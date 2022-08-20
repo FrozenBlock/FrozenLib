@@ -1,0 +1,115 @@
+package net.frozenblock.lib;
+
+import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.frozenblock.lib.sound.*;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.entity.Entity;
+
+public final class FrozenClient implements ClientModInitializer {
+
+    @Override
+    public void onInitializeClient() {
+        ClientTickEvents.START_WORLD_TICK.register(e -> {
+            Minecraft client = Minecraft.getInstance();
+            if (client.level != null) {
+                FlyBySoundHub.update(client, client.player, true);
+            }
+        });
+
+        receiveMovingLoopingSoundPacket();
+        receiveMovingRestrictionSoundPacket();
+        receiveMovingRestrictionLoopingSoundPacket();
+        receiveFlybySoundPacket();
+    }
+
+    private static void receiveMovingLoopingSoundPacket() {
+        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+            int id = byteBuf.readVarInt();
+            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundSource category = byteBuf.readEnum(SoundSource.class);
+            float volume = byteBuf.readFloat();
+            float pitch = byteBuf.readFloat();
+            ResourceLocation predicateId = byteBuf.readResourceLocation();
+            ctx.execute(() -> {
+                ClientLevel world = Minecraft.getInstance().level;
+                if (world != null) {
+                    Entity entity = world.getEntity(id);
+                    if (entity != null) {
+                        RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
+                        Minecraft.getInstance().getSoundManager().play(new MovingSoundLoop(entity, sound, category, volume, pitch, predicate));
+                    }
+                }
+            });
+        });
+    }
+
+    private static void receiveMovingRestrictionSoundPacket() {
+        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+            int id = byteBuf.readVarInt();
+            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundSource category = byteBuf.readEnum(SoundSource.class);
+            float volume = byteBuf.readFloat();
+            float pitch = byteBuf.readFloat();
+            ResourceLocation predicateId = byteBuf.readResourceLocation();
+            ctx.execute(() -> {
+                ClientLevel world = Minecraft.getInstance().level;
+                if (world != null) {
+                    Entity entity = world.getEntity(id);
+                    if (entity != null) {
+                        RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
+                        Minecraft.getInstance().getSoundManager().play(new MovingSoundWithRestriction(entity, sound, category, volume, pitch, predicate));
+                    }
+                }
+            });
+        });
+    }
+
+    private static void receiveMovingRestrictionLoopingSoundPacket() {
+        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+            int id = byteBuf.readVarInt();
+            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundSource category = byteBuf.readEnum(SoundSource.class);
+            float volume = byteBuf.readFloat();
+            float pitch = byteBuf.readFloat();
+            ResourceLocation predicateId = byteBuf.readResourceLocation();
+            ctx.execute(() -> {
+                ClientLevel world = Minecraft.getInstance().level;
+                if (world != null) {
+                    Entity entity = world.getEntity(id);
+                if (entity != null) {
+                    RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
+                    Minecraft.getInstance().getSoundManager().play(new MovingSoundLoopWithRestriction(entity, sound, category, volume, pitch, predicate));
+                }
+            }
+            });
+        });
+    }
+
+    private static void receiveFlybySoundPacket() {
+        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.FLYBY_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+            int id = byteBuf.readVarInt();
+            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundSource category = byteBuf.readEnum(SoundSource.class);
+            float volume = byteBuf.readFloat();
+            float pitch = byteBuf.readFloat();
+            ctx.execute(() -> {
+                ClientLevel world = Minecraft.getInstance().level;
+                if (world != null) {
+                    Entity entity = world.getEntity(id);
+                    if (entity != null) {
+                        FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(pitch, volume, category, sound);
+                        FlyBySoundHub.addEntity(entity, flyBySound);
+                    }
+                }
+            });
+        });
+    }
+
+}
