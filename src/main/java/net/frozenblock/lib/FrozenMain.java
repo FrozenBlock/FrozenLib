@@ -1,8 +1,15 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
 import net.frozenblock.lib.sound.RegisterMovingSoundRestrictions;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.logging.Logger;
 
@@ -13,6 +20,10 @@ public final class FrozenMain implements ModInitializer {
     @Override
     public void onInitialize() {
         RegisterMovingSoundRestrictions.init();
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+            BlockScheduledTicks.ticks.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos, Blocks.BEDROCK.defaultBlockState(), 3));
+        }
+
     }
 
     //IDENTIFIERS
