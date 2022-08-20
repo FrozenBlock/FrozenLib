@@ -12,7 +12,7 @@
 		"server.PointedDripstoneBlockMixin",
 		"server.SignTypeAccessor",
 		"server.SpawnRestrictionMixin",
-		"worldgen.StructurePoolElementMixin"
+		"worldgen.SinglePoolElementMixin"
 	],
 	"injectors": {
 		"defaultRequire": 1

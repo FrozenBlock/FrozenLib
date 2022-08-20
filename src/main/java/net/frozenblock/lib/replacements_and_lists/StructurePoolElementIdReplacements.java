@@ -7,6 +7,6 @@ import java.util.Map;
 
 public class StructurePoolElementIdReplacements {
 
-    public static Map<String, ResourceLocation> resourceLocationReplacements = new HashMap<>();
+    public static Map<ResourceLocation, ResourceLocation> resourceLocationReplacements = new HashMap<>();
 
 }
