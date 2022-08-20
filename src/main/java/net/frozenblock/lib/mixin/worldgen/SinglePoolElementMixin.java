@@ -23,7 +23,7 @@ public abstract class SinglePoolElementMixin {
     @Shadow @Final @Mutable
     public Either<ResourceLocation, StructureTemplate> template;
 
-    @Inject(method = "<init>", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "<init>", at = @At("TAIL"))
     public void init(Either<ResourceLocation, StructureTemplate> template, Holder<StructureProcessorList> processors, StructureTemplatePool.Projection projection, CallbackInfo info) {
         if (template.left().isPresent()) {
             ResourceLocation id = template.left().get();
