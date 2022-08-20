@@ -21,7 +21,7 @@ import java.util.function.Function;
 public class StructurePoolElementMixin {
     /** Allows us to change which namespace to use when looking for structure files. */
 
-    @Inject(method = "legacy(Ljava/lang/String;)Ljava/util/functions/Function;", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "legacy(Ljava/lang/String;)Ljava/util/Objects/Function;", at = @At("HEAD"), cancellable = true)
     private static void legacy(String id, CallbackInfoReturnable<Function<StructureTemplatePool.Projection, LegacySinglePoolElement>> info) {
         if (StructurePoolElementIdReplacements.resourceLocationReplacements.containsKey(id)) {
             info.cancel();
@@ -29,7 +29,7 @@ public class StructurePoolElementMixin {
         }
     }
 
-    @Inject(method = "legacy(Ljava/lang/String;Lnet/minecraft/core/Holder;)Ljava/util/functions/Function;", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "legacy(Ljava/lang/String;Lnet/minecraft/core/Holder;)Ljava/util/Objects/Function;", at = @At("HEAD"), cancellable = true)
     private static void legacy(String id, Holder<StructureProcessorList> processors, CallbackInfoReturnable<Function<StructureTemplatePool.Projection, LegacySinglePoolElement>> info) {
         if (StructurePoolElementIdReplacements.resourceLocationReplacements.containsKey(id)) {
             info.cancel();
@@ -37,7 +37,7 @@ public class StructurePoolElementMixin {
         }
     }
 
-    @Inject(method = "single(Ljava/lang/String;)Ljava/util/functions/Function;", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "single(Ljava/lang/String;)Ljava/util/Objects/Function;", at = @At("HEAD"), cancellable = true)
     private static void single(String id, CallbackInfoReturnable<Function<StructureTemplatePool.Projection, SinglePoolElement>> info) {
         if (StructurePoolElementIdReplacements.resourceLocationReplacements.containsKey(id)) {
             info.cancel();
@@ -45,7 +45,7 @@ public class StructurePoolElementMixin {
         }
     }
 
-    @Inject(method = "single(Ljava/lang/String;Lnet/minecraft/core/Holder;)Ljava/util/functions/Function;", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "single(Ljava/lang/String;Lnet/minecraft/core/Holder;)Ljava/util/Objects/Function;", at = @At("HEAD"), cancellable = true)
     private static void single(String id, Holder<StructureProcessorList> processors, CallbackInfoReturnable<Function<StructureTemplatePool.Projection, SinglePoolElement>> info) {
         if (StructurePoolElementIdReplacements.resourceLocationReplacements.containsKey(id)) {
             info.cancel();
