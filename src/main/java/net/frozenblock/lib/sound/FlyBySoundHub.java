@@ -77,18 +77,7 @@ public class FlyBySoundHub {
         flybyEntitiesAndSounds.put(entity, flyBySound);
     }
 
-    public static class FlyBySound {
-        public final float pitch;
-        public final float volume;
-        public final SoundSource category;
-        public final SoundEvent sound;
-
-
-        public FlyBySound(float pitch, float volume, SoundSource category, SoundEvent sound) {
-            this.pitch = pitch;
-            this.volume = volume;
-            this.category = category;
-            this.sound = sound;
-        }
+    public record FlyBySound(float pitch, float volume, SoundSource category,
+                             SoundEvent sound) {
     }
 }
