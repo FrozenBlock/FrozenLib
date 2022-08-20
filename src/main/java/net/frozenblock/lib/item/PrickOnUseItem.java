@@ -21,7 +21,7 @@ public class PrickOnUseItem extends Item {
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
         if (this.isEdible()) {
-            user.hurt(FrozenDamageSource.pricklyPear(),2.0F);
+            user.hurt(FrozenDamageSource.source("prick"),2.0F);
             if (this.hurtSound != null && !user.isSilent()) {
                 user.playSound(this.hurtSound, 0.4F, 0.9F + (world.random.nextFloat() * 0.2F));
             }
