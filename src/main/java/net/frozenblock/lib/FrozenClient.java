@@ -23,6 +23,10 @@ public final class FrozenClient implements ClientModInitializer {
             }
         });
 
+        if (FabricLoader.getInstance()) {
+            FlyBySoundHub.autoEntitiesAndSounds.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
+        }
+
         receiveMovingLoopingSoundPacket();
         receiveMovingRestrictionSoundPacket();
         receiveMovingRestrictionLoopingSoundPacket();

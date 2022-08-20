@@ -4,8 +4,11 @@ import net.fabricmc.api.ModInitializer;
 import net.frozenblock.lib.sound.RegisterMovingSoundRestrictions;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.logging.Logger;
+
 public final class FrozenMain implements ModInitializer {
     public static final String MOD_ID = "frozenblocklib";
+    public static final Logger LOGGER = Logger.getLogger(MOD_ID);
 
     @Override
     public void onInitialize() {
@@ -24,6 +27,12 @@ public final class FrozenMain implements ModInitializer {
 
     public static String string(String path) {
         return id(path).toString();
+    }
+
+    public static void log(String string, boolean should) {
+        if (should) {
+            LOGGER.info(string);
+        }
     }
 
 }
