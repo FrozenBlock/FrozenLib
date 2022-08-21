@@ -1,4 +1,4 @@
-package net.frozenblock.api.mathematics;
+package net.frozenblock.lib.mathematics;
 
 public final class AdvancedMath {
     /**

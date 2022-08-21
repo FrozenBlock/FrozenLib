@@ -1,4 +1,4 @@
-package net.frozenblock.api.simplemethods;
+package net.frozenblock.lib.simplemethods;
 
 import net.minecraft.core.Direction;
 
