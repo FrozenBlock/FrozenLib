@@ -38,4 +38,5 @@ accessible    method    net/minecraft/client/renderer/Sheets    chestMaterial   
 accessible    field    net/minecraft/world/CompoundContainer    container1    Lnet/minecraft/world/Container;
 accessible    field    net/minecraft/world/CompoundContainer    container2    Lnet/minecraft/world/Container;
 accessible method net/minecraft/world/level/block/AbstractCauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
-accessible    class    net/minecraft/world/level/levelgen/structure/pools/LegacySinglePoolElement
+accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
+accessible method net/minecraft/world/item/ItemCooldowns$CooldownInstance <init> (II)V
