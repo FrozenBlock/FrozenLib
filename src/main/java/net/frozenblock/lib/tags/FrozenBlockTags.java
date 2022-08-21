@@ -6,10 +6,10 @@ import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
-public final class BlockTags {
+public final class FrozenBlockTags {
     public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = of(FabricLoader.getInstance().isDevelopmentEnvironment() ? "dripstone_can_drip_testing" : "dripstone_can_drip");
 
-    private BlockTags() {
+    private FrozenBlockTags() {
     }
 
     private static TagKey<Block> of(String path) {

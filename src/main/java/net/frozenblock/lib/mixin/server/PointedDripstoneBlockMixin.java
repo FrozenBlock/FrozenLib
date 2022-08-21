@@ -1,6 +1,6 @@
 package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.tags.BlockTags;
+import net.frozenblock.lib.tags.FrozenBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -34,7 +34,7 @@ public class PointedDripstoneBlockMixin {
 
     @Inject(at = @At("HEAD"), method = "findFillableCauldronBelowStalactiteTip", cancellable = true)
     private static void findFillableCauldronBelowStalactiteTip(Level world, BlockPos pos2, Fluid fluid, CallbackInfoReturnable<BlockPos> info) {
-        Predicate<BlockState> predicate = state -> (state.getBlock() instanceof AbstractCauldronBlock && ((AbstractCauldronBlock) state.getBlock()).canReceiveStalactiteDrip(fluid)) || state.is(BlockTags.DRIPSTONE_CAN_DRIP_ON);
+        Predicate<BlockState> predicate = state -> (state.getBlock() instanceof AbstractCauldronBlock && ((AbstractCauldronBlock) state.getBlock()).canReceiveStalactiteDrip(fluid)) || state.is(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON);
         BiPredicate<BlockPos, BlockState> biPredicate = (pos, state) -> canDripThrough(world, pos, state);
         info.setReturnValue(findBlockVertical(world, pos2, Direction.DOWN.getAxisDirection(), biPredicate, predicate, 11).orElse(null));
         info.cancel();
