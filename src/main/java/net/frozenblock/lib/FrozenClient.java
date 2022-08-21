@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.interfaces.CooldownInterface;
 import net.frozenblock.lib.sound.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -14,6 +15,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 
 public final class FrozenClient implements ClientModInitializer {
 
@@ -34,6 +36,7 @@ public final class FrozenClient implements ClientModInitializer {
         receiveMovingRestrictionSoundPacket();
         receiveMovingRestrictionLoopingSoundPacket();
         receiveFlybySoundPacket();
+        receiveCooldownChangePacket();
     }
 
     private static void receiveMovingLoopingSoundPacket() {
@@ -114,6 +117,19 @@ public final class FrozenClient implements ClientModInitializer {
                         FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(pitch, volume, category, sound);
                         FlyBySoundHub.addEntity(entity, flyBySound);
                     }
+                }
+            });
+        });
+    }
+
+    private static void receiveCooldownChangePacket() {
+        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.COOLDOWN_CHANGE_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+            Item item = byteBuf.readById(Registry.ITEM);
+            int additional = byteBuf.readVarInt();
+            ctx.execute(() -> {
+                ClientLevel world = Minecraft.getInstance().level;
+                if (world != null && Minecraft.getInstance().player != null) {
+                    ((CooldownInterface)Minecraft.getInstance().player.getCooldowns()).changeCooldown(item , additional);
                 }
             });
         });
