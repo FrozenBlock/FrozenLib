@@ -55,7 +55,7 @@ dependencies {
 	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${minecraft_version}"
 	mappings(loom.layered {
-		addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${quilt_mappings}:v2"))
+		//addLayer(quiltMappings.mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${quilt_mappings}:v2"))
 		//mappings "net.fabricmc:yarn:1.19.2+build.4:v2"
 		officialMojangMappings()
 	})
@@ -140,11 +140,41 @@ String getVersion() {
 	return version
 }
 
+artifacts {
+	archives remapJar
+	/*archives(sourcesJar) {
+		classifier = "sources"
+		builtBy remapSourcesJar
+	}
+	archives javadocJar*/
+}
+
 // configure the maven publication
 publishing {
 	publications {
 		mavenJava(MavenPublication) {
-			from components.java
+			pom {
+				name = project.archives_base_name
+				artifactId = project.mod_version
+				url = "https://github.com/FrozenBlock/FrozenLib"
+
+				scm {
+					url = "https://github.com/FrozenBlock/FrozenLib"
+				}
+			}
+
+			/*scm {
+				url = "https://github.com/FrozenBlock/FrozenLib"
+			}*/
+
+			afterEvaluate {
+				artifact remapJar
+				/*artifact(sourcesJar) {
+					classifier = "sources"
+					builtBy remapSourcesJar
+				}
+				artifact javadocJar*/
+			}
 		}
 	}
 
