@@ -15,7 +15,7 @@ public class BonemealBehaviors {
 
     @FunctionalInterface
     public interface BonemealBehavior {
-        void bonemeal(Level world, BlockPos pos, BlockState state, Direction face, Direction horizontal);
+        boolean bonemeal(Level world, BlockPos pos, BlockState state, Direction face, Direction horizontal);
     }
 
 }
