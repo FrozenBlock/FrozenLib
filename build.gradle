@@ -5,6 +5,8 @@ plugins {
 	id 'maven-publish'
 }
 
+def env = System.getenv()
+
 archivesBaseName = project.archives_base_name
 version = getVersion()
 group = project.maven_group
@@ -121,7 +123,7 @@ java {
 	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
 	// if it is present.
 	// If you remove this line, sources will not be generated.
-	//withSourcesJar()
+	withSourcesJar()
 }
 
 jar {
@@ -140,40 +142,29 @@ String getVersion() {
 	return version
 }
 
-artifacts {
-	archives remapJar
-	/*archives(sourcesJar) {
-		classifier = "sources"
-		builtBy remapSourcesJar
+configurations {
+	dev {
+		canBeResolved = false
+		canBeConsumed = true
 	}
-	archives javadocJar*/
+}
+
+artifacts {
+	dev jar
+	archives remapJar
+	archives sourcesJar
 }
 
 // configure the maven publication
 publishing {
 	publications {
-		mavenJava(MavenPublication) {
-			pom {
-				name = project.archives_base_name
-				artifactId = project.mod_version
-				url = "https://github.com/FrozenBlock/FrozenLib"
-
-				scm {
-					url = "https://github.com/FrozenBlock/FrozenLib"
-				}
+		gpr(MavenPublication) {
+			artifactId archivesBaseName
+			artifact(remapJar) {
+				builtBy remapJar
 			}
-
-			/*scm {
-				url = "https://github.com/FrozenBlock/FrozenLib"
-			}*/
-
-			afterEvaluate {
-				artifact remapJar
-				/*artifact(sourcesJar) {
-					classifier = "sources"
-					builtBy remapSourcesJar
-				}
-				artifact javadocJar*/
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
 			}
 		}
 	}
@@ -184,5 +175,13 @@ publishing {
 		// Notice: This block does NOT have the same function as the block in the top level.
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
+		maven {
+			name = "GitHubPackages"
+			url = uri("https://maven.pkg.github.com/frozenblock/frozenlib")
+			credentials {
+				username = env.GITHUB_USER
+				password = env.GITHUB_TOKEN
+			}
+		}
 	}
 }
