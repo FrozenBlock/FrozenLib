@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PrimaryLevelData.class)
 public class NoExperimentalMixin {
 
-    @Inject(method = "worldGenSettingsLifecycle", at = @At("HEAD"), cancellable = true)
+    /*@Inject(method = "worldGenSettingsLifecycle", at = @At("HEAD"), cancellable = true)
     public void worldGenSettingsLifecycle(CallbackInfoReturnable<Lifecycle> info) {
         info.cancel();
         info.setReturnValue(Lifecycle.stable());
-    }
+    }*/
 
 }
