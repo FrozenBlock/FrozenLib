@@ -41,13 +41,13 @@ public class SpawnRestrictionMixin {
         }
         if (changed) {
             if (newHeight == null) {
-                newHeight = heightmapType;
+                throw new IllegalArgumentException("Height cannot be null");
             }
             if (newLocation == null) {
-                newLocation = location;
+                throw new IllegalArgumentException("Location cannot be null");
             }
             if (newPredicate == null) {
-                newPredicate = predicate;
+                throw new IllegalArgumentException("Predicate cannot be null");
             }
             info.cancel();
             SpawnPlacements.Data entry = DATA_BY_TYPE.put(type, new SpawnPlacements.Data(newHeight, newLocation, newPredicate));
