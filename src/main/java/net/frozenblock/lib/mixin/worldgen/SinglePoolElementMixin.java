@@ -20,7 +20,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SinglePoolElement.class)
 public abstract class SinglePoolElementMixin {
-    /** Allows us to change which namespace to use when looking for structure files. */
 
     @Shadow @Final @Mutable
     public Either<ResourceLocation, StructureTemplate> template;

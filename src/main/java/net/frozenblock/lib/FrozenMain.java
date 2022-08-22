@@ -3,14 +3,9 @@ package net.frozenblock.lib;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
-import net.frozenblock.lib.replacements_and_lists.StructurePoolElementIdReplacements;
 import net.frozenblock.lib.sound.RegisterMovingSoundRestrictions;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.logging.Logger;
 
@@ -26,6 +21,7 @@ public final class FrozenMain implements ModInitializer {
             //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
             //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
             //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
+            RegisterDev.init();
         }
 
     }
