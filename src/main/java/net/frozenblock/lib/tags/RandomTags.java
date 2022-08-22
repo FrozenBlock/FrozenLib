@@ -1,4 +1,4 @@
-package net.frozenblock.lib.simplemethods;
+package net.frozenblock.lib.tags;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
  * <h3>Example usage</h3>
  * <pre>
  * {@code
- * if (WilderTags.blockTagcontains(block, BlockTags.MINEABLE_PICKAXE)) {
+ * if (RandomTags.blockTagcontains(block, BlockTags.MINEABLE_PICKAXE)) {
  *
  * }
  *
@@ -23,7 +23,7 @@ import java.util.ArrayList;
  * }
  * </pre>
  */
-public class WilderTags {
+public class RandomTags {
     // lol just a port from twm
 
     @Nullable
