@@ -14,7 +14,6 @@
 		"server.PointedDripstoneBlockMixin",
 		"server.ServerItemCooldownsMixin",
 		"server.SignTypeAccessor",
-		"server.SpawnRestrictionMixin",
 		"worldgen.SinglePoolElementMixin"
 	],
 	"injectors": {
