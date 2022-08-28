@@ -22,6 +22,10 @@ public final class FrozenMain implements ModInitializer {
             //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
             //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
             RegisterDev.init();
+
+            if (FabricLoader.getInstance().getModContainer("wilderwild").isEmpty()) {
+                throw new RuntimeException("lol this is just to close the instance");
+            }
         }
 
     }
