@@ -15,6 +15,9 @@ public final class FrozenMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        if (FabricLoader.getInstance().isDevelopmentEnvironment()) if (FabricLoader.getInstance().getModContainer("wilderwild").isEmpty()) {
+            throw new RuntimeException("lol this is just to close the instance");
+        }
         RegisterMovingSoundRestrictions.init();
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockScheduledTicks.ticks.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos, Blocks.BEDROCK.defaultBlockState(), 3));
@@ -22,10 +25,6 @@ public final class FrozenMain implements ModInitializer {
             //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
             //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
             RegisterDev.init();
-
-            if (FabricLoader.getInstance().getModContainer("wilderwild").isEmpty()) {
-                throw new RuntimeException("lol this is just to close the instance");
-            }
         }
 
     }
