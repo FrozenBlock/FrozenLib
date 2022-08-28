@@ -41,6 +41,7 @@ public class LivingEntityMixin {
         if (!entity.level.isClientSide) {
             ItemStack stack = entity.getUseItem();
             if (stack.is(FrozenItemTags.NO_USE_GAME_EVENTS)) {
+                this.setLivingEntityFlag(1, false);
                 info.cancel();
             }
         }
