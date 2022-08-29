@@ -24,10 +24,12 @@ public class BoneMealItemMixin {
         Direction direction = context.getClickedFace();
         Direction horizontal = context.getHorizontalDirection();
         if (BonemealBehaviors.bonemeals.containsKey(state.getBlock())) {
-            if (BonemealBehaviors.bonemeals.get(state.getBlock()).bonemeal(context, world, blockPos, state, direction, horizontal)) {
+            if (BonemealBehaviors.bonemeals.get(state.getBlock()).bonemeal(context, world, blockPos, state, direction, horizontal) && !world.isClientSide) {
                 context.getItemInHand().shrink(1);
-                info.setReturnValue(InteractionResult.sidedSuccess(world.isClientSide));
+                info.setReturnValue(InteractionResult.SUCCESS);
                 info.cancel();
+            } else {
+                info.setReturnValue(InteractionResult.sidedSuccess(world.isClientSide));
             }
         }
     }
