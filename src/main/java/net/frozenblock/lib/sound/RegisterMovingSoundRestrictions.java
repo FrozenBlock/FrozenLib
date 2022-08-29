@@ -15,7 +15,6 @@ public final class RegisterMovingSoundRestrictions {
         predicates.put(id, predicate);
     }
 
-    @Nullable
     public static LoopPredicate<?> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
             if (predicates.containsKey(id)) {

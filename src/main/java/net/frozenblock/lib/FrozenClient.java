@@ -32,32 +32,10 @@ public final class FrozenClient implements ClientModInitializer {
             FlyBySoundHub.autoEntitiesAndSounds.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
         }
 
-        receiveMovingLoopingSoundPacket();
         receiveMovingRestrictionSoundPacket();
         receiveMovingRestrictionLoopingSoundPacket();
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
-    }
-
-    private static void receiveMovingLoopingSoundPacket() {
-        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-            int id = byteBuf.readVarInt();
-            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
-            SoundSource category = byteBuf.readEnum(SoundSource.class);
-            float volume = byteBuf.readFloat();
-            float pitch = byteBuf.readFloat();
-            ResourceLocation predicateId = byteBuf.readResourceLocation();
-            ctx.execute(() -> {
-                ClientLevel world = Minecraft.getInstance().level;
-                if (world != null) {
-                    Entity entity = world.getEntity(id);
-                    if (entity != null) {
-                        RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
-                        Minecraft.getInstance().getSoundManager().play(new MovingSoundLoop(entity, sound, category, volume, pitch, predicate));
-                    }
-                }
-            });
-        });
     }
 
     private static void receiveMovingRestrictionSoundPacket() {
