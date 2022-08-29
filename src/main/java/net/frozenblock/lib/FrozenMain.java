@@ -8,13 +8,12 @@ import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
 import net.frozenblock.lib.sound.FrozenSoundPackets;
 import net.frozenblock.lib.sound.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.RegisterMovingSoundRestrictions;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import org.slf4j.helpers.NOPLogger;
 
@@ -66,13 +65,13 @@ public final class FrozenMain implements ModInitializer {
     private static void receiveSoundSyncPacket() {
         ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
+            Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registry.DIMENSION_REGISTRY));
             ctx.execute(() -> {
-                ClientLevel world = Minecraft.getInstance().level;
-                if (world != null) {
-                    Entity entity = world.getEntity(id);
+                if (dimension != null) {
+                    Entity entity = dimension.getEntity(id);
                     if (entity != null) {
                         if (entity instanceof LivingEntity living) {
-                            for (MovingLoopingSoundEntityManager.SoundLoopNBT nbt : ((EntityLoopingSoundInterface)living).getSounds().getSounds()) {
+                            for (MovingLoopingSoundEntityManager.SoundLoopNBT nbt : ((EntityLoopingSoundInterface) living).getSounds().getSounds()) {
                                 FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
                             }
                         }

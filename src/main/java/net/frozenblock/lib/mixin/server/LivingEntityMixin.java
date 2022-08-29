@@ -82,7 +82,7 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface {
         if (!entity.level.isClientSide) {
             this.loopingSoundManager.tick();
         } else if (!this.clientFrozenSoundSync) {
-            FrozenClientPacketInbetween.requestFrozenSoundSync(entity.getId());
+            FrozenClientPacketInbetween.requestFrozenSoundSync(entity.getId(), entity.level.dimension());
             this.clientFrozenSoundSync = true;
         }
     }
