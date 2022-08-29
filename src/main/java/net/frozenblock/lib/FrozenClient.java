@@ -93,11 +93,11 @@ public final class FrozenClient implements ClientModInitializer {
                 ClientLevel world = Minecraft.getInstance().level;
                 if (world != null) {
                     Entity entity = world.getEntity(id);
-                if (entity != null) {
-                    RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
-                    Minecraft.getInstance().getSoundManager().play(new MovingSoundLoopWithRestriction(entity, sound, category, volume, pitch, predicate));
+                    if (entity != null) {
+                        RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
+                        Minecraft.getInstance().getSoundManager().play(new MovingSoundLoopWithRestriction(entity, sound, category, volume, pitch, predicate));
+                    }
                 }
-            }
             });
         });
     }

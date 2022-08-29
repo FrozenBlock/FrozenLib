@@ -7,6 +7,7 @@ import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -24,7 +25,7 @@ public class FrozenSoundPackets {
             byteBuf.writeFloat(volume);
             byteBuf.writeFloat(pitch);
             byteBuf.writeResourceLocation(id);
-            for (ServerPlayer player : PlayerLookup.tracking(entity)) {
+            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_LOOPING_SOUND_PACKET, byteBuf);
             }
         }
@@ -39,7 +40,7 @@ public class FrozenSoundPackets {
             byteBuf.writeFloat(volume);
             byteBuf.writeFloat(pitch);
             byteBuf.writeResourceLocation(id);
-            for (ServerPlayer player : PlayerLookup.tracking(entity)) {
+            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, byteBuf);
             }
         }
@@ -54,7 +55,7 @@ public class FrozenSoundPackets {
             byteBuf.writeFloat(volume);
             byteBuf.writeFloat(pitch);
             byteBuf.writeResourceLocation(id);
-            for (ServerPlayer player : PlayerLookup.tracking(entity)) {
+            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
         }
