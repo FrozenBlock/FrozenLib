@@ -21,6 +21,9 @@
 	"client": [
 	  "net.frozenblock.lib.FrozenClient",
       "org.quiltmc.qsl.frozenblock.datafixerupper.impl.client.ClientFreezer"
+	],
+	"preLaunch": [
+	  "net.frozenblock.lib.FrozenPreLaunch"
 	]
   },
   "mixins": [
