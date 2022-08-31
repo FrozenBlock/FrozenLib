@@ -35,9 +35,9 @@ public final class ClientFreezer implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            FrozenMain.log("QuiltMC's DataFixer Client Registry is about to freeze", true);
+            FrozenMain.log("[Quilt DFU API] Clientside DataFixer Registry is about to freeze", true);
             QuiltDataFixesInternals.get().freeze();
-            FrozenMain.log("QuiltMC's DataFixer Client Registry was frozen", true);
+            FrozenMain.log("[Quilt DFU API] Clientside DataFixer Registry was frozen", true);
         });
     }
 }
