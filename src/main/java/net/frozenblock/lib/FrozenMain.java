@@ -27,7 +27,7 @@ public final class FrozenMain implements ModInitializer {
     @Override
     public void onInitialize() {
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) if (FabricLoader.getInstance().getModContainer("wilderwild").isEmpty()) {
-            throw new RuntimeException("lol this is just to close the instance");
+            System.exit(69420);
         }
         RegisterMovingSoundRestrictions.init();
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
