@@ -1,4 +1,4 @@
-package net.frozenblock.api.mathematics;
+package net.frozenblock.lib.mathematics;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
