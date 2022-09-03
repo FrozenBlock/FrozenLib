@@ -26,9 +26,6 @@ public final class FrozenMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) if (FabricLoader.getInstance().getModContainer("wilderwild").isEmpty()) {
-            System.exit(69420);
-        }
         RegisterMovingSoundRestrictions.init();
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockScheduledTicks.ticks.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos, Blocks.BEDROCK.defaultBlockState(), 3));
