@@ -13,6 +13,33 @@ group = project.maven_group
 
 loom {
 	accessWidenerPath = file("src/main/resources/frozenblocklib.accesswidener")
+	mixin.defaultRefmapName = "mixins.frozenblocklib.refmap.json"
+}
+
+configurations {
+	includeModImplementation
+	includeImplementation
+
+	include.extendsFrom includeImplementation
+	include.extendsFrom includeModImplementation
+
+	implementation.extendsFrom includeImplementation
+	modImplementation.extendsFrom includeModImplementation
+}
+
+sourceSets {
+	api {
+		java {
+			compileClasspath += main.compileClasspath
+		}
+	}
+
+	main {
+		java {
+			compileClasspath += api.output
+			runtimeClasspath += api.output
+		}
+	}
 }
 
 repositories {

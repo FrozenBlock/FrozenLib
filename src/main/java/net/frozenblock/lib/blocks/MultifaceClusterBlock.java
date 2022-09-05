@@ -1,4 +1,4 @@
-package net.frozenblock.lib.block;
+package net.frozenblock.lib.blocks;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
