@@ -1,4 +1,4 @@
-package net.frozenblock.lib.block;
+package net.frozenblock.lib.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
