@@ -17,6 +17,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -42,7 +43,7 @@ public class MultifaceClusterBlock extends MultifaceBlock implements SimpleWater
 
     public MultifaceClusterBlock(int height, int xzOffset, Properties properties) {
         super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false).setValue(UP, true));
+        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
         this.upAabb = Block.box(xzOffset, 0.0, xzOffset, 16 - xzOffset, height, (16 - xzOffset));
         this.downAabb = Block.box(xzOffset, (16 - height), xzOffset, (16 - xzOffset), 16.0, (16 - xzOffset));
         this.northAabb = Block.box(xzOffset, xzOffset, (16 - height), (16 - xzOffset), (16 - xzOffset), 16.0);
@@ -100,5 +101,15 @@ public class MultifaceClusterBlock extends MultifaceBlock implements SimpleWater
     protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(WATERLOGGED);
+    }
+
+    @Override
+    public PushReaction getPistonPushReaction(BlockState blockState) {
+        return PushReaction.DESTROY;
+    }
+
+    @Override
+    public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
+        return blockState.getFluidState().isEmpty();
     }
 }
