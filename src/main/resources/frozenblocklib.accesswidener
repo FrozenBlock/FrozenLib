@@ -12,7 +12,6 @@ transitive-accessible    field    net/minecraft/world/entity/Entity    DATA_POSE
 transitive-accessible    method    net/minecraft/client/model/HierarchicalModel    animate    (Lnet/minecraft/world/entity/AnimationState;Lnet/minecraft/client/animation/AnimationDefinition;F)V
 transitive-accessible    field    net/minecraft/world/entity/LivingEntity    dead    Z
 transitive-accessible    class    net/minecraft/world/entity/SpawnPlacements$Data
-transitive-accessible    class    net/minecraft/world/entity/npc/VillagerTrades$ItemsForEmeralds
 transitive-accessible    method    net/minecraft/world/level/block/Block    registerDefaultState    (Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible    class    net/minecraft/client/renderer/RenderType$CompositeState
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
@@ -22,25 +21,13 @@ transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard
 transitive-accessible    method    net/minecraft/client/renderer/RenderType$CompositeRenderType    <init>    (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)V
 transitive-accessible    method    net/minecraft/client/renderer/RenderStateShard$TextureStateShard    <init>    (Lnet/minecraft/resources/ResourceLocation;ZZ)V
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    TRANSLUCENT_TRANSPARENCY    Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
-transitive-accessible    method    net/minecraft/world/entity/SpawnPlacements   register    (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/SpawnPlacements$Type;Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/world/entity/SpawnPlacements$SpawnPredicate;)V
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement    <init>    (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V
-transitive-accessible    method    net/minecraft/client/renderer/Sheets    chestMaterial    (Ljava/lang/String;)Lnet/minecraft/client/resources/model/Material;
 transitive-accessible    field    net/minecraft/world/CompoundContainer    container1    Lnet/minecraft/world/Container;
 transitive-accessible    field    net/minecraft/world/CompoundContainer    container2    Lnet/minecraft/world/Container;
 transitive-accessible    method    net/minecraft/world/level/block/AbstractCauldronBlock    canReceiveStalactiteDrip    (Lnet/minecraft/world/level/material/Fluid;)Z
 transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible    method    net/minecraft/world/item/ItemCooldowns$CooldownInstance    <init>    (II)V
 transitive-accessible    field    net/minecraft/world/item/ItemStack    tag    Lnet/minecraft/nbt/CompoundTag;
-transitive-accessible    field    net/minecraft/world/level/levelgen/structure/structures/JigsawStructure    maxDistanceFromCenter    I
-transitive-accessible    field    net/minecraft/world/level/levelgen/structure/structures/JigsawStructure    startJigsawName    Ljava/util/Optional;
-transitive-accessible    field    net/minecraft/world/level/levelgen/structure/structures/JigsawStructure    maxDepth    I
-transitive-accessible    field    net/minecraft/world/level/levelgen/structure/structures/JigsawStructure    startHeight    Lnet/minecraft/world/level/levelgen/heightproviders/HeightProvider;
-transitive-accessible    field    net/minecraft/world/level/levelgen/structure/structures/JigsawStructure    useExpansionHack    Z
-transitive-accessible    field    net/minecraft/world/level/levelgen/structure/structures/JigsawStructure    startPool    Lnet/minecraft/core/Holder;
-transitive-accessible    field    net/minecraft/world/level/levelgen/structure/structures/JigsawStructure    projectStartToHeightmap    Ljava/util/Optional;
-transitive-accessible    field    net/minecraft/world/level/levelgen/structure/Structure    settings    Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
-transitive-accessible    method    net/minecraft/client/gui/screens/Screen    addRenderableWidget    (Lnet/minecraft/client/gui/components/events/GuiEventListener;)Lnet/minecraft/client/gui/components/events/GuiEventListener;
-transitive-accessible    field    net/minecraft/client/gui/screens/inventory/JigsawBlockEditScreen    MAX_LEVELS    I
 transitive-accessible    class    net/minecraft/world/level/chunk/ChunkStatus$SimpleGenerationTask
 transitive-accessible    method    net/minecraft/data/worldgen/biome/OverworldBiomes    calculateSkyColor    (F)I
 transitive-extendable    method    net/minecraft/world/item/InstrumentItem    getInstrument    (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
@@ -48,8 +35,18 @@ transitive-accessible    method    net/minecraft/world/effect/MobEffect    <init
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    RENDERTYPE_TRANSLUCENT_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible    method    net/minecraft/client/renderer/RenderStateShard$ShaderStateShard    <init>    (Ljava/util/function/Supplier;)V
 transitive-accessible    method    net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider    <init>    (Lnet/minecraft/world/level/block/state/BlockState;)V
-transitive-accessible    class    net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask
 transitive-accessible    class    net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask$CompileResults
 transitive-accessible    field    net/minecraft/world/entity/Mob    goalSelector    Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 transitive-accessible    field    net/minecraft/world/entity/Mob    targetSelector    Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;ID[D)Lnet/minecraft/core/Holder;
+
+# Used to set overworld biomes
+accessible    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource    preset    Ljava/util/Optional;
+accessible    class   net/minecraft/world/level/biome/MultiNoiseBiomeSource$PresetInstance
+accessible    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource$Preset    parameterSource    Ljava/util/function/Function;
+accessible    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource    parameters    Lnet/minecraft/world/level/biome/Climate$ParameterList;
+mutable    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource    parameters    Lnet/minecraft/world/level/biome/Climate$ParameterList;
+
+# Rebuilding biome source feature lists
+accessible    field    net/minecraft/world/level/biome/BiomeSource    possibleBiomes    Ljava/util/Set;
+mutable    field    net/minecraft/world/level/biome/BiomeSource    possibleBiomes    Ljava/util/Set;

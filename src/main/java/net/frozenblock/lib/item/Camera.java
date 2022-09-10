@@ -28,7 +28,7 @@ public class Camera extends Item {
         if (entity instanceof Player player) {
             if (player.getCooldowns().isOnCooldown(this) && player.getCooldowns().getCooldownPercent(this, 0) == 0.9F) {
                 if (world.isClientSide && canGo) {
-                    FrozenMain.LOGGER.warning("PLAYER HAS ACCESS TO DEV CAMERA AND HAS JUST USED IT");
+                    FrozenMain.LOGGER.warn("PLAYER HAS ACCESS TO DEV CAMERA AND HAS JUST USED IT");
                     Minecraft client = Minecraft.getInstance();
                     File directory = getPanoramaFolderName(new File(client.gameDirectory, "panoramas"));
                     File directory1 = new File(directory, "screenshots");

@@ -1,22 +1,24 @@
 {
-	"required": true,
-	"minVersion": "0.8",
-	"package": "net.frozenblock.lib.mixin",
-	"compatibilityLevel": "JAVA_17",
-	"mixins": [
-		"server.AbstractBlockMixin",
-		"server.BoneMealItemMixin",
-		"server.HopperBlockEntityMixin",
-		"server.ItemCooldownsMixin",
-		"server.LegacySinglePoolElementAccessor",
-		"server.LivingEntityMixin",
-		"server.NoExperimentalMixin",
-		"server.PointedDripstoneBlockMixin",
-		"server.ServerItemCooldownsMixin",
-		"server.SignTypeAccessor",
-		"worldgen.SinglePoolElementMixin"
-	],
-	"injectors": {
-		"defaultRequire": 1
-	}
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+	"server.AbstractBlockMixin",
+	"server.BoneMealItemMixin",
+	"server.HopperBlockEntityMixin",
+	"server.ItemCooldownsMixin",
+	"server.LegacySinglePoolElementAccessor",
+	"server.LivingEntityMixin",
+	"server.NoExperimentalMixin",
+	"server.PointedDripstoneBlockMixin",
+	"server.ServerItemCooldownsMixin",
+	"server.SignTypeAccessor",
+	"worldgen.SinglePoolElementMixin",
+	"worldgen.biome.MinecraftServerMixin",
+	"worldgen.biome.MultiNoiseBiomeSourceMixin"
+  ],
+  "injectors": {
+	"defaultRequire": 1
+  }
 }

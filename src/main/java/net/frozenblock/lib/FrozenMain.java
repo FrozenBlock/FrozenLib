@@ -1,5 +1,6 @@
 package net.frozenblock.lib;
 
+import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -15,13 +16,13 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
-
-import java.util.logging.Logger;
 
 public final class FrozenMain implements ModInitializer {
     public static final String MOD_ID = "frozenblocklib";
-    public static final Logger LOGGER = Logger.getLogger(MOD_ID);
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
 
     @Override
