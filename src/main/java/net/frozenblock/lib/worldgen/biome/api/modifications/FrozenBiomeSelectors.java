@@ -1,4 +1,4 @@
-package net.frozenblock.lib.worldgen.biome;
+package net.frozenblock.lib.worldgen.biome.api.modifications;
 
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
