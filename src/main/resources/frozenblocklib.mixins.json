@@ -6,6 +6,7 @@
   "mixins": [
 	"server.AbstractBlockMixin",
 	"server.BoneMealItemMixin",
+	"server.CreeperMixin",
 	"server.HopperBlockEntityMixin",
 	"server.ItemCooldownsMixin",
 	"server.LegacySinglePoolElementAccessor",
