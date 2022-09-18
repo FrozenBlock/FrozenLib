@@ -47,9 +47,9 @@ public final class FrozenClient implements ClientModInitializer {
             float pitch = byteBuf.readFloat();
             ResourceLocation predicateId = byteBuf.readResourceLocation();
             ctx.execute(() -> {
-                ClientLevel world = Minecraft.getInstance().level;
-                if (world != null) {
-                    Entity entity = world.getEntity(id);
+                ClientLevel level = Minecraft.getInstance().level;
+                if (level != null) {
+                    Entity entity = level.getEntity(id);
                     if (entity != null) {
                         RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new MovingSoundWithRestriction(entity, sound, category, volume, pitch, predicate));
@@ -68,9 +68,9 @@ public final class FrozenClient implements ClientModInitializer {
             float pitch = byteBuf.readFloat();
             ResourceLocation predicateId = byteBuf.readResourceLocation();
             ctx.execute(() -> {
-                ClientLevel world = Minecraft.getInstance().level;
-                if (world != null) {
-                    Entity entity = world.getEntity(id);
+                ClientLevel level = Minecraft.getInstance().level;
+                if (level != null) {
+                    Entity entity = level.getEntity(id);
                     if (entity != null) {
                         RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new MovingSoundLoopWithRestriction(entity, sound, category, volume, pitch, predicate));
@@ -88,9 +88,9 @@ public final class FrozenClient implements ClientModInitializer {
             float volume = byteBuf.readFloat();
             float pitch = byteBuf.readFloat();
             ctx.execute(() -> {
-                ClientLevel world = Minecraft.getInstance().level;
-                if (world != null) {
-                    Entity entity = world.getEntity(id);
+                ClientLevel level = Minecraft.getInstance().level;
+                if (level != null) {
+                    Entity entity = level.getEntity(id);
                     if (entity != null) {
                         FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(pitch, volume, category, sound);
                         FlyBySoundHub.addEntity(entity, flyBySound);
@@ -105,8 +105,8 @@ public final class FrozenClient implements ClientModInitializer {
             Item item = byteBuf.readById(Registry.ITEM);
             int additional = byteBuf.readVarInt();
             ctx.execute(() -> {
-                ClientLevel world = Minecraft.getInstance().level;
-                if (world != null && Minecraft.getInstance().player != null) {
+                ClientLevel level = Minecraft.getInstance().level;
+                if (level != null && Minecraft.getInstance().player != null) {
                     ((CooldownInterface)Minecraft.getInstance().player.getCooldowns()).changeCooldown(item , additional);
                 }
             });
