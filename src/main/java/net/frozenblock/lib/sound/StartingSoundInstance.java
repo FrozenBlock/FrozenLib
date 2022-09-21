@@ -73,7 +73,10 @@ public class StartingSoundInstance extends AbstractTickableSoundInstance {
 
     @Override
     public boolean isStopped() {
-        return this.hasSwitched;
+        if (this.hasSwitched) {
+            return true;
+        }
+        return super.isStopped();
     }
 
     @Override
