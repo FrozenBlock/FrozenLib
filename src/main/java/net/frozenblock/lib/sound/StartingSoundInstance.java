@@ -1,13 +1,11 @@
 package net.frozenblock.lib.sound;
 
-import com.mojang.blaze3d.audio.Library;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.AbstractSoundInstance;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.client.sounds.WeighedSoundEvents;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -20,10 +18,12 @@ public class StartingSoundInstance extends AbstractTickableSoundInstance {
     public final SoundEvent loopingSound;
     public final StartingSound startingSound;
     public boolean hasSwitched = false;
+    public final AbstractSoundInstance nextSound;
 
-    public StartingSoundInstance(Entity entity, StartingSound startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, RegisterMovingSoundRestrictions.LoopPredicate<?> predicate) {
+    public StartingSoundInstance(Entity entity, StartingSound startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, RegisterMovingSoundRestrictions.LoopPredicate<?> predicate, AbstractSoundInstance nextSound) {
         super(startingSound, category, SoundInstance.createUnseededRandom());
         this.startingSound = startingSound;
+        this.nextSound = nextSound;
         this.loopingSound = loopingSound;
         this.entity = entity;
         this.looping = false;
@@ -37,28 +37,10 @@ public class StartingSoundInstance extends AbstractTickableSoundInstance {
         this.predicate = predicate;
     }
 
-    private StartingSoundInstance(Entity entity, SoundEvent loopingSound, SoundSource category, float volume, float pitch, RegisterMovingSoundRestrictions.LoopPredicate<?> predicate) {
-        super(loopingSound, category, SoundInstance.createUnseededRandom());
-        this.startingSound = null;
-        this.loopingSound = loopingSound;
-        this.entity = entity;
-        this.looping = true;
-        this.delay = 0;
-        this.volume = volume;
-        this.pitch = pitch;
-
-        this.x = (float) entity.getX();
-        this.y = (float) entity.getY();
-        this.z = (float) entity.getZ();
-        this.predicate = predicate;
-    }
-
-    public MovingSoundLoopWithRestriction startLoopingInstance() {
-        var loopingInstance = new MovingSoundLoopWithRestriction(this.entity, this.loopingSound, this.source, this.volume, this.pitch, this.predicate);
+    public void startNextSound() {
         this.stop();
         this.hasSwitched = true;
-        Minecraft.getInstance().getSoundManager().play(loopingInstance);
-        return loopingInstance;
+        Minecraft.getInstance().getSoundManager().play(this.nextSound);
     }
 
     @Override
@@ -94,7 +76,7 @@ public class StartingSoundInstance extends AbstractTickableSoundInstance {
                     if (channelHandle != null) {
                         channelHandle.execute(source -> {
                             if (!source.playing()) {
-                                this.startLoopingInstance();
+                                this.startNextSound();
                             }
                         });
                     }
