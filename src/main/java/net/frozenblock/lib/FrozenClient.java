@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.interfaces.CooldownInterface;
+import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.*;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -34,6 +35,7 @@ public final class FrozenClient implements ClientModInitializer {
 
         receiveMovingRestrictionSoundPacket();
         receiveMovingRestrictionLoopingSoundPacket();
+        receiveStartingMovingRestrictionLoopingSoundPacket();
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
     }
@@ -74,6 +76,28 @@ public final class FrozenClient implements ClientModInitializer {
                     if (entity != null) {
                         RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new MovingSoundLoopWithRestriction(entity, sound, category, volume, pitch, predicate));
+                    }
+                }
+            });
+        });
+    }
+
+    private static void receiveStartingMovingRestrictionLoopingSoundPacket() {
+        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+            int id = byteBuf.readVarInt();
+            StartingSound startingSound = byteBuf.readById(FrozenRegistry.STARTING_SOUND);
+            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundSource category = byteBuf.readEnum(SoundSource.class);
+            float volume = byteBuf.readFloat();
+            float pitch = byteBuf.readFloat();
+            ResourceLocation predicateId = byteBuf.readResourceLocation();
+            ctx.execute(() -> {
+                ClientLevel level = Minecraft.getInstance().level;
+                if (level != null) {
+                    Entity entity = level.getEntity(id);
+                    if (entity != null) {
+                        RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
+                        Minecraft.getInstance().getSoundManager().play(new StartingSoundInstance(entity, startingSound, sound, category, volume, pitch, predicate));
                     }
                 }
             });
