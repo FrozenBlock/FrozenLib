@@ -51,6 +51,7 @@ public class StartingSoundInstance extends AbstractTickableSoundInstance {
             this.looping = true;
             this.location = this.loopingSound.getLocation();
             Minecraft.getInstance().getSoundManager().queueTickingSound(this);
+            this.hasSwitched = true;
         } else {
             super.stop();
         }
