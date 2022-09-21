@@ -63,7 +63,7 @@ public class FrozenSoundPackets {
         ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
     }
 
-    public static void createStartingMovingRestrictionLoopingSound(Level world, Entity entity, StartingSound startingSound, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id) {
+    public static void createStartingMovingRestrictionLoopingSound(Level world, Entity entity, SoundEvent startingSound, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id) {
         if (!world.isClientSide) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
             byteBuf.writeVarInt(entity.getId());
@@ -82,7 +82,7 @@ public class FrozenSoundPackets {
         }
     }
 
-    public static void createStartingMovingRestrictionLoopingSound(ServerPlayer player, Entity entity, StartingSound startingSound, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id) {
+    public static void createStartingMovingRestrictionLoopingSound(ServerPlayer player, Entity entity, SoundEvent startingSound, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeVarInt(entity.getId());
         byteBuf.writeId(FrozenRegistry.STARTING_SOUND, startingSound);

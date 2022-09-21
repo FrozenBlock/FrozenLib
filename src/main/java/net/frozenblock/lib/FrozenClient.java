@@ -85,7 +85,7 @@ public final class FrozenClient implements ClientModInitializer {
     private static void receiveStartingMovingRestrictionLoopingSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
-            StartingSound startingSound = byteBuf.readById(FrozenRegistry.STARTING_SOUND);
+            SoundEvent startingSound = byteBuf.readById(FrozenRegistry.STARTING_SOUND);
             SoundEvent loopingSound = byteBuf.readById(Registry.SOUND_EVENT);
             SoundSource category = byteBuf.readEnum(SoundSource.class);
             float volume = byteBuf.readFloat();
