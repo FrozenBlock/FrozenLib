@@ -2,17 +2,16 @@ package net.frozenblock.lib.sound;
 
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.registry.FrozenRegistry;
-import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.item.Instrument;
 
 import java.util.HashMap;
 
 public class StartingSound extends SoundEvent {
 
-    public static HashMap<Holder<Instrument>, StartingSound> startingSounds = new HashMap<>();
+    public static HashMap<ResourceKey<?>, StartingSound> startingSounds = new HashMap<>();
 
     public static final StartingSound EMPTY_SOUND = register("empty_sound");
 
