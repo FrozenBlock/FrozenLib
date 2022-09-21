@@ -84,6 +84,7 @@ transitive-accessible    method    net/minecraft/core/Registry    registerSimple
 transitive-accessible    field    net/minecraft/client/sounds/SoundManager    soundEngine    Lnet/minecraft/client/sounds/SoundEngine;
 transitive-accessible    field    net/minecraft/client/sounds/SoundEngine    soundDeleteTime    Ljava/util/Map;
 transitive-accessible    field    net/minecraft/client/sounds/SoundEngine    tickCount    I
-transitive-extendable    method    net/minecraft/client/resources/sounds/AbstractTickableSoundInstance    stop    ()V
+transitive-accessible    field    net/minecraft/client/sounds/SoundEngine    instanceToChannel    Ljava/util/Map;
 transitive-accessible    field    net/minecraft/client/sounds/SoundEngine    channelAccess    Lnet/minecraft/client/sounds/ChannelAccess;
 transitive-mutable    field    net/minecraft/client/resources/sounds/AbstractSoundInstance    location    Lnet/minecraft/resources/ResourceLocation;
+transitive-extendable    method    net/minecraft/client/resources/sounds/AbstractTickableSoundInstance    stop    ()V

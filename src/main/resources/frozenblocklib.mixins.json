@@ -21,8 +21,5 @@
   ],
   "injectors": {
 	"defaultRequire": 1
-  },
-  "client": [
-	"client.SoundEngineMixin"
-  ]
+  }
 }
