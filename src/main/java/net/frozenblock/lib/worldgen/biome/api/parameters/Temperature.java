@@ -2,7 +2,7 @@ package net.frozenblock.lib.worldgen.biome.api.parameters;
 
 import net.minecraft.world.level.biome.Climate;
 
-public class FrozenTemperature {
+public final class Temperature {
 
     public static final Climate.Parameter[] temperatures = new Climate.Parameter[]{
             Climate.Parameter.span(-1.0F, -0.45F),
