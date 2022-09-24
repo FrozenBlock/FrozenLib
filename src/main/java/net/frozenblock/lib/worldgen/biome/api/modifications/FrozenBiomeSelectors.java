@@ -80,32 +80,6 @@ public final class FrozenBiomeSelectors {
 
     /**
      * Returns a biome selector that will match all biomes that would normally spawn in the Overworld,
-     * assuming Vanilla's default biome source is used, except the specified biome.
-     */
-    public static Predicate<BiomeSelectionContext> foundInOverworldExcept(ResourceKey<Biome> except) {
-        return context -> (context.hasTag(BiomeTags.IS_OVERWORLD) || context.canGenerateIn(LevelStem.OVERWORLD)) && except != context.getBiomeKey();
-    }
-
-    /**
-     * Returns a biome selector that will match all biomes that would normally spawn in the Nether,
-     * assuming Vanilla's default multi noise biome source with the nether preset is used, except the specified biome.
-     *
-     * <p>This selector will also match modded biomes that have been added to the nether using {@link NetherBiomes}.
-     */
-    public static Predicate<BiomeSelectionContext> foundInTheNetherExcept(ResourceKey<Biome> except) {
-        return context -> (context.hasTag(BiomeTags.IS_NETHER) || context.canGenerateIn(LevelStem.NETHER)) && except != context.getBiomeKey();
-    }
-
-    /**
-     * Returns a biome selector that will match all biomes that would normally spawn in the End,
-     * assuming Vanilla's default End biome source is used, except the specified biome.
-     */
-    public static Predicate<BiomeSelectionContext> foundInTheEndExcept(ResourceKey<Biome> except) {
-        return context -> (context.hasTag(BiomeTags.IS_END) || context.canGenerateIn(LevelStem.END)) && except != context.getBiomeKey();
-    }
-
-    /**
-     * Returns a biome selector that will match all biomes that would normally spawn in the Overworld,
      * assuming Vanilla's default biome source is used, except for biomes in the specified tag.
      */
     public static Predicate<BiomeSelectionContext> foundInOverworldExcept(TagKey<Biome> except) {
