@@ -23,15 +23,12 @@ loom {
 configurations {
     includeModImplementation
     includeImplementation
-    includeModApi
 
     include.extendsFrom includeImplementation
     include.extendsFrom includeModImplementation
-    include.extendsFrom includeModApi
 
     implementation.extendsFrom includeImplementation
     modImplementation.extendsFrom includeModImplementation
-    modApi.extendsFrom includeModApi
 }
 
 sourceSets {
@@ -125,7 +122,8 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${fabric_version}"
 
     // Fabric-ASM
-    includeModImplementation "com.github.Chocohead:Fabric-ASM:${fabric_asm_version}"
+    modImplementation "com.github.Chocohead:Fabric-ASM:${fabric_asm_version}"
+    include "com.github.Chocohead:Fabric-ASM:${fabric_asm_version}"
 
     // Mod Menu
     modImplementation "com.terraformersmc:modmenu:${modmenu_version}"

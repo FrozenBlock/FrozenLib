@@ -11,9 +11,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+/**
+ *
+ */
 @Mixin(BlockBehaviour.class)
 public class AbstractBlockMixin {
 
+    /**
+     *
+     */
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo info) {
         if (BlockScheduledTicks.ticks.containsKey(state.getBlock())) {
