@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DripstoneDripWaterFrom {
-/*
+
     public static Map<Block, InjectedOnDrip> map = new HashMap<>();
 
     @FunctionalInterface
@@ -17,5 +17,4 @@ public class DripstoneDripWaterFrom {
         void drip(ServerLevel world, PointedDripstoneBlock.FluidInfo fluidInfo, BlockPos pos);
     }
 
- */
 }
