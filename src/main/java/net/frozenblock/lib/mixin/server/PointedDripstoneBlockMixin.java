@@ -39,36 +39,25 @@ public class PointedDripstoneBlockMixin {
     @Final @Shadow
     private static VoxelShape REQUIRED_SPACE_TO_DRIP_THROUGH_NON_SOLID_BLOCK;
 
-    private static BlockPos savedBlockPos;
-
-    @Inject(method = "m_ulptarvl(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo;", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    @SuppressWarnings("UnresolvedMixinReference")
+    @Inject(method = "m_ulptarvl(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo;", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"), remap = false, locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
     private static void getFluidAboveStalactite(Level level, BlockPos pos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> cir, BlockPos blockPos, BlockState blockState) {
-        if (DripstoneDripWaterFrom.map.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm() && savedBlockPos != null) {
-            cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(savedBlockPos, Fluids.WATER, blockState));
-            savedBlockPos = null;
-        }
-        if (DripstoneDripLavaFrom.map.containsKey(blockState.getBlock()) && savedBlockPos != null) {
-            cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(savedBlockPos, Fluids.LAVA, blockState));
-            savedBlockPos = null;
+        if (blockPos != null) {
+            if (DripstoneDripWaterFrom.map.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
+                cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState));
+            } else if (DripstoneDripLavaFrom.map.containsKey(blockState.getBlock())) {
+                cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState));
+            }
         }
     }
 
-    @Inject(method = "m_ulptarvl(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo;", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/core/BlockPos;above()Lnet/minecraft/core/BlockPos;"), locals = LocalCapture.CAPTURE_FAILHARD)
-    private static void getFluidAboveStalactite1(Level level, BlockPos pos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> cir, BlockPos blockPos) {
-        savedBlockPos = blockPos;
-    }
-
-
-    @Inject(method = "maybeTransferFluid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+    @Inject(method = "maybeTransferFluid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
     private static void maybeTransferFluid(BlockState state, ServerLevel level, BlockPos pos, float randChance, CallbackInfo ci, Optional<PointedDripstoneBlock.FluidInfo> optional, Fluid fluid, float f, BlockPos blockPos) {
         if (optional.isPresent()) {
             PointedDripstoneBlock.FluidInfo fluidInfo = optional.get();
             Block block = optional.get().sourceState().getBlock();
-            if (DripstoneDripWaterFrom.map.containsKey(block) && fluid == Fluids.WATER) {
+            if ((DripstoneDripWaterFrom.map.containsKey(block) && fluid == Fluids.WATER) || (DripstoneDripLavaFrom.map.containsKey(block) && fluid == Fluids.LAVA)) {
                 DripstoneDripWaterFrom.map.get(block).drip(level, fluidInfo, blockPos);
-                ci.cancel();
-            } else if (DripstoneDripLavaFrom.map.containsKey(block) && fluid == Fluids.LAVA) {
-                DripstoneDripLavaFrom.map.get(block).drip(level, fluidInfo, blockPos);
                 ci.cancel();
             }
         }
