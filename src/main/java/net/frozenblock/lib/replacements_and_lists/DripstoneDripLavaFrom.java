@@ -9,12 +9,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class DripstoneDripLavaFrom {
-
+/*
     public static Map<Block, InjectedOnDrip> map = new HashMap<>();
 
     @FunctionalInterface
     public interface InjectedOnDrip {
         void drip(ServerLevel world, PointedDripstoneBlock.FluidInfo fluidInfo, BlockPos pos);
     }
+
+ */
 
 }
