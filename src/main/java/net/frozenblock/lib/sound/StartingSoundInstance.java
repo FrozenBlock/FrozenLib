@@ -14,13 +14,13 @@ import net.minecraft.world.entity.Entity;
 public class StartingSoundInstance extends AbstractTickableSoundInstance {
 
     public final Entity entity;
-    public final RegisterMovingSoundRestrictions.LoopPredicate<?> predicate;
+    public final FrozenSoundPredicates.LoopPredicate<?> predicate;
     public final SoundEvent loopingSound;
     public final SoundEvent startingSound;
     public boolean hasSwitched = false;
     public final AbstractSoundInstance nextSound;
 
-    public StartingSoundInstance(Entity entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, RegisterMovingSoundRestrictions.LoopPredicate<?> predicate, AbstractSoundInstance nextSound) {
+    public StartingSoundInstance(Entity entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, FrozenSoundPredicates.LoopPredicate<?> predicate, AbstractSoundInstance nextSound) {
         super(startingSound, category, SoundInstance.createUnseededRandom());
         this.startingSound = startingSound;
         this.nextSound = nextSound;

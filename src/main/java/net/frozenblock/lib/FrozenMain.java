@@ -1,6 +1,5 @@
 package net.frozenblock.lib;
 
-import com.mojang.logging.LogUtils;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -8,7 +7,7 @@ import net.frozenblock.lib.interfaces.EntityLoopingSoundInterface;
 import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
 import net.frozenblock.lib.sound.FrozenSoundPackets;
 import net.frozenblock.lib.sound.MovingLoopingSoundEntityManager;
-import net.frozenblock.lib.sound.RegisterMovingSoundRestrictions;
+import net.frozenblock.lib.sound.FrozenSoundPredicates;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -27,7 +26,7 @@ public final class FrozenMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        RegisterMovingSoundRestrictions.init();
+        FrozenSoundPredicates.init();
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockScheduledTicks.ticks.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos, Blocks.BEDROCK.defaultBlockState(), 3));
             //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));

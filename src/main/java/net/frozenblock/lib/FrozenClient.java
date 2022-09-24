@@ -53,7 +53,7 @@ public final class FrozenClient implements ClientModInitializer {
                 if (level != null) {
                     Entity entity = level.getEntity(id);
                     if (entity != null) {
-                        RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
+                        FrozenSoundPredicates.LoopPredicate<?> predicate = FrozenSoundPredicates.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new MovingSoundWithRestriction(entity, sound, category, volume, pitch, predicate));
                     }
                 }
@@ -74,7 +74,7 @@ public final class FrozenClient implements ClientModInitializer {
                 if (level != null) {
                     Entity entity = level.getEntity(id);
                     if (entity != null) {
-                        RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
+                        FrozenSoundPredicates.LoopPredicate<?> predicate = FrozenSoundPredicates.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new MovingSoundLoopWithRestriction(entity, sound, category, volume, pitch, predicate));
                     }
                 }
@@ -96,7 +96,7 @@ public final class FrozenClient implements ClientModInitializer {
                 if (level != null) {
                     Entity entity = level.getEntity(id);
                     if (entity != null) {
-                        RegisterMovingSoundRestrictions.LoopPredicate<?> predicate = RegisterMovingSoundRestrictions.getPredicate(predicateId);
+                        FrozenSoundPredicates.LoopPredicate<?> predicate = FrozenSoundPredicates.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new StartingSoundInstance(entity, startingSound, loopingSound, category, volume, pitch, predicate, new MovingSoundLoopWithRestriction(entity, loopingSound, category, volume, pitch, predicate)));
                     }
                 }

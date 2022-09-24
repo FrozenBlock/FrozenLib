@@ -65,7 +65,7 @@ public class MovingLoopingSoundEntityManager {
             this.ticksToCheck = 20;
             ArrayList<SoundLoopNBT> soundsToRemove = new ArrayList<>();
             for (SoundLoopNBT nbt : this.getSounds()) {
-                if (!RegisterMovingSoundRestrictions.getPredicate(nbt.restrictionID).test(this.entity)) {
+                if (!FrozenSoundPredicates.getPredicate(nbt.restrictionID).test(this.entity)) {
                     soundsToRemove.add(nbt);
                 }
             }
