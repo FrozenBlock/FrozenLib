@@ -3,6 +3,7 @@ package net.frozenblock.lib;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
 import net.frozenblock.lib.interfaces.EntityLoopingSoundInterface;
 import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
 import net.frozenblock.lib.sound.FrozenSoundPackets;
@@ -36,6 +37,18 @@ public final class FrozenMain implements ModInitializer {
         }
 
         receiveSoundSyncPacket();
+
+        FabricLoader.getInstance().getEntrypointContainers("frozenlib_main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
+            try {
+                FrozenMainEntrypoint mainPoint = entrypoint.getEntrypoint();
+                mainPoint.init();
+                if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                    mainPoint.initDevOnly();
+                }
+            } catch (Throwable ignored) {
+
+            }
+        });
     }
 
     //IDENTIFIERS

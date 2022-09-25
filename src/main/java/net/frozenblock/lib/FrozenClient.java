@@ -4,6 +4,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
 import net.frozenblock.lib.interfaces.CooldownInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.*;
@@ -38,6 +39,18 @@ public final class FrozenClient implements ClientModInitializer {
         receiveStartingMovingRestrictionLoopingSoundPacket();
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
+
+        FabricLoader.getInstance().getEntrypointContainers("frozenlib_client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
+            try {
+                FrozenClientEntrypoint clientPoint = entrypoint.getEntrypoint();
+                clientPoint.init();
+                if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+                    clientPoint.initDevOnly();
+                }
+            } catch (Throwable ignored) {
+
+            }
+        });
     }
 
     private static void receiveMovingRestrictionSoundPacket() {
