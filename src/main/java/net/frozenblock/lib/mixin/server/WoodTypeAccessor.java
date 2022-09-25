@@ -5,7 +5,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(WoodType.class)
-public interface SignTypeAccessor {
+public interface WoodTypeAccessor {
     @Invoker("<init>")
     static WoodType newSignType(String name) {
         throw new AssertionError();

@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(BlockBehaviour.class)
-public final class BlockBehaviourMixin {
+public class BlockBehaviourMixin {
 
     @Inject(method = "tick", at = @At("HEAD"))
     public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo info) {

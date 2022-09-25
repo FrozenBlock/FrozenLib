@@ -14,7 +14,7 @@
 	"server.NoExperimentalMixin",
 	"server.PointedDripstoneBlockMixin",
 	"server.ServerItemCooldownsMixin",
-	"server.SignTypeAccessor",
+	"server.WoodTypeAccessor",
 	"worldgen.SinglePoolElementMixin",
 	"worldgen.biome.MinecraftServerMixin",
 	"worldgen.biome.MultiNoiseBiomeSourceMixin"
