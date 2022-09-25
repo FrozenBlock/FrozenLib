@@ -1,5 +1,6 @@
 package net.frozenblock.lib.mixin.server;
 
+import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.replacements_and_lists.DripstoneDripLavaFrom;
 import net.frozenblock.lib.replacements_and_lists.DripstoneDripWaterFrom;
 import net.frozenblock.lib.tags.FrozenBlockTags;
@@ -42,12 +43,43 @@ public class PointedDripstoneBlockMixin {
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "m_ulptarvl(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo;", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
     private static void getFluidAboveStalactite(Level level, BlockPos pos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> cir, BlockPos blockPos, BlockState blockState) {
-        if (blockPos != null) {
+        if (!FrozenBools.useNewDripstoneLiquid && blockPos != null) {
             if (DripstoneDripWaterFrom.map.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
                 cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState));
             } else if (DripstoneDripLavaFrom.map.containsKey(blockState.getBlock())) {
                 cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState));
             }
+        }
+    }
+
+    @Inject(at = @At("HEAD"), method = "getFluidAboveStalactite", cancellable = true)
+    private static void getFluidAboveStalactite(Level level, BlockPos pos, BlockState state, CallbackInfoReturnable<Optional<PointedDripstoneBlock.FluidInfo>> info) {
+        if (FrozenBools.useNewDripstoneLiquid) {
+            info.cancel();
+            info.setReturnValue(
+
+            !isStalactite(state) ? Optional.empty() : findRootBlock(level, pos, state, 11).map((posx) -> {
+
+                BlockState firstState = level.getBlockState(posx);
+                if (DripstoneDripWaterFrom.map.containsKey(firstState.getBlock()) && !level.dimensionType().ultraWarm()) {
+                    return new PointedDripstoneBlock.FluidInfo(posx, Fluids.WATER, firstState);
+                } else if (DripstoneDripLavaFrom.map.containsKey(firstState.getBlock())) {
+                    return new PointedDripstoneBlock.FluidInfo(posx, Fluids.LAVA, firstState);
+                }
+                BlockPos blockPos = posx.above();
+                BlockState blockState = level.getBlockState(blockPos);
+                Fluid fluid;
+                if (DripstoneDripWaterFrom.map.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
+                    return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState);
+                } else if (DripstoneDripLavaFrom.map.containsKey(blockState.getBlock())) {
+                    return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState);
+                } else {
+                    fluid = level.getFluidState(blockPos).getType();
+                }
+
+                return new PointedDripstoneBlock.FluidInfo(blockPos, fluid, blockState);
+            })
+            );
         }
     }
 
