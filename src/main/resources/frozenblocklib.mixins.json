@@ -4,7 +4,7 @@
   "package": "net.frozenblock.lib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-	"server.AbstractBlockMixin",
+	"server.BlockBehaviourMixin",
 	"server.BoneMealItemMixin",
 	"server.CreeperMixin",
 	"server.HopperBlockEntityMixin",
