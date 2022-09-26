@@ -1,9 +1,16 @@
 package net.frozenblock.lib.worldgen.surface;
 
+import net.minecraft.core.Holder;
+import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public final class FrozenSurfaceRules {
@@ -46,6 +53,17 @@ public final class FrozenSurfaceRules {
 
     public static SurfaceRules.SequenceRuleSource sequence(List<SurfaceRules.RuleSource> list) {
         return new SurfaceRules.SequenceRuleSource(list);
+    }
+
+    @SafeVarargs
+    public static SurfaceRules.ConditionSource isBiome(TagKey<Biome>... tags) {
+        ArrayList<ResourceKey<Biome>> list = new ArrayList<>();
+        for (TagKey<Biome> tag : tags) {
+            for (Holder<Biome> biome : BuiltinRegistries.BIOME.getTagOrEmpty(tag)) {
+                list.add(biome.unwrapKey().orElseThrow());
+            }
+        }
+        return SurfaceRules.isBiome(list);
     }
 
     public static SurfaceRules.RuleSource makeStateRule(Block block) {

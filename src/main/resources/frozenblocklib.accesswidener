@@ -73,6 +73,7 @@ transitive-mutable    field    net/minecraft/world/level/biome/BiomeSource    po
 
 # Surface Rules
 transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource    <init>    (Ljava/util/List;)V
+transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRules    isBiome    (Ljava/util/List;)Lnet/minecraft/world/level/levelgen/SurfaceRules$BiomeConditionSource;
 
 # Registry
 transitive-accessible    class    net/minecraft/core/Registry$RegistryBootstrap
