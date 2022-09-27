@@ -17,12 +17,12 @@
 
 package org.quiltmc.qsl.frozenblock.datafixerupper.api;
 
-import java.util.Map;
-import java.util.function.Supplier;
-
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.templates.TypeTemplate;
 import org.jetbrains.annotations.Range;
+
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * Represents a {@link Schema} that has no parent.

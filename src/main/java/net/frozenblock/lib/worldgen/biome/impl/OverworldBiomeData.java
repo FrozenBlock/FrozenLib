@@ -2,7 +2,6 @@ package net.frozenblock.lib.worldgen.biome.impl;
 
 import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.fabric.impl.biome.BiomeSourceAccess;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.biome.api.FrozenBiomeSourceAccess;
 import net.minecraft.core.Holder;
@@ -17,10 +16,8 @@ import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
 import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
-import java.lang.reflect.Array;
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @ApiStatus.Internal
 public final class OverworldBiomeData {

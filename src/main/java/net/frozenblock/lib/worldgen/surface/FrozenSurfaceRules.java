@@ -10,7 +10,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public final class FrozenSurfaceRules {

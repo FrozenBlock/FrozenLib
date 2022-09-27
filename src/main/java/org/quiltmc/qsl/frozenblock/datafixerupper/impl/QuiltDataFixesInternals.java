@@ -21,13 +21,12 @@ import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.logging.LogUtils;
-import org.jetbrains.annotations.*;
-import org.slf4j.Logger;
-
 import net.minecraft.SharedConstants;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.util.datafix.DataFixers;
-import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.*;
+import org.slf4j.Logger;
 
 /**
  * Modified to work on Fabric
