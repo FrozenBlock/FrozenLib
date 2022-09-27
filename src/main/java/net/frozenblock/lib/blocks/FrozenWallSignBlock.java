@@ -7,19 +7,17 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import java.util.Objects;
 
 public class FrozenWallSignBlock extends WallSignBlock {
-    public final String modId;
+    public final ResourceLocation lootTable;
 
-    public FrozenWallSignBlock(Properties settings, WoodType signType, String modId) {
+    public FrozenWallSignBlock(Properties settings, WoodType signType, ResourceLocation lootTable) {
         super(settings, signType);
-        this.modId = modId;
+        this.lootTable = lootTable;
     }
 
     @Override
     public ResourceLocation getLootTable() {
-        ResourceLocation correctedLootTableId = new ResourceLocation(this.modId, "blocks/" + this.type().name() + "_sign");
-
-        if (!Objects.equals(this.drops, correctedLootTableId)) {
-            this.drops = correctedLootTableId;
+        if (!Objects.equals(this.drops, this.lootTable)) {
+            this.drops = this.lootTable;
         }
 
         return this.drops;
