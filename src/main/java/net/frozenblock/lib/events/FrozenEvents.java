@@ -33,23 +33,18 @@ public class FrozenEvents {
     }
 
     public static <T> void register(Event<T> event, Class<? super T> type) {
-        FrozenMain.LOGGER.info("the events are creating");
         if (!REGISTERED_EVENTS.contains(event)) {
             REGISTERED_EVENTS.add(event);
             for (var eventType : EventType.VALUES) {
-                FrozenMain.LOGGER.info("the enum is recognized");
                 if (eventType.listener().isAssignableFrom(type)) {
                     List<?> entrypoints = FabricLoader.getInstance().getEntrypoints(eventType.entrypoint(), eventType.listener());
 
-                    FrozenMain.LOGGER.info("getting there");
                     for (Object entrypoint : entrypoints) {
                         var map = new Object2ObjectOpenHashMap<Class<?>, ResourceLocation>();
 
-                        FrozenMain.LOGGER.info("GETTING CLOSER");
                         if (type.isAssignableFrom(entrypoint.getClass())) {
                             var phase = map.getOrDefault(type, Event.DEFAULT_PHASE);
                             event.register(phase, (T) entrypoint);
-                            FrozenMain.LOGGER.info("listener registered");
                         }
                     }
 
@@ -57,33 +52,5 @@ public class FrozenEvents {
                 }
             }
         }
-    }
-
-    public static <T> Event<T> createCommonEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
-        var event = EventFactory.createArrayBacked(type, invokerFactory);
-
-        FrozenMain.LOGGER.info("the events are creating");
-        for (var eventType : EventType.VALUES) {
-            FrozenMain.LOGGER.info("the enum is recognized");
-            if (eventType.listener().isAssignableFrom(type)) {
-                List<?> entrypoints = FabricLoader.getInstance().getEntrypoints(eventType.entrypoint(), eventType.listener());
-
-                FrozenMain.LOGGER.info("getting there");
-                for (Object entrypoint : entrypoints) {
-                    var map = new Object2ObjectOpenHashMap<Class<?>, ResourceLocation>();
-
-                    FrozenMain.LOGGER.info("GETTING CLOSER");
-                    if (type.isAssignableFrom(entrypoint.getClass())) {
-                        var phase = map.getOrDefault(type, Event.DEFAULT_PHASE);
-                        event.register(phase, (T)entrypoint);
-                        FrozenMain.LOGGER.info("listener registered");
-                    }
-                }
-
-                break;
-            }
-        }
-
-        return event;
     }
 }
