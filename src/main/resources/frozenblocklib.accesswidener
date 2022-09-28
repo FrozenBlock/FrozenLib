@@ -9,6 +9,7 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/feature/tr
 
 # Items
 transitive-accessible    method    net/minecraft/world/item/RecordItem    <init>    (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;I)V
+transitive-extendable    method    net/minecraft/world/item/InstrumentItem    getInstrument    (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
 transitive-extendable    method    net/minecraft/world/level/block/state/BlockBehaviour    getLootTable    ()Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    cooldowns    Ljava/util/Map;
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns$CooldownInstance    startTime    I
@@ -28,6 +29,11 @@ transitive-accessible    field    net/minecraft/world/entity/LivingEntity    dea
 # Entity Spawns
 transitive-accessible    class    net/minecraft/world/entity/SpawnPlacements$Data
 
+# Mobs
+transitive-accessible    method    net/minecraft/world/effect/MobEffect    <init>    (Lnet/minecraft/world/effect/MobEffectCategory;I)V
+transitive-accessible    field    net/minecraft/world/entity/Mob    goalSelector    Lnet/minecraft/world/entity/ai/goal/GoalSelector;
+transitive-accessible    field    net/minecraft/world/entity/Mob    targetSelector    Lnet/minecraft/world/entity/ai/goal/GoalSelector;
+
 # Blocks
 transitive-accessible    method    net/minecraft/world/level/block/Block    registerDefaultState    (Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible    field    net/minecraft/world/CompoundContainer    container1    Lnet/minecraft/world/Container;
@@ -35,6 +41,8 @@ transitive-accessible    field    net/minecraft/world/CompoundContainer    conta
 transitive-accessible    method    net/minecraft/world/level/block/AbstractCauldronBlock    canReceiveStalactiteDrip    (Lnet/minecraft/world/level/material/Fluid;)Z
 transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible    method    net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo    <init>    (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
+transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    <init>    (Ljava/lang/String;)V
+transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    register    (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
 
 # Block Entities
 
@@ -47,17 +55,16 @@ transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard
 transitive-accessible    method    net/minecraft/client/renderer/RenderType$CompositeRenderType    <init>    (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)V
 transitive-accessible    method    net/minecraft/client/renderer/RenderStateShard$TextureStateShard    <init>    (Lnet/minecraft/resources/ResourceLocation;ZZ)V
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    TRANSLUCENT_TRANSPARENCY    Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
-
-transitive-accessible    class    net/minecraft/world/level/chunk/ChunkStatus$SimpleGenerationTask
-transitive-accessible    method    net/minecraft/data/worldgen/biome/OverworldBiomes    calculateSkyColor    (F)I
-transitive-extendable    method    net/minecraft/world/item/InstrumentItem    getInstrument    (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
-transitive-accessible    method    net/minecraft/world/effect/MobEffect    <init>    (Lnet/minecraft/world/effect/MobEffectCategory;I)V
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    RENDERTYPE_TRANSLUCENT_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible    method    net/minecraft/client/renderer/RenderStateShard$ShaderStateShard    <init>    (Ljava/util/function/Supplier;)V
+
+# Biomes
+transitive-accessible    class    net/minecraft/world/level/chunk/ChunkStatus$SimpleGenerationTask
+transitive-accessible    method    net/minecraft/data/worldgen/biome/OverworldBiomes    calculateSkyColor    (F)I
 transitive-accessible    method    net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider    <init>    (Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible    class    net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask$CompileResults
-transitive-accessible    field    net/minecraft/world/entity/Mob    goalSelector    Lnet/minecraft/world/entity/ai/goal/GoalSelector;
-transitive-accessible    field    net/minecraft/world/entity/Mob    targetSelector    Lnet/minecraft/world/entity/ai/goal/GoalSelector;
+
+# Noise
 transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;ID[D)Lnet/minecraft/core/Holder;
 
 # Used to set overworld biomes
@@ -74,6 +81,12 @@ transitive-mutable    field    net/minecraft/world/level/biome/BiomeSource    po
 # Surface Rules
 transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource    <init>    (Ljava/util/List;)V
 transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRules    isBiome    (Ljava/util/List;)Lnet/minecraft/world/level/levelgen/SurfaceRules$BiomeConditionSource;
+
+# QuiltMC Surface Rules
+transitive-accessible    class    net/minecraft/world/level/levelgen/SurfaceRules$Context
+transitive-accessible    class    net/minecraft/world/level/levelgen/SurfaceRules$SurfaceRule
+transitive-accessible    class    net/minecraft/world/level/levelgen/SurfaceRules$SequenceRule
+transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRules$SequenceRule    <init>    (Ljava/util/List;)V
 
 # Registry
 transitive-accessible    class    net/minecraft/core/Registry$RegistryBootstrap

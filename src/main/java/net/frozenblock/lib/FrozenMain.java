@@ -1,8 +1,12 @@
 package net.frozenblock.lib;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.entrypoints.CommonEventEntrypoint;
+import net.frozenblock.lib.events.FrozenEvents;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
 import net.frozenblock.lib.interfaces.EntityLoopingSoundInterface;
 import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
@@ -16,9 +20,12 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
+
+import java.util.List;
 
 public final class FrozenMain implements ModInitializer {
     public static final String MOD_ID = "frozenblocklib";
@@ -38,7 +45,7 @@ public final class FrozenMain implements ModInitializer {
 
         receiveSoundSyncPacket();
 
-        FabricLoader.getInstance().getEntrypointContainers("frozenlib_main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
+        FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
             try {
                 FrozenMainEntrypoint mainPoint = entrypoint.getEntrypoint();
                 mainPoint.init();

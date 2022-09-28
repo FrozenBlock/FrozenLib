@@ -1,17 +1,14 @@
 package net.frozenblock.lib.registry;
 
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.sound.StartingSounds;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.sounds.SoundEvent;
 
 public class FrozenRegistry {
 
-    public static final ResourceKey<Registry<SoundEvent>> STARTING_SOUND_REGISTRY = createRegistryKey("starting_sound");
-    public static final Registry<SoundEvent> STARTING_SOUND = Registry.registerSimple(STARTING_SOUND_REGISTRY, registry -> StartingSounds.EMPTY_SOUND);
-
-    private static <T> ResourceKey<Registry<T>> createRegistryKey(String registryName) {
-        return ResourceKey.createRegistryKey(FrozenMain.id(registryName));
-    }
+    public static final MappedRegistry<SoundEvent> STARTING_SOUND = FabricRegistryBuilder.createSimple(SoundEvent.class, FrozenMain.id("starting_sound"))
+            .attribute(RegistryAttribute.SYNCED)
+            .buildAndRegister();
 }

@@ -16,19 +16,21 @@
   "entrypoints": {
 	"main": [
 	  "net.frozenblock.lib.FrozenMain",
-      "org.quiltmc.qsl.frozenblock.datafixerupper.impl.ServerFreezer"
+      "org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer",
+	  "org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer"
 	],
 	"client": [
 	  "net.frozenblock.lib.FrozenClient",
-      "org.quiltmc.qsl.frozenblock.datafixerupper.impl.client.ClientFreezer"
+      "org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer"
 	],
 	"preLaunch": [
 	  "net.frozenblock.lib.FrozenPreLaunch"
 	]
   },
   "mixins": [
-	"frozenblocklib.mixins.json",
-	"quiltmc_datafixerupper.mixins.json"
+	"mixin/frozenblocklib.mixins.json",
+	"mixin/quiltmc_datafixerupper.mixins.json",
+	"mixin/quiltmc_surface_rule.mixins.json"
   ],
   "accessWidener": "frozenblocklib.accesswidener",
   "depends": {

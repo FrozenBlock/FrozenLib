@@ -40,7 +40,7 @@ public final class FrozenClient implements ClientModInitializer {
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
 
-        FabricLoader.getInstance().getEntrypointContainers("frozenlib_client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
+        FabricLoader.getInstance().getEntrypointContainers("frozenlib:client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
             try {
                 FrozenClientEntrypoint clientPoint = entrypoint.getEntrypoint();
                 clientPoint.init();

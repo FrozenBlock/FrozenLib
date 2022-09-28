@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+	"server.BlockBehaviourMixin",
+	"server.BoneMealItemMixin",
+	"server.CreeperMixin",
+	"server.HopperBlockEntityMixin",
+	"server.ItemCooldownsMixin",
+	"server.LegacySinglePoolElementAccessor",
+	"server.LivingEntityMixin",
+	"server.NoExperimentalMixin",
+	"server.PointedDripstoneBlockMixin",
+	"server.ServerItemCooldownsMixin",
+	"worldgen.SinglePoolElementMixin",
+	"worldgen.biome.MinecraftServerMixin",
+	"worldgen.biome.MultiNoiseBiomeSourceMixin"
+  ],
+  "injectors": {
+	"defaultRequire": 1
+  }
+}
