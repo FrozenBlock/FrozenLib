@@ -40,7 +40,7 @@ public final class ResourceLoaderEvents {
     /**
      * An event indicating the start of the reloading of data packs on a Minecraft server.
      * <p>
-    // * This event should not be used to load resources.*//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
+     * This event should not be used to load resources.*//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
      */
     public static final Event<StartDataPackReload> START_DATA_PACK_RELOAD = FrozenEvents.createEnvironmentEvent(StartDataPackReload.class,
             callbacks -> (server, resourceManager) -> {
@@ -52,7 +52,7 @@ public final class ResourceLoaderEvents {
     /**
      * An event indicating the end of the reloading of data packs on a Minecraft server.
      * <p>
-    // * This event should not be used to load resources.*//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
+     * This event should not be used to load resources.*//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
      */
     public static final Event<EndDataPackReload> END_DATA_PACK_RELOAD = FrozenEvents.createEnvironmentEvent(EndDataPackReload.class,
             callbacks -> (server, resourceManager, error) -> {

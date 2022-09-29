@@ -66,8 +66,8 @@ public class ReloadableSequenceMaterialRule implements SurfaceRules.RuleSource {
         } else {
             ImmutableList.Builder<SurfaceRules.SurfaceRule> builder = ImmutableList.builder();
 
-            for (var ruleSource : this.sequence) {
-                builder.add(ruleSource.apply(context));
+            for (var materialRule : this.sequence) {
+                builder.add(materialRule.apply(context));
             }
 
             return new SurfaceRules.SequenceRule(builder.build());

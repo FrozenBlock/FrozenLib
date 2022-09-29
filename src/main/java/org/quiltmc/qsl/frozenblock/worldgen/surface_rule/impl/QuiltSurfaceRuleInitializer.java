@@ -41,8 +41,7 @@ import java.util.Map;
 public class QuiltSurfaceRuleInitializer implements ModInitializer {
     @Override
     public void onInitialize() {
-        var mod = FabricLoader.getInstance().getModContainer(FrozenMain.MOD_ID).orElseThrow();
-        Registry.register(Registry.RULE, new ResourceLocation(mod.getMetadata().getId(), "reloadable_sequence"),
+        Registry.register(Registry.RULE, FrozenMain.id("reloadable_sequence"),
                 ReloadableSequenceMaterialRule.RULE_CODEC.codec()
         );
     }

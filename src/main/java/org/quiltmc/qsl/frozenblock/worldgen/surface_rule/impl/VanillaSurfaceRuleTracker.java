@@ -32,6 +32,9 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
 
+/**
+ * Modified to work on Fabric
+ */
 @ApiStatus.Internal
 public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
     private static final ResourceLocation SURFACE_RULES_APPLY_PHASE = new ResourceLocation("frozenblock_quilt_surface_rule", "apply");
@@ -52,7 +55,6 @@ public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
     private VanillaSurfaceRuleTracker(Consumer<T> eventInvoker) {
         this.eventInvoker = eventInvoker;
 
-        // TODO: use the datapack reload event
         ResourceLoaderEvents.END_DATA_PACK_RELOAD.register(SURFACE_RULES_APPLY_PHASE, (server, resourceManager, error) -> {
             if (error == null && server == null) {
                 this.init(resourceManager);

@@ -94,44 +94,4 @@ public class MainMixin {
         ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, exception);
         return exception; // noop
     }
-
-    /*@Inject(
-            method = {"m_cbzunkqe", "method_43613"},
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/storage/PrimaryLevelData;<init>(Lnet/minecraft/world/level/LevelSettings;Lnet/minecraft/world/level/levelgen/WorldGenSettings;Lcom/mojang/serialization/Lifecycle;)V",
-                    remap = true
-            ),
-            remap = false,
-            require = 1,
-            cancellable = true,
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private static void onLoadDataPacks(LevelStorageSource.LevelStorageAccess session, OptionSet optionSet, OptionSpec optionSpec,
-                                        DedicatedServerSettings serverPropertiesLoader, OptionSpec optionSpec2,
-                                        ResourceManager resourceManager, DataPackConfig dataPackSettings,
-                                        CallbackInfoReturnable<Pair<WorldData, RegistryAccess.Frozen>> cir,
-                                        RegistryAccess.Writable writable,
-                                        DynamicOps<Tag> nbtRegistryOps,
-                                        WorldData saveProperties,
-                                        LevelSettings levelInfo,
-                                        WorldGenSettings existingGeneratorOptions) {
-        var dataPackLoadingContext = new DataPackLoadingContext(writable, resourceManager);
-        DataResult<WorldGenSettings> result = dataPackLoadingContext.loadGeneratorOptions(existingGeneratorOptions, dataPackLoadingContext.loadRegistries());
-
-        RegistryAccess.Frozen frozenRegistryManager = dataPackLoadingContext.registryManager().freeze();
-        Lifecycle lifecycle = result.lifecycle().add(frozenRegistryManager.allElementsLifecycle());
-        WorldGenSettings generatorOptions = result.getOrThrow(
-                false, Util.prefix("Error parsing worldgen settings after loading data-packs: ", LOGGER::error)
-        );
-
-        if (frozenRegistryManager.registryOrThrow(Registry.WORLD_PRESET_REGISTRY).size() == 0) {
-            throw new IllegalStateException("Needs at least one world preset to continue");
-        } else if (frozenRegistryManager.registryOrThrow(Registry.BIOME_REGISTRY).size() == 0) {
-            throw new IllegalStateException("Needs at least one biome to continue");
-        } else {
-            var levelProperties = new PrimaryLevelData(levelInfo, generatorOptions, lifecycle);
-            cir.setReturnValue(Pair.of(levelProperties, frozenRegistryManager));
-        }
-    }*/
 }
