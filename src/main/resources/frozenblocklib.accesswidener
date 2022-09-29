@@ -8,7 +8,6 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/feature/tr
 transitive-accessible    method    net/minecraft/world/level/levelgen/feature/trunkplacers/TrunkPlacerType    <init>    (Lcom/mojang/serialization/Codec;)V
 
 # Items
-transitive-accessible    method    net/minecraft/world/item/RecordItem    <init>    (ILnet/minecraft/sounds/SoundEvent;Lnet/minecraft/world/item/Item$Properties;I)V
 transitive-extendable    method    net/minecraft/world/item/InstrumentItem    getInstrument    (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
 transitive-extendable    method    net/minecraft/world/level/block/state/BlockBehaviour    getLootTable    ()Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    cooldowns    Ljava/util/Map;
