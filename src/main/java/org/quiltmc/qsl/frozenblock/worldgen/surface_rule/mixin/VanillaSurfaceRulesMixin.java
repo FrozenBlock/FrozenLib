@@ -44,6 +44,7 @@ public abstract class VanillaSurfaceRulesMixin {
     private static void frozenblock_quilt$injectOverworldRules(boolean abovePreliminarySurface, boolean bedrockRoof, boolean bedrockFloor,
                                                    CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
         //if (!VanillaSurfaceRuleTracker.OVERWORLD.isPaused()) {
+        //TODO only apply surface rules if not paused
             cir.setReturnValue(VanillaSurfaceRuleTracker.OVERWORLD.modifyMaterialRules(new SurfaceRuleContextImpl.OverworldImpl(
                     abovePreliminarySurface, bedrockRoof, bedrockFloor, cir.getReturnValue()
             )));
