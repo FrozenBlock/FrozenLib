@@ -22,7 +22,7 @@ import java.util.List;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-//import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
 /**
@@ -39,7 +39,7 @@ public interface SurfaceRuleContext {
      * The list is mutable.
      */
     @Contract(pure = true)
-    @NotNull List<SurfaceRules.RuleSource> ruleSources();
+    @NotNull List<SurfaceRules.RuleSource> materialRules();
 
     ///**
     // * {@return the resource manager of the current set of loaded data-packs}

@@ -41,7 +41,7 @@ public abstract class VanillaSurfaceRulesMixin {
             at = @At("RETURN"),
             cancellable = true)
     private static void quilt$injectOverworldRules(boolean abovePreliminarySurface, boolean bedrockRoof, boolean bedrockFloor, CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-        cir.setReturnValue(VanillaSurfaceRuleTracker.OVERWORLD.modifyRuleSources(new SurfaceRuleContextImpl.OverworldImpl(
+        cir.setReturnValue(VanillaSurfaceRuleTracker.OVERWORLD.modifyMaterialRules(new SurfaceRuleContextImpl.OverworldImpl(
                 abovePreliminarySurface, bedrockRoof, bedrockFloor, cir.getReturnValue()
         )));
     }
@@ -51,7 +51,7 @@ public abstract class VanillaSurfaceRulesMixin {
             at = @At("RETURN"),
             cancellable = true)
     private static void quilt$injectNetherRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-        cir.setReturnValue(VanillaSurfaceRuleTracker.NETHER.modifyRuleSources(new SurfaceRuleContextImpl.NetherImpl(
+        cir.setReturnValue(VanillaSurfaceRuleTracker.NETHER.modifyMaterialRules(new SurfaceRuleContextImpl.NetherImpl(
                 cir.getReturnValue()
         )));
     }
@@ -61,7 +61,7 @@ public abstract class VanillaSurfaceRulesMixin {
             at = @At("RETURN"),
             cancellable = true)
     private static void quilt$injectEndRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-        cir.setReturnValue(VanillaSurfaceRuleTracker.THE_END.modifyRuleSources(new SurfaceRuleContextImpl.TheEndImpl(
+        cir.setReturnValue(VanillaSurfaceRuleTracker.THE_END.modifyMaterialRules(new SurfaceRuleContextImpl.TheEndImpl(
                 cir.getReturnValue()
         )));
     }

@@ -24,17 +24,14 @@ import java.util.function.Consumer;
 
 import org.jetbrains.annotations.ApiStatus;
 
-//import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
-//import org.quiltmc.qsl.resource.loader.api.ResourceLoaderEvents;
+import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
 
-/**
- * Modified to work on Fabric
- */
 @ApiStatus.Internal
 public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
     private static final ResourceLocation SURFACE_RULES_APPLY_PHASE = new ResourceLocation("frozenblock_quilt_surface_rule", "apply");
@@ -55,6 +52,7 @@ public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
     private VanillaSurfaceRuleTracker(Consumer<T> eventInvoker) {
         this.eventInvoker = eventInvoker;
 
+        // TODO: use the datapack reload event
         /*ResourceLoaderEvents.END_DATA_PACK_RELOAD.register(SURFACE_RULES_APPLY_PHASE, (server, resourceManager, error) -> {
             if (error == null && server == null) {
                 this.init(resourceManager);
@@ -85,12 +83,12 @@ public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
     }
 
     /**
-     * Called whenever a Vanilla surface rule sources are created and require processing.
+     * Called whenever a Vanilla surface material rules are created and require processing.
      *
      * @param context the context
      * @return the modded sequence material rule
      */
-    public SurfaceRules.RuleSource modifyRuleSources(T context) {
+    public SurfaceRules.RuleSource modifyMaterialRules(T context) {
         this.rules.add(context);
 
         return context;

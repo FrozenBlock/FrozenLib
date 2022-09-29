@@ -19,12 +19,12 @@ package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
 import java.util.List;
 
-import net.minecraft.data.worldgen.SurfaceRuleData;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-//import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import net.minecraft.data.worldgen.SurfaceRuleData;
 
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleContext;
 
@@ -41,13 +41,13 @@ public abstract class SurfaceRuleContextImpl extends ReloadableSequenceMaterialR
     }
 
     private void setup(@NotNull SurfaceRules.RuleSource rules) {
-        this.ruleSources().clear();
+        this.materialRules().clear();
         this.vanillaRules = rules;
-        this.ruleSources().add(rules);
+        this.materialRules().add(rules);
     }
 
     @Override
-    public @NotNull List<SurfaceRules.RuleSource> ruleSources() {
+    public @NotNull List<SurfaceRules.RuleSource> materialRules() {
         return this.sequence();
     }
 
