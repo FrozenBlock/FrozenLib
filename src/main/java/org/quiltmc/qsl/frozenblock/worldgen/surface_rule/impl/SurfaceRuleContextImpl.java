@@ -58,8 +58,7 @@ public abstract class SurfaceRuleContextImpl extends ReloadableSequenceMaterialR
 
     void reset(VanillaSurfaceRuleTracker<? extends SurfaceRuleContextImpl> tracker, ResourceManager resourceManager) {
         tracker.pause();
-        //TODO use this
-        //this.setup(this.getVanillaRules());
+        this.setup(this.getVanillaRules());
         tracker.unpause();
         this.resourceManager = resourceManager;
     }
