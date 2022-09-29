@@ -53,11 +53,11 @@ public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
         this.eventInvoker = eventInvoker;
 
         // TODO: use the datapack reload event
-        /*ResourceLoaderEvents.END_DATA_PACK_RELOAD.register(SURFACE_RULES_APPLY_PHASE, (server, resourceManager, error) -> {
+        ResourceLoaderEvents.END_DATA_PACK_RELOAD.register(SURFACE_RULES_APPLY_PHASE, (server, resourceManager, error) -> {
             if (error == null && server == null) {
                 this.init(resourceManager);
             }
-        });*/
+        });
     }
 
     /**
@@ -65,9 +65,8 @@ public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
      * <p>
      * This signifies we can start processing the Vanilla surface material rules.
      */
-    public void init(/*ResourceManager resourceManager*/) {
-        this.rules.forEach(this::apply);
-        //this.rules.forEach(context -> this.apply(context, resourceManager));
+    public void init(ResourceManager resourceManager) {
+        this.rules.forEach(context -> this.apply(context, resourceManager));
     }
 
     public boolean isPaused() {
@@ -98,10 +97,10 @@ public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
      * Triggers the modification event for the given surface material rules.
      *
      * @param context         the modification context
-    // * @param resourceManager the resource manager
+     * @param resourceManager the resource manager
      */
-    private void apply(T context/*, ResourceManager resourceManager*/) {
-        //context.reset(this, resourceManager);
+    private void apply(T context, ResourceManager resourceManager) {
+        context.reset(this, resourceManager);
 
         this.eventInvoker.accept(context);
 

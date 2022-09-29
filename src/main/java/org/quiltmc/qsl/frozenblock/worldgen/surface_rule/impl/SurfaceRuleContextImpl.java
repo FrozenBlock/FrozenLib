@@ -34,7 +34,7 @@ import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleContext;
 @ApiStatus.Internal
 public abstract class SurfaceRuleContextImpl extends ReloadableSequenceMaterialRule implements SurfaceRuleContext {
     SurfaceRules.RuleSource vanillaRules;
-    //private ResourceManager resourceManager;
+    private ResourceManager resourceManager;
 
     public SurfaceRuleContextImpl(SurfaceRules.RuleSource rules) {
         this.setup(rules);
@@ -51,22 +51,23 @@ public abstract class SurfaceRuleContextImpl extends ReloadableSequenceMaterialR
         return this.sequence();
     }
 
-    //@Override
-    //public @NotNull ResourceManager resourceManager() {
-    //    return this.resourceManager;
-    //}
+    @Override
+    public @NotNull ResourceManager resourceManager() {
+        return this.resourceManager;
+    }
 
-    void reset(VanillaSurfaceRuleTracker<? extends SurfaceRuleContextImpl> tracker/*, ResourceManager resourceManager*/) {
+    void reset(VanillaSurfaceRuleTracker<? extends SurfaceRuleContextImpl> tracker, ResourceManager resourceManager) {
         tracker.pause();
-        this.setup(this.getVanillaRules());
+        //this.getVanillaRules();
+        //this.setup(this.getVanillaRules());
         tracker.unpause();
-        //this.resourceManager = resourceManager;
+        this.resourceManager = resourceManager;
     }
 
     void cleanup() {
         // No need to keep references lying around, especially if some are susceptible to being GC-ed.
         this.vanillaRules = null;
-        //this.resourceManager = null;
+        this.resourceManager = null;
     }
 
     @ApiStatus.OverrideOnly

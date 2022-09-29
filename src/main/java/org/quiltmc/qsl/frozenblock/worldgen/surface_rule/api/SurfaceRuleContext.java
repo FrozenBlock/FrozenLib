@@ -41,11 +41,11 @@ public interface SurfaceRuleContext {
     @Contract(pure = true)
     @NotNull List<SurfaceRules.RuleSource> materialRules();
 
-    ///**
-    // * {@return the resource manager of the current set of loaded data-packs}
-    // */
-    //@Contract(pure = true)
-    //@NotNull ResourceManager resourceManager();
+    /**
+     * {@return the resource manager of the current set of loaded data-packs}
+     */
+    @Contract(pure = true)
+    @NotNull ResourceManager resourceManager();
 
     /**
      * Represents the Overworld-specific context.
