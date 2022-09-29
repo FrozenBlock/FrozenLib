@@ -39,7 +39,7 @@ public class SequenceMaterialRuleMixin implements QuiltSequenceMaterialRuleHooks
     private List<SurfaceRules.RuleSource> sequence;
 
     @Override
-    public void quilt$freeze() {
+    public void frozenblock_quilt$freeze() {
         this.sequence = List.copyOf(this.sequence);
     }
 }

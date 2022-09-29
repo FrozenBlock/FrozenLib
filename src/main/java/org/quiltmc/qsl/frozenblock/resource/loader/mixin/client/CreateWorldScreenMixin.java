@@ -79,7 +79,7 @@ public abstract class CreateWorldScreenMixin {
         throw new IllegalStateException("Mixin injection failed.");
     }
 
-    @Redirect(
+    /*@Redirect(
             method = "openFresh",
             at = @At(
                     value = "INVOKE",
@@ -104,7 +104,7 @@ public abstract class CreateWorldScreenMixin {
                 return new WorldCreationContext(generatorOptions, Lifecycle.stable(), frozen, serverReloadableResources);
             }, Util.backgroundExecutor(), Minecraft.getInstance());
         });
-    }
+    }*/
 
     @Inject(
             method = "tryApplyNewDataPacks",
