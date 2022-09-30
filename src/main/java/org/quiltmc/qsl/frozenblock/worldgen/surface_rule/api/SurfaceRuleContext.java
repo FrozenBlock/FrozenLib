@@ -41,12 +41,6 @@ public interface SurfaceRuleContext {
     @NotNull List<SurfaceRules.RuleSource> materialRules();
 
     /**
-     * Adds to the list of material rules.
-     */
-    @Contract(pure = true)
-    void addMaterialRule(SurfaceRules.RuleSource ruleSource);
-
-    /**
      * {@return the resource manager of the current set of loaded data-packs}
      */
     @Contract(pure = true)

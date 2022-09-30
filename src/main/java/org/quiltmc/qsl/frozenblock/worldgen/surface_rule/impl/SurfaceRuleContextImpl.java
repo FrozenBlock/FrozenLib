@@ -36,33 +36,18 @@ public abstract class SurfaceRuleContextImpl extends ReloadableSequenceMaterialR
     private ResourceManager resourceManager;
 
     public SurfaceRuleContextImpl(SurfaceRules.RuleSource rules) {
-        this.ruleSourceList = new ArrayList<>();
         this.setup(rules);
     }
 
     private void setup(@NotNull SurfaceRules.RuleSource rules) {
         this.materialRules().clear();
         this.vanillaRules = rules;
-        this.addMaterialRule(rules);
+        this.materialRules().add(rules);
     }
-
-    private final List<SurfaceRules.RuleSource> ruleSourceList;
 
     @Override
     public @NotNull List<SurfaceRules.RuleSource> materialRules() {
-        return this.ruleSourceList;
-    }
-
-    @Override
-    public void addMaterialRule(SurfaceRules.RuleSource ruleSource) {
-        this.sequence().clear();
-        SurfaceRules.RuleSource newRuleSource = SurfaceRules.sequence(ruleSource);
-        for (SurfaceRules.RuleSource rule : this.ruleSourceList) {
-            newRuleSource = SurfaceRules.sequence(newRuleSource, rule);
-        }
-        this.ruleSourceList.add(ruleSource);
-        this.sequence().add(0, newRuleSource);
-        this.sequence().add(newRuleSource);
+        return this.sequence();
     }
 
     @Override

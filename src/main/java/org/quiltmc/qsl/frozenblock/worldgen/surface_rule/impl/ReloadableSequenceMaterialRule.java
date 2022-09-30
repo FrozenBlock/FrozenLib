@@ -60,10 +60,16 @@ public class ReloadableSequenceMaterialRule implements SurfaceRules.RuleSource {
 
     @Override
     public SurfaceRules.SurfaceRule apply(SurfaceRules.Context context) {
-        ImmutableList.Builder<SurfaceRules.SurfaceRule> builder = ImmutableList.builder();
-        for (var materialRule : this.sequence()) {
-            builder.add(materialRule.apply(context));
+        if (this.sequence.size() == 1) {
+            return this.sequence.get(0).apply(context);
+        } else {
+            ImmutableList.Builder<SurfaceRules.SurfaceRule> builder = ImmutableList.builder();
+
+            for (var materialRule : this.sequence) {
+                builder.add(materialRule.apply(context));
+            }
+
+            return new SurfaceRules.SequenceRule(builder.build());
         }
-        return new SurfaceRules.SequenceRule(builder.build());
     }
 }
