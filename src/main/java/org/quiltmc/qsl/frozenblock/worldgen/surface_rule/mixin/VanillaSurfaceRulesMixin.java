@@ -17,17 +17,15 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.mixin;
 
+import net.minecraft.data.worldgen.SurfaceRuleData;
+import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
+import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.SurfaceRuleContextImpl;
+import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.VanillaSurfaceRuleTracker;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import net.minecraft.world.level.levelgen.SurfaceRules;
-import net.minecraft.data.worldgen.SurfaceRuleData;
-
-import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
-import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.SurfaceRuleContextImpl;
-import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.VanillaSurfaceRuleTracker;
 
 /**
  * This modifies the Vanilla surface rules using the {@link SurfaceRuleEvents}.

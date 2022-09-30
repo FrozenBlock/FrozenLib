@@ -22,13 +22,12 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.Lifecycle;
-import org.jetbrains.annotations.ApiStatus;
-
-import net.minecraft.world.level.levelgen.presets.WorldPresets;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.levelgen.WorldGenSettings;
+import net.minecraft.world.level.levelgen.presets.WorldPresets;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Modified to work on Fabric

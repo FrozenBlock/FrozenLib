@@ -17,22 +17,10 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.entrypoints.CommonEventEntrypoint;
-import net.frozenblock.lib.events.FrozenEvents;
-import org.jetbrains.annotations.ApiStatus;
-
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.core.Registry;
-
-import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.api.ModInitializer;
-import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
-
-import java.util.Map;
+import net.frozenblock.lib.FrozenMain;
+import net.minecraft.core.Registry;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Modified to work on Fabric

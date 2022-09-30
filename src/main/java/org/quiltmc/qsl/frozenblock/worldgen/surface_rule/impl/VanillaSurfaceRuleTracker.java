@@ -17,20 +17,18 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.Unit;
+import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.jetbrains.annotations.ApiStatus;
+import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
+import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
+
 import java.util.Collections;
 import java.util.Set;
 import java.util.WeakHashMap;
 import java.util.function.Consumer;
-
-import org.jetbrains.annotations.ApiStatus;
-
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Unit;
-import net.minecraft.world.level.levelgen.SurfaceRules;
-
-import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
-import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
 
 /**
  * Modified to work on Fabric

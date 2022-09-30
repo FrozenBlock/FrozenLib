@@ -17,16 +17,15 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
-import java.util.List;
-
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-
+import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.levelgen.SurfaceRules;
-import net.minecraft.data.worldgen.SurfaceRuleData;
-
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleContext;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Modified to work on Fabric
@@ -37,18 +36,33 @@ public abstract class SurfaceRuleContextImpl extends ReloadableSequenceMaterialR
     private ResourceManager resourceManager;
 
     public SurfaceRuleContextImpl(SurfaceRules.RuleSource rules) {
+        this.ruleSourceList = new ArrayList<>();
         this.setup(rules);
     }
 
     private void setup(@NotNull SurfaceRules.RuleSource rules) {
         this.materialRules().clear();
         this.vanillaRules = rules;
-        this.materialRules().add(rules);
+        this.addMaterialRule(rules);
     }
+
+    private final List<SurfaceRules.RuleSource> ruleSourceList;
 
     @Override
     public @NotNull List<SurfaceRules.RuleSource> materialRules() {
-        return this.sequence();
+        return this.ruleSourceList;
+    }
+
+    @Override
+    public void addMaterialRule(SurfaceRules.RuleSource ruleSource) {
+        //this.sequence().clear();
+        SurfaceRules.RuleSource newRuleSource = SurfaceRules.sequence(ruleSource);
+        for (SurfaceRules.RuleSource rule : this.ruleSourceList) {
+            newRuleSource = SurfaceRules.sequence(newRuleSource, rule);
+        }
+        this.ruleSourceList.add(ruleSource);
+        this.sequence().add(0, newRuleSource);
+        this.sequence().add(newRuleSource);
     }
 
     @Override

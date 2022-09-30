@@ -17,29 +17,19 @@
 
 package org.quiltmc.qsl.frozenblock.resource.loader.mixin.client;
 
-import com.mojang.serialization.Lifecycle;
-import net.fabricmc.fabric.api.util.TriState;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
-import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.server.WorldLoader;
+import net.minecraft.server.WorldStem;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.WorldData;
+import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.server.WorldLoader;
-import net.minecraft.server.WorldStem;
-
-import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
 /**
  * Modified to work on Fabric

@@ -17,14 +17,13 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
-import org.jetbrains.annotations.ApiStatus;
-
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.jetbrains.annotations.ApiStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a {@linkplain net.minecraft.world.level.levelgen.SurfaceRules.SequenceRuleSource} that is easily reloadable when needed.
@@ -61,16 +60,10 @@ public class ReloadableSequenceMaterialRule implements SurfaceRules.RuleSource {
 
     @Override
     public SurfaceRules.SurfaceRule apply(SurfaceRules.Context context) {
-        if (this.sequence.size() == 1) {
-            return this.sequence.get(0).apply(context);
-        } else {
-            ImmutableList.Builder<SurfaceRules.SurfaceRule> builder = ImmutableList.builder();
-
-            for (var materialRule : this.sequence) {
-                builder.add(materialRule.apply(context));
-            }
-
-            return new SurfaceRules.SequenceRule(builder.build());
+        ImmutableList.Builder<SurfaceRules.SurfaceRule> builder = ImmutableList.builder();
+        for (var materialRule : this.sequence()) {
+            builder.add(materialRule.apply(context));
         }
+        return new SurfaceRules.SequenceRule(builder.build());
     }
 }

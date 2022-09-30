@@ -17,24 +17,9 @@
 
 package org.quiltmc.qsl.frozenblock.resource.loader.mixin.server;
 
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.DataResult;
-import com.mojang.serialization.DynamicOps;
-import com.mojang.serialization.Lifecycle;
-import joptsimple.OptionSet;
-import joptsimple.OptionSpec;
-import net.minecraft.Util;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.nbt.Tag;
-import net.minecraft.server.dedicated.DedicatedServerSettings;
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.level.DataPackConfig;
-import net.minecraft.world.level.LevelSettings;
-import net.minecraft.world.level.levelgen.WorldGenSettings;
-import net.minecraft.world.level.storage.LevelStorageSource;
-import net.minecraft.world.level.storage.PrimaryLevelData;
-import net.minecraft.world.level.storage.WorldData;
+import net.minecraft.server.Main;
+import net.minecraft.server.WorldStem;
+import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -44,14 +29,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import net.minecraft.server.Main;
-import net.minecraft.server.WorldStem;
-
-import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
-import org.quiltmc.qsl.frozenblock.resource.loader.impl.DataPackLoadingContext;
 
 /**
  * Modified to work on Fabric

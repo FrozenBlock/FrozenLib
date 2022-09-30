@@ -17,13 +17,12 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api;
 
-import java.util.List;
-
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.level.levelgen.SurfaceRules;
+import java.util.List;
 
 /**
  * Represents a context about surface rules for ease of modification of them.
@@ -40,6 +39,12 @@ public interface SurfaceRuleContext {
      */
     @Contract(pure = true)
     @NotNull List<SurfaceRules.RuleSource> materialRules();
+
+    /**
+     * Adds to the list of material rules.
+     */
+    @Contract(pure = true)
+    void addMaterialRule(SurfaceRules.RuleSource ruleSource);
 
     /**
      * {@return the resource manager of the current set of loaded data-packs}
