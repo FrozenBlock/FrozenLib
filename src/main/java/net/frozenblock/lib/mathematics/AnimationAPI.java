@@ -10,7 +10,7 @@ public interface AnimationAPI {
      * <p>
      * Only for FrozenBlock Modders, ALL RIGHTS RESERVED
      * <p>
-     * Defining a point A(x,y) & B(x,y) you can create an animation between those two points ( A.geyY() won't affect the animation).
+     * Defining a point A(x,y) & B(x,y) you can create an animation between those two points ( A.getY() won't affect the animation).
      * Learn more at https://github.com/LIUKRAST/AnimationAPI/blob/main/README.md
      *
      * @author      LiukRast (2021-2022)
@@ -35,14 +35,14 @@ public interface AnimationAPI {
     }
 
     /**
-     * Executes multiple times rawseed to make the number look more "random"
+     * Executes {@link #rawSeed(float)} multiple times to make the number look more "random"
      **/
     default float seed(float seed) {
         return rawSeed(rawSeed(rawSeed(seed)));
     }
 
     /**
-     * convert a 2D position with a seed in a resulting seed
+     * Convert a 2D position with a seed in a resulting seed
      **/
     default float seed2D(Point2D seed2d, float seed) {
         return rawSeed((float) seed2d.getX()) * rawSeed((float) seed2d.getX()) * rawSeed(seed);
