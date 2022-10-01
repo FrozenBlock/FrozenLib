@@ -21,11 +21,14 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.DataFix;
 import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Dynamic;
 import net.frozenblock.lib.datafixer.BlockStateRenameFix;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;
 import net.minecraft.util.datafix.fixes.RenameBiomesFix;
+import net.minecraft.util.datafix.fixes.SimpleEntityRenameFix;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import org.jetbrains.annotations.NotNull;
 
@@ -69,6 +72,35 @@ public final class SimpleFixes {
     }
 
     /**
+     * Adds an entity rename fix to the builder, in case an entity's identifier is changed.
+     *
+     * @param builder the builder
+     * @param name    the fix's name
+     * @param oldId   the entity's old identifier
+     * @param newId   the entity's new identifier
+     * @param schema  the schema this fixer should be a part of
+     * @see SimpleEntityRenameFix
+     */
+    public static void addEntityRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
+                                         @NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
+                                         @NotNull Schema schema) {
+        requireNonNull(builder, "DataFixerBuilder cannot be null");
+        requireNonNull(name, "Fix name cannot be null");
+        requireNonNull(oldId, "Old identifier cannot be null");
+        requireNonNull(newId, "New identifier cannot be null");
+        requireNonNull(schema, "Schema cannot be null");
+
+        final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
+
+        builder.addFixer(new SimpleEntityRenameFix(name, schema, true) {
+            @Override
+            protected Pair<String, Dynamic<?>> getNewNameAndTag(String name, Dynamic<?> tag) {
+                return Pair.of(Objects.equals(name, oldIdStr) ? newIdStr : name, tag);
+            }
+        });
+    }
+
+    /**
      * Adds an item rename fix to the builder, in case an item's identifier is changed.
      *
      * @param builder the builder
@@ -95,12 +127,14 @@ public final class SimpleFixes {
     /**
      * Adds a blockstate rename fix to the builder, in case a blockstate's name is changed.
      *
-     * @param builder the builder
-     * @param name    the fix's name
-     * @param oldState   the block's old identifier
-     * @param newState   the block's new identifier
-     * @param schema  the schema this fixer should be a part of
-     * @see BlockRenameFix
+     * @param builder       the builder
+     * @param name          the fix's name
+     * @param blockId       the block's identifier
+     * @param oldState      the blockstate's old name
+     * @param defaultValue  the blockstate's default value
+     * @param newState      the blockstates's new name
+     * @param schema        the schema this fixer should be a part of
+     * @see BlockStateRenameFix
      */
     public static void addBlockStateRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
                                          @NotNull ResourceLocation blockId, @NotNull String oldState,
