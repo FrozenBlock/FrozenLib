@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityMixin implements EntityLoopingSoundInterface {
+public abstract class LivingEntityMixin implements EntityLoopingSoundInterface {
 
     @Shadow
     protected ItemStack useItem;
@@ -88,9 +88,7 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface {
     }
 
     @Shadow
-    protected void setLivingEntityFlag(int mask, boolean value) {
-
-    }
+    protected abstract void setLivingEntityFlag(int mask, boolean value);
 
     @Override
     public boolean hasSyncedClient() {
