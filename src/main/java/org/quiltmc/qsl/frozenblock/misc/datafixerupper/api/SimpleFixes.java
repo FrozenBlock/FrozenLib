@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.datafixers.DataFix;
 import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
+import net.frozenblock.lib.datafixer.BlockStateRenameFix;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;
@@ -89,6 +90,32 @@ public final class SimpleFixes {
         final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
         builder.addFixer(ItemRenameFix.create(schema, name, (inputName) ->
                 Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
+    }
+
+    /**
+     * Adds a blockstate rename fix to the builder, in case a blockstate's name is changed.
+     *
+     * @param builder the builder
+     * @param name    the fix's name
+     * @param oldState   the block's old identifier
+     * @param newState   the block's new identifier
+     * @param schema  the schema this fixer should be a part of
+     * @see BlockRenameFix
+     */
+    public static void addBlockStateRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
+                                         @NotNull ResourceLocation blockId, @NotNull String oldState,
+                                         @NotNull String defaultValue, @NotNull String newState,
+                                         @NotNull Schema schema) {
+        requireNonNull(builder, "DataFixerBuilder cannot be null");
+        requireNonNull(name, "Fix name cannot be null");
+        requireNonNull(blockId, "Block Id cannot be null");
+        requireNonNull(oldState, "Old BlockState cannot be null");
+        requireNonNull(defaultValue, "Default value cannot be null");
+        requireNonNull(newState, "New BlockState cannot be null");
+        requireNonNull(schema, "Schema cannot be null");
+
+        final String blockIdStr = blockId.toString();
+        builder.addFixer(new BlockStateRenameFix(schema, name, blockIdStr, oldState, defaultValue, newState));
     }
 
     /**
