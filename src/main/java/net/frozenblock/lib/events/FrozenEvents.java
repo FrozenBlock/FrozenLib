@@ -12,7 +12,7 @@ import java.util.function.Function;
 
 public class FrozenEvents {
 
-    private static final List<Event> REGISTERED_EVENTS = new ArrayList<>();
+    private static final List<Event<?>> REGISTERED_EVENTS = new ArrayList<>();
 
     public static <T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
         var event = EventFactory.createArrayBacked(type, invokerFactory);
