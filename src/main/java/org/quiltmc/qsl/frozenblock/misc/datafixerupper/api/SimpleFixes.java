@@ -93,7 +93,7 @@ public final class SimpleFixes {
         final String oldIdStr = oldId.toString();
         final String newIdStr = newId.toString();
 
-        builder.addFixer(new SimpleEntityRenameFix(name, schema, true) {
+        builder.addFixer(new SimpleEntityRenameFix(name, schema, false) {
             @Override
             protected Pair<String, Dynamic<?>> getNewNameAndTag(String name, Dynamic<?> tag) {
                 if (Objects.equals(oldIdStr, name)) {
