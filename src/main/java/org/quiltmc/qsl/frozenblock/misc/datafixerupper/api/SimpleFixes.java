@@ -23,7 +23,7 @@ import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
-import net.frozenblock.lib.datafixer.BlockStateRenameFix;
+import net.frozenblock.lib.datafix.BlockStateRenameFix;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;
@@ -90,12 +90,16 @@ public final class SimpleFixes {
         requireNonNull(newId, "New identifier cannot be null");
         requireNonNull(schema, "Schema cannot be null");
 
-        final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
+        final String oldIdStr = oldId.toString();
+        final String newIdStr = newId.toString();
 
         builder.addFixer(new SimpleEntityRenameFix(name, schema, true) {
             @Override
             protected Pair<String, Dynamic<?>> getNewNameAndTag(String name, Dynamic<?> tag) {
-                return Pair.of(Objects.equals(name, oldIdStr) ? newIdStr : name, tag);
+                if (Objects.equals(oldIdStr, name)) {
+                    return Pair.of(newIdStr, tag);
+                }
+                return Pair.of(name, tag);
             }
         });
     }
