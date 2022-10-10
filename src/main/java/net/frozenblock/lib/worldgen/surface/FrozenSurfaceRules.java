@@ -1,5 +1,7 @@
 package net.frozenblock.lib.worldgen.surface;
 
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -43,6 +45,11 @@ public final class FrozenSurfaceRules {
     public static final SurfaceRules.RuleSource NETHER_WART_BLOCK = makeStateRule(Blocks.NETHER_WART_BLOCK);
     public static final SurfaceRules.RuleSource CRIMSON_NYLIUM = makeStateRule(Blocks.CRIMSON_NYLIUM);
     public static final SurfaceRules.RuleSource ENDSTONE = makeStateRule(Blocks.END_STONE);
+
+
+    public static SurfaceRules.ConditionSource isBiome(List<ResourceKey<Biome>> biomes) {
+        return SurfaceRules.isBiome(biomes);
+    }
 
     public static SurfaceRules.SequenceRuleSource sequence(List<SurfaceRules.RuleSource> list) {
         return new SurfaceRules.SequenceRuleSource(list);
