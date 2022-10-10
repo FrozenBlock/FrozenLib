@@ -26,9 +26,8 @@ import org.jetbrains.annotations.ApiStatus;
  * Modified to work on Fabric
  */
 @ApiStatus.Internal
-public class QuiltSurfaceRuleInitializer implements ModInitializer {
-    @Override
-    public void onInitialize() {
+public class QuiltSurfaceRuleInitializer {
+    public static void onInitialize() {
         Registry.register(Registry.RULE, FrozenMain.id("reloadable_sequence"),
                 ReloadableSequenceMaterialRule.RULE_CODEC.codec()
         );

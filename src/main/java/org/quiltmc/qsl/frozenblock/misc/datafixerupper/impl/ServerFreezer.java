@@ -17,7 +17,6 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.frozenblock.lib.FrozenMain;
 import org.jetbrains.annotations.ApiStatus;
@@ -26,10 +25,9 @@ import org.jetbrains.annotations.ApiStatus;
  * Modified to work on Fabric
  */
 @ApiStatus.Internal
-public final class ServerFreezer implements ModInitializer {
+public final class ServerFreezer {
 
-    @Override
-    public void onInitialize() {
+    public static void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
             FrozenMain.log("[Quilt DFU API] Serverside DataFixer Registry is about to freeze", true);
             QuiltDataFixesInternals.get().freeze();

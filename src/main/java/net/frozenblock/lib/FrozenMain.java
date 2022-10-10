@@ -16,6 +16,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
+import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
@@ -27,6 +29,8 @@ public final class FrozenMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ServerFreezer.onInitialize();
+        QuiltSurfaceRuleInitializer.onInitialize();
         FrozenSoundPredicates.init();
         if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockScheduledTicks.ticks.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos, Blocks.BEDROCK.defaultBlockState(), 3));

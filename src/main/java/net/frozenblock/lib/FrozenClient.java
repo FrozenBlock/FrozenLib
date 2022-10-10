@@ -18,11 +18,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
 public final class FrozenClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        ClientFreezer.onInitializeClient();
         ClientTickEvents.START_WORLD_TICK.register(e -> {
             Minecraft client = Minecraft.getInstance();
             if (client.level != null) {
