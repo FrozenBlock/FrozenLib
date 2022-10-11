@@ -42,6 +42,7 @@ public final class FrozenClient implements ClientModInitializer {
         receiveMovingRestrictionLoopingSoundPacket();
         receiveStartingMovingRestrictionLoopingSoundPacket();
         receiveMovingRestrictionLoopingFadingDistanceSoundPacket();
+        receiveMovingFadingDistanceSoundPacket();
         receiveFadingDistanceSoundPacket();
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
@@ -125,6 +126,31 @@ public final class FrozenClient implements ClientModInitializer {
 
     private static void receiveMovingRestrictionLoopingFadingDistanceSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+            int id = byteBuf.readVarInt();
+            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent sound2 = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundSource category = byteBuf.readEnum(SoundSource.class);
+            float volume = byteBuf.readFloat();
+            float pitch = byteBuf.readFloat();
+            float fadeDist = byteBuf.readFloat();
+            float maxDist = byteBuf.readFloat();
+            ResourceLocation predicateId = byteBuf.readResourceLocation();
+            ctx.execute(() -> {
+                ClientLevel level = Minecraft.getInstance().level;
+                if (level != null) {
+                    Entity entity = level.getEntity(id);
+                    if (entity != null) {
+                        FrozenSoundPredicates.LoopPredicate<?> predicate = FrozenSoundPredicates.getPredicate(predicateId);
+                        Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
+                        Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
+                    }
+                }
+            });
+        });
+    }
+
+    private static void receiveMovingFadingDistanceSoundPacket() {
+        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
             SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
             SoundEvent sound2 = byteBuf.readById(Registry.SOUND_EVENT);
