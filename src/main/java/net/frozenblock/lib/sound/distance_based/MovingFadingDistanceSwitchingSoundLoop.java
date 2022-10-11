@@ -20,7 +20,7 @@ public class MovingFadingDistanceSwitchingSoundLoop extends AbstractTickableSoun
     private final double fadeDist;
     private final float maxVol;
 
-    public MovingFadingDistanceSwitchingSoundLoop(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, FrozenSoundPredicates.LoopPredicate<?> predicate, boolean isFarSound, double maxDist, double fadeDist, float maxVol) {
+    public MovingFadingDistanceSwitchingSoundLoop(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, FrozenSoundPredicates.LoopPredicate<?> predicate, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = true;

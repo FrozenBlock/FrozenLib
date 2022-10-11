@@ -4,11 +4,13 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
+import net.frozenblock.lib.interfaces.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.interfaces.EntityLoopingSoundInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
 import net.frozenblock.lib.sound.FrozenSoundPackets;
 import net.frozenblock.lib.sound.FrozenSoundPredicates;
+import net.frozenblock.lib.sound.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.MovingLoopingSoundEntityManager;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -62,6 +64,9 @@ public final class FrozenMain implements ModInitializer {
     public static final ResourceLocation MOVING_RESTRICTION_LOOPING_SOUND_PACKET = id("moving_restriction_looping_sound_packet");
     public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = id("starting_moving_restriction_looping_sound_packet");
     public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = id("moving_restriction_sound_packet");
+    public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = id("moving_restriction_looping_fading_distance_sound_packet");
+    public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = id("fading_distance_sound_packet");
+    public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = id("moving_fading_distance_sound_packet");
     public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
     public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
 
@@ -90,6 +95,9 @@ public final class FrozenMain implements ModInitializer {
                         if (entity instanceof LivingEntity living) {
                             for (MovingLoopingSoundEntityManager.SoundLoopNBT nbt : ((EntityLoopingSoundInterface) living).getSounds().getSounds()) {
                                 FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
+                            }
+                            for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : ((EntityLoopingFadingDistanceSoundInterface) living).getFadingDistanceSounds().getSounds()) {
+                                FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), Registry.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
                             }
                         }
                     }

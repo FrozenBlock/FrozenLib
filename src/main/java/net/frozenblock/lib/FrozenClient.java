@@ -8,6 +8,8 @@ import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
 import net.frozenblock.lib.interfaces.CooldownInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.*;
+import net.frozenblock.lib.sound.distance_based.FadingDistanceSwitchingSound;
+import net.frozenblock.lib.sound.distance_based.MovingFadingDistanceSwitchingSoundLoop;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
@@ -39,6 +41,8 @@ public final class FrozenClient implements ClientModInitializer {
         receiveMovingRestrictionSoundPacket();
         receiveMovingRestrictionLoopingSoundPacket();
         receiveStartingMovingRestrictionLoopingSoundPacket();
+        receiveMovingRestrictionLoopingFadingDistanceSoundPacket();
+        receiveFadingDistanceSoundPacket();
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
 
@@ -114,6 +118,53 @@ public final class FrozenClient implements ClientModInitializer {
                         FrozenSoundPredicates.LoopPredicate<?> predicate = FrozenSoundPredicates.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new StartingSoundInstance(entity, startingSound, loopingSound, category, volume, pitch, predicate, new MovingSoundLoopWithRestriction(entity, loopingSound, category, volume, pitch, predicate)));
                     }
+                }
+            });
+        });
+    }
+
+    private static void receiveMovingRestrictionLoopingFadingDistanceSoundPacket() {
+        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+            int id = byteBuf.readVarInt();
+            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent sound2 = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundSource category = byteBuf.readEnum(SoundSource.class);
+            float volume = byteBuf.readFloat();
+            float pitch = byteBuf.readFloat();
+            float fadeDist = byteBuf.readFloat();
+            float maxDist = byteBuf.readFloat();
+            ResourceLocation predicateId = byteBuf.readResourceLocation();
+            ctx.execute(() -> {
+                ClientLevel level = Minecraft.getInstance().level;
+                if (level != null) {
+                    Entity entity = level.getEntity(id);
+                    if (entity != null) {
+                        FrozenSoundPredicates.LoopPredicate<?> predicate = FrozenSoundPredicates.getPredicate(predicateId);
+                        Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
+                        Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
+                    }
+                }
+            });
+        });
+    }
+
+    private static void receiveFadingDistanceSoundPacket() {
+        ClientPlayNetworking.registerGlobalReceiver(FrozenMain.FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+            double x = byteBuf.readDouble();
+            double y = byteBuf.readDouble();
+            double z = byteBuf.readDouble();
+            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent sound2 = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundSource category = byteBuf.readEnum(SoundSource.class);
+            float volume = byteBuf.readFloat();
+            float pitch = byteBuf.readFloat();
+            float fadeDist = byteBuf.readFloat();
+            float maxDist = byteBuf.readFloat();
+            ctx.execute(() -> {
+                ClientLevel level = Minecraft.getInstance().level;
+                if (level != null) {
+                    Minecraft.getInstance().getSoundManager().play(new FadingDistanceSwitchingSound(sound, category, volume, pitch, fadeDist, maxDist, volume, false, x, y, z));
+                    Minecraft.getInstance().getSoundManager().play(new FadingDistanceSwitchingSound(sound2, category, volume, pitch, fadeDist, maxDist, volume, true, x ,y ,z));
                 }
             });
         });

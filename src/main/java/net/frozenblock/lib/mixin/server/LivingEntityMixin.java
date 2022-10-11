@@ -1,7 +1,9 @@
 package net.frozenblock.lib.mixin.server;
 
+import net.frozenblock.lib.interfaces.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.interfaces.EntityLoopingSoundInterface;
 import net.frozenblock.lib.sound.FrozenClientPacketInbetween;
+import net.frozenblock.lib.sound.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.tags.FrozenItemTags;
 import net.minecraft.nbt.CompoundTag;
@@ -19,7 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements EntityLoopingSoundInterface {
+public abstract class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoopingFadingDistanceSoundInterface {
 
     @Shadow
     protected ItemStack useItem;
@@ -27,12 +29,14 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface {
     protected int useItemRemaining;
 
     public MovingLoopingSoundEntityManager loopingSoundManager;
+    public MovingLoopingFadingDistanceSoundEntityManager loopingFadingDistanceSoundManager;
     public boolean clientFrozenSoundSync;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void init(EntityType<? extends LivingEntity> entityType, Level level, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         this.loopingSoundManager = new MovingLoopingSoundEntityManager(entity);
+        this.loopingFadingDistanceSoundManager = new MovingLoopingFadingDistanceSoundEntityManager(entity);
     }
 
     @Inject(method = "startUsingItem", at = @At("HEAD"), cancellable = true)
@@ -69,11 +73,15 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface {
         if (this.loopingSoundManager != null) {
             this.loopingSoundManager.save(compoundTag);
         }
+        if (this.loopingFadingDistanceSoundManager != null) {
+            this.loopingFadingDistanceSoundManager.save(compoundTag);
+        }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
         this.loopingSoundManager.load(compoundTag);
+        this.loopingFadingDistanceSoundManager.load(compoundTag);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
@@ -81,6 +89,7 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (!entity.level.isClientSide) {
             this.loopingSoundManager.tick();
+            this.loopingFadingDistanceSoundManager.tick();
         } else if (!this.clientFrozenSoundSync) {
             FrozenClientPacketInbetween.requestFrozenSoundSync(entity.getId(), entity.level.dimension());
             this.clientFrozenSoundSync = true;
@@ -103,5 +112,20 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface {
     @Override
     public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId) {
         this.loopingSoundManager.addSound(soundID, category, volume, pitch, restrictionId);
+    }
+
+    @Override
+    public boolean hasSyncedFadingDistanceClient() {
+        return this.clientFrozenSoundSync;
+    }
+
+    @Override
+    public MovingLoopingFadingDistanceSoundEntityManager getFadingDistanceSounds() {
+        return this.loopingFadingDistanceSoundManager;
+    }
+
+    @Override
+    public void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, float fadeDist, float maxDist) {
+        this.loopingFadingDistanceSoundManager.addSound(soundID, sound2ID, category, volume, pitch, restrictionId, fadeDist, maxDist);
     }
 }
