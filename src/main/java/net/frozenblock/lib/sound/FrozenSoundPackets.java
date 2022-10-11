@@ -100,6 +100,20 @@ public class FrozenSoundPackets {
         ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
     }
 
+    public static void createMovingRestrictionFadingDistanceSound(ServerPlayer player, Entity entity, SoundEvent sound, SoundEvent sound2, SoundSource category, float volume, float pitch, ResourceLocation id, float fadeDist, float maxDist) {
+        FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+        byteBuf.writeVarInt(entity.getId());
+        byteBuf.writeId(Registry.SOUND_EVENT, sound);
+        byteBuf.writeId(Registry.SOUND_EVENT, sound2);
+        byteBuf.writeEnum(category);
+        byteBuf.writeFloat(volume);
+        byteBuf.writeFloat(pitch);
+        byteBuf.writeFloat(fadeDist);
+        byteBuf.writeFloat(maxDist);
+        byteBuf.writeResourceLocation(id);
+        ServerPlayNetworking.send(player, FrozenMain.MOVING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
+    }
+
     public static void createFadingDistanceSound(Level world, Vector3d pos, SoundEvent sound, SoundEvent sound2, SoundSource category, float volume, float pitch, ResourceLocation id, float fadeDist, float maxDist) {
         if (!world.isClientSide) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
