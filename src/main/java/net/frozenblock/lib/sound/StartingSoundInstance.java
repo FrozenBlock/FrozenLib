@@ -20,7 +20,11 @@ public class StartingSoundInstance extends AbstractTickableSoundInstance {
     public boolean hasSwitched = false;
     public final AbstractSoundInstance nextSound;
 
-    public StartingSoundInstance(Entity entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, FrozenSoundPredicates.LoopPredicate<?> predicate, AbstractSoundInstance nextSound) {
+    public StartingSoundInstance(Entity entity, SoundEvent startingSound,
+                                 SoundEvent loopingSound, SoundSource category,
+                                 float volume, float pitch,
+                                 FrozenSoundPredicates.LoopPredicate<?> predicate,
+                                 AbstractSoundInstance nextSound) {
         super(startingSound, category, SoundInstance.createUnseededRandom());
         this.startingSound = startingSound;
         this.nextSound = nextSound;
@@ -70,7 +74,8 @@ public class StartingSoundInstance extends AbstractTickableSoundInstance {
                 if (!this.predicate.test(this.entity)) {
                     this.stop();
                 } else {
-                    var soundManager = Minecraft.getInstance().getSoundManager();
+                    var soundManager =
+                            Minecraft.getInstance().getSoundManager();
                     var soundEngine = soundManager.soundEngine;
                     var channelHandle = soundEngine.instanceToChannel.get(this);
                     if (channelHandle != null) {

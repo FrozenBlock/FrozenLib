@@ -32,16 +32,19 @@ import java.util.List;
  */
 @ApiStatus.Internal
 public class ReloadableSequenceMaterialRule implements SurfaceRules.RuleSource {
-    static final KeyDispatchDataCodec<ReloadableSequenceMaterialRule> RULE_CODEC = KeyDispatchDataCodec.of(
+    static final KeyDispatchDataCodec<ReloadableSequenceMaterialRule>
+            RULE_CODEC = KeyDispatchDataCodec.of(
             SurfaceRules.RuleSource.CODEC
                     .listOf()
-                    .xmap(ReloadableSequenceMaterialRule::new, ReloadableSequenceMaterialRule::sequence)
+                    .xmap(ReloadableSequenceMaterialRule::new,
+                            ReloadableSequenceMaterialRule::sequence)
                     .fieldOf("sequence")
     );
 
     private final List<SurfaceRules.RuleSource> sequence;
 
-    public ReloadableSequenceMaterialRule(List<SurfaceRules.RuleSource> sequence) {
+    public ReloadableSequenceMaterialRule(
+            List<SurfaceRules.RuleSource> sequence) {
         this.sequence = new ArrayList<>(sequence);
     }
 
@@ -63,7 +66,8 @@ public class ReloadableSequenceMaterialRule implements SurfaceRules.RuleSource {
         if (this.sequence.size() == 1) {
             return this.sequence.get(0).apply(context);
         } else {
-            ImmutableList.Builder<SurfaceRules.SurfaceRule> builder = ImmutableList.builder();
+            ImmutableList.Builder<SurfaceRules.SurfaceRule> builder =
+                    ImmutableList.builder();
 
             for (var materialRule : this.sequence) {
                 builder.add(materialRule.apply(context));

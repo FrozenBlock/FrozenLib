@@ -17,19 +17,23 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BoneMealItemMixin {
 
     @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
-    public void useOn(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
+    public void useOn(UseOnContext context,
+                      CallbackInfoReturnable<InteractionResult> info) {
         Level level = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
         BlockState state = level.getBlockState(blockPos);
         Direction direction = context.getClickedFace();
         Direction horizontal = context.getHorizontalDirection();
         if (BonemealBehaviors.bonemeals.containsKey(state.getBlock())) {
-            if (BonemealBehaviors.bonemeals.get(state.getBlock()).bonemeal(context, level, blockPos, state, direction, horizontal) && !level.isClientSide) {
+            if (BonemealBehaviors.bonemeals.get(state.getBlock())
+                    .bonemeal(context, level, blockPos, state, direction,
+                            horizontal) && !level.isClientSide) {
                 context.getItemInHand().shrink(1);
                 info.setReturnValue(InteractionResult.SUCCESS);
                 info.cancel();
             } else {
-                info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
+                info.setReturnValue(
+                        InteractionResult.sidedSuccess(level.isClientSide));
             }
         }
     }

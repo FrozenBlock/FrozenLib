@@ -18,17 +18,16 @@
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
 
 import com.google.common.collect.ImmutableMap;
-import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFix;
 import com.mojang.datafixers.DataFixerBuilder;
-import com.mojang.datafixers.Typed;
 import com.mojang.datafixers.schemas.Schema;
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Dynamic;
 import net.frozenblock.lib.datafix.BlockStateRenameFix;
 import net.frozenblock.lib.datafix.FrozenEntityRenameFix;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.datafix.fixes.*;
+import net.minecraft.util.datafix.fixes.BlockRenameFix;
+import net.minecraft.util.datafix.fixes.ItemRenameFix;
+import net.minecraft.util.datafix.fixes.RenameBiomesFix;
+import net.minecraft.util.datafix.fixes.SimpleEntityRenameFix;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +43,8 @@ import static java.util.Objects.requireNonNull;
  */
 public final class SimpleFixes {
     private SimpleFixes() {
-        throw new RuntimeException("SimpleFixes contains only static declarations.");
+        throw new RuntimeException(
+                "SimpleFixes contains only static declarations.");
     }
 
     /**
@@ -57,8 +57,10 @@ public final class SimpleFixes {
      * @param schema  the schema this fixer should be a part of
      * @see BlockRenameFix
      */
-    public static void addBlockRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-                                         @NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
+    public static void addBlockRenameFix(@NotNull DataFixerBuilder builder,
+                                         @NotNull String name,
+                                         @NotNull ResourceLocation oldId,
+                                         @NotNull ResourceLocation newId,
                                          @NotNull Schema schema) {
         requireNonNull(builder, "DataFixerBuilder cannot be null");
         requireNonNull(name, "Fix name cannot be null");
@@ -68,7 +70,8 @@ public final class SimpleFixes {
 
         final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
         builder.addFixer(BlockRenameFix.create(schema, name, (inputName) ->
-                Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
+                Objects.equals(NamespacedSchema.ensureNamespaced(inputName),
+                        oldIdStr) ? newIdStr : inputName));
     }
 
     /**
@@ -81,9 +84,11 @@ public final class SimpleFixes {
      * @param schema  the schema this fixer should be a part of
      * @see SimpleEntityRenameFix
      */
-    public static void addEntityRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-                                        @NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
-                                        @NotNull Schema schema) {
+    public static void addEntityRenameFix(@NotNull DataFixerBuilder builder,
+                                          @NotNull String name,
+                                          @NotNull ResourceLocation oldId,
+                                          @NotNull ResourceLocation newId,
+                                          @NotNull Schema schema) {
         requireNonNull(builder, "DataFixerBuilder cannot be null");
         requireNonNull(name, "Fix name cannot be null");
         requireNonNull(oldId, "Old identifier cannot be null");
@@ -91,8 +96,11 @@ public final class SimpleFixes {
         requireNonNull(schema, "Schema cannot be null");
 
         final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
-        builder.addFixer(FrozenEntityRenameFix.create(schema, name, (inputName) ->
-                Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
+        builder.addFixer(
+                FrozenEntityRenameFix.create(schema, name, (inputName) ->
+                        Objects.equals(
+                                NamespacedSchema.ensureNamespaced(inputName),
+                                oldIdStr) ? newIdStr : inputName));
     }
 
     /**
@@ -105,8 +113,10 @@ public final class SimpleFixes {
      * @param schema  the schema this fix should be a part of
      * @see ItemRenameFix
      */
-    public static void addItemRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-                                        @NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
+    public static void addItemRenameFix(@NotNull DataFixerBuilder builder,
+                                        @NotNull String name,
+                                        @NotNull ResourceLocation oldId,
+                                        @NotNull ResourceLocation newId,
                                         @NotNull Schema schema) {
         requireNonNull(builder, "DataFixerBuilder cannot be null");
         requireNonNull(name, "Fix name cannot be null");
@@ -116,25 +126,29 @@ public final class SimpleFixes {
 
         final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
         builder.addFixer(ItemRenameFix.create(schema, name, (inputName) ->
-                Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
+                Objects.equals(NamespacedSchema.ensureNamespaced(inputName),
+                        oldIdStr) ? newIdStr : inputName));
     }
 
     /**
      * Adds a blockstate rename fix to the builder, in case a blockstate's name is changed.
      *
-     * @param builder       the builder
-     * @param name          the fix's name
-     * @param blockId       the block's identifier
-     * @param oldState      the blockstate's old name
-     * @param defaultValue  the blockstate's default value
-     * @param newState      the blockstates's new name
-     * @param schema        the schema this fixer should be a part of
+     * @param builder      the builder
+     * @param name         the fix's name
+     * @param blockId      the block's identifier
+     * @param oldState     the blockstate's old name
+     * @param defaultValue the blockstate's default value
+     * @param newState     the blockstates's new name
+     * @param schema       the schema this fixer should be a part of
      * @see BlockStateRenameFix
      */
-    public static void addBlockStateRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-                                         @NotNull ResourceLocation blockId, @NotNull String oldState,
-                                         @NotNull String defaultValue, @NotNull String newState,
-                                         @NotNull Schema schema) {
+    public static void addBlockStateRenameFix(@NotNull DataFixerBuilder builder,
+                                              @NotNull String name,
+                                              @NotNull ResourceLocation blockId,
+                                              @NotNull String oldState,
+                                              @NotNull String defaultValue,
+                                              @NotNull String newState,
+                                              @NotNull Schema schema) {
         requireNonNull(builder, "DataFixerBuilder cannot be null");
         requireNonNull(name, "Fix name cannot be null");
         requireNonNull(blockId, "Block Id cannot be null");
@@ -144,7 +158,9 @@ public final class SimpleFixes {
         requireNonNull(schema, "Schema cannot be null");
 
         final String blockIdStr = blockId.toString();
-        builder.addFixer(new BlockStateRenameFix(schema, name, blockIdStr, oldState, defaultValue, newState));
+        builder.addFixer(
+                new BlockStateRenameFix(schema, name, blockIdStr, oldState,
+                        defaultValue, newState));
     }
 
     /**
@@ -156,7 +172,8 @@ public final class SimpleFixes {
      * @param schema  the schema this fixer should be a part of
      * @see RenameBiomesFix
      */
-    public static void addBiomeRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
+    public static void addBiomeRenameFix(@NotNull DataFixerBuilder builder,
+                                         @NotNull String name,
                                          @NotNull Map<ResourceLocation, ResourceLocation> changes,
                                          @NotNull Schema schema) {
         requireNonNull(builder, "DataFixerBuilder cannot be null");
@@ -166,8 +183,10 @@ public final class SimpleFixes {
 
         var mapBuilder = ImmutableMap.<String, String>builder();
         for (var entry : changes.entrySet()) {
-            mapBuilder.put(entry.getKey().toString(), entry.getValue().toString());
+            mapBuilder.put(entry.getKey().toString(),
+                    entry.getValue().toString());
         }
-        builder.addFixer(new RenameBiomesFix(schema, false, name, mapBuilder.build()));
+        builder.addFixer(
+                new RenameBiomesFix(schema, false, name, mapBuilder.build()));
     }
 }

@@ -9,9 +9,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class FrozenSoundPredicates {
-    public static Map<ResourceLocation, LoopPredicate<?>> predicates = new HashMap<>();
+    public static Map<ResourceLocation, LoopPredicate<?>> predicates =
+            new HashMap<>();
 
-    public static void register(ResourceLocation id, LoopPredicate<?> predicate) {
+    public static void register(ResourceLocation id,
+                                LoopPredicate<?> predicate) {
         predicates.put(id, predicate);
     }
 
@@ -31,8 +33,10 @@ public final class FrozenSoundPredicates {
 
     public static LoopPredicate<Entity> DEFAULT = entity -> !entity.isSilent();
     public static ResourceLocation DEFAULT_ID = FrozenMain.id("default");
-    public static LoopPredicate<Entity> NOT_SILENT_AND_ALIVE = entity -> !entity.isSilent();
-    public static ResourceLocation NOT_SILENT_AND_ALIVE_ID = FrozenMain.id("not_silent_and_alive");
+    public static LoopPredicate<Entity> NOT_SILENT_AND_ALIVE =
+            entity -> !entity.isSilent();
+    public static ResourceLocation NOT_SILENT_AND_ALIVE_ID =
+            FrozenMain.id("not_silent_and_alive");
 
     public static void init() {
         register(FrozenMain.id("default"), DEFAULT);

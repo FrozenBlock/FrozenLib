@@ -38,13 +38,15 @@ public final class EmptySchema extends FirstSchema {
      *
      * @param versionKey the data version key
      */
-    public EmptySchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
+    public EmptySchema(
+            @Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
         super(versionKey);
     }
 
     // Ensure the schema stays empty.
     @Override
-    public void registerType(boolean recursive, DSL.TypeReference type, Supplier<TypeTemplate> template) {
+    public void registerType(boolean recursive, DSL.TypeReference type,
+                             Supplier<TypeTemplate> template) {
         throw new UnsupportedOperationException();
     }
 

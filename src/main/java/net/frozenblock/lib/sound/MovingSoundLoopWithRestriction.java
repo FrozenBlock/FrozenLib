@@ -9,12 +9,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
-public class MovingSoundLoopWithRestriction extends AbstractTickableSoundInstance {
+public class MovingSoundLoopWithRestriction
+        extends AbstractTickableSoundInstance {
 
     private final Entity entity;
     private final FrozenSoundPredicates.LoopPredicate<?> predicate;
 
-    public MovingSoundLoopWithRestriction(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, FrozenSoundPredicates.LoopPredicate<?> predicate) {
+    public MovingSoundLoopWithRestriction(Entity entity, SoundEvent sound,
+                                          SoundSource category, float volume,
+                                          float pitch,
+                                          FrozenSoundPredicates.LoopPredicate<?> predicate) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = true;

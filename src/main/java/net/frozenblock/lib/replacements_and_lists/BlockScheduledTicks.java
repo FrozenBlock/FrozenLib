@@ -15,7 +15,8 @@ public class BlockScheduledTicks {
 
     @FunctionalInterface
     public interface InjectedScheduledTick {
-        void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random);
+        void tick(BlockState state, ServerLevel world, BlockPos pos,
+                  RandomSource random);
     }
 
 }

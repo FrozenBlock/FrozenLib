@@ -9,7 +9,8 @@ public final class FrozenOverworldBiomes {
     private FrozenOverworldBiomes() {
     }
 
-    public static void addOverworldBiome(ResourceKey<Biome> biome, Climate.TargetPoint targetPoint) {
+    public static void addOverworldBiome(ResourceKey<Biome> biome,
+                                         Climate.TargetPoint targetPoint) {
         OverworldBiomeData.addOverworldBiome(biome, Climate.parameters(
                 targetPoint.temperature(),
                 targetPoint.humidity(),
@@ -21,7 +22,8 @@ public final class FrozenOverworldBiomes {
         ));
     }
 
-    public static void addOverworldBiome(ResourceKey<Biome> biome, Climate.ParameterPoint parameterPoint) {
+    public static void addOverworldBiome(ResourceKey<Biome> biome,
+                                         Climate.ParameterPoint parameterPoint) {
         OverworldBiomeData.addOverworldBiome(biome, parameterPoint);
     }
 

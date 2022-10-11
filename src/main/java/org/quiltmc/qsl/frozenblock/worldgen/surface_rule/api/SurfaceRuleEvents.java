@@ -37,34 +37,41 @@ public final class SurfaceRuleEvents {
      * <p>
      * This phase always happen after the {@link Event#DEFAULT_PHASE default phase}.
      */
-    public static final ResourceLocation REMOVE_PHASE = new ResourceLocation("frozenblock_quilt", "remove");
+    public static final ResourceLocation REMOVE_PHASE =
+            new ResourceLocation("frozenblock_quilt", "remove");
 
     /**
      * An event indicating that the surface rules for the Overworld dimension may get modified by mods, allowing the injection of modded surface rules.
      */
-    public static final Event<OverworldModifierCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldModifierCallback.class, callbacks -> context -> {
-        for (var callback : callbacks) {
-            callback.modifyOverworldRules(context);
-        }
-    });
+    public static final Event<OverworldModifierCallback> MODIFY_OVERWORLD =
+            FrozenEvents.createEnvironmentEvent(OverworldModifierCallback.class,
+                    callbacks -> context -> {
+                        for (var callback : callbacks) {
+                            callback.modifyOverworldRules(context);
+                        }
+                    });
 
     /**
      * An event indicating that the surface rules for the Nether dimension may get modified by mods, allowing the injection of modded surface rules.
      */
-    public static final Event<NetherModifierCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherModifierCallback.class, callbacks -> context -> {
-        for (var callback : callbacks) {
-            callback.modifyNetherRules(context);
-        }
-    });
+    public static final Event<NetherModifierCallback> MODIFY_NETHER =
+            FrozenEvents.createEnvironmentEvent(NetherModifierCallback.class,
+                    callbacks -> context -> {
+                        for (var callback : callbacks) {
+                            callback.modifyNetherRules(context);
+                        }
+                    });
 
     /**
      * An event indicating that the surface rules for the End dimension may get modified by mods, allowing the injection of modded surface rules.
      */
-    public static final Event<TheEndModifierCallback> MODIFY_THE_END = FrozenEvents.createEnvironmentEvent(TheEndModifierCallback.class, callbacks -> context -> {
-        for (var callback : callbacks) {
-            callback.modifyTheEndRules(context);
-        }
-    });
+    public static final Event<TheEndModifierCallback> MODIFY_THE_END =
+            FrozenEvents.createEnvironmentEvent(TheEndModifierCallback.class,
+                    callbacks -> context -> {
+                        for (var callback : callbacks) {
+                            callback.modifyTheEndRules(context);
+                        }
+                    });
 
     @FunctionalInterface
     public interface OverworldModifierCallback extends CommonEventEntrypoint {
@@ -73,7 +80,8 @@ public final class SurfaceRuleEvents {
          *
          * @param context the modification context
          */
-        void modifyOverworldRules(@NotNull SurfaceRuleContext.Overworld context);
+        void modifyOverworldRules(
+                @NotNull SurfaceRuleContext.Overworld context);
     }
 
     @FunctionalInterface
@@ -97,7 +105,8 @@ public final class SurfaceRuleEvents {
     }
 
     private SurfaceRuleEvents() {
-        throw new UnsupportedOperationException("SurfaceMaterialRuleEvents only contains static definitions.");
+        throw new UnsupportedOperationException(
+                "SurfaceMaterialRuleEvents only contains static definitions.");
     }
 
     static {

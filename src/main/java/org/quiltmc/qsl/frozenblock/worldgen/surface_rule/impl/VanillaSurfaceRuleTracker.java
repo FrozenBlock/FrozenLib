@@ -35,15 +35,22 @@ import java.util.function.Consumer;
  */
 @ApiStatus.Internal
 public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
-    private static final ResourceLocation SURFACE_RULES_APPLY_PHASE = new ResourceLocation("frozenblock_quilt_surface_rule", "apply");
-    public static final VanillaSurfaceRuleTracker<SurfaceRuleContextImpl.OverworldImpl> OVERWORLD = new VanillaSurfaceRuleTracker<>(
-            context -> SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().modifyOverworldRules(context)
+    private static final ResourceLocation SURFACE_RULES_APPLY_PHASE =
+            new ResourceLocation("frozenblock_quilt_surface_rule", "apply");
+    public static final VanillaSurfaceRuleTracker<SurfaceRuleContextImpl.OverworldImpl>
+            OVERWORLD = new VanillaSurfaceRuleTracker<>(
+            context -> SurfaceRuleEvents.MODIFY_OVERWORLD.invoker()
+                    .modifyOverworldRules(context)
     );
-    public static final VanillaSurfaceRuleTracker<SurfaceRuleContextImpl.NetherImpl> NETHER = new VanillaSurfaceRuleTracker<>(
-            context -> SurfaceRuleEvents.MODIFY_NETHER.invoker().modifyNetherRules(context)
+    public static final VanillaSurfaceRuleTracker<SurfaceRuleContextImpl.NetherImpl>
+            NETHER = new VanillaSurfaceRuleTracker<>(
+            context -> SurfaceRuleEvents.MODIFY_NETHER.invoker()
+                    .modifyNetherRules(context)
     );
-    public static final VanillaSurfaceRuleTracker<SurfaceRuleContextImpl.TheEndImpl> THE_END = new VanillaSurfaceRuleTracker<>(
-            context -> SurfaceRuleEvents.MODIFY_THE_END.invoker().modifyTheEndRules(context)
+    public static final VanillaSurfaceRuleTracker<SurfaceRuleContextImpl.TheEndImpl>
+            THE_END = new VanillaSurfaceRuleTracker<>(
+            context -> SurfaceRuleEvents.MODIFY_THE_END.invoker()
+                    .modifyTheEndRules(context)
     );
 
     private final Consumer<T> eventInvoker;
@@ -53,11 +60,12 @@ public final class VanillaSurfaceRuleTracker<T extends SurfaceRuleContextImpl> {
     private VanillaSurfaceRuleTracker(Consumer<T> eventInvoker) {
         this.eventInvoker = eventInvoker;
 
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.register(SURFACE_RULES_APPLY_PHASE, (server, resourceManager, error) -> {
-            if (error == null && server == null) {
-                this.init(resourceManager);
-            }
-        });
+        ResourceLoaderEvents.END_DATA_PACK_RELOAD.register(
+                SURFACE_RULES_APPLY_PHASE, (server, resourceManager, error) -> {
+                    if (error == null && server == null) {
+                        this.init(resourceManager);
+                    }
+                });
     }
 
     /**

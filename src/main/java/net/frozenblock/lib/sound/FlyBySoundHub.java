@@ -18,13 +18,16 @@ import java.util.Map;
 @Environment(EnvType.CLIENT)
 public class FlyBySoundHub {
 
-    public static Map<EntityType<?>, FlyBySound> autoEntitiesAndSounds = new HashMap<>();
+    public static Map<EntityType<?>, FlyBySound> autoEntitiesAndSounds =
+            new HashMap<>();
 
-    public static Map<Entity, FlyBySound> flybyEntitiesAndSounds = new HashMap<>();
+    public static Map<Entity, FlyBySound> flybyEntitiesAndSounds =
+            new HashMap<>();
     public static Map<Entity, Integer> entityCooldowns = new HashMap<>();
     private static int checkAroundCooldown;
 
-    public static void update(Minecraft client, Player player, boolean autoSounds) {
+    public static void update(Minecraft client, Player player,
+                              boolean autoSounds) {
         for (Entity entity : flybyEntitiesAndSounds.keySet()) {
             if (client.level == null) {
                 flybyEntitiesAndSounds.clear();
@@ -36,21 +39,31 @@ public class FlyBySoundHub {
                 Vec3 entityPos = entity.position();
                 Vec3 playerPos = player.getEyePosition();
                 double distanceTo = entityPos.distanceTo(playerPos);
-                double newDistanceTo = entityPos.add(vel).add(vel).distanceTo(playerPos.add(playerVel));
+                double newDistanceTo = entityPos.add(vel).add(vel)
+                        .distanceTo(playerPos.add(playerVel));
 
                 int cooldown = entityCooldowns.getOrDefault(entity, 0) - 1;
                 entityCooldowns.put(entity, cooldown);
-                if ((distanceTo > newDistanceTo && distanceTo < (vel.lengthSqr() + playerVel.length()) * 2) && cooldown <= 0) {
+                if ((distanceTo > newDistanceTo && distanceTo <
+                        (vel.lengthSqr() + playerVel.length()) * 2) &&
+                        cooldown <= 0) {
                     FlyBySound flyBy = flybyEntitiesAndSounds.get(entity);
                     float volume = (float) (flyBy.volume + (vel.length() / 2));
-                    client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.category, volume, flyBy.pitch, entity, client.level.random.nextLong()));
+                    client.getSoundManager()
+                            .play(new EntityBoundSoundInstance(flyBy.sound,
+                                    flyBy.category, volume, flyBy.pitch, entity,
+                                    client.level.random.nextLong()));
                     entityCooldowns.put(entity, 40);
                 }
             }
         }
         //Remove Entities That Aren't Active
-        for (Entity entity : flybyEntitiesAndSounds.keySet().stream().toList()) {
-            if (entity == null || entity.isRemoved() || entity.isSilent() || (entity.distanceTo(client.getCameraEntity()) > 16 && !autoEntitiesAndSounds.containsKey(entity.getType()))) {
+        for (Entity entity : flybyEntitiesAndSounds.keySet().stream()
+                .toList()) {
+            if (entity == null || entity.isRemoved() || entity.isSilent() ||
+                    (entity.distanceTo(client.getCameraEntity()) > 16 &&
+                            !autoEntitiesAndSounds.containsKey(
+                                    entity.getType()))) {
                 flybyEntitiesAndSounds.remove(entity);
             }
         }
@@ -61,8 +74,11 @@ public class FlyBySoundHub {
             } else {
                 if (client.level != null && autoSounds) {
                     checkAroundCooldown = 1;
-                    AABB box = new AABB(player.blockPosition().offset(-3, -3, -3), player.blockPosition().offset(3, 3, 3));
-                    for (Entity entity : client.level.getEntities(player, box)) {
+                    AABB box =
+                            new AABB(player.blockPosition().offset(-3, -3, -3),
+                                    player.blockPosition().offset(3, 3, 3));
+                    for (Entity entity : client.level.getEntities(player,
+                            box)) {
                         EntityType<?> type = entity.getType();
                         if (autoEntitiesAndSounds.containsKey(type)) {
                             addEntity(entity, autoEntitiesAndSounds.get(type));

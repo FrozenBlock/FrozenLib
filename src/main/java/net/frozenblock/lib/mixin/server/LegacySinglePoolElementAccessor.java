@@ -14,7 +14,10 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 public interface LegacySinglePoolElementAccessor {
 
     @Invoker("<init>")
-    static LegacySinglePoolElement legacySinglePoolElement(Either<ResourceLocation, StructureTemplate> either, Holder<StructureProcessorList> holder, StructureTemplatePool.Projection projection) {
+    static LegacySinglePoolElement legacySinglePoolElement(
+            Either<ResourceLocation, StructureTemplate> either,
+            Holder<StructureProcessorList> holder,
+            StructureTemplatePool.Projection projection) {
         throw new AssertionError();
     }
 

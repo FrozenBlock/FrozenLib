@@ -48,13 +48,16 @@ public class MainMixin {
             ),
             remap = false
     )
-    private static void onStartReloadResources(String[] strings, CallbackInfo ci) {
-        ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null); // First reload
+    private static void onStartReloadResources(String[] strings,
+                                               CallbackInfo ci) {
+        ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker()
+                .onStartDataPackReload(null, null); // First reload
     }
 
     @ModifyVariable(method = "main", at = @At(value = "STORE"), remap = false)
     private static WorldStem onSuccessfulReloadResources(WorldStem resources) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resources.resourceManager(), null);
+        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker()
+                .onEndDataPackReload(null, resources.resourceManager(), null);
         return resources; // noop
     }
 
@@ -68,7 +71,8 @@ public class MainMixin {
             remap = false
     )
     private static Throwable onFailedReloadResources(Throwable exception) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, exception);
+        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker()
+                .onEndDataPackReload(null, null, exception);
         return exception; // noop
     }
 }

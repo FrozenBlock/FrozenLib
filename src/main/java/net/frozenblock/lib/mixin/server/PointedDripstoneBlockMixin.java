@@ -37,81 +37,128 @@ import java.util.function.Predicate;
 @Mixin(PointedDripstoneBlock.class)
 public class PointedDripstoneBlockMixin {
 
-    @Final @Shadow
+    @Final
+    @Shadow
     private static VoxelShape REQUIRED_SPACE_TO_DRIP_THROUGH_NON_SOLID_BLOCK;
 
     @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "method_33279(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo;", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
-    private static void getFluidAboveStalactite(Level level, BlockPos pos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> cir, BlockPos blockPos, BlockState blockState) {
+    private static void getFluidAboveStalactite(Level level, BlockPos pos,
+                                                CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> cir,
+                                                BlockPos blockPos,
+                                                BlockState blockState) {
         if (!FrozenBools.useNewDripstoneLiquid && blockPos != null) {
-            if (DripstoneDripWaterFrom.map.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
-                cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState));
-            } else if (DripstoneDripLavaFrom.map.containsKey(blockState.getBlock())) {
-                cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState));
+            if (DripstoneDripWaterFrom.map.containsKey(blockState.getBlock()) &&
+                    !level.dimensionType().ultraWarm()) {
+                cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos,
+                        Fluids.WATER, blockState));
+            } else if (DripstoneDripLavaFrom.map.containsKey(
+                    blockState.getBlock())) {
+                cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos,
+                        Fluids.LAVA, blockState));
             }
         }
     }
 
     @Inject(at = @At("HEAD"), method = "getFluidAboveStalactite", cancellable = true)
-    private static void getFluidAboveStalactite(Level level, BlockPos pos, BlockState state, CallbackInfoReturnable<Optional<PointedDripstoneBlock.FluidInfo>> info) {
+    private static void getFluidAboveStalactite(Level level, BlockPos pos,
+                                                BlockState state,
+                                                CallbackInfoReturnable<Optional<PointedDripstoneBlock.FluidInfo>> info) {
         if (FrozenBools.useNewDripstoneLiquid) {
             info.setReturnValue(
 
-            !isStalactite(state) ? Optional.empty() : findRootBlock(level, pos, state, 11).map((posx) -> {
+                    !isStalactite(state) ? Optional.empty() :
+                            findRootBlock(level, pos, state, 11).map((posx) -> {
 
-                BlockState firstState = level.getBlockState(posx);
-                if (DripstoneDripWaterFrom.map.containsKey(firstState.getBlock()) && !level.dimensionType().ultraWarm()) {
-                    return new PointedDripstoneBlock.FluidInfo(posx, Fluids.WATER, firstState);
-                } else if (DripstoneDripLavaFrom.map.containsKey(firstState.getBlock())) {
-                    return new PointedDripstoneBlock.FluidInfo(posx, Fluids.LAVA, firstState);
-                }
-                BlockPos blockPos = posx.above();
-                BlockState blockState = level.getBlockState(blockPos);
-                Fluid fluid;
-                if (DripstoneDripWaterFrom.map.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
-                    return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState);
-                } else if (DripstoneDripLavaFrom.map.containsKey(blockState.getBlock())) {
-                    return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState);
-                } else {
-                    fluid = level.getFluidState(blockPos).getType();
-                }
+                                BlockState firstState =
+                                        level.getBlockState(posx);
+                                if (DripstoneDripWaterFrom.map.containsKey(
+                                        firstState.getBlock()) &&
+                                        !level.dimensionType().ultraWarm()) {
+                                    return new PointedDripstoneBlock.FluidInfo(
+                                            posx, Fluids.WATER, firstState);
+                                } else if (DripstoneDripLavaFrom.map.containsKey(
+                                        firstState.getBlock())) {
+                                    return new PointedDripstoneBlock.FluidInfo(
+                                            posx, Fluids.LAVA, firstState);
+                                }
+                                BlockPos blockPos = posx.above();
+                                BlockState blockState =
+                                        level.getBlockState(blockPos);
+                                Fluid fluid;
+                                if (DripstoneDripWaterFrom.map.containsKey(
+                                        blockState.getBlock()) &&
+                                        !level.dimensionType().ultraWarm()) {
+                                    return new PointedDripstoneBlock.FluidInfo(
+                                            blockPos, Fluids.WATER, blockState);
+                                } else if (DripstoneDripLavaFrom.map.containsKey(
+                                        blockState.getBlock())) {
+                                    return new PointedDripstoneBlock.FluidInfo(
+                                            blockPos, Fluids.LAVA, blockState);
+                                } else {
+                                    fluid = level.getFluidState(blockPos)
+                                            .getType();
+                                }
 
-                return new PointedDripstoneBlock.FluidInfo(blockPos, fluid, blockState);
-            })
+                                return new PointedDripstoneBlock.FluidInfo(
+                                        blockPos, fluid, blockState);
+                            })
             );
         }
     }
 
     @Inject(method = "maybeTransferFluid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
-    private static void maybeTransferFluid(BlockState state, ServerLevel level, BlockPos pos, float randChance, CallbackInfo ci, Optional<PointedDripstoneBlock.FluidInfo> optional, Fluid fluid, float f, BlockPos blockPos) {
+    private static void maybeTransferFluid(BlockState state, ServerLevel level,
+                                           BlockPos pos, float randChance,
+                                           CallbackInfo ci,
+                                           Optional<PointedDripstoneBlock.FluidInfo> optional,
+                                           Fluid fluid, float f,
+                                           BlockPos blockPos) {
         if (optional.isPresent()) {
             PointedDripstoneBlock.FluidInfo fluidInfo = optional.get();
             Block block = optional.get().sourceState().getBlock();
-            if (DripstoneDripWaterFrom.map.containsKey(block) && fluid == Fluids.WATER) {
-                DripstoneDripWaterFrom.map.get(block).drip(level, fluidInfo, blockPos);
+            if (DripstoneDripWaterFrom.map.containsKey(block) &&
+                    fluid == Fluids.WATER) {
+                DripstoneDripWaterFrom.map.get(block)
+                        .drip(level, fluidInfo, blockPos);
                 ci.cancel();
             }
-            if (DripstoneDripLavaFrom.map.containsKey(block) && fluid == Fluids.LAVA) {
-                DripstoneDripLavaFrom.map.get(block).drip(level, fluidInfo, blockPos);
+            if (DripstoneDripLavaFrom.map.containsKey(block) &&
+                    fluid == Fluids.LAVA) {
+                DripstoneDripLavaFrom.map.get(block)
+                        .drip(level, fluidInfo, blockPos);
                 ci.cancel();
             }
         }
     }
 
     @Inject(at = @At("HEAD"), method = "findFillableCauldronBelowStalactiteTip", cancellable = true)
-    private static void findFillableCauldronBelowStalactiteTip(Level world, BlockPos pos2, Fluid fluid, CallbackInfoReturnable<BlockPos> info) {
-        Predicate<BlockState> tagPredicate = state -> state.is(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON);
-        if (tagPredicate.test(world.getBlockState(pos2.mutable().move(Direction.get(Direction.DOWN.getAxisDirection(), Direction.Axis.Y))))) {
-            Predicate<BlockState> predicate = tagPredicate.or(state -> (state.getBlock() instanceof AbstractCauldronBlock && ((AbstractCauldronBlock) state.getBlock()).canReceiveStalactiteDrip(fluid)));
-            BiPredicate<BlockPos, BlockState> biPredicate = (pos, state) -> canDripThrough(world, pos, state);
-            info.setReturnValue(findBlockVertical(world, pos2, Direction.DOWN.getAxisDirection(), biPredicate, predicate, 11).orElse(null));
+    private static void findFillableCauldronBelowStalactiteTip(Level world,
+                                                               BlockPos pos2,
+                                                               Fluid fluid,
+                                                               CallbackInfoReturnable<BlockPos> info) {
+        Predicate<BlockState> tagPredicate =
+                state -> state.is(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON);
+        if (tagPredicate.test(world.getBlockState(pos2.mutable()
+                .move(Direction.get(Direction.DOWN.getAxisDirection(),
+                        Direction.Axis.Y))))) {
+            Predicate<BlockState> predicate = tagPredicate.or(state -> (
+                    state.getBlock() instanceof AbstractCauldronBlock &&
+                            ((AbstractCauldronBlock) state.getBlock()).canReceiveStalactiteDrip(
+                                    fluid)));
+            BiPredicate<BlockPos, BlockState> biPredicate =
+                    (pos, state) -> canDripThrough(world, pos, state);
+            info.setReturnValue(findBlockVertical(world, pos2,
+                    Direction.DOWN.getAxisDirection(), biPredicate, predicate,
+                    11).orElse(null));
             info.cancel();
         }
 
     }
 
     @Shadow
-    private static boolean canDripThrough(BlockGetter world, BlockPos pos, BlockState state) {
+    private static boolean canDripThrough(BlockGetter world, BlockPos pos,
+                                          BlockState state) {
         if (state.isAir()) {
             return true;
         }
@@ -122,11 +169,18 @@ public class PointedDripstoneBlockMixin {
             return false;
         }
         VoxelShape voxelShape = state.getCollisionShape(world, pos);
-        return !Shapes.joinIsNotEmpty(REQUIRED_SPACE_TO_DRIP_THROUGH_NON_SOLID_BLOCK, voxelShape, BooleanOp.AND);
+        return !Shapes.joinIsNotEmpty(
+                REQUIRED_SPACE_TO_DRIP_THROUGH_NON_SOLID_BLOCK, voxelShape,
+                BooleanOp.AND);
     }
 
     @Shadow
-    private static Optional<BlockPos> findBlockVertical(LevelAccessor world, BlockPos pos, Direction.AxisDirection direction, BiPredicate<BlockPos, BlockState> continuePredicate, Predicate<BlockState> stopPredicate, int range) {
+    private static Optional<BlockPos> findBlockVertical(LevelAccessor world,
+                                                        BlockPos pos,
+                                                        Direction.AxisDirection direction,
+                                                        BiPredicate<BlockPos, BlockState> continuePredicate,
+                                                        Predicate<BlockState> stopPredicate,
+                                                        int range) {
         Direction direction2 = Direction.get(direction, Direction.Axis.Y);
         BlockPos.MutableBlockPos mutable = pos.mutable();
         for (int i = 1; i < range; ++i) {
@@ -135,7 +189,10 @@ public class PointedDripstoneBlockMixin {
             if (stopPredicate.test(blockState)) {
                 return Optional.of(mutable.immutable());
             }
-            if (!world.isOutsideBuildHeight(mutable.getY()) && continuePredicate.test(mutable, blockState)) continue;
+            if (!world.isOutsideBuildHeight(mutable.getY()) &&
+                    continuePredicate.test(mutable, blockState)) {
+                continue;
+            }
             return Optional.empty();
         }
         return Optional.empty();
@@ -152,12 +209,16 @@ public class PointedDripstoneBlockMixin {
     }
 
     @Shadow
-    private static boolean isPointedDripstoneWithDirection(BlockState state, Direction dir) {
-        return state.is(Blocks.POINTED_DRIPSTONE) && state.getValue(BlockStateProperties.VERTICAL_DIRECTION) == dir;
+    private static boolean isPointedDripstoneWithDirection(BlockState state,
+                                                           Direction dir) {
+        return state.is(Blocks.POINTED_DRIPSTONE) &&
+                state.getValue(BlockStateProperties.VERTICAL_DIRECTION) == dir;
     }
 
     @Shadow
-    private static Optional<BlockPos> findRootBlock(Level level, BlockPos pos, BlockState state, int maxIterations) {
+    private static Optional<BlockPos> findRootBlock(Level level, BlockPos pos,
+                                                    BlockState state,
+                                                    int maxIterations) {
         return Optional.empty();
     }
 

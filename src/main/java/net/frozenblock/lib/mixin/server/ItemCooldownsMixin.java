@@ -17,12 +17,15 @@ public class ItemCooldownsMixin implements CooldownInterface {
     @Final
     @Shadow
     @Mutable
-    public final Map<Item, ItemCooldowns.CooldownInstance> cooldowns = Maps.newHashMap();
+    public final Map<Item, ItemCooldowns.CooldownInstance> cooldowns =
+            Maps.newHashMap();
 
     public void changeCooldown(Item item, int additional) {
         if (this.cooldowns.containsKey(item)) {
             ItemCooldowns.CooldownInstance cooldown = this.cooldowns.get(item);
-            this.cooldowns.put(item, new ItemCooldowns.CooldownInstance(cooldown.startTime, cooldown.endTime + additional));
+            this.cooldowns.put(item,
+                    new ItemCooldowns.CooldownInstance(cooldown.startTime,
+                            cooldown.endTime + additional));
             this.onCooldownChanged(item, additional);
         }
     }

@@ -41,7 +41,8 @@ import static java.util.Objects.requireNonNull;
  */
 public final class QuiltDataFixes {
     private QuiltDataFixes() {
-        throw new RuntimeException("QuiltDataFixes only contains static declarations.");
+        throw new RuntimeException(
+                "QuiltDataFixes only contains static declarations.");
     }
 
     /**
@@ -51,11 +52,12 @@ public final class QuiltDataFixes {
      *
      * @see DataFixerBuilder#addSchema(int, BiFunction)
      */
-    public static final BiFunction<Integer, Schema, Schema> BASE_SCHEMA = (version, parent) -> {
-        checkArgument(version == 0, "version must be 0");
-        checkArgument(parent == null, "parent must be null");
-        return QuiltDataFixesInternals.get().createBaseSchema();
-    };
+    public static final BiFunction<Integer, Schema, Schema> BASE_SCHEMA =
+            (version, parent) -> {
+                checkArgument(version == 0, "version must be 0");
+                checkArgument(parent == null, "parent must be null");
+                return QuiltDataFixesInternals.get().createBaseSchema();
+            };
 
     /**
      * Registers a new data fixer.
@@ -73,10 +75,12 @@ public final class QuiltDataFixes {
         requireNonNull(dataFixer, "dataFixer cannot be null");
 
         if (isFrozen()) {
-            throw new IllegalStateException("Can't register data fixer after registry is frozen");
+            throw new IllegalStateException(
+                    "Can't register data fixer after registry is frozen");
         }
 
-        QuiltDataFixesInternals.get().registerFixer(modId, currentVersion, dataFixer);
+        QuiltDataFixesInternals.get()
+                .registerFixer(modId, currentVersion, dataFixer);
     }
 
     /**
@@ -105,7 +109,8 @@ public final class QuiltDataFixes {
         requireNonNull(mod, "mod cannot be null");
         requireNonNull(dataFixerBuilder, "data fixer builder cannot be null");
 
-        registerFixer(mod.getMetadata().getId(), dataFixerBuilder.getDataVersion(),
+        registerFixer(mod.getMetadata().getId(),
+                dataFixerBuilder.getDataVersion(),
                 dataFixerBuilder.build(Util::bootstrapExecutor));
     }
 
@@ -118,7 +123,8 @@ public final class QuiltDataFixes {
     public static @NotNull Optional<DataFixer> getFixer(@NotNull String modId) {
         requireNonNull(modId, "modId cannot be null");
 
-        QuiltDataFixesInternals.DataFixerEntry entry = QuiltDataFixesInternals.get().getFixerEntry(modId);
+        QuiltDataFixesInternals.DataFixerEntry entry =
+                QuiltDataFixesInternals.get().getFixerEntry(modId);
         if (entry == null) {
             return Optional.empty();
         }
@@ -134,7 +140,8 @@ public final class QuiltDataFixes {
      */
     @Contract(pure = true)
     @Range(from = 0, to = Integer.MAX_VALUE)
-    public static int getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
+    public static int getModDataVersion(@NotNull CompoundTag compound,
+                                        @NotNull String modId) {
         requireNonNull(compound, "compound cannot be null");
         requireNonNull(modId, "modId cannot be null");
 

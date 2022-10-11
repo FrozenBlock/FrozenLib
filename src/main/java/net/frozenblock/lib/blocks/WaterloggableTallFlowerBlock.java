@@ -16,20 +16,27 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
-public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements SimpleWaterloggedBlock {
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+public class WaterloggableTallFlowerBlock extends TallFlowerBlock
+        implements SimpleWaterloggedBlock {
+    public static final BooleanProperty WATERLOGGED =
+            BlockStateProperties.WATERLOGGED;
 
     public WaterloggableTallFlowerBlock(Properties settings) {
         super(settings);
-        this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
+        this.registerDefaultState(
+                this.defaultBlockState().setValue(WATERLOGGED, false));
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+    public BlockState updateShape(BlockState state, Direction direction,
+                                  BlockState neighborState, LevelAccessor world,
+                                  BlockPos pos, BlockPos neighborPos) {
         if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+            world.scheduleTick(pos, Fluids.WATER,
+                    Fluids.WATER.getTickDelay(world));
         }
-        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+        return super.updateShape(state, direction, neighborState, world, pos,
+                neighborPos);
     }
 
     @Nullable
@@ -37,17 +44,21 @@ public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements Sim
         BlockPos blockPos = ctx.getClickedPos();
         Level world = ctx.getLevel();
         FluidState fluidState = world.getFluidState(blockPos);
-        return blockPos.getY() < world.getMaxBuildHeight() - 1 && world.getBlockState(blockPos.above()).canBeReplaced(ctx) ?
-                this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER) : null;
+        return blockPos.getY() < world.getMaxBuildHeight() - 1 &&
+                world.getBlockState(blockPos.above()).canBeReplaced(ctx) ?
+                this.defaultBlockState().setValue(WATERLOGGED,
+                        fluidState.getType() == Fluids.WATER) : null;
     }
 
     @Override
     public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) :
+                super.getFluidState(state);
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(
+            StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
         builder.add(WATERLOGGED);
     }

@@ -30,16 +30,21 @@ import java.util.List;
 public class HopperBlockEntityMixin {
 
     @Inject(at = @At("HEAD"), method = "ejectItems", cancellable = true)
-    private static void ejectItems(Level world, BlockPos pos, BlockState state, Container inventory, CallbackInfoReturnable<Boolean> info) {
-        if (HopperUntouchableList.inventoryContainsBlacklisted(getAttachedContainer(world, pos, state))) {
+    private static void ejectItems(Level world, BlockPos pos, BlockState state,
+                                   Container inventory,
+                                   CallbackInfoReturnable<Boolean> info) {
+        if (HopperUntouchableList.inventoryContainsBlacklisted(
+                getAttachedContainer(world, pos, state))) {
             info.cancel();
             info.setReturnValue(false);
         }
     }
 
     @Inject(at = @At("HEAD"), method = "suckInItems", cancellable = true)
-    private static void suckInItems(Level world, Hopper hopper, CallbackInfoReturnable<Boolean> info) {
-        if (HopperUntouchableList.inventoryContainsBlacklisted(getSourceContainer(world, hopper))) {
+    private static void suckInItems(Level world, Hopper hopper,
+                                    CallbackInfoReturnable<Boolean> info) {
+        if (HopperUntouchableList.inventoryContainsBlacklisted(
+                getSourceContainer(world, hopper))) {
             info.cancel();
             info.setReturnValue(false);
         }
@@ -47,7 +52,8 @@ public class HopperBlockEntityMixin {
 
     @Nullable
     @Shadow
-    private static Container getAttachedContainer(Level world, BlockPos pos, BlockState state) {
+    private static Container getAttachedContainer(Level world, BlockPos pos,
+                                                  BlockState state) {
         Direction direction = state.getValue(HopperBlock.FACING);
         return HopperBlockEntity.getContainerAt(world, pos.relative(direction));
     }
@@ -55,12 +61,14 @@ public class HopperBlockEntityMixin {
     @Nullable
     @Shadow
     private static Container getSourceContainer(Level world, Hopper hopper) {
-        return getContainerAt(world, hopper.getLevelX(), hopper.getLevelY() + 1.0, hopper.getLevelZ());
+        return getContainerAt(world, hopper.getLevelX(),
+                hopper.getLevelY() + 1.0, hopper.getLevelZ());
     }
 
     @Nullable
     @Shadow
-    private static Container getContainerAt(Level world, double x, double y, double z) {
+    private static Container getContainerAt(Level world, double x, double y,
+                                            double z) {
         List<Entity> list;
         BlockEntity blockEntity;
         Container inventory = null;
@@ -68,11 +76,20 @@ public class HopperBlockEntityMixin {
         BlockState blockState = world.getBlockState(blockPos);
         Block block = blockState.getBlock();
         if (block instanceof WorldlyContainerHolder) {
-            inventory = ((WorldlyContainerHolder) block).getContainer(blockState, world, blockPos);
-        } else if (blockState.hasBlockEntity() && (blockEntity = world.getBlockEntity(blockPos)) instanceof Container && (inventory = (Container) blockEntity) instanceof ChestBlockEntity && block instanceof ChestBlock) {
-            inventory = ChestBlock.getContainer((ChestBlock) block, blockState, world, blockPos, true);
+            inventory =
+                    ((WorldlyContainerHolder) block).getContainer(blockState,
+                            world, blockPos);
+        } else if (blockState.hasBlockEntity() && (blockEntity =
+                world.getBlockEntity(blockPos)) instanceof Container &&
+                (inventory =
+                        (Container) blockEntity) instanceof ChestBlockEntity &&
+                block instanceof ChestBlock) {
+            inventory = ChestBlock.getContainer((ChestBlock) block, blockState,
+                    world, blockPos, true);
         }
-        if (inventory == null && !(list = world.getEntities((Entity) null, new AABB(x - 0.5, y - 0.5, z - 0.5, x + 0.5, y + 0.5, z + 0.5), EntitySelector.CONTAINER_ENTITY_SELECTOR)).isEmpty()) {
+        if (inventory == null && !(list = world.getEntities((Entity) null,
+                new AABB(x - 0.5, y - 0.5, z - 0.5, x + 0.5, y + 0.5, z + 0.5),
+                EntitySelector.CONTAINER_ENTITY_SELECTOR)).isEmpty()) {
             inventory = (Container) list.get(world.random.nextInt(list.size()));
         }
         return inventory;

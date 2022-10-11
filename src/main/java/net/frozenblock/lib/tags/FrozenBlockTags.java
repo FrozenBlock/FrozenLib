@@ -7,7 +7,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 public final class FrozenBlockTags {
-    public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = of(FabricLoader.getInstance().isDevelopmentEnvironment() ? "dripstone_can_drip_testing" : "dripstone_can_drip");
+    public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON =
+            of(FabricLoader.getInstance().isDevelopmentEnvironment() ?
+                    "dripstone_can_drip_testing" : "dripstone_can_drip");
 
     private FrozenBlockTags() {
     }

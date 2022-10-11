@@ -39,12 +39,17 @@ public abstract class VanillaSurfaceRulesMixin {
             at = @At("RETURN"),
             cancellable = true
     )
-    private static void frozenblock_quilt$injectOverworldRules(boolean abovePreliminarySurface, boolean bedrockRoof, boolean bedrockFloor,
-                                                   CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
+    private static void frozenblock_quilt$injectOverworldRules(
+            boolean abovePreliminarySurface, boolean bedrockRoof,
+            boolean bedrockFloor,
+            CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
         if (!VanillaSurfaceRuleTracker.OVERWORLD.isPaused()) {
-            cir.setReturnValue(VanillaSurfaceRuleTracker.OVERWORLD.modifyMaterialRules(new SurfaceRuleContextImpl.OverworldImpl(
-                    abovePreliminarySurface, bedrockRoof, bedrockFloor, cir.getReturnValue()
-            )));
+            cir.setReturnValue(
+                    VanillaSurfaceRuleTracker.OVERWORLD.modifyMaterialRules(
+                            new SurfaceRuleContextImpl.OverworldImpl(
+                                    abovePreliminarySurface, bedrockRoof,
+                                    bedrockFloor, cir.getReturnValue()
+                            )));
         }
     }
 
@@ -53,11 +58,14 @@ public abstract class VanillaSurfaceRulesMixin {
             at = @At("RETURN"),
             cancellable = true
     )
-    private static void frozenblock_quilt$injectNetherRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
+    private static void frozenblock_quilt$injectNetherRules(
+            CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
         if (!VanillaSurfaceRuleTracker.NETHER.isPaused()) {
-            cir.setReturnValue(VanillaSurfaceRuleTracker.NETHER.modifyMaterialRules(new SurfaceRuleContextImpl.NetherImpl(
-                    cir.getReturnValue()
-            )));
+            cir.setReturnValue(
+                    VanillaSurfaceRuleTracker.NETHER.modifyMaterialRules(
+                            new SurfaceRuleContextImpl.NetherImpl(
+                                    cir.getReturnValue()
+                            )));
         }
     }
 
@@ -66,11 +74,14 @@ public abstract class VanillaSurfaceRulesMixin {
             at = @At("RETURN"),
             cancellable = true
     )
-    private static void frozenblock_quilt$injectEndRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
+    private static void frozenblock_quilt$injectEndRules(
+            CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
         if (!VanillaSurfaceRuleTracker.THE_END.isPaused()) {
-            cir.setReturnValue(VanillaSurfaceRuleTracker.THE_END.modifyMaterialRules(new SurfaceRuleContextImpl.TheEndImpl(
-                    cir.getReturnValue()
-            )));
+            cir.setReturnValue(
+                    VanillaSurfaceRuleTracker.THE_END.modifyMaterialRules(
+                            new SurfaceRuleContextImpl.TheEndImpl(
+                                    cir.getReturnValue()
+                            )));
         }
     }
 }

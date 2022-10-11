@@ -30,7 +30,8 @@ import java.util.List;
  * Modified to work on Fabric
  */
 @Mixin(SurfaceRules.SequenceRuleSource.class)
-public class SequenceMaterialRuleMixin implements QuiltSequenceMaterialRuleHooks {
+public class SequenceMaterialRuleMixin
+        implements QuiltSequenceMaterialRuleHooks {
     @Mutable
     @Shadow
     @Final

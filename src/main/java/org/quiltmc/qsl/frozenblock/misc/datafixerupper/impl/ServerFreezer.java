@@ -29,9 +29,13 @@ public final class ServerFreezer {
 
     public static void onInitialize() {
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            FrozenMain.log("[Quilt DFU API] Serverside DataFixer Registry is about to freeze", true);
+            FrozenMain.log(
+                    "[Quilt DFU API] Serverside DataFixer Registry is about to freeze",
+                    true);
             QuiltDataFixesInternals.get().freeze();
-            FrozenMain.log("[Quilt DFU API] Serverside DataFixer Registry was frozen", true);
+            FrozenMain.log(
+                    "[Quilt DFU API] Serverside DataFixer Registry was frozen",
+                    true);
         });
     }
 }

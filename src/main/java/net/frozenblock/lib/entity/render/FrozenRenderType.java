@@ -11,16 +11,23 @@ import java.util.function.BiFunction;
 
 public final class FrozenRenderType {
 
-    public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize(
+    public static final BiFunction<ResourceLocation, Boolean, RenderType>
+            ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize(
             ((identifier, affectsOutline) -> {
-                RenderType.CompositeState multiPhaseParameters = RenderType.CompositeState.builder()
-                        .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
-                        .setTextureState(new RenderStateShard.TextureStateShard(identifier, false, false))
-                        .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
-                        .setCullState(RenderStateShard.NO_CULL)
-                        .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
-                        .setOverlayState(RenderStateShard.OVERLAY)
-                        .createCompositeState(affectsOutline);
+                RenderType.CompositeState multiPhaseParameters =
+                        RenderType.CompositeState.builder()
+                                .setShaderState(
+                                        RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+                                .setTextureState(
+                                        new RenderStateShard.TextureStateShard(
+                                                identifier, false, false))
+                                .setTransparencyState(
+                                        RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                                .setCullState(RenderStateShard.NO_CULL)
+                                .setWriteMaskState(
+                                        RenderStateShard.COLOR_DEPTH_WRITE)
+                                .setOverlayState(RenderStateShard.OVERLAY)
+                                .createCompositeState(affectsOutline);
                 return create(
                         "entity_translucent_emissive_fixed_frozenlib",
                         DefaultVertexFormat.NEW_ENTITY,
@@ -33,7 +40,8 @@ public final class FrozenRenderType {
             })
     );
 
-    public static RenderType entityTranslucentEmissiveFixed(ResourceLocation resourceLocation) {
+    public static RenderType entityTranslucentEmissiveFixed(
+            ResourceLocation resourceLocation) {
         return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, true);
     }
 
@@ -66,6 +74,7 @@ public final class FrozenRenderType {
             boolean translucent,
             RenderType.CompositeState phases
     ) {
-        return new RenderType.CompositeRenderType(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, phases);
+        return new RenderType.CompositeRenderType(name, vertexFormat, drawMode,
+                expectedBufferSize, hasCrumbling, translucent, phases);
     }
 }
