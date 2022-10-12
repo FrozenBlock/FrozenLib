@@ -7,7 +7,6 @@ import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
 import net.frozenblock.lib.interfaces.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.interfaces.EntityLoopingSoundInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
-import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
 import net.frozenblock.lib.sound.FrozenSoundPackets;
 import net.frozenblock.lib.sound.FrozenSoundPredicates;
 import net.frozenblock.lib.sound.MovingLoopingFadingDistanceSoundEntityManager;
@@ -18,7 +17,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer;
 import org.slf4j.Logger;
@@ -36,15 +34,6 @@ public final class FrozenMain implements ModInitializer {
         ServerFreezer.onInitialize();
         QuiltSurfaceRuleInitializer.onInitialize();
         FrozenSoundPredicates.init();
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            BlockScheduledTicks.ticks.put(Blocks.DIAMOND_BLOCK,
-                    (state, world, pos, random) -> world.setBlock(pos,
-                            Blocks.BEDROCK.defaultBlockState(), 3));
-            //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
-            //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
-            //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
-            RegisterDev.init();
-        }
 
         receiveSoundSyncPacket();
 
