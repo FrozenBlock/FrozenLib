@@ -23,16 +23,18 @@ public final class AdvancedMath {
     }
 
 
-    public static boolean squareBetween(final int x, final int z,
-                                        final int between1,
-                                        final int between2) {
+    public static boolean squareBetween(
+            final int x,
+            final int z,
+            final int between1,
+            final int between2
+    ) {
         boolean cond1 = x > between1 && x < between2;
         boolean cond2 = z > between1 && z < between2;
         return cond1 && cond2;
     }
 
-    public static BlockPos offset(final BlockPos pos, final Direction dir,
-                                  final int a) {
+    public static BlockPos offset(final BlockPos pos, final Direction dir, final int a) {
         return switch (dir) {
             case WEST -> pos.west(a);
             case EAST -> pos.east(a);
@@ -65,8 +67,7 @@ public final class AdvancedMath {
         }
     }
 
-    public static double cutCos(final double value, final double offset,
-                                final boolean inverse) {
+    public static double cutCos(double value, double offset, boolean inverse) {
         double equation = Math.cos(value);
         if (!inverse) {
             return Math.max(equation, offset);

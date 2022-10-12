@@ -15,9 +15,7 @@ import net.minecraft.world.level.Level;
 
 public class FlyBySoundPacket {
 
-    public static void createFlybySound(Level world, Entity entity,
-                                        SoundEvent sound, SoundSource category,
-                                        float volume, float pitch) {
+    public static void createFlybySound(Level world, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch) {
         if (!world.isClientSide) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
             byteBuf.writeVarInt(entity.getId());
@@ -25,10 +23,8 @@ public class FlyBySoundPacket {
             byteBuf.writeEnum(category);
             byteBuf.writeFloat(volume);
             byteBuf.writeFloat(pitch);
-            for (ServerPlayer player : PlayerLookup.around((ServerLevel) world,
-                    entity.blockPosition(), 128)) {
-                ServerPlayNetworking.send(player, FrozenMain.FLYBY_SOUND_PACKET,
-                        byteBuf);
+            for (ServerPlayer player : PlayerLookup.around((ServerLevel) world, entity.blockPosition(), 128)) {
+                ServerPlayNetworking.send(player, FrozenMain.FLYBY_SOUND_PACKET, byteBuf);
             }
         }
     }

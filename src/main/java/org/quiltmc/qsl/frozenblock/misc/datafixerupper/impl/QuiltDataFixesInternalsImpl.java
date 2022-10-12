@@ -50,16 +50,13 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     }
 
     @Override
-    public void registerFixer(@NotNull String modId,
-                              @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
+    public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
                               @NotNull DataFixer dataFixer) {
         if (this.modDataFixers.containsKey(modId)) {
-            throw new IllegalArgumentException(
-                    "Mod '" + modId + "' already has a registered data fixer");
+            throw new IllegalArgumentException("Mod '" + modId + "' already has a registered data fixer");
         }
 
-        this.modDataFixers.put(modId,
-                new DataFixerEntry(dataFixer, currentVersion));
+        this.modDataFixers.put(modId, new DataFixerEntry(dataFixer, currentVersion));
     }
 
     @Override
@@ -73,8 +70,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     }
 
     @Override
-    public @NotNull CompoundTag updateWithAllFixers(
-            @NotNull DataFixTypes dataFixTypes, @NotNull CompoundTag compound) {
+    public @NotNull CompoundTag updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull CompoundTag compound) {
         var current = new Dynamic<>(NbtOps.INSTANCE, compound);
 
         for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
@@ -91,11 +87,9 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     }
 
     @Override
-    public @NotNull CompoundTag addModDataVersions(
-            @NotNull CompoundTag compound) {
+    public @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound) {
         for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-            compound.putInt(entry.getKey() + "_DataVersion",
-                    entry.getValue().currentVersion());
+            compound.putInt(entry.getKey() + "_DataVersion", entry.getValue().currentVersion());
         }
 
         return compound;

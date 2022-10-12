@@ -37,8 +37,7 @@ public final class FrozenMain implements ModInitializer {
 
         receiveSoundSyncPacket();
 
-        FabricLoader.getInstance().getEntrypointContainers("frozenlib:main",
-                FrozenMainEntrypoint.class).forEach(entrypoint -> {
+        FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
             try {
                 FrozenMainEntrypoint mainPoint = entrypoint.getEntrypoint();
                 mainPoint.init();
@@ -52,27 +51,15 @@ public final class FrozenMain implements ModInitializer {
     }
 
     //IDENTIFIERS
-    public static final ResourceLocation FLYBY_SOUND_PACKET =
-            id("flyby_sound_packet");
-    public static final ResourceLocation
-            MOVING_RESTRICTION_LOOPING_SOUND_PACKET =
-            id("moving_restriction_looping_sound_packet");
-    public static final ResourceLocation
-            STARTING_RESTRICTION_LOOPING_SOUND_PACKET =
-            id("starting_moving_restriction_looping_sound_packet");
-    public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET =
-            id("moving_restriction_sound_packet");
-    public static final ResourceLocation
-            MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET =
-            id("moving_restriction_looping_fading_distance_sound_packet");
-    public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET =
-            id("fading_distance_sound_packet");
-    public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET =
-            id("moving_fading_distance_sound_packet");
-    public static final ResourceLocation COOLDOWN_CHANGE_PACKET =
-            id("cooldown_change_packet");
-    public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET =
-            id("request_looping_sound_sync_packet");
+    public static final ResourceLocation FLYBY_SOUND_PACKET = id("flyby_sound_packet");
+    public static final ResourceLocation MOVING_RESTRICTION_LOOPING_SOUND_PACKET = id("moving_restriction_looping_sound_packet");
+    public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = id("starting_moving_restriction_looping_sound_packet");
+    public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = id("moving_restriction_sound_packet");
+    public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = id("moving_restriction_looping_fading_distance_sound_packet");
+    public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = id("fading_distance_sound_packet");
+    public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = id("moving_fading_distance_sound_packet");
+    public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
+    public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
 
     public static ResourceLocation id(String path) {
         return new ResourceLocation(MOD_ID, path);
@@ -89,49 +76,25 @@ public final class FrozenMain implements ModInitializer {
     }
 
     private static void receiveSoundSyncPacket() {
-        ServerPlayNetworking.registerGlobalReceiver(
-                FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET,
-                (ctx, player, handler, byteBuf, responseSender) -> {
-                    int id = byteBuf.readVarInt();
-                    Level dimension = ctx.getLevel(byteBuf.readResourceKey(
-                            Registry.DIMENSION_REGISTRY));
-                    ctx.execute(() -> {
-                        if (dimension != null) {
-                            Entity entity = dimension.getEntity(id);
-                            if (entity != null) {
-                                if (entity instanceof LivingEntity living) {
-                                    for (MovingLoopingSoundEntityManager.SoundLoopNBT nbt : ((EntityLoopingSoundInterface) living).getSounds()
-                                            .getSounds()) {
-                                        FrozenSoundPackets.createMovingRestrictionLoopingSound(
-                                                player, entity,
-                                                Registry.SOUND_EVENT.get(
-                                                        nbt.getSoundEventID()),
-                                                SoundSource.valueOf(
-                                                        SoundSource.class,
-                                                        nbt.getOrdinal()),
-                                                nbt.volume, nbt.pitch,
-                                                nbt.restrictionID);
-                                    }
-                                    for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : ((EntityLoopingFadingDistanceSoundInterface) living).getFadingDistanceSounds()
-                                            .getSounds()) {
-                                        FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(
-                                                player, entity,
-                                                Registry.SOUND_EVENT.get(
-                                                        nbt.getSoundEventID()),
-                                                Registry.SOUND_EVENT.get(
-                                                        nbt.getSound2EventID()),
-                                                SoundSource.valueOf(
-                                                        SoundSource.class,
-                                                        nbt.getOrdinal()),
-                                                nbt.volume, nbt.pitch,
-                                                nbt.restrictionID, nbt.fadeDist,
-                                                nbt.maxDist);
-                                    }
-                                }
+        ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
+            int id = byteBuf.readVarInt();
+            Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registry.DIMENSION_REGISTRY));
+            ctx.execute(() -> {
+                if (dimension != null) {
+                    Entity entity = dimension.getEntity(id);
+                    if (entity != null) {
+                        if (entity instanceof LivingEntity living) {
+                            for (MovingLoopingSoundEntityManager.SoundLoopNBT nbt : ((EntityLoopingSoundInterface) living).getSounds().getSounds()) {
+                                FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
+                            }
+                            for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : ((EntityLoopingFadingDistanceSoundInterface) living).getFadingDistanceSounds().getSounds()) {
+                                FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), Registry.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
                             }
                         }
-                    });
-                });
+                    }
+                }
+            });
+        });
     }
 
 }

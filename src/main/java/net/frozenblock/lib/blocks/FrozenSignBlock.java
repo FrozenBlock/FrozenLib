@@ -9,8 +9,7 @@ import java.util.Objects;
 public class FrozenSignBlock extends StandingSignBlock {
     public final ResourceLocation lootTable;
 
-    public FrozenSignBlock(Properties settings, WoodType signType,
-                           ResourceLocation lootTable) {
+    public FrozenSignBlock(Properties settings, WoodType signType, ResourceLocation lootTable) {
         super(settings, signType);
         this.lootTable = lootTable;
     }

@@ -43,10 +43,8 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     }
 
     @Override
-    public void registerFixer(@NotNull String modId,
-                              @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
-                              @NotNull DataFixer dataFixer) {
-    }
+    public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
+                              @NotNull DataFixer dataFixer) {}
 
     @Override
     public @Nullable DataFixerEntry getFixerEntry(@NotNull String modId) {
@@ -59,14 +57,12 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     }
 
     @Override
-    public @NotNull CompoundTag updateWithAllFixers(
-            @NotNull DataFixTypes dataFixTypes, @NotNull CompoundTag compound) {
+    public @NotNull CompoundTag updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull CompoundTag compound) {
         return compound.copy();
     }
 
     @Override
-    public @NotNull CompoundTag addModDataVersions(
-            @NotNull CompoundTag compound) {
+    public @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound) {
         return compound;
     }
 

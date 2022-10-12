@@ -31,8 +31,7 @@ public class RandomTags {
         ArrayList<Block> blocks = new ArrayList<>();
         for (Holder<Block> block : Registry.BLOCK.getTagOrEmpty(tag)) {
             if (block.unwrapKey().isPresent()) {
-                Registry.BLOCK.getOptional(block.unwrapKey().get())
-                        .ifPresent(blocks::add);
+                Registry.BLOCK.getOptional(block.unwrapKey().get()).ifPresent(blocks::add);
             }
         }
         if (!blocks.isEmpty()) {

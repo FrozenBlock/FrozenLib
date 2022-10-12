@@ -21,8 +21,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements EntityLoopingSoundInterface,
-        EntityLoopingFadingDistanceSoundInterface {
+public abstract class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoopingFadingDistanceSoundInterface {
 
     @Shadow
     protected ItemStack useItem;
@@ -30,17 +29,14 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface,
     protected int useItemRemaining;
 
     public MovingLoopingSoundEntityManager loopingSoundManager;
-    public MovingLoopingFadingDistanceSoundEntityManager
-            loopingFadingDistanceSoundManager;
+    public MovingLoopingFadingDistanceSoundEntityManager loopingFadingDistanceSoundManager;
     public boolean clientFrozenSoundSync;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void init(EntityType<? extends LivingEntity> entityType,
-                      Level level, CallbackInfo info) {
+    private void init(EntityType<? extends LivingEntity> entityType, Level level, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         this.loopingSoundManager = new MovingLoopingSoundEntityManager(entity);
-        this.loopingFadingDistanceSoundManager =
-                new MovingLoopingFadingDistanceSoundEntityManager(entity);
+        this.loopingFadingDistanceSoundManager = new MovingLoopingFadingDistanceSoundEntityManager(entity);
     }
 
     @Inject(method = "startUsingItem", at = @At("HEAD"), cancellable = true)
@@ -54,8 +50,7 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface,
                 this.useItemRemaining = stack.getUseDuration();
                 if (!entity.level.isClientSide) {
                     this.setLivingEntityFlag(1, true);
-                    this.setLivingEntityFlag(2,
-                            hand == InteractionHand.OFF_HAND);
+                    this.setLivingEntityFlag(2, hand == InteractionHand.OFF_HAND);
                 }
             }
         }
@@ -74,8 +69,7 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface,
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    public void addAdditionalSaveData(CompoundTag compoundTag,
-                                      CallbackInfo info) {
+    public void addAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
         if (this.loopingSoundManager != null) {
             this.loopingSoundManager.save(compoundTag);
         }
@@ -85,8 +79,7 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface,
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    public void readAdditionalSaveData(CompoundTag compoundTag,
-                                       CallbackInfo info) {
+    public void readAdditionalSaveData(CompoundTag compoundTag, CallbackInfo info) {
         this.loopingSoundManager.load(compoundTag);
         this.loopingFadingDistanceSoundManager.load(compoundTag);
     }
@@ -98,8 +91,7 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface,
             this.loopingSoundManager.tick();
             this.loopingFadingDistanceSoundManager.tick();
         } else if (!this.clientFrozenSoundSync) {
-            FrozenClientPacketInbetween.requestFrozenSoundSync(entity.getId(),
-                    entity.level.dimension());
+            FrozenClientPacketInbetween.requestFrozenSoundSync(entity.getId(), entity.level.dimension());
             this.clientFrozenSoundSync = true;
         }
     }
@@ -118,11 +110,8 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface,
     }
 
     @Override
-    public void addSound(ResourceLocation soundID, SoundSource category,
-                         float volume, float pitch,
-                         ResourceLocation restrictionId) {
-        this.loopingSoundManager.addSound(soundID, category, volume, pitch,
-                restrictionId);
+    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId) {
+        this.loopingSoundManager.addSound(soundID, category, volume, pitch, restrictionId);
     }
 
     @Override
@@ -136,13 +125,7 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface,
     }
 
     @Override
-    public void addFadingDistanceSound(ResourceLocation soundID,
-                                       ResourceLocation sound2ID,
-                                       SoundSource category, float volume,
-                                       float pitch,
-                                       ResourceLocation restrictionId,
-                                       float fadeDist, float maxDist) {
-        this.loopingFadingDistanceSoundManager.addSound(soundID, sound2ID,
-                category, volume, pitch, restrictionId, fadeDist, maxDist);
+    public void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, float fadeDist, float maxDist) {
+        this.loopingFadingDistanceSoundManager.addSound(soundID, sound2ID, category, volume, pitch, restrictionId, fadeDist, maxDist);
     }
 }

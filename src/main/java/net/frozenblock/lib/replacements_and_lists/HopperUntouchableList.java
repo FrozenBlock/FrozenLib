@@ -9,8 +9,7 @@ import java.util.ArrayList;
 
 public class HopperUntouchableList {
 
-    public static ArrayList<BlockEntityType<?>> blackListedTypes =
-            new ArrayList<>();
+    public static ArrayList<BlockEntityType<?>> blackListedTypes = new ArrayList<>();
 
     public static boolean inventoryContainsBlacklisted(Container inventory) {
         if (inventory instanceof BlockEntity block) {

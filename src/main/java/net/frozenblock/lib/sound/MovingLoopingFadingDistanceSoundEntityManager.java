@@ -31,14 +31,10 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         nbt.putInt("frozenDistanceSoundTicksToCheck", this.ticksToCheck);
         if (nbt.contains("frozenDistanceSounds", 9)) {
             this.sounds.clear();
-            DataResult<List<FadingDistanceSoundLoopNBT>> var10000 =
-                    FadingDistanceSoundLoopNBT.CODEC.listOf()
-                            .parse(new Dynamic<>(NbtOps.INSTANCE,
-                                    nbt.getList("frozenDistanceSounds", 10)));
+            DataResult<List<FadingDistanceSoundLoopNBT>> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenDistanceSounds", 10)));
             Logger var10001 = FrozenMain.LOGGER4;
             Objects.requireNonNull(var10001);
-            Optional<List<FadingDistanceSoundLoopNBT>> list =
-                    var10000.resultOrPartial(var10001::error);
+            Optional<List<FadingDistanceSoundLoopNBT>> list = var10000.resultOrPartial(var10001::error);
             if (list.isPresent()) {
                 List<FadingDistanceSoundLoopNBT> allSounds = list.get();
                 this.sounds.addAll(allSounds);
@@ -48,21 +44,14 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 
     public void save(CompoundTag nbt) {
         this.ticksToCheck = nbt.getInt("frozenDistanceSoundTicksToCheck");
-        DataResult<Tag> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf()
-                .encodeStart(NbtOps.INSTANCE, this.sounds);
+        DataResult<Tag> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
         Logger var10001 = FrozenMain.LOGGER4;
         Objects.requireNonNull(var10001);
-        var10000.resultOrPartial(var10001::error).ifPresent(
-                (cursorsNbt) -> nbt.put("frozenDistanceSounds", cursorsNbt));
+        var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenDistanceSounds", cursorsNbt));
     }
 
-    public void addSound(ResourceLocation soundID, ResourceLocation soundID2,
-                         SoundSource category, float volume, float pitch,
-                         ResourceLocation restrictionId, float fadeDist,
-                         float maxDist) {
-        this.sounds.add(
-                new FadingDistanceSoundLoopNBT(soundID, soundID2, category,
-                        volume, pitch, restrictionId, fadeDist, maxDist));
+    public void addSound(ResourceLocation soundID, ResourceLocation soundID2, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, float fadeDist, float maxDist) {
+        this.sounds.add(new FadingDistanceSoundLoopNBT(soundID, soundID2, category, volume, pitch, restrictionId, fadeDist, maxDist));
     }
 
     public ArrayList<FadingDistanceSoundLoopNBT> getSounds() {
@@ -74,11 +63,9 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
             --this.ticksToCheck;
         } else {
             this.ticksToCheck = 20;
-            ArrayList<FadingDistanceSoundLoopNBT> soundsToRemove =
-                    new ArrayList<>();
+            ArrayList<FadingDistanceSoundLoopNBT> soundsToRemove = new ArrayList<>();
             for (FadingDistanceSoundLoopNBT nbt : this.getSounds()) {
-                if (!FrozenSoundPredicates.getPredicate(nbt.restrictionID)
-                        .test(this.entity)) {
+                if (!FrozenSoundPredicates.getPredicate(nbt.restrictionID).test(this.entity)) {
                     soundsToRemove.add(nbt);
                 }
             }
@@ -96,35 +83,18 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         public final float maxDist;
         public final ResourceLocation restrictionID;
 
-        public static final Codec<FadingDistanceSoundLoopNBT> CODEC =
-                RecordCodecBuilder.create((instance) -> instance.group(
-                        ResourceLocation.CODEC.fieldOf("soundEventID")
-                                .forGetter(
-                                        FadingDistanceSoundLoopNBT::getSoundEventID),
-                        ResourceLocation.CODEC.fieldOf("sound2EventID")
-                                .forGetter(
-                                        FadingDistanceSoundLoopNBT::getSound2EventID),
-                        Codec.STRING.fieldOf("categoryOrdinal").forGetter(
-                                FadingDistanceSoundLoopNBT::getOrdinal),
-                        Codec.FLOAT.fieldOf("volume").forGetter(
-                                FadingDistanceSoundLoopNBT::getVolume),
-                        Codec.FLOAT.fieldOf("pitch").forGetter(
-                                FadingDistanceSoundLoopNBT::getPitch),
-                        ResourceLocation.CODEC.fieldOf("restrictionID")
-                                .forGetter(
-                                        FadingDistanceSoundLoopNBT::getRestrictionID),
-                        Codec.FLOAT.fieldOf("fadeDist").forGetter(
-                                FadingDistanceSoundLoopNBT::getFadeDist),
-                        Codec.FLOAT.fieldOf("maxDist").forGetter(
-                                FadingDistanceSoundLoopNBT::getMaxDist)
-                ).apply(instance, FadingDistanceSoundLoopNBT::new));
+        public static final Codec<FadingDistanceSoundLoopNBT> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(FadingDistanceSoundLoopNBT::getSoundEventID),
+                ResourceLocation.CODEC.fieldOf("sound2EventID").forGetter(FadingDistanceSoundLoopNBT::getSound2EventID),
+                Codec.STRING.fieldOf("categoryOrdinal").forGetter(FadingDistanceSoundLoopNBT::getOrdinal),
+                Codec.FLOAT.fieldOf("volume").forGetter(FadingDistanceSoundLoopNBT::getVolume),
+                Codec.FLOAT.fieldOf("pitch").forGetter(FadingDistanceSoundLoopNBT::getPitch),
+                ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(FadingDistanceSoundLoopNBT::getRestrictionID),
+                Codec.FLOAT.fieldOf("fadeDist").forGetter(FadingDistanceSoundLoopNBT::getFadeDist),
+                Codec.FLOAT.fieldOf("maxDist").forGetter(FadingDistanceSoundLoopNBT::getMaxDist)
+        ).apply(instance, FadingDistanceSoundLoopNBT::new));
 
-        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID,
-                                          ResourceLocation sound2EventID,
-                                          String ordinal, float vol,
-                                          float pitch,
-                                          ResourceLocation restrictionID,
-                                          float fadeDist, float maxDist) {
+        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID, ResourceLocation sound2EventID, String ordinal, float vol, float pitch, ResourceLocation restrictionID, float fadeDist, float maxDist) {
             this.soundEventID = soundEventID;
             this.sound2EventID = sound2EventID;
             this.categoryOrdinal = ordinal;
@@ -135,12 +105,7 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
             this.maxDist = maxDist;
         }
 
-        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID,
-                                          ResourceLocation sound2EventID,
-                                          SoundSource category, float vol,
-                                          float pitch,
-                                          ResourceLocation restrictionID,
-                                          float fadeDist, float maxDist) {
+        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID, ResourceLocation sound2EventID, SoundSource category, float vol, float pitch, ResourceLocation restrictionID, float fadeDist, float maxDist) {
             this.soundEventID = soundEventID;
             this.sound2EventID = sound2EventID;
             this.categoryOrdinal = category.toString();
@@ -154,31 +119,24 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         public ResourceLocation getSoundEventID() {
             return this.soundEventID;
         }
-
         public ResourceLocation getSound2EventID() {
             return this.sound2EventID;
         }
-
         public String getOrdinal() {
             return this.categoryOrdinal;
         }
-
         public float getVolume() {
             return this.volume;
         }
-
         public float getPitch() {
             return this.pitch;
         }
-
         public float getFadeDist() {
             return this.fadeDist;
         }
-
         public float getMaxDist() {
             return this.maxDist;
         }
-
         public ResourceLocation getRestrictionID() {
             return this.restrictionID;
         }

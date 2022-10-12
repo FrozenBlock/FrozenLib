@@ -27,10 +27,8 @@ public class LootTableWhacker extends Item {
             if (stack.getHoverName().getString().contains(":")) {
                 String id = stack.getHoverName().getString();
                 List<String> strings = Arrays.stream(id.split(":")).toList();
-                ResourceLocation location =
-                        new ResourceLocation(strings.get(0), strings.get(1));
-                if (level.getBlockEntity(
-                        blockPos) instanceof RandomizableContainerBlockEntity loot) {
+                ResourceLocation location = new ResourceLocation(strings.get(0), strings.get(1));
+                if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {
                     loot.lootTable = location;
                     FrozenMain.log(location.toString(), true);
                 }

@@ -24,17 +24,13 @@ public class Camera extends Item {
     private boolean canGo;
 
     @Override
-    public void inventoryTick(ItemStack itemStack, Level world, Entity entity,
-                              int i, boolean bl) {
+    public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int i, boolean bl) {
         if (entity instanceof Player player) {
-            if (player.getCooldowns().isOnCooldown(this) &&
-                    player.getCooldowns().getCooldownPercent(this, 0) == 0.9F) {
+            if (player.getCooldowns().isOnCooldown(this) && player.getCooldowns().getCooldownPercent(this, 0) == 0.9F) {
                 if (world.isClientSide && canGo) {
-                    FrozenMain.LOGGER.warn(
-                            "PLAYER HAS ACCESS TO DEV CAMERA AND HAS JUST USED IT");
+                    FrozenMain.LOGGER.warn("PLAYER HAS ACCESS TO DEV CAMERA AND HAS JUST USED IT");
                     Minecraft client = Minecraft.getInstance();
-                    File directory = getPanoramaFolderName(
-                            new File(client.gameDirectory, "panoramas"));
+                    File directory = getPanoramaFolderName(new File(client.gameDirectory, "panoramas"));
                     File directory1 = new File(directory, "screenshots");
                     directory1.mkdir();
                     directory1.mkdirs();
@@ -45,8 +41,7 @@ public class Camera extends Item {
         }
     }
 
-    private static final DateFormat DATE_FORMAT =
-            new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
+    private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
 
     private static File getPanoramaFolderName(File directory) {
         String string = DATE_FORMAT.format(new Date());
@@ -60,8 +55,7 @@ public class Camera extends Item {
         }
     }
 
-    public InteractionResultHolder<ItemStack> use(Level world, Player user,
-                                                  InteractionHand hand) {
+    public InteractionResultHolder<ItemStack> use(Level world, Player user, InteractionHand hand) {
         ItemStack itemStack = user.getItemInHand(hand);
         if (!user.getCooldowns().isOnCooldown(this)) {
             user.getCooldowns().addCooldown(this, 10);

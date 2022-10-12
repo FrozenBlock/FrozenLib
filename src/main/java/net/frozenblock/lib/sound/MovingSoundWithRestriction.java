@@ -14,10 +14,7 @@ public class MovingSoundWithRestriction extends AbstractTickableSoundInstance {
     private final Entity entity;
     private final FrozenSoundPredicates.LoopPredicate<?> predicate;
 
-    public MovingSoundWithRestriction(Entity entity, SoundEvent sound,
-                                      SoundSource category, float volume,
-                                      float pitch,
-                                      FrozenSoundPredicates.LoopPredicate<?> predicate) {
+    public MovingSoundWithRestriction(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, FrozenSoundPredicates.LoopPredicate<?> predicate) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = false;

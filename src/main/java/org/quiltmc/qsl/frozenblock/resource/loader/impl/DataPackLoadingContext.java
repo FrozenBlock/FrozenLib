@@ -41,24 +41,16 @@ public record DataPackLoadingContext(RegistryAccess.Writable registryManager,
      * @return the dynamic ops
      */
     public DynamicOps<JsonElement> loadRegistries() {
-        return RegistryOps.createAndLoad(JsonOps.INSTANCE, this.registryManager,
-                this.resourceManager);
+        return RegistryOps.createAndLoad(JsonOps.INSTANCE, this.registryManager, this.resourceManager);
     }
 
-    public DataResult<WorldGenSettings> loadGeneratorOptions(
-            WorldGenSettings existing, DynamicOps<JsonElement> registryOps) {
-        DataResult<JsonElement> encodedBaseOptions =
-                WorldGenSettings.CODEC.encodeStart(registryOps, existing)
-                        .setLifecycle(Lifecycle.stable());
-        return encodedBaseOptions.flatMap(
-                jsonElement -> WorldGenSettings.CODEC.parse(registryOps,
-                        jsonElement));
+    public DataResult<WorldGenSettings> loadGeneratorOptions(WorldGenSettings existing, DynamicOps<JsonElement> registryOps) {
+        DataResult<JsonElement> encodedBaseOptions = WorldGenSettings.CODEC.encodeStart(registryOps, existing)
+                .setLifecycle(Lifecycle.stable());
+        return encodedBaseOptions.flatMap(jsonElement -> WorldGenSettings.CODEC.parse(registryOps, jsonElement));
     }
 
-    public DataResult<WorldGenSettings> loadDefaultGeneratorOptions(
-            DynamicOps<JsonElement> registryOps) {
-        return this.loadGeneratorOptions(
-                WorldPresets.createNormalWorldFromPreset(this.registryManager),
-                registryOps);
+    public DataResult<WorldGenSettings> loadDefaultGeneratorOptions(DynamicOps<JsonElement> registryOps) {
+        return this.loadGeneratorOptions(WorldPresets.createNormalWorldFromPreset(this.registryManager), registryOps);
     }
 }

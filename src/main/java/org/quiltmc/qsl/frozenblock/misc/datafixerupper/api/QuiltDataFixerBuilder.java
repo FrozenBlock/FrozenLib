@@ -40,8 +40,7 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
      *
      * @param dataVersion the current data version
      */
-    public QuiltDataFixerBuilder(
-            @Range(from = 0, to = Integer.MAX_VALUE) int dataVersion) {
+    public QuiltDataFixerBuilder(@Range(from = 0, to = Integer.MAX_VALUE) int dataVersion) {
         super(dataVersion);
         this.dataVersion = dataVersion;
     }
@@ -64,13 +63,10 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
      * @return the newly built data fixer
      */
     @Contract(value = "_ -> new")
-    public @NotNull DataFixer build(
-            @NotNull Supplier<Executor> executorGetter) {
+    public @NotNull DataFixer build(@NotNull Supplier<Executor> executorGetter) {
         return switch (SharedConstants.DATAFIXER_OPTIMIZATION_OPTION) {
-            case UNINITIALIZED_UNOPTIMIZED, INITIALIZED_UNOPTIMIZED ->
-                    this.buildUnoptimized();
-            case UNINITIALIZED_OPTIMIZED, INITIALIZED_OPTIMIZED ->
-                    this.buildOptimized(executorGetter.get());
+            case UNINITIALIZED_UNOPTIMIZED, INITIALIZED_UNOPTIMIZED -> this.buildUnoptimized();
+            case UNINITIALIZED_OPTIMIZED, INITIALIZED_OPTIMIZED -> this.buildOptimized(executorGetter.get());
         };
     }
 }

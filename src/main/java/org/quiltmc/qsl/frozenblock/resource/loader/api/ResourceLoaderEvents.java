@@ -32,39 +32,32 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class ResourceLoaderEvents {
     private ResourceLoaderEvents() {
-        throw new UnsupportedOperationException(
-                "ResourceLoaderEvents only contains static definitions.");
+        throw new UnsupportedOperationException("ResourceLoaderEvents only contains static definitions.");
     }
 
     /**
      * An event indicating the start of the reloading of data packs on a Minecraft server.
      * <p>
-     * This event should not be used to load resources.
-     *//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
+     * This event should not be used to load resources.*//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
      */
-    public static final Event<StartDataPackReload> START_DATA_PACK_RELOAD =
-            FrozenEvents.createEnvironmentEvent(StartDataPackReload.class,
-                    callbacks -> (server, resourceManager) -> {
-                        for (var callback : callbacks) {
-                            callback.onStartDataPackReload(server,
-                                    resourceManager);
-                        }
-                    });
+    public static final Event<StartDataPackReload> START_DATA_PACK_RELOAD = FrozenEvents.createEnvironmentEvent(StartDataPackReload.class,
+            callbacks -> (server, resourceManager) -> {
+                for (var callback : callbacks) {
+                    callback.onStartDataPackReload(server, resourceManager);
+                }
+            });
 
     /**
      * An event indicating the end of the reloading of data packs on a Minecraft server.
      * <p>
-     * This event should not be used to load resources.
-     *//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
+     * This event should not be used to load resources.*//*, use {@link ResourceLoader#registerReloader(IdentifiableResourceReloader)} instead.
      */
-    public static final Event<EndDataPackReload> END_DATA_PACK_RELOAD =
-            FrozenEvents.createEnvironmentEvent(EndDataPackReload.class,
-                    callbacks -> (server, resourceManager, error) -> {
-                        for (var callback : callbacks) {
-                            callback.onEndDataPackReload(server,
-                                    resourceManager, error);
-                        }
-                    });
+    public static final Event<EndDataPackReload> END_DATA_PACK_RELOAD = FrozenEvents.createEnvironmentEvent(EndDataPackReload.class,
+            callbacks -> (server, resourceManager, error) -> {
+                for (var callback : callbacks) {
+                    callback.onEndDataPackReload(server, resourceManager, error);
+                }
+            });
 
     /**
      * Functional interface to be implemented on callbacks for {@link #START_DATA_PACK_RELOAD}.
@@ -79,8 +72,7 @@ public final class ResourceLoaderEvents {
          * @param server             the server, may be {@code null} for the first reload
          * @param oldResourceManager the old resource manager, to be replaced, may be {@code null} for the first reload
          */
-        void onStartDataPackReload(@Nullable MinecraftServer server,
-                                   @Nullable ResourceManager oldResourceManager);
+        void onStartDataPackReload(@Nullable MinecraftServer server, @Nullable ResourceManager oldResourceManager);
     }
 
     /**
@@ -99,8 +91,6 @@ public final class ResourceLoaderEvents {
          * @param resourceManager the resource manager, may be {@code null} if the data pack reload failed
          * @param error           present if the data pack reload failed, or {@code null} otherwise
          */
-        void onEndDataPackReload(@Nullable MinecraftServer server,
-                                 ResourceManager resourceManager,
-                                 @Nullable Throwable error);
+        void onEndDataPackReload(@Nullable MinecraftServer server, ResourceManager resourceManager, @Nullable Throwable error);
     }
 }

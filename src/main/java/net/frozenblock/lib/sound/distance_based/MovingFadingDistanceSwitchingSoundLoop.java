@@ -11,8 +11,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
-public class MovingFadingDistanceSwitchingSoundLoop
-        extends AbstractTickableSoundInstance {
+public class MovingFadingDistanceSwitchingSoundLoop extends AbstractTickableSoundInstance {
 
     private final Entity entity;
     private final FrozenSoundPredicates.LoopPredicate<?> predicate;
@@ -21,14 +20,7 @@ public class MovingFadingDistanceSwitchingSoundLoop
     private final double fadeDist;
     private final float maxVol;
 
-    public MovingFadingDistanceSwitchingSoundLoop(Entity entity,
-                                                  SoundEvent sound,
-                                                  SoundSource category,
-                                                  float volume, float pitch,
-                                                  FrozenSoundPredicates.LoopPredicate<?> predicate,
-                                                  double fadeDist,
-                                                  double maxDist, float maxVol,
-                                                  boolean isFarSound) {
+    public MovingFadingDistanceSwitchingSoundLoop(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, FrozenSoundPredicates.LoopPredicate<?> predicate, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = true;
@@ -76,12 +68,8 @@ public class MovingFadingDistanceSwitchingSoundLoop
                         this.volume = this.isFarSound ? this.maxVol : 0.001F;
                     } else {
                         //Gets lower as you move farther
-                        float fadeProgress =
-                                (float) ((this.maxDist - distance) /
-                                        (this.maxDist - this.fadeDist));
-                        this.volume = this.isFarSound ?
-                                (1F - fadeProgress) * this.maxVol :
-                                fadeProgress * this.maxVol;
+                        float fadeProgress = (float) ((this.maxDist - distance) / (this.maxDist - this.fadeDist));
+                        this.volume = this.isFarSound ? (1F - fadeProgress) * this.maxVol : fadeProgress * this.maxVol;
                     }
                 }
             }

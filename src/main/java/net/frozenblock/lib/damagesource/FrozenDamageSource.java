@@ -19,8 +19,7 @@ public class FrozenDamageSource extends DamageSource {
         String string = "death.attack." + this.msgId;
         String string2 = string + ".player";
         if (livingEntity != null) {
-            return Component.translatable(string2, entity.getDisplayName(),
-                    livingEntity.getDisplayName());
+            return Component.translatable(string2, entity.getDisplayName(), livingEntity.getDisplayName());
         }
         return Component.translatable(string, entity.getDisplayName());
     }

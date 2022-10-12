@@ -23,48 +23,34 @@ public final class EasyNoiseSampler {
 
     public static long seed = 0;
     public static RandomSource checkedRandom = new LegacyRandomSource(seed);
-    public static RandomSource threadSafeRandom =
-            new ThreadSafeLegacyRandomSource(seed);
-    public static RandomSource localRandom =
-            new SingleThreadedRandomSource(seed);
-    public static XoroshiroRandomSource xoroRandom =
-            new XoroshiroRandomSource(seed);
+    public static RandomSource threadSafeRandom = new ThreadSafeLegacyRandomSource(seed);
+    public static RandomSource localRandom = new SingleThreadedRandomSource(seed);
+    public static XoroshiroRandomSource xoroRandom = new XoroshiroRandomSource(seed);
     public static ImprovedNoise perlinAtomic = new ImprovedNoise(checkedRandom);
-    public static ImprovedNoise perlinBlocking =
-            new ImprovedNoise(threadSafeRandom);
+    public static ImprovedNoise perlinBlocking = new ImprovedNoise(threadSafeRandom);
     public static ImprovedNoise perlinSimple = new ImprovedNoise(localRandom);
     public static ImprovedNoise perlinXoro = new ImprovedNoise(xoroRandom);
 
-    public static double sample(ImprovedNoise sampler, BlockPos pos,
-                                double multiplier, boolean multiplyY,
-                                boolean useY) {
+    public static double sample(ImprovedNoise sampler, BlockPos pos, double multiplier, boolean multiplyY, boolean useY) {
         if (useY) {
             if (multiplyY) {
-                return sampler.noise(pos.getX() * multiplier,
-                        pos.getY() * multiplier, pos.getZ() * multiplier);
+                return sampler.noise(pos.getX() * multiplier, pos.getY() * multiplier, pos.getZ() * multiplier);
             }
-            return sampler.noise(pos.getX() * multiplier, pos.getY(),
-                    pos.getZ() * multiplier);
+            return sampler.noise(pos.getX() * multiplier, pos.getY(), pos.getZ() * multiplier);
         }
-        return sampler.noise(pos.getX() * multiplier, 64,
-                pos.getZ() * multiplier);
+        return sampler.noise(pos.getX() * multiplier, 64, pos.getZ() * multiplier);
     }
 
-    public static double samplePositive(ImprovedNoise sampler, BlockPos pos,
-                                        double multiplier, boolean multiplyY,
-                                        boolean useY) {
+    public static double samplePositive(ImprovedNoise sampler, BlockPos pos, double multiplier, boolean multiplyY, boolean useY) {
         double ret = 0;
         if (useY) {
             if (multiplyY) {
-                ret = sampler.noise(pos.getX() * multiplier,
-                        pos.getY() * multiplier, pos.getZ() * multiplier);
+                ret = sampler.noise(pos.getX() * multiplier, pos.getY() * multiplier, pos.getZ() * multiplier);
             } else {
-                ret = sampler.noise(pos.getX() * multiplier, pos.getY(),
-                        pos.getZ() * multiplier);
+                ret = sampler.noise(pos.getX() * multiplier, pos.getY(), pos.getZ() * multiplier);
             }
         } else {
-            ret = sampler.noise(pos.getX() * multiplier, 64,
-                    pos.getZ() * multiplier);
+            ret = sampler.noise(pos.getX() * multiplier, 64, pos.getZ() * multiplier);
         }
         if (ret < 0) {
             return ret * -1;

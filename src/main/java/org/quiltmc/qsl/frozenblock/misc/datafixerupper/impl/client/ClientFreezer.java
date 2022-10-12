@@ -33,13 +33,9 @@ public final class ClientFreezer {
 
     public static void onInitializeClient() {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            FrozenMain.log(
-                    "[Quilt DFU API] Clientside DataFixer Registry is about to freeze",
-                    true);
+            FrozenMain.log("[Quilt DFU API] Clientside DataFixer Registry is about to freeze", true);
             QuiltDataFixesInternals.get().freeze();
-            FrozenMain.log(
-                    "[Quilt DFU API] Clientside DataFixer Registry was frozen",
-                    true);
+            FrozenMain.log("[Quilt DFU API] Clientside DataFixer Registry was frozen", true);
         });
     }
 }

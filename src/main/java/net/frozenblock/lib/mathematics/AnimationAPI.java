@@ -45,17 +45,13 @@ public interface AnimationAPI {
      * Convert a 2D position with a seed in a resulting seed
      **/
     default float seed2D(Point2D seed2d, float seed) {
-        return rawSeed((float) seed2d.getX()) * rawSeed((float) seed2d.getX()) *
-                rawSeed(seed);
+        return rawSeed((float) seed2d.getX()) * rawSeed((float) seed2d.getX()) * rawSeed(seed);
     }
 
-    default float legAnimation(float base, float range, float frequency,
-                               float limbAngle, float limbDistance,
-                               boolean inverted) {
+    default float legAnimation(float base, float range, float frequency, float limbAngle, float limbDistance, boolean inverted) {
         float baseRange = 1.4f;
         float baseFrequency = 0.6662f;
-        float wave = (float) Math.sin(limbAngle * (baseFrequency * frequency)) *
-                (baseRange * range) * limbDistance;
+        float wave = (float) Math.sin(limbAngle * (baseFrequency * frequency)) * (baseRange * range) * limbDistance;
         if (inverted) {
             return base + wave;
         } else {
@@ -63,19 +59,15 @@ public interface AnimationAPI {
         }
     }
 
-    default float legAnimation(float base, float range, float frequency,
-                               float limbAngle, float limbDistance) {
-        return legAnimation(base, range, frequency, limbAngle, limbDistance,
-                false);
+    default float legAnimation(float base, float range, float frequency, float limbAngle, float limbDistance) {
+        return legAnimation(base, range, frequency, limbAngle, limbDistance, false);
     }
 
-    default float legAnimation(float base, float limbAngle, float limbDistance,
-                               boolean inverted) {
+    default float legAnimation(float base, float limbAngle, float limbDistance, boolean inverted) {
         return legAnimation(base, 1, 1, limbAngle, limbDistance, inverted);
     }
 
-    default float legAnimation(float base, float limbAngle,
-                               float limbDistance) {
+    default float legAnimation(float base, float limbAngle, float limbDistance) {
         return legAnimation(base, limbAngle, limbDistance, false);
     }
 
@@ -89,8 +81,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() *
-                    (1 - (float) Math.cos(Math.PI * (relativeX(a, b, x) / 2)));
+            return (float) b.getY() * (1 - (float) Math.cos(Math.PI * (relativeX(a, b, x) / 2)));
         }
     }
 
@@ -100,8 +91,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() *
-                    ((float) Math.sin(Math.PI * (relativeX(a, b, x) / 2)));
+            return (float) b.getY() * ((float) Math.sin(Math.PI * (relativeX(a, b, x) / 2)));
         }
     }
 
@@ -111,8 +101,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() * (0.5f -
-                    ((float) Math.cos(Math.PI * relativeX(a, b, x)) / 2));
+            return (float) b.getY() * (0.5f - ((float) Math.cos(Math.PI * relativeX(a, b, x)) / 2));
         }
     }
     // -------------------------------------------------------
@@ -144,8 +133,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() *
-                    (1 - (float) Math.pow(-(relativeX(a, b, x) - 1), c));
+            return (float) b.getY() * (1 - (float) Math.pow(-(relativeX(a, b, x) - 1), c));
         }
     }
 
@@ -160,11 +148,9 @@ public interface AnimationAPI {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
             if (x < (b.getX() - a.getX()) / 2) {
-                return (float) b.getY() * (float) (Math.pow(2, c - 1) *
-                        Math.pow(relativeX(a, b, x), c));
+                return (float) b.getY() * (float) (Math.pow(2, c - 1) * Math.pow(relativeX(a, b, x), c));
             } else {
-                return (float) b.getY() * (float) (1 -
-                        Math.pow(2 - 2 * relativeX(a, b, x), c) / 2);
+                return (float) b.getY() * (float) (1 - Math.pow(2 - 2 * relativeX(a, b, x), c) / 2);
             }
         }
     }
@@ -243,8 +229,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() *
-                    (float) Math.pow(2, (10 * relativeX(a, b, x)) - 10);
+            return (float) b.getY() * (float) Math.pow(2, (10 * relativeX(a, b, x)) - 10);
         }
     }
 
@@ -254,8 +239,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() *
-                    (1 - (float) Math.pow(2, -10 * relativeX(a, b, x)));
+            return (float) b.getY() * (1 - (float) Math.pow(2, -10 * relativeX(a, b, x)));
         }
     }
 
@@ -266,11 +250,9 @@ public interface AnimationAPI {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
             if (x < (b.getX() - a.getX()) / 2) {
-                return (float) b.getY() *
-                        (float) Math.pow(2, (20 * relativeX(a, b, x)) - 10) / 2;
+                return (float) b.getY() * (float) Math.pow(2, (20 * relativeX(a, b, x)) - 10) / 2;
             } else {
-                return (float) b.getY() * (float) (2 -
-                        Math.pow(2, 10 - (20 * relativeX(a, b, x)))) / 2;
+                return (float) b.getY() * (float) (2 - Math.pow(2, 10 - (20 * relativeX(a, b, x)))) / 2;
             }
         }
     }
@@ -289,9 +271,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() * (float) (1 -
-                    Math.pow(1 - Math.pow(relativeX(a, b, x), roundness),
-                            1 / (float) roundness));
+            return (float) b.getY() * (float) (1 - Math.pow(1 - Math.pow(relativeX(a, b, x), roundness), 1 / (float) roundness));
         }
     }
 
@@ -305,9 +285,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() * (float) Math.pow(
-                    1 - Math.pow(relativeX(a, b, x) - 1, roundness),
-                    1 / (float) roundness);
+            return (float) b.getY() * (float) Math.pow(1 - Math.pow(relativeX(a, b, x) - 1, roundness), 1 / (float) roundness);
         }
     }
 
@@ -322,13 +300,9 @@ public interface AnimationAPI {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
             if (x < (b.getX() - a.getX()) / 2) {
-                return (float) b.getY() * (float) (1 - Math.pow(
-                        1 - Math.pow(2 * relativeX(a, b, x), roundness),
-                        1 / (float) roundness)) / 2;
+                return (float) b.getY() * (float) (1 - Math.pow(1 - Math.pow(2 * relativeX(a, b, x), roundness), 1 / (float) roundness)) / 2;
             } else {
-                return (float) b.getY() * (float) (Math.pow(
-                        1 - Math.pow(-2 * relativeX(a, b, x) + 2, roundness),
-                        1 / (float) roundness) + 1) / 2;
+                return (float) b.getY() * (float) (Math.pow(1 - Math.pow(-2 * relativeX(a, b, x) + 2, roundness), 1 / (float) roundness) + 1) / 2;
             }
         }
     }
@@ -359,9 +333,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() *
-                    (float) (Math.cos(2 * Math.PI * c * relativeX(a, b, x)) *
-                            relativeX(a, b, x));
+            return (float) b.getY() * (float) (Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * relativeX(a, b, x));
         }
     }
 
@@ -375,9 +347,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() * (float) (1 -
-                    (Math.cos(2 * Math.PI * c * relativeX(a, b, x)) *
-                            (1 - relativeX(a, b, x))));
+            return (float) b.getY() * (float) (1 - (Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * (1 - relativeX(a, b, x))));
         }
     }
 
@@ -391,9 +361,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() * (float) (relativeX(a, b, x) +
-                    (Math.sin(2 * Math.PI * c * relativeX(a, b, x)) *
-                            Math.sin(Math.PI * relativeX(a, b, x))));
+            return (float) b.getY() * (float) (relativeX(a, b, x) + (Math.sin(2 * Math.PI * c * relativeX(a, b, x)) * Math.sin(Math.PI * relativeX(a, b, x))));
         }
     }
 
@@ -427,9 +395,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() * (float) Math.abs(
-                    Math.cos(2 * Math.PI * c * relativeX(a, b, x)) *
-                            relativeX(a, b, x));
+            return (float) b.getY() * (float) Math.abs(Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * relativeX(a, b, x));
         }
     }
 
@@ -443,9 +409,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() * (float) (1 - Math.abs(
-                    Math.cos(2 * Math.PI * c * relativeX(a, b, x)) *
-                            (1 - relativeX(a, b, x))));
+            return (float) b.getY() * (float) (1 - Math.abs(Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * (1 - relativeX(a, b, x))));
         }
     }
 
@@ -459,9 +423,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() * (float) (relativeX(a, b, x) + Math.abs(
-                    Math.sin(2 * Math.PI * c * relativeX(a, b, x)) *
-                            Math.sin(Math.PI * relativeX(a, b, x))));
+            return (float) b.getY() * (float) (relativeX(a, b, x) + Math.abs(Math.sin(2 * Math.PI * c * relativeX(a, b, x)) * Math.sin(Math.PI * relativeX(a, b, x))));
         }
     }
 
@@ -496,9 +458,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() *
-                    (float) (c2 * Math.pow(relativeX(a, b, x), 3) -
-                            c1 * Math.pow(relativeX(a, b, x) - 1, 2));
+            return (float) b.getY() * (float) (c2 * Math.pow(relativeX(a, b, x), 3) - c1 * Math.pow(relativeX(a, b, x) - 1, 2));
         }
     }
 
@@ -513,9 +473,7 @@ public interface AnimationAPI {
         } else if (x > b.getX()) {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
-            return (float) b.getY() *
-                    (float) (1 + c2 * Math.pow(relativeX(a, b, x) - 1, 3) +
-                            c1 * Math.pow(relativeX(a, b, x) - 1, 2));
+            return (float) b.getY() * (float) (1 + c2 * Math.pow(relativeX(a, b, x) - 1, 3) + c1 * Math.pow(relativeX(a, b, x) - 1, 2));
         }
     }
 
@@ -532,14 +490,9 @@ public interface AnimationAPI {
             return (float) b.getY(); // after animation defining the eq as b's Y
         } else {
             if (x < (b.getX() - a.getX()) / 2) {
-                return (float) b.getY() *
-                        (float) (Math.pow(2 * relativeX(a, b, x), 2) *
-                                ((c3 + 1) * 2 * relativeX(a, b, x) - c3)) / 2;
+                return (float) b.getY() * (float) (Math.pow(2 * relativeX(a, b, x), 2) * ((c3 + 1) * 2 * relativeX(a, b, x) - c3)) / 2;
             } else {
-                return (float) b.getY() * (float) (
-                        Math.pow(2 * relativeX(a, b, x) - 2, 2) *
-                                ((c3 + 1) * (2 * relativeX(a, b, x) - 2) + c3) +
-                                2) / 2;
+                return (float) b.getY() * (float) (Math.pow(2 * relativeX(a, b, x) - 2, 2) * ((c3 + 1) * (2 * relativeX(a, b, x) - 2) + c3) + 2) / 2;
             }
         }
     }
@@ -568,14 +521,11 @@ public interface AnimationAPI {
     }
 
     private float flat(Point2D a, Point2D b, float x) {
-        return (float) (Math.floor(relativeX(a, b, x)) * (b.getY() - a.getY()) +
-                a.getY());
+        return (float) (Math.floor(relativeX(a, b, x)) * (b.getY() - a.getY()) + a.getY());
     }
 
     private float flat2(Point2D a, Point2D b, float x) {
-        return (float) (
-                2 * Math.floor(relativeX(a, b, x) / 2) * (b.getY() - a.getY()) +
-                        a.getY());
+        return (float) (2 * Math.floor(relativeX(a, b, x) / 2) * (b.getY() - a.getY()) + a.getY());
     }
 
     private float inverse(Point2D a, Point2D b, float x) {
@@ -584,9 +534,7 @@ public interface AnimationAPI {
 
     // BOOMERANG
     default float boomerang(Point2D a, Point2D b, float x) {
-        return line(a, b, x) - flat2(a, b, x) + a.getY() < b.getY() ?
-                (float) (line(a, b, x) - flat2(a, b, x) + a.getY()) :
-                inverse(a, b, x);
+        return line(a, b, x) - flat2(a, b, x) + a.getY() < b.getY() ? (float) (line(a, b, x) - flat2(a, b, x) + a.getY()) : inverse(a, b, x);
     }
 
     // LOOP

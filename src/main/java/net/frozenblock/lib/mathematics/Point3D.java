@@ -120,16 +120,14 @@ public abstract class Point3D implements Cloneable {
         setLocation(p.getX(), p.getY(), p.getZ());
     }
 
-    public static double distanceSq(double x1, double y1, double z1, double x2,
-                                    double y2, double z2) {
+    public static double distanceSq(double x1, double y1, double z1, double x2, double y2, double z2) {
         x1 -= x2;
         y1 -= y2;
         z1 -= z2;
         return (x1 * x1 + y1 * y1 + z1 * z1);
     }
 
-    public static double distance(double x1, double y1, double z1, double x2,
-                                  double y2, double z2) {
+    public static double distance(double x1, double y1, double z1, double x2, double y2, double z2) {
         x1 -= x2;
         y1 -= y2;
         z1 -= z2;
@@ -185,8 +183,7 @@ public abstract class Point3D implements Cloneable {
 
     public boolean equals(Object obj) {
         if (obj instanceof Point3D p2d) {
-            return (getX() == p2d.getX()) && (getY() == p2d.getY()) &&
-                    (getZ() == p2d.getZ());
+            return (getX() == p2d.getX()) && (getY() == p2d.getY()) && (getZ() == p2d.getZ());
         }
         return super.equals(obj);
     }

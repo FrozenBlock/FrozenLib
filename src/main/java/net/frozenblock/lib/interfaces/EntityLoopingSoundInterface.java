@@ -10,7 +10,6 @@ public interface EntityLoopingSoundInterface {
 
     MovingLoopingSoundEntityManager getSounds();
 
-    void addSound(ResourceLocation soundID, SoundSource category, float volume,
-                  float pitch, ResourceLocation restrictionId);
+    void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId);
 
 }

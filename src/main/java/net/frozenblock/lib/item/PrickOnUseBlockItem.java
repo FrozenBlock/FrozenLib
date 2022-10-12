@@ -17,9 +17,7 @@ public class PrickOnUseBlockItem extends BlockItem {
     @Deprecated
     private final Block block;
 
-    public PrickOnUseBlockItem(Block block, Properties properties, float damage,
-                               @Nullable SoundEvent sound,
-                               String damageSourceName) {
+    public PrickOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, String damageSourceName) {
         super(block, properties);
         this.block = block;
         this.damage = damage;
@@ -28,13 +26,11 @@ public class PrickOnUseBlockItem extends BlockItem {
     }
 
     @Override
-    public ItemStack finishUsingItem(ItemStack stack, Level world,
-                                     LivingEntity user) {
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
         if (this.isEdible()) {
-            user.hurt(FrozenDamageSource.source(damageSourceName), this.damage);
+            user.hurt(FrozenDamageSource.source(damageSourceName),this.damage);
             if (this.hurtSound != null && !user.isSilent()) {
-                user.playSound(this.hurtSound, 0.5F,
-                        0.9F + (world.random.nextFloat() * 0.2F));
+                user.playSound(this.hurtSound, 0.5F, 0.9F + (world.random.nextFloat() * 0.2F));
             }
             return user.eat(world, stack);
         }

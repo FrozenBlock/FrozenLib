@@ -15,17 +15,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ServerItemCooldowns.class)
-public class ServerItemCooldownsMixin extends ItemCooldowns
-        implements CooldownInterface {
-    @Shadow
-    @Final
+public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownInterface {
+    @Shadow @Final
     private ServerPlayer player;
 
     public void changeCooldown(Item item, int additional) {
         if (this.cooldowns.containsKey(item)) {
             CooldownInstance cooldown = this.cooldowns.get(item);
-            this.cooldowns.put(item, new CooldownInstance(cooldown.startTime,
-                    cooldown.endTime + additional));
+            this.cooldowns.put(item, new CooldownInstance(cooldown.startTime, cooldown.endTime + additional));
             this.onCooldownChanged(item, additional);
         }
     }
@@ -34,8 +31,7 @@ public class ServerItemCooldownsMixin extends ItemCooldowns
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeId(Registry.ITEM, item);
         byteBuf.writeVarInt(additional);
-        ServerPlayNetworking.send(this.player,
-                FrozenMain.COOLDOWN_CHANGE_PACKET, byteBuf);
+        ServerPlayNetworking.send(this.player, FrozenMain.COOLDOWN_CHANGE_PACKET, byteBuf);
     }
 
 }

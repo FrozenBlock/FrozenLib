@@ -38,20 +38,16 @@ public abstract class MinecraftServerMixin {
     public abstract ResourceManager getResourceManager();
 
     @Inject(method = "reloadResources", at = @At("HEAD"))
-    private void onReloadResourcesStart(Collection<String> collection,
-                                        CallbackInfoReturnable<CompletableFuture<Void>> cir) {
-        ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker()
-                .onStartDataPackReload((MinecraftServer) (Object) this,
-                        this.getResourceManager());
+    private void onReloadResourcesStart(Collection<String> collection, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
+        ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload((MinecraftServer) (Object) this,
+                this.getResourceManager());
     }
 
     @Inject(method = "reloadResources", at = @At("TAIL"))
-    private void onReloadResourcesEnd(Collection<String> collection,
-                                      CallbackInfoReturnable<CompletableFuture<Void>> cir) {
+    private void onReloadResourcesEnd(Collection<String> collection, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
         cir.getReturnValue().handleAsync((value, throwable) -> {
-            ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker()
-                    .onEndDataPackReload((MinecraftServer) (Object) this,
-                            this.getResourceManager(), throwable);
+            ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload((MinecraftServer) (Object) this,
+                    this.getResourceManager(), throwable);
             return value;
         }, (MinecraftServer) (Object) this);
     }

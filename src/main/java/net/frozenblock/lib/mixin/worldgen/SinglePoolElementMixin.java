@@ -19,23 +19,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SinglePoolElement.class)
 public class SinglePoolElementMixin {
 
-    @Shadow
-    @Final
-    @Mutable
+    @Shadow @Final @Mutable
     protected Either<ResourceLocation, StructureTemplate> template;
 
     @Inject(method = "<init>(Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V", at = @At("TAIL"))
-    public void init(Either<ResourceLocation, StructureTemplate> template,
-                     Holder<StructureProcessorList> processors,
-                     StructureTemplatePool.Projection projection,
-                     CallbackInfo info) {
+    public void init(Either<ResourceLocation, StructureTemplate> template, Holder<StructureProcessorList> processors, StructureTemplatePool.Projection projection, CallbackInfo info) {
         if (template.left().isPresent()) {
             ResourceLocation id = template.left().get();
-            if (StructurePoolElementIdReplacements.resourceLocationReplacements.containsKey(
-                    id)) {
-                this.template = Either.left(
-                        StructurePoolElementIdReplacements.resourceLocationReplacements.get(
-                                id));
+            if (StructurePoolElementIdReplacements.resourceLocationReplacements.containsKey(id)) {
+                this.template = Either.left(StructurePoolElementIdReplacements.resourceLocationReplacements.get(id));
             }
         }
     }

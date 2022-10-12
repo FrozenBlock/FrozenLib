@@ -31,14 +31,10 @@ public class MovingLoopingSoundEntityManager {
         nbt.putInt("frozenSoundTicksToCheck", this.ticksToCheck);
         if (nbt.contains("frozenSounds", 9)) {
             this.sounds.clear();
-            DataResult<List<SoundLoopNBT>> var10000 =
-                    SoundLoopNBT.CODEC.listOf()
-                            .parse(new Dynamic<>(NbtOps.INSTANCE,
-                                    nbt.getList("frozenSounds", 10)));
+            DataResult<List<SoundLoopNBT>> var10000 = SoundLoopNBT.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenSounds", 10)));
             Logger var10001 = FrozenMain.LOGGER4;
             Objects.requireNonNull(var10001);
-            Optional<List<SoundLoopNBT>> list =
-                    var10000.resultOrPartial(var10001::error);
+            Optional<List<SoundLoopNBT>> list = var10000.resultOrPartial(var10001::error);
             if (list.isPresent()) {
                 List<SoundLoopNBT> allSounds = list.get();
                 this.sounds.addAll(allSounds);
@@ -48,19 +44,14 @@ public class MovingLoopingSoundEntityManager {
 
     public void save(CompoundTag nbt) {
         this.ticksToCheck = nbt.getInt("frozenSoundTicksToCheck");
-        DataResult<Tag> var10000 = SoundLoopNBT.CODEC.listOf()
-                .encodeStart(NbtOps.INSTANCE, this.sounds);
+        DataResult<Tag> var10000 = SoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
         Logger var10001 = FrozenMain.LOGGER4;
         Objects.requireNonNull(var10001);
-        var10000.resultOrPartial(var10001::error)
-                .ifPresent((cursorsNbt) -> nbt.put("frozenSounds", cursorsNbt));
+        var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenSounds", cursorsNbt));
     }
 
-    public void addSound(ResourceLocation soundID, SoundSource category,
-                         float volume, float pitch,
-                         ResourceLocation restrictionId) {
-        this.sounds.add(new SoundLoopNBT(soundID, category, volume, pitch,
-                restrictionId));
+    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId) {
+        this.sounds.add(new SoundLoopNBT(soundID, category, volume, pitch, restrictionId));
     }
 
     public ArrayList<SoundLoopNBT> getSounds() {
@@ -74,8 +65,7 @@ public class MovingLoopingSoundEntityManager {
             this.ticksToCheck = 20;
             ArrayList<SoundLoopNBT> soundsToRemove = new ArrayList<>();
             for (SoundLoopNBT nbt : this.getSounds()) {
-                if (!FrozenSoundPredicates.getPredicate(nbt.restrictionID)
-                        .test(this.entity)) {
+                if (!FrozenSoundPredicates.getPredicate(nbt.restrictionID).test(this.entity)) {
                     soundsToRemove.add(nbt);
                 }
             }
@@ -90,23 +80,15 @@ public class MovingLoopingSoundEntityManager {
         public final float pitch;
         public final ResourceLocation restrictionID;
 
-        public static final Codec<SoundLoopNBT> CODEC =
-                RecordCodecBuilder.create((instance) -> instance.group(
-                        ResourceLocation.CODEC.fieldOf("soundEventID")
-                                .forGetter(SoundLoopNBT::getSoundEventID),
-                        Codec.STRING.fieldOf("categoryOrdinal")
-                                .forGetter(SoundLoopNBT::getOrdinal),
-                        Codec.FLOAT.fieldOf("volume")
-                                .forGetter(SoundLoopNBT::getVolume),
-                        Codec.FLOAT.fieldOf("pitch")
-                                .forGetter(SoundLoopNBT::getPitch),
-                        ResourceLocation.CODEC.fieldOf("restrictionID")
-                                .forGetter(SoundLoopNBT::getRestrictionID)
-                ).apply(instance, SoundLoopNBT::new));
+        public static final Codec<SoundLoopNBT> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(SoundLoopNBT::getSoundEventID),
+                Codec.STRING.fieldOf("categoryOrdinal").forGetter(SoundLoopNBT::getOrdinal),
+                Codec.FLOAT.fieldOf("volume").forGetter(SoundLoopNBT::getVolume),
+                Codec.FLOAT.fieldOf("pitch").forGetter(SoundLoopNBT::getPitch),
+                ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(SoundLoopNBT::getRestrictionID)
+        ).apply(instance, SoundLoopNBT::new));
 
-        public SoundLoopNBT(ResourceLocation soundEventID, String ordinal,
-                            float vol, float pitch,
-                            ResourceLocation restrictionID) {
+        public SoundLoopNBT(ResourceLocation soundEventID, String ordinal, float vol, float pitch, ResourceLocation restrictionID) {
             this.soundEventID = soundEventID;
             this.categoryOrdinal = ordinal;
             this.volume = vol;
@@ -114,9 +96,7 @@ public class MovingLoopingSoundEntityManager {
             this.restrictionID = restrictionID;
         }
 
-        public SoundLoopNBT(ResourceLocation soundEventID, SoundSource category,
-                            float vol, float pitch,
-                            ResourceLocation restrictionID) {
+        public SoundLoopNBT(ResourceLocation soundEventID, SoundSource category, float vol, float pitch, ResourceLocation restrictionID) {
             this.soundEventID = soundEventID;
             this.categoryOrdinal = category.toString();
             this.volume = vol;
@@ -127,19 +107,15 @@ public class MovingLoopingSoundEntityManager {
         public ResourceLocation getSoundEventID() {
             return this.soundEventID;
         }
-
         public String getOrdinal() {
             return this.categoryOrdinal;
         }
-
         public float getVolume() {
             return this.volume;
         }
-
         public float getPitch() {
             return this.pitch;
         }
-
         public ResourceLocation getRestrictionID() {
             return this.restrictionID;
         }

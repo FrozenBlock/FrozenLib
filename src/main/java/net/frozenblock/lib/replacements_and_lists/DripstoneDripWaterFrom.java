@@ -14,8 +14,7 @@ public class DripstoneDripWaterFrom {
 
     @FunctionalInterface
     public interface InjectedOnDrip {
-        void drip(ServerLevel world, PointedDripstoneBlock.FluidInfo fluidInfo,
-                  BlockPos pos);
+        void drip(ServerLevel world, PointedDripstoneBlock.FluidInfo fluidInfo, BlockPos pos);
     }
 
 }
