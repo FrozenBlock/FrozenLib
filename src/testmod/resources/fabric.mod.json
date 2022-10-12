@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "frozenblocklib_testmod",
+  "version": "${version}",
+  "name": "FrozenBlockLib Test Mod",
+  "license": "LGPL-3.0",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "net.frozenblock.lib.testmod.FrozenTestMain"
+    ]
+  },
+  "depends": {
+    "fabricloader": ">=0.14.8",
+    "fabric": ">=0.58.0",
+    "minecraft": ">=1.19",
+    "java": ">=17"
+  },
+  "breaks": {
+    "quilted_fabric_api": "4.0.0-beta.8"
+  },
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/EpkBWm844s"
+      },
+      "parent": "frozenblocklib"
+    }
+  }
+}

@@ -11,7 +11,29 @@ archivesBaseName = project.archives_base_name
 version = getVersion()
 group = project.maven_group
 
+sourceSets {
+    testmod {
+        runtimeClasspath += main.runtimeClasspath
+        compileClasspath += main.compileClasspath
+    }
+}
+
 loom {
+    runs {
+        testmodClient {
+            client()
+            ideConfigGenerated project.rootProject == project
+            name = "Testmod Client"
+            source sourceSets.testmod
+        }
+        testmodServer {
+            server()
+            ideConfigGenerated project.rootProject == project
+            name = "Testmod Server"
+            source sourceSets.testmod
+        }
+    }
+
     mixin {
         defaultRefmapName = "mixins.frozenblocklib.refmap.json"
     }
@@ -123,6 +145,8 @@ dependencies {
         exclude(group: "net.fabricmc.fabric-api")
         exclude(group: "com.terraformersmc")
     }
+
+    testmodImplementation sourceSets.main.output
 
     // only affects runClient, does not affect gradlew build. add -PuseThirdPartyMods=false to not use these
     if (findProperty("useThirdPartyMods") != "false") {
