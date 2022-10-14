@@ -4,17 +4,26 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.frozenblock.lib.item.Camera;
 import net.frozenblock.lib.item.LootTableWhacker;
-import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
+import net.frozenblock.lib.events.ScheduledBlockEvents;
 import net.minecraft.core.Registry;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.TntBlock;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static net.frozenblock.lib.FrozenMain.id;
 
 public final class FrozenTestMain implements ModInitializer {
 
-    public static final Camera CAMERA = new Camera(new FabricItemSettings());
-    public static final LootTableWhacker LOOT_TABLE_WHACKER =
-            new LootTableWhacker(new FabricItemSettings());
+    public static final String MOD_ID = "frozenblocklib_testmod";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+
+    public static boolean areConfigsInit = false;
+
+    public static final Camera CAMERA = new Camera(new FabricItemSettings().maxCount(1));
+    public static final LootTableWhacker LOOT_TABLE_WHACKER = new LootTableWhacker(new FabricItemSettings().maxCount(1));
 
     @Override
     public void onInitialize() {
