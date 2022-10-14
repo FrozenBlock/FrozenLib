@@ -4,7 +4,6 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.frozenblock.lib.item.Camera;
 import net.frozenblock.lib.item.LootTableWhacker;
-import net.frozenblock.lib.events.ScheduledBlockEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
