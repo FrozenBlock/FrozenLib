@@ -27,6 +27,14 @@ public final class FrozenMain implements ModInitializer {
     public static final String MOD_ID = "frozenblocklib";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
+    public static boolean DEV_LOGGING = false;
+
+    /**
+     * Used for features that may be unstable and crash in public builds.
+     * <p>
+     * It's smart to use this for at least registries.
+     */
+    public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
 
     @Override
     public void onInitialize() {

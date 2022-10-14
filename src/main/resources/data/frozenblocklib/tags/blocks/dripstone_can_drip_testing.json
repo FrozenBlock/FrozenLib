@@ -1,7 +1,0 @@
-{
-  "replace": false,
-  "values": [
-    "#frozenblocklib:dripstone_can_drip",
-    "minecraft:diamond_block"
-  ]
-}

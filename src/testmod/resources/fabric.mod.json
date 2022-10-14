@@ -8,6 +8,12 @@
   "entrypoints": {
     "main": [
       "net.frozenblock.lib.testmod.FrozenTestMain"
+    ],
+    "client": [
+      "net.frozenblock.lib.testmod.FrozenTestClient"
+    ],
+    "modmenu": [
+      "net.frozenblock.lib.testmod.config.ModMenuIntegration"
     ]
   },
   "depends": {

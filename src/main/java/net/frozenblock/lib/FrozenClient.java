@@ -27,16 +27,12 @@ public final class FrozenClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientFreezer.onInitializeClient();
-        ClientTickEvents.START_WORLD_TICK.register(e -> {
+        ClientTickEvents.START_WORLD_TICK.register(level -> {
             Minecraft client = Minecraft.getInstance();
             if (client.level != null) {
                 FlyBySoundHub.update(client, client.player, true);
             }
         });
-
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-            FlyBySoundHub.autoEntitiesAndSounds.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
-        }
 
         receiveMovingRestrictionSoundPacket();
         receiveMovingRestrictionLoopingSoundPacket();

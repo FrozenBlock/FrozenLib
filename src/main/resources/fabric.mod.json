@@ -19,9 +19,6 @@
 	],
 	"client": [
 	  "net.frozenblock.lib.FrozenClient"
-	],
-	"preLaunch": [
-	  "net.frozenblock.lib.FrozenPreLaunch"
 	]
   },
   "mixins": [
