@@ -4,11 +4,9 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.frozenblock.lib.item.Camera;
 import net.frozenblock.lib.item.LootTableWhacker;
+import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
 import net.minecraft.core.Registry;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.TntBlock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
