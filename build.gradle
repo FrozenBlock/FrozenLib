@@ -19,6 +19,8 @@ sourceSets {
 }
 
 loom {
+	runtimeOnlyLog4j = true
+
     runs {
         testmodClient {
             client()
