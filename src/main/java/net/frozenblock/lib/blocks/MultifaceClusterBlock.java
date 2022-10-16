@@ -25,6 +25,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
+/**
+ * A block that combines an amethyst cluster-type block with a multiface block.
+ */
 public class MultifaceClusterBlock extends MultifaceBlock implements SimpleWaterloggedBlock {
     private final MultifaceSpreader spreader = new MultifaceSpreader(this);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;

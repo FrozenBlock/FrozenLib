@@ -9,7 +9,6 @@
 	"server.CreeperMixin",
 	"server.HopperBlockEntityMixin",
 	"server.ItemCooldownsMixin",
-	"server.LegacySinglePoolElementAccessor",
 	"server.LivingEntityMixin",
 	"server.NoExperimentalMixin",
 	"server.PointedDripstoneBlockMixin",

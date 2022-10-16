@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CreeperMixin {
 
     @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
-    public void setTarget(@Nullable LivingEntity livingEntity, CallbackInfo info) {
+    public void ignoreTag(@Nullable LivingEntity livingEntity, CallbackInfo info) {
         if (livingEntity != null) {
             if (livingEntity.getType().is(FrozenEntityTags.CREEPER_IGNORES)) {
                 info.cancel();

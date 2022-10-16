@@ -4,7 +4,7 @@ By contributing to FrozenLib, you agree with the [Developer Certificate of Origi
 
 ## Conventions
 
-### General
+### Naming
 
 `UpperCamelCase` should be used for class names.
 `lowerCamelCase` should be used for method names, variable names, and variables that aren't both static and final.
@@ -54,8 +54,9 @@ Avoid the use of abbreviations in javadocs, except if they describe the name of 
 The `$` character can be used in mixins to mark a semantic separation in the name.
 It allows to separate the actual name of the variable and the namespace, `frozenLib`.
 
-Fields marked as `@Unique` must be prefixed with `frozenLib$`,
-but methods marked with `@Unique` do not need prefixes.
+Fields marked as `@Unique` must be prefixed with `frozenLib$` or `FROZENLIB$` if the field is static and final.
+Methods marked with `@Unique` do not need prefixes.
+
 
 
 ## Licensing & DCO
@@ -63,6 +64,10 @@ but methods marked with `@Unique` do not need prefixes.
 FrozenLib is licensed under [LGPL 3.0][LICENSE], and it has a [Developer Certificate of Origin (DCO)][DCO], which you are required to agree with to contribute.
 Specifying the commit author may be sufficient, but a [sign-off can be also added](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--s).
 Legal names are not required.
+
+---
+
+**Note: This document is currently incomplete.**
 
 [LICENSE]: ./LICENSE "FrozenLib license file"
 

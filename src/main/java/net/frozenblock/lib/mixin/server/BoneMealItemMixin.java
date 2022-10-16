@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class BoneMealItemMixin {
 
     @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
-    public void useOn(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
+    public void useBonemeal(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
         Level level = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
         BlockState state = level.getBlockState(blockPos);

@@ -13,12 +13,16 @@ import net.minecraft.world.item.ServerItemCooldowns;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerItemCooldowns.class)
 public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownInterface {
-    @Shadow @Final
+    @Shadow
+	@Final
     private ServerPlayer player;
 
+	@Unique
+	@Override
     public void changeCooldown(Item item, int additional) {
         if (this.cooldowns.containsKey(item)) {
             CooldownInstance cooldown = this.cooldowns.get(item);
@@ -27,6 +31,8 @@ public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownI
         }
     }
 
+	@Unique
+	@Override
     public void onCooldownChanged(Item item, int additional) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeId(Registry.ITEM, item);
