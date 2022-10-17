@@ -1,5 +1,8 @@
 package net.frozenblock.lib.mixin.server;
 
+import java.util.Optional;
+import java.util.function.BiPredicate;
+import java.util.function.Predicate;
 import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.replacements_and_lists.DripstoneDripLavaFrom;
 import net.frozenblock.lib.replacements_and_lists.DripstoneDripWaterFrom;
@@ -29,10 +32,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-
-import java.util.Optional;
-import java.util.function.BiPredicate;
-import java.util.function.Predicate;
 
 @Mixin(PointedDripstoneBlock.class)
 public class PointedDripstoneBlockMixin {

@@ -1,17 +1,15 @@
 package net.frozenblock.lib.tags;
 
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Optional;
 import net.fabricmc.fabric.api.tag.convention.v1.TagUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Optional;
 
 /**
  * Contains methods related to {@link TagKey}s.

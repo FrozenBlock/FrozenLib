@@ -1,10 +1,9 @@
 package net.frozenblock.lib.blocks;
 
+import java.util.Objects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
-
-import java.util.Objects;
 
 public class FrozenSignBlock extends StandingSignBlock {
     public final ResourceLocation lootTable;

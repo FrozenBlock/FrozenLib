@@ -1,12 +1,11 @@
 package net.frozenblock.lib.sound;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public final class FrozenSoundPredicates {
     public static Map<ResourceLocation, LoopPredicate<?>> predicates = new HashMap<>();

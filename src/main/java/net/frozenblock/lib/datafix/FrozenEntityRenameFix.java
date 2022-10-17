@@ -6,11 +6,10 @@ import com.mojang.datafixers.TypeRewriteRule;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.Type;
 import com.mojang.datafixers.util.Pair;
-import net.minecraft.util.datafix.fixes.References;
-import net.minecraft.util.datafix.schemas.NamespacedSchema;
-
 import java.util.Objects;
 import java.util.function.Function;
+import net.minecraft.util.datafix.fixes.References;
+import net.minecraft.util.datafix.schemas.NamespacedSchema;
 
 public abstract class FrozenEntityRenameFix extends DataFix {
 

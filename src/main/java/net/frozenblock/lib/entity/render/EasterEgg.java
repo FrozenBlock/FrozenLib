@@ -1,17 +1,15 @@
 package net.frozenblock.lib.entity.render;
 
+import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicBoolean;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-
-import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class EasterEgg<T extends LivingEntity> {
 

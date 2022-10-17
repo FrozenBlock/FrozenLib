@@ -1,5 +1,9 @@
 package net.frozenblock.lib.item;
 
+import java.io.File;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
@@ -9,11 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-
-import java.io.File;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class Camera extends Item {
 

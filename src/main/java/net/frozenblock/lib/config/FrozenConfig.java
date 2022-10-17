@@ -1,14 +1,13 @@
 package net.frozenblock.lib.config;
 
 import com.google.common.base.Preconditions;
+import java.util.Arrays;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
-
-import java.util.Arrays;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenConfig {

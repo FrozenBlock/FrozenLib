@@ -1,12 +1,11 @@
 package net.frozenblock.lib.sound;
 
+import java.util.HashMap;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
-
-import java.util.HashMap;
 
 public class StartingSounds {
 

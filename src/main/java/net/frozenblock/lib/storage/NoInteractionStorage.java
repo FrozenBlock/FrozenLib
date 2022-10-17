@@ -1,10 +1,9 @@
 package net.frozenblock.lib.storage;
 
+import java.util.Iterator;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
-
-import java.util.Iterator;
 
 public interface NoInteractionStorage<T> extends Storage<T> {
 

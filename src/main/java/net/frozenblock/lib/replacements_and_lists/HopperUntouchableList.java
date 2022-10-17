@@ -1,11 +1,10 @@
 package net.frozenblock.lib.replacements_and_lists;
 
+import java.util.ArrayList;
 import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-
-import java.util.ArrayList;
 
 public class HopperUntouchableList {
 

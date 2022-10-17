@@ -1,5 +1,6 @@
 package net.frozenblock.lib.worldgen.biome.api.modifications;
 
+import java.util.function.Predicate;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.NetherBiomes;
@@ -7,8 +8,6 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.LevelStem;
-
-import java.util.function.Predicate;
 
 /**
  * Provides several biome selectors with additional functionality.

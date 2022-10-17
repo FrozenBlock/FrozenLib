@@ -1,5 +1,7 @@
 package net.frozenblock.lib.sound;
 
+import java.util.HashMap;
+import java.util.Map;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -11,9 +13,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import java.util.HashMap;
-import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 public class FlyBySoundHub {
