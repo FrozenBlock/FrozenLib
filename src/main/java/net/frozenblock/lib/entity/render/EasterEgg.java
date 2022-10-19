@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -39,7 +38,7 @@ public class EasterEgg<T extends LivingEntity> {
     }
 
     public static <E extends LivingEntity> EasterEgg<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, boolean caseSensitive, String...names) {
-        return register(key, type, texture, (entity, renderer) -> {
+        return register(key, type, texture, (entity) -> {
             String entityName = ChatFormatting.stripFormatting(entity.getName().getString());
             AtomicBoolean isNameCorrect = new AtomicBoolean(false);
             if (names.length == 0) {
@@ -69,6 +68,6 @@ public class EasterEgg<T extends LivingEntity> {
 
     @FunctionalInterface
     public interface Condition {
-        boolean condition(LivingEntity entity, LivingEntityRenderer<?, ?> renderer);
+        boolean condition(LivingEntity entity);
     }
 }
