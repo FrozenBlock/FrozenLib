@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
  * <p>
  * Only for FrozenBlock Modders, ALL RIGHTS RESERVED
  * <p>
- * Defining a point A(x,y) & B(x,y) you can create an animation between those two points ( A.getY() won't affect the animation).
+ * Defining a point A(x,y) and B(x,y) you can create an animation between those two points ( A.getY() won't affect the animation).
  * Learn more at <a href="https://github.com/LIUKRAST/AnimationAPI/blob/main/README.md">the README</a>
  *
  * @author LiukRast (2021-2022)
@@ -516,7 +516,7 @@ public final class AnimationAPI {
 
     /**
      * LOOP SYSTEM
-     * Loop: defines A & B and always repeat between these two values
+     * Loop: defines A and B and always repeat between these two values
      * Boomerang: creates a loop but instead of repeating it from start, it comes back and THEN loop
      */
     public static float line(Point2D a, Point2D b, float x) {
