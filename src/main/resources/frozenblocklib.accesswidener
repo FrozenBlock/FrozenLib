@@ -39,12 +39,12 @@ transitive-accessible    method    net/minecraft/world/level/block/Block    regi
 transitive-accessible    field    net/minecraft/world/CompoundContainer    container1    Lnet/minecraft/world/Container;
 transitive-accessible    field    net/minecraft/world/CompoundContainer    container2    Lnet/minecraft/world/Container;
 transitive-accessible    method    net/minecraft/world/level/block/AbstractCauldronBlock    canReceiveStalactiteDrip    (Lnet/minecraft/world/level/material/Fluid;)Z
-transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible    method    net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo    <init>    (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    <init>    (Ljava/lang/String;)V
 transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    register    (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
 
 # Block Entities
+transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
 
 # Render Types
 transitive-accessible    class    net/minecraft/client/renderer/RenderType$CompositeState
@@ -62,7 +62,6 @@ transitive-accessible    method    net/minecraft/client/renderer/RenderStateShar
 transitive-accessible    class    net/minecraft/world/level/chunk/ChunkStatus$SimpleGenerationTask
 transitive-accessible    method    net/minecraft/data/worldgen/biome/OverworldBiomes    calculateSkyColor    (F)I
 transitive-accessible    method    net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider    <init>    (Lnet/minecraft/world/level/block/state/BlockState;)V
-transitive-accessible    class    net/minecraft/client/renderer/chunk/ChunkRenderDispatcher$RenderChunk$RebuildTask$CompileResults
 
 # Noise
 transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;ID[D)Lnet/minecraft/core/Holder;
