@@ -1,4 +1,4 @@
-package net.frozenblock.lib.item;
+package net.frozenblock.lib.item.api;
 
 import net.frozenblock.lib.interfaces.CooldownInterface;
 import net.minecraft.world.entity.player.Player;

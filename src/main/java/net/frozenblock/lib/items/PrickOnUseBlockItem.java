@@ -1,20 +1,25 @@
-package net.frozenblock.lib.item;
+package net.frozenblock.lib.items;
 
 import net.frozenblock.lib.damagesource.FrozenDamageSource;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-public class PrickOnUseItem extends Item {
+public class PrickOnUseBlockItem extends BlockItem {
     public final float damage;
     public final SoundEvent hurtSound;
     public final String damageSourceName;
 
-    public PrickOnUseItem(Item.Properties properties, float damage, @Nullable SoundEvent sound, String damageSourceName) {
-        super(properties);
+    @Deprecated
+    private final Block block;
+
+    public PrickOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, String damageSourceName) {
+        super(block, properties);
+        this.block = block;
         this.damage = damage;
         this.hurtSound = sound;
         this.damageSourceName = damageSourceName;

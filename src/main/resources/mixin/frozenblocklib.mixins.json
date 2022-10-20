@@ -7,6 +7,7 @@
 	"server.AbstractFishMixin",
 	"server.BlockBehaviourMixin",
 	"server.BoneMealItemMixin",
+	"server.CreativeModeTabMixin",
 	"server.CreeperMixin",
 	"server.HopperBlockEntityMixin",
 	"server.ItemCooldownsMixin",

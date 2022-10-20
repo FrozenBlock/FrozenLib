@@ -12,6 +12,7 @@ public class StartingSounds {
     /**
      * Use this to associate a Starting Sound to a {@link ResourceKey} for later use.
      */
+	@Deprecated
     public static HashMap<ResourceKey<?>, SoundEvent> startingSounds = new HashMap<>();
 
     public static final SoundEvent EMPTY_SOUND = register("empty_sound");

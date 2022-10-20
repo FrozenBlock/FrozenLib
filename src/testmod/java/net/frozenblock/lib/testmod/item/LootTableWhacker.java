@@ -1,4 +1,4 @@
-package net.frozenblock.lib.item;
+package net.frozenblock.lib.testmod.item;
 
 import java.util.Arrays;
 import java.util.List;
