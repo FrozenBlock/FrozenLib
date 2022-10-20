@@ -8,6 +8,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(CreativeModeTab.class)
 public class CreativeModeTabMixin implements FrozenTabs {
@@ -15,9 +16,10 @@ public class CreativeModeTabMixin implements FrozenTabs {
 	private CreativeModeTab.ItemDisplayBuilder displayBuilder;
 	private FeatureFlagSet featureFlagSet;
 
-	@Inject(method = "lazyBuildDisplayItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/CreativeModeTab;generateDisplayItems(Lnet/minecraft/world/flag/FeatureFlagSet;Lnet/minecraft/world/item/CreativeModeTab$Output;)V"))
-	private void setDisplayBuilder(FeatureFlagSet featureFlagSet, boolean bl, CallbackInfoReturnable<ItemStackLinkedSet> cir) {
-
+	@Inject(method = "lazyBuildDisplayItems", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/CreativeModeTab;generateDisplayItems(Lnet/minecraft/world/flag/FeatureFlagSet;Lnet/minecraft/world/item/CreativeModeTab$Output;)V"), locals = LocalCapture.CAPTURE_FAILHARD)
+	private void setDisplayBuilder(FeatureFlagSet featureFlagSet, boolean bl, CallbackInfoReturnable<ItemStackLinkedSet> cir, CreativeModeTab.ItemDisplayBuilder itemDisplayBuilder) {
+		this.displayBuilder = itemDisplayBuilder;
+		this.featureFlagSet = featureFlagSet;
 	}
 
 	@Override
