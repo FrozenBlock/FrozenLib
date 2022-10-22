@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -64,7 +65,7 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
             this.ticksToCheck = 20;
             ArrayList<FadingDistanceSoundLoopNBT> soundsToRemove = new ArrayList<>();
             for (FadingDistanceSoundLoopNBT nbt : this.getSounds()) {
-                if (!FrozenSoundPredicates.getPredicate(nbt.restrictionID).test(this.entity)) {
+                if (!SoundPredicate.getPredicate(nbt.restrictionID).test(this.entity)) {
                     soundsToRemove.add(nbt);
                 }
             }

@@ -2,6 +2,7 @@ package net.frozenblock.lib.sound;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractSoundInstance;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
@@ -14,13 +15,13 @@ import net.minecraft.world.entity.Entity;
 public class StartingSoundInstance extends AbstractTickableSoundInstance {
 
     public final Entity entity;
-    public final FrozenSoundPredicates.LoopPredicate<?> predicate;
+    public final SoundPredicate.LoopPredicate<?> predicate;
     public final SoundEvent loopingSound;
     public final SoundEvent startingSound;
     public boolean hasSwitched = false;
     public final AbstractSoundInstance nextSound;
 
-    public StartingSoundInstance(Entity entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, FrozenSoundPredicates.LoopPredicate<?> predicate, AbstractSoundInstance nextSound) {
+    public StartingSoundInstance(Entity entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<?> predicate, AbstractSoundInstance nextSound) {
         super(startingSound, category, SoundInstance.createUnseededRandom());
         this.startingSound = startingSound;
         this.nextSound = nextSound;
