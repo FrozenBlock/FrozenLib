@@ -7,22 +7,22 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
-public final class FrozenSoundPredicate<T extends Entity> {
+public final class SoundPredicate<T extends Entity> {
 
     public static void register(ResourceLocation id, LoopPredicate<?> predicate) {
-		Registry.register(FrozenRegistry.SOUND_PREDICATES, id, new FrozenSoundPredicate<>(predicate));
+		Registry.register(FrozenRegistry.SOUND_PREDICATE, id, new SoundPredicate<>(predicate));
     }
 
 	private final LoopPredicate<T> predicate;
 
-	public FrozenSoundPredicate(LoopPredicate<T> predicate) {
+	public SoundPredicate(LoopPredicate<T> predicate) {
 		this.predicate = predicate;
 	}
 
     public static LoopPredicate<?> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
-            if (FrozenRegistry.SOUND_PREDICATES.containsKey(id)) {
-				FrozenSoundPredicate<?> predicate = FrozenRegistry.SOUND_PREDICATES.get(id);
+            if (FrozenRegistry.SOUND_PREDICATE.containsKey(id)) {
+				SoundPredicate<?> predicate = FrozenRegistry.SOUND_PREDICATE.get(id);
 				if (predicate != null) {
 					return predicate.predicate;
 				} else {

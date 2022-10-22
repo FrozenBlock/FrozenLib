@@ -9,13 +9,17 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 
-public class EasterEgg<T extends LivingEntity> {
+/**
+ * Used to override an entity's texture if a condition is met.
+ * @param <T>	The entity class the override is for.
+ */
+public class EntityTextureOverride<T extends LivingEntity> {
 
     private final EntityType<T> type;
     private final ResourceLocation texture;
     private final Condition condition;
 
-    public EasterEgg(EntityType<T> type, ResourceLocation texture, Condition condition) {
+    public EntityTextureOverride(EntityType<T> type, ResourceLocation texture, Condition condition) {
         this.type = type;
         this.texture = texture;
         this.condition = condition;
@@ -33,11 +37,11 @@ public class EasterEgg<T extends LivingEntity> {
         return this.condition;
     }
 
-    public static <E extends LivingEntity> EasterEgg<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, String...names) {
+    public static <E extends LivingEntity> EntityTextureOverride<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, String...names) {
         return register(key, type, texture, false, names);
     }
 
-    public static <E extends LivingEntity> EasterEgg<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, boolean caseSensitive, String...names) {
+    public static <E extends LivingEntity> EntityTextureOverride<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, boolean caseSensitive, String...names) {
         return register(key, type, texture, (entity) -> {
             String entityName = ChatFormatting.stripFormatting(entity.getName().getString());
             AtomicBoolean isNameCorrect = new AtomicBoolean(false);
@@ -62,8 +66,8 @@ public class EasterEgg<T extends LivingEntity> {
         });
     }
 
-    public static <E extends LivingEntity> EasterEgg<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, Condition condition) {
-        return Registry.register(FrozenRegistry.EASTER_EGG, key, new EasterEgg<>(type, texture, condition));
+    public static <E extends LivingEntity> EntityTextureOverride<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, Condition condition) {
+        return Registry.register(FrozenRegistry.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(type, texture, condition));
     }
 
     @FunctionalInterface

@@ -2,7 +2,7 @@ package net.frozenblock.lib.sound;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.sound.SoundPredicate.FrozenSoundPredicate;
+import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
@@ -13,9 +13,9 @@ import net.minecraft.world.entity.Entity;
 public class MovingSoundWithRestriction extends AbstractTickableSoundInstance {
 
     private final Entity entity;
-    private final FrozenSoundPredicate.LoopPredicate<?> predicate;
+    private final SoundPredicate.LoopPredicate<?> predicate;
 
-    public MovingSoundWithRestriction(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, FrozenSoundPredicate.LoopPredicate<?> predicate) {
+    public MovingSoundWithRestriction(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<?> predicate) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = false;

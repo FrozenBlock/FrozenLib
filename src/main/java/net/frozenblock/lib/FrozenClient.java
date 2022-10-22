@@ -8,7 +8,7 @@ import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
 import net.frozenblock.lib.interfaces.CooldownInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.FlyBySoundHub;
-import net.frozenblock.lib.sound.SoundPredicate.FrozenSoundPredicate;
+import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
 import net.frozenblock.lib.sound.MovingSoundLoopWithRestriction;
 import net.frozenblock.lib.sound.MovingSoundWithRestriction;
 import net.frozenblock.lib.sound.StartingSoundInstance;
@@ -71,7 +71,7 @@ public final class FrozenClient implements ClientModInitializer {
                 if (level != null) {
                     Entity entity = level.getEntity(id);
                     if (entity != null) {
-                        FrozenSoundPredicate.LoopPredicate<?> predicate = FrozenSoundPredicate.getPredicate(predicateId);
+                        SoundPredicate.LoopPredicate<?> predicate = SoundPredicate.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new MovingSoundWithRestriction(entity, sound, category, volume, pitch, predicate));
                     }
                 }
@@ -92,7 +92,7 @@ public final class FrozenClient implements ClientModInitializer {
                 if (level != null) {
                     Entity entity = level.getEntity(id);
                     if (entity != null) {
-                        FrozenSoundPredicate.LoopPredicate<?> predicate = FrozenSoundPredicate.getPredicate(predicateId);
+                        SoundPredicate.LoopPredicate<?> predicate = SoundPredicate.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new MovingSoundLoopWithRestriction(entity, sound, category, volume, pitch, predicate));
                     }
                 }
@@ -114,7 +114,7 @@ public final class FrozenClient implements ClientModInitializer {
                 if (level != null) {
                     Entity entity = level.getEntity(id);
                     if (entity != null) {
-                        FrozenSoundPredicate.LoopPredicate<?> predicate = FrozenSoundPredicate.getPredicate(predicateId);
+                        SoundPredicate.LoopPredicate<?> predicate = SoundPredicate.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new StartingSoundInstance(entity, startingSound, loopingSound, category, volume, pitch, predicate, new MovingSoundLoopWithRestriction(entity, loopingSound, category, volume, pitch, predicate)));
                     }
                 }
@@ -138,7 +138,7 @@ public final class FrozenClient implements ClientModInitializer {
                 if (level != null) {
                     Entity entity = level.getEntity(id);
                     if (entity != null) {
-                        FrozenSoundPredicate.LoopPredicate<?> predicate = FrozenSoundPredicate.getPredicate(predicateId);
+                        SoundPredicate.LoopPredicate<?> predicate = SoundPredicate.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
                         Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
                     }
@@ -163,7 +163,7 @@ public final class FrozenClient implements ClientModInitializer {
                 if (level != null) {
                     Entity entity = level.getEntity(id);
                     if (entity != null) {
-                        FrozenSoundPredicate.LoopPredicate<?> predicate = FrozenSoundPredicate.getPredicate(predicateId);
+                        SoundPredicate.LoopPredicate<?> predicate = SoundPredicate.getPredicate(predicateId);
                         Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
                         Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
                     }
