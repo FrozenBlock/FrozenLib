@@ -10,8 +10,12 @@ import org.jetbrains.annotations.Nullable;
 public final class SoundPredicate<T extends Entity> {
 
     public static void register(ResourceLocation id, LoopPredicate<?> predicate) {
-		Registry.register(FrozenRegistry.SOUND_PREDICATE, id, new SoundPredicate<>(predicate));
+		Registry.register(FrozenRegistry.SOUND_PREDICATE_SYNCED, id, new SoundPredicate<>(predicate));
     }
+
+	public static void registerUnsynced(ResourceLocation id, LoopPredicate<?> predicate) {
+		Registry.register(FrozenRegistry.SOUND_PREDICATE, id, new SoundPredicate<>(predicate));
+	}
 
 	private final LoopPredicate<T> predicate;
 
@@ -21,18 +25,18 @@ public final class SoundPredicate<T extends Entity> {
 
     public static LoopPredicate<?> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
-            if (FrozenRegistry.SOUND_PREDICATE.containsKey(id)) {
+            if (FrozenRegistry.SOUND_PREDICATE_SYNCED.containsKey(id)) {
+				SoundPredicate<?> predicate = FrozenRegistry.SOUND_PREDICATE_SYNCED.get(id);
+				if (predicate != null) {
+					return predicate.predicate;
+				}
+			} else if (FrozenRegistry.SOUND_PREDICATE.containsKey(id)) {
 				SoundPredicate<?> predicate = FrozenRegistry.SOUND_PREDICATE.get(id);
 				if (predicate != null) {
 					return predicate.predicate;
-				} else {
-					FrozenMain.LOGGER.error("Unable to find sound predicate " + id.toString() + "! Using default sound predicate instead!");
-					return DEFAULT;
 				}
-			} else {
-				FrozenMain.LOGGER.error("Unable to find sound predicate " + id.toString() + "! Using default sound predicate instead!");
-				return DEFAULT;
 			}
+			FrozenMain.LOGGER.error("Unable to find sound predicate " + id + "! Using default sound predicate instead!");
         }
         return DEFAULT;
     }
