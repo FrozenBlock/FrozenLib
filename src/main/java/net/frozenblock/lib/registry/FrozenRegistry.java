@@ -19,7 +19,7 @@ public class FrozenRegistry {
             .buildAndRegister();
 
 	public static final MappedRegistry<FrozenSoundPredicate> SOUND_PREDICATES = FabricRegistryBuilder.createSimple(FrozenSoundPredicate.class, FrozenMain.id("sound_predicates"))
-			//.attribute(RegistryAttribute.MODDED)
+			.attribute(RegistryAttribute.SYNCED)
 			.buildAndRegister();
 
     public static void initRegistry() {
