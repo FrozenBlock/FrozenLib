@@ -125,7 +125,7 @@ public abstract class CreateWorldScreenMixin {
     // Lambda method in CreateWorldScreen#tryApplyNewDataPacks, at C_kjxfcecs#method_42098.
     // Inject before closing the resource manager.
     @Inject(
-            method = {"method_45681", "m_paskjwcu"},
+            method = {"method_41851", "m_tlckpqyc", "lambda$openFresh$1"},
             at = @At("HEAD"),
             require = 1,
             remap = false // Very bad, someone please fix the Mixin annotation processor already.
@@ -155,7 +155,7 @@ public abstract class CreateWorldScreenMixin {
     // Lambda method in CreateWorldScreen#applyDataPacks, at CompletableFuture#handle.
     // Take Void and Throwable parameters.
     @Inject(
-            method = {"method_45685", "m_kltndaqc"},
+            method = {"method_45685", "m_sxbkwuzy", "lambda$applyNewPackConfig$27"},
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",

@@ -1,11 +1,13 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
 import net.frozenblock.lib.interfaces.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.interfaces.EntityLoopingSoundInterface;
+import net.frozenblock.lib.mathematics.EasyNoiseSampler;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.FrozenSoundPackets;
 import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
@@ -56,6 +58,15 @@ public final class FrozenMain implements ModInitializer {
 
             }
         });
+
+		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+			if (server != null) {
+				var seed = server.overworld().getSeed();
+				if (EasyNoiseSampler.seed != seed) {
+					EasyNoiseSampler.setSeed(seed);
+				}
+			}
+		});
     }
 
     //IDENTIFIERS

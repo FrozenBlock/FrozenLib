@@ -12,6 +12,9 @@
     "client": [
       "net.frozenblock.lib.testmod.FrozenTestClient"
     ],
+    "frozenlib:events": [
+      "net.frozenblock.lib.testmod.FrozenTestMain"
+    ],
     "modmenu": [
       "net.frozenblock.lib.testmod.config.ModMenuIntegration"
     ]
