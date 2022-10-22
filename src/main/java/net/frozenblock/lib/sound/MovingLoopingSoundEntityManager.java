@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.sound.SoundPredicate.FrozenSoundPredicate;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -64,7 +65,7 @@ public class MovingLoopingSoundEntityManager {
             this.ticksToCheck = 20;
             ArrayList<SoundLoopNBT> soundsToRemove = new ArrayList<>();
             for (SoundLoopNBT nbt : this.getSounds()) {
-                if (!FrozenSoundPredicates.getPredicate(nbt.restrictionID).test(this.entity)) {
+                if (!FrozenSoundPredicate.getPredicate(nbt.restrictionID).test(this.entity)) {
                     soundsToRemove.add(nbt);
                 }
             }

@@ -1,24 +1,38 @@
-package net.frozenblock.lib.sound;
+package net.frozenblock.lib.sound.SoundPredicate;
 
-import java.util.HashMap;
-import java.util.Map;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.registry.FrozenRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
-public final class FrozenSoundPredicates {
-    public static Map<ResourceLocation, LoopPredicate<?>> predicates = new HashMap<>();
+public final class FrozenSoundPredicate<T extends Entity> {
 
     public static void register(ResourceLocation id, LoopPredicate<?> predicate) {
-        predicates.put(id, predicate);
+		Registry.register(FrozenRegistry.SOUND_PREDICATES, id, new FrozenSoundPredicate<>(predicate));
     }
+
+	private final LoopPredicate<T> predicate;
+
+	public FrozenSoundPredicate(LoopPredicate<T> predicate) {
+		this.predicate = predicate;
+	}
 
     public static LoopPredicate<?> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
-            if (predicates.containsKey(id)) {
-                return predicates.get(id);
-            }
+            if (FrozenRegistry.SOUND_PREDICATES.containsKey(id)) {
+				FrozenSoundPredicate<?> predicate = FrozenRegistry.SOUND_PREDICATES.get(id);
+				if (predicate != null) {
+					return predicate.predicate;
+				} else {
+					FrozenMain.LOGGER.error("Unable to find sound predicate " + id.toString() + "! Using default sound predicate instead!");
+					return DEFAULT;
+				}
+			} else {
+				FrozenMain.LOGGER.error("Unable to find sound predicate " + id.toString() + "! Using default sound predicate instead!");
+				return DEFAULT;
+			}
         }
         return DEFAULT;
     }

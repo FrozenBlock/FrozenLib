@@ -2,7 +2,7 @@ package net.frozenblock.lib.sound.distance_based;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.sound.FrozenSoundPredicates;
+import net.frozenblock.lib.sound.SoundPredicate.FrozenSoundPredicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
@@ -14,13 +14,13 @@ import net.minecraft.world.entity.Entity;
 public class MovingFadingDistanceSwitchingSoundLoop extends AbstractTickableSoundInstance {
 
     private final Entity entity;
-    private final FrozenSoundPredicates.LoopPredicate<?> predicate;
+    private final FrozenSoundPredicate.LoopPredicate<?> predicate;
     private final boolean isFarSound;
     private final double maxDist;
     private final double fadeDist;
     private final float maxVol;
 
-    public MovingFadingDistanceSwitchingSoundLoop(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, FrozenSoundPredicates.LoopPredicate<?> predicate, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
+    public MovingFadingDistanceSwitchingSoundLoop(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, FrozenSoundPredicate.LoopPredicate<?> predicate, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = true;

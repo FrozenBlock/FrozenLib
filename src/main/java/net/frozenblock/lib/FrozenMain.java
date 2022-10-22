@@ -8,7 +8,7 @@ import net.frozenblock.lib.interfaces.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.interfaces.EntityLoopingSoundInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.FrozenSoundPackets;
-import net.frozenblock.lib.sound.FrozenSoundPredicates;
+import net.frozenblock.lib.sound.SoundPredicate.FrozenSoundPredicate;
 import net.frozenblock.lib.sound.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.MovingLoopingSoundEntityManager;
 import net.minecraft.core.Registry;
@@ -41,7 +41,7 @@ public final class FrozenMain implements ModInitializer {
         FrozenRegistry.initRegistry();
         ServerFreezer.onInitialize();
         QuiltSurfaceRuleInitializer.onInitialize();
-        FrozenSoundPredicates.init();
+        FrozenSoundPredicate.init();
 
         receiveSoundSyncPacket();
 
