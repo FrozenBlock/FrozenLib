@@ -41,7 +41,7 @@ import static java.util.Objects.requireNonNull;
  */
 public final class QuiltDataFixes {
     private QuiltDataFixes() {
-        throw new UnsupportedOperationException("QuiltDataFixes only contains static declarations.");
+        throw new UnsupportedOperationException("QuiltDataFixes contains only static declarations.");
     }
 
     /**
