@@ -1,6 +1,14 @@
+buildscript {
+	dependencies {
+		classpath 'org.kohsuke:github-api:+'
+	}
+}
+
 plugins {
-	id 'fabric-loom' version '1.0-SNAPSHOT'
-	id 'io.github.juuxel.loom-quiltflower' version '1.7.+'
+	id 'fabric-loom' version '+'
+	id 'io.github.juuxel.loom-quiltflower' version '+'
+	id 'org.ajoberstar.grgit' version '+'
+	id 'com.modrinth.minotaur' version '+'
 	id 'maven-publish'
     id 'eclipse'
     id 'idea'
@@ -259,6 +267,47 @@ artifacts {
 }
 
 def env = System.getenv()
+
+def getBranch() {
+	def env = System.getenv()
+	if (env.GITHUB_REF) {
+		def branch = env.GITHUB_REF
+		return branch.substring(branch.lastIndexOf("/") + 1)
+	}
+
+	if (grgit == null) {
+		return "unknown"
+	}
+
+	def branch = grgit.branch.current().name
+	return branch.substring(branch.lastIndexOf("/") + 1)
+}
+
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
+
+task release(dependsOn: [remapJar, sourcesJar, javadocJar]) {
+	onlyIf {
+		env.GITHUB_TOKEN
+	}
+
+	doLast {
+		def github = GitHub.connectUsingOAuth(env.GITHUB_TOKEN as String)
+		def repository = github.getRepository("FrozenBlock/FrozenLib")
+
+		def releaseBuilder = new GHReleaseBuilder(repository, version as String)
+		releaseBuilder.name("${mod_version}-")
+		releaseBuilder.body(env.CHANGELOG ?: "No changelog provided")
+		releaseBuilder.commitish(getBranch())
+
+		def ghRelease = releaseBuilder.create()
+		ghRelease.uploadAsset(remapJar.archiveFile.get().getAsFile(), "application/java-archive")
+		ghRelease.uploadAsset(sourcesJar.archiveFile.get().getAsFile(), "application/java-archive")
+		ghRelease.uploadAsset(javadocJar.archiveFile.get().getAsFile(), "application/java-archive")
+		ghRelease.delete()
+	}
+}
+
 
 // configure the maven publication
 publishing {
