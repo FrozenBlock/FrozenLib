@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 public final class FrozenOverworldBiomes {
     private FrozenOverworldBiomes() {
-		throw new UnsupportedOperationException("FrozenOverworldBiomes only contains static declarations.");
+		throw new UnsupportedOperationException("FrozenOverworldBiomes contains only static declarations.");
     }
 
 	/**

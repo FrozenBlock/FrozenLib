@@ -17,7 +17,7 @@ import java.awt.geom.Point2D;
  */
 public final class AnimationAPI {
 	private AnimationAPI() {
-		throw new UnsupportedOperationException("AnimationAPI only contains static declarations.");
+		throw new UnsupportedOperationException("AnimationAPI contains only static declarations.");
 	}
 
     public static float relativeX(Point2D a, Point2D b, float x) {

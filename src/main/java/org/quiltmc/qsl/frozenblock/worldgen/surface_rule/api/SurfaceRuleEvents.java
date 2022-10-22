@@ -97,7 +97,7 @@ public final class SurfaceRuleEvents {
     }
 
     private SurfaceRuleEvents() {
-        throw new UnsupportedOperationException("SurfaceMaterialRuleEvents only contains static definitions.");
+        throw new UnsupportedOperationException("SurfaceMaterialRuleEvents contains only static definitions.");
     }
 
     static {

@@ -5,7 +5,7 @@ import java.util.List;
 
 public final class FrozenBiomeParameters {
 	private FrozenBiomeParameters() {
-		throw new UnsupportedOperationException("FrozenBiomeParameters only contains static declarations.");
+		throw new UnsupportedOperationException("FrozenBiomeParameters contains only static declarations.");
 	}
 
 	public static void addWeirdness(BiomeRunnable runnable, List<Climate.Parameter> weirdnesses) {

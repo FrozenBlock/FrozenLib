@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class ResourceLoaderEvents {
     private ResourceLoaderEvents() {
-        throw new UnsupportedOperationException("ResourceLoaderEvents only contains static definitions.");
+        throw new UnsupportedOperationException("ResourceLoaderEvents contains only static definitions.");
     }
 
     /**
