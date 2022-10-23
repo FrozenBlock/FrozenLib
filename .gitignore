@@ -36,3 +36,4 @@ target/
 
 run/
 /remappedSrc/
+/src/main/generated/.cache
