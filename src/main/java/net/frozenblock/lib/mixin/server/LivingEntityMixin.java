@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoopingFadingDistanceSoundInterface {
+public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoopingFadingDistanceSoundInterface {
 
     @Shadow
     protected ItemStack useItem;
@@ -100,8 +100,10 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface, 
         }
     }
 
-    @Shadow
-    protected abstract void setLivingEntityFlag(int mask, boolean value);
+	@Shadow
+	protected void setLivingEntityFlag(int mask, boolean value) {
+		throw new UnsupportedOperationException("Mixin injection failed. - FrozenLib LivingEntityMixin.");
+	}
 
 	@Unique
     @Override

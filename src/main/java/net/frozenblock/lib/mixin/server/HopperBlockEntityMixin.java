@@ -36,12 +36,12 @@ public class HopperBlockEntityMixin {
     @Nullable
     @Shadow
     private static Container getAttachedContainer(Level world, BlockPos pos, BlockState state) {
-        throw new AssertionError("Mixin injection failed.");
+        throw new AssertionError("Mixin injection failed. - FrozenLib HopperBlockEntityMixin");
     }
 
     @Nullable
     @Shadow
     private static Container getSourceContainer(Level world, Hopper hopper) {
-        throw new AssertionError("Mixin injection failed.");
+        throw new AssertionError("Mixin injection failed. - FrozenLib HopperBlockEntityMixin");
     }
 }
