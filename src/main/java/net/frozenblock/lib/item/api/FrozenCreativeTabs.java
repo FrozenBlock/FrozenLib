@@ -32,25 +32,43 @@ public final class FrozenCreativeTabs {
 	}
 
 	/**
-	 * @param item	The item that the added item is compared to
-	 * @param item2	The item that is going to be added
+	 * @param comparedItem	The item that the added item is compared to
+	 * @param item	The item that is going to be added
 	 */
-	public static void addBefore(ItemLike item, ItemLike item2, CreativeModeTab... tabs) {
+	public static void addBefore(ItemLike comparedItem, ItemLike item, CreativeModeTab... tabs) {
+		addBefore(comparedItem, item, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, tabs);
+	}
+
+	/**
+	 * @param comparedItem	The item that the added item is compared to
+	 * @param item	The item that is going to be added
+	 */
+	public static void addBefore(ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
+			List<ItemStack> list = List.of(new ItemStack(item));
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				entries.addBefore(item, item2);
+				entries.addBefore(comparedItem, list, tabVisibility);
 			});
 		}
 	}
 
 	/**
 	 * @param comparedItem	The item that the added item is compared to
-	 * @param item2	The item that is going to be added
+	 * @param item	The item that is going to be added
 	 */
-	public static void addAfter(ItemLike comparedItem, ItemLike item2, CreativeModeTab... tabs) {
+	public static void addAfter(ItemLike comparedItem, ItemLike item, CreativeModeTab... tabs) {
+		addAfter(comparedItem, item, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, tabs);
+	}
+
+	/**
+	 * @param comparedItem	The item that the added item is compared to
+	 * @param item	The item that is going to be added
+	 */
+	public static void addAfter(ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
+			List<ItemStack> list = List.of(new ItemStack(item));
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				entries.addAfter(comparedItem, item2);
+				entries.addAfter(comparedItem, list, tabVisibility);
 			});
 		}
 	}
