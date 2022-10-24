@@ -6,6 +6,13 @@ public class FrozenBools {
 
     public static boolean useNewDripstoneLiquid = false;
 
+	// MOD LOADERS
+	public static final boolean isFabric = FabricLoader.getInstance().isModLoaded("fabric")
+			&& !(FabricLoader.getInstance().isModLoaded("qsl")
+			|| FabricLoader.getInstance().isModLoaded("quilted_fabric_api"));
+	public static final boolean isQuilt = FabricLoader.getInstance().isModLoaded("qsl")
+			|| FabricLoader.getInstance().isModLoaded("quilted_fabric_api");
+
     // EXTERNAL MODS
 	public static final boolean hasArchitectury = FabricLoader.getInstance().isModLoaded("architectury");
 	public static final boolean hasBCLib = FabricLoader.getInstance().isModLoaded("bclib");
