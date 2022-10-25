@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * <p>
  * Modified to work on Fabric
  */
-@Mixin(value = SurfaceRuleData.class, priority = 69420)
+@Mixin(SurfaceRuleData.class)
 public abstract class VanillaSurfaceRulesMixin {
     @Inject(
             method = "overworldLike",
