@@ -7,13 +7,19 @@ import net.minecraft.world.flag.FeatureFlagRegistry;
 public class FrozenFeatureFlagRegistryBuilder extends FeatureFlagRegistry.Builder {
 
 	private boolean frozen;
+	private final String id;
 
-	public FrozenFeatureFlagRegistryBuilder(String string) {
-		super(string);
+	public FrozenFeatureFlagRegistryBuilder(String id) {
+		super(id);
+		this.id = id;
 	}
 
 	public boolean frozen() {
 		return this.frozen;
+	}
+
+	public String getId() {
+		return this.id;
 	}
 
 	public void freeze() {
