@@ -11,16 +11,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
-public class MovingFadingDistanceSwitchingSoundLoop extends AbstractTickableSoundInstance {
+public class MovingFadingDistanceSwitchingSoundLoop<T extends Entity> extends AbstractTickableSoundInstance {
 
-    private final Entity entity;
-    private final SoundPredicate.LoopPredicate<?> predicate;
+    private final T entity;
+    private final SoundPredicate.LoopPredicate<T> predicate;
     private final boolean isFarSound;
     private final double maxDist;
     private final double fadeDist;
     private final float maxVol;
 
-    public MovingFadingDistanceSwitchingSoundLoop(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<?> predicate, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
+    public MovingFadingDistanceSwitchingSoundLoop(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = true;

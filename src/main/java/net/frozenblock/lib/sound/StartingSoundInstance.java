@@ -12,16 +12,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
-public class StartingSoundInstance extends AbstractTickableSoundInstance {
+public class StartingSoundInstance<T extends Entity> extends AbstractTickableSoundInstance {
 
-    public final Entity entity;
-    public final SoundPredicate.LoopPredicate<?> predicate;
+    public final T entity;
+    public final SoundPredicate.LoopPredicate<T> predicate;
     public final SoundEvent loopingSound;
     public final SoundEvent startingSound;
     public boolean hasSwitched = false;
     public final AbstractSoundInstance nextSound;
 
-    public StartingSoundInstance(Entity entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<?> predicate, AbstractSoundInstance nextSound) {
+    public StartingSoundInstance(T entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, AbstractSoundInstance nextSound) {
         super(startingSound, category, SoundInstance.createUnseededRandom());
         this.startingSound = startingSound;
         this.nextSound = nextSound;
