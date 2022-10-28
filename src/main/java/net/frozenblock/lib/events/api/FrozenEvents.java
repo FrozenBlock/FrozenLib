@@ -1,4 +1,4 @@
-package net.frozenblock.lib.events;
+package net.frozenblock.lib.events.api;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.ArrayList;
@@ -7,6 +7,7 @@ import java.util.function.Function;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.events.impl.EventType;
 import net.minecraft.resources.ResourceLocation;
 
 public class FrozenEvents {

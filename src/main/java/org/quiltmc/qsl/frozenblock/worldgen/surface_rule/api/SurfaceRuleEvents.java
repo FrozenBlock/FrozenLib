@@ -19,7 +19,7 @@ package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoints.CommonEventEntrypoint;
-import net.frozenblock.lib.events.FrozenEvents;
+import net.frozenblock.lib.events.api.FrozenEvents;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 

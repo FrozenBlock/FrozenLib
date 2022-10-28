@@ -1,4 +1,4 @@
-package net.frozenblock.lib.events;
+package net.frozenblock.lib.events.impl;
 
 import java.util.List;
 import net.frozenblock.lib.entrypoints.ClientEventEntrypoint;
