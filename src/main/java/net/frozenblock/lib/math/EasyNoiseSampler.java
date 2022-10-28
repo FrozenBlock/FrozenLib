@@ -1,4 +1,15 @@
-package net.frozenblock.lib.mathematics;
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package net.frozenblock.lib.math;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -8,27 +19,30 @@ import net.minecraft.world.level.levelgen.ThreadSafeLegacyRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
+/**
+ * EASY NOISE SAMPLER
+ * <p>
+ * Adds easy-to-use noise sampling and random number generators
+ * <p>
+ * Only for FrozenBlock Modders and Lunade, ALL RIGHTS RESERVED
+ * <p>
+ *
+ * @author Lunade (2021-2022)
+ */
 public final class EasyNoiseSampler {
 
-    /**
-     * EASY NOISE SAMPLER
-     * <p>
-     * Adds easy-to-use noise sampling and random number generators
-     * <p>
-     * Only for FrozenBlock Modders and Lunade, ALL RIGHTS RESERVED
-     * <p>
-     *
-     * @author Lunade (2021-2022)
-     */
+	private EasyNoiseSampler() {
+		throw new UnsupportedOperationException("EasyNoiseSampler contains only static declarations.");
+	}
 
     public static long seed = 0;
     public static RandomSource checkedRandom = new LegacyRandomSource(seed);
     public static RandomSource threadSafeRandom = new ThreadSafeLegacyRandomSource(seed);
     public static RandomSource localRandom = new SingleThreadedRandomSource(seed);
     public static XoroshiroRandomSource xoroRandom = new XoroshiroRandomSource(seed);
-    public static ImprovedNoise perlinAtomic = new ImprovedNoise(checkedRandom);
-    public static ImprovedNoise perlinBlocking = new ImprovedNoise(threadSafeRandom);
-    public static ImprovedNoise perlinSimple = new ImprovedNoise(localRandom);
+    public static ImprovedNoise perlinChecked = new ImprovedNoise(checkedRandom);
+    public static ImprovedNoise perlinThreadSafe = new ImprovedNoise(threadSafeRandom);
+    public static ImprovedNoise perlinLocal = new ImprovedNoise(localRandom);
     public static ImprovedNoise perlinXoro = new ImprovedNoise(xoroRandom);
 
     public static double sample(ImprovedNoise sampler, BlockPos pos, double multiplier, boolean multiplyY, boolean useY) {
@@ -65,9 +79,9 @@ public final class EasyNoiseSampler {
             threadSafeRandom = new ThreadSafeLegacyRandomSource(seed);
             localRandom = new SingleThreadedRandomSource(seed);
             xoroRandom = new XoroshiroRandomSource(seed);
-            perlinAtomic = new ImprovedNoise(checkedRandom);
-            perlinBlocking = new ImprovedNoise(threadSafeRandom);
-            perlinSimple = new ImprovedNoise(localRandom);
+            perlinChecked = new ImprovedNoise(checkedRandom);
+            perlinThreadSafe = new ImprovedNoise(threadSafeRandom);
+            perlinLocal = new ImprovedNoise(localRandom);
             perlinXoro = new ImprovedNoise(xoroRandom);
         }
     }

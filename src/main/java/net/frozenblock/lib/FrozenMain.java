@@ -1,11 +1,22 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
-import net.frozenblock.lib.interfaces.EntityLoopingFadingDistanceSoundInterface;
-import net.frozenblock.lib.interfaces.EntityLoopingSoundInterface;
+import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
+import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.FrozenSoundPackets;
 import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
@@ -24,7 +35,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
 
 public final class FrozenMain implements ModInitializer {
-    public static final String MOD_ID = "frozenblocklib";
+    public static final String MOD_ID = "frozenlib";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
     public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
     public static boolean DEV_LOGGING = false;

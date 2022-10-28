@@ -1,6 +1,9 @@
 {
   "schemaVersion": 1,
-  "id": "frozenblocklib_testmod",
+  "id": "frozenlib_testmod",
+  "provides": [
+    "frozenblocklib_testmod"
+  ],
   "version": "${version}",
   "name": "FrozenBlockLib Test Mod",
   "license": "LGPL-3.0",

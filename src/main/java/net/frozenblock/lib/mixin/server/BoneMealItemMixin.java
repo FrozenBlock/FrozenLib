@@ -1,6 +1,17 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.replacements_and_lists.BonemealBehaviors;
+import net.frozenblock.lib.impl.BonemealBehaviors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -23,8 +34,8 @@ public class BoneMealItemMixin {
         BlockState state = level.getBlockState(blockPos);
         Direction direction = context.getClickedFace();
         Direction horizontal = context.getHorizontalDirection();
-        if (BonemealBehaviors.bonemeals.containsKey(state.getBlock())) {
-            if (BonemealBehaviors.bonemeals.get(state.getBlock()).bonemeal(context, level, blockPos, state, direction, horizontal) && !level.isClientSide) {
+        if (BonemealBehaviors.BONEMEAL_BEHAVIORS.containsKey(state.getBlock())) {
+            if (BonemealBehaviors.BONEMEAL_BEHAVIORS.get(state.getBlock()).bonemeal(context, level, blockPos, state, direction, horizontal) && !level.isClientSide) {
                 context.getItemInHand().shrink(1);
                 info.setReturnValue(InteractionResult.SUCCESS);
                 info.cancel();
