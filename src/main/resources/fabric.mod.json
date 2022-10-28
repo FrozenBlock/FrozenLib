@@ -6,12 +6,14 @@
   ],
   "version": "${version}",
   "name": "FrozenLib",
-  "description": "A library for FrozenBlock's mods. It will grow over time.",
+  "description": "A library that contains many tools for modders. Includes advanced math operations, noise sampling, animation tools, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, and much more!",
   "authors": [
 	"FrozenBlock"
   ],
   "contact": {
-
+    "homepage": "https://www.modrinth.com/mod/FrozenLib",
+    "sources": "https://github.com/FrozenBlock/FrozenLib",
+    "issues": "https://github.com/FrozenBlock/FrozenLib/issues"
   },
   "license": "LGPL-3.0",
   "icon": "assets/frozenlib/icon.png",
