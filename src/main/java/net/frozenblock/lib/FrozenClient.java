@@ -58,6 +58,7 @@ public final class FrozenClient implements ClientModInitializer {
         });
     }
 
+	@SuppressWarnings("unchecked")
     private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
@@ -79,6 +80,7 @@ public final class FrozenClient implements ClientModInitializer {
         });
     }
 
+	@SuppressWarnings("unchecked")
     private static <T extends Entity> void receiveMovingRestrictionLoopingSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
@@ -100,6 +102,7 @@ public final class FrozenClient implements ClientModInitializer {
         });
     }
 
+	@SuppressWarnings("unchecked")
     private static <T extends Entity> void receiveStartingMovingRestrictionLoopingSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
@@ -122,6 +125,7 @@ public final class FrozenClient implements ClientModInitializer {
         });
     }
 
+	@SuppressWarnings("unchecked")
     private static <T extends Entity> void receiveMovingRestrictionLoopingFadingDistanceSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
@@ -147,6 +151,7 @@ public final class FrozenClient implements ClientModInitializer {
         });
     }
 
+	@SuppressWarnings("unchecked")
     private static <T extends Entity> void receiveMovingFadingDistanceSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
