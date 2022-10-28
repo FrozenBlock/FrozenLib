@@ -48,6 +48,12 @@ public class MovingFadingDistanceSwitchingSoundLoop extends AbstractTickableSoun
         return true;
     }
 
+	@Override
+	public void stop() {
+		this.predicate.onStop(this.entity);
+		super.stop();
+	}
+
     @Override
     public void tick() {
         Minecraft client = Minecraft.getInstance();

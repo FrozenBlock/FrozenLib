@@ -35,6 +35,12 @@ public class MovingSoundWithRestriction extends AbstractTickableSoundInstance {
         return true;
     }
 
+	@Override
+	public void stop() {
+		this.predicate.onStop(this.entity);
+		super.stop();
+	}
+
     public void tick() {
         if (this.entity.isRemoved()) {
             this.stop();

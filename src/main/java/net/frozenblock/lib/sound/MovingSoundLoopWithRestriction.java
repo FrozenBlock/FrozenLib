@@ -39,6 +39,12 @@ public class MovingSoundLoopWithRestriction extends AbstractTickableSoundInstanc
         return true;
     }
 
+	@Override
+	public void stop() {
+		this.predicate.onStop(this.entity);
+		super.stop();
+	}
+
     @Override
     public void tick() {
         if (this.entity.isRemoved()) {

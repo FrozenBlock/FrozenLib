@@ -44,6 +44,10 @@ public final class SoundPredicate<T extends Entity> {
     @FunctionalInterface
     public interface LoopPredicate<T extends Entity> {
         boolean test(Entity entity);
+
+		default void onStop(Entity entity) {
+
+		}
     }
 
     public static LoopPredicate<Entity> DEFAULT = entity -> !entity.isSilent();

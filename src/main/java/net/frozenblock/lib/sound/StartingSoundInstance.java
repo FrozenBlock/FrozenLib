@@ -62,6 +62,12 @@ public class StartingSoundInstance extends AbstractTickableSoundInstance {
         return super.isStopped();
     }
 
+	@Override
+	public void stop() {
+		this.predicate.onStop(this.entity);
+		super.stop();
+	}
+
     @Override
     public void tick() {
         if (!this.isStopped()) {
