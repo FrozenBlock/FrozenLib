@@ -201,7 +201,7 @@ processResources {
 license {
 	rule project.file("HEADER")
 
-	include "net.frozenblock/*.java"
+	include "net/frozenblock/**/*.java"
 }
 
 javadoc {
