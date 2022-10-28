@@ -6,7 +6,7 @@
   ],
   "version": "${version}",
   "name": "FrozenLib",
-  "description": "A library that contains many tools for modders. Includes advanced math operations, noise sampling, animation tools, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, and much more!",
+  "description": "A library that contains many tools for modders. Includes advanced math operations, noise sampling, animation tools, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, and much more! Provides a Fabric implementation of QuiltMC's DataFixerUpper API and Surface Rule API.",
   "authors": [
 	"FrozenBlock"
   ],
