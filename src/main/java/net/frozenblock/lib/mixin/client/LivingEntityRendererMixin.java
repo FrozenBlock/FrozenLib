@@ -104,7 +104,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 				matrixStack.pushPose();
 				matrixStack.translate(0.0D, f, 0.0D);
 				matrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-				matrixStack.scale(-0.025F, -0.025F, 0.025F);
+				//matrixStack.scale(0.025F, 0.025F, 0.025F);
 				Matrix4f matrix4f = matrixStack.last().pose();
 				Matrix3f matrix3f = matrixStack.last().normal();
 				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveFixedNoOutline(iconInterface.getSpottingIconManager().icon.getTexture()));
