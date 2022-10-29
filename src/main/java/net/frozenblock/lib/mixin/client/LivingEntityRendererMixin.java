@@ -45,7 +45,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		super(context);
 	}
 
-	@Inject(method = "render", at = @At(value = "TAIL", target = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V"))
+	@Inject(method = "render", at = @At(value = "TAIL"))
 	public void render(T entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo info) {
 		this.renderSpottingIcon(entity, entity.getDisplayName(), matrixStack, buffer, packedLight);
 	}
