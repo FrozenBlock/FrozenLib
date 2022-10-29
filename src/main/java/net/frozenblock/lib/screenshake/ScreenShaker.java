@@ -92,7 +92,7 @@ public class ScreenShaker {
 			if (distanceBasedIntensity > 0) {
 				int currentDuration = Math.max(this.ticks - this.durationFalloffStart, 0);
 				int maxDuration = this.duration - this.durationFalloffStart;
-				return distanceBasedIntensity * (maxDuration - currentDuration);
+				return (distanceBasedIntensity * (maxDuration - currentDuration)) / maxDuration;
 			}
 			return 0F;
 		}
