@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -47,7 +48,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
 	@Inject(method = "render", at = @At(value = "TAIL"))
 	public void render(T entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo info) {
-		this.renderSpottingIcon(entity, entity.getDisplayName(), matrixStack, buffer, packedLight);
+		this.renderSpottingIcon(entity, matrixStack, buffer, packedLight);
 	}
 
 	@Inject(method = "getRenderType", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"), cancellable = true)
@@ -96,53 +97,61 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 
 	//TODO: Render above blocks
 	@Unique
-	public void renderSpottingIcon(T entity, Component displayName, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+	public void renderSpottingIcon(T entity, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
 		double d = this.entityRenderDispatcher.distanceToSqr(entity);
 		if (!(d > 4096.0D) && entity instanceof EntitySpottingIconInterface iconInterface) {
 			SpottingIconManager.SpottingIcon icon = iconInterface.getSpottingIconManager().icon;
 			if (icon != null) {
-				float f = entity.getBbHeight() + 1.5F;
-				matrixStack.pushPose();
-				matrixStack.translate(0.0D, f, 0.0D);
-				matrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-				//matrixStack.scale(0.025F, 0.025F, 0.025F);
-				Matrix4f matrix4f = matrixStack.last().pose();
-				Matrix3f matrix3f = matrixStack.last().normal();
-				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveFixedNoOutline(iconInterface.getSpottingIconManager().icon.getTexture()));
-				vertexConsumer
-						.vertex(matrix4f, -0.5F, -0.5F, 0.0F)
-						.color(255, 255, 255, 255)
-						.uv(0, 1)
-						.overlayCoords(0)
-						.uv2(packedLight)
-						.normal(matrix3f, 0.0F, 1.0F, 0.0F)
-						.endVertex();
-				vertexConsumer
-						.vertex(matrix4f, 0.5F, -0.5F, 0.0F)
-						.color(255, 255, 255, 255)
-						.uv(1, 1)
-						.overlayCoords(0)
-						.uv2(packedLight)
-						.normal(matrix3f, 0.0F, 1.0F, 0.0F)
-						.endVertex();
-				vertexConsumer
-						.vertex(matrix4f, 0.5F, 0.5F, 0.0F)
-						.color(255, 255, 255, 255)
-						.uv(1, 0)
-						.overlayCoords(0)
-						.uv2(packedLight)
-						.normal(matrix3f, 0.0F, 1.0F, 0.0F)
-						.endVertex();
-				vertexConsumer
-						.vertex(matrix4f, -0.5F, 0.5F, 0.0F)
-						.color(255, 255, 255, 255)
-						.uv(0, 0)
-						.overlayCoords(0)
-						.uv2(packedLight)
-						.normal(matrix3f, 0.0F, 1.0F, 0.0F)
-						.endVertex();
+				float dist = Mth.sqrt((float) this.entityRenderDispatcher.distanceToSqr(entity));
+				if (dist > icon.startFadeDist) {
+					float endDist = icon.endFadeDist - icon.startFadeDist;
+					dist -= icon.startFadeDist;
+					if (dist > 0) {
+						float alpha = 255 * (Math.min(1F, dist / endDist));
+						float f = entity.getBbHeight() + 1F;
+						matrixStack.pushPose();
+						matrixStack.translate(0.0D, f, 0.0D);
+						matrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+						matrixStack.scale(-1, 1, 1);
+						Matrix4f matrix4f = matrixStack.last().pose();
+						Matrix3f matrix3f = matrixStack.last().normal();
+						VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveFixedNoOutline(iconInterface.getSpottingIconManager().icon.getTexture()));
+						vertexConsumer
+								.vertex(matrix4f, -0.5F, -0.5F, 0.0F)
+								.color(255, 255, 255, alpha)
+								.uv(0, 1)
+								.overlayCoords(0)
+								.uv2(packedLight)
+								.normal(matrix3f, 0.0F, 1.0F, 0.0F)
+								.endVertex();
+						vertexConsumer
+								.vertex(matrix4f, 0.5F, -0.5F, 0.0F)
+								.color(255, 255, 255, alpha)
+								.uv(1, 1)
+								.overlayCoords(0)
+								.uv2(packedLight)
+								.normal(matrix3f, 0.0F, 1.0F, 0.0F)
+								.endVertex();
+						vertexConsumer
+								.vertex(matrix4f, 0.5F, 0.5F, 0.0F)
+								.color(255, 255, 255, alpha)
+								.uv(1, 0)
+								.overlayCoords(0)
+								.uv2(packedLight)
+								.normal(matrix3f, 0.0F, 1.0F, 0.0F)
+								.endVertex();
+						vertexConsumer
+								.vertex(matrix4f, -0.5F, 0.5F, 0.0F)
+								.color(255, 255, 255, alpha)
+								.uv(0, 0)
+								.overlayCoords(0)
+								.uv2(packedLight)
+								.normal(matrix3f, 0.0F, 1.0F, 0.0F)
+								.endVertex();
 
-				matrixStack.popPose();
+						matrixStack.popPose();
+					}
+				}
 			}
 		}
 	}
