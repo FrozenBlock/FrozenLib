@@ -12,11 +12,14 @@
 package net.frozenblock.lib.testmod.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.Screen;
 
-final class ModMenuConfigInteractionHandler {
+@Environment(EnvType.CLIENT)
+public final class ModMenuConfigInteractionHandler {
 
-    static ConfigScreenFactory<Screen> buildScreen() {
+    public static ConfigScreenFactory<Screen> buildScreen() {
         return TestConfig::buildScreen;
     }
 }

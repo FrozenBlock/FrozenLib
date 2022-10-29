@@ -39,7 +39,7 @@ public class ScreenShakeHandler {
 		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0) {
 			float intensity = (highestIntensity + (totalIntensity / amount)) * 0.5F;
 			if (intensity != 0) {
-				camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * (height / width)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
+				camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) height / (float) width)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
 			}
 		}
 		SCREEN_SHAKES.removeAll(SHAKES_TO_REMOVE);

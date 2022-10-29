@@ -17,14 +17,14 @@ public final class ClothConfigInteractionHandler {
 
     public static boolean testBoolean() {
         if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return TestConfig.get().testBoolean;
+            return TestConfig.get().general.testBoolean;
         }
         return true;
     }
 
     public static boolean testSubMenuBoolean() {
         if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return TestConfig.get().subMenu.testSubMenuBoolean;
+            return TestConfig.get().general.subMenu.testSubMenuBoolean;
         }
         return true;
     }

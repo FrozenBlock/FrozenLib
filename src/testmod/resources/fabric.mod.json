@@ -5,7 +5,7 @@
     "frozenblocklib_testmod"
   ],
   "version": "${version}",
-  "name": "FrozenBlockLib Test Mod",
+  "name": "FrozenLib Test Mod",
   "license": "LGPL-3.0",
   "environment": "*",
   "entrypoints": {
