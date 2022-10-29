@@ -1,11 +1,22 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib.mixin.server;
 
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
 import net.frozenblock.lib.FrozenBools;
-import net.frozenblock.lib.replacements_and_lists.DripstoneDripLavaFrom;
-import net.frozenblock.lib.replacements_and_lists.DripstoneDripWaterFrom;
+import net.frozenblock.lib.impl.DripstoneDripLavaFrom;
+import net.frozenblock.lib.impl.DripstoneDripWaterFrom;
 import net.frozenblock.lib.tags.FrozenBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,9 +54,9 @@ public class PointedDripstoneBlockMixin {
     @Inject(method = {"method_33279", "m_ulptarvl"}, require = 1, at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
     private static void getFluidAboveStalactite(Level level, BlockPos pos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> cir, BlockPos blockPos, BlockState blockState) {
         if (!FrozenBools.useNewDripstoneLiquid && blockPos != null) {
-            if (DripstoneDripWaterFrom.map.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
+            if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
                 cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState));
-            } else if (DripstoneDripLavaFrom.map.containsKey(blockState.getBlock())) {
+            } else if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock())) {
                 cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState));
             }
         }
@@ -59,17 +70,17 @@ public class PointedDripstoneBlockMixin {
             !isStalactite(state) ? Optional.empty() : findRootBlock(level, pos, state, 11).map((posx) -> {
 
                 BlockState firstState = level.getBlockState(posx);
-                if (DripstoneDripWaterFrom.map.containsKey(firstState.getBlock()) && !level.dimensionType().ultraWarm()) {
+                if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(firstState.getBlock()) && !level.dimensionType().ultraWarm()) {
                     return new PointedDripstoneBlock.FluidInfo(posx, Fluids.WATER, firstState);
-                } else if (DripstoneDripLavaFrom.map.containsKey(firstState.getBlock())) {
+                } else if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(firstState.getBlock())) {
                     return new PointedDripstoneBlock.FluidInfo(posx, Fluids.LAVA, firstState);
                 }
                 BlockPos blockPos = posx.above();
                 BlockState blockState = level.getBlockState(blockPos);
                 Fluid fluid;
-                if (DripstoneDripWaterFrom.map.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
+                if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
                     return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState);
-                } else if (DripstoneDripLavaFrom.map.containsKey(blockState.getBlock())) {
+                } else if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock())) {
                     return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState);
                 } else {
                     fluid = level.getFluidState(blockPos).getType();
@@ -86,12 +97,12 @@ public class PointedDripstoneBlockMixin {
         if (optional.isPresent()) {
             PointedDripstoneBlock.FluidInfo fluidInfo = optional.get();
             Block block = optional.get().sourceState().getBlock();
-            if (DripstoneDripWaterFrom.map.containsKey(block) && fluid == Fluids.WATER) {
-                DripstoneDripWaterFrom.map.get(block).drip(level, fluidInfo, blockPos);
+            if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(block) && fluid == Fluids.WATER) {
+                DripstoneDripWaterFrom.ON_DRIP_BLOCK.get(block).drip(level, fluidInfo, blockPos);
                 ci.cancel();
             }
-            if (DripstoneDripLavaFrom.map.containsKey(block) && fluid == Fluids.LAVA) {
-                DripstoneDripLavaFrom.map.get(block).drip(level, fluidInfo, blockPos);
+            if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(block) && fluid == Fluids.LAVA) {
+                DripstoneDripLavaFrom.ON_DRIP_BLOCK.get(block).drip(level, fluidInfo, blockPos);
                 ci.cancel();
             }
         }

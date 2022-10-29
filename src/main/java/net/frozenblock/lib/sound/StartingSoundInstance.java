@@ -1,3 +1,14 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib.sound;
 
 import net.fabricmc.api.EnvType;
@@ -12,16 +23,16 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
-public class StartingSoundInstance extends AbstractTickableSoundInstance {
+public class StartingSoundInstance<T extends Entity> extends AbstractTickableSoundInstance {
 
-    public final Entity entity;
-    public final SoundPredicate.LoopPredicate<?> predicate;
+    public final T entity;
+    public final SoundPredicate.LoopPredicate<T> predicate;
     public final SoundEvent loopingSound;
     public final SoundEvent startingSound;
     public boolean hasSwitched = false;
     public final AbstractSoundInstance nextSound;
 
-    public StartingSoundInstance(Entity entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<?> predicate, AbstractSoundInstance nextSound) {
+    public StartingSoundInstance(T entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, AbstractSoundInstance nextSound) {
         super(startingSound, category, SoundInstance.createUnseededRandom());
         this.startingSound = startingSound;
         this.nextSound = nextSound;
@@ -61,6 +72,12 @@ public class StartingSoundInstance extends AbstractTickableSoundInstance {
         }
         return super.isStopped();
     }
+
+	@Override
+	public void stop() {
+		this.predicate.onStop(this.entity);
+		super.stop();
+	}
 
     @Override
     public void tick() {

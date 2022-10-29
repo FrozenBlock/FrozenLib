@@ -1,3 +1,14 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib.sound;
 
 import java.util.HashMap;
@@ -17,16 +28,16 @@ import net.minecraft.world.phys.Vec3;
 @Environment(EnvType.CLIENT)
 public class FlyBySoundHub {
 
-    public static Map<EntityType<?>, FlyBySound> autoEntitiesAndSounds = new HashMap<>();
+    public static final Map<EntityType<?>, FlyBySound> AUTO_ENTITIES_AND_SOUNDS = new HashMap<>();
 
-    public static Map<Entity, FlyBySound> flybyEntitiesAndSounds = new HashMap<>();
-    public static Map<Entity, Integer> entityCooldowns = new HashMap<>();
+    public static final Map<Entity, FlyBySound> FLYBY_ENTITIES_AND_SOUNDS = new HashMap<>();
+    public static final Map<Entity, Integer> ENTITY_COOLDOWNS = new HashMap<>();
     private static int checkAroundCooldown;
 
     public static void update(Minecraft client, Player player, boolean autoSounds) {
-        for (Entity entity : flybyEntitiesAndSounds.keySet()) {
+        for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet()) {
             if (client.level == null) {
-                flybyEntitiesAndSounds.clear();
+                FLYBY_ENTITIES_AND_SOUNDS.clear();
                 return;
             }
             if (entity != null) {
@@ -37,24 +48,24 @@ public class FlyBySoundHub {
                 double distanceTo = entityPos.distanceTo(playerPos);
                 double newDistanceTo = entityPos.add(vel).add(vel).distanceTo(playerPos.add(playerVel));
 
-                int cooldown = entityCooldowns.getOrDefault(entity, 0) - 1;
-                entityCooldowns.put(entity, cooldown);
+                int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
+                ENTITY_COOLDOWNS.put(entity, cooldown);
                 if ((distanceTo > newDistanceTo && distanceTo < (vel.lengthSqr() + playerVel.length()) * 2) && cooldown <= 0) {
-                    FlyBySound flyBy = flybyEntitiesAndSounds.get(entity);
+                    FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
                     float volume = (float) (flyBy.volume + (vel.length() / 2));
                     client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.category, volume, flyBy.pitch, entity, client.level.random.nextLong()));
-                    entityCooldowns.put(entity, 40);
+                    ENTITY_COOLDOWNS.put(entity, 40);
                 }
             }
         }
         //Remove Entities That Aren't Active
-        for (Entity entity : flybyEntitiesAndSounds.keySet().stream().toList()) {
-            if (entity == null || entity.isRemoved() || entity.isSilent() || (entity.distanceTo(client.getCameraEntity()) > 16 && !autoEntitiesAndSounds.containsKey(entity.getType()))) {
-                flybyEntitiesAndSounds.remove(entity);
+        for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet().stream().toList()) {
+            if (entity == null || entity.isRemoved() || entity.isSilent() || (entity.distanceTo(client.getCameraEntity()) > 16 && !AUTO_ENTITIES_AND_SOUNDS.containsKey(entity.getType()))) {
+                FLYBY_ENTITIES_AND_SOUNDS.remove(entity);
             }
         }
 
-        if (!autoEntitiesAndSounds.isEmpty()) {
+        if (!AUTO_ENTITIES_AND_SOUNDS.isEmpty()) {
             if (checkAroundCooldown > 0) {
                 --checkAroundCooldown;
             } else {
@@ -63,8 +74,8 @@ public class FlyBySoundHub {
                     AABB box = new AABB(player.blockPosition().offset(-3, -3, -3), player.blockPosition().offset(3, 3, 3));
                     for (Entity entity : client.level.getEntities(player, box)) {
                         EntityType<?> type = entity.getType();
-                        if (autoEntitiesAndSounds.containsKey(type)) {
-                            addEntity(entity, autoEntitiesAndSounds.get(type));
+                        if (AUTO_ENTITIES_AND_SOUNDS.containsKey(type)) {
+                            addEntity(entity, AUTO_ENTITIES_AND_SOUNDS.get(type));
                         }
                     }
                 }
@@ -73,7 +84,7 @@ public class FlyBySoundHub {
     }
 
     public static void addEntity(Entity entity, FlyBySound flyBySound) {
-        flybyEntitiesAndSounds.put(entity, flyBySound);
+        FLYBY_ENTITIES_AND_SOUNDS.put(entity, flyBySound);
     }
 
     public record FlyBySound(float pitch, float volume, SoundSource category,

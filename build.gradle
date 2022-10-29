@@ -8,6 +8,7 @@ plugins {
 	id 'fabric-loom' version '+'
 	id 'io.github.juuxel.loom-quiltflower' version '+'
 	id 'org.ajoberstar.grgit' version '+'
+	id 'org.quiltmc.gradle.licenser' version '+'
 	id 'com.modrinth.minotaur' version '+'
 	id 'maven-publish'
     id 'eclipse'
@@ -45,10 +46,10 @@ loom {
     }
 
     mixin {
-        defaultRefmapName = "mixins.frozenblocklib.refmap.json"
+        defaultRefmapName = "mixins.frozenlib.refmap.json"
     }
 
-    accessWidenerPath = file("src/main/resources/frozenblocklib.accesswidener")
+    accessWidenerPath = file("src/main/resources/frozenlib.accesswidener")
 }
 
 configurations {
@@ -197,6 +198,16 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
+}
+
+quiltflower {
+	quiltflowerVersion.set("1.9.0")
+}
+
+license {
+	rule project.file("HEADER")
+
+	include "net/frozenblock/**/*.java"
 }
 
 javadoc {

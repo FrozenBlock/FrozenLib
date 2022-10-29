@@ -1,8 +1,11 @@
 {
   "schemaVersion": 1,
-  "id": "frozenblocklib_testmod",
+  "id": "frozenlib_testmod",
+  "provides": [
+    "frozenblocklib_testmod"
+  ],
   "version": "${version}",
-  "name": "FrozenBlockLib Test Mod",
+  "name": "FrozenLib Test Mod",
   "license": "LGPL-3.0",
   "environment": "*",
   "entrypoints": {
@@ -28,12 +31,15 @@
   "breaks": {
     "quilted_fabric_api": "4.0.0-beta.8"
   },
+  "mixins": [
+    "mixin/frozenlib_testmod.mixins.json"
+  ],
   "custom": {
     "modmenu": {
       "links": {
         "modmenu.discord": "https://discord.gg/EpkBWm844s"
       },
-      "parent": "frozenblocklib"
+      "parent": "frozenlib"
     }
   }
 }

@@ -19,7 +19,7 @@ package org.quiltmc.qsl.frozenblock.resource.loader.api;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoints.CommonEventEntrypoint;
-import net.frozenblock.lib.events.FrozenEvents;
+import net.frozenblock.lib.events.api.FrozenEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.Nullable;

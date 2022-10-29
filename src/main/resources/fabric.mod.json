@@ -1,17 +1,22 @@
 {
   "schemaVersion": 1,
-  "id": "frozenblocklib",
+  "id": "frozenlib",
+  "provides": [
+    "frozenblocklib"
+  ],
   "version": "${version}",
-  "name": "FrozenBlock's Library",
-  "description": "It will grow over time.",
+  "name": "FrozenLib",
+  "description": "A library that contains many tools for modders. Includes advanced math operations, noise sampling, animation tools, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, and much more! Provides a Fabric implementation of QuiltMC's DataFixerUpper API and Surface Rule API.",
   "authors": [
 	"FrozenBlock"
   ],
   "contact": {
-
+    "homepage": "https://www.modrinth.com/mod/FrozenLib",
+    "sources": "https://github.com/FrozenBlock/FrozenLib",
+    "issues": "https://github.com/FrozenBlock/FrozenLib/issues"
   },
   "license": "LGPL-3.0",
-  "icon": "assets/frozenblocklib/icon.png",
+  "icon": "assets/frozenlib/icon.png",
   "environment": "*",
   "entrypoints": {
 	"main": [
@@ -22,12 +27,12 @@
 	]
   },
   "mixins": [
-	"mixin/frozenblocklib.mixins.json",
+	"mixin/frozenlib.mixins.json",
 	"mixin/quiltmc_datafixerupper.mixins.json",
 	"mixin/quiltmc_surface_rule.mixins.json",
 	"mixin/quiltmc_resource_loader.mixins.json"
   ],
-  "accessWidener": "frozenblocklib.accesswidener",
+  "accessWidener": "frozenlib.accesswidener",
   "depends": {
 	"fabricloader": ">=0.14.8",
 	"fabric": ">=0.65.1",

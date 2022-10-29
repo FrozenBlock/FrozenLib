@@ -1,3 +1,14 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib;
 
 import net.fabricmc.loader.api.FabricLoader;
@@ -7,28 +18,29 @@ public class FrozenBools {
     public static boolean useNewDripstoneLiquid = false;
 
 	// MOD LOADERS
-	public static final boolean isFabric = FabricLoader.getInstance().isModLoaded("fabric")
+	public static final boolean IS_FABRIC = FabricLoader.getInstance().isModLoaded("fabric")
 			&& !(FabricLoader.getInstance().isModLoaded("qsl")
 			|| FabricLoader.getInstance().isModLoaded("quilted_fabric_api"));
-	public static final boolean isQuilt = FabricLoader.getInstance().isModLoaded("qsl")
+	public static final boolean IS_QUILT = FabricLoader.getInstance().isModLoaded("qsl")
 			|| FabricLoader.getInstance().isModLoaded("quilted_fabric_api");
 
     // EXTERNAL MODS
-	public static final boolean hasArchitectury = FabricLoader.getInstance().isModLoaded("architectury");
-	public static final boolean hasBCLib = FabricLoader.getInstance().isModLoaded("bclib");
-    public static final boolean hasCloth = FabricLoader.getInstance().isModLoaded("cloth-config");
-	public static final boolean hasContinuity = FabricLoader.getInstance().isModLoaded("continuity");
-	public static final boolean hasEntityCulling = FabricLoader.getInstance().isModLoaded("entityculling");
-	public static final boolean hasGeckoLib = FabricLoader.getInstance().isModLoaded("geckolib3");
-	public static final boolean hasIndium = FabricLoader.getInstance().isModLoaded("indium");
-	public static final boolean hasIris = FabricLoader.getInstance().isModLoaded("iris");
-    public static final boolean hasPipes = FabricLoader.getInstance().isModLoaded("copper_pipe");
-	public static final boolean hasRoughlyEnoughItems = FabricLoader.getInstance().isModLoaded("roughlyenoughitems");
-	public static final boolean hasRoughlyEnoughResources = FabricLoader.getInstance().isModLoaded("roughlyenoughresources");
-	public static final boolean hasRepurposedStructures = FabricLoader.getInstance().isModLoaded("repurposed_structures");
-	public static final boolean hasServerCore = FabricLoader.getInstance().isModLoaded("servercore");
-    public static final boolean hasSodium = FabricLoader.getInstance().isModLoaded("sodium");
-	public static final boolean hasStarlight = FabricLoader.getInstance().isModLoaded("starlight");
-    public static final boolean hasTerraBlender = FabricLoader.getInstance().isModLoaded("terrablender");
-    public static final boolean hasTerralith = FabricLoader.getInstance().isModLoaded("terralith");
+	public static final boolean HAS_ARCHITECTURY = FabricLoader.getInstance().isModLoaded("architectury");
+	public static final boolean HAS_BCLIB = FabricLoader.getInstance().isModLoaded("bclib");
+    public static final boolean HAS_CLOTH_CONFIG = FabricLoader.getInstance().isModLoaded("cloth-config");
+	public static final boolean HAS_CONTINUITY = FabricLoader.getInstance().isModLoaded("continuity");
+	public static final boolean HAS_ENTITY_CULLING = FabricLoader.getInstance().isModLoaded("entityculling");
+	public static final boolean HAS_GECKO_LIB = FabricLoader.getInstance().isModLoaded("geckolib3");
+	public static final boolean HAS_INDIUM = FabricLoader.getInstance().isModLoaded("indium");
+	public static final boolean HAS_IRIS = FabricLoader.getInstance().isModLoaded("iris");
+	public static final boolean HAS_MOONLIGHT_LIB = FabricLoader.getInstance().isModLoaded("moonlight");
+    public static final boolean HAS_SIMPLE_COPPER_PIPES = FabricLoader.getInstance().isModLoaded("copper_pipe");
+	public static final boolean HAS_ROUGHLY_ENOUGH_ITEMS = FabricLoader.getInstance().isModLoaded("roughlyenoughitems");
+	public static final boolean HAS_ROUGHLY_ENOUGH_RESOURCES = FabricLoader.getInstance().isModLoaded("roughlyenoughresources");
+	public static final boolean HAS_REPURPOSED_STRUCTURES = FabricLoader.getInstance().isModLoaded("repurposed_structures");
+	public static final boolean HAS_SERVER_CORE = FabricLoader.getInstance().isModLoaded("servercore");
+    public static final boolean HAS_SODIUM = FabricLoader.getInstance().isModLoaded("sodium");
+	public static final boolean HAS_STARLIGHT = FabricLoader.getInstance().isModLoaded("starlight");
+    public static final boolean HAS_TERRABLENDER = FabricLoader.getInstance().isModLoaded("terrablender");
+    public static final boolean HAS_TERRALITH = FabricLoader.getInstance().isModLoaded("terralith");
 }

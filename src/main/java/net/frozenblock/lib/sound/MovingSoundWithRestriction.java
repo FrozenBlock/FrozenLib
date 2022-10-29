@@ -1,3 +1,14 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib.sound;
 
 import net.fabricmc.api.EnvType;
@@ -10,12 +21,12 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
-public class MovingSoundWithRestriction extends AbstractTickableSoundInstance {
+public class MovingSoundWithRestriction<T extends Entity> extends AbstractTickableSoundInstance {
 
-    private final Entity entity;
-    private final SoundPredicate.LoopPredicate<?> predicate;
+    private final T entity;
+    private final SoundPredicate.LoopPredicate<T> predicate;
 
-    public MovingSoundWithRestriction(Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<?> predicate) {
+    public MovingSoundWithRestriction(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = false;
@@ -34,6 +45,12 @@ public class MovingSoundWithRestriction extends AbstractTickableSoundInstance {
     public boolean canStartSilent() {
         return true;
     }
+
+	@Override
+	public void stop() {
+		this.predicate.onStop(this.entity);
+		super.stop();
+	}
 
     public void tick() {
         if (this.entity.isRemoved()) {
