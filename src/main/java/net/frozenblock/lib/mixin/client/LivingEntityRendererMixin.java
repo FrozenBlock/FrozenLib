@@ -107,7 +107,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 					float endDist = icon.endFadeDist - icon.startFadeDist;
 					dist -= icon.startFadeDist;
 					if (dist > 0) {
-						float alpha = 255 * (Math.min(1F, dist / endDist));
+						float alpha = Math.min(1F, dist / endDist);
 						float f = entity.getBbHeight() + 1F;
 						matrixStack.pushPose();
 						matrixStack.translate(0.0D, f, 0.0D);
