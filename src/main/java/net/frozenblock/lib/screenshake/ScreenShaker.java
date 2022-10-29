@@ -52,43 +52,28 @@ public class ScreenShaker {
 		}
 	}
 
-	public static void addShake(float intensity, int duration, Vec3 pos, float maxDistance) {
-		SCREEN_SHAKES.add(new ScreenShake(intensity, duration, pos, maxDistance));
-	}
-
-	public static void addShakeWithTimeFalloff(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance) {
-		SCREEN_SHAKES.add(new ScreenShakeTimeFalloff(intensity, duration, falloffStart, pos, maxDistance));
+	public static void addShake(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance) {
+		SCREEN_SHAKES.add(new ScreenShake(intensity, duration, falloffStart, pos, maxDistance));
 	}
 
 	public static class ScreenShake {
 		private final float intensity;
 		public final int duration;
+		private final int durationFalloffStart;
 		public final Vec3 pos;
 		public final float maxDistance;
 		public int ticks;
 
-		public ScreenShake(float intensity, int duration, Vec3 pos, float maxDistance) {
+		public ScreenShake(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance) {
 			this.intensity = intensity;
 			this.duration = duration;
+			this.durationFalloffStart = durationFalloffStart;
 			this.pos = pos;
 			this.maxDistance = maxDistance;
 		}
 
 		public float getIntensity(Vec3 playerPos) {
-			return Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * this.intensity), 0);
-		}
-	}
-
-	public static class ScreenShakeTimeFalloff extends ScreenShake {
-		private final int durationFalloffStart;
-
-		public ScreenShakeTimeFalloff(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance) {
-			super(intensity, duration, pos, maxDistance);
-			this.durationFalloffStart = durationFalloffStart;
-		}
-
-		public float getIntensity(Vec3 playerPos) {
-			float distanceBasedIntensity = super.getIntensity(playerPos);
+			float distanceBasedIntensity = Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * this.intensity), 0);
 			if (distanceBasedIntensity > 0) {
 				int currentDuration = Math.max(this.ticks - this.durationFalloffStart, 0);
 				int maxDuration = this.duration - this.durationFalloffStart;

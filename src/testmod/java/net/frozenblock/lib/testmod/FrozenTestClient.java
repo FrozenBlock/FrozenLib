@@ -30,6 +30,6 @@ public final class FrozenTestClient implements ClientModInitializer {
     }
 
 	public static void addScreenShakeEasy(Vec3 pos, float intensity, float radius) {
-		ScreenShaker.addShakeWithTimeFalloff(intensity, 10, 5, pos, radius);
+		ScreenShaker.addShake(intensity, 7, 3, pos, radius);
 	}
 }
