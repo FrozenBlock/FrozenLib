@@ -32,8 +32,8 @@ public class ScreenShaker {
 			float shakeIntensity = shake.getIntensity(camera.getPosition());
 			totalIntensity += shakeIntensity;
 			highestIntensity = Math.max(shakeIntensity, highestIntensity);
-			shake.duration -= 1;
-			if (shake.duration <= 0) {
+			shake.ticks += 1;
+			if (shake.ticks > shake.duration) {
 				SHAKES_TO_REMOVE.add(shake);
 			}
 		}
@@ -46,9 +46,9 @@ public class ScreenShaker {
 		SHAKES_TO_REMOVE.clear();
 	}
 
-	public static void cameraShake(RandomSource randomSource, Camera camera, int width, int height) {
+	public static void cameraShake(RandomSource randomSource, Camera camera, int windowWidth, int windowHeight) {
 		if (intensity != 0) {
-			camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) height / (float) width)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
+			camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
 		}
 	}
 
@@ -56,17 +56,19 @@ public class ScreenShaker {
 		SCREEN_SHAKES.add(new ScreenShake(intensity, duration, pos, maxDistance));
 	}
 
-	public static class ScreenShake {
+	public static void addShakeWithTimeFalloff(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance) {
+		SCREEN_SHAKES.add(new ScreenShakeTimeFalloff(intensity, duration, falloffStart, pos, maxDistance));
+	}
 
+	public static class ScreenShake {
 		private final float intensity;
-		private final int maxDuration;
-		public int duration;
+		public final int duration;
 		public final Vec3 pos;
 		public final float maxDistance;
+		public int ticks;
 
 		public ScreenShake(float intensity, int duration, Vec3 pos, float maxDistance) {
 			this.intensity = intensity;
-			maxDuration = duration;
 			this.duration = duration;
 			this.pos = pos;
 			this.maxDistance = maxDistance;
@@ -75,7 +77,25 @@ public class ScreenShaker {
 		public float getIntensity(Vec3 playerPos) {
 			return Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * this.intensity), 0);
 		}
+	}
 
+	public static class ScreenShakeTimeFalloff extends ScreenShake {
+		private final int durationFalloffStart;
+
+		public ScreenShakeTimeFalloff(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance) {
+			super(intensity, duration, pos, maxDistance);
+			this.durationFalloffStart = durationFalloffStart;
+		}
+
+		public float getIntensity(Vec3 playerPos) {
+			float distanceBasedIntensity = super.getIntensity(playerPos);
+			if (distanceBasedIntensity > 0) {
+				int currentDuration = Math.max(this.ticks - this.durationFalloffStart, 0);
+				int maxDuration = this.duration - this.durationFalloffStart;
+				return distanceBasedIntensity * (maxDuration - currentDuration);
+			}
+			return 0F;
+		}
 	}
 
 }
