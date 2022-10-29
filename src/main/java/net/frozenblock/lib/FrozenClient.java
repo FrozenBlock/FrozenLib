@@ -18,7 +18,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
-import net.frozenblock.lib.screenshake.ScreenShakeHandler;
+import net.frozenblock.lib.screenshake.ScreenShaker;
 import net.frozenblock.lib.sound.FlyBySoundHub;
 import net.frozenblock.lib.sound.MovingSoundLoopWithRestriction;
 import net.frozenblock.lib.sound.MovingSoundWithRestriction;
@@ -246,10 +246,10 @@ public final class FrozenClient implements ClientModInitializer {
 				FlyBySoundHub.update(client, client.player, true);
 			}
 		});
-		ClientTickEvents.END_CLIENT_TICK.register(level -> {
+		ClientTickEvents.START_CLIENT_TICK.register(level -> {
 			Minecraft client = Minecraft.getInstance();
 			if (client.level != null) {
-				ScreenShakeHandler.tick(client.level.random, client.gameRenderer.getMainCamera(), client.getWindow().getWidth(), client.getWindow().getHeight());
+				ScreenShaker.tick(client.gameRenderer.getMainCamera());
 			}
 		});
 	}

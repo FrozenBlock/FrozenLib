@@ -17,12 +17,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
-public class ScreenShakeHandler {
+public class ScreenShaker {
 
 	public static final ArrayList<ScreenShake> SCREEN_SHAKES = new ArrayList<>();
 	private static final ArrayList<ScreenShake> SHAKES_TO_REMOVE = new ArrayList<>();
+	private static float intensity;
 
-	public static void tick(RandomSource randomSource, Camera camera, int width, int height) {
+	public static void tick(Camera camera) {
 		float highestIntensity = 0F;
 		float totalIntensity = 0F;
 		int amount = 0;
@@ -37,13 +38,18 @@ public class ScreenShakeHandler {
 			}
 		}
 		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0) {
-			float intensity = (highestIntensity + (totalIntensity / amount)) * 0.5F;
-			if (intensity != 0) {
-				camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) height / (float) width)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
-			}
+			intensity = (highestIntensity + (totalIntensity / amount)) * 0.5F;
+		} else {
+			intensity = 0F;
 		}
 		SCREEN_SHAKES.removeAll(SHAKES_TO_REMOVE);
 		SHAKES_TO_REMOVE.clear();
+	}
+
+	public static void cameraShake(RandomSource randomSource, Camera camera, int width, int height) {
+		if (intensity != 0) {
+			camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) height / (float) width)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
+		}
 	}
 
 	public static void addShake(float intensity, int duration, Vec3 pos, float maxDistance) {
@@ -65,7 +71,7 @@ public class ScreenShakeHandler {
 		}
 
 		public float getIntensity(Vec3 playerPos) {
-			return (float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * -1F);
+			return (float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * -(this.intensity));
 		}
 
 	}
