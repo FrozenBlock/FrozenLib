@@ -17,57 +17,72 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
-public class ScreenShakeHandler {
+public class ScreenShaker {
 
 	public static final ArrayList<ScreenShake> SCREEN_SHAKES = new ArrayList<>();
 	private static final ArrayList<ScreenShake> SHAKES_TO_REMOVE = new ArrayList<>();
+	private static float intensity;
 
-	public static void tick(RandomSource randomSource, Camera camera, int width, int height) {
+	public static void tick(Camera camera) {
 		float highestIntensity = 0F;
 		float totalIntensity = 0F;
 		int amount = 0;
 		for (ScreenShake shake : SCREEN_SHAKES) {
-			amount += 1;
 			float shakeIntensity = shake.getIntensity(camera.getPosition());
-			totalIntensity += shakeIntensity;
-			highestIntensity = Math.max(shakeIntensity, highestIntensity);
-			shake.duration -= 1;
-			if (shake.duration <= 0) {
+			if (shakeIntensity > 0) {
+				totalIntensity += shakeIntensity;
+				highestIntensity = Math.max(shakeIntensity, highestIntensity);
+				amount += 1;
+			}
+			shake.ticks += 1;
+			if (shake.ticks > shake.duration) {
 				SHAKES_TO_REMOVE.add(shake);
 			}
 		}
 		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0) {
-			float intensity = (highestIntensity + (totalIntensity / amount)) * 0.5F;
-			if (intensity != 0) {
-				camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) height / (float) width)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
-			}
+			intensity = (highestIntensity + ((totalIntensity / amount) * 0.5F));
+		} else {
+			intensity = 0F;
 		}
 		SCREEN_SHAKES.removeAll(SHAKES_TO_REMOVE);
 		SHAKES_TO_REMOVE.clear();
 	}
 
-	public static void addShake(float intensity, int duration, Vec3 pos, float maxDistance) {
-		SCREEN_SHAKES.add(new ScreenShake(intensity, duration, pos, maxDistance));
+	public static void cameraShake(RandomSource randomSource, Camera camera, int windowWidth, int windowHeight) {
+		if (intensity != 0) {
+			camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
+		}
+	}
+
+	public static void addShake(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance) {
+		SCREEN_SHAKES.add(new ScreenShake(intensity, duration, falloffStart, pos, maxDistance));
 	}
 
 	public static class ScreenShake {
-
 		private final float intensity;
-		public int duration;
+		public final int duration;
+		private final int durationFalloffStart;
 		public final Vec3 pos;
 		public final float maxDistance;
+		public int ticks;
 
-		public ScreenShake(float intensity, int duration, Vec3 pos, float maxDistance) {
+		public ScreenShake(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance) {
 			this.intensity = intensity;
 			this.duration = duration;
+			this.durationFalloffStart = durationFalloffStart;
 			this.pos = pos;
 			this.maxDistance = maxDistance;
 		}
 
 		public float getIntensity(Vec3 playerPos) {
-			return (float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * -1F);
+			float distanceBasedIntensity = Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * this.intensity), 0);
+			if (distanceBasedIntensity > 0) {
+				int currentDuration = Math.max(this.ticks - this.durationFalloffStart, 0);
+				int maxDuration = this.duration - this.durationFalloffStart;
+				return (distanceBasedIntensity * (maxDuration - currentDuration)) / maxDuration;
+			}
+			return 0F;
 		}
-
 	}
 
 }

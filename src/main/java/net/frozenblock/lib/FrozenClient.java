@@ -18,7 +18,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
-import net.frozenblock.lib.screenshake.ScreenShakeHandler;
+import net.frozenblock.lib.screenshake.ScreenShaker;
 import net.frozenblock.lib.sound.FlyBySoundHub;
 import net.frozenblock.lib.sound.MovingSoundLoopWithRestriction;
 import net.frozenblock.lib.sound.MovingSoundWithRestriction;
@@ -26,6 +26,8 @@ import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
 import net.frozenblock.lib.sound.StartingSoundInstance;
 import net.frozenblock.lib.sound.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.distance_based.MovingFadingDistanceSwitchingSoundLoop;
+import net.frozenblock.lib.spotting_icons.SpottingIconManager;
+import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
@@ -51,6 +53,8 @@ public final class FrozenClient implements ClientModInitializer {
         receiveFadingDistanceSoundPacket();
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
+		receiveIconPacket();
+		receiveIconRemovePacket();
 
         FabricLoader.getInstance().getEntrypointContainers("frozenlib:client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
             try {
@@ -239,6 +243,40 @@ public final class FrozenClient implements ClientModInitializer {
         });
     }
 
+	private static void receiveIconPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SPOTTING_ICON_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			ResourceLocation texture = byteBuf.readResourceLocation();
+			float startFade = byteBuf.readFloat();
+			float endFade = byteBuf.readFloat();
+			ResourceLocation predicate = byteBuf.readResourceLocation();
+			ctx.execute(() -> {
+				ClientLevel level = Minecraft.getInstance().level;
+				if (level != null) {
+					Entity entity = level.getEntity(id);
+					if (entity instanceof EntitySpottingIconInterface iconInterface) {
+						iconInterface.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
+					}
+				}
+			});
+		});
+	}
+
+	private static void receiveIconRemovePacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SPOTTING_ICON_REMOVE_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			ctx.execute(() -> {
+				ClientLevel level = Minecraft.getInstance().level;
+				if (level != null) {
+					Entity entity = level.getEntity(id);
+					if (entity instanceof EntitySpottingIconInterface iconInterface) {
+						iconInterface.getSpottingIconManager().icon = null;
+					}
+				}
+			});
+		});
+	}
+
 	private static void registerClientTickEvents() {
 		ClientTickEvents.START_WORLD_TICK.register(level -> {
 			Minecraft client = Minecraft.getInstance();
@@ -246,10 +284,10 @@ public final class FrozenClient implements ClientModInitializer {
 				FlyBySoundHub.update(client, client.player, true);
 			}
 		});
-		ClientTickEvents.END_CLIENT_TICK.register(level -> {
+		ClientTickEvents.START_CLIENT_TICK.register(level -> {
 			Minecraft client = Minecraft.getInstance();
 			if (client.level != null) {
-				ScreenShakeHandler.tick(client.level.random, client.gameRenderer.getMainCamera(), client.getWindow().getWidth(), client.getWindow().getHeight());
+				ScreenShaker.tick(client.gameRenderer.getMainCamera());
 			}
 		});
 	}

@@ -30,4 +30,11 @@ public class FrozenClientPacketToServer {
         ClientPlayNetworking.send(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, byteBuf);
     }
 
+	public static void sendFrozenIconSyncRequest(int id, ResourceKey<Level> level) {
+		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+		byteBuf.writeVarInt(id);
+		byteBuf.writeResourceKey(level);
+		ClientPlayNetworking.send(FrozenMain.REQUEST_SPOTTING_ICON_SYNC_PACKET, byteBuf);
+	}
+
 }

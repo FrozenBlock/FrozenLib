@@ -16,6 +16,8 @@ import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.sound.FrozenClientPacketInbetween;
 import net.frozenblock.lib.sound.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.MovingLoopingSoundEntityManager;
+import net.frozenblock.lib.spotting_icons.SpottingIconManager;
+import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.tags.FrozenItemTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -33,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoopingFadingDistanceSoundInterface {
+public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoopingFadingDistanceSoundInterface, EntitySpottingIconInterface {
 
     @Shadow
     protected ItemStack useItem;
@@ -44,14 +46,17 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
     public MovingLoopingSoundEntityManager frozenLib$loopingSoundManager;
 	@Unique
     public MovingLoopingFadingDistanceSoundEntityManager frozenLib$loopingFadingDistanceSoundManager;
-    @Unique
-	public boolean frozenLib$clientFrozenSoundSync;
+	@Unique
+	public SpottingIconManager frozenLib$SpottingIconManager;
+	@Unique
+	public boolean frozenLib$clientFrozenSoundAndIconsSynced;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void setLoopingSoundManager(EntityType<? extends LivingEntity> entityType, Level level, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         this.frozenLib$loopingSoundManager = new MovingLoopingSoundEntityManager(entity);
         this.frozenLib$loopingFadingDistanceSoundManager = new MovingLoopingFadingDistanceSoundEntityManager(entity);
+		this.frozenLib$SpottingIconManager = new SpottingIconManager(entity);
     }
 
     @Inject(method = "startUsingItem", at = @At("HEAD"), cancellable = true)
@@ -91,23 +96,29 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
         if (this.frozenLib$loopingFadingDistanceSoundManager != null) {
             this.frozenLib$loopingFadingDistanceSoundManager.save(compoundTag);
         }
+		if (this.frozenLib$SpottingIconManager != null) {
+			this.frozenLib$SpottingIconManager.save(compoundTag);
+		}
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readLoopingSoundData(CompoundTag compoundTag, CallbackInfo info) {
         this.frozenLib$loopingSoundManager.load(compoundTag);
         this.frozenLib$loopingFadingDistanceSoundManager.load(compoundTag);
+		this.frozenLib$SpottingIconManager.load(compoundTag);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void tickLoopingSound(CallbackInfo info) {
+    public void tickSoundsAndIcon(CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (!entity.level.isClientSide) {
             this.frozenLib$loopingSoundManager.tick();
             this.frozenLib$loopingFadingDistanceSoundManager.tick();
-        } else if (!this.frozenLib$clientFrozenSoundSync) {
+			this.frozenLib$SpottingIconManager.tick();
+        } else if (!this.frozenLib$clientFrozenSoundAndIconsSynced) {
             FrozenClientPacketInbetween.requestFrozenSoundSync(entity.getId(), entity.level.dimension());
-            this.frozenLib$clientFrozenSoundSync = true;
+			FrozenClientPacketInbetween.requestFrozenIconSync(entity.getId(), entity.level.dimension());
+            this.frozenLib$clientFrozenSoundAndIconsSynced = true;
         }
     }
 
@@ -119,8 +130,13 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
 	@Unique
     @Override
     public boolean hasSyncedClient() {
-        return this.frozenLib$clientFrozenSoundSync;
+        return this.frozenLib$clientFrozenSoundAndIconsSynced;
     }
+
+	@Override
+	public SpottingIconManager getSpottingIconManager() {
+		return this.frozenLib$SpottingIconManager;
+	}
 
 	@Unique
     @Override
@@ -137,7 +153,7 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
 	@Unique
     @Override
     public boolean hasSyncedFadingDistanceClient() {
-        return this.frozenLib$clientFrozenSoundSync;
+        return this.frozenLib$clientFrozenSoundAndIconsSynced;
     }
 
 	@Unique

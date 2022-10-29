@@ -25,6 +25,7 @@
 	"defaultRequire": 1
   },
   "client": [
+    "client.CameraMixin",
 	"client.LivingEntityRendererMixin"
   ]
 }

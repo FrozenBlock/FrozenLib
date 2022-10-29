@@ -47,6 +47,10 @@ public final class FrozenRenderType {
         return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, true);
     }
 
+	public static RenderType entityTranslucentEmissiveFixedNoOutline(ResourceLocation resourceLocation) {
+		return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, false);
+	}
+
     /*@Nullable
     public static ShaderInstance renderTypeTranslucentCutoutShader;
 

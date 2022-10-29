@@ -11,24 +11,48 @@
 
 package net.frozenblock.lib.mixin.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Matrix3f;
+import com.mojang.math.Matrix4f;
+import net.frozenblock.lib.entity.render.FrozenRenderType;
 import net.frozenblock.lib.registry.FrozenRegistry;
+import net.frozenblock.lib.spotting_icons.SpottingIconManager;
+import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.client.model.EntityModel;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntityRenderer.class)
-public class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> {
+public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> extends EntityRenderer<T> {
 
     @Shadow
 	protected M model;
 
-    @Inject(method = "getRenderType", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"), cancellable = true)
+	protected LivingEntityRendererMixin(EntityRendererProvider.Context context) {
+		super(context);
+	}
+
+	@Inject(method = "render", at = @At(value = "TAIL"))
+	public void render(T entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo info) {
+		this.renderSpottingIcon(entity, matrixStack, buffer, packedLight);
+	}
+
+	@Inject(method = "getRenderType", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"), cancellable = true)
     private void getEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
         FrozenRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
             if (override.getType() == livingEntity.getType()) {
@@ -71,4 +95,63 @@ public class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityM
             });
         }
     }
+
+	//TODO: Render above blocks
+	@Unique
+	public void renderSpottingIcon(T entity, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+		if (entity instanceof EntitySpottingIconInterface iconInterface) {
+			SpottingIconManager.SpottingIcon icon = iconInterface.getSpottingIconManager().icon;
+			if (icon != null) {
+				double dist = Mth.sqrt((float) this.entityRenderDispatcher.distanceToSqr(entity));
+				if (dist > icon.startFadeDist) {
+					float endDist = icon.endFadeDist - icon.startFadeDist;
+					dist -= icon.startFadeDist;
+					float alpha = dist > endDist ? 1F : (float) Math.min(1F, dist / endDist);
+					float f = entity.getBbHeight() + 1F;
+					matrixStack.pushPose();
+					matrixStack.translate(0.0D, f, 0.0D);
+					matrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+					matrixStack.scale(-1, 1, 1);
+					Matrix4f matrix4f = matrixStack.last().pose();
+					Matrix3f matrix3f = matrixStack.last().normal();
+					int overlay = OverlayTexture.pack(OverlayTexture.u(0F), OverlayTexture.v(false));
+					VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveFixedNoOutline(iconInterface.getSpottingIconManager().icon.getTexture()));
+					vertexConsumer
+							.vertex(matrix4f, -0.5F, -0.5F, 0.0F)
+							.color(1, 1, 1, alpha)
+							.uv(0, 1)
+							.overlayCoords(overlay)
+							.uv2(packedLight)
+							.normal(matrix3f, 0.0F, 1.0F, 0.0F)
+							.endVertex();
+					vertexConsumer
+							.vertex(matrix4f, 0.5F, -0.5F, 0.0F)
+							.color(1, 1, 1, alpha)
+							.uv(1, 1)
+							.overlayCoords(overlay)
+							.uv2(packedLight)
+							.normal(matrix3f, 0.0F, 1.0F, 0.0F)
+							.endVertex();
+					vertexConsumer
+							.vertex(matrix4f, 0.5F, 0.5F, 0.0F)
+							.color(1, 1, 1, alpha)
+							.uv(1, 0)
+							.overlayCoords(overlay)
+							.uv2(packedLight)
+							.normal(matrix3f, 0.0F, 1.0F, 0.0F)
+							.endVertex();
+					vertexConsumer
+							.vertex(matrix4f, -0.5F, 0.5F, 0.0F)
+							.color(1, 1, 1, alpha)
+							.uv(0, 0)
+							.overlayCoords(overlay)
+							.uv2(packedLight)
+							.normal(matrix3f, 0.0F, 1.0F, 0.0F)
+							.endVertex();
+
+					matrixStack.popPose();
+				}
+			}
+		}
+	}
 }

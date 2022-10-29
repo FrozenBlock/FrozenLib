@@ -14,7 +14,7 @@ package net.frozenblock.lib.testmod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.screenshake.ScreenShakeHandler;
+import net.frozenblock.lib.screenshake.ScreenShaker;
 import net.frozenblock.lib.sound.FlyBySoundHub;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,6 +30,6 @@ public final class FrozenTestClient implements ClientModInitializer {
     }
 
 	public static void addScreenShakeEasy(Vec3 pos, float intensity, float radius) {
-		ScreenShakeHandler.addShake(intensity, 35, pos, radius);
+		ScreenShaker.addShake(intensity, 5, 1, pos, radius * 0.3F);
 	}
 }
