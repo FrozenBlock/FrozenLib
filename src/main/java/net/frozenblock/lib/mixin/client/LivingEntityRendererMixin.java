@@ -94,6 +94,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
         }
     }
 
+	//TODO: Render above blocks
 	@Unique
 	public void renderSpottingIcon(T entity, Component displayName, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
 		double d = this.entityRenderDispatcher.distanceToSqr(entity);
