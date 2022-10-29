@@ -28,10 +28,12 @@ public class ScreenShaker {
 		float totalIntensity = 0F;
 		int amount = 0;
 		for (ScreenShake shake : SCREEN_SHAKES) {
-			amount += 1;
 			float shakeIntensity = shake.getIntensity(camera.getPosition());
-			totalIntensity += shakeIntensity;
-			highestIntensity = Math.max(shakeIntensity, highestIntensity);
+			if (shakeIntensity > 0) {
+				totalIntensity += shakeIntensity;
+				highestIntensity = Math.max(shakeIntensity, highestIntensity);
+				amount += 1;
+			}
 			shake.ticks += 1;
 			if (shake.ticks > shake.duration) {
 				SHAKES_TO_REMOVE.add(shake);
