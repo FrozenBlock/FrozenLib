@@ -19,21 +19,21 @@ import net.minecraft.world.phys.Vec3;
 
 public class ScreenShakeHandler {
 
-	private static final ArrayList<ScreenShake> screenShakes = new ArrayList<>();
-	private static final ArrayList<ScreenShake> shakesToRemove = new ArrayList<>();
+	private static final ArrayList<ScreenShake> SCREEN_SHAKES = new ArrayList<>();
+	private static final ArrayList<ScreenShake> SHAKES_TO_REMOVE = new ArrayList<>();
 
 	public static void tick(RandomSource randomSource, Camera camera, int width, int height) {
 		float highestIntensity = 0F;
 		float totalIntensity = 0F;
 		int amount = 0;
-		for (ScreenShake shake : screenShakes) {
+		for (ScreenShake shake : SCREEN_SHAKES) {
 			amount += 1;
 			float shakeIntensity = shake.getIntensity(camera.getPosition());
 			totalIntensity += shakeIntensity;
 			highestIntensity = Math.max(shakeIntensity, highestIntensity);
 			shake.duration -= 1;
 			if (shake.duration <= 0) {
-				shakesToRemove.add(shake);
+				SHAKES_TO_REMOVE.add(shake);
 			}
 		}
 		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0) {
@@ -42,12 +42,12 @@ public class ScreenShakeHandler {
 				camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * (height / width)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
 			}
 		}
-		screenShakes.removeAll(shakesToRemove);
-		shakesToRemove.clear();
+		SCREEN_SHAKES.removeAll(SHAKES_TO_REMOVE);
+		SHAKES_TO_REMOVE.clear();
 	}
 
 	public static void addShake(float intensity, int duration, Vec3 pos, float maxDistance) {
-		screenShakes.add(new ScreenShake(intensity, duration, pos, maxDistance));
+		SCREEN_SHAKES.add(new ScreenShake(intensity, duration, pos, maxDistance));
 	}
 
 	public static class ScreenShake {

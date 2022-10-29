@@ -26,7 +26,7 @@ public final class FrozenTestClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        FlyBySoundHub.autoEntitiesAndSounds.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
+        FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
     }
 
 	public static void addScreenShakeEasy(Vec3 pos, float intensity, float radius) {
