@@ -99,8 +99,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 	//TODO: Render above blocks
 	@Unique
 	public void renderSpottingIcon(T entity, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
-		double d = this.entityRenderDispatcher.distanceToSqr(entity);
-		if (!(d > 4096.0D) && entity instanceof EntitySpottingIconInterface iconInterface) {
+		if (entity instanceof EntitySpottingIconInterface iconInterface) {
 			SpottingIconManager.SpottingIcon icon = iconInterface.getSpottingIconManager().icon;
 			if (icon != null) {
 				double dist = Mth.sqrt((float) this.entityRenderDispatcher.distanceToSqr(entity));
