@@ -198,6 +198,10 @@ processResources {
     }
 }
 
+quiltflower {
+	quiltflowerVersion.set("1.9.0")
+}
+
 license {
 	rule project.file("HEADER")
 
