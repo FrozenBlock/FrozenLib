@@ -102,3 +102,9 @@ transitive-accessible    field    net/minecraft/client/sounds/SoundEngine    ins
 transitive-accessible    field    net/minecraft/client/sounds/SoundEngine    channelAccess    Lnet/minecraft/client/sounds/ChannelAccess;
 transitive-mutable    field    net/minecraft/client/resources/sounds/AbstractSoundInstance    location    Lnet/minecraft/resources/ResourceLocation;
 transitive-extendable    method    net/minecraft/client/resources/sounds/AbstractTickableSoundInstance    stop    ()V
+
+#Camera
+transitive-accessible    method    net/minecraft/client/Camera    setRotation    (FF)V
+transitive-accessible    field    net/minecraft/client/Camera    xRot    F
+transitive-accessible    field    net/minecraft/client/Camera    yRot    F
+

@@ -1,7 +1,20 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib.screenshake;
 
 import java.util.ArrayList;
-import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.Camera;
+import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
 public class ScreenShakeHandler {
@@ -9,13 +22,13 @@ public class ScreenShakeHandler {
 	private static final ArrayList<ScreenShake> screenShakes = new ArrayList<>();
 	private static final ArrayList<ScreenShake> shakesToRemove = new ArrayList<>();
 
-	public static void tick(ClientLevel level, Vec3 playerPos) {
+	public static void tick(RandomSource randomSource, Camera camera, int width, int height) {
 		float highestIntensity = 0F;
 		float totalIntensity = 0F;
 		int amount = 0;
 		for (ScreenShake shake : screenShakes) {
 			amount += 1;
-			float shakeIntensity = shake.getIntensity(playerPos);
+			float shakeIntensity = shake.getIntensity(camera.getPosition());
 			totalIntensity += shakeIntensity;
 			highestIntensity = Math.max(shakeIntensity, highestIntensity);
 			shake.duration -= 1;
@@ -25,7 +38,9 @@ public class ScreenShakeHandler {
 		}
 		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0) {
 			float intensity = (highestIntensity + (totalIntensity / amount)) * 0.5F;
-			
+			if (intensity != 0) {
+				camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * (height / width)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
+			}
 		}
 		screenShakes.removeAll(shakesToRemove);
 		shakesToRemove.clear();

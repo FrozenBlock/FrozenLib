@@ -248,8 +248,8 @@ public final class FrozenClient implements ClientModInitializer {
 		});
 		ClientTickEvents.END_CLIENT_TICK.register(level -> {
 			Minecraft client = Minecraft.getInstance();
-			if (client.level != null && client.player != null) {
-				ScreenShakeHandler.tick(client.level, client.player.position());
+			if (client.level != null) {
+				ScreenShakeHandler.tick(client.level.random, client.gameRenderer.getMainCamera(), client.getWindow().getWidth(), client.getWindow().getHeight());
 			}
 		});
 	}
