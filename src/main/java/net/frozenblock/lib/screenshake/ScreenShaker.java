@@ -28,12 +28,11 @@ public class ScreenShaker {
 		float totalIntensity = 0F;
 		int amount = 0;
 		for (ScreenShake shake : SCREEN_SHAKES) {
-			float shakeIntensity = shake.getIntensity(camera.getPosition());
-			if (shakeIntensity > 0) {
-				totalIntensity += shakeIntensity;
-				highestIntensity = Math.max(shakeIntensity, highestIntensity);
-				amount += 1;
-			}
+			float shakeAmount = shake.getAmount(camera.getPosition());
+			float shakeIntensity = shake.getIntensity(shakeAmount);
+			totalIntensity += shakeIntensity;
+			highestIntensity = Math.max(shakeIntensity, highestIntensity);
+			amount += shakeAmount;
 			shake.ticks += 1;
 			if (shake.ticks > shake.duration) {
 				SHAKES_TO_REMOVE.add(shake);
@@ -74,14 +73,22 @@ public class ScreenShaker {
 			this.maxDistance = maxDistance;
 		}
 
-		public float getIntensity(Vec3 playerPos) {
-			float distanceBasedIntensity = Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * this.intensity), 0);
+		public float getAmount(Vec3 playerPos) {
+			float distanceBasedIntensity = Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance)), 0);
 			if (distanceBasedIntensity > 0) {
 				int currentDuration = Math.max(this.ticks - this.durationFalloffStart, 0);
 				int maxDuration = this.duration - this.durationFalloffStart;
 				return (distanceBasedIntensity * (maxDuration - currentDuration)) / maxDuration;
 			}
 			return 0F;
+		}
+
+		public float getIntensity(Vec3 playerPos) {
+			return this.getAmount(playerPos) * this.intensity;
+		}
+
+		public float getIntensity(float amount) {
+			return amount * this.intensity;
 		}
 	}
 
