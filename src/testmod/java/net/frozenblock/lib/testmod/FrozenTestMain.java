@@ -13,10 +13,9 @@ package net.frozenblock.lib.testmod;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.frozenblock.lib.item.api.FrozenCreativeTabs;
-import net.frozenblock.lib.testmod.item.Camera;
-import net.frozenblock.lib.testmod.item.LootTableWhacker;
+`import static net.frozenblock.lib.FrozenMain.id;
 import net.frozenblock.lib.impl.BlockScheduledTicks;
+import net.frozenblock.lib.item.api.FrozenCreativeTabs;
 import net.frozenblock.lib.testmod.config.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;
 import net.frozenblock.lib.testmod.item.LootTableWhacker;
@@ -28,8 +27,6 @@ import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleContext;
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static net.frozenblock.lib.FrozenMain.id;
 
 public final class FrozenTestMain implements ModInitializer, SurfaceRuleEvents.OverworldModifierCallback, SurfaceRuleEvents.NetherModifierCallback {
 

@@ -8,6 +8,7 @@
 	"server.BlockBehaviourMixin",
 	"server.BoneMealItemMixin",
 	"server.CreeperMixin",
+	"server.FeatureFlagsMixin",
 	"server.HopperBlockEntityMixin",
 	"server.ItemCooldownsMixin",
 	"server.LivingEntityMixin",
@@ -25,7 +26,7 @@
 	"defaultRequire": 1
   },
   "client": [
-    "client.CameraMixin",
+	"client.CameraMixin",
 	"client.LivingEntityRendererMixin"
   ]
 }
