@@ -59,19 +59,21 @@ public class ScreenShaker {
 	public static class ScreenShake {
 
 		private final float intensity;
+		private final int maxDuration;
 		public int duration;
 		public final Vec3 pos;
 		public final float maxDistance;
 
 		public ScreenShake(float intensity, int duration, Vec3 pos, float maxDistance) {
 			this.intensity = intensity;
+			maxDuration = duration;
 			this.duration = duration;
 			this.pos = pos;
 			this.maxDistance = maxDistance;
 		}
 
 		public float getIntensity(Vec3 playerPos) {
-			return (float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * -(this.intensity));
+			return Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * this.intensity), 0);
 		}
 
 	}
