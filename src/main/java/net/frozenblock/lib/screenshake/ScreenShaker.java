@@ -40,7 +40,7 @@ public class ScreenShaker {
 			}
 		}
 		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0) {
-			intensity = (highestIntensity + (totalIntensity / amount)) * 0.5F;
+			intensity = (highestIntensity + ((totalIntensity / amount) * 0.5F));
 		} else {
 			intensity = 0F;
 		}
