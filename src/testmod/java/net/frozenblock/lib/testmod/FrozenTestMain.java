@@ -16,7 +16,6 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.frozenblock.lib.item.api.FrozenCreativeTabs;
 import net.frozenblock.lib.testmod.item.Camera;
 import net.frozenblock.lib.testmod.item.LootTableWhacker;
-import net.frozenblock.lib.replacements_and_lists.BlockScheduledTicks;
 import net.frozenblock.lib.impl.BlockScheduledTicks;
 import net.frozenblock.lib.testmod.config.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;
