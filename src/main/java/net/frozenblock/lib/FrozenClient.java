@@ -18,10 +18,11 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.registry.FrozenRegistry;
+import net.frozenblock.lib.screenshake.ScreenShakeHandler;
 import net.frozenblock.lib.sound.FlyBySoundHub;
-import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
 import net.frozenblock.lib.sound.MovingSoundLoopWithRestriction;
 import net.frozenblock.lib.sound.MovingSoundWithRestriction;
+import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
 import net.frozenblock.lib.sound.StartingSoundInstance;
 import net.frozenblock.lib.sound.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.distance_based.MovingFadingDistanceSwitchingSoundLoop;
@@ -40,12 +41,7 @@ public final class FrozenClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ClientFreezer.onInitializeClient();
-        ClientTickEvents.START_WORLD_TICK.register(level -> {
-            Minecraft client = Minecraft.getInstance();
-            if (client.level != null) {
-                FlyBySoundHub.update(client, client.player, true);
-            }
-        });
+        registerClientTickEvents();
 
         receiveMovingRestrictionSoundPacket();
         receiveMovingRestrictionLoopingSoundPacket();
@@ -242,5 +238,20 @@ public final class FrozenClient implements ClientModInitializer {
             });
         });
     }
+
+	private static void registerClientTickEvents() {
+		ClientTickEvents.START_WORLD_TICK.register(level -> {
+			Minecraft client = Minecraft.getInstance();
+			if (client.level != null) {
+				FlyBySoundHub.update(client, client.player, true);
+			}
+		});
+		ClientTickEvents.END_CLIENT_TICK.register(level -> {
+			Minecraft client = Minecraft.getInstance();
+			if (client.level != null && client.player != null) {
+				ScreenShakeHandler.tick(client.level, client.player.position());
+			}
+		});
+	}
 
 }
