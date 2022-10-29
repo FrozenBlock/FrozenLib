@@ -9,19 +9,14 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound;
+package net.frozenblock.lib.spotting_icons.impl;
 
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
+import net.frozenblock.lib.spotting_icons.SpottingIconManager;
 
-public class FrozenClientPacketInbetween {
+public interface EntitySpottingIconInterface {
 
-    public static void requestFrozenSoundSync(int id, ResourceKey<Level> level) {
-        FrozenClientPacketToServer.sendFrozenSoundSyncRequest(id, level);
-    }
+    boolean hasSyncedClient();
 
-	public static void requestFrozenIconSync(int id, ResourceKey<Level> level) {
-		FrozenClientPacketToServer.sendFrozenIconSyncRequest(id, level);
-	}
+    SpottingIconManager getSpottingIconManager();
 
 }

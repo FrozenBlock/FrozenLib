@@ -1,0 +1,64 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ *
+ * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package net.frozenblock.lib.spotting_icons;
+
+import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.registry.FrozenRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Nullable;
+
+public final class SpottingIconPredicate<T extends Entity> {
+
+    public static <T extends Entity> void register(ResourceLocation id, IconPredicate<T> predicate) {
+		Registry.register(FrozenRegistry.SPOTTING_ICON_PREDICATE, id, new SpottingIconPredicate<>(predicate));
+    }
+
+	private final IconPredicate<T> predicate;
+
+	public SpottingIconPredicate(IconPredicate<T> predicate) {
+		this.predicate = predicate;
+	}
+
+    public static <T extends Entity> IconPredicate<T> getPredicate(@Nullable ResourceLocation id) {
+        if (id != null) {
+            if (FrozenRegistry.SPOTTING_ICON_PREDICATE.containsKey(id)) {
+				SpottingIconPredicate<T> predicate = FrozenRegistry.SPOTTING_ICON_PREDICATE.get(id);
+				if (predicate != null) {
+					return predicate.predicate;
+				}
+			}
+			FrozenMain.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
+        }
+        return defaultPredicate();
+    }
+
+    @FunctionalInterface
+    public interface IconPredicate<T extends Entity> {
+        boolean test(T entity);
+
+		default void onRemoved(T entity) {
+
+		}
+    }
+
+	public static <T extends Entity> IconPredicate<T> defaultPredicate() {
+		return Entity::isAlive;
+	}
+
+    public static ResourceLocation DEFAULT_ID = FrozenMain.id("default");
+
+    public static void init() {
+        register(FrozenMain.id("default"), defaultPredicate());
+    }
+}

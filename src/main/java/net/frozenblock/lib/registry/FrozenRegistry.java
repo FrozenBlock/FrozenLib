@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.entity.render.EntityTextureOverride;
 import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
+import net.frozenblock.lib.spotting_icons.SpottingIconPredicate;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.sounds.SoundEvent;
 
@@ -34,6 +35,10 @@ public class FrozenRegistry {
 			.buildAndRegister();
 
 	public static final MappedRegistry<SoundPredicate> SOUND_PREDICATE = FabricRegistryBuilder.createSimple(SoundPredicate.class, FrozenMain.id("sound_predicate"))
+			.buildAndRegister();
+
+	public static final MappedRegistry<SpottingIconPredicate> SPOTTING_ICON_PREDICATE = FabricRegistryBuilder.createSimple(SpottingIconPredicate.class, FrozenMain.id("spotting_icon_predicate_synced"))
+			.attribute(RegistryAttribute.SYNCED)
 			.buildAndRegister();
 
     public static void initRegistry() {
