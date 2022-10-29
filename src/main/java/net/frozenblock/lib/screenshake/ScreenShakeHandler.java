@@ -19,7 +19,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ScreenShakeHandler {
 
-	private static final ArrayList<ScreenShake> SCREEN_SHAKES = new ArrayList<>();
+	public static final ArrayList<ScreenShake> SCREEN_SHAKES = new ArrayList<>();
 	private static final ArrayList<ScreenShake> SHAKES_TO_REMOVE = new ArrayList<>();
 
 	public static void tick(RandomSource randomSource, Camera camera, int width, int height) {
