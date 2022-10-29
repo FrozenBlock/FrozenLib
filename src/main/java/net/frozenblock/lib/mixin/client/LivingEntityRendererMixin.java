@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
@@ -102,12 +103,12 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		if (!(d > 4096.0D) && entity instanceof EntitySpottingIconInterface iconInterface) {
 			SpottingIconManager.SpottingIcon icon = iconInterface.getSpottingIconManager().icon;
 			if (icon != null) {
-				float dist = Mth.sqrt((float) this.entityRenderDispatcher.distanceToSqr(entity));
+				double dist = Mth.sqrt((float) this.entityRenderDispatcher.distanceToSqr(entity));
 				if (dist > icon.startFadeDist) {
 					float endDist = icon.endFadeDist - icon.startFadeDist;
 					dist -= icon.startFadeDist;
 					if (dist > 0) {
-						float alpha = Math.min(1F, dist / endDist);
+						float alpha = (float) Math.min(1F, dist / endDist);
 						float f = entity.getBbHeight() + 1F;
 						matrixStack.pushPose();
 						matrixStack.translate(0.0D, f, 0.0D);
@@ -115,36 +116,37 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 						matrixStack.scale(-1, 1, 1);
 						Matrix4f matrix4f = matrixStack.last().pose();
 						Matrix3f matrix3f = matrixStack.last().normal();
+						int overlay = OverlayTexture.pack(OverlayTexture.u(0F), OverlayTexture.v(false));
 						VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveFixedNoOutline(iconInterface.getSpottingIconManager().icon.getTexture()));
 						vertexConsumer
 								.vertex(matrix4f, -0.5F, -0.5F, 0.0F)
-								.color(255, 255, 255, alpha)
+								.color(1, 1, 1, alpha)
 								.uv(0, 1)
-								.overlayCoords(0)
+								.overlayCoords(overlay)
 								.uv2(packedLight)
 								.normal(matrix3f, 0.0F, 1.0F, 0.0F)
 								.endVertex();
 						vertexConsumer
 								.vertex(matrix4f, 0.5F, -0.5F, 0.0F)
-								.color(255, 255, 255, alpha)
+								.color(1, 1, 1, alpha)
 								.uv(1, 1)
-								.overlayCoords(0)
+								.overlayCoords(overlay)
 								.uv2(packedLight)
 								.normal(matrix3f, 0.0F, 1.0F, 0.0F)
 								.endVertex();
 						vertexConsumer
 								.vertex(matrix4f, 0.5F, 0.5F, 0.0F)
-								.color(255, 255, 255, alpha)
+								.color(1, 1, 1, alpha)
 								.uv(1, 0)
-								.overlayCoords(0)
+								.overlayCoords(overlay)
 								.uv2(packedLight)
 								.normal(matrix3f, 0.0F, 1.0F, 0.0F)
 								.endVertex();
 						vertexConsumer
 								.vertex(matrix4f, -0.5F, 0.5F, 0.0F)
-								.color(255, 255, 255, alpha)
+								.color(1, 1, 1, alpha)
 								.uv(0, 0)
-								.overlayCoords(0)
+								.overlayCoords(overlay)
 								.uv2(packedLight)
 								.normal(matrix3f, 0.0F, 1.0F, 0.0F)
 								.endVertex();
