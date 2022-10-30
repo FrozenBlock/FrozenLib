@@ -25,7 +25,7 @@ public class ScreenShaker {
 	private static float intensity;
 
 	public static void tick(Camera camera) {
-		if (Minecraft.getInstance().isLocalServer() && Minecraft.getInstance().isPaused()) {
+		if (Minecraft.getInstance().isMultiplayerServer() && Minecraft.getInstance().isPaused()) {
 			return;
 		}
 		float highestIntensity = 0F;
@@ -53,6 +53,9 @@ public class ScreenShaker {
 	}
 
 	public static void cameraShake(RandomSource randomSource, Camera camera, int windowWidth, int windowHeight) {
+		if (Minecraft.getInstance().isPaused()) {
+			return;
+		}
 		if (intensity != 0) {
 			camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
 		}
