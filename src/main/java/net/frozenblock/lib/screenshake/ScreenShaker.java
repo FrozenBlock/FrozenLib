@@ -43,7 +43,7 @@ public class ScreenShaker {
 				SHAKES_TO_REMOVE.add(shake);
 			}
 		}
-		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0) {
+		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0 && !Minecraft.getInstance().isPaused()) {
 			intensity = (highestIntensity + ((totalIntensity / amount) * 0.5F));
 		} else {
 			intensity = 0F;
@@ -53,9 +53,6 @@ public class ScreenShaker {
 	}
 
 	public static void cameraShake(RandomSource randomSource, Camera camera, int windowWidth, int windowHeight) {
-		if (Minecraft.getInstance().isPaused()) {
-			return;
-		}
 		if (intensity != 0) {
 			camera.setRotation(camera.getYRot() + (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight)), camera.getXRot() + Mth.nextFloat(randomSource, -intensity, intensity));
 		}
