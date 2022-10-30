@@ -17,6 +17,7 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.jetbrains.annotations.Contract;
@@ -38,13 +39,19 @@ public interface SurfaceRuleContext {
      * The list is mutable.
      */
     @Contract(pure = true)
-    @NotNull List<SurfaceRules.RuleSource> materialRules();
+    @NotNull List<SurfaceRules.RuleSource> ruleSources();
 
     /**
      * {@return the resource manager of the current set of loaded data-packs}
      */
     @Contract(pure = true)
     @NotNull ResourceManager resourceManager();
+
+	/**
+	 * {@return the resource location of the chunk generator settings that have those surface rules}
+	 */
+	@Contract(pure = true)
+	@NotNull ResourceLocation resourceLocation();
 
     /**
      * Represents the Overworld-specific context.

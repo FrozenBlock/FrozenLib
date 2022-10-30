@@ -55,7 +55,6 @@ public final class FrozenMain implements ModInitializer {
     public void onInitialize() {
         FrozenRegistry.initRegistry();
         ServerFreezer.onInitialize();
-        QuiltSurfaceRuleInitializer.onInitialize();
         SoundPredicate.init();
 
         receiveSoundSyncPacket();

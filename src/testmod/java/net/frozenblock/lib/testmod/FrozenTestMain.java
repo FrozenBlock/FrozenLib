@@ -13,30 +13,28 @@ package net.frozenblock.lib.testmod;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-`import static net.frozenblock.lib.FrozenMain.id;
+import static net.frozenblock.lib.FrozenMain.id;
 import net.frozenblock.lib.impl.BlockScheduledTicks;
 import net.frozenblock.lib.item.api.FrozenCreativeTabs;
 import net.frozenblock.lib.testmod.config.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;
 import net.frozenblock.lib.testmod.item.LootTableWhacker;
 import net.minecraft.core.Registry;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.NotNull;
-import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleContext;
-import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public final class FrozenTestMain implements ModInitializer, SurfaceRuleEvents.OverworldModifierCallback, SurfaceRuleEvents.NetherModifierCallback {
+public final class FrozenTestMain implements ModInitializer {
 
     public static final String MOD_ID = "frozenlib_testmod";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
     public static boolean areConfigsInit = false;
 
-    public static final Camera CAMERA = new Camera(new FabricItemSettings().maxCount(1));
-    public static final LootTableWhacker LOOT_TABLE_WHACKER = new LootTableWhacker(new FabricItemSettings().maxCount(1));
+    public static final Camera CAMERA = new Camera(new FabricItemSettings().maxCount(1).requiredFeatures(FeatureFlags.VANILLA));
+    public static final LootTableWhacker LOOT_TABLE_WHACKER = new LootTableWhacker(new FabricItemSettings().maxCount(1).requiredFeatures(FeatureFlags.VANILLA));
 
     @Override
     public void onInitialize() {
@@ -54,14 +52,4 @@ public final class FrozenTestMain implements ModInitializer, SurfaceRuleEvents.O
         //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
         //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
     }
-
-	@Override
-	public void modifyOverworldRules(SurfaceRuleContext.@NotNull Overworld context) {
-
-	}
-
-	@Override
-	public void modifyNetherRules(SurfaceRuleContext.@NotNull Nether context) {
-
-	}
 }

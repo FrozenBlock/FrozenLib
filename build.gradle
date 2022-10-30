@@ -206,6 +206,12 @@ license {
 	include "net/frozenblock/**/*.java"
 }
 
+license {
+	rule project.file("QUILT_MODIFIED_HEADER")
+
+	include "org.quiltmc/**/frozenblock/**/*"
+}
+
 javadoc {
     options.tags = ["reason"]
 }

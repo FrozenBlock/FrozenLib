@@ -15,23 +15,29 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
+package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin.client;
 
+import net.minecraft.client.HotbarManager;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.entity.player.Player;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
  * Modified to work on Fabric
+ * Original name was <STRONG>HotbarStorageMixin</STRONG>
  */
-@Mixin(value = Player.class, priority = 1001)
-public abstract class PlayerEntityMixin {
-    @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    public void addModDataVersions(CompoundTag compound, CallbackInfo ci) {
+@Mixin(value = HotbarManager.class, priority = 1001)
+public abstract class HotbarManagerMixin {
+    @Inject(
+            method = "save",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtIo;write(Lnet/minecraft/nbt/CompoundTag;Ljava/io/File;)V"),
+            locals = LocalCapture.CAPTURE_FAILHARD
+    )
+    private void addModDataVersions(CallbackInfo ci, CompoundTag compound) {
         QuiltDataFixesInternals.get().addModDataVersions(compound);
     }
 }

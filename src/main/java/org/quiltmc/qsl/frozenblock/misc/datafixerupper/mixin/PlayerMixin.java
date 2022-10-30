@@ -17,28 +17,22 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
-import com.mojang.datafixers.DataFixer;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.world.entity.player.Player;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
  * Modified to work on Fabric
+ * Original name was <STRONG>PlayerEntityMixin</STRONG>
  */
-@Mixin(value = NbtUtils.class, priority = 1001)
-public abstract class NbtHelperMixin {
-    @Inject(
-            method = "update(Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/util/datafix/DataFixTypes;Lnet/minecraft/nbt/CompoundTag;II)Lnet/minecraft/nbt/CompoundTag;",
-            at = @At("RETURN"),
-            cancellable = true
-    )
-    private static void updateDataWithFixers(DataFixer fixer, DataFixTypes fixTypes, CompoundTag compound,
-                                             int oldVersion, int targetVersion, CallbackInfoReturnable<CompoundTag> cir) {
-        cir.setReturnValue(QuiltDataFixesInternals.get().updateWithAllFixers(fixTypes, cir.getReturnValue()));
+@Mixin(value = Player.class, priority = 1001)
+public abstract class PlayerMixin {
+    @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
+    public void addModDataVersions(CompoundTag compound, CallbackInfo ci) {
+        QuiltDataFixesInternals.get().addModDataVersions(compound);
     }
 }

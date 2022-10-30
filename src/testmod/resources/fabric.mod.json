@@ -16,7 +16,7 @@
       "net.frozenblock.lib.testmod.FrozenTestClient"
     ],
     "frozenlib:events": [
-      "net.frozenblock.lib.testmod.FrozenTestMain"
+      "org.quiltmc.qsl.frozenblock.worldgen.surface_rule.test.QuiltSurfaceRuleTest"
     ],
     "modmenu": [
       "net.frozenblock.lib.testmod.config.ModMenuIntegration"
