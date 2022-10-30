@@ -109,6 +109,6 @@ transitive-accessible    field    net/minecraft/client/Camera    xRot    F
 transitive-accessible    field    net/minecraft/client/Camera    yRot    F
 
 #Particle
-transitive-accessible    field    net/minecraft/client/particle.Particle    x    D
-transitive-accessible    field    net/minecraft/client/particle.Particle    y    D
-transitive-accessible    field    net/minecraft/client/particle.Particle    z    D
+transitive-accessible    field    net/minecraft/client/particle/Particle    x    D
+transitive-accessible    field    net/minecraft/client/particle/Particle    y    D
+transitive-accessible    field    net/minecraft/client/particle/Particle    z    D
