@@ -43,7 +43,7 @@ public class ScreenShaker {
 				SHAKES_TO_REMOVE.add(shake);
 			}
 		}
-		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0 && !Minecraft.getInstance().isPaused()) {
+		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0) {
 			intensity = (highestIntensity + ((totalIntensity / amount) * 0.5F));
 		} else {
 			intensity = 0F;
