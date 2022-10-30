@@ -25,7 +25,7 @@ public class ScreenShaker {
 	private static float intensity;
 
 	public static void tick(Camera camera) {
-		if (Minecraft.getInstance().isMultiplayerServer() && Minecraft.getInstance().isPaused()) {
+		if (!Minecraft.getInstance().isMultiplayerServer() && Minecraft.getInstance().isPaused()) {
 			return;
 		}
 		float highestIntensity = 0F;
