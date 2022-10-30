@@ -198,14 +198,11 @@ processResources {
     }
 }
 
-quiltflower {
-	quiltflowerVersion.set("1.9.0")
-}
-
 license {
+	rule project.file("QUILT_MODIFIED_HEADER")
 	rule project.file("HEADER")
 
-	include "net/frozenblock/**/*.java"
+	include "**/*.java"
 }
 
 javadoc {
