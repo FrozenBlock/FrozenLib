@@ -1,6 +1,7 @@
 package net.frozenblock.lib.item.api;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.frozenblock.lib.feature_flag.impl.FabricItemGroupAccessor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;
@@ -47,7 +48,9 @@ public final class FrozenCreativeTabs {
 		for (CreativeModeTab tab : tabs) {
 			List<ItemStack> list = List.of(new ItemStack(item));
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				entries.addBefore(comparedItem, list, tabVisibility);
+				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+					entries.addBefore(comparedItem, list, tabVisibility);
+				}
 			});
 		}
 	}
@@ -68,7 +71,9 @@ public final class FrozenCreativeTabs {
 		for (CreativeModeTab tab : tabs) {
 			List<ItemStack> list = List.of(new ItemStack(item));
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				entries.addAfter(comparedItem, list, tabVisibility);
+				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+					entries.addAfter(comparedItem, list, tabVisibility);
+				}
 			});
 		}
 	}
@@ -90,11 +95,13 @@ public final class FrozenCreativeTabs {
 	public static void addInstrumentBefore(Item comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				List<ItemStack> list = new ArrayList<>();
-				for (Holder<Instrument> holder : Registry.INSTRUMENT.getTagOrEmpty(tagKey)) {
-					list.add(InstrumentItem.create(instrument, holder));
+				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+					List<ItemStack> list = new ArrayList<>();
+					for (Holder<Instrument> holder : Registry.INSTRUMENT.getTagOrEmpty(tagKey)) {
+						list.add(InstrumentItem.create(instrument, holder));
+					}
+					entries.addBefore(comparedItem, list, tabVisibility);
 				}
-				entries.addBefore(comparedItem, list, tabVisibility);
 			});
 		}
 	}
@@ -106,11 +113,13 @@ public final class FrozenCreativeTabs {
 	public static void addInstrumentAfter(Item comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				List<ItemStack> list = new ArrayList<>();
-				for (Holder<Instrument> holder : Registry.INSTRUMENT.getTagOrEmpty(tagKey)) {
-					list.add(InstrumentItem.create(instrument, holder));
+				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+					List<ItemStack> list = new ArrayList<>();
+					for (Holder<Instrument> holder : Registry.INSTRUMENT.getTagOrEmpty(tagKey)) {
+						list.add(InstrumentItem.create(instrument, holder));
+					}
+					entries.addAfter(comparedItem, list, tabVisibility);
 				}
-				entries.addAfter(comparedItem, list, tabVisibility);
 			});
 		}
 	}
