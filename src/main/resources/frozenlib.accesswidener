@@ -116,3 +116,9 @@ transitive-accessible    method    net/minecraft/client/Camera    setRotation   
 transitive-accessible    field    net/minecraft/client/Camera    xRot    F
 transitive-accessible    field    net/minecraft/client/Camera    yRot    F
 
+# Data Generation
+transitive-accessible    field    net/minecraft/data/DataGenerator    vanillaPackOutput    Lnet/minecraft/data/PackOutput;
+transitive-extendable    class    net/minecraft/data/DataGenerator$PackGenerator
+transitive-accessible    class    net/minecraft/data/DataGenerator$PackGenerator
+transitive-extendable    method    net/minecraft/data/DataGenerator$PackGenerator    <init>    (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
+transitive-accessible    method    net/minecraft/data/DataGenerator$PackGenerator    <init>    (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
