@@ -32,14 +32,12 @@ import org.slf4j.Logger;
 public class MovingLoopingFadingDistanceSoundEntityManager {
     ArrayList<FadingDistanceSoundLoopNBT> sounds = new ArrayList<>();
     public LivingEntity entity;
-    public int ticksToCheck;
 
     public MovingLoopingFadingDistanceSoundEntityManager(LivingEntity entity) {
         this.entity = entity;
     }
 
     public void load(CompoundTag nbt) {
-        nbt.putInt("frozenDistanceSoundTicksToCheck", this.ticksToCheck);
         if (nbt.contains("frozenDistanceSounds", 9)) {
             this.sounds.clear();
             DataResult<List<FadingDistanceSoundLoopNBT>> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenDistanceSounds", 10)));
@@ -54,7 +52,6 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
     }
 
     public void save(CompoundTag nbt) {
-        this.ticksToCheck = nbt.getInt("frozenDistanceSoundTicksToCheck");
         DataResult<Tag> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
         Logger var10001 = FrozenMain.LOGGER4;
         Objects.requireNonNull(var10001);
@@ -69,20 +66,19 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         return this.sounds;
     }
 
-    public void tick() {
-        if (this.ticksToCheck > 0) {
-            --this.ticksToCheck;
-        } else {
-            this.ticksToCheck = 20;
-            ArrayList<FadingDistanceSoundLoopNBT> soundsToRemove = new ArrayList<>();
-            for (FadingDistanceSoundLoopNBT nbt : this.getSounds()) {
-                if (!SoundPredicate.getPredicate(nbt.restrictionID).test(this.entity)) {
-                    soundsToRemove.add(nbt);
-                }
-            }
-            this.sounds.removeAll(soundsToRemove);
-        }
-    }
+	public void tick() {
+		if (!this.sounds.isEmpty()) {
+			ArrayList<FadingDistanceSoundLoopNBT> soundsToRemove = new ArrayList<>();
+			for (FadingDistanceSoundLoopNBT nbt : this.sounds) {
+				SoundPredicate.LoopPredicate<LivingEntity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
+				if (!predicate.test(this.entity)) {
+					soundsToRemove.add(nbt);
+					predicate.onStop(this.entity);
+				}
+			}
+			this.sounds.removeAll(soundsToRemove);
+		}
+	}
 
     public static class FadingDistanceSoundLoopNBT {
         public final ResourceLocation soundEventID;

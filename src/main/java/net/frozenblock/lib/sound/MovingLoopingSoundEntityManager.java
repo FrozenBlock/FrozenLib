@@ -32,14 +32,12 @@ import org.slf4j.Logger;
 public class MovingLoopingSoundEntityManager {
     ArrayList<SoundLoopNBT> sounds = new ArrayList<>();
     public LivingEntity entity;
-    public int ticksToCheck;
 
     public MovingLoopingSoundEntityManager(LivingEntity entity) {
         this.entity = entity;
     }
 
     public void load(CompoundTag nbt) {
-        nbt.putInt("frozenSoundTicksToCheck", this.ticksToCheck);
         if (nbt.contains("frozenSounds", 9)) {
             this.sounds.clear();
             DataResult<List<SoundLoopNBT>> var10000 = SoundLoopNBT.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenSounds", 10)));
@@ -54,7 +52,6 @@ public class MovingLoopingSoundEntityManager {
     }
 
     public void save(CompoundTag nbt) {
-        this.ticksToCheck = nbt.getInt("frozenSoundTicksToCheck");
         DataResult<Tag> var10000 = SoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
         Logger var10001 = FrozenMain.LOGGER4;
         Objects.requireNonNull(var10001);
@@ -70,18 +67,17 @@ public class MovingLoopingSoundEntityManager {
     }
 
     public void tick() {
-        if (this.ticksToCheck > 0) {
-            --this.ticksToCheck;
-        } else {
-            this.ticksToCheck = 20;
-            ArrayList<SoundLoopNBT> soundsToRemove = new ArrayList<>();
-            for (SoundLoopNBT nbt : this.getSounds()) {
-                if (!SoundPredicate.getPredicate(nbt.restrictionID).test(this.entity)) {
-                    soundsToRemove.add(nbt);
-                }
-            }
-            this.sounds.removeAll(soundsToRemove);
-        }
+		if (!this.sounds.isEmpty()) {
+			ArrayList<SoundLoopNBT> soundsToRemove = new ArrayList<>();
+			for (SoundLoopNBT nbt : this.sounds) {
+				SoundPredicate.LoopPredicate<LivingEntity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
+				if (!predicate.test(this.entity)) {
+					soundsToRemove.add(nbt);
+					predicate.onStop(this.entity);
+				}
+			}
+			this.sounds.removeAll(soundsToRemove);
+		}
     }
 
     public static class SoundLoopNBT {
