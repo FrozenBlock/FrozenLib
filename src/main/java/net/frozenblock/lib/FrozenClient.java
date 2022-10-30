@@ -36,6 +36,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
 public final class FrozenClient implements ClientModInitializer {
@@ -53,6 +54,7 @@ public final class FrozenClient implements ClientModInitializer {
         receiveFadingDistanceSoundPacket();
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
+		receiveScreenShakePacket();
 		receiveIconPacket();
 		receiveIconRemovePacket();
 
@@ -242,6 +244,25 @@ public final class FrozenClient implements ClientModInitializer {
             });
         });
     }
+
+	private static void receiveScreenShakePacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SCREEN_SHAKE_PACKET, (ctx, hander, byteBuf, responseSender) -> {
+			float intensity = byteBuf.readFloat();
+			int duration = byteBuf.readInt();
+			int fallOffStart = byteBuf.readInt();
+			double x = byteBuf.readDouble();
+			double y = byteBuf.readDouble();
+			double z = byteBuf.readDouble();
+			float maxDistance = byteBuf.readFloat();
+			ctx.execute(() -> {
+				ClientLevel level = Minecraft.getInstance().level;
+				if (level != null) {
+					Vec3 pos = new Vec3(x, y, z);
+					ScreenShaker.addShake(intensity, duration, fallOffStart, pos, maxDistance);
+				}
+			});
+		});
+	}
 
 	private static void receiveIconPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SPOTTING_ICON_PACKET, (ctx, handler, byteBuf, responseSender) -> {

@@ -12,9 +12,11 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
+import net.frozenblock.lib.math.EasyNoiseSampler;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.FrozenSoundPackets;
 import net.frozenblock.lib.sound.MovingLoopingFadingDistanceSoundEntityManager;
@@ -68,6 +70,15 @@ public final class FrozenMain implements ModInitializer {
 
             }
         });
+
+		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+			if (server != null) {
+				var seed = server.overworld().getSeed();
+				if (EasyNoiseSampler.seed != seed) {
+					EasyNoiseSampler.setSeed(seed);
+				}
+			}
+		});
     }
 
     //IDENTIFIERS
@@ -80,6 +91,8 @@ public final class FrozenMain implements ModInitializer {
     public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = id("moving_fading_distance_sound_packet");
     public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
     public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
+
+	public static final ResourceLocation SCREEN_SHAKE_PACKET = id("screen_shake_packet");
 
 	public static final ResourceLocation SPOTTING_ICON_PACKET = id("spotting_icon_packet");
 	public static final ResourceLocation SPOTTING_ICON_REMOVE_PACKET = id("spotting_icon_remove_packet");
