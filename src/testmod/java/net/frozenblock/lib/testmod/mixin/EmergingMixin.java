@@ -26,6 +26,6 @@ public class EmergingMixin<E extends Warden> {
 
 	@Inject(method = "start(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/monster/warden/Warden;J)V", at = @At("TAIL"))
 	private void startShaking(ServerLevel serverLevel, E warden, long l, CallbackInfo ci) {
-		ScreenShakePackets.createScreenShakePacket(serverLevel, 0.3F, WardenAi.EMERGE_DURATION - 30, warden.getX(), warden.getY(), warden.getZ(), 30);
+		ScreenShakePackets.createScreenShakePacket(serverLevel, 0.25F, WardenAi.EMERGE_DURATION - 30, warden.getX(), warden.getY(), warden.getZ(), 20);
 	}
 }
