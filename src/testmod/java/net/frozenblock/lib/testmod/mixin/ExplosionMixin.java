@@ -11,6 +11,7 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
+import net.frozenblock.lib.screenshake.ScreenShakePackets;
 import net.frozenblock.lib.testmod.FrozenTestClient;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Explosion;
@@ -38,9 +39,7 @@ public class ExplosionMixin {
 
 	@Inject(method = "finalizeExplosion", at = @At(value = "TAIL"))
 	public void finalizeExplosion(boolean spawnParticles, CallbackInfo info) {
-		if (this.level.isClientSide) {
-			FrozenTestClient.addScreenShakeEasy(new Vec3(this.x, this.y, this.z), (float) ((0.2F + (blockInteraction != Explosion.BlockInteraction.NONE ? 0.1F : 0) + radius * 0.1) / 5F), radius * 2);
-		}
+		ScreenShakePackets.createScreenShakePacket(this.level, (float) ((0.2F + (blockInteraction != Explosion.BlockInteraction.NONE ? 0.2F : 0) + radius * 0.1) / 5F), this.x, this.y, this.z, radius * 2);
 	}
 
 }
