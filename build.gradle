@@ -207,8 +207,8 @@ quiltflower {
 }
 
 license {
-	rule project.file("QUILT_MODIFIED_HEADER")
-	rule project.file("HEADER")
+	rule project.file("codeformat/QUILT_MODIFIED_HEADER")
+	rule project.file("codeformat/HEADER")
 
 	include "**/*.java"
 }
