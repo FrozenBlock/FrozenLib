@@ -15,7 +15,9 @@ import java.util.List;
 import net.frozenblock.lib.entrypoints.ClientEventEntrypoint;
 import net.frozenblock.lib.entrypoints.CommonEventEntrypoint;
 import net.frozenblock.lib.entrypoints.ServerEventEntrypoint;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public enum EventType {
     CLIENT("frozenlib:client_events", ClientEventEntrypoint.class),
     COMMON("frozenlib:events", CommonEventEntrypoint.class),

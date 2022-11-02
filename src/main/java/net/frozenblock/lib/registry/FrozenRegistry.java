@@ -15,16 +15,11 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.entity.render.EntityTextureOverride;
-import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.SpottingIconPredicate;
 import net.minecraft.core.MappedRegistry;
-import net.minecraft.sounds.SoundEvent;
 
 public class FrozenRegistry {
-
-    public static final MappedRegistry<SoundEvent> STARTING_SOUND = FabricRegistryBuilder.createSimple(SoundEvent.class, FrozenMain.id("starting_sound"))
-            .attribute(RegistryAttribute.SYNCED)
-            .buildAndRegister();
 
     public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenMain.id("entity_texture_override"))
             .attribute(RegistryAttribute.SYNCED)

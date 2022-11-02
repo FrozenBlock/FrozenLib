@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound;
+package net.frozenblock.lib.sound.api;
 
 import com.mojang.math.Vector3d;
 import io.netty.buffer.Unpooled;
@@ -17,7 +17,6 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
-import net.frozenblock.lib.registry.FrozenRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -149,7 +148,7 @@ public class FrozenSoundPackets {
         if (!world.isClientSide) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
             byteBuf.writeVarInt(entity.getId());
-            byteBuf.writeId(FrozenRegistry.STARTING_SOUND, startingSound);
+            byteBuf.writeId(Registry.SOUND_EVENT, startingSound);
             byteBuf.writeId(Registry.SOUND_EVENT, sound);
             byteBuf.writeEnum(category);
             byteBuf.writeFloat(volume);
@@ -167,7 +166,7 @@ public class FrozenSoundPackets {
     public static void createStartingMovingRestrictionLoopingSound(ServerPlayer player, Entity entity, SoundEvent startingSound, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeVarInt(entity.getId());
-        byteBuf.writeId(FrozenRegistry.STARTING_SOUND, startingSound);
+        byteBuf.writeId(Registry.SOUND_EVENT, startingSound);
         byteBuf.writeId(Registry.SOUND_EVENT, sound);
         byteBuf.writeEnum(category);
         byteBuf.writeFloat(volume);

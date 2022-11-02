@@ -14,12 +14,10 @@ package net.frozenblock.lib.testmod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.screenshake.ScreenShaker;
-import net.frozenblock.lib.sound.FlyBySoundHub;
+import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.phys.Vec3;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenTestClient implements ClientModInitializer {
@@ -28,12 +26,4 @@ public final class FrozenTestClient implements ClientModInitializer {
     public void onInitializeClient() {
         FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
     }
-
-	public static void addScreenShakeEasy(Vec3 pos, float intensity, float radius) {
-		ScreenShaker.addShake(intensity, 5, 1, pos, radius * 0.3F);
-	}
-
-	public static void addScreenShakeEasy(Vec3 pos, int duration, float intensity, float radius) {
-		ScreenShaker.addShake(intensity, duration, 1, pos, radius * 0.3F);
-	}
 }

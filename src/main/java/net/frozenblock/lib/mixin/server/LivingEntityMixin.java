@@ -13,9 +13,9 @@ package net.frozenblock.lib.mixin.server;
 
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
-import net.frozenblock.lib.sound.FrozenClientPacketInbetween;
-import net.frozenblock.lib.sound.MovingLoopingFadingDistanceSoundEntityManager;
-import net.frozenblock.lib.sound.MovingLoopingSoundEntityManager;
+import net.frozenblock.lib.sound.api.FrozenClientPacketInbetween;
+import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
+import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.spotting_icons.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.tags.FrozenItemTags;

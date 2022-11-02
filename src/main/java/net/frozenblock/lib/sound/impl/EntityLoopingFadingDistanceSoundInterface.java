@@ -11,10 +11,12 @@
 
 package net.frozenblock.lib.sound.impl;
 
-import net.frozenblock.lib.sound.MovingLoopingFadingDistanceSoundEntityManager;
+import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public interface EntityLoopingFadingDistanceSoundInterface {
 
     boolean hasSyncedFadingDistanceClient();

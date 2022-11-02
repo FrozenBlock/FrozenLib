@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound;
+package net.frozenblock.lib.sound.api;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;

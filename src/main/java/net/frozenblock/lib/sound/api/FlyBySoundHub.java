@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound;
+package net.frozenblock.lib.sound.api;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -87,7 +87,6 @@ public class FlyBySoundHub {
         FLYBY_ENTITIES_AND_SOUNDS.put(entity, flyBySound);
     }
 
-    public record FlyBySound(float pitch, float volume, SoundSource category,
-                             SoundEvent sound) {
+    public record FlyBySound(float pitch, float volume, SoundSource category, SoundEvent sound) {
     }
 }

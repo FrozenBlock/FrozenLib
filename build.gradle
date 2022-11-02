@@ -50,6 +50,10 @@ loom {
     }
 
     accessWidenerPath = file("src/main/resources/frozenlib.accesswidener")
+	interfaceInjection {
+		// When enabled injected interfaces from dependecies will be applied.
+		enableDependencyInterfaceInjection = true
+	}
 }
 
 configurations {
@@ -196,6 +200,10 @@ processResources {
     filesMatching("fabric.mod.json") {
         expand "version": project.version
     }
+}
+
+quiltflower {
+	quiltflowerVersion.set("1.8.0")
 }
 
 license {

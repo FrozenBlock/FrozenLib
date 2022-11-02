@@ -17,16 +17,14 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
 import net.frozenblock.lib.item.impl.CooldownInterface;
-import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.screenshake.ScreenShaker;
-import net.frozenblock.lib.sound.FlyBySoundHub;
-import net.frozenblock.lib.sound.MovingSoundLoopWithRestriction;
-import net.frozenblock.lib.sound.MovingSoundWithRestriction;
-import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
-import net.frozenblock.lib.sound.StartingSoundInstance;
-import net.frozenblock.lib.sound.distance_based.FadingDistanceSwitchingSound;
-import net.frozenblock.lib.sound.distance_based.MovingFadingDistanceSwitchingSoundLoop;
-import net.frozenblock.lib.spotting_icons.SpottingIconManager;
+import net.frozenblock.lib.sound.api.FlyBySoundHub;
+import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
+import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
+import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
+import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -47,8 +45,8 @@ public final class FrozenClient implements ClientModInitializer {
         registerClientTickEvents();
 
         receiveMovingRestrictionSoundPacket();
-        receiveMovingRestrictionLoopingSoundPacket();
-        receiveStartingMovingRestrictionLoopingSoundPacket();
+        receiveRestrictedMovingSoundLoopPacket();
+        receiveStartingRestrictedMovingSoundLoopPacket();
         receiveMovingRestrictionLoopingFadingDistanceSoundPacket();
         receiveMovingFadingDistanceSoundPacket();
         receiveFadingDistanceSoundPacket();
@@ -86,7 +84,7 @@ public final class FrozenClient implements ClientModInitializer {
                     T entity = (T) level.getEntity(id);
                     if (entity != null) {
                         SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-                        Minecraft.getInstance().getSoundManager().play(new MovingSoundWithRestriction<>(entity, sound, category, volume, pitch, predicate));
+                        Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSound<>(entity, sound, category, volume, pitch, predicate));
                     }
                 }
             });
@@ -94,7 +92,7 @@ public final class FrozenClient implements ClientModInitializer {
     }
 
 	@SuppressWarnings("unchecked")
-    private static <T extends Entity> void receiveMovingRestrictionLoopingSoundPacket() {
+    private static <T extends Entity> void receiveRestrictedMovingSoundLoopPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
             SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
@@ -108,7 +106,7 @@ public final class FrozenClient implements ClientModInitializer {
                     T entity = (T) level.getEntity(id);
                     if (entity != null) {
                         SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-                        Minecraft.getInstance().getSoundManager().play(new MovingSoundLoopWithRestriction<>(entity, sound, category, volume, pitch, predicate));
+                        Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, sound, category, volume, pitch, predicate));
                     }
                 }
             });
@@ -116,10 +114,10 @@ public final class FrozenClient implements ClientModInitializer {
     }
 
 	@SuppressWarnings("unchecked")
-    private static <T extends Entity> void receiveStartingMovingRestrictionLoopingSoundPacket() {
+    private static <T extends Entity> void receiveStartingRestrictedMovingSoundLoopPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
-            SoundEvent startingSound = byteBuf.readById(FrozenRegistry.STARTING_SOUND);
+            SoundEvent startingSound = byteBuf.readById(Registry.SOUND_EVENT);
             SoundEvent loopingSound = byteBuf.readById(Registry.SOUND_EVENT);
             SoundSource category = byteBuf.readEnum(SoundSource.class);
             float volume = byteBuf.readFloat();
@@ -131,7 +129,7 @@ public final class FrozenClient implements ClientModInitializer {
                     T entity = (T) level.getEntity(id);
                     if (entity != null) {
                         SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-                        Minecraft.getInstance().getSoundManager().play(new StartingSoundInstance<>(entity, startingSound, loopingSound, category, volume, pitch, predicate, new MovingSoundLoopWithRestriction<>(entity, loopingSound, category, volume, pitch, predicate)));
+                        Minecraft.getInstance().getSoundManager().play(new RestrictedStartingSound<>(entity, startingSound, loopingSound, category, volume, pitch, predicate, new RestrictedMovingSoundLoop<>(entity, loopingSound, category, volume, pitch, predicate)));
                     }
                 }
             });
@@ -156,8 +154,8 @@ public final class FrozenClient implements ClientModInitializer {
                     T entity = (T) level.getEntity(id);
                     if (entity != null) {
                         SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-                        Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
-                        Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
+                        Minecraft.getInstance().getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
+                        Minecraft.getInstance().getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
                     }
                 }
             });
@@ -182,8 +180,8 @@ public final class FrozenClient implements ClientModInitializer {
                     T entity = (T) level.getEntity(id);
                     if (entity != null) {
                         SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-                        Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
-                        Minecraft.getInstance().getSoundManager().play(new MovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
+                        Minecraft.getInstance().getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
+                        Minecraft.getInstance().getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
                     }
                 }
             });
