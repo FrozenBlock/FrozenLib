@@ -39,7 +39,7 @@ public class MovingParticleSoundLoop<T extends Particle> extends AbstractTickabl
 
     @Override
     public boolean canPlaySound() {
-        return !this.particle.isAlive();
+        return this.particle.isAlive();
     }
 
     @Override
