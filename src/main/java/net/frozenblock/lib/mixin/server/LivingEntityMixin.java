@@ -11,6 +11,10 @@
 
 package net.frozenblock.lib.mixin.server;
 
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.impl.DripstoneDripLavaFrom;
 import net.frozenblock.lib.impl.DripstoneDripWaterFrom;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
@@ -22,9 +26,12 @@ import net.frozenblock.lib.spotting_icons.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.tags.FrozenItemTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -65,12 +72,6 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
 	public SpottingIconManager frozenLib$SpottingIconManager;
 	@Unique
 	public boolean frozenLib$clientFrozenSoundAndIconsSynced;
-
-	//net/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V
-	@Redirect(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V", ordinal = 2))
-	public void hurt(Level lvl, Entity par1, byte par2, DamageSource source, float amount) {
-		return;
-	}
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void setLoopingSoundManagers(EntityType<? extends LivingEntity> entityType, Level level, CallbackInfo info) {
@@ -142,6 +143,22 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
             this.frozenLib$clientFrozenSoundAndIconsSynced = true;
         }
     }
+
+	@Redirect(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V", ordinal = 2))
+	public void hurt(Level lvl, Entity par1, byte par2, DamageSource source, float amount) {
+		if (par2 == ((byte)2)) {
+			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			byteBuf.writeVarInt(par1.getId());
+			byteBuf.writeId(Registry.SOUND_EVENT, sound);
+			byteBuf.writeEnum(category);
+			byteBuf.writeFloat(volume);
+			byteBuf.writeFloat(pitch);
+			for (ServerPlayer player : PlayerLookup.around((ServerLevel) world, entity.blockPosition(), 128)) {
+				ServerPlayNetworking.send(player, FrozenMain.FLYBY_SOUND_PACKET, byteBuf);
+			}
+		}
+		lvl.broadcastEntityEvent(par1, par2);
+	}
 
 	@Shadow
 	protected void setLivingEntityFlag(int mask, boolean value) {

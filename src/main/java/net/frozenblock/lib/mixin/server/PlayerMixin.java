@@ -11,7 +11,7 @@
 
 package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.impl.PlayerDamageSourcesWithSounds;
+import net.frozenblock.lib.impl.DamageSourceSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.player.Player;
@@ -25,9 +25,7 @@ public final class PlayerMixin {
 
 	@Inject(method = "getHurtSound", at = @At("HEAD"), cancellable = true)
 	public void getHurtSound(DamageSource damageSource, CallbackInfoReturnable<SoundEvent> info) {
-		if (PlayerDamageSourcesWithSounds.DAMAGE_SOURCES_AND_SOUNDS.containsKey(damageSource)) {
-			info.setReturnValue(PlayerDamageSourcesWithSounds.getDamageSound(damageSource));
-		}
+			info.setReturnValue(DamageSourceSounds.getDamageSound(damageSource));
 	}
 
 }

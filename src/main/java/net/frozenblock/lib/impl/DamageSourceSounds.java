@@ -13,19 +13,28 @@ package net.frozenblock.lib.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 
-public final class PlayerDamageSourcesWithSounds {
+public final class DamageSourceSounds {
 
-    public static final Map<DamageSource, SoundEvent> DAMAGE_SOURCES_AND_SOUNDS = new HashMap<>();
+    private static final Map<DamageSource, SoundEvent> DAMAGE_SOURCES_AND_SOUNDS = new HashMap<>();
+	private static final Map<ResourceLocation, SoundEvent> LOCATION_SOUND_EVENT_MAP = new HashMap<>();
+	private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_LOCATION_MAP = new HashMap<>();
 
-	public static void addDamageSound(DamageSource source, SoundEvent sound) {
+	public static void addDamageSound(DamageSource source, SoundEvent sound, ResourceLocation registry) {
 		DAMAGE_SOURCES_AND_SOUNDS.put(source, sound);
+		LOCATION_SOUND_EVENT_MAP.put(registry, sound);
+		DAMAGE_SOURCE_LOCATION_MAP.put(source, registry);
 	}
 
 	public static SoundEvent getDamageSound(DamageSource source) {
+		return DAMAGE_SOURCES_AND_SOUNDS.containsKey(source) ? DAMAGE_SOURCES_AND_SOUNDS.get(source) : SoundEvents.PLAYER_HURT;
+	}
+
+	public static SoundEvent getDamageSound(ResourceLocation location) {
 		return DAMAGE_SOURCES_AND_SOUNDS.containsKey(source) ? DAMAGE_SOURCES_AND_SOUNDS.get(source) : SoundEvents.PLAYER_HURT;
 	}
 
