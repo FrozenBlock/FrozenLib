@@ -31,6 +31,7 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
@@ -117,7 +118,7 @@ public final class DelayedRegistry<T> extends WritableRegistry<T> {
 	}
 
 	@Override
-	public Optional<Holder<T>> getRandom(RandomSource random) {
+	public Optional<Holder.Reference<T>> getRandom(RandomSource random) {
 		return this.wrapped.getRandom(random);
 	}
 
@@ -137,7 +138,7 @@ public final class DelayedRegistry<T> extends WritableRegistry<T> {
 		return this;
 	}
 
-	@Override
+	/*@Override
 	public Holder.Reference<T> getOrCreateHolderOrThrow(ResourceKey<T> registryKey) {
 		return this.wrapped.getOrCreateHolderOrThrow(registryKey);
 	}
@@ -145,7 +146,7 @@ public final class DelayedRegistry<T> extends WritableRegistry<T> {
 	@Override
 	public DataResult<Holder.Reference<T>> getOrCreateHolder(ResourceKey<T> key) {
 		return this.wrapped.getOrCreateHolder(key);
-	}
+	}*/
 
 	@Override
 	public Holder.Reference<T> createIntrusiveHolder(T holder) {
@@ -213,14 +214,19 @@ public final class DelayedRegistry<T> extends WritableRegistry<T> {
 	}
 
 	@Override
-	public Holder<T> register(ResourceKey<T> key, T entry, Lifecycle lifecycle) {
+	public Holder.Reference<T> register(ResourceKey<T> key, T entry, Lifecycle lifecycle) {
 		this.delayedEntries.add(new DelayedEntry<>(key, entry, lifecycle));
-		return new Holder.Direct<>(entry);
+		return Holder.Reference.createIntrusive(this.holderOwner(), entry);
 	}
 
 	@Override
 	public boolean isEmpty() {
 		return this.wrapped.isEmpty();
+	}
+
+	@Override
+	public HolderGetter<T> createRegistrationLookup() {
+		return this.wrapped.createRegistrationLookup();
 	}
 
 	void applyDelayed() {

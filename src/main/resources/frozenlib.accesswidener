@@ -69,7 +69,7 @@ transitive-accessible    method    net/minecraft/data/worldgen/biome/OverworldBi
 transitive-accessible    method    net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider    <init>    (Lnet/minecraft/world/level/block/state/BlockState;)V
 
 # Noise
-transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;ID[D)Lnet/minecraft/core/Holder;
+transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/data/worldgen/BootstapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
 
 # Used to set overworld biomes
 transitive-accessible    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource    preset    Ljava/util/Optional;
@@ -97,10 +97,12 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRul
 
 # Registry
 transitive-accessible    class    net/minecraft/core/Registry$RegistryBootstrap
-transitive-accessible    class    net/minecraft/data/BuiltinRegistries$RegistryBootstrap
+#transitive-accessible    class    net/minecraft/data/BuiltinRegistries$RegistryBootstrap
 transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
 transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
 #transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Ljava/util/function/Function;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
+# Registry
+transitive-accessible    field    net/minecraft/data/registries/VanillaRegistries    BUILDER    Lnet/minecraft/core/RegistrySetBuilder;
 
 # Sounds
 transitive-accessible    field    net/minecraft/client/sounds/SoundManager    soundEngine    Lnet/minecraft/client/sounds/SoundEngine;
