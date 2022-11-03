@@ -74,7 +74,7 @@ public final class SoundPredicate<T extends Entity> {
     public static ResourceLocation NOT_SILENT_AND_ALIVE_ID = FrozenMain.id("not_silent_and_alive");
 
     public static void init() {
-        register(FrozenMain.id("default"), defaultPredicate());
-        register(FrozenMain.id("not_silent_and_alive"), notSilentAndAlive());
+        register(DEFAULT_ID, defaultPredicate());
+        register(NOT_SILENT_AND_ALIVE_ID, notSilentAndAlive());
     }
 }

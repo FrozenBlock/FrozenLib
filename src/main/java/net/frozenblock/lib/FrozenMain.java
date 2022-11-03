@@ -53,9 +53,9 @@ public final class FrozenMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
-        FrozenRegistry.initRegistry();
         ServerFreezer.onInitialize();
         SoundPredicate.init();
+		FrozenRegistry.initRegistry();
 
         receiveSoundSyncPacket();
 		receiveIconSyncPacket();

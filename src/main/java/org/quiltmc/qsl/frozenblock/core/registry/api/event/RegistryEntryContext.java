@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.core.registry.api;
+package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;

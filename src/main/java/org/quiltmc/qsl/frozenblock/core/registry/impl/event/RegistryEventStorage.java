@@ -21,7 +21,7 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.event;
 import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.core.Registry;
 import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.qsl.frozenblock.core.registry.api.RegistryEvents;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
 /**
  * A duck interface for getting registry events stored in a {@link Registry}.

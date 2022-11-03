@@ -21,7 +21,7 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.event;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.qsl.frozenblock.core.registry.api.RegistryEntryContext;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEntryContext;
 
 /**
  * The default implementation for {@link RegistryEntryContext}.

@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.core.registry.api;
+package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
 import java.util.function.Predicate;
 import net.minecraft.core.Registry;

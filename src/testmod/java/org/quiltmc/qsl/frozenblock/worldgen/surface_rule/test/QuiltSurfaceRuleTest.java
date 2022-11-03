@@ -61,6 +61,11 @@ public class QuiltSurfaceRuleTest implements SurfaceRuleEvents.OverworldModifier
 						)
 				)
 		);
+		context.ruleSources().add(0,
+				SurfaceRules.ifTrue(
+						SurfaceRules.isBiome(Biomes.DESERT),
+						SurfaceRules.state(Blocks.MYCELIUM.defaultBlockState())
+				));
 	}
 
 	@Override

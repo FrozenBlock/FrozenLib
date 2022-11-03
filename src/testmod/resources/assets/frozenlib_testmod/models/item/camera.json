@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-	"layer0": "frozenblocklib:item/dev_camera"
+	"layer0": "frozenlib_testmod:item/dev_camera"
   }
 }

@@ -25,9 +25,10 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.qsl.frozenblock.core.registry.api.RegistryEntryContext;
-import org.quiltmc.qsl.frozenblock.core.registry.api.RegistryEvents;
-import org.quiltmc.qsl.frozenblock.core.registry.api.RegistryMonitor;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEntryContext;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryMonitor;
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api.SurfaceRuleEvents;
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.mixin.NoiseGeneratorSettingsAccessor;
 
@@ -38,9 +39,9 @@ import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.mixin.NoiseGeneratorSet
 public class QuiltSurfaceRuleInitializer implements RegistryEvents.DynamicRegistrySetupCallback {
 
 	@Override
-	public void onDynamicRegistrySetup(@NotNull ResourceManager resourceManager, @NotNull RegistryAccess registryManager) {
-		registryManager.registry(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY).ifPresent(registry -> {
-			RegistryMonitor.create(registry).forAll(context -> this.modifyChunkGeneratorSettings(context, resourceManager));
+	public void onDynamicRegistrySetup(@NotNull DynamicRegistryManagerSetupContext context) {
+		context.monitor(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, monitor -> {
+			monitor.forAll(ctx -> this.modifyChunkGeneratorSettings(ctx, context.resourceManager()));
 		});
 	}
 

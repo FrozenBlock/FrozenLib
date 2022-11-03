@@ -25,7 +25,7 @@ import net.frozenblock.lib.events.api.FrozenEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
-import org.quiltmc.qsl.frozenblock.core.registry.api.RegistryEvents;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.event.RegistryEventStorage;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;

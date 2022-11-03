@@ -16,7 +16,7 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.core.registry.api;
+package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoints.CommonEventEntrypoint;
@@ -68,9 +68,9 @@ public final class RegistryEvents {
 	 * Use {@link RegistryAccess#registry} to prevent crashes.
 	 */
 	public static final Event<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = FrozenEvents.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
-			callbacks -> (resourceManager, registryManager) -> {
+			callbacks -> context -> {
 				for (var callback : callbacks) {
-					callback.onDynamicRegistrySetup(resourceManager, registryManager);
+					callback.onDynamicRegistrySetup(context);
 				}
 			}
 	);
@@ -122,10 +122,9 @@ public final class RegistryEvents {
 		 * the combined registry manager, and each layer holds different registries.
 		 * Use {@link RegistryAccess#registry} to prevent crashes.
 		 *
-		 * @param resourceManager the resource manager used to load the registries
-		 * @param registryManager the registry manager
+		 * @param context the dynamic registry manager setup context
 		 */
-		void onDynamicRegistrySetup(@NotNull ResourceManager resourceManager, @NotNull RegistryAccess registryManager);
+		void onDynamicRegistrySetup(@NotNull DynamicRegistryManagerSetupContext context);
 	}
 
 	@FunctionalInterface

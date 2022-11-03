@@ -22,7 +22,8 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.quiltmc.qsl.frozenblock.core.registry.api.RegistryEvents;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
+import org.quiltmc.qsl.frozenblock.core.registry.impl.DynamicRegistryManagerSetupContextImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -48,10 +49,12 @@ public class RegistryDataLoaderMixin {
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	private static void onBeforeLoad(ResourceManager resourceManager, RegistryAccess registryManager,
+	private static void onBeforeLoad(ResourceManager resourceManager, RegistryAccess baseRegistryAccess,
 			List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir,
 			Map<ResourceKey<?>, Exception> map, List<?> list2, RegistryAccess registryAccess) {
-		RegistryEvents.DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(resourceManager, registryManager);
+		RegistryEvents.DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(
+				new DynamicRegistryManagerSetupContextImpl(resourceManager, baseRegistryAccess)
+		);
 	}
 
 	@Inject(
@@ -64,9 +67,9 @@ public class RegistryDataLoaderMixin {
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	private static void onAfterLoad(ResourceManager resourceManager, RegistryAccess registryManager,
+	private static void onAfterLoad(ResourceManager resourceManager, RegistryAccess baseRegistryAccess,
 									 List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir,
 									 Map<ResourceKey<?>, Exception> map, List<?> list2, RegistryAccess registryAccess) {
-		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(registryManager);
+		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(baseRegistryAccess);
 	}
 }

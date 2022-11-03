@@ -11,18 +11,26 @@
 
 package net.frozenblock.lib.testmod;
 
+import com.mojang.datafixers.schemas.Schema;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import static net.frozenblock.lib.FrozenMain.id;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.impl.BlockScheduledTicks;
 import net.frozenblock.lib.item.api.FrozenCreativeTabs;
 import net.frozenblock.lib.testmod.config.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;
 import net.frozenblock.lib.testmod.item.LootTableWhacker;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.Blocks;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.SimpleFixes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -38,6 +46,7 @@ public final class FrozenTestMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
+		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
         Registry.register(Registry.ITEM, id("camera"), CAMERA);
         Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
 		FrozenCreativeTabs.add(CAMERA, CreativeModeTabs.TAB_TOOLS);
@@ -52,4 +61,21 @@ public final class FrozenTestMain implements ModInitializer {
         //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
         //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
     }
+
+	private static final int DATA_VERSION = 1;
+
+	private static void applyDataFixes(ModContainer mod) {
+		LOGGER.info("Applying DataFixes for FrozenLib Testmod");
+		var builder = new QuiltDataFixerBuilder(DATA_VERSION);
+		builder.addSchema(0, QuiltDataFixes.BASE_SCHEMA);
+		Schema schemaV1 = builder.addSchema(1, NamespacedSchema::new);
+		SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenMain.id("camera"), id("camera"), schemaV1);
+
+		QuiltDataFixes.buildAndRegisterFixer(mod, builder);
+		LOGGER.info("DataFixes for FrozenLib Testmod have been applied");
+	}
+
+	public static ResourceLocation id(String path) {
+		return new ResourceLocation(MOD_ID, path);
+	}
 }
