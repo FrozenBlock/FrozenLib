@@ -122,3 +122,11 @@ transitive-extendable    class    net/minecraft/data/DataGenerator$PackGenerator
 transitive-accessible    class    net/minecraft/data/DataGenerator$PackGenerator
 transitive-extendable    method    net/minecraft/data/DataGenerator$PackGenerator    <init>    (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
 transitive-accessible    method    net/minecraft/data/DataGenerator$PackGenerator    <init>    (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
+
+#Particle
+transitive-accessible    field    net/minecraft/client/particle/Particle    x    D
+transitive-accessible    field    net/minecraft/client/particle/Particle    y    D
+transitive-accessible    field    net/minecraft/client/particle/Particle    z    D
+
+# Minecraft Instance
+transitive-accessible    method    net/minecraft/client/Minecraft    isMultiplayerServer ()Z

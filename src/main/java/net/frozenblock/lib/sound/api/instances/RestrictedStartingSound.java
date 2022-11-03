@@ -9,21 +9,21 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound;
+package net.frozenblock.lib.sound.api.instances;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
+import net.frozenblock.lib.sound.api.RestrictedSoundInstance;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractSoundInstance;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
-public class StartingSoundInstance<T extends Entity> extends AbstractTickableSoundInstance {
+public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundInstance {
 
     public final T entity;
     public final SoundPredicate.LoopPredicate<T> predicate;
@@ -32,7 +32,7 @@ public class StartingSoundInstance<T extends Entity> extends AbstractTickableSou
     public boolean hasSwitched = false;
     public final AbstractSoundInstance nextSound;
 
-    public StartingSoundInstance(T entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, AbstractSoundInstance nextSound) {
+    public RestrictedStartingSound(T entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, AbstractSoundInstance nextSound) {
         super(startingSound, category, SoundInstance.createUnseededRandom());
         this.startingSound = startingSound;
         this.nextSound = nextSound;
@@ -47,6 +47,7 @@ public class StartingSoundInstance<T extends Entity> extends AbstractTickableSou
         this.y = (float) entity.getY();
         this.z = (float) entity.getZ();
         this.predicate = predicate;
+		this.predicate.onStart(this.entity);
     }
 
     public void startNextSound() {

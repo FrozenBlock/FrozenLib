@@ -13,6 +13,7 @@ package net.frozenblock.lib.screenshake;
 
 import java.util.ArrayList;
 import net.minecraft.client.Camera;
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
@@ -24,6 +25,9 @@ public class ScreenShaker {
 	private static float intensity;
 
 	public static void tick(Camera camera) {
+		if (!Minecraft.getInstance().isMultiplayerServer() && Minecraft.getInstance().isPaused()) {
+			return;
+		}
 		float highestIntensity = 0F;
 		float totalIntensity = 0F;
 		int amount = 0;

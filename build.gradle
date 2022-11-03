@@ -1,13 +1,13 @@
 buildscript {
 	dependencies {
-		classpath 'org.kohsuke:github-api:+'
+		//classpath 'org.kohsuke:github-api:+'
 	}
 }
 
 plugins {
 	id 'fabric-loom' version '+'
 	id 'io.github.juuxel.loom-quiltflower' version '+'
-	id 'org.ajoberstar.grgit' version '+'
+	//id 'org.ajoberstar.grgit' version '+'
 	id 'org.quiltmc.gradle.licenser' version '+'
 	id 'com.modrinth.minotaur' version '+'
 	id 'maven-publish'
@@ -50,6 +50,10 @@ loom {
     }
 
     accessWidenerPath = file("src/main/resources/frozenlib.accesswidener")
+	interfaceInjection {
+		// When enabled injected interfaces from dependecies will be applied.
+		enableDependencyInterfaceInjection = true
+	}
 }
 
 configurations {
@@ -200,6 +204,10 @@ processResources {
     }
 }
 
+quiltflower {
+	quiltflowerVersion.set("1.8.0")
+}
+
 license {
 	rule project.file("codeformat/QUILT_MODIFIED_HEADER")
 	rule project.file("codeformat/HEADER")
@@ -293,14 +301,14 @@ def getBranch() {
 	return branch.substring(branch.lastIndexOf("/") + 1)
 }
 
-import org.kohsuke.github.GHReleaseBuilder
-import org.kohsuke.github.GitHub
+//import org.kohsuke.github.GHReleaseBuilder
+//import org.kohsuke.github.GitHub
 
 task release(dependsOn: [remapJar, sourcesJar, javadocJar]) {
 	onlyIf {
 		env.GITHUB_TOKEN
 	}
-
+	/*
 	doLast {
 		def github = GitHub.connectUsingOAuth(env.GITHUB_TOKEN as String)
 		def repository = github.getRepository("FrozenBlock/FrozenLib")
@@ -316,6 +324,7 @@ task release(dependsOn: [remapJar, sourcesJar, javadocJar]) {
 		ghRelease.uploadAsset(javadocJar.archiveFile.get().getAsFile(), "application/java-archive")
 		ghRelease.delete()
 	}
+	 */
 }
 
 

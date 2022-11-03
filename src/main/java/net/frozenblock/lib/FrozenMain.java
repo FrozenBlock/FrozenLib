@@ -20,10 +20,10 @@ import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.math.EasyNoiseSampler;
 import net.frozenblock.lib.registry.FrozenRegistry;
-import net.frozenblock.lib.sound.FrozenSoundPackets;
-import net.frozenblock.lib.sound.MovingLoopingFadingDistanceSoundEntityManager;
-import net.frozenblock.lib.sound.MovingLoopingSoundEntityManager;
-import net.frozenblock.lib.sound.SoundPredicate.SoundPredicate;
+import net.frozenblock.lib.sound.api.FrozenSoundPackets;
+import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
+import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
+import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
@@ -93,6 +93,8 @@ public final class FrozenMain implements ModInitializer {
     public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
     public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
 
+	public static final ResourceLocation SCREEN_SHAKE_PACKET = id("screen_shake_packet");
+
 	public static final ResourceLocation SPOTTING_ICON_PACKET = id("spotting_icon_packet");
 	public static final ResourceLocation SPOTTING_ICON_REMOVE_PACKET = id("spotting_icon_remove_packet");
 	public static final ResourceLocation REQUEST_SPOTTING_ICON_SYNC_PACKET = id("request_spotting_icon_sync_packet");
@@ -120,7 +122,7 @@ public final class FrozenMain implements ModInitializer {
                     Entity entity = dimension.getEntity(id);
                     if (entity != null) {
                         if (entity instanceof EntityLoopingSoundInterface soundInterface) {
-                            for (MovingLoopingSoundEntityManager.SoundLoopNBT nbt : soundInterface.getSounds().getSounds()) {
+                            for (MovingLoopingSoundEntityManager.SoundLoopData nbt : soundInterface.getSounds().getSounds()) {
                                 FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
                             }
                         }

@@ -11,10 +11,12 @@
 
 package net.frozenblock.lib.sound.impl;
 
-import net.frozenblock.lib.sound.MovingLoopingSoundEntityManager;
+import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public interface EntityLoopingSoundInterface {
 
     boolean hasSyncedClient();

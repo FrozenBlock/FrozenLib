@@ -9,27 +9,15 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound;
+package net.frozenblock.lib.sound.api;
 
-import java.util.HashMap;
-import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.registry.FrozenRegistry;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 
-public class StartingSounds {
-
-    /**
-     * Use this to associate a Starting Sound to a {@link ResourceKey} for later use.
-     */
-	@Deprecated
-    public static HashMap<ResourceKey<?>, SoundEvent> startingSounds = new HashMap<>();
-
-    public static final SoundEvent EMPTY_SOUND = register("empty_sound");
-
-    public static SoundEvent register(String key) {
-        return Registry.register(FrozenRegistry.STARTING_SOUND, key, new SoundEvent(FrozenMain.id(key)));
-    }
-
+public abstract class RestrictedSoundInstance extends AbstractTickableSoundInstance {
+	protected RestrictedSoundInstance(SoundEvent soundEvent, SoundSource soundSource, RandomSource randomSource) {
+		super(soundEvent, soundSource, randomSource);
+	}
 }

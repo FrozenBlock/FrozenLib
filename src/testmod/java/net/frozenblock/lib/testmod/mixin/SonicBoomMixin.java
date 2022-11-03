@@ -12,34 +12,21 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.screenshake.ScreenShakePackets;
-import net.frozenblock.lib.testmod.FrozenTestClient;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.behavior.warden.SonicBoom;
+import net.minecraft.world.entity.monster.warden.Warden;
+import net.minecraft.world.entity.monster.warden.WardenAi;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Explosion.class)
-public class ExplosionMixin {
+@Mixin(SonicBoom.class)
+public class SonicBoomMixin {
 
-	@Shadow
-	@Final
-	private RandomSource random;
-	@Shadow @Final private Level level;
-	@Shadow @Final private double x;
-	@Shadow @Final private double y;
-	@Shadow @Final private double z;
-	@Shadow @Final private Explosion.BlockInteraction blockInteraction;
-	@Shadow @Final private float radius;
-
-	@Inject(method = "finalizeExplosion", at = @At(value = "TAIL"))
-	public void finalizeExplosion(boolean spawnParticles, CallbackInfo info) {
-		ScreenShakePackets.createScreenShakePacket(this.level, (float) ((0.2F + (blockInteraction != Explosion.BlockInteraction.NONE ? 0.2F : 0) + radius * 0.1) / 5F), this.x, this.y, this.z, radius * 2);
+	@Inject(method = "m_ehrxwrfs(Lnet/minecraft/world/entity/monster/warden/Warden;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0))
+	private static void startShaking(Warden warden, ServerLevel world, LivingEntity livingEntity, CallbackInfo ci) {
+		ScreenShakePackets.createScreenShakePacket(world, 0.5F, 25, warden.getX(), warden.getY(), warden.getZ(), 18);
 	}
-
 }

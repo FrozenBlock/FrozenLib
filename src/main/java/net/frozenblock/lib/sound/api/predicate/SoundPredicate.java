@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.SoundPredicate;
+package net.frozenblock.lib.sound.api.predicate;
 
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.registry.FrozenRegistry;
@@ -34,6 +34,7 @@ public final class SoundPredicate<T extends Entity> {
 		this.predicate = predicate;
 	}
 
+	@SuppressWarnings("unchecked")
     public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
             if (FrozenRegistry.SOUND_PREDICATE_SYNCED.containsKey(id)) {
@@ -56,8 +57,10 @@ public final class SoundPredicate<T extends Entity> {
     public interface LoopPredicate<T extends Entity> {
         boolean test(T entity);
 
-		default void onStop(T entity) {
+		default void onStart(@Nullable T entity) {
+		}
 
+		default void onStop(@Nullable T entity) {
 		}
     }
 

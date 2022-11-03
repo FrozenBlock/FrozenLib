@@ -9,21 +9,17 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.testmod;
+package net.frozenblock.lib.sound.api;
 
-import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.frozenblock.lib.sound.api.FlyBySoundHub;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.EntityType;
+import java.util.HashMap;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
 
-@Environment(EnvType.CLIENT)
-public final class FrozenTestClient implements ClientModInitializer {
+public class StartingSounds {
 
-    @Override
-    public void onInitializeClient() {
-        FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
-    }
+    /**
+     * Use this to associate a {@link SoundEvent} to a {@link ResourceKey} for later use as a starting sound.
+     */
+	public static final HashMap<ResourceKey<?>, SoundEvent> STARTING_SOUNDS = new HashMap<>();
+
 }

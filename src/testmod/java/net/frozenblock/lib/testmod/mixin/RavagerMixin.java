@@ -12,34 +12,25 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.screenshake.ScreenShakePackets;
-import net.frozenblock.lib.testmod.FrozenTestClient;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.Explosion;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.monster.Ravager;
+import net.minecraft.world.entity.monster.warden.WardenAi;
+import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Explosion.class)
-public class ExplosionMixin {
+@Mixin(Ravager.class)
+public abstract class RavagerMixin extends Raider {
 
-	@Shadow
-	@Final
-	private RandomSource random;
-	@Shadow @Final private Level level;
-	@Shadow @Final private double x;
-	@Shadow @Final private double y;
-	@Shadow @Final private double z;
-	@Shadow @Final private Explosion.BlockInteraction blockInteraction;
-	@Shadow @Final private float radius;
-
-	@Inject(method = "finalizeExplosion", at = @At(value = "TAIL"))
-	public void finalizeExplosion(boolean spawnParticles, CallbackInfo info) {
-		ScreenShakePackets.createScreenShakePacket(this.level, (float) ((0.2F + (blockInteraction != Explosion.BlockInteraction.NONE ? 0.2F : 0) + radius * 0.1) / 5F), this.x, this.y, this.z, radius * 2);
+	private RavagerMixin(EntityType<? extends Raider> entityType, Level level) {
+		super(entityType, level);
 	}
 
+	@Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Ravager;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
+	private void startShaking(CallbackInfo ci) {
+		ScreenShakePackets.createScreenShakePacket(this.level, 0.5F, 17, this.getX(), this.getY(), this.getZ(), 23);
+	}
 }
