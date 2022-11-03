@@ -13,29 +13,33 @@ package net.frozenblock.lib.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import net.frozenblock.lib.FrozenMain;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 
-public final class DamageSourceSounds {
+public final class PlayerDamageSourceSounds {
 
-    private static final Map<DamageSource, SoundEvent> DAMAGE_SOURCES_AND_SOUNDS = new HashMap<>();
-	private static final Map<ResourceLocation, SoundEvent> LOCATION_SOUND_EVENT_MAP = new HashMap<>();
-	private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_LOCATION_MAP = new HashMap<>();
+    private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_RESOURCE_LOCATION_MAP = new HashMap<>();
+	private static final Map<ResourceLocation, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new HashMap<>();
+	private static final ResourceLocation DEFAULT_ID = FrozenMain.id("default_damage_source");
 
 	public static void addDamageSound(DamageSource source, SoundEvent sound, ResourceLocation registry) {
-		DAMAGE_SOURCES_AND_SOUNDS.put(source, sound);
-		LOCATION_SOUND_EVENT_MAP.put(registry, sound);
-		DAMAGE_SOURCE_LOCATION_MAP.put(source, registry);
+		DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.put(source, registry);
+		RESOURCE_LOCATION_SOUND_EVENT_MAP.put(registry, sound);
 	}
 
 	public static SoundEvent getDamageSound(DamageSource source) {
-		return DAMAGE_SOURCES_AND_SOUNDS.containsKey(source) ? DAMAGE_SOURCES_AND_SOUNDS.get(source) : SoundEvents.PLAYER_HURT;
+		return DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.containsKey(source) ? getDamageSound(DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.get(source)) : SoundEvents.PLAYER_HURT;
 	}
 
 	public static SoundEvent getDamageSound(ResourceLocation location) {
-		return DAMAGE_SOURCES_AND_SOUNDS.containsKey(source) ? DAMAGE_SOURCES_AND_SOUNDS.get(source) : SoundEvents.PLAYER_HURT;
+		return RESOURCE_LOCATION_SOUND_EVENT_MAP.containsKey(location) ? RESOURCE_LOCATION_SOUND_EVENT_MAP.get(location) : SoundEvents.PLAYER_HURT;
+	}
+
+	public static ResourceLocation getDamageID(DamageSource source) {
+		return DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.containsKey(source) ? DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.get(source) : DEFAULT_ID;
 	}
 
 }
