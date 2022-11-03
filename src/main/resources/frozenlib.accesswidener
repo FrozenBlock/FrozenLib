@@ -101,8 +101,8 @@ transitive-accessible    class    net/minecraft/core/Registry$RegistryBootstrap
 transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
 transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
 #transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Ljava/util/function/Function;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
-# Registry
-transitive-accessible    field    net/minecraft/data/registries/VanillaRegistries    BUILDER    Lnet/minecraft/core/RegistrySetBuilder;
+transitive-accessible    method    net/minecraft/data/registries/VanillaRegistries    validateThatAllBiomeFeaturesHaveBiomeFilter    (Lnet/minecraft/core/HolderLookup$Provider;)V
+transitive-accessible    method    net/minecraft/data/Main    bindRegistries    (Ljava/util/function/BiFunction;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/data/DataProvider$Factory;
 
 # Sounds
 transitive-accessible    field    net/minecraft/client/sounds/SoundManager    soundEngine    Lnet/minecraft/client/sounds/SoundEngine;
