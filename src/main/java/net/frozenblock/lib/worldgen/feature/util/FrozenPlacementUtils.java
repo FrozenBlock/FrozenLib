@@ -1,5 +1,6 @@
 package net.frozenblock.lib.worldgen.feature.util;
 
+import java.util.Arrays;
 import java.util.List;
 import net.frozenblock.lib.worldgen.feature.FrozenConfiguredFeature;
 import net.frozenblock.lib.worldgen.feature.FrozenPlacedFeature;
@@ -22,16 +23,20 @@ public class FrozenPlacementUtils {
 		return ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(namespace, path));
 	}
 
-	public static void register(BootstapContext<PlacedFeature> bootstapContext, ResourceKey<PlacedFeature> registryKey, Holder<ConfiguredFeature<?, ?>> holder, List<PlacementModifier> list) {
-		PlacementUtils.register(bootstapContext, registryKey, holder, list);
+	public static void register(BootstapContext<PlacedFeature> bootstapContext, ResourceKey<PlacedFeature> registryKey, Holder<ConfiguredFeature<?, ?>> holder, List<PlacementModifier> modifiers) {
+		PlacementUtils.register(bootstapContext, registryKey, holder, modifiers);
 	}
 
-	public static void register(BootstapContext<PlacedFeature> bootstapContext, ResourceKey<PlacedFeature> registryKey, Holder<ConfiguredFeature<?, ?>> holder, PlacementModifier... placementModifiers) {
-		PlacementUtils.register(bootstapContext, registryKey, holder, placementModifiers);
+	public static void register(BootstapContext<PlacedFeature> bootstapContext, ResourceKey<PlacedFeature> registryKey, Holder<ConfiguredFeature<?, ?>> holder, PlacementModifier... modifiers) {
+		PlacementUtils.register(bootstapContext, registryKey, holder, modifiers);
 	}
 
-	public static FrozenPlacedFeature placedFeature(String namespace, String path, FrozenConfiguredFeature feature, PlacementModifier... placementModifiers) {
-		return new FrozenPlacedFeature(createKey(namespace, path), feature.getResourceKey(), placementModifiers);
+	public static FrozenPlacedFeature placedFeature(String namespace, String path, FrozenConfiguredFeature feature, PlacementModifier... modifiers) {
+		return placedFeature(namespace, path, feature, Arrays.asList(modifiers));
+	}
+
+	public static FrozenPlacedFeature placedFeature(String namespace, String path, FrozenConfiguredFeature feature, List<PlacementModifier> modifiers) {
+		return new FrozenPlacedFeature(createKey(namespace, path), feature.getResourceKey(), modifiers);
 	}
 
 	public static Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {

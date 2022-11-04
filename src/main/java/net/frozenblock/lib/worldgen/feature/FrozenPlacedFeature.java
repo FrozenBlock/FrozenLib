@@ -7,6 +7,7 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import org.jetbrains.annotations.ApiStatus;
+import java.util.List;
 
 /**
  * Used for easier registry of features.
@@ -18,10 +19,10 @@ public class FrozenPlacedFeature {
 
 	private final ResourceKey<PlacedFeature> resourceKey;
 	private final ResourceKey<ConfiguredFeature<?, ?>> featureKey;
-	private final PlacementModifier[] placementModifiers;
+	private final List<PlacementModifier> placementModifiers;
 
 
-	public FrozenPlacedFeature(ResourceKey<PlacedFeature> resourceKey, ResourceKey<ConfiguredFeature<?, ?>> featureKey, PlacementModifier[] placementModifiers) {
+	public FrozenPlacedFeature(ResourceKey<PlacedFeature> resourceKey, ResourceKey<ConfiguredFeature<?, ?>> featureKey, List<PlacementModifier> placementModifiers) {
 		this.resourceKey = resourceKey;
 		this.featureKey = featureKey;
 		this.placementModifiers = placementModifiers;
@@ -39,7 +40,7 @@ public class FrozenPlacedFeature {
 		return this.featureKey;
 	}
 
-	public PlacementModifier[] getPlacementModifiers() {
+	public List<PlacementModifier> getPlacementModifiers() {
 		return this.placementModifiers;
 	}
 }
