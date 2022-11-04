@@ -1,5 +1,7 @@
 package net.frozenblock.lib.worldgen.feature;
 
+import net.frozenblock.lib.worldgen.feature.util.FrozenConfiguredFeatureUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -12,16 +14,32 @@ import org.jetbrains.annotations.ApiStatus;
  */
 
 @ApiStatus.Experimental
-public class FrozenConfiguredFeature<FC extends FeatureConfiguration, F extends FeatureConfiguration> {
+public class FrozenConfiguredFeature<FC extends FeatureConfiguration, F extends Feature<FC>> {
 
-	public final ResourceKey<ConfiguredFeature<?, ?>> resourceKey;
-	public final Feature<F> feature;
-	public final FC featureConfiguration;
+	private final ResourceKey<ConfiguredFeature<?, ?>> resourceKey;
+	private final F feature;
+	private final FC featureConfiguration;
 
 
-	public FrozenConfiguredFeature(ResourceKey<ConfiguredFeature<?, ?>> resourceKey, Feature<F> feature, FC featureConfiguration) {
+	public FrozenConfiguredFeature(ResourceKey<ConfiguredFeature<?, ?>> resourceKey, F feature, FC featureConfiguration) {
 		this.resourceKey = resourceKey;
 		this.feature = feature;
 		this.featureConfiguration = featureConfiguration;
+	}
+
+	public ResourceKey<ConfiguredFeature<?, ?>> getResourceKey() {
+		return this.resourceKey;
+	}
+
+	public Holder<ConfiguredFeature<?, ?>> getHolder() {
+		return FrozenConfiguredFeatureUtils.getHolder(this.getResourceKey());
+	}
+
+	public F getFeature() {
+		return this.feature;
+	}
+
+	public FC getFeatureConfiguration() {
+		return this.featureConfiguration;
 	}
 }

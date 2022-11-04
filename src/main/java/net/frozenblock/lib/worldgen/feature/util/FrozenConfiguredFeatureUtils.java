@@ -3,6 +3,7 @@ package net.frozenblock.lib.worldgen.feature.util;
 import net.frozenblock.lib.worldgen.feature.FrozenConfiguredFeature;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.resources.ResourceKey;
@@ -57,5 +58,9 @@ public class FrozenConfiguredFeatureUtils {
 
 	public static FrozenConfiguredFeature feature(String namespace, String path, Feature<? extends FeatureConfiguration> feature, FeatureConfiguration featureConfiguration) {
 		return new FrozenConfiguredFeature(createKey(namespace, path), feature, featureConfiguration);
+	}
+
+	public static Holder<ConfiguredFeature<?, ?>> getHolder(ResourceKey<ConfiguredFeature<?, ?>> resourceKey) {
+		return VanillaRegistries.createLookup().lookupOrThrow(Registry.CONFIGURED_FEATURE_REGISTRY).getOrThrow(resourceKey);
 	}
 }
