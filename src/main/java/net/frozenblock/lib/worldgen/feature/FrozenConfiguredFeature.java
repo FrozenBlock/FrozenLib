@@ -19,16 +19,22 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, F extends 
 	private final ResourceKey<ConfiguredFeature<?, ?>> resourceKey;
 	private final F feature;
 	private final FC featureConfiguration;
+	private final ConfiguredFeature<FC, F> configuredFeature;
 
 
 	public FrozenConfiguredFeature(ResourceKey<ConfiguredFeature<?, ?>> resourceKey, F feature, FC featureConfiguration) {
 		this.resourceKey = resourceKey;
 		this.feature = feature;
 		this.featureConfiguration = featureConfiguration;
+		this.configuredFeature = new ConfiguredFeature<>(this.feature, this.featureConfiguration);
 	}
 
 	public ResourceKey<ConfiguredFeature<?, ?>> getResourceKey() {
 		return this.resourceKey;
+	}
+
+	public ConfiguredFeature<FC, F> getConfiguredFeature() {
+		return this.configuredFeature;
 	}
 
 	public Holder<ConfiguredFeature<?, ?>> getHolder() {
