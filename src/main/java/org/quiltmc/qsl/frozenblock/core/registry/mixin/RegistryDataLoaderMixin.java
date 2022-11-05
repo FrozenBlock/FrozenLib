@@ -20,6 +20,7 @@ package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryDataLoader;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
@@ -52,7 +53,7 @@ public class RegistryDataLoaderMixin {
 	)
 	private static void onBeforeLoad(ResourceManager resourceManager, RegistryAccess baseRegistryAccess,
 			List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir,
-			Map<ResourceKey<?>, Exception> map, List<?> list2, RegistryAccess registryAccess) {
+			Map<ResourceKey<?>, Exception> map, List<?> list2, RegistryOps.RegistryInfoLookup registryInfoLookup) {
 		RegistryEvents.DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(
 				new DynamicRegistryManagerSetupContextImpl(resourceManager, baseRegistryAccess)
 		);
