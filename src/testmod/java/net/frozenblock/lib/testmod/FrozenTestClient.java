@@ -14,7 +14,9 @@ package net.frozenblock.lib.testmod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.impl.NewSplahes;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -25,5 +27,6 @@ public final class FrozenTestClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
+		NewSplahes.addNewSplashLocation(new ResourceLocation("frozenlib", "texts/splashes.txt"));
     }
 }
