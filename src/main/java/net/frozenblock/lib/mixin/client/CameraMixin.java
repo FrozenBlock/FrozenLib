@@ -27,7 +27,7 @@ public class CameraMixin {
 	@Inject(method = "setup", at = @At("RETURN"))
 	private void setup(BlockGetter area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
 		Minecraft client = Minecraft.getInstance();
-		ScreenShaker.cameraShake(focusedEntity.level.random, Camera.class.cast(this), client.getWindow().getWidth(), client.getWindow().getHeight());
+		ScreenShaker.cameraShake(Camera.class.cast(this), tickDelta);
 	}
 
 }

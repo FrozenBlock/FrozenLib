@@ -11,6 +11,7 @@
 
 package net.frozenblock.lib;
 
+import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -327,7 +328,8 @@ public final class FrozenClient implements ClientModInitializer {
 		ClientTickEvents.START_CLIENT_TICK.register(level -> {
 			Minecraft client = Minecraft.getInstance();
 			if (client.level != null) {
-				ScreenShaker.tick(client.gameRenderer.getMainCamera());
+				Window window = client.getWindow();
+				ScreenShaker.tick(client.gameRenderer.getMainCamera(), client.level.getRandom(), window.getWidth(), window.getHeight());
 			}
 		});
 	}
