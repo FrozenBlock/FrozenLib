@@ -9,23 +9,23 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.client;
+package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.screenshake.ScreenShaker;
-import net.minecraft.client.Camera;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.BlockGetter;
+import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Camera.class)
-public class CameraMixin {
+@Mixin(Player.class)
+public final class PlayerMixin {
 
-	@Inject(method = "setup", at = @At("RETURN"))
-	private void setup(BlockGetter area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-		ScreenShaker.cameraShake(Camera.class.cast(this), tickDelta);
+	@Inject(method = "getHurtSound", at = @At("HEAD"), cancellable = true)
+	public void getHurtSound(DamageSource damageSource, CallbackInfoReturnable<SoundEvent> info) {
+			info.setReturnValue(PlayerDamageSourceSounds.getDamageSound(damageSource));
 	}
 
 }

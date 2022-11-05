@@ -11,11 +11,13 @@
 
 package net.frozenblock.lib;
 
+import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
+import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.screenshake.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
@@ -33,6 +35,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
@@ -55,6 +58,7 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveScreenShakePacket();
 		receiveIconPacket();
 		receiveIconRemovePacket();
+		receivePlayerDamagePacket();
 
         FabricLoader.getInstance().getEntrypointContainers("frozenlib:client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
             try {
@@ -296,6 +300,24 @@ public final class FrozenClient implements ClientModInitializer {
 		});
 	}
 
+	private static void receivePlayerDamagePacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.HURT_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			ResourceLocation damageLocation = byteBuf.readResourceLocation();
+			float volume = byteBuf.readFloat();
+			ctx.execute(() -> {
+				ClientLevel level = Minecraft.getInstance().level;
+				if (level != null) {
+					Entity entity = level.getEntity(id);
+					if (entity instanceof Player player) {
+						SoundEvent soundEvent = PlayerDamageSourceSounds.getDamageSound(damageLocation);
+						player.playSound(soundEvent, volume, (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
+					}
+				}
+			});
+		});
+	}
+
 	private static void registerClientTickEvents() {
 		ClientTickEvents.START_WORLD_TICK.register(level -> {
 			Minecraft client = Minecraft.getInstance();
@@ -306,7 +328,8 @@ public final class FrozenClient implements ClientModInitializer {
 		ClientTickEvents.START_CLIENT_TICK.register(level -> {
 			Minecraft client = Minecraft.getInstance();
 			if (client.level != null) {
-				ScreenShaker.tick(client.gameRenderer.getMainCamera());
+				Window window = client.getWindow();
+				ScreenShaker.tick(client.gameRenderer.getMainCamera(), client.level.getRandom(), window.getWidth(), window.getHeight());
 			}
 		});
 	}

@@ -11,27 +11,41 @@
 
 package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
-import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
 import net.frozenblock.lib.sound.api.FrozenClientPacketInbetween;
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
+import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
+import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.spotting_icons.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.tags.FrozenItemTags;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
@@ -52,7 +66,7 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
 	public boolean frozenLib$clientFrozenSoundAndIconsSynced;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void setLoopingSoundManager(EntityType<? extends LivingEntity> entityType, Level level, CallbackInfo info) {
+    private void setLoopingSoundManagers(EntityType<? extends LivingEntity> entityType, Level level, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         this.frozenLib$loopingSoundManager = new MovingLoopingSoundEntityManager(entity);
         this.frozenLib$loopingFadingDistanceSoundManager = new MovingLoopingFadingDistanceSoundEntityManager(entity);
@@ -122,6 +136,28 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
         }
     }
 
+	@Redirect(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V", ordinal = 2))
+	public void hurt(Level lvl, Entity par1, byte par2, DamageSource source, float amount) {
+		if (par2 == ((byte)2) && par1 instanceof Player) {
+			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			byteBuf.writeVarInt(par1.getId());
+			byteBuf.writeResourceLocation(PlayerDamageSourceSounds.getDamageID(source));
+			byteBuf.writeFloat(this.getSoundVolume());
+			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) lvl, par1.blockPosition())) {
+				ServerPlayNetworking.send(player, FrozenMain.HURT_SOUND_PACKET, byteBuf);
+			}
+		}
+		lvl.broadcastEntityEvent(par1, par2);
+	}
+
+	@Redirect(method = "handleEntityEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)Lnet/minecraft/sounds/SoundEvent;"))
+	public SoundEvent stopHurtSoundIfTwo(LivingEntity par1, DamageSource par2, byte id) {
+		if (id == ((byte)2) && par1 instanceof Player) {
+			return null;
+		}
+		return this.getHurtSound(par2);
+	}
+
 	@Shadow
 	protected void setLivingEntityFlag(int mask, boolean value) {
 		throw new UnsupportedOperationException("Mixin injection failed. - FrozenLib LivingEntityMixin.");
@@ -133,6 +169,7 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
         return this.frozenLib$clientFrozenSoundAndIconsSynced;
     }
 
+	@Unique
 	@Override
 	public SpottingIconManager getSpottingIconManager() {
 		return this.frozenLib$SpottingIconManager;
@@ -167,4 +204,15 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
     public void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, float fadeDist, float maxDist) {
         this.frozenLib$loopingFadingDistanceSoundManager.addSound(soundID, sound2ID, category, volume, pitch, restrictionId, fadeDist, maxDist);
     }
+
+	@Shadow
+	@Nullable
+	protected SoundEvent getHurtSound(DamageSource damageSource) {
+		throw new RuntimeException("Mixin injection failed - FrozenLib LivingEntityMixin");
+	}
+
+	@Shadow
+	protected float getSoundVolume() {
+		throw new RuntimeException("Mixin injection failed - FrozenLib LivingEntityMixin");
+	}
 }

@@ -327,6 +327,14 @@ task release(dependsOn: [remapJar, sourcesJar, javadocJar]) {
 	 */
 }
 
+modrinth {
+	projectId = "frozenlib"
+	versionName = "${project.mod_version}"
+	versionType = "release"
+	changelog = env.CHANGELOG ?: "No changelog provided"
+
+	uploadFile = remapJar
+}
 
 // configure the maven publication
 publishing {

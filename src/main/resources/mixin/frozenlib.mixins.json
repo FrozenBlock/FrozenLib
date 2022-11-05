@@ -16,6 +16,7 @@
 	"server.MappedRegistryMixin",
 	"server.NoExperimentalMixin",
 	"server.PointedDripstoneBlockMixin",
+  "server.PlayerMixin",
 	"server.RegistryMixin",
 	"server.ServerItemCooldownsMixin",
 	"server.fabric_api.FabricItemGroupEntriesMixin",
@@ -27,7 +28,8 @@
 	"defaultRequire": 1
   },
   "client": [
-	"client.CameraMixin",
-	"client.LivingEntityRendererMixin"
+  "client.CameraMixin",
+	"client.LivingEntityRendererMixin",
+  "client.SplashManagerMixin"
   ]
 }
