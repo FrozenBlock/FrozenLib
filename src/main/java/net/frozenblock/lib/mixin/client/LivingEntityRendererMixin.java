@@ -110,7 +110,6 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 					float f = entity.getBbHeight() + 1F;
 					matrixStack.pushPose();
 					matrixStack.translate(0.0D, f, 0.0D);
-					matrixStack.translate(this.entityRenderDispatcher.camera.getEntity().getX() - (entity.getX() * 0.7F), 0, this.entityRenderDispatcher.camera.getEntity().getZ() -entity.getZ() * 0.7F);
 					matrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
 					matrixStack.scale(-1, 1, 1);
 					Matrix4f matrix4f = matrixStack.last().pose();
