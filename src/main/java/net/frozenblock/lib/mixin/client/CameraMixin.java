@@ -13,7 +13,6 @@ package net.frozenblock.lib.mixin.client;
 
 import net.frozenblock.lib.screenshake.ScreenShaker;
 import net.minecraft.client.Camera;
-import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,7 +25,6 @@ public class CameraMixin {
 
 	@Inject(method = "setup", at = @At("RETURN"))
 	private void setup(BlockGetter area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-		Minecraft client = Minecraft.getInstance();
 		ScreenShaker.cameraShake(Camera.class.cast(this), tickDelta);
 	}
 
