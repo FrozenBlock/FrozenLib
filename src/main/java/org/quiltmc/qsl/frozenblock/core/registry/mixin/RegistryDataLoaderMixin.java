@@ -41,7 +41,6 @@ import java.util.Map;
 @Mixin(RegistryDataLoader.class)
 public class RegistryDataLoaderMixin {
 
-	//TODO: FIX
 	@Inject(
 			method = "load",
 			at = @At(
@@ -71,7 +70,7 @@ public class RegistryDataLoaderMixin {
 	)
 	private static void onAfterLoad(ResourceManager resourceManager, RegistryAccess baseRegistryAccess,
 									 List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir,
-									 Map<ResourceKey<?>, Exception> map, List<?> list2, RegistryAccess registryAccess) {
+									 Map<ResourceKey<?>, Exception> map, List<?> list2, RegistryOps.RegistryInfoLookup registryInfoLookup) {
 		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(baseRegistryAccess);
 	}
 }
