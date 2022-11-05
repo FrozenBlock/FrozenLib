@@ -40,6 +40,7 @@ import java.util.Map;
 @Mixin(RegistryDataLoader.class)
 public class RegistryDataLoaderMixin {
 
+	//TODO: FIX
 	@Inject(
 			method = "load",
 			at = @At(
