@@ -169,6 +169,7 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
         return this.frozenLib$clientFrozenSoundAndIconsSynced;
     }
 
+	@Unique
 	@Override
 	public SpottingIconManager getSpottingIconManager() {
 		return this.frozenLib$SpottingIconManager;
@@ -206,12 +207,12 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
 
 	@Shadow
 	@Nullable
-	public SoundEvent getHurtSound(DamageSource damageSource) {
+	protected SoundEvent getHurtSound(DamageSource damageSource) {
 		throw new RuntimeException("Mixin injection failed - FrozenLib LivingEntityMixin");
 	}
 
 	@Shadow
-	public float getSoundVolume() {
+	protected float getSoundVolume() {
 		throw new RuntimeException("Mixin injection failed - FrozenLib LivingEntityMixin");
 	}
 }
