@@ -16,31 +16,28 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
+package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin.client;
 
-import com.mojang.datafixers.DataFixer;
+import net.minecraft.client.HotbarManager;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.util.datafix.DataFixTypes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
  * Modified to work on Fabric
- * Original name was <STRONG>NbtHelperMixin</STRONG>
  */
-@Mixin(value = NbtUtils.class, priority = 1001)
-public abstract class NbtUtilsMixin {
+@Mixin(value = HotbarManager.class, priority = 1001)
+public abstract class HotbarStorageMixin {
     @Inject(
-            method = "update(Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/util/datafix/DataFixTypes;Lnet/minecraft/nbt/CompoundTag;II)Lnet/minecraft/nbt/CompoundTag;",
-            at = @At("RETURN"),
-            cancellable = true
+            method = "save",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtIo;write(Lnet/minecraft/nbt/CompoundTag;Ljava/io/File;)V"),
+            locals = LocalCapture.CAPTURE_FAILHARD
     )
-    private static void updateDataWithFixers(DataFixer fixer, DataFixTypes fixTypes, CompoundTag compound,
-                                             int oldVersion, int targetVersion, CallbackInfoReturnable<CompoundTag> cir) {
-        cir.setReturnValue(QuiltDataFixesInternals.get().updateWithAllFixers(fixTypes, cir.getReturnValue()));
+    private void addModDataVersions(CallbackInfo ci, CompoundTag compound) {
+        QuiltDataFixesInternals.get().addModDataVersions(compound);
     }
 }

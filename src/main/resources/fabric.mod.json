@@ -24,23 +24,19 @@
 	],
 	"client": [
 	  "net.frozenblock.lib.FrozenClient"
-	],
-    "frozenlib:events": [
-      "org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer"
-    ]
+	]
   },
   "mixins": [
 	"mixin/frozenlib.mixins.json",
-	"mixin/frozenlib_quilt_datafixerupper.mixins.json",
-    "mixin/frozenlib_quilt_registry.mixins.json",
-    "mixin/frozenlib_quilt_resource_loader.mixins.json",
-    "mixin/frozenlib_quilt_surface_rule.mixins.json"
+	"mixin/quiltmc_datafixerupper.mixins.json",
+	"mixin/quiltmc_surface_rule.mixins.json",
+	"mixin/quiltmc_resource_loader.mixins.json"
   ],
   "accessWidener": "frozenlib.accesswidener",
   "depends": {
 	"fabricloader": ">=0.14.8",
-	"fabric": ">=0.65.1",
-	"minecraft": "~1.19.3-alpha",
+	"fabric": ">=0.58.0",
+	"minecraft": ">=1.19",
 	"java": ">=17"
   },
   "breaks": {

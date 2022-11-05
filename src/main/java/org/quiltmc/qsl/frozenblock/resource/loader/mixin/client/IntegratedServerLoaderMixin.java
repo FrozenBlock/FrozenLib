@@ -46,21 +46,19 @@ public abstract class IntegratedServerLoaderMixin {
     protected abstract void doLoadLevel(Screen parentScreen, String worldName, boolean safeMode, boolean requireBackup);
 
     @Inject(
-            method = "loadWorldDataBlocking",
+            method = "loadWorldStem(Lnet/minecraft/server/WorldLoader$PackConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;)Lnet/minecraft/server/WorldStem;",
             at = @At("HEAD")
     )
     private void onStartDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
-									 WorldLoader.ResultFactory resultFactory,
                                      CallbackInfoReturnable<WorldStem> cir) {
         ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
     }
 
     @Inject(
-            method = "loadWorldDataBlocking",
+            method = "loadWorldStem(Lnet/minecraft/server/WorldLoader$PackConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;)Lnet/minecraft/server/WorldStem;",
             at = @At("RETURN")
     )
     private void onEndDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
-								   WorldLoader.ResultFactory resultFactory,
                                    CallbackInfoReturnable<WorldStem> cir) {
         ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, cir.getReturnValue().resourceManager(), null);
     }

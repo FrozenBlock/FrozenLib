@@ -16,8 +16,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
-import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
-import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.math.EasyNoiseSampler;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.api.FrozenSoundPackets;
@@ -53,9 +51,10 @@ public final class FrozenMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        FrozenRegistry.initRegistry();
         ServerFreezer.onInitialize();
+        QuiltSurfaceRuleInitializer.onInitialize();
         SoundPredicate.init();
-		FrozenRegistry.initRegistry();
 
         receiveSoundSyncPacket();
 		receiveIconSyncPacket();

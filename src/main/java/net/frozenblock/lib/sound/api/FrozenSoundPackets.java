@@ -11,8 +11,7 @@
 
 package net.frozenblock.lib.sound.api;
 
-import org.joml.Vector3d;
-import org.joml.Vector3f;
+import com.mojang.math.Vector3d;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

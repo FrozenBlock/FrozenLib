@@ -16,29 +16,25 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin.client;
+package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
-import net.minecraft.client.HotbarManager;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Modified to work on Fabric
- * Original name was <STRONG>HotbarStorageMixin</STRONG>
  */
-@Mixin(value = HotbarManager.class, priority = 1001)
-public abstract class HotbarManagerMixin {
-    @Inject(
-            method = "save",
-            at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtIo;write(Lnet/minecraft/nbt/CompoundTag;Ljava/io/File;)V"),
-            locals = LocalCapture.CAPTURE_FAILHARD
-    )
-    private void addModDataVersions(CallbackInfo ci, CompoundTag compound) {
-        QuiltDataFixesInternals.get().addModDataVersions(compound);
+@Mixin(value = StructureTemplate.class, priority = 1001)
+public abstract class StructureMixin {
+    @Inject(method = "save", at = @At("TAIL"), cancellable = true)
+    private void addModDataVersions(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
+        CompoundTag out = cir.getReturnValue();
+        QuiltDataFixesInternals.get().addModDataVersions(out);
+        cir.setReturnValue(out);
     }
 }

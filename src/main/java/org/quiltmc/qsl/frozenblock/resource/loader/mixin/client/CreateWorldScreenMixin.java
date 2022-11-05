@@ -29,7 +29,6 @@ import net.minecraft.client.gui.screens.GenericDirtMessageScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
-import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
@@ -42,9 +41,9 @@ import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.ServerPacksSource;
 import net.minecraft.server.packs.resources.CloseableResourceManager;
 import net.minecraft.world.level.DataPackConfig;
-import net.minecraft.world.level.WorldDataConfiguration;
 import net.minecraft.world.level.levelgen.WorldGenSettings;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
+import org.quiltmc.qsl.frozenblock.resource.loader.impl.DataPackLoadingContext;
 import org.slf4j.Logger;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -70,7 +69,7 @@ public abstract class CreateWorldScreenMixin {
     private static Logger LOGGER;
 
     @Shadow
-    private static WorldLoader.InitConfig createDefaultLoadConfig(PackRepository resourcePackManager, WorldDataConfiguration worldDataConfiguration) {
+    private static WorldLoader.InitConfig createDefaultLoadConfig(PackRepository resourcePackManager, DataPackConfig dataPackConfig) {
         throw new IllegalStateException("Mixin injection failed.");
     }
 
@@ -102,13 +101,13 @@ public abstract class CreateWorldScreenMixin {
     }*/
 
     @Inject(
-            method = "applyNewPackConfig",
+            method = "tryApplyNewDataPacks",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/WorldLoader;load(Lnet/minecraft/server/WorldLoader$InitConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;Lnet/minecraft/server/WorldLoader$ResultFactory;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
             )
     )
-    private void onDataPackLoadStart(PackRepository packRepository, WorldDataConfiguration worldDataConfiguration, CallbackInfo ci) {
+    private void onDataPackLoadStart(PackRepository repository, CallbackInfo ci) {
         ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
     }
 
@@ -123,17 +122,17 @@ public abstract class CreateWorldScreenMixin {
         ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
     }
 
-    // Lambda method in CreateWorldScreen#tryApplyNewDataPacks, at C_kjxfcecs#method_42098.
+    // Lambda method in CreateWorldScreen#applyDataPacks, at C_kjxfcecs#method_42098.
     // Inject before closing the resource manager.
     @Inject(
-            method = {"method_41851", "m_tlckpqyc", "lambda$openFresh$1"},
+            method = {"method_41850", "m_paskjwcu"},
             at = @At("HEAD"),
             require = 1,
             remap = false // Very bad, someone please fix the Mixin annotation processor already.
     )
     private static void onDataPackLoadEnd(CloseableResourceManager resourceManager,
                                           ReloadableServerResources serverReloadableResources,
-                                          LayeredRegistryAccess layeredRegistryAccess, CreateWorldScreen.DataPackReloadCookie dataPackReloadCookie,
+                                          RegistryAccess.Frozen frozen, Pair pair,
                                           CallbackInfoReturnable<WorldCreationContext> cir) {
         ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
     }
@@ -147,16 +146,16 @@ public abstract class CreateWorldScreenMixin {
             remap = false // Very bad, someone please fix the Mixin annotation processor already.
     )
     private static void onCreateDataPackLoadEnd(CloseableResourceManager resourceManager,
-												ReloadableServerResources serverReloadableResources,
-												LayeredRegistryAccess frozen, CreateWorldScreen.DataPackReloadCookie generatorOptions,
-												CallbackInfoReturnable<WorldCreationContext> cir) {
+                                                ReloadableServerResources serverReloadableResources,
+                                                RegistryAccess.Frozen frozen, WorldGenSettings generatorOptions,
+                                                CallbackInfoReturnable<WorldCreationContext> cir) {
         ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
     }
 
     // Lambda method in CreateWorldScreen#applyDataPacks, at CompletableFuture#handle.
     // Take Void and Throwable parameters.
     @Inject(
-            method = {"method_45685", "m_sxbkwuzy", "lambda$applyNewPackConfig$27"},
+            method = {"method_37089", "m_kltndaqc"},
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
@@ -170,7 +169,7 @@ public abstract class CreateWorldScreenMixin {
         ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, throwable);
     }
 
-    /*@Unique
+    @Unique
     private static CompletableFuture<WorldCreationContext> frozenblock_quilt$applyDefaultDataPacks(Supplier<CompletableFuture<WorldCreationContext>> base) {
         var client = Minecraft.getInstance();
         client.tell(() -> client.setScreen(new GenericDirtMessageScreen(Component.translatable("dataPack.validation.working"))));
@@ -209,7 +208,7 @@ public abstract class CreateWorldScreenMixin {
             ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, error);
             return base.get();
         });
-    }*/
+    }
 
     private static DataPackConfig createDefaultDataPackSettings(DataPackConfig source) {
         var moddedResourcePacks = new ArrayList<Pack>();
