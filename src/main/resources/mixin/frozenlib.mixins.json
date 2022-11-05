@@ -1,6 +1,6 @@
 {
   "required": true,
-  "minVersion": "0.8",
+  "minVersion": "0.8.5",
   "package": "net.frozenblock.lib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
@@ -8,15 +8,18 @@
 	"server.BlockBehaviourMixin",
 	"server.BoneMealItemMixin",
 	"server.CreeperMixin",
+	"server.FeatureFlagsMixin",
 	"server.HopperBlockEntityMixin",
 	"server.ItemCooldownsMixin",
 	"server.LivingEntityMixin",
+	"server.MainMixin",
 	"server.MappedRegistryMixin",
 	"server.NoExperimentalMixin",
 	"server.PointedDripstoneBlockMixin",
-    "server.PlayerMixin",
+  "server.PlayerMixin",
 	"server.RegistryMixin",
 	"server.ServerItemCooldownsMixin",
+	"server.fabric_api.FabricItemGroupEntriesMixin",
 	"worldgen.SinglePoolElementMixin",
 	"worldgen.biome.MinecraftServerMixin",
 	"worldgen.biome.MultiNoiseBiomeSourceMixin"
@@ -25,8 +28,8 @@
 	"defaultRequire": 1
   },
   "client": [
-    "client.CameraMixin",
+  "client.CameraMixin",
 	"client.LivingEntityRendererMixin",
-    "client.SplashManagerMixin"
+  "client.SplashManagerMixin"
   ]
 }

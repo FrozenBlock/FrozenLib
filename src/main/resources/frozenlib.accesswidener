@@ -16,6 +16,10 @@ transitive-accessible    field    net/minecraft/world/item/ItemCooldowns$Cooldow
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns$CooldownInstance    endTime    I
 transitive-accessible    method    net/minecraft/world/item/ItemCooldowns$CooldownInstance    <init>    (II)V
 transitive-accessible    field    net/minecraft/world/item/ItemStack    tag    Lnet/minecraft/nbt/CompoundTag;
+transitive-accessible    class    net/minecraft/world/item/CreativeModeTab$ItemDisplayBuilder
+transitive-accessible    method    net/minecraft/world/item/CreativeModeTabs    generateInstrumentTypes    (Lnet/minecraft/world/item/CreativeModeTab$Output;Lnet/minecraft/world/item/Item;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/item/CreativeModeTab$TabVisibility;)V
+transitive-accessible    class    net/minecraft/world/item/CreativeModeTab$TabVisibility
+transitive-accessible    method    net/minecraft/client/renderer/item/ItemProperties   register    (Lnet/minecraft/world/item/Item;Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/client/renderer/item/ClampedItemPropertyFunction;)V
 
 # Structures
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    getWorldPos    (III)Lnet/minecraft/core/BlockPos$MutableBlockPos;
@@ -42,6 +46,7 @@ transitive-accessible    method    net/minecraft/world/level/block/AbstractCauld
 transitive-accessible    method    net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo    <init>    (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    <init>    (Ljava/lang/String;)V
 transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    register    (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
+transitive-accessible    method    net/minecraft/data/BlockFamilies   familyBuilder    (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
 
 # Block Entities
 transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
@@ -64,7 +69,7 @@ transitive-accessible    method    net/minecraft/data/worldgen/biome/OverworldBi
 transitive-accessible    method    net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider    <init>    (Lnet/minecraft/world/level/block/state/BlockState;)V
 
 # Noise
-transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/core/Registry;Lnet/minecraft/resources/ResourceKey;ID[D)Lnet/minecraft/core/Holder;
+transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/data/worldgen/BootstapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
 
 # Used to set overworld biomes
 transitive-accessible    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource    preset    Ljava/util/Optional;
@@ -81,6 +86,9 @@ transitive-mutable    field    net/minecraft/world/level/biome/BiomeSource    po
 transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource    <init>    (Ljava/util/List;)V
 transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRules    isBiome    (Ljava/util/List;)Lnet/minecraft/world/level/levelgen/SurfaceRules$BiomeConditionSource;
 
+# QuiltMC Resource Reloaders
+transitive-accessible    class    net/minecraft/client/gui/screens/worldselection/CreateWorldScreen$DataPackReloadCookie
+
 # QuiltMC Surface Rules
 transitive-accessible    class    net/minecraft/world/level/levelgen/SurfaceRules$Context
 transitive-accessible    class    net/minecraft/world/level/levelgen/SurfaceRules$SurfaceRule
@@ -89,10 +97,12 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRul
 
 # Registry
 transitive-accessible    class    net/minecraft/core/Registry$RegistryBootstrap
-transitive-accessible    class    net/minecraft/data/BuiltinRegistries$RegistryBootstrap
+#transitive-accessible    class    net/minecraft/data/BuiltinRegistries$RegistryBootstrap
 transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
 transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
-transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Ljava/util/function/Function;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
+#transitive-accessible    method    net/minecraft/core/Registry    registerSimple    (Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Ljava/util/function/Function;Lnet/minecraft/core/Registry$RegistryBootstrap;)Lnet/minecraft/core/Registry;
+transitive-accessible    method    net/minecraft/data/registries/VanillaRegistries    validateThatAllBiomeFeaturesHaveBiomeFilter    (Lnet/minecraft/core/HolderLookup$Provider;)V
+transitive-accessible    method    net/minecraft/data/Main    bindRegistries    (Ljava/util/function/BiFunction;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/data/DataProvider$Factory;
 
 # Sounds
 transitive-accessible    field    net/minecraft/client/sounds/SoundManager    soundEngine    Lnet/minecraft/client/sounds/SoundEngine;
@@ -107,6 +117,13 @@ transitive-extendable    method    net/minecraft/client/resources/sounds/Abstrac
 transitive-accessible    method    net/minecraft/client/Camera    setRotation    (FF)V
 transitive-accessible    field    net/minecraft/client/Camera    xRot    F
 transitive-accessible    field    net/minecraft/client/Camera    yRot    F
+
+# Data Generation
+transitive-accessible    field    net/minecraft/data/DataGenerator    vanillaPackOutput    Lnet/minecraft/data/PackOutput;
+transitive-extendable    class    net/minecraft/data/DataGenerator$PackGenerator
+transitive-accessible    class    net/minecraft/data/DataGenerator$PackGenerator
+transitive-extendable    method    net/minecraft/data/DataGenerator$PackGenerator    <init>    (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
+transitive-accessible    method    net/minecraft/data/DataGenerator$PackGenerator    <init>    (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
 
 #Particle
 transitive-accessible    field    net/minecraft/client/particle/Particle    x    D

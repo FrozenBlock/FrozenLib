@@ -41,31 +41,48 @@ public final class SurfaceRuleEvents {
     public static final ResourceLocation REMOVE_PHASE = new ResourceLocation("frozenblock_quilt", "remove");
 
     /**
-     * An event indicating that the surface rules for the Overworld dimension may get modified by mods, allowing the injection of modded surface rules.
+     * An event indicating that the surface rules for the Overworld dimension may get modified by mods,
+	 * allowing the injection of modded surface rules.
      */
-    public static final Event<OverworldModifierCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldModifierCallback.class, callbacks -> context -> {
-        for (var callback : callbacks) {
-            callback.modifyOverworldRules(context);
-        }
-    });
+    public static final Event<OverworldModifierCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldModifierCallback.class,
+			callbacks -> context -> {
+        		for (var callback : callbacks) {
+            		callback.modifyOverworldRules(context);
+        		}
+    		});
 
     /**
-     * An event indicating that the surface rules for the Nether dimension may get modified by mods, allowing the injection of modded surface rules.
+     * An event indicating that the surface rules for the Nether dimension may get modified by mods,
+	 * allowing the injection of modded surface rules.
      */
-    public static final Event<NetherModifierCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherModifierCallback.class, callbacks -> context -> {
-        for (var callback : callbacks) {
-            callback.modifyNetherRules(context);
-        }
-    });
+    public static final Event<NetherModifierCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherModifierCallback.class,
+			callbacks -> context -> {
+        		for (var callback : callbacks) {
+            		callback.modifyNetherRules(context);
+        		}
+    		});
 
     /**
-     * An event indicating that the surface rules for the End dimension may get modified by mods, allowing the injection of modded surface rules.
+     * An event indicating that the surface rules for the End dimension may get modified by mods,
+	 * allowing the injection of modded surface rules.
      */
-    public static final Event<TheEndModifierCallback> MODIFY_THE_END = FrozenEvents.createEnvironmentEvent(TheEndModifierCallback.class, callbacks -> context -> {
-        for (var callback : callbacks) {
-            callback.modifyTheEndRules(context);
-        }
-    });
+    public static final Event<TheEndModifierCallback> MODIFY_THE_END = FrozenEvents.createEnvironmentEvent(TheEndModifierCallback.class,
+			callbacks -> context -> {
+        		for (var callback : callbacks) {
+            		callback.modifyTheEndRules(context);
+        		}
+    		});
+
+	/**
+	 * An event indicating that the surface rules for a non-Vanilla dimension may get modified by mods,
+	 * allowing the injection of modded surface rules.
+	 */
+	public static final Event<GenericModifierCallback> MODIFY_GENERIC = FrozenEvents.createEnvironmentEvent(GenericModifierCallback.class,
+			callbacks -> context -> {
+				for (var callback : callbacks) {
+					callback.modifyGenericSurfaceRules(context);
+				}
+			});
 
     @FunctionalInterface
     public interface OverworldModifierCallback extends CommonEventEntrypoint {
@@ -97,6 +114,16 @@ public final class SurfaceRuleEvents {
         void modifyTheEndRules(@NotNull SurfaceRuleContext.TheEnd context);
     }
 
+	@FunctionalInterface
+	public interface GenericModifierCallback extends CommonEventEntrypoint {
+		/**
+		 * Called to modify the given generic surface rules.
+		 *
+		 * @param context the modification context
+		 */
+		void modifyGenericSurfaceRules(@NotNull SurfaceRuleContext context);
+	}
+
     private SurfaceRuleEvents() {
         throw new UnsupportedOperationException("SurfaceMaterialRuleEvents contains only static definitions.");
     }
@@ -105,5 +132,6 @@ public final class SurfaceRuleEvents {
         MODIFY_OVERWORLD.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
         MODIFY_NETHER.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
         MODIFY_THE_END.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
+		MODIFY_GENERIC.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
     }
 }
