@@ -21,6 +21,7 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(TitleScreen.class)
 public class TitleScreenMixin {
@@ -31,7 +32,7 @@ public class TitleScreenMixin {
 	private PanoramaRenderer panorama;
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	public void multiplePans(boolean fading) {
+	public void multiplePans(boolean fading, CallbackInfo info) {
 		this.panorama = new PanoramaRenderer(new CubeMap(NewPanoramas.getNewPanoramas().get((int) (Math.random() * NewPanoramas.size()))));
 	}
 
