@@ -30,5 +30,6 @@ public final class FrozenTestClient implements ClientModInitializer {
         FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
 		NewSplahes.addNewSplashLocation(new ResourceLocation("frozenlib", "texts/splashes.txt"));
 		NewPanoramas.addNewPanorama(new ResourceLocation("frozenlib", "textures/gui/title/background/panorama"));
+		NewPanoramas.addNewPanorama(new ResourceLocation("this_will_throw_an_error", "textures/gui/title/background/panorama"));
     }
 }
