@@ -28,13 +28,17 @@ public class ScreenShaker {
 	private static float yRot;
 	private static float prevXRot;
 	private static float xRot;
+	private static float prevZRot;
+	private static float zRot;
 
 	public static void tick(Camera camera, RandomSource randomSource, int windowWidth, int windowHeight) {
 		prevYRot = yRot;
 		prevXRot = xRot;
+		prevZRot = zRot;
 		if (!Minecraft.getInstance().isMultiplayerServer() && Minecraft.getInstance().isPaused()) {
 			yRot = 0F;
 			xRot = 0F;
+			zRot = 0F;
 			return;
 		}
 		float highestIntensity = 0F;
@@ -61,12 +65,17 @@ public class ScreenShaker {
 		SHAKES_TO_REMOVE.clear();
 		yRot = Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight);
 		xRot = Mth.nextFloat(randomSource, -intensity, intensity);
+		zRot = Mth.nextFloat(randomSource, -intensity, intensity) * 0.3F;
 	}
 
 	public static void cameraShake(Camera camera, float tickDelta) {
 		if (intensity != 0) {
 			camera.setRotation(camera.getYRot() + (Mth.lerp(tickDelta, prevYRot, yRot)), camera.getXRot() + (Mth.lerp(tickDelta, prevXRot, xRot)));
 		}
+	}
+
+	public static float cameraZ(float tickDelta) {
+		return Mth.lerp(tickDelta, prevZRot, zRot);
 	}
 
 	public static void addShake(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance) {

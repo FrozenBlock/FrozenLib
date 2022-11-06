@@ -59,6 +59,6 @@ public final class SpottingIconPredicate<T extends Entity> {
     public static ResourceLocation DEFAULT_ID = FrozenMain.id("default");
 
     public static void init() {
-        register(FrozenMain.id("default"), defaultPredicate());
+        register(DEFAULT_ID, defaultPredicate());
     }
 }
