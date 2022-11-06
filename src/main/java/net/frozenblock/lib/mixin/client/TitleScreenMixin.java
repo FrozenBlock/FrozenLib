@@ -11,14 +11,18 @@
 
 package net.frozenblock.lib.mixin.client;
 
+import java.util.ArrayList;
 import net.frozenblock.lib.impl.NewPanoramas;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.client.renderer.PanoramaRenderer;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -31,9 +35,29 @@ public class TitleScreenMixin {
 	@Mutable
 	private PanoramaRenderer panorama;
 
+	@Unique
+	private final ArrayList<ResourceLocation> validPanoramas = new ArrayList<>();
+
 	@Inject(method = "<init>(Z)V", at = @At("TAIL"))
 	public void multiplePans(boolean fading, CallbackInfo info) {
-		this.panorama = new PanoramaRenderer(new CubeMap(NewPanoramas.getNewPanoramas().get((int) (Math.random() * NewPanoramas.size()))));
+		for (ResourceLocation panLocation : NewPanoramas.getNewPanoramas()) {
+			for(int i = 0; i < 6; ++i) {
+				String namespace = panLocation.getNamespace();
+				String path = panLocation.getPath();
+				//Panorama isn't valid if one of the six images aren't found- move on to next ResourceLocation in the list.
+				if (Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(namespace, path + "_" + i + ".png")).isEmpty()) {
+					break;
+				}
+				//Panorama is valid if all six images are found, add to valid panorama list.
+				if (i == 5) {
+					validPanoramas.add(panLocation);
+				}
+			}
+		}
+		//Set panorama from valid list.
+		this.panorama = new PanoramaRenderer(new CubeMap(validPanoramas.get((int) (Math.random() * validPanoramas.size()))));
+		//Clear valid list to save a bit on resources.
+		validPanoramas.clear();
 	}
 
 
