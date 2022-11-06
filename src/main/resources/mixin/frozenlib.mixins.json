@@ -28,6 +28,7 @@
     "client.CameraMixin",
     "client.GameRendererMixin",
 	"client.LivingEntityRendererMixin",
-    "client.SplashManagerMixin"
+    "client.SplashManagerMixin",
+    "client.TitleScreenMixin"
   ]
 }

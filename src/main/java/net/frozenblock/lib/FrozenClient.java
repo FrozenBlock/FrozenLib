@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
+import net.frozenblock.lib.impl.NewPanoramas;
 import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.screenshake.ScreenShaker;
@@ -59,6 +60,8 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receivePlayerDamagePacket();
+
+		NewPanoramas.addNewPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
         FabricLoader.getInstance().getEntrypointContainers("frozenlib:client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
             try {
