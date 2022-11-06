@@ -56,10 +56,15 @@ public class TitleScreenMixin {
 				}
 			}
 		}
-		//Set panorama from valid list.
-		this.panorama = new PanoramaRenderer(new CubeMap(validPanoramas.get((int) (Math.random() * validPanoramas.size()))));
-		//Clear valid list to save a bit on resources.
-		validPanoramas.clear();
+		if (!validPanoramas.isEmpty()) {
+			//Set panorama from valid list.
+			this.panorama = new PanoramaRenderer(new CubeMap(validPanoramas.get((int) (Math.random() * validPanoramas.size()))));
+			//Clear valid list to save a bit on resources.
+			validPanoramas.clear();
+		} else {
+			//Use original panorama in case panorama list is accidentally emptied.
+			this.panorama = new PanoramaRenderer(new CubeMap(new ResourceLocation("textures/gui/title/background/panorama")));
+		}
 	}
 
 
