@@ -28,8 +28,4 @@ public class NewPanoramas {
 		return NEW_PANORAMAS;
 	}
 
-	public static int size() {
-		return NEW_PANORAMAS.size();
-	}
-
 }

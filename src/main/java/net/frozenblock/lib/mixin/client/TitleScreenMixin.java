@@ -41,9 +41,9 @@ public class TitleScreenMixin {
 	@Inject(method = "<init>(Z)V", at = @At("TAIL"))
 	public void multiplePans(boolean fading, CallbackInfo info) {
 		for (ResourceLocation panLocation : NewPanoramas.getNewPanoramas()) {
+			String namespace = panLocation.getNamespace();
+			String path = panLocation.getPath();
 			for(int i = 0; i < 6; ++i) {
-				String namespace = panLocation.getNamespace();
-				String path = panLocation.getPath();
 				//Panorama isn't valid if one of the six images aren't found- move on to next ResourceLocation in the list.
 				if (Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(namespace, path + "_" + i + ".png")).isEmpty()) {
 					break;
