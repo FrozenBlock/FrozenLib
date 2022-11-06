@@ -24,6 +24,7 @@ import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
+import net.frozenblock.lib.spotting_icons.SpottingIconPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -55,6 +56,7 @@ public final class FrozenMain implements ModInitializer {
         ServerFreezer.onInitialize();
         QuiltSurfaceRuleInitializer.onInitialize();
         SoundPredicate.init();
+		SpottingIconPredicate.init();
 
         receiveSoundSyncPacket();
 		receiveIconSyncPacket();
