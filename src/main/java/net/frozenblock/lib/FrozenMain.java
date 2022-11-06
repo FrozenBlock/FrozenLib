@@ -116,6 +116,18 @@ public final class FrozenMain implements ModInitializer {
         }
     }
 
+	public static void warn(String string, boolean should) {
+		if (should) {
+			LOGGER.warn(string);
+		}
+	}
+
+	public static void error(String string, boolean should) {
+		if (should) {
+			LOGGER.error(string);
+		}
+	}
+
     private static void receiveSoundSyncPacket() {
         ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
