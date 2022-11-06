@@ -28,5 +28,4 @@ public class GameRendererMixin {
 		matrixStack.mulPose(Vector3f.ZP.rotationDegrees(ScreenShaker.cameraZ(partialTicks)));
 	}
 
-
 }
