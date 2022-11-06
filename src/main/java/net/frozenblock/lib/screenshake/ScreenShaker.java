@@ -65,17 +65,15 @@ public class ScreenShaker {
 		SHAKES_TO_REMOVE.clear();
 		yRot = Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight);
 		xRot = Mth.nextFloat(randomSource, -intensity, intensity);
-		zRot = Mth.nextFloat(randomSource, -intensity, intensity) * 0.3F;
+		zRot = Mth.nextFloat(randomSource, -intensity, intensity);
 	}
 
-	public static void cameraShake(Camera camera, float tickDelta) {
-		if (intensity != 0) {
-			camera.setRotation(camera.getYRot() + (Mth.lerp(tickDelta, prevYRot, yRot)), camera.getXRot() + (Mth.lerp(tickDelta, prevXRot, xRot)));
-		}
+	public static void cameraShake(Camera camera, float partialTicks) {
+		camera.setRotation(camera.getYRot() + (Mth.lerp(partialTicks, prevYRot, yRot)), camera.getXRot() + (Mth.lerp(partialTicks, prevXRot, xRot)));
 	}
 
-	public static float cameraZ(float tickDelta) {
-		return Mth.lerp(tickDelta, prevZRot, zRot);
+	public static float cameraZ(float partialTicks) {
+		return Mth.lerp(partialTicks, prevZRot, zRot);
 	}
 
 	public static void addShake(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance) {

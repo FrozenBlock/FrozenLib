@@ -26,6 +26,7 @@
   },
   "client": [
     "client.CameraMixin",
+    "client.GameRendererMixin",
 	"client.LivingEntityRendererMixin",
     "client.SplashManagerMixin"
   ]
