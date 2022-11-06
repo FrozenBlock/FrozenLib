@@ -22,7 +22,6 @@ public class ScreenShaker {
 
 	public static final ArrayList<ScreenShake> SCREEN_SHAKES = new ArrayList<>();
 	private static final ArrayList<ScreenShake> SHAKES_TO_REMOVE = new ArrayList<>();
-	private static float intensity;
 
 	private static float prevYRot;
 	private static float yRot;
@@ -51,16 +50,12 @@ public class ScreenShaker {
 				highestIntensity = Math.max(shakeIntensity, highestIntensity);
 				amount += 1;
 			}
-			shake.ticks += 1;
 			if (shake.ticks > shake.duration) {
 				SHAKES_TO_REMOVE.add(shake);
 			}
+			shake.ticks += 1;
 		}
-		if (amount > 0 && totalIntensity != 0 && highestIntensity != 0) {
-			intensity = (highestIntensity + ((totalIntensity / amount) * 0.5F));
-		} else {
-			intensity = 0F;
-		}
+		float intensity = (amount > 0 && totalIntensity != 0 && highestIntensity != 0) ? (highestIntensity + ((totalIntensity / amount) * 0.5F)) : 0F;
 		SCREEN_SHAKES.removeAll(SHAKES_TO_REMOVE);
 		SHAKES_TO_REMOVE.clear();
 		yRot = Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight);
@@ -68,12 +63,22 @@ public class ScreenShaker {
 		zRot = Mth.nextFloat(randomSource, -intensity, intensity);
 	}
 
+
 	public static void cameraShake(Camera camera, float partialTicks) {
-		camera.setRotation(camera.getYRot() + (Mth.lerp(partialTicks, prevYRot, yRot)), camera.getXRot() + (Mth.lerp(partialTicks, prevXRot, xRot)));
+		camera.setRotation(camera.getYRot() + (prevYRot + partialTicks * (yRot - prevYRot)), camera.getXRot() + (prevXRot + partialTicks * xRot - prevXRot));
 	}
 
 	public static float cameraZ(float partialTicks) {
+		return prevZRot + partialTicks * (zRot - prevZRot);
+	}
+
+	//Left in for the sake of readability
+	public static float cameraZUnoptim(float partialTicks) {
 		return Mth.lerp(partialTicks, prevZRot, zRot);
+	}
+
+	public static void cameraShakeUnoptim(Camera camera, float partialTicks) {
+		camera.setRotation(camera.getYRot() + (Mth.lerp(partialTicks, prevYRot, yRot)), camera.getXRot() + (Mth.lerp(partialTicks, prevXRot, xRot)));
 	}
 
 	public static void addShake(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance) {
