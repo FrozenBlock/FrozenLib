@@ -28,7 +28,6 @@ import static java.util.Objects.requireNonNull;
 import net.frozenblock.lib.datafix.BlockStateRenameFix;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
-import net.minecraft.util.datafix.fixes.EntityRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;
 import net.minecraft.util.datafix.fixes.RenameBiomesFix;
 import net.minecraft.util.datafix.fixes.SimplestEntityRenameFix;
@@ -77,7 +76,7 @@ public final class SimpleFixes {
 	 * @param oldId   the entity's old identifier
 	 * @param newId   the entity's new identifier
 	 * @param schema  the schema this fix should be a part of
-	 * @see EntityRenameFix
+	 * @see SimplestEntityRenameFix
 	 */
 	public static void addEntityRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
 										  @NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
