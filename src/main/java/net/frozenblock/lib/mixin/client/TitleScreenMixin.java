@@ -31,7 +31,7 @@ public class TitleScreenMixin {
 	@Mutable
 	private PanoramaRenderer panorama;
 
-	@Inject(method = "<init>", at = @At("TAIL"))
+	@Inject(method = "<init>(Z)V", at = @At("TAIL"))
 	public void multiplePans(boolean fading, CallbackInfo info) {
 		this.panorama = new PanoramaRenderer(new CubeMap(NewPanoramas.getNewPanoramas().get((int) (Math.random() * NewPanoramas.size()))));
 	}
