@@ -14,13 +14,9 @@ package net.frozenblock.lib.math;
 import java.awt.geom.Point2D;
 
 /**
- * CONICS
+ * Allows defining conics via equations.
  * <p>
- * Allows defining conics via equations
- * <p>
- * Only for FrozenBlock Modders, ALL RIGHTS RESERVED
- * <p>
- * Defining a point or 3D point allows you to define if it is inside or at the border of a conic
+ * Defining a point or 3D point allows you to define if it is inside or at the border of a conic.
  *
  * @author LiukRast (2021-2022)
  * @since 4.0

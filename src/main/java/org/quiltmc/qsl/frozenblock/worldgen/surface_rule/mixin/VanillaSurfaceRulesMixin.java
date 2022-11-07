@@ -26,6 +26,7 @@ import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.VanillaSurfaceRule
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
@@ -33,34 +34,35 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  * <p>
  * Modified to work on Fabric
  */
-@Mixin(SurfaceRuleData.class)
-public abstract class VanillaSurfaceRulesMixin {
-    @Inject(
+@Mixin(value = SurfaceRuleData.class, priority = 1005)
+public class VanillaSurfaceRulesMixin {
+
+    @ModifyVariable(
             method = "overworldLike",
-            at = @At("RETURN"),
-            cancellable = true
+            at = @At("STORE"),
+			ordinal = 8
     )
-    private static void frozenblock_quilt$injectOverworldRules(boolean abovePreliminarySurface, boolean bedrockRoof, boolean bedrockFloor,
-                                                   CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
+    private static SurfaceRules.RuleSource frozenblock_quilt$injectOverworldLikeRules(SurfaceRules.RuleSource source, boolean abovePreliminarySurface, boolean bedrockRoof, boolean bedrockFloor) {
         if (!VanillaSurfaceRuleTracker.OVERWORLD.isPaused()) {
-            cir.setReturnValue(VanillaSurfaceRuleTracker.OVERWORLD.modifyMaterialRules(new SurfaceRuleContextImpl.OverworldImpl(
-                    abovePreliminarySurface, bedrockRoof, bedrockFloor, cir.getReturnValue()
-            )));
+            return VanillaSurfaceRuleTracker.OVERWORLD.modifyMaterialRules(new SurfaceRuleContextImpl.OverworldImpl(
+                    abovePreliminarySurface, bedrockRoof, bedrockFloor, source
+            ));
         }
+		return source;
     }
 
-    @Inject(
+    @ModifyVariable(
             method = "nether",
-            at = @At("RETURN"),
-            cancellable = true
+            at = @At("RETURN")
     )
-    private static void frozenblock_quilt$injectNetherRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
+    private static SurfaceRules.RuleSource frozenblock_quilt$injectNetherRules(SurfaceRules.RuleSource source) {
         if (!VanillaSurfaceRuleTracker.NETHER.isPaused()) {
-            cir.setReturnValue(VanillaSurfaceRuleTracker.NETHER.modifyMaterialRules(new SurfaceRuleContextImpl.NetherImpl(
-                    cir.getReturnValue()
-            )));
+            return VanillaSurfaceRuleTracker.NETHER.modifyMaterialRules(new SurfaceRuleContextImpl.NetherImpl(
+                    source
+            ));
         }
-    }
+		return source;
+	}
 
     @Inject(
             method = "end",
