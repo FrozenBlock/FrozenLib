@@ -20,12 +20,7 @@ import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
 /**
- * EASY NOISE SAMPLER
- * <p>
  * Adds easy-to-use noise sampling and random number generators
- * <p>
- * Only for FrozenBlock Modders and Lunade, ALL RIGHTS RESERVED
- * <p>
  *
  * @author Lunade (2021-2022)
  */

@@ -16,8 +16,6 @@ import net.minecraft.core.Direction;
 
 /**
  * Adds more math operations.
- * <p>
- * Only for FrozenBlock Modders, ALL RIGHTS RESERVED
  *
  * @author LiukRast (2021-2022)
  * @since 4.0

@@ -14,18 +14,13 @@ package net.frozenblock.lib.math;
 import java.io.Serializable;
 
 /**
- * POINT 3D
+ * Same as Java's Point2D, but with 3D coordinates.
  * <p>
- * Same as Java's Point2D, but with 3D coordinates
- * <p>
- * Only for FrozenBlock Modders, ALL RIGHTS RESERVED
- * <p>
- * Allows you to create a 3D point with x, y and z
+ * Allows you to create a 3D point with x, y and z.
  *
  * @author LiukRast (2021-2022)
  * @since 4.0
  */
-
 public abstract class Point3D implements Cloneable {
 
     /**

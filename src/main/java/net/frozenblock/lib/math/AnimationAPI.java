@@ -14,13 +14,10 @@ package net.frozenblock.lib.math;
 import java.awt.geom.Point2D;
 
 /**
- * ANIMATION API
- * <p>
- * This class is used to make animations with easings
- * <p>
- * Only for FrozenBlock Modders, ALL RIGHTS RESERVED
+ * This class is used to make animations with easings.
  * <p>
  * Defining a point A(x,y) and B(x,y) you can create an animation between those two points ( A.getY() won't affect the animation).
+ * <p>
  * Learn more at <a href="https://github.com/LIUKRAST/AnimationAPI/blob/main/README.md">the README</a>
  *
  * @author LiukRast (2021-2022)
