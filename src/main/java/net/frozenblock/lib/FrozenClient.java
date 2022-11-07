@@ -57,6 +57,7 @@ public final class FrozenClient implements ClientModInitializer {
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
 		receiveScreenShakePacket();
+		receiveScreenShakeFromEntityPacket();
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receivePlayerDamagePacket();
@@ -264,6 +265,25 @@ public final class FrozenClient implements ClientModInitializer {
 				if (level != null) {
 					Vec3 pos = new Vec3(x, y, z);
 					ScreenShaker.addShake(intensity, duration, fallOffStart, pos, maxDistance);
+				}
+			});
+		});
+	}
+
+	private static void receiveScreenShakeFromEntityPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SCREEN_SHAKE_ENTITY_PACKET, (ctx, hander, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			float intensity = byteBuf.readFloat();
+			int duration = byteBuf.readInt();
+			int fallOffStart = byteBuf.readInt();
+			float maxDistance = byteBuf.readFloat();
+			ctx.execute(() -> {
+				ClientLevel level = Minecraft.getInstance().level;
+				if (level != null) {
+					Entity entity = level.getEntity(id);
+					if (entity != null) {
+						ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance);
+					}
 				}
 			});
 		});

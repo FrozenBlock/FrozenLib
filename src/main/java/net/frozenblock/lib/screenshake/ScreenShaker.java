@@ -20,6 +20,7 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 
 @Environment(EnvType.CLIENT)
@@ -89,11 +90,15 @@ public class ScreenShaker {
 		SCREEN_SHAKES.add(new ScreenShake(intensity, duration, falloffStart, pos, maxDistance));
 	}
 
+	public static void addShake(Entity entity, float intensity, int duration, int falloffStart, float maxDistance) {
+		SCREEN_SHAKES.add(new EntityScreenShake(entity, intensity, duration, falloffStart, maxDistance));
+	}
+
 	public static class ScreenShake {
 		private final float intensity;
 		public final int duration;
 		private final int durationFalloffStart;
-		public final Vec3 pos;
+		protected Vec3 pos;
 		public final float maxDistance;
 		public int ticks;
 
@@ -111,6 +116,24 @@ public class ScreenShaker {
 				int currentDuration = Math.max(this.ticks - this.durationFalloffStart, 0);
 				int maxDuration = this.duration - this.durationFalloffStart;
 				return (distanceBasedIntensity * (maxDuration - currentDuration)) / maxDuration;
+			}
+			return 0F;
+		}
+	}
+
+	public static class EntityScreenShake extends ScreenShake {
+		private final Entity entity;
+
+		public EntityScreenShake(Entity entity, float intensity, int duration, int durationFalloffStart, float maxDistance) {
+			super(intensity, duration, durationFalloffStart, entity.position(), maxDistance);
+			this.entity = entity;
+		}
+
+		@Override
+		public float getIntensity(Vec3 playerPos) {
+			if (this.entity != null && !this.entity.isRemoved()) {
+				this.pos = this.entity.position();
+				return super.getIntensity(playerPos);
 			}
 			return 0F;
 		}
