@@ -14,12 +14,15 @@ package net.frozenblock.lib.screenshake;
 import java.util.ArrayList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
+@Environment(EnvType.CLIENT)
 public class ScreenShaker {
 
 	public static final ArrayList<ScreenShake> SCREEN_SHAKES = new ArrayList<>();
