@@ -12,7 +12,6 @@
 package net.frozenblock.lib.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
 import net.frozenblock.lib.screenshake.ScreenShaker;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
@@ -25,7 +24,7 @@ public class GameRendererMixin {
 
 	@Inject(method = "renderLevel", at = @At("HEAD"))
 	public void renderLevel(float partialTicks, long finishTimeNano, PoseStack matrixStack, CallbackInfo info) {
-		matrixStack.mulPose(Vector3f.ZP.rotationDegrees(ScreenShaker.cameraZ(partialTicks)));
+		ScreenShaker.shake(matrixStack, partialTicks);
 	}
 
 }

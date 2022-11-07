@@ -25,7 +25,6 @@
 	"defaultRequire": 1
   },
   "client": [
-    "client.CameraMixin",
     "client.GameRendererMixin",
 	"client.LivingEntityRendererMixin",
     "client.SplashManagerMixin",

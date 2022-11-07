@@ -12,6 +12,8 @@
 package net.frozenblock.lib.screenshake;
 
 import java.util.ArrayList;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.Mth;
@@ -64,20 +66,19 @@ public class ScreenShaker {
 	}
 
 
-	public static void cameraShake(Camera camera, float partialTicks) {
-		camera.setRotation(camera.getYRot() + (prevYRot + partialTicks * (yRot - prevYRot)), camera.getXRot() + (prevXRot + partialTicks * xRot - prevXRot));
+	public static void shake(PoseStack poseStack, float partialTicks) {
+		poseStack.mulPose(Vector3f.XP.rotationDegrees(prevXRot + partialTicks * xRot - prevXRot));
+		poseStack.mulPose(Vector3f.YP.rotationDegrees(prevYRot + partialTicks * yRot - prevYRot));
+		poseStack.mulPose(Vector3f.ZP.rotationDegrees(prevZRot + partialTicks * zRot - prevZRot));
 	}
 
+	@Deprecated
 	public static float cameraZ(float partialTicks) {
-		return prevZRot + partialTicks * (zRot - prevZRot);
-	}
-
-	//Left in for the sake of readability
-	public static float cameraZUnoptim(float partialTicks) {
 		return Mth.lerp(partialTicks, prevZRot, zRot);
 	}
 
-	public static void cameraShakeUnoptim(Camera camera, float partialTicks) {
+	@Deprecated
+	public static void cameraShake(Camera camera, float partialTicks) {
 		camera.setRotation(camera.getYRot() + (Mth.lerp(partialTicks, prevYRot, yRot)), camera.getXRot() + (Mth.lerp(partialTicks, prevXRot, xRot)));
 	}
 
