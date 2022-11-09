@@ -15,6 +15,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.entities.behavior.api.FrozenActivities;
+import net.frozenblock.lib.entities.behavior.api.FrozenMemoryTypes;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
 import net.frozenblock.lib.math.EasyNoiseSampler;
 import net.frozenblock.lib.registry.FrozenRegistry;
@@ -57,6 +59,8 @@ public final class FrozenMain implements ModInitializer {
         QuiltSurfaceRuleInitializer.onInitialize();
         SoundPredicate.init();
 		SpottingIconPredicate.init();
+		FrozenMemoryTypes.init();
+		FrozenActivities.init();
 
         receiveSoundSyncPacket();
 		receiveIconSyncPacket();

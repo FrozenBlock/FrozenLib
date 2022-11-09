@@ -5,6 +5,7 @@
   "compatibilityLevel": "JAVA_17",
   "mixins": [
 	"server.AbstractFishMixin",
+	"server.BehaviorMixin",
 	"server.BlockBehaviourMixin",
 	"server.BoneMealItemMixin",
 	"server.CreeperMixin",
@@ -13,8 +14,8 @@
 	"server.LivingEntityMixin",
 	"server.MappedRegistryMixin",
 	"server.NoExperimentalMixin",
+	"server.PlayerMixin",
 	"server.PointedDripstoneBlockMixin",
-    "server.PlayerMixin",
 	"server.RegistryMixin",
 	"server.ServerItemCooldownsMixin",
 	"worldgen.SinglePoolElementMixin",
@@ -25,9 +26,9 @@
 	"defaultRequire": 1
   },
   "client": [
-    "client.GameRendererMixin",
+	"client.GameRendererMixin",
 	"client.LivingEntityRendererMixin",
-    "client.SplashManagerMixin",
-    "client.TitleScreenMixin"
+	"client.SplashManagerMixin",
+	"client.TitleScreenMixin"
   ]
 }
