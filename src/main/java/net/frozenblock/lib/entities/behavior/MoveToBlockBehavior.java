@@ -1,12 +1,9 @@
 package net.frozenblock.lib.entities.behavior;
 
 import com.google.common.collect.ImmutableMap;
-import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.entities.behavior.api.FrozenMemoryTypes;
 import net.frozenblock.lib.entities.behavior.impl.FrozenBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
@@ -18,8 +15,7 @@ import net.minecraft.world.level.LevelReader;
  * {@link MoveToBlockGoal} as a behavior.
  */
 public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behavior<E> {
-	private static final int MAX_DURATION = 1200;
-	private static final int MIN_DURATION = 1200;
+	public static final int DURATION = 1200;
 	protected final E mob;
 	public final double speedModifier;
 	protected int tryTicks;
@@ -34,7 +30,7 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 	}
 
 	public MoveToBlockBehavior(E mob, double speedModifier, int searchRange, int verticalSearchRange) {
-		super(ImmutableMap.of(), MIN_DURATION, MAX_DURATION);
+		super(ImmutableMap.of(), DURATION);
 		this.mob = mob;
 		this.speedModifier = speedModifier;
 		this.searchRange = searchRange;
@@ -49,7 +45,7 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 
 	@Override
 	public boolean canStillUse(ServerLevel level, E entity, long gameTime) {
-		return this.tryTicks >= -((FrozenBehavior) this).getDuration() && this.tryTicks <= MAX_DURATION && this.isValidTarget(level, this.blockPos);
+		return this.tryTicks >= -((FrozenBehavior) this).getDuration() && this.tryTicks <= DURATION && this.isValidTarget(level, this.blockPos);
 	}
 
 	@Override
@@ -59,8 +55,9 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 	}
 
 	protected void moveMobToBlock() {
-		this.mob.getBrain().setMemory(FrozenMemoryTypes.BLOCK_TARGET, this.blockPos);
-		this.mob.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(this.blockPos, (float) this.speedModifier, (int) this.acceptedDistance()));
+		this.mob
+				.getNavigation()
+				.moveTo(this.blockPos.getX() + 0.5, this.blockPos.getY() + 1, this.blockPos.getZ() + 0.5, this.speedModifier);
 	}
 
 	public double acceptedDistance() {
@@ -78,7 +75,9 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 			this.reachedTarget = false;
 			++this.tryTicks;
 			if (this.shouldRecalculatePath()) {
-				this.mob.getBrain().setMemory(MemoryModuleType.WALK_TARGET, new WalkTarget(blockPos, (float) this.speedModifier, (int) Mth.sqrt(Mth.square(this.searchRange) + Mth.square(this.verticalSearchRange))));
+				this.mob
+						.getNavigation()
+						.moveTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, this.speedModifier);
 			}
 		} else {
 			this.reachedTarget = true;
