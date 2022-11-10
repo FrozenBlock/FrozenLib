@@ -19,16 +19,18 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 public final class SoundPredicate<T extends Entity> {
+	public static final ResourceLocation DEFAULT_ID = FrozenMain.id("default");
+	public static final ResourceLocation NOT_SILENT_AND_ALIVE_ID = FrozenMain.id("not_silent_and_alive");
+
+	private final LoopPredicate<T> predicate;
 
     public static <T extends Entity> void register(ResourceLocation id, LoopPredicate<T> predicate) {
-		Registry.register(FrozenRegistry.SOUND_PREDICATE_SYNCED, id, new SoundPredicate<>(predicate));
+		Registry.register(FrozenRegistry.SOUND_PREDICATE, id, new SoundPredicate<>(predicate));
     }
 
 	public static <T extends Entity> void registerUnsynced(ResourceLocation id, LoopPredicate<T> predicate) {
-		Registry.register(FrozenRegistry.SOUND_PREDICATE, id, new SoundPredicate<>(predicate));
+		Registry.register(FrozenRegistry.SOUND_PREDICATE_UNSYNCED, id, new SoundPredicate<>(predicate));
 	}
-
-	private final LoopPredicate<T> predicate;
 
 	public SoundPredicate(LoopPredicate<T> predicate) {
 		this.predicate = predicate;
@@ -37,13 +39,13 @@ public final class SoundPredicate<T extends Entity> {
 	@SuppressWarnings("unchecked")
     public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
-            if (FrozenRegistry.SOUND_PREDICATE_SYNCED.containsKey(id)) {
-				SoundPredicate<T> predicate = FrozenRegistry.SOUND_PREDICATE_SYNCED.get(id);
+            if (FrozenRegistry.SOUND_PREDICATE.containsKey(id)) {
+				SoundPredicate<T> predicate = FrozenRegistry.SOUND_PREDICATE.get(id);
 				if (predicate != null) {
 					return predicate.predicate;
 				}
-			} else if (FrozenRegistry.SOUND_PREDICATE.containsKey(id)) {
-				SoundPredicate<T> predicate = FrozenRegistry.SOUND_PREDICATE.get(id);
+			} else if (FrozenRegistry.SOUND_PREDICATE_UNSYNCED.containsKey(id)) {
+				SoundPredicate<T> predicate = FrozenRegistry.SOUND_PREDICATE_UNSYNCED.get(id);
 				if (predicate != null) {
 					return predicate.predicate;
 				}
@@ -52,6 +54,18 @@ public final class SoundPredicate<T extends Entity> {
         }
         return defaultPredicate();
     }
+
+	public static <T extends Entity> LoopPredicate<T> defaultPredicate() {
+		return entity -> !entity.isSilent();
+	}
+	public static <T extends Entity> LoopPredicate<T> notSilentAndAlive() {
+		return entity -> !entity.isSilent();
+	}
+
+	public static void init() {
+		register(DEFAULT_ID, defaultPredicate());
+		register(NOT_SILENT_AND_ALIVE_ID, notSilentAndAlive());
+	}
 
     @FunctionalInterface
     public interface LoopPredicate<T extends Entity> {
@@ -62,19 +76,5 @@ public final class SoundPredicate<T extends Entity> {
 
 		default void onStop(@Nullable T entity) {
 		}
-    }
-
-	public static <T extends Entity> LoopPredicate<T> defaultPredicate() {
-		return entity -> !entity.isSilent();
-	}
-    public static ResourceLocation DEFAULT_ID = FrozenMain.id("default");
-	public static <T extends Entity> LoopPredicate<T> notSilentAndAlive() {
-		return entity -> !entity.isSilent();
-	}
-    public static ResourceLocation NOT_SILENT_AND_ALIVE_ID = FrozenMain.id("not_silent_and_alive");
-
-    public static void init() {
-        register(FrozenMain.id("default"), defaultPredicate());
-        register(FrozenMain.id("not_silent_and_alive"), notSilentAndAlive());
     }
 }

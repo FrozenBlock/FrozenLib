@@ -48,6 +48,7 @@ public final class FrozenClient implements ClientModInitializer {
         ClientFreezer.onInitializeClient();
         registerClientTickEvents();
 
+		receiveLocalSoundPacket();
         receiveMovingRestrictionSoundPacket();
         receiveRestrictedMovingSoundLoopPacket();
         receiveStartingRestrictedMovingSoundLoopPacket();
@@ -76,6 +77,25 @@ public final class FrozenClient implements ClientModInitializer {
             }
         });
     }
+
+	private static void receiveLocalSoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_SOUND_PACKET, (client, handler, buf, responseSender) -> {
+			double x = buf.readDouble();
+			double y = buf.readDouble();
+			double z = buf.readDouble();
+			SoundEvent sound = buf.readById(Registry.SOUND_EVENT);
+			SoundSource source = buf.readEnum(SoundSource.class);
+			float volume = buf.readFloat();
+			float pitch = buf.readFloat();
+			boolean distanceDelay = buf.readBoolean();
+			client.execute(() -> {
+				ClientLevel level = client.level;
+				if (level != null) {
+					level.playLocalSound(x, y, z, sound, source, volume, pitch, distanceDelay);
+				}
+			});
+		});
+	}
 
 	@SuppressWarnings("unchecked")
     private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {

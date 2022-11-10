@@ -25,11 +25,11 @@ public class FrozenRegistry {
             .attribute(RegistryAttribute.SYNCED)
             .buildAndRegister();
 
-	public static final MappedRegistry<SoundPredicate> SOUND_PREDICATE_SYNCED = FabricRegistryBuilder.createSimple(SoundPredicate.class, FrozenMain.id("sound_predicate_synced"))
+	public static final MappedRegistry<SoundPredicate> SOUND_PREDICATE = FabricRegistryBuilder.createSimple(SoundPredicate.class, FrozenMain.id("sound_predicate_synced"))
 			.attribute(RegistryAttribute.SYNCED)
 			.buildAndRegister();
 
-	public static final MappedRegistry<SoundPredicate> SOUND_PREDICATE = FabricRegistryBuilder.createSimple(SoundPredicate.class, FrozenMain.id("sound_predicate"))
+	public static final MappedRegistry<SoundPredicate> SOUND_PREDICATE_UNSYNCED = FabricRegistryBuilder.createSimple(SoundPredicate.class, FrozenMain.id("sound_predicate"))
 			.buildAndRegister();
 
 	public static final MappedRegistry<SpottingIconPredicate> SPOTTING_ICON_PREDICATE = FabricRegistryBuilder.createSimple(SpottingIconPredicate.class, FrozenMain.id("spotting_icon_predicate_synced"))
