@@ -13,7 +13,7 @@ package net.frozenblock.lib.screenshake;
 
 import java.util.ArrayList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
@@ -22,6 +22,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
 public class ScreenShaker {
@@ -71,9 +72,9 @@ public class ScreenShaker {
 
 
 	public static void shake(PoseStack poseStack, float partialTicks) {
-		poseStack.mulPose(Vector3f.XP.rotationDegrees(prevXRot + partialTicks * xRot - prevXRot));
-		poseStack.mulPose(Vector3f.YP.rotationDegrees(prevYRot + partialTicks * yRot - prevYRot));
-		poseStack.mulPose(Vector3f.ZP.rotationDegrees(prevZRot + partialTicks * zRot - prevZRot));
+		poseStack.mulPose(Axis.XP.rotationDegrees(prevXRot + partialTicks * xRot - prevXRot));
+		poseStack.mulPose(Axis.YP.rotationDegrees(prevYRot + partialTicks * yRot - prevYRot));
+		poseStack.mulPose(Axis.ZP.rotationDegrees(prevZRot + partialTicks * zRot - prevZRot));
 	}
 
 	@Deprecated

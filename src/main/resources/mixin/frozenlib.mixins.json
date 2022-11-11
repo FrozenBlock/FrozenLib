@@ -1,34 +1,37 @@
 {
   "required": true,
-  "minVersion": "0.8",
+  "minVersion": "0.8.5",
   "package": "net.frozenblock.lib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-	"server.AbstractFishMixin",
-	"server.BehaviorMixin",
-	"server.BlockBehaviourMixin",
-	"server.BoneMealItemMixin",
-	"server.CreeperMixin",
-	"server.HopperBlockEntityMixin",
-	"server.ItemCooldownsMixin",
-	"server.LivingEntityMixin",
-	"server.MappedRegistryMixin",
-	"server.NoExperimentalMixin",
-	"server.PlayerMixin",
-	"server.PointedDripstoneBlockMixin",
-	"server.RegistryMixin",
-	"server.ServerItemCooldownsMixin",
-	"worldgen.SinglePoolElementMixin",
-	"worldgen.biome.MinecraftServerMixin",
-	"worldgen.biome.MultiNoiseBiomeSourceMixin"
+    "server.AbstractFishMixin",
+    "server.BehaviorMixin",
+    "server.BlockBehaviourMixin",
+    "server.BoneMealItemMixin",
+    "server.CreeperMixin",
+    "server.FeatureFlagsMixin",
+    "server.HopperBlockEntityMixin",
+    "server.ItemCooldownsMixin",
+    "server.LivingEntityMixin",
+    "server.MainMixin",
+    "server.MappedRegistryMixin",
+    "server.NoExperimentalMixin",
+    "server.PlayerMixin",
+    "server.PointedDripstoneBlockMixin",
+    "server.RegistryMixin",
+    "server.ServerItemCooldownsMixin",
+    "server.fabric_api.FabricItemGroupEntriesMixin",
+    "worldgen.SinglePoolElementMixin",
+    "worldgen.biome.MinecraftServerMixin",
+    "worldgen.biome.MultiNoiseBiomeSourceMixin"
+  ],
+  "client": [
+    "client.GameRendererMixin",
+    "client.LivingEntityRendererMixin",
+    "client.SplashManagerMixin",
+    "client.TitleScreenMixin"
   ],
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   },
-  "client": [
-	"client.GameRendererMixin",
-	"client.LivingEntityRendererMixin",
-	"client.SplashManagerMixin",
-	"client.TitleScreenMixin"
-  ]
 }

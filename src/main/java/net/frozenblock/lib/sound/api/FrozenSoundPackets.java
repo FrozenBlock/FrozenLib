@@ -82,6 +82,40 @@ public final class FrozenSoundPackets {
 		}
 	}
 
+	public static void createLocalSound(Level level, BlockPos pos, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay) {
+		if (!level.isClientSide) {
+			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			byteBuf.writeDouble(pos.getX());
+			byteBuf.writeDouble(pos.getY());
+			byteBuf.writeDouble(pos.getZ());
+			byteBuf.writeId(Registry.SOUND_EVENT, sound);
+			byteBuf.writeEnum(source);
+			byteBuf.writeFloat(volume);
+			byteBuf.writeFloat(pitch);
+			byteBuf.writeBoolean(distanceDelay);
+			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, pos)) {
+				ServerPlayNetworking.send(player, FrozenMain.LOCAL_SOUND_PACKET, byteBuf);
+			}
+		}
+	}
+
+	public static void createLocalSound(Level level, double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay) {
+		if (!level.isClientSide) {
+			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			byteBuf.writeDouble(x);
+			byteBuf.writeDouble(y);
+			byteBuf.writeDouble(z);
+			byteBuf.writeId(Registry.SOUND_EVENT, sound);
+			byteBuf.writeEnum(source);
+			byteBuf.writeFloat(volume);
+			byteBuf.writeFloat(pitch);
+			byteBuf.writeBoolean(distanceDelay);
+			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, new BlockPos(x, y, z))) {
+				ServerPlayNetworking.send(player, FrozenMain.LOCAL_SOUND_PACKET, byteBuf);
+			}
+		}
+	}
+
     public static void createMovingRestrictionSound(Level world, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id) {
         if (!world.isClientSide) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
