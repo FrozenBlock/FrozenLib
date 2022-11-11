@@ -11,8 +11,10 @@
 
 package net.frozenblock.lib.mixin.client;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.screenshake.ScreenShaker;
 import net.minecraft.client.Camera;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import org.spongepowered.asm.mixin.Mixin;
@@ -20,12 +22,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Camera.class)
-public class CameraMixin {
+@Mixin(GameRenderer.class)
+public class GameRendererMixin {
 
-	@Inject(method = "setup", at = @At("RETURN"))
-	private void setup(BlockGetter area, Entity focusedEntity, boolean thirdPerson, boolean inverseView, float tickDelta, CallbackInfo ci) {
-		ScreenShaker.cameraShake(Camera.class.cast(this), tickDelta);
+	@Inject(method = "renderLevel", at = @At("HEAD"))
+	public void renderLevel(float partialTicks, long finishTimeNano, PoseStack matrixStack, CallbackInfo info) {
+		ScreenShaker.shake(matrixStack, partialTicks);
 	}
 
 }

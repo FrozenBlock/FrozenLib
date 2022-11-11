@@ -18,6 +18,7 @@ import net.frozenblock.lib.FrozenMain;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
 public final class ScreenShakePackets {
@@ -46,6 +47,29 @@ public final class ScreenShakePackets {
 			byteBuf.writeFloat(maxDistance);
 			for (ServerPlayer player : PlayerLookup.world((ServerLevel) level)) {
 				ServerPlayNetworking.send(player, FrozenMain.SCREEN_SHAKE_PACKET, byteBuf);
+			}
+		}
+	}
+
+	//With Entity
+	public static void createScreenShakePacketEntity(Entity entity, Level level, float intensity, float maxDistance) {
+		createScreenShakePacketEntity(entity, level, intensity, 5, 1, maxDistance);
+	}
+
+	public static void createScreenShakePacketEntity(Entity entity, Level level, float intensity, int duration, float maxDistance) {
+		createScreenShakePacketEntity(entity, level, intensity, duration, 1, maxDistance);
+	}
+
+	public static void createScreenShakePacketEntity(Entity entity, Level level, float intensity, int duration, int falloffStart, float maxDistance) {
+		if (!level.isClientSide) {
+			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			byteBuf.writeVarInt(entity.getId());
+			byteBuf.writeFloat(intensity);
+			byteBuf.writeInt(duration);
+			byteBuf.writeInt(falloffStart);
+			byteBuf.writeFloat(maxDistance);
+			for (ServerPlayer player : PlayerLookup.world((ServerLevel) level)) {
+				ServerPlayNetworking.send(player, FrozenMain.SCREEN_SHAKE_ENTITY_PACKET, byteBuf);
 			}
 		}
 	}

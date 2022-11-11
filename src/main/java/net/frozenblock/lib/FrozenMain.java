@@ -26,6 +26,7 @@ import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
+import net.frozenblock.lib.spotting_icons.SpottingIconPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -53,9 +54,10 @@ public final class FrozenMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        FrozenRegistry.initRegistry();
         ServerFreezer.onInitialize();
         SoundPredicate.init();
-		FrozenRegistry.initRegistry();
+		SpottingIconPredicate.init();
 
         receiveSoundSyncPacket();
 		receiveIconSyncPacket();
@@ -84,6 +86,7 @@ public final class FrozenMain implements ModInitializer {
 
     //IDENTIFIERS
     public static final ResourceLocation FLYBY_SOUND_PACKET = id("flyby_sound_packet");
+	public static final ResourceLocation LOCAL_SOUND_PACKET = id("local_sound_packet");
     public static final ResourceLocation MOVING_RESTRICTION_LOOPING_SOUND_PACKET = id("moving_restriction_looping_sound_packet");
     public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = id("starting_moving_restriction_looping_sound_packet");
     public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = id("moving_restriction_sound_packet");
@@ -94,6 +97,7 @@ public final class FrozenMain implements ModInitializer {
     public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
 
 	public static final ResourceLocation SCREEN_SHAKE_PACKET = id("screen_shake_packet");
+	public static final ResourceLocation SCREEN_SHAKE_ENTITY_PACKET = id("screen_shake_entity_packet");
 
 	public static final ResourceLocation SPOTTING_ICON_PACKET = id("spotting_icon_packet");
 	public static final ResourceLocation SPOTTING_ICON_REMOVE_PACKET = id("spotting_icon_remove_packet");
@@ -114,6 +118,18 @@ public final class FrozenMain implements ModInitializer {
             LOGGER.info(string);
         }
     }
+
+	public static void warn(String string, boolean should) {
+		if (should) {
+			LOGGER.warn(string);
+		}
+	}
+
+	public static void error(String string, boolean should) {
+		if (should) {
+			LOGGER.error(string);
+		}
+	}
 
     private static void receiveSoundSyncPacket() {
         ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {

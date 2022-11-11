@@ -51,7 +51,7 @@ public class PointedDripstoneBlockMixin {
     private static VoxelShape REQUIRED_SPACE_TO_DRIP_THROUGH_NON_SOLID_BLOCK;
 
     @SuppressWarnings("UnresolvedMixinReference")
-    @Inject(method = {"method_33279", "m_ulptarvl"}, require = 1, at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
+    @Inject(method = {"m_ulptarvl","method_33279","lambda$getFluidAboveStalactite$11"}, at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true, require = 1)
     private static void getFluidAboveStalactite(Level level, BlockPos pos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> cir, BlockPos blockPos, BlockState blockState) {
         if (!FrozenBools.useNewDripstoneLiquid && blockPos != null) {
             if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {

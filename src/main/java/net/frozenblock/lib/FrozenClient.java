@@ -17,6 +17,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
+import net.frozenblock.lib.impl.NewPanoramas;
 import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.screenshake.ScreenShaker;
@@ -47,6 +48,7 @@ public final class FrozenClient implements ClientModInitializer {
         ClientFreezer.onInitializeClient();
         registerClientTickEvents();
 
+		receiveLocalSoundPacket();
         receiveMovingRestrictionSoundPacket();
         receiveRestrictedMovingSoundLoopPacket();
         receiveStartingRestrictedMovingSoundLoopPacket();
@@ -56,9 +58,12 @@ public final class FrozenClient implements ClientModInitializer {
         receiveFlybySoundPacket();
         receiveCooldownChangePacket();
 		receiveScreenShakePacket();
+		receiveScreenShakeFromEntityPacket();
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receivePlayerDamagePacket();
+
+		NewPanoramas.addNewPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
         FabricLoader.getInstance().getEntrypointContainers("frozenlib:client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
             try {
@@ -72,6 +77,25 @@ public final class FrozenClient implements ClientModInitializer {
             }
         });
     }
+
+	private static void receiveLocalSoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_SOUND_PACKET, (client, handler, buf, responseSender) -> {
+			double x = buf.readDouble();
+			double y = buf.readDouble();
+			double z = buf.readDouble();
+			SoundEvent sound = buf.readById(Registry.SOUND_EVENT);
+			SoundSource source = buf.readEnum(SoundSource.class);
+			float volume = buf.readFloat();
+			float pitch = buf.readFloat();
+			boolean distanceDelay = buf.readBoolean();
+			client.execute(() -> {
+				ClientLevel level = client.level;
+				if (level != null) {
+					level.playLocalSound(x, y, z, sound, source, volume, pitch, distanceDelay);
+				}
+			});
+		});
+	}
 
 	@SuppressWarnings("unchecked")
     private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
@@ -261,6 +285,25 @@ public final class FrozenClient implements ClientModInitializer {
 				if (level != null) {
 					Vec3 pos = new Vec3(x, y, z);
 					ScreenShaker.addShake(intensity, duration, fallOffStart, pos, maxDistance);
+				}
+			});
+		});
+	}
+
+	private static void receiveScreenShakeFromEntityPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SCREEN_SHAKE_ENTITY_PACKET, (ctx, hander, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			float intensity = byteBuf.readFloat();
+			int duration = byteBuf.readInt();
+			int fallOffStart = byteBuf.readInt();
+			float maxDistance = byteBuf.readFloat();
+			ctx.execute(() -> {
+				ClientLevel level = Minecraft.getInstance().level;
+				if (level != null) {
+					Entity entity = level.getEntity(id);
+					if (entity != null) {
+						ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance);
+					}
 				}
 			});
 		});
