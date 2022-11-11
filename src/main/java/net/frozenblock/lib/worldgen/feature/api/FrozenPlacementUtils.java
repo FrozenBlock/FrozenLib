@@ -1,13 +1,10 @@
-package net.frozenblock.lib.worldgen.feature.util;
+package net.frozenblock.lib.worldgen.feature.api;
 
-import java.util.Arrays;
 import java.util.List;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricWorldgenProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;

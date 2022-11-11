@@ -1,4 +1,4 @@
-package net.frozenblock.lib.worldgen.feature.util;
+package net.frozenblock.lib.worldgen.feature.api;
 
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricWorldgenProvider;
 import net.minecraft.core.Holder;
