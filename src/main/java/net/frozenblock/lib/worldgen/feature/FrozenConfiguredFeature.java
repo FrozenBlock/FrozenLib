@@ -14,6 +14,7 @@ import org.jetbrains.annotations.ApiStatus;
  */
 
 @ApiStatus.Experimental
+@Deprecated(forRemoval = true)
 public class FrozenConfiguredFeature<FC extends FeatureConfiguration, F extends Feature<FC>> {
 
 	private final ResourceKey<ConfiguredFeature<?, ?>> resourceKey;

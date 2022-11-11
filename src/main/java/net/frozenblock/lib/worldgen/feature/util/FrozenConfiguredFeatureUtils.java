@@ -1,6 +1,6 @@
 package net.frozenblock.lib.worldgen.feature.util;
 
-import net.frozenblock.lib.worldgen.feature.FrozenConfiguredFeature;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricWorldgenProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -40,9 +40,9 @@ public class FrozenConfiguredFeatureUtils {
 	}
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(
-			BootstapContext<ConfiguredFeature<?, ?>> bootstapContext, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
+			FabricWorldgenProvider.Entries entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
-		FeatureUtils.register(bootstapContext, registryKey, feature, featureConfiguration);
+		entries.add(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
 	}
 
 	public static <FC extends FeatureConfiguration, V extends T, T extends ConfiguredFeature<FC, ?>> Holder.Reference<ConfiguredFeature<FeatureConfiguration, ?>> getExact(DynamicRegistryManagerSetupContext.RegistryMap registries, V value) {
@@ -54,10 +54,6 @@ public class FrozenConfiguredFeatureUtils {
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>, V extends ConfiguredFeature<FC, ?>> Holder.Reference<V> getExactReference(Holder.Reference<?> reference) {
 		return (Holder.Reference<V>) reference;
-	}
-
-	public static FrozenConfiguredFeature feature(String namespace, String path, Feature<? extends FeatureConfiguration> feature, FeatureConfiguration featureConfiguration) {
-		return new FrozenConfiguredFeature(createKey(namespace, path), feature, featureConfiguration);
 	}
 
 	public static Holder<ConfiguredFeature<?, ?>> getHolder(ResourceKey<ConfiguredFeature<?, ?>> resourceKey) {

@@ -16,6 +16,7 @@ import java.util.List;
  */
 
 @ApiStatus.Experimental
+@Deprecated(forRemoval = true)
 public class FrozenPlacedFeature {
 
 	private final ResourceKey<PlacedFeature> resourceKey;
