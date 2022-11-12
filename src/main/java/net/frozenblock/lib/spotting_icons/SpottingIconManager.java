@@ -71,7 +71,7 @@ public class SpottingIconManager {
         } else {
             this.ticksToCheck = 20;
             if (this.icon != null) {
-				SpottingIconPredicate.IconPredicate<Entity> predicate = SpottingIconPredicate.getPredicate(this.icon.restrictionID);
+				final SpottingIconPredicate.IconPredicate<Entity> predicate = SpottingIconPredicate.getPredicate(this.icon.restrictionID);
 				if (!predicate.test(this.entity)) {
 					this.removeIcon();
 				}
@@ -92,9 +92,11 @@ public class SpottingIconManager {
 				ServerPlayNetworking.send(player, FrozenMain.SPOTTING_ICON_PACKET, byteBuf);
 			}
 		}
+		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onAdded(this.entity);
 	}
 
 	public void removeIcon() {
+		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onRemoved(this.entity);
 		this.icon = null;
 		if (!this.entity.level.isClientSide) {
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());

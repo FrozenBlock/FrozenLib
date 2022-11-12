@@ -29,7 +29,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 
-public class FrozenSoundPackets {
+public final class FrozenSoundPackets {
+	private FrozenSoundPackets() {
+		throw new UnsupportedOperationException("FrozenSoundPackets contains only static declarations.");
+	}
 
 	public static void createLocalSound(Level level, BlockPos pos, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay) {
 		if (!level.isClientSide) {
@@ -61,6 +64,20 @@ public class FrozenSoundPackets {
 			byteBuf.writeBoolean(distanceDelay);
 			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, new BlockPos(x, y, z))) {
 				ServerPlayNetworking.send(player, FrozenMain.LOCAL_SOUND_PACKET, byteBuf);
+			}
+		}
+	}
+
+	public static void createFlybySound(Level world, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch) {
+		if (!world.isClientSide) {
+			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			byteBuf.writeVarInt(entity.getId());
+			byteBuf.writeId(Registry.SOUND_EVENT, sound);
+			byteBuf.writeEnum(category);
+			byteBuf.writeFloat(volume);
+			byteBuf.writeFloat(pitch);
+			for (ServerPlayer player : PlayerLookup.around((ServerLevel) world, entity.blockPosition(), 128)) {
+				ServerPlayNetworking.send(player, FrozenMain.FLYBY_SOUND_PACKET, byteBuf);
 			}
 		}
 	}

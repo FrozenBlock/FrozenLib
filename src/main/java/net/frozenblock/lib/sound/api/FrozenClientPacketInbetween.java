@@ -14,7 +14,10 @@ package net.frozenblock.lib.sound.api;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 
-public class FrozenClientPacketInbetween {
+public final class FrozenClientPacketInbetween {
+	private FrozenClientPacketInbetween() {
+		throw new UnsupportedOperationException("FrozenClientPacketInbetween contains only static declarations.");
+	}
 
     public static void requestFrozenSoundSync(int id, ResourceKey<Level> level) {
         FrozenClientPacketToServer.sendFrozenSoundSyncRequest(id, level);

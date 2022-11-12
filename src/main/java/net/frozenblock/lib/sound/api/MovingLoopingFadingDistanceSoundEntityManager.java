@@ -30,8 +30,8 @@ import net.minecraft.world.entity.LivingEntity;
 import org.slf4j.Logger;
 
 public class MovingLoopingFadingDistanceSoundEntityManager {
-    ArrayList<FadingDistanceSoundLoopNBT> sounds = new ArrayList<>();
-    public LivingEntity entity;
+    private final ArrayList<FadingDistanceSoundLoopNBT> sounds = new ArrayList<>();
+    public final LivingEntity entity;
 
     public MovingLoopingFadingDistanceSoundEntityManager(LivingEntity entity) {
         this.entity = entity;
