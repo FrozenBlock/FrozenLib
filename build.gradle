@@ -375,3 +375,5 @@ configurations {
 artifacts {
     dev jar
 }
+
+build.dependsOn applyLicenses

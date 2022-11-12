@@ -22,7 +22,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
 public final class ScreenShakePackets {
-
 	private ScreenShakePackets() {
 		throw new UnsupportedOperationException("ScreenShakePackets contains only static declarations.");
 	}
