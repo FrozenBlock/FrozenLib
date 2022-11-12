@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(FeatureFlags.class)
 public class FeatureFlagsMixin {
 
-	@Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/flag/FeatureFlagRegistry$Builder;build()Lnet/minecraft/world/flag/FeatureFlagRegistry;"), locals = LocalCapture.CAPTURE_FAILHARD)
+@Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/flag/FeatureFlagRegistry$Builder;build()Lnet/minecraft/world/flag/FeatureFlagRegistry;", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
 	private static void featureFlagEntrypoint(CallbackInfo ci, FeatureFlagRegistry.Builder builder) {
 		FrozenFeatureFlags.ON_FEATURE_FLAG_INIT.invoker().init(builder);
 	}
