@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature_flag.impl;
+package net.frozenblock.lib.item.impl;
 
 import net.minecraft.world.item.ItemStack;
 

@@ -12,7 +12,7 @@
 package net.frozenblock.lib.item.api;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.frozenblock.lib.feature_flag.impl.FabricItemGroupAccessor;
+import net.frozenblock.lib.item.impl.FabricItemGroupAccessor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.tags.TagKey;

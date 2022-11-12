@@ -17,13 +17,13 @@ public class FrozenPlacementUtils {
 		return ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(namespace, path));
 	}
 
-	public static void register(
+	public static Holder<PlacedFeature> register(
 			FabricWorldgenProvider.Entries entries,
 			ResourceKey<PlacedFeature> registryKey,
 			Holder<ConfiguredFeature<?, ?>> holder,
 			List<PlacementModifier> list
 	) {
-		entries.add(registryKey, new PlacedFeature(holder, List.copyOf(list)));
+		return entries.add(registryKey, new PlacedFeature(holder, List.copyOf(list)));
 	}
 
 	public static void register(
