@@ -39,10 +39,10 @@ public class FrozenConfiguredFeatureUtils {
 		FeatureUtils.register(bootstapContext, registryKey, feature, FeatureConfiguration.NONE);
 	}
 
-	public static <FC extends FeatureConfiguration, F extends Feature<FC>> void register(
+	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
 			FabricWorldgenProvider.Entries entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
-		entries.add(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
+		return entries.add(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
 	}
 
 	public static <FC extends FeatureConfiguration, V extends T, T extends ConfiguredFeature<FC, ?>> Holder.Reference<ConfiguredFeature<FeatureConfiguration, ?>> getExact(DynamicRegistryManagerSetupContext.RegistryMap registries, V value) {
