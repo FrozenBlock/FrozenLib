@@ -11,7 +11,10 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
-public class FrozenPlacementUtils {
+public final class FrozenPlacementUtils {
+	private FrozenPlacementUtils() {
+		throw new UnsupportedOperationException("FrozenPlacementUtils contains only static declarations.");
+	}
 
 	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
 		return ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(namespace, path));
