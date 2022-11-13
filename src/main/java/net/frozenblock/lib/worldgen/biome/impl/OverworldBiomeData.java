@@ -19,11 +19,13 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import net.fabricmc.fabric.impl.biome.modification.BuiltInRegistryKeys;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.worldgen.biome.api.FrozenBiomeSourceAccess;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
@@ -58,14 +60,17 @@ public final class OverworldBiomeData {
 
     public static boolean canGenerateInOverworld(ResourceKey<Biome> biome) {
         if (OVERWORLD_BIOMES.isEmpty()) {
-            MultiNoiseBiomeSource source = MultiNoiseBiomeSource.Preset.OVERWORLD.biomeSource(BuiltinRegistries.BIOME);
+			var biomeRegistry = FrozenRegistry.vanillaRegistries().lookupOrThrow(Registry.BIOME_REGISTRY);
+
+            MultiNoiseBiomeSource source = MultiNoiseBiomeSource.Preset.OVERWORLD.biomeSource(FrozenRegistry.vanillaRegistries().lookupOrThrow(Registry.BIOME_REGISTRY));
 
             for (Holder<Biome> entry : source.possibleBiomes()) {
-                BuiltinRegistries.BIOME.getResourceKey(entry.value()).ifPresent(OVERWORLD_BIOMES::add);
+                entry.unwrapKey().ifPresent(OVERWORLD_BIOMES::add);
             }
-            BuiltinRegistries.BIOME.getTagOrEmpty(BiomeTags.IS_OVERWORLD).forEach(entry -> {
-                if (!OVERWORLD_BIOMES.contains(BuiltinRegistries.BIOME.getResourceKey(entry.value()).orElseThrow())) {
-                    BuiltinRegistries.BIOME.getResourceKey(entry.value()).ifPresent(OVERWORLD_BIOMES::add);
+
+            biomeRegistry.getOrThrow(BiomeTags.IS_OVERWORLD).forEach(entry -> {
+                if (!OVERWORLD_BIOMES.contains(entry.unwrapKey().orElseThrow())) {
+                    entry.unwrapKey().ifPresent(OVERWORLD_BIOMES::add);
                 }
             });
         }
@@ -77,7 +82,7 @@ public final class OverworldBiomeData {
         OVERWORLD_BIOMES.clear(); // Clear cached biome source data
     }
 
-    private static Climate.ParameterList<Holder<Biome>> withModdedBiomeEntries(Climate.ParameterList<Holder<Biome>> entries, Registry<Biome> biomeRegistry) {
+    private static Climate.ParameterList<Holder<Biome>> withModdedBiomeEntries(Climate.ParameterList<Holder<Biome>> entries, HolderGetter<Biome> biomes) {
         if (OVERWORLD_BIOME_NOISE_POINTS.isEmpty()) {
             return entries;
         }
@@ -85,8 +90,10 @@ public final class OverworldBiomeData {
         ArrayList<Pair<Climate.ParameterPoint, Holder<Biome>>> entryList = new ArrayList<>(entries.values());
 
         for (Map.Entry<ResourceKey<Biome>, Climate.ParameterPoint> entry : OVERWORLD_BIOME_NOISE_POINTS.entrySet()) {
-            if (biomeRegistry.containsKey(entry.getKey())) {
-                entryList.add(Pair.of(entry.getValue(), biomeRegistry.getHolderOrThrow(entry.getKey())));
+			Holder.Reference<Biome> biomeEntry = biomes.get(entry.getKey()).orElse(null);
+
+            if (biomeEntry != null) {
+                entryList.add(Pair.of(entry.getValue(), biomeEntry));
             } else {
                 LOGGER.warn("Overworld biome {} not loaded", entry.getKey().location());
             }
@@ -95,7 +102,7 @@ public final class OverworldBiomeData {
         return new Climate.ParameterList<>(entryList);
     }
 
-    public static void modifyBiomeSource(Registry<Biome> biomeRegistry, BiomeSource biomeSource) {
+    public static void modifyBiomeSource(HolderGetter<Biome> biomeRegistry, BiomeSource biomeSource) {
         if (biomeSource instanceof MultiNoiseBiomeSource multiNoiseBiomeSource) {
             if (((FrozenBiomeSourceAccess) multiNoiseBiomeSource).frozenLib_shouldModifyBiomeEntries() && multiNoiseBiomeSource.stable(MultiNoiseBiomeSource.Preset.OVERWORLD)) {
                 multiNoiseBiomeSource.parameters = OverworldBiomeData.withModdedBiomeEntries(

@@ -1,15 +1,16 @@
 {
   "required": true,
+  "minVersion": "0.8.5",
   "package": "org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
 	"ChunkSerializerMixin",
-	"NbtHelperMixin",
-	"PlayerEntityMixin",
-	"StructureMixin"
+    "NbtUtilsMixin",
+    "PlayerMixin",
+    "StructureTemplateMixin"
   ],
   "client": [
-	"client.HotbarStorageMixin"
+    "client.HotbarManagerMixin"
   ],
   "injectors": {
 	"defaultRequire": 1

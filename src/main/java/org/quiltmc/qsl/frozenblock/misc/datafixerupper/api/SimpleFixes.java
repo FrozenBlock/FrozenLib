@@ -19,20 +19,24 @@
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFix;
 import com.mojang.datafixers.DataFixerBuilder;
+import com.mojang.datafixers.Typed;
 import com.mojang.datafixers.schemas.Schema;
-import java.util.Map;
-import java.util.Objects;
-import static java.util.Objects.requireNonNull;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Dynamic;
 import net.frozenblock.lib.datafix.BlockStateRenameFix;
+import net.frozenblock.lib.datafix.FrozenEntityRenameFix;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.datafix.fixes.BlockRenameFix;
-import net.minecraft.util.datafix.fixes.ItemRenameFix;
-import net.minecraft.util.datafix.fixes.RenameBiomesFix;
-import net.minecraft.util.datafix.fixes.SimplestEntityRenameFix;
+import net.minecraft.util.datafix.fixes.*;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.Objects;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Provides methods to add common {@link DataFix}es to {@link DataFixerBuilder}s.
@@ -68,33 +72,29 @@ public final class SimpleFixes {
                 Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
     }
 
-	/**
-	 * Adds an entity rename fix to the builder, in case an entity's identifier is changed.
-	 *
-	 * @param builder the builder
-	 * @param name    the fix's name
-	 * @param oldId   the entity's old identifier
-	 * @param newId   the entity's new identifier
-	 * @param schema  the schema this fix should be a part of
-	 * @see SimplestEntityRenameFix
-	 */
-	public static void addEntityRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-										  @NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
-										  @NotNull Schema schema) {
-		requireNonNull(builder, "DataFixerBuilder cannot be null");
-		requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(oldId, "Old identifier cannot be null");
-		requireNonNull(newId, "New identifier cannot be null");
-		requireNonNull(schema, "Schema cannot be null");
+    /**
+     * Adds an entity rename fix to the builder, in case an entity's identifier is changed.
+     *
+     * @param builder the builder
+     * @param name    the fix's name
+     * @param oldId   the entity's old identifier
+     * @param newId   the entity's new identifier
+     * @param schema  the schema this fixer should be a part of
+     * @see SimpleEntityRenameFix
+     */
+    public static void addEntityRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
+                                        @NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
+                                        @NotNull Schema schema) {
+        requireNonNull(builder, "DataFixerBuilder cannot be null");
+        requireNonNull(name, "Fix name cannot be null");
+        requireNonNull(oldId, "Old identifier cannot be null");
+        requireNonNull(newId, "New identifier cannot be null");
+        requireNonNull(schema, "Schema cannot be null");
 
-		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
-		builder.addFixer(new SimplestEntityRenameFix(name, schema, false) {
-			@Override
-			protected String rename(String inputName) {
-				return Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName;
-			}
-		});
-	}
+        final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
+        builder.addFixer(FrozenEntityRenameFix.create(schema, name, (inputName) ->
+                Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
+    }
 
     /**
      * Adds an item rename fix to the builder, in case an item's identifier is changed.
