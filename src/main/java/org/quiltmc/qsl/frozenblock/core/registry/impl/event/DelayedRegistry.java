@@ -32,7 +32,10 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
@@ -47,14 +50,17 @@ import org.jetbrains.annotations.Nullable;
  * Modified to work on Fabric
  */
 @ApiStatus.Internal
-public final class DelayedRegistry<T> extends WritableRegistry<T> {
-	private final WritableRegistry<T> wrapped;
+public final class DelayedRegistry<T> implements WritableRegistry<T> {
+	private final MappedRegistry<T> wrapped;
 	private final Queue<DelayedEntry<T>> delayedEntries = new LinkedList<>();
 
-	DelayedRegistry(WritableRegistry<T> registry) {
-		super(registry.key(), registry.elementsLifecycle());
-
+	DelayedRegistry(MappedRegistry<T> registry) {
 		this.wrapped = registry;
+	}
+
+	@Override
+	public ResourceKey<? extends Registry<T>> key() {
+		return this.wrapped.key();
 	}
 
 	@Override
@@ -98,8 +104,8 @@ public final class DelayedRegistry<T> extends WritableRegistry<T> {
 	}
 
 	@Override
-	public Lifecycle elementsLifecycle() {
-		return this.wrapped.elementsLifecycle();
+	public Lifecycle registryLifecycle() {
+		return this.wrapped.registryLifecycle();
 	}
 
 	@Override
@@ -138,15 +144,9 @@ public final class DelayedRegistry<T> extends WritableRegistry<T> {
 		return this;
 	}
 
-	/*@Override
 	public Holder.Reference<T> getOrCreateHolderOrThrow(ResourceKey<T> registryKey) {
 		return this.wrapped.getOrCreateHolderOrThrow(registryKey);
 	}
-
-	@Override
-	public DataResult<Holder.Reference<T>> getOrCreateHolder(ResourceKey<T> key) {
-		return this.wrapped.getOrCreateHolder(key);
-	}*/
 
 	@Override
 	public Holder.Reference<T> createIntrusiveHolder(T holder) {
@@ -189,11 +189,6 @@ public final class DelayedRegistry<T> extends WritableRegistry<T> {
 	}
 
 	@Override
-	public boolean isKnownTagName(TagKey<T> tag) {
-		return this.wrapped.isKnownTagName(tag);
-	}
-
-	@Override
 	public void resetTags() {
 		throw new UnsupportedOperationException("DelayedRegistry does not support resetTags.");
 	}
@@ -227,6 +222,16 @@ public final class DelayedRegistry<T> extends WritableRegistry<T> {
 	@Override
 	public HolderGetter<T> createRegistrationLookup() {
 		return this.wrapped.createRegistrationLookup();
+	}
+
+	@Override
+	public HolderOwner<T> holderOwner() {
+		return this.wrapped.holderOwner();
+	}
+
+	@Override
+	public HolderLookup.RegistryLookup<T> asLookup() {
+		return this.wrapped.asLookup();
 	}
 
 	void applyDelayed() {

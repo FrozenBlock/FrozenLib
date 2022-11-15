@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.tag.convention.v1.TagUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.Nullable;
@@ -35,7 +36,7 @@ public final class TagUtils {
     @SuppressWarnings("unchecked")
     @Nullable
     public static <T> T getRandomEntry(RandomSource random, TagKey<T> tag) {
-        Optional<? extends Registry<?>> maybeRegistry = Registry.REGISTRY.getOptional(tag.registry().location());
+        Optional<? extends Registry<?>> maybeRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().location());
         Objects.requireNonNull(random);
         Objects.requireNonNull(tag);
 

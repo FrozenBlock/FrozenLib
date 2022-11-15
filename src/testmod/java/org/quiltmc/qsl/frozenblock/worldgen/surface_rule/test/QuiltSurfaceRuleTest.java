@@ -19,6 +19,7 @@
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.test;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
@@ -104,9 +105,9 @@ public class QuiltSurfaceRuleTest implements SurfaceRuleEvents.OverworldModifier
 
 	@Override
 	public void modifyTheEndRules(@NotNull SurfaceRuleContext.TheEnd context) {
-		ResourceKey<Biome> TEST_END_HIGHLANDS = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("quilt_biome_testmod", "test_end_highlands"));
-		ResourceKey<Biome> TEST_END_MIDLANDS = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("quilt_biome_testmod", "test_end_midlands"));
-		ResourceKey<Biome> TEST_END_BARRRENS = ResourceKey.create(Registry.BIOME_REGISTRY, new ResourceLocation("quilt_biome_testmod", "test_end_barrens"));
+		ResourceKey<Biome> TEST_END_HIGHLANDS = ResourceKey.create(Registries.BIOME, new ResourceLocation("quilt_biome_testmod", "test_end_highlands"));
+		ResourceKey<Biome> TEST_END_MIDLANDS = ResourceKey.create(Registries.BIOME, new ResourceLocation("quilt_biome_testmod", "test_end_midlands"));
+		ResourceKey<Biome> TEST_END_BARRRENS = ResourceKey.create(Registries.BIOME, new ResourceLocation("quilt_biome_testmod", "test_end_barrens"));
 
 		SurfaceRules.ConditionSource pinkBiome = SurfaceRules.isBiome(TEST_END_HIGHLANDS);
 		SurfaceRules.ConditionSource whiteBiome = SurfaceRules.isBiome(TEST_END_MIDLANDS);

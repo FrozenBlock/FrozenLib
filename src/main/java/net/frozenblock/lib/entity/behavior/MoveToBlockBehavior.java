@@ -9,10 +9,10 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entities.behavior;
+package net.frozenblock.lib.entity.behavior;
 
 import com.google.common.collect.ImmutableMap;
-import net.frozenblock.lib.entities.behavior.impl.FrozenBehavior;
+import net.frozenblock.lib.entity.behavior.impl.FrozenBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.PathfinderMob;

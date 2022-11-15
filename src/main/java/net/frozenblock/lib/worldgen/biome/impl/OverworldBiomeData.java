@@ -26,6 +26,7 @@ import net.frozenblock.lib.worldgen.biome.api.FrozenBiomeSourceAccess;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biome;
@@ -60,9 +61,9 @@ public final class OverworldBiomeData {
 
     public static boolean canGenerateInOverworld(ResourceKey<Biome> biome) {
         if (OVERWORLD_BIOMES.isEmpty()) {
-			var biomeRegistry = FrozenRegistry.vanillaRegistries().lookupOrThrow(Registry.BIOME_REGISTRY);
+			var biomeRegistry = FrozenRegistry.vanillaRegistries().lookupOrThrow(Registries.BIOME);
 
-            MultiNoiseBiomeSource source = MultiNoiseBiomeSource.Preset.OVERWORLD.biomeSource(FrozenRegistry.vanillaRegistries().lookupOrThrow(Registry.BIOME_REGISTRY));
+            MultiNoiseBiomeSource source = MultiNoiseBiomeSource.Preset.OVERWORLD.biomeSource(FrozenRegistry.vanillaRegistries().lookupOrThrow(Registries.BIOME));
 
             for (Holder<Biome> entry : source.possibleBiomes()) {
                 entry.unwrapKey().ifPresent(OVERWORLD_BIOMES::add);

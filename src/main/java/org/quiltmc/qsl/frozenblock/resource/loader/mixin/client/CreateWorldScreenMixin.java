@@ -191,7 +191,7 @@ public abstract class CreateWorldScreenMixin {
 
                     if (frozenRegistryManager.registryOrThrow(Registry.WORLD_PRESET_REGISTRY).size() == 0) {
                         throw new IllegalStateException("Needs at least one world preset to continue");
-                    } else if (frozenRegistryManager.registryOrThrow(Registry.BIOME_REGISTRY).size() == 0) {
+                    } else if (frozenRegistryManager.registryOrThrow(Registries.BIOME).size() == 0) {
                         throw new IllegalStateException("Needs at least one biome to continue");
                     } else {
                         return Pair.of(Pair.of(generatorOptions, lifecycle), frozenRegistryManager);

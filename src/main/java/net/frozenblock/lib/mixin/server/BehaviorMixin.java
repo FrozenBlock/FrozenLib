@@ -11,7 +11,7 @@
 
 package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.entities.behavior.impl.FrozenBehavior;
+import net.frozenblock.lib.entity.behavior.impl.FrozenBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.Behavior;

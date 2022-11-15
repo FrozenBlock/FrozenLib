@@ -29,6 +29,8 @@ import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.spotting_icons.SpottingIconPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -134,19 +136,19 @@ public final class FrozenMain implements ModInitializer {
     private static void receiveSoundSyncPacket() {
         ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
-            Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registry.DIMENSION_REGISTRY));
+            Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registries.DIMENSION));
             ctx.execute(() -> {
                 if (dimension != null) {
                     Entity entity = dimension.getEntity(id);
                     if (entity != null) {
                         if (entity instanceof EntityLoopingSoundInterface soundInterface) {
                             for (MovingLoopingSoundEntityManager.SoundLoopData nbt : soundInterface.getSounds().getSounds()) {
-                                FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
+                                FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
                             }
                         }
 						if (entity instanceof EntityLoopingFadingDistanceSoundInterface soundInterface) {
 							for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : soundInterface.getFadingDistanceSounds().getSounds()) {
-								FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), Registry.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
+								FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), BuiltInRegistries.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
 							}
 						}
                     }
@@ -158,7 +160,7 @@ public final class FrozenMain implements ModInitializer {
 	private static void receiveIconSyncPacket() {
 		ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_SPOTTING_ICON_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
 			int id = byteBuf.readVarInt();
-			Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registry.DIMENSION_REGISTRY));
+			Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registries.DIMENSION));
 			ctx.execute(() -> {
 				if (dimension != null) {
 					Entity entity = dimension.getEntity(id);

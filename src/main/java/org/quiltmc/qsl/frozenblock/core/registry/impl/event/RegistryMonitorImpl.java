@@ -63,7 +63,7 @@ public class RegistryMonitorImpl<V> implements RegistryMonitor<V> {
 			context.set(entry.key().location(), entry.value());
 
 			if (this.testFilter(context)) {
-				callback.onAdded(context);
+				callback.onAdded(this.registry, context);
 			}
 		});
 
@@ -74,9 +74,9 @@ public class RegistryMonitorImpl<V> implements RegistryMonitor<V> {
 
 	@Override
 	public void forUpcoming(RegistryEvents.EntryAdded<V> callback) {
-		RegistryEvents.getEntryAddEvent(this.registry).register(context -> {
-			if (this.testFilter(context)) {
-				callback.onAdded(context);
+		RegistryEvents.ENTRY_ADDED_EVENT.register((registry, context) -> {
+			if (registry == this.registry && this.testFilter(context)) {
+				callback.onAdded(registry, context);
 			}
 		});
 	}

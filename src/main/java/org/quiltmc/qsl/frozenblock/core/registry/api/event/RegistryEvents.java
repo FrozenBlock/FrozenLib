@@ -52,9 +52,12 @@ public final class RegistryEvents {
 	 * @param <V>      the entry type of the {@link Registry} to listen for
 	 * @return the entry added event for the specified registry, which can have callbacks registered to it
 	 */
-	public static <V> Event<EntryAdded<V>> getEntryAddEvent(Registry<V> registry) {
-		return RegistryEventStorage.as(registry).quilt$getEntryAddedEvent();
-	}
+	public static final Event<EntryAdded> ENTRY_ADDED_EVENT = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class,
+			callbacks -> (registry, context) -> {
+				for (var callback : callbacks) {
+					callback.onAdded(registry, context);
+				}
+			});
 
 	/**
 	 * This event gets triggered when a new {@link RegistryAccess} gets created,
@@ -95,10 +98,10 @@ public final class RegistryEvents {
 	);
 
 	/**
-	 * Functional interface to be implemented on callbacks for {@link #getEntryAddEvent(Registry)}.
+	 * Functional interface to be implemented on callbacks for {@link #ENTRY_ADDED_EVENT}.
 	 *
 	 * @param <V> the entry type of the {@link Registry} being listened for
-	 * @see #getEntryAddEvent(Registry)
+	 * @see #ENTRY_ADDED_EVENT
 	 */
 	@FunctionalInterface
 	public interface EntryAdded<V> {
@@ -108,7 +111,7 @@ public final class RegistryEvents {
 		 * @param context an object containing information regarding the registry, entry object, and ID of the entry
 		 *                being registered
 		 */
-		void onAdded(RegistryEntryContext<V> context);
+		void onAdded(Registry<V> registry, RegistryEntryContext<V> context);
 	}
 
 	@FunctionalInterface

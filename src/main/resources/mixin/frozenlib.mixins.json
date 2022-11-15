@@ -19,7 +19,7 @@
     "server.NoExperimentalMixin",
     "server.PlayerMixin",
     "server.PointedDripstoneBlockMixin",
-    "server.RegistryMixin",
+	"server.BuiltInRegistriesMixin",
     "server.ServerItemCooldownsMixin",
     "server.fabric_api.FabricItemGroupEntriesMixin",
     "worldgen.SinglePoolElementMixin",

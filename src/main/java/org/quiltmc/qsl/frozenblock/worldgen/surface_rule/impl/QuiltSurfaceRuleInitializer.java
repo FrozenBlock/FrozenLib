@@ -20,6 +20,7 @@ package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -40,8 +41,8 @@ public class QuiltSurfaceRuleInitializer implements RegistryEvents.DynamicRegist
 
 	@Override
 	public void onDynamicRegistrySetup(@NotNull DynamicRegistryManagerSetupContext context) {
-		context.monitor(Registry.NOISE_GENERATOR_SETTINGS_REGISTRY, monitor -> {
-			monitor.forAll(ctx -> this.modifyChunkGeneratorSettings(ctx, context.resourceManager()));
+		context.monitor(Registries.NOISE_SETTINGS, monitor -> {
+			monitor.forAll((registry, ctx) -> this.modifyChunkGeneratorSettings(ctx, context.resourceManager()));
 		});
 	}
 

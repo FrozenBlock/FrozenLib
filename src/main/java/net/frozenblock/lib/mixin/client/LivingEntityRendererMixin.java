@@ -13,7 +13,7 @@ package net.frozenblock.lib.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.frozenblock.lib.entity.render.FrozenRenderType;
+import net.frozenblock.lib.entity.render.api.FrozenRenderType;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.spotting_icons.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import org.joml.Matrix3f;

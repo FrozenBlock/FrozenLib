@@ -11,6 +11,7 @@
 
 package net.frozenblock.lib.sound.api;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.joml.Vector3d;
 import org.joml.Vector3f;
 import io.netty.buffer.Unpooled;
@@ -41,7 +42,7 @@ public final class FrozenSoundPackets {
 			byteBuf.writeDouble(pos.getX());
 			byteBuf.writeDouble(pos.getY());
 			byteBuf.writeDouble(pos.getZ());
-			byteBuf.writeId(Registry.SOUND_EVENT, sound);
+			byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
 			byteBuf.writeEnum(source);
 			byteBuf.writeFloat(volume);
 			byteBuf.writeFloat(pitch);
@@ -58,7 +59,7 @@ public final class FrozenSoundPackets {
 			byteBuf.writeDouble(x);
 			byteBuf.writeDouble(y);
 			byteBuf.writeDouble(z);
-			byteBuf.writeId(Registry.SOUND_EVENT, sound);
+			byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
 			byteBuf.writeEnum(source);
 			byteBuf.writeFloat(volume);
 			byteBuf.writeFloat(pitch);
@@ -73,7 +74,7 @@ public final class FrozenSoundPackets {
 		if (!world.isClientSide) {
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 			byteBuf.writeVarInt(entity.getId());
-			byteBuf.writeId(Registry.SOUND_EVENT, sound);
+			byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
 			byteBuf.writeEnum(category);
 			byteBuf.writeFloat(volume);
 			byteBuf.writeFloat(pitch);
@@ -87,7 +88,7 @@ public final class FrozenSoundPackets {
         if (!world.isClientSide) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
             byteBuf.writeVarInt(entity.getId());
-            byteBuf.writeId(Registry.SOUND_EVENT, sound);
+            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
             byteBuf.writeEnum(category);
             byteBuf.writeFloat(volume);
             byteBuf.writeFloat(pitch);
@@ -102,7 +103,7 @@ public final class FrozenSoundPackets {
         if (!world.isClientSide) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
             byteBuf.writeVarInt(entity.getId());
-            byteBuf.writeId(Registry.SOUND_EVENT, sound);
+            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
             byteBuf.writeEnum(category);
             byteBuf.writeFloat(volume);
             byteBuf.writeFloat(pitch);
@@ -111,7 +112,7 @@ public final class FrozenSoundPackets {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
             if (entity instanceof LivingEntity living) {
-                ((EntityLoopingSoundInterface)living).addSound(Registry.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
+                ((EntityLoopingSoundInterface)living).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
             }
         }
     }
@@ -119,7 +120,7 @@ public final class FrozenSoundPackets {
     public static void createMovingRestrictionLoopingSound(ServerPlayer player, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeVarInt(entity.getId());
-        byteBuf.writeId(Registry.SOUND_EVENT, sound);
+        byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
         byteBuf.writeEnum(category);
         byteBuf.writeFloat(volume);
         byteBuf.writeFloat(pitch);
@@ -131,8 +132,8 @@ public final class FrozenSoundPackets {
         if (!world.isClientSide) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
             byteBuf.writeVarInt(entity.getId());
-            byteBuf.writeId(Registry.SOUND_EVENT, sound);
-            byteBuf.writeId(Registry.SOUND_EVENT, sound2);
+            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
+            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound2);
             byteBuf.writeEnum(category);
             byteBuf.writeFloat(volume);
             byteBuf.writeFloat(pitch);
@@ -143,7 +144,7 @@ public final class FrozenSoundPackets {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
             }
             if (entity instanceof LivingEntity living) {
-                ((EntityLoopingSoundInterface)living).addSound(Registry.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
+                ((EntityLoopingSoundInterface)living).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
             }
         }
     }
@@ -151,8 +152,8 @@ public final class FrozenSoundPackets {
     public static void createMovingRestrictionLoopingFadingDistanceSound(ServerPlayer player, Entity entity, SoundEvent sound, SoundEvent sound2, SoundSource category, float volume, float pitch, ResourceLocation id, float fadeDist, float maxDist) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeVarInt(entity.getId());
-        byteBuf.writeId(Registry.SOUND_EVENT, sound);
-        byteBuf.writeId(Registry.SOUND_EVENT, sound2);
+        byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
+        byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound2);
         byteBuf.writeEnum(category);
         byteBuf.writeFloat(volume);
         byteBuf.writeFloat(pitch);
@@ -165,8 +166,8 @@ public final class FrozenSoundPackets {
     public static void createMovingRestrictionFadingDistanceSound(ServerPlayer player, Entity entity, SoundEvent sound, SoundEvent sound2, SoundSource category, float volume, float pitch, ResourceLocation id, float fadeDist, float maxDist) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeVarInt(entity.getId());
-        byteBuf.writeId(Registry.SOUND_EVENT, sound);
-        byteBuf.writeId(Registry.SOUND_EVENT, sound2);
+        byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
+        byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound2);
         byteBuf.writeEnum(category);
         byteBuf.writeFloat(volume);
         byteBuf.writeFloat(pitch);
@@ -182,8 +183,8 @@ public final class FrozenSoundPackets {
             byteBuf.writeDouble(pos.x);
             byteBuf.writeDouble(pos.y);
             byteBuf.writeDouble(pos.z);
-            byteBuf.writeId(Registry.SOUND_EVENT, sound);
-            byteBuf.writeId(Registry.SOUND_EVENT, sound2);
+            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
+            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound2);
             byteBuf.writeEnum(category);
             byteBuf.writeFloat(volume);
             byteBuf.writeFloat(pitch);
@@ -200,8 +201,8 @@ public final class FrozenSoundPackets {
         if (!world.isClientSide) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
             byteBuf.writeVarInt(entity.getId());
-            byteBuf.writeId(Registry.SOUND_EVENT, startingSound);
-            byteBuf.writeId(Registry.SOUND_EVENT, sound);
+            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, startingSound);
+            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
             byteBuf.writeEnum(category);
             byteBuf.writeFloat(volume);
             byteBuf.writeFloat(pitch);
@@ -210,7 +211,7 @@ public final class FrozenSoundPackets {
                 ServerPlayNetworking.send(player, FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
             if (entity instanceof LivingEntity living) {
-                ((EntityLoopingSoundInterface)living).addSound(Registry.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
+                ((EntityLoopingSoundInterface)living).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
             }
         }
     }
@@ -218,8 +219,8 @@ public final class FrozenSoundPackets {
     public static void createStartingMovingRestrictionLoopingSound(ServerPlayer player, Entity entity, SoundEvent startingSound, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeVarInt(entity.getId());
-        byteBuf.writeId(Registry.SOUND_EVENT, startingSound);
-        byteBuf.writeId(Registry.SOUND_EVENT, sound);
+        byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, startingSound);
+        byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
         byteBuf.writeEnum(category);
         byteBuf.writeFloat(volume);
         byteBuf.writeFloat(pitch);

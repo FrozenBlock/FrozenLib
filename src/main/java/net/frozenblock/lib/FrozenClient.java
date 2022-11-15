@@ -32,6 +32,7 @@ import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -83,7 +84,7 @@ public final class FrozenClient implements ClientModInitializer {
 			double x = buf.readDouble();
 			double y = buf.readDouble();
 			double z = buf.readDouble();
-			SoundEvent sound = buf.readById(Registry.SOUND_EVENT);
+			SoundEvent sound = buf.readById(BuiltInRegistries.SOUND_EVENT);
 			SoundSource source = buf.readEnum(SoundSource.class);
 			float volume = buf.readFloat();
 			float pitch = buf.readFloat();
@@ -101,7 +102,7 @@ public final class FrozenClient implements ClientModInitializer {
     private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
-            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
             SoundSource category = byteBuf.readEnum(SoundSource.class);
             float volume = byteBuf.readFloat();
             float pitch = byteBuf.readFloat();
@@ -123,7 +124,7 @@ public final class FrozenClient implements ClientModInitializer {
     private static <T extends Entity> void receiveRestrictedMovingSoundLoopPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
-            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
             SoundSource category = byteBuf.readEnum(SoundSource.class);
             float volume = byteBuf.readFloat();
             float pitch = byteBuf.readFloat();
@@ -145,8 +146,8 @@ public final class FrozenClient implements ClientModInitializer {
     private static <T extends Entity> void receiveStartingRestrictedMovingSoundLoopPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
-            SoundEvent startingSound = byteBuf.readById(Registry.SOUND_EVENT);
-            SoundEvent loopingSound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent startingSound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+            SoundEvent loopingSound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
             SoundSource category = byteBuf.readEnum(SoundSource.class);
             float volume = byteBuf.readFloat();
             float pitch = byteBuf.readFloat();
@@ -168,8 +169,8 @@ public final class FrozenClient implements ClientModInitializer {
     private static <T extends Entity> void receiveMovingRestrictionLoopingFadingDistanceSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
-            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
-            SoundEvent sound2 = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+            SoundEvent sound2 = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
             SoundSource category = byteBuf.readEnum(SoundSource.class);
             float volume = byteBuf.readFloat();
             float pitch = byteBuf.readFloat();
@@ -194,8 +195,8 @@ public final class FrozenClient implements ClientModInitializer {
     private static <T extends Entity> void receiveMovingFadingDistanceSoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
-            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
-            SoundEvent sound2 = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+            SoundEvent sound2 = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
             SoundSource category = byteBuf.readEnum(SoundSource.class);
             float volume = byteBuf.readFloat();
             float pitch = byteBuf.readFloat();
@@ -221,8 +222,8 @@ public final class FrozenClient implements ClientModInitializer {
             double x = byteBuf.readDouble();
             double y = byteBuf.readDouble();
             double z = byteBuf.readDouble();
-            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
-            SoundEvent sound2 = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+            SoundEvent sound2 = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
             SoundSource category = byteBuf.readEnum(SoundSource.class);
             float volume = byteBuf.readFloat();
             float pitch = byteBuf.readFloat();
@@ -241,7 +242,7 @@ public final class FrozenClient implements ClientModInitializer {
     private static void receiveFlybySoundPacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.FLYBY_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
             int id = byteBuf.readVarInt();
-            SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+            SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
             SoundSource category = byteBuf.readEnum(SoundSource.class);
             float volume = byteBuf.readFloat();
             float pitch = byteBuf.readFloat();
@@ -260,7 +261,7 @@ public final class FrozenClient implements ClientModInitializer {
 
     private static void receiveCooldownChangePacket() {
         ClientPlayNetworking.registerGlobalReceiver(FrozenMain.COOLDOWN_CHANGE_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-            Item item = byteBuf.readById(Registry.ITEM);
+            Item item = byteBuf.readById(BuiltInRegistries.ITEM);
             int additional = byteBuf.readVarInt();
             ctx.execute(() -> {
                 ClientLevel level = Minecraft.getInstance().level;

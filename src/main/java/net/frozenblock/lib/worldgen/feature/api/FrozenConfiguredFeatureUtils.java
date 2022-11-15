@@ -11,9 +11,10 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricWorldgenProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
@@ -32,7 +33,7 @@ public final class FrozenConfiguredFeatureUtils {
 	}
 
 	public static ResourceKey<ConfiguredFeature<?, ?>> createKey(String namespace, String path) {
-		return ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, new ResourceLocation(namespace, path));
+		return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(namespace, path));
 	}
 
 	public static Holder<? extends ConfiguredFeature<NoneFeatureConfiguration, ?>> register(DynamicRegistryManagerSetupContext context, DynamicRegistryManagerSetupContext.RegistryMap registries, String namespace, String id, Feature<NoneFeatureConfiguration> feature) {
@@ -40,7 +41,7 @@ public final class FrozenConfiguredFeatureUtils {
 	}
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>, C extends ConfiguredFeature<FC, ?>> Holder.Reference<C> register(DynamicRegistryManagerSetupContext context, DynamicRegistryManagerSetupContext.RegistryMap registries, @NotNull String namespace, @NotNull String id, F feature, @NotNull FC config) {
-		var configuredRegistry = registries.get(Registry.CONFIGURED_FEATURE_REGISTRY);
+		var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
 		final ConfiguredFeature<FC, ?> configuredFeature = new ConfiguredFeature<>(feature, config);
 		Registry.register(configuredRegistry, new ResourceLocation(namespace, id), configuredFeature);
 		var featureEntry = getExact(registries, configuredFeature);
@@ -54,13 +55,13 @@ public final class FrozenConfiguredFeatureUtils {
 	}
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
-			FabricWorldgenProvider.Entries entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
+			FabricDynamicRegistryProvider.Entries entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
 		return entries.add(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
 	}
 
 	public static <FC extends FeatureConfiguration, V extends T, T extends ConfiguredFeature<FC, ?>> Holder.Reference<ConfiguredFeature<FeatureConfiguration, ?>> getExact(DynamicRegistryManagerSetupContext.RegistryMap registries, V value) {
-		var configuredRegistry = registries.get(Registry.CONFIGURED_FEATURE_REGISTRY);
+		var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
 		var holder = configuredRegistry.getHolderOrThrow(configuredRegistry.getResourceKey(value).orElseThrow());
 		var exactHolder = getExactReference(holder);
 		return exactHolder;
@@ -71,6 +72,6 @@ public final class FrozenConfiguredFeatureUtils {
 	}
 
 	public static Holder<ConfiguredFeature<?, ?>> getHolder(ResourceKey<ConfiguredFeature<?, ?>> resourceKey) {
-		return VanillaRegistries.createLookup().lookupOrThrow(Registry.CONFIGURED_FEATURE_REGISTRY).getOrThrow(resourceKey);
+		return VanillaRegistries.createLookup().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(resourceKey);
 	}
 }

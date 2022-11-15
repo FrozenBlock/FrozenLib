@@ -13,6 +13,7 @@ package net.frozenblock.lib.tags;
 
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
@@ -23,6 +24,6 @@ public final class FrozenEntityTags {
     }
 
     private static TagKey<EntityType<?>> bind(String path) {
-        return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, FrozenMain.id(path));
+        return TagKey.create(Registries.ENTITY_TYPE, FrozenMain.id(path));
     }
 }

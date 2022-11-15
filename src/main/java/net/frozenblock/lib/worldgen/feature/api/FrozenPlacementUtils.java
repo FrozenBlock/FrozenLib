@@ -12,9 +12,10 @@
 package net.frozenblock.lib.worldgen.feature.api;
 
 import java.util.List;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricWorldgenProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -28,11 +29,11 @@ public final class FrozenPlacementUtils {
 	}
 
 	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
-		return ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, new ResourceLocation(namespace, path));
+		return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(namespace, path));
 	}
 
 	public static Holder<PlacedFeature> register(
-			FabricWorldgenProvider.Entries entries,
+			FabricDynamicRegistryProvider.Entries entries,
 			ResourceKey<PlacedFeature> registryKey,
 			Holder<ConfiguredFeature<?, ?>> holder,
 			List<PlacementModifier> list
@@ -41,7 +42,7 @@ public final class FrozenPlacementUtils {
 	}
 
 	public static void register(
-			FabricWorldgenProvider.Entries entries,
+			FabricDynamicRegistryProvider.Entries entries,
 			ResourceKey<PlacedFeature> registryKey,
 			Holder<ConfiguredFeature<?, ?>> holder,
 			PlacementModifier... placementModifiers
@@ -50,6 +51,6 @@ public final class FrozenPlacementUtils {
 	}
 
 	public static Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {
-		return VanillaRegistries.createLookup().lookupOrThrow(Registry.PLACED_FEATURE_REGISTRY).getOrThrow(resourceKey);
+		return VanillaRegistries.createLookup().lookupOrThrow(Registries.PLACED_FEATURE).getOrThrow(resourceKey);
 	}
 }

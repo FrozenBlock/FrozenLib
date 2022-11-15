@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.render;
+package net.frozenblock.lib.entity.render.api;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;

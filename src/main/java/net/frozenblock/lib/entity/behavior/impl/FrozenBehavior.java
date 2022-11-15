@@ -9,9 +9,11 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entities.behavior.impl;
+package net.frozenblock.lib.entity.behavior.impl;
 
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.Internal
 public interface FrozenBehavior {
 
 	int getDuration();

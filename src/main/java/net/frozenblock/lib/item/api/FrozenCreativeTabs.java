@@ -15,6 +15,7 @@ import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.frozenblock.lib.item.impl.FabricItemGroupAccessor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Instrument;
@@ -92,7 +93,7 @@ public final class FrozenCreativeTabs {
 	public static void addInstrument(Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				for (Holder<Instrument> holder : Registry.INSTRUMENT.getTagOrEmpty(tagKey)) {
+				for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
 					entries.accept(InstrumentItem.create(instrument, holder), tabVisibility);
 				}
 			});
@@ -108,7 +109,7 @@ public final class FrozenCreativeTabs {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
 					List<ItemStack> list = new ArrayList<>();
-					for (Holder<Instrument> holder : Registry.INSTRUMENT.getTagOrEmpty(tagKey)) {
+					for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
 						list.add(InstrumentItem.create(instrument, holder));
 					}
 					entries.addBefore(comparedItem, list, tabVisibility);
@@ -126,7 +127,7 @@ public final class FrozenCreativeTabs {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
 					List<ItemStack> list = new ArrayList<>();
-					for (Holder<Instrument> holder : Registry.INSTRUMENT.getTagOrEmpty(tagKey)) {
+					for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
 						list.add(InstrumentItem.create(instrument, holder));
 					}
 					entries.addAfter(comparedItem, list, tabVisibility);

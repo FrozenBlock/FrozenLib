@@ -14,7 +14,7 @@ package net.frozenblock.lib.registry;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.entity.render.EntityTextureOverride;
+import net.frozenblock.lib.entity.render.api.EntityTextureOverride;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.SpottingIconPredicate;
 import net.minecraft.core.HolderLookup;

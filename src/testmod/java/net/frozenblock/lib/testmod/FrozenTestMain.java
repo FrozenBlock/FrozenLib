@@ -23,6 +23,7 @@ import net.frozenblock.lib.testmod.config.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;
 import net.frozenblock.lib.testmod.item.LootTableWhacker;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import net.minecraft.world.flag.FeatureFlags;
@@ -47,10 +48,10 @@ public final class FrozenTestMain implements ModInitializer {
     @Override
     public void onInitialize() {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
-        Registry.register(Registry.ITEM, id("camera"), CAMERA);
-        Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
-		FrozenCreativeTabs.add(CAMERA, CreativeModeTabs.TAB_TOOLS);
-		FrozenCreativeTabs.add(LOOT_TABLE_WHACKER, CreativeModeTabs.TAB_TOOLS);
+        Registry.register(BuiltInRegistries.ITEM, id("camera"), CAMERA);
+        Registry.register(BuiltInRegistries.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
+		FrozenCreativeTabs.add(CAMERA, CreativeModeTabs.TOOLS_AND_UTILITIES);
+		FrozenCreativeTabs.add(LOOT_TABLE_WHACKER, CreativeModeTabs.TOOLS_AND_UTILITIES);
 
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));

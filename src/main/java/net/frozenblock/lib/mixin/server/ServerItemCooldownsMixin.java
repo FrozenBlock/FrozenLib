@@ -16,6 +16,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
@@ -46,7 +47,7 @@ public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownI
 	@Override
     public void onCooldownChanged(Item item, int additional) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-        byteBuf.writeId(Registry.ITEM, item);
+        byteBuf.writeId(BuiltInRegistries.ITEM, item);
         byteBuf.writeVarInt(additional);
         ServerPlayNetworking.send(this.player, FrozenMain.COOLDOWN_CHANGE_PACKET, byteBuf);
     }

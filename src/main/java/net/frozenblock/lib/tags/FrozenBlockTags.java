@@ -13,6 +13,7 @@ package net.frozenblock.lib.tags;
 
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
@@ -23,6 +24,6 @@ public final class FrozenBlockTags {
     }
 
     private static TagKey<Block> bind(String path) {
-        return TagKey.create(Registry.BLOCK_REGISTRY, FrozenMain.id(path));
+        return TagKey.create(Registries.BLOCK, FrozenMain.id(path));
     }
 }
