@@ -25,5 +25,5 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @ApiStatus.Internal
 public interface QuiltSequenceMaterialRuleHooks {
-    void frozenblock_quilt$freeze();
+    void frozenLib_quilt$freeze();
 }

@@ -39,7 +39,9 @@ public final class FrozenCreativeTabs {
 	public static void add(ItemLike item, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				entries.accept(item);
+				var stack = new ItemStack(item);
+				stack.setCount(1);
+				entries.accept(stack);
 			});
 		}
 	}
@@ -58,11 +60,13 @@ public final class FrozenCreativeTabs {
 	 */
 	public static void addBefore(ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
-			List<ItemStack> list = List.of(new ItemStack(item));
+			var stack = new ItemStack(item);
+			stack.setCount(1);
+			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
 					entries.addBefore(comparedItem, list, tabVisibility);
-				}
+				//}
 			});
 		}
 	}
@@ -81,11 +85,13 @@ public final class FrozenCreativeTabs {
 	 */
 	public static void addAfter(ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
-			List<ItemStack> list = List.of(new ItemStack(item));
+			var stack = new ItemStack(item);
+			stack.setCount(1);
+			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
 					entries.addAfter(comparedItem, list, tabVisibility);
-				}
+				//}
 			});
 		}
 	}
@@ -94,7 +100,9 @@ public final class FrozenCreativeTabs {
 		for (CreativeModeTab tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
-					entries.accept(InstrumentItem.create(instrument, holder), tabVisibility);
+					var stack = InstrumentItem.create(instrument, holder);
+					stack.setCount(1);
+					entries.accept(stack, tabVisibility);
 				}
 			});
 		}
@@ -107,13 +115,15 @@ public final class FrozenCreativeTabs {
 	public static void addInstrumentBefore(Item comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
 					List<ItemStack> list = new ArrayList<>();
 					for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
-						list.add(InstrumentItem.create(instrument, holder));
+						var stack = InstrumentItem.create(instrument, holder);
+						stack.setCount(1);
+						list.add(stack);
 					}
 					entries.addBefore(comparedItem, list, tabVisibility);
-				}
+				//}
 			});
 		}
 	}
@@ -125,13 +135,15 @@ public final class FrozenCreativeTabs {
 	public static void addInstrumentAfter(Item comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
 		for (CreativeModeTab tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
 					List<ItemStack> list = new ArrayList<>();
 					for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
-						list.add(InstrumentItem.create(instrument, holder));
+						var stack = InstrumentItem.create(instrument, holder);
+						stack.setCount(1);
+						list.add(stack);
 					}
 					entries.addAfter(comparedItem, list, tabVisibility);
-				}
+				//}
 			});
 		}
 	}

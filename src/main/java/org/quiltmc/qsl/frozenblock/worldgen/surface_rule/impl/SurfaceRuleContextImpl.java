@@ -19,7 +19,6 @@
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
 import net.frozenblock.lib.worldgen.surface.FrozenSurfaceRules;
-import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -47,7 +46,7 @@ public class SurfaceRuleContextImpl implements SurfaceRuleContext {
     }
 
 	public SurfaceRules.RuleSource freeze() {
-		((QuiltSequenceMaterialRuleHooks) (Object) this.ruleSource).frozenblock_quilt$freeze();
+		((QuiltSequenceMaterialRuleHooks) (Object) this.ruleSource).frozenLib_quilt$freeze();
 		return this.ruleSource;
 	}
 

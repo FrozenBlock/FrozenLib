@@ -66,7 +66,12 @@ public interface DynamicRegistryManagerSetupContext {
 	default <V> @NotNull Optional<V> register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull ResourceLocation resourceLocation,
 											  @NotNull Supplier<V> gameObjectSupplier) {
 		return this.registryManager().registry(registryKey)
-				.map(registry -> Registry.register(registry, resourceLocation, gameObjectSupplier.get()));
+				.map(registry -> {
+					((DelayedRegistryImpl) registry).setFrozen(false);
+					var value = Registry.register(registry, resourceLocation, gameObjectSupplier.get());
+					((DelayedRegistryImpl) registry).setFrozen(true);
+					return value;
+				});
 	}
 
 	/**

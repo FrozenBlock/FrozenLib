@@ -26,6 +26,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
+import java.util.Set;
 
 public final class FrozenConfiguredFeatureUtils {
 	private FrozenConfiguredFeatureUtils() {
@@ -58,6 +59,14 @@ public final class FrozenConfiguredFeatureUtils {
 			FabricDynamicRegistryProvider.Entries entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
 		return entries.add(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
+	}
+
+	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
+			DynamicRegistryManagerSetupContext entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
+	) {
+		var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE));
+		var value = registry.register(Registries.CONFIGURED_FEATURE, registryKey.location(), new ConfiguredFeature<>(feature, featureConfiguration));
+		return Holder.direct(value);
 	}
 
 	public static <FC extends FeatureConfiguration, V extends T, T extends ConfiguredFeature<FC, ?>> Holder.Reference<ConfiguredFeature<FeatureConfiguration, ?>> getExact(DynamicRegistryManagerSetupContext.RegistryMap registries, V value) {

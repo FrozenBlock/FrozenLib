@@ -15,6 +15,9 @@
     "client": [
       "net.frozenblock.lib.testmod.FrozenTestClient"
     ],
+    "fabric-datagen": [
+      "net.frozenblock.lib.testmod.datagen.FrozenLibTestDatagen"
+    ],
     "frozenlib:events": [
       "org.quiltmc.qsl.frozenblock.worldgen.surface_rule.test.QuiltSurfaceRuleTest"
     ],

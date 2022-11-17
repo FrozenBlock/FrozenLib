@@ -28,7 +28,6 @@ import java.util.Set;
 import java.util.stream.Stream;
 
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
@@ -45,6 +44,7 @@ import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.DelayedRegistryImpl;
 
 /**
  * Modified to work on Fabric

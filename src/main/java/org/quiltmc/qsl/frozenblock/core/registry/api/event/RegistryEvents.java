@@ -25,7 +25,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.event.RegistryEventStorage;
 
 /**
  * Events for listening to the manipulation of Minecraft's content registries.

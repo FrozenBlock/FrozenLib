@@ -24,6 +24,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.DelayedRegistryImpl;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEntryContext;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryMonitor;
@@ -52,13 +53,14 @@ public class RegistryMonitorImpl<V> implements RegistryMonitor<V> {
 
 	@Override
 	public void forAll(RegistryEvents.EntryAdded<V> callback) {
-		if (!(this.registry instanceof WritableRegistry<V>)) {
+		if (!(this.registry instanceof MappedRegistry<V>)) {
 			throw new UnsupportedOperationException("Registry " + this.registry + " is not supported!");
 		}
 
 		var delayed = new DelayedRegistry<>((MappedRegistry<V>) this.registry);
 		var context = new MutableRegistryEntryContextImpl<>(delayed);
 
+		((DelayedRegistryImpl) this.registry).setFrozen(false);
 		this.registry.holders().forEach(entry -> {
 			context.set(entry.key().location(), entry.value());
 
@@ -70,6 +72,7 @@ public class RegistryMonitorImpl<V> implements RegistryMonitor<V> {
 		this.forUpcoming(callback);
 
 		delayed.applyDelayed();
+		((DelayedRegistryImpl) this.registry).setFrozen(true);
 	}
 
 	@Override
