@@ -58,7 +58,7 @@ public final class FrozenRenderType {
 							.setCullState(RenderStateShard.NO_CULL)
 							.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
 							.setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
-							//.setOverlayState(RenderStateShard.OVERLAY)
+							.setOverlayState(RenderStateShard.OVERLAY)
 							.createCompositeState(affectsOutline)
 			))
 	);

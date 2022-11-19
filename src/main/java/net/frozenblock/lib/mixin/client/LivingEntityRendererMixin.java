@@ -95,7 +95,6 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
         }
     }
 
-	//TODO: Render above blocks
 	@Unique
 	public void renderSpottingIcon(T entity, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
 		SpottingIconManager.SpottingIcon icon = entity.getSpottingIconManager().icon;
