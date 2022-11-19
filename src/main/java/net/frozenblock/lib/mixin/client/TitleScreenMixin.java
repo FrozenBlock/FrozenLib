@@ -13,7 +13,7 @@ package net.frozenblock.lib.mixin.client;
 
 import java.util.ArrayList;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.impl.NewPanoramas;
+import net.frozenblock.lib.menu.api.Panoramas;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.CubeMap;
@@ -41,7 +41,7 @@ public class TitleScreenMixin {
 
 	@Inject(method = "<init>(Z)V", at = @At("TAIL"))
 	public void multiplePans(boolean fading, CallbackInfo info) {
-		for (ResourceLocation panLocation : NewPanoramas.getNewPanoramas()) {
+		for (ResourceLocation panLocation : Panoramas.getPanoramas()) {
 			String namespace = panLocation.getNamespace();
 			String path = panLocation.getPath();
 			for(int i = 0; i < 6; ++i) {

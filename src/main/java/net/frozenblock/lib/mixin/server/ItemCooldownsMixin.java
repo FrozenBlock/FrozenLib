@@ -27,8 +27,7 @@ public class ItemCooldownsMixin implements CooldownInterface {
 
     @Final
     @Shadow
-    @Mutable
-    public final Map<Item, ItemCooldowns.CooldownInstance> cooldowns = Maps.newHashMap();
+    public Map<Item, ItemCooldowns.CooldownInstance> cooldowns;
 
 	@Unique
 	@Override

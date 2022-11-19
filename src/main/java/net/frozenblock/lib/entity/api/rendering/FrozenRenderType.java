@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.render;
+package net.frozenblock.lib.entity.api.rendering;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
@@ -43,12 +43,36 @@ public final class FrozenRenderType {
             })
     );
 
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize(
+			((texture, affectsOutline) -> create(
+					"entity_translucent_emissive_always_render_frozenlib",
+					DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+					VertexFormat.Mode.QUADS,
+					256,
+					false,
+					true,
+					RenderType.CompositeState.builder()
+							.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+							.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+							.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+							.setCullState(RenderStateShard.NO_CULL)
+							.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+							.setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
+							//.setOverlayState(RenderStateShard.OVERLAY)
+							.createCompositeState(affectsOutline)
+			))
+	);
+
     public static RenderType entityTranslucentEmissiveFixed(ResourceLocation resourceLocation) {
         return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, true);
     }
 
 	public static RenderType entityTranslucentEmissiveFixedNoOutline(ResourceLocation resourceLocation) {
 		return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, false);
+	}
+
+	public static RenderType entityTranslucentEmissiveAlwaysRender(ResourceLocation resourceLocation) {
+		return ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER.apply(resourceLocation, false);
 	}
 
     /*@Nullable

@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icons;
+package net.frozenblock.lib.spotting_icons.api;
 
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.registry.FrozenRegistry;
@@ -30,6 +30,7 @@ public final class SpottingIconPredicate<T extends Entity> {
 		this.predicate = predicate;
 	}
 
+	@SuppressWarnings("unchecked")
     public static <T extends Entity> IconPredicate<T> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
             if (FrozenRegistry.SPOTTING_ICON_PREDICATE.containsKey(id)) {

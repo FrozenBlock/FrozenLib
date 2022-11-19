@@ -11,6 +11,10 @@
 
 package net.frozenblock.lib.worldgen.biome.api;
 
+import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
+import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
+
+@InjectedInterface(MultiNoiseBiomeSource.class)
 public interface FrozenBiomeSourceAccess {
 
     boolean frozenLib_shouldModifyBiomeEntries();

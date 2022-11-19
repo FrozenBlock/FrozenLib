@@ -17,7 +17,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
-import net.frozenblock.lib.impl.NewPanoramas;
+import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.screenshake.ScreenShaker;
@@ -36,6 +36,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
@@ -63,7 +64,7 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconRemovePacket();
 		receivePlayerDamagePacket();
 
-		NewPanoramas.addNewPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
+		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
         FabricLoader.getInstance().getEntrypointContainers("frozenlib:client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
             try {
@@ -320,8 +321,8 @@ public final class FrozenClient implements ClientModInitializer {
 				ClientLevel level = Minecraft.getInstance().level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
-					if (entity instanceof EntitySpottingIconInterface iconInterface) {
-						iconInterface.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
+					if (entity instanceof LivingEntity livingEntity) {
+						livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
 					}
 				}
 			});
@@ -335,8 +336,8 @@ public final class FrozenClient implements ClientModInitializer {
 				ClientLevel level = Minecraft.getInstance().level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
-					if (entity instanceof EntitySpottingIconInterface iconInterface) {
-						iconInterface.getSpottingIconManager().icon = null;
+					if (entity instanceof LivingEntity livingEntity) {
+						livingEntity.getSpottingIconManager().icon = null;
 					}
 				}
 			});

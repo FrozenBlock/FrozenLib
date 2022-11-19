@@ -27,6 +27,11 @@ import org.jetbrains.annotations.Nullable;
  */
 public final class TagUtils {
 
+	private TagUtils() {
+		throw new UnsupportedOperationException("TagUtils contains only static declarations.");
+	}
+
+
     @Nullable
     public static <T> T getRandomEntry(TagKey<T> tag) {
         return getRandomEntry(RandomSource.create(), tag);
@@ -64,8 +69,5 @@ public final class TagUtils {
 
     public static <T> boolean isIn(@Nullable RegistryAccess registryAccess, TagKey<T> tagKey, T entry) {
         return TagUtil.isIn(registryAccess, tagKey, entry);
-    }
-
-    private TagUtils() {
     }
 }

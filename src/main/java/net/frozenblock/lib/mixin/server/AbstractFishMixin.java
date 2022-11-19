@@ -22,7 +22,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractFish.class)
-public final class AbstractFishMixin extends WaterAnimal {
+public abstract class AbstractFishMixin extends WaterAnimal {
 
 	private AbstractFishMixin(EntityType<? extends WaterAnimal> entityType, Level level) {
 		super(entityType, level);

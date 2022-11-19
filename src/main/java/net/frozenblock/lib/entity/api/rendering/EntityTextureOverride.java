@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.render;
+package net.frozenblock.lib.entity.api.rendering;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -28,9 +28,9 @@ public class EntityTextureOverride<T extends LivingEntity> {
 
     private final EntityType<T> type;
     private final ResourceLocation texture;
-    private final Condition condition;
+    private final Condition<T> condition;
 
-    public EntityTextureOverride(EntityType<T> type, ResourceLocation texture, Condition condition) {
+    public EntityTextureOverride(EntityType<T> type, ResourceLocation texture, Condition<T> condition) {
         this.type = type;
         this.texture = texture;
         this.condition = condition;
@@ -44,15 +44,15 @@ public class EntityTextureOverride<T extends LivingEntity> {
         return this.texture;
     }
 
-    public Condition getCondition() {
+    public Condition<T> getCondition() {
         return this.condition;
     }
 
-    public static <E extends LivingEntity> EntityTextureOverride<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, String...names) {
+    public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, String...names) {
         return register(key, type, texture, false, names);
     }
 
-    public static <E extends LivingEntity> EntityTextureOverride<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, boolean caseSensitive, String...names) {
+    public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, boolean caseSensitive, String...names) {
         return register(key, type, texture, (entity) -> {
             String entityName = ChatFormatting.stripFormatting(entity.getName().getString());
             AtomicBoolean isNameCorrect = new AtomicBoolean(false);
@@ -77,12 +77,12 @@ public class EntityTextureOverride<T extends LivingEntity> {
         });
     }
 
-    public static <E extends LivingEntity> EntityTextureOverride<E> register(ResourceLocation key, EntityType<E> type, ResourceLocation texture, Condition condition) {
+    public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, Condition<T> condition) {
         return Registry.register(FrozenRegistry.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(type, texture, condition));
     }
 
     @FunctionalInterface
-    public interface Condition {
-        boolean condition(LivingEntity entity);
+    public interface Condition<T extends LivingEntity> {
+        boolean condition(T entity);
     }
 }

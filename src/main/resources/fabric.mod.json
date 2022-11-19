@@ -43,6 +43,28 @@
     "quilted_fabric_api": "4.0.0-beta.8"
   },
   "custom": {
+    "loom:injected_interfaces": {
+      "net/minecraft/class_4097": [
+        "net/frozenblock/lib/entity/impl/behavior/FrozenBehavior"
+      ],
+      "net/minecraft/class_1796": [
+        "net/frozenblock/lib/item/impl/CooldownInterface"
+      ],
+      "net/minecraft/class_1817": [
+        "net/frozenblock/lib/item/impl/CooldownInterface"
+      ],
+      "net/minecraft/class_1309": [
+        "net/frozenblock/lib/sound/impl/EntityLoopingSoundInterface",
+        "net/frozenblock/lib/sound/impl/EntityLoopingFadingDistanceSoundInterface",
+        "net/frozenblock/lib/spotting_icons/impl/EntitySpottingIconInterface"
+      ],
+      "net/minecraft/class_4766": [
+        "net/frozenblock/lib/worldgen/biome/api/FrozenBiomeSourceAccess"
+      ],
+      "net/minecraft/class_6686/class_6710": [
+        "org/quiltmc/qsl/frozenblock/worldgen/surface_rule/impl/QuiltSequenceMaterialRuleHooks"
+      ]
+    },
 	"modmenu": {
 	  "links": {
 		"modmenu.discord": "https://discord.gg/EpkBWm844s"

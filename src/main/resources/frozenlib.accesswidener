@@ -51,12 +51,17 @@ transitive-accessible    class    net/minecraft/client/renderer/RenderType$Compo
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    NO_CULL    Lnet/minecraft/client/renderer/RenderStateShard$CullStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    COLOR_DEPTH_WRITE    Lnet/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard;
+transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    COLOR_WRITE    Lnet/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard;
+transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    NO_LAYERING    Lnet/minecraft/client/renderer/RenderStateShard$LayeringStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    OVERLAY    Lnet/minecraft/client/renderer/RenderStateShard$OverlayStateShard;
 transitive-accessible    method    net/minecraft/client/renderer/RenderType$CompositeRenderType    <init>    (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)V
 transitive-accessible    method    net/minecraft/client/renderer/RenderStateShard$TextureStateShard    <init>    (Lnet/minecraft/resources/ResourceLocation;ZZ)V
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    TRANSLUCENT_TRANSPARENCY    Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    RENDERTYPE_TRANSLUCENT_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible    method    net/minecraft/client/renderer/RenderStateShard$ShaderStateShard    <init>    (Ljava/util/function/Supplier;)V
+transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    RENDERTYPE_TEXT_INTENSITY_SEE_THROUGH_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
+transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    LIGHTMAP    Lnet/minecraft/client/renderer/RenderStateShard$LightmapStateShard;
+transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    NO_DEPTH_TEST    Lnet/minecraft/client/renderer/RenderStateShard$DepthTestStateShard;
 
 # Biomes
 transitive-accessible    class    net/minecraft/world/level/chunk/ChunkStatus$SimpleGenerationTask

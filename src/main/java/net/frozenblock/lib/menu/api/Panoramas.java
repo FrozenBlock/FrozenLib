@@ -9,23 +9,23 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.impl;
+package net.frozenblock.lib.menu.api;
 
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewPanoramas {
+public class Panoramas {
 
-	private static final List<ResourceLocation> NEW_PANORAMAS = new ArrayList<>();
+	private static final List<ResourceLocation> PANORAMAS = new ArrayList<>();
 
-	public static void addNewPanorama(ResourceLocation location) {
-		NEW_PANORAMAS.add(location);
+	public static void addPanorama(ResourceLocation location) {
+		PANORAMAS.add(location);
 	}
 
-	public static List<ResourceLocation> getNewPanoramas() {
-		return NEW_PANORAMAS;
+	public static List<ResourceLocation> getPanoramas() {
+		return PANORAMAS;
 	}
 
 }

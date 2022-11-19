@@ -9,7 +9,7 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.storage;
+package net.frozenblock.lib.storage.api;
 
 import java.util.Iterator;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;

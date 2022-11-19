@@ -17,10 +17,12 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 
 public final class FrozenEntityTags {
-    public static final TagKey<EntityType<?>> CREEPER_IGNORES = bind("creeper_ignores");
 
-    private FrozenEntityTags() {
-    }
+	private FrozenEntityTags() {
+		throw new UnsupportedOperationException("FrozenEntityTags contains only static declarations.");
+	}
+
+    public static final TagKey<EntityType<?>> CREEPER_IGNORES = bind("creeper_ignores");
 
     private static TagKey<EntityType<?>> bind(String path) {
         return TagKey.create(Registry.ENTITY_TYPE_REGISTRY, FrozenMain.id(path));

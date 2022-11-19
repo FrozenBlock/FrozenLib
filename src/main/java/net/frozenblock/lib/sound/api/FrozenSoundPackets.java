@@ -110,7 +110,7 @@ public final class FrozenSoundPackets {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
             if (entity instanceof LivingEntity living) {
-                ((EntityLoopingSoundInterface)living).addSound(Registry.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
+                living.addSound(Registry.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
             }
         }
     }
@@ -142,7 +142,7 @@ public final class FrozenSoundPackets {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
             }
             if (entity instanceof LivingEntity living) {
-                ((EntityLoopingSoundInterface)living).addSound(Registry.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
+                living.addSound(Registry.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
             }
         }
     }
@@ -209,7 +209,7 @@ public final class FrozenSoundPackets {
                 ServerPlayNetworking.send(player, FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
             if (entity instanceof LivingEntity living) {
-                ((EntityLoopingSoundInterface)living).addSound(Registry.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
+                living.addSound(Registry.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
             }
         }
     }

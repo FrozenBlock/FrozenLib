@@ -14,8 +14,8 @@ package net.frozenblock.lib.testmod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.impl.NewPanoramas;
-import net.frozenblock.lib.impl.NewSplahes;
+import net.frozenblock.lib.menu.api.Panoramas;
+import net.frozenblock.lib.menu.api.Splashes;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -28,8 +28,8 @@ public final class FrozenTestClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
-		NewSplahes.addNewSplashLocation(new ResourceLocation("frozenlib", "texts/splashes.txt"));
-		NewPanoramas.addNewPanorama(new ResourceLocation("frozenlib", "textures/gui/title/background/panorama"));
-		NewPanoramas.addNewPanorama(new ResourceLocation("this_will_throw_an_error", "textures/gui/title/background/panorama"));
+		Splashes.addSplashLocation(new ResourceLocation("frozenlib", "texts/splashes.txt"));
+		Panoramas.addPanorama(new ResourceLocation("frozenlib", "textures/gui/title/background/panorama"));
+		Panoramas.addPanorama(new ResourceLocation("this_will_throw_an_error", "textures/gui/title/background/panorama"));
     }
 }

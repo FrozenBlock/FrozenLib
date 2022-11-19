@@ -9,10 +9,22 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entities.behavior.impl;
+package net.frozenblock.lib.menu.api;
 
+import net.minecraft.resources.ResourceLocation;
+import java.util.ArrayList;
+import java.util.List;
 
-public interface FrozenBehavior {
+public class Splashes {
 
-	int getDuration();
+	private static final List<ResourceLocation> SPLASHES = new ArrayList<>();
+
+	public static void addSplashLocation(ResourceLocation location) {
+		SPLASHES.add(location);
+	}
+
+	public static List<ResourceLocation> getSplashes() {
+		return SPLASHES;
+	}
+
 }

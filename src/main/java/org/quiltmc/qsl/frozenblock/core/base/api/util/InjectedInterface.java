@@ -16,17 +16,23 @@
  * limitations under the License.
  */
 
-package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
+package org.quiltmc.qsl.frozenblock.core.base.api.util;
 
-import net.minecraft.world.level.levelgen.SurfaceRules;
-import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
+import java.lang.annotation.Documented;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * Modified to work on Fabric
+ * States that the annotated interface is injected into some of the game's classes.
  */
-@ApiStatus.Internal
-@InjectedInterface(SurfaceRules.SequenceRuleSource.class)
-public interface QuiltSequenceMaterialRuleHooks {
-    void frozenblock_quilt$freeze();
+@Documented
+@Retention(RetentionPolicy.CLASS)
+@Target(ElementType.TYPE)
+public @interface InjectedInterface {
+	/**
+	 * {@return the target classes for which the annotated interface is injected into}
+	 */
+	Class<?>[] value();
 }

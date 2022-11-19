@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Warden.class)
-public class WardenMixin extends Monster {
+public abstract class WardenMixin extends Monster {
 
 	private WardenMixin(EntityType<? extends Monster> entityType, Level level) {
 		super(entityType, level);

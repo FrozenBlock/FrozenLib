@@ -9,22 +9,13 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.impl;
+package net.frozenblock.lib.entity.impl.behavior;
 
-import net.minecraft.resources.ResourceLocation;
-import java.util.ArrayList;
-import java.util.List;
+import net.minecraft.world.entity.ai.behavior.Behavior;
+import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
-public class NewSplahes {
+@InjectedInterface(Behavior.class)
+public interface FrozenBehavior {
 
-	private static final List<ResourceLocation> NEW_SPLASHES = new ArrayList<>();
-
-	public static void addNewSplashLocation(ResourceLocation location) {
-		NEW_SPLASHES.add(location);
-	}
-
-	public static List<ResourceLocation> getNewSplashes() {
-		return NEW_SPLASHES;
-	}
-
+	int getDuration();
 }

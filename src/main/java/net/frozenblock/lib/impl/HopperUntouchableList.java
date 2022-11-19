@@ -23,9 +23,7 @@ public class HopperUntouchableList {
 
     public static boolean inventoryContainsBlacklisted(Container inventory) {
         if (inventory instanceof BlockEntity block) {
-            if (BLACKLISTED_TYPES.contains(block.getType())) {
-                return true;
-            }
+			return BLACKLISTED_TYPES.contains(block.getType());
         } else if (inventory instanceof CompoundContainer doubleInventory) {
             if (doubleInventory.container1 instanceof BlockEntity block) {
                 if (BLACKLISTED_TYPES.contains(block.getType())) {
@@ -33,9 +31,7 @@ public class HopperUntouchableList {
                 }
             }
             if (doubleInventory.container2 instanceof BlockEntity block) {
-                if (BLACKLISTED_TYPES.contains(block.getType())) {
-                    return true;
-                }
+				return BLACKLISTED_TYPES.contains(block.getType());
             }
         }
         return false;

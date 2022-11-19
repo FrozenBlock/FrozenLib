@@ -24,12 +24,13 @@ import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
-import net.frozenblock.lib.spotting_icons.SpottingIconPredicate;
+import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer;
@@ -137,18 +138,14 @@ public final class FrozenMain implements ModInitializer {
             ctx.execute(() -> {
                 if (dimension != null) {
                     Entity entity = dimension.getEntity(id);
-                    if (entity != null) {
-                        if (entity instanceof EntityLoopingSoundInterface soundInterface) {
-                            for (MovingLoopingSoundEntityManager.SoundLoopData nbt : soundInterface.getSounds().getSounds()) {
-                                FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
-                            }
-                        }
-						if (entity instanceof EntityLoopingFadingDistanceSoundInterface soundInterface) {
-							for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : soundInterface.getFadingDistanceSounds().getSounds()) {
-								FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), Registry.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
-							}
+                    if (entity instanceof LivingEntity livingEntity) {
+						for (MovingLoopingSoundEntityManager.SoundLoopData nbt : livingEntity.getSounds().getSounds()) {
+							FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
 						}
-                    }
+						for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : livingEntity.getFadingDistanceSounds().getSounds()) {
+							FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), Registry.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
+						}
+					}
                 }
             });
         });
@@ -162,8 +159,8 @@ public final class FrozenMain implements ModInitializer {
 				if (dimension != null) {
 					Entity entity = dimension.getEntity(id);
 					if (entity != null) {
-						if (entity instanceof EntitySpottingIconInterface icon) {
-							icon.getSpottingIconManager().sendIconPacket(player);
+						if (entity instanceof LivingEntity livingEntity) {
+							livingEntity.getSpottingIconManager().sendIconPacket(player);
 						}
 					}
 				}

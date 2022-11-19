@@ -9,10 +9,10 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entities.behavior;
+package net.frozenblock.lib.entity.api;
 
 import com.google.common.collect.ImmutableMap;
-import net.frozenblock.lib.entities.behavior.impl.FrozenBehavior;
+import net.frozenblock.lib.entity.impl.behavior.FrozenBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.PathfinderMob;
@@ -54,7 +54,7 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 
 	@Override
 	public boolean canStillUse(ServerLevel level, E entity, long gameTime) {
-		return this.tryTicks >= -((FrozenBehavior) this).getDuration() && this.tryTicks <= DURATION && this.isValidTarget(level, this.blockPos);
+		return this.tryTicks >= -this.getDuration() && this.tryTicks <= DURATION && this.isValidTarget(level, this.blockPos);
 	}
 
 	@Override
