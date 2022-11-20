@@ -17,13 +17,13 @@ import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityMixin implements EntitySpottingIconInterface {
@@ -40,14 +40,14 @@ public class EntityMixin implements EntitySpottingIconInterface {
     }
 
 
-    @Inject(method = "saveWithoutId", at = @At("TAIL"))
-    public void save(CompoundTag compoundTag, CallbackInfo info) {
+    @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
+    public void saveIconManager(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> info) {
 		if (this.frozenLib$SpottingIconManager != null) {
 			this.frozenLib$SpottingIconManager.save(compoundTag);
 		}
     }
 
-    @Inject(method = "load", at = @At("TAIL"))
+    @Inject(method = "load", at = @At(value = "INVOKE", target = ":net/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
     public void load(CompoundTag compoundTag, CallbackInfo info) {
 		this.frozenLib$SpottingIconManager.load(compoundTag);
     }
@@ -74,6 +74,5 @@ public class EntityMixin implements EntitySpottingIconInterface {
 	public SpottingIconManager getSpottingIconManager() {
 		return this.frozenLib$SpottingIconManager;
 	}
-
 
 }
