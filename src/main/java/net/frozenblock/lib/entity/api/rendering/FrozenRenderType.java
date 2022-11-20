@@ -58,6 +58,8 @@ public final class FrozenRenderType {
 							.setCullState(RenderStateShard.NO_CULL)
 							.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
 							.setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
+							//.setLayeringState(RenderStateShard.POLYGON_OFFSET_LAYERING)
+							//.setOutputState(RenderStateShard.TRANSLUCENT_TARGET)
 							.createCompositeState(affectsOutline)
 			))
 	);
