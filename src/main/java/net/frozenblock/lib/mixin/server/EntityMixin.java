@@ -12,13 +12,9 @@
 package net.frozenblock.lib.mixin.server;
 
 import net.frozenblock.lib.sound.api.FrozenClientPacketInbetween;
-import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
-import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -38,26 +34,26 @@ public class EntityMixin implements EntitySpottingIconInterface {
 	public boolean frozenLib$clientIconsSynced;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void setLoopingSoundManagers(EntityType<?> entityType, Level level, CallbackInfo info) {
-        LivingEntity entity = LivingEntity.class.cast(this);
+    private void setIconManager(EntityType<?> entityType, Level level, CallbackInfo info) {
+        Entity entity = Entity.class.cast(this);
 		this.frozenLib$SpottingIconManager = new SpottingIconManager(entity);
     }
 
 
     @Inject(method = "saveWithoutId", at = @At("TAIL"))
-    public void addLoopingSoundData(CompoundTag compoundTag, CallbackInfo info) {
+    public void save(CompoundTag compoundTag, CallbackInfo info) {
 		if (this.frozenLib$SpottingIconManager != null) {
 			this.frozenLib$SpottingIconManager.save(compoundTag);
 		}
     }
 
     @Inject(method = "load", at = @At("TAIL"))
-    public void readLoopingSoundData(CompoundTag compoundTag, CallbackInfo info) {
+    public void load(CompoundTag compoundTag, CallbackInfo info) {
 		this.frozenLib$SpottingIconManager.load(compoundTag);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void tickSoundsAndIcon(CallbackInfo info) {
+    public void tickIcon(CallbackInfo info) {
 		Entity entity = Entity.class.cast(this);
         if (!entity.level.isClientSide) {
 			this.frozenLib$SpottingIconManager.tick();

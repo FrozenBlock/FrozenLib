@@ -15,9 +15,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.Unpooled;
 import java.util.Objects;
 import java.util.Optional;
-import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
@@ -28,15 +28,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import org.slf4j.Logger;
 
 public class SpottingIconManager {
-    public LivingEntity entity;
+    public Entity entity;
     public int ticksToCheck;
 	public SpottingIcon icon;
 
-    public SpottingIconManager(LivingEntity entity) {
+    public SpottingIconManager(Entity entity) {
         this.entity = entity;
     }
 

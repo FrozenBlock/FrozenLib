@@ -114,7 +114,7 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void tickSoundsAndIcon(CallbackInfo info) {
+    public void tickSounds(CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (!entity.level.isClientSide) {
             this.frozenLib$loopingSoundManager.tick();
