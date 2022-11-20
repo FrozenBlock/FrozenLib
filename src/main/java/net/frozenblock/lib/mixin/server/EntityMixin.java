@@ -47,7 +47,7 @@ public class EntityMixin implements EntitySpottingIconInterface {
 		}
     }
 
-    @Inject(method = "load", at = @At(value = "INVOKE", target = ":net/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
+    @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
     public void load(CompoundTag compoundTag, CallbackInfo info) {
 		this.frozenLib$SpottingIconManager.load(compoundTag);
     }
