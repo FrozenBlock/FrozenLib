@@ -35,29 +35,20 @@ public class SpottingIconManager {
 	public int ticksToCheck;
 	public SpottingIcon icon;
 	public boolean clientHasIconResource;
-	private boolean clientIsInList;
 
 	public SpottingIconManager(Entity entity) {
 		this.entity = entity;
 	}
 
 	public void tick() {
-		if (this.entity.level.isClientSide) {
-			if (this.icon != null) {
-				if (!this.clientIsInList) {
-					SpottingIconClientManager.addManager(this);
-					this.clientIsInList = true;
-				}
-			} else if (this.clientIsInList) {
-				SpottingIconClientManager.removeManager(this);
-				this.clientIsInList = false;
-			}
-		}
 		if (this.ticksToCheck > 0) {
 			--this.ticksToCheck;
 		} else {
 			this.ticksToCheck = 20;
 			if (this.icon != null) {
+				if (this.entity.level.isClientSide) {
+					this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.getTexture());
+				}
 				if (!SpottingIconPredicate.getPredicate(this.icon.restrictionID).test(this.entity)) {
 					this.removeIcon();
 				}
@@ -78,7 +69,7 @@ public class SpottingIconManager {
 				ServerPlayNetworking.send(player, FrozenMain.SPOTTING_ICON_PACKET, byteBuf);
 			}
 		} else {
-			this.clientHasIconResource = SpottingIconClientManager.hasTexture(this.icon.getTexture());
+			this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.getTexture());
 		}
 		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onAdded(this.entity);
 	}
