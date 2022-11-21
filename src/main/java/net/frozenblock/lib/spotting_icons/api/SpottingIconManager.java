@@ -34,33 +34,10 @@ public class SpottingIconManager {
 	public Entity entity;
 	public int ticksToCheck;
 	public SpottingIcon icon;
+	public boolean clientHasIconResource;
 
 	public SpottingIconManager(Entity entity) {
 		this.entity = entity;
-	}
-
-	public void load(CompoundTag nbt) {
-		nbt.putInt("frozenSpottingIconTicksToCheck", this.ticksToCheck);
-		if (nbt.contains("frozenSpottingIcons")) {
-			this.icon = null;
-			DataResult<SpottingIcon> var10000 = SpottingIcon.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getCompound("frozenSpottingIcons")));
-			Logger var10001 = FrozenMain.LOGGER4;
-			Objects.requireNonNull(var10001);
-			Optional<SpottingIcon> icon = var10000.resultOrPartial(var10001::error);
-			icon.ifPresent(spottingIcon -> this.icon = spottingIcon);
-		}
-	}
-
-	public void save(CompoundTag nbt) {
-		this.ticksToCheck = nbt.getInt("frozenSpottingIconTicksToCheck");
-		if (this.icon != null) {
-			DataResult<Tag> var10000 = SpottingIcon.CODEC.encodeStart(NbtOps.INSTANCE, this.icon);
-			Logger var10001 = FrozenMain.LOGGER4;
-			Objects.requireNonNull(var10001);
-			var10000.resultOrPartial(var10001::error).ifPresent((iconNBT) -> nbt.put("frozenSpottingIcons", iconNBT));
-		} else if (nbt.contains("frozenSpottingIcons")) {
-			nbt.remove("frozenSpottingIcons");
-		}
 	}
 
 	public void tick() {
@@ -69,8 +46,10 @@ public class SpottingIconManager {
 		} else {
 			this.ticksToCheck = 20;
 			if (this.icon != null) {
-				final SpottingIconPredicate.IconPredicate<Entity> predicate = SpottingIconPredicate.getPredicate(this.icon.restrictionID);
-				if (!predicate.test(this.entity)) {
+				if (this.entity.level.isClientSide) {
+					this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.getTexture());
+				}
+				if (!SpottingIconPredicate.getPredicate(this.icon.restrictionID).test(this.entity)) {
 					this.removeIcon();
 				}
 			}
@@ -89,6 +68,8 @@ public class SpottingIconManager {
 			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
 				ServerPlayNetworking.send(player, FrozenMain.SPOTTING_ICON_PACKET, byteBuf);
 			}
+		} else {
+			this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.getTexture());
 		}
 		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onAdded(this.entity);
 	}
@@ -114,6 +95,30 @@ public class SpottingIconManager {
 			byteBuf.writeFloat(this.icon.endFadeDist);
 			byteBuf.writeResourceLocation(this.icon.restrictionID);
 			ServerPlayNetworking.send(player, FrozenMain.SPOTTING_ICON_PACKET, byteBuf);
+		}
+	}
+
+	public void load(CompoundTag nbt) {
+		nbt.putInt("frozenSpottingIconTicksToCheck", this.ticksToCheck);
+		if (nbt.contains("frozenSpottingIcons")) {
+			this.icon = null;
+			DataResult<SpottingIcon> var10000 = SpottingIcon.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getCompound("frozenSpottingIcons")));
+			Logger var10001 = FrozenMain.LOGGER4;
+			Objects.requireNonNull(var10001);
+			Optional<SpottingIcon> icon = var10000.resultOrPartial(var10001::error);
+			icon.ifPresent(spottingIcon -> this.icon = spottingIcon);
+		}
+	}
+
+	public void save(CompoundTag nbt) {
+		this.ticksToCheck = nbt.getInt("frozenSpottingIconTicksToCheck");
+		if (this.icon != null) {
+			DataResult<Tag> var10000 = SpottingIcon.CODEC.encodeStart(NbtOps.INSTANCE, this.icon);
+			Logger var10001 = FrozenMain.LOGGER4;
+			Objects.requireNonNull(var10001);
+			var10000.resultOrPartial(var10001::error).ifPresent((iconNBT) -> nbt.put("frozenSpottingIcons", iconNBT));
+		} else if (nbt.contains("frozenSpottingIcons")) {
+			nbt.remove("frozenSpottingIcons");
 		}
 	}
 
