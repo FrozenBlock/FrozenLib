@@ -42,6 +42,12 @@ transitive-accessible    method    net/minecraft/world/level/block/AbstractCauld
 transitive-accessible    method    net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo    <init>    (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    <init>    (Ljava/lang/String;)V
 transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    register    (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
+transitive-accessible    method    net/minecraft/world/level/block/StairBlock    <init>    Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/WoodButtonBlock    <init>    (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/PressurePlateBlock    <init>    (Lnet/minecraft/world/level/block/PressurePlateBlock$Sensitivity;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/DoorBlock    <init>    (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/TrapDoorBlock    <init>    (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/SaplingBlock    <init>    (Lnet/minecraft/world/level/block/grower/AbstractTreeGrower;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 
 # Block Entities
 transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
