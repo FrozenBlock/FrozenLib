@@ -18,12 +18,11 @@ public final class BlockMixin {
     private void getSoundGroupOverride(BlockState state, CallbackInfoReturnable<SoundType> info) {
         Block block = state.getBlock();
         ResourceLocation id = Registry.BLOCK.getKey(block);
-        if (BlockSoundGroupOverwrites.IDS.contains(id)) {
-            int index = BlockSoundGroupOverwrites.IDS.indexOf(id);
-            info.setReturnValue(BlockSoundGroupOverwrites.SOUND_GROUPS.get(index));
-        } else if (BlockSoundGroupOverwrites.NAMESPACES.contains(id.getNamespace())) {
-            int index = BlockSoundGroupOverwrites.NAMESPACES.indexOf(id.getNamespace());
-            info.setReturnValue(BlockSoundGroupOverwrites.NAMESPACE_SOUND_GROUPS.get(index));
+		String namespace = id.getNamespace();
+        if (BlockSoundGroupOverwrites.BLOCK_SOUNDS.containsKey(id)) {
+            info.setReturnValue(BlockSoundGroupOverwrites.BLOCK_SOUNDS.get(id));
+        } else if (BlockSoundGroupOverwrites.NAMESPACE_SOUNDS.containsKey(namespace)) {
+            info.setReturnValue(BlockSoundGroupOverwrites.NAMESPACE_SOUNDS.get(namespace));
         }
     }
 
