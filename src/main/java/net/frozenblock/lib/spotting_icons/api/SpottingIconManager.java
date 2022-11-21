@@ -46,12 +46,20 @@ public class SpottingIconManager {
 		} else {
 			this.ticksToCheck = 20;
 			if (this.icon != null) {
-				if (this.entity.level.isClientSide) {
-					this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.getTexture());
-				}
 				if (!SpottingIconPredicate.getPredicate(this.icon.restrictionID).test(this.entity)) {
 					this.removeIcon();
 				}
+			}
+		}
+	}
+
+	public void tickClient() {
+		if (this.ticksToCheck > 0) {
+			--this.ticksToCheck;
+		} else {
+			this.ticksToCheck = 20;
+			if (this.icon != null) {
+				this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.getTexture());
 			}
 		}
 	}
