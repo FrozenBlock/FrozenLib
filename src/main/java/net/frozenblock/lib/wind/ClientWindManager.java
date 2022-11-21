@@ -39,7 +39,7 @@ public class ClientWindManager {
 		prevCloudX = cloudX;
 		prevCloudY = cloudY;
 		prevCloudZ = cloudZ;
-		cloudX += windX * 0.-5;
+		cloudX += windX * 0.05;
 		if (cloudY > targetCloudY) {
 			cloudY -= windY * 0.005;
 		} else if (cloudY < targetCloudY) {
