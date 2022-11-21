@@ -35,17 +35,20 @@ public class ClientWindManager {
 		windY = vec3.y;
 		windZ = vec3.z;
 		//CLOUDS
-		targetCloudY = vec3.y();
 		prevCloudX = cloudX;
 		prevCloudY = cloudY;
 		prevCloudZ = cloudZ;
-		cloudX += windX * 0.05;
+
+		cloudX += (windX * 0.05);
+		cloudZ += (windZ * 0.05);
+
+		targetCloudY = vec3.y();
+		double cloudWindY = windY < 0 ? -windY : windY;
 		if (cloudY > targetCloudY) {
-			cloudY -= windY * 0.005;
+			cloudY -= cloudWindY * 0.05;
 		} else if (cloudY < targetCloudY) {
-			cloudY += windY * 0.005;
+			cloudY += cloudWindY * 0.05;
 		}
-		cloudZ += windZ * 0.05;
 	}
 
 	public static double getWindX(float partialTick) {

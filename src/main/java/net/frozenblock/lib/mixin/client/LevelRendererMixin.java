@@ -90,22 +90,20 @@ public class LevelRendererMixin {
 			RenderSystem.enableDepthTest();
 			RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.depthMask(true);
-			float g = 12.0F;
-			float h = 4.0F;
-			double d = 2.0E-4D;
-			double e = ClientWindManager.getCloudX(partialTick);
-			double i = (camX + e) / 12.0D;
-			double j = (double)(f - (float)camY + 0.33F) + ClientWindManager.getCloudY(partialTick);
-			double k = (camZ / 12.0D + 0.33000001311302185D) + ClientWindManager.getCloudZ(partialTick);
-			i -= (double)(Mth.floor(i / 2048.0D) * 2048);
-			k -= (double)(Mth.floor(k / 2048.0D) * 2048);
-			float l = (float)(i - (double)Mth.floor(i));
-			float m = (float)(j / 4.0D - (double)Mth.floor(j / 4.0D)) * 4.0F;
-			float n = (float)(k - (double)Mth.floor(k));
+
+			double cloudX = (camX / 12.0D) + ClientWindManager.getCloudX(partialTick);
+			double cloudY = (double)(f - (float)camY + 0.33F) + ClientWindManager.getCloudY(partialTick);
+			double cloudZ = (camZ / 12.0D + 0.33000001311302185D) + ClientWindManager.getCloudZ(partialTick);
+
+			cloudX -= Mth.floor(cloudX / 2048.0D) * 2048;
+			cloudZ -= Mth.floor(cloudZ / 2048.0D) * 2048;
+			float l = (float)(cloudX - (double)Mth.floor(cloudX));
+			float m = (float)(cloudY / 4.0D - (double)Mth.floor(cloudY / 4.0D)) * 4.0F;
+			float n = (float)(cloudZ - (double)Mth.floor(cloudZ));
 			Vec3 vec3 = this.level.getCloudColor(partialTick);
-			int o = (int)Math.floor(i);
-			int p = (int)Math.floor(j / 4.0D);
-			int q = (int)Math.floor(k);
+			int o = (int)Math.floor(cloudX);
+			int p = (int)Math.floor(cloudY / 4.0D);
+			int q = (int)Math.floor(cloudZ);
 			if (o != this.prevCloudX || p != this.prevCloudY || q != this.prevCloudZ || this.minecraft.options.getCloudsType() != this.prevCloudsType || this.prevCloudColor.distanceToSqr(vec3) > 2.0E-4D) {
 				this.prevCloudX = o;
 				this.prevCloudY = p;
@@ -123,7 +121,7 @@ public class LevelRendererMixin {
 				}
 
 				this.cloudBuffer = new VertexBuffer();
-				BufferBuilder.RenderedBuffer renderedBuffer = this.buildClouds(bufferBuilder, i, j, k, vec3);
+				BufferBuilder.RenderedBuffer renderedBuffer = this.buildClouds(bufferBuilder, cloudX, cloudY, cloudZ, vec3);
 				this.cloudBuffer.bind();
 				this.cloudBuffer.upload(renderedBuffer);
 				VertexBuffer.unbind();
