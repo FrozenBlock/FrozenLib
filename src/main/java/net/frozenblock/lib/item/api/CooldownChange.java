@@ -16,7 +16,11 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 
-public class CooldownChange {
+public final class CooldownChange {
+
+	private CooldownChange() {
+		throw new UnsupportedOperationException("CooldownChange contains only static declarations.");
+	}
 
 	public static void changeCooldown(Player player, Item item, int additionalCooldown, int min) {
 		ItemCooldowns manager = player.getCooldowns();
