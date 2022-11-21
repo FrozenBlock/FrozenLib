@@ -27,7 +27,7 @@ public class ClientWindManager {
 		prevWindY = windY;
 		prevWindZ = windZ;
 		time += 1;
-		double calcTime = time * 0.002;
+		double calcTime = time * 0.0005;
 		double calcTimeY = time * 0.0005;
 		Vec3 vec3 = EasyNoiseSampler.sampleVec3(EasyNoiseSampler.perlinXoro, calcTime, calcTimeY, calcTime);
 		windX = vec3.x;
@@ -38,9 +38,9 @@ public class ClientWindManager {
 		prevCloudY = cloudY;
 		prevCloudZ = cloudZ;
 
-		cloudX += (windX * 0.05);
+		cloudX += (windX * 0.025);
 		cloudY += (windY * 0.005);
-		cloudZ += (windZ * 0.05);
+		cloudZ += (windZ * 0.025);
 	}
 
 	public static double getWindX(float partialTick) {
