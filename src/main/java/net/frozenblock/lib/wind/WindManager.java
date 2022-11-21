@@ -48,7 +48,7 @@ public class WindManager {
 		cloudX += (windX * 0.025);
 		cloudY += (windY * 0.005);
 		cloudZ += (windZ * 0.025);
-		if (tickCount >= 100) {
+		if (tickCount >= 400) {
 			tickCount = 0;
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 			byteBuf.writeLong(server.overworld().getGameTime());
