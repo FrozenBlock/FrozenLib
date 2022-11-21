@@ -13,8 +13,8 @@ package net.frozenblock.lib;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
@@ -29,6 +29,7 @@ import net.frozenblock.lib.wind.WindManager;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -76,16 +77,17 @@ public final class FrozenMain implements ModInitializer {
 			}
 		});
 
-		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
+		ServerWorldEvents.LOAD.register((server, level) -> {
 			if (server != null) {
 				var seed = server.overworld().getSeed();
-				if (EasyNoiseSampler.seed != seed) {
-					EasyNoiseSampler.setSeed(seed);
-				}
+				EasyNoiseSampler.setSeed(seed);
+				WindManager.setSeed(seed);
 			}
 		});
-		ServerTickEvents.START_WORLD_TICK.register((level) -> {
-			WindManager.time = level.getGameTime();
+
+		ServerTickEvents.START_SERVER_TICK.register((server) -> {
+			ServerLevel level = server.overworld();
+			WindManager.time = server.overworld().getGameTime();
 			WindManager.tick(level);
 		});
 	}
@@ -185,6 +187,7 @@ public final class FrozenMain implements ModInitializer {
 				byteBuf.writeDouble(WindManager.cloudX);
 				byteBuf.writeDouble(WindManager.cloudY);
 				byteBuf.writeDouble(WindManager.cloudZ);
+				byteBuf.writeLong(ctx.overworld().getSeed());
 				ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
 			});
 		});

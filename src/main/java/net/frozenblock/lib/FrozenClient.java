@@ -356,6 +356,7 @@ public final class FrozenClient implements ClientModInitializer {
 			double x = byteBuf.readDouble();
 			double y = byteBuf.readDouble();
 			double z = byteBuf.readDouble();
+			long seed = byteBuf.readLong();
 			ctx.execute(() -> {
 				ClientLevel level = Minecraft.getInstance().level;
 				if (level != null) {
@@ -363,6 +364,7 @@ public final class FrozenClient implements ClientModInitializer {
 					ClientWindManager.cloudX = x;
 					ClientWindManager.cloudY = y;
 					ClientWindManager.cloudZ = z;
+					ClientWindManager.setSeed(seed);
 					ClientWindManager.hasSynced = true;
 				}
 			});
