@@ -86,7 +86,7 @@ public final class FrozenMain implements ModInitializer {
 		});
 		ServerTickEvents.START_WORLD_TICK.register((level) -> {
 			WindManager.time = level.getGameTime();
-			WindManager.tick();
+			WindManager.tick(level);
 		});
 	}
 

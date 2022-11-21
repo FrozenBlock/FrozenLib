@@ -395,7 +395,7 @@ public final class FrozenClient implements ClientModInitializer {
 				if (!ClientWindManager.hasSynced) {
 					FrozenClientPacketInbetween.requestWindSync();
 				}
-				ClientWindManager.tick();
+				ClientWindManager.tick(level);
 			}
 		});
 		ClientTickEvents.START_CLIENT_TICK.register(level -> {
