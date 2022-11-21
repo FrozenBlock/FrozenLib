@@ -60,7 +60,7 @@ public class LevelRendererMixin {
 					entity.yOld = entity.getY();
 					entity.zOld = entity.getZ();
 				}
-				this.renderEntityIcon(entity, d, e, f, partialTick, poseStack, (MultiBufferSource) bufferSource);
+				this.renderEntityIcon(entity, d, e, f, partialTick, poseStack, bufferSource);
 			}
 		}
 	}
@@ -70,7 +70,7 @@ public class LevelRendererMixin {
 		double e = Mth.lerp(partialTick, entity.yOld, entity.getY());
 		double f = Mth.lerp(partialTick, entity.zOld, entity.getZ());
 		float g = Mth.lerp(partialTick, entity.yRotO, entity.getYRot());
-		((EntityRenderDispatcherWithIcon)this.entityRenderDispatcher).renderIcon(entity, d - camX, e - camY, f - camZ, g, partialTick, poseStack, bufferSource, this.entityRenderDispatcher.getPackedLightCoords(entity, partialTick));
+		((EntityRenderDispatcherWithIcon) this.entityRenderDispatcher).renderIcon(entity, d - camX, e - camY, f - camZ, g, partialTick, poseStack, bufferSource, this.entityRenderDispatcher.getPackedLightCoords(entity, partialTick));
 	}
 
 }

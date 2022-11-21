@@ -19,8 +19,8 @@ import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 @InjectedInterface({ItemCooldowns.class, ServerItemCooldowns.class})
 public interface CooldownInterface {
 
-    void changeCooldown(Item item, int additional);
+	void changeCooldown(Item item, int additional);
 
-    void onCooldownChanged(Item item, int additional);
+	void onCooldownChanged(Item item, int additional);
 
 }

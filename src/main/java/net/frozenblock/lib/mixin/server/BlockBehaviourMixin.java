@@ -25,11 +25,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BlockBehaviour.class)
 public class BlockBehaviourMixin {
 
-    @Inject(method = "tick", at = @At("HEAD"))
-    public void tickScheduled(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo info) {
-        if (BlockScheduledTicks.TICKS.containsKey(state.getBlock())) {
-            BlockScheduledTicks.TICKS.get(state.getBlock()).tick(state, world, pos, random);
-        }
-    }
+	@Inject(method = "tick", at = @At("HEAD"))
+	public void tickScheduled(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo info) {
+		if (BlockScheduledTicks.TICKS.containsKey(state.getBlock())) {
+			BlockScheduledTicks.TICKS.get(state.getBlock()).tick(state, world, pos, random);
+		}
+	}
 
 }

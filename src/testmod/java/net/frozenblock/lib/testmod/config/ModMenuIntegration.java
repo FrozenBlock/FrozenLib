@@ -21,11 +21,11 @@ import net.minecraft.client.gui.screens.Screen;
 @Environment(EnvType.CLIENT)
 public final class ModMenuIntegration implements ModMenuApi {
 
-    @Override
-    public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-        if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return ModMenuConfigInteractionHandler.buildScreen();
-        }
-        return (screen -> null);
-    }
+	@Override
+	public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
+		if (FrozenBools.HAS_CLOTH_CONFIG) {
+			return ModMenuConfigInteractionHandler.buildScreen();
+		}
+		return (screen -> null);
+	}
 }

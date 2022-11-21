@@ -12,11 +12,9 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.screenshake.ScreenShakePackets;
-import net.frozenblock.lib.testmod.FrozenTestClient;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -30,12 +28,24 @@ public class ExplosionMixin {
 	@Shadow
 	@Final
 	private RandomSource random;
-	@Shadow @Final private Level level;
-	@Shadow @Final private double x;
-	@Shadow @Final private double y;
-	@Shadow @Final private double z;
-	@Shadow @Final private Explosion.BlockInteraction blockInteraction;
-	@Shadow @Final private float radius;
+	@Shadow
+	@Final
+	private Level level;
+	@Shadow
+	@Final
+	private double x;
+	@Shadow
+	@Final
+	private double y;
+	@Shadow
+	@Final
+	private double z;
+	@Shadow
+	@Final
+	private Explosion.BlockInteraction blockInteraction;
+	@Shadow
+	@Final
+	private float radius;
 
 	@Inject(method = "finalizeExplosion", at = @At(value = "TAIL"))
 	public void finalizeExplosion(boolean spawnParticles, CallbackInfo info) {

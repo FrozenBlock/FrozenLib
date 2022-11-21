@@ -21,9 +21,9 @@ import net.minecraft.core.MappedRegistry;
 
 public class FrozenRegistry {
 
-    public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenMain.id("entity_texture_override"))
-            .attribute(RegistryAttribute.SYNCED)
-            .buildAndRegister();
+	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenMain.id("entity_texture_override"))
+			.attribute(RegistryAttribute.SYNCED)
+			.buildAndRegister();
 
 	public static final MappedRegistry<SoundPredicate> SOUND_PREDICATE = FabricRegistryBuilder.createSimple(SoundPredicate.class, FrozenMain.id("sound_predicate_synced"))
 			.attribute(RegistryAttribute.SYNCED)
@@ -36,7 +36,7 @@ public class FrozenRegistry {
 			.attribute(RegistryAttribute.SYNCED)
 			.buildAndRegister();
 
-    public static void initRegistry() {
+	public static void initRegistry() {
 
-    }
+	}
 }

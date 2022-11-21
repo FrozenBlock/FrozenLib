@@ -37,39 +37,39 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(WorldOpenFlows.class)
 public abstract class IntegratedServerLoaderMixin {
-    @Shadow
-    private static void safeCloseAccess(LevelStorageSource.LevelStorageAccess storageSession, String worlName) {
-        throw new IllegalStateException("Mixin injection failed.");
-    }
+	@Shadow
+	private static void safeCloseAccess(LevelStorageSource.LevelStorageAccess storageSession, String worlName) {
+		throw new IllegalStateException("Mixin injection failed.");
+	}
 
-    @Shadow
-    protected abstract void doLoadLevel(Screen parentScreen, String worldName, boolean safeMode, boolean requireBackup);
+	@Shadow
+	protected abstract void doLoadLevel(Screen parentScreen, String worldName, boolean safeMode, boolean requireBackup);
 
-    @Inject(
-            method = "loadWorldStem(Lnet/minecraft/server/WorldLoader$PackConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;)Lnet/minecraft/server/WorldStem;",
-            at = @At("HEAD")
-    )
-    private void onStartDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
-                                     CallbackInfoReturnable<WorldStem> cir) {
-        ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
-    }
+	@Inject(
+			method = "loadWorldStem(Lnet/minecraft/server/WorldLoader$PackConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;)Lnet/minecraft/server/WorldStem;",
+			at = @At("HEAD")
+	)
+	private void onStartDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
+									 CallbackInfoReturnable<WorldStem> cir) {
+		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
+	}
 
-    @Inject(
-            method = "loadWorldStem(Lnet/minecraft/server/WorldLoader$PackConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;)Lnet/minecraft/server/WorldStem;",
-            at = @At("RETURN")
-    )
-    private void onEndDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
-                                   CallbackInfoReturnable<WorldStem> cir) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, cir.getReturnValue().resourceManager(), null);
-    }
+	@Inject(
+			method = "loadWorldStem(Lnet/minecraft/server/WorldLoader$PackConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;)Lnet/minecraft/server/WorldStem;",
+			at = @At("RETURN")
+	)
+	private void onEndDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
+								   CallbackInfoReturnable<WorldStem> cir) {
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, cir.getReturnValue().resourceManager(), null);
+	}
 
-    @ModifyArg(
-            method = {"createFreshLevel", "doLoadLevel(Lnet/minecraft/client/gui/screens/Screen;Ljava/lang/String;ZZ)V"},
-            at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V", remap = false),
-            index = 1
-    )
-    private Throwable onFailedDataPackLoad(Throwable throwable) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, throwable);
-        return throwable; // noop
-    }
+	@ModifyArg(
+			method = {"createFreshLevel", "doLoadLevel(Lnet/minecraft/client/gui/screens/Screen;Ljava/lang/String;ZZ)V"},
+			at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V", remap = false),
+			index = 1
+	)
+	private Throwable onFailedDataPackLoad(Throwable throwable) {
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, throwable);
+		return throwable; // noop
+	}
 }

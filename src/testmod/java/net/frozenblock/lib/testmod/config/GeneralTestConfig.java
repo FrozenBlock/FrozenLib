@@ -19,10 +19,9 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.FrozenConfig;
-import net.minecraft.resources.ResourceLocation;
-
 import static net.frozenblock.lib.testmod.config.TestConfig.text;
 import static net.frozenblock.lib.testmod.config.TestConfig.tooltip;
+import net.minecraft.resources.ResourceLocation;
 
 @Config(name = "general")
 public class GeneralTestConfig implements ConfigData {

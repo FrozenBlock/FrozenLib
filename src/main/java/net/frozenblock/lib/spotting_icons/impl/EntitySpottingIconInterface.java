@@ -13,14 +13,13 @@ package net.frozenblock.lib.spotting_icons.impl;
 
 import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
 @InjectedInterface(Entity.class)
 public interface EntitySpottingIconInterface {
 
-    boolean hasSyncedClient();
+	boolean hasSyncedClient();
 
-    SpottingIconManager getSpottingIconManager();
+	SpottingIconManager getSpottingIconManager();
 
 }

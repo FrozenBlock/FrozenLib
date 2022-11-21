@@ -15,7 +15,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.sound.api.RestrictedSoundInstance;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -24,33 +23,33 @@ import net.minecraft.world.entity.Entity;
 @Environment(EnvType.CLIENT)
 public class RestrictedMovingSoundLoop<T extends Entity> extends RestrictedSoundInstance {
 
-    private final T entity;
-    private final SoundPredicate.LoopPredicate<T> predicate;
+	private final T entity;
+	private final SoundPredicate.LoopPredicate<T> predicate;
 
-    public RestrictedMovingSoundLoop(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate) {
-        super(sound, category, SoundInstance.createUnseededRandom());
-        this.entity = entity;
-        this.looping = true;
-        this.delay = 0;
-        this.volume = volume;
-        this.pitch = pitch;
+	public RestrictedMovingSoundLoop(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate) {
+		super(sound, category, SoundInstance.createUnseededRandom());
+		this.entity = entity;
+		this.looping = true;
+		this.delay = 0;
+		this.volume = volume;
+		this.pitch = pitch;
 
-        this.x = (float) entity.getX();
-        this.y = (float) entity.getY();
-        this.z = (float) entity.getZ();
-        this.predicate = predicate;
+		this.x = (float) entity.getX();
+		this.y = (float) entity.getY();
+		this.z = (float) entity.getZ();
+		this.predicate = predicate;
 		this.predicate.onStart(this.entity);
-    }
+	}
 
-    @Override
-    public boolean canPlaySound() {
-        return !this.entity.isSilent();
-    }
+	@Override
+	public boolean canPlaySound() {
+		return !this.entity.isSilent();
+	}
 
-    @Override
-    public boolean canStartSilent() {
-        return true;
-    }
+	@Override
+	public boolean canStartSilent() {
+		return true;
+	}
 
 	@Override
 	public void stop() {
@@ -58,19 +57,19 @@ public class RestrictedMovingSoundLoop<T extends Entity> extends RestrictedSound
 		super.stop();
 	}
 
-    @Override
-    public void tick() {
-        if (this.entity.isRemoved()) {
-            this.stop();
-        } else {
-            if (!this.predicate.test(this.entity)) {
-                this.stop();
-            } else {
-                this.x = (float) this.entity.getX();
-                this.y = (float) this.entity.getY();
-                this.z = (float) this.entity.getZ();
-            }
-        }
-    }
+	@Override
+	public void tick() {
+		if (this.entity.isRemoved()) {
+			this.stop();
+		} else {
+			if (!this.predicate.test(this.entity)) {
+				this.stop();
+			} else {
+				this.x = (float) this.entity.getX();
+				this.y = (float) this.entity.getY();
+				this.z = (float) this.entity.getZ();
+			}
+		}
+	}
 
 }

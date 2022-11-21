@@ -23,13 +23,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Creeper.class)
 public class CreeperMixin {
 
-    @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
-    public void ignoreTag(@Nullable LivingEntity livingEntity, CallbackInfo info) {
-        if (livingEntity != null) {
-            if (livingEntity.getType().is(FrozenEntityTags.CREEPER_IGNORES)) {
-                info.cancel();
-            }
-        }
-    }
+	@Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
+	public void ignoreTag(@Nullable LivingEntity livingEntity, CallbackInfo info) {
+		if (livingEntity != null) {
+			if (livingEntity.getType().is(FrozenEntityTags.CREEPER_IGNORES)) {
+				info.cancel();
+			}
+		}
+	}
 
 }

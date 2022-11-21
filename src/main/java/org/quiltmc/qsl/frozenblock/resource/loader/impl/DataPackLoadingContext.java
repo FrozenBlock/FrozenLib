@@ -35,23 +35,23 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @ApiStatus.Internal
 public record DataPackLoadingContext(RegistryAccess.Writable registryManager,
-                                     ResourceManager resourceManager) {
-    /**
-     * Loads the registries from the {@link #resourceManager() resource manager}.
-     *
-     * @return the dynamic ops
-     */
-    public DynamicOps<JsonElement> loadRegistries() {
-        return RegistryOps.createAndLoad(JsonOps.INSTANCE, this.registryManager, this.resourceManager);
-    }
+									 ResourceManager resourceManager) {
+	/**
+	 * Loads the registries from the {@link #resourceManager() resource manager}.
+	 *
+	 * @return the dynamic ops
+	 */
+	public DynamicOps<JsonElement> loadRegistries() {
+		return RegistryOps.createAndLoad(JsonOps.INSTANCE, this.registryManager, this.resourceManager);
+	}
 
-    public DataResult<WorldGenSettings> loadGeneratorOptions(WorldGenSettings existing, DynamicOps<JsonElement> registryOps) {
-        DataResult<JsonElement> encodedBaseOptions = WorldGenSettings.CODEC.encodeStart(registryOps, existing)
-                .setLifecycle(Lifecycle.stable());
-        return encodedBaseOptions.flatMap(jsonElement -> WorldGenSettings.CODEC.parse(registryOps, jsonElement));
-    }
+	public DataResult<WorldGenSettings> loadGeneratorOptions(WorldGenSettings existing, DynamicOps<JsonElement> registryOps) {
+		DataResult<JsonElement> encodedBaseOptions = WorldGenSettings.CODEC.encodeStart(registryOps, existing)
+				.setLifecycle(Lifecycle.stable());
+		return encodedBaseOptions.flatMap(jsonElement -> WorldGenSettings.CODEC.parse(registryOps, jsonElement));
+	}
 
-    public DataResult<WorldGenSettings> loadDefaultGeneratorOptions(DynamicOps<JsonElement> registryOps) {
-        return this.loadGeneratorOptions(WorldPresets.createNormalWorldFromPreset(this.registryManager), registryOps);
-    }
+	public DataResult<WorldGenSettings> loadDefaultGeneratorOptions(DynamicOps<JsonElement> registryOps) {
+		return this.loadGeneratorOptions(WorldPresets.createNormalWorldFromPreset(this.registryManager), registryOps);
+	}
 }

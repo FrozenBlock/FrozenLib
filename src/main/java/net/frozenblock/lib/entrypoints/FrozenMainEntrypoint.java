@@ -13,8 +13,8 @@ package net.frozenblock.lib.entrypoints;
 
 public interface FrozenMainEntrypoint {
 
-    void init();
+	void init();
 
-    void initDevOnly();
+	void initDevOnly();
 
 }

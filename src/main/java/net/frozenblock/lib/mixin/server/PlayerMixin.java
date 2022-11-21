@@ -25,7 +25,7 @@ public final class PlayerMixin {
 
 	@Inject(method = "getHurtSound", at = @At("HEAD"), cancellable = true)
 	public void getHurtSound(DamageSource damageSource, CallbackInfoReturnable<SoundEvent> info) {
-			info.setReturnValue(PlayerDamageSourceSounds.getDamageSound(damageSource));
+		info.setReturnValue(PlayerDamageSourceSounds.getDamageSound(damageSource));
 	}
 
 }

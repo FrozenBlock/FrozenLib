@@ -22,9 +22,9 @@ public final class FrozenItemTags {
 		throw new UnsupportedOperationException("FrozenItemTags contains only static declarations.");
 	}
 
-    public static final TagKey<Item> NO_USE_GAME_EVENTS = of("dont_emit_use_game_events");
+	public static final TagKey<Item> NO_USE_GAME_EVENTS = of("dont_emit_use_game_events");
 
-    private static TagKey<Item> of(String path) {
-        return TagKey.create(Registry.ITEM_REGISTRY, FrozenMain.id(path));
-    }
+	private static TagKey<Item> of(String path) {
+		return TagKey.create(Registry.ITEM_REGISTRY, FrozenMain.id(path));
+	}
 }

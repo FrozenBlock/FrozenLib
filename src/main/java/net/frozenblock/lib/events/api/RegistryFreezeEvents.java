@@ -49,7 +49,7 @@ public final class RegistryFreezeEvents {
 	@FunctionalInterface
 	public interface StartRegistryFreeze extends CommonEventEntrypoint {
 		/**
-		 * @param allRegistries	This indicates whether the Registry is being frozen from {@link Registry#freezeBuiltins()} or not.
+		 * @param allRegistries This indicates whether the Registry is being frozen from {@link Registry#freezeBuiltins()} or not.
 		 */
 		void onStartRegistryFreeze(@Nullable Registry<?> registry, boolean allRegistries);
 	}
@@ -57,7 +57,7 @@ public final class RegistryFreezeEvents {
 	@FunctionalInterface
 	public interface EndRegistryFreeze extends CommonEventEntrypoint {
 		/**
-		 * @param allRegistries	This indicates whether the Registry is being frozen from {@link Registry#freezeBuiltins()} or not.
+		 * @param allRegistries This indicates whether the Registry is being frozen from {@link Registry#freezeBuiltins()} or not.
 		 */
 		void onEndRegistryFreeze(@Nullable Registry<?> registry, boolean allRegistries);
 	}

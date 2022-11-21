@@ -22,10 +22,7 @@ import net.frozenblock.lib.sound.api.FrozenSoundPackets;
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
-import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -39,40 +36,40 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
 
 public final class FrozenMain implements ModInitializer {
-    public static final String MOD_ID = "frozenlib";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
-    public static boolean DEV_LOGGING = false;
+	public static final String MOD_ID = "frozenlib";
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
+	public static boolean DEV_LOGGING = false;
 
-    /**
-     * Used for features that may be unstable and crash in public builds.
-     * <p>
-     * It's smart to use this for at least registries.
-     */
-    public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
+	/**
+	 * Used for features that may be unstable and crash in public builds.
+	 * <p>
+	 * It's smart to use this for at least registries.
+	 */
+	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
 
-    @Override
-    public void onInitialize() {
-        FrozenRegistry.initRegistry();
-        ServerFreezer.onInitialize();
-        QuiltSurfaceRuleInitializer.onInitialize();
-        SoundPredicate.init();
+	@Override
+	public void onInitialize() {
+		FrozenRegistry.initRegistry();
+		ServerFreezer.onInitialize();
+		QuiltSurfaceRuleInitializer.onInitialize();
+		SoundPredicate.init();
 		SpottingIconPredicate.init();
 
-        receiveSoundSyncPacket();
+		receiveSoundSyncPacket();
 		receiveIconSyncPacket();
 
-        FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
-            try {
-                FrozenMainEntrypoint mainPoint = entrypoint.getEntrypoint();
-                mainPoint.init();
-                if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-                    mainPoint.initDevOnly();
-                }
-            } catch (Throwable ignored) {
+		FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
+			try {
+				FrozenMainEntrypoint mainPoint = entrypoint.getEntrypoint();
+				mainPoint.init();
+				if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+					mainPoint.initDevOnly();
+				}
+			} catch (Throwable ignored) {
 
-            }
-        });
+			}
+		});
 
 		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
 			if (server != null) {
@@ -82,19 +79,19 @@ public final class FrozenMain implements ModInitializer {
 				}
 			}
 		});
-    }
+	}
 
-    //IDENTIFIERS
-    public static final ResourceLocation FLYBY_SOUND_PACKET = id("flyby_sound_packet");
+	//IDENTIFIERS
+	public static final ResourceLocation FLYBY_SOUND_PACKET = id("flyby_sound_packet");
 	public static final ResourceLocation LOCAL_SOUND_PACKET = id("local_sound_packet");
-    public static final ResourceLocation MOVING_RESTRICTION_LOOPING_SOUND_PACKET = id("moving_restriction_looping_sound_packet");
-    public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = id("starting_moving_restriction_looping_sound_packet");
-    public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = id("moving_restriction_sound_packet");
-    public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = id("moving_restriction_looping_fading_distance_sound_packet");
-    public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = id("fading_distance_sound_packet");
-    public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = id("moving_fading_distance_sound_packet");
-    public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
-    public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
+	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_SOUND_PACKET = id("moving_restriction_looping_sound_packet");
+	public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = id("starting_moving_restriction_looping_sound_packet");
+	public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = id("moving_restriction_sound_packet");
+	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = id("moving_restriction_looping_fading_distance_sound_packet");
+	public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = id("fading_distance_sound_packet");
+	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = id("moving_fading_distance_sound_packet");
+	public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
+	public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
 
 	public static final ResourceLocation SCREEN_SHAKE_PACKET = id("screen_shake_packet");
 	public static final ResourceLocation SCREEN_SHAKE_ENTITY_PACKET = id("screen_shake_entity_packet");
@@ -105,19 +102,19 @@ public final class FrozenMain implements ModInitializer {
 
 	public static final ResourceLocation HURT_SOUND_PACKET = id("hurt_sound_packet");
 
-    public static ResourceLocation id(String path) {
-        return new ResourceLocation(MOD_ID, path);
-    }
+	public static ResourceLocation id(String path) {
+		return new ResourceLocation(MOD_ID, path);
+	}
 
-    public static String string(String path) {
-        return id(path).toString();
-    }
+	public static String string(String path) {
+		return id(path).toString();
+	}
 
-    public static void log(String string, boolean should) {
-        if (should) {
-            LOGGER.info(string);
-        }
-    }
+	public static void log(String string, boolean should) {
+		if (should) {
+			LOGGER.info(string);
+		}
+	}
 
 	public static void warn(String string, boolean should) {
 		if (should) {
@@ -131,14 +128,14 @@ public final class FrozenMain implements ModInitializer {
 		}
 	}
 
-    private static void receiveSoundSyncPacket() {
-        ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
-            int id = byteBuf.readVarInt();
-            Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registry.DIMENSION_REGISTRY));
-            ctx.execute(() -> {
-                if (dimension != null) {
-                    Entity entity = dimension.getEntity(id);
-                    if (entity instanceof LivingEntity livingEntity) {
+	private static void receiveSoundSyncPacket() {
+		ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registry.DIMENSION_REGISTRY));
+			ctx.execute(() -> {
+				if (dimension != null) {
+					Entity entity = dimension.getEntity(id);
+					if (entity instanceof LivingEntity livingEntity) {
 						for (MovingLoopingSoundEntityManager.SoundLoopData nbt : livingEntity.getSounds().getSounds()) {
 							FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
 						}
@@ -146,10 +143,10 @@ public final class FrozenMain implements ModInitializer {
 							FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), Registry.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
 						}
 					}
-                }
-            });
-        });
-    }
+				}
+			});
+		});
+	}
 
 	private static void receiveIconSyncPacket() {
 		ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_SPOTTING_ICON_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {

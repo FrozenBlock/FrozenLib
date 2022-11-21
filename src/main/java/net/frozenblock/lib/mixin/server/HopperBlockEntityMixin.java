@@ -28,31 +28,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(HopperBlockEntity.class)
 public class HopperBlockEntityMixin {
 
-    @Inject(at = @At("HEAD"), method = "ejectItems", cancellable = true)
-    private static void preventEjection(Level world, BlockPos pos, BlockState state, Container inventory, CallbackInfoReturnable<Boolean> info) {
-        if (HopperUntouchableList.inventoryContainsBlacklisted(getAttachedContainer(world, pos, state))) {
-            info.cancel();
-            info.setReturnValue(false);
-        }
-    }
+	@Inject(at = @At("HEAD"), method = "ejectItems", cancellable = true)
+	private static void preventEjection(Level world, BlockPos pos, BlockState state, Container inventory, CallbackInfoReturnable<Boolean> info) {
+		if (HopperUntouchableList.inventoryContainsBlacklisted(getAttachedContainer(world, pos, state))) {
+			info.cancel();
+			info.setReturnValue(false);
+		}
+	}
 
-    @Inject(at = @At("HEAD"), method = "suckInItems", cancellable = true)
-    private static void preventInsertion(Level world, Hopper hopper, CallbackInfoReturnable<Boolean> info) {
-        if (HopperUntouchableList.inventoryContainsBlacklisted(getSourceContainer(world, hopper))) {
-            info.cancel();
-            info.setReturnValue(false);
-        }
-    }
+	@Inject(at = @At("HEAD"), method = "suckInItems", cancellable = true)
+	private static void preventInsertion(Level world, Hopper hopper, CallbackInfoReturnable<Boolean> info) {
+		if (HopperUntouchableList.inventoryContainsBlacklisted(getSourceContainer(world, hopper))) {
+			info.cancel();
+			info.setReturnValue(false);
+		}
+	}
 
-    @Nullable
-    @Shadow
-    private static Container getAttachedContainer(Level world, BlockPos pos, BlockState state) {
-        throw new AssertionError("Mixin injection failed. - FrozenLib HopperBlockEntityMixin");
-    }
+	@Nullable
+	@Shadow
+	private static Container getAttachedContainer(Level world, BlockPos pos, BlockState state) {
+		throw new AssertionError("Mixin injection failed. - FrozenLib HopperBlockEntityMixin");
+	}
 
-    @Nullable
-    @Shadow
-    private static Container getSourceContainer(Level world, Hopper hopper) {
-        throw new AssertionError("Mixin injection failed. - FrozenLib HopperBlockEntityMixin");
-    }
+	@Nullable
+	@Shadow
+	private static Container getSourceContainer(Level world, Hopper hopper) {
+		throw new AssertionError("Mixin injection failed. - FrozenLib HopperBlockEntityMixin");
+	}
 }

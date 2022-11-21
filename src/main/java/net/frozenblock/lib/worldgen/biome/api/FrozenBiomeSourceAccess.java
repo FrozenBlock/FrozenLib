@@ -17,7 +17,7 @@ import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 @InjectedInterface(MultiNoiseBiomeSource.class)
 public interface FrozenBiomeSourceAccess {
 
-    boolean frozenLib_shouldModifyBiomeEntries();
+	boolean frozenLib_shouldModifyBiomeEntries();
 
-    void frozenLib_setModifyBiomeEntries(boolean modifyBiomeEntries);
+	void frozenLib_setModifyBiomeEntries(boolean modifyBiomeEntries);
 }

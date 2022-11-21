@@ -31,42 +31,42 @@ import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 public class WaterloggableSaplingBlock extends SaplingBlock implements SimpleWaterloggedBlock {
-    private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	private static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
 
-    public WaterloggableSaplingBlock(AbstractTreeGrower generator, Properties settings) {
-        super(generator, settings);
-        this.registerDefaultState(this.stateDefinition.any().setValue(STAGE, 0).setValue(WATERLOGGED, false));
-    }
-
-	@Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(STAGE).add(WATERLOGGED);
-    }
+	public WaterloggableSaplingBlock(AbstractTreeGrower generator, Properties settings) {
+		super(generator, settings);
+		this.registerDefaultState(this.stateDefinition.any().setValue(STAGE, 0).setValue(WATERLOGGED, false));
+	}
 
 	@Override
-    protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos) {
-        return super.mayPlaceOn(floor, world, pos) || floor.is(Blocks.CLAY) || floor.is(Blocks.MUD) || floor.is(Blocks.SAND);
-    }
+	protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+		builder.add(STAGE).add(WATERLOGGED);
+	}
 
 	@Override
-    @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
-        boolean bl = fluidState.getType() == Fluids.WATER;
-        return Objects.requireNonNull(super.getStateForPlacement(ctx)).setValue(WATERLOGGED, bl);
-    }
+	protected boolean mayPlaceOn(BlockState floor, BlockGetter world, BlockPos pos) {
+		return super.mayPlaceOn(floor, world, pos) || floor.is(Blocks.CLAY) || floor.is(Blocks.MUD) || floor.is(Blocks.SAND);
+	}
 
 	@Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-        }
-
-        return direction == Direction.UP && !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
-    }
+	@Nullable
+	public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+		FluidState fluidState = ctx.getLevel().getFluidState(ctx.getClickedPos());
+		boolean bl = fluidState.getType() == Fluids.WATER;
+		return Objects.requireNonNull(super.getStateForPlacement(ctx)).setValue(WATERLOGGED, bl);
+	}
 
 	@Override
-    public FluidState getFluidState(BlockState state) {
-        return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
-    }
+	public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
+		if (state.getValue(WATERLOGGED)) {
+			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+		}
+
+		return direction == Direction.UP && !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+	}
+
+	@Override
+	public FluidState getFluidState(BlockState state) {
+		return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
+	}
 }

@@ -22,10 +22,10 @@ import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 @InjectedInterface(LivingEntity.class)
 public interface EntityLoopingSoundInterface {
 
-    boolean hasSyncedClient();
+	boolean hasSyncedClient();
 
-    MovingLoopingSoundEntityManager getSounds();
+	MovingLoopingSoundEntityManager getSounds();
 
-    void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId);
+	void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId);
 
 }

@@ -25,26 +25,26 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 
 public class LootTableWhacker extends Item {
 
-    public LootTableWhacker(Properties settings) {
-        super(settings);
-    }
+	public LootTableWhacker(Properties settings) {
+		super(settings);
+	}
 
-    public InteractionResult useOn(UseOnContext context) {
-        Level level = context.getLevel();
-        BlockPos blockPos = context.getClickedPos();
-        ItemStack stack = context.getItemInHand();
-        if (stack.hasCustomHoverName()) {
-            if (stack.getHoverName().getString().contains(":")) {
-                String id = stack.getHoverName().getString();
-                List<String> strings = Arrays.stream(id.split(":")).toList();
-                ResourceLocation location = new ResourceLocation(strings.get(0), strings.get(1));
-                if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {
-                    loot.lootTable = location;
-                    FrozenMain.log(location.toString(), true);
-                }
-            }
-        }
-        return InteractionResult.SUCCESS;
-    }
+	public InteractionResult useOn(UseOnContext context) {
+		Level level = context.getLevel();
+		BlockPos blockPos = context.getClickedPos();
+		ItemStack stack = context.getItemInHand();
+		if (stack.hasCustomHoverName()) {
+			if (stack.getHoverName().getString().contains(":")) {
+				String id = stack.getHoverName().getString();
+				List<String> strings = Arrays.stream(id.split(":")).toList();
+				ResourceLocation location = new ResourceLocation(strings.get(0), strings.get(1));
+				if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {
+					loot.lootTable = location;
+					FrozenMain.log(location.toString(), true);
+				}
+			}
+		}
+		return InteractionResult.SUCCESS;
+	}
 
 }

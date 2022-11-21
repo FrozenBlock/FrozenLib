@@ -45,7 +45,7 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 	@Unique
 	@Override
 	public <T extends Entity> void renderIcon(T entity, float entityYaw, float partialTick, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
-		SpottingIconManager.SpottingIcon icon = ((EntitySpottingIconInterface)entity).getSpottingIconManager().icon;
+		SpottingIconManager.SpottingIcon icon = ((EntitySpottingIconInterface) entity).getSpottingIconManager().icon;
 		if (icon != null) {
 			double dist = Mth.sqrt((float) this.entityRenderDispatcher.distanceToSqr(entity));
 			if (dist > icon.startFadeDist) {
@@ -60,7 +60,7 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 				Matrix4f matrix4f = matrixStack.last().pose();
 				Matrix3f matrix3f = matrixStack.last().normal();
 				int overlay = OverlayTexture.pack(OverlayTexture.u(0F), OverlayTexture.v(false));
-				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveAlwaysRender(((EntitySpottingIconInterface)entity).getSpottingIconManager().icon.getTexture()));
+				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveAlwaysRender(((EntitySpottingIconInterface) entity).getSpottingIconManager().icon.getTexture()));
 				vertexConsumer
 						.vertex(matrix4f, -0.5F, -0.5F, 0.0F)
 						.color(1, 1, 1, alpha)

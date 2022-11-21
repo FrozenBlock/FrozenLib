@@ -33,77 +33,77 @@ import org.jetbrains.annotations.NotNull;
  * Modified to work on Fabric
  */
 public final class SurfaceRuleEvents {
-    /**
-     * Represents the event phase named {@code quilt:remove} for the modification events for which removals may happen.
-     * <p>
-     * This phase always happen after the {@link Event#DEFAULT_PHASE default phase}.
-     */
-    public static final ResourceLocation REMOVE_PHASE = new ResourceLocation("frozenblock_quilt", "remove");
+	/**
+	 * Represents the event phase named {@code quilt:remove} for the modification events for which removals may happen.
+	 * <p>
+	 * This phase always happen after the {@link Event#DEFAULT_PHASE default phase}.
+	 */
+	public static final ResourceLocation REMOVE_PHASE = new ResourceLocation("frozenblock_quilt", "remove");
 
-    /**
-     * An event indicating that the surface rules for the Overworld dimension may get modified by mods, allowing the injection of modded surface rules.
-     */
-    public static final Event<OverworldModifierCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldModifierCallback.class, callbacks -> context -> {
-        for (var callback : callbacks) {
-            callback.modifyOverworldRules(context);
-        }
-    });
+	/**
+	 * An event indicating that the surface rules for the Overworld dimension may get modified by mods, allowing the injection of modded surface rules.
+	 */
+	public static final Event<OverworldModifierCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldModifierCallback.class, callbacks -> context -> {
+		for (var callback : callbacks) {
+			callback.modifyOverworldRules(context);
+		}
+	});
 
-    /**
-     * An event indicating that the surface rules for the Nether dimension may get modified by mods, allowing the injection of modded surface rules.
-     */
-    public static final Event<NetherModifierCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherModifierCallback.class, callbacks -> context -> {
-        for (var callback : callbacks) {
-            callback.modifyNetherRules(context);
-        }
-    });
+	/**
+	 * An event indicating that the surface rules for the Nether dimension may get modified by mods, allowing the injection of modded surface rules.
+	 */
+	public static final Event<NetherModifierCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherModifierCallback.class, callbacks -> context -> {
+		for (var callback : callbacks) {
+			callback.modifyNetherRules(context);
+		}
+	});
 
-    /**
-     * An event indicating that the surface rules for the End dimension may get modified by mods, allowing the injection of modded surface rules.
-     */
-    public static final Event<TheEndModifierCallback> MODIFY_THE_END = FrozenEvents.createEnvironmentEvent(TheEndModifierCallback.class, callbacks -> context -> {
-        for (var callback : callbacks) {
-            callback.modifyTheEndRules(context);
-        }
-    });
+	/**
+	 * An event indicating that the surface rules for the End dimension may get modified by mods, allowing the injection of modded surface rules.
+	 */
+	public static final Event<TheEndModifierCallback> MODIFY_THE_END = FrozenEvents.createEnvironmentEvent(TheEndModifierCallback.class, callbacks -> context -> {
+		for (var callback : callbacks) {
+			callback.modifyTheEndRules(context);
+		}
+	});
 
-    @FunctionalInterface
-    public interface OverworldModifierCallback extends CommonEventEntrypoint {
-        /**
-         * Called to modify the given Overworld surface rules.
-         *
-         * @param context the modification context
-         */
-        void modifyOverworldRules(@NotNull SurfaceRuleContext.Overworld context);
-    }
+	@FunctionalInterface
+	public interface OverworldModifierCallback extends CommonEventEntrypoint {
+		/**
+		 * Called to modify the given Overworld surface rules.
+		 *
+		 * @param context the modification context
+		 */
+		void modifyOverworldRules(@NotNull SurfaceRuleContext.Overworld context);
+	}
 
-    @FunctionalInterface
-    public interface NetherModifierCallback extends CommonEventEntrypoint {
-        /**
-         * Called to modify the given Nether surface rules.
-         *
-         * @param context the modification context
-         */
-        void modifyNetherRules(@NotNull SurfaceRuleContext.Nether context);
-    }
+	@FunctionalInterface
+	public interface NetherModifierCallback extends CommonEventEntrypoint {
+		/**
+		 * Called to modify the given Nether surface rules.
+		 *
+		 * @param context the modification context
+		 */
+		void modifyNetherRules(@NotNull SurfaceRuleContext.Nether context);
+	}
 
-    @FunctionalInterface
-    public interface TheEndModifierCallback extends CommonEventEntrypoint {
-        /**
-         * Called to modify the given End surface rules.
-         *
-         * @param context the modification context
-         */
-        void modifyTheEndRules(@NotNull SurfaceRuleContext.TheEnd context);
-    }
+	@FunctionalInterface
+	public interface TheEndModifierCallback extends CommonEventEntrypoint {
+		/**
+		 * Called to modify the given End surface rules.
+		 *
+		 * @param context the modification context
+		 */
+		void modifyTheEndRules(@NotNull SurfaceRuleContext.TheEnd context);
+	}
 
-    private SurfaceRuleEvents() {
-        throw new UnsupportedOperationException("SurfaceMaterialRuleEvents contains only static definitions.");
-    }
+	private SurfaceRuleEvents() {
+		throw new UnsupportedOperationException("SurfaceMaterialRuleEvents contains only static definitions.");
+	}
 
-    static {
-        MODIFY_OVERWORLD.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
-        MODIFY_NETHER.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
-        MODIFY_THE_END.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
-    }
+	static {
+		MODIFY_OVERWORLD.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
+		MODIFY_NETHER.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
+		MODIFY_THE_END.addPhaseOrdering(Event.DEFAULT_PHASE, REMOVE_PHASE);
+	}
 }

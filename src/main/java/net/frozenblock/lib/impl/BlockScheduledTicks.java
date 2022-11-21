@@ -21,11 +21,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockScheduledTicks {
 
-    public static final Map<Block, InjectedScheduledTick> TICKS = new HashMap<>();
+	public static final Map<Block, InjectedScheduledTick> TICKS = new HashMap<>();
 
-    @FunctionalInterface
-    public interface InjectedScheduledTick {
-        void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random);
-    }
+	@FunctionalInterface
+	public interface InjectedScheduledTick {
+		void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random);
+	}
 
 }
