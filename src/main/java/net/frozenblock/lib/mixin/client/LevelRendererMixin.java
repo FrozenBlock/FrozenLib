@@ -186,7 +186,7 @@ public class LevelRendererMixin {
 
 	@Shadow
 	private BufferBuilder.RenderedBuffer buildClouds(BufferBuilder builder, double x, double y, double z, Vec3 cloudColor) {
-		throw new AssertionError("Mixin injection failed - FrozenLib LevelRendererMixin")
+		throw new AssertionError("Mixin injection failed - FrozenLib LevelRendererMixin");
 	}
 
 }
