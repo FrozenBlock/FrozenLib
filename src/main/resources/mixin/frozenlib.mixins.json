@@ -7,9 +7,10 @@
 	"server.AbstractFishMixin",
 	"server.BehaviorMixin",
 	"server.BlockBehaviourMixin",
+	"server.BlockMixin",
 	"server.BoneMealItemMixin",
 	"server.CreeperMixin",
-    "server.EntityMixin",
+	"server.EntityMixin",
 	"server.HopperBlockEntityMixin",
 	"server.ItemCooldownsMixin",
 	"server.LivingEntityMixin",
@@ -27,10 +28,10 @@
 	"defaultRequire": 1
   },
   "client": [
-    "client.EntityRenderDispatcherMixin",
-    "client.EntityRendererMixin",
+	"client.EntityRenderDispatcherMixin",
+	"client.EntityRendererMixin",
 	"client.GameRendererMixin",
-    "client.LevelRendererMixin",
+	"client.LevelRendererMixin",
 	"client.LivingEntityRendererMixin",
 	"client.SplashManagerMixin",
 	"client.TitleScreenMixin"
