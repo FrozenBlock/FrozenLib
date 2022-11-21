@@ -97,12 +97,12 @@ public final class OverworldBiomeData {
 
 	public static void modifyBiomeSource(Registry<Biome> biomeRegistry, BiomeSource biomeSource) {
 		if (biomeSource instanceof MultiNoiseBiomeSource multiNoiseBiomeSource) {
-			if (multiNoiseBiomeSource.frozenLib_shouldModifyBiomeEntries() && multiNoiseBiomeSource.stable(MultiNoiseBiomeSource.Preset.OVERWORLD)) {
+			if (((FrozenBiomeSourceAccess) multiNoiseBiomeSource).frozenLib_shouldModifyBiomeEntries() && multiNoiseBiomeSource.stable(MultiNoiseBiomeSource.Preset.OVERWORLD)) {
 				multiNoiseBiomeSource.parameters = OverworldBiomeData.withModdedBiomeEntries(
 						MultiNoiseBiomeSource.Preset.OVERWORLD.parameterSource.apply(biomeRegistry),
 						biomeRegistry);
 				multiNoiseBiomeSource.possibleBiomes = multiNoiseBiomeSource.parameters.values().stream().map(Pair::getSecond).collect(Collectors.toSet());
-				multiNoiseBiomeSource.frozenLib_setModifyBiomeEntries(false);
+				((FrozenBiomeSourceAccess) multiNoiseBiomeSource).frozenLib_setModifyBiomeEntries(false);
 			}
 		}
 	}

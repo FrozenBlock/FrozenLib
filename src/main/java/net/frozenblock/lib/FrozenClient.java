@@ -265,7 +265,7 @@ public final class FrozenClient implements ClientModInitializer {
 			ctx.execute(() -> {
 				ClientLevel level = Minecraft.getInstance().level;
 				if (level != null && Minecraft.getInstance().player != null) {
-					Minecraft.getInstance().player.getCooldowns().changeCooldown(item, additional);
+					((CooldownInterface) Minecraft.getInstance().player.getCooldowns()).changeCooldown(item, additional);
 				}
 			});
 		});
