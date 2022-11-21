@@ -57,12 +57,9 @@ public class EntityMixin implements EntitySpottingIconInterface {
 		Entity entity = Entity.class.cast(this);
 		if (!entity.level.isClientSide) {
 			this.frozenLib$SpottingIconManager.tick();
-		} else {
-			if (!this.frozenLib$clientIconsSynced) {
-				FrozenClientPacketInbetween.requestFrozenIconSync(entity.getId(), entity.level.dimension());
-				this.frozenLib$clientIconsSynced = true;
-			}
-			this.frozenLib$SpottingIconManager.tickClient();
+		} else if (!this.frozenLib$clientIconsSynced) {
+			FrozenClientPacketInbetween.requestFrozenIconSync(entity.getId(), entity.level.dimension());
+			this.frozenLib$clientIconsSynced = true;
 		}
 	}
 
