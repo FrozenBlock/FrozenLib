@@ -1,6 +1,7 @@
 package net.frozenblock.lib.wind;
 
 import net.frozenblock.lib.math.EasyNoiseSampler;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
 
 public class WindManager {
@@ -12,7 +13,8 @@ public class WindManager {
 	public static double cloudY;
 	public static double cloudZ;
 
-	public static void tick() {
+	public static void tick(ServerLevel level) {
+		level.getThunderLevel()
 		double calcTime = time * 0.0005;
 		double calcTimeY = time * 0.00035;
 		Vec3 vec3 = EasyNoiseSampler.sampleVec3(EasyNoiseSampler.perlinXoro, calcTime, calcTimeY, calcTime);
