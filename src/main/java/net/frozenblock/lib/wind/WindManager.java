@@ -14,13 +14,13 @@ public class WindManager {
 	public static double cloudZ;
 
 	public static void tick(ServerLevel level) {
-		level.getThunderLevel()
+		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
 		double calcTime = time * 0.0005;
 		double calcTimeY = time * 0.00035;
 		Vec3 vec3 = EasyNoiseSampler.sampleVec3(EasyNoiseSampler.perlinXoro, calcTime, calcTimeY, calcTime);
-		windX = vec3.x;
-		windY = vec3.y;
-		windZ = vec3.z;
+		windX = vec3.x + (vec3.x * thunderLevel);
+		windY = vec3.y + (vec3.y * thunderLevel);
+		windZ = vec3.z + (vec3.z * thunderLevel);
 		cloudX += (windX * 0.025);
 		cloudY += (windY * 0.005);
 		cloudZ += (windZ * 0.025);

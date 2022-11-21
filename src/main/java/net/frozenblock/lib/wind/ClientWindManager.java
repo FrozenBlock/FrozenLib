@@ -1,6 +1,7 @@
 package net.frozenblock.lib.wind;
 
 import net.frozenblock.lib.math.EasyNoiseSampler;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 
@@ -22,7 +23,8 @@ public class ClientWindManager {
 
 	public static boolean hasSynced;
 
-	public static void tick() {
+	public static void tick(ClientLevel level) {
+		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
 		prevWindX = windX;
 		prevWindY = windY;
 		prevWindZ = windZ;
@@ -30,14 +32,13 @@ public class ClientWindManager {
 		double calcTime = time * 0.0005;
 		double calcTimeY = time * 0.00035;
 		Vec3 vec3 = EasyNoiseSampler.sampleVec3(EasyNoiseSampler.perlinXoro, calcTime, calcTimeY, calcTime);
-		windX = vec3.x;
-		windY = vec3.y;
-		windZ = vec3.z;
+		windX = vec3.x + (vec3.x * thunderLevel);
+		windY = vec3.y + (vec3.y * thunderLevel);
+		windZ = vec3.z + (vec3.z * thunderLevel);
 		//CLOUDS
 		prevCloudX = cloudX;
 		prevCloudY = cloudY;
 		prevCloudZ = cloudZ;
-
 		cloudX += (windX * 0.025);
 		cloudY += (windY * 0.005);
 		cloudZ += (windZ * 0.025);
