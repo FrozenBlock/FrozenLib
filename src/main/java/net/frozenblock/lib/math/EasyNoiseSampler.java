@@ -68,7 +68,7 @@ public final class EasyNoiseSampler {
 		return ret;
 	}
 
-	public static Vec3 sampleVec3(ImprovedNoise sampler, long x, long y, long z) {
+	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
 		double windX = sampler.noise(x, 0, 0);
 		double windY = sampler.noise(0, y, 0);
 		double windZ = sampler.noise(0, 0, z);
