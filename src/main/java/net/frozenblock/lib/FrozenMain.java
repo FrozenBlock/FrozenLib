@@ -11,8 +11,10 @@
 
 package net.frozenblock.lib;
 
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
@@ -23,7 +25,9 @@ import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManag
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
+import net.frozenblock.lib.wind.WindManager;
 import net.minecraft.core.Registry;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -58,6 +62,7 @@ public final class FrozenMain implements ModInitializer {
 
 		receiveSoundSyncPacket();
 		receiveIconSyncPacket();
+		receiveWindSyncPacket();
 
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
 			try {
@@ -78,6 +83,10 @@ public final class FrozenMain implements ModInitializer {
 					EasyNoiseSampler.setSeed(seed);
 				}
 			}
+		});
+		ServerTickEvents.START_WORLD_TICK.register((level) -> {
+			WindManager.time = level.getGameTime();
+			WindManager.tick();
 		});
 	}
 
@@ -101,6 +110,9 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation REQUEST_SPOTTING_ICON_SYNC_PACKET = id("request_spotting_icon_sync_packet");
 
 	public static final ResourceLocation HURT_SOUND_PACKET = id("hurt_sound_packet");
+
+	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
+	public static final ResourceLocation REQUEST_WIND_SYNC_PACKET = id("request_wind_sync_packet");
 
 	public static ResourceLocation id(String path) {
 		return new ResourceLocation(MOD_ID, path);
@@ -161,6 +173,16 @@ public final class FrozenMain implements ModInitializer {
 						}
 					}
 				}
+			});
+		});
+	}
+
+	private static void receiveWindSyncPacket() {
+		ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_WIND_SYNC_PACKET, (ctx, player, handler, bytes, responseSender) -> {
+			ctx.execute(() -> {
+				FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+				byteBuf.writeLong(ctx.overworld().getGameTime());
+				ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
 			});
 		});
 	}

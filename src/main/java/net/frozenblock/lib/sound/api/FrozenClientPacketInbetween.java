@@ -27,4 +27,8 @@ public final class FrozenClientPacketInbetween {
 		FrozenClientPacketToServer.sendFrozenIconSyncRequest(id, level);
 	}
 
+	public static void requestWindSync() {
+		FrozenClientPacketToServer.sendWindSyncRequest();
+	}
+
 }
