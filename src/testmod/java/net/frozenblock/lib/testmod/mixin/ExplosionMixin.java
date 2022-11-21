@@ -49,7 +49,7 @@ public class ExplosionMixin {
 
 	@Inject(method = "finalizeExplosion", at = @At(value = "TAIL"))
 	public void finalizeExplosion(boolean spawnParticles, CallbackInfo info) {
-		ScreenShakePackets.createScreenShakePacket(this.level, (float) ((0.5F + (blockInteraction != Explosion.BlockInteraction.NONE ? 0.2F : 0) + radius * 0.1) / 5F), this.x, this.y, this.z, radius * 2);
+		ScreenShakePackets.createScreenShakePacket(this.level, (float) ((0.5F + (blockInteraction != Explosion.BlockInteraction.NONE ? 0.2F : 0) + radius * 0.1) / 5F), 5, 1, this.x, this.y, this.z, radius * 2);
 	}
 
 }
