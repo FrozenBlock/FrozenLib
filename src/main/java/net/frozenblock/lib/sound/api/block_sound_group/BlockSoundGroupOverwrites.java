@@ -28,12 +28,26 @@ public final class BlockSoundGroupOverwrites {
 	 * You can also add a LIST of blocks (IDs not allowed,) by using new Block[]{block1, block2}.
 	 */
 
+	/**
+	 * This will only work with vanilla blocks.
+	 */
 	public static void addBlock(String id, SoundType sounds) {
-		BLOCK_SOUNDS.put(new ResourceLocation(id), sounds);
+		var key = new ResourceLocation(id);
+		if (!Registry.BLOCK.containsKey(key)) {
+			throw new IllegalStateException("The specified block's id is null.");
+		}
+		BLOCK_SOUNDS.put(key, sounds);
 	}
 
-	public static void addBlock(String nameSpace, String id, SoundType sounds) {
-		BLOCK_SOUNDS.put(new ResourceLocation(id), sounds);
+	/**
+	 * Adds a block with the specified namespace and id.
+	 */
+	public static void addBlock(String namespace, String id, SoundType sounds) {
+		var key = new ResourceLocation(namespace, id);
+		if (!Registry.BLOCK.containsKey(key)) {
+			throw new IllegalStateException("The specified block's id is null.");
+		}
+		BLOCK_SOUNDS.put(key, sounds);
 	}
 
 	public static void addBlock(Block block, SoundType sounds) {
@@ -69,7 +83,7 @@ public final class BlockSoundGroupOverwrites {
 		}
 	}
 
-	public static void addNamespace(String nameSpace, SoundType sounds) {
-		NAMESPACE_SOUNDS.put(nameSpace, sounds);
+	public static void addNamespace(String namespace, SoundType sounds) {
+		NAMESPACE_SOUNDS.put(namespace, sounds);
 	}
 }
