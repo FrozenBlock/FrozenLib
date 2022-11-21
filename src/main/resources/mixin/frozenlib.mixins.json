@@ -16,6 +16,7 @@
 	"server.LivingEntityMixin",
 	"server.MappedRegistryMixin",
 	"server.NoExperimentalMixin",
+    "server.PlayerListMixin",
 	"server.PlayerMixin",
 	"server.PointedDripstoneBlockMixin",
 	"server.RegistryMixin",

@@ -9,22 +9,29 @@
  * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.api;
+package net.frozenblock.lib.events.api;
 
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
+import java.util.ArrayList;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
-public final class FrozenClientPacketInbetween {
-	private FrozenClientPacketInbetween() {
-		throw new UnsupportedOperationException("FrozenClientPacketInbetween contains only static declarations.");
+public class PlayerJoinEvent {
+
+	private static final ArrayList<PlayerJoin> JOIN_EVENTS = new ArrayList<>();
+
+	public static void register(PlayerJoin joinEvent) {
+		JOIN_EVENTS.add(joinEvent);
 	}
 
-	public static void requestFrozenSoundSync(int id, ResourceKey<Level> level) {
-		FrozenClientPacketToServer.sendFrozenSoundSyncRequest(id, level);
+	public static void onPlayerJoined(MinecraftServer server, ServerPlayer player) {
+		for (PlayerJoin joinEvent : JOIN_EVENTS) {
+			joinEvent.onPlayerJoin(server, player);
+		}
 	}
 
-	public static void requestFrozenIconSync(int id, ResourceKey<Level> level) {
-		FrozenClientPacketToServer.sendFrozenIconSyncRequest(id, level);
+	@FunctionalInterface
+	public interface PlayerJoin {
+		void onPlayerJoin(MinecraftServer server, ServerPlayer player);
 	}
 
 }

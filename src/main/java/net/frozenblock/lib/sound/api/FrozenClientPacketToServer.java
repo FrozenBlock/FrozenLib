@@ -37,9 +37,4 @@ public class FrozenClientPacketToServer {
 		ClientPlayNetworking.send(FrozenMain.REQUEST_SPOTTING_ICON_SYNC_PACKET, byteBuf);
 	}
 
-	public static void sendWindSyncRequest() {
-		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-		ClientPlayNetworking.send(FrozenMain.REQUEST_WIND_SYNC_PACKET, byteBuf);
-	}
-
 }

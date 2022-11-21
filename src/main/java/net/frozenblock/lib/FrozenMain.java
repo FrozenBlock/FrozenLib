@@ -18,6 +18,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
+import net.frozenblock.lib.events.api.PlayerJoinEvent;
 import net.frozenblock.lib.math.EasyNoiseSampler;
 import net.frozenblock.lib.registry.FrozenRegistry;
 import net.frozenblock.lib.sound.api.FrozenSoundPackets;
@@ -63,7 +64,6 @@ public final class FrozenMain implements ModInitializer {
 
 		receiveSoundSyncPacket();
 		receiveIconSyncPacket();
-		receiveWindSyncPacket();
 
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
 			try {
@@ -90,6 +90,17 @@ public final class FrozenMain implements ModInitializer {
 			WindManager.time = server.overworld().getGameTime();
 			WindManager.tick(level);
 		});
+
+		PlayerJoinEvent.register(((server, player) -> {
+			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			byteBuf.writeLong(server.overworld().getGameTime());
+			byteBuf.writeDouble(WindManager.cloudX);
+			byteBuf.writeDouble(WindManager.cloudY);
+			byteBuf.writeDouble(WindManager.cloudZ);
+			byteBuf.writeLong(server.overworld().getSeed());
+			ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
+		}));
+
 	}
 
 	//IDENTIFIERS
@@ -114,7 +125,6 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation HURT_SOUND_PACKET = id("hurt_sound_packet");
 
 	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
-	public static final ResourceLocation REQUEST_WIND_SYNC_PACKET = id("request_wind_sync_packet");
 
 	public static ResourceLocation id(String path) {
 		return new ResourceLocation(MOD_ID, path);
@@ -178,19 +188,4 @@ public final class FrozenMain implements ModInitializer {
 			});
 		});
 	}
-
-	private static void receiveWindSyncPacket() {
-		ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_WIND_SYNC_PACKET, (ctx, player, handler, bytes, responseSender) -> {
-			ctx.execute(() -> {
-				FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-				byteBuf.writeLong(ctx.overworld().getGameTime());
-				byteBuf.writeDouble(WindManager.cloudX);
-				byteBuf.writeDouble(WindManager.cloudY);
-				byteBuf.writeDouble(WindManager.cloudZ);
-				byteBuf.writeLong(ctx.overworld().getSeed());
-				ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
-			});
-		});
-	}
-
 }
