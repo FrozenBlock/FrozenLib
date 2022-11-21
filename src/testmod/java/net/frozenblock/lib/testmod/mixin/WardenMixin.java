@@ -35,7 +35,7 @@ public abstract class WardenMixin extends Monster {
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initWithIcon(EntityType<? extends Warden> entityType, Level level, CallbackInfo ci) {
 		Warden warden = Warden.class.cast(this);
-		warden.getSpottingIconManager().setIcon(FrozenMain.id("textures/spotting_icons/warden.png"), 8, 12, FrozenMain.id("default"));
+		((EntitySpottingIconInterface) warden).getSpottingIconManager().setIcon(FrozenMain.id("textures/spotting_icons/warden.png"), 8, 12, FrozenMain.id("default"));
 	}
 
 	@Inject(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
