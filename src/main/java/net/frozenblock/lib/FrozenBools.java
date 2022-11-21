@@ -18,7 +18,7 @@ public class FrozenBools {
     public static boolean useNewDripstoneLiquid = false;
 
 	// MOD LOADERS
-	public static final boolean IS_FABRIC = FabricLoader.getInstance().isModLoaded("fabric")
+	public static final boolean IS_FABRIC = FabricLoader.getInstance().isModLoaded("fabric-api")
 			&& !(FabricLoader.getInstance().isModLoaded("qsl")
 			|| FabricLoader.getInstance().isModLoaded("quilted_fabric_api"));
 	public static final boolean IS_QUILT = FabricLoader.getInstance().isModLoaded("qsl")
