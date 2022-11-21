@@ -130,7 +130,7 @@ public class LevelRendererMixin {
 			FogRenderer.levelFogColor();
 			poseStack.pushPose();
 			poseStack.scale(12.0F, 1.0F, 12.0F);
-			poseStack.translate((double)(-l), (double)m, (double)(-n));
+			poseStack.translate(-l, m, -n);
 			if (this.cloudBuffer != null) {
 				this.cloudBuffer.bind();
 				int r = this.prevCloudsType == CloudStatus.FANCY ? 0 : 1;
