@@ -28,7 +28,7 @@ public class ClientWindManager {
 		prevWindZ = windZ;
 		time += 1;
 		double calcTime = time * 0.0005;
-		double calcTimeY = time * 0.0005;
+		double calcTimeY = time * 0.00035;
 		Vec3 vec3 = EasyNoiseSampler.sampleVec3(EasyNoiseSampler.perlinXoro, calcTime, calcTimeY, calcTime);
 		windX = vec3.x;
 		windY = vec3.y;

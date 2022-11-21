@@ -353,10 +353,16 @@ public final class FrozenClient implements ClientModInitializer {
 	private static void receiveWindSyncPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.WIND_SYNC_PACKET, (ctx, handler, byteBuf, responseSender) -> {
 			long windTime = byteBuf.readLong();
+			double x = byteBuf.readDouble();
+			double y = byteBuf.readDouble();
+			double z = byteBuf.readDouble();
 			ctx.execute(() -> {
 				ClientLevel level = Minecraft.getInstance().level;
 				if (level != null) {
 					ClientWindManager.time = windTime;
+					ClientWindManager.cloudX = x;
+					ClientWindManager.cloudY = y;
+					ClientWindManager.cloudZ = z;
 					ClientWindManager.hasSynced = true;
 				}
 			});

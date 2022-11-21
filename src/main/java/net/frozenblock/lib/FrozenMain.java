@@ -182,6 +182,9 @@ public final class FrozenMain implements ModInitializer {
 			ctx.execute(() -> {
 				FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 				byteBuf.writeLong(ctx.overworld().getGameTime());
+				byteBuf.writeDouble(WindManager.cloudX);
+				byteBuf.writeDouble(WindManager.cloudY);
+				byteBuf.writeDouble(WindManager.cloudZ);
 				ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
 			});
 		});
