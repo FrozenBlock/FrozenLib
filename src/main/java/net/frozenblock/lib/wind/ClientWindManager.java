@@ -13,7 +13,6 @@ public class ClientWindManager {
 	public static double windY;
 	public static double windZ;
 
-	public static double targetCloudY;
 	public static double prevCloudX;
 	public static double prevCloudY;
 	public static double prevCloudZ;
@@ -28,8 +27,8 @@ public class ClientWindManager {
 		prevWindY = windY;
 		prevWindZ = windZ;
 		time += 1;
-		long calcTime = time / 200;
-		long calcTimeY = time / 400;
+		float calcTime = time / 200;
+		float calcTimeY = time / 400;
 		Vec3 vec3 = EasyNoiseSampler.sampleVec3(EasyNoiseSampler.perlinXoro, calcTime, calcTimeY, calcTimeY);
 		windX = vec3.x;
 		windY = vec3.y;
@@ -40,15 +39,8 @@ public class ClientWindManager {
 		prevCloudZ = cloudZ;
 
 		cloudX += (windX * 0.05);
+		cloudY += (windY * 0.005);
 		cloudZ += (windZ * 0.05);
-
-		targetCloudY = vec3.y();
-		double cloudWindY = windY < 0 ? -windY : windY;
-		if (cloudY > targetCloudY) {
-			cloudY -= cloudWindY * 0.05;
-		} else if (cloudY < targetCloudY) {
-			cloudY += cloudWindY * 0.05;
-		}
 	}
 
 	public static double getWindX(float partialTick) {
