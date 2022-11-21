@@ -35,8 +35,8 @@ public final class FrozenTestClient implements ClientModInitializer {
 		Splashes.addSplashLocation(new ResourceLocation("frozenlib", "texts/splashes.txt"));
 		Panoramas.addPanorama(new ResourceLocation("frozenlib", "textures/gui/title/background/panorama"));
 		Panoramas.addPanorama(new ResourceLocation("this_will_throw_an_error", "textures/gui/title/background/panorama"));
-		FabricLoader.getInstance().getModContainer("frozenlib_testmod").ifPresent(modContainer -> {
-			ResourceManagerHelper.registerBuiltinResourcePack(new ResourceLocation("frozenlib_testmod", "creeper_icon"), modContainer, ResourcePackActivationType.NORMAL);
+		FabricLoader.getInstance().getModContainer(FrozenMain.MOD_ID).ifPresent(modContainer -> {
+			ResourceManagerHelper.registerBuiltinResourcePack(FrozenMain.id("creeper_icon"), modContainer, ResourcePackActivationType.NORMAL);
 		});
 	}
 }
