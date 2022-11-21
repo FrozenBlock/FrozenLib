@@ -11,7 +11,14 @@
 
 package net.frozenblock.lib.wind;
 
+import io.netty.buffer.Unpooled;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.FrozenMain;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
@@ -19,6 +26,7 @@ import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 
 public class WindManager {
+	public static int tickCount;
 	public static long time;
 	public static double windX;
 	public static double windY;
@@ -28,7 +36,8 @@ public class WindManager {
 	public static double cloudZ;
 	public static long seed = 0;
 
-	public static void tick(ServerLevel level) {
+	public static void tick(MinecraftServer server, ServerLevel level) {
+		++tickCount;
 		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
 		double calcTime = time * 0.0005;
 		double calcTimeY = time * 0.00035;
@@ -39,6 +48,17 @@ public class WindManager {
 		cloudX += (windX * 0.025);
 		cloudY += (windY * 0.005);
 		cloudZ += (windZ * 0.025);
+		if (tickCount >= 100) {
+			tickCount = 0;
+			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			byteBuf.writeLong(server.overworld().getGameTime());
+			byteBuf.writeDouble(WindManager.cloudX);
+			byteBuf.writeDouble(WindManager.cloudY);
+			byteBuf.writeDouble(WindManager.cloudZ);
+			for (ServerPlayer player : PlayerLookup.all(server)) {
+				ServerPlayNetworking.send(player, FrozenMain.SMALL_WIND_SYNC_PACKET, byteBuf);
+			}
+		}
 	}
 
 	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {

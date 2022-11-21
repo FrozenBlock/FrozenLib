@@ -88,7 +88,7 @@ public final class FrozenMain implements ModInitializer {
 		ServerTickEvents.START_SERVER_TICK.register((server) -> {
 			ServerLevel level = server.overworld();
 			WindManager.time = server.overworld().getGameTime();
-			WindManager.tick(level);
+			WindManager.tick(server, level);
 		});
 
 		PlayerJoinEvent.register(((server, player) -> {
@@ -125,6 +125,7 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation HURT_SOUND_PACKET = id("hurt_sound_packet");
 
 	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
+	public static final ResourceLocation SMALL_WIND_SYNC_PACKET = id("small_wind_sync_packet");
 
 	public static ResourceLocation id(String path) {
 		return new ResourceLocation(MOD_ID, path);
