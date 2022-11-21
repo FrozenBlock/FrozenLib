@@ -39,13 +39,13 @@ public class ClientWindManager {
 		prevCloudX = cloudX;
 		prevCloudY = cloudY;
 		prevCloudZ = cloudZ;
-		cloudX += windX * 0.5;
+		cloudX += windX * 0.-5;
 		if (cloudY > targetCloudY) {
-			cloudY -= windY * 0.05;
+			cloudY -= windY * 0.005;
 		} else if (cloudY < targetCloudY) {
-			cloudY += windY * 0.05;
+			cloudY += windY * 0.005;
 		}
-		cloudZ += windZ * 0.5;
+		cloudZ += windZ * 0.05;
 	}
 
 	public static double getWindX(float partialTick) {
@@ -68,7 +68,7 @@ public class ClientWindManager {
 		return Mth.lerp(partialTick, prevCloudY, cloudY);
 	}
 
-	public static double geCloudZ(float partialTick) {
+	public static double getCloudZ(float partialTick) {
 		return Mth.lerp(partialTick, prevCloudZ, cloudZ);
 	}
 

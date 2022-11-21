@@ -95,8 +95,8 @@ public class LevelRendererMixin {
 			double d = 2.0E-4D;
 			double e = ClientWindManager.getCloudX(partialTick);
 			double i = (camX + e) / 12.0D;
-			double j = (double)(f - (float)camY + 0.33F) + ClientWindManager.getWindY(partialTick);
-			double k = (camZ / 12.0D + 0.33000001311302185D) + ClientWindManager.getWindZ(partialTick);
+			double j = (double)(f - (float)camY + 0.33F) + ClientWindManager.getCloudY(partialTick);
+			double k = (camZ / 12.0D + 0.33000001311302185D) + ClientWindManager.getCloudZ(partialTick);
 			i -= (double)(Mth.floor(i / 2048.0D) * 2048);
 			k -= (double)(Mth.floor(k / 2048.0D) * 2048);
 			float l = (float)(i - (double)Mth.floor(i));
