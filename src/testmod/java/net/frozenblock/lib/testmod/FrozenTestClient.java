@@ -14,10 +14,6 @@ package net.frozenblock.lib.testmod;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.menu.api.Splashes;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
@@ -35,8 +31,5 @@ public final class FrozenTestClient implements ClientModInitializer {
 		Splashes.addSplashLocation(new ResourceLocation("frozenlib", "texts/splashes.txt"));
 		Panoramas.addPanorama(new ResourceLocation("frozenlib", "textures/gui/title/background/panorama"));
 		Panoramas.addPanorama(new ResourceLocation("this_will_throw_an_error", "textures/gui/title/background/panorama"));
-		FabricLoader.getInstance().getModContainer(FrozenMain.MOD_ID).ifPresent(modContainer -> {
-			ResourceManagerHelper.registerBuiltinResourcePack(FrozenMain.id("creeper_icon"), modContainer, ResourcePackActivationType.NORMAL);
-		});
 	}
 }
