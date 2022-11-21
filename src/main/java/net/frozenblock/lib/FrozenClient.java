@@ -15,7 +15,6 @@ import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoints.FrozenClientEntrypoint;
 import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
@@ -29,25 +28,20 @@ import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.frozenblock.lib.spotting_icons.api.SpottingIconClientManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.Executor;
 
-public final class FrozenClient implements ClientModInitializer, SimpleResourceReloadListener {
+public final class FrozenClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
@@ -70,7 +64,6 @@ public final class FrozenClient implements ClientModInitializer, SimpleResourceR
 		receivePlayerDamagePacket();
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
-
 
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
 			try {
@@ -384,19 +377,4 @@ public final class FrozenClient implements ClientModInitializer, SimpleResourceR
 		});
 	}
 
-	@Override
-	public CompletableFuture<Void> load(ResourceManager manager, ProfilerFiller profiler, Executor executor) {
-		return null;
-	}
-
-	@Override
-	public CompletableFuture<Void> apply(Object data, ResourceManager manager, ProfilerFiller profiler, Executor executor) {
-		SpottingIconClientManager.onResourceReload(manager);
-		return null;
-	}
-
-	@Override
-	public ResourceLocation getFabricId() {
-		return FrozenMain.id("resource_listener");
-	}
 }
