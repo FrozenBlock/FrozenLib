@@ -28,7 +28,7 @@ public class HeavyItemDamageRegistry {
 	private static final Object2ObjectOpenHashMap<Item, HeavyItemDamage> HEAVY_ITEM_DAMAGE = new Object2ObjectOpenHashMap<>();
 
 	public static void register(Item item, float startDamage, float maxStackDamage) {
-
+		HEAVY_ITEM_DAMAGE.put(item, new HeavyItemDamage(startDamage, maxStackDamage));
 	}
 
 	public static float getDamage(ItemStack stack) {
