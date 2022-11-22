@@ -58,7 +58,7 @@ public class WindManager {
 		laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 		//CLOUDS
 		cloudX += (laggedWindX * 0.025);
-		cloudY += (laggedWindY * 0.005);
+		cloudY += (laggedWindY * 0.01);
 		cloudZ += (laggedWindZ * 0.025);
 		//SYNC WITH CLIENTS IN CASE OF DESYNC
 		if (tickCount >= 400) {

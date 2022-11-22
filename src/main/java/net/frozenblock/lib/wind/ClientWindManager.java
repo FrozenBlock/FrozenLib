@@ -72,7 +72,7 @@ public class ClientWindManager {
 		prevCloudY = cloudY;
 		prevCloudZ = cloudZ;
 		cloudX += (laggedWindX * 0.025);
-		cloudY += (laggedWindY * 0.005);
+		cloudY += (laggedWindY * 0.01);
 		cloudZ += (laggedWindZ * 0.025);
 	}
 
