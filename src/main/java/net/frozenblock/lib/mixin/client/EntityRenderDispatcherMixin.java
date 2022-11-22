@@ -46,8 +46,8 @@ public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIc
 			((EntityRendererWithIcon) entityRenderer).renderIcon(entity, rotationYaw, partialTicks, matrixStack, buffer, packedLight);
 			matrixStack.popPose();
 		} catch (Throwable throwable) {
-			CrashReport crashReport = CrashReport.forThrowable(throwable, "Rendering entity in world");
-			CrashReportCategory crashReportCategory = crashReport.addCategory("Entity being rendered");
+			CrashReport crashReport = CrashReport.forThrowable(throwable, "Rendering entity icon in world");
+			CrashReportCategory crashReportCategory = crashReport.addCategory("Entity icon being rendered");
 			entity.fillCrashReportCategory(crashReportCategory);
 			CrashReportCategory crashReportCategory2 = crashReport.addCategory("Renderer details");
 			crashReportCategory2.setDetail("Assigned renderer", entityRenderer);
