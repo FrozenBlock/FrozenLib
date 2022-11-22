@@ -31,6 +31,9 @@ public class WindManager {
 	public static double windX;
 	public static double windY;
 	public static double windZ;
+	public static double laggedWindX;
+	public static double laggedWindY;
+	public static double laggedWindZ;
 	public static double cloudX;
 	public static double cloudY;
 	public static double cloudZ;
@@ -38,6 +41,7 @@ public class WindManager {
 
 	public static void tick(MinecraftServer server, ServerLevel level) {
 		++tickCount;
+		//WIND
 		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
 		double calcTime = time * 0.0005;
 		double calcTimeY = time * 0.00035;
@@ -45,9 +49,18 @@ public class WindManager {
 		windX = vec3.x + (vec3.x * thunderLevel);
 		windY = vec3.y + (vec3.y * thunderLevel);
 		windZ = vec3.z + (vec3.z * thunderLevel);
-		cloudX += (windX * 0.025);
-		cloudY += (windY * 0.005);
-		cloudZ += (windZ * 0.025);
+		//LAGGED WIND
+		double calcLaggedTime = (time - 100) * 0.0005;
+		double calcLaggedTimeY = (time - 140) * 0.00035;
+		Vec3 laggedVec = sampleVec3(perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
+		laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
+		laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
+		laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+		//CLOUDS
+		cloudX += (laggedWindX * 0.025);
+		cloudY += (laggedWindY * 0.005);
+		cloudZ += (laggedWindZ * 0.025);
+		//SYNC WITH CLIENTS IN CASE OF DESYNC
 		if (tickCount >= 400) {
 			tickCount = 0;
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());

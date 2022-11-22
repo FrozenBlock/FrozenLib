@@ -113,9 +113,10 @@ public class ScreenShaker {
 		public float getIntensity(Vec3 playerPos) {
 			float distanceBasedIntensity = Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * this.intensity), 0);
 			if (distanceBasedIntensity > 0) {
-				int currentDuration = Math.max(this.ticks - this.durationFalloffStart, 0);
-				int maxDuration = this.duration - this.durationFalloffStart;
-				return (distanceBasedIntensity * (maxDuration - currentDuration)) / maxDuration;
+				int timeFromFalloffStart = Math.max(this.ticks - this.durationFalloffStart, 0); //Starts counting up once it reaches falloff start
+				int falloffTime = this.duration - this.durationFalloffStart; //The amount of time the intensity falls off for before reaching 0
+				float lerpedTimeFromFalloffStart = Mth.lerp(this.ticks / this.duration, 0, timeFromFalloffStart);
+				return (distanceBasedIntensity * (falloffTime - lerpedTimeFromFalloffStart)) / falloffTime;
 			}
 			return 0F;
 		}
