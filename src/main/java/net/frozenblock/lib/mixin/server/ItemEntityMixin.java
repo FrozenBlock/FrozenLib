@@ -18,12 +18,10 @@ import net.frozenblock.lib.tags.FrozenItemTags;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -42,9 +40,9 @@ public class ItemEntityMixin {
 	@Unique
 	private boolean isHeavy;
 
-	@Inject(method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V", at = @At("TAIL"))
-	public void setHeavy(EntityType<? extends ItemEntity> entityType, Level level, CallbackInfo info) {
-		this.isHeavy = this.getItem().is(FrozenItemTags.HEAVY_ITEMS);
+	@Inject(method = "setItem", at = @At("TAIL"))
+	public void setItem(ItemStack stack, CallbackInfo info) {
+		this.isHeavy = stack.is(FrozenItemTags.HEAVY_ITEMS);
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;floor(D)I", shift = At.Shift.BEFORE))
