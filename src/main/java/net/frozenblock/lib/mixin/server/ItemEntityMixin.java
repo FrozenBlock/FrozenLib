@@ -96,7 +96,7 @@ public class ItemEntityMixin {
 		ItemEntity item = ItemEntity.class.cast(this);
 		if (!entity.isSpectator() && entity.isAlive() && entity.isPickable() && entity instanceof LivingEntity) {
 			Vec3 compared = entity.getDeltaMovement().subtract(item.getDeltaMovement());
-			return compared.horizontalDistance() > 0.4 || compared.y < 0.4;
+			return compared.horizontalDistance() > 0.4 || compared.y > 0.2;
 		} else {
 			return false;
 		}
