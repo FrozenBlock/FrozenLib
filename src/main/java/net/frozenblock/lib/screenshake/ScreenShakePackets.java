@@ -27,7 +27,7 @@ public final class ScreenShakePackets {
 	}
 
 	public static void createScreenShakePacket(Level level, float intensity, double x, double y, double z, float maxDistance) {
-		createScreenShakePacket(level, intensity, 5, 1, x, y, z, maxDistance);
+		createScreenShakePacket(level, intensity, 20, 10, x, y, z, maxDistance);
 	}
 
 	public static void createScreenShakePacket(Level level, float intensity, int duration, double x, double y, double z, float maxDistance) {
