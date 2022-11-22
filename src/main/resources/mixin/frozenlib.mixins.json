@@ -13,6 +13,7 @@
 	"server.EntityMixin",
 	"server.HopperBlockEntityMixin",
 	"server.ItemCooldownsMixin",
+    "server.ItemEntityMixin",
 	"server.LivingEntityMixin",
 	"server.MappedRegistryMixin",
 	"server.NoExperimentalMixin",
