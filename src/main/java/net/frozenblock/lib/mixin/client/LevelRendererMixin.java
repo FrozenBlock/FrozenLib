@@ -89,9 +89,9 @@ public class LevelRendererMixin {
 			RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
 			RenderSystem.depthMask(true);
 
-			double cloudX = (camX / 12.0D) + ClientWindManager.getCloudX(partialTick);
+			double cloudX = (camX / 12.0D) - ClientWindManager.getCloudX(partialTick);
 			double cloudY = (double)(f - (float)camY + 0.33F) + ClientWindManager.getCloudY(partialTick);
-			double cloudZ = (camZ / 12.0D + 0.33000001311302185D) + ClientWindManager.getCloudZ(partialTick);
+			double cloudZ = (camZ / 12.0D + 0.33000001311302185D) - ClientWindManager.getCloudZ(partialTick);
 
 			cloudX -= Mth.floor(cloudX / 2048.0D) * 2048;
 			cloudZ -= Mth.floor(cloudZ / 2048.0D) * 2048;
