@@ -18,6 +18,7 @@ import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.ThreadSafeLegacyRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Adds easy-to-use noise sampling and random number generators
@@ -65,6 +66,13 @@ public final class EasyNoiseSampler {
 			return ret * -1;
 		}
 		return ret;
+	}
+
+	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
+		double windX = sampler.noise(x, 0, 0);
+		double windY = sampler.noise(0, y, 0);
+		double windZ = sampler.noise(0, 0, z);
+		return new Vec3(windX, windY, windZ);
 	}
 
 	public static void setSeed(long newSeed) {

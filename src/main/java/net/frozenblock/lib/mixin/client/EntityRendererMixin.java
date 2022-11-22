@@ -45,10 +45,11 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 	@Unique
 	@Override
 	public <T extends Entity> void renderIcon(T entity, float entityYaw, float partialTick, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
-		SpottingIconManager.SpottingIcon icon = ((EntitySpottingIconInterface) entity).getSpottingIconManager().icon;
+		SpottingIconManager iconManager = ((EntitySpottingIconInterface) entity).getSpottingIconManager();
+		SpottingIconManager.SpottingIcon icon = iconManager.icon;
 		if (icon != null) {
 			double dist = Mth.sqrt((float) this.entityRenderDispatcher.distanceToSqr(entity));
-			if (dist > icon.startFadeDist) {
+			if (dist > icon.startFadeDist && iconManager.clientHasIconResource) {
 				float endDist = icon.endFadeDist - icon.startFadeDist;
 				dist -= icon.startFadeDist;
 				float alpha = dist > endDist ? 1F : (float) Math.min(1F, dist / endDist);
