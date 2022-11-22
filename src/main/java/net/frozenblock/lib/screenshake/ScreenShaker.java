@@ -46,8 +46,8 @@ public class ScreenShaker {
 			zRot = 0F;
 			return;
 		}
-		float highestIntensity = 0F;
-		float totalIntensity = 0F;
+		float highestIntensity = 0;
+		float totalIntensity = 0;
 		int amount = 0;
 		for (ScreenShake shake : SCREEN_SHAKES) {
 			float shakeIntensity = shake.getIntensity(camera.getPosition());
@@ -113,9 +113,9 @@ public class ScreenShaker {
 		public float getIntensity(Vec3 playerPos) {
 			float distanceBasedIntensity = Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * this.intensity), 0);
 			if (distanceBasedIntensity > 0) {
-				int timeFromFalloffStart = Math.max(this.ticks - this.durationFalloffStart, 0); //Starts counting up once it reaches falloff start
-				int falloffTime = this.duration - this.durationFalloffStart; //The amount of time the intensity falls off for before reaching 0
-				float lerpedTimeFromFalloffStart = Mth.lerp(this.ticks / this.duration, 0, timeFromFalloffStart);
+				float timeFromFalloffStart = Math.max(this.ticks - this.durationFalloffStart, 0); //Starts counting up once it reaches falloff start
+				float falloffTime = this.duration - this.durationFalloffStart; //The amount of time the intensity falls off for before reaching 0
+				float lerpedTimeFromFalloffStart = Mth.lerp((float)this.ticks / this.duration, 0, timeFromFalloffStart);
 				return (distanceBasedIntensity * (falloffTime - lerpedTimeFromFalloffStart)) / falloffTime;
 			}
 			return 0F;
