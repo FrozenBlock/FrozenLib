@@ -2,11 +2,18 @@
  * Copyright 2022 FrozenBlock
  * This file is part of FrozenLib.
  *
- * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
  *
- * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.screenshake;
@@ -46,8 +53,8 @@ public class ScreenShaker {
 			zRot = 0F;
 			return;
 		}
-		float highestIntensity = 0F;
-		float totalIntensity = 0F;
+		float highestIntensity = 0;
+		float totalIntensity = 0;
 		int amount = 0;
 		for (ScreenShake shake : SCREEN_SHAKES) {
 			float shakeIntensity = shake.getIntensity(camera.getPosition());
@@ -113,9 +120,9 @@ public class ScreenShaker {
 		public float getIntensity(Vec3 playerPos) {
 			float distanceBasedIntensity = Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance) * this.intensity), 0);
 			if (distanceBasedIntensity > 0) {
-				int timeFromFalloffStart = Math.max(this.ticks - this.durationFalloffStart, 0); //Starts counting up once it reaches falloff start
-				int falloffTime = this.duration - this.durationFalloffStart; //The amount of time the intensity falls off for before reaching 0
-				float lerpedTimeFromFalloffStart = Mth.lerp(this.ticks / this.duration, 0, timeFromFalloffStart);
+				float timeFromFalloffStart = Math.max(this.ticks - this.durationFalloffStart, 0); //Starts counting up once it reaches falloff start
+				float falloffTime = this.duration - this.durationFalloffStart; //The amount of time the intensity falls off for before reaching 0
+				float lerpedTimeFromFalloffStart = Mth.lerp((float)this.ticks / this.duration, 0, timeFromFalloffStart);
 				return (distanceBasedIntensity * (falloffTime - lerpedTimeFromFalloffStart)) / falloffTime;
 			}
 			return 0F;
