@@ -62,6 +62,8 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveScreenShakeFromEntityPacket();
 		receiveIconPacket();
 		receiveIconRemovePacket();
+		receiveWindSyncPacket();
+		receiveSmallWindSyncPacket();
 		receivePlayerDamagePacket();
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
@@ -344,6 +346,44 @@ public final class FrozenClient implements ClientModInitializer {
 		});
 	}
 
+	private static void receiveWindSyncPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.WIND_SYNC_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			long windTime = byteBuf.readLong();
+			double x = byteBuf.readDouble();
+			double y = byteBuf.readDouble();
+			double z = byteBuf.readDouble();
+			long seed = byteBuf.readLong();
+			ctx.execute(() -> {
+				ClientLevel level = Minecraft.getInstance().level;
+				if (level != null) {
+					ClientWindManager.time = windTime;
+					ClientWindManager.cloudX = x;
+					ClientWindManager.cloudY = y;
+					ClientWindManager.cloudZ = z;
+					ClientWindManager.setSeed(seed);
+				}
+			});
+		});
+	}
+
+	private static void receiveSmallWindSyncPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SMALL_WIND_SYNC_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			long windTime = byteBuf.readLong();
+			double x = byteBuf.readDouble();
+			double y = byteBuf.readDouble();
+			double z = byteBuf.readDouble();
+			ctx.execute(() -> {
+				ClientLevel level = Minecraft.getInstance().level;
+				if (level != null) {
+					ClientWindManager.time = windTime;
+					ClientWindManager.cloudX = x;
+					ClientWindManager.cloudY = y;
+					ClientWindManager.cloudZ = z;
+				}
+			});
+		});
+	}
+
 	private static void receivePlayerDamagePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.HURT_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
 			int id = byteBuf.readVarInt();
@@ -367,6 +407,7 @@ public final class FrozenClient implements ClientModInitializer {
 			Minecraft client = Minecraft.getInstance();
 			if (client.level != null) {
 				FlyBySoundHub.update(client, client.player, true);
+				ClientWindManager.tick(level);
 			}
 		});
 		ClientTickEvents.START_CLIENT_TICK.register(level -> {
