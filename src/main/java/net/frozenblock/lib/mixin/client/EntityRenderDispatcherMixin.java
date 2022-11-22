@@ -35,7 +35,7 @@ public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIc
 
 	@Unique
 	public <E extends Entity> void renderIcon(E entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
-		EntityRenderer<E> entityRenderer = (EntityRenderer<E>) this.getRenderer(entity);
+		EntityRenderer<? super E> entityRenderer = this.getRenderer(entity);
 		try {
 			Vec3 vec3 = entityRenderer.getRenderOffset(entity, partialTicks);
 			double d = x + vec3.x();
@@ -52,8 +52,8 @@ public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIc
 			CrashReportCategory crashReportCategory2 = crashReport.addCategory("Renderer details");
 			crashReportCategory2.setDetail("Assigned renderer", entityRenderer);
 			crashReportCategory2.setDetail("Location", CrashReportCategory.formatLocation(this.level, x, y, z));
-			crashReportCategory2.setDetail("Rotation", Float.valueOf(rotationYaw));
-			crashReportCategory2.setDetail("Delta", Float.valueOf(partialTicks));
+			crashReportCategory2.setDetail("Rotation", rotationYaw);
+			crashReportCategory2.setDetail("Delta", partialTicks);
 			throw new ReportedException(crashReport);
 		}
 	}
