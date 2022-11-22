@@ -94,8 +94,9 @@ public class ItemEntityMixin {
 	@Unique
 	public boolean canHitEntity(Entity entity) {
 		ItemEntity item = ItemEntity.class.cast(this);
-		if (!entity.isSpectator() && entity.isAlive() && entity.isPickable() && entity instanceof LivingEntity) {
-			Vec3 compared = entity.getDeltaMovement().subtract(item.getDeltaMovement());
+		Vec3 itemMovement = item.getDeltaMovement();
+		if (!entity.isSpectator() && entity.isAlive() && entity.isPickable() && entity instanceof LivingEntity && itemMovement.length() > 0.3) {
+			Vec3 compared = entity.getDeltaMovement().subtract(itemMovement);
 			return compared.horizontalDistance() > 0.4 || compared.y > 0.3;
 		} else {
 			return false;
