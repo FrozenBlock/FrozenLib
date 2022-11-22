@@ -14,6 +14,7 @@ package net.frozenblock.lib.mixin.server;
 import java.util.List;
 import java.util.UUID;
 import net.frozenblock.lib.damagesource.FrozenDamageSource;
+import net.frozenblock.lib.item.api.HeavyItemDamageRegistry;
 import net.frozenblock.lib.tags.FrozenItemTags;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -78,7 +79,7 @@ public class ItemEntityMixin {
 			if (owner != null) {
 				((LivingEntity) owner).setLastHurtMob(entity);
 			}
-			if (entity.hurt(damageSource, 1.0F)) {
+			if (entity.hurt(damageSource, HeavyItemDamageRegistry.getDamage(this.getItem()))) {
 				//TODO: Bonk sound
 				item.playSound(SoundEvents.ANVIL_LAND, 0.3F, 1.2F / (item.level.random.nextFloat() * 0.2F + 0.9F));
 			}
