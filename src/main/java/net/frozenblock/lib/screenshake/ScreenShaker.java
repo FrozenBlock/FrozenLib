@@ -116,7 +116,7 @@ public class ScreenShaker {
 				int timeFromFalloffStart = Math.max(this.ticks - this.durationFalloffStart, 0); //Starts counting up once it reaches falloff start
 				int falloffTime = this.duration - this.durationFalloffStart; //The amount of time the intensity falls off for before reaching 0
 				float lerpedFalloffTime = Mth.lerp(this.ticks / this.duration, 0, falloffTime);
-				return (distanceBasedIntensity * (falloffTime - timeFromFalloffStart)) / lerpedFalloffTime;
+				return (distanceBasedIntensity * (lerpedFalloffTime - timeFromFalloffStart)) / lerpedFalloffTime;
 			}
 			return 0F;
 		}
