@@ -20,11 +20,13 @@ package net.frozenblock.lib.math.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Adds more math operations.
  *
  * @author LiukRast (2021-2022)
+ * @author FrozenBlock (2022)
  * @since 4.0
  */
 public final class AdvancedMath {
@@ -122,4 +124,15 @@ public final class AdvancedMath {
             }
         }
     }
+
+	public static Vec3 rotateAboutXZ(Vec3 original, double distanceFrom, double angle) {
+		Vec3 offsetVec = original.add(distanceFrom, 0, distanceFrom);
+		double originX = original.x;
+		double originZ = original.z;
+		double distancedX = offsetVec.x;
+		double distancedZ = offsetVec.z;
+		double x = originX + (distancedX - originX) * Math.cos(angle) - (distancedZ - originZ) * Math.sin(angle);
+		double z = originZ + (distancedX - originX) * Math.sin(angle) + (distancedZ - originZ) * Math.cos(angle);
+		return new Vec3(x, original.y, z);
+	}
 }
