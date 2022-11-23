@@ -19,7 +19,7 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spotting_icon.impl.EntitySpottingIconInterface;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.level.Level;

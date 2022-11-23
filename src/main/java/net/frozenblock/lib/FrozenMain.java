@@ -32,7 +32,7 @@ import net.frozenblock.lib.sound.api.FrozenSoundPackets;
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
+import net.frozenblock.lib.spotting_icon.api.SpottingIconPredicate;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;

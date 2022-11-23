@@ -19,8 +19,8 @@
 package net.frozenblock.lib.mixin.server;
 
 import net.frozenblock.lib.sound.api.FrozenClientPacketInbetween;
-import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spotting_icon.api.SpottingIconManager;
+import net.frozenblock.lib.spotting_icon.impl.EntitySpottingIconInterface;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;

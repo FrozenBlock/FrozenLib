@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icons.api;
+package net.frozenblock.lib.spotting_icon.api;
 
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.registry.api.FrozenRegistry;

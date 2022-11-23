@@ -23,7 +23,7 @@ import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.entity.api.rendering.EntityTextureOverride;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
+import net.frozenblock.lib.spotting_icon.api.SpottingIconPredicate;
 import net.minecraft.core.MappedRegistry;
 
 public class FrozenRegistry {

@@ -16,17 +16,18 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icons.impl;
+package net.frozenblock.lib.spotting_icon.api;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.world.entity.Entity;
-import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.resources.ResourceLocation;
 
-@InjectedInterface(EntityRenderer.class)
-public interface EntityRendererWithIcon {
+@Environment(EnvType.CLIENT)
+public class ClientSpottingIconMethods {
 
-	<T extends Entity> void renderIcon(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight);
+	public static boolean hasTexture(ResourceLocation resourceLocation) {
+		return Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(resourceLocation.getNamespace(),  resourceLocation.getPath())).isPresent();
+	}
 
 }
