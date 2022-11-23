@@ -33,6 +33,7 @@ import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManag
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icon.api.SpottingIconPredicate;
+import net.frozenblock.lib.spotting_icon.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
@@ -188,7 +189,7 @@ public final class FrozenMain implements ModInitializer {
 				if (dimension != null) {
 					Entity entity = dimension.getEntity(id);
 					if (entity != null) {
-						if (entity instanceof LivingEntity livingEntity) {
+						if (entity instanceof EntitySpottingIconInterface livingEntity) {
 							livingEntity.getSpottingIconManager().sendIconPacket(player);
 						}
 					}
