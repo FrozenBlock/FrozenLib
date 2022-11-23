@@ -126,13 +126,14 @@ public final class AdvancedMath {
     }
 
 	public static Vec3 rotateAboutXZ(Vec3 original, double distanceFrom, double angle) {
+		double calcAngle = angle * (Math.PI / 180);
 		Vec3 offsetVec = original.add(distanceFrom, 0, distanceFrom);
 		double originX = original.x;
 		double originZ = original.z;
 		double distancedX = offsetVec.x;
 		double distancedZ = offsetVec.z;
-		double x = originX + (distancedX - originX) * Math.cos(angle) - (distancedZ - originZ) * Math.sin(angle);
-		double z = originZ + (distancedX - originX) * Math.sin(angle) + (distancedZ - originZ) * Math.cos(angle);
+		double x = originX + (distancedX - originX) * Math.cos(calcAngle) - (distancedZ - originZ) * Math.sin(calcAngle);
+		double z = originZ + (distancedX - originX) * Math.sin(calcAngle) + (distancedZ - originZ) * Math.cos(calcAngle);
 		return new Vec3(x, original.y, z);
 	}
 }
