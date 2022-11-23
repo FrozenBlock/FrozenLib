@@ -2,11 +2,18 @@
  * Copyright 2022 FrozenBlock
  * This file is part of FrozenLib.
  *
- * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
  *
- * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.mixin.server;
@@ -14,6 +21,7 @@ package net.frozenblock.lib.mixin.server;
 import java.util.List;
 import java.util.UUID;
 import net.frozenblock.lib.damagesource.FrozenDamageSource;
+import net.frozenblock.lib.item.api.HeavyItemDamageRegistry;
 import net.frozenblock.lib.tags.FrozenItemTags;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
@@ -78,7 +86,7 @@ public class ItemEntityMixin {
 			if (owner != null) {
 				((LivingEntity) owner).setLastHurtMob(entity);
 			}
-			if (entity.hurt(damageSource, 1.0F)) {
+			if (entity.hurt(damageSource, HeavyItemDamageRegistry.getDamage(this.getItem()))) {
 				//TODO: Bonk sound
 				item.playSound(SoundEvents.ANVIL_LAND, 0.3F, 1.2F / (item.level.random.nextFloat() * 0.2F + 0.9F));
 			}
