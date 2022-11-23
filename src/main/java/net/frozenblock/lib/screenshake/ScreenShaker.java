@@ -76,7 +76,6 @@ public class ScreenShaker {
 		zRot = Mth.nextFloat(randomSource, -intensity, intensity);
 	}
 
-
 	public static void shake(PoseStack poseStack, float partialTicks) {
 		poseStack.mulPose(Vector3f.XP.rotationDegrees(prevXRot + partialTicks * xRot - prevXRot));
 		poseStack.mulPose(Vector3f.YP.rotationDegrees(prevYRot + partialTicks * yRot - prevYRot));
