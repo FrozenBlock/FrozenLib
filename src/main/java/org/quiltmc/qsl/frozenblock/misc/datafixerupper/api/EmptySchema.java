@@ -23,9 +23,10 @@ import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.Type;
 import com.mojang.datafixers.types.templates.TypeTemplate;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
+import org.jetbrains.annotations.Range;
+
 import java.util.Map;
 import java.util.function.Supplier;
-import org.jetbrains.annotations.Range;
 
 /**
  * Represents an empty {@link Schema}, having no parent and containing no type definitions.
@@ -33,23 +34,23 @@ import org.jetbrains.annotations.Range;
  * Modified to work on Fabric
  */
 public final class EmptySchema extends FirstSchema {
-	/**
-	 * Constructs an empty schema.
-	 *
-	 * @param versionKey the data version key
-	 */
-	public EmptySchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
-		super(versionKey);
-	}
+    /**
+     * Constructs an empty schema.
+     *
+     * @param versionKey the data version key
+     */
+    public EmptySchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
+        super(versionKey);
+    }
 
-	// Ensure the schema stays empty.
-	@Override
-	public void registerType(boolean recursive, DSL.TypeReference type, Supplier<TypeTemplate> template) {
-		throw new UnsupportedOperationException();
-	}
+    // Ensure the schema stays empty.
+    @Override
+    public void registerType(boolean recursive, DSL.TypeReference type, Supplier<TypeTemplate> template) {
+        throw new UnsupportedOperationException();
+    }
 
-	@Override
-	protected Map<String, Type<?>> buildTypes() {
-		return Object2ObjectMaps.emptyMap();
-	}
+    @Override
+    protected Map<String, Type<?>> buildTypes() {
+        return Object2ObjectMaps.emptyMap();
+    }
 }

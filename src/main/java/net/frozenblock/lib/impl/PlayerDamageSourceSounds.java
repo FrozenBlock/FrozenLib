@@ -28,7 +28,7 @@ import net.minecraft.world.damagesource.DamageSource;
 
 public final class PlayerDamageSourceSounds {
 
-	private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_RESOURCE_LOCATION_MAP = new HashMap<>();
+    private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_RESOURCE_LOCATION_MAP = new HashMap<>();
 	private static final Map<ResourceLocation, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new HashMap<>();
 	private static final ResourceLocation DEFAULT_ID = FrozenMain.id("default_damage_source");
 

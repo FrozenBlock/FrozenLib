@@ -28,5 +28,5 @@ import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 @ApiStatus.Internal
 @InjectedInterface(SurfaceRules.SequenceRuleSource.class)
 public interface QuiltSequenceMaterialRuleHooks {
-	void frozenblock_quilt$freeze();
+    void frozenblock_quilt$freeze();
 }

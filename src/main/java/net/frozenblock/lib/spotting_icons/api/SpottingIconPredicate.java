@@ -27,9 +27,9 @@ import org.jetbrains.annotations.Nullable;
 
 public final class SpottingIconPredicate<T extends Entity> {
 
-	public static <T extends Entity> void register(ResourceLocation id, IconPredicate<T> predicate) {
+    public static <T extends Entity> void register(ResourceLocation id, IconPredicate<T> predicate) {
 		Registry.register(FrozenRegistry.SPOTTING_ICON_PREDICATE, id, new SpottingIconPredicate<>(predicate));
-	}
+    }
 
 	private final IconPredicate<T> predicate;
 
@@ -38,22 +38,22 @@ public final class SpottingIconPredicate<T extends Entity> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Entity> IconPredicate<T> getPredicate(@Nullable ResourceLocation id) {
-		if (id != null) {
-			if (FrozenRegistry.SPOTTING_ICON_PREDICATE.containsKey(id)) {
+    public static <T extends Entity> IconPredicate<T> getPredicate(@Nullable ResourceLocation id) {
+        if (id != null) {
+            if (FrozenRegistry.SPOTTING_ICON_PREDICATE.containsKey(id)) {
 				SpottingIconPredicate<T> predicate = FrozenRegistry.SPOTTING_ICON_PREDICATE.get(id);
 				if (predicate != null) {
 					return predicate.predicate;
 				}
 			}
 			FrozenMain.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
-		}
-		return defaultPredicate();
-	}
+        }
+        return defaultPredicate();
+    }
 
-	@FunctionalInterface
-	public interface IconPredicate<T extends Entity> {
-		boolean test(T entity);
+    @FunctionalInterface
+    public interface IconPredicate<T extends Entity> {
+        boolean test(T entity);
 
 		default void onAdded(T entity) {
 
@@ -61,15 +61,15 @@ public final class SpottingIconPredicate<T extends Entity> {
 
 		default void onRemoved(T entity) {
 		}
-	}
+    }
 
 	public static <T extends Entity> IconPredicate<T> defaultPredicate() {
 		return Entity::isAlive;
 	}
 
-	public static ResourceLocation DEFAULT_ID = FrozenMain.id("default");
+    public static ResourceLocation DEFAULT_ID = FrozenMain.id("default");
 
-	public static void init() {
-		register(DEFAULT_ID, defaultPredicate());
-	}
+    public static void init() {
+        register(DEFAULT_ID, defaultPredicate());
+    }
 }

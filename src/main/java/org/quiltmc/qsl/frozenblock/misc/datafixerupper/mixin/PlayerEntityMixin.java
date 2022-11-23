@@ -31,8 +31,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(value = Player.class, priority = 1001)
 public abstract class PlayerEntityMixin {
-	@Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-	public void addModDataVersions(CompoundTag compound, CallbackInfo ci) {
-		QuiltDataFixesInternals.get().addModDataVersions(compound);
-	}
+    @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
+    public void addModDataVersions(CompoundTag compound, CallbackInfo ci) {
+        QuiltDataFixesInternals.get().addModDataVersions(compound);
+    }
 }

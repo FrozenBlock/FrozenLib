@@ -30,11 +30,11 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
  */
 @Mixin(value = ChunkSerializer.class, priority = 1001)
 public abstract class ChunkSerializerMixin {
-	@ModifyVariable(
-			method = "write",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putInt(Ljava/lang/String;I)V", ordinal = 0)
-	)
-	private static CompoundTag addModDataVersions(CompoundTag compound) {
-		return QuiltDataFixesInternals.get().addModDataVersions(compound);
-	}
+    @ModifyVariable(
+            method = "write",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/CompoundTag;putInt(Ljava/lang/String;I)V", ordinal = 0)
+    )
+    private static CompoundTag addModDataVersions(CompoundTag compound) {
+        return QuiltDataFixesInternals.get().addModDataVersions(compound);
+    }
 }

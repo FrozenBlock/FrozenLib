@@ -18,9 +18,9 @@
 
 package net.frozenblock.lib.screenshake.api;
 
+import java.util.ArrayList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import java.util.ArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;

@@ -37,43 +37,43 @@ import net.minecraft.world.entity.LivingEntity;
 import org.slf4j.Logger;
 
 public class MovingLoopingSoundEntityManager {
-	private final ArrayList<SoundLoopData> sounds = new ArrayList<>();
-	public LivingEntity entity;
+    private final ArrayList<SoundLoopData> sounds = new ArrayList<>();
+    public LivingEntity entity;
 
-	public MovingLoopingSoundEntityManager(LivingEntity entity) {
-		this.entity = entity;
-	}
+    public MovingLoopingSoundEntityManager(LivingEntity entity) {
+        this.entity = entity;
+    }
 
-	public void load(CompoundTag nbt) {
-		if (nbt.contains("frozenSounds", 9)) {
-			this.sounds.clear();
-			DataResult<List<SoundLoopData>> var10000 = SoundLoopData.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenSounds", 10)));
-			Logger var10001 = FrozenMain.LOGGER4;
-			Objects.requireNonNull(var10001);
-			Optional<List<SoundLoopData>> list = var10000.resultOrPartial(var10001::error);
-			if (list.isPresent()) {
-				List<SoundLoopData> allSounds = list.get();
-				this.sounds.addAll(allSounds);
-			}
-		}
-	}
+    public void load(CompoundTag nbt) {
+        if (nbt.contains("frozenSounds", 9)) {
+            this.sounds.clear();
+            DataResult<List<SoundLoopData>> var10000 = SoundLoopData.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenSounds", 10)));
+            Logger var10001 = FrozenMain.LOGGER4;
+            Objects.requireNonNull(var10001);
+            Optional<List<SoundLoopData>> list = var10000.resultOrPartial(var10001::error);
+            if (list.isPresent()) {
+                List<SoundLoopData> allSounds = list.get();
+                this.sounds.addAll(allSounds);
+            }
+        }
+    }
 
-	public void save(CompoundTag nbt) {
-		DataResult<Tag> var10000 = SoundLoopData.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
-		Logger var10001 = FrozenMain.LOGGER4;
-		Objects.requireNonNull(var10001);
-		var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenSounds", cursorsNbt));
-	}
+    public void save(CompoundTag nbt) {
+        DataResult<Tag> var10000 = SoundLoopData.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
+        Logger var10001 = FrozenMain.LOGGER4;
+        Objects.requireNonNull(var10001);
+        var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenSounds", cursorsNbt));
+    }
 
-	public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId) {
-		this.sounds.add(new SoundLoopData(soundID, category, volume, pitch, restrictionId));
-	}
+    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId) {
+        this.sounds.add(new SoundLoopData(soundID, category, volume, pitch, restrictionId));
+    }
 
-	public ArrayList<SoundLoopData> getSounds() {
-		return this.sounds;
-	}
+    public ArrayList<SoundLoopData> getSounds() {
+        return this.sounds;
+    }
 
-	public void tick() {
+    public void tick() {
 		if (!this.sounds.isEmpty()) {
 			ArrayList<SoundLoopData> soundsToRemove = new ArrayList<>();
 			for (SoundLoopData nbt : this.sounds) {
@@ -85,57 +85,53 @@ public class MovingLoopingSoundEntityManager {
 			}
 			this.sounds.removeAll(soundsToRemove);
 		}
-	}
+    }
 
-	public static class SoundLoopData {
-		public final ResourceLocation soundEventID;
-		public final String categoryOrdinal;
-		public final float volume;
-		public final float pitch;
-		public final ResourceLocation restrictionID;
+    public static class SoundLoopData {
+        public final ResourceLocation soundEventID;
+        public final String categoryOrdinal;
+        public final float volume;
+        public final float pitch;
+        public final ResourceLocation restrictionID;
 
-		public static final Codec<SoundLoopData> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-				ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(SoundLoopData::getSoundEventID),
-				Codec.STRING.fieldOf("categoryOrdinal").forGetter(SoundLoopData::getOrdinal),
-				Codec.FLOAT.fieldOf("volume").forGetter(SoundLoopData::getVolume),
-				Codec.FLOAT.fieldOf("pitch").forGetter(SoundLoopData::getPitch),
-				ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(SoundLoopData::getRestrictionID)
-		).apply(instance, SoundLoopData::new));
+        public static final Codec<SoundLoopData> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+                ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(SoundLoopData::getSoundEventID),
+                Codec.STRING.fieldOf("categoryOrdinal").forGetter(SoundLoopData::getOrdinal),
+                Codec.FLOAT.fieldOf("volume").forGetter(SoundLoopData::getVolume),
+                Codec.FLOAT.fieldOf("pitch").forGetter(SoundLoopData::getPitch),
+                ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(SoundLoopData::getRestrictionID)
+        ).apply(instance, SoundLoopData::new));
 
-		public SoundLoopData(ResourceLocation soundEventID, String ordinal, float vol, float pitch, ResourceLocation restrictionID) {
-			this.soundEventID = soundEventID;
-			this.categoryOrdinal = ordinal;
-			this.volume = vol;
-			this.pitch = pitch;
-			this.restrictionID = restrictionID;
-		}
+        public SoundLoopData(ResourceLocation soundEventID, String ordinal, float vol, float pitch, ResourceLocation restrictionID) {
+            this.soundEventID = soundEventID;
+            this.categoryOrdinal = ordinal;
+            this.volume = vol;
+            this.pitch = pitch;
+            this.restrictionID = restrictionID;
+        }
 
-		public SoundLoopData(ResourceLocation soundEventID, SoundSource category, float vol, float pitch, ResourceLocation restrictionID) {
-			this.soundEventID = soundEventID;
-			this.categoryOrdinal = category.toString();
-			this.volume = vol;
-			this.pitch = pitch;
-			this.restrictionID = restrictionID;
-		}
+        public SoundLoopData(ResourceLocation soundEventID, SoundSource category, float vol, float pitch, ResourceLocation restrictionID) {
+            this.soundEventID = soundEventID;
+            this.categoryOrdinal = category.toString();
+            this.volume = vol;
+            this.pitch = pitch;
+            this.restrictionID = restrictionID;
+        }
 
-		public ResourceLocation getSoundEventID() {
-			return this.soundEventID;
-		}
-
-		public String getOrdinal() {
-			return this.categoryOrdinal;
-		}
-
-		public float getVolume() {
-			return this.volume;
-		}
-
-		public float getPitch() {
-			return this.pitch;
-		}
-
-		public ResourceLocation getRestrictionID() {
-			return this.restrictionID;
-		}
-	}
+        public ResourceLocation getSoundEventID() {
+            return this.soundEventID;
+        }
+        public String getOrdinal() {
+            return this.categoryOrdinal;
+        }
+        public float getVolume() {
+            return this.volume;
+        }
+        public float getPitch() {
+            return this.pitch;
+        }
+        public ResourceLocation getRestrictionID() {
+            return this.restrictionID;
+        }
+    }
 }

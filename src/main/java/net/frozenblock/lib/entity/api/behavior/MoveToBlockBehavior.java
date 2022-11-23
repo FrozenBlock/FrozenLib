@@ -19,6 +19,7 @@
 package net.frozenblock.lib.entity.api.behavior;
 
 import com.google.common.collect.ImmutableMap;
+import net.frozenblock.lib.entity.impl.behavior.FrozenBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.PathfinderMob;
@@ -115,10 +116,10 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 		BlockPos blockPos = this.mob.blockPosition();
 		BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 
-		for (int k = this.verticalSearchStart; k <= this.verticalSearchRange; k = k > 0 ? -k : 1 - k) {
-			for (int l = 0; l < this.searchRange; ++l) {
-				for (int m = 0; m <= l; m = m > 0 ? -m : 1 - m) {
-					for (int n = m < l && m > -l ? l : 0; n <= l; n = n > 0 ? -n : 1 - n) {
+		for(int k = this.verticalSearchStart; k <= this.verticalSearchRange; k = k > 0 ? -k : 1 - k) {
+			for(int l = 0; l < this.searchRange; ++l) {
+				for(int m = 0; m <= l; m = m > 0 ? -m : 1 - m) {
+					for(int n = m < l && m > -l ? l : 0; n <= l; n = n > 0 ? -n : 1 - n) {
 						mutableBlockPos.setWithOffset(blockPos, m, k - 1, n);
 						if (this.mob.isWithinRestriction(mutableBlockPos) && this.isValidTarget(this.mob.level, mutableBlockPos)) {
 							this.blockPos = mutableBlockPos;

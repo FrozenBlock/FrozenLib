@@ -27,11 +27,11 @@ import net.minecraft.world.level.block.PointedDripstoneBlock;
 
 public class DripstoneDripLavaFrom {
 
-	public static final Map<Block, InjectedOnDrip> ON_DRIP_BLOCK = new HashMap<>();
+    public static final Map<Block, InjectedOnDrip> ON_DRIP_BLOCK = new HashMap<>();
 
-	@FunctionalInterface
-	public interface InjectedOnDrip {
-		void drip(ServerLevel world, PointedDripstoneBlock.FluidInfo fluidInfo, BlockPos pos);
-	}
+    @FunctionalInterface
+    public interface InjectedOnDrip {
+        void drip(ServerLevel world, PointedDripstoneBlock.FluidInfo fluidInfo, BlockPos pos);
+    }
 
 }

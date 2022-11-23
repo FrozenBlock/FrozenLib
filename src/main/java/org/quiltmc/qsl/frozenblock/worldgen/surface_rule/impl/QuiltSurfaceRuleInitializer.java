@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
+import net.fabricmc.api.ModInitializer;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Registry;
 import org.jetbrains.annotations.ApiStatus;
@@ -27,9 +28,9 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @ApiStatus.Internal
 public class QuiltSurfaceRuleInitializer {
-	public static void onInitialize() {
-		Registry.register(Registry.RULE, FrozenMain.id("reloadable_sequence"),
-				ReloadableSequenceMaterialRule.RULE_CODEC.codec()
-		);
-	}
+    public static void onInitialize() {
+        Registry.register(Registry.RULE, FrozenMain.id("reloadable_sequence"),
+                ReloadableSequenceMaterialRule.RULE_CODEC.codec()
+        );
+    }
 }

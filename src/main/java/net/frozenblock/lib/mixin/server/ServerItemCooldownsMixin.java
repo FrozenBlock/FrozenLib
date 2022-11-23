@@ -35,27 +35,27 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerItemCooldowns.class)
 public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownInterface {
-	@Shadow
+    @Shadow
 	@Final
-	private ServerPlayer player;
+    private ServerPlayer player;
 
 	@Unique
 	@Override
-	public void changeCooldown(Item item, int additional) {
-		if (this.cooldowns.containsKey(item)) {
-			CooldownInstance cooldown = this.cooldowns.get(item);
-			this.cooldowns.put(item, new CooldownInstance(cooldown.startTime, cooldown.endTime + additional));
-			this.onCooldownChanged(item, additional);
-		}
-	}
+    public void changeCooldown(Item item, int additional) {
+        if (this.cooldowns.containsKey(item)) {
+            CooldownInstance cooldown = this.cooldowns.get(item);
+            this.cooldowns.put(item, new CooldownInstance(cooldown.startTime, cooldown.endTime + additional));
+            this.onCooldownChanged(item, additional);
+        }
+    }
 
 	@Unique
 	@Override
-	public void onCooldownChanged(Item item, int additional) {
-		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-		byteBuf.writeId(Registry.ITEM, item);
-		byteBuf.writeVarInt(additional);
-		ServerPlayNetworking.send(this.player, FrozenMain.COOLDOWN_CHANGE_PACKET, byteBuf);
-	}
+    public void onCooldownChanged(Item item, int additional) {
+        FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+        byteBuf.writeId(Registry.ITEM, item);
+        byteBuf.writeVarInt(additional);
+        ServerPlayNetworking.send(this.player, FrozenMain.COOLDOWN_CHANGE_PACKET, byteBuf);
+    }
 
 }

@@ -26,9 +26,9 @@ public final class FrozenClientPacketInbetween {
 		throw new UnsupportedOperationException("FrozenClientPacketInbetween contains only static declarations.");
 	}
 
-	public static void requestFrozenSoundSync(int id, ResourceKey<Level> level) {
-		FrozenClientPacketToServer.sendFrozenSoundSyncRequest(id, level);
-	}
+    public static void requestFrozenSoundSync(int id, ResourceKey<Level> level) {
+        FrozenClientPacketToServer.sendFrozenSoundSyncRequest(id, level);
+    }
 
 	public static void requestFrozenIconSync(int id, ResourceKey<Level> level) {
 		FrozenClientPacketToServer.sendFrozenIconSyncRequest(id, level);

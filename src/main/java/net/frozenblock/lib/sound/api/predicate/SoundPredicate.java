@@ -31,9 +31,9 @@ public final class SoundPredicate<T extends Entity> {
 
 	private final LoopPredicate<T> predicate;
 
-	public static <T extends Entity> void register(ResourceLocation id, LoopPredicate<T> predicate) {
+    public static <T extends Entity> void register(ResourceLocation id, LoopPredicate<T> predicate) {
 		Registry.register(FrozenRegistry.SOUND_PREDICATE, id, new SoundPredicate<>(predicate));
-	}
+    }
 
 	public static <T extends Entity> void registerUnsynced(ResourceLocation id, LoopPredicate<T> predicate) {
 		Registry.register(FrozenRegistry.SOUND_PREDICATE_UNSYNCED, id, new SoundPredicate<>(predicate));
@@ -44,9 +44,9 @@ public final class SoundPredicate<T extends Entity> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable ResourceLocation id) {
-		if (id != null) {
-			if (FrozenRegistry.SOUND_PREDICATE.containsKey(id)) {
+    public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable ResourceLocation id) {
+        if (id != null) {
+            if (FrozenRegistry.SOUND_PREDICATE.containsKey(id)) {
 				SoundPredicate<T> predicate = FrozenRegistry.SOUND_PREDICATE.get(id);
 				if (predicate != null) {
 					return predicate.predicate;
@@ -58,14 +58,13 @@ public final class SoundPredicate<T extends Entity> {
 				}
 			}
 			FrozenMain.LOGGER.error("Unable to find sound predicate " + id + "! Using default sound predicate instead!");
-		}
-		return defaultPredicate();
-	}
+        }
+        return defaultPredicate();
+    }
 
 	public static <T extends Entity> LoopPredicate<T> defaultPredicate() {
 		return entity -> !entity.isSilent();
 	}
-
 	public static <T extends Entity> LoopPredicate<T> notSilentAndAlive() {
 		return entity -> !entity.isSilent();
 	}
@@ -75,14 +74,14 @@ public final class SoundPredicate<T extends Entity> {
 		register(NOT_SILENT_AND_ALIVE_ID, notSilentAndAlive());
 	}
 
-	@FunctionalInterface
-	public interface LoopPredicate<T extends Entity> {
-		boolean test(T entity);
+    @FunctionalInterface
+    public interface LoopPredicate<T extends Entity> {
+        boolean test(T entity);
 
 		default void onStart(@Nullable T entity) {
 		}
 
 		default void onStop(@Nullable T entity) {
 		}
-	}
+    }
 }

@@ -28,31 +28,31 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 public class PrickOnUseBlockItem extends BlockItem {
-	public final float damage;
-	public final SoundEvent hurtSound;
-	public final String damageSourceName;
+    public final float damage;
+    public final SoundEvent hurtSound;
+    public final String damageSourceName;
 
-	@Deprecated
-	private final Block block;
+    @Deprecated
+    private final Block block;
 
-	public PrickOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, String damageSourceName) {
-		super(block, properties);
-		this.block = block;
-		this.damage = damage;
-		this.hurtSound = sound;
-		this.damageSourceName = damageSourceName;
-	}
+    public PrickOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, String damageSourceName) {
+        super(block, properties);
+        this.block = block;
+        this.damage = damage;
+        this.hurtSound = sound;
+        this.damageSourceName = damageSourceName;
+    }
 
-	@Override
-	public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
-		if (this.isEdible()) {
-			user.hurt(FrozenDamageSource.source(damageSourceName), this.damage);
-			if (this.hurtSound != null && !user.isSilent()) {
-				user.playSound(this.hurtSound, 0.5F, 0.9F + (world.random.nextFloat() * 0.2F));
-			}
-			return user.eat(world, stack);
-		}
-		return stack;
-	}
+    @Override
+    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
+        if (this.isEdible()) {
+            user.hurt(FrozenDamageSource.source(damageSourceName),this.damage);
+            if (this.hurtSound != null && !user.isSilent()) {
+                user.playSound(this.hurtSound, 0.5F, 0.9F + (world.random.nextFloat() * 0.2F));
+            }
+            return user.eat(world, stack);
+        }
+        return stack;
+    }
 
 }

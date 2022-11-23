@@ -29,10 +29,10 @@ import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 @InjectedInterface(LivingEntity.class)
 public interface EntityLoopingFadingDistanceSoundInterface {
 
-	boolean hasSyncedFadingDistanceClient();
+    boolean hasSyncedFadingDistanceClient();
 
-	MovingLoopingFadingDistanceSoundEntityManager getFadingDistanceSounds();
+    MovingLoopingFadingDistanceSoundEntityManager getFadingDistanceSounds();
 
-	void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, float fadeDist, float maxDist);
+    void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, float fadeDist, float maxDist);
 
 }

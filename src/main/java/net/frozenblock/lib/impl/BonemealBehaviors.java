@@ -29,11 +29,11 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BonemealBehaviors {
 
-	public static final Map<Block, BonemealBehavior> BONEMEAL_BEHAVIORS = new HashMap<>();
+    public static final Map<Block, BonemealBehavior> BONEMEAL_BEHAVIORS = new HashMap<>();
 
-	@FunctionalInterface
-	public interface BonemealBehavior {
-		boolean bonemeal(UseOnContext context, Level world, BlockPos pos, BlockState state, Direction face, Direction horizontal);
-	}
+    @FunctionalInterface
+    public interface BonemealBehavior {
+        boolean bonemeal(UseOnContext context, Level world, BlockPos pos, BlockState state, Direction face, Direction horizontal);
+    }
 
 }

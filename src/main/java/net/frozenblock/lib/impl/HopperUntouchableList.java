@@ -26,22 +26,22 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 public class HopperUntouchableList {
 
-	public static final ArrayList<BlockEntityType<?>> BLACKLISTED_TYPES = new ArrayList<>();
+    public static final ArrayList<BlockEntityType<?>> BLACKLISTED_TYPES = new ArrayList<>();
 
-	public static boolean inventoryContainsBlacklisted(Container inventory) {
-		if (inventory instanceof BlockEntity block) {
+    public static boolean inventoryContainsBlacklisted(Container inventory) {
+        if (inventory instanceof BlockEntity block) {
 			return BLACKLISTED_TYPES.contains(block.getType());
-		} else if (inventory instanceof CompoundContainer doubleInventory) {
-			if (doubleInventory.container1 instanceof BlockEntity block) {
-				if (BLACKLISTED_TYPES.contains(block.getType())) {
-					return true;
-				}
-			}
-			if (doubleInventory.container2 instanceof BlockEntity block) {
+        } else if (inventory instanceof CompoundContainer doubleInventory) {
+            if (doubleInventory.container1 instanceof BlockEntity block) {
+                if (BLACKLISTED_TYPES.contains(block.getType())) {
+                    return true;
+                }
+            }
+            if (doubleInventory.container2 instanceof BlockEntity block) {
 				return BLACKLISTED_TYPES.contains(block.getType());
-			}
-		}
-		return false;
-	}
+            }
+        }
+        return false;
+    }
 
 }
