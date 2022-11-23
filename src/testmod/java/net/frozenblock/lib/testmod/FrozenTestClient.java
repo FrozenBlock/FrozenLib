@@ -32,11 +32,11 @@ import net.minecraft.world.entity.EntityType;
 @Environment(EnvType.CLIENT)
 public final class FrozenTestClient implements ClientModInitializer {
 
-	@Override
-	public void onInitializeClient() {
-		FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
+    @Override
+    public void onInitializeClient() {
+        FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
 		Splashes.addSplashLocation(new ResourceLocation("frozenlib", "texts/splashes.txt"));
 		Panoramas.addPanorama(new ResourceLocation("frozenlib", "textures/gui/title/background/panorama"));
 		Panoramas.addPanorama(new ResourceLocation("this_will_throw_an_error", "textures/gui/title/background/panorama"));
-	}
+    }
 }

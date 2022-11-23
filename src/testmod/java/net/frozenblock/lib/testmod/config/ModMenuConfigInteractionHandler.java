@@ -26,7 +26,7 @@ import net.minecraft.client.gui.screens.Screen;
 @Environment(EnvType.CLIENT)
 public final class ModMenuConfigInteractionHandler {
 
-	public static ConfigScreenFactory<Screen> buildScreen() {
-		return TestConfig::buildScreen;
-	}
+    public static ConfigScreenFactory<Screen> buildScreen() {
+        return TestConfig::buildScreen;
+    }
 }

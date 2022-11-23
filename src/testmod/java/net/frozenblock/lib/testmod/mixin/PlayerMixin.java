@@ -35,6 +35,6 @@ public class PlayerMixin {
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initWithIcon(Level level, BlockPos pos, float yRot, GameProfile gameProfile, ProfilePublicKey profilePublicKey, CallbackInfo ci) {
 		Player player = Player.class.cast(this);
-		player.getSpottingIconManager().setIcon(FrozenMain.id("textures/spotting_icons/player.png"), 0, 1, FrozenMain.id("default"));
+		((EntitySpottingIconInterface) player).getSpottingIconManager().setIcon(FrozenMain.id("textures/spotting_icons/player.png"), 0, 1, FrozenMain.id("default"));
 	}
 }

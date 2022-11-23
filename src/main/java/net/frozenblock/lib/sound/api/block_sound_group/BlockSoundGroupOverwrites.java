@@ -18,14 +18,19 @@
 
 package net.frozenblock.lib.sound.api.block_sound_group;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.google.common.base.Preconditions;
+import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Allows you to add any block by either adding its registry (Blocks.STONE) or its ID ("stone").

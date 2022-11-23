@@ -19,11 +19,12 @@
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
 import com.google.common.collect.ImmutableList;
-import java.util.ArrayList;
-import java.util.List;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.jetbrains.annotations.ApiStatus;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Represents a {@linkplain net.minecraft.world.level.levelgen.SurfaceRules.SequenceRuleSource} that is easily reloadable when needed.
@@ -32,44 +33,44 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @ApiStatus.Internal
 public class ReloadableSequenceMaterialRule implements SurfaceRules.RuleSource {
-	static final KeyDispatchDataCodec<ReloadableSequenceMaterialRule> RULE_CODEC = KeyDispatchDataCodec.of(
-			SurfaceRules.RuleSource.CODEC
-					.listOf()
-					.xmap(ReloadableSequenceMaterialRule::new, ReloadableSequenceMaterialRule::sequence)
-					.fieldOf("sequence")
-	);
+    static final KeyDispatchDataCodec<ReloadableSequenceMaterialRule> RULE_CODEC = KeyDispatchDataCodec.of(
+            SurfaceRules.RuleSource.CODEC
+                    .listOf()
+                    .xmap(ReloadableSequenceMaterialRule::new, ReloadableSequenceMaterialRule::sequence)
+                    .fieldOf("sequence")
+    );
 
-	private final List<SurfaceRules.RuleSource> sequence;
+    private final List<SurfaceRules.RuleSource> sequence;
 
-	public ReloadableSequenceMaterialRule(List<SurfaceRules.RuleSource> sequence) {
-		this.sequence = new ArrayList<>(sequence);
-	}
+    public ReloadableSequenceMaterialRule(List<SurfaceRules.RuleSource> sequence) {
+        this.sequence = new ArrayList<>(sequence);
+    }
 
-	public ReloadableSequenceMaterialRule() {
-		this.sequence = new ArrayList<>();
-	}
+    public ReloadableSequenceMaterialRule() {
+        this.sequence = new ArrayList<>();
+    }
 
-	public List<SurfaceRules.RuleSource> sequence() {
-		return this.sequence;
-	}
+    public List<SurfaceRules.RuleSource> sequence() {
+        return this.sequence;
+    }
 
-	@Override
-	public KeyDispatchDataCodec<? extends SurfaceRules.RuleSource> codec() {
-		return RULE_CODEC;
-	}
+    @Override
+    public KeyDispatchDataCodec<? extends SurfaceRules.RuleSource> codec() {
+        return RULE_CODEC;
+    }
 
-	@Override
-	public SurfaceRules.SurfaceRule apply(SurfaceRules.Context context) {
-		if (this.sequence.size() == 1) {
-			return this.sequence.get(0).apply(context);
-		} else {
-			ImmutableList.Builder<SurfaceRules.SurfaceRule> builder = ImmutableList.builder();
+    @Override
+    public SurfaceRules.SurfaceRule apply(SurfaceRules.Context context) {
+        if (this.sequence.size() == 1) {
+            return this.sequence.get(0).apply(context);
+        } else {
+            ImmutableList.Builder<SurfaceRules.SurfaceRule> builder = ImmutableList.builder();
 
-			for (var materialRule : this.sequence) {
-				builder.add(materialRule.apply(context));
-			}
+            for (var materialRule : this.sequence) {
+                builder.add(materialRule.apply(context));
+            }
 
-			return new SurfaceRules.SequenceRule(builder.build());
-		}
-	}
+            return new SurfaceRules.SequenceRule(builder.build());
+        }
+    }
 }

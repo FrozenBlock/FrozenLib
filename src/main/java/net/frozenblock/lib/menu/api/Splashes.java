@@ -18,9 +18,9 @@
 
 package net.frozenblock.lib.menu.api;
 
+import net.minecraft.resources.ResourceLocation;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.resources.ResourceLocation;
 
 public class Splashes {
 

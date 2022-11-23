@@ -20,7 +20,6 @@ package net.frozenblock.lib.testmod;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import static net.frozenblock.lib.FrozenMain.id;
 import net.frozenblock.lib.impl.BlockScheduledTicks;
 import net.frozenblock.lib.testmod.config.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;
@@ -30,28 +29,30 @@ import net.minecraft.world.level.block.Blocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import static net.frozenblock.lib.FrozenMain.id;
+
 public final class FrozenTestMain implements ModInitializer {
 
-	public static final String MOD_ID = "frozenlib_testmod";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+    public static final String MOD_ID = "frozenlib_testmod";
+    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 
-	public static boolean areConfigsInit = false;
+    public static boolean areConfigsInit = false;
 
-	public static final Camera CAMERA = new Camera(new FabricItemSettings().maxCount(1));
-	public static final LootTableWhacker LOOT_TABLE_WHACKER = new LootTableWhacker(new FabricItemSettings().maxCount(1));
+    public static final Camera CAMERA = new Camera(new FabricItemSettings().maxCount(1));
+    public static final LootTableWhacker LOOT_TABLE_WHACKER = new LootTableWhacker(new FabricItemSettings().maxCount(1));
 
-	@Override
-	public void onInitialize() {
-		Registry.register(Registry.ITEM, id("camera"), CAMERA);
-		Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
+    @Override
+    public void onInitialize() {
+        Registry.register(Registry.ITEM, id("camera"), CAMERA);
+        Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
 
-		BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
-				Blocks.BEDROCK.defaultBlockState(), 3));
+        BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
+                        Blocks.BEDROCK.defaultBlockState(), 3));
 		if (ClothConfigInteractionHandler.testBoolean()) {
 
 		}
-		//StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
-		//StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
-		//StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
-	}
+        //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
+        //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
+        //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
+    }
 }

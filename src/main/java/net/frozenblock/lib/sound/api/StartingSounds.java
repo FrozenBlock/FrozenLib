@@ -24,9 +24,9 @@ import net.minecraft.sounds.SoundEvent;
 
 public class StartingSounds {
 
-	/**
-	 * Use this to associate a {@link SoundEvent} to a {@link ResourceKey} for later use as a starting sound.
-	 */
+    /**
+     * Use this to associate a {@link SoundEvent} to a {@link ResourceKey} for later use as a starting sound.
+     */
 	public static final HashMap<ResourceKey<?>, SoundEvent> STARTING_SOUNDS = new HashMap<>();
 
 }

@@ -32,12 +32,12 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
  */
 @Mixin(value = HotbarManager.class, priority = 1001)
 public abstract class HotbarStorageMixin {
-	@Inject(
-			method = "save",
-			at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtIo;write(Lnet/minecraft/nbt/CompoundTag;Ljava/io/File;)V"),
-			locals = LocalCapture.CAPTURE_FAILHARD
-	)
-	private void addModDataVersions(CallbackInfo ci, CompoundTag compound) {
-		QuiltDataFixesInternals.get().addModDataVersions(compound);
-	}
+    @Inject(
+            method = "save",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/nbt/NbtIo;write(Lnet/minecraft/nbt/CompoundTag;Ljava/io/File;)V"),
+            locals = LocalCapture.CAPTURE_FAILHARD
+    )
+    private void addModDataVersions(CallbackInfo ci, CompoundTag compound) {
+        QuiltDataFixesInternals.get().addModDataVersions(compound);
+    }
 }

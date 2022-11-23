@@ -32,54 +32,54 @@ import net.minecraft.world.entity.Entity;
 @Environment(EnvType.CLIENT)
 public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundInstance {
 
-	public final T entity;
-	public final SoundPredicate.LoopPredicate<T> predicate;
-	public final SoundEvent loopingSound;
-	public final SoundEvent startingSound;
-	public boolean hasSwitched = false;
-	public final AbstractSoundInstance nextSound;
+    public final T entity;
+    public final SoundPredicate.LoopPredicate<T> predicate;
+    public final SoundEvent loopingSound;
+    public final SoundEvent startingSound;
+    public boolean hasSwitched = false;
+    public final AbstractSoundInstance nextSound;
 
-	public RestrictedStartingSound(T entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, AbstractSoundInstance nextSound) {
-		super(startingSound, category, SoundInstance.createUnseededRandom());
-		this.startingSound = startingSound;
-		this.nextSound = nextSound;
-		this.loopingSound = loopingSound;
-		this.entity = entity;
-		this.looping = false;
-		this.delay = 0;
-		this.volume = volume;
-		this.pitch = pitch;
+    public RestrictedStartingSound(T entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, AbstractSoundInstance nextSound) {
+        super(startingSound, category, SoundInstance.createUnseededRandom());
+        this.startingSound = startingSound;
+        this.nextSound = nextSound;
+        this.loopingSound = loopingSound;
+        this.entity = entity;
+        this.looping = false;
+        this.delay = 0;
+        this.volume = volume;
+        this.pitch = pitch;
 
-		this.x = (float) entity.getX();
-		this.y = (float) entity.getY();
-		this.z = (float) entity.getZ();
-		this.predicate = predicate;
+        this.x = (float) entity.getX();
+        this.y = (float) entity.getY();
+        this.z = (float) entity.getZ();
+        this.predicate = predicate;
 		this.predicate.onStart(this.entity);
-	}
+    }
 
-	public void startNextSound() {
-		this.stop();
-		this.hasSwitched = true;
-		Minecraft.getInstance().getSoundManager().play(this.nextSound);
-	}
+    public void startNextSound() {
+        this.stop();
+        this.hasSwitched = true;
+        Minecraft.getInstance().getSoundManager().play(this.nextSound);
+    }
 
-	@Override
-	public boolean canPlaySound() {
-		return !this.entity.isSilent();
-	}
+    @Override
+    public boolean canPlaySound() {
+        return !this.entity.isSilent();
+    }
 
-	@Override
-	public boolean canStartSilent() {
-		return true;
-	}
+    @Override
+    public boolean canStartSilent() {
+        return true;
+    }
 
-	@Override
-	public boolean isStopped() {
-		if (this.hasSwitched) {
-			return true;
-		}
-		return super.isStopped();
-	}
+    @Override
+    public boolean isStopped() {
+        if (this.hasSwitched) {
+            return true;
+        }
+        return super.isStopped();
+    }
 
 	@Override
 	public void stop() {
@@ -87,31 +87,31 @@ public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundIn
 		super.stop();
 	}
 
-	@Override
-	public void tick() {
-		if (!this.isStopped()) {
-			if (this.entity.isRemoved()) {
-				this.stop();
-			} else {
-				if (!this.predicate.test(this.entity)) {
-					this.stop();
-				} else {
-					var soundManager = Minecraft.getInstance().getSoundManager();
-					var soundEngine = soundManager.soundEngine;
-					var channelHandle = soundEngine.instanceToChannel.get(this);
-					if (channelHandle != null) {
-						channelHandle.execute(source -> {
-							if (!source.playing()) {
-								this.startNextSound();
-							}
-						});
-					}
+    @Override
+    public void tick() {
+        if (!this.isStopped()) {
+            if (this.entity.isRemoved()) {
+                this.stop();
+            } else {
+                if (!this.predicate.test(this.entity)) {
+                    this.stop();
+                } else {
+                    var soundManager = Minecraft.getInstance().getSoundManager();
+                    var soundEngine = soundManager.soundEngine;
+                    var channelHandle = soundEngine.instanceToChannel.get(this);
+                    if (channelHandle != null) {
+                        channelHandle.execute(source -> {
+                            if (!source.playing()) {
+                                this.startNextSound();
+                            }
+                        });
+                    }
 
-					this.x = (float) this.entity.getX();
-					this.y = (float) this.entity.getY();
-					this.z = (float) this.entity.getZ();
-				}
-			}
-		}
-	}
+                    this.x = (float) this.entity.getX();
+                    this.y = (float) this.entity.getY();
+                    this.z = (float) this.entity.getZ();
+                }
+            }
+        }
+    }
 }

@@ -31,40 +31,40 @@ import net.minecraft.world.entity.Entity;
 @Environment(EnvType.CLIENT)
 public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> extends RestrictedSoundInstance {
 
-	private final T entity;
-	private final SoundPredicate.LoopPredicate<T> predicate;
-	private final boolean isFarSound;
-	private final double maxDist;
-	private final double fadeDist;
-	private final float maxVol;
+    private final T entity;
+    private final SoundPredicate.LoopPredicate<T> predicate;
+    private final boolean isFarSound;
+    private final double maxDist;
+    private final double fadeDist;
+    private final float maxVol;
 
-	public RestrictedMovingFadingDistanceSwitchingSoundLoop(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
-		super(sound, category, SoundInstance.createUnseededRandom());
-		this.entity = entity;
-		this.looping = true;
-		this.delay = 0;
-		this.volume = volume;
-		this.pitch = pitch;
+    public RestrictedMovingFadingDistanceSwitchingSoundLoop(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
+        super(sound, category, SoundInstance.createUnseededRandom());
+        this.entity = entity;
+        this.looping = true;
+        this.delay = 0;
+        this.volume = volume;
+        this.pitch = pitch;
 
-		this.x = (float) entity.getX();
-		this.y = (float) entity.getY();
-		this.z = (float) entity.getZ();
-		this.predicate = predicate;
-		this.isFarSound = isFarSound;
-		this.maxDist = maxDist;
-		this.fadeDist = fadeDist;
-		this.maxVol = maxVol;
-	}
+        this.x = (float) entity.getX();
+        this.y = (float) entity.getY();
+        this.z = (float) entity.getZ();
+        this.predicate = predicate;
+        this.isFarSound = isFarSound;
+        this.maxDist = maxDist;
+        this.fadeDist = fadeDist;
+        this.maxVol = maxVol;
+    }
 
-	@Override
-	public boolean canPlaySound() {
-		return !this.entity.isSilent();
-	}
+    @Override
+    public boolean canPlaySound() {
+        return !this.entity.isSilent();
+    }
 
-	@Override
-	public boolean canStartSilent() {
-		return true;
-	}
+    @Override
+    public boolean canStartSilent() {
+        return true;
+    }
 
 	@Override
 	public void stop() {
@@ -72,32 +72,32 @@ public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> 
 		super.stop();
 	}
 
-	@Override
-	public void tick() {
-		Minecraft client = Minecraft.getInstance();
-		if (this.entity.isRemoved()) {
-			this.stop();
-		} else {
-			if (!this.predicate.test(this.entity)) {
-				this.stop();
-			} else {
-				this.x = (float) this.entity.getX();
-				this.y = (float) this.entity.getY();
-				this.z = (float) this.entity.getZ();
-				if (client.player != null) {
-					float distance = client.player.distanceTo(this.entity);
-					if (distance < this.fadeDist) {
-						this.volume = !this.isFarSound ? this.maxVol : 0.001F;
-					} else if (distance > this.maxDist) {
-						this.volume = this.isFarSound ? this.maxVol : 0.001F;
-					} else {
-						//Gets lower as you move farther
-						float fadeProgress = (float) ((this.maxDist - distance) / (this.maxDist - this.fadeDist));
-						this.volume = this.isFarSound ? (1F - fadeProgress) * this.maxVol : fadeProgress * this.maxVol;
-					}
-				}
-			}
-		}
-	}
+    @Override
+    public void tick() {
+        Minecraft client = Minecraft.getInstance();
+        if (this.entity.isRemoved()) {
+            this.stop();
+        } else {
+            if (!this.predicate.test(this.entity)) {
+                this.stop();
+            } else {
+                this.x = (float) this.entity.getX();
+                this.y = (float) this.entity.getY();
+                this.z = (float) this.entity.getZ();
+                if (client.player != null) {
+                    float distance = client.player.distanceTo(this.entity);
+                    if (distance < this.fadeDist) {
+                        this.volume = !this.isFarSound ? this.maxVol : 0.001F;
+                    } else if (distance > this.maxDist) {
+                        this.volume = this.isFarSound ? this.maxVol : 0.001F;
+                    } else {
+                        //Gets lower as you move farther
+                        float fadeProgress = (float) ((this.maxDist - distance) / (this.maxDist - this.fadeDist));
+                        this.volume = this.isFarSound ? (1F - fadeProgress) * this.maxVol : fadeProgress * this.maxVol;
+                    }
+                }
+            }
+        }
+    }
 
 }

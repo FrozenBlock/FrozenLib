@@ -34,22 +34,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BoneMealItem.class)
 public class BoneMealItemMixin {
 
-	@Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
-	public void useBonemeal(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
-		Level level = context.getLevel();
-		BlockPos blockPos = context.getClickedPos();
-		BlockState state = level.getBlockState(blockPos);
-		Direction direction = context.getClickedFace();
-		Direction horizontal = context.getHorizontalDirection();
-		if (BonemealBehaviors.BONEMEAL_BEHAVIORS.containsKey(state.getBlock())) {
-			if (BonemealBehaviors.BONEMEAL_BEHAVIORS.get(state.getBlock()).bonemeal(context, level, blockPos, state, direction, horizontal) && !level.isClientSide) {
-				context.getItemInHand().shrink(1);
-				info.setReturnValue(InteractionResult.SUCCESS);
-				info.cancel();
-			} else {
-				info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
-			}
-		}
-	}
+    @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
+    public void useBonemeal(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
+        Level level = context.getLevel();
+        BlockPos blockPos = context.getClickedPos();
+        BlockState state = level.getBlockState(blockPos);
+        Direction direction = context.getClickedFace();
+        Direction horizontal = context.getHorizontalDirection();
+        if (BonemealBehaviors.BONEMEAL_BEHAVIORS.containsKey(state.getBlock())) {
+            if (BonemealBehaviors.BONEMEAL_BEHAVIORS.get(state.getBlock()).bonemeal(context, level, blockPos, state, direction, horizontal) && !level.isClientSide) {
+                context.getItemInHand().shrink(1);
+                info.setReturnValue(InteractionResult.SUCCESS);
+                info.cancel();
+            } else {
+                info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
+            }
+        }
+    }
 
 }

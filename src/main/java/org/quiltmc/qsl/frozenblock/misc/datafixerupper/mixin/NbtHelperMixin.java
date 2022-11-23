@@ -33,13 +33,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(value = NbtUtils.class, priority = 1001)
 public abstract class NbtHelperMixin {
-	@Inject(
-			method = "update(Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/util/datafix/DataFixTypes;Lnet/minecraft/nbt/CompoundTag;II)Lnet/minecraft/nbt/CompoundTag;",
-			at = @At("RETURN"),
-			cancellable = true
-	)
-	private static void updateDataWithFixers(DataFixer fixer, DataFixTypes fixTypes, CompoundTag compound,
-											 int oldVersion, int targetVersion, CallbackInfoReturnable<CompoundTag> cir) {
-		cir.setReturnValue(QuiltDataFixesInternals.get().updateWithAllFixers(fixTypes, cir.getReturnValue()));
-	}
+    @Inject(
+            method = "update(Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/util/datafix/DataFixTypes;Lnet/minecraft/nbt/CompoundTag;II)Lnet/minecraft/nbt/CompoundTag;",
+            at = @At("RETURN"),
+            cancellable = true
+    )
+    private static void updateDataWithFixers(DataFixer fixer, DataFixTypes fixTypes, CompoundTag compound,
+                                             int oldVersion, int targetVersion, CallbackInfoReturnable<CompoundTag> cir) {
+        cir.setReturnValue(QuiltDataFixesInternals.get().updateWithAllFixers(fixTypes, cir.getReturnValue()));
+    }
 }

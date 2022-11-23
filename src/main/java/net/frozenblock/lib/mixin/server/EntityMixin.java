@@ -40,41 +40,41 @@ public class EntityMixin implements EntitySpottingIconInterface {
 	@Unique
 	public boolean frozenLib$clientIconsSynced;
 
-	@Inject(method = "<init>", at = @At("TAIL"))
-	private void setIconManager(EntityType<?> entityType, Level level, CallbackInfo info) {
-		Entity entity = Entity.class.cast(this);
+    @Inject(method = "<init>", at = @At("TAIL"))
+    private void setIconManager(EntityType<?> entityType, Level level, CallbackInfo info) {
+        Entity entity = Entity.class.cast(this);
 		this.frozenLib$SpottingIconManager = new SpottingIconManager(entity);
-	}
+    }
 
 
-	@Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
-	public void saveIconManager(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> info) {
+    @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
+    public void saveIconManager(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> info) {
 		if (this.frozenLib$SpottingIconManager != null) {
 			this.frozenLib$SpottingIconManager.save(compoundTag);
 		}
-	}
+    }
 
-	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
-	public void load(CompoundTag compoundTag, CallbackInfo info) {
+    @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
+    public void load(CompoundTag compoundTag, CallbackInfo info) {
 		this.frozenLib$SpottingIconManager.load(compoundTag);
-	}
+    }
 
-	@Inject(method = "tick", at = @At("TAIL"))
-	public void tickIcon(CallbackInfo info) {
+    @Inject(method = "tick", at = @At("TAIL"))
+    public void tickIcon(CallbackInfo info) {
 		Entity entity = Entity.class.cast(this);
-		if (!entity.level.isClientSide) {
+        if (!entity.level.isClientSide) {
 			this.frozenLib$SpottingIconManager.tick();
-		} else if (!this.frozenLib$clientIconsSynced) {
+        } else if (!this.frozenLib$clientIconsSynced) {
 			FrozenClientPacketInbetween.requestFrozenIconSync(entity.getId(), entity.level.dimension());
-			this.frozenLib$clientIconsSynced = true;
-		}
-	}
+            this.frozenLib$clientIconsSynced = true;
+        }
+    }
 
 	@Unique
-	@Override
-	public boolean hasSyncedClient() {
-		return this.frozenLib$clientIconsSynced;
-	}
+    @Override
+    public boolean hasSyncedClient() {
+        return this.frozenLib$clientIconsSynced;
+    }
 
 	@Unique
 	@Override

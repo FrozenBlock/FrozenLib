@@ -33,48 +33,47 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.EmptySchema;
  */
 @ApiStatus.Internal
 public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
-	private final Schema schema;
+    private final Schema schema;
 
-	private boolean frozen;
+    private boolean frozen;
 
-	public NoOpQuiltDataFixesInternals() {
-		this.schema = new EmptySchema(0);
+    public NoOpQuiltDataFixesInternals() {
+        this.schema = new EmptySchema(0);
 
-		this.frozen = false;
-	}
+        this.frozen = false;
+    }
 
-	@Override
-	public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
-							  @NotNull DataFixer dataFixer) {
-	}
+    @Override
+    public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
+                              @NotNull DataFixer dataFixer) {}
 
-	@Override
-	public @Nullable DataFixerEntry getFixerEntry(@NotNull String modId) {
-		return null;
-	}
+    @Override
+    public @Nullable DataFixerEntry getFixerEntry(@NotNull String modId) {
+        return null;
+    }
 
-	@Override
-	public @NotNull Schema createBaseSchema() {
-		return this.schema;
-	}
+    @Override
+    public @NotNull Schema createBaseSchema() {
+        return this.schema;
+    }
 
-	@Override
-	public @NotNull CompoundTag updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull CompoundTag compound) {
-		return compound.copy();
-	}
+    @Override
+    public @NotNull CompoundTag updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull CompoundTag compound) {
+        return compound.copy();
+    }
 
-	@Override
-	public @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound) {
-		return compound;
-	}
+    @Override
+    public @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound) {
+        return compound;
+    }
 
-	@Override
-	public void freeze() {
-		this.frozen = true;
-	}
+    @Override
+    public void freeze() {
+        this.frozen = true;
+    }
 
-	@Override
-	public boolean isFrozen() {
-		return this.frozen;
-	}
+    @Override
+    public boolean isFrozen() {
+        return this.frozen;
+    }
 }
