@@ -35,6 +35,7 @@ import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.spotting_icon.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -330,7 +331,7 @@ public final class FrozenClient implements ClientModInitializer {
 				ClientLevel level = Minecraft.getInstance().level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
-					if (entity instanceof LivingEntity livingEntity) {
+					if (entity instanceof EntitySpottingIconInterface livingEntity) {
 						livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
 					}
 				}
@@ -345,7 +346,7 @@ public final class FrozenClient implements ClientModInitializer {
 				ClientLevel level = Minecraft.getInstance().level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
-					if (entity instanceof LivingEntity livingEntity) {
+					if (entity instanceof EntitySpottingIconInterface livingEntity) {
 						livingEntity.getSpottingIconManager().icon = null;
 					}
 				}
