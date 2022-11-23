@@ -28,7 +28,7 @@ import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManag
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
-import net.frozenblock.lib.tags.FrozenItemTags;
+import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;

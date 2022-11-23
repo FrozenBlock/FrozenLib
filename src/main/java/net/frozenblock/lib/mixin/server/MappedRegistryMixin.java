@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.events.api.RegistryFreezeEvents;
+import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import org.spongepowered.asm.mixin.Mixin;

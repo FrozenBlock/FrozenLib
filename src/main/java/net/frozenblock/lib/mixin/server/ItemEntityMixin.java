@@ -20,9 +20,9 @@ package net.frozenblock.lib.mixin.server;
 
 import java.util.List;
 import java.util.UUID;
-import net.frozenblock.lib.damagesource.FrozenDamageSource;
+import net.frozenblock.lib.damagesource.api.FrozenDamageSource;
 import net.frozenblock.lib.item.api.HeavyItemDamageRegistry;
-import net.frozenblock.lib.tags.FrozenItemTags;
+import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;

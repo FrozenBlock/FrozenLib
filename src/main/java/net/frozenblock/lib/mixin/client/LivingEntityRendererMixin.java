@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.mixin.client;
 
-import net.frozenblock.lib.registry.FrozenRegistry;
+import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;

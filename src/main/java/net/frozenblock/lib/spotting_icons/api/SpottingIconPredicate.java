@@ -19,7 +19,7 @@
 package net.frozenblock.lib.spotting_icons.api;
 
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.registry.FrozenRegistry;
+import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;

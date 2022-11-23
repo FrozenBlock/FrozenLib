@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.entities.NoFlopAbstractFish;
+import net.frozenblock.lib.entity.api.NoFlopAbstractFish;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.entity.animal.WaterAnimal;

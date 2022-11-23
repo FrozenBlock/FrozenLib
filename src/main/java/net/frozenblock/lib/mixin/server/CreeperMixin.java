@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.tags.FrozenEntityTags;
+import net.frozenblock.lib.tag.api.FrozenEntityTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
 import org.jetbrains.annotations.Nullable;

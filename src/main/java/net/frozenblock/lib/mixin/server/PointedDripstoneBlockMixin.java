@@ -24,7 +24,7 @@ import java.util.function.Predicate;
 import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.impl.DripstoneDripLavaFrom;
 import net.frozenblock.lib.impl.DripstoneDripWaterFrom;
-import net.frozenblock.lib.tags.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;

@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.screenshake.ScreenShakePackets;
+import net.frozenblock.lib.screenshake.api.ScreenShakePackets;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;

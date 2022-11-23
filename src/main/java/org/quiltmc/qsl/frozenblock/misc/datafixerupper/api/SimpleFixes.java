@@ -25,7 +25,7 @@ import com.mojang.datafixers.schemas.Schema;
 import java.util.Map;
 import java.util.Objects;
 import static java.util.Objects.requireNonNull;
-import net.frozenblock.lib.datafix.BlockStateRenameFix;
+import net.frozenblock.lib.datafix.api.BlockStateRenameFix;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;

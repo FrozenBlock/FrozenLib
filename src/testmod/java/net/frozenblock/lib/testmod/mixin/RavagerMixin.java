@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.screenshake.ScreenShakePackets;
+import net.frozenblock.lib.screenshake.api.ScreenShakePackets;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Ravager;
 import net.minecraft.world.entity.raid.Raider;

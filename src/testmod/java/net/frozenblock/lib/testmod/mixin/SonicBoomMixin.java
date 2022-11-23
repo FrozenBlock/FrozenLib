@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.screenshake.ScreenShakePackets;
+import net.frozenblock.lib.screenshake.api.ScreenShakePackets;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.warden.SonicBoom;

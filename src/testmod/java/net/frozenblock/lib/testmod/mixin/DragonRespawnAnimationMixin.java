@@ -19,7 +19,7 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import java.util.List;
-import net.frozenblock.lib.screenshake.ScreenShakePackets;
+import net.frozenblock.lib.screenshake.api.ScreenShakePackets;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
