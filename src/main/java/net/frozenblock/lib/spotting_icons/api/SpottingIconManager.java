@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icon.api;
+package net.frozenblock.lib.spotting_icons.api;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;

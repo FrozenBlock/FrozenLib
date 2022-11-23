@@ -16,17 +16,17 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icon.impl;
+package net.frozenblock.lib.spotting_icons.impl;
 
-import net.frozenblock.lib.spotting_icon.api.SpottingIconManager;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.Entity;
 import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
-@InjectedInterface(Entity.class)
-public interface EntitySpottingIconInterface {
+@InjectedInterface(EntityRenderer.class)
+public interface EntityRendererWithIcon {
 
-	boolean hasSyncedClient();
-
-	SpottingIconManager getSpottingIconManager();
+	<T extends Entity> void renderIcon(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight);
 
 }

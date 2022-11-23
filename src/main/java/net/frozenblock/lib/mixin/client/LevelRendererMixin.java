@@ -21,7 +21,7 @@ package net.frozenblock.lib.mixin.client;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Matrix4f;
-import net.frozenblock.lib.spotting_icon.impl.EntityRenderDispatcherWithIcon;
+import net.frozenblock.lib.spotting_icons.impl.EntityRenderDispatcherWithIcon;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;

@@ -20,7 +20,7 @@ package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.screenshake.api.ScreenShakePackets;
-import net.frozenblock.lib.spotting_icon.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;

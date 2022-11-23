@@ -16,18 +16,14 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icon.api;
+package net.frozenblock.lib.spotting_icons.impl;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 
-@Environment(EnvType.CLIENT)
-public class ClientSpottingIconMethods {
+public interface EntitySpottingIconInterface {
 
-	public static boolean hasTexture(ResourceLocation resourceLocation) {
-		return Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(resourceLocation.getNamespace(),  resourceLocation.getPath())).isPresent();
-	}
+	boolean hasSyncedClient();
+
+	SpottingIconManager getSpottingIconManager();
 
 }

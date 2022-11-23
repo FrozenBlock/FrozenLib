@@ -19,8 +19,8 @@
 package net.frozenblock.lib.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.frozenblock.lib.spotting_icon.impl.EntityRenderDispatcherWithIcon;
-import net.frozenblock.lib.spotting_icon.impl.EntityRendererWithIcon;
+import net.frozenblock.lib.spotting_icons.impl.EntityRenderDispatcherWithIcon;
+import net.frozenblock.lib.spotting_icons.impl.EntityRendererWithIcon;
 import net.minecraft.CrashReport;
 import net.minecraft.CrashReportCategory;
 import net.minecraft.ReportedException;
