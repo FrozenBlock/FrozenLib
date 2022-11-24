@@ -71,12 +71,12 @@ public class MultifaceClusterBlock extends MultifaceBlock implements SimpleWater
         this.eastAabb = Block.box(0.0, xzOffset, xzOffset, height, (16 - xzOffset), (16 - xzOffset));
         this.westAabb = Block.box((16 - height), xzOffset, xzOffset, 16.0, (16 - xzOffset), (16 - xzOffset));
         this.shapeByDirection = Util.make(Maps.newEnumMap(Direction.class), shapes -> {
-            shapes.put(Direction.NORTH, this.northAabb);
-            shapes.put(Direction.EAST, this.eastAabb);
-            shapes.put(Direction.SOUTH, this.southAabb);
-            shapes.put(Direction.WEST, this.westAabb);
-            shapes.put(Direction.UP, this.upAabb);
-            shapes.put(Direction.DOWN, this.downAabb);
+            shapes.put(Direction.NORTH, this.southAabb);
+            shapes.put(Direction.EAST, this.westAabb);
+            shapes.put(Direction.SOUTH, this.northAabb);
+            shapes.put(Direction.WEST, this.eastAabb);
+            shapes.put(Direction.UP, this.downAabb);
+            shapes.put(Direction.DOWN, this.upAabb);
         });
         this.shapesCache = this.getShapeForEachState(this::calculateMultifaceShape);
     }
