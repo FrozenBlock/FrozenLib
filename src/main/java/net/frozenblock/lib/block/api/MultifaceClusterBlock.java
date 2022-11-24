@@ -45,8 +45,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A block that combines an amethyst cluster-type block with a multiface block.
  */
-public class MultifaceClusterBlock extends MultifaceBlock implements SimpleWaterloggedBlock {
-    private final MultifaceSpreader spreader = new MultifaceSpreader(this);
+public abstract class MultifaceClusterBlock extends MultifaceBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty UP = BlockStateProperties.UP;
 
@@ -79,11 +78,6 @@ public class MultifaceClusterBlock extends MultifaceBlock implements SimpleWater
             shapes.put(Direction.DOWN, this.upAabb);
         });
         this.shapesCache = this.getShapeForEachState(this::calculateMultifaceShape);
-    }
-
-    @Override
-    public MultifaceSpreader getSpreader() {
-        return this.spreader;
     }
 
     @Override

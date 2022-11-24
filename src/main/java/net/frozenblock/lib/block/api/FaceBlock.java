@@ -3,14 +3,15 @@ package net.frozenblock.lib.block.api;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * A {@link MultifaceClusterBlock but only one face is permitted.}
+ * A {@link MultifaceBlock but only one face is permitted.}
  */
-public abstract class FaceClusterBlock extends MultifaceClusterBlock {
-	public FaceClusterBlock(int height, int xzOffset, Properties properties) {
-		super(height, xzOffset, properties);
+public abstract class FaceBlock extends MultifaceBlock {
+	public FaceBlock(Properties properties) {
+		super(properties);
 	}
 
 	@Override
