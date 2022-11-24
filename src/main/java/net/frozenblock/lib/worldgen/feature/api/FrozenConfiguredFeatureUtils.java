@@ -56,9 +56,9 @@ public final class FrozenConfiguredFeatureUtils {
 	}
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
-			FabricDynamicRegistryProvider.Entries entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
+			BootstapContext<ConfiguredFeature<?, ?>> entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
-		return entries.add(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
+		return entries.register(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
 	}
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
