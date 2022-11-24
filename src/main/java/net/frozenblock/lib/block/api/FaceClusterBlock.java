@@ -5,6 +5,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * A {@link MultifaceClusterBlock but only one face is permitted.}
+ */
 public class FaceClusterBlock extends MultifaceClusterBlock {
 	public FaceClusterBlock(int height, int xzOffset, Properties properties) {
 		super(height, xzOffset, properties);
