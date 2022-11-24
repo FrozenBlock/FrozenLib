@@ -91,7 +91,7 @@ public class MultifaceClusterBlock extends MultifaceBlock implements SimpleWater
         return this.shapesCache.get(state);
     }
 
-    private VoxelShape calculateMultifaceShape(BlockState state) {
+    public VoxelShape calculateMultifaceShape(BlockState state) {
         VoxelShape voxelShape = Shapes.empty();
 
         for(Direction direction : DIRECTIONS) {
