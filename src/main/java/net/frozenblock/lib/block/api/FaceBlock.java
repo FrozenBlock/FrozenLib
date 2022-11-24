@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * A {@link MultifaceBlock but only one face is permitted.}
+ * A {@link MultifaceBlock}, but only one face is permitted.
  */
 public abstract class FaceBlock extends MultifaceBlock {
 	public FaceBlock(Properties properties) {

@@ -6,7 +6,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * A {@link MultifaceClusterBlock but only one face is permitted.}
+ * A {@link MultifaceClusterBlock}, but only one face is permitted.
  */
 public abstract class FaceClusterBlock extends MultifaceClusterBlock {
 	public FaceClusterBlock(int height, int xzOffset, Properties properties) {
