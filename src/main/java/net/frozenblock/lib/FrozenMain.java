@@ -2,38 +2,48 @@
  * Copyright 2022 FrozenBlock
  * This file is part of FrozenLib.
  *
- * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
  *
- * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib;
 
+import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.entrypoints.FrozenMainEntrypoint;
-import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
-import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
-import net.frozenblock.lib.math.EasyNoiseSampler;
-import net.frozenblock.lib.registry.FrozenRegistry;
+import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
+import net.frozenblock.lib.event.api.PlayerJoinEvent;
+import net.frozenblock.lib.math.api.EasyNoiseSampler;
+import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.sound.api.FrozenSoundPackets;
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
-import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
-import net.frozenblock.lib.spotting_icons.SpottingIconPredicate;
+import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer;
@@ -42,61 +52,77 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
 
 public final class FrozenMain implements ModInitializer {
-    public static final String MOD_ID = "frozenlib";
-    public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-    public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
-    public static boolean DEV_LOGGING = false;
+	public static final String MOD_ID = "frozenlib";
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
+	public static boolean DEV_LOGGING = false;
 
-    /**
-     * Used for features that may be unstable and crash in public builds.
-     * <p>
-     * It's smart to use this for at least registries.
-     */
-    public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
+	/**
+	 * Used for features that may be unstable and crash in public builds.
+	 * <p>
+	 * It's smart to use this for at least registries.
+	 */
+	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
 
-    @Override
-    public void onInitialize() {
-        FrozenRegistry.initRegistry();
-        ServerFreezer.onInitialize();
-        SoundPredicate.init();
+	@Override
+	public void onInitialize() {
+		FrozenRegistry.initRegistry();
+		ServerFreezer.onInitialize();
+		SoundPredicate.init();
 		SpottingIconPredicate.init();
 
-        receiveSoundSyncPacket();
+		receiveSoundSyncPacket();
 		receiveIconSyncPacket();
 
-        FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
-            try {
-                FrozenMainEntrypoint mainPoint = entrypoint.getEntrypoint();
-                mainPoint.init();
-                if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-                    mainPoint.initDevOnly();
-                }
-            } catch (Throwable ignored) {
-
-            }
-        });
-
-		ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
-			if (server != null) {
-				var seed = server.overworld().getSeed();
-				if (EasyNoiseSampler.seed != seed) {
-					EasyNoiseSampler.setSeed(seed);
+		FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
+			try {
+				FrozenMainEntrypoint mainPoint = entrypoint.getEntrypoint();
+				mainPoint.init();
+				if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+					mainPoint.initDevOnly();
 				}
+			} catch (Throwable ignored) {
+
 			}
 		});
-    }
 
-    //IDENTIFIERS
-    public static final ResourceLocation FLYBY_SOUND_PACKET = id("flyby_sound_packet");
+		ServerWorldEvents.LOAD.register((server, level) -> {
+			if (server != null) {
+				var seed = server.overworld().getSeed();
+				EasyNoiseSampler.setSeed(seed);
+				WindManager.setSeed(seed);
+			}
+		});
+
+		ServerTickEvents.START_SERVER_TICK.register((server) -> {
+			ServerLevel level = server.overworld();
+			WindManager.time = server.overworld().getGameTime();
+			WindManager.tick(server, level);
+		});
+
+		PlayerJoinEvent.register(((server, player) -> {
+			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			byteBuf.writeLong(server.overworld().getGameTime());
+			byteBuf.writeDouble(WindManager.cloudX);
+			byteBuf.writeDouble(WindManager.cloudY);
+			byteBuf.writeDouble(WindManager.cloudZ);
+			byteBuf.writeLong(server.overworld().getSeed());
+			ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
+		}));
+
+	}
+
+	//IDENTIFIERS
+	public static final ResourceLocation FLYBY_SOUND_PACKET = id("flyby_sound_packet");
 	public static final ResourceLocation LOCAL_SOUND_PACKET = id("local_sound_packet");
-    public static final ResourceLocation MOVING_RESTRICTION_LOOPING_SOUND_PACKET = id("moving_restriction_looping_sound_packet");
-    public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = id("starting_moving_restriction_looping_sound_packet");
-    public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = id("moving_restriction_sound_packet");
-    public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = id("moving_restriction_looping_fading_distance_sound_packet");
-    public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = id("fading_distance_sound_packet");
-    public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = id("moving_fading_distance_sound_packet");
-    public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
-    public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
+	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_SOUND_PACKET = id("moving_restriction_looping_sound_packet");
+	public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = id("starting_moving_restriction_looping_sound_packet");
+	public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = id("moving_restriction_sound_packet");
+	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = id("moving_restriction_looping_fading_distance_sound_packet");
+	public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = id("fading_distance_sound_packet");
+	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = id("moving_fading_distance_sound_packet");
+	public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
+	public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
 
 	public static final ResourceLocation SCREEN_SHAKE_PACKET = id("screen_shake_packet");
 	public static final ResourceLocation SCREEN_SHAKE_ENTITY_PACKET = id("screen_shake_entity_packet");
@@ -107,19 +133,22 @@ public final class FrozenMain implements ModInitializer {
 
 	public static final ResourceLocation HURT_SOUND_PACKET = id("hurt_sound_packet");
 
-    public static ResourceLocation id(String path) {
-        return new ResourceLocation(MOD_ID, path);
-    }
+	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
+	public static final ResourceLocation SMALL_WIND_SYNC_PACKET = id("small_wind_sync_packet");
 
-    public static String string(String path) {
-        return id(path).toString();
-    }
+	public static ResourceLocation id(String path) {
+		return new ResourceLocation(MOD_ID, path);
+	}
 
-    public static void log(String string, boolean should) {
-        if (should) {
-            LOGGER.info(string);
-        }
-    }
+	public static String string(String path) {
+		return id(path).toString();
+	}
+
+	public static void log(String string, boolean should) {
+		if (should) {
+			LOGGER.info(string);
+		}
+	}
 
 	public static void warn(String string, boolean should) {
 		if (should) {
@@ -133,29 +162,25 @@ public final class FrozenMain implements ModInitializer {
 		}
 	}
 
-    private static void receiveSoundSyncPacket() {
-        ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
-            int id = byteBuf.readVarInt();
-            Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registries.DIMENSION));
-            ctx.execute(() -> {
-                if (dimension != null) {
-                    Entity entity = dimension.getEntity(id);
-                    if (entity != null) {
-                        if (entity instanceof EntityLoopingSoundInterface soundInterface) {
-                            for (MovingLoopingSoundEntityManager.SoundLoopData nbt : soundInterface.getSounds().getSounds()) {
-                                FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
-                            }
-                        }
-						if (entity instanceof EntityLoopingFadingDistanceSoundInterface soundInterface) {
-							for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : soundInterface.getFadingDistanceSounds().getSounds()) {
-								FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), BuiltInRegistries.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
-							}
+	private static void receiveSoundSyncPacket() {
+		ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registries.DIMENSION));
+			ctx.execute(() -> {
+				if (dimension != null) {
+					Entity entity = dimension.getEntity(id);
+					if (entity instanceof LivingEntity livingEntity) {
+						for (MovingLoopingSoundEntityManager.SoundLoopData nbt : livingEntity.getSounds().getSounds()) {
+							FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
 						}
-                    }
-                }
-            });
-        });
-    }
+						for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : livingEntity.getFadingDistanceSounds().getSounds()) {
+							FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), BuiltInRegistries.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
+						}
+					}
+				}
+			});
+		});
+	}
 
 	private static void receiveIconSyncPacket() {
 		ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_SPOTTING_ICON_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
@@ -165,13 +190,12 @@ public final class FrozenMain implements ModInitializer {
 				if (dimension != null) {
 					Entity entity = dimension.getEntity(id);
 					if (entity != null) {
-						if (entity instanceof EntitySpottingIconInterface icon) {
-							icon.getSpottingIconManager().sendIconPacket(player);
+						if (entity instanceof EntitySpottingIconInterface livingEntity) {
+							livingEntity.getSpottingIconManager().sendIconPacket(player);
 						}
 					}
 				}
 			});
 		});
 	}
-
 }

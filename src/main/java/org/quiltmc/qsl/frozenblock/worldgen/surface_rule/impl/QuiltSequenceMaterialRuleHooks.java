@@ -18,12 +18,15 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
+import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.jetbrains.annotations.ApiStatus;
+import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
 /**
  * Modified to work on Fabric
  */
 @ApiStatus.Internal
+@InjectedInterface(SurfaceRules.SequenceRuleSource.class)
 public interface QuiltSequenceMaterialRuleHooks {
     void frozenLib_quilt$freeze();
 }

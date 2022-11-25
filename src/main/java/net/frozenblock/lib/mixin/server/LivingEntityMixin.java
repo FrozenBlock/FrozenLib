@@ -2,11 +2,18 @@
  * Copyright 2022 FrozenBlock
  * This file is part of FrozenLib.
  *
- * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
  *
- * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.mixin.server;
@@ -21,9 +28,7 @@ import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManag
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
-import net.frozenblock.lib.spotting_icons.SpottingIconManager;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
-import net.frozenblock.lib.tags.FrozenItemTags;
+import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -49,7 +54,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoopingFadingDistanceSoundInterface, EntitySpottingIconInterface {
+public abstract class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoopingFadingDistanceSoundInterface {
 
     @Shadow
     protected ItemStack useItem;
@@ -61,16 +66,13 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
 	@Unique
     public MovingLoopingFadingDistanceSoundEntityManager frozenLib$loopingFadingDistanceSoundManager;
 	@Unique
-	public SpottingIconManager frozenLib$SpottingIconManager;
-	@Unique
-	public boolean frozenLib$clientFrozenSoundAndIconsSynced;
+	public boolean frozenLib$clientFrozenSoundsSynced;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void setLoopingSoundManagers(EntityType<? extends LivingEntity> entityType, Level level, CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         this.frozenLib$loopingSoundManager = new MovingLoopingSoundEntityManager(entity);
         this.frozenLib$loopingFadingDistanceSoundManager = new MovingLoopingFadingDistanceSoundEntityManager(entity);
-		this.frozenLib$SpottingIconManager = new SpottingIconManager(entity);
     }
 
     @Inject(method = "startUsingItem", at = @At("HEAD"), cancellable = true)
@@ -110,29 +112,23 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
         if (this.frozenLib$loopingFadingDistanceSoundManager != null) {
             this.frozenLib$loopingFadingDistanceSoundManager.save(compoundTag);
         }
-		if (this.frozenLib$SpottingIconManager != null) {
-			this.frozenLib$SpottingIconManager.save(compoundTag);
-		}
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     public void readLoopingSoundData(CompoundTag compoundTag, CallbackInfo info) {
         this.frozenLib$loopingSoundManager.load(compoundTag);
         this.frozenLib$loopingFadingDistanceSoundManager.load(compoundTag);
-		this.frozenLib$SpottingIconManager.load(compoundTag);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
-    public void tickSoundsAndIcon(CallbackInfo info) {
+    public void tickSounds(CallbackInfo info) {
         LivingEntity entity = LivingEntity.class.cast(this);
         if (!entity.level.isClientSide) {
             this.frozenLib$loopingSoundManager.tick();
             this.frozenLib$loopingFadingDistanceSoundManager.tick();
-			this.frozenLib$SpottingIconManager.tick();
-        } else if (!this.frozenLib$clientFrozenSoundAndIconsSynced) {
+        } else if (!this.frozenLib$clientFrozenSoundsSynced) {
             FrozenClientPacketInbetween.requestFrozenSoundSync(entity.getId(), entity.level.dimension());
-			FrozenClientPacketInbetween.requestFrozenIconSync(entity.getId(), entity.level.dimension());
-            this.frozenLib$clientFrozenSoundAndIconsSynced = true;
+            this.frozenLib$clientFrozenSoundsSynced = true;
         }
     }
 
@@ -166,14 +162,8 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
 	@Unique
     @Override
     public boolean hasSyncedClient() {
-        return this.frozenLib$clientFrozenSoundAndIconsSynced;
+        return this.frozenLib$clientFrozenSoundsSynced;
     }
-
-	@Unique
-	@Override
-	public SpottingIconManager getSpottingIconManager() {
-		return this.frozenLib$SpottingIconManager;
-	}
 
 	@Unique
     @Override
@@ -190,7 +180,7 @@ public class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoo
 	@Unique
     @Override
     public boolean hasSyncedFadingDistanceClient() {
-        return this.frozenLib$clientFrozenSoundAndIconsSynced;
+        return this.frozenLib$clientFrozenSoundsSynced;
     }
 
 	@Unique

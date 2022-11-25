@@ -2,18 +2,22 @@
  * Copyright 2022 FrozenBlock
  * This file is part of FrozenLib.
  *
- * FrozenLib is free software: you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
  *
- * FrozenLib is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License along with FrozenLib. If not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.sound.api;
 
-import net.minecraft.core.registries.BuiltInRegistries;
-import org.joml.Vector3d;
-import org.joml.Vector3f;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -21,6 +25,7 @@ import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -30,6 +35,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import org.joml.Vector3d;
 
 public final class FrozenSoundPackets {
 	private FrozenSoundPackets() {
@@ -112,7 +118,7 @@ public final class FrozenSoundPackets {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
             if (entity instanceof LivingEntity living) {
-                ((EntityLoopingSoundInterface)living).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
+                living.addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
             }
         }
     }
@@ -211,7 +217,7 @@ public final class FrozenSoundPackets {
                 ServerPlayNetworking.send(player, FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
             if (entity instanceof LivingEntity living) {
-                ((EntityLoopingSoundInterface)living).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
+                living.addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
             }
         }
     }

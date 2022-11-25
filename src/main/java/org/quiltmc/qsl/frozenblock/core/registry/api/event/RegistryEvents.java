@@ -19,8 +19,8 @@
 package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
 import net.fabricmc.fabric.api.event.Event;
-import net.frozenblock.lib.entrypoints.CommonEventEntrypoint;
-import net.frozenblock.lib.events.api.FrozenEvents;
+import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.server.packs.resources.ResourceManager;
