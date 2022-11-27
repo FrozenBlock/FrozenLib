@@ -20,6 +20,7 @@ package net.frozenblock.lib.testmod.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.ProfilePublicKey;

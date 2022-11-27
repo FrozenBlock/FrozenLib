@@ -22,6 +22,7 @@ import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
@@ -29,6 +30,7 @@ import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
+import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
@@ -42,6 +44,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -75,6 +78,9 @@ public final class FrozenClient implements ClientModInitializer {
 		receivePlayerDamagePacket();
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
+
+		var resourceLoader = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
+		resourceLoader.registerReloadListener(BlockSoundGroupManager.INSTANCE);
 
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:client", FrozenClientEntrypoint.class).forEach(entrypoint -> {
 			try {

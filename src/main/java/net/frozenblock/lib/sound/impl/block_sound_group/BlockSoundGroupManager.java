@@ -1,0 +1,201 @@
+/*
+ * Copyright 2022 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
+ */
+
+package net.frozenblock.lib.sound.impl.block_sound_group;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JsonOps;
+import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
+import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
+import net.frozenblock.lib.sound.api.block_sound_group.SoundCodecs;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.GsonHelper;
+import net.minecraft.util.profiling.ProfilerFiller;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
+
+@ApiStatus.Internal
+public class BlockSoundGroupManager implements SimpleResourceReloadListener<BlockSoundGroupManager.SoundGroupLoader> {
+	private static final Logger LOGGER = LoggerFactory.getLogger("FrozenLib Block Sound Group Manager");
+	private static final String DIRECTORY = "blocksoundoverwrites";
+
+	public static final BlockSoundGroupManager INSTANCE = new BlockSoundGroupManager();
+
+	private Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites;
+	private final Map<ResourceLocation, BlockSoundGroupOverwrite> queuedOverwrites = new HashMap<>();
+
+	public List<BlockSoundGroupOverwrite> getOverwrites() {
+		List<BlockSoundGroupOverwrite> list = new ArrayList<>();
+		this.overwrites.forEach((location, overwrite) -> {
+			list.add(overwrite);
+		});
+		return list;
+	}
+
+	@Nullable
+	public BlockSoundGroupOverwrite getOverwrite(ResourceLocation id) {
+		return this.overwrites.get(id);
+	}
+
+	/**
+	 * This will only work with vanilla blocks.
+	 */
+	public void addBlock(String id, SoundType sounds) {
+		var key = new ResourceLocation(id);
+		if (!BuiltInRegistries.BLOCK.containsKey(key)) {
+			throw new IllegalStateException("The specified block's id is null.");
+		}
+		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+	}
+
+	/**
+	 * Adds a block with the specified namespace and id.
+	 */
+	public void addBlock(String namespace, String id, SoundType sounds) {
+		var key = new ResourceLocation(namespace, id);
+		if (!BuiltInRegistries.BLOCK.containsKey(key)) {
+			throw new IllegalStateException("The specified block's id is null.");
+		}
+		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+	}
+
+	public void addBlock(Block block, SoundType sounds) {
+		var key = BuiltInRegistries.BLOCK.getKey(block);
+		if (!BuiltInRegistries.BLOCK.containsKey(key)) {
+			throw new IllegalStateException("The specified block's id is null.");
+		}
+		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+	}
+
+	public void addBlocks(Block[] blocks, SoundType sounds) {
+		for (Block block : blocks) {
+			var key = BuiltInRegistries.BLOCK.getKey(block);
+			if (!BuiltInRegistries.BLOCK.containsKey(key)) {
+				throw new IllegalStateException("The specified block's id is null.");
+			}
+			this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+		}
+	}
+
+	public void addBlockTag(TagKey<Block> tag, SoundType sounds) {
+		var tagIterable = BuiltInRegistries.BLOCK.getTagOrEmpty(tag);
+		if (tagIterable == null) {
+			throw new IllegalStateException("The specified TagKey is null.");
+		} else {
+			for (Holder<Block> block : tagIterable) {
+				var key = block.unwrapKey().orElseThrow().location();
+				if (!BuiltInRegistries.BLOCK.containsKey(key)) {
+					throw new IllegalStateException("The specified block's id is null.");
+				}
+				this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+			}
+		}
+	}
+
+	public static ResourceLocation getPath(ResourceLocation blockId) {
+		return new ResourceLocation(blockId.getNamespace(), DIRECTORY + "/" + blockId.getPath() + ".json");
+	}
+
+	@Override
+	public CompletableFuture<SoundGroupLoader> load(ResourceManager manager, ProfilerFiller profiler, Executor executor) {
+		return CompletableFuture.supplyAsync(() -> new SoundGroupLoader(manager, profiler), executor);
+	}
+
+	@Override
+	public CompletableFuture<Void> apply(SoundGroupLoader prepared, ResourceManager manager, ProfilerFiller profiler, Executor executor) {
+		this.overwrites = prepared.getOverwrites();
+		this.overwrites.putAll(this.queuedOverwrites);
+		return CompletableFuture.runAsync(() -> {
+		});
+	}
+
+	@Override
+	@NotNull
+	public ResourceLocation getFabricId() {
+		return FrozenMain.id("block_sound_group_reloader");
+	}
+
+	public static class SoundGroupLoader {
+		private final ResourceManager manager;
+		private final ProfilerFiller profiler;
+		private final Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites = new HashMap<>();
+
+		public SoundGroupLoader(ResourceManager manager, ProfilerFiller profiler) {
+			this.manager = manager;
+			this.profiler = profiler;
+			this.loadSoundOverwrites();
+		}
+
+		private void loadSoundOverwrites() {
+			profiler.push("Load Sound Overwrites");
+			Map<ResourceLocation, Resource> resources = manager.listResources(DIRECTORY, id -> id.getPath().endsWith(".json"));
+			for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+				this.addOverwrite(entry.getKey(), entry.getValue());
+			}
+			profiler.pop();
+		}
+
+		private void addOverwrite(ResourceLocation id, Resource resource) {
+			BufferedReader reader;
+			try {
+				reader = resource.openAsReader();
+			} catch (IOException e) {
+				LOGGER.error(String.format("Unable to open BufferedReader for id %s", id), e);
+				return;
+			}
+
+			JsonObject json = GsonHelper.parse(reader);
+			DataResult<Pair<BlockSoundGroupOverwrite, JsonElement>> result = SoundCodecs.SOUND_GROUP_OVERWRITE.decode(JsonOps.INSTANCE, json);
+
+			if (result.error().isPresent()) {
+				LOGGER.error(String.format("Unable to parse sound overwrite file %s. \nReason: %s", id, result.error().get().message()));
+				return;
+			}
+
+			ResourceLocation overwriteId = new ResourceLocation(id.getNamespace(), id.getPath().substring((DIRECTORY + "/").length()));
+			overwrites.put(overwriteId, result.result().orElseThrow().getFirst());
+		}
+
+		public Map<ResourceLocation, BlockSoundGroupOverwrite> getOverwrites() {
+			return this.overwrites;
+		}
+	}
+}

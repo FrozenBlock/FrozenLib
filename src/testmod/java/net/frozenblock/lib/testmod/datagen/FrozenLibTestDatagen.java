@@ -6,7 +6,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider;
-import net.frozenblock.lib.tags.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.level.biome.Biomes;

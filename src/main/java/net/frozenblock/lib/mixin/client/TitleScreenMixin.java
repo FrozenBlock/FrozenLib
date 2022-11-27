@@ -44,7 +44,7 @@ public class TitleScreenMixin {
 	private PanoramaRenderer panorama;
 
 	@Unique
-	private final ArrayList<ResourceLocation> validPanoramas = new ArrayList<>();
+	private final ArrayList<ResourceLocation> frozenLib$validPanoramas = new ArrayList<>();
 
 	@Inject(method = "<init>(Z)V", at = @At("TAIL"))
 	public void multiplePans(boolean fading, CallbackInfo info) {
@@ -59,15 +59,15 @@ public class TitleScreenMixin {
 				}
 				//Panorama is valid if all six images are found, add to valid panorama list.
 				if (i == 5) {
-					validPanoramas.add(panLocation);
+					frozenLib$validPanoramas.add(panLocation);
 				}
 			}
 		}
-		if (!validPanoramas.isEmpty()) {
+		if (!frozenLib$validPanoramas.isEmpty()) {
 			//Set panorama from valid list.
-			this.panorama = new PanoramaRenderer(new CubeMap(validPanoramas.get((int) (Math.random() * validPanoramas.size()))));
+			this.panorama = new PanoramaRenderer(new CubeMap(frozenLib$validPanoramas.get((int) (Math.random() * frozenLib$validPanoramas.size()))));
 			//Clear valid list to save a bit on resources.
-			validPanoramas.clear();
+			frozenLib$validPanoramas.clear();
 		} else {
 			//Use original panorama in case panorama list is accidentally emptied.
 			this.panorama = new PanoramaRenderer(new CubeMap(new ResourceLocation("textures/gui/title/background/panorama")));
