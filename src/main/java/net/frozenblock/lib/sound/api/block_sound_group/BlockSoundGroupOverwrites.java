@@ -18,14 +18,12 @@
 
 package net.frozenblock.lib.sound.api.block_sound_group;
 
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 /**
@@ -41,6 +39,15 @@ public final class BlockSoundGroupOverwrites {
 	}
 
 	private static final BlockSoundGroupManager MANAGER = BlockSoundGroupManager.INSTANCE;
+
+	public static List<BlockSoundGroupOverwrite> getOverwrites() {
+		return MANAGER.getOverwrites();
+	}
+
+	@Nullable
+	public BlockSoundGroupOverwrite getOverwrite(ResourceLocation id) {
+		return MANAGER.getOverwrite(id);
+	}
 
 	/**
 	 * This will only work with vanilla blocks.

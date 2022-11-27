@@ -18,9 +18,8 @@
 
 package net.frozenblock.lib.mixin.server;
 
-import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupManager;
+import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
-import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrites;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;

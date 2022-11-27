@@ -30,7 +30,7 @@ import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
-import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupManager;
+import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;

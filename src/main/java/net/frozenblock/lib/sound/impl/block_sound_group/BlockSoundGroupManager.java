@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.api.block_sound_group;
+package net.frozenblock.lib.sound.impl.block_sound_group;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
@@ -25,6 +25,8 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
+import net.frozenblock.lib.sound.api.block_sound_group.SoundCodecs;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -35,6 +37,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -48,6 +51,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 
+@ApiStatus.Internal
 public class BlockSoundGroupManager implements SimpleResourceReloadListener<BlockSoundGroupManager.SoundGroupLoader> {
 	private static final Logger LOGGER = LoggerFactory.getLogger("FrozenLib Block Sound Group Manager");
 	private static final String DIRECTORY = "blocksoundoverwrites";
