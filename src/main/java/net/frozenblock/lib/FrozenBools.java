@@ -37,6 +37,7 @@ public class FrozenBools {
     public static final boolean HAS_CLOTH_CONFIG = FabricLoader.getInstance().isModLoaded("cloth-config");
 	public static final boolean HAS_CONTINUITY = FabricLoader.getInstance().isModLoaded("continuity");
 	public static final boolean HAS_ENTITY_CULLING = FabricLoader.getInstance().isModLoaded("entityculling");
+	public static final boolean HAS_EVERY_COMPAT = FabricLoader.getInstance().isModLoaded("everycomp");
 	public static final boolean HAS_GECKO_LIB = FabricLoader.getInstance().isModLoaded("geckolib3");
 	public static final boolean HAS_INDIUM = FabricLoader.getInstance().isModLoaded("indium");
 	public static final boolean HAS_IRIS = FabricLoader.getInstance().isModLoaded("iris");
