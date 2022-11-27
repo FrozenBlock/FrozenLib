@@ -1,0 +1,12 @@
+{
+  "id": "minecraft:stone",
+  "sound_type": {
+    "volume": 1.0,
+    "pitch": 1.0,
+    "break_sound": "block.wood.break",
+    "step_sound": "block.wood.step",
+    "place_sound": "block.wood.place",
+    "hit_sound": "block.wood.hit",
+    "fall_sound": "block.wood.fall"
+  }
+}

@@ -18,8 +18,6 @@
 
 package net.frozenblock.lib.sound.api.block_sound_group;
 
-import com.google.common.base.Preconditions;
-import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -28,9 +26,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Allows you to add any block by either adding its registry (Blocks.STONE) or its ID ("stone").
@@ -44,65 +40,31 @@ public final class BlockSoundGroupOverwrites {
 		throw new UnsupportedOperationException("BlockSoundGroupOverwrites contains only static declarations.");
 	}
 
-	public static final Map<ResourceLocation, SoundType> BLOCK_SOUNDS = new HashMap<>();
-	public static final Map<String, SoundType> NAMESPACE_SOUNDS = new HashMap<>();
+	private static final BlockSoundGroupManager MANAGER = BlockSoundGroupManager.INSTANCE;
 
 	/**
 	 * This will only work with vanilla blocks.
 	 */
 	public static void addBlock(String id, SoundType sounds) {
-		var key = new ResourceLocation(id);
-		if (!Registry.BLOCK.containsKey(key)) {
-			throw new IllegalStateException("The specified block's id is null.");
-		}
-		BLOCK_SOUNDS.put(key, sounds);
+		MANAGER.addBlock(id, sounds);
 	}
 
 	/**
 	 * Adds a block with the specified namespace and id.
 	 */
 	public static void addBlock(String namespace, String id, SoundType sounds) {
-		var key = new ResourceLocation(namespace, id);
-		if (!Registry.BLOCK.containsKey(key)) {
-			throw new IllegalStateException("The specified block's id is null.");
-		}
-		BLOCK_SOUNDS.put(key, sounds);
+		MANAGER.addBlock(namespace, id, sounds);
 	}
 
 	public static void addBlock(Block block, SoundType sounds) {
-		var id = Registry.BLOCK.getKey(block);
-		if (!Registry.BLOCK.containsKey(id)) {
-			throw new IllegalStateException("The specified block's id is null.");
-		}
-		BLOCK_SOUNDS.put(id, sounds);
+		MANAGER.addBlock(block, sounds);
 	}
 
 	public static void addBlocks(Block[] blocks, SoundType sounds) {
-		for (Block block : blocks) {
-			var id = Registry.BLOCK.getKey(block);
-			if (!Registry.BLOCK.containsKey(id)) {
-				throw new IllegalStateException("The specified block's id is null.");
-			}
-			BLOCK_SOUNDS.put(id, sounds);
-		}
+		MANAGER.addBlocks(blocks, sounds);
 	}
 
 	public static void addBlockTag(TagKey<Block> tag, SoundType sounds) {
-		var tagIterable = Registry.BLOCK.getTagOrEmpty(tag);
-		if (tagIterable == null) {
-			throw new IllegalStateException("The specified TagKey is null.");
-		} else {
-			for (Holder<Block> block : tagIterable) {
-				var key = block.unwrapKey().orElseThrow().location();
-				if (!Registry.BLOCK.containsKey(key)) {
-					throw new IllegalStateException("The specified block's id is null.");
-				}
-				BLOCK_SOUNDS.put(key, sounds);
-			}
-		}
-	}
-
-	public static void addNamespace(String namespace, SoundType sounds) {
-		NAMESPACE_SOUNDS.put(namespace, sounds);
+		MANAGER.addBlockTag(tag, sounds);
 	}
 }
