@@ -140,3 +140,7 @@ transitive-accessible    field    net/minecraft/client/particle/Particle    z   
 
 # Minecraft Instance
 transitive-accessible    method    net/minecraft/client/Minecraft    isMultiplayerServer ()Z
+
+# Feature Flags
+transitive-mutable    field    net/minecraft/world/flag/FeatureFlags    REGISTRY    Lnet/minecraft/world/flag/FeatureFlagRegistry;
+transitive-mutable    field    net/minecraft/world/flag/FeatureFlags    CODEC    Lcom/mojang/serialization/Codec;
