@@ -46,10 +46,6 @@ public final class RegistryEvents {
 	 * Gets the entry added event for a specific Minecraft registry.
 	 * <p>
 	 * The event is invoked upon the addition or assignment of an entry in the specified registry.
-	 *
-	 * @param registry the {@link Registry} for this event to listen for
-	 * @param <V>      the entry type of the {@link Registry} to listen for
-	 * @return the entry added event for the specified registry, which can have callbacks registered to it
 	 */
 	public static final Event<EntryAdded> ENTRY_ADDED_EVENT = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class,
 			callbacks -> (registry, context) -> {

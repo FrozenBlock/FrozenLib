@@ -109,6 +109,7 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRul
 transitive-accessible    method    net/minecraft/data/registries/VanillaRegistries    validateThatAllBiomeFeaturesHaveBiomeFilter    (Lnet/minecraft/core/HolderLookup$Provider;)V
 transitive-accessible    method    net/minecraft/data/Main    bindRegistries    (Ljava/util/function/BiFunction;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/data/DataProvider$Factory;
 transitive-accessible    method    net/minecraft/core/MappedRegistry    getOrCreateHolderOrThrow    (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/core/Holder$Reference;
+transitive-accessible    method    net/minecraft/core/registries/BuiltInRegistries    freeze    ()V
 
 # Sounds
 transitive-accessible    field    net/minecraft/client/sounds/SoundManager    soundEngine    Lnet/minecraft/client/sounds/SoundEngine;
