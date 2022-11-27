@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.mixin.server;
 
+import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrites;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
 import net.minecraft.core.Registry;
@@ -37,7 +38,7 @@ public final class BlockMixin {
     private void getSoundGroupOverride(BlockState state, CallbackInfoReturnable<SoundType> info) {
         Block block = state.getBlock();
         ResourceLocation id = Registry.BLOCK.getKey(block);
-		for (BlockSoundGroupOverwrite overwrite : BlockSoundGroupManager.INSTANCE.getOverwrites()) {
+		for (BlockSoundGroupOverwrite overwrite : BlockSoundGroupOverwrites.getOverwrites()) {
 			if (overwrite.getBlockId().equals(id)) {
 				info.setReturnValue(overwrite.getSoundOverwrite());
 			}
