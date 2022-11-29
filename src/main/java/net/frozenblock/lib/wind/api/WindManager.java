@@ -68,7 +68,7 @@ public class WindManager {
 		cloudY += (laggedWindY * 0.01);
 		cloudZ += (laggedWindZ * 0.025);
 		//SYNC WITH CLIENTS IN CASE OF DESYNC
-		if (tickCount >= 400) {
+		if (tickCount >= 20) {
 			tickCount = 0;
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 			byteBuf.writeLong(server.overworld().getGameTime());
