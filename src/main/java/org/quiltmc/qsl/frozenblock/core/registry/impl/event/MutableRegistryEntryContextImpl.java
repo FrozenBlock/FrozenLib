@@ -94,3 +94,4 @@ public class MutableRegistryEntryContextImpl<V> implements RegistryEntryContext<
 		return this.raw;
 	}
 }
+

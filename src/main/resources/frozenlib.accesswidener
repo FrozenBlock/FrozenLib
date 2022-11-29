@@ -110,6 +110,7 @@ transitive-accessible    method    net/minecraft/data/registries/VanillaRegistri
 transitive-accessible    method    net/minecraft/data/Main    bindRegistries    (Ljava/util/function/BiFunction;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/data/DataProvider$Factory;
 transitive-accessible    method    net/minecraft/core/MappedRegistry    getOrCreateHolderOrThrow    (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/core/Holder$Reference;
 transitive-accessible    method    net/minecraft/core/registries/BuiltInRegistries    freeze    ()V
+transitive-accessible    method    net/minecraft/core/Holder$Reference    bindValue    (Ljava/lang/Object;)V
 
 # Sounds
 transitive-accessible    field    net/minecraft/client/sounds/SoundManager    soundEngine    Lnet/minecraft/client/sounds/SoundEngine;

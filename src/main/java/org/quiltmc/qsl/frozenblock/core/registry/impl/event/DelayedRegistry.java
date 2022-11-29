@@ -44,7 +44,6 @@ import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.frozenblock.core.registry.api.event.DelayedRegistryImpl;
 
 /**
  * Modified to work on Fabric
@@ -64,22 +63,22 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	public @Nullable ResourceLocation getKey(T entry) {
+	public ResourceLocation getKey(T entry) {
 		return this.wrapped.getKey(entry);
 	}
 
 	@Override
-	public Optional<ResourceKey<T>> getResourceKey(T entry) {
+	public @NotNull Optional<ResourceKey<T>> getResourceKey(T entry) {
 		return this.wrapped.getResourceKey(entry);
 	}
 
 	@Override
-	public int getId(@Nullable T entry) {
+	public int getId(T entry) {
 		return this.wrapped.getId(entry);
 	}
 
 	@Override
-	public @Nullable T byId(int index) {
+	public T byId(int index) {
 		return this.wrapped.byId(index);
 	}
 

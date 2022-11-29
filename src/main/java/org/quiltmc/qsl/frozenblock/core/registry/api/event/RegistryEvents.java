@@ -21,9 +21,9 @@ package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -46,13 +46,15 @@ public final class RegistryEvents {
 	 * Gets the entry added event for a specific Minecraft registry.
 	 * <p>
 	 * The event is invoked upon the addition or assignment of an entry in the specified registry.
+	 *
+	 * @param registry the {@link Registry} for this event to listen for. Must be an instance of {@link MappedRegistry}.
+	 * @param <V>      the entry type of the {@link Registry} to listen for
+	 * @return the entry added event for the specified registry, which can have callbacks registered to it
+	 * @throws ClassCastException if the registry is not a {@link MappedRegistry}
 	 */
-	public static final Event<EntryAdded> ENTRY_ADDED_EVENT = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class,
-			callbacks -> (registry, context) -> {
-				for (var callback : callbacks) {
-					callback.onAdded(registry, context);
-				}
-			});
+	public static <V> Event<EntryAdded<V>> getEntryAddEvent(Registry<V> registry) {
+		return RegistryEventStorage.as((MappedRegistry<V>) registry).frozenLib_quilt$getEntryAddedEvent();
+	}
 
 	/**
 	 * This event gets triggered when a new {@link RegistryAccess} gets created,
@@ -93,20 +95,20 @@ public final class RegistryEvents {
 	);
 
 	/**
-	 * Functional interface to be implemented on callbacks for {@link #ENTRY_ADDED_EVENT}.
+	 * Functional interface to be implemented on callbacks for {@link #getEntryAddEvent(Registry)}.
 	 *
 	 * @param <V> the entry type of the {@link Registry} being listened for
-	 * @see #ENTRY_ADDED_EVENT
+	 * @see #getEntryAddEvent(Registry)
 	 */
 	@FunctionalInterface
 	public interface EntryAdded<V> {
 		/**
 		 * Called when an entry in this callback's event's {@link Registry} has an entry added or assigned.
 		 *
-		 * @param context an object containing information regarding the registry, entry object, and ID of the entry
+		 * @param context an object containing information regarding the registry, entry object, and identifier of the entry
 		 *                being registered
 		 */
-		void onAdded(Registry<V> registry, RegistryEntryContext<V> context);
+		void onAdded(RegistryEntryContext<V> context);
 	}
 
 	@FunctionalInterface

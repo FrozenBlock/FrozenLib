@@ -58,20 +58,15 @@ public interface DynamicRegistryManagerSetupContext {
 	 * Attempts to safely register a game object into the given registry.
 	 *
 	 * @param registryKey        the key of the registry to register into
-	 * @param resourceLocation                 the identifier of the game object to register
+	 * @param id                 the identifier of the game object to register
 	 * @param gameObjectSupplier the supplier of the game object to register
 	 * @param <V>                the type of game object to register
 	 * @return the optional game object, if the registry is present then the optional is filled, or empty otherwise
 	 */
-	default <V> @NotNull Optional<V> register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull ResourceLocation resourceLocation,
+	default <V> @NotNull Optional<V> register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull ResourceLocation id,
 											  @NotNull Supplier<V> gameObjectSupplier) {
 		return this.registryManager().registry(registryKey)
-				.map(registry -> {
-					((DelayedRegistryImpl) registry).setFrozen(false);
-					var value = Registry.register(registry, resourceLocation, gameObjectSupplier.get());
-					((DelayedRegistryImpl) registry).setFrozen(true);
-					return value;
-				});
+				.map(registry -> Registry.register(registry, id, gameObjectSupplier.get()));
 	}
 
 	/**
@@ -157,14 +152,14 @@ public interface DynamicRegistryManagerSetupContext {
 		 * Registers the given game object into the given registry.
 		 *
 		 * @param registryKey the key of the registry to register into
-		 * @param resourceLocation          the resource location of the game object to register
+		 * @param id          the identifier of the game object to register
 		 * @param gameObject  the game object to register
 		 * @param <V>         the type of values held in the registry
 		 * @return the game object
 		 */
-		public <V> @NotNull V register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull ResourceLocation resourceLocation,
+		public <V> @NotNull V register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull ResourceLocation id,
 									   @NotNull V gameObject) {
-			return Registry.register(this.get(registryKey), resourceLocation, gameObject);
+			return Registry.register(this.get(registryKey), id, gameObject);
 		}
 	}
 }

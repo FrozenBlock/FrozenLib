@@ -24,7 +24,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.frozenblock.core.registry.api.event.DelayedRegistryImpl;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEventStorage;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEntryContext;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryMonitor;
@@ -53,33 +53,31 @@ public class RegistryMonitorImpl<V> implements RegistryMonitor<V> {
 
 	@Override
 	public void forAll(RegistryEvents.EntryAdded<V> callback) {
-		if (!(this.registry instanceof MappedRegistry<V>)) {
+		if (!(this.registry instanceof WritableRegistry<V>)) {
 			throw new UnsupportedOperationException("Registry " + this.registry + " is not supported!");
 		}
 
 		var delayed = new DelayedRegistry<>((MappedRegistry<V>) this.registry);
 		var context = new MutableRegistryEntryContextImpl<>(delayed);
 
-		((DelayedRegistryImpl) this.registry).setFrozen(false);
 		this.registry.holders().forEach(entry -> {
 			context.set(entry.key().location(), entry.value());
 
 			if (this.testFilter(context)) {
-				callback.onAdded(this.registry, context);
+				callback.onAdded(context);
 			}
 		});
 
 		this.forUpcoming(callback);
 
 		delayed.applyDelayed();
-		((DelayedRegistryImpl) this.registry).setFrozen(true);
 	}
 
 	@Override
 	public void forUpcoming(RegistryEvents.EntryAdded<V> callback) {
-		RegistryEvents.ENTRY_ADDED_EVENT.register((registry, context) -> {
-			if (registry == this.registry && this.testFilter(context)) {
-				callback.onAdded(registry, context);
+		RegistryEvents.getEntryAddEvent(this.registry).register(context -> {
+			if (this.testFilter(context)) {
+				callback.onAdded(context);
 			}
 		});
 	}
