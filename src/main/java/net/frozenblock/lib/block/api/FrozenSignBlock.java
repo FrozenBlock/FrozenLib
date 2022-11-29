@@ -39,6 +39,7 @@ public class FrozenSignBlock extends StandingSignBlock {
             this.drops = this.lootTable;
         }
 
-        return this.drops;
+		assert this.drops != null;
+		return this.drops;
     }
 }
