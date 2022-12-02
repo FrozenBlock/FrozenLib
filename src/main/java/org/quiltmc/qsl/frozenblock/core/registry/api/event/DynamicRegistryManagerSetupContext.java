@@ -56,6 +56,9 @@ public interface DynamicRegistryManagerSetupContext {
 
 	/**
 	 * Attempts to safely register a game object into the given registry.
+	 * <p>
+	 * This method is preferred instead of {@link Registry#register(Registry, ResourceLocation, Object)}
+	 * as it makes sure to not overwrite data-pack-provided entries, it also makes sure the registry exists.
 	 *
 	 * @param registryKey        the key of the registry to register into
 	 * @param id                 the identifier of the game object to register
@@ -66,7 +69,7 @@ public interface DynamicRegistryManagerSetupContext {
 	default <V> @NotNull Optional<V> register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull ResourceLocation id,
 											  @NotNull Supplier<V> gameObjectSupplier) {
 		return this.registryManager().registry(registryKey)
-				.map(registry -> Registry.register(registry, id, gameObjectSupplier.get()));
+				.map(registry -> registry.containsKey(id) ? registry.get(id) : Registry.register(registry, id, gameObjectSupplier.get()));
 	}
 
 	/**

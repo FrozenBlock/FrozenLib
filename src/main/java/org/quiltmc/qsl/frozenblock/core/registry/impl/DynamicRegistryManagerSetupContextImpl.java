@@ -18,12 +18,60 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.WritableRegistry;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 
+/**
+ * Represents the context implementation for the {@link RegistryEvents#DYNAMIC_REGISTRY_SETUP} event.
+ * <p>
+ * <b>It is imperative that the passed registries are mutable to allow registration.</b>
+ *
+ * @author LambdAurora
+ */
 @ApiStatus.Internal
-public record DynamicRegistryManagerSetupContextImpl(ResourceManager resourceManager, RegistryAccess registryManager)
-		implements DynamicRegistryManagerSetupContext {
+public class DynamicRegistryManagerSetupContextImpl implements DynamicRegistryManagerSetupContext, RegistryAccess {
+	private final ResourceManager resourceManager;
+	private final Map<ResourceKey<?>, WritableRegistry<?>> registries;
+
+	public DynamicRegistryManagerSetupContextImpl(ResourceManager resourceManager, Stream<WritableRegistry<?>> registries) {
+		this.resourceManager = resourceManager;
+		this.registries = new Object2ObjectOpenHashMap<>();
+
+		registries.forEach(registry -> this.registries.put(registry.key(), registry));
+	}
+
+	@Override
+	public @NotNull RegistryAccess registryManager() {
+		return this;
+	}
+
+	@Override
+	public @NotNull ResourceManager resourceManager() {
+		return this.resourceManager;
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	@Override
+	@NotNull
+	public <E> Optional<Registry<E>> registry(ResourceKey<? extends Registry<? extends E>> key) {
+		return Optional.ofNullable((Registry) this.registries.get(key)).map(registry -> registry);
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	@Override
+	@NotNull
+	public Stream<RegistryEntry<?>> registries() {
+		return this.registries.entrySet().stream().map(entry -> new RegistryEntry<>((ResourceKey) entry.getKey(), entry.getValue()));
+	}
 }

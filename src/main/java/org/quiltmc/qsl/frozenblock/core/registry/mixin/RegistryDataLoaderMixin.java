@@ -18,7 +18,9 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
@@ -35,8 +37,6 @@ import java.util.Map;
 
 /**
  * Modified to work on Fabric
- * <p>
- * Original name was <STRONG>C_ratuaukiMixin</STRONG>
  */
 @Mixin(RegistryDataLoader.class)
 public class RegistryDataLoaderMixin {
@@ -46,15 +46,17 @@ public class RegistryDataLoaderMixin {
 			at = @At(
 					value = "INVOKE",
 					target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
-					ordinal = 0
+					ordinal = 0,
+					shift = At.Shift.AFTER
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	private static void onBeforeLoad(ResourceManager resourceManager, RegistryAccess baseRegistryAccess,
-			List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir,
-			Map<ResourceKey<?>, Exception> map, List<?> list2, RegistryOps.RegistryInfoLookup registryInfoLookup) {
+	private static void onBeforeLoad(ResourceManager resourceManager, RegistryAccess registryManager, List<RegistryDataLoader.RegistryData<?>> decodingData,
+									 CallbackInfoReturnable<RegistryAccess.Frozen> cir,
+									 Map<?, ?> map,
+									 List<Pair<WritableRegistry<?>, ?>> registries) {
 		RegistryEvents.DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(
-				new DynamicRegistryManagerSetupContextImpl(resourceManager, baseRegistryAccess)
+				new DynamicRegistryManagerSetupContextImpl(resourceManager, registries.stream().map(Pair::getFirst))
 		);
 	}
 
@@ -68,9 +70,8 @@ public class RegistryDataLoaderMixin {
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	private static void onAfterLoad(ResourceManager resourceManager, RegistryAccess baseRegistryAccess,
-									 List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir,
-									 Map<ResourceKey<?>, Exception> map, List<?> list2, RegistryOps.RegistryInfoLookup registryInfoLookup) {
-		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(baseRegistryAccess);
+	private static void onAfterLoad(ResourceManager resourceManager, RegistryAccess registryManager, List<RegistryDataLoader.RegistryData<?>> decodingData,
+									CallbackInfoReturnable<RegistryAccess.Frozen> cir) {
+		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(registryManager);
 	}
 }

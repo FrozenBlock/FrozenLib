@@ -18,6 +18,8 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.event;
 
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Lifecycle;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,15 +28,12 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Stream;
-
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Lifecycle;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.HolderOwner;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.HolderSet.Named;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
@@ -50,46 +49,32 @@ import org.jetbrains.annotations.Nullable;
  */
 @ApiStatus.Internal
 public final class DelayedRegistry<T> implements WritableRegistry<T> {
-	private final MappedRegistry<T> wrapped;
+	private final WritableRegistry<T> wrapped;
 	private final Queue<DelayedEntry<T>> delayedEntries = new LinkedList<>();
 
-	DelayedRegistry(MappedRegistry<T> registry) {
+	DelayedRegistry(WritableRegistry<T> registry) {
 		this.wrapped = registry;
 	}
 
 	@Override
-	public ResourceKey<? extends Registry<T>> key() {
-		return this.wrapped.key();
-	}
-
-	@Override
-	public ResourceLocation getKey(T entry) {
+	public @Nullable ResourceLocation getKey(T entry) {
 		return this.wrapped.getKey(entry);
 	}
 
 	@Override
-	public @NotNull Optional<ResourceKey<T>> getResourceKey(T entry) {
+	@NotNull
+	public Optional<ResourceKey<T>> getResourceKey(T entry) {
 		return this.wrapped.getResourceKey(entry);
 	}
 
 	@Override
-	public int getId(T entry) {
+	public int getId(@Nullable T entry) {
 		return this.wrapped.getId(entry);
 	}
 
 	@Override
-	public T byId(int index) {
-		return this.wrapped.byId(index);
-	}
-
-	@Override
-	public int size() {
-		return this.wrapped.size();
-	}
-
-	@Override
-	public @Nullable T get(@Nullable ResourceKey<T> key) {
-		return this.wrapped.get(key);
+	public @Nullable T get(@Nullable ResourceKey<T> entry) {
+		return this.wrapped.get(entry);
 	}
 
 	@Override
@@ -98,32 +83,38 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	public Lifecycle lifecycle(T object) {
-		return this.wrapped.lifecycle(object);
+	@NotNull
+	public Lifecycle lifecycle(T entry) {
+		return this.wrapped.lifecycle(entry);
 	}
 
 	@Override
+	@NotNull
 	public Lifecycle registryLifecycle() {
 		return this.wrapped.registryLifecycle();
 	}
 
 	@Override
+	@NotNull
 	public Set<ResourceLocation> keySet() {
 		return this.wrapped.keySet();
 	}
 
 	@Override
+	@NotNull
 	public Set<Map.Entry<ResourceKey<T>, T>> entrySet() {
 		return this.wrapped.entrySet();
 	}
 
 	@Override
+	@NotNull
 	public Set<ResourceKey<T>> registryKeySet() {
 		return this.wrapped.registryKeySet();
 	}
 
 	@Override
-	public Optional<Holder.Reference<T>> getRandom(RandomSource random) {
+	@NotNull
+	public Optional<Reference<T>> getRandom(RandomSource random) {
 		return this.wrapped.getRandom(random);
 	}
 
@@ -138,51 +129,62 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
+	@NotNull
 	public Registry<T> freeze() {
 		// Refuse freezing.
 		return this;
 	}
 
-	public Holder.Reference<T> getOrCreateHolderOrThrow(ResourceKey<T> registryKey) {
-		return this.wrapped.getOrCreateHolderOrThrow(registryKey);
-	}
-
 	@Override
-	public Holder.Reference<T> createIntrusiveHolder(T holder) {
+	@NotNull
+	public Reference<T> createIntrusiveHolder(T holder) {
 		return this.wrapped.createIntrusiveHolder(holder);
 	}
 
 	@Override
-	public Optional<Holder.Reference<T>> getHolder(int index) {
+	@NotNull
+	public Optional<Reference<T>> getHolder(int index) {
 		return this.wrapped.getHolder(index);
 	}
 
 	@Override
-	public Optional<Holder.Reference<T>> getHolder(ResourceKey<T> key) {
+	@NotNull
+	public Optional<Reference<T>> getHolder(ResourceKey<T> key) {
 		return this.wrapped.getHolder(key);
 	}
 
 	@Override
-	public Stream<Holder.Reference<T>> holders() {
+	@NotNull
+	public Holder<T> wrapAsHolder(T object) {
+		return this.wrapped.wrapAsHolder(object);
+	}
+
+	@Override
+	@NotNull
+	public Stream<Reference<T>> holders() {
 		return this.wrapped.holders();
 	}
 
 	@Override
-	public Optional<HolderSet.Named<T>> getTag(TagKey<T> tag) {
+	@NotNull
+	public Optional<Named<T>> getTag(TagKey<T> tag) {
 		return this.wrapped.getTag(tag);
 	}
 
 	@Override
-	public HolderSet.Named<T> getOrCreateTag(TagKey<T> key) {
+	@NotNull
+	public Named<T> getOrCreateTag(TagKey<T> key) {
 		return this.wrapped.getOrCreateTag(key);
 	}
 
 	@Override
-	public Stream<Pair<TagKey<T>, HolderSet.Named<T>>> getTags() {
+	@NotNull
+	public Stream<Pair<TagKey<T>, Named<T>>> getTags() {
 		return this.wrapped.getTags();
 	}
 
 	@Override
+	@NotNull
 	public Stream<TagKey<T>> getTagNames() {
 		return this.wrapped.getTagNames();
 	}
@@ -198,19 +200,50 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	public @NotNull Iterator<T> iterator() {
+	@NotNull
+	public HolderOwner<T> holderOwner() {
+		return this.wrapped.holderOwner();
+	}
+
+	@Override
+	@NotNull
+	public RegistryLookup<T> asLookup() {
+		return this.wrapped.asLookup();
+	}
+
+	@Override
+	@NotNull
+	public Iterator<T> iterator() {
 		return this.wrapped.iterator();
 	}
 
 	@Override
+	public @Nullable T byId(int index) {
+		return this.wrapped.byId(index);
+	}
+
+	@Override
+	@NotNull
+	public ResourceKey<? extends Registry<T>> key() {
+		return this.wrapped.key();
+	}
+
+	@Override
+	public int size() {
+		return this.wrapped.size();
+	}
+
+	@Override
+	@NotNull
 	public Holder<T> registerMapping(int rawId, ResourceKey<T> key, T entry, Lifecycle lifecycle) {
 		throw new UnsupportedOperationException("DelayedRegistry does not support set.");
 	}
 
 	@Override
-	public Holder.Reference<T> register(ResourceKey<T> key, T entry, Lifecycle lifecycle) {
+	@NotNull
+	public Reference<T> register(ResourceKey<T> key, T entry, Lifecycle lifecycle) {
 		this.delayedEntries.add(new DelayedEntry<>(key, entry, lifecycle));
-		return Holder.Reference.createIntrusive(this.holderOwner(), entry);
+		return Holder.Reference.createStandAlone(this.wrapped.holderOwner(), key);
 	}
 
 	@Override
@@ -219,18 +252,9 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
+	@NotNull
 	public HolderGetter<T> createRegistrationLookup() {
 		return this.wrapped.createRegistrationLookup();
-	}
-
-	@Override
-	public HolderOwner<T> holderOwner() {
-		return this.wrapped.holderOwner();
-	}
-
-	@Override
-	public HolderLookup.RegistryLookup<T> asLookup() {
-		return this.wrapped.asLookup();
 	}
 
 	void applyDelayed() {
@@ -241,6 +265,5 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 		}
 	}
 
-	record DelayedEntry<T>(ResourceKey<T> key, T entry, Lifecycle lifecycle) {
-	}
+	record DelayedEntry<T>(ResourceKey<T> key, T entry, Lifecycle lifecycle) {}
 }
