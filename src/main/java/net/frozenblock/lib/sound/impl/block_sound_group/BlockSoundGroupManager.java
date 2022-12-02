@@ -166,7 +166,8 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 		private void loadSoundOverwrites() {
 			profiler.push("Load Sound Overwrites");
 			Map<ResourceLocation, Resource> resources = manager.listResources(DIRECTORY, id -> id.getPath().endsWith(".json"));
-			for (Map.Entry<ResourceLocation, Resource> entry : resources.entrySet()) {
+			var entrySet = resources.entrySet();
+			for (Map.Entry<ResourceLocation, Resource> entry : entrySet) {
 				this.addOverwrite(entry.getKey(), entry.getValue());
 			}
 			profiler.pop();

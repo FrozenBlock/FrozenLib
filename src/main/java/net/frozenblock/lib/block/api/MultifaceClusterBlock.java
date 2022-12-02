@@ -21,6 +21,7 @@ package net.frozenblock.lib.block.api;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import java.util.Map;
+import java.util.Objects;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -81,8 +82,9 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
     }
 
     @Override
+	@NotNull
     public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return this.shapesCache.get(state);
+        return Objects.requireNonNull(this.shapesCache.get(state));
     }
 
     public VoxelShape calculateMultifaceShape(BlockState state) {
@@ -98,6 +100,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
     }
 
     @Override
+	@NotNull
     public BlockState updateShape(BlockState state, @NotNull Direction direction, @NotNull BlockState neighborState, @NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull BlockPos neighborPos) {
         if (state.getValue(WATERLOGGED)) {
             world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
@@ -107,6 +110,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
     }
 
     @Override
+	@NotNull
     public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
@@ -118,6 +122,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
     }
 
     @Override
+	@NotNull
     public PushReaction getPistonPushReaction(BlockState blockState) {
         return PushReaction.DESTROY;
     }
