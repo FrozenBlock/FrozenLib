@@ -117,18 +117,20 @@ public final class FrozenClient implements ClientModInitializer {
 	}
 
 	private static void receiveLocalPlayerSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_PLAYER_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> ctx.execute(() -> {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_PLAYER_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
 			SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
 			float volume = byteBuf.readFloat();
 			float pitch = byteBuf.readFloat();
-			if (ctx.level != null) {
-				LocalPlayer player = ctx.player;
-				if (player != null) {
-					assert sound != null;
-					ctx.getSoundManager().play(new EntityBoundSoundInstance(sound, SoundSource.PLAYERS, volume, pitch, ctx.player, ctx.level.random.nextLong()));
+			ctx.execute(() -> {
+				if (ctx.level != null) {
+					LocalPlayer player = ctx.player;
+					if (player != null) {
+						assert sound != null;
+						ctx.getSoundManager().play(new EntityBoundSoundInstance(sound, SoundSource.PLAYERS, volume, pitch, player, ctx.level.random.nextLong()));
+					}
 				}
-			}
-		}));
+			})
+		});
 	}
 
 	@SuppressWarnings("unchecked")
