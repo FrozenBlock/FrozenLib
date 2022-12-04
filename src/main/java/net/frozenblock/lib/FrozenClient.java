@@ -129,7 +129,7 @@ public final class FrozenClient implements ClientModInitializer {
 						ctx.getSoundManager().play(new EntityBoundSoundInstance(sound, SoundSource.PLAYERS, volume, pitch, player, ctx.level.random.nextLong()));
 					}
 				}
-			})
+			});
 		});
 	}
 
