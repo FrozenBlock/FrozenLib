@@ -104,25 +104,17 @@ public final class AdvancedMath {
      */
     public static Direction randomDir(final Direction.Axis axis) {
         double random = Math.random();
-        if (axis == Direction.Axis.Y) {
-            if (random > 0.5) {
-                return Direction.UP;
-            } else {
-                return Direction.DOWN;
-            }
-        } else if (axis == Direction.Axis.X) {
-            if (random > 0.5) {
-                return Direction.EAST;
-            } else {
-                return Direction.WEST;
-            }
-        } else {
-            if (random > 0.5) {
-                return Direction.NORTH;
-            } else {
-                return Direction.SOUTH;
-            }
-        }
+		switch (axis) {
+			case X -> {
+				return random > 0.5 ? Direction.EAST : Direction.WEST;
+			}
+			case Y -> {
+				return random > 0.5 ? Direction.UP : Direction.DOWN;
+			}
+			default -> {
+				return random > 0.5 ? Direction.NORTH : Direction.SOUTH;
+			}
+		}
     }
 
 	public static Vec3 rotateAboutXZ(Vec3 original, double distanceFrom, double angle) {

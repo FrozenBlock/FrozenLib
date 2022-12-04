@@ -171,7 +171,7 @@ public abstract class CreateWorldScreenMixin {
     }
 
     /*@Unique
-    private static CompletableFuture<WorldCreationContext> frozenblock_quilt$applyDefaultDataPacks(Supplier<CompletableFuture<WorldCreationContext>> base) {
+    private static CompletableFuture<WorldCreationContext> frozenLib_quilt$applyDefaultDataPacks(Supplier<CompletableFuture<WorldCreationContext>> base) {
         var client = Minecraft.getInstance();
         client.tell(() -> client.setScreen(new GenericDirtMessageScreen(Component.translatable("dataPack.validation.working"))));
 
