@@ -1,27 +1,29 @@
 pluginManagement {
     repositories {
         maven {
-            name = 'Quilt'
-            url = 'https://maven.quiltmc.org/repository/release/'
+            setName("Quilt")
+            setUrl("https://maven.quiltmc.org/repository/release/")
         }
 		maven {
-			name = 'Quilt Snapshot'
-			url = 'https://maven.quiltmc.org/repository/snapshot/'
+			setName("Quilt Snapshot")
+			setUrl("https://maven.quiltmc.org/repository/snapshot/")
 		}
         maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
+            setName("Fabric")
+            setUrl("https://maven.fabricmc.net/")
         }
         jcenter()
         maven {
-            name = "Forge"
-            url = "https://files.minecraftforge.net/maven/"
+            setName("Forge")
+            setUrl("https://files.minecraftforge.net/maven/")
         }
         maven {
-            name = "Jitpack"
-            url 'https://jitpack.io/'
+            setName("Jitpack")
+            setUrl("https://jitpack.io/")
         }
         mavenCentral()
         gradlePluginPortal()
     }
 }
+
+rootProject.setName("FrozenLib")
