@@ -125,7 +125,7 @@ public final class FrozenClient implements ClientModInitializer {
 				LocalPlayer player = ctx.player;
 				if (player != null) {
 					assert sound != null;
-					ctx.getSoundManager().play(new RestrictedMovingSound<>(ctx.player, sound, SoundSource.PLAYERS, volume, pitch, (entity) -> true));
+					ctx.getSoundManager().play(new EntityBoundSoundInstance(sound, SoundSource.PLAYERS, volume, pitch, ctx.player, ctx.level.random.nextLong()));
 				}
 			}
 		}));
