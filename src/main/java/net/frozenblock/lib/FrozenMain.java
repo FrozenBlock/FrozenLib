@@ -120,6 +120,7 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = id("moving_restriction_looping_fading_distance_sound_packet");
 	public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = id("fading_distance_sound_packet");
 	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = id("moving_fading_distance_sound_packet");
+	public static final ResourceLocation LOCAL_PLAYER_SOUND_PACKET = id("local_player_sound_packet");
 	public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
 	public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
 

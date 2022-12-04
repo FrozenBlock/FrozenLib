@@ -233,4 +233,12 @@ public final class FrozenSoundPackets {
         ServerPlayNetworking.send(player, FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
     }
 
+	public static void createLocalPlayerSound(ServerPlayer player, SoundEvent sound, float volume, float pitch) {
+		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+		byteBuf.writeId(Registry.SOUND_EVENT, sound);
+		byteBuf.writeFloat(volume);
+		byteBuf.writeFloat(pitch);
+		ServerPlayNetworking.send(player, FrozenMain.LOCAL_PLAYER_SOUND_PACKET, byteBuf);
+	}
+
 }

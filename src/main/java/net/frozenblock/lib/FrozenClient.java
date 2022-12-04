@@ -30,17 +30,19 @@ import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
-import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -75,6 +77,7 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveWindSyncPacket();
 		receiveSmallWindSyncPacket();
 		receivePlayerDamagePacket();
+		receiveLocalPlayerSoundPacket();
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
@@ -111,6 +114,21 @@ public final class FrozenClient implements ClientModInitializer {
 				}
 			});
 		});
+	}
+
+	private static void receiveLocalPlayerSoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_PLAYER_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> ctx.execute(() -> {
+			SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+			float volume = byteBuf.readFloat();
+			float pitch = byteBuf.readFloat();
+			if (ctx.level != null) {
+				LocalPlayer player = ctx.player;
+				if (player != null) {
+					assert sound != null;
+					ctx.getSoundManager().play(new EntityBoundSoundInstance(sound, SoundSource.PLAYERS, volume, pitch, ctx.player, ctx.level.random.nextLong()));
+				}
+			}
+		}));
 	}
 
 	@SuppressWarnings("unchecked")
