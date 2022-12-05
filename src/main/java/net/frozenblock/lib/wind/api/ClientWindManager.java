@@ -26,30 +26,18 @@ import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 
-public class ClientWindManager {
-	public static long time;
+public class ClientWindManager extends WindManager {
 	public static double prevWindX;
 	public static double prevWindY;
 	public static double prevWindZ;
-	public static double windX;
-	public static double windY;
-	public static double windZ;
 
 	public static double prevLaggedWindX;
 	public static double prevLaggedWindY;
 	public static double prevLaggedWindZ;
-	public static double laggedWindX;
-	public static double laggedWindY;
-	public static double laggedWindZ;
 
 	public static double prevCloudX;
 	public static double prevCloudY;
 	public static double prevCloudZ;
-	public static double cloudX;
-	public static double cloudY;
-	public static double cloudZ;
-
-	public static long seed = 0;
 
 	public static void tick(ClientLevel level) {
 		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
@@ -105,26 +93,6 @@ public class ClientWindManager {
 
 	public static double getCloudZ(float partialTick) {
 		return Mth.lerp(partialTick, prevCloudZ, cloudZ);
-	}
-
-	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
-		double windX = sampler.noise(x, 0, 0);
-		double windY = sampler.noise(0, y, 0);
-		double windZ = sampler.noise(0, 0, z);
-		return new Vec3(windX, windY, windZ);
-	}
-
-	public static ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(seed));
-	public static ImprovedNoise perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(seed));
-	public static ImprovedNoise perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(seed));
-
-	public static void setSeed(long newSeed) {
-		if (newSeed != seed) {
-			seed = newSeed;
-			perlinChecked = new ImprovedNoise(new LegacyRandomSource(seed));
-			perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(seed));
-			perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(seed));
-		}
 	}
 
 }

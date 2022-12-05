@@ -22,10 +22,14 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
@@ -100,4 +104,25 @@ public class WindManager {
 			perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(seed));
 		}
 	}
+
+	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		return new Vec3(windX * windMultiplier, windY * windMultiplier, windZ * windMultiplier);
+	}
+
+	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		return new Vec3((windX * windMultiplier) * multiplier, (windY * windMultiplier) * multiplier, (windZ * windMultiplier) * multiplier);
+	}
+
+	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier, double clamp) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		return new Vec3(Mth.clamp((windX * windMultiplier) * multiplier, -clamp, clamp),
+				Mth.clamp((windY * windMultiplier) * multiplier, -clamp, clamp),
+				Mth.clamp((windZ * windMultiplier) * multiplier, -clamp, clamp));
+	}
+
 }
