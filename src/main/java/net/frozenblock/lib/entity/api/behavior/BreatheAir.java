@@ -16,7 +16,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 import java.util.Map;
 
-public abstract class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
+public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 	public BreatheAir() {
 		super(ImmutableMap.of());
 	}
