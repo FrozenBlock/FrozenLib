@@ -75,7 +75,7 @@ public class WindManager {
 		if (tickCount >= 20) {
 			tickCount = 0;
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeLong(server.overworld().getGameTime());
+			byteBuf.writeLong(time);
 			byteBuf.writeDouble(WindManager.cloudX);
 			byteBuf.writeDouble(WindManager.cloudY);
 			byteBuf.writeDouble(WindManager.cloudZ);

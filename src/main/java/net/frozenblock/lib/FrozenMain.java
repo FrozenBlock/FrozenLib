@@ -101,7 +101,7 @@ public final class FrozenMain implements ModInitializer {
 
 		PlayerJoinEvent.register(((server, player) -> {
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeLong(server.overworld().getGameTime());
+			byteBuf.writeLong(WindManager.time);
 			byteBuf.writeDouble(WindManager.cloudX);
 			byteBuf.writeDouble(WindManager.cloudY);
 			byteBuf.writeDouble(WindManager.cloudZ);
