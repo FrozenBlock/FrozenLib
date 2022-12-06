@@ -20,10 +20,6 @@ package net.frozenblock.lib.wind.api;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
-import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
-import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 
 public class ClientWindManager extends WindManager {
@@ -52,6 +48,7 @@ public class ClientWindManager extends WindManager {
 		windX = vec3.x + (vec3.x * thunderLevel);
 		windY = vec3.y + (vec3.y * thunderLevel);
 		windZ = vec3.z + (vec3.z * thunderLevel);
+
 		//LAGGED WIND
 		prevLaggedWindX = laggedWindX;
 		prevLaggedWindY = laggedWindY;
@@ -62,6 +59,7 @@ public class ClientWindManager extends WindManager {
 		laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
 		laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
 		laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+
 		//CLOUDS
 		prevCloudX = cloudX;
 		prevCloudY = cloudY;
