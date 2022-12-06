@@ -386,14 +386,15 @@ public final class FrozenClient implements ClientModInitializer {
 			double y = byteBuf.readDouble();
 			double z = byteBuf.readDouble();
 			long seed = byteBuf.readLong();
+			boolean override = byteBuf.readBoolean();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
-				if (level != null) {
+				if (ctx.level != null) {
 					ClientWindManager.time = windTime;
 					ClientWindManager.cloudX = x;
 					ClientWindManager.cloudY = y;
 					ClientWindManager.cloudZ = z;
 					ClientWindManager.setSeed(seed);
+					ClientWindManager.overrideWind = override;
 				}
 			});
 		});

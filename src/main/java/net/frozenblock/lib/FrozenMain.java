@@ -20,6 +20,7 @@ package net.frozenblock.lib;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -35,6 +36,7 @@ import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.WindManager;
+import net.frozenblock.lib.wind.command.OverrideWindCommand;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -85,6 +87,8 @@ public final class FrozenMain implements ModInitializer {
 			}
 		});
 
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> OverrideWindCommand.register(dispatcher));
+
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			if (server != null) {
 				var seed = server.overworld().getSeed();
@@ -106,6 +110,7 @@ public final class FrozenMain implements ModInitializer {
 			byteBuf.writeDouble(WindManager.cloudY);
 			byteBuf.writeDouble(WindManager.cloudZ);
 			byteBuf.writeLong(server.overworld().getSeed());
+			byteBuf.writeBoolean(WindManager.overrideWind);
 			ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
 		}));
 

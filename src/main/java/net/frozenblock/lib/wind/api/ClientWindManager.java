@@ -31,6 +31,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ClientWindManager {
 	public static long time;
+	public static boolean overrideWind;
 
 	public static double prevWindX;
 	public static double prevWindY;
@@ -90,9 +91,12 @@ public class ClientWindManager {
 	}
 
 	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
-		double windX = sampler.noise(x, 0, 0);
-		double windY = sampler.noise(0, y, 0);
-		double windZ = sampler.noise(0, 0, z);
+		if (!overrideWind) {
+			double windX = sampler.noise(x, 0, 0);
+			double windY = sampler.noise(0, y, 0);
+			double windZ = sampler.noise(0, 0, z);
+			return new Vec3(windX, windY, windZ);
+		}
 		return new Vec3(windX, windY, windZ);
 	}
 
