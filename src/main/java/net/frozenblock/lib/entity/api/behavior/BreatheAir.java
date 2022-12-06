@@ -1,5 +1,6 @@
 package net.frozenblock.lib.entity.api.behavior;
 
+import com.google.common.collect.ImmutableMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
@@ -16,8 +17,8 @@ import net.minecraft.world.phys.Vec3;
 import java.util.Map;
 
 public abstract class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
-	public BreatheAir(Map<MemoryModuleType<?>, MemoryStatus> entryCondition) {
-		super(entryCondition);
+	public BreatheAir() {
+		super(ImmutableMap.of());
 	}
 
 	@Override
