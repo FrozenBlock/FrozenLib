@@ -31,6 +31,7 @@ public class OverrideWindCommand {
 		byteBuf.writeDouble(WindManager.cloudX);
 		byteBuf.writeDouble(WindManager.cloudY);
 		byteBuf.writeDouble(WindManager.cloudZ);
+		byteBuf.writeLong(WindManager.seed);
 		byteBuf.writeBoolean(true);
 		for (ServerPlayer player : PlayerLookup.all(source.getServer())) {
 			ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
