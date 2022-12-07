@@ -40,6 +40,7 @@ public class WindManager {
 	public static boolean overrideWind;
 	public static int tickCount;
 	public static long time;
+	public static Vec3 commandWind = Vec3.ZERO;
 	public static double windX;
 	public static double windY;
 	public static double windZ;
@@ -52,6 +53,7 @@ public class WindManager {
 	public static long seed = 0;
 
 	public static void tick(MinecraftServer server, ServerLevel level) {
+		time = level.getGameTime();
 		++tickCount;
 		//WIND
 		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
@@ -93,7 +95,7 @@ public class WindManager {
 			double windZ = sampler.noise(0, 0, z);
 			return new Vec3(windX, windY, windZ);
 		}
-		return new Vec3(windX, windY, windZ);
+		return commandWind;
 	}
 
 	public static ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(seed));

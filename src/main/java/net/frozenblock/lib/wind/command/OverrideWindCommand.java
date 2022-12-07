@@ -26,6 +26,7 @@ public class OverrideWindCommand {
 		WindManager.windX = vec3.x();
 		WindManager.windY = vec3.y();
 		WindManager.windZ = vec3.z();
+		WindManager.commandWind = new Vec3(WindManager.windX, WindManager.windY, WindManager.windZ);
 		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 		byteBuf.writeLong(WindManager.time);
 		byteBuf.writeDouble(WindManager.cloudX);
@@ -33,6 +34,9 @@ public class OverrideWindCommand {
 		byteBuf.writeDouble(WindManager.cloudZ);
 		byteBuf.writeLong(WindManager.seed);
 		byteBuf.writeBoolean(true);
+		byteBuf.writeDouble(WindManager.commandWind.x());
+		byteBuf.writeDouble(WindManager.commandWind.y());
+		byteBuf.writeDouble(WindManager.commandWind.z());
 		for (ServerPlayer player : PlayerLookup.all(source.getServer())) {
 			ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
 		}

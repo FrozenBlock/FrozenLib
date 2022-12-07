@@ -97,11 +97,7 @@ public final class FrozenMain implements ModInitializer {
 			}
 		});
 
-		ServerTickEvents.START_SERVER_TICK.register((server) -> {
-			ServerLevel level = server.overworld();
-			WindManager.time = server.overworld().getGameTime();
-			WindManager.tick(server, level);
-		});
+		ServerTickEvents.START_SERVER_TICK.register((server) -> WindManager.tick(server, server.overworld()));
 
 		PlayerJoinEvent.register(((server, player) -> {
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
@@ -111,6 +107,9 @@ public final class FrozenMain implements ModInitializer {
 			byteBuf.writeDouble(WindManager.cloudZ);
 			byteBuf.writeLong(server.overworld().getSeed());
 			byteBuf.writeBoolean(WindManager.overrideWind);
+			byteBuf.writeDouble(WindManager.commandWind.x());
+			byteBuf.writeDouble(WindManager.commandWind.y());
+			byteBuf.writeDouble(WindManager.commandWind.z());
 			ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
 		}));
 

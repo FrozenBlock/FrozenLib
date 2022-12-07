@@ -387,6 +387,9 @@ public final class FrozenClient implements ClientModInitializer {
 			double z = byteBuf.readDouble();
 			long seed = byteBuf.readLong();
 			boolean override = byteBuf.readBoolean();
+			double xa = byteBuf.readDouble();
+			double ya = byteBuf.readDouble();
+			double za = byteBuf.readDouble();
 			ctx.execute(() -> {
 				if (ctx.level != null) {
 					ClientWindManager.time = windTime;
@@ -395,6 +398,7 @@ public final class FrozenClient implements ClientModInitializer {
 					ClientWindManager.cloudZ = z;
 					ClientWindManager.setSeed(seed);
 					ClientWindManager.overrideWind = override;
+					ClientWindManager.commandWind = new Vec3(xa, ya, za);
 				}
 			});
 		});
