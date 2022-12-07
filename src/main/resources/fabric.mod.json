@@ -48,9 +48,6 @@
   },
   "custom": {
     "loom:injected_interfaces": {
-      "net/minecraft/class_4097": [
-        "net/frozenblock/lib/entity/impl/behavior/FrozenBehavior"
-      ],
       "net/minecraft/class_1796": [
         "net/frozenblock/lib/item/impl/CooldownInterface"
       ],

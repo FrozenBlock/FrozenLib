@@ -76,7 +76,7 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 
 	@Override
 	public boolean canStillUse(ServerLevel level, E entity, long gameTime) {
-		return this.tryTicks >= -this.getDuration() && this.tryTicks <= DURATION && this.isValidTarget(level, this.blockPos);
+		return this.tryTicks >= -((FrozenBehavior) this).getDuration() && this.tryTicks <= DURATION && this.isValidTarget(level, this.blockPos);
 	}
 
 	@Override

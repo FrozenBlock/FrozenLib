@@ -19,7 +19,10 @@
 package net.frozenblock.lib.wind.api;
 
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
@@ -28,6 +31,9 @@ import net.minecraft.world.phys.Vec3;
 
 public class ClientWindManager {
 	public static long time;
+	public static boolean overrideWind;
+	public static Vec3 commandWind = Vec3.ZERO;
+
 	public static double prevWindX;
 	public static double prevWindY;
 	public static double prevWindZ;
@@ -64,6 +70,7 @@ public class ClientWindManager {
 		windX = vec3.x + (vec3.x * thunderLevel);
 		windY = vec3.y + (vec3.y * thunderLevel);
 		windZ = vec3.z + (vec3.z * thunderLevel);
+
 		//LAGGED WIND
 		prevLaggedWindX = laggedWindX;
 		prevLaggedWindY = laggedWindY;
@@ -74,6 +81,7 @@ public class ClientWindManager {
 		laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
 		laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
 		laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+
 		//CLOUDS
 		prevCloudX = cloudX;
 		prevCloudY = cloudY;
@@ -81,6 +89,49 @@ public class ClientWindManager {
 		cloudX += (laggedWindX * 0.025);
 		cloudY += (laggedWindY * 0.01);
 		cloudZ += (laggedWindZ * 0.025);
+	}
+
+	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
+		if (!overrideWind) {
+			double windX = sampler.noise(x, 0, 0);
+			double windY = sampler.noise(0, y, 0);
+			double windZ = sampler.noise(0, 0, z);
+			return new Vec3(windX, windY, windZ);
+		}
+		return commandWind;
+	}
+
+	public static ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(seed));
+	public static ImprovedNoise perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(seed));
+	public static ImprovedNoise perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(seed));
+
+	public static void setSeed(long newSeed) {
+		if (newSeed != seed) {
+			seed = newSeed;
+			perlinChecked = new ImprovedNoise(new LegacyRandomSource(seed));
+			perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(seed));
+			perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(seed));
+		}
+	}
+
+	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		return new Vec3(windX * windMultiplier, windY * windMultiplier, windZ * windMultiplier);
+	}
+
+	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		return new Vec3((windX * windMultiplier) * multiplier, (windY * windMultiplier) * multiplier, (windZ * windMultiplier) * multiplier);
+	}
+
+	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier, double clamp) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		return new Vec3(Mth.clamp((windX * windMultiplier) * multiplier, -clamp, clamp),
+				Mth.clamp((windY * windMultiplier) * multiplier, -clamp, clamp),
+				Mth.clamp((windZ * windMultiplier) * multiplier, -clamp, clamp));
 	}
 
 	public static double getWindX(float partialTick) {
@@ -105,26 +156,6 @@ public class ClientWindManager {
 
 	public static double getCloudZ(float partialTick) {
 		return Mth.lerp(partialTick, prevCloudZ, cloudZ);
-	}
-
-	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
-		double windX = sampler.noise(x, 0, 0);
-		double windY = sampler.noise(0, y, 0);
-		double windZ = sampler.noise(0, 0, z);
-		return new Vec3(windX, windY, windZ);
-	}
-
-	public static ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(seed));
-	public static ImprovedNoise perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(seed));
-	public static ImprovedNoise perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(seed));
-
-	public static void setSeed(long newSeed) {
-		if (newSeed != seed) {
-			seed = newSeed;
-			perlinChecked = new ImprovedNoise(new LegacyRandomSource(seed));
-			perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(seed));
-			perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(seed));
-		}
 	}
 
 }

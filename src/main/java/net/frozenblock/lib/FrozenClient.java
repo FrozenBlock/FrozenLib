@@ -30,17 +30,19 @@ import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
-import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -76,6 +78,7 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveWindSyncPacket();
 		receiveSmallWindSyncPacket();
 		receivePlayerDamagePacket();
+		receiveLocalPlayerSoundPacket();
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
@@ -109,6 +112,23 @@ public final class FrozenClient implements ClientModInitializer {
 				ClientLevel level = client.level;
 				if (level != null) {
 					level.playLocalSound(x, y, z, sound, source, volume, pitch, distanceDelay);
+				}
+			});
+		});
+	}
+
+	private static void receiveLocalPlayerSoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_PLAYER_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+			float volume = byteBuf.readFloat();
+			float pitch = byteBuf.readFloat();
+			ctx.execute(() -> {
+				if (ctx.level != null) {
+					LocalPlayer player = ctx.player;
+					if (player != null) {
+						assert sound != null;
+						ctx.getSoundManager().play(new EntityBoundSoundInstance(sound, SoundSource.PLAYERS, volume, pitch, player, ctx.level.random.nextLong()));
+					}
 				}
 			});
 		});
@@ -367,14 +387,19 @@ public final class FrozenClient implements ClientModInitializer {
 			double y = byteBuf.readDouble();
 			double z = byteBuf.readDouble();
 			long seed = byteBuf.readLong();
+			boolean override = byteBuf.readBoolean();
+			double xa = byteBuf.readDouble();
+			double ya = byteBuf.readDouble();
+			double za = byteBuf.readDouble();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
-				if (level != null) {
+				if (ctx.level != null) {
 					ClientWindManager.time = windTime;
 					ClientWindManager.cloudX = x;
 					ClientWindManager.cloudY = y;
 					ClientWindManager.cloudZ = z;
 					ClientWindManager.setSeed(seed);
+					ClientWindManager.overrideWind = override;
+					ClientWindManager.commandWind = new Vec3(xa, ya, za);
 				}
 			});
 		});

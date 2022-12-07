@@ -22,10 +22,14 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
@@ -33,8 +37,10 @@ import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 
 public class WindManager {
+	public static boolean overrideWind;
 	public static int tickCount;
 	public static long time;
+	public static Vec3 commandWind = Vec3.ZERO;
 	public static double windX;
 	public static double windY;
 	public static double windZ;
@@ -47,6 +53,7 @@ public class WindManager {
 	public static long seed = 0;
 
 	public static void tick(MinecraftServer server, ServerLevel level) {
+		time = level.getGameTime();
 		++tickCount;
 		//WIND
 		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
@@ -71,7 +78,7 @@ public class WindManager {
 		if (tickCount >= 20) {
 			tickCount = 0;
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeLong(server.overworld().getGameTime());
+			byteBuf.writeLong(time);
 			byteBuf.writeDouble(WindManager.cloudX);
 			byteBuf.writeDouble(WindManager.cloudY);
 			byteBuf.writeDouble(WindManager.cloudZ);
@@ -82,10 +89,13 @@ public class WindManager {
 	}
 
 	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
-		double windX = sampler.noise(x, 0, 0);
-		double windY = sampler.noise(0, y, 0);
-		double windZ = sampler.noise(0, 0, z);
-		return new Vec3(windX, windY, windZ);
+		if (!overrideWind) {
+			double windX = sampler.noise(x, 0, 0);
+			double windY = sampler.noise(0, y, 0);
+			double windZ = sampler.noise(0, 0, z);
+			return new Vec3(windX, windY, windZ);
+		}
+		return commandWind;
 	}
 
 	public static ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(seed));
@@ -100,4 +110,25 @@ public class WindManager {
 			perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(seed));
 		}
 	}
+
+	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		return new Vec3(windX * windMultiplier, windY * windMultiplier, windZ * windMultiplier);
+	}
+
+	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		return new Vec3((windX * windMultiplier) * multiplier, (windY * windMultiplier) * multiplier, (windZ * windMultiplier) * multiplier);
+	}
+
+	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier, double clamp) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		return new Vec3(Mth.clamp((windX * windMultiplier) * multiplier, -clamp, clamp),
+				Mth.clamp((windY * windMultiplier) * multiplier, -clamp, clamp),
+				Mth.clamp((windZ * windMultiplier) * multiplier, -clamp, clamp));
+	}
+
 }
