@@ -119,7 +119,7 @@ public final class FrozenClient implements ClientModInitializer {
 
 	private static void receiveLocalPlayerSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_PLAYER_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			SoundEvent sound = byteBuf.readById(Registry.SOUND_EVENT);
+			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
 			float volume = byteBuf.readFloat();
 			float pitch = byteBuf.readFloat();
 			ctx.execute(() -> {

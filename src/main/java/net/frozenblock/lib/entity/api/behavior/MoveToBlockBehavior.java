@@ -35,6 +35,7 @@ package net.frozenblock.lib.entity.api.behavior;/*
  */
 
 import com.google.common.collect.ImmutableMap;
+import net.frozenblock.lib.entity.impl.behavior.FrozenBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.PathfinderMob;
