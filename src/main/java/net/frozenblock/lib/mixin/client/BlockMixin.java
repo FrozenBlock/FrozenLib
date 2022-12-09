@@ -38,9 +38,12 @@ public final class BlockMixin {
     private void getSoundGroupOverride(BlockState state, CallbackInfoReturnable<SoundType> info) {
         Block block = state.getBlock();
         ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
-		for (BlockSoundGroupOverwrite overwrite : BlockSoundGroupOverwrites.getOverwrites()) {
-			if (overwrite.getBlockId().equals(id)) {
-				info.setReturnValue(overwrite.getSoundOverwrite());
+		var overwrites = BlockSoundGroupOverwrites.getOverwrites();
+		if (overwrites != null) {
+			for (BlockSoundGroupOverwrite overwrite : overwrites) {
+				if (overwrite.getBlockId().equals(id)) {
+					info.setReturnValue(overwrite.getSoundOverwrite());
+				}
 			}
 		}
     }

@@ -62,12 +62,12 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	private Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites;
 	private final Map<ResourceLocation, BlockSoundGroupOverwrite> queuedOverwrites = new HashMap<>();
 
+	@Nullable
 	public List<BlockSoundGroupOverwrite> getOverwrites() {
-		List<BlockSoundGroupOverwrite> list = new ArrayList<>();
-		this.overwrites.forEach((location, overwrite) -> {
-			list.add(overwrite);
-		});
-		return list;
+		if (this.overwrites != null) {
+			return this.overwrites.values().stream().toList();
+		}
+		return null;
 	}
 
 	@Nullable

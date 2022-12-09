@@ -40,6 +40,7 @@ public final class BlockSoundGroupOverwrites {
 
 	private static final BlockSoundGroupManager MANAGER = BlockSoundGroupManager.INSTANCE;
 
+	@Nullable
 	public static List<BlockSoundGroupOverwrite> getOverwrites() {
 		return MANAGER.getOverwrites();
 	}
