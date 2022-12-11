@@ -14,7 +14,6 @@
     "server.ItemEntityMixin",
 	"server.MappedRegistryMixin",
 	"server.NoExperimentalMixin",
-    "server.PlayerListMixin",
 	"server.PlayerMixin",
 	"server.PointedDripstoneBlockMixin",
 	"server.RegistryMixin",
@@ -27,8 +26,6 @@
 	"defaultRequire": 1
   },
   "client": [
-    "client.BlockMixin",
-	"client.GameRendererMixin",
 	"client.LivingEntityRendererMixin"
   ]
 }
