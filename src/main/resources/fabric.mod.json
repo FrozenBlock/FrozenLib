@@ -28,6 +28,9 @@
   },
   "mixins": [
 	"mixin/frozenlib.mixins.json",
+    "mixin/frozenlib.menu.mixins.json",
+    "mixin/frozenlib.spotting_icons.mixins.json",
+    "mixin/frozenlib.sound.mixins.json",
 	"mixin/quiltmc_datafixerupper.mixins.json",
 	"mixin/quiltmc_surface_rule.mixins.json",
 	"mixin/quiltmc_resource_loader.mixins.json"

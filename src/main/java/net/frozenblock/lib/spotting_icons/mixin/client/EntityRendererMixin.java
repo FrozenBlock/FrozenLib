@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.client;
+package net.frozenblock.lib.spotting_icons.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -44,10 +44,6 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 	@Shadow
 	@Final
 	protected EntityRenderDispatcher entityRenderDispatcher;
-
-	protected EntityRendererMixin(EntityRendererProvider.Context context) {
-
-	}
 
 	@Unique
 	@Override

@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.client;
+package net.frozenblock.lib.menu.mixin;
 
 import java.io.BufferedReader;
 import java.io.IOException;

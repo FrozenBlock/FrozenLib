@@ -9,11 +9,9 @@
 	"server.BlockBehaviourMixin",
 	"server.BoneMealItemMixin",
 	"server.CreeperMixin",
-	"server.EntityMixin",
 	"server.HopperBlockEntityMixin",
 	"server.ItemCooldownsMixin",
     "server.ItemEntityMixin",
-	"server.LivingEntityMixin",
 	"server.MappedRegistryMixin",
 	"server.NoExperimentalMixin",
     "server.PlayerListMixin",
@@ -30,12 +28,7 @@
   },
   "client": [
     "client.BlockMixin",
-	"client.EntityRenderDispatcherMixin",
-	"client.EntityRendererMixin",
 	"client.GameRendererMixin",
-	"client.LevelRendererMixin",
-	"client.LivingEntityRendererMixin",
-	"client.SplashManagerMixin",
-	"client.TitleScreenMixin"
+	"client.LivingEntityRendererMixin"
   ]
 }
