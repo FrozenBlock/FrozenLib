@@ -9,7 +9,6 @@
 	"server.BlockBehaviourMixin",
 	"server.BoneMealItemMixin",
 	"server.CreeperMixin",
-	"server.HopperBlockEntityMixin",
 	"server.ItemCooldownsMixin",
     "server.ItemEntityMixin",
 	"server.MappedRegistryMixin",
