@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.server;
+package net.frozenblock.lib.item.mixin.server;
 
 import java.util.List;
 import java.util.UUID;

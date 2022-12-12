@@ -9,18 +9,11 @@
 	"server.BlockBehaviourMixin",
 	"server.BoneMealItemMixin",
 	"server.CreeperMixin",
-	"server.EntityMixin",
-	"server.HopperBlockEntityMixin",
-	"server.ItemCooldownsMixin",
-    "server.ItemEntityMixin",
-	"server.LivingEntityMixin",
 	"server.MappedRegistryMixin",
 	"server.NoExperimentalMixin",
-    "server.PlayerListMixin",
 	"server.PlayerMixin",
 	"server.PointedDripstoneBlockMixin",
 	"server.RegistryMixin",
-	"server.ServerItemCooldownsMixin",
 	"worldgen.SinglePoolElementMixin",
 	"worldgen.biome.MinecraftServerMixin",
 	"worldgen.biome.MultiNoiseBiomeSourceMixin"
@@ -29,13 +22,6 @@
 	"defaultRequire": 1
   },
   "client": [
-    "client.BlockMixin",
-	"client.EntityRenderDispatcherMixin",
-	"client.EntityRendererMixin",
-	"client.GameRendererMixin",
-	"client.LevelRendererMixin",
-	"client.LivingEntityRendererMixin",
-	"client.SplashManagerMixin",
-	"client.TitleScreenMixin"
+	"client.LivingEntityRendererMixin"
   ]
 }

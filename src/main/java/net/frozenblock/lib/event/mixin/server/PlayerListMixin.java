@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.server;
+package net.frozenblock.lib.event.mixin.server;
 
 import net.frozenblock.lib.event.api.PlayerJoinEvent;
 import net.minecraft.network.Connection;
@@ -40,5 +40,4 @@ public class PlayerListMixin {
 	public void placeNewPlayer(Connection netManager, ServerPlayer player, CallbackInfo info) {
 		PlayerJoinEvent.onPlayerJoined(this.server, player);
 	}
-
 }
