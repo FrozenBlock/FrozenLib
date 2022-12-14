@@ -1,4 +1,4 @@
-package net.frozenblock.lib.block.entity.render;
+package net.frozenblock.lib.block.api.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Quaternion;
@@ -44,15 +44,11 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 		poseStack.translate(0.5, 0, 0.5);
 		poseStack.pushPose();
 		poseStack.mulPose(this.rotation);
-		this.base.render(poseStack, vertexConsumers.getBuffer(RenderType.entityCutout(this.getTexture(entity))), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+		this.base.render(poseStack, vertexConsumers.getBuffer(RenderType.entityCutout(this.getTextureLocation(entity))), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
 		poseStack.popPose();
     }
 
-	public ResourceLocation getTexture(T entity) {
-		throw new IllegalStateException("BillboardBlockEntityRenders must override getTexture method!");
-	}
+	public abstract ResourceLocation getTextureLocation(T entity);
 
-	public ModelPart getRoot() {
-		throw new IllegalStateException("BillboardBlockEntityRenders must override getRoot method!");
-	}
+	public abstract ModelPart getRoot();
 }
