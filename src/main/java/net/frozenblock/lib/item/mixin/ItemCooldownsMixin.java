@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.mixin.server;
+package net.frozenblock.lib.item.mixin;
 
 import java.util.Map;
 import net.frozenblock.lib.item.impl.CooldownInterface;

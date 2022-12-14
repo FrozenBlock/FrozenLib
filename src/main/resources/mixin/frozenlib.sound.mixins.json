@@ -7,7 +7,7 @@
 	"defaultRequire": 1
   },
   "mixins": [
-	"server.LivingEntityMixin"
+    "LivingEntityMixin"
   ],
   "client": [
     "client.BlockMixin"

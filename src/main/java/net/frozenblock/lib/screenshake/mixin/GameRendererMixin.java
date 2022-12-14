@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.screenshake.mixin.client;
+package net.frozenblock.lib.screenshake.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;

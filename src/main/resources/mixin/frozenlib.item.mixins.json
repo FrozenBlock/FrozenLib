@@ -7,8 +7,8 @@
 	"defaultRequire": 1
   },
   "mixins": [
-    "server.ItemCooldownMixin",
-    "server.ItemEntityMixin",
-    "server.ServerItemCooldownsMixin"
+    "ItemCooldownsMixin",
+    "ItemEntityMixin",
+    "ServerItemCooldownsMixin"
   ]
 }

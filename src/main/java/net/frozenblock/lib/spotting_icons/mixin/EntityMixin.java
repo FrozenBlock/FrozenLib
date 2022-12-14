@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icons.mixin.server;
+package net.frozenblock.lib.spotting_icons.mixin;
 
 import net.frozenblock.lib.sound.api.FrozenClientPacketInbetween;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;

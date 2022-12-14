@@ -7,7 +7,7 @@
 	"defaultRequire": 1
   },
   "mixins": [
-    "server.EntityMixin"
+    "EntityMixin"
   ],
   "client": [
 	"client.EntityRenderDispatcherMixin",

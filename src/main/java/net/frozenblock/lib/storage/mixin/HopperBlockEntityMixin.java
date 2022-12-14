@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.storage.mixin.server;
+package net.frozenblock.lib.storage.mixin;
 
 import net.frozenblock.lib.impl.HopperUntouchableList;
 import net.minecraft.core.BlockPos;

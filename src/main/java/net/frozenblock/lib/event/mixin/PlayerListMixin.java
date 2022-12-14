@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.mixin.server;
+package net.frozenblock.lib.event.mixin;
 
 import net.frozenblock.lib.event.api.PlayerJoinEvent;
 import net.minecraft.network.Connection;
