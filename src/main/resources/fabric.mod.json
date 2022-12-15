@@ -31,10 +31,16 @@
   },
   "mixins": [
 	"mixin/frozenlib.mixins.json",
-	"mixin/frozenlib_quilt_datafixerupper.mixins.json",
-    "mixin/frozenlib_quilt_registry.mixins.json",
-    "mixin/frozenlib_quilt_resource_loader.mixins.json",
-    "mixin/frozenlib_quilt_surface_rule.mixins.json"
+    "mixin/frozenlib.menu.mixins.json",
+    "mixin/frozenlib.spotting_icons.mixins.json",
+    "mixin/frozenlib.sound.mixins.json",
+    "mixin/frozenlib.screenshake.mixins.json",
+    "mixin/frozenlib.event.mixins.json",
+    "mixin/frozenlib.storage.mixins.json",
+    "mixin/frozenlib.item.mixins.json",
+    "mixin/frozenlib_quiltmc_datafixerupper.mixins.json",
+    "mixin/frozenlib_quiltmc_surface_rule.mixins.json",
+    "mixin/frozenlib_quiltmc_resource_loader.mixins.json"
   ],
   "accessWidener": "frozenlib.accesswidener",
   "depends": {

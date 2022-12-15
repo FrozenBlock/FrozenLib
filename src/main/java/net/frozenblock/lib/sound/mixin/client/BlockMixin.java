@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.client;
+package net.frozenblock.lib.sound.mixin.client;
 
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrites;

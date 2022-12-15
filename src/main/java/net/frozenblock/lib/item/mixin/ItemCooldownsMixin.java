@@ -16,16 +16,14 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.server;
+package net.frozenblock.lib.item.mixin;
 
-import com.google.common.collect.Maps;
 import java.util.Map;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
