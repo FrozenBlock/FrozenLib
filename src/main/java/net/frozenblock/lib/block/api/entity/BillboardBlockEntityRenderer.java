@@ -1,8 +1,7 @@
 package net.frozenblock.lib.block.api.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Quaternion;
-import com.mojang.math.Vector3f;
+import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -19,6 +18,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Con
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Quaternionf;
 
 @Environment(EnvType.CLIENT)
 public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
@@ -36,11 +36,11 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 		return LayerDefinition.create(modelData, 16, 16);
 	}
 
-	private final Quaternion rotation = new Quaternion(0F, 0F, 0F, 1F);
+	private final Quaternionf rotation = new Quaternionf(0F, 0F, 0F, 1F);
 
 	public void render(@NotNull T entity, float tickDelta, @NotNull PoseStack poseStack, @NotNull MultiBufferSource vertexConsumers, int light, int overlay) {
 		this.rotation.set(0.0f, 0.0f, 0.0f, 1.0f);
-		this.rotation.mul(Vector3f.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().yRot));
+		this.rotation.mul(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().yRot));
 		poseStack.translate(0.5, 0, 0.5);
 		poseStack.pushPose();
 		poseStack.mulPose(this.rotation);
