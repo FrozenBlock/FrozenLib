@@ -27,6 +27,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvent;
+import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.sound.api.FrozenSoundPackets;
@@ -41,7 +42,9 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
@@ -86,6 +89,8 @@ public final class FrozenMain implements ModInitializer {
 
 			}
 		});
+
+		PlayerDamageSourceSounds.addDamageSound(DamageSource.DROWN, SoundEvents.PLAYER_HURT_DROWN, FrozenMain.id("player_drown"));
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> OverrideWindCommand.register(dispatcher));
 
