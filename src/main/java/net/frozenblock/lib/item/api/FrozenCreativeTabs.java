@@ -90,10 +90,8 @@ public final class FrozenCreativeTabs {
 			stack.setCount(1);
 			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
-				FrozenMain.error("EMPTY ITEM IN TAB: " + Arrays.stream(tabs).findFirst(), stack.isEmpty());
+				FrozenMain.error("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty());
 				entries.addBefore(comparedItem, list, tabVisibility);
-				//}
 			});
 		}
 	}
@@ -116,10 +114,7 @@ public final class FrozenCreativeTabs {
 			stack.setCount(1);
 			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {\
-					FrozenMain.error("EMPTY ITEM IN TAB: " + Arrays.stream(tabs).findFirst(), stack.isEmpty());
-					entries.addAfter(comparedItem, list, tabVisibility);
-				//}
+				entries.addAfter(comparedItem, list, tabVisibility);
 			});
 		}
 	}
@@ -134,10 +129,8 @@ public final class FrozenCreativeTabs {
 			stack.setCount(1);
 			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
-				FrozenMain.error("EMPTY ITEM " + path + " IN TAB: " + Arrays.stream(tabs).findFirst(), stack.isEmpty());
+				FrozenMain.error("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty());
 				entries.addAfter(comparedItem, list, tabVisibility);
-				//}
 			});
 		}
 	}
