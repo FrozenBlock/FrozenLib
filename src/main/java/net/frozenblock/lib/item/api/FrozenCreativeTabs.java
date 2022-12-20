@@ -19,6 +19,7 @@
 package net.frozenblock.lib.item.api;
 
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.item.impl.FabricItemGroupAccessor;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -31,6 +32,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -82,6 +84,24 @@ public final class FrozenCreativeTabs {
 	 * @param comparedItem	The item that the added item is compared to
 	 * @param item	The item that is going to be added
 	 */
+	public static void addBefore(ItemLike comparedItem, ItemLike item, String path, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
+		for (CreativeModeTab tab : tabs) {
+			var stack = new ItemStack(item);
+			stack.setCount(1);
+			List<ItemStack> list = List.of(stack);
+			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
+				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+				FrozenMain.error("EMPTY ITEM IN TAB: " + Arrays.stream(tabs).findFirst(), stack.isEmpty());
+				entries.addBefore(comparedItem, list, tabVisibility);
+				//}
+			});
+		}
+	}
+
+	/**
+	 * @param comparedItem	The item that the added item is compared to
+	 * @param item	The item that is going to be added
+	 */
 	public static void addAfter(ItemLike comparedItem, ItemLike item, CreativeModeTab... tabs) {
 		addAfter(comparedItem, item, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, tabs);
 	}
@@ -96,8 +116,27 @@ public final class FrozenCreativeTabs {
 			stack.setCount(1);
 			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {\
+					FrozenMain.error("EMPTY ITEM IN TAB: " + Arrays.stream(tabs).findFirst(), stack.isEmpty());
 					entries.addAfter(comparedItem, list, tabVisibility);
+				//}
+			});
+		}
+	}
+
+	/**
+	 * @param comparedItem	The item that the added item is compared to
+	 * @param item	The item that is going to be added
+	 */
+	public static void addAfter(ItemLike comparedItem, ItemLike item, String path, CreativeModeTab.TabVisibility tabVisibility, CreativeModeTab... tabs) {
+		for (CreativeModeTab tab : tabs) {
+			var stack = new ItemStack(item);
+			stack.setCount(1);
+			List<ItemStack> list = List.of(stack);
+			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
+				//if (((FabricItemGroupAccessor) entries).enabled(new ItemStack(comparedItem))) {
+				FrozenMain.error("EMPTY ITEM " + path + " IN TAB: " + Arrays.stream(tabs).findFirst(), stack.isEmpty());
+				entries.addAfter(comparedItem, list, tabVisibility);
 				//}
 			});
 		}
