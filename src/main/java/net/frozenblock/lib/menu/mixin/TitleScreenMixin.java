@@ -26,6 +26,7 @@ import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.client.renderer.PanoramaRenderer;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.RandomSource;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -65,7 +66,7 @@ public class TitleScreenMixin {
 		}
 		if (!frozenLib$validPanoramas.isEmpty()) {
 			//Set panorama from valid list.
-			this.panorama = new PanoramaRenderer(new CubeMap(frozenLib$validPanoramas.get((int) (Math.random() * frozenLib$validPanoramas.size()))));
+			this.panorama = new PanoramaRenderer(new CubeMap(frozenLib$validPanoramas.get(RandomSource.create().nextInt(this.frozenLib$validPanoramas.size()))));
 			//Clear valid list to save a bit on resources.
 			frozenLib$validPanoramas.clear();
 		} else {

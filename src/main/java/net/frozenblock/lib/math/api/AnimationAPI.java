@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.math.api;
 
+import net.minecraft.util.RandomSource;
 import java.awt.geom.Point2D;
 
 /**
@@ -130,7 +131,7 @@ public final class AnimationAPI {
     public static float polyEaseIn(Point2D a, Point2D b, float x, float c) {
         if (c < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -144,7 +145,7 @@ public final class AnimationAPI {
     public static float polyEaseOut(Point2D a, Point2D b, float x, float c) {
         if (c < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -158,7 +159,7 @@ public final class AnimationAPI {
     public static float polyEaseInOut(Point2D a, Point2D b, float x, float c) {
         if (c < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -282,7 +283,7 @@ public final class AnimationAPI {
     public static float circEaseIn(Point2D a, Point2D b, float x, int roundness) {
         if (roundness < 0) {
             System.out.println("Animation API error - roundness must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -296,7 +297,7 @@ public final class AnimationAPI {
     public static float circEaseOut(Point2D a, Point2D b, float x, int roundness) {
         if (roundness < 0) {
             System.out.println("Animation API error - roundness must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -310,7 +311,7 @@ public final class AnimationAPI {
     public static float circEaseInOut(Point2D a, Point2D b, float x, int roundness) {
         if (roundness < 0) {
             System.out.println("Animation API error - roundness must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -344,7 +345,7 @@ public final class AnimationAPI {
     public static float elasticEaseIn(Point2D a, Point2D b, float x, int c) {
         if (c < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -358,7 +359,7 @@ public final class AnimationAPI {
     public static float elasticEaseOut(Point2D a, Point2D b, float x, int c) {
         if (c < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -372,7 +373,7 @@ public final class AnimationAPI {
     public static float elasticEaseInOut(Point2D a, Point2D b, float x, int c) {
         if (c < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -406,7 +407,7 @@ public final class AnimationAPI {
     public static float bounceEaseIn(Point2D a, Point2D b, float x, int c) {
         if (c < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -420,7 +421,7 @@ public final class AnimationAPI {
     public static float bounceEaseOut(Point2D a, Point2D b, float x, int c) {
         if (c < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -434,7 +435,7 @@ public final class AnimationAPI {
     public static float bounceEaseInOut(Point2D a, Point2D b, float x, int c) {
         if (c < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -469,7 +470,7 @@ public final class AnimationAPI {
         float c2 = c1 + 1;
         if (c1 < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -484,7 +485,7 @@ public final class AnimationAPI {
         float c2 = c1 + 1;
         if (c1 < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
@@ -500,7 +501,7 @@ public final class AnimationAPI {
         float c3 = c1 * 1.525F;
         if (c1 < 0) {
             System.out.println("Animation API error - c must be >= 0");
-            return (float) Math.random();
+            return RandomSource.create().nextFloat();
         }
         if (x < a.getX()) {
             return 0; // before animation defining the eq as 0
