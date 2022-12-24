@@ -35,16 +35,16 @@ import net.frozenblock.lib.sound.api.FrozenSoundPackets;
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
+import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.command.OverrideWindCommand;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -52,7 +52,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
-import org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
@@ -182,10 +181,10 @@ public final class FrozenMain implements ModInitializer {
 				if (dimension != null) {
 					Entity entity = dimension.getEntity(id);
 					if (entity instanceof LivingEntity livingEntity) {
-						for (MovingLoopingSoundEntityManager.SoundLoopData nbt : livingEntity.getSounds().getSounds()) {
+						for (MovingLoopingSoundEntityManager.SoundLoopData nbt : ((EntityLoopingSoundInterface)livingEntity).getSounds().getSounds()) {
 							FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
 						}
-						for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : livingEntity.getFadingDistanceSounds().getSounds()) {
+						for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : ((EntityLoopingFadingDistanceSoundInterface)livingEntity).getFadingDistanceSounds().getSounds()) {
 							FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), BuiltInRegistries.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
 						}
 					}
