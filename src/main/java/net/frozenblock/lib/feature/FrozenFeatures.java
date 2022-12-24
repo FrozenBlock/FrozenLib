@@ -19,6 +19,7 @@
 package net.frozenblock.lib.feature;
 
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.feature.features.CircularWaterloggedVegetationPatchFeature;
 import net.frozenblock.lib.feature.features.ColumnWithDiskFeature;
 import net.frozenblock.lib.feature.features.DownwardsPillarFeature;
 import net.frozenblock.lib.feature.features.NoisePathFeature;
@@ -31,6 +32,7 @@ import net.frozenblock.lib.feature.features.config.PathFeatureConfig;
 import net.frozenblock.lib.feature.features.config.PathSwapUnderWaterFeatureConfig;
 import net.frozenblock.lib.feature.features.config.PillarFeatureConfig;
 import net.minecraft.core.Registry;
+import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 
 public class FrozenFeatures {
 
@@ -41,6 +43,7 @@ public class FrozenFeatures {
 	public static final ColumnWithDiskFeature COLUMN_WITH_DISK_FEATURE = new ColumnWithDiskFeature(ColumnWithDiskFeatureConfig.CODEC);
 	public static final UpwardsPillarFeature UPWARDS_PILLAR_FEATURE = new UpwardsPillarFeature(PillarFeatureConfig.CODEC);
 	public static final DownwardsPillarFeature DOWNWARDS_PILLAR_FEATURE = new DownwardsPillarFeature(PillarFeatureConfig.CODEC);
+	public static final CircularWaterloggedVegetationPatchFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH = new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 
 	public static void init() {
 		Registry.register(Registry.FEATURE, FrozenMain.id("noise_path_feature"), NOISE_PATH_FEATURE);
@@ -50,6 +53,7 @@ public class FrozenFeatures {
 		Registry.register(Registry.FEATURE, FrozenMain.id("column_with_disk_feature"), COLUMN_WITH_DISK_FEATURE);
 		Registry.register(Registry.FEATURE, FrozenMain.id("upwards_pillar"), UPWARDS_PILLAR_FEATURE);
 		Registry.register(Registry.FEATURE, FrozenMain.id("downwards_pillar"), DOWNWARDS_PILLAR_FEATURE);
+		Registry.register(Registry.FEATURE, FrozenMain.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
 	}
 
 }
