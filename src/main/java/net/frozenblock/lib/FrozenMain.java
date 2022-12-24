@@ -27,6 +27,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvent;
+import net.frozenblock.lib.feature.FrozenFeatures;
 import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
@@ -75,6 +76,7 @@ public final class FrozenMain implements ModInitializer {
 		ServerFreezer.onInitialize();
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
+		FrozenFeatures.init();
 
 		receiveSoundSyncPacket();
 		receiveIconSyncPacket();

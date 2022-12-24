@@ -20,6 +20,7 @@ package net.frozenblock.lib.math.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -41,7 +42,7 @@ public final class AdvancedMath {
     }
 
     public static double randomPosNeg() {
-        return Math.random() * (Math.random() >= 0.5 ? 1 : -1);
+        return RandomSource.create().nextDouble() * (RandomSource.create().nextDouble() >= 0.5 ? 1 : -1);
     }
 
 
@@ -103,7 +104,7 @@ public final class AdvancedMath {
      * @return A random {@linkplain Direction} on a specific {@linkplain Direction.Axis}.
      */
     public static Direction randomDir(final Direction.Axis axis) {
-        double random = Math.random();
+        double random = RandomSource.create().nextDouble();
 		switch (axis) {
 			case X -> {
 				return random > 0.5 ? Direction.EAST : Direction.WEST;
