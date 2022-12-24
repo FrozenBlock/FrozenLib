@@ -22,8 +22,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
@@ -46,7 +46,7 @@ public class PathFeatureConfig implements FeatureConfiguration {
             config.useY
         ), Codec.BOOL.fieldOf("multiplyY").orElse(false).forGetter((config) ->
             config.multiplyY
-        ), RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("replaceable").forGetter((config) ->
+        ), RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter((config) ->
             config.replaceable
         )).apply(instance, PathFeatureConfig::new);
     });
