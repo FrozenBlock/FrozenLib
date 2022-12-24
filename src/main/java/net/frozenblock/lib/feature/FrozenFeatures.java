@@ -32,6 +32,7 @@ import net.frozenblock.lib.feature.features.config.PathFeatureConfig;
 import net.frozenblock.lib.feature.features.config.PathSwapUnderWaterFeatureConfig;
 import net.frozenblock.lib.feature.features.config.PillarFeatureConfig;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 
 public class FrozenFeatures {
@@ -46,14 +47,14 @@ public class FrozenFeatures {
 	public static final CircularWaterloggedVegetationPatchFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH = new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 
 	public static void init() {
-		Registry.register(Registry.FEATURE, FrozenMain.id("noise_path_feature"), NOISE_PATH_FEATURE);
-		Registry.register(Registry.FEATURE, FrozenMain.id("noise_plant_feature"), NOISE_PLANT_FEATURE);
-		Registry.register(Registry.FEATURE, FrozenMain.id("noise_path_swap_under_water_feature"), NOISE_PATH_SWAP_UNDER_WATER_FEATURE);
-		Registry.register(Registry.FEATURE, FrozenMain.id("noise_path_under_water_feature"), NOISE_PATH_UNDER_WATER_FEATURE);
-		Registry.register(Registry.FEATURE, FrozenMain.id("column_with_disk_feature"), COLUMN_WITH_DISK_FEATURE);
-		Registry.register(Registry.FEATURE, FrozenMain.id("upwards_pillar"), UPWARDS_PILLAR_FEATURE);
-		Registry.register(Registry.FEATURE, FrozenMain.id("downwards_pillar"), DOWNWARDS_PILLAR_FEATURE);
-		Registry.register(Registry.FEATURE, FrozenMain.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_feature"), NOISE_PATH_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_plant_feature"), NOISE_PLANT_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_swap_under_water_feature"), NOISE_PATH_SWAP_UNDER_WATER_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_under_water_feature"), NOISE_PATH_UNDER_WATER_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("column_with_disk_feature"), COLUMN_WITH_DISK_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("upwards_pillar"), UPWARDS_PILLAR_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("downwards_pillar"), DOWNWARDS_PILLAR_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
 	}
 
 }
