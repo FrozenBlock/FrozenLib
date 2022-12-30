@@ -42,7 +42,6 @@ import net.frozenblock.lib.wind.command.OverrideWindCommand;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -94,7 +93,9 @@ public final class FrozenMain implements ModInitializer {
 
 		PlayerDamageSourceSounds.addDamageSound(DamageSource.DROWN, SoundEvents.PLAYER_HURT_DROWN, FrozenMain.id("player_drown"));
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> OverrideWindCommand.register(dispatcher));
+		if (UNSTABLE_LOGGING) {
+			CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> OverrideWindCommand.register(dispatcher));
+		}
 
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			if (server != null) {
