@@ -62,7 +62,7 @@ public class MobCategoryMixin {
 	private static void addCustomCategories(CallbackInfo ci) {
 		var categories = new ArrayList<>(Arrays.asList($VALUES));
 		var last = categories.get(categories.size() - 1);
-		int currentOrdinal = last.ordinal() + 1;
+		int currentOrdinal = last.ordinal();
 
 		ArrayList<String> internalIds = new ArrayList<>();
 		for (MobCategory category : categories) {
