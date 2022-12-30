@@ -49,7 +49,7 @@
     "mixin/frozenlib.modmenu.mixins.json",
     "mixin/frozenlib_quiltmc_datafixerupper.mixins.json",
     "mixin/frozenlib_quiltmc_surface_rule.mixins.json",
-    "mixin/frozenlib_quiltmc_resource_loader.mixins.json",
+    "mixin/frozenlib_quiltmc_resource_loader.mixins.json"
   ],
   "accessWidener": "frozenlib.accesswidener",
   "depends": {
