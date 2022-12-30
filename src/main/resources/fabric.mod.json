@@ -37,7 +37,7 @@
       "org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer"
     ],
     "modmenu": [
-      "frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
+      "net.frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
     ]
   },
   "mixins": [
