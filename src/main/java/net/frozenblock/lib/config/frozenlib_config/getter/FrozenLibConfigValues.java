@@ -37,7 +37,7 @@ public class FrozenLibConfigValues {
 	}
 
 	public static class DefaultFrozenLibConfigValues {
-		public static final boolean USE_WIND_ON_NON_FROZENLIB_SERVERS = false;
+		public static final boolean USE_WIND_ON_NON_FROZENLIB_SERVERS = true;
 	}
 
 	public interface ConfigInterface {
