@@ -45,7 +45,7 @@ public class BadgeMixin {
 		var last = badges.get(badges.size() - 1);
 		int currentOrdinal = last.ordinal() + 1;
 
-		var frozenblock = newType("FROZENBLOCK", currentOrdinal, "modmenu.badge.frozenblock", 0xff107454, 0xff093929, "frozenblock");
+		var frozenblock = newType("FROZENBLOCK", currentOrdinal, "modmenu.badge.frozenblock", 0xff2b4b7c, 0xff0e2a55, "frozenblock");
 		badges.add(frozenblock);
 
 		ArrayList<String> internalIds = new ArrayList<>();
