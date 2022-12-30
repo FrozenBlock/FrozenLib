@@ -10,6 +10,14 @@
   "authors": [
 	"FrozenBlock"
   ],
+  "contributors": [
+    "Treetrain1",
+    "Luna",
+    "Liukrast",
+    "Merp",
+    "Xfrtrex",
+    "Soro"
+  ],
   "contact": {
     "homepage": "https://www.modrinth.com/mod/FrozenLib",
     "sources": "https://github.com/FrozenBlock/FrozenLib",
@@ -27,6 +35,9 @@
 	],
     "frozenlib:events": [
       "org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer"
+    ],
+    "modmenu": [
+      "frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
     ]
   },
   "mixins": [

@@ -20,6 +20,7 @@ package net.frozenblock.lib.wind.api;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -63,7 +64,6 @@ public class ClientWindManager {
 	public static long seed = 0;
 
 	private static boolean hasInitialized;
-	public static final boolean SHOULD_USE_WIND_WHEN_SERVER_HAS_NONE = true;
 
 	public static void tick(ClientLevel level) {
 		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
@@ -98,7 +98,7 @@ public class ClientWindManager {
 		cloudY += (laggedWindY * 0.01);
 		cloudZ += (laggedWindZ * 0.025);
 
-		if (!hasInitialized && time > 80 && SHOULD_USE_WIND_WHEN_SERVER_HAS_NONE) {
+		if (!hasInitialized && time > 80 && FrozenLibConfigValues.CONFIG.getter.useWindOnNonFrozenServers()) {
 			RandomSource randomSource = AdvancedMath.random();
 			setSeed(randomSource.nextLong());
 			time = randomSource.nextLong();
@@ -178,7 +178,7 @@ public class ClientWindManager {
 	}
 
 	public static boolean shouldUseWind() {
-		return hasInitialized || SHOULD_USE_WIND_WHEN_SERVER_HAS_NONE;
+		return hasInitialized || FrozenLibConfigValues.CONFIG.getter.useWindOnNonFrozenServers();
 	}
 
 }
