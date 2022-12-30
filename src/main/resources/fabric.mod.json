@@ -34,7 +34,7 @@
 	  "net.frozenblock.lib.FrozenClient"
 	],
     "modmenu": [
-      "frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
+      "net.frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
     ]
   },
   "mixins": [
