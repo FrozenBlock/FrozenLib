@@ -59,6 +59,7 @@ public final class FrozenMain implements ModInitializer {
 	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
 	public static boolean DEV_LOGGING = false;
+	public static boolean areConfigsInit;
 
 	/**
 	 * Used for features that may be unstable and crash in public builds.
