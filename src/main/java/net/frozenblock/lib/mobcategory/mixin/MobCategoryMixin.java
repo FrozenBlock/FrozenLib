@@ -73,7 +73,7 @@ public class MobCategoryMixin {
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:mob_categories", FrozenMobCategoryEntrypoint.class).forEach(entrypoint -> {
 			try {
 				FrozenMobCategoryEntrypoint mobCategoryEntrypoint = entrypoint.getEntrypoint();
-				newCategories.addAll(mobCategoryEntrypoint.newBadges());
+				newCategories.addAll(mobCategoryEntrypoint.newCategories());
 			} catch (Throwable ignored) {
 
 			}
@@ -86,7 +86,7 @@ public class MobCategoryMixin {
 				throw new IllegalStateException("Cannot add duplicate MobCategory " + internalId + "!");
 			}
 			currentOrdinal += 1;
-			var addedCategory = newType(internalId.toString(), currentOrdinal, newCategory.name, newCategory.max, newCategory.isFriendly, newCategory.isPersistent, newCategory.despawnDistance);
+			var addedCategory = newType(internalId.toString(), currentOrdinal, newCategory.modId + newCategory.name, newCategory.max, newCategory.isFriendly, newCategory.isPersistent, newCategory.despawnDistance);
 			categories.add(addedCategory);
 			FrozenMobCategories.addMobCategory(internalId.toString(), addedCategory);
 		}
