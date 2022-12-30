@@ -94,7 +94,9 @@ public final class FrozenMain implements ModInitializer {
 
 		PlayerDamageSourceSounds.addDamageSound(DamageSource.DROWN, SoundEvents.PLAYER_HURT_DROWN, FrozenMain.id("player_drown"));
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> OverrideWindCommand.register(dispatcher));
+		if (UNSTABLE_LOGGING) {
+			CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> OverrideWindCommand.register(dispatcher));
+		}
 
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			if (server != null) {
