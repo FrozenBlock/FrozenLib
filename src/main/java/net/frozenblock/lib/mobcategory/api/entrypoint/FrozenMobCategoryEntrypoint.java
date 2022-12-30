@@ -25,7 +25,7 @@ public abstract class FrozenMobCategoryEntrypoint {
 
 	public abstract ArrayList<FrozenMobCategory> newCategories();
 
-	public static FrozenMobCategory createBadge(String modId, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
+	public static FrozenMobCategory createCategory(String modId, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
 		return new FrozenMobCategory(modId, name, max, isFriendly, isPersistent, despawnDistance);
 	}
 
