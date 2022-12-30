@@ -20,6 +20,7 @@ package net.frozenblock.lib.menu.mixin;
 
 import java.util.ArrayList;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -66,7 +67,7 @@ public class TitleScreenMixin {
 		}
 		if (!frozenLib$validPanoramas.isEmpty()) {
 			//Set panorama from valid list.
-			this.panorama = new PanoramaRenderer(new CubeMap(frozenLib$validPanoramas.get(RandomSource.create().nextInt(this.frozenLib$validPanoramas.size()))));
+			this.panorama = new PanoramaRenderer(new CubeMap(frozenLib$validPanoramas.get(AdvancedMath.random().nextInt(this.frozenLib$validPanoramas.size()))));
 			//Clear valid list to save a bit on resources.
 			frozenLib$validPanoramas.clear();
 		} else {

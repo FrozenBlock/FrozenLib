@@ -36,13 +36,17 @@ public final class AdvancedMath {
 		throw new UnsupportedOperationException("AdvancedMath contains only static declarations.");
 	}
 
+	public static RandomSource random() {
+		return RandomSource.create();
+	}
+
     public static float range(final float min, final float max,
                               final float number) {
         return (number * max) + min;
     }
 
     public static double randomPosNeg() {
-        return RandomSource.create().nextDouble() * (RandomSource.create().nextDouble() >= 0.5 ? 1 : -1);
+        return random().nextDouble() * (random().nextDouble() >= 0.5 ? 1 : -1);
     }
 
 
@@ -104,7 +108,7 @@ public final class AdvancedMath {
      * @return A random {@linkplain Direction} on a specific {@linkplain Direction.Axis}.
      */
     public static Direction randomDir(final Direction.Axis axis) {
-        double random = RandomSource.create().nextDouble();
+        double random = random().nextDouble();
 		switch (axis) {
 			case X -> {
 				return random > 0.5 ? Direction.EAST : Direction.WEST;

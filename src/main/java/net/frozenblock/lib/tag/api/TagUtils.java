@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
 import net.fabricmc.fabric.api.tag.convention.v1.TagUtil;
+import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -41,7 +42,7 @@ public final class TagUtils {
 
     @Nullable
     public static <T> T getRandomEntry(TagKey<T> tag) {
-        return getRandomEntry(RandomSource.create(), tag);
+        return getRandomEntry(AdvancedMath.random(), tag);
     }
 
     @SuppressWarnings("unchecked")
