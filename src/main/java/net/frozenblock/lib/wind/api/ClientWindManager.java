@@ -62,8 +62,7 @@ public class ClientWindManager {
 	public static double cloudZ;
 
 	public static long seed = 0;
-
-	private static boolean hasInitialized;
+	public static boolean hasInitialized;
 
 	public static void tick(ClientLevel level) {
 		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
