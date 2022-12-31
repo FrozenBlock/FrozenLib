@@ -6,6 +6,4 @@
   "option.frozenlib.use_wind_on_non_frozenlib_servers.false": "OFF",
   "option.frozenlib.use_wind_on_non_frozenlib_servers.true": "ON",
   "tooltip.frozenlib.use_wind_on_non_frozenlib_servers": "When disabled, the client won't use wind on servers that\ndon't have FrozenLib installed.\nWhen enabled, the client will generate a random seed to use\nfor wind on servers that don't have FrozenLib installed.",
-
-  "modmenu.badge.frozenblock": "FrozenBlock"
 }
