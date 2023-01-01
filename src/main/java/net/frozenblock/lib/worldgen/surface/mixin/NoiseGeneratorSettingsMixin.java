@@ -19,10 +19,8 @@
 package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.LinkedHashMap;
-import java.util.List;
 import java.util.Map;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenLiveSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.impl.SetNoiseGeneratorPresetInterface;
@@ -53,8 +51,6 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 	private boolean hasCheckedEntrypoints;
 	@Unique
 	private SurfaceRules.RuleSource heldSurfaceRule;
-	@Unique
-	private static final List<EntrypointContainer<FrozenLiveSurfaceRuleEntrypoint>> liveEntrypoints = FabricLoader.getInstance().getEntrypointContainers("frozenlib:live_surfacerules", FrozenLiveSurfaceRuleEntrypoint.class);
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"), cancellable = true)
 	private void surfaceRule(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
@@ -90,7 +86,7 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 
 		Map<SurfaceRules.RuleSource, ResourceLocation> sourceHolder = new LinkedHashMap<>();
 
-		liveEntrypoints.forEach(entrypoint -> {
+		FabricLoader.getInstance().getEntrypointContainers("frozenlib:live_surfacerules", FrozenLiveSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
 			try {
 				FrozenLiveSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
 				ruleEntrypoint.addLiveRuleSources(sourceHolder);
@@ -100,24 +96,18 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 		});
 
 		SurfaceRules.RuleSource newSource = null;
-		if (!sourceHolder.isEmpty()) {
-			for (SurfaceRules.RuleSource ruleSource : sourceHolder.keySet()) {
-				if (sourceHolder.get(ruleSource).equals(this.preset)) {
-					if (newSource == null) {
-						newSource = ruleSource;
-					} else {
-						newSource = SurfaceRules.sequence(newSource, ruleSource);
-					}
+		for (SurfaceRules.RuleSource ruleSource : sourceHolder.keySet()) {
+			if (sourceHolder.get(ruleSource).equals(this.preset)) {
+				if (newSource == null) {
+					newSource = ruleSource;
+				} else {
+					newSource = SurfaceRules.sequence(newSource, ruleSource);
 				}
 			}
+		}
 
-			if (newSource != null) {
-				this.surfaceRule = SurfaceRules.sequence(newSource, this.heldSurfaceRule, newSource);
-			} else {
-				this.surfaceRule = heldSurfaceRule;
-			}
-		} else {
-			this.surfaceRule = this.heldSurfaceRule;
+		if (newSource != null) {
+			this.surfaceRule = SurfaceRules.sequence(newSource, this.heldSurfaceRule, newSource);
 		}
 	}
 
