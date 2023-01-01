@@ -114,7 +114,7 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 			if (newSource != null) {
 				this.surfaceRule = SurfaceRules.sequence(newSource, this.heldSurfaceRule, newSource);
 			} else {
-				this.surfaceRule = this.heldSurfaceRule;
+				this.surfaceRule = heldSurfaceRule;
 			}
 		} else {
 			this.surfaceRule = this.heldSurfaceRule;
