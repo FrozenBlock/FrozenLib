@@ -62,8 +62,8 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 	@Unique
 	private static final List<EntrypointContainer<FrozenLiveSurfaceRuleEntrypoint>> liveEntrypoints = FabricLoader.getInstance().getEntrypointContainers("frozenlib:live_surfacerules", FrozenLiveSurfaceRuleEntrypoint.class);
 
-	@Inject(method = "surfaceRule", at = @At("HEAD"))
-	private void getAddedRules(CallbackInfoReturnable<SurfaceRules.RuleSource> info) {
+	@Inject(method = "surfaceRule", at = @At("HEAD"), cancellable = true)
+	private void getAddedRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
 		if (!this.hasCheckedEntrypoints) {
 			Map<SurfaceRules.RuleSource, ResourceLocation> sourceHolder = new LinkedHashMap<>();
 			FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfacerules", FrozenSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
@@ -129,10 +129,12 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 		}
 	}
 
-	@Inject(method = "surfaceRule", at = @At("HEAD"), cancellable = true)
-	private void applyAddedRules(CallbackInfoReturnable<SurfaceRules.RuleSource> info) {
+	@Redirect(method = "surfaceRule", at = @At("RETURN"))
+	private SurfaceRules.RuleSource applyAddedRules(SurfaceRules.RuleSource original) {
 		if (this.addedLiveSurfaceRules != null) {
-			info.setReturnValue(SurfaceRules.sequence(this.addedLiveSurfaceRules, info.getReturnValue(), this.addedLiveSurfaceRules));
+			return SurfaceRules.sequence(this.addedLiveSurfaceRules, original, this.addedLiveSurfaceRules);
+		} else {
+			return original;
 		}
 	}
 
