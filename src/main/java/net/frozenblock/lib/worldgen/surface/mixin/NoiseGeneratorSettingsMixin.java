@@ -48,6 +48,8 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 	private ResourceLocation preset;
 	@Unique
 	private boolean hasCheckedEntrypoints;
+	@Unique
+	private SurfaceRules.RuleSource heldSurfaceRule;
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"), cancellable = true)
 	private void surfaceRule(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
@@ -78,6 +80,7 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 			if (newSource != null) {
 				this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
 			}
+			this.heldSurfaceRule = this.surfaceRule;
 		}
 	}
 
