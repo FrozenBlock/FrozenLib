@@ -10,10 +10,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BootstapContext.class)
-public class BootstapContextMixin<T> {
+public interface BootstapContextMixin<T> {
 
-	@Inject(method = "register", at = @At("HEAD"))
-	public void register(ResourceKey<T> registryKey, T value, CallbackInfoReturnable<net.minecraft.core.Holder.Reference<T>> info) {
+	@Inject(method = {"register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;)Lnet/minecraft/core/Holder$Reference;"}, at = @At("HEAD"))
+	default void register(ResourceKey<T> registryKey, T value, CallbackInfoReturnable<net.minecraft.core.Holder.Reference<T>> info) {
 		if (value instanceof NoiseGeneratorSettings noiseGeneratorSettings) {
 			SetNoiseGeneratorPresetInterface.class.cast(noiseGeneratorSettings).setPreset(registryKey.location());
 		}
