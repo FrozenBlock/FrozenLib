@@ -40,6 +40,7 @@ import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.command.OverrideWindCommand;
 import net.minecraft.core.Registry;
+import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -122,6 +123,7 @@ public final class FrozenMain implements ModInitializer {
 			ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
 		}));
 
+		SurfaceRuleData.overworld();
 	}
 
 	//IDENTIFIERS
