@@ -23,9 +23,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.worldgen.surface.api.FrozenPresetBoundRuleSource;
 import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.impl.SetNoiseGeneratorPresetInterface;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -79,11 +76,6 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 				this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
 			}
 		}
-	}
-
-	@Inject(method = "register", at = @At("HEAD"))
-	private static void register(Registry<NoiseGeneratorSettings> registry, ResourceKey<NoiseGeneratorSettings> key, NoiseGeneratorSettings settings, CallbackInfoReturnable<Holder<NoiseGeneratorSettings>> info) {
-		SetNoiseGeneratorPresetInterface.class.cast(settings).setPreset(key.location());
 	}
 
 	@Override
