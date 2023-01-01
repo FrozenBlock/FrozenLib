@@ -46,6 +46,8 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 	private ResourceLocation preset;
 	@Unique
 	private boolean hasCheckedEntrypoints;
+	@Unique
+	private SurfaceRules.RuleSource heldSurfaceRule;
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"), cancellable = true)
 	private void surfaceRule(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
@@ -76,6 +78,33 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 			if (newSource != null) {
 				this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
 			}
+			this.heldSurfaceRule = this.surfaceRule;
+		}
+
+		Map<SurfaceRules.RuleSource, ResourceLocation> sourceHolder = new LinkedHashMap<>();
+
+		FabricLoader.getInstance().getEntrypointContainers("frozenlib:live_surfacerules", FrozenLiveSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
+			try {
+				FrozenLiveSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
+				ruleEntrypoint.addLiveRuleSources(sourceHolder);
+			} catch (Throwable ignored) {
+
+			}
+		});
+
+		SurfaceRules.RuleSource newSource = null;
+		for (SurfaceRules.RuleSource ruleSource : sourceHolder.keySet()) {
+			if (sourceHolder.get(ruleSource).equals(this.preset)) {
+				if (newSource == null) {
+					newSource = ruleSource;
+				} else {
+					newSource = SurfaceRules.sequence(newSource, ruleSource);
+				}
+			}
+		}
+
+		if (newSource != null) {
+			this.surfaceRule = SurfaceRules.sequence(newSource, this.heldSurfaceRule, newSource);
 		}
 	}
 
