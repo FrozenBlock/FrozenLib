@@ -18,9 +18,14 @@
 
 package net.frozenblock.lib.wind.api;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
+import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
@@ -29,6 +34,7 @@ import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 
+@Environment(EnvType.CLIENT)
 public class ClientWindManager {
 	public static long time;
 	public static boolean overrideWind;
@@ -56,6 +62,7 @@ public class ClientWindManager {
 	public static double cloudZ;
 
 	public static long seed = 0;
+	public static boolean hasInitialized;
 
 	public static void tick(ClientLevel level) {
 		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
@@ -89,16 +96,27 @@ public class ClientWindManager {
 		cloudX += (laggedWindX * 0.025);
 		cloudY += (laggedWindY * 0.01);
 		cloudZ += (laggedWindZ * 0.025);
+
+		if (!hasInitialized && time > 80 && FrozenLibConfigValues.CONFIG.getter.useWindOnNonFrozenServers()) {
+			RandomSource randomSource = AdvancedMath.random();
+			setSeed(randomSource.nextLong());
+			time = randomSource.nextLong();
+			hasInitialized = true;
+		}
 	}
 
 	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
-		if (!overrideWind) {
-			double windX = sampler.noise(x, 0, 0);
-			double windY = sampler.noise(0, y, 0);
-			double windZ = sampler.noise(0, 0, z);
-			return new Vec3(windX, windY, windZ);
+		if (shouldUseWind()) {
+			if (!overrideWind) {
+				double windX = sampler.noise(x, 0, 0);
+				double windY = sampler.noise(0, y, 0);
+				double windZ = sampler.noise(0, 0, z);
+				return new Vec3(windX, windY, windZ);
+			}
+			return commandWind;
+		} else {
+			return Vec3.ZERO;
 		}
-		return commandWind;
 	}
 
 	public static ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(seed));
@@ -117,21 +135,21 @@ public class ClientWindManager {
 	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		return new Vec3(windX * windMultiplier, windY * windMultiplier, windZ * windMultiplier);
+		return shouldUseWind() ? new Vec3(windX * windMultiplier, windY * windMultiplier, windZ * windMultiplier) : Vec3.ZERO;
 	}
 
 	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		return new Vec3((windX * windMultiplier) * multiplier, (windY * windMultiplier) * multiplier, (windZ * windMultiplier) * multiplier);
+		return shouldUseWind() ? new Vec3((windX * windMultiplier) * multiplier, (windY * windMultiplier) * multiplier, (windZ * windMultiplier) * multiplier) : Vec3.ZERO;
 	}
 
 	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier, double clamp) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		return new Vec3(Mth.clamp((windX * windMultiplier) * multiplier, -clamp, clamp),
+		return shouldUseWind() ? new Vec3(Mth.clamp((windX * windMultiplier) * multiplier, -clamp, clamp),
 				Mth.clamp((windY * windMultiplier) * multiplier, -clamp, clamp),
-				Mth.clamp((windZ * windMultiplier) * multiplier, -clamp, clamp));
+				Mth.clamp((windZ * windMultiplier) * multiplier, -clamp, clamp)) : Vec3.ZERO;
 	}
 
 	public static double getWindX(float partialTick) {
@@ -156,6 +174,10 @@ public class ClientWindManager {
 
 	public static double getCloudZ(float partialTick) {
 		return Mth.lerp(partialTick, prevCloudZ, cloudZ);
+	}
+
+	public static boolean shouldUseWind() {
+		return hasInitialized || FrozenLibConfigValues.CONFIG.getter.useWindOnNonFrozenServers();
 	}
 
 }

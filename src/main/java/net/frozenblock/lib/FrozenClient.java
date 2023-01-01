@@ -399,6 +399,7 @@ public final class FrozenClient implements ClientModInitializer {
 					ClientWindManager.setSeed(seed);
 					ClientWindManager.overrideWind = override;
 					ClientWindManager.commandWind = new Vec3(xa, ya, za);
+					ClientWindManager.hasInitialized = true;
 				}
 			});
 		});

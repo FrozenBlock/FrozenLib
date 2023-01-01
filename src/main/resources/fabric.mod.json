@@ -10,6 +10,14 @@
   "authors": [
 	"FrozenBlock"
   ],
+  "contributors": [
+    "Treetrain1",
+    "Luna",
+    "Liukrast",
+    "Merp",
+    "Xfrtrex",
+    "Soro"
+  ],
   "contact": {
     "homepage": "https://www.modrinth.com/mod/FrozenLib",
     "sources": "https://github.com/FrozenBlock/FrozenLib",
@@ -24,7 +32,10 @@
 	],
 	"client": [
 	  "net.frozenblock.lib.FrozenClient"
-	]
+	],
+    "modmenu": [
+      "net.frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
+    ]
   },
   "mixins": [
 	"mixin/frozenlib.mixins.json",
@@ -35,6 +46,8 @@
     "mixin/frozenlib.event.mixins.json",
     "mixin/frozenlib.storage.mixins.json",
     "mixin/frozenlib.item.mixins.json",
+    "mixin/frozenlib.mobcategory.mixins.json",
+    "mixin/frozenlib.modmenu.mixins.json",
     "mixin/frozenlib_quiltmc_datafixerupper.mixins.json",
     "mixin/frozenlib_quiltmc_surface_rule.mixins.json",
     "mixin/frozenlib_quiltmc_resource_loader.mixins.json"
@@ -74,7 +87,8 @@
 		"modmenu.discord": "https://discord.gg/EpkBWm844s"
 	  },
 	  "badges": [
-		"library"
+		"library",
+        "frozenblock"
 	  ]
 	}
   }
