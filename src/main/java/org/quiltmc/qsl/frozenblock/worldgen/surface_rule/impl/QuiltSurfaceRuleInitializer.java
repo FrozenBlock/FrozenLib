@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
+import net.fabricmc.api.ModInitializer;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Registry;
 import org.jetbrains.annotations.ApiStatus;
