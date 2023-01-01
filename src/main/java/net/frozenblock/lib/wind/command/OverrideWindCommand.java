@@ -36,7 +36,7 @@ import net.minecraft.world.phys.Vec3;
 public class OverrideWindCommand {
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register((LiteralArgumentBuilder) ((LiteralArgumentBuilder)Commands.literal("wind").requires(source -> source.hasPermission(2))).executes(context -> setWind((CommandSourceStack)context.getSource(), ((CommandSourceStack)context.getSource()).getPosition())).then(((Commands.argument("vec", Vec3Argument.vec3()).executes(context -> setWind(context.getSource(), Vec3Argument.getVec3(context, "vec")))))));
+		dispatcher.register(Commands.literal("wind").requires(source -> source.hasPermission(2)).executes(context -> setWind(context.getSource(), context.getSource().getPosition())).then(((Commands.argument("vec", Vec3Argument.vec3()).executes(context -> setWind(context.getSource(), Vec3Argument.getVec3(context, "vec")))))));
 	}
 
 	private static int setWind(CommandSourceStack source, Vec3 vec3) {
