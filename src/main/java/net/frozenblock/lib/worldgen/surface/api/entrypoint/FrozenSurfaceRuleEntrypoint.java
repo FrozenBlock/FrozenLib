@@ -18,12 +18,13 @@
 
 package net.frozenblock.lib.worldgen.surface.api.entrypoint;
 
-import java.util.ArrayList;
-import net.frozenblock.lib.worldgen.surface.api.FrozenPresetBoundRuleSource;
+import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 
 public interface FrozenSurfaceRuleEntrypoint {
 
-	void addRuleSources(ArrayList<FrozenPresetBoundRuleSource> context);
+	void addRuleSources(Map<SurfaceRules.RuleSource, ResourceLocation> context);
 
 }
 

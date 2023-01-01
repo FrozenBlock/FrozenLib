@@ -18,9 +18,10 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.worldgen.surface.api.FrozenPresetBoundRuleSource;
+import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenLiveSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.impl.SetNoiseGeneratorPresetInterface;
 import net.minecraft.resources.ResourceLocation;
@@ -45,28 +46,30 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 	private ResourceLocation preset;
 	@Unique
 	private boolean hasCheckedEntrypoints;
+	@Unique
+	private SurfaceRules.RuleSource heldSurfaceRule;
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"), cancellable = true)
 	private void surfaceRule(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
 		if (!this.hasCheckedEntrypoints) {
-			ArrayList<FrozenPresetBoundRuleSource> sourceHolders = new ArrayList<>();
+			Map<SurfaceRules.RuleSource, ResourceLocation> sourceHolder = new LinkedHashMap<>();
 
 			FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfacerules", FrozenSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
 				try {
 					FrozenSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
-					ruleEntrypoint.addRuleSources(sourceHolders);
+					ruleEntrypoint.addRuleSources(sourceHolder);
 				} catch (Throwable ignored) {
 
 				}
 			});
 
 			SurfaceRules.RuleSource newSource = null;
-			for (FrozenPresetBoundRuleSource presetBoundRuleSource : sourceHolders) {
-				if (presetBoundRuleSource.preset.equals(this.preset)) {
+			for (SurfaceRules.RuleSource ruleSource : sourceHolder.keySet()) {
+				if (sourceHolder.get(ruleSource).equals(this.preset)) {
 					if (newSource == null) {
-						newSource = presetBoundRuleSource.ruleSource;
+						newSource = ruleSource;
 					} else {
-						newSource = SurfaceRules.sequence(newSource, presetBoundRuleSource.ruleSource);
+						newSource = SurfaceRules.sequence(newSource, ruleSource);
 					}
 				}
 			}
@@ -75,6 +78,33 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 			if (newSource != null) {
 				this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
 			}
+			this.heldSurfaceRule = this.surfaceRule;
+		}
+
+		Map<SurfaceRules.RuleSource, ResourceLocation> sourceHolder = new LinkedHashMap<>();
+
+		FabricLoader.getInstance().getEntrypointContainers("frozenlib:live_surfacerules", FrozenLiveSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
+			try {
+				FrozenLiveSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
+				ruleEntrypoint.addLiveRuleSources(sourceHolder);
+			} catch (Throwable ignored) {
+
+			}
+		});
+
+		SurfaceRules.RuleSource newSource = null;
+		for (SurfaceRules.RuleSource ruleSource : sourceHolder.keySet()) {
+			if (sourceHolder.get(ruleSource).equals(this.preset)) {
+				if (newSource == null) {
+					newSource = ruleSource;
+				} else {
+					newSource = SurfaceRules.sequence(newSource, ruleSource);
+				}
+			}
+		}
+
+		if (newSource != null) {
+			this.surfaceRule = SurfaceRules.sequence(newSource, this.heldSurfaceRule, newSource);
 		}
 	}
 

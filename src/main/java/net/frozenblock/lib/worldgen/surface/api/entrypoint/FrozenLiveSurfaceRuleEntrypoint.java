@@ -16,17 +16,15 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.surface.api;
+package net.frozenblock.lib.worldgen.surface.api.entrypoint;
 
+import java.util.Map;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
-public class FrozenPresetBoundRuleSource {
-	public final ResourceLocation preset;
-	public final SurfaceRules.RuleSource ruleSource;
+public interface FrozenLiveSurfaceRuleEntrypoint {
 
-	public FrozenPresetBoundRuleSource(ResourceLocation preset, SurfaceRules.RuleSource ruleSource) {
-		this.preset = preset;
-		this.ruleSource = ruleSource;
-	}
+	void addLiveRuleSources(Map<SurfaceRules.RuleSource, ResourceLocation> context);
+
 }
+
