@@ -41,7 +41,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(NoiseGeneratorSettings.class)
@@ -124,12 +123,12 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 					newSource = SurfaceRules.sequence(this.addedSurfaceRules, newSource);
 				}
 
-				this.addedLiveSurfaceRules = newSource;
+				this.addedLiveSurfaceRules = this.addedSurfaceRules;
 			}
 		}
 	}
 
-	@Redirect(method = "surfaceRule", at = @At("RETURN"))
+	@ModifyVariable(method = "surfaceRule", at = @At("RETURN"))
 	private SurfaceRules.RuleSource applyAddedRules(SurfaceRules.RuleSource original) {
 		if (this.addedLiveSurfaceRules != null) {
 			return SurfaceRules.sequence(this.addedLiveSurfaceRules, original, this.addedLiveSurfaceRules);
