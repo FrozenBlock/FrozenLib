@@ -18,8 +18,6 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -40,7 +38,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(NoiseGeneratorSettings.class)
@@ -55,16 +52,15 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 	@Unique
 	private boolean hasCheckedEntrypoints;
 	@Unique
-	private SurfaceRules.RuleSource addedSurfaceRules;
-	@Unique
-	private SurfaceRules.RuleSource addedLiveSurfaceRules;
+	private SurfaceRules.RuleSource heldSurfaceRule;
 	@Unique
 	private static final List<EntrypointContainer<FrozenLiveSurfaceRuleEntrypoint>> liveEntrypoints = FabricLoader.getInstance().getEntrypointContainers("frozenlib:live_surfacerules", FrozenLiveSurfaceRuleEntrypoint.class);
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"), cancellable = true)
-	private void getAddedRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
+	private void surfaceRule(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
 		if (!this.hasCheckedEntrypoints) {
 			Map<SurfaceRules.RuleSource, ResourceLocation> sourceHolder = new LinkedHashMap<>();
+
 			FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfacerules", FrozenSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
 				try {
 					FrozenSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
@@ -87,53 +83,41 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 			this.hasCheckedEntrypoints = true;
 
 			if (newSource != null) {
-				this.addedSurfaceRules = newSource;
+				this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
 			}
-
-			this.addedLiveSurfaceRules = this.addedSurfaceRules;
+			this.heldSurfaceRule = this.surfaceRule;
 		}
 
-		if (!liveEntrypoints.isEmpty()) {
-			Map<SurfaceRules.RuleSource, ResourceLocation> sourceHolder = new LinkedHashMap<>();
+		Map<SurfaceRules.RuleSource, ResourceLocation> sourceHolder = new LinkedHashMap<>();
 
-			liveEntrypoints.forEach(entrypoint -> {
-				try {
-					FrozenLiveSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
-					ruleEntrypoint.addLiveRuleSources(sourceHolder);
-				} catch (Throwable ignored) {
+		liveEntrypoints.forEach(entrypoint -> {
+			try {
+				FrozenLiveSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
+				ruleEntrypoint.addLiveRuleSources(sourceHolder);
+			} catch (Throwable ignored) {
 
-				}
-			});
+			}
+		});
 
-			SurfaceRules.RuleSource newSource = null;
-			if (!sourceHolder.isEmpty()) {
-				for (SurfaceRules.RuleSource ruleSource : sourceHolder.keySet()) {
-					if (sourceHolder.get(ruleSource).equals(this.preset)) {
-						if (newSource == null) {
-							newSource = ruleSource;
-						} else {
-							newSource = SurfaceRules.sequence(newSource, ruleSource);
-						}
+		SurfaceRules.RuleSource newSource = null;
+		if (!sourceHolder.isEmpty()) {
+			for (SurfaceRules.RuleSource ruleSource : sourceHolder.keySet()) {
+				if (sourceHolder.get(ruleSource).equals(this.preset)) {
+					if (newSource == null) {
+						newSource = ruleSource;
+					} else {
+						newSource = SurfaceRules.sequence(newSource, ruleSource);
 					}
 				}
-
-				if (newSource == null) {
-					newSource = this.addedSurfaceRules;
-				} else {
-					newSource = SurfaceRules.sequence(this.addedSurfaceRules, newSource);
-				}
-
-				this.addedLiveSurfaceRules = this.addedSurfaceRules;
 			}
-		}
-	}
 
-	@ModifyVariable(method = "surfaceRule", at = @At("RETURN"))
-	private SurfaceRules.RuleSource applyAddedRules(SurfaceRules.RuleSource original) {
-		if (this.addedLiveSurfaceRules != null) {
-			return SurfaceRules.sequence(this.addedLiveSurfaceRules, original, this.addedLiveSurfaceRules);
+			if (newSource != null) {
+				this.surfaceRule = SurfaceRules.sequence(newSource, this.heldSurfaceRule, newSource);
+			} else {
+				this.surfaceRule = this.heldSurfaceRule;
+			}
 		} else {
-			return original;
+			this.surfaceRule = this.heldSurfaceRule;
 		}
 	}
 
