@@ -21,7 +21,6 @@ package net.frozenblock.lib.worldgen.surface.mixin;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenLiveSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.impl.SetNoiseGeneratorPresetInterface;
 import net.minecraft.resources.ResourceLocation;
