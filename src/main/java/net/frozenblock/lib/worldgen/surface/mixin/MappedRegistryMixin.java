@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MappedRegistryMixin {
 
 	@Inject(method = "registerMapping(ILnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;Z)Lnet/minecraft/core/Holder;", at = @At("HEAD"))
-	private static <T> void register(int id, ResourceKey<T> key, T value, Lifecycle lifecycle, boolean logDuplicateKeys, CallbackInfoReturnable<Holder<T>> info) {
+	private <T> void register(int id, ResourceKey<T> key, T value, Lifecycle lifecycle, boolean logDuplicateKeys, CallbackInfoReturnable<Holder<T>> info) {
 		if (value instanceof NoiseGeneratorSettings settings) {
 			SetNoiseGeneratorPresetInterface.class.cast(settings).setPreset(key.location());
 		}
