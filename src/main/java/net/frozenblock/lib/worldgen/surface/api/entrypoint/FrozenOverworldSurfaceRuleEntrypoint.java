@@ -19,16 +19,16 @@
 package net.frozenblock.lib.worldgen.surface.api.entrypoint;
 
 import java.util.ArrayList;
-import net.frozenblock.lib.worldgen.surface.api.FrozenPresetBoundRuleSource;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 
 /**
- * Lets you modify the Surface Rules of any world preset.
+ * Lets you modify the Surface Rules of Overworld-based world presets.
  * Will not work with Terrablender.
  */
 
-public interface FrozenSurfaceRuleEntrypoint {
+public interface FrozenOverworldSurfaceRuleEntrypoint {
 
-	void addRuleSources(ArrayList<FrozenPresetBoundRuleSource> context);
+	void addOverworldRuleSources(ArrayList<SurfaceRules.RuleSource> context);
 
 }
 
