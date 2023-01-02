@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 FrozenBlock
+ * Copyright 2023 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -20,6 +20,7 @@ package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.ArrayList;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.FrozenPresetBoundRuleSource;
 import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.impl.SetNoiseGeneratorPresetInterface;
@@ -83,13 +84,9 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 		}
 	}
 
-	@Inject(method = "register", at = @At("HEAD"))
-	private static void register(Registry<NoiseGeneratorSettings> registry, ResourceKey<NoiseGeneratorSettings> key, NoiseGeneratorSettings settings, CallbackInfoReturnable<Holder<NoiseGeneratorSettings>> info) {
-		SetNoiseGeneratorPresetInterface.class.cast(settings).setPreset(key.location());
-	}
-
 	@Override
 	public void setPreset(ResourceLocation location) {
+		FrozenMain.log(location + "preset registered!", FabricLoader.getInstance().isDevelopmentEnvironment());
 		this.frozenLib$preset = location;
 	}
 }

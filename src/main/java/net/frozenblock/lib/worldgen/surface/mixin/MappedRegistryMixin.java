@@ -1,5 +1,5 @@
 /*
- * Copyright 2022-2023 FrozenBlock
+ * Copyright 2023 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -16,23 +16,27 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.server;
+package net.frozenblock.lib.worldgen.surface.mixin;
 
-import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.player.Player;
+import com.mojang.serialization.Lifecycle;
+import net.frozenblock.lib.worldgen.surface.impl.SetNoiseGeneratorPresetInterface;
+import net.minecraft.core.Holder;
+import net.minecraft.core.MappedRegistry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Player.class)
-public final class PlayerMixin {
+@Mixin(MappedRegistry.class)
+public class MappedRegistryMixin {
 
-	@Inject(method = "getHurtSound", at = @At("HEAD"), cancellable = true)
-	public void getHurtSound(DamageSource damageSource, CallbackInfoReturnable<SoundEvent> info) {
-			info.setReturnValue(PlayerDamageSourceSounds.getDamageSound(damageSource));
+	@Inject(method = "registerMapping", at = @At("HEAD"))
+	private static <T> void register(int id, ResourceKey<T> key, T value, Lifecycle lifecycle, boolean logDuplicateKeys, CallbackInfoReturnable<Holder<T>> info) {
+		if (value instanceof NoiseGeneratorSettings settings) {
+			SetNoiseGeneratorPresetInterface.class.cast(settings).setPreset(key.location());
+		}
 	}
-
 }
+

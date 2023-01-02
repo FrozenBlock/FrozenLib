@@ -1,6 +1,6 @@
 /*
- * Copyright 2022 QuiltMC
- * Copyright 2022 FrozenBlock
+ * Copyright 2022-2023 QuiltMC
+ * Copyright 2022-2023 FrozenBlock
  * Modified to work on Fabric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
