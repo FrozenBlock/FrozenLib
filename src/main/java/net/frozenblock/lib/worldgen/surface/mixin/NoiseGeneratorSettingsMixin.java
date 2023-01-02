@@ -29,6 +29,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,17 +42,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInterface {
 
 	@Shadow
+	@Final
 	@Mutable
 	private SurfaceRules.RuleSource surfaceRule;
 
 	@Unique
-	private ResourceLocation preset;
+	private ResourceLocation frozenLib$preset;
 	@Unique
-	private boolean hasCheckedEntrypoints;
+	private boolean frozenLib$hasCheckedEntrypoints;
 
-	@Inject(method = "surfaceRule", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "surfaceRule", at = @At("HEAD"))
 	private void surfaceRule(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-		if (!this.hasCheckedEntrypoints) {
+		if (!this.frozenLib$hasCheckedEntrypoints) {
 			ArrayList<FrozenPresetBoundRuleSource> sourceHolders = new ArrayList<>();
 
 			FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfacerules", FrozenSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
@@ -65,7 +67,7 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 
 			SurfaceRules.RuleSource newSource = null;
 			for (FrozenPresetBoundRuleSource presetBoundRuleSource : sourceHolders) {
-				if (presetBoundRuleSource.preset.equals(this.preset)) {
+				if (presetBoundRuleSource.preset.equals(this.frozenLib$preset)) {
 					if (newSource == null) {
 						newSource = presetBoundRuleSource.ruleSource;
 					} else {
@@ -73,7 +75,7 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 					}
 				}
 			}
-			this.hasCheckedEntrypoints = true;
+			this.frozenLib$hasCheckedEntrypoints = true;
 
 			if (newSource != null) {
 				this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
@@ -88,7 +90,7 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 
 	@Override
 	public void setPreset(ResourceLocation location) {
-		this.preset = location;
+		this.frozenLib$preset = location;
 	}
 }
 
