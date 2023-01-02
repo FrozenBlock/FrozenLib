@@ -21,6 +21,11 @@ package net.frozenblock.lib.worldgen.surface.api;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
+/**
+ * Holds both a {@link ResourceLocation} and {@link net.minecraft.world.level.levelgen.SurfaceRules.RuleSource}.
+ * The ResourceLocation denotes the world preset to be modified, and the RuleSource are the rules to be applied to it.
+ */
+
 public class FrozenPresetBoundRuleSource {
 	public final ResourceLocation preset;
 	public final SurfaceRules.RuleSource ruleSource;

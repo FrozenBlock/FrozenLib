@@ -21,6 +21,10 @@ package net.frozenblock.lib.worldgen.surface.api.entrypoint;
 import java.util.ArrayList;
 import net.frozenblock.lib.worldgen.surface.api.FrozenPresetBoundRuleSource;
 
+/**
+ * Lets you modify the Surface Rules of any world preset.
+ */
+
 public interface FrozenSurfaceRuleEntrypoint {
 
 	void addRuleSources(ArrayList<FrozenPresetBoundRuleSource> context);
