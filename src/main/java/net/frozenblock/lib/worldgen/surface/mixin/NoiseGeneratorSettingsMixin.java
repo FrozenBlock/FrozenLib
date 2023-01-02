@@ -86,7 +86,7 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 
 	@Override
 	public void setPreset(ResourceLocation location) {
-		FrozenMain.log(location + "preset registered!", FabricLoader.getInstance().isDevelopmentEnvironment());
+		FrozenMain.log(location + " preset registered!", FabricLoader.getInstance().isDevelopmentEnvironment());
 		this.frozenLib$preset = location;
 	}
 }
