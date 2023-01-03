@@ -71,7 +71,7 @@ public final class FrozenMain implements ModInitializer {
 	 */
 	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
 
-	public static final List<EntrypointContainer<FrozenSurfaceRuleEntrypoint>> SURFACE_RULE_ENTRYPOINTS = FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfaceRules", FrozenSurfaceRuleEntrypoint.class);
+	public static final List<EntrypointContainer<FrozenSurfaceRuleEntrypoint>> SURFACE_RULE_ENTRYPOINTS = FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfacerules", FrozenSurfaceRuleEntrypoint.class);
 
 	@Override
 	public void onInitialize() {
