@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.FrozenPresetBoundRuleSource;
-import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenSurfaceRuleEntrypoint;
+import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
 import net.frozenblock.lib.worldgen.surface.impl.SetNoiseGeneratorPresetInterface;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -57,14 +57,7 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 		if (!this.frozenLib$hasCheckedEntrypoints) {
 			ArrayList<FrozenPresetBoundRuleSource> sourceHolders = new ArrayList<>();
 
-			FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfacerules", FrozenSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
-				try {
-					FrozenSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
-					ruleEntrypoint.addRuleSources(sourceHolders);
-				} catch (Throwable ignored) {
-
-				}
-			});
+			SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(sourceHolders);
 
 			SurfaceRules.RuleSource newSource = null;
 			for (FrozenPresetBoundRuleSource presetBoundRuleSource : sourceHolders) {
