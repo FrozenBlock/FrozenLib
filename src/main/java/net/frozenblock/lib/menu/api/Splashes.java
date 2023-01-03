@@ -18,10 +18,15 @@
 
 package net.frozenblock.lib.menu.api;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+@Environment(EnvType.CLIENT)
 public class Splashes {
 
 	private static final List<ResourceLocation> SPLASHES = new ArrayList<>();

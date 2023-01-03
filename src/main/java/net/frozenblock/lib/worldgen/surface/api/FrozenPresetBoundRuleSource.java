@@ -22,7 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
 /**
- * Holds both a {@link ResourceLocation} and {@link net.minecraft.world.level.levelgen.SurfaceRules.RuleSource}.
+ * Holds both a {@link ResourceLocation} and {@link SurfaceRules.RuleSource}.
  * The ResourceLocation denotes the world preset to be modified, and the RuleSource are the rules to be applied to it.
  */
 
