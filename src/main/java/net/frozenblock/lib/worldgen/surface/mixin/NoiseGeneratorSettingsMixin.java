@@ -24,9 +24,6 @@ import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.FrozenPresetBoundRuleSource;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
 import net.frozenblock.lib.worldgen.surface.impl.SetNoiseGeneratorPresetInterface;
-import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -57,7 +54,10 @@ public class NoiseGeneratorSettingsMixin implements SetNoiseGeneratorPresetInter
 		if (!this.frozenLib$hasCheckedEntrypoints) {
 			ArrayList<FrozenPresetBoundRuleSource> sourceHolders = new ArrayList<>();
 
+			//TODO: Fix i guess idk
 			SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(sourceHolders);
+
+			FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addSurfaceRules(sourceHolders)));
 
 			SurfaceRules.RuleSource newSource = null;
 			for (FrozenPresetBoundRuleSource presetBoundRuleSource : sourceHolders) {

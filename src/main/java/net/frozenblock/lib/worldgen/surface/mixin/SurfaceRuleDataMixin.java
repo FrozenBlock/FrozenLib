@@ -19,6 +19,7 @@
 package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.ArrayList;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
 import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -35,7 +36,10 @@ public class SurfaceRuleDataMixin {
 	private static SurfaceRules.RuleSource addNewOverworldRules(SurfaceRules.RuleSource source, boolean abovePreliminarySurface, boolean bedrockRoof, boolean bedrockFloor) {
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
+		//TODO: Fix i guess idk
 		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(sourceHolders);
+
+		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(sourceHolders)));
 
 		SurfaceRules.RuleSource newSource = null;
 		for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
@@ -56,7 +60,10 @@ public class SurfaceRuleDataMixin {
 	private static SurfaceRules.RuleSource addNewNetherRules(SurfaceRules.RuleSource source) {
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
+		//TODO: Fix i guess idk
 		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(sourceHolders);
+
+		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(sourceHolders)));
 
 		SurfaceRules.RuleSource newSource = null;
 		for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
@@ -77,7 +84,10 @@ public class SurfaceRuleDataMixin {
 	private static void addNewEndRules(CallbackInfoReturnable<SurfaceRules.RuleSource> info) {
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
+		//TODO: Fix i guess idk
 		SurfaceRuleEvents.MODIFY_END.invoker().addRuleSources(sourceHolders);
+
+		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addEndSurfaceRules(sourceHolders)));
 
 		SurfaceRules.RuleSource newSource = null;
 		for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
