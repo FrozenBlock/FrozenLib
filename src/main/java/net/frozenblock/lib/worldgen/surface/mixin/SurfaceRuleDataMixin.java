@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 FrozenBlock
+ * Copyright 2023 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -19,10 +19,8 @@
 package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.ArrayList;
-import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenEndSurfaceRuleEntrypoint;
-import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenNetherSurfaceRuleEntrypoint;
-import net.frozenblock.lib.worldgen.surface.api.entrypoint.FrozenOverworldSurfaceRuleEntrypoint;
+import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
 import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,14 +36,10 @@ public class SurfaceRuleDataMixin {
 	private static SurfaceRules.RuleSource addNewOverworldRules(SurfaceRules.RuleSource source, boolean abovePreliminarySurface, boolean bedrockRoof, boolean bedrockFloor) {
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
-		FabricLoader.getInstance().getEntrypointContainers("frozenlib:overworld_surfacerules", FrozenOverworldSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
-			try {
-				FrozenOverworldSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
-				ruleEntrypoint.addOverworldRuleSources(sourceHolders);
-			} catch (Throwable ignored) {
+		//TODO: Fix i guess idk
+		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(sourceHolders);
 
-			}
-		});
+		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(sourceHolders)));
 
 		SurfaceRules.RuleSource newSource = null;
 		for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
@@ -66,14 +60,10 @@ public class SurfaceRuleDataMixin {
 	private static SurfaceRules.RuleSource addNewNetherRules(SurfaceRules.RuleSource source) {
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
-		FabricLoader.getInstance().getEntrypointContainers("frozenlib:nether_surfacerules", FrozenNetherSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
-			try {
-				FrozenNetherSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
-				ruleEntrypoint.addNetherRuleSources(sourceHolders);
-			} catch (Throwable ignored) {
+		//TODO: Fix i guess idk
+		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(sourceHolders);
 
-			}
-		});
+		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(sourceHolders)));
 
 		SurfaceRules.RuleSource newSource = null;
 		for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
@@ -94,14 +84,10 @@ public class SurfaceRuleDataMixin {
 	private static void addNewEndRules(CallbackInfoReturnable<SurfaceRules.RuleSource> info) {
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
-		FabricLoader.getInstance().getEntrypointContainers("frozenlib:end_surfacerules", FrozenEndSurfaceRuleEntrypoint.class).forEach(entrypoint -> {
-			try {
-				FrozenEndSurfaceRuleEntrypoint ruleEntrypoint = entrypoint.getEntrypoint();
-				ruleEntrypoint.addEndRuleSources(sourceHolders);
-			} catch (Throwable ignored) {
+		//TODO: Fix i guess idk
+		SurfaceRuleEvents.MODIFY_END.invoker().addRuleSources(sourceHolders);
 
-			}
-		});
+		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addEndSurfaceRules(sourceHolders)));
 
 		SurfaceRules.RuleSource newSource = null;
 		for (SurfaceRules.RuleSource ruleSource : sourceHolders) {

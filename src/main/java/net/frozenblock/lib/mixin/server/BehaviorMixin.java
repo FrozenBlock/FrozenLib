@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 FrozenBlock
+ * Copyright 2023 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -33,16 +33,16 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class BehaviorMixin<E extends LivingEntity> implements FrozenBehavior {
 
 	@Unique
-	private int wilderWild$duration;
+	private int frozenLib$duration;
 
 	@Inject(method = "tryStart", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/behavior/Behavior;start(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void tryStart(ServerLevel level, E owner, long gameTime, CallbackInfoReturnable<Boolean> cir, int i) {
-		this.wilderWild$duration = i;
+		this.frozenLib$duration = i;
 	}
 
 	@Unique
 	@Override
 	public int getDuration() {
-		return this.wilderWild$duration;
+		return this.frozenLib$duration;
 	}
 }

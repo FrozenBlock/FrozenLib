@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 FrozenBlock
+ * Copyright 2023 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -46,17 +46,17 @@ public class ItemEntityMixin {
 	private UUID thrower;
 
 	@Unique
-	private boolean isHeavy;
+	private boolean frozenLib$isHeavy;
 
 	@Inject(method = "setItem", at = @At("TAIL"))
 	public void setItem(ItemStack stack, CallbackInfo info) {
-		this.isHeavy = stack.is(FrozenItemTags.HEAVY_ITEMS);
+		this.frozenLib$isHeavy = stack.is(FrozenItemTags.HEAVY_ITEMS);
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;floor(D)I", shift = At.Shift.BEFORE))
 	public void hitIfHeavy(CallbackInfo info) {
 		ItemEntity item = ItemEntity.class.cast(this);
-		if (this.isHeavy) {
+		if (this.frozenLib$isHeavy) {
 			List<Entity> entities = this.collidingEntities();
 			for (Entity entity : entities) {
 				if (!item.isRemoved() && entity != null) {

@@ -1,5 +1,5 @@
 /*
- * Copyright 2022 FrozenBlock
+ * Copyright 2023 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -22,7 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
 /**
- * Holds both a {@link ResourceLocation} and {@link net.minecraft.world.level.levelgen.SurfaceRules.RuleSource}.
+ * Holds both a {@link ResourceLocation} and {@link SurfaceRules.RuleSource}.
  * The ResourceLocation denotes the world preset to be modified, and the RuleSource are the rules to be applied to it.
  */
 
