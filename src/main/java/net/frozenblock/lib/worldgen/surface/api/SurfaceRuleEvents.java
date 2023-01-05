@@ -28,7 +28,7 @@ public class SurfaceRuleEvents {
 
 	/**
 	 * Lets you modify the Surface Rules of Overworld-based world presets.
-	 * Will not work with TerraBlender.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
 	public static final Event<OverworldSurfaceRuleCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
@@ -38,7 +38,7 @@ public class SurfaceRuleEvents {
 
 	/**
 	 * Lets you modify the Surface Rules of Nether-based world presets.
-	 * Will not work with TerraBlender.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
 	public static final Event<NetherSurfaceRuleCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
@@ -48,7 +48,7 @@ public class SurfaceRuleEvents {
 
 	/**
 	 * Lets you modify the Surface Rules of End-based world presets.
-	 * Will not work with TerraBlender.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
 	public static final Event<EndSurfaceRuleCallback> MODIFY_END = FrozenEvents.createEnvironmentEvent(EndSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
@@ -58,7 +58,7 @@ public class SurfaceRuleEvents {
 
 	/**
 	 * Lets you modify the Surface Rules of custom world presets.
-	 * Will not work with TerraBlender.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
 	public static final Event<GenericSurfaceRuleCallback> MODIFY_GENERIC = FrozenEvents.createEnvironmentEvent(GenericSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {

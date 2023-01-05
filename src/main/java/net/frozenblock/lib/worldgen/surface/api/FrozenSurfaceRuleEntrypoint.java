@@ -26,6 +26,7 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
  * An entrypoint that lets you add surface rules to world presets/dimensions.
  * <p>
  * Defined with the {@code frozenlib:surfacerules} key in {@code fabric.mod.json}.
+ * Compatible with Terrablender.
  */
 public interface FrozenSurfaceRuleEntrypoint {
 

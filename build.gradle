@@ -156,6 +156,9 @@ dependencies {
         exclude(group: "com.terraformersmc")
     }
 
+	// TerraBlender
+	modCompileOnly("curse.maven:terrablender-fabric-565956:4284515")
+
     testmodImplementation sourceSets.main.output
 
     // only affects runClient, does not affect gradlew build.

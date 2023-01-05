@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.terrablender.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "net.frozenblock.terrablender.mixin.plugin.RequiresTerraBlenderMixinPlugin",
+  "injectors": {
+	"defaultRequire": 1
+  },
+  "mixins": [
+    "TBSurfaceRuleDataMixin"
+  ]
+}
