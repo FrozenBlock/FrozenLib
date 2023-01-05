@@ -54,7 +54,7 @@ public class TBSurfaceRuleDataMixin {
 		return source;
 	}
 
-	@ModifyVariable(method = "overworldLike", at = @At("STORE"), ordinal = 2)
+	@ModifyVariable(method = "nether", at = @At("STORE"), ordinal = 2)
 	private static SurfaceRules.RuleSource addNewNetherRules(SurfaceRules.RuleSource source) {
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
