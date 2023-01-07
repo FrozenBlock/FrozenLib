@@ -20,7 +20,7 @@ package net.frozenblock.terrablender.mixin.plugin;
 
 import java.util.List;
 import java.util.Set;
-import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.FrozenBools;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -39,7 +39,7 @@ public class RequiresTerraBlenderMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		return FabricLoader.getInstance().getModContainer("terrablender").isPresent();
+		return FrozenBools.HAS_TERRABLENDER;
 	}
 
 	@Override
