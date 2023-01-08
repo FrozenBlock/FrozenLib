@@ -20,8 +20,6 @@ package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.Map;
 import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.chunk.ChunkGenerator;
@@ -38,9 +36,7 @@ public class MinecraftServerMixin {
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void onInit(CallbackInfo info) {
 		MinecraftServer server = MinecraftServer.class.cast(this);
-		RegistryAccess registryAccess = server.registryAccess();
-		Registry<LevelStem> levelStems = registryAccess.registryOrThrow(Registry.LEVEL_STEM_REGISTRY);
-		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> stemEntry : levelStems.entrySet()) {
+		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> stemEntry : server.getWorldData().worldGenSettings().dimensions().entrySet()) {
 			LevelStem stem = stemEntry.getValue();
 			ChunkGenerator chunkGenerator = stem.generator();
 			NoiseGeneratorInterface.class.cast(((NoiseBasedChunkGenerator)chunkGenerator).generatorSettings().value()).setDimension(stem.typeHolder());
