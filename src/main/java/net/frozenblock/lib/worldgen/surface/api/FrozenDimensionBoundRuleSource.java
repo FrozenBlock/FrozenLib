@@ -23,15 +23,15 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 
 /**
  * Holds both a {@link ResourceLocation} and {@link SurfaceRules.RuleSource}.
- * The ResourceLocation denotes the world preset to be modified, and the RuleSource are the rules to be applied to it.
+ * The ResourceLocation denotes the dimension type to be modified, and the RuleSource are the rules to be applied to it.
  */
 
-public class FrozenPresetBoundRuleSource {
-	public final ResourceLocation preset;
+public class FrozenDimensionBoundRuleSource {
+	public final ResourceLocation dimension;
 	public final SurfaceRules.RuleSource ruleSource;
 
-	public FrozenPresetBoundRuleSource(ResourceLocation preset, SurfaceRules.RuleSource ruleSource) {
-		this.preset = preset;
+	public FrozenDimensionBoundRuleSource(ResourceLocation preset, SurfaceRules.RuleSource ruleSource) {
+		this.dimension = preset;
 		this.ruleSource = ruleSource;
 	}
 }

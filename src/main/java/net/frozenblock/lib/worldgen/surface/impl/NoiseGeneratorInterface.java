@@ -18,10 +18,11 @@
 
 package net.frozenblock.lib.worldgen.surface.impl;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.dimension.DimensionType;
 
-public interface SetNoiseGeneratorPresetInterface {
+public interface NoiseGeneratorInterface {
 
-	void setPreset(ResourceLocation location);
+	void setDimension(Holder<DimensionType> location);
 
 }
