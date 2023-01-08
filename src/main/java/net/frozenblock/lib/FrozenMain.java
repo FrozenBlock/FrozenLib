@@ -41,6 +41,7 @@ import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.command.OverrideWindCommand;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
+import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -84,6 +85,8 @@ public final class FrozenMain implements ModInitializer {
 
 		receiveSoundSyncPacket();
 		receiveIconSyncPacket();
+
+		Registry.register(Registry.CONDITION, FrozenMain.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
 			try {
