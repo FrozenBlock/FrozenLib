@@ -19,6 +19,7 @@
 package net.frozenblock.lib;
 
 import io.netty.buffer.Unpooled;
+import java.util.List;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -42,9 +43,11 @@ import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.command.OverrideWindCommand;
+import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
+import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
@@ -57,7 +60,6 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
-import java.util.List;
 
 public final class FrozenMain implements ModInitializer {
 	public static final String MOD_ID = "frozenlib";
@@ -85,6 +87,8 @@ public final class FrozenMain implements ModInitializer {
 
 		receiveSoundSyncPacket();
 		receiveIconSyncPacket();
+
+		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenMain.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
 			try {
