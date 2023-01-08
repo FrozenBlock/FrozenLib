@@ -59,7 +59,10 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"))
 	private void overworld(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-		if (!this.frozenLib$hasCheckedOverworldEntrypoints && !FrozenBools.HAS_TERRABLENDER && (this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES))) {
+		if (!(this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES))) {
+			this.frozenLib$hasCheckedOverworldEntrypoints = true;
+		}
+		if (!this.frozenLib$hasCheckedOverworldEntrypoints && !FrozenBools.HAS_TERRABLENDER)) {
 			ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 			//TODO: Fix i guess idk
@@ -85,7 +88,10 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"))
 	private void nether(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-		if (!this.frozenLib$hasCheckedNetherEntrypoints && !FrozenBools.HAS_TERRABLENDER && this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER)) {
+		if (!this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER)) {
+			this.frozenLib$hasCheckedNetherEntrypoints = true;
+		}
+		if (!this.frozenLib$hasCheckedNetherEntrypoints && !FrozenBools.HAS_TERRABLENDER) {
 			ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 			//TODO: Fix i guess idk
@@ -111,7 +117,10 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"))
 	private void end(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-		if (!this.frozenLib$hasCheckedEndEntrypoints && this.frozenLib$dimension.is(BuiltinDimensionTypes.END)) {
+		if (!this.frozenLib$dimension.is(BuiltinDimensionTypes.END)) {
+			this.frozenLib$hasCheckedEndEntrypoints = true;
+		}
+		if (!this.frozenLib$hasCheckedEndEntrypoints) {
 			ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 			//TODO: Fix i guess idk
@@ -146,12 +155,12 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 			FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addSurfaceRules(sourceHolders)));
 
 			SurfaceRules.RuleSource newSource = null;
-			for (FrozenDimensionBoundRuleSource ruleSource : sourceHolders) {
-				if (this.frozenLib$dimension.is(ruleSource.dimension)) {
+			for (FrozenDimensionBoundRuleSource dimRuleSource : sourceHolders) {
+				if (this.frozenLib$dimension.is(dimRuleSource.dimension)) {
 					if (newSource == null) {
-						newSource = ruleSource.ruleSource;
+						newSource = dimRuleSource.ruleSource;
 					} else {
-						newSource = SurfaceRules.sequence(newSource, ruleSource.ruleSource);
+						newSource = SurfaceRules.sequence(newSource, dimRuleSource.ruleSource);
 					}
 				}
 			}
