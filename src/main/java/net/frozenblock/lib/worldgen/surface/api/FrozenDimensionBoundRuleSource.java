@@ -16,12 +16,22 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.surface.impl;
+package net.frozenblock.lib.worldgen.surface.api;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.SurfaceRules;
 
-public interface SetNoiseGeneratorPresetInterface {
+/**
+ * Holds both a {@link ResourceLocation} and {@link SurfaceRules.RuleSource}.
+ * The ResourceLocation denotes the dimension to be modified, and the RuleSource are the rules to be applied to it.
+ */
 
-	void setPreset(ResourceLocation location);
+public class FrozenDimensionBoundRuleSource {
+	public final ResourceLocation dimension;
+	public final SurfaceRules.RuleSource ruleSource;
 
+	public FrozenDimensionBoundRuleSource(ResourceLocation dimension, SurfaceRules.RuleSource ruleSource) {
+		this.dimension = dimension;
+		this.ruleSource = ruleSource;
+	}
 }

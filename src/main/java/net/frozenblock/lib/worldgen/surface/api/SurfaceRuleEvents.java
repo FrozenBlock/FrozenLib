@@ -81,6 +81,6 @@ public class SurfaceRuleEvents {
 	}
 
 	public interface GenericSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addRuleSources(ArrayList<FrozenPresetBoundRuleSource> context);
+		void addRuleSources(ArrayList<FrozenDimensionBoundRuleSource> context);
 	}
 }
