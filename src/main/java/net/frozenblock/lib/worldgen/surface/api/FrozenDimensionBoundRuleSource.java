@@ -30,8 +30,8 @@ public class FrozenDimensionBoundRuleSource {
 	public final ResourceLocation dimension;
 	public final SurfaceRules.RuleSource ruleSource;
 
-	public FrozenDimensionBoundRuleSource(ResourceLocation preset, SurfaceRules.RuleSource ruleSource) {
-		this.dimension = preset;
+	public FrozenDimensionBoundRuleSource(ResourceLocation dimension, SurfaceRules.RuleSource ruleSource) {
+		this.dimension = dimension;
 		this.ruleSource = ruleSource;
 	}
 }
