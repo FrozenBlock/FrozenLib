@@ -19,6 +19,7 @@
 package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.ArrayList;
+import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
@@ -58,7 +59,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"))
 	private void overworld(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-		if (!this.frozenLib$hasCheckedOverworldEntrypoints && (this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES))) {
+		if (!this.frozenLib$hasCheckedOverworldEntrypoints && !FrozenBools.HAS_TERRABLENDER && (this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES))) {
 			ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 			//TODO: Fix i guess idk
@@ -84,7 +85,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	@Inject(method = "surfaceRule", at = @At("HEAD"))
 	private void nether(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-		if (!this.frozenLib$hasCheckedNetherEntrypoints && this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER)) {
+		if (!this.frozenLib$hasCheckedNetherEntrypoints && !FrozenBools.HAS_TERRABLENDER && this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER)) {
 			ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 			//TODO: Fix i guess idk
