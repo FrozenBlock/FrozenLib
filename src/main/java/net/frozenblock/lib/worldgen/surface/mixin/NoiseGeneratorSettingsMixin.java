@@ -62,7 +62,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 		if (!(this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES))) {
 			this.frozenLib$hasCheckedOverworldEntrypoints = true;
 		}
-		if (!this.frozenLib$hasCheckedOverworldEntrypoints && !FrozenBools.HAS_TERRABLENDER)) {
+		if (!this.frozenLib$hasCheckedOverworldEntrypoints && !FrozenBools.HAS_TERRABLENDER) {
 			ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 			//TODO: Fix i guess idk
