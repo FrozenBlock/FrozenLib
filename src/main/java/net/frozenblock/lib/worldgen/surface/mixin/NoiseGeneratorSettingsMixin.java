@@ -81,7 +81,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				this.frozenLib$hasCheckedOverworldEntrypoints = true;
 
 				if (newSource != null) {
-					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
+					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule);
 				}
 			}
 		}
@@ -112,7 +112,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				this.frozenLib$hasCheckedNetherEntrypoints = true;
 
 				if (newSource != null) {
-					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
+					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule);
 				}
 			}
 		}
@@ -143,7 +143,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				this.frozenLib$hasCheckedEndEntrypoints = true;
 
 				if (newSource != null) {
-					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
+					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule);
 				}
 			}
 		}
@@ -173,7 +173,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				this.frozenLib$hasCheckedGenericEntrypoints = true;
 
 				if (newSource != null) {
-					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule, newSource);
+					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule);
 				}
 			}
 		}
