@@ -22,7 +22,7 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(netherRules)));
 		if (!overworldRules.isEmpty()) {
 			SurfaceRules.RuleSource netherSource = FrozenSurfaceRules.sequence(netherRules);
-			SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, "frozenlib_terrablender_compat_nether", netherSource);
+			SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.NETHER, "frozenlib_terrablender_compat_nether", netherSource);
 		}
 	}
 

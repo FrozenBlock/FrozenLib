@@ -162,11 +162,11 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 				SurfaceRules.RuleSource newSource = null;
 				for (FrozenDimensionBoundRuleSource dimRuleSource : sourceHolders) {
-					if (this.frozenLib$dimension.is(dimRuleSource.dimension)) {
+					if (this.frozenLib$dimension.is(dimRuleSource.dimension())) {
 						if (newSource == null) {
-							newSource = dimRuleSource.ruleSource;
+							newSource = dimRuleSource.ruleSource();
 						} else {
-							newSource = SurfaceRules.sequence(newSource, dimRuleSource.ruleSource);
+							newSource = SurfaceRules.sequence(newSource, dimRuleSource.ruleSource());
 						}
 					}
 				}
