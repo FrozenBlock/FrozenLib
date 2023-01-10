@@ -26,7 +26,7 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
  * An entrypoint that lets you add surface rules to dimensions.
  * <p>
  * Defined with the {@code frozenlib:surfacerules} key in {@code fabric.mod.json}.
- * Compatible with Terrablender.
+ * Compatible with TerraBlender.
  */
 public interface FrozenSurfaceRuleEntrypoint {
 
@@ -49,8 +49,13 @@ public interface FrozenSurfaceRuleEntrypoint {
 	 * Adds all surface rules added to the list (context) to and specified world preset.
 	 * <p>
 	 * Context holds {@link FrozenDimensionBoundRuleSource}s, which hold both a {@link SurfaceRules.RuleSource} and a {@link ResourceLocation}.
+	 * <p>
 	 * The {@link ResourceLocation} specifies which world preset to add the {@link SurfaceRules.RuleSource}s to.
-	 * Example given: context.add(new FrozenPresetBoundRuleSource(new ResourceLocation("minecraft", "amplified") SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.Desert), FrozenSurfaceRules.makeStateRule(Blocks.BEDROCK))));
+	 * <p>
+	 * <p>
+	 * Example given:
+	 * <p>
+	 * {@code context.add(new FrozenDimensionBoundRuleSource(new ResourceLocation("minecraft", "amplified"), SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.Desert), FrozenSurfaceRules.makeStateRule(Blocks.BEDROCK))));}
 	 */
 	void addSurfaceRules(ArrayList<FrozenDimensionBoundRuleSource> context);
 
