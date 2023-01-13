@@ -16,30 +16,53 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.terrablender;
+package net.frozenblock.lib.terrablender;
 
+import java.util.ArrayList;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.worldgen.surface.FrozenSurfaceRules;
+import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import terrablender.api.SurfaceRuleManager;
 import terrablender.api.TerraBlenderApi;
-import java.util.ArrayList;
 
 public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 
 	@Override
 	public void onTerraBlenderInitialized() {
 		ArrayList<SurfaceRules.RuleSource> overworldRules = new ArrayList<>();
+		//TODO: Fix i guess idk
+		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(overworldRules);
 		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(overworldRules)));
-		if (!overworldRules.isEmpty()) {
-			SurfaceRules.RuleSource overworldSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), FrozenSurfaceRules.sequence(overworldRules));
+
+		SurfaceRules.RuleSource overworldSource = null;
+		for (SurfaceRules.RuleSource ruleSource : overworldRules) {
+			if (overworldSource == null) {
+				overworldSource = ruleSource;
+			} else {
+				overworldSource = SurfaceRules.sequence(overworldSource, ruleSource);
+			}
+		}
+
+		if (overworldSource != null) {
+			overworldSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), overworldSource);
 			SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, "frozenlib_terrablender_compat_overworld", overworldSource);
 		}
 
 		ArrayList<SurfaceRules.RuleSource> netherRules = new ArrayList<>();
+		//TODO: Fix i guess idk
+		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(netherRules);
 		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(netherRules)));
-		if (!overworldRules.isEmpty()) {
-			SurfaceRules.RuleSource netherSource = FrozenSurfaceRules.sequence(netherRules);
+
+		SurfaceRules.RuleSource netherSource = null;
+		for (SurfaceRules.RuleSource ruleSource : netherRules) {
+			if (netherSource == null) {
+				netherSource = ruleSource;
+			} else {
+				netherSource = SurfaceRules.sequence(netherSource, ruleSource);
+			}
+		}
+
+		if (netherSource != null) {
 			SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.NETHER, "frozenlib_terrablender_compat_nether", netherSource);
 		}
 	}
