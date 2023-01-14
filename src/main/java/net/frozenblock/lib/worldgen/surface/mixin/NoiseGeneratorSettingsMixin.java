@@ -79,35 +79,10 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 						newSource = SurfaceRules.sequence(newSource, ruleSource);
 					}
 				}
-
-				if (newSource != null) {
-					newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
-				}
-
-				ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
-
-				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(noPrelimSourceHolders);
-
-				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(noPrelimSourceHolders)));
-
-				SurfaceRules.RuleSource noPrelimSource = null;
-				for (SurfaceRules.RuleSource ruleSource : noPrelimSourceHolders) {
-					if (noPrelimSource == null) {
-						noPrelimSource = ruleSource;
-					} else {
-						noPrelimSource = SurfaceRules.sequence(noPrelimSource, ruleSource);
-					}
-				}
-
 				this.frozenLib$hasCheckedOverworldEntrypoints = true;
 
 				if (newSource != null) {
 					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule);
-				}
-
-				if (noPrelimSource != null) {
-					this.surfaceRule = SurfaceRules.sequence(noPrelimSource, this.surfaceRule);
 				}
 			}
 		}
@@ -154,7 +129,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_END.invoker().addRuleSources(sourceHolders);
+				SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(sourceHolders);
 
 				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addEndSurfaceRules(sourceHolders)));
 
