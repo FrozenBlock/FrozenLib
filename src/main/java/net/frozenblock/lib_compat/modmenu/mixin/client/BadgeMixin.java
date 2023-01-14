@@ -16,14 +16,14 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.modmenu.mixin.client;
+package net.frozenblock.lib_compat.modmenu.mixin.client;
 
 import com.terraformersmc.modmenu.util.mod.Mod;
 import java.util.ArrayList;
 import java.util.Arrays;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.modmenu.api.FrozenModMenuEntrypoint;
-import net.frozenblock.modmenu.impl.FrozenModMenuBadge;
+import net.frozenblock.lib_compat.modmenu.impl.FrozenModMenuBadge;
+import net.frozenblock.lib_compat.modmenu.api.FrozenModMenuEntrypoint;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -64,7 +64,10 @@ public class BadgeMixin {
 		int currentOrdinal = last.ordinal() + 1;
 
 		var frozenblock = newType("FROZENBLOCK", currentOrdinal, "FrozenBlock", 0xFF84A0FE, 0xFF000D5B, "frozenblock");
+		currentOrdinal += 1;
+		var indev = newType("INDEV", currentOrdinal, "Indev", 0xFF71BC00, 0xFF1C5400, "indev");
 		badges.add(frozenblock);
+		badges.add(indev);
 
 		ArrayList<String> internalIds = new ArrayList<>();
 		for (Mod.Badge badge : badges) {

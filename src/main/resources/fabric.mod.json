@@ -40,7 +40,7 @@
       "net.frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
     ],
     "terrablender": [
-      "net.frozenblock.lib.terrablender.FrozenTerraBlenderCompat"
+      "net.frozenblock.lib_compat.terrablender.FrozenTerraBlenderCompat"
     ]
   },
   "mixins": [
