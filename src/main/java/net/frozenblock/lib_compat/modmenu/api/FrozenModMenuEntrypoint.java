@@ -16,9 +16,9 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.modmenu.api;
+package net.frozenblock.lib_compat.modmenu.api;
 
-import net.frozenblock.modmenu.impl.FrozenModMenuBadge;
+import net.frozenblock.lib_compat.modmenu.impl.FrozenModMenuBadge;
 import java.util.ArrayList;
 
 public abstract class FrozenModMenuEntrypoint {

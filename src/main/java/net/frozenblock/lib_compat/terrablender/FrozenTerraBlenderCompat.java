@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.terrablender;
+package net.frozenblock.lib_compat.terrablender;
 
 import java.util.ArrayList;
 import net.frozenblock.lib.FrozenMain;

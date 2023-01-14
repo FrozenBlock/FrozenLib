@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.modmenu.impl;
+package net.frozenblock.lib_compat.modmenu.impl;
 
 public class FrozenModMenuBadge {
 	public final String translationKey;
