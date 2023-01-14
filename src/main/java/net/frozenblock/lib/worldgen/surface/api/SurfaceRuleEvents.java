@@ -37,6 +37,16 @@ public class SurfaceRuleEvents {
 	});
 
 	/**
+	 * Lets you modify the Surface Rules of Overworld-based world presets without checking the preliminary surface.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
+	 */
+	public static final Event<OverworldSurfaceRuleNoPrelimSurfaceCallback> MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleNoPrelimSurfaceCallback.class, callbacks -> context -> {
+		for (var callback : callbacks) {
+			callback.addRuleSources(context);
+		}
+	});
+
+	/**
 	 * Lets you modify the Surface Rules of Nether-based world presets.
 	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
@@ -67,6 +77,11 @@ public class SurfaceRuleEvents {
 	});
 
 	public interface OverworldSurfaceRuleCallback extends CommonEventEntrypoint {
+		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
+	}
+
+
+	public interface OverworldSurfaceRuleNoPrelimSurfaceCallback extends CommonEventEntrypoint {
 		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
 	}
 
