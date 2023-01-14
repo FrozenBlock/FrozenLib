@@ -102,7 +102,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				this.frozenLib$hasCheckedOverworldEntrypoints = true;
 
 				if (newSource != null) {
-					this.surfaceRule = SurfaceRules.sequence(SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource), this.surfaceRule);
+					this.surfaceRule = SurfaceRules.sequence(newSource, this.surfaceRule);
 				}
 
 				if (noPrelimSource != null) {
