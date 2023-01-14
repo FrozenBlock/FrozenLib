@@ -22,7 +22,7 @@ import com.terraformersmc.modmenu.util.mod.Mod;
 import java.util.ArrayList;
 import java.util.Arrays;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.modmenu.entrypoint.FrozenModMenuEntrypoint;
+import net.frozenblock.modmenu.api.FrozenModMenuEntrypoint;
 import net.frozenblock.modmenu.impl.FrozenModMenuBadge;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;

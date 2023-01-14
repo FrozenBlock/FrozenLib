@@ -45,7 +45,7 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 
 		if (overworldSource != null) {
 			overworldSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), overworldSource);
-			SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, "frozenlib_terrablender_compat_overworld", overworldSource);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 0, overworldSource);
 		}
 
 		ArrayList<SurfaceRules.RuleSource> netherRules = new ArrayList<>();
@@ -63,7 +63,7 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		}
 
 		if (netherSource != null) {
-			SurfaceRuleManager.addSurfaceRules(SurfaceRuleManager.RuleCategory.NETHER, "frozenlib_terrablender_compat_nether", netherSource);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 0, netherSource);
 		}
 	}
 
