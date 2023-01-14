@@ -29,6 +29,7 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 
 	@Override
 	public void onTerraBlenderInitialized() {
+		//OVERWORLD
 		ArrayList<SurfaceRules.RuleSource> overworldRules = new ArrayList<>();
 		//TODO: Fix i guess idk
 		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(overworldRules);
@@ -43,11 +44,30 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 			}
 		}
 
+		ArrayList<SurfaceRules.RuleSource> overworldNoPrelimRules = new ArrayList<>();
+		//TODO: Fix i guess idk
+		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(overworldNoPrelimRules);
+		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(overworldNoPrelimRules)));
+
+		SurfaceRules.RuleSource overworldNoPrelimSource = null;
+		for (SurfaceRules.RuleSource ruleSource : overworldNoPrelimRules) {
+			if (overworldNoPrelimSource == null) {
+				overworldNoPrelimSource = ruleSource;
+			} else {
+				overworldNoPrelimSource = SurfaceRules.sequence(overworldNoPrelimSource, ruleSource);
+			}
+		}
+
 		if (overworldSource != null) {
 			overworldSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), overworldSource);
 			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 0, overworldSource);
 		}
 
+		if (overworldNoPrelimSource != null) {
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 0, overworldNoPrelimSource);
+		}
+
+		//NETHER
 		ArrayList<SurfaceRules.RuleSource> netherRules = new ArrayList<>();
 		//TODO: Fix i guess idk
 		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(netherRules);

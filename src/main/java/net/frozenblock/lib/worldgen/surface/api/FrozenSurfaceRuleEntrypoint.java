@@ -36,6 +36,11 @@ public interface FrozenSurfaceRuleEntrypoint {
 	void addOverworldSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
 
 	/**
+	 * Adds all {@link SurfaceRules.RuleSource}s added to the list (context) to Overworld world presets without checking the preliminary surface.
+	 */
+	void addOverworldSurfaceRulesNoPrelimSurface(ArrayList<SurfaceRules.RuleSource> context);
+
+	/**
 	 * Adds all {@link SurfaceRules.RuleSource}s added to the list (context) to Nether world presets.
 	 */
 	void addNetherSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
