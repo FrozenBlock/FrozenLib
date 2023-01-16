@@ -23,7 +23,7 @@ import net.frozenblock.lib.mobcategory.impl.FrozenMobCategory;
 
 public abstract class FrozenMobCategoryEntrypoint {
 
-	public abstract ArrayList<FrozenMobCategory> newCategories();
+	public abstract void newCategories(ArrayList<FrozenMobCategory> context);
 
 	public static FrozenMobCategory createCategory(String modId, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
 		return new FrozenMobCategory(modId, name, max, isFriendly, isPersistent, despawnDistance);
