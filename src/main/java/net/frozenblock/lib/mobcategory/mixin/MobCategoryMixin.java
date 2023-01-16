@@ -73,7 +73,7 @@ public class MobCategoryMixin {
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:mob_categories", FrozenMobCategoryEntrypoint.class).forEach(entrypoint -> {
 			try {
 				FrozenMobCategoryEntrypoint mobCategoryEntrypoint = entrypoint.getEntrypoint();
-				newCategories.addAll(mobCategoryEntrypoint.newCategories());
+				mobCategoryEntrypoint.newCategories(newCategories);
 			} catch (Throwable ignored) {
 
 			}
