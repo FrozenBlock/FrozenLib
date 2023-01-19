@@ -39,7 +39,9 @@ public class MinecraftServerMixin {
 		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> stemEntry : server.getWorldData().worldGenSettings().dimensions().entrySet()) {
 			LevelStem stem = stemEntry.getValue();
 			ChunkGenerator chunkGenerator = stem.generator();
-			NoiseGeneratorInterface.class.cast(((NoiseBasedChunkGenerator)chunkGenerator).generatorSettings().value()).setDimension(stem.typeHolder());
+			if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseBasedChunkGenerator) {
+				NoiseGeneratorInterface.class.cast(noiseBasedChunkGenerator.generatorSettings().value()).setDimension(stem.typeHolder());
+			}
 		}
 	}
 
