@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.shovel.mixin;
 
-import net.frozenblock.lib.impl.BonemealBehaviors;
 import net.frozenblock.lib.shovel.impl.ShovelBehaviors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -45,7 +44,7 @@ public class ShovelItemMixin {
 		Direction direction = context.getClickedFace();
 		Direction horizontal = context.getHorizontalDirection();
 		if (ShovelBehaviors.SHOVEL_BEHAVIORS.containsKey(state.getBlock())) {
-			if (BonemealBehaviors.BONEMEAL_BEHAVIORS.get(state.getBlock()).bonemeal(context, level, blockPos, state, direction, horizontal) && !level.isClientSide) {
+			if (ShovelBehaviors.SHOVEL_BEHAVIORS.get(state.getBlock()).shovel(context, level, blockPos, state, direction, horizontal) && !level.isClientSide) {
 				Player player = context.getPlayer();
 				level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, state));
 				if (player != null) {
