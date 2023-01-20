@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.shovel.mixin;
 
-import net.frozenblock.lib.shovel.impl.ShovelBehaviors;
+import net.frozenblock.lib.shovel.api.ShovelBehaviors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
