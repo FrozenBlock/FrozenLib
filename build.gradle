@@ -10,6 +10,8 @@ plugins {
     id("java-library")
 }
 
+project.ext.release = findProperty("releaseType") == "stable"
+
 setArchivesBaseName(project.archives_base_name)
 setVersion(getVersion())
 setGroup(project.maven_group)
@@ -256,7 +258,7 @@ artifacts {
 String getVersion() {
     String version = "${mod_version}-${mod_loader}+${minecraft_version}"
 
-    if (findProperty("releaseType") != "stable") {
+    if (!project.release) {
         version += "-unstable"
     }
 
@@ -369,4 +371,6 @@ artifacts {
     dev(jar)
 }
 
-build.dependsOn(applyLicenses)
+if (!project.release) {
+	build.dependsOn(applyLicenses)
+}
