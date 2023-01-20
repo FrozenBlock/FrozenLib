@@ -40,7 +40,7 @@ public final class FrozenBiomeParameters {
 	 */
 	public static Climate.Parameter inBetween(Climate.Parameter par1, Climate.Parameter par2) {
 		float lowest = par1.min();
-		float highest = par1.max();
+		float highest = par2.max();
 		if (lowest > highest) {
 			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetween when lower parameter is higher than the first!");
 		}
