@@ -19,9 +19,13 @@
 package net.frozenblock.lib_compat.terrablender;
 
 import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.worldgen.biome.api.BiomeParameters;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
+import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import terrablender.api.ParameterUtils;
 import terrablender.api.SurfaceRuleManager;
 import terrablender.api.TerraBlenderApi;
 
@@ -85,6 +89,18 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		if (netherSource != null) {
 			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 0, netherSource);
 		}
+	}
+
+	public static List<Climate.ParameterPoint> points(BiomeParameters parameters) {
+		return new ParameterUtils.ParameterPointListBuilder()
+				.temperature(parameters.temperatures.toArray(new Climate.Parameter[0]))
+				.humidity(parameters.humidities.toArray(new Climate.Parameter[0]))
+				.continentalness(parameters.continentalnesses.toArray(new Climate.Parameter[0]))
+				.erosion(parameters.erosions.toArray(new Climate.Parameter[0]))
+				.depth(parameters.depths.toArray(new Climate.Parameter[0]))
+				.weirdness(parameters.weirdnesses.toArray(new Climate.Parameter[0]))
+				.offset(parameters.offsets.toArray(new Float[0]))
+				.build();
 	}
 
 }

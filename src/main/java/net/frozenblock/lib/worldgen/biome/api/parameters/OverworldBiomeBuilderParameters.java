@@ -19,11 +19,10 @@
 package net.frozenblock.lib.worldgen.biome.api.parameters;
 
 import com.mojang.datafixers.util.Pair;
-import it.unimi.dsi.fastutil.floats.FloatArrayList;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.function.Consumer;
+import net.frozenblock.lib.worldgen.biome.api.BiomeParameters;
 import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biomes;
@@ -67,16 +66,6 @@ public class OverworldBiomeBuilderParameters {
 
 	public static final HashMap<ResourceLocation, BiomeParameters> BIOMES = new LinkedHashMap<>();
 	private static boolean hasRun = false;
-
-	public static class BiomeParameters {
-		public final ArrayList<Climate.Parameter> temperatures = new ArrayList<>();
-		public final ArrayList<Climate.Parameter> humidities = new ArrayList<>();
-		public final ArrayList<Climate.Parameter> continentalnesses = new ArrayList<>();
-		public final ArrayList<Climate.Parameter> erosions = new ArrayList<>();
-		public final ArrayList<Climate.Parameter> depths = new ArrayList<>();
-		public final ArrayList<Climate.Parameter> weirdnesses = new ArrayList<>();
-		public final FloatArrayList offsets = new FloatArrayList();
-	}
 
 	public static BiomeParameters getParameters(ResourceLocation location) {
 		if (!hasRun) {
