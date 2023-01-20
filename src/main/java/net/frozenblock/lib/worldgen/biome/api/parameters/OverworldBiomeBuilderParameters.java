@@ -24,7 +24,9 @@ import java.util.LinkedHashMap;
 import java.util.function.Consumer;
 import net.frozenblock.lib.worldgen.biome.api.BiomeParameters;
 import net.minecraft.SharedConstants;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.Climate;
 
@@ -73,6 +75,14 @@ public class OverworldBiomeBuilderParameters {
 			hasRun = true;
 		}
 		return getOrCreateParameters(location);
+	}
+
+	public static BiomeParameters getParameters(ResourceKey<Biome> key) {
+		if (!hasRun) {
+			addBiomes(pair -> addParameters(pair.getFirst(), pair.getSecond()));
+			hasRun = true;
+		}
+		return getOrCreateParameters(key.location());
 	}
 
 	private static void addParameters(Climate.ParameterPoint parameters, ResourceLocation location) {
