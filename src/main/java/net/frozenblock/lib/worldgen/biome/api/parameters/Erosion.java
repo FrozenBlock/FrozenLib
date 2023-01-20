@@ -35,7 +35,7 @@ public final class Erosion {
     public static final Climate.Parameter EROSION_0 = erosions[0];
     public static final Climate.Parameter EROSION_1 = erosions[1];
     public static final Climate.Parameter EROSION_2 = erosions[2];
-    public static final Climate.Parameter EROSION_3 = erosions[3];;
+    public static final Climate.Parameter EROSION_3 = erosions[3];
     public static final Climate.Parameter EROSION_4 = erosions[4];
     public static final Climate.Parameter EROSION_5 = erosions[5];
     public static final Climate.Parameter EROSION_6 = erosions[6];
