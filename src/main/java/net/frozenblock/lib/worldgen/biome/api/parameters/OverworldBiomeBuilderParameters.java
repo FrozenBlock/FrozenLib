@@ -67,22 +67,20 @@ public class OverworldBiomeBuilderParameters {
 	public static final ResourceLocation[][] SHATTERED_BIOMES = new ResourceLocation[][]{{Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_FOREST.location(), Biomes.WINDSWEPT_FOREST.location()}, {Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_FOREST.location(), Biomes.WINDSWEPT_FOREST.location()}, {Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_FOREST.location(), Biomes.WINDSWEPT_FOREST.location()}, {null, null, null, null, null}, {null, null, null, null, null}};
 
 	public static final HashMap<ResourceLocation, BiomeParameters> BIOMES = new LinkedHashMap<>();
-	private static boolean hasRun = false;
 
 	public static BiomeParameters getParameters(ResourceLocation location) {
-		if (!hasRun) {
-			addBiomes(pair -> addParameters(pair.getFirst(), pair.getSecond()));
-			hasRun = true;
+		if (!BIOMES.containsKey(location)) {
+			addBiomes(pair -> {
+				if (pair.getSecond().equals(location)) {
+					addParameters(pair.getFirst(), pair.getSecond());
+				}
+			});
 		}
 		return getOrCreateParameters(location);
 	}
 
 	public static BiomeParameters getParameters(ResourceKey<Biome> key) {
-		if (!hasRun) {
-			addBiomes(pair -> addParameters(pair.getFirst(), pair.getSecond()));
-			hasRun = true;
-		}
-		return getOrCreateParameters(key.location());
+		return getParameters(key.location());
 	}
 
 	private static void addParameters(Climate.ParameterPoint parameters, ResourceLocation location) {
