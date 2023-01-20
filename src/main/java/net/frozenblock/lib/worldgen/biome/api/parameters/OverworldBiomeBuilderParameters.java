@@ -69,23 +69,13 @@ public class OverworldBiomeBuilderParameters {
 	private static boolean hasRun = false;
 
 	public static class BiomeParameters {
-		public final ArrayList<Climate.Parameter> temperatures;
-		public final ArrayList<Climate.Parameter> humidities;
-		public final ArrayList<Climate.Parameter> continentalnesses;
-		public final ArrayList<Climate.Parameter> erosions;
-		public final ArrayList<Climate.Parameter> depths;
-		public final ArrayList<Climate.Parameter> weirdnesses;
-		public final FloatArrayList offsets;
-
-		public BiomeParameters() {
-			this.temperatures = new ArrayList<>();
-			this.humidities = new ArrayList<>();
-			this.continentalnesses = new ArrayList<>();
-			this.erosions = new ArrayList<>();
-			this.depths = new ArrayList<>();
-			this.weirdnesses = new ArrayList<>();
-			this.offsets = new FloatArrayList();
-		}
+		public final ArrayList<Climate.Parameter> temperatures = new ArrayList<>();
+		public final ArrayList<Climate.Parameter> humidities = new ArrayList<>();
+		public final ArrayList<Climate.Parameter> continentalnesses = new ArrayList<>();
+		public final ArrayList<Climate.Parameter> erosions = new ArrayList<>();
+		public final ArrayList<Climate.Parameter> depths = new ArrayList<>();
+		public final ArrayList<Climate.Parameter> weirdnesses = new ArrayList<>();
+		public final FloatArrayList offsets = new FloatArrayList();
 	}
 
 	public static BiomeParameters getParameters(ResourceLocation location) {
