@@ -97,7 +97,13 @@ public class OverworldBiomeBuilderParameters {
 	}
 
 	private static BiomeParameters getOrCreateParameters(ResourceLocation location) {
-		return BIOMES.containsKey(location) ? BIOMES.get(location) : BIOMES.put(location, new BiomeParameters());
+		if (BIOMES.containsKey(location)) {
+			return BIOMES.get(location);
+		} else {
+			BiomeParameters parameters = new BiomeParameters();
+			BIOMES.put(location, parameters);
+			return parameters;
+		}
 	}
 
 	private static void addBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> key) {
