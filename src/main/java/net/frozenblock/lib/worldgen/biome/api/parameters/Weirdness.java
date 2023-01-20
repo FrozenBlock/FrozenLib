@@ -51,5 +51,5 @@ public final class Weirdness {
     public static final Climate.Parameter PEAK_VARIANT = weirdnesses[10];
     public static final Climate.Parameter HIGH_SLICE_VARIANT_DESCENDING = weirdnesses[11];
     public static final Climate.Parameter MID_SLICE_VARIANT_DESCENDING = weirdnesses[12];
-    public static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
+    public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 }
