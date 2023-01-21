@@ -122,7 +122,7 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 	}
 
 	public static List<Climate.ParameterPoint> points(ResourceKey<Biome> key) {
-		points(key.location());
+		return points(key.location());
 	}
 
 	public static List<Climate.ParameterPoint> points(ResourceLocation location) {
