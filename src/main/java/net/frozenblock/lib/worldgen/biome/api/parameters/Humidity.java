@@ -26,5 +26,12 @@ public final class Humidity {
     public static final Climate.Parameter NEUTRAL = OverworldBiomeBuilderParameters.humidities[2];
     public static final Climate.Parameter WET = OverworldBiomeBuilderParameters.humidities[3];
     public static final Climate.Parameter HUMID = OverworldBiomeBuilderParameters.humidities[4];
+
+	public static final Climate.Parameter ONE = OverworldBiomeBuilderParameters.humidities[0];
+	public static final Climate.Parameter TWO = OverworldBiomeBuilderParameters.humidities[1];
+	public static final Climate.Parameter THREE = OverworldBiomeBuilderParameters.humidities[2];
+	public static final Climate.Parameter FOUR = OverworldBiomeBuilderParameters.humidities[3];
+	public static final Climate.Parameter FIVE = OverworldBiomeBuilderParameters.humidities[4];
+
     public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 }

@@ -26,5 +26,12 @@ public final class Temperature {
     public static final Climate.Parameter NEUTRAL = OverworldBiomeBuilderParameters.temperatures[2];
     public static final Climate.Parameter WARM = OverworldBiomeBuilderParameters.temperatures[3];
     public static final Climate.Parameter HOT = OverworldBiomeBuilderParameters.temperatures[4];
+
+	public static final Climate.Parameter ONE = OverworldBiomeBuilderParameters.temperatures[0];
+	public static final Climate.Parameter TWO = OverworldBiomeBuilderParameters.temperatures[1];
+	public static final Climate.Parameter THREE = OverworldBiomeBuilderParameters.temperatures[2];
+	public static final Climate.Parameter FOUR = OverworldBiomeBuilderParameters.temperatures[3];
+	public static final Climate.Parameter FIVE = OverworldBiomeBuilderParameters.temperatures[4];
+
     public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 }
