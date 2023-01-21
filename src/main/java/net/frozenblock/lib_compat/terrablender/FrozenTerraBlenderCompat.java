@@ -22,7 +22,11 @@ import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.biome.api.BiomeParameters;
+import net.frozenblock.lib.worldgen.biome.api.parameters.OverworldBiomeBuilderParameters;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import terrablender.api.ParameterUtils;
@@ -92,15 +96,37 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 	}
 
 	public static List<Climate.ParameterPoint> points(BiomeParameters parameters) {
-		return new ParameterUtils.ParameterPointListBuilder()
-				.temperature(parameters.temperatures.toArray(new Climate.Parameter[0]))
-				.humidity(parameters.humidities.toArray(new Climate.Parameter[0]))
-				.continentalness(parameters.continentalnesses.toArray(new Climate.Parameter[0]))
-				.erosion(parameters.erosions.toArray(new Climate.Parameter[0]))
-				.depth(parameters.depths.toArray(new Climate.Parameter[0]))
-				.weirdness(parameters.weirdnesses.toArray(new Climate.Parameter[0]))
-				.offset(parameters.offsets.toArray(new Float[0]))
-				.build();
+		ParameterUtils.ParameterPointListBuilder builder = new ParameterUtils.ParameterPointListBuilder();
+		for (Climate.Parameter parameter : parameters.temperatures) {
+			builder.temperature(parameter);
+		}
+		for (Climate.Parameter parameter : parameters.humidities) {
+			builder.humidity(parameter);
+		}
+		for (Climate.Parameter parameter : parameters.continentalnesses) {
+			builder.continentalness(parameter);
+		}
+		for (Climate.Parameter parameter : parameters.erosions) {
+			builder.erosion(parameter);
+		}
+		for (Climate.Parameter parameter : parameters.depths) {
+			builder.depth(parameter);
+		}
+		for (Climate.Parameter parameter : parameters.weirdnesses) {
+			builder.weirdness(parameter);
+		}
+		for (float f : parameters.offsets) {
+			builder.offset(f);
+		}
+		return builder.build();
+	}
+
+	public static List<Climate.ParameterPoint> points(ResourceKey<Biome> key) {
+		points(key.location());
+	}
+
+	public static List<Climate.ParameterPoint> points(ResourceLocation location) {
+		return points(OverworldBiomeBuilderParameters.getParameters(location));
 	}
 
 }
