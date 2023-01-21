@@ -16,14 +16,14 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.shovel.mixin;
+package net.frozenblock.lib.axe.mixin;
 
-import net.frozenblock.lib.shovel.api.ShovelBehaviors;
+import net.frozenblock.lib.axe.api.AxeBehaviors;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ShovelItem;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,18 +33,18 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ShovelItem.class)
-public class ShovelItemMixin {
+@Mixin(AxeItem.class)
+public class AxeItemMixin {
 
 	@Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
-	public void frozenlib$_shovelBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
+	public void frozenlib$_axeBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
 		Level level = context.getLevel();
 		BlockPos blockPos = context.getClickedPos();
 		BlockState state = level.getBlockState(blockPos);
 		Direction direction = context.getClickedFace();
 		Direction horizontal = context.getHorizontalDirection();
-		if (ShovelBehaviors.SHOVEL_BEHAVIORS.containsKey(state.getBlock())) {
-			if (ShovelBehaviors.SHOVEL_BEHAVIORS.get(state.getBlock()).shovel(context, level, blockPos, state, direction, horizontal)) {
+		if (AxeBehaviors.AXE_BEHAVIORS.containsKey(state.getBlock())) {
+			if (AxeBehaviors.AXE_BEHAVIORS.get(state.getBlock()).axe(context, level, blockPos, state, direction, horizontal)) {
 				if (!level.isClientSide) {
 					Player player = context.getPlayer();
 					level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, state));

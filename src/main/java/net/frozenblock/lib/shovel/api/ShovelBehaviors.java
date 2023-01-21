@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.shovel.impl;
+package net.frozenblock.lib.shovel.api;
 
 import java.util.HashMap;
 import java.util.Map;

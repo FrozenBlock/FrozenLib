@@ -19,9 +19,17 @@
 package net.frozenblock.lib_compat.terrablender;
 
 import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.worldgen.biome.api.BiomeParameters;
+import net.frozenblock.lib.worldgen.biome.api.parameters.OverworldBiomeBuilderParameters;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import terrablender.api.ParameterUtils;
 import terrablender.api.SurfaceRuleManager;
 import terrablender.api.TerraBlenderApi;
 

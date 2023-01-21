@@ -32,6 +32,38 @@ public final class FrozenBiomeParameters {
 		}
 	}
 
+	/**
+	 * Returns climate parameters in between both specified parameters.
+	 * <p>
+	 * Is NOT identical to Climate.Parameter;span.
+	 * Instead, this will meet in the middle of both parameters.
+	 */
+	public static Climate.Parameter inBetween(Climate.Parameter par1, Climate.Parameter par2) {
+		float lowest = par1.min();
+		float highest = par2.max();
+		if (lowest > highest) {
+			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetween when lower parameter is higher than the first!");
+		}
+		float offsetBy = (highest - lowest) * 0.25F;
+		return Climate.Parameter.span(lowest + offsetBy, highest - offsetBy);
+	}
+
+	/**
+	 * Returns climate parameters in between both specified parameters with a smaller range.
+	 * <p>
+	 * Is NOT identical to Climate.Parameter;span.
+	 * Instead, this will meet in the middle of both parameters, though, with a smaller range.
+	 */
+	public static Climate.Parameter inBetweenTighter(Climate.Parameter par1, Climate.Parameter par2) {
+		float lowest = par1.min();
+		float highest = par2.max();
+		if (lowest > highest) {
+			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenTighter when lower parameter is higher than the first!");
+		}
+		float offsetBy = (highest - lowest) * 0.4F;
+		return Climate.Parameter.span(lowest + offsetBy, highest - offsetBy);
+	}
+
 	@FunctionalInterface
 	public interface BiomeRunnable {
 		void run(Climate.Parameter weirdness);

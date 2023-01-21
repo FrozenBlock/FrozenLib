@@ -16,15 +16,24 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.biome.api.parameters;
+package net.frozenblock.lib.axe.api;
 
-import net.minecraft.world.level.biome.Climate;
+import java.util.HashMap;
+import java.util.Map;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
-public final class Temperature {
-    public static final Climate.Parameter ICY = OverworldBiomeBuilderParameters.temperatures[0];
-    public static final Climate.Parameter COOL = OverworldBiomeBuilderParameters.temperatures[1];
-    public static final Climate.Parameter NEUTRAL = OverworldBiomeBuilderParameters.temperatures[2];
-    public static final Climate.Parameter WARM = OverworldBiomeBuilderParameters.temperatures[3];
-    public static final Climate.Parameter HOT = OverworldBiomeBuilderParameters.temperatures[4];
-    public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
+public class AxeBehaviors {
+
+	public static final Map<Block, AxeBehavior> AXE_BEHAVIORS = new HashMap<>();
+
+	@FunctionalInterface
+	public interface AxeBehavior {
+		boolean axe(UseOnContext context, Level world, BlockPos pos, BlockState state, Direction face, Direction horizontal);
+	}
+
 }
