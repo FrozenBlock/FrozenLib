@@ -21,6 +21,7 @@ package net.frozenblock.lib.worldgen.biome.api.parameters;
 import com.mojang.datafixers.util.Pair;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.function.Consumer;
 import net.frozenblock.lib.worldgen.biome.api.BiomeParameters;
 import net.minecraft.SharedConstants;
@@ -83,13 +84,7 @@ public class OverworldBiomeBuilderParameters {
 
 	private static void addParameters(Climate.ParameterPoint parameters, ResourceLocation location) {
 		BiomeParameters biomeParameters = getOrCreateParameters(location);
-		biomeParameters.temperatures.add(parameters.temperature());
-		biomeParameters.humidities.add(parameters.humidity());
-		biomeParameters.continentalnesses.add(parameters.continentalness());
-		biomeParameters.erosions.add(parameters.erosion());
-		biomeParameters.depths.add(parameters.depth());
-		biomeParameters.weirdnesses.add(parameters.weirdness());
-		biomeParameters.offsets.add(parameters.offset());
+		biomeParameters.points.add(parameters);
 	}
 
 	private static BiomeParameters getOrCreateParameters(ResourceLocation location) {
@@ -100,6 +95,18 @@ public class OverworldBiomeBuilderParameters {
 			BIOMES.put(location, parameters);
 			return parameters;
 		}
+	}
+
+	public static List<Climate.ParameterPoint> points(BiomeParameters parameters) {
+		return parameters.points;
+	}
+
+	public static List<Climate.ParameterPoint> points(ResourceKey<Biome> key) {
+		return points(key.location());
+	}
+
+	public static List<Climate.ParameterPoint> points(ResourceLocation location) {
+		return points(OverworldBiomeBuilderParameters.getParameters(location));
 	}
 
 	private static void addBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> key) {

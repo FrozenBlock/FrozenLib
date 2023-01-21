@@ -95,38 +95,4 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		}
 	}
 
-	public static List<Climate.ParameterPoint> points(BiomeParameters parameters) {
-		ParameterUtils.ParameterPointListBuilder builder = new ParameterUtils.ParameterPointListBuilder();
-		for (Climate.Parameter parameter : parameters.temperatures) {
-			builder.temperature(parameter);
-		}
-		for (Climate.Parameter parameter : parameters.humidities) {
-			builder.humidity(parameter);
-		}
-		for (Climate.Parameter parameter : parameters.continentalnesses) {
-			builder.continentalness(parameter);
-		}
-		for (Climate.Parameter parameter : parameters.erosions) {
-			builder.erosion(parameter);
-		}
-		for (Climate.Parameter parameter : parameters.depths) {
-			builder.depth(parameter);
-		}
-		for (Climate.Parameter parameter : parameters.weirdnesses) {
-			builder.weirdness(parameter);
-		}
-		for (float f : parameters.offsets) {
-			builder.offset(f);
-		}
-		return builder.build();
-	}
-
-	public static List<Climate.ParameterPoint> points(ResourceKey<Biome> key) {
-		return points(key.location());
-	}
-
-	public static List<Climate.ParameterPoint> points(ResourceLocation location) {
-		return points(OverworldBiomeBuilderParameters.getParameters(location));
-	}
-
 }

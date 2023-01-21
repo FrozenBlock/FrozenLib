@@ -1,17 +1,10 @@
 package net.frozenblock.lib.worldgen.biome.api;
 
-import it.unimi.dsi.fastutil.floats.FloatArrayList;
-import net.minecraft.world.level.biome.Climate;
 import java.util.ArrayList;
+import net.minecraft.world.level.biome.Climate;
 
 public class BiomeParameters {
-	public final ArrayList<Climate.Parameter> temperatures = new ArrayList<>();
-	public final ArrayList<Climate.Parameter> humidities = new ArrayList<>();
-	public final ArrayList<Climate.Parameter> continentalnesses = new ArrayList<>();
-	public final ArrayList<Climate.Parameter> erosions = new ArrayList<>();
-	public final ArrayList<Climate.Parameter> depths = new ArrayList<>();
-	public final ArrayList<Climate.Parameter> weirdnesses = new ArrayList<>();
-	public final FloatArrayList offsets = new FloatArrayList();
+	public final ArrayList<Climate.ParameterPoint> points = new ArrayList<>();
 
 	public BiomeParameters() {
 	}
