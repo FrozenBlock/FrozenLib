@@ -48,9 +48,29 @@ public class OverworldBiomeBuilderParameters {
 	private static final float EROSION_DEEP_DARK_DRYNESS_THRESHOLD = -0.225F;
 	private static final float DEPTH_DEEP_DARK_DRYNESS_THRESHOLD = 0.9F;
 	public static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
-	public static final Climate.Parameter[] temperatures = new Climate.Parameter[]{Climate.Parameter.span(-1.0F, -0.45F), Climate.Parameter.span(-0.45F, -0.15F), Climate.Parameter.span(-0.15F, 0.2F), Climate.Parameter.span(0.2F, 0.55F), Climate.Parameter.span(0.55F, 1.0F)};
-	public static final Climate.Parameter[] humidities = new Climate.Parameter[]{Climate.Parameter.span(-1.0F, -0.35F), Climate.Parameter.span(-0.35F, -0.1F), Climate.Parameter.span(-0.1F, 0.1F), Climate.Parameter.span(0.1F, 0.3F), Climate.Parameter.span(0.3F, 1.0F)};
-	public static final Climate.Parameter[] erosions = new Climate.Parameter[]{Climate.Parameter.span(-1.0F, -0.78F), Climate.Parameter.span(-0.78F, -0.375F), Climate.Parameter.span(-0.375F, -0.2225F), Climate.Parameter.span(-0.2225F, 0.05F), Climate.Parameter.span(0.05F, 0.45F), Climate.Parameter.span(0.45F, 0.55F), Climate.Parameter.span(0.55F, 1.0F)};
+	public static final Climate.Parameter[] temperatures = new Climate.Parameter[]{
+			Climate.Parameter.span(-1.0F, -0.45F),
+			Climate.Parameter.span(-0.45F, -0.15F),
+			Climate.Parameter.span(-0.15F, 0.2F),
+			Climate.Parameter.span(0.2F, 0.55F),
+			Climate.Parameter.span(0.55F, 1.0F)
+	};
+	public static final Climate.Parameter[] humidities = new Climate.Parameter[]{
+			Climate.Parameter.span(-1.0F, -0.35F),
+			Climate.Parameter.span(-0.35F, -0.1F),
+			Climate.Parameter.span(-0.1F, 0.1F),
+			Climate.Parameter.span(0.1F, 0.3F),
+			Climate.Parameter.span(0.3F, 1.0F)
+	};
+	public static final Climate.Parameter[] erosions = new Climate.Parameter[]{
+			Climate.Parameter.span(-1.0F, -0.78F),
+			Climate.Parameter.span(-0.78F, -0.375F),
+			Climate.Parameter.span(-0.375F, -0.2225F),
+			Climate.Parameter.span(-0.2225F, 0.05F),
+			Climate.Parameter.span(0.05F, 0.45F),
+			Climate.Parameter.span(0.45F, 0.55F),
+			Climate.Parameter.span(0.55F, 1.0F)
+	};
 	public static final Climate.Parameter FROZEN_RANGE = temperatures[0];
 	public static final Climate.Parameter UNFROZEN_RANGE = Climate.Parameter.span(temperatures[1], temperatures[4]);
 	public static final Climate.Parameter mushroomFieldsContinentalness = Climate.Parameter.span(-1.2F, -1.05F);
@@ -61,12 +81,44 @@ public class OverworldBiomeBuilderParameters {
 	public static final Climate.Parameter nearInlandContinentalness = Climate.Parameter.span(-0.11F, 0.03F);
 	public static final Climate.Parameter midInlandContinentalness = Climate.Parameter.span(0.03F, 0.3F);
 	public static final Climate.Parameter farInlandContinentalness = Climate.Parameter.span(0.3F, 1.0F);
-	public static final ResourceLocation[][] OCEANS = new ResourceLocation[][]{{Biomes.DEEP_FROZEN_OCEAN.location(), Biomes.DEEP_COLD_OCEAN.location(), Biomes.DEEP_OCEAN.location(), Biomes.DEEP_LUKEWARM_OCEAN.location(), Biomes.WARM_OCEAN.location()}, {Biomes.FROZEN_OCEAN.location(), Biomes.COLD_OCEAN.location(), Biomes.OCEAN.location(), Biomes.LUKEWARM_OCEAN.location(), Biomes.WARM_OCEAN.location()}};
-	public static final ResourceLocation[][] MIDDLE_BIOMES = new ResourceLocation[][]{{Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_TAIGA.location(), Biomes.TAIGA.location()}, {Biomes.PLAINS.location(), Biomes.PLAINS.location(), Biomes.FOREST.location(), Biomes.TAIGA.location(), Biomes.OLD_GROWTH_SPRUCE_TAIGA.location()}, {Biomes.FLOWER_FOREST.location(), Biomes.PLAINS.location(), Biomes.FOREST.location(), Biomes.BIRCH_FOREST.location(), Biomes.DARK_FOREST.location()}, {Biomes.SAVANNA.location(), Biomes.SAVANNA.location(), Biomes.FOREST.location(), Biomes.JUNGLE.location(), Biomes.JUNGLE.location()}, {Biomes.DESERT.location(), Biomes.DESERT.location(), Biomes.DESERT.location(), Biomes.DESERT.location(), Biomes.DESERT.location()}};
-	public static final ResourceLocation[][] MIDDLE_BIOMES_VARIANT = new ResourceLocation[][]{{Biomes.ICE_SPIKES.location(), null, Biomes.SNOWY_TAIGA.location(), null, null}, {null, null, null, null, Biomes.OLD_GROWTH_PINE_TAIGA.location()}, {Biomes.SUNFLOWER_PLAINS.location(), null, null, Biomes.OLD_GROWTH_BIRCH_FOREST.location(), null}, {null, null, Biomes.PLAINS.location(), Biomes.SPARSE_JUNGLE.location(), Biomes.BAMBOO_JUNGLE.location()}, {null, null, null, null, null}};
-	public static final ResourceLocation[][] PLATEAU_BIOMES = new ResourceLocation[][]{{Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_TAIGA.location(), Biomes.SNOWY_TAIGA.location()}, {Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.FOREST.location(), Biomes.TAIGA.location(), Biomes.OLD_GROWTH_SPRUCE_TAIGA.location()}, {Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.DARK_FOREST.location()}, {Biomes.SAVANNA_PLATEAU.location(), Biomes.SAVANNA_PLATEAU.location(), Biomes.FOREST.location(), Biomes.FOREST.location(), Biomes.JUNGLE.location()}, {Biomes.BADLANDS.location(), Biomes.BADLANDS.location(), Biomes.BADLANDS.location(), Biomes.WOODED_BADLANDS.location(), Biomes.WOODED_BADLANDS.location()}};
-	public static final ResourceLocation[][] PLATEAU_BIOMES_VARIANT = new ResourceLocation[][]{{Biomes.ICE_SPIKES.location(), null, null, null, null}, {null, null, Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.OLD_GROWTH_PINE_TAIGA.location()}, {null, null, Biomes.FOREST.location(), Biomes.BIRCH_FOREST.location(), null}, {null, null, null, null, null}, {Biomes.ERODED_BADLANDS.location(), Biomes.ERODED_BADLANDS.location(), null, null, null}};
-	public static final ResourceLocation[][] SHATTERED_BIOMES = new ResourceLocation[][]{{Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_FOREST.location(), Biomes.WINDSWEPT_FOREST.location()}, {Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_FOREST.location(), Biomes.WINDSWEPT_FOREST.location()}, {Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_FOREST.location(), Biomes.WINDSWEPT_FOREST.location()}, {null, null, null, null, null}, {null, null, null, null, null}};
+	public static final ResourceLocation[][] OCEANS = new ResourceLocation[][]{
+			{Biomes.DEEP_FROZEN_OCEAN.location(), Biomes.DEEP_COLD_OCEAN.location(), Biomes.DEEP_OCEAN.location(), Biomes.DEEP_LUKEWARM_OCEAN.location(), Biomes.WARM_OCEAN.location()},
+			{Biomes.FROZEN_OCEAN.location(), Biomes.COLD_OCEAN.location(), Biomes.OCEAN.location(), Biomes.LUKEWARM_OCEAN.location(), Biomes.WARM_OCEAN.location()}
+	};
+	public static final ResourceLocation[][] MIDDLE_BIOMES = new ResourceLocation[][]{
+			{Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_TAIGA.location(), Biomes.TAIGA.location()},
+			{Biomes.PLAINS.location(), Biomes.PLAINS.location(), Biomes.FOREST.location(), Biomes.TAIGA.location(), Biomes.OLD_GROWTH_SPRUCE_TAIGA.location()},
+			{Biomes.FLOWER_FOREST.location(), Biomes.PLAINS.location(), Biomes.FOREST.location(), Biomes.BIRCH_FOREST.location(), Biomes.DARK_FOREST.location()},
+			{Biomes.SAVANNA.location(), Biomes.SAVANNA.location(), Biomes.FOREST.location(), Biomes.JUNGLE.location(), Biomes.JUNGLE.location()},
+			{Biomes.DESERT.location(), Biomes.DESERT.location(), Biomes.DESERT.location(), Biomes.DESERT.location(), Biomes.DESERT.location()}
+	};
+	public static final ResourceLocation[][] MIDDLE_BIOMES_VARIANT = new ResourceLocation[][]{
+			{Biomes.ICE_SPIKES.location(), null, Biomes.SNOWY_TAIGA.location(), null, null},
+			{null, null, null, null, Biomes.OLD_GROWTH_PINE_TAIGA.location()},
+			{Biomes.SUNFLOWER_PLAINS.location(), null, null, Biomes.OLD_GROWTH_BIRCH_FOREST.location(), null},
+			{null, null, Biomes.PLAINS.location(), Biomes.SPARSE_JUNGLE.location(), Biomes.BAMBOO_JUNGLE.location()},
+			{null, null, null, null, null}
+	};
+	public static final ResourceLocation[][] PLATEAU_BIOMES = new ResourceLocation[][]{
+			{Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_PLAINS.location(), Biomes.SNOWY_TAIGA.location(), Biomes.SNOWY_TAIGA.location()},
+			{Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.FOREST.location(), Biomes.TAIGA.location(), Biomes.OLD_GROWTH_SPRUCE_TAIGA.location()},
+			{Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.DARK_FOREST.location()},
+			{Biomes.SAVANNA_PLATEAU.location(), Biomes.SAVANNA_PLATEAU.location(), Biomes.FOREST.location(), Biomes.FOREST.location(), Biomes.JUNGLE.location()},
+			{Biomes.BADLANDS.location(), Biomes.BADLANDS.location(), Biomes.BADLANDS.location(), Biomes.WOODED_BADLANDS.location(), Biomes.WOODED_BADLANDS.location()}
+	};
+	public static final ResourceLocation[][] PLATEAU_BIOMES_VARIANT = new ResourceLocation[][]{
+			{Biomes.ICE_SPIKES.location(), null, null, null, null}, {null, null, Biomes.MEADOW.location(), Biomes.MEADOW.location(), Biomes.OLD_GROWTH_PINE_TAIGA.location()},
+			{null, null, Biomes.FOREST.location(), Biomes.BIRCH_FOREST.location(), null},
+			{null, null, null, null, null},
+			{Biomes.ERODED_BADLANDS.location(), Biomes.ERODED_BADLANDS.location(), null, null, null}
+	};
+	public static final ResourceLocation[][] SHATTERED_BIOMES = new ResourceLocation[][]{
+			{Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_FOREST.location(), Biomes.WINDSWEPT_FOREST.location()},
+			{Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_GRAVELLY_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_FOREST.location(), Biomes.WINDSWEPT_FOREST.location()},
+			{Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_HILLS.location(), Biomes.WINDSWEPT_FOREST.location(), Biomes.WINDSWEPT_FOREST.location()},
+			{null, null, null, null, null},
+			{null, null, null, null, null}
+	};
 
 	public static final HashMap<ResourceLocation, BiomeParameters> BIOMES = new LinkedHashMap<>();
 	private static boolean hasRun = false;
@@ -157,60 +209,6 @@ public class OverworldBiomeBuilderParameters {
 		addMidSlice(consumer, Climate.Parameter.span(0.93333334F, 1.0F));
 	}
 
-	private static List<Climate.ParameterPoint> MIDDLE_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getMiddlePoints() {
-		runBiomes();
-		return MIDDLE_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> PEAK_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getPeakPoints() {
-		runBiomes();
-		return PEAK_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> PLATEAU_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getPlateauPoints() {
-		runBiomes();
-		return PLATEAU_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> SHATTERED_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getShatteredPoints() {
-		runBiomes();
-		return SHATTERED_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> BADLANDS_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getBadlandsPoints() {
-		runBiomes();
-		return BADLANDS_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> SLOPE_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getSlopePoints() {
-		runBiomes();
-		return SLOPE_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> WINDSWEPT_SAVANNA_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getWindsweptSavannaPoints() {
-		runBiomes();
-		return WINDSWEPT_SAVANNA_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> BEACH_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getBeachPoints() {
-		runBiomes();
-		return BEACH_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> SHATTERED_COAST_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getShatteredCoastPoints() {
-		runBiomes();
-		return SHATTERED_COAST_POINTS;
-	}
-
 	private static void addPeaks(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter param) {
 		for(int i = 0; i < temperatures.length; ++i) {
 			Climate.Parameter parameter = temperatures[i];
@@ -235,29 +233,6 @@ public class OverworldBiomeBuilderParameters {
 				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[5], param, 0.0F, windsweptSavannaOrShattered);
 				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F, shattered);
 				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, middle);
-			}
-		}
-
-		//MIDDLE
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), Climate.Parameter.span(erosions[2], erosions[3]), param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[4], param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[6], param, 0.0F);
-		//PEAK
-		addSurfaceBiome(PEAK_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[0], param, 0.0F);
-		addSurfaceBiome(PEAK_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[1], param, 0.0F);
-		//PLATEAU
-		addSurfaceBiome(PLATEAU_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[2], param, 0.0F);
-		addSurfaceBiome(PLATEAU_POINTS, FULL_RANGE, FULL_RANGE, farInlandContinentalness, erosions[3], param, 0.0F);
-		//SHATTERED
-		addSurfaceBiome(SHATTERED_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F);
-
-		for(int t = 0; t < temperatures.length; ++t) {
-			Climate.Parameter temperature = temperatures[t];
-			for (int h = 0; h < humidities.length; ++h) {
-				Climate.Parameter humidity = humidities[h];
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(t, h), temperature, humidity, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[1], param, 0.0F);
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHot(t, h), temperature, humidity, midInlandContinentalness, erosions[3], param, 0.0F);
-				addSurfaceBiome(maybePickWindsweptSavannaBiome(t, h, param, SHATTERED_POINTS), temperature, humidity, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[5], param, 0.0F);
 			}
 		}
 	}
@@ -289,32 +264,6 @@ public class OverworldBiomeBuilderParameters {
 				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[5], param, 0.0F, windsweptSavannaOrMiddle);
 				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F, shattered);
 				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, middle);
-			}
-		}
-
-		//MIDDLE
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, coastContinentalness, Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), Climate.Parameter.span(erosions[2], erosions[3]), param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[4], param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[6], param, 0.0F);
-		//SLOPE
-		addSurfaceBiome(SLOPE_POINTS, FULL_RANGE, FULL_RANGE, nearInlandContinentalness, erosions[0], param, 0.0F);
-		addSurfaceBiome(SLOPE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[1], param, 0.0F);
-		//PEAK
-		addSurfaceBiome(PEAK_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[0], param, 0.0F);
-		//PLATEAU
-		addSurfaceBiome(PLATEAU_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[2], param, 0.0F);
-		addSurfaceBiome(PLATEAU_POINTS, FULL_RANGE, FULL_RANGE, farInlandContinentalness, erosions[3], param, 0.0F);
-		//SHATTERED
-		addSurfaceBiome(SHATTERED_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F);
-
-		for(int i = 0; i < temperatures.length; ++i) {
-			Climate.Parameter temperature = temperatures[i];
-			for (int j = 0; j < humidities.length; ++j) {
-				Climate.Parameter humidity = humidities[j];
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(i, j), temperature, humidity, nearInlandContinentalness, erosions[1], param, 0.0F);
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHot(i, j), temperature, humidity, midInlandContinentalness, erosions[3], param, 0.0F);
-				addSurfaceBiome(maybePickWindsweptSavannaBiome(i, j, param, MIDDLE_POINTS), temperature, humidity, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[5], param, 0.0F);
 			}
 		}
 	}
@@ -367,41 +316,6 @@ public class OverworldBiomeBuilderParameters {
 				}
 			}
 		}
-
-		//MIDDLE
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, nearInlandContinentalness, erosions[2], param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[3], param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, Temperature.ONE, FULL_RANGE, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F);
-		//SLOPE
-		addSurfaceBiome(SLOPE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[0], param, 0.0F);
-		addSurfaceBiome(SLOPE_POINTS, Temperature.ONE, FULL_RANGE, farInlandContinentalness, erosions[1], param, 0.0F);
-		//PLATEAU
-		addSurfaceBiome(PLATEAU_POINTS, Climate.Parameter.span(Temperature.TWO, Temperature.FIVE), FULL_RANGE, farInlandContinentalness, erosions[1], param, 0.0F);
-		addSurfaceBiome(PLATEAU_POINTS, FULL_RANGE, FULL_RANGE, farInlandContinentalness, erosions[2], param, 0.0F);
-		//SHATTERED
-		addSurfaceBiome(SHATTERED_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F);
-		//SHATTERED COAST
-		addSurfaceBiome(SHATTERED_COAST_POINTS, FULL_RANGE, FULL_RANGE, coastContinentalness, erosions[5], param, 0.0F);
-
-		if (param.max() < 0L) {
-			addSurfaceBiome(BEACH_POINTS, FULL_RANGE, FULL_RANGE, coastContinentalness, erosions[4], param, 0.0F);
-			addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[4], param, 0.0F);
-			addSurfaceBiome(BEACH_POINTS, FULL_RANGE, FULL_RANGE, coastContinentalness, erosions[6], param, 0.0F);
-		} else {
-			addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[4], param, 0.0F);
-			addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, coastContinentalness, erosions[6], param, 0.0F);
-		}
-
-		for(int i = 0; i < temperatures.length; ++i) {
-			Climate.Parameter temperature = temperatures[i];
-			for(int j = 0; j < humidities.length; ++j) {
-				Climate.Parameter humidity = humidities[j];
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(i, j), temperature, humidity, Climate.Parameter.span(nearInlandContinentalness, midInlandContinentalness), erosions[1], param, 0.0F);
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHot(i, j), temperature, humidity, midInlandContinentalness, erosions[2], param, 0.0F);
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHot(i, j), temperature, humidity, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[3], param, 0.0F);
-				addSurfaceBiome(maybePickWindsweptSavannaBiome(i, j, param, MIDDLE_POINTS), temperature, humidity, nearInlandContinentalness, erosions[5], param, 0.0F);
-			}
-		}
 	}
 
 	private static void addLowSlice(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter param) {
@@ -433,29 +347,6 @@ public class OverworldBiomeBuilderParameters {
 				if (i == 0) {
 					addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, middle);
 				}
-			}
-		}
-
-		//MIDDLE
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, Temperature.ONE, FULL_RANGE, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[4], param, 0.0F);
-		addSurfaceBiome(MIDDLE_POINTS, FULL_RANGE, FULL_RANGE, nearInlandContinentalness, Climate.Parameter.span(erosions[2], erosions[3]), param, 0.0F);
-
-		//BEACH
-		addSurfaceBiome(BEACH_POINTS, FULL_RANGE, FULL_RANGE, coastContinentalness, erosions[6], param, 0.0F);
-		addSurfaceBiome(BEACH_POINTS, FULL_RANGE, FULL_RANGE, coastContinentalness, Climate.Parameter.span(erosions[3], erosions[4]), param, 0.0F);
-		//SHATTERED COAST
-		addSurfaceBiome(SHATTERED_COAST_POINTS, FULL_RANGE, FULL_RANGE, coastContinentalness, erosions[5], param, 0.0F);
-
-		for(int i = 0; i < temperatures.length; ++i) {
-			Climate.Parameter parameter = temperatures[i];
-			for(int j = 0; j < humidities.length; ++j) {
-				Climate.Parameter parameter2 = humidities[j];
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHot(i, j), parameter, parameter2, nearInlandContinentalness, Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F);
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(i, j), parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F);
-				addSurfaceBiome(pickMiddleBiomeOrBadlandsIfHot(i, j), parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), Climate.Parameter.span(erosions[2], erosions[3]), param, 0.0F);
-				addSurfaceBiome(maybePickWindsweptSavannaBiome(i, j, param, MIDDLE_POINTS), parameter, parameter2, nearInlandContinentalness, erosions[5], param, 0.0F);
 			}
 		}
 	}
@@ -587,19 +478,6 @@ public class OverworldBiomeBuilderParameters {
 
 	private static void addBottomBiome(List<Climate.ParameterPoint> list, Climate.Parameter parameter, Climate.Parameter parameter2, Climate.Parameter parameter3, Climate.Parameter parameter4, Climate.Parameter parameter5, float f) {
 		list.add(Climate.parameters(parameter, parameter2, parameter3, parameter4, Climate.Parameter.point(1.1F), parameter5, f));
-	}
-
-	//LISTS
-	private static List<Climate.ParameterPoint> pickMiddleBiomeOrBadlandsIfHot(int temperature, int humidity) {
-		return temperature == 4 ? BADLANDS_POINTS : MIDDLE_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(int temperature, int humidity) {
-		return temperature == 0 ? SLOPE_POINTS : pickMiddleBiomeOrBadlandsIfHot(temperature, humidity);
-	}
-
-	private static List<Climate.ParameterPoint> maybePickWindsweptSavannaBiome(int temperature, int humidity, Climate.Parameter param, List<Climate.ParameterPoint> list) {
-		return temperature > 1 && humidity < 4 && param.max() >= 0L ? WINDSWEPT_SAVANNA_POINTS : list;
 	}
 
 }

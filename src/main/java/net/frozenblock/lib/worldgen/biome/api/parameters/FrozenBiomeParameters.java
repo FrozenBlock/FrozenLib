@@ -86,6 +86,10 @@ public final class FrozenBiomeParameters {
 		return Climate.Parameter.span(middle + offset, highest);
 	}
 
+	public static Climate.Parameter squish(Climate.Parameter parameter, float squish) {
+		return Climate.Parameter.span(parameter.min() + squish, parameter.max() - squish);
+	}
+
 	public static boolean isWeird(Climate.ParameterPoint point) {
 		return point.weirdness().max() < 0L;
 	}
