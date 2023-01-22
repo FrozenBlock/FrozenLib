@@ -86,6 +86,10 @@ public final class FrozenBiomeParameters {
 		return Climate.Parameter.span(middle + offset, highest);
 	}
 
+	public static boolean isWeird(Climate.ParameterPoint point) {
+		return point.weirdness().max() < 0L;
+	}
+
 	@FunctionalInterface
 	public interface BiomeRunnable {
 		void run(Climate.Parameter weirdness);
