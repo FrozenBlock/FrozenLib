@@ -40,8 +40,8 @@ public final class BlockMixin {
 		var overwrites = BlockSoundGroupOverwrites.getOverwrites();
 		if (overwrites != null) {
 			for (BlockSoundGroupOverwrite overwrite : overwrites) {
-				if (overwrite.getBlockId().equals(id)) {
-					info.setReturnValue(overwrite.getSoundOverwrite());
+				if (overwrite.blockId().equals(id)) {
+					info.setReturnValue(overwrite.soundOverwrite());
 				}
 			}
 		}
