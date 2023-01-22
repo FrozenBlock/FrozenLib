@@ -41,8 +41,8 @@ public final class SoundCodecs {
 
 	public static final Codec<BlockSoundGroupOverwrite> SOUND_GROUP_OVERWRITE = RecordCodecBuilder.create(instance ->
 			instance.group(
-					ResourceLocation.CODEC.fieldOf("id").forGetter(BlockSoundGroupOverwrite::getBlockId),
-					SOUND_TYPE.fieldOf("sound_type").forGetter(BlockSoundGroupOverwrite::getSoundOverwrite)
+					ResourceLocation.CODEC.fieldOf("id").forGetter(BlockSoundGroupOverwrite::blockId),
+					SOUND_TYPE.fieldOf("sound_type").forGetter(BlockSoundGroupOverwrite::soundOverwrite)
 			).apply(instance, BlockSoundGroupOverwrite::new)
 	);
 

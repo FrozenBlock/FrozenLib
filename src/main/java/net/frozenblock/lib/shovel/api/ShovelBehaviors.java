@@ -16,11 +16,24 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.api.block_sound_group;
+package net.frozenblock.lib.shovel.api;
 
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.SoundType;
-import org.jetbrains.annotations.NotNull;
+import java.util.HashMap;
+import java.util.Map;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
-public record BlockSoundGroupOverwrite(@NotNull ResourceLocation blockId, @NotNull SoundType soundOverwrite) {
+public class ShovelBehaviors {
+
+	public static final Map<Block, ShovelBehavior> SHOVEL_BEHAVIORS = new HashMap<>();
+
+	@FunctionalInterface
+	public interface ShovelBehavior {
+		boolean shovel(UseOnContext context, Level world, BlockPos pos, BlockState state, Direction face, Direction horizontal);
+	}
+
 }
