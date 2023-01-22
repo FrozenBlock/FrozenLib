@@ -39,6 +39,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -50,8 +51,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements EntityLoopingSoundInterface, EntityLoopingFadingDistanceSoundInterface {
@@ -132,27 +136,27 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface, 
         }
     }
 
-	@Redirect(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V", ordinal = 2))
-	public void hurt(Level lvl, Entity par1, byte par2, DamageSource source, float amount) {
-		if (par2 == ((byte)2) && par1 instanceof Player) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeVarInt(par1.getId());
-			byteBuf.writeResourceLocation(PlayerDamageSourceSounds.getDamageID(source));
-			byteBuf.writeFloat(this.getSoundVolume());
-			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) lvl, par1.blockPosition())) {
-				ServerPlayNetworking.send(player, FrozenMain.HURT_SOUND_PACKET, byteBuf);
-			}
-		}
-		lvl.broadcastEntityEvent(par1, par2);
-	}
+    @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V", ordinal = 2), locals = LocalCapture.CAPTURE_FAILHARD)
+    private void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, float f, boolean bl, float g, boolean bl2, Entity entity2, byte event) {
+        var entity = LivingEntity.class.cast(this);
+        if (event == EntityEvent.HURT && entity instanceof Player) {
+            FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+            byteBuf.writeVarInt(entity.getId());
+            byteBuf.writeResourceLocation(PlayerDamageSourceSounds.getDamageID(source));
+            byteBuf.writeFloat(this.getSoundVolume());
+            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) entity.level, entity.blockPosition())) {
+                ServerPlayNetworking.send(player, FrozenMain.HURT_SOUND_PACKET, byteBuf);
+            }
+        }
+    }
 
-	@Redirect(method = "handleEntityEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)Lnet/minecraft/sounds/SoundEvent;"))
+	/*@Redirect(method = "handleEntityEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)Lnet/minecraft/sounds/SoundEvent;"))
 	public SoundEvent stopHurtSoundIfTwo(LivingEntity par1, DamageSource par2, byte id) {
 		if (id == ((byte)2) && par1 instanceof Player) {
 			return null;
 		}
 		return this.getHurtSound(par2);
-	}
+	}*/
 
 	@Shadow
 	protected void setLivingEntityFlag(int mask, boolean value) {

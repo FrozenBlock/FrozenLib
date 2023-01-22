@@ -38,30 +38,52 @@ public final class FrozenBiomeParameters {
 	 * Is NOT identical to Climate.Parameter;span.
 	 * Instead, this will meet in the middle of both parameters.
 	 */
-	public static Climate.Parameter inBetween(Climate.Parameter par1, Climate.Parameter par2) {
+	public static Climate.Parameter inBetween(Climate.Parameter par1, Climate.Parameter par2, float width) {
+		if (width >= 1F || width <= 0F) {
+			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetween if width >= 1 or width <= 0!");
+		}
+		width *= 0.5F;
 		float lowest = par1.min();
 		float highest = par2.max();
 		if (lowest > highest) {
 			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetween when lower parameter is higher than the first!");
 		}
-		float offsetBy = (highest - lowest) * 0.25F;
-		return Climate.Parameter.span(lowest + offsetBy, highest - offsetBy);
+		float difference = (highest - lowest);
+		float middle = lowest + (difference * 0.5F);
+		float offset = difference * width;
+		return Climate.Parameter.span(middle - offset, middle + offset);
 	}
 
-	/**
-	 * Returns climate parameters in between both specified parameters with a smaller range.
-	 * <p>
-	 * Is NOT identical to Climate.Parameter;span.
-	 * Instead, this will meet in the middle of both parameters, though, with a smaller range.
-	 */
-	public static Climate.Parameter inBetweenTighter(Climate.Parameter par1, Climate.Parameter par2) {
+	public static Climate.Parameter inBetweenLowCutoff(Climate.Parameter par1, Climate.Parameter par2, float width) {
+		if (width >= 1F || width <= 0F) {
+			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenLowCutoff if width >= 1 or width <= 0!");
+		}
+		width *= 0.5F;
 		float lowest = par1.min();
 		float highest = par2.max();
 		if (lowest > highest) {
-			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenTighter when lower parameter is higher than the first!");
+			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenLowCutoff when lower parameter is higher than the first!");
 		}
-		float offsetBy = (highest - lowest) * 0.4F;
-		return Climate.Parameter.span(lowest + offsetBy, highest - offsetBy);
+		float difference = (highest - lowest);
+		float middle = lowest + (difference * 0.5F);
+		float offset = difference * width;
+		return Climate.Parameter.span(lowest, middle - offset);
+	}
+
+	public static Climate.Parameter inBetweenHighCutoff(Climate.Parameter par1, Climate.Parameter par2, float width) {
+		if (width >= 1F || width <= 0F) {
+			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenHighCutoff if width >= 1 or width <= 0!");
+		}
+		width *= 0.5F;
+		float lowest = par1.min();
+		float highest = par2.max();
+		if (lowest > highest) {
+			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenHighCutoff when lower parameter is higher than the first!");
+		}
+		float difference = (highest - lowest);
+		float middle = lowest + (difference * 0.5F);
+		float offset = difference * width;
+		return Climate.Parameter.span(middle + offset, highest);
 	}
 
 	@FunctionalInterface
