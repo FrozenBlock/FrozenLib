@@ -428,17 +428,4 @@ public class OverworldBiomeBuilderParameters {
 		list.add(Climate.parameters(parameter, parameter2, parameter3, parameter4, Climate.Parameter.point(1.1F), parameter5, f));
 	}
 
-	//LISTS
-	private static List<Climate.ParameterPoint> pickMiddleBiomeOrBadlandsIfHot(int temperature, int humidity) {
-		return temperature == 4 ? BADLANDS_POINTS : MIDDLE_POINTS;
-	}
-
-	private static List<Climate.ParameterPoint> pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(int temperature, int humidity) {
-		return temperature == 0 ? SLOPE_POINTS : pickMiddleBiomeOrBadlandsIfHot(temperature, humidity);
-	}
-
-	private static List<Climate.ParameterPoint> maybePickWindsweptSavannaBiome(int temperature, int humidity, Climate.Parameter param, List<Climate.ParameterPoint> list) {
-		return temperature > 1 && humidity < 4 && param.max() >= 0L ? WINDSWEPT_SAVANNA_POINTS : list;
-	}
-
 }
