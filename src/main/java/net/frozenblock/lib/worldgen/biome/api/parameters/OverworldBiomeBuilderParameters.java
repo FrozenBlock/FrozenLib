@@ -163,12 +163,6 @@ public class OverworldBiomeBuilderParameters {
 		return MIDDLE_POINTS;
 	}
 
-	private static List<Climate.ParameterPoint> MIDDLE_VARIANT_POINTS = new ArrayList<>();
-	public static List<Climate.ParameterPoint> getMiddleVariantPoints() {
-		runBiomes();
-		return MIDDLE_VARIANT_POINTS;
-	}
-
 	private static List<Climate.ParameterPoint> PEAK_POINTS = new ArrayList<>();
 	public static List<Climate.ParameterPoint> getPeakPoints() {
 		runBiomes();
