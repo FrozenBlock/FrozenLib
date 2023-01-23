@@ -23,7 +23,7 @@ public class BlockEntityTypeMixin {
 
 		if ((type == BlockEntityType.SIGN &&
 				(state.getBlock() instanceof StandingSignBlock || state.getBlock() instanceof WallSignBlock))
-				|| (type == BlockEntityType.SIGN
+				|| (type == BlockEntityType.HANGING_SIGN
 				&& (state.getBlock() instanceof CeilingHangingSignBlock || state.getBlock() instanceof WallHangingSignBlock))) {
 			info.setReturnValue(true);
 		}
