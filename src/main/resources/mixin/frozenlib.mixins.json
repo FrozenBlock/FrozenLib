@@ -7,6 +7,7 @@
     "server.AbstractFishMixin",
     "server.BehaviorMixin",
     "server.BlockBehaviourMixin",
+    "server.BlockEntityTypeMixin",
     "server.BoneMealItemMixin",
     "server.BuiltInRegistriesMixin",
     "server.CreeperMixin",
@@ -23,7 +24,7 @@
     "worldgen.biome.MultiNoiseBiomeSourceMixin"
   ],
   "client": [
-	"client.LivingEntityRendererMixin"
+    "client.LivingEntityRendererMixin"
   ],
   "injectors": {
     "defaultRequire": 1

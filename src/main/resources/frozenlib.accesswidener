@@ -45,8 +45,6 @@ transitive-accessible    field    net/minecraft/world/CompoundContainer    conta
 transitive-accessible    field    net/minecraft/world/CompoundContainer    container2    Lnet/minecraft/world/Container;
 transitive-accessible    method    net/minecraft/world/level/block/AbstractCauldronBlock    canReceiveStalactiteDrip    (Lnet/minecraft/world/level/material/Fluid;)Z
 transitive-accessible    method    net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo    <init>    (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
-transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    <init>    (Ljava/lang/String;)V
-transitive-accessible    method    net/minecraft/world/level/block/state/properties/WoodType    register    (Lnet/minecraft/world/level/block/state/properties/WoodType;)Lnet/minecraft/world/level/block/state/properties/WoodType;
 transitive-accessible    method    net/minecraft/data/BlockFamilies   familyBuilder    (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
 
 # Block Entities
