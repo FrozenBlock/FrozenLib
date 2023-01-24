@@ -18,8 +18,8 @@
 
 package net.frozenblock.lib_compat.modmenu.api;
 
-import net.frozenblock.lib_compat.modmenu.impl.FrozenModMenuBadge;
 import java.util.ArrayList;
+import net.frozenblock.lib_compat.modmenu.impl.FrozenModMenuBadge;
 
 public abstract class FrozenModMenuEntrypoint {
 

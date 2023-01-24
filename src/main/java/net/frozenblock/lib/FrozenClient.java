@@ -29,8 +29,6 @@ import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;
-import net.frozenblock.lib.silentticker.SilentTicker;
-import net.frozenblock.lib.silentticker.SilentTickerManager;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
@@ -80,7 +78,6 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveSmallWindSyncPacket();
 		receivePlayerDamagePacket();
 		receiveLocalPlayerSoundPacket();
-		receiveSilentTickerPacket();
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
@@ -442,15 +439,6 @@ public final class FrozenClient implements ClientModInitializer {
 				}
 			});
 		});
-	}
-
-	private static void receiveSilentTickerPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SILENT_TICKER_PACKET, (ctx, handler, byteBuf, responseSender) -> ctx.execute(() -> {
-			ClientLevel level = ctx.level;
-			if (level != null) {
-				SilentTicker.readPacket(level, byteBuf);
-			}
-		}));
 	}
 
 	private static void registerClientTickEvents() {

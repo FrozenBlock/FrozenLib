@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.math.api;
 
-import net.minecraft.util.RandomSource;
 import java.awt.geom.Point2D;
 
 /**

@@ -18,11 +18,11 @@
 
 package net.frozenblock.lib.worldgen.surface.api;
 
+import java.util.ArrayList;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.world.level.levelgen.SurfaceRules;
-import java.util.ArrayList;
 
 public class SurfaceRuleEvents {
 

@@ -23,7 +23,6 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.sound.api.RestrictedSoundInstance;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
