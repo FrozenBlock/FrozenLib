@@ -18,13 +18,13 @@
 
 package net.frozenblock.lib.sound.api.block_sound_group;
 
+import java.util.List;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.Nullable;
-import java.util.List;
 
 /**
  * Allows you to add any block by either adding its registry (Blocks.STONE) or its ID ("stone").

@@ -144,12 +144,12 @@ public final class FrozenClient implements ClientModInitializer {
 			float pitch = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSound<>(entity, sound, category, volume, pitch, predicate));
+						ctx.getSoundManager().play(new RestrictedMovingSound<>(entity, sound, category, volume, pitch, predicate));
 					}
 				}
 			});
@@ -166,12 +166,12 @@ public final class FrozenClient implements ClientModInitializer {
 			float pitch = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, sound, category, volume, pitch, predicate));
+						ctx.getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, sound, category, volume, pitch, predicate));
 					}
 				}
 			});
@@ -189,12 +189,12 @@ public final class FrozenClient implements ClientModInitializer {
 			float pitch = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						Minecraft.getInstance().getSoundManager().play(new RestrictedStartingSound<>(entity, startingSound, loopingSound, category, volume, pitch, predicate, new RestrictedMovingSoundLoop<>(entity, loopingSound, category, volume, pitch, predicate)));
+						ctx.getSoundManager().play(new RestrictedStartingSound<>(entity, startingSound, loopingSound, category, volume, pitch, predicate, new RestrictedMovingSoundLoop<>(entity, loopingSound, category, volume, pitch, predicate)));
 					}
 				}
 			});
@@ -214,13 +214,13 @@ public final class FrozenClient implements ClientModInitializer {
 			float maxDist = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						Minecraft.getInstance().getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
-						Minecraft.getInstance().getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
 					}
 				}
 			});
@@ -240,13 +240,13 @@ public final class FrozenClient implements ClientModInitializer {
 			float maxDist = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						Minecraft.getInstance().getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
-						Minecraft.getInstance().getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
 					}
 				}
 			});
@@ -266,10 +266,10 @@ public final class FrozenClient implements ClientModInitializer {
 			float fadeDist = byteBuf.readFloat();
 			float maxDist = byteBuf.readFloat();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
-					Minecraft.getInstance().getSoundManager().play(new FadingDistanceSwitchingSound(sound, category, volume, pitch, fadeDist, maxDist, volume, false, x, y, z));
-					Minecraft.getInstance().getSoundManager().play(new FadingDistanceSwitchingSound(sound2, category, volume, pitch, fadeDist, maxDist, volume, true, x, y, z));
+					ctx.getSoundManager().play(new FadingDistanceSwitchingSound(sound, category, volume, pitch, fadeDist, maxDist, volume, false, x, y, z));
+					ctx.getSoundManager().play(new FadingDistanceSwitchingSound(sound2, category, volume, pitch, fadeDist, maxDist, volume, true, x, y, z));
 				}
 			});
 		});
@@ -283,7 +283,7 @@ public final class FrozenClient implements ClientModInitializer {
 			float volume = byteBuf.readFloat();
 			float pitch = byteBuf.readFloat();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
 					if (entity != null) {
@@ -300,9 +300,9 @@ public final class FrozenClient implements ClientModInitializer {
 			Item item = byteBuf.readById(BuiltInRegistries.ITEM);
 			int additional = byteBuf.readVarInt();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
-				if (level != null && Minecraft.getInstance().player != null) {
-					((CooldownInterface) Minecraft.getInstance().player.getCooldowns()).changeCooldown(item, additional);
+				ClientLevel level = ctx.level;
+				if (level != null && ctx.player != null) {
+					((CooldownInterface) ctx.player.getCooldowns()).changeCooldown(item, additional);
 				}
 			});
 		});
@@ -318,7 +318,7 @@ public final class FrozenClient implements ClientModInitializer {
 			double z = byteBuf.readDouble();
 			float maxDistance = byteBuf.readFloat();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					Vec3 pos = new Vec3(x, y, z);
 					ScreenShaker.addShake(intensity, duration, fallOffStart, pos, maxDistance);
@@ -335,7 +335,7 @@ public final class FrozenClient implements ClientModInitializer {
 			int fallOffStart = byteBuf.readInt();
 			float maxDistance = byteBuf.readFloat();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
 					if (entity != null) {
@@ -354,7 +354,7 @@ public final class FrozenClient implements ClientModInitializer {
 			float endFade = byteBuf.readFloat();
 			ResourceLocation predicate = byteBuf.readResourceLocation();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
 					if (entity instanceof EntitySpottingIconInterface livingEntity) {
@@ -369,7 +369,7 @@ public final class FrozenClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SPOTTING_ICON_REMOVE_PACKET, (ctx, handler, byteBuf, responseSender) -> {
 			int id = byteBuf.readVarInt();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
 					if (entity instanceof EntitySpottingIconInterface livingEntity) {
@@ -413,7 +413,7 @@ public final class FrozenClient implements ClientModInitializer {
 			double y = byteBuf.readDouble();
 			double z = byteBuf.readDouble();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					ClientWindManager.time = windTime;
 					ClientWindManager.cloudX = x;
@@ -430,7 +430,7 @@ public final class FrozenClient implements ClientModInitializer {
 			ResourceLocation damageLocation = byteBuf.readResourceLocation();
 			float volume = byteBuf.readFloat();
 			ctx.execute(() -> {
-				ClientLevel level = Minecraft.getInstance().level;
+				ClientLevel level = ctx.level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
 					if (entity instanceof Player player) {

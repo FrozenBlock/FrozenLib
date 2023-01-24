@@ -19,19 +19,9 @@
 package net.frozenblock.lib.spotting_icons.impl;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
-import net.minecraft.CrashReport;
-import net.minecraft.CrashReportCategory;
-import net.minecraft.ReportedException;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
 @InjectedInterface(EntityRenderDispatcher.class)
