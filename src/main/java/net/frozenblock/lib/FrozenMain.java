@@ -32,6 +32,7 @@ import net.frozenblock.lib.feature.FrozenFeatures;
 import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.frozenblock.lib.silentticker.SilentTickerManager;
 import net.frozenblock.lib.sound.api.FrozenSoundPackets;
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
@@ -116,6 +117,8 @@ public final class FrozenMain implements ModInitializer {
 
 		ServerTickEvents.START_SERVER_TICK.register((server) -> WindManager.tick(server, server.overworld()));
 
+		ServerTickEvents.START_SERVER_TICK.register((server) -> SilentTickerManager.tickSilentTickers());
+
 		PlayerJoinEvent.register(((server, player) -> {
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 			byteBuf.writeLong(WindManager.time);
@@ -156,6 +159,8 @@ public final class FrozenMain implements ModInitializer {
 
 	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
 	public static final ResourceLocation SMALL_WIND_SYNC_PACKET = id("small_wind_sync_packet");
+
+	public static final ResourceLocation SILENT_TICKER_PACKET = FrozenMain.id("silent_ticker_packet");
 
 	public static ResourceLocation id(String path) {
 		return new ResourceLocation(MOD_ID, path);
