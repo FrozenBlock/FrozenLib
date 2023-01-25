@@ -25,6 +25,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,6 +38,7 @@ import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
 import net.frozenblock.lib.sound.api.block_sound_group.SoundCodecs;
+import net.frozenblock.lib.sound.api.block_sound_group.TagBlockSoundGroupOverwrite;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -62,6 +64,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 
 	private Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites;
 	private final Map<ResourceLocation, BlockSoundGroupOverwrite> queuedOverwrites = new HashMap<>();
+	private final List<TagBlockSoundGroupOverwrite> tagOverwrites = new ArrayList<>();
 
 	@Nullable
 	public List<BlockSoundGroupOverwrite> getOverwrites() {
@@ -124,18 +127,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	}
 
 	public void addBlockTag(TagKey<Block> tag, SoundType sounds, BooleanSupplier condition) {
-		var tagIterable = Registry.BLOCK.getTagOrEmpty(tag);
-		if (tagIterable == null) {
-			throw new IllegalStateException("The specified TagKey is null.");
-		} else {
-			for (Holder<Block> block : tagIterable) {
-				var key = block.unwrapKey().orElseThrow().location();
-				if (!Registry.BLOCK.containsKey(key)) {
-					throw new IllegalStateException("The specified block's id is null.");
-				}
-				this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
-			}
-		}
+		this.tagOverwrites.add(new TagBlockSoundGroupOverwrite(tag, sounds, condition));
 	}
 
 	public static ResourceLocation getPath(ResourceLocation blockId) {
@@ -151,6 +143,21 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	public CompletableFuture<Void> apply(SoundGroupLoader prepared, ResourceManager manager, ProfilerFiller profiler, Executor executor) {
 		this.overwrites = prepared.getOverwrites();
 		this.overwrites.putAll(this.queuedOverwrites);
+		for (var tagOverwrite : this.tagOverwrites) {
+			var tagIterable = Registry.BLOCK.getTagOrEmpty(tagOverwrite.blockTag());
+			if (tagIterable == null) {
+				throw new IllegalStateException("The specified TagKey is null.");
+			} else {
+				for (Holder<Block> block : tagIterable) {
+					var key = block.unwrapKey().orElseThrow().location();
+					if (!Registry.BLOCK.containsKey(key)) {
+						throw new IllegalStateException("The specified block's id is null.");
+					}
+					this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, tagOverwrite.soundOverwrite(), tagOverwrite.condition()));
+				}
+			}
+		}
+		this.tagOverwrites.clear();
 		return CompletableFuture.runAsync(() -> {
 		});
 	}
