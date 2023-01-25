@@ -12,7 +12,6 @@
 	"server.CreeperMixin",
 	"server.MappedRegistryMixin",
 	"server.NoExperimentalMixin",
-	"server.PlayerMixin",
 	"server.PointedDripstoneBlockMixin",
 	"server.RegistryMixin",
 	"worldgen.SinglePoolElementMixin",

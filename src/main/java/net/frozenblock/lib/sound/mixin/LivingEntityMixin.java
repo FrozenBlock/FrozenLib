@@ -22,7 +22,7 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
+import net.frozenblock.lib.damagesource.api.PlayerDamageSourceSounds;
 import net.frozenblock.lib.sound.api.FrozenClientPacketInbetween;
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
@@ -51,6 +51,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -137,7 +138,7 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface, 
     @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V", ordinal = 2), locals = LocalCapture.CAPTURE_FAILHARD)
     private void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, float f, boolean bl, float g, boolean bl2, Entity entity2, byte event) {
         var entity = LivingEntity.class.cast(this);
-        if (event == EntityEvent.HURT && entity instanceof Player) {
+        if (entity instanceof Player && event == EntityEvent.HURT && PlayerDamageSourceSounds.containsSource(source)) {
             FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
             byteBuf.writeVarInt(entity.getId());
             byteBuf.writeResourceLocation(PlayerDamageSourceSounds.getDamageID(source));
@@ -148,13 +149,13 @@ public abstract class LivingEntityMixin implements EntityLoopingSoundInterface, 
         }
     }
 
-	/*@Redirect(method = "handleEntityEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)Lnet/minecraft/sounds/SoundEvent;"))
+    @Redirect(method = "handleEntityEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)Lnet/minecraft/sounds/SoundEvent;"))
 	public SoundEvent stopHurtSoundIfTwo(LivingEntity par1, DamageSource par2, byte id) {
-		if (id == ((byte)2) && par1 instanceof Player) {
+		if (par1 instanceof Player && id == EntityEvent.HURT && PlayerDamageSourceSounds.containsSource(par2)) {
 			return null;
 		}
 		return this.getHurtSound(par2);
-	}*/
+	}
 
 	@Shadow
 	protected void setLivingEntityFlag(int mask, boolean value) {
