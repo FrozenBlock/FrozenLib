@@ -1,9 +1,12 @@
 package net.frozenblock.lib.integration.api;
 
+import net.frozenblock.lib.integration.impl.ModIntegrationSupplier;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 public final class ModIntegrations {
 
@@ -16,13 +19,14 @@ public final class ModIntegrations {
      *
      * @param integration   The mod integration class to register
      * @param srcModID      The id of the mod registering the mod integration
+	 * @param modID      The id of the mod being integrated
      * @return
      */
-    public static ModIntegration register(ModIntegration integration, String srcModID) {
-        return Registry.register(FrozenRegistry.MOD_INTEGRATION, srcModID + "/" + integration.getID(), integration);
+    public static ModIntegrationSupplier register(Supplier<ModIntegration> integration, String srcModID, String modID) {
+        return Registry.register(FrozenRegistry.MOD_INTEGRATION, new ResourceLocation(srcModID, modID), new ModIntegrationSupplier(integration, modID));
     }
 
-    public static List<ModIntegration> getIntegrations() {
+    public static List<ModIntegrationSupplier> getIntegrationSuppliers() {
         return FrozenRegistry.MOD_INTEGRATION.stream().toList();
     }
 
@@ -31,9 +35,8 @@ public final class ModIntegrations {
      */
     public static void initialize() {
         for (var integration : FrozenRegistry.MOD_INTEGRATION) {
-            if (integration.modLoaded()) {
-                integration.init();
-            }
+            integration.getIntegration().init();
         }
     }
+
 }

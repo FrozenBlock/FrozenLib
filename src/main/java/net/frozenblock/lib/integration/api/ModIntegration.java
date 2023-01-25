@@ -1,7 +1,5 @@
 package net.frozenblock.lib.integration.api;
 
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.Registry;
 import net.minecraft.data.BuiltinRegistries;
@@ -15,9 +13,15 @@ import net.minecraft.world.level.block.Block;
 public abstract class ModIntegration {
 
     private final String modID;
+	private final String modRegistryID;
+
+	public ModIntegration(String modID, String modRegistryID) {
+		this.modID = modID;
+		this.modRegistryID = modRegistryID;
+	}
 
     public ModIntegration(String modID) {
-        this.modID = modID;
+        this(modID, modID);
     }
 
     public String getID() {
@@ -25,7 +29,7 @@ public abstract class ModIntegration {
     }
 
     public ResourceLocation id(String path) {
-        return new ResourceLocation(this.modID, path);
+        return new ResourceLocation(this.modRegistryID, path);
     }
 
     public Block getBlock(String path) {
