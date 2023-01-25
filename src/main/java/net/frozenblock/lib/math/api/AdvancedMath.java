@@ -133,21 +133,4 @@ public final class AdvancedMath {
 		double z = originZ + (distancedX - originX) * Math.sin(calcAngle) + (distancedZ - originZ) * Math.cos(calcAngle);
 		return new Vec3(x, original.y, z);
 	}
-
-	public static double nonNeg(double d) {
-		return d < 0 ? d * -1 : d;
-	}
-
-	public static float nonNeg(float f) {
-		return f < 0 ? f * -1 : f;
-	}
-
-	public static int nonNeg(int i) {
-		return i < 0 ? i * -1 : i;
-	}
-
-	public static long nonNeg(long l) {
-		return l < 0 ? l * -1 : l;
-	}
-
 }

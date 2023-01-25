@@ -30,8 +30,8 @@ public class EntityUtils {
 		Direction direction = null;
 		Vec3 deltaMovement = entity.getDeltaMovement();
 		if (deltaMovement.horizontalDistance() > 0) {
-			double nonNegX = AdvancedMath.nonNeg(deltaMovement.x);
-			double nonNegZ = AdvancedMath.nonNeg(deltaMovement.z);
+			double nonNegX = Math.abs(deltaMovement.x);
+			double nonNegZ = Math.abs(deltaMovement.z);
 			if (nonNegX > nonNegZ) {
 				direction = deltaMovement.x > 0 ? Direction.EAST : Direction.WEST;
 			} else if (nonNegZ > 0) {
