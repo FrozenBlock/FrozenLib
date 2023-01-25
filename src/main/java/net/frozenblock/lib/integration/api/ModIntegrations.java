@@ -16,11 +16,10 @@ public final class ModIntegrations {
      *
      * @param integration   The mod integration class to register
      * @param srcModID      The id of the mod registering the mod integration
-     * @param targetModID   The mod id to add integration for
      * @return
      */
-    public static ModIntegration register(ModIntegration integration, String srcModID, String targetModID) {
-        return Registry.register(FrozenRegistry.MOD_INTEGRATION, srcModID + "/" + targetModID, integration);
+    public static ModIntegration register(ModIntegration integration, String srcModID) {
+        return Registry.register(FrozenRegistry.MOD_INTEGRATION, srcModID + "/" + integration.getID(), integration);
     }
 
     public static List<ModIntegration> getIntegrations() {
