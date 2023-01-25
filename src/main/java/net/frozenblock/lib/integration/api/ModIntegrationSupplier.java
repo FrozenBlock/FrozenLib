@@ -1,4 +1,4 @@
-package net.frozenblock.lib.integration.impl;
+package net.frozenblock.lib.integration.api;
 
 import java.util.Optional;
 import java.util.function.Supplier;

@@ -1,6 +1,5 @@
 package net.frozenblock.lib.integration.api;
 
-import net.frozenblock.lib.integration.impl.ModIntegrationSupplier;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -20,7 +19,7 @@ public final class ModIntegrations {
      * @param integration   The mod integration class to register
      * @param srcModID      The id of the mod registering the mod integration
 	 * @param modID      The id of the mod being integrated
-     * @return
+     * @return A {@link ModIntegrationSupplier}.
      */
     public static ModIntegrationSupplier<? extends ModIntegration> register(Supplier<? extends ModIntegration> integration, String srcModID, String modID) {
         return Registry.register(FrozenRegistry.MOD_INTEGRATION, new ResourceLocation(srcModID, modID), new ModIntegrationSupplier<>(integration, modID));
