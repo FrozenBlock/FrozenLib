@@ -6,12 +6,12 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.UnloadedModIntegration;
 
-public class ModIntegrationSupplier {
+public class ModIntegrationSupplier<T extends ModIntegration> {
 	private final String modID;
-	private final Optional<? extends ModIntegration> optionalIntegration;
+	private final Optional<T> optionalIntegration;
 	private final ModIntegration unloadedModIntegration;
 
-	public ModIntegrationSupplier(Supplier<? extends ModIntegration> modIntegrationSupplier, String modID) {
+	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, String modID) {
 		this.modID = modID;
 		this.optionalIntegration = this.modLoaded() ? Optional.of(modIntegrationSupplier.get()) : Optional.empty();
 		this.unloadedModIntegration = new UnloadedModIntegration(modID);
@@ -21,7 +21,7 @@ public class ModIntegrationSupplier {
 		return this.optionalIntegration.isPresent() ? this.optionalIntegration.get() : this.unloadedModIntegration;
 	}
 
-	public Optional<? extends ModIntegration> get() {
+	public Optional<T> get() {
 		return this.optionalIntegration;
 	}
 
