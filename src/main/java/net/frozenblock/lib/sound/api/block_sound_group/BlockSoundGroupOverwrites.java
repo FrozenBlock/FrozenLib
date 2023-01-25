@@ -19,6 +19,7 @@
 package net.frozenblock.lib.sound.api.block_sound_group;
 
 import java.util.List;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
@@ -55,33 +56,33 @@ public final class BlockSoundGroupOverwrites {
 	/**
 	 * This will only work with vanilla blocks.
 	 */
-	public static void addBlock(String id, SoundType sounds, Supplier<Boolean> condition) {
+	public static void addBlock(String id, SoundType sounds, BooleanSupplier condition) {
 		MANAGER.addBlock(id, sounds, condition);
 	}
 
 	/**
 	 * Adds a block with the specified namespace and id.
 	 */
-	public static void addBlock(String namespace, String id, SoundType sounds, Supplier<Boolean> condition) {
+	public static void addBlock(String namespace, String id, SoundType sounds, BooleanSupplier condition) {
 		MANAGER.addBlock(namespace, id, sounds, condition);
 	}
 
 	/**
 	 * Adds a block with the specified {@link ResourceLocation}.
 	 */
-	public static void addBlock(ResourceLocation key, SoundType sounds, Supplier<Boolean> condition) {
+	public static void addBlock(ResourceLocation key, SoundType sounds, BooleanSupplier condition) {
 		MANAGER.addBlock(key, sounds, condition);
 	}
 
-	public static void addBlock(Block block, SoundType sounds, Supplier<Boolean> condition) {
+	public static void addBlock(Block block, SoundType sounds, BooleanSupplier condition) {
 		MANAGER.addBlock(block, sounds, condition);
 	}
 
-	public static void addBlocks(Block[] blocks, SoundType sounds, Supplier<Boolean> condition) {
+	public static void addBlocks(Block[] blocks, SoundType sounds, BooleanSupplier condition) {
 		MANAGER.addBlocks(blocks, sounds, condition);
 	}
 
-	public static void addBlockTag(TagKey<Block> tag, SoundType sounds, Supplier<Boolean> condition) {
+	public static void addBlockTag(TagKey<Block> tag, SoundType sounds, BooleanSupplier condition) {
 		MANAGER.addBlockTag(tag, sounds, condition);
 	}
 }
