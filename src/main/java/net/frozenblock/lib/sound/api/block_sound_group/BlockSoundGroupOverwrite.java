@@ -22,5 +22,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.NotNull;
 
-public record BlockSoundGroupOverwrite(@NotNull ResourceLocation blockId, @NotNull SoundType soundOverwrite) {
+import java.util.function.Supplier;
+
+public record BlockSoundGroupOverwrite(@NotNull ResourceLocation blockId, @NotNull SoundType soundOverwrite, Supplier<Boolean> condition) {
 }
