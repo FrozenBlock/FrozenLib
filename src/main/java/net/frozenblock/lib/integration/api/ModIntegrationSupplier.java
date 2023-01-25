@@ -3,8 +3,7 @@ package net.frozenblock.lib.integration.api;
 import java.util.Optional;
 import java.util.function.Supplier;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.integration.api.ModIntegration;
-import net.frozenblock.lib.integration.api.UnloadedModIntegration;
+import net.frozenblock.lib.integration.impl.EmptyModIntegration;
 
 public class ModIntegrationSupplier<T extends ModIntegration> {
 	private final String modID;
@@ -14,7 +13,7 @@ public class ModIntegrationSupplier<T extends ModIntegration> {
 	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, String modID) {
 		this.modID = modID;
 		this.optionalIntegration = this.modLoaded() ? Optional.of(modIntegrationSupplier.get()) : Optional.empty();
-		this.unloadedModIntegration = new UnloadedModIntegration(modID);
+		this.unloadedModIntegration = new EmptyModIntegration(modID);
 	}
 
 	public ModIntegration getIntegration() {
