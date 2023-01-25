@@ -22,6 +22,7 @@ import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.entity.api.rendering.EntityTextureOverride;
+import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.minecraft.core.HolderLookup;
@@ -33,6 +34,10 @@ public class FrozenRegistry {
     public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenMain.id("entity_texture_override"))
             .attribute(RegistryAttribute.SYNCED)
             .buildAndRegister();
+
+	public static final MappedRegistry<ModIntegration> MOD_INTEGRATION = FabricRegistryBuilder.createSimple(ModIntegration.class, FrozenMain.id("mod_integration"))
+			.attribute(RegistryAttribute.SYNCED)
+			.buildAndRegister();
 
 	public static final MappedRegistry<SoundPredicate> SOUND_PREDICATE = FabricRegistryBuilder.createSimple(SoundPredicate.class, FrozenMain.id("sound_predicate_synced"))
 			.attribute(RegistryAttribute.SYNCED)

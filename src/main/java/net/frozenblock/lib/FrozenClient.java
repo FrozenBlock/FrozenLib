@@ -25,7 +25,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
-import net.frozenblock.lib.impl.PlayerDamageSourceSounds;
+import net.frozenblock.lib.damagesource.api.PlayerDamageSourceSounds;
+import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;
@@ -59,6 +60,7 @@ public final class FrozenClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		ModIntegrations.initialize(); // Mod integrations must run after normal mod initialization
 		ClientFreezer.onInitializeClient();
 		registerClientTickEvents();
 

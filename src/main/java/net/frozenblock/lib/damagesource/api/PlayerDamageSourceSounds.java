@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.impl;
+package net.frozenblock.lib.damagesource.api;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,6 +27,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 
 public final class PlayerDamageSourceSounds {
+	private PlayerDamageSourceSounds() {
+		throw new UnsupportedOperationException("PlayerDamageSourceSounds contains only static declarations.");
+	}
 
     private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_RESOURCE_LOCATION_MAP = new HashMap<>();
 	private static final Map<ResourceLocation, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new HashMap<>();
@@ -38,6 +41,7 @@ public final class PlayerDamageSourceSounds {
 	}
 
 	public static SoundEvent getDamageSound(DamageSource source) {
+
 		return DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.containsKey(source) ? getDamageSound(DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.get(source)) : SoundEvents.PLAYER_HURT;
 	}
 
@@ -49,4 +53,11 @@ public final class PlayerDamageSourceSounds {
 		return DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.containsKey(source) ? DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.get(source) : DEFAULT_ID;
 	}
 
+	public static boolean containsSource(DamageSource source) {
+		return DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.containsKey(source);
+	}
+
+	public static boolean containsSource(ResourceLocation location) {
+		return RESOURCE_LOCATION_SOUND_EVENT_MAP.containsKey(location);
+	}
 }

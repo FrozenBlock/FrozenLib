@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 public final class RegistryFreezeEvents {
 
 	private RegistryFreezeEvents() {
-		throw new UnsupportedOperationException("RegistryFreeze events contains only static declarations.");
+		throw new UnsupportedOperationException("RegistryFreezeEvents contains only static declarations.");
 	}
 
 	/**
