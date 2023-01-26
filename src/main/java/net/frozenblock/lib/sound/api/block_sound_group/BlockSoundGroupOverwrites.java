@@ -20,8 +20,6 @@ package net.frozenblock.lib.sound.api.block_sound_group;
 
 import java.util.List;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;

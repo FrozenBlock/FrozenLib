@@ -32,8 +32,6 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
-import java.util.function.Supplier;
-
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;

@@ -19,7 +19,6 @@
 package net.frozenblock.lib.entity.api;
 
 import java.util.Optional;
-import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;

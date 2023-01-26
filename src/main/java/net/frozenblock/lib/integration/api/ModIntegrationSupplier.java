@@ -8,16 +8,22 @@ import net.frozenblock.lib.integration.impl.EmptyModIntegration;
 public class ModIntegrationSupplier<T extends ModIntegration> {
 	private final String modID;
 	private final Optional<T> optionalIntegration;
-	private final ModIntegration unloadedModIntegration;
+	private final T unloadedModIntegration;
 
 	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, String modID) {
 		this.modID = modID;
 		this.optionalIntegration = this.modLoaded() ? Optional.of(modIntegrationSupplier.get()) : Optional.empty();
-		this.unloadedModIntegration = new EmptyModIntegration(modID);
+		this.unloadedModIntegration = (T) new EmptyModIntegration(modID);
 	}
 
-	public ModIntegration getIntegration() {
-		return this.optionalIntegration.isPresent() ? this.optionalIntegration.get() : this.unloadedModIntegration;
+	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, Supplier<T> unloadedModIntegrationSupplier, String modID) {
+		this.modID = modID;
+		this.optionalIntegration = this.modLoaded() ? Optional.of(modIntegrationSupplier.get()) : Optional.empty();
+		this.unloadedModIntegration = unloadedModIntegrationSupplier.get();
+	}
+
+	public T getIntegration() {
+		return this.optionalIntegration.orElse(this.unloadedModIntegration);
 	}
 
 	public Optional<T> get() {
