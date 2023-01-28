@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
+import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
@@ -77,44 +78,51 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	/**
 	 * This will only work with vanilla blocks.
 	 */
-	public void addBlock(String id, SoundType sounds) {
+	public void addBlock(String id, SoundType sounds, BooleanSupplier condition) {
 		var key = new ResourceLocation(id);
 		if (!BuiltInRegistries.BLOCK.containsKey(key)) {
 			throw new IllegalStateException("The specified block's id is null.");
 		}
-		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
 	}
 
 	/**
 	 * Adds a block with the specified namespace and id.
 	 */
-	public void addBlock(String namespace, String id, SoundType sounds) {
+	public void addBlock(String namespace, String id, SoundType sounds, BooleanSupplier condition) {
 		var key = new ResourceLocation(namespace, id);
+		addBlock(key, sounds, condition);
+	}
+
+	/**
+	 * Adds a block with the specified {@link ResourceLocation}.
+	 */
+	public void addBlock(ResourceLocation key, SoundType sounds, BooleanSupplier condition) {
 		if (!BuiltInRegistries.BLOCK.containsKey(key)) {
 			throw new IllegalStateException("The specified block's id is null.");
 		}
-		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
 	}
 
-	public void addBlock(Block block, SoundType sounds) {
+	public void addBlock(Block block, SoundType sounds, BooleanSupplier condition) {
 		var key = BuiltInRegistries.BLOCK.getKey(block);
 		if (!BuiltInRegistries.BLOCK.containsKey(key)) {
 			throw new IllegalStateException("The specified block's id is null.");
 		}
-		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
 	}
 
-	public void addBlocks(Block[] blocks, SoundType sounds) {
+	public void addBlocks(Block[] blocks, SoundType sounds, BooleanSupplier condition) {
 		for (Block block : blocks) {
 			var key = BuiltInRegistries.BLOCK.getKey(block);
 			if (!BuiltInRegistries.BLOCK.containsKey(key)) {
 				throw new IllegalStateException("The specified block's id is null.");
 			}
-			this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+			this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
 		}
 	}
 
-	public void addBlockTag(TagKey<Block> tag, SoundType sounds) {
+	public void addBlockTag(TagKey<Block> tag, SoundType sounds, BooleanSupplier condition) {
 		var tagIterable = BuiltInRegistries.BLOCK.getTagOrEmpty(tag);
 		if (tagIterable == null) {
 			throw new IllegalStateException("The specified TagKey is null.");
@@ -124,7 +132,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 				if (!BuiltInRegistries.BLOCK.containsKey(key)) {
 					throw new IllegalStateException("The specified block's id is null.");
 				}
-				this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds));
+				this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
 			}
 		}
 	}

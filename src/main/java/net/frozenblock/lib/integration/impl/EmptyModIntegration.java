@@ -16,18 +16,22 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib;
+package net.frozenblock.lib.integration.impl;
 
-import net.fabricmc.api.DedicatedServerModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.frozenblock.lib.integration.api.ModIntegrations;
+import net.frozenblock.lib.integration.api.ModIntegration;
+import org.jetbrains.annotations.ApiStatus;
 
-@Environment(EnvType.SERVER)
-public class FrozenServer implements DedicatedServerModInitializer {
+/**
+ * An empty mod integration used if a mod is not loaded
+ */
+@ApiStatus.Internal
+public class EmptyModIntegration extends ModIntegration {
+	public EmptyModIntegration(String modID) {
+		super(modID);
+	}
 
-    @Override
-    public void onInitializeServer() {
-        ModIntegrations.initialize(); // Mod integrations must run after normal mod initialization
-    }
+	@Override
+	public void init() {
+
+	}
 }
