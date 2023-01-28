@@ -15,6 +15,9 @@
     "client": [
       "net.frozenblock.lib.testmod.FrozenTestClient"
     ],
+    "frozenlib:surfacerules": [
+      "net.frozenblock.lib.testmod.worldgen.TestSurfaceRules"
+    ],
     "modmenu": [
       "net.frozenblock.lib.testmod.config.ModMenuIntegration"
     ]
