@@ -18,8 +18,8 @@
     "fabric-datagen": [
       "net.frozenblock.lib.testmod.datagen.FrozenLibTestDatagen"
     ],
-    "frozenlib:events": [
-      "org.quiltmc.qsl.frozenblock.worldgen.surface_rule.test.QuiltSurfaceRuleTest"
+    "frozenlib:surfacerules": [
+      "net.frozenblock.lib.testmod.worldgen.TestSurfaceRules"
     ],
     "modmenu": [
       "net.frozenblock.lib.testmod.config.ModMenuIntegration"

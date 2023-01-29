@@ -33,6 +33,9 @@
 	"client": [
 	  "net.frozenblock.lib.FrozenClient"
 	],
+    "server": [
+      "net.frozenblock.lib.FrozenServer"
+    ],
     "frozenlib:events": [
       "org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer"
     ],

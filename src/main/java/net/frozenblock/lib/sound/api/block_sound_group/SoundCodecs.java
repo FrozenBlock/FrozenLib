@@ -43,7 +43,7 @@ public final class SoundCodecs {
 			instance.group(
 					ResourceLocation.CODEC.fieldOf("id").forGetter(BlockSoundGroupOverwrite::blockId),
 					SOUND_TYPE.fieldOf("sound_type").forGetter(BlockSoundGroupOverwrite::soundOverwrite)
-			).apply(instance, BlockSoundGroupOverwrite::new)
+			).apply(instance, (id, soundType) -> new BlockSoundGroupOverwrite(id, soundType, () -> true))
 	);
 
 	private SoundCodecs() {

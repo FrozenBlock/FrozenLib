@@ -18,29 +18,46 @@
 
 package net.frozenblock.lib.entity.api;
 
-import net.minecraft.sounds.SoundEvent;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.Marker;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
-/**
- * This is the same as {@link AbstractFish} but the entity will not flop when on land.
- */
-public abstract class NoFlopAbstractFish extends AbstractFish {
+public abstract class SilentTicker extends Marker {
+	private int ticks;
 
-	public NoFlopAbstractFish(EntityType<? extends NoFlopAbstractFish> entityType, Level level) {
+	public SilentTicker(EntityType<?> entityType, Level level) {
 		super(entityType, level);
 	}
 
 	@Override
-	protected SoundEvent getFlopSound() {
-		return null;
+	public void tick() {
+		this.ticks += 1;
+		this.tick(this.level, this.getPosition(1F), this.blockPosition(), this.ticks);
 	}
 
-	/**
-	 * Acts as a form of access widener.
-	 */
-	public boolean canRandomSwim() {
-		return super.canRandomSwim();
+	@Override
+	public void readAdditionalSaveData(CompoundTag compound) {
+		super.readAdditionalSaveData(compound);
+		this.ticks = compound.getInt("frozenlib_ticks");
 	}
+
+	@Override
+	public void addAdditionalSaveData(CompoundTag compound) {
+		super.addAdditionalSaveData(compound);
+		compound.putInt("frozenlib_ticks", this.ticks);
+	}
+
+	public abstract void tick(Level level, Vec3 vec3, BlockPos pos, int ticks);
+
+	public Level getLevel() {
+		return this.level;
+	}
+
+	public int getTicks() {
+		return this.ticks;
+	}
+
 }

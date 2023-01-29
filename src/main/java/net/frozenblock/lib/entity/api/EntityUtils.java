@@ -18,29 +18,26 @@
 
 package net.frozenblock.lib.entity.api;
 
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.AbstractFish;
-import net.minecraft.world.level.Level;
+import java.util.Optional;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 
-/**
- * This is the same as {@link AbstractFish} but the entity will not flop when on land.
- */
-public abstract class NoFlopAbstractFish extends AbstractFish {
+public class EntityUtils {
 
-	public NoFlopAbstractFish(EntityType<? extends NoFlopAbstractFish> entityType, Level level) {
-		super(entityType, level);
+	public static Optional<Direction> getMovementDirectionHorizontal(Entity entity) {
+		Direction direction = null;
+		Vec3 deltaMovement = entity.getDeltaMovement();
+		if (deltaMovement.horizontalDistance() > 0) {
+			double nonNegX = Math.abs(deltaMovement.x);
+			double nonNegZ = Math.abs(deltaMovement.z);
+			if (nonNegX > nonNegZ) {
+				direction = deltaMovement.x > 0 ? Direction.EAST : Direction.WEST;
+			} else if (nonNegZ > 0) {
+				direction = deltaMovement.z > 0 ? Direction.SOUTH : Direction.NORTH;
+			}
+		}
+		return direction != null ? Optional.of(direction) : Optional.empty();
 	}
 
-	@Override
-	protected SoundEvent getFlopSound() {
-		return null;
-	}
-
-	/**
-	 * Acts as a form of access widener.
-	 */
-	public boolean canRandomSwim() {
-		return super.canRandomSwim();
-	}
 }

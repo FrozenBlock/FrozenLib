@@ -16,31 +16,18 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.api;
+package net.frozenblock.lib;
 
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.AbstractFish;
-import net.minecraft.world.level.Level;
+import net.fabricmc.api.DedicatedServerModInitializer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.frozenblock.lib.integration.api.ModIntegrations;
 
-/**
- * This is the same as {@link AbstractFish} but the entity will not flop when on land.
- */
-public abstract class NoFlopAbstractFish extends AbstractFish {
+@Environment(EnvType.SERVER)
+public class FrozenServer implements DedicatedServerModInitializer {
 
-	public NoFlopAbstractFish(EntityType<? extends NoFlopAbstractFish> entityType, Level level) {
-		super(entityType, level);
-	}
-
-	@Override
-	protected SoundEvent getFlopSound() {
-		return null;
-	}
-
-	/**
-	 * Acts as a form of access widener.
-	 */
-	public boolean canRandomSwim() {
-		return super.canRandomSwim();
-	}
+    @Override
+    public void onInitializeServer() {
+        ModIntegrations.initialize(); // Mod integrations must run after normal mod initialization
+    }
 }
