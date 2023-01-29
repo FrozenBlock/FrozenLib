@@ -75,14 +75,22 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	}
 
 	/**
+	 * Adds a block with the specified {@link ResourceLocation}.
+	 */
+	public void addBlock(ResourceLocation key, SoundType sounds, BooleanSupplier condition) {
+		if (!Registry.BLOCK.containsKey(key)) {
+			FrozenMain.log("Error whilst adding a block to BlockSoundGroupOverwrites: The specified block id has not been added to the Registry", true);
+		} else {
+			this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
+		}
+	}
+
+	/**
 	 * This will only work with vanilla blocks.
 	 */
 	public void addBlock(String id, SoundType sounds, BooleanSupplier condition) {
 		var key = new ResourceLocation(id);
-		if (!Registry.BLOCK.containsKey(key)) {
-			throw new IllegalStateException("The specified block's id is null.");
-		}
-		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
+		addBlock(key, sounds, condition);
 	}
 
 	/**
@@ -93,45 +101,26 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 		addBlock(key, sounds, condition);
 	}
 
-	/**
-	 * Adds a block with the specified {@link ResourceLocation}.
-	 */
-	public void addBlock(ResourceLocation key, SoundType sounds, BooleanSupplier condition) {
-		if (!Registry.BLOCK.containsKey(key)) {
-			throw new IllegalStateException("The specified block's id is null.");
-		}
-		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
-	}
-
 	public void addBlock(Block block, SoundType sounds, BooleanSupplier condition) {
 		var key = Registry.BLOCK.getKey(block);
-		if (!Registry.BLOCK.containsKey(key)) {
-			throw new IllegalStateException("The specified block's id is null.");
-		}
-		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
+		addBlock(key, sounds, condition);
 	}
 
 	public void addBlocks(Block[] blocks, SoundType sounds, BooleanSupplier condition) {
 		for (Block block : blocks) {
 			var key = Registry.BLOCK.getKey(block);
-			if (!Registry.BLOCK.containsKey(key)) {
-				throw new IllegalStateException("The specified block's id is null.");
-			}
-			this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
+			addBlock(key, sounds, condition);
 		}
 	}
 
 	public void addBlockTag(TagKey<Block> tag, SoundType sounds, BooleanSupplier condition) {
-		var tagIterable = Registry.BLOCK.getTagOrEmpty(tag);
-		if (tagIterable == null) {
-			throw new IllegalStateException("The specified TagKey is null.");
+		var tagIterable = Registry.BLOCK.getTag(tag);
+		if (tagIterable.isEmpty()) {
+			FrozenMain.log("Error whilst adding a tag to BlockSoundGroupOverwrites: Tag is invalid", true);
 		} else {
-			for (Holder<Block> block : tagIterable) {
+			for (Holder<Block> block : tagIterable.get()) {
 				var key = block.unwrapKey().orElseThrow().location();
-				if (!Registry.BLOCK.containsKey(key)) {
-					throw new IllegalStateException("The specified block's id is null.");
-				}
-				this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
+				addBlock(key, sounds, condition);
 			}
 		}
 	}
