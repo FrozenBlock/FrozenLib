@@ -30,6 +30,7 @@ public final class FrozenBlockTags {
 	}
 
     public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
+	public static final TagKey<Block> CAN_INTERACT_WHILE_SHIFTING = bind("can_interact_while_shifting");
 
     private static TagKey<Block> bind(String path) {
         return TagKey.create(Registry.BLOCK_REGISTRY, FrozenMain.id(path));
