@@ -191,8 +191,6 @@ dependencies {
 }
 
 processResources {
-    inputs.property("version", project.version)
-
 	Map<String, Object> properties = new HashMap<>()
 	properties.put("version", project.version)
 	properties.put("minecraft_version", minecraft_version)
