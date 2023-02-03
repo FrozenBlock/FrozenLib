@@ -30,7 +30,11 @@ public final class FrozenBlockTags {
 	}
 
     public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
-	public static final TagKey<Block> CAN_INTERACT_WHILE_SHIFTING = bind("can_interact_while_shifting");
+
+	/**
+	 * A tag that defines blocks that should be able to be interacted with while the player is crouching
+	 */
+	public static final TagKey<Block> CAN_INTERACT_WHILE_CROUCHING = bind("can_interact_while_crouching");
 
     private static TagKey<Block> bind(String path) {
         return TagKey.create(Registry.BLOCK_REGISTRY, FrozenMain.id(path));
