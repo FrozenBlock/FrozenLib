@@ -32,7 +32,7 @@ public final class FrozenBlockTags {
     public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
 
 	/**
-	 * A tag that defines blocks that should be able to be interacted with while the player is crouching
+	 * A tag for blocks that the player should be able to interact with whilst crouching
 	 */
 	public static final TagKey<Block> CAN_INTERACT_WHILE_CROUCHING = bind("can_interact_while_crouching");
 
