@@ -32,6 +32,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
@@ -54,8 +56,11 @@ public class ServerPlayerGameModeMixin {
 		this.frozenLib$bl = bl;
 	}
 
-	@Redirect(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isSecondaryUseActive()Z"))
-	public boolean useItemOn(ServerPlayer par1, ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, BlockHitResult hitResult) {
-		return this.frozenLib$usedOnBlockState.is(FrozenBlockTags.CAN_INTERACT_WHILE_SHIFTING) ? frozenLib$bl : par1.isSecondaryUseActive() && frozenLib$bl;
+	@ModifyVariable(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isSecondaryUseActive()Z"))
+	private boolean useItemOn(boolean original) {
+		if (this.frozenLib$usedOnBlockState.is(FrozenBlockTags.CAN_INTERACT_WHILE_SHIFTING)) {
+			return this.frozenLib$bl;
+		}
+		return original;
 	}
 }
