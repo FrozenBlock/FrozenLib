@@ -1,5 +1,14 @@
 name: Build
-on: [push, pull_request]
+on:
+    workflow_dispatch:
+        inputs:
+            publish:
+                description: Publish to CurseForge and Modrinth
+                required: true
+                default: "false"
+    pull_request:
+    push:
+
 jobs:
   build:
     strategy:
@@ -7,6 +16,9 @@ jobs:
         java: [17, 18, 19]
         os: [ubuntu-latest, windows-latest]
     runs-on: ${{ matrix.os }}
+    env:
+      CURSEFORGE_TOKEN: ${{secrets.CURSEFORGE_TOKEN}}
+      MODRINTH_TOKEN: ${{secrets.MODRINTH_TOKEN}}
     steps:
       - name: Cache Dependencies
         uses: actions/cache@v3
@@ -44,3 +56,6 @@ jobs:
         with:
           name: FrozenLib-Artifacts-${{ steps.ref.outputs.branch }}
           path: build/libs/
+      - name: Publish to CurseForge and Modrinth
+        if: ${{github.events.input.publish}}
+        run: ./gradlew publishMod
