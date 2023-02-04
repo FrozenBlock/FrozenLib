@@ -17,6 +17,7 @@
     "server.MappedRegistryMixin",
     "server.NoExperimentalMixin",
     "server.PointedDripstoneBlockMixin",
+    "server.ServerPlayerGameModeMixin",
     "server.fabric_api.FabricItemGroupEntriesMixin",
     "worldgen.SinglePoolElementMixin",
     "worldgen.biome.MinecraftServerMixin",
