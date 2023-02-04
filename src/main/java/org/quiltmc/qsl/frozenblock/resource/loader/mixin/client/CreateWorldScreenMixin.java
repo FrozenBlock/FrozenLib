@@ -126,33 +126,37 @@ public abstract class CreateWorldScreenMixin {
     // Lambda method in CreateWorldScreen#tryApplyNewDataPacks, at C_kjxfcecs#method_42098.
     // Inject before closing the resource manager.
     @Inject(
-            method = {"method_41851", "m_tlckpqyc", "lambda$openFresh$2"},
+            method = {"method_41851", "m_tlckpqyc", "lambda$openFresh$1"},
             at = @At("HEAD"),
             require = 1,
             remap = false // Very bad, someone please fix the Mixin annotation processor already.
     )
-    private static void onDataPackLoadEnd(WorldLoader.DataLoadContext context,
+    private static void onDataPackLoadEnd(CloseableResourceManager resourceManager,
+                                          ReloadableServerResources serverReloadableResources,
+                                          LayeredRegistryAccess layeredRegistryAccess, CreateWorldScreen.DataPackReloadCookie dataPackReloadCookie,
                                           CallbackInfoReturnable<WorldCreationContext> cir) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, context.resources(), null);
+        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
     }
 
     // Lambda method in CreateWorldScreen#create, at C_kjxfcecs#method_42098.
     // Inject before closing the resource manager.
     @Inject(
-            method = {"method_41851", "m_tlckpqyc", "lambda$openFresh$2"},
+            method = {"method_41851", "m_tlckpqyc"},
             at = @At("HEAD"),
             require = 1,
             remap = false // Very bad, someone please fix the Mixin annotation processor already.
     )
-    private static void onCreateDataPackLoadEnd(WorldLoader.DataLoadContext context,
+    private static void onCreateDataPackLoadEnd(CloseableResourceManager resourceManager,
+												ReloadableServerResources serverReloadableResources,
+												LayeredRegistryAccess frozen, CreateWorldScreen.DataPackReloadCookie generatorOptions,
 												CallbackInfoReturnable<WorldCreationContext> cir) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, context.resources(), null);
+        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
     }
 
     // Lambda method in CreateWorldScreen#applyDataPacks, at CompletableFuture#handle.
     // Take Void and Throwable parameters.
     @Inject(
-            method = {"method_45677", "m_lgnmfmry", "lambda$applyNewPackConfig$19"},
+            method = {"method_45685", "m_sxbkwuzy", "lambda$applyNewPackConfig$27"},
             at = @At(
                     value = "INVOKE",
                     target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
