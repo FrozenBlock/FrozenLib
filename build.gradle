@@ -4,6 +4,7 @@ plugins {
 	//id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
+	id("com.matthewprenger.cursegradle") version("+")
 	id("maven-publish")
     id("eclipse")
     id("idea")
@@ -193,10 +194,14 @@ dependencies {
 }
 
 processResources {
-    inputs.property("version", project.version)
+	Map<String, Object> properties = new HashMap<>()
+	properties.put("version", project.version)
+	properties.put("minecraft_version", minecraft_version)
+
+	properties.forEach((a, b) -> inputs.property(a, b))
 
     filesMatching("fabric.mod.json") {
-        expand("version": project.version)
+        expand(properties)
     }
 }
 
@@ -377,3 +382,5 @@ artifacts {
 if (!project.release) {
 	build.dependsOn(applyLicenses)
 }
+
+apply from: "gradle/publishing.gradle"
