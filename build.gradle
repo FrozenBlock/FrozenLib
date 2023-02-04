@@ -1,7 +1,16 @@
+buildscript {
+	repositories {
+		gradlePluginPortal()
+	}
+	dependencies {
+		classpath("org.kohsuke:github-api:1.313")
+	}
+}
+
 plugins {
 	id("fabric-loom") version("+")
 	id("io.github.juuxel.loom-quiltflower") version("+")
-	//id("org.ajoberstar.grgit") version("+")
+	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
 	id("com.matthewprenger.cursegradle") version("+")
@@ -287,56 +296,6 @@ artifacts {
 }
 
 def env = System.getenv()
-
-def getBranch() {
-	def env = System.getenv()
-	if (env.GITHUB_REF) {
-		def branch = env.GITHUB_REF
-		return branch.substring(branch.lastIndexOf("/") + 1)
-	}
-
-	if (grgit == null) {
-		return "unknown"
-	}
-
-	def branch = grgit.branch.current().name
-	return branch.substring(branch.lastIndexOf("/") + 1)
-}
-
-//import org.kohsuke.github.GHReleaseBuilder
-//import org.kohsuke.github.GitHub
-
-task release(dependsOn: [remapJar, sourcesJar, javadocJar]) {
-	onlyIf {
-		env.GITHUB_TOKEN
-	}
-	/*
-	doLast {
-		def github = GitHub.connectUsingOAuth(env.GITHUB_TOKEN as String)
-		def repository = github.getRepository("FrozenBlock/FrozenLib")
-
-		def releaseBuilder = new GHReleaseBuilder(repository, version as String)
-		releaseBuilder.name("${mod_version}-")
-		releaseBuilder.body(env.CHANGELOG ?: "No changelog provided")
-		releaseBuilder.commitish(getBranch())
-
-		def ghRelease = releaseBuilder.create()
-		ghRelease.uploadAsset(remapJar.archiveFile.get().getAsFile(), "application/java-archive")
-		ghRelease.uploadAsset(sourcesJar.archiveFile.get().getAsFile(), "application/java-archive")
-		ghRelease.uploadAsset(javadocJar.archiveFile.get().getAsFile(), "application/java-archive")
-		ghRelease.delete()
-	}
-	 */
-}
-
-modrinth {
-	setProjectId("frozenlib")
-	setVersionName("${project.mod_version}")
-	setVersionType("release")
-	setChangelog(env.CHANGELOG ?: "No changelog provided")
-
-	setUploadFile(remapJar)
-}
 
 // configure the maven publication
 publishing {
