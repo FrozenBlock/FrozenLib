@@ -24,26 +24,67 @@ import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.entrypoint.api.ServerEventEntrypoint;
 import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * Enum class representing the different environments for events to take place on
+ */
 @ApiStatus.Internal
 public enum EventType {
+
+	/**
+	 * Represents a client-sided event.
+	 */
 	CLIENT("frozenlib:client_events", ClientEventEntrypoint.class),
+
+	/**
+	 * Represents a common event.
+	 */
 	COMMON("frozenlib:events", CommonEventEntrypoint.class),
+
+	/**
+	 * Represents a server-sided event.
+	 */
 	SERVER("frozenlib:server_events", ServerEventEntrypoint.class);
 
+	/**
+	 * A list of all the possible event types.
+	 */
 	public static final List<EventType> VALUES = List.of(values());
 
+	/**
+	 * The entrypoint string for the event type.
+	 */
 	private final String entrypoint;
+
+	/**
+	 * The listener class for the event type.
+	 */
 	private final Class<?> listener;
 
+	/**
+	 * Constructor for the EventType enum.
+	 *
+	 * @param entrypoint The entrypoint string for the event type.
+	 * @param listener The listener class for the event type.
+	 */
 	EventType(String entrypoint, Class<?> listener) {
 		this.entrypoint = entrypoint;
 		this.listener = listener;
 	}
 
+	/**
+	 * Returns the entrypoint string for the event type.
+	 *
+	 * @return The entrypoint string.
+	 */
 	public String entrypoint() {
 		return this.entrypoint;
 	}
 
+	/**
+	 * Returns the listener class for the event type.
+	 *
+	 * @return The listener class.
+	 */
 	public Class<?> listener() {
 		return this.listener;
 	}

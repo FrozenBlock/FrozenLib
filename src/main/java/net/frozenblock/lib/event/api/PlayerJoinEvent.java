@@ -18,27 +18,35 @@
 
 package net.frozenblock.lib.event.api;
 
-import java.util.ArrayList;
+import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
+/**
+ * A class representing the player join event.
+ */
 public class PlayerJoinEvent {
 
-	private static final ArrayList<PlayerJoin> JOIN_EVENTS = new ArrayList<>();
-
-	public static void register(PlayerJoin joinEvent) {
-		JOIN_EVENTS.add(joinEvent);
-	}
-
-	public static void onPlayerJoined(MinecraftServer server, ServerPlayer player) {
-		for (PlayerJoin joinEvent : JOIN_EVENTS) {
-			joinEvent.onPlayerJoin(server, player);
+	/**
+	 * The event that is triggered when a player joins the server.
+	 */
+	public static final Event<PlayerJoin> ON_JOIN = FrozenEvents.createEnvironmentEvent(PlayerJoin.class, (callbacks) -> (server, player) -> {
+		for (var callback : callbacks) {
+			callback.onPlayerJoin(server, player);
 		}
-	}
+	});
 
+	/**
+	 * A functional interface representing a player join event.
+	 */
 	@FunctionalInterface
-	public interface PlayerJoin {
+	public interface PlayerJoin extends CommonEventEntrypoint {
+		/**
+		 * Triggers the event when a player joins the server.
+		 * @param server the Minecraft server instance
+		 * @param player the player joining the server
+		 */
 		void onPlayerJoin(MinecraftServer server, ServerPlayer player);
 	}
-
 }

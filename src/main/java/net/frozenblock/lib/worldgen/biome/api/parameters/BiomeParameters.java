@@ -16,18 +16,19 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib_compat.modmenu.api;
+package net.frozenblock.lib.worldgen.biome.api.parameters;
 
 import java.util.ArrayList;
-import net.frozenblock.lib_compat.modmenu.impl.FrozenModMenuBadge;
+import java.util.List;
+import net.minecraft.world.level.biome.Climate;
 
-public abstract class FrozenModMenuEntrypoint {
+public class BiomeParameters {
+	public final ArrayList<Climate.ParameterPoint> points = new ArrayList<>();
 
-	public abstract ArrayList<FrozenModMenuBadge> newBadges();
-
-	public static FrozenModMenuBadge createBadge(String translationKey, int outlineColor, int fillColor, String key) {
-		return new FrozenModMenuBadge(translationKey, outlineColor, fillColor, key);
+	public BiomeParameters() {
 	}
 
+	public void add(Climate.ParameterPoint... points) {
+		this.points.addAll(List.of(points));
+	}
 }
-

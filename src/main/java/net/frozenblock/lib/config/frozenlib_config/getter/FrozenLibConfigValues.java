@@ -19,21 +19,10 @@
 package net.frozenblock.lib.config.frozenlib_config.getter;
 
 public class FrozenLibConfigValues {
-	public static FrozenConfigGetter CONFIG = new FrozenConfigGetter(new ConfigInterface() {
-		@Override
-		public boolean useWindOnNonFrozenServers() {
-			return DefaultFrozenLibConfigValues.USE_WIND_ON_NON_FROZENLIB_SERVERS;
-		}
-	});
+	public static FrozenConfigGetter CONFIG = new FrozenConfigGetter(() -> DefaultFrozenLibConfigValues.USE_WIND_ON_NON_FROZENLIB_SERVERS);
 
 
-
-	public static class FrozenConfigGetter {
-		public final ConfigInterface getter;
-
-		public FrozenConfigGetter(ConfigInterface getter) {
-			this.getter = getter;
-		}
+	public record FrozenConfigGetter(ConfigInterface getter) {
 	}
 
 	public static class DefaultFrozenLibConfigValues {

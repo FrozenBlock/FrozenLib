@@ -38,6 +38,6 @@ public class PlayerListMixin {
 
 	@Inject(method = "placeNewPlayer", at = @At("TAIL"))
 	public void placeNewPlayer(Connection netManager, ServerPlayer player, CallbackInfo info) {
-		PlayerJoinEvent.onPlayerJoined(this.server, player);
+		PlayerJoinEvent.ON_JOIN.invoker().onPlayerJoin(this.server, player);
 	}
 }

@@ -21,12 +21,12 @@ package net.frozenblock.lib.worldgen.biome.api.parameters;
 import net.minecraft.world.level.biome.Climate;
 
 public final class Erosion {
-    public static final Climate.Parameter EROSION_0 = OverworldBiomeBuilderParameters.erosions[0];
-    public static final Climate.Parameter EROSION_1 = OverworldBiomeBuilderParameters.erosions[1];
-    public static final Climate.Parameter EROSION_2 = OverworldBiomeBuilderParameters.erosions[2];
-    public static final Climate.Parameter EROSION_3 = OverworldBiomeBuilderParameters.erosions[3];
-    public static final Climate.Parameter EROSION_4 = OverworldBiomeBuilderParameters.erosions[4];
-    public static final Climate.Parameter EROSION_5 = OverworldBiomeBuilderParameters.erosions[5];
-    public static final Climate.Parameter EROSION_6 = OverworldBiomeBuilderParameters.erosions[6];
+    public static final Climate.Parameter EROSION_0 = OverworldBiomeBuilderParameters.EROSIONS[0];
+    public static final Climate.Parameter EROSION_1 = OverworldBiomeBuilderParameters.EROSIONS[1];
+    public static final Climate.Parameter EROSION_2 = OverworldBiomeBuilderParameters.EROSIONS[2];
+    public static final Climate.Parameter EROSION_3 = OverworldBiomeBuilderParameters.EROSIONS[3];
+    public static final Climate.Parameter EROSION_4 = OverworldBiomeBuilderParameters.EROSIONS[4];
+    public static final Climate.Parameter EROSION_5 = OverworldBiomeBuilderParameters.EROSIONS[5];
+    public static final Climate.Parameter EROSION_6 = OverworldBiomeBuilderParameters.EROSIONS[6];
     public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 }

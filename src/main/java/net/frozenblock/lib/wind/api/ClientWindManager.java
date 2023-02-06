@@ -97,7 +97,7 @@ public class ClientWindManager {
 		cloudY += (laggedWindY * 0.01);
 		cloudZ += (laggedWindZ * 0.025);
 
-		if (!hasInitialized && time > 80 && FrozenLibConfigValues.CONFIG.getter.useWindOnNonFrozenServers()) {
+		if (!hasInitialized && time > 80 && FrozenLibConfigValues.CONFIG.getter().useWindOnNonFrozenServers()) {
 			RandomSource randomSource = AdvancedMath.random();
 			setSeed(randomSource.nextLong());
 			time = randomSource.nextLong();
@@ -177,7 +177,7 @@ public class ClientWindManager {
 	}
 
 	public static boolean shouldUseWind() {
-		return hasInitialized || FrozenLibConfigValues.CONFIG.getter.useWindOnNonFrozenServers();
+		return hasInitialized || FrozenLibConfigValues.CONFIG.getter().useWindOnNonFrozenServers();
 	}
 
 }

@@ -21,13 +21,13 @@ package net.frozenblock.lib.worldgen.biome.api.parameters;
 import net.minecraft.world.level.biome.Climate;
 
 public final class Continentalness {
-    public static final Climate.Parameter MUSHROOM_FIELDS = OverworldBiomeBuilderParameters.mushroomFieldsContinentalness;
-    public static final Climate.Parameter DEEP_OCEAN = OverworldBiomeBuilderParameters.deepOceanContinentalness;
-    public static final Climate.Parameter OCEAN = OverworldBiomeBuilderParameters.oceanContinentalness;
-    public static final Climate.Parameter COAST = OverworldBiomeBuilderParameters.coastContinentalness;
-    public static final Climate.Parameter INLAND = OverworldBiomeBuilderParameters.inlandContinentalness;
-    public static final Climate.Parameter NEAR_INLAND = OverworldBiomeBuilderParameters.nearInlandContinentalness;
-    public static final Climate.Parameter MID_INLAND = OverworldBiomeBuilderParameters.midInlandContinentalness;
-    public static final Climate.Parameter FAR_INLAND = OverworldBiomeBuilderParameters.farInlandContinentalness;
+    public static final Climate.Parameter MUSHROOM_FIELDS = OverworldBiomeBuilderParameters.MUSHROOM_FIELDS_CONTINENTALNESS;
+    public static final Climate.Parameter DEEP_OCEAN = OverworldBiomeBuilderParameters.DEEP_OCEAN_CONTINENTALNESS;
+    public static final Climate.Parameter OCEAN = OverworldBiomeBuilderParameters.OCEAN_CONTINENTALNESS;
+    public static final Climate.Parameter COAST = OverworldBiomeBuilderParameters.COAST_CONTINENTALNESS;
+    public static final Climate.Parameter INLAND = OverworldBiomeBuilderParameters.INLAND_CONTINENTALNESS;
+    public static final Climate.Parameter NEAR_INLAND = OverworldBiomeBuilderParameters.NEAR_INLAND_CONTINENTALNESS;
+    public static final Climate.Parameter MID_INLAND = OverworldBiomeBuilderParameters.MID_INLAND_CONTINENTALNESS;
+    public static final Climate.Parameter FAR_INLAND = OverworldBiomeBuilderParameters.FAR_INLAND_CONTINENTALNESS;
     public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 }

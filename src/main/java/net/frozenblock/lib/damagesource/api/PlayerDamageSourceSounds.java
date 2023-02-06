@@ -46,11 +46,11 @@ public final class PlayerDamageSourceSounds {
 	}
 
 	public static SoundEvent getDamageSound(ResourceLocation location) {
-		return RESOURCE_LOCATION_SOUND_EVENT_MAP.containsKey(location) ? RESOURCE_LOCATION_SOUND_EVENT_MAP.get(location) : SoundEvents.PLAYER_HURT;
+		return RESOURCE_LOCATION_SOUND_EVENT_MAP.getOrDefault(location, SoundEvents.PLAYER_HURT);
 	}
 
 	public static ResourceLocation getDamageID(DamageSource source) {
-		return DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.containsKey(source) ? DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.get(source) : DEFAULT_ID;
+		return DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.getOrDefault(source, DEFAULT_ID);
 	}
 
 	public static boolean containsSource(DamageSource source) {

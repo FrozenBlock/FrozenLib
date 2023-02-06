@@ -18,20 +18,8 @@
 
 package net.frozenblock.lib.mobcategory.impl;
 
-public class FrozenMobCategory {
-	public final String modId;
-	public final String name;
-	public final int max;
-	public final boolean isFriendly;
-	public final boolean isPersistent;
-	public final int despawnDistance;
+import net.minecraft.resources.ResourceLocation;
 
-	public FrozenMobCategory(String modId, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
-		this.modId = modId;
-		this.name = name;
-		this.max = max;
-		this.isFriendly = isFriendly;
-		this.isPersistent = isPersistent;
-		this.despawnDistance = despawnDistance;
-	}
+public record FrozenMobCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent,
+								int despawnDistance) {
 }
