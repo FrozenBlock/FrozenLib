@@ -19,6 +19,7 @@
 package net.frozenblock.lib.event.api;
 
 import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -40,7 +41,7 @@ public class PlayerJoinEvent {
 	 * A functional interface representing a player join event.
 	 */
 	@FunctionalInterface
-	public interface PlayerJoin {
+	public interface PlayerJoin extends CommonEventEntrypoint {
 		/**
 		 * Triggers the event when a player joins the server.
 		 * @param server the Minecraft server instance
