@@ -24,7 +24,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.function.Consumer;
-import net.frozenblock.lib.worldgen.biome.api.BiomeParameters;
 import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -48,21 +47,21 @@ public class OverworldBiomeBuilderParameters {
 	private static final float EROSION_DEEP_DARK_DRYNESS_THRESHOLD = -0.225F;
 	private static final float DEPTH_DEEP_DARK_DRYNESS_THRESHOLD = 0.9F;
 	public static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
-	public static final Climate.Parameter[] temperatures = new Climate.Parameter[]{
+	public static final Climate.Parameter[] TEMPERATURES = new Climate.Parameter[]{
 			Climate.Parameter.span(-1.0F, -0.45F),
 			Climate.Parameter.span(-0.45F, -0.15F),
 			Climate.Parameter.span(-0.15F, 0.2F),
 			Climate.Parameter.span(0.2F, 0.55F),
 			Climate.Parameter.span(0.55F, 1.0F)
 	};
-	public static final Climate.Parameter[] humidities = new Climate.Parameter[]{
+	public static final Climate.Parameter[] HUMIDITIES = new Climate.Parameter[]{
 			Climate.Parameter.span(-1.0F, -0.35F),
 			Climate.Parameter.span(-0.35F, -0.1F),
 			Climate.Parameter.span(-0.1F, 0.1F),
 			Climate.Parameter.span(0.1F, 0.3F),
 			Climate.Parameter.span(0.3F, 1.0F)
 	};
-	public static final Climate.Parameter[] erosions = new Climate.Parameter[]{
+	public static final Climate.Parameter[] EROSIONS = new Climate.Parameter[]{
 			Climate.Parameter.span(-1.0F, -0.78F),
 			Climate.Parameter.span(-0.78F, -0.375F),
 			Climate.Parameter.span(-0.375F, -0.2225F),
@@ -71,16 +70,16 @@ public class OverworldBiomeBuilderParameters {
 			Climate.Parameter.span(0.45F, 0.55F),
 			Climate.Parameter.span(0.55F, 1.0F)
 	};
-	public static final Climate.Parameter FROZEN_RANGE = temperatures[0];
-	public static final Climate.Parameter UNFROZEN_RANGE = Climate.Parameter.span(temperatures[1], temperatures[4]);
-	public static final Climate.Parameter mushroomFieldsContinentalness = Climate.Parameter.span(-1.2F, -1.05F);
-	public static final Climate.Parameter deepOceanContinentalness = Climate.Parameter.span(-1.05F, -0.455F);
-	public static final Climate.Parameter oceanContinentalness = Climate.Parameter.span(-0.455F, -0.19F);
-	public static final Climate.Parameter coastContinentalness = Climate.Parameter.span(-0.19F, -0.11F);
-	public static final Climate.Parameter inlandContinentalness = Climate.Parameter.span(-0.11F, 0.55F);
-	public static final Climate.Parameter nearInlandContinentalness = Climate.Parameter.span(-0.11F, 0.03F);
-	public static final Climate.Parameter midInlandContinentalness = Climate.Parameter.span(0.03F, 0.3F);
-	public static final Climate.Parameter farInlandContinentalness = Climate.Parameter.span(0.3F, 1.0F);
+	public static final Climate.Parameter FROZEN_RANGE = TEMPERATURES[0];
+	public static final Climate.Parameter UNFROZEN_RANGE = Climate.Parameter.span(TEMPERATURES[1], TEMPERATURES[4]);
+	public static final Climate.Parameter MUSHROOM_FIELDS_CONTINENTALNESS = Climate.Parameter.span(-1.2F, -1.05F);
+	public static final Climate.Parameter DEEP_OCEAN_CONTINENTALNESS = Climate.Parameter.span(-1.05F, -0.455F);
+	public static final Climate.Parameter OCEAN_CONTINENTALNESS = Climate.Parameter.span(-0.455F, -0.19F);
+	public static final Climate.Parameter COAST_CONTINENTALNESS = Climate.Parameter.span(-0.19F, -0.11F);
+	public static final Climate.Parameter INLAND_CONTINENTALNESS = Climate.Parameter.span(-0.11F, 0.55F);
+	public static final Climate.Parameter NEAR_INLAND_CONTINENTALNESS = Climate.Parameter.span(-0.11F, 0.03F);
+	public static final Climate.Parameter MID_INLAND_CONTINENTALNESS = Climate.Parameter.span(0.03F, 0.3F);
+	public static final Climate.Parameter FAR_INLAND_CONTINENTALNESS = Climate.Parameter.span(0.3F, 1.0F);
 	public static final ResourceLocation[][] OCEANS = new ResourceLocation[][]{
 			{Biomes.DEEP_FROZEN_OCEAN.location(), Biomes.DEEP_COLD_OCEAN.location(), Biomes.DEEP_OCEAN.location(), Biomes.DEEP_LUKEWARM_OCEAN.location(), Biomes.WARM_OCEAN.location()},
 			{Biomes.FROZEN_OCEAN.location(), Biomes.COLD_OCEAN.location(), Biomes.OCEAN.location(), Biomes.LUKEWARM_OCEAN.location(), Biomes.WARM_OCEAN.location()}
@@ -139,9 +138,9 @@ public class OverworldBiomeBuilderParameters {
 		return getParameters(key.location());
 	}
 
-	private static void addParameters(Climate.ParameterPoint parameters, ResourceLocation location) {
+	private static void addParameters(ResourceLocation location, Climate.ParameterPoint parameters) {
 		BiomeParameters biomeParameters = getOrCreateParameters(location);
-		biomeParameters.points.add(parameters);
+		biomeParameters.add(parameters);
 	}
 
 	private static BiomeParameters getOrCreateParameters(ResourceLocation location) {
@@ -166,7 +165,7 @@ public class OverworldBiomeBuilderParameters {
 		return points(OverworldBiomeBuilderParameters.getParameters(location));
 	}
 
-	private static void addBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> key) {
+	private static void addBiomes(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> key) {
 		if (!SharedConstants.debugGenerateSquareTerrainWithoutNoise) {
 			addOffCoastBiomes(key);
 			addInlandBiomes(key);
@@ -180,20 +179,20 @@ public class OverworldBiomeBuilderParameters {
 		return OFF_COAST_POINTS;
 	}
 
-	private static void addOffCoastBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer) {
-		addSurfaceBiome(consumer, FULL_RANGE, FULL_RANGE, mushroomFieldsContinentalness, FULL_RANGE, FULL_RANGE, 0.0F, Biomes.MUSHROOM_FIELDS.location());
+	private static void addOffCoastBiomes(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer) {
+		addSurfaceBiome(consumer, FULL_RANGE, FULL_RANGE, MUSHROOM_FIELDS_CONTINENTALNESS, FULL_RANGE, FULL_RANGE, 0.0F, Biomes.MUSHROOM_FIELDS.location());
 
-		for(int i = 0; i < temperatures.length; ++i) {
-			Climate.Parameter parameter = temperatures[i];
-			addSurfaceBiome(consumer, parameter, FULL_RANGE, deepOceanContinentalness, FULL_RANGE, FULL_RANGE, 0.0F, OCEANS[0][i]);
-			addSurfaceBiome(consumer, parameter, FULL_RANGE, oceanContinentalness, FULL_RANGE, FULL_RANGE, 0.0F, OCEANS[1][i]);
+		for(int i = 0; i < TEMPERATURES.length; ++i) {
+			Climate.Parameter parameter = TEMPERATURES[i];
+			addSurfaceBiome(consumer, parameter, FULL_RANGE, DEEP_OCEAN_CONTINENTALNESS, FULL_RANGE, FULL_RANGE, 0.0F, OCEANS[0][i]);
+			addSurfaceBiome(consumer, parameter, FULL_RANGE, OCEAN_CONTINENTALNESS, FULL_RANGE, FULL_RANGE, 0.0F, OCEANS[1][i]);
 		}
-		addSurfaceBiome(OFF_COAST_POINTS, FULL_RANGE, FULL_RANGE, deepOceanContinentalness, FULL_RANGE, FULL_RANGE, 0.0F);
-		addSurfaceBiome(OFF_COAST_POINTS, FULL_RANGE, FULL_RANGE, oceanContinentalness, FULL_RANGE, FULL_RANGE, 0.0F);
+		addSurfaceBiome(OFF_COAST_POINTS, FULL_RANGE, FULL_RANGE, DEEP_OCEAN_CONTINENTALNESS, FULL_RANGE, FULL_RANGE, 0.0F);
+		addSurfaceBiome(OFF_COAST_POINTS, FULL_RANGE, FULL_RANGE, OCEAN_CONTINENTALNESS, FULL_RANGE, FULL_RANGE, 0.0F);
 	}
 
 
-	private static void addInlandBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer) {
+	private static void addInlandBiomes(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer) {
 		addMidSlice(consumer, Climate.Parameter.span(-1.0F, -0.93333334F));
 		addHighSlice(consumer, Climate.Parameter.span(-0.93333334F, -0.7666667F));
 		addPeaks(consumer, Climate.Parameter.span(-0.7666667F, -0.56666666F));
@@ -209,12 +208,12 @@ public class OverworldBiomeBuilderParameters {
 		addMidSlice(consumer, Climate.Parameter.span(0.93333334F, 1.0F));
 	}
 
-	private static void addPeaks(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter param) {
-		for(int i = 0; i < temperatures.length; ++i) {
-			Climate.Parameter parameter = temperatures[i];
+	private static void addPeaks(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer, Climate.Parameter param) {
+		for(int i = 0; i < TEMPERATURES.length; ++i) {
+			Climate.Parameter temperature = TEMPERATURES[i];
 
-			for(int j = 0; j < humidities.length; ++j) {
-				Climate.Parameter parameter2 = humidities[j];
+			for(int j = 0; j < HUMIDITIES.length; ++j) {
+				Climate.Parameter humidity = HUMIDITIES[j];
 				ResourceLocation middle = pickMiddleBiome(i, j, param);
 				ResourceLocation middleOrBadlands = pickMiddleBiomeOrBadlandsIfHot(i, j, param);
 				ResourceLocation middleOrBadlandsOrSlope = pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(i, j, param);
@@ -222,27 +221,27 @@ public class OverworldBiomeBuilderParameters {
 				ResourceLocation shattered = pickShatteredBiome(i, j, param);
 				ResourceLocation windsweptSavannaOrShattered = maybePickWindsweptSavannaBiome(i, j, param, shattered);
 				ResourceLocation peak = pickPeakBiome(i, j, param);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[0], param, 0.0F, peak);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[1], param, 0.0F, middleOrBadlandsOrSlope);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[1], param, 0.0F, peak);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), Climate.Parameter.span(erosions[2], erosions[3]), param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[2], param, 0.0F, plateau);
-				addSurfaceBiome(consumer, parameter, parameter2, midInlandContinentalness, erosions[3], param, 0.0F, middleOrBadlands);
-				addSurfaceBiome(consumer, parameter, parameter2, farInlandContinentalness, erosions[3], param, 0.0F, plateau);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[4], param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[5], param, 0.0F, windsweptSavannaOrShattered);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F, shattered);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[0], param, 0.0F, peak);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, NEAR_INLAND_CONTINENTALNESS), EROSIONS[1], param, 0.0F, middleOrBadlandsOrSlope);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[1], param, 0.0F, peak);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, NEAR_INLAND_CONTINENTALNESS), Climate.Parameter.span(EROSIONS[2], EROSIONS[3]), param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[2], param, 0.0F, plateau);
+				addSurfaceBiome(consumer, temperature, humidity, MID_INLAND_CONTINENTALNESS, EROSIONS[3], param, 0.0F, middleOrBadlands);
+				addSurfaceBiome(consumer, temperature, humidity, FAR_INLAND_CONTINENTALNESS, EROSIONS[3], param, 0.0F, plateau);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[4], param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, NEAR_INLAND_CONTINENTALNESS), EROSIONS[5], param, 0.0F, windsweptSavannaOrShattered);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[5], param, 0.0F, shattered);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, middle);
 			}
 		}
 	}
 
-	private static void addHighSlice(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter param) {
-		for(int i = 0; i < temperatures.length; ++i) {
-			Climate.Parameter parameter = temperatures[i];
+	private static void addHighSlice(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer, Climate.Parameter param) {
+		for(int i = 0; i < TEMPERATURES.length; ++i) {
+			Climate.Parameter temperature = TEMPERATURES[i];
 
-			for(int j = 0; j < humidities.length; ++j) {
-				Climate.Parameter parameter2 = humidities[j];
+			for(int j = 0; j < HUMIDITIES.length; ++j) {
+				Climate.Parameter humidity = HUMIDITIES[j];
 				ResourceLocation middle = pickMiddleBiome(i, j, param);
 				ResourceLocation middleOrBadlands = pickMiddleBiomeOrBadlandsIfHot(i, j, param);
 				ResourceLocation middleOrBadlandsOrSlope = pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(i, j, param);
@@ -251,33 +250,33 @@ public class OverworldBiomeBuilderParameters {
 				ResourceLocation windsweptSavannaOrMiddle = maybePickWindsweptSavannaBiome(i, j, param, middle);
 				ResourceLocation slope = pickSlopeBiome(i, j, param);
 				ResourceLocation peak = pickPeakBiome(i, j, param);
-				addSurfaceBiome(consumer, parameter, parameter2, coastContinentalness, Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, nearInlandContinentalness, erosions[0], param, 0.0F, slope);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[0], param, 0.0F, peak);
-				addSurfaceBiome(consumer, parameter, parameter2, nearInlandContinentalness, erosions[1], param, 0.0F, middleOrBadlandsOrSlope);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[1], param, 0.0F, slope);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), Climate.Parameter.span(erosions[2], erosions[3]), param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[2], param, 0.0F, plateau);
-				addSurfaceBiome(consumer, parameter, parameter2, midInlandContinentalness, erosions[3], param, 0.0F, middleOrBadlands);
-				addSurfaceBiome(consumer, parameter, parameter2, farInlandContinentalness, erosions[3], param, 0.0F, plateau);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[4], param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[5], param, 0.0F, windsweptSavannaOrMiddle);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F, shattered);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, COAST_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, NEAR_INLAND_CONTINENTALNESS, EROSIONS[0], param, 0.0F, slope);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[0], param, 0.0F, peak);
+				addSurfaceBiome(consumer, temperature, humidity, NEAR_INLAND_CONTINENTALNESS, EROSIONS[1], param, 0.0F, middleOrBadlandsOrSlope);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[1], param, 0.0F, slope);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, NEAR_INLAND_CONTINENTALNESS), Climate.Parameter.span(EROSIONS[2], EROSIONS[3]), param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[2], param, 0.0F, plateau);
+				addSurfaceBiome(consumer, temperature, humidity, MID_INLAND_CONTINENTALNESS, EROSIONS[3], param, 0.0F, middleOrBadlands);
+				addSurfaceBiome(consumer, temperature, humidity, FAR_INLAND_CONTINENTALNESS, EROSIONS[3], param, 0.0F, plateau);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[4], param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, NEAR_INLAND_CONTINENTALNESS), EROSIONS[5], param, 0.0F, windsweptSavannaOrMiddle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[5], param, 0.0F, shattered);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, middle);
 			}
 		}
 	}
 
-	private static void addMidSlice(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter param) {
-		addSurfaceBiome(consumer, FULL_RANGE, FULL_RANGE, coastContinentalness, Climate.Parameter.span(erosions[0], erosions[2]), param, 0.0F, Biomes.STONY_SHORE.location());
-		addSurfaceBiome(consumer, Climate.Parameter.span(temperatures[1], temperatures[2]), FULL_RANGE, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, Biomes.SWAMP.location());
-		addSurfaceBiome(consumer, Climate.Parameter.span(temperatures[3], temperatures[4]), FULL_RANGE, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, Biomes.MANGROVE_SWAMP.location());
+	private static void addMidSlice(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer, Climate.Parameter param) {
+		addSurfaceBiome(consumer, FULL_RANGE, FULL_RANGE, COAST_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[0], EROSIONS[2]), param, 0.0F, Biomes.STONY_SHORE.location());
+		addSurfaceBiome(consumer, Climate.Parameter.span(TEMPERATURES[1], TEMPERATURES[2]), FULL_RANGE, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, Biomes.SWAMP.location());
+		addSurfaceBiome(consumer, Climate.Parameter.span(TEMPERATURES[3], TEMPERATURES[4]), FULL_RANGE, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, Biomes.MANGROVE_SWAMP.location());
 
-		for(int i = 0; i < temperatures.length; ++i) {
-			Climate.Parameter parameter = temperatures[i];
+		for(int i = 0; i < TEMPERATURES.length; ++i) {
+			Climate.Parameter temperature = TEMPERATURES[i];
 
-			for(int j = 0; j < humidities.length; ++j) {
-				Climate.Parameter parameter2 = humidities[j];
+			for(int j = 0; j < HUMIDITIES.length; ++j) {
+				Climate.Parameter humidity = HUMIDITIES[j];
 				ResourceLocation middle = pickMiddleBiome(i, j, param);
 				ResourceLocation middleOrBadlands = pickMiddleBiomeOrBadlandsIfHot(i, j, param);
 				ResourceLocation middleOrBadlandsOrSlope = pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(i, j, param);
@@ -287,99 +286,99 @@ public class OverworldBiomeBuilderParameters {
 				ResourceLocation windsweptOrMiddle = maybePickWindsweptSavannaBiome(i, j, param, middle);
 				ResourceLocation shatteredCoast = pickShatteredCoastBiome(i, j, param);
 				ResourceLocation slope = pickSlopeBiome(i, j, param);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[0], param, 0.0F, slope);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(nearInlandContinentalness, midInlandContinentalness), erosions[1], param, 0.0F, middleOrBadlandsOrSlope);
-				addSurfaceBiome(consumer, parameter, parameter2, farInlandContinentalness, erosions[1], param, 0.0F, i == 0 ? slope : plateau);
-				addSurfaceBiome(consumer, parameter, parameter2, nearInlandContinentalness, erosions[2], param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, midInlandContinentalness, erosions[2], param, 0.0F, middleOrBadlands);
-				addSurfaceBiome(consumer, parameter, parameter2, farInlandContinentalness, erosions[2], param, 0.0F, plateau);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, nearInlandContinentalness), erosions[3], param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[3], param, 0.0F, middleOrBadlands);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[0], param, 0.0F, slope);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS), EROSIONS[1], param, 0.0F, middleOrBadlandsOrSlope);
+				addSurfaceBiome(consumer, temperature, humidity, FAR_INLAND_CONTINENTALNESS, EROSIONS[1], param, 0.0F, i == 0 ? slope : plateau);
+				addSurfaceBiome(consumer, temperature, humidity, NEAR_INLAND_CONTINENTALNESS, EROSIONS[2], param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, MID_INLAND_CONTINENTALNESS, EROSIONS[2], param, 0.0F, middleOrBadlands);
+				addSurfaceBiome(consumer, temperature, humidity, FAR_INLAND_CONTINENTALNESS, EROSIONS[2], param, 0.0F, plateau);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, NEAR_INLAND_CONTINENTALNESS), EROSIONS[3], param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[3], param, 0.0F, middleOrBadlands);
 				if (param.max() < 0L) {
-					addSurfaceBiome(consumer, parameter, parameter2, coastContinentalness, erosions[4], param, 0.0F, beach);
-					addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[4], param, 0.0F, middle);
+					addSurfaceBiome(consumer, temperature, humidity, COAST_CONTINENTALNESS, EROSIONS[4], param, 0.0F, beach);
+					addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[4], param, 0.0F, middle);
 				} else {
-					addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), erosions[4], param, 0.0F, middle);
+					addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(COAST_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[4], param, 0.0F, middle);
 				}
 
-				addSurfaceBiome(consumer, parameter, parameter2, coastContinentalness, erosions[5], param, 0.0F, shatteredCoast);
-				addSurfaceBiome(consumer, parameter, parameter2, nearInlandContinentalness, erosions[5], param, 0.0F, windsweptOrMiddle);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F, shattered);
+				addSurfaceBiome(consumer, temperature, humidity, COAST_CONTINENTALNESS, EROSIONS[5], param, 0.0F, shatteredCoast);
+				addSurfaceBiome(consumer, temperature, humidity, NEAR_INLAND_CONTINENTALNESS, EROSIONS[5], param, 0.0F, windsweptOrMiddle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[5], param, 0.0F, shattered);
 				if (param.max() < 0L) {
-					addSurfaceBiome(consumer, parameter, parameter2, coastContinentalness, erosions[6], param, 0.0F, beach);
+					addSurfaceBiome(consumer, temperature, humidity, COAST_CONTINENTALNESS, EROSIONS[6], param, 0.0F, beach);
 				} else {
-					addSurfaceBiome(consumer, parameter, parameter2, coastContinentalness, erosions[6], param, 0.0F, middle);
+					addSurfaceBiome(consumer, temperature, humidity, COAST_CONTINENTALNESS, EROSIONS[6], param, 0.0F, middle);
 				}
 
 				if (i == 0) {
-					addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, middle);
+					addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, middle);
 				}
 			}
 		}
 	}
 
-	private static void addLowSlice(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter param) {
-		addSurfaceBiome(consumer, FULL_RANGE, FULL_RANGE, coastContinentalness, Climate.Parameter.span(erosions[0], erosions[2]), param, 0.0F, Biomes.STONY_SHORE.location());
-		addSurfaceBiome(consumer, Climate.Parameter.span(temperatures[1], temperatures[2]), FULL_RANGE, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, Biomes.SWAMP.location());
-		addSurfaceBiome(consumer, Climate.Parameter.span(temperatures[3], temperatures[4]), FULL_RANGE, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, Biomes.MANGROVE_SWAMP.location());
+	private static void addLowSlice(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer, Climate.Parameter param) {
+		addSurfaceBiome(consumer, FULL_RANGE, FULL_RANGE, COAST_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[0], EROSIONS[2]), param, 0.0F, Biomes.STONY_SHORE.location());
+		addSurfaceBiome(consumer, Climate.Parameter.span(TEMPERATURES[1], TEMPERATURES[2]), FULL_RANGE, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, Biomes.SWAMP.location());
+		addSurfaceBiome(consumer, Climate.Parameter.span(TEMPERATURES[3], TEMPERATURES[4]), FULL_RANGE, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, Biomes.MANGROVE_SWAMP.location());
 
-		for(int i = 0; i < temperatures.length; ++i) {
-			Climate.Parameter parameter = temperatures[i];
+		for(int i = 0; i < TEMPERATURES.length; ++i) {
+			Climate.Parameter temperature = TEMPERATURES[i];
 
-			for(int j = 0; j < humidities.length; ++j) {
-				Climate.Parameter parameter2 = humidities[j];
+			for(int j = 0; j < HUMIDITIES.length; ++j) {
+				Climate.Parameter humidity = HUMIDITIES[j];
 				ResourceLocation middle = pickMiddleBiome(i, j, param);
 				ResourceLocation middleOrBadlands = pickMiddleBiomeOrBadlandsIfHot(i, j, param);
 				ResourceLocation middleOrBadlandsOrSlope = pickMiddleBiomeOrBadlandsIfHotOrSlopeIfCold(i, j, param);
 				ResourceLocation beach = pickBeachBiome(i, j);
 				ResourceLocation windsweptSavannaOrMiddle = maybePickWindsweptSavannaBiome(i, j, param, middle);
 				ResourceLocation shatteredCoast = pickShatteredCoastBiome(i, j, param);
-				addSurfaceBiome(consumer, parameter, parameter2, nearInlandContinentalness, Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F, middleOrBadlands);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F, middleOrBadlandsOrSlope);
-				addSurfaceBiome(consumer, parameter, parameter2, nearInlandContinentalness, Climate.Parameter.span(erosions[2], erosions[3]), param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), Climate.Parameter.span(erosions[2], erosions[3]), param, 0.0F, middleOrBadlands);
-				addSurfaceBiome(consumer, parameter, parameter2, coastContinentalness, Climate.Parameter.span(erosions[3], erosions[4]), param, 0.0F, beach);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[4], param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, coastContinentalness, erosions[5], param, 0.0F, shatteredCoast);
-				addSurfaceBiome(consumer, parameter, parameter2, nearInlandContinentalness, erosions[5], param, 0.0F, windsweptSavannaOrMiddle);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), erosions[5], param, 0.0F, middle);
-				addSurfaceBiome(consumer, parameter, parameter2, coastContinentalness, erosions[6], param, 0.0F, beach);
+				addSurfaceBiome(consumer, temperature, humidity, NEAR_INLAND_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, middleOrBadlands);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, middleOrBadlandsOrSlope);
+				addSurfaceBiome(consumer, temperature, humidity, NEAR_INLAND_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[2], EROSIONS[3]), param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), Climate.Parameter.span(EROSIONS[2], EROSIONS[3]), param, 0.0F, middleOrBadlands);
+				addSurfaceBiome(consumer, temperature, humidity, COAST_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[3], EROSIONS[4]), param, 0.0F, beach);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[4], param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, COAST_CONTINENTALNESS, EROSIONS[5], param, 0.0F, shatteredCoast);
+				addSurfaceBiome(consumer, temperature, humidity, NEAR_INLAND_CONTINENTALNESS, EROSIONS[5], param, 0.0F, windsweptSavannaOrMiddle);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[5], param, 0.0F, middle);
+				addSurfaceBiome(consumer, temperature, humidity, COAST_CONTINENTALNESS, EROSIONS[6], param, 0.0F, beach);
 				if (i == 0) {
-					addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(nearInlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, middle);
+					addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(NEAR_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, middle);
 				}
 			}
 		}
 	}
 
-	private static void addValleys(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter param) {
-		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, coastContinentalness, Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F, param.max() < 0L ? Biomes.STONY_SHORE.location() : Biomes.FROZEN_RIVER.location());
-		addSurfaceBiome(consumer, UNFROZEN_RANGE, FULL_RANGE, coastContinentalness, Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F, param.max() < 0L ? Biomes.STONY_SHORE.location() : Biomes.RIVER.location());
-		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, nearInlandContinentalness, Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F, Biomes.FROZEN_RIVER.location());
-		addSurfaceBiome(consumer, UNFROZEN_RANGE, FULL_RANGE, nearInlandContinentalness, Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F, Biomes.RIVER.location());
-		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), Climate.Parameter.span(erosions[2], erosions[5]), param, 0.0F, Biomes.FROZEN_RIVER.location());
-		addSurfaceBiome(consumer, UNFROZEN_RANGE, FULL_RANGE, Climate.Parameter.span(coastContinentalness, farInlandContinentalness), Climate.Parameter.span(erosions[2], erosions[5]), param, 0.0F, Biomes.RIVER.location());
-		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, coastContinentalness, erosions[6], param, 0.0F, Biomes.FROZEN_RIVER.location());
-		addSurfaceBiome(consumer, UNFROZEN_RANGE, FULL_RANGE, coastContinentalness, erosions[6], param, 0.0F, Biomes.RIVER.location());
-		addSurfaceBiome(consumer, Climate.Parameter.span(temperatures[1], temperatures[2]), FULL_RANGE, Climate.Parameter.span(inlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, Biomes.SWAMP.location());
-		addSurfaceBiome(consumer, Climate.Parameter.span(temperatures[3], temperatures[4]), FULL_RANGE, Climate.Parameter.span(inlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, Biomes.MANGROVE_SWAMP.location());
-		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, Climate.Parameter.span(inlandContinentalness, farInlandContinentalness), erosions[6], param, 0.0F, Biomes.FROZEN_RIVER.location());
+	private static void addValleys(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer, Climate.Parameter param) {
+		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, COAST_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, param.max() < 0L ? Biomes.STONY_SHORE.location() : Biomes.FROZEN_RIVER.location());
+		addSurfaceBiome(consumer, UNFROZEN_RANGE, FULL_RANGE, COAST_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, param.max() < 0L ? Biomes.STONY_SHORE.location() : Biomes.RIVER.location());
+		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, NEAR_INLAND_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, Biomes.FROZEN_RIVER.location());
+		addSurfaceBiome(consumer, UNFROZEN_RANGE, FULL_RANGE, NEAR_INLAND_CONTINENTALNESS, Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, Biomes.RIVER.location());
+		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, Climate.Parameter.span(COAST_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), Climate.Parameter.span(EROSIONS[2], EROSIONS[5]), param, 0.0F, Biomes.FROZEN_RIVER.location());
+		addSurfaceBiome(consumer, UNFROZEN_RANGE, FULL_RANGE, Climate.Parameter.span(COAST_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), Climate.Parameter.span(EROSIONS[2], EROSIONS[5]), param, 0.0F, Biomes.RIVER.location());
+		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, COAST_CONTINENTALNESS, EROSIONS[6], param, 0.0F, Biomes.FROZEN_RIVER.location());
+		addSurfaceBiome(consumer, UNFROZEN_RANGE, FULL_RANGE, COAST_CONTINENTALNESS, EROSIONS[6], param, 0.0F, Biomes.RIVER.location());
+		addSurfaceBiome(consumer, Climate.Parameter.span(TEMPERATURES[1], TEMPERATURES[2]), FULL_RANGE, Climate.Parameter.span(INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, Biomes.SWAMP.location());
+		addSurfaceBiome(consumer, Climate.Parameter.span(TEMPERATURES[3], TEMPERATURES[4]), FULL_RANGE, Climate.Parameter.span(INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, Biomes.MANGROVE_SWAMP.location());
+		addSurfaceBiome(consumer, FROZEN_RANGE, FULL_RANGE, Climate.Parameter.span(INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), EROSIONS[6], param, 0.0F, Biomes.FROZEN_RIVER.location());
 
-		for(int i = 0; i < temperatures.length; ++i) {
-			Climate.Parameter parameter = temperatures[i];
+		for(int i = 0; i < TEMPERATURES.length; ++i) {
+			Climate.Parameter temperature = TEMPERATURES[i];
 
-			for(int j = 0; j < humidities.length; ++j) {
-				Climate.Parameter parameter2 = humidities[j];
+			for(int j = 0; j < HUMIDITIES.length; ++j) {
+				Climate.Parameter humidity = HUMIDITIES[j];
 				ResourceLocation ResourceLocation = pickMiddleBiomeOrBadlandsIfHot(i, j, param);
-				addSurfaceBiome(consumer, parameter, parameter2, Climate.Parameter.span(midInlandContinentalness, farInlandContinentalness), Climate.Parameter.span(erosions[0], erosions[1]), param, 0.0F, ResourceLocation);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, ResourceLocation);
 			}
 		}
 
 	}
 
-	private static void addUndergroundBiomes(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consume) {
+	private static void addUndergroundBiomes(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consume) {
 		addUndergroundBiome(consume, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(0.8F, 1.0F), FULL_RANGE, FULL_RANGE, 0.0F, Biomes.DRIPSTONE_CAVES.location());
 		addUndergroundBiome(consume, FULL_RANGE, Climate.Parameter.span(0.7F, 1.0F), FULL_RANGE, FULL_RANGE, FULL_RANGE, 0.0F, Biomes.LUSH_CAVES.location());
-		addBottomBiome(consume, FULL_RANGE, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(erosions[0], erosions[1]), FULL_RANGE, 0.0F, Biomes.DEEP_DARK.location());
+		addBottomBiome(consume, FULL_RANGE, FULL_RANGE, FULL_RANGE, Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), FULL_RANGE, 0.0F, Biomes.DEEP_DARK.location());
 	}
 
 	private static ResourceLocation pickMiddleBiome(int temperature, int humidity, Climate.Parameter param) {
@@ -454,17 +453,17 @@ public class OverworldBiomeBuilderParameters {
 		return ResourceLocation == null ? pickMiddleBiome(temperature, humidity, param) : ResourceLocation;
 	}
 
-	private static void addSurfaceBiome(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness, ResourceLocation key) {
-		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(0.0F), depth, weirdness), key));
-		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(1.0F), depth, weirdness), key));
+	private static void addSurfaceBiome(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness, ResourceLocation key) {
+		consumer.accept(Pair.of(key, Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(0.0F), depth, weirdness)));
+		consumer.accept(Pair.of(key, Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(1.0F), depth, weirdness)));
 	}
 
-	private static void addUndergroundBiome(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness, ResourceLocation key) {
-		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.2F, 0.9F), depth, weirdness), key));
+	private static void addUndergroundBiome(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness, ResourceLocation key) {
+		consumer.accept(Pair.of(key, Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.2F, 0.9F), depth, weirdness)));
 	}
 
-	private static void addBottomBiome(Consumer<Pair<Climate.ParameterPoint, ResourceLocation>> consumer, Climate.Parameter parameter, Climate.Parameter parameter2, Climate.Parameter parameter3, Climate.Parameter parameter4, Climate.Parameter parameter5, float f, ResourceLocation registryKey) {
-		consumer.accept(Pair.of(Climate.parameters(parameter, parameter2, parameter3, parameter4, Climate.Parameter.point(1.1F), parameter5, f), registryKey));
+	private static void addBottomBiome(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer, Climate.Parameter parameter, Climate.Parameter parameter2, Climate.Parameter parameter3, Climate.Parameter parameter4, Climate.Parameter parameter5, float f, ResourceLocation registryKey) {
+		consumer.accept(Pair.of(registryKey, Climate.parameters(parameter, parameter2, parameter3, parameter4, Climate.Parameter.point(1.1F), parameter5, f)));
 	}
 
 	private static void addSurfaceBiome(List<Climate.ParameterPoint> list, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness) {
