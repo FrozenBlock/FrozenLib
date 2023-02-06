@@ -16,18 +16,18 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib_compat.modmenu.impl;
+package net.frozenblock.lib.modmenu.api;
 
-public class FrozenModMenuBadge {
-	public final String translationKey;
-	public final int outlineColor;
-	public final int fillColor;
-	public final String key;
+import java.util.ArrayList;
+import net.frozenblock.lib.modmenu.impl.FrozenModMenuBadge;
 
-	public FrozenModMenuBadge(String translationKey, int outlineColor, int fillColor, String key) {
-		this.translationKey = translationKey;
-		this.outlineColor = outlineColor;
-		this.fillColor = fillColor;
-		this.key = key;
+public abstract class FrozenModMenuEntrypoint {
+
+	public abstract ArrayList<FrozenModMenuBadge> newBadges();
+
+	public static FrozenModMenuBadge createBadge(String translationKey, int outlineColor, int fillColor, String key) {
+		return new FrozenModMenuBadge(translationKey, outlineColor, fillColor, key);
 	}
+
 }
+

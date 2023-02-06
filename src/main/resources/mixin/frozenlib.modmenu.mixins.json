@@ -1,9 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib_compat.modmenu.mixin",
+  "package": "net.frozenblock.lib.modmenu.mixin",
   "compatibilityLevel": "JAVA_17",
-  "plugin": "net.frozenblock.lib_compat.modmenu.mixin.plugin.RequiresModMenuMixinPlugin",
+  "plugin": "net.frozenblock.lib.modmenu.mixin.plugin.RequiresModMenuMixinPlugin",
   "injectors": {
 	"defaultRequire": 1
   },
