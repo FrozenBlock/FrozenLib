@@ -4,5 +4,4 @@ Make sure to clear after release
 
 Put changelog here:
 -----------------
-- Added a tag for blocks that the player should be able to interact with whilst crouching
-- Automated releases to GitHub, CurseForge, and Modrinth
+- Ported to 23w05a
