@@ -79,14 +79,16 @@ public class MobCategoryMixin {
 			}
 		});
 
-		for (FrozenMobCategory newCategory : newCategories) {
-			StringBuilder internalId = new StringBuilder(newCategory.modId.toUpperCase());
-			internalId.append(newCategory.name.toUpperCase());
+		for (FrozenMobCategory category : newCategories) {
+			var namespace = category.key().getNamespace();
+			var path = category.key().getPath();
+			StringBuilder internalId = new StringBuilder(namespace.toUpperCase());
+			internalId.append(path.toUpperCase());
 			if (internalIds.contains(internalId.toString())) {
 				throw new IllegalStateException("Cannot add duplicate MobCategory " + internalId + "!");
 			}
 			currentOrdinal += 1;
-			var addedCategory = newType(internalId.toString(), currentOrdinal, newCategory.modId + newCategory.name, newCategory.max, newCategory.isFriendly, newCategory.isPersistent, newCategory.despawnDistance);
+			var addedCategory = newType(internalId.toString(), currentOrdinal, namespace + path, category.max(), category.isFriendly(), category.isPersistent(), category.despawnDistance());
 			categories.add(addedCategory);
 			FrozenMobCategories.addMobCategory(internalId.toString(), addedCategory);
 		}

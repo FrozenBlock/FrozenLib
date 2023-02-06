@@ -111,7 +111,7 @@ public final class FrozenMain implements ModInitializer {
 
 		ServerTickEvents.START_SERVER_TICK.register((server) -> WindManager.tick(server, server.overworld()));
 
-		PlayerJoinEvent.register(((server, player) -> {
+		PlayerJoinEvent.ON_JOIN.register(((server, player) -> {
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 			byteBuf.writeLong(WindManager.time);
 			byteBuf.writeDouble(WindManager.cloudX);
