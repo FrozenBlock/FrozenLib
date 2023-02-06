@@ -113,14 +113,13 @@ public abstract class CreateWorldScreenMixin {
 	}
 
 	@Inject(
-			method = {"m_lgnmfmry", "method_45677", "lambda$applyNewPackConfig$19"},
+			method = "m_lgnmfmry(Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;",
 			at = @At(
 					value = "INVOKE",
 					target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
 					shift = At.Shift.AFTER,
 					remap = false
-			),
-			require = 1
+			)
 	)
 	private void onFailDataPackLoading(Void unused, Throwable throwable, CallbackInfoReturnable<Object> cir) {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, throwable);
