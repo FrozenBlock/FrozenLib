@@ -46,11 +46,13 @@ import net.minecraft.world.level.WorldDataConfiguration;
 import net.minecraft.world.level.levelgen.WorldGenSettings;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 import org.slf4j.Logger;
+import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -65,41 +67,17 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 @Mixin(CreateWorldScreen.class)
 public abstract class CreateWorldScreenMixin {
-    @Shadow
-    @Final
-    private static Logger LOGGER;
 
-    @Shadow
-    private static WorldLoader.InitConfig createDefaultLoadConfig(PackRepository resourcePackManager, WorldDataConfiguration worldDataConfiguration) {
-        throw new IllegalStateException("Mixin injection failed.");
-    }
-
-    /*@Redirect(
-            method = "openFresh",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/WorldLoader;load(Lnet/minecraft/server/WorldLoader$InitConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;Lnet/minecraft/server/WorldLoader$ResultFactory;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
-            )
-    )
-    private static <D> CompletableFuture<WorldCreationContext> loadDynamicRegistry(WorldLoader.InitConfig initConfig,
-                                                                                   WorldLoader.WorldDataSupplier<D> loadContextSupplier, WorldLoader.ResultFactory<D, WorldCreationContext> applierFactory,
-                                                                                   Executor prepareExecutor, Executor applyExecutor) {
-        return quilt$applyDefaultDataPacks(() -> {
-            ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
-            return WorldLoader.load(initConfig, (resourceManager, dataPackSettings) -> {
-                RegistryAccess.Writable registryManager = RegistryAccess.builtinCopy();
-                // Force-loads the dynamic registry from data-packs as some mods may define dynamic game objects via data-driven capabilities.
-                RegistryOps.createAndLoad(JsonOps.INSTANCE, registryManager, resourceManager);
-                RegistryAccess.Frozen frozen = registryManager.freeze();
-                WorldGenSettings generatorOptions = WorldPresets.createNormalWorldFromPreset(frozen);
-                return Pair.of(generatorOptions, frozen);
-            }, (resourceManager, serverReloadableResources, frozen, generatorOptions) -> {
-                ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
-                resourceManager.close();
-                return new WorldCreationContext(generatorOptions, Lifecycle.stable(), frozen, serverReloadableResources);
-            }, Util.backgroundExecutor(), Minecraft.getInstance());
-        });
-    }*/
+	@Dynamic
+	@Inject(
+			method = {"m_qcsfhvrb", "method_41851", "lambda$openFresh$2"},
+			at = @At("HEAD"),
+			require = 1
+	)
+	private static void onEndDataPackLoadOnOpen(CloseableResourceManager resourceManager, ReloadableServerResources resources,
+			LayeredRegistryAccess<?> layeredRegistryAccess, @Coerce Object object, CallbackInfoReturnable<WorldCreationContext> cir) {
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
+	}
 
     @Inject(
             method = "applyNewPackConfig",
@@ -123,108 +101,28 @@ public abstract class CreateWorldScreenMixin {
         ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
     }
 
-    // Lambda method in CreateWorldScreen#tryApplyNewDataPacks, at C_kjxfcecs#method_42098.
-    // Inject before closing the resource manager.
-    @Inject(
-            method = {"method_41851", "m_tlckpqyc", "lambda$openFresh$1"},
-            at = @At("HEAD"),
-            require = 1,
-            remap = false // Very bad, someone please fix the Mixin annotation processor already.
-    )
-    private static void onDataPackLoadEnd(CloseableResourceManager resourceManager,
-                                          ReloadableServerResources serverReloadableResources,
-                                          LayeredRegistryAccess layeredRegistryAccess, CreateWorldScreen.DataPackReloadCookie dataPackReloadCookie,
-                                          CallbackInfoReturnable<WorldCreationContext> cir) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
-    }
+	@Dynamic
+	@Inject(
+			method = {"m_fiszvdug", "method_45681", "lambda$applyNewPackConfig$15"},
+			at = @At("HEAD"),
+			require = 1
+	)
+	private static void onCreateDataPackLoadEnd(CloseableResourceManager resourceManager, ReloadableServerResources resources,
+			LayeredRegistryAccess<?> layeredRegistryAccess, @Coerce Object object, CallbackInfoReturnable<WorldCreationContext> cir) {
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
+	}
 
-    // Lambda method in CreateWorldScreen#create, at C_kjxfcecs#method_42098.
-    // Inject before closing the resource manager.
-    @Inject(
-            method = {"method_41851", "m_tlckpqyc"},
-            at = @At("HEAD"),
-            require = 1,
-            remap = false // Very bad, someone please fix the Mixin annotation processor already.
-    )
-    private static void onCreateDataPackLoadEnd(CloseableResourceManager resourceManager,
-												ReloadableServerResources serverReloadableResources,
-												LayeredRegistryAccess frozen, CreateWorldScreen.DataPackReloadCookie generatorOptions,
-												CallbackInfoReturnable<WorldCreationContext> cir) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
-    }
-
-    // Lambda method in CreateWorldScreen#applyDataPacks, at CompletableFuture#handle.
-    // Take Void and Throwable parameters.
-    @Inject(
-            method = {"method_45685", "m_sxbkwuzy", "lambda$applyNewPackConfig$27"},
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
-                    shift = At.Shift.AFTER,
-                    remap = false
-            ),
-            require = 1,
-            remap = false
-    )
-    private void onFailDataPackLoading(Void unused, Throwable throwable, CallbackInfoReturnable<Object> cir) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, throwable);
-    }
-
-    /*@Unique
-    private static CompletableFuture<WorldCreationContext> frozenLib_quilt$applyDefaultDataPacks(Supplier<CompletableFuture<WorldCreationContext>> base) {
-        var client = Minecraft.getInstance();
-        client.tell(() -> client.setScreen(new GenericDirtMessageScreen(Component.translatable("dataPack.validation.working"))));
-
-        WorldLoader.InitConfig initConfig = createDefaultLoadConfig(new PackRepository(PackType.SERVER_DATA, new ServerPacksSource()),
-                createDefaultDataPackSettings(DataPackConfig.DEFAULT));
-        return WorldLoader.load(
-                initConfig,
-                (resourceManager, dataPackSettings) -> {
-                    var dataPackLoadingContext = new DataPackLoadingContext(RegistryAccess.builtinCopy(), resourceManager);
-                    DataResult<WorldGenSettings> result = dataPackLoadingContext.loadDefaultGeneratorOptions(dataPackLoadingContext.loadRegistries());
-
-                    RegistryAccess.Frozen frozenRegistryManager = dataPackLoadingContext.registryManager().freeze();
-                    Lifecycle lifecycle = result.lifecycle().add(frozenRegistryManager.allElementsLifecycle());
-                    WorldGenSettings generatorOptions = result.getOrThrow(
-                            false, Util.prefix("Error parsing world-gen settings after loading data-packs: ", LOGGER::error)
-                    );
-
-                    if (frozenRegistryManager.registryOrThrow(Registry.WORLD_PRESET_REGISTRY).size() == 0) {
-                        throw new IllegalStateException("Needs at least one world preset to continue");
-                    } else if (frozenRegistryManager.registryOrThrow(Registries.BIOME).size() == 0) {
-                        throw new IllegalStateException("Needs at least one biome to continue");
-                    } else {
-                        return Pair.of(Pair.of(generatorOptions, lifecycle), frozenRegistryManager);
-                    }
-                },
-                (resourceManager, serverReloadableResources, registryManager, pair) -> {
-                    ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
-                    resourceManager.close();
-                    return new WorldCreationContext(pair.getFirst(), pair.getSecond(), registryManager, serverReloadableResources);
-                },
-                Util.backgroundExecutor(),
-                client
-        ).exceptionallyCompose(error -> {
-            LOGGER.warn("Failed to validate default data-pack.", error);
-            ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, error);
-            return base.get();
-        });
-    }*/
-
-    private static DataPackConfig createDefaultDataPackSettings(DataPackConfig source) {
-        var moddedResourcePacks = new ArrayList<Pack>();
-
-        var enabled = new ArrayList<>(source.getEnabled());
-        var disabled = new ArrayList<>(source.getDisabled());
-
-        // This ensure that any built-in registered data packs by mods which needs to be enabled by default are
-        // as the data pack screen automatically put any data pack as disabled except the Default data pack.
-        for (var profile : moddedResourcePacks) {
-            PackResources pack = profile.open();
-
-            enabled.add(profile.getId());
-        }
-
-        return new DataPackConfig(enabled, disabled);
-    }
+	@Inject(
+			method = {"m_lgnmfmry", "method_45677", "lambda$applyNewPackConfig$19"},
+			at = @At(
+					value = "INVOKE",
+					target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
+					shift = At.Shift.AFTER,
+					remap = false
+			),
+			require = 1
+	)
+	private void onFailDataPackLoading(Void unused, Throwable throwable, CallbackInfoReturnable<Object> cir) {
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, throwable);
+	}
 }
