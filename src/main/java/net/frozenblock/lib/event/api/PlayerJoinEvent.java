@@ -18,23 +18,18 @@
 
 package net.frozenblock.lib.event.api;
 
-import java.util.ArrayList;
+import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
 public class PlayerJoinEvent {
 
-	private static final ArrayList<PlayerJoin> JOIN_EVENTS = new ArrayList<>();
-
-	public static void register(PlayerJoin joinEvent) {
-		JOIN_EVENTS.add(joinEvent);
-	}
-
-	public static void onPlayerJoined(MinecraftServer server, ServerPlayer player) {
-		for (PlayerJoin joinEvent : JOIN_EVENTS) {
-			joinEvent.onPlayerJoin(server, player);
-		}
-	}
+	public static final Event<PlayerJoin> ON_JOIN = FrozenEvents.createEnvironmentEvent(PlayerJoin.class,
+			callbacks -> (server, player) -> {
+				for (var callback : callbacks) {
+					callback.onPlayerJoin(server, player);
+				}
+			});
 
 	@FunctionalInterface
 	public interface PlayerJoin {
