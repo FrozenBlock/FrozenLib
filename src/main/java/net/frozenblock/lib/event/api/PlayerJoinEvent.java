@@ -22,18 +22,30 @@ import net.fabricmc.fabric.api.event.Event;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
+/**
+ * A class representing the player join event.
+ */
 public class PlayerJoinEvent {
 
-	public static final Event<PlayerJoin> ON_JOIN = FrozenEvents.createEnvironmentEvent(PlayerJoin.class,
-			callbacks -> (server, player) -> {
-				for (var callback : callbacks) {
-					callback.onPlayerJoin(server, player);
-				}
-			});
+	/**
+	 * The event that is triggered when a player joins the server.
+	 */
+	public static final Event<PlayerJoin> ON_JOIN = FrozenEvents.createEnvironmentEvent(PlayerJoin.class, (callbacks) -> (server, player) -> {
+		for (var callback : callbacks) {
+			callback.onPlayerJoin(server, player);
+		}
+	});
 
+	/**
+	 * A functional interface representing a player join event.
+	 */
 	@FunctionalInterface
 	public interface PlayerJoin {
+		/**
+		 * Triggers the event when a player joins the server.
+		 * @param server the Minecraft server instance
+		 * @param player the player joining the server
+		 */
 		void onPlayerJoin(MinecraftServer server, ServerPlayer player);
 	}
-
 }
