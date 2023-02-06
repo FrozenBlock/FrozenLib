@@ -16,14 +16,14 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib_compat.modmenu.mixin.client;
+package net.frozenblock.lib.modmenu.mixin.client;
 
 import com.terraformersmc.modmenu.util.mod.Mod;
 import java.util.ArrayList;
 import java.util.Arrays;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib_compat.modmenu.api.FrozenModMenuEntrypoint;
-import net.frozenblock.lib_compat.modmenu.impl.FrozenModMenuBadge;
+import net.frozenblock.lib.modmenu.api.FrozenModMenuEntrypoint;
+import net.frozenblock.lib.modmenu.impl.FrozenModMenuBadge;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;

@@ -21,17 +21,17 @@ package net.frozenblock.lib.worldgen.biome.api.parameters;
 import net.minecraft.world.level.biome.Climate;
 
 public final class Humidity {
-    public static final Climate.Parameter ARID = OverworldBiomeBuilderParameters.humidities[0];
-    public static final Climate.Parameter DRY = OverworldBiomeBuilderParameters.humidities[1];
-    public static final Climate.Parameter NEUTRAL = OverworldBiomeBuilderParameters.humidities[2];
-    public static final Climate.Parameter WET = OverworldBiomeBuilderParameters.humidities[3];
-    public static final Climate.Parameter HUMID = OverworldBiomeBuilderParameters.humidities[4];
+    public static final Climate.Parameter ARID = OverworldBiomeBuilderParameters.HUMIDITIES[0];
+    public static final Climate.Parameter DRY = OverworldBiomeBuilderParameters.HUMIDITIES[1];
+    public static final Climate.Parameter NEUTRAL = OverworldBiomeBuilderParameters.HUMIDITIES[2];
+    public static final Climate.Parameter WET = OverworldBiomeBuilderParameters.HUMIDITIES[3];
+    public static final Climate.Parameter HUMID = OverworldBiomeBuilderParameters.HUMIDITIES[4];
 
-	public static final Climate.Parameter ONE = OverworldBiomeBuilderParameters.humidities[0];
-	public static final Climate.Parameter TWO = OverworldBiomeBuilderParameters.humidities[1];
-	public static final Climate.Parameter THREE = OverworldBiomeBuilderParameters.humidities[2];
-	public static final Climate.Parameter FOUR = OverworldBiomeBuilderParameters.humidities[3];
-	public static final Climate.Parameter FIVE = OverworldBiomeBuilderParameters.humidities[4];
+	public static final Climate.Parameter ONE = OverworldBiomeBuilderParameters.HUMIDITIES[0];
+	public static final Climate.Parameter TWO = OverworldBiomeBuilderParameters.HUMIDITIES[1];
+	public static final Climate.Parameter THREE = OverworldBiomeBuilderParameters.HUMIDITIES[2];
+	public static final Climate.Parameter FOUR = OverworldBiomeBuilderParameters.HUMIDITIES[3];
+	public static final Climate.Parameter FIVE = OverworldBiomeBuilderParameters.HUMIDITIES[4];
 
     public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 }

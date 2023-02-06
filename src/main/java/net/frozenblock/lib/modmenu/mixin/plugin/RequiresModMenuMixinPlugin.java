@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib_compat.modmenu.mixin.plugin;
+package net.frozenblock.lib.modmenu.mixin.plugin;
 
 import java.util.List;
 import java.util.Set;

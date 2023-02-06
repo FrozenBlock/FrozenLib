@@ -30,23 +30,40 @@ import net.minecraft.network.chat.Component;
 @Environment(EnvType.CLIENT)
 public final class FrozenConfig {
 
-    public static ConfigCategory createSubCategory(ConfigEntryBuilder entryBuilder, ConfigCategory parentCategory, Component key, boolean expanded, Component tooltip, AbstractConfigListEntry... entries) {
-        Preconditions.checkArgument(entryBuilder != null, "ConfigEntryBuilder is null");
-        Preconditions.checkArgument(parentCategory != null, "Parent Category is null");
-        Preconditions.checkArgument(key != null, "Sub Category key is null");
-        Arrays.stream(entries).forEach(entry -> Preconditions.checkArgument(entry != null, "Config List Entry is null"));
+	/**
+	 * Creates a subcategory in the parent config category with the specified key and adds entries to it.
+	 *
+	 * @param entryBuilder the ConfigEntryBuilder instance
+	 * @param parentCategory the parent config category
+	 * @param key the key for the subcategory
+	 * @param expanded if the subcategory is expanded or not
+	 * @param tooltip the tooltip for the subcategory
+	 * @param entries the entries to be added to the subcategory
+	 * @return the newly created subcategory
+	 */
+	public static ConfigCategory createSubCategory(ConfigEntryBuilder entryBuilder, ConfigCategory parentCategory, Component key, boolean expanded, Component tooltip, AbstractConfigListEntry... entries) {
+		// Check if the required parameters are not null
+		Preconditions.checkArgument(entryBuilder != null, "ConfigEntryBuilder is null");
+		Preconditions.checkArgument(parentCategory != null, "Parent Category is null");
+		Preconditions.checkArgument(key != null, "Sub Category key is null");
+		Arrays.stream(entries).forEach(entry -> Preconditions.checkArgument(entry != null, "Config List Entry is null"));
 
-        var subCategory = entryBuilder.startSubCategory(key, Arrays.stream(entries).toList());
+		// Create the subcategory
+		var subCategory = entryBuilder.startSubCategory(key, Arrays.stream(entries).toList());
 
-        subCategory.setExpanded(expanded);
-        if (tooltip != null) {
-            subCategory.setTooltip(tooltip);
-        }
+		// Set the expanded status
+		subCategory.setExpanded(expanded);
+		// If the tooltip is not null, set the tooltip for the subcategory
+		if (tooltip != null) {
+			subCategory.setTooltip(tooltip);
+		}
 
-        return parentCategory.addEntry(entryBuilder.startSubCategory(key, Arrays.stream(entries).toList())
-                .setExpanded(expanded)
-                .setTooltip(tooltip)
-                .build()
-        );
-    }
+		// Add the subcategory to the parent category and return it
+		return parentCategory.addEntry(entryBuilder.startSubCategory(key, Arrays.stream(entries).toList())
+				.setExpanded(expanded)
+				.setTooltip(tooltip)
+				.build()
+		);
+	}
+
 }

@@ -26,47 +26,82 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.event.impl.EventType;
-import net.minecraft.resources.ResourceLocation;
 
 public class FrozenEvents {
 
-    private static final List<Event<?>> REGISTERED_EVENTS = new ArrayList<>();
+	/**
+	 * A list to store all the registered events
+	 */
+	private static final List<Event<?>> REGISTERED_EVENTS = new ArrayList<>();
 
-    public static <T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
-        var event = EventFactory.createArrayBacked(type, invokerFactory);
+	/**
+	 * Creates an environment event with the specified event type and invoker factory.
+	 *
+	 * @param type The type of event to be created
+	 * @param invokerFactory The function to create the invoker for the event
+	 * @return A new Event of the specified type
+	 */
+	public static <T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
+		// Create an array-backed event
+		var event = EventFactory.createArrayBacked(type, invokerFactory);
 
-        register(event, type);
+		// Register the event
+		register(event, type);
 
-        return event;
-    }
+		// Return the newly created event
+		return event;
+	}
 
-    public static <T> Event<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
-        var event = EventFactory.createArrayBacked(type, emptyInvoker, invokerFactory);
+	/**
+	 * Creates an environment event with the specified event type, empty invoker, and invoker factory.
+	 *
+	 * @param type The type of event to be created
+	 * @param emptyInvoker An empty invoker for the event
+	 * @param invokerFactory The function to create the invoker for the event
+	 * @return A new Event of the specified type
+	 */
+	public static <T> Event<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
+		// Create an array-backed event
+		var event = EventFactory.createArrayBacked(type, emptyInvoker, invokerFactory);
 
-        register(event, type);
+		// Register the event
+		register(event, type);
 
-        return event;
-    }
+		// Return the newly created event
+		return event;
+	}
 
-    public static <T> void register(Event<T> event, Class<? super T> type) {
-        if (!REGISTERED_EVENTS.contains(event)) {
-            REGISTERED_EVENTS.add(event);
-            for (var eventType : EventType.VALUES) {
-                if (eventType.listener().isAssignableFrom(type)) {
-                    List<?> entrypoints = FabricLoader.getInstance().getEntrypoints(eventType.entrypoint(), eventType.listener());
+	/**
+	 * Registers the specified event.
+	 *
+	 * @param event The event to be registered
+	 * @param type The type of the event to be registered
+	 */
+	public static <T> void register(Event<T> event, Class<? super T> type) {
+		// Check if the event is already registered
+		if (!REGISTERED_EVENTS.contains(event)) {
+			// Add the event to the list of registered events
+			REGISTERED_EVENTS.add(event);
 
-                    for (Object entrypoint : entrypoints) {
-                        var map = new Object2ObjectOpenHashMap<Class<?>, ResourceLocation>();
+			// Loop through all event types
+			for (var eventType : EventType.VALUES) {
+				// Check if the listener type is assignable from the event type
+				if (eventType.listener().isAssignableFrom(type)) {
+					// Get the entrypoints for the specified listener type
+					List<?> entrypoints = FabricLoader.getInstance().getEntrypoints(eventType.entrypoint(), eventType.listener());
 
-                        if (type.isAssignableFrom(entrypoint.getClass())) {
-                            var phase = map.getOrDefault(type, Event.DEFAULT_PHASE);
-                            event.register(phase, (T) entrypoint);
-                        }
-                    }
-
-                    break;
-                }
-            }
-        }
-    }
+					// Loop through the entrypoints
+					for (Object entrypoint : entrypoints) {
+						// Check if the entrypoint is assignable from the event type
+						if (type.isAssignableFrom(entrypoint.getClass())) {
+							// Register the entrypoint to the event
+							event.register(Event.DEFAULT_PHASE, (T) entrypoint);
+						}
+					}
+					// Break the loop once a match is found
+					break;
+				}
+			}
+		}
+	}
 }

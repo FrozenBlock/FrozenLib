@@ -21,17 +21,17 @@ package net.frozenblock.lib.worldgen.biome.api.parameters;
 import net.minecraft.world.level.biome.Climate;
 
 public final class Temperature {
-    public static final Climate.Parameter ICY = OverworldBiomeBuilderParameters.temperatures[0];
-    public static final Climate.Parameter COOL = OverworldBiomeBuilderParameters.temperatures[1];
-    public static final Climate.Parameter NEUTRAL = OverworldBiomeBuilderParameters.temperatures[2];
-    public static final Climate.Parameter WARM = OverworldBiomeBuilderParameters.temperatures[3];
-    public static final Climate.Parameter HOT = OverworldBiomeBuilderParameters.temperatures[4];
+    public static final Climate.Parameter ICY = OverworldBiomeBuilderParameters.TEMPERATURES[0];
+    public static final Climate.Parameter COOL = OverworldBiomeBuilderParameters.TEMPERATURES[1];
+    public static final Climate.Parameter NEUTRAL = OverworldBiomeBuilderParameters.TEMPERATURES[2];
+    public static final Climate.Parameter WARM = OverworldBiomeBuilderParameters.TEMPERATURES[3];
+    public static final Climate.Parameter HOT = OverworldBiomeBuilderParameters.TEMPERATURES[4];
 
-	public static final Climate.Parameter ONE = OverworldBiomeBuilderParameters.temperatures[0];
-	public static final Climate.Parameter TWO = OverworldBiomeBuilderParameters.temperatures[1];
-	public static final Climate.Parameter THREE = OverworldBiomeBuilderParameters.temperatures[2];
-	public static final Climate.Parameter FOUR = OverworldBiomeBuilderParameters.temperatures[3];
-	public static final Climate.Parameter FIVE = OverworldBiomeBuilderParameters.temperatures[4];
+	public static final Climate.Parameter ONE = OverworldBiomeBuilderParameters.TEMPERATURES[0];
+	public static final Climate.Parameter TWO = OverworldBiomeBuilderParameters.TEMPERATURES[1];
+	public static final Climate.Parameter THREE = OverworldBiomeBuilderParameters.TEMPERATURES[2];
+	public static final Climate.Parameter FOUR = OverworldBiomeBuilderParameters.TEMPERATURES[3];
+	public static final Climate.Parameter FIVE = OverworldBiomeBuilderParameters.TEMPERATURES[4];
 
     public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 }

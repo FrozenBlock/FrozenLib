@@ -29,6 +29,9 @@ import static net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig.text;
 import static net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig.tooltip;
 import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
 
+/**
+ * The main config category for FrozenLib
+ */
 @Config(name = "config")
 public final class FrozenLibConfigCategory implements ConfigData {
 
