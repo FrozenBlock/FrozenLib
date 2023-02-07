@@ -74,6 +74,7 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveFlybySoundPacket();
 		receiveCooldownChangePacket();
 		receiveForcedCooldownPacket();
+		receiveCooldownTickCountPacket();
 		receiveScreenShakePacket();
 		receiveScreenShakeFromEntityPacket();
 		receiveIconPacket();
@@ -320,6 +321,18 @@ public final class FrozenClient implements ClientModInitializer {
 				ClientLevel level = ctx.level;
 				if (level != null && ctx.player != null) {
 					ctx.player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
+				}
+			});
+		});
+	}
+
+	private static void receiveCooldownTickCountPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.COOLDOWN_TICK_COUNT_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			int tickCount = byteBuf.readInt();
+			ctx.execute(() -> {
+				ClientLevel level = ctx.level;
+				if (level != null && ctx.player != null) {
+					ctx.player.getCooldowns().tickCount = tickCount;
 				}
 			});
 		});

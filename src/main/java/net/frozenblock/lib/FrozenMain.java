@@ -139,6 +139,7 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation LOCAL_PLAYER_SOUND_PACKET = id("local_player_sound_packet");
 	public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
 	public static final ResourceLocation FORCED_COOLDOWN_PACKET = id("forced_cooldown_packet");
+	public static final ResourceLocation COOLDOWN_TICK_COUNT_PACKET = id("cooldown_tick_count_packet");
 	public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
 
 	public static final ResourceLocation SCREEN_SHAKE_PACKET = id("screen_shake_packet");
