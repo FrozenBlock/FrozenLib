@@ -12,6 +12,7 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/feature/fo
 transitive-extendable    method    net/minecraft/world/item/InstrumentItem    getInstrument    (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
 transitive-extendable    method    net/minecraft/world/level/block/state/BlockBehaviour    getLootTable    ()Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    cooldowns    Ljava/util/Map;
+transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    tickCount    I
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns$CooldownInstance    startTime    I
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns$CooldownInstance    endTime    I
 transitive-accessible    method    net/minecraft/world/item/ItemCooldowns$CooldownInstance    <init>    (II)V
