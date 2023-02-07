@@ -52,6 +52,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
@@ -72,6 +73,7 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveFadingDistanceSoundPacket();
 		receiveFlybySoundPacket();
 		receiveCooldownChangePacket();
+		receiveForcedCooldownPacket();
 		receiveScreenShakePacket();
 		receiveScreenShakeFromEntityPacket();
 		receiveIconPacket();
@@ -304,6 +306,20 @@ public final class FrozenClient implements ClientModInitializer {
 				ClientLevel level = ctx.level;
 				if (level != null && ctx.player != null) {
 					((CooldownInterface) ctx.player.getCooldowns()).changeCooldown(item, additional);
+				}
+			});
+		});
+	}
+
+	private static void receiveForcedCooldownPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.FORCED_COOLDOWN_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			Item item = byteBuf.readById(Registry.ITEM);
+			int startTime = byteBuf.readVarInt();
+			int endTime = byteBuf.readVarInt();
+			ctx.execute(() -> {
+				ClientLevel level = ctx.level;
+				if (level != null && ctx.player != null) {
+					ctx.player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
 				}
 			});
 		});
