@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.entity.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "AbstractFishMixin",
+    "behavior.BehaviorMixin"
+  ],
+  "client": [
+    "client.rendering.LivingEntityRendererMixin"
+  ]
+}

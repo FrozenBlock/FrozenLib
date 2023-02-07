@@ -18,6 +18,8 @@
 
 package net.frozenblock.lib.registry.api;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
@@ -29,8 +31,8 @@ import net.minecraft.core.MappedRegistry;
 
 public class FrozenRegistry {
 
+	@Environment(EnvType.CLIENT)
     public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenMain.id("entity_texture_override"))
-            .attribute(RegistryAttribute.SYNCED)
             .buildAndRegister();
 
 	public static final MappedRegistry<ModIntegrationSupplier> MOD_INTEGRATION = FabricRegistryBuilder.createSimple(ModIntegrationSupplier.class, FrozenMain.id("mod_integration"))

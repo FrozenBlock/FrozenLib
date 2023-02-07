@@ -20,7 +20,7 @@ package net.frozenblock.lib.testmod;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.frozenblock.lib.impl.BlockScheduledTicks;
+import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.frozenblock.lib.testmod.config.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;
 import net.frozenblock.lib.testmod.item.LootTableWhacker;

@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.storage.mixin;
 
-import net.frozenblock.lib.impl.HopperUntouchableList;
+import net.frozenblock.lib.storage.api.HopperUntouchableList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.Level;
