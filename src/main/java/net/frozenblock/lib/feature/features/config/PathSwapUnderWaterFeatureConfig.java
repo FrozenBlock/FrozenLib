@@ -48,7 +48,11 @@ public class PathSwapUnderWaterFeatureConfig implements FeatureConfiguration {
             return config.useY;
         }), Codec.BOOL.fieldOf("multiplyY").orElse(false).forGetter((config) -> {
             return config.multiplyY;
-        }), RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("replaceable").forGetter((config) -> {
+        }), Codec.BOOL.fieldOf("is3D").orElse(false).forGetter((config) ->
+				config.is3D
+		), Codec.BOOL.fieldOf("onlyExposed").orElse(false).forGetter((config) ->
+				config.onlyExposed
+		), RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("replaceable").forGetter((config) -> {
             return config.replaceable;
         })).apply(instance, PathSwapUnderWaterFeatureConfig::new);
     });
@@ -61,13 +65,15 @@ public class PathSwapUnderWaterFeatureConfig implements FeatureConfiguration {
     public final double maxThresh;
     public final boolean useY;
     public final boolean multiplyY;
+	public final boolean is3D;
+	public final boolean onlyExposed;
     public final HolderSet<Block> replaceable;
 
     private static DataResult<Block> validateBlock(Block block) {
         return DataResult.success(block);
     }
 
-    public PathSwapUnderWaterFeatureConfig(BlockStateProvider pathBlock, BlockStateProvider waterPathBlock, int radius, int noise, double multiplier, double minThresh, double maxThresh, boolean useY, boolean multiplyY, HolderSet<Block> replaceable) {
+    public PathSwapUnderWaterFeatureConfig(BlockStateProvider pathBlock, BlockStateProvider waterPathBlock, int radius, int noise, double multiplier, double minThresh, double maxThresh, boolean useY, boolean multiplyY, boolean is3D, boolean onlyExposed, HolderSet<Block> replaceable) {
         this.pathBlock = pathBlock;
 		this.waterPathBlock = waterPathBlock;
         this.radius = radius;
@@ -77,6 +83,8 @@ public class PathSwapUnderWaterFeatureConfig implements FeatureConfiguration {
         this.maxThresh = maxThresh;
         this.useY = useY;
         this.multiplyY = multiplyY;
+		this.is3D = is3D;
+		this.onlyExposed = onlyExposed;
         this.replaceable = replaceable;
     }
 

@@ -46,7 +46,11 @@ public class PathFeatureConfig implements FeatureConfiguration {
             config.useY
         ), Codec.BOOL.fieldOf("multiplyY").orElse(false).forGetter((config) ->
             config.multiplyY
-        ), RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("replaceable").forGetter((config) ->
+        ), Codec.BOOL.fieldOf("is3D").orElse(false).forGetter((config) ->
+				config.is3D
+		), Codec.BOOL.fieldOf("onlyExposed").orElse(false).forGetter((config) ->
+				config.onlyExposed
+		), RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("replaceable").forGetter((config) ->
             config.replaceable
         )).apply(instance, PathFeatureConfig::new);
     });
@@ -58,13 +62,15 @@ public class PathFeatureConfig implements FeatureConfiguration {
     public final double maxThresh;
     public final boolean useY;
     public final boolean multiplyY;
+	public final boolean is3D;
+	public final boolean onlyExposed;
     public final HolderSet<Block> replaceable;
 
     private static DataResult<Block> validateBlock(Block block) {
         return DataResult.success(block);
     }
 
-    public PathFeatureConfig(BlockStateProvider pathBlock, int radius, int noise, double multiplier, double minThresh, double maxThresh, boolean useY, boolean multiplyY, HolderSet<Block> replaceable) {
+    public PathFeatureConfig(BlockStateProvider pathBlock, int radius, int noise, double multiplier, double minThresh, double maxThresh, boolean useY, boolean multiplyY, boolean is3D, boolean onlyExposed, HolderSet<Block> replaceable) {
         this.pathBlock = pathBlock;
         this.radius = radius;
         this.noise = noise;
@@ -73,6 +79,8 @@ public class PathFeatureConfig implements FeatureConfiguration {
         this.maxThresh = maxThresh;
         this.useY = useY;
         this.multiplyY = multiplyY;
+		this.is3D = is3D;
+		this.onlyExposed = onlyExposed;
         this.replaceable = replaceable;
     }
 
