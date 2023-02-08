@@ -31,6 +31,7 @@ public final class FrozenItemTags {
 
 	public static final TagKey<Item> NO_USE_GAME_EVENTS = of("dont_emit_use_game_events");
 	public static final TagKey<Item> HEAVY_ITEMS = of("heavy_items");
+	public static final TagKey<Item> ALWAYS_SAVE_COOLDOWNS = of("always_save_cooldowns");
 
 	private static TagKey<Item> of(String path) {
 		return TagKey.create(Registry.ITEM_REGISTRY, FrozenMain.id(path));
