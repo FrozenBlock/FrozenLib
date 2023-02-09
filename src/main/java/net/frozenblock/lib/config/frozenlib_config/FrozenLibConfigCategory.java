@@ -36,6 +36,7 @@ import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
 public final class FrozenLibConfigCategory implements ConfigData {
 
 	public boolean useWindOnNonFrozenServers = FrozenLibConfigValues.DefaultFrozenLibConfigValues.USE_WIND_ON_NON_FROZENLIB_SERVERS;
+	public boolean saveItemCooldowns = FrozenLibConfigValues.DefaultFrozenLibConfigValues.SAVE_ITEM_COOLDOWNS;
 
     @Environment(EnvType.CLIENT)
     static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
@@ -48,5 +49,12 @@ public final class FrozenLibConfigCategory implements ConfigData {
                 .setTooltip(tooltip("use_wind_on_non_frozenlib_servers"))
                 .build()
         );
+
+		var saveItemCooldowns = category.addEntry(entryBuilder.startBooleanToggle(text("save_item_cooldowns"), config.saveItemCooldowns)
+				.setDefaultValue(FrozenLibConfigValues.DefaultFrozenLibConfigValues.SAVE_ITEM_COOLDOWNS)
+				.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
+				.setTooltip(tooltip("save_item_cooldowns"))
+				.build()
+		);
     }
 }

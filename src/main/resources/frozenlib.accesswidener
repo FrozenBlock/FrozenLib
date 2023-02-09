@@ -12,6 +12,7 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/feature/fo
 transitive-extendable    method    net/minecraft/world/item/InstrumentItem    getInstrument    (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
 transitive-extendable    method    net/minecraft/world/level/block/state/BlockBehaviour    getLootTable    ()Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    cooldowns    Ljava/util/Map;
+transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    tickCount    I
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns$CooldownInstance    startTime    I
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns$CooldownInstance    endTime    I
 transitive-accessible    method    net/minecraft/world/item/ItemCooldowns$CooldownInstance    <init>    (II)V
@@ -24,6 +25,11 @@ transitive-accessible    method    net/minecraft/client/renderer/item/ItemProper
 # Structures
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    getWorldPos    (III)Lnet/minecraft/core/BlockPos$MutableBlockPos;
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement    <init>    (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V
+transitive-accessible    method    net/minecraft/world/level/levelgen/structure/ScatteredFeaturePiece    updateAverageGroundHeight    (Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;I)Z
+transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    generateBox    (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;IIIIIILnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Z)V
+transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    placeBlock    (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V
+transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    fillColumnDown    (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V
+transitive-accessible    field    net/minecraft/world/level/levelgen/structure/Structure    settings    Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
 
 # Entity Models
 transitive-accessible    field    net/minecraft/world/entity/Entity    DATA_POSE    Lnet/minecraft/network/syncher/EntityDataAccessor;
@@ -32,6 +38,7 @@ transitive-accessible    field    net/minecraft/world/entity/LivingEntity    dea
 
 # Entity Spawns
 transitive-accessible    class    net/minecraft/world/entity/SpawnPlacements$Data
+transitive-accessible    method    net/minecraft/world/entity/SpawnPlacements   register    (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/SpawnPlacements$Type;Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/world/entity/SpawnPlacements$SpawnPredicate;)V
 
 # Mobs
 transitive-accessible    method    net/minecraft/world/effect/MobEffect    <init>    (Lnet/minecraft/world/effect/MobEffectCategory;I)V
@@ -41,10 +48,18 @@ transitive-accessible    method    net/minecraft/world/entity/monster/warden/War
 
 # Blocks
 transitive-accessible    method    net/minecraft/world/level/block/Block    registerDefaultState    (Lnet/minecraft/world/level/block/state/BlockState;)V
+transitive-accessible    method    net/minecraft/client/renderer/Sheets    chestMaterial    (Ljava/lang/String;)Lnet/minecraft/client/resources/model/Material;
 transitive-accessible    field    net/minecraft/world/CompoundContainer    container1    Lnet/minecraft/world/Container;
 transitive-accessible    field    net/minecraft/world/CompoundContainer    container2    Lnet/minecraft/world/Container;
 transitive-accessible    method    net/minecraft/world/level/block/AbstractCauldronBlock    canReceiveStalactiteDrip    (Lnet/minecraft/world/level/material/Fluid;)Z
 transitive-accessible    method    net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo    <init>    (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
+transitive-accessible    method    net/minecraft/world/level/block/StairBlock    <init>    (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/WoodButtonBlock    <init>    (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/PressurePlateBlock    <init>    (Lnet/minecraft/world/level/block/PressurePlateBlock$Sensitivity;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/DoorBlock    <init>    (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/TrapDoorBlock    <init>    (Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    method    net/minecraft/world/level/block/SaplingBlock    <init>    (Lnet/minecraft/world/level/block/grower/AbstractTreeGrower;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
+transitive-accessible    field    net/minecraft/world/level/block/MultifaceSpreader    config    Lnet/minecraft/world/level/block/MultifaceSpreader$SpreadConfig;
 transitive-accessible    method    net/minecraft/data/BlockFamilies   familyBuilder    (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
 
 # Block Entities

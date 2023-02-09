@@ -7,9 +7,11 @@
 	"defaultRequire": 1
   },
   "mixins": [
+    "bonemeal.BoneMealItemMixin",
     "ItemCooldownsMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
-    "ServerItemCooldownsMixin"
+    "ServerItemCooldownsMixin",
+    "ServerPlayerMixin"
   ]
 }

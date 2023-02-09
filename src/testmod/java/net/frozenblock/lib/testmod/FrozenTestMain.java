@@ -24,7 +24,7 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.impl.BlockScheduledTicks;
+import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.frozenblock.lib.item.api.FrozenCreativeTabs;
 import net.frozenblock.lib.testmod.config.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;

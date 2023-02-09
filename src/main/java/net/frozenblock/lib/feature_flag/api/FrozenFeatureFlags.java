@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.feature_flag.api;
 
+import com.google.common.base.Preconditions;
 import net.minecraft.world.flag.FeatureFlagRegistry;
 import net.minecraft.world.flag.FeatureFlags;
 
@@ -30,6 +31,7 @@ public class FrozenFeatureFlags {
 	public static FeatureFlagRegistry.Builder builder;
 
 	public static void rebuild() {
+		Preconditions.checkArgument(builder != null, new NullPointerException("Feature flags rebuilt before builder exists"));
 		FeatureFlags.REGISTRY = builder.build();
 		FeatureFlags.CODEC = FeatureFlags.REGISTRY.codec();
 	}

@@ -44,7 +44,19 @@ public class FrozenLibConfig extends PartitioningSerializer.GlobalData {
         if (!FrozenMain.areConfigsInit) {
             AutoConfig.register(FrozenLibConfig.class, PartitioningSerializer.wrap(GsonConfigSerializer::new));
 			FrozenMain.areConfigsInit = true;
-			FrozenLibConfigValues.CONFIG = new FrozenLibConfigValues.FrozenConfigGetter(() -> FrozenLibConfig.get().config.useWindOnNonFrozenServers);
+			FrozenLibConfigValues.CONFIG = new FrozenLibConfigValues.FrozenConfigGetter(
+					new FrozenLibConfigValues.ConfigInterface() {
+						@Override
+						public boolean useWindOnNonFrozenServers() {
+							return FrozenLibConfig.get().config.useWindOnNonFrozenServers;
+						}
+
+						@Override
+						public boolean saveItemCooldowns() {
+							return FrozenLibConfig.get().config.saveItemCooldowns;
+						}
+					}
+			);
         }
         return AutoConfig.getConfigHolder(FrozenLibConfig.class).getConfig();
     }

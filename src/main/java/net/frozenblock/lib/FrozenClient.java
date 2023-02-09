@@ -24,13 +24,13 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.damagesource.api.PlayerDamageSourceSounds;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
+import net.frozenblock.lib.sound.api.damagesource.PlayerDamageSourceSounds;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
@@ -53,6 +53,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
@@ -73,6 +74,8 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveFadingDistanceSoundPacket();
 		receiveFlybySoundPacket();
 		receiveCooldownChangePacket();
+		receiveForcedCooldownPacket();
+		receiveCooldownTickCountPacket();
 		receiveScreenShakePacket();
 		receiveScreenShakeFromEntityPacket();
 		receiveIconPacket();
@@ -305,6 +308,32 @@ public final class FrozenClient implements ClientModInitializer {
 				ClientLevel level = ctx.level;
 				if (level != null && ctx.player != null) {
 					((CooldownInterface) ctx.player.getCooldowns()).changeCooldown(item, additional);
+				}
+			});
+		});
+	}
+
+	private static void receiveForcedCooldownPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.FORCED_COOLDOWN_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			Item item = byteBuf.readById(Registry.ITEM);
+			int startTime = byteBuf.readVarInt();
+			int endTime = byteBuf.readVarInt();
+			ctx.execute(() -> {
+				ClientLevel level = ctx.level;
+				if (level != null && ctx.player != null) {
+					ctx.player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
+				}
+			});
+		});
+	}
+
+	private static void receiveCooldownTickCountPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.COOLDOWN_TICK_COUNT_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			int tickCount = byteBuf.readInt();
+			ctx.execute(() -> {
+				ClientLevel level = ctx.level;
+				if (level != null && ctx.player != null) {
+					ctx.player.getCooldowns().tickCount = tickCount;
 				}
 			});
 		});
