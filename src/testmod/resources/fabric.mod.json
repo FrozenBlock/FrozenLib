@@ -19,7 +19,7 @@
       "net.frozenblock.lib.testmod.worldgen.TestSurfaceRules"
     ],
     "modmenu": [
-      "net.frozenblock.lib.testmod.config.cloth.ModMenuIntegration"
+      "net.frozenblock.lib.testmod.config.ModMenuInit"
     ]
   },
   "depends": {

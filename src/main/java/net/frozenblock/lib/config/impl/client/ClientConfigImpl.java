@@ -1,8 +1,8 @@
-package net.frozenblock.lib.config.impl;
+package net.frozenblock.lib.config.impl.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.api.client.FrozenConfig;
+import net.frozenblock.lib.config.api.client.ClientConfig;
 import net.frozenblock.lib.config.api.client.FrozenConfigScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -12,14 +12,15 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @ApiStatus.Internal
-public class FrozenConfigImpl implements FrozenConfig {
+@Environment(EnvType.CLIENT)
+public class ClientConfigImpl implements ClientConfig {
 
 	private final Component title;
 
 	private final Runnable onSave;
 	private final Consumer<FrozenConfigScreen> initializer;
 
-	public FrozenConfigImpl(Component title, Runnable onSave, Consumer<FrozenConfigScreen> initializer) {
+	public ClientConfigImpl(Component title, Runnable onSave, Consumer<FrozenConfigScreen> initializer) {
 		this.title = title;
 		this.onSave = onSave;
 		this.initializer = initializer;
@@ -47,7 +48,7 @@ public class FrozenConfigImpl implements FrozenConfig {
 	}
 
 	@ApiStatus.Internal
-	public static final class BuilderImpl implements FrozenConfig.Builder {
+	public static final class BuilderImpl implements ClientConfig.Builder {
 		private Component title;
 		private Runnable onSave = () -> {};
 		private Consumer<FrozenConfigScreen> initializer = screen -> {};
@@ -71,8 +72,8 @@ public class FrozenConfigImpl implements FrozenConfig {
 		}
 
 		@Override
-		public FrozenConfig build() {
-			return new FrozenConfigImpl(this.title, this.onSave, this.initializer);
+		public ClientConfig build() {
+			return new ClientConfigImpl(this.title, this.onSave, this.initializer);
 		}
 	}
 }

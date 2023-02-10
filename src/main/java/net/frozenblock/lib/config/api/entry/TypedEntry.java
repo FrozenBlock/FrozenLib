@@ -1,4 +1,6 @@
 package net.frozenblock.lib.config.api.entry;
 
-public record TypedEntry() {
+import com.mojang.serialization.Codec;
+
+public record TypedEntry<T>(Class<T> classType, Codec<T> codec) {
 }

@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.ConfigBuilder;
 import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.impl.FrozenConfigImpl;
+import net.frozenblock.lib.config.impl.client.ClientConfigImpl;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public interface FrozenConfig {
+public interface ClientConfig {
 
 	Component title();
 
@@ -24,10 +24,10 @@ public interface FrozenConfig {
 	Screen makeScreen(@Nullable Screen parent);
 
 	static Builder makeBuilder() {
-		return new FrozenConfigImpl.BuilderImpl();
+		return new ClientConfigImpl.BuilderImpl();
 	}
 
-	static <T> FrozenConfig make(Config<T> config, ConfigBuilder<T> builder) {
+	static <T> ClientConfig make(Config<T> config, ConfigBuilder<T> builder) {
 		return builder.build(config.defaultInstance(), config.config(), makeBuilder().save(config::save)).build();
 	}
 
@@ -39,6 +39,6 @@ public interface FrozenConfig {
 
 		Builder init(@NotNull Consumer<FrozenConfigScreen> initializer);
 
-		FrozenConfig build();
+		ClientConfig build();
 	}
 }

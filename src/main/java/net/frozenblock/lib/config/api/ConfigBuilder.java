@@ -1,8 +1,8 @@
 package net.frozenblock.lib.config.api;
 
-import net.frozenblock.lib.config.api.client.FrozenConfig;
+import net.frozenblock.lib.config.api.client.ClientConfig;
 
 @FunctionalInterface
 public interface ConfigBuilder<T> {
-	FrozenConfig.Builder build(T defaultInstance, T config, FrozenConfig.Builder builder);
+	ClientConfig.Builder build(T defaultInstance, T config, ClientConfig.Builder builder);
 }
