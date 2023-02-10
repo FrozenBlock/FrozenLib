@@ -4,21 +4,21 @@ import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.config.api.entry.TypedEntry;
+import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
 
 public class ConfigRegistry {
 
 	private static final List<Config<?>> CONFIG_REGISTRY = new ArrayList<>();
 
-	private static final List<TypedEntry<?>> TYPED_ENTRY_REGISTRY = new ArrayList<>();
+	private static final List<TypedEntryType<?>> TYPED_ENTRY_REGISTRY = new ArrayList<>();
 
 	static {
-		register(new TypedEntry<>(FrozenMain.MOD_ID, Boolean.class, Codec.BOOL));
-		register(new TypedEntry<>(FrozenMain.MOD_ID, Integer.class, Codec.INT));
-		register(new TypedEntry<>(FrozenMain.MOD_ID, Long.class, Codec.LONG));
-		register(new TypedEntry<>(FrozenMain.MOD_ID, Float.class, Codec.FLOAT));
-		register(new TypedEntry<>(FrozenMain.MOD_ID, Double.class, Codec.DOUBLE));
+		register(new TypedEntryType<>(FrozenMain.MOD_ID, Boolean.class, Codec.BOOL));
+		register(new TypedEntryType<>(FrozenMain.MOD_ID, Integer.class, Codec.INT));
+		register(new TypedEntryType<>(FrozenMain.MOD_ID, Long.class, Codec.LONG));
+		register(new TypedEntryType<>(FrozenMain.MOD_ID, Float.class, Codec.FLOAT));
+		register(new TypedEntryType<>(FrozenMain.MOD_ID, Double.class, Codec.DOUBLE));
 	}
 
 	public static <T> Config<T> register(Config<T> config) {
@@ -33,7 +33,7 @@ public class ConfigRegistry {
 		return CONFIG_REGISTRY.contains(config);
 	}
 
-	public static <T> TypedEntry<T> register(TypedEntry<T> entry) {
+	public static <T> TypedEntryType<T> register(TypedEntryType<T> entry) {
 		if (TYPED_ENTRY_REGISTRY.contains(entry)) {
 			throw new IllegalStateException("Typed entry already registered.");
 		}
@@ -41,7 +41,7 @@ public class ConfigRegistry {
 		return entry;
 	}
 
-	public static boolean contains(TypedEntry<?> entry) {
+	public static boolean contains(TypedEntryType<?> entry) {
 		return TYPED_ENTRY_REGISTRY.contains(entry);
 	}
 }

@@ -4,7 +4,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.client.ClientConfig;
 import net.frozenblock.lib.config.api.entry.Exclude;
-import net.frozenblock.lib.config.api.entry.TypedEntry;
+import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.gson.GsonConfig;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
@@ -21,8 +21,8 @@ public class TestConfig {
 	);
 
 	@Exclude
-	private static final TypedEntry<SoundEvent> SOUND_EVENT = ConfigRegistry.register(
-			new TypedEntry<>(
+	private static final TypedEntryType<SoundEvent> SOUND_EVENT = ConfigRegistry.register(
+			new TypedEntryType<>(
 					FrozenTestMain.MOD_ID,
 					SoundEvent.class,
 					SoundEvent.CODEC
