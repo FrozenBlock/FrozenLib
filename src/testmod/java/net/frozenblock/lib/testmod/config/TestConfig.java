@@ -18,12 +18,7 @@ import java.nio.file.Path;
 
 public class TestConfig {
 	private static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
-			new GsonConfig<>(
-					FrozenTestMain.MOD_ID,
-					TestConfig.class,
-					Path.of("./config/frozenlib_testmod.json"),
-					new GsonBuilder()
-			)
+			new GsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class)
 	);
 
 	private static final TypedEntry<SoundEvent> SOUND_EVENT = ConfigRegistry.register(

@@ -3,6 +3,7 @@ package net.frozenblock.lib.config.api.instance.gson;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.entry.ConfigExclusionStrategy;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -20,6 +21,14 @@ import java.nio.file.StandardOpenOption;
 public class GsonConfig<T> extends Config<T> {
 	private final Gson gson;
 	private final Path path;
+
+	public GsonConfig(String modId, Class<T> config) {
+		this(modId, config, new GsonBuilder());
+	}
+
+	public GsonConfig(String modId, Class<T> config, GsonBuilder builder) {
+		this(modId, config, Path.of("./config/" + modId + ".json"), builder);
+	}
 
 	public GsonConfig(String modId, Class<T> config, Path path, GsonBuilder builder) {
 		super(modId, config);
