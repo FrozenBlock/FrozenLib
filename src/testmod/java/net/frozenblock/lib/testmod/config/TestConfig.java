@@ -37,6 +37,18 @@ public class TestConfig {
 	@ConfigEntry
 	public boolean testToggle = true;
 
+	@ConfigEntry
+	public int testInt = 69;
+
+	@ConfigEntry
+	public long testLong = 69420L;
+
+	@ConfigEntry
+	public float testFloat = 69.420F;
+
+	@ConfigEntry
+	public double testDouble = 69.4206942069420D;
+
 	public boolean notAnEntry = false;
 
 	public static Config<TestConfig> get() {
