@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api;
+package net.frozenblock.lib.config.clothconfig;
 
 import com.google.common.base.Preconditions;
 import java.util.Arrays;
@@ -28,7 +28,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
-public final class FrozenConfig {
+public final class FrozenClothConfig {
 
 	/**
 	 * Creates a subcategory in the parent config category with the specified key and adds entries to it.

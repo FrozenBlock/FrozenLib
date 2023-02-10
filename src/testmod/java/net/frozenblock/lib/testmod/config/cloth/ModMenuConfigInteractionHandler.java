@@ -16,23 +16,17 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.testmod.config;
+package net.frozenblock.lib.testmod.config.cloth;
 
-import net.frozenblock.lib.FrozenBools;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.gui.screens.Screen;
 
-public final class ClothConfigInteractionHandler {
+@Environment(EnvType.CLIENT)
+public final class ModMenuConfigInteractionHandler {
 
-    public static boolean testBoolean() {
-        if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return TestConfig.get().general.testBoolean;
-        }
-        return true;
-    }
-
-    public static boolean testSubMenuBoolean() {
-        if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return TestConfig.get().general.subMenu.testSubMenuBoolean;
-        }
-        return true;
+    public static ConfigScreenFactory<Screen> buildScreen() {
+        return TestConfig::buildScreen;
     }
 }
