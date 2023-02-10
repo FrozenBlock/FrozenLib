@@ -6,6 +6,7 @@ import com.google.gson.GsonBuilder;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.entry.ConfigExclusionStrategy;
+import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -33,6 +34,7 @@ public class GsonConfig<T> extends Config<T> {
 	public GsonConfig(String modId, Class<T> config, Path path, GsonBuilder builder) {
 		super(modId, config);
 		this.gson = builder.setExclusionStrategies(new ConfigExclusionStrategy())
+				.registerTypeHierarchyAdapter(TypedEntry.class, new TypedEntry.Serializer())
 				.registerTypeHierarchyAdapter(Component.class, new Component.Serializer())
 				.registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
 				.registerTypeHierarchyAdapter(Color.class, new ColorSerializer())

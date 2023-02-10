@@ -44,4 +44,8 @@ public class ConfigRegistry {
 	public static boolean contains(TypedEntryType<?> entry) {
 		return TYPED_ENTRY_REGISTRY.contains(entry);
 	}
+
+	public static Iterable<TypedEntryType<?>> getAll() {
+		return TYPED_ENTRY_REGISTRY;
+	}
 }
