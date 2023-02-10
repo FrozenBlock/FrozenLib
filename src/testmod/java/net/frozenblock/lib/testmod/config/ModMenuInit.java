@@ -10,6 +10,6 @@ public class ModMenuInit implements ModMenuApi {
 
 	@Override
 	public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-		return TestConfig.INSTANCE.config()::makeGui;
+		return TestConfig.get().config()::makeGui;
 	}
 }

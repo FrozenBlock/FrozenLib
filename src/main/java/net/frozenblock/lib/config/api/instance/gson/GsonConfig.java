@@ -21,8 +21,8 @@ public class GsonConfig<T> extends Config<T> {
 	private final Gson gson;
 	private final Path path;
 
-	public GsonConfig(Class<T> config, Path path, GsonBuilder builder) {
-		super(config);
+	public GsonConfig(String modId, Class<T> config, Path path, GsonBuilder builder) {
+		super(modId, config);
 		this.gson = builder.setExclusionStrategies(new ConfigExclusionStrategy())
 				.registerTypeHierarchyAdapter(Component.class, new Component.Serializer())
 				.registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
