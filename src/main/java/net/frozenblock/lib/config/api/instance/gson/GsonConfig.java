@@ -38,6 +38,7 @@ public class GsonConfig<T> extends Config<T> {
 				.registerTypeHierarchyAdapter(Color.class, new ColorSerializer())
 				.serializeNulls()
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+				.setPrettyPrinting()
 				.create();
 		this.path = path;
 	}
