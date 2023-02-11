@@ -36,7 +36,7 @@ public class FrozenConfigScreen extends Screen {
 				buttonWidth,
 				20,
 				Component.translatable("frozenlib.config.discard"),
-				button -> quit()
+				button -> this.quit()
 		);
 
 		this.saveButton = new Button(
@@ -45,7 +45,10 @@ public class FrozenConfigScreen extends Screen {
 				buttonWidth,
 				20,
 				Component.translatable("frozenlib.config.save"),
-				button -> this.config.save()
+				button -> {
+					this.config.save();
+					this.quit();
+				}
 		);
 
 		addRenderableWidget(this.cancelButton);
