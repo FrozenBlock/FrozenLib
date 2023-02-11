@@ -3,6 +3,7 @@ package net.frozenblock.lib.testmod.config;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.client.ClientConfig;
+import net.frozenblock.lib.config.api.client.option.OptionType;
 import net.frozenblock.lib.config.api.entry.Exclude;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
@@ -62,6 +63,12 @@ public class TestConfig {
 	public Screen makeGui(Screen parent) {
 		return ClientConfig.makeBuilder()
 				.title(Component.literal("FrozenLib Testmod"))
+				.option(
+						this.testToggle,
+						OptionType.BUTTON,
+						Component.translatable("frozenlib_testmod.config.test_toggle"),
+						newValue -> this.testToggle = newValue
+				)
 				.save(INSTANCE::save)
 				.build()
 				.makeScreen(parent);

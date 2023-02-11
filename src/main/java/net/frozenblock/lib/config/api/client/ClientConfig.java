@@ -3,18 +3,24 @@ package net.frozenblock.lib.config.api.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.ConfigBuilder;
+import net.frozenblock.lib.config.api.client.option.Option;
+import net.frozenblock.lib.config.api.client.option.OptionType;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.impl.client.ClientConfigImpl;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public interface ClientConfig {
 
 	Component title();
+
+	List<Option<?>> options();
 
 	Runnable save();
 
@@ -34,6 +40,10 @@ public interface ClientConfig {
 	interface Builder {
 
 		Builder title(@NotNull Component title);
+
+		<T> Builder option(@NotNull T value, @NotNull OptionType type, @NotNull Component text, @NotNull Option.Save<T> onSave);
+
+		<T> Builder option(@NotNull T value, @NotNull OptionType type, @NotNull Component text, @NotNull Optional<Component> tooltip, @NotNull Option.Save<T> onSave);
 
 		Builder save(@NotNull Runnable onSave);
 
