@@ -44,10 +44,10 @@ public class TypedEntry<T> {
 		this.value = value;
 	}
 
-	public static class Serializer implements JsonSerializer<TypedEntry>, JsonDeserializer<TypedEntry> {
+	public static class Serializer<T> implements JsonSerializer<TypedEntry<T>>, JsonDeserializer<TypedEntry<T>> {
 
 		@Override
-		public TypedEntry<?> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+		public TypedEntry<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonObject()) {
 				JsonObject object = json.getAsJsonObject();
 				if (object == null) {
@@ -63,7 +63,7 @@ public class TypedEntry<T> {
 
 						var optional = result.result();
 						if (optional.isPresent()) {
-							Pair<TypedEntry<?>, JsonElement> type = (Pair<TypedEntry<?>, JsonElement>) optional.get();
+							Pair<TypedEntry<T>, JsonElement> type = (Pair<TypedEntry<T>, JsonElement>) optional.get();
 							return type.getFirst();
 						}
 					}
@@ -73,19 +73,23 @@ public class TypedEntry<T> {
 		}
 
 		@Override
-		public JsonElement serialize(TypedEntry src, Type typeOfSrc, JsonSerializationContext context) {
-			var empty = JsonOps.INSTANCE.empty();
-			if (src == null) {
-				return empty;
+		public JsonElement serialize(TypedEntry<T> src, Type typeOfSrc, JsonSerializationContext context) {
+			if (src != null) {
+				var type = src.getType();
+				if (type != null) {
+					var codec = type.codec();
+					if (codec != null) {
+						var encoded = codec.encodeStart(JsonOps.INSTANCE, src.getValue());
+						if (encoded != null && encoded.error().isEmpty()) {
+							var optional = encoded.result();
+							if (optional.isPresent()) {
+								return optional.get();
+							}
+						}
+					}
+				}
 			}
-			var type = src.type;
-			if (type == null) {
-				return empty;
-			}
-			var codec = type.codec();
-
-			codec.encodeStart(JsonOps.INSTANCE, src);
-			return empty;
+			return JsonOps.INSTANCE.empty();
 		}
 	}
 }

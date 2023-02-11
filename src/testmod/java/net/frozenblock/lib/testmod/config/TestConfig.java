@@ -45,8 +45,15 @@ public class TestConfig {
 			SOUND_EVENT, SoundEvents.BEE_LOOP
 	);
 
+	public TypedEntry<Integer> typedInt = new TypedEntry<>(
+			TypedEntryType.INTEGER, 69
+	);
+
 	@Exclude
-	public boolean notAnEntry = false;
+	public boolean notABoolean = false;
+
+	@Exclude
+	public int notAnInt = 0;
 
 	public static Config<TestConfig> get() {
 		return INSTANCE;
