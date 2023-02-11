@@ -43,6 +43,7 @@ public class GsonConfig<T> extends Config<T> {
 				.setPrettyPrinting()
 				.create();
 		this.path = path;
+		this.load();
 	}
 
 	@Override
