@@ -48,6 +48,8 @@ public class TestConfig {
 
 	public double testDouble = 69.4206942069420D;
 
+	public List<Integer> testIntList = List.of(45);
+
 	public TypedEntry<Boolean> typedBoolean = new TypedEntry<>(
 			TypedEntryType.BOOLEAN, true
 	);
