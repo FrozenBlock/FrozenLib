@@ -61,7 +61,8 @@ public class TestConfig {
 
 	@Environment(EnvType.CLIENT)
 	public Screen makeGui(Screen parent) {
-		return ClientConfig.makeBuilder()
+		return null;
+		/*return ClientConfig.makeBuilder()
 				.title(Component.literal("FrozenLib Testmod"))
 				.option(
 						this.testToggle,
@@ -71,6 +72,6 @@ public class TestConfig {
 				)
 				.save(INSTANCE::save)
 				.build()
-				.makeScreen(parent);
+				.makeScreen(parent);*/
 	}
 }

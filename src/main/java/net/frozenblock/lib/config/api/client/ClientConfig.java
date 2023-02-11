@@ -28,7 +28,7 @@ public interface ClientConfig {
 
 	@Environment(EnvType.CLIENT)
 	Screen makeScreen(@Nullable Screen parent);
-
+/*
 	static Builder makeBuilder() {
 		return new ClientConfigImpl.BuilderImpl();
 	}
@@ -36,7 +36,7 @@ public interface ClientConfig {
 	static <T> ClientConfig make(Config<T> config, ConfigBuilder<T> builder) {
 		return builder.build(config.defaultInstance(), config.config(), makeBuilder().save(config::save)).build();
 	}
-
+*/
 	interface Builder {
 
 		Builder title(@NotNull Component title);
