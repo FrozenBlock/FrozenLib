@@ -10,8 +10,10 @@ import com.google.gson.JsonSerializationContext;
 import com.google.gson.JsonSerializer;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.JsonOps;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import java.lang.reflect.Type;
+import java.util.Objects;
 
 public class TypedEntry<T> {
 
@@ -46,6 +48,12 @@ public class TypedEntry<T> {
 
 	public static class Serializer<T> implements JsonSerializer<TypedEntry<T>>, JsonDeserializer<TypedEntry<T>> {
 
+		private final String modId;
+
+		public Serializer(String modId) {
+			this.modId = modId;
+		}
+
 		@Override
 		public TypedEntry<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
 			if (json.isJsonObject()) {
@@ -54,17 +62,19 @@ public class TypedEntry<T> {
 					return null;
 				} else {
 					for (var entry : ConfigRegistry.getAll()) {
-						var codec = entry.codec();
-						var result = codec.decode(JsonOps.INSTANCE, object);
+						if (Objects.equals(entry.modId(), this.modId) || Objects.equals(entry.modId(), FrozenMain.MOD_ID)) {
+							var codec = entry.codec();
+							var result = codec.decode(JsonOps.INSTANCE, object);
 
-						if (result.error().isPresent()) {
-							continue;
-						}
+							if (result.error().isPresent()) {
+								continue;
+							}
 
-						var optional = result.result();
-						if (optional.isPresent()) {
-							Pair<TypedEntry<T>, JsonElement> type = (Pair<TypedEntry<T>, JsonElement>) optional.get();
-							return type.getFirst();
+							var optional = result.result();
+							if (optional.isPresent()) {
+								Pair<TypedEntry<T>, JsonElement> type = (Pair<TypedEntry<T>, JsonElement>) optional.get();
+								return type.getFirst();
+							}
 						}
 					}
 				}
@@ -77,13 +87,15 @@ public class TypedEntry<T> {
 			if (src != null) {
 				var type = src.getType();
 				if (type != null) {
-					var codec = type.codec();
-					if (codec != null) {
-						var encoded = codec.encodeStart(JsonOps.INSTANCE, src.getValue());
-						if (encoded != null && encoded.error().isEmpty()) {
-							var optional = encoded.result();
-							if (optional.isPresent()) {
-								return optional.get();
+					if (Objects.equals(type.modId(), this.modId) || Objects.equals(type.modId(), FrozenMain.MOD_ID)) {
+						var codec = type.codec();
+						if (codec != null) {
+							var encoded = codec.encodeStart(JsonOps.INSTANCE, src.getValue());
+							if (encoded != null && encoded.error().isEmpty()) {
+								var optional = encoded.result();
+								if (optional.isPresent()) {
+									return optional.get();
+								}
 							}
 						}
 					}

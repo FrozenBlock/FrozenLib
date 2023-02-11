@@ -17,18 +17,20 @@ import net.minecraft.sounds.SoundEvents;
 
 public class TestConfig {
 
-	@Exclude
-	private static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
-			new GsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class)
-	);
-
-	@Exclude
-	private static final TypedEntryType<SoundEvent> SOUND_EVENT = ConfigRegistry.register(
+	/**
+	 * Make sure to define at top of class
+	 */
+	public static final TypedEntryType<SoundEvent> SOUND_EVENT = ConfigRegistry.register(
 			new TypedEntryType<>(
 					FrozenTestMain.MOD_ID,
 					SoundEvent.class,
 					SoundEvent.CODEC
 			)
+	);
+
+	@Exclude
+	private static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
+			new GsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class)
 	);
 
 	public boolean testToggle = true;
