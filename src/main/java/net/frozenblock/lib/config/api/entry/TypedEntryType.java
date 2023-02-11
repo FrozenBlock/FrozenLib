@@ -30,6 +30,10 @@ public record TypedEntryType<T>(String modId, Codec<T> codec) {
 			new TypedEntryType<>(FrozenMain.MOD_ID, Codec.DOUBLE)
 	);
 
+	public static final TypedEntryType<String> STRING = register(
+			new TypedEntryType<>(FrozenMain.MOD_ID, Codec.STRING)
+	);
+
 	// LISTS
 
 	public static final TypedEntryType<List<Byte>> BYTE_LIST = register(

@@ -1,6 +1,5 @@
 package net.frozenblock.lib.config.api.entry;
 
-import com.google.gson.Gson;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
@@ -15,36 +14,7 @@ import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import java.lang.reflect.Type;
 import java.util.Objects;
 
-public class TypedEntry<T> {
-
-	private final TypedEntryType<T> type;
-
-	private final T defaultValue;
-
-	private T value;
-
-	public TypedEntry(TypedEntryType<T> type, T defaultValue) {
-		this.type = type;
-		this.defaultValue = defaultValue;
-
-		this.value = defaultValue;
-	}
-
-	public TypedEntryType<T> getType() {
-		return this.type;
-	}
-
-	public T getDefaultValue() {
-		return this.defaultValue;
-	}
-
-	public T getValue() {
-		return this.value;
-	}
-
-	public void setValue(T value) {
-		this.value = value;
-	}
+public record TypedEntry<T>(TypedEntryType<T> type, T value) {
 
 	public static class Serializer<T> implements JsonSerializer<TypedEntry<T>>, JsonDeserializer<TypedEntry<T>> {
 
@@ -85,12 +55,12 @@ public class TypedEntry<T> {
 		@Override
 		public JsonElement serialize(TypedEntry<T> src, Type typeOfSrc, JsonSerializationContext context) {
 			if (src != null) {
-				var type = src.getType();
+				var type = src.type();
 				if (type != null) {
 					if (Objects.equals(type.modId(), this.modId) || Objects.equals(type.modId(), FrozenMain.MOD_ID)) {
 						var codec = type.codec();
 						if (codec != null) {
-							var encoded = codec.encodeStart(JsonOps.INSTANCE, src.getValue());
+							var encoded = codec.encodeStart(JsonOps.INSTANCE, src.value());
 							if (encoded != null && encoded.error().isEmpty()) {
 								var optional = encoded.result();
 								if (optional.isPresent()) {
