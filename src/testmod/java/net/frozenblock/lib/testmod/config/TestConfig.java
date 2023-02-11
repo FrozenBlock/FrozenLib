@@ -17,13 +17,10 @@ import net.minecraft.sounds.SoundEvents;
 
 public class TestConfig {
 
-	/**
-	 * Make sure to define at top of class
-	 */
+	// Make sure to define TypedEntryTypes at top of class.
 	public static final TypedEntryType<SoundEvent> SOUND_EVENT = ConfigRegistry.register(
 			new TypedEntryType<>(
 					FrozenTestMain.MOD_ID,
-					SoundEvent.class,
 					SoundEvent.CODEC
 			)
 	);
@@ -43,12 +40,12 @@ public class TestConfig {
 
 	public double testDouble = 69.4206942069420D;
 
-	public TypedEntry<SoundEvent> randomSound = new TypedEntry<>(
-			SOUND_EVENT, SoundEvents.BEE_LOOP
-	);
-
 	public TypedEntry<Integer> typedInt = new TypedEntry<>(
 			TypedEntryType.INTEGER, 69
+	);
+
+	public TypedEntry<SoundEvent> randomSound = new TypedEntry<>(
+			SOUND_EVENT, SoundEvents.BEE_LOOP
 	);
 
 	@Exclude

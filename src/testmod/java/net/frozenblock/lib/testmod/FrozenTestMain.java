@@ -45,7 +45,6 @@ public final class FrozenTestMain implements ModInitializer {
 
     @Override
     public void onInitialize() {
-		TestConfig.get().load();
 		LOGGER.info("The test toggle value is " + TestConfig.get().config().testToggle);
         Registry.register(Registry.ITEM, id("camera"), CAMERA);
         Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);

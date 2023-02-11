@@ -7,6 +7,8 @@ public abstract class Config<T> {
 	private T configInstance;
 	private final T defaultInstance;
 
+	private boolean loaded;
+
 	public Config(String modId, Class<T> config) {
 		this.modId = modId;
 		this.config = config;
@@ -22,6 +24,7 @@ public abstract class Config<T> {
 	}
 
 	public T config() {
+		this.ensureLoaded();
 		return this.configInstance;
 	}
 
@@ -39,4 +42,11 @@ public abstract class Config<T> {
 
 	public abstract void save();
 	public abstract void load();
+
+	public void ensureLoaded() {
+		if (!this.loaded) {
+			this.load();
+			this.loaded = true;
+		}
+	}
 }
