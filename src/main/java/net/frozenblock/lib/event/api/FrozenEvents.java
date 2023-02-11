@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.event.api;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;

@@ -18,12 +18,11 @@
 
 package net.frozenblock.lib.integration.api;
 
+import java.util.List;
+import java.util.function.Supplier;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.List;
-import java.util.function.Supplier;
 
 public final class ModIntegrations {
 
