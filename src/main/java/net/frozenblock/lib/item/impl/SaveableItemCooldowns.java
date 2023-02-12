@@ -28,7 +28,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
@@ -86,12 +86,12 @@ public class SaveableItemCooldowns {
 				int cooldownLeft = saveableCooldownInstance.getCooldownLeft();
 				int startTime = tickCount - (saveableCooldownInstance.getTotalCooldownTime() - cooldownLeft);
 				int endTime = tickCount + cooldownLeft;
-				Optional<Item> optionalItem = Registry.ITEM.getOptional(saveableCooldownInstance.getItemResourceLocation());
+				Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(saveableCooldownInstance.getItemResourceLocation());
 				if (optionalItem.isPresent()) {
 					Item item = optionalItem.get();
 					itemCooldowns.cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
 					FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-					byteBuf.writeId(Registry.ITEM, item);
+					byteBuf.writeId(BuiltInRegistries.ITEM, item);
 					byteBuf.writeVarInt(startTime);
 					byteBuf.writeVarInt(endTime);
 					ServerPlayNetworking.send(player, FrozenMain.FORCED_COOLDOWN_PACKET, byteBuf);
@@ -120,7 +120,7 @@ public class SaveableItemCooldowns {
 		}
 
 		public static SaveableCooldownInstance makeFromCooldownInstance(@NotNull Item item, @NotNull ItemCooldowns.CooldownInstance cooldownInstance, int tickCount) {
-			ResourceLocation resourceLocation = Registry.ITEM.getKey(item);
+			ResourceLocation resourceLocation = BuiltInRegistries.ITEM.getKey(item);
 			int cooldownLeft = cooldownInstance.endTime - tickCount;
 			int totalCooldownTime = cooldownInstance.endTime - cooldownInstance.startTime;
 			return new SaveableCooldownInstance(resourceLocation, cooldownLeft, totalCooldownTime);

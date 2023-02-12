@@ -44,7 +44,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -315,7 +314,7 @@ public final class FrozenClient implements ClientModInitializer {
 
 	private static void receiveForcedCooldownPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.FORCED_COOLDOWN_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			Item item = byteBuf.readById(Registry.ITEM);
+			Item item = byteBuf.readById(BuiltInRegistries.ITEM);
 			int startTime = byteBuf.readVarInt();
 			int endTime = byteBuf.readVarInt();
 			ctx.execute(() -> {
