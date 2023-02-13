@@ -42,8 +42,12 @@ public record TypedEntry<T>(TypedEntryType<T> type, T value) {
 
 							var optional = result.result();
 							if (optional.isPresent()) {
-								Pair<TypedEntry<T>, JsonElement> type = (Pair<TypedEntry<T>, JsonElement>) optional.get();
-								return type.getFirst();
+								try {
+								    Pair<TypedEntry<T>, JsonElement> type = (Pair<TypedEntry<T>, JsonElement>) optional.get();
+								    return type.getFirst();
+								} catch (ClassCastException e) {
+									continue;
+								}
 							}
 						}
 					}
