@@ -54,14 +54,14 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 					BlockState state = level.getBlockState(mutableDisk);
 					boolean inner = mutableDisk.closerThan(s, radius * 0.475);
 					boolean fade = !inner && !mutableDisk.closerThan(s, radius * 0.8);
-					if (random.nextFloat() < config.placeChance && state.is(config.replaceable)) {
+					if (random.nextFloat() < config.placeChance) {
 						if (fade) {
-							if (random.nextFloat() > 0.5F) {
+							if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
 								level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
 								bl = true;
 							}
-						} else {
-							level.setBlock(mutableDisk, !inner ? config.outerState.getState(random, mutableDisk) : config.innerState.getState(random, mutableDisk), 3);
+						} else if (state.is(inner ? config.innerReplaceable : config.outerReplaceable)) {
+							level.setBlock(mutableDisk, inner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
 							bl = true;
 						}
                     }
