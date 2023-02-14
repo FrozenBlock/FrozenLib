@@ -26,7 +26,9 @@ import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ServerLevel.class)
 public final class LightningOverrideMixin {
@@ -34,10 +36,9 @@ public final class LightningOverrideMixin {
 	@Unique
 	private BlockPos frozenLib$lightningPos;
 
-	@ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;findLightningTargetAround(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;"), method = "tickChunk")
-	public BlockPos frozenLib$getLightningTarget(BlockPos original) {
-		this.frozenLib$lightningPos = original;
-		return original;
+	@ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;isRainingAt(Lnet/minecraft/core/BlockPos;)Z"), method = "tickChunk")
+	public void frozenLib$getLightningTarget(Args args) {
+		this.frozenLib$lightningPos = args.get(0);
 	}
 
 	@ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;isRainingAt(Lnet/minecraft/core/BlockPos;)Z"), method = "tickChunk")
