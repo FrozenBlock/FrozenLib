@@ -23,35 +23,31 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.Heightmap;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(ServerLevel.class)
 public final class LightningOverrideMixin {
 
-	@Unique
-	private BlockPos frozenLib$lightningPos;
-
-	@ModifyArgs(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;isRainingAt(Lnet/minecraft/core/BlockPos;)Z"), method = "tickChunk")
-	public void frozenLib$getLightningTarget(Args args) {
-		this.frozenLib$lightningPos = args.get(0);
+	@Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;isRainingAt(Lnet/minecraft/core/BlockPos;)Z"), method = "tickChunk")
+	public boolean frozenLib$getLightningTarget(ServerLevel level, BlockPos pos) {
+		return this.frozenLib$newLightningCheck(pos);
 	}
 
-	@ModifyVariable(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;isRainingAt(Lnet/minecraft/core/BlockPos;)Z"), method = "tickChunk")
-	public boolean frozenLib$applyLightningOverride(boolean original) {
-		if (this.frozenLib$lightningPos != null) {
-			Holder<Biome> biome = ServerLevel.class.cast(this).getBiome(this.frozenLib$lightningPos);
-			if (biome.is(FrozenBiomeTags.CAN_LIGHTNING_OVERRIDE)) {
-				return true;
-			} else if (biome.is(FrozenBiomeTags.CANNOT_LIGHTNING_OVERRIDE)) {
-				return false;
-			}
+	@Unique
+	public boolean frozenLib$newLightningCheck(BlockPos position) {
+		ServerLevel level = ServerLevel.class.cast(this);
+		if (!level.isRaining() || !level.canSeeSky(position)) {
+			return false;
 		}
-		return original;
+		if (level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, position).getY() > position.getY()) {
+			return false;
+		}
+		Holder<Biome> biome = level.getBiome(position);
+		return ((biome.value().getPrecipitation() == Biome.Precipitation.RAIN && biome.value().warmEnoughToRain(position)) || biome.is(FrozenBiomeTags.CAN_LIGHTNING_OVERRIDE)) && !biome.is(FrozenBiomeTags.CANNOT_LIGHTNING_OVERRIDE);
 	}
 
 }
