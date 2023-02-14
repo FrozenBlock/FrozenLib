@@ -41,7 +41,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 		FadingDiskFeatureConfig config = context.config();
         BlockPos s = blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, blockPos.getX(), blockPos.getZ()));
         RandomSource random = level.getRandom();
-        int radius = random.nextIntBetweenInclusive(4, 10);
+        int radius = config.radius.sample(random);
         //DISK
         BlockPos.MutableBlockPos mutableDisk = s.mutable();
         int bx = s.getX();
