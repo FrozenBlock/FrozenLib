@@ -16,7 +16,6 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package net.frozenblock.lib.feature.features.config;
 
 import com.mojang.serialization.Codec;
@@ -35,6 +34,7 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
 					BlockStateProvider.CODEC.fieldOf("innerState").forGetter(config -> config.innerState),
 					BlockStateProvider.CODEC.fieldOf("outerState").forGetter(config -> config.outerState),
 					IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
+					Codec.FLOAT.fieldOf("placeChance").forGetter(config -> config.placeChance),
 					RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("replaceable").forGetter((config) -> config.replaceable)
 			).apply(instance, FadingDiskFeatureConfig::new)
     );
@@ -42,12 +42,14 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
     public final BlockStateProvider innerState;
     public final BlockStateProvider outerState;
     public final IntProvider radius;
+	public final float placeChance;
 	public final HolderSet<Block> replaceable;
 
-    public FadingDiskFeatureConfig(BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, HolderSet<Block> replaceable) {
+    public FadingDiskFeatureConfig(BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, HolderSet<Block> replaceable) {
 		this.innerState = innerState;
 		this.outerState = outerState;
 		this.radius = radius;
+		this.placeChance = placeChance;
 		this.replaceable = replaceable;
     }
 }

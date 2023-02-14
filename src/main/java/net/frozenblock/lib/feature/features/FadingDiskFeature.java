@@ -16,7 +16,6 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package net.frozenblock.lib.feature.features;
 
 import com.mojang.serialization.Codec;
@@ -53,9 +52,9 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
                 if (distance < radius * radius) {
 					mutableDisk.set(x, level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1, z);
 					BlockState state = level.getBlockState(mutableDisk);
-					boolean inner = !mutableDisk.closerThan(s, radius * 0.475);
-					boolean fade = !mutableDisk.closerThan(s, radius * 0.8);
-					if (state.is(config.replaceable)) {
+					boolean inner = mutableDisk.closerThan(s, radius * 0.475);
+					boolean fade = !inner && !mutableDisk.closerThan(s, radius * 0.8);
+					if (random.nextFloat() < config.placeChance && state.is(config.replaceable)) {
 						if (fade) {
 							if (random.nextFloat() > 0.5F) {
 								level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
