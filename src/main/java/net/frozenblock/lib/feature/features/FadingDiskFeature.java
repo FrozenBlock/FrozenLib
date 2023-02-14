@@ -45,26 +45,26 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
         BlockPos.MutableBlockPos mutableDisk = s.mutable();
         int bx = s.getX();
         int bz = s.getZ();
-		int y = s.getY();
         for (int x = bx - radius; x <= bx + radius; x++) {
             for (int z = bz - radius; z <= bz + radius; z++) {
                 double distance = ((bx - x) * (bx - x) + (bz - z) * (bz - z));
                 if (distance < radius * radius) {
 					mutableDisk.set(x, level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1, z);
 					BlockState state = level.getBlockState(mutableDisk);
-					boolean inner = mutableDisk.closerThan(s, radius * 0.475);
-					boolean fade = !inner && !mutableDisk.closerThan(s, radius * 0.8);
+					boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
+					boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
+					boolean choseInner;
 					if (random.nextFloat() < config.placeChance) {
 						if (fade) {
 							if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
 								level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
 								bl = true;
 							}
-						} else if (state.is(inner ? config.innerReplaceable : config.outerReplaceable)) {
-							level.setBlock(mutableDisk, inner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
+						} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable)) {
+							level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
 							bl = true;
 						}
-                    }
+					}
                 }
             }
         }

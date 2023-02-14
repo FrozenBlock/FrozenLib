@@ -35,6 +35,9 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
 					BlockStateProvider.CODEC.fieldOf("outerState").forGetter(config -> config.outerState),
 					IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
 					Codec.FLOAT.fieldOf("placeChance").forGetter(config -> config.placeChance),
+					Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
+					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
+					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
 					RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
 					RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable)
 			).apply(instance, FadingDiskFeatureConfig::new)
@@ -44,14 +47,20 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
     public final BlockStateProvider outerState;
     public final IntProvider radius;
 	public final float placeChance;
+	public final float innerChance;
+	public final float innerPercent;
+	public final float startFadePercent;
 	public final HolderSet<Block> innerReplaceable;
 	public final HolderSet<Block> outerReplaceable;
 
-    public FadingDiskFeatureConfig(BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, HolderSet<Block> innerReplaceable, HolderSet<Block> outerReplaceable) {
+    public FadingDiskFeatureConfig(BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, HolderSet<Block> innerReplaceable, HolderSet<Block> outerReplaceable) {
 		this.innerState = innerState;
 		this.outerState = outerState;
 		this.radius = radius;
 		this.placeChance = placeChance;
+		this.innerChance = innerChance;
+		this.innerPercent = innerPercent;
+		this.startFadePercent = startFadePercent;
 		this.innerReplaceable = innerReplaceable;
 		this.outerReplaceable = outerReplaceable;
     }
