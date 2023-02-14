@@ -59,6 +59,7 @@
     "mixin/frozenlib.storage.mixins.json",
     "mixin/frozenlib.tag.mixins.json",
     "mixin/frozenlib.tick.mixins.json",
+    "mixin/frozenlib.weather.mixins.json",
     "mixin/frozenlib.worldgen.biome.mixins.json",
     "mixin/frozenlib.worldgen.structure.mixins.json",
     "mixin/frozenlib.worldgen.surface.mixins.json",
