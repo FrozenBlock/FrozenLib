@@ -21,7 +21,11 @@ package net.frozenblock.lib.feature.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryCodecs;
 import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
@@ -30,17 +34,20 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
             (instance) -> instance.group(
 					BlockStateProvider.CODEC.fieldOf("innerState").forGetter(config -> config.innerState),
 					BlockStateProvider.CODEC.fieldOf("outerState").forGetter(config -> config.outerState),
-					IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius)
+					IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
+					RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("replaceable").forGetter((config) -> config.replaceable)
 			).apply(instance, FadingDiskFeatureConfig::new)
     );
 
     public final BlockStateProvider innerState;
     public final BlockStateProvider outerState;
     public final IntProvider radius;
+	public final HolderSet<Block> replaceable;
 
-    public FadingDiskFeatureConfig(BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius) {
+    public FadingDiskFeatureConfig(BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, HolderSet<Block> replaceable) {
 		this.innerState = innerState;
 		this.outerState = outerState;
 		this.radius = radius;
+		this.replaceable = replaceable;
     }
 }

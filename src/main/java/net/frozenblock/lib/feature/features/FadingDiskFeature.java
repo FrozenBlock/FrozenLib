@@ -54,8 +54,8 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
                     mutableDisk.set(x, y, z);
 					boolean inner = !mutableDisk.closerThan(s, radius * 0.4);
                     boolean fade = !inner && !mutableDisk.closerThan(s, radius * 0.8);
-					mutableDisk.set(blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z)));
-					if (level.getBlockState(mutableDisk.below()).is(Blocks.WATER) && level.getFluidState(mutableDisk).isEmpty() && level.getBlockState(mutableDisk).isAir()) {
+					mutableDisk.set(blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z)).below());
+					if (config.replaceable.contains(level.getBlockState(mutableDisk).getBlock().builtInRegistryHolder())) {
                         if (random.nextFloat() > 0.2F) {
 							if (fade) {
                                 if (random.nextFloat() > 0.5F) {
