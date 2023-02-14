@@ -24,7 +24,6 @@ import net.frozenblock.lib.feature.features.config.FadingDiskFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
@@ -49,24 +48,22 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 		int y = s.getY();
         for (int x = bx - radius; x <= bx + radius; x++) {
             for (int z = bz - radius; z <= bz + radius; z++) {
-                double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
+                double distance = ((bx - x) * (bx - x) + (bz - z) * (bz - z));
                 if (distance < radius * radius) {
                     mutableDisk.set(x, y, z);
-					boolean inner = !mutableDisk.closerThan(s, radius * 0.4);
-                    boolean fade = !inner && !mutableDisk.closerThan(s, radius * 0.8);
+					boolean inner = !mutableDisk.closerThan(s, radius * 0.475);
+                    boolean fade = !mutableDisk.closerThan(s, radius * 0.8);
 					mutableDisk.set(blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z)).below());
 					if (config.replaceable.contains(level.getBlockState(mutableDisk).getBlock().builtInRegistryHolder())) {
-                        if (random.nextFloat() > 0.2F) {
-							if (fade) {
-                                if (random.nextFloat() > 0.5F) {
-                                    level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
-                                    bl = true;
-                                }
-                            } else {
-                                level.setBlock(mutableDisk, !inner ? config.outerState.getState(random, mutableDisk) : config.innerState.getState(random, mutableDisk), 3);
-                                bl = true;
-                            }
-                        }
+						if (fade) {
+							if (random.nextFloat() > 0.5F) {
+								level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
+								bl = true;
+							}
+						} else {
+							level.setBlock(mutableDisk, !inner ? config.outerState.getState(random, mutableDisk) : config.innerState.getState(random, mutableDisk), 3);
+							bl = true;
+						}
                     }
                 }
             }
