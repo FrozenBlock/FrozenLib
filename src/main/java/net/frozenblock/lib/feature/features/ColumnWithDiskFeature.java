@@ -44,7 +44,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
         ColumnWithDiskFeatureConfig config = context.config();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
-        BlockPos s = blockPos.atY(level.getHeight(Types.WORLD_SURFACE_WG, blockPos.getX(), blockPos.getZ()) - 1);
+        BlockPos s = blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, blockPos.getX(), blockPos.getZ()) - 1);
         RandomSource random = level.getRandom();
         int radius = config.radius.sample(random);
         Optional<Holder<Block>> diskOptional = config.diskBlocks.getRandomElement(random);
@@ -58,10 +58,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
                 for (int z = bz - radius; z <= bz + radius; z++) {
                     double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
                     if (distance < radius * radius) {
-                        mutableDisk.set(x, level.getHeight(Types.WORLD_SURFACE_WG, x, z) - 1, z);
-                        if (level.getBlockState(mutableDisk).getBlock() instanceof BushBlock) {
-                            mutableDisk.set(mutableDisk.below());
-                        }
+                        mutableDisk.set(x, level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1, z);
                         boolean fade = !mutableDisk.closerThan(s, radius * 0.8);
                         if (level.getBlockState(mutableDisk).is(config.replaceable)) {
                             generated = true;
