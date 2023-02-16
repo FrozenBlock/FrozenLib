@@ -112,7 +112,7 @@ public final class OverworldBiomeData {
 		if (biomeSource instanceof MultiNoiseBiomeSource multiNoiseBiomeSource) {
 			if (((FrozenBiomeSourceAccess) multiNoiseBiomeSource).frozenLib_shouldModifyBiomeEntries() && multiNoiseBiomeSource.stable(MultiNoiseBiomeSource.Preset.OVERWORLD)) {
 				multiNoiseBiomeSource.parameters = OverworldBiomeData.withModdedBiomeEntries(
-						MultiNoiseBiomeSource.Preset.OVERWORLD.parameterSource.apply(biomeRegistry),
+						MultiNoiseBiomeSource.Preset.OVERWORLD.parameterSource.apply(biomeRegistry::getOrThrow),
 						biomeRegistry);
 				multiNoiseBiomeSource.possibleBiomes = multiNoiseBiomeSource.parameters.values().stream().map(Pair::getSecond).collect(Collectors.toSet());
 				((FrozenBiomeSourceAccess) multiNoiseBiomeSource).frozenLib_setModifyBiomeEntries(false);

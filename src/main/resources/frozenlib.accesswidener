@@ -96,7 +96,7 @@ transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    regi
 # Used to set overworld biomes
 transitive-accessible    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource    preset    Ljava/util/Optional;
 transitive-accessible    class   net/minecraft/world/level/biome/MultiNoiseBiomeSource$PresetInstance
-transitive-accessible    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource$Preset    parameterSource    Ljava/util/function/Function;
+transitive-accessible    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource$Preset    parameterSource    Lnet/minecraft/world/level/biome/MultiNoiseBiomeSource$Preset$SourceProvider;
 transitive-accessible    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource    parameters    Lnet/minecraft/world/level/biome/Climate$ParameterList;
 transitive-mutable    field    net/minecraft/world/level/biome/MultiNoiseBiomeSource    parameters    Lnet/minecraft/world/level/biome/Climate$ParameterList;
 
