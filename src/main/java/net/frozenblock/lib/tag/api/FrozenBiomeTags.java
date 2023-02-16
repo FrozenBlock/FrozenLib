@@ -16,23 +16,23 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.testmod.config;
+package net.frozenblock.lib.tag.api;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenBools;
-import net.minecraft.client.gui.screens.Screen;
+import net.frozenblock.lib.FrozenMain;
+import net.minecraft.core.Registry;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.level.biome.Biome;
 
-@Environment(EnvType.CLIENT)
-public final class ModMenuIntegration implements ModMenuApi {
+public final class FrozenBiomeTags {
 
-    @Override
-    public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-        if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return ModMenuConfigInteractionHandler.buildScreen();
-        }
-        return (screen -> null);
-    }
+	private FrozenBiomeTags() {
+		throw new UnsupportedOperationException("FrozenBiomeTags contains only static declarations.");
+	}
+
+	public static final TagKey<Biome> CAN_LIGHTNING_OVERRIDE = of("can_lightning_override");
+	public static final TagKey<Biome> CANNOT_LIGHTNING_OVERRIDE = of("cannot_lightning_override");
+
+	private static TagKey<Biome> of(String path) {
+		return TagKey.create(Registry.BIOME_REGISTRY, FrozenMain.id(path));
+	}
 }

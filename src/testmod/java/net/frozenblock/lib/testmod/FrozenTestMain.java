@@ -24,9 +24,10 @@ import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.testmod.config.TestConfig;
 import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.frozenblock.lib.item.api.FrozenCreativeTabs;
-import net.frozenblock.lib.testmod.config.ClothConfigInteractionHandler;
+import net.frozenblock.lib.testmod.config.cloth.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;
 import net.frozenblock.lib.testmod.item.LootTableWhacker;
 import net.minecraft.core.Registry;
@@ -55,7 +56,8 @@ public final class FrozenTestMain implements ModInitializer {
     @Override
     public void onInitialize() {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
-        Registry.register(BuiltInRegistries.ITEM, id("camera"), CAMERA);
+		LOGGER.info("The test toggle value is " + TestConfig.get().config().testToggle);
+		Registry.register(BuiltInRegistries.ITEM, id("camera"), CAMERA);
         Registry.register(BuiltInRegistries.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
 		FrozenCreativeTabs.add(CAMERA, CreativeModeTabs.TOOLS_AND_UTILITIES);
 		FrozenCreativeTabs.add(LOOT_TABLE_WHACKER, CreativeModeTabs.TOOLS_AND_UTILITIES);
