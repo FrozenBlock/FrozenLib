@@ -16,25 +16,22 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.server;
+package net.frozenblock.lib.feature_flag.mixin;
 
-import net.frozenblock.lib.event.api.RegistryFreezeEvents;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.frozenblock.lib.feature_flag.api.FrozenFeatureFlags;
+import net.minecraft.world.flag.FeatureFlagRegistry;
+import net.minecraft.world.flag.FeatureFlags;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
-@Mixin(BuiltInRegistries.class)
-public class BuiltInRegistriesMixin {
+@Mixin(FeatureFlags.class)
+public class FeatureFlagsMixin {
 
-	@Inject(method = "freeze", at = @At("HEAD"))
-	private static void freezeBuiltinsStart(CallbackInfo ci) {
-		RegistryFreezeEvents.START_REGISTRY_FREEZE.invoker().onStartRegistryFreeze(null, true);
-	}
-
-	@Inject(method = "freeze", at = @At("TAIL"))
-	private static void freezeBuiltinsEnd(CallbackInfo ci) {
-		RegistryFreezeEvents.END_REGISTRY_FREEZE.invoker().onEndRegistryFreeze(null, true);
+	@Inject(method = "<clinit>", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/flag/FeatureFlagRegistry$Builder;createVanilla(Ljava/lang/String;)Lnet/minecraft/world/flag/FeatureFlag;", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD)
+	private static void save(CallbackInfo ci, FeatureFlagRegistry.Builder builder) {
+		FrozenFeatureFlags.builder = builder;
 	}
 }

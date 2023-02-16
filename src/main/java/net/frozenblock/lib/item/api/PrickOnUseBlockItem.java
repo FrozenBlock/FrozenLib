@@ -18,8 +18,11 @@
 
 package net.frozenblock.lib.item.api;
 
-import net.frozenblock.lib.damagesource.api.FrozenDamageSource;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
@@ -30,23 +33,23 @@ import org.jetbrains.annotations.Nullable;
 public class PrickOnUseBlockItem extends BlockItem {
     public final float damage;
     public final SoundEvent hurtSound;
-    public final String damageSourceName;
+    public final ResourceKey<DamageType> damageType;
 
     @Deprecated
     private final Block block;
 
-    public PrickOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, String damageSourceName) {
+    public PrickOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, ResourceKey<DamageType> damageType) {
         super(block, properties);
         this.block = block;
         this.damage = damage;
         this.hurtSound = sound;
-        this.damageSourceName = damageSourceName;
+        this.damageType = damageType;
     }
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
         if (this.isEdible()) {
-            user.hurt(FrozenDamageSource.source(damageSourceName),this.damage);
+            user.hurt(world.damageSources().source(this.damageType),this.damage);
             if (this.hurtSound != null && !user.isSilent()) {
                 user.playSound(this.hurtSound, 0.5F, 0.9F + (world.random.nextFloat() * 0.2F));
             }

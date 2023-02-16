@@ -20,7 +20,7 @@ package net.frozenblock.lib.item.mixin;
 
 import java.util.List;
 import java.util.UUID;
-import net.frozenblock.lib.damagesource.api.FrozenDamageSource;
+
 import net.frozenblock.lib.item.api.HeavyItemDamageRegistry;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.sounds.SoundEvents;
@@ -82,7 +82,7 @@ public class ItemEntityMixin {
 		ItemEntity item = ItemEntity.class.cast(this);
 		Entity owner = this.thrower != null ? item.level.getPlayerByUUID(this.thrower) : null;
 		if (entity != owner) {
-			DamageSource damageSource = FrozenDamageSource.source("heavy_item");
+			DamageSource damageSource = owner.damageSources().mobAttack((LivingEntity) entity);
 			if (owner != null) {
 				((LivingEntity) owner).setLastHurtMob(entity);
 			}

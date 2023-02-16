@@ -151,8 +151,6 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation SPOTTING_ICON_REMOVE_PACKET = id("spotting_icon_remove_packet");
 	public static final ResourceLocation REQUEST_SPOTTING_ICON_SYNC_PACKET = id("request_spotting_icon_sync_packet");
 
-	public static final ResourceLocation HURT_SOUND_PACKET = id("hurt_sound_packet");
-
 	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
 	public static final ResourceLocation SMALL_WIND_SYNC_PACKET = id("small_wind_sync_packet");
 

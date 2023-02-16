@@ -82,7 +82,6 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		receiveSmallWindSyncPacket();
-		receivePlayerDamagePacket();
 		receiveLocalPlayerSoundPacket();
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
@@ -315,7 +314,7 @@ public final class FrozenClient implements ClientModInitializer {
 
 	private static void receiveForcedCooldownPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.FORCED_COOLDOWN_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			Item item = byteBuf.readById(Registry.ITEM);
+			Item item = byteBuf.readById(BuiltInRegistries.ITEM);
 			int startTime = byteBuf.readVarInt();
 			int endTime = byteBuf.readVarInt();
 			ctx.execute(() -> {
@@ -450,24 +449,6 @@ public final class FrozenClient implements ClientModInitializer {
 					ClientWindManager.cloudX = x;
 					ClientWindManager.cloudY = y;
 					ClientWindManager.cloudZ = z;
-				}
-			});
-		});
-	}
-
-	private static void receivePlayerDamagePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.HURT_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			ResourceLocation damageLocation = byteBuf.readResourceLocation();
-			float volume = byteBuf.readFloat();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity instanceof Player player) {
-						SoundEvent soundEvent = PlayerDamageSourceSounds.getDamageSound(damageLocation);
-						player.playSound(soundEvent, volume, (player.getRandom().nextFloat() - player.getRandom().nextFloat()) * 0.2F + 1.0F);
-					}
 				}
 			});
 		});

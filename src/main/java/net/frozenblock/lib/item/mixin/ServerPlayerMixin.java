@@ -60,7 +60,7 @@ public class ServerPlayerMixin {
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))
 	public void wilderWild$tick(CallbackInfo info) {
-		if (this.wilderWild$savedItemCooldowns.isPresent() && this.connection != null && this.connection.getConnection().isConnected() && !this.isChangingDimension) {
+		if (this.wilderWild$savedItemCooldowns.isPresent() && this.connection != null && this.connection.isAcceptingMessages() && !this.isChangingDimension) {
 			SaveableItemCooldowns.setCooldowns(this.wilderWild$savedItemCooldowns.get(), ServerPlayer.class.cast(this));
 			this.wilderWild$savedItemCooldowns = Optional.empty();
 		}

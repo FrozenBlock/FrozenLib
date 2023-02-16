@@ -16,11 +16,18 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.impl;
+package net.frozenblock.lib.feature_flag.mixin;
 
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.flag.FeatureFlagRegistry;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-public interface FabricItemGroupAccessor {
+@Mixin(value = FeatureFlagRegistry.Builder.class, priority = 1001)
+public class FeatureFlagBuilderMixin {
 
-	boolean enabled(ItemStack itemStack);
+	@ModifyConstant(method = "create", constant = @Constant(intValue = 64))
+	private int increaseMax(int constant) {
+		return Math.max(constant, 512);
+	}
 }
