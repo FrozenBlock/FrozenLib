@@ -1,8 +1,13 @@
 Hello
 Put changelog in plain text please
-Make sure to clear after release
+Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Added a tag for blocks that the player should be able to interact with whilst crouching
-- Automated releases to GitHub, CurseForge, and Modrinth
+- Added Config API with typed entries: See source for more info
+- Added fading disks
+- Added lightning overrides
+- Improved some documentation
+- Fully separated mod into sub packages
+- Added saveable item cooldowns
+- Added functionality to path features
