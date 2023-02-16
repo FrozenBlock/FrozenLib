@@ -16,25 +16,18 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.server;
+package net.frozenblock.lib.feature_flag.mixin;
 
-import net.frozenblock.lib.event.api.RegistryFreezeEvents;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.flag.FeatureFlagRegistry;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.Constant;
+import org.spongepowered.asm.mixin.injection.ModifyConstant;
 
-@Mixin(BuiltInRegistries.class)
-public class BuiltInRegistriesMixin {
+@Mixin(value = FeatureFlagRegistry.Builder.class, priority = 1001)
+public class FeatureFlagBuilderMixin {
 
-	@Inject(method = "freeze", at = @At("HEAD"))
-	private static void freezeBuiltinsStart(CallbackInfo ci) {
-		RegistryFreezeEvents.START_REGISTRY_FREEZE.invoker().onStartRegistryFreeze(null, true);
-	}
-
-	@Inject(method = "freeze", at = @At("TAIL"))
-	private static void freezeBuiltinsEnd(CallbackInfo ci) {
-		RegistryFreezeEvents.END_REGISTRY_FREEZE.invoker().onEndRegistryFreeze(null, true);
+	@ModifyConstant(method = "create", constant = @Constant(intValue = 64))
+	private int increaseMax(int constant) {
+		return Math.max(constant, 512);
 	}
 }

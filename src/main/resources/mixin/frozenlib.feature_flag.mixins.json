@@ -1,14 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib.event.mixin",
+  "package": "net.frozenblock.lib.feature_flag.mixin",
   "compatibilityLevel": "JAVA_17",
   "injectors": {
 	"defaultRequire": 1
   },
   "mixins": [
-    "BuiltInRegistriesMixin",
-    "MappedRegistryMixin",
-    "PlayerListMixin"
+    "FeatureFlagsMixin",
+    "FeatureFlagBuilderMixin"
   ]
 }

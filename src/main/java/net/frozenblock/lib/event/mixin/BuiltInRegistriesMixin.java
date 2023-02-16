@@ -16,25 +16,25 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.server.fabric_api;
+package net.frozenblock.lib.event.mixin;
 
-import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroupEntries;
-import net.frozenblock.lib.item.impl.FabricItemGroupAccessor;
-import net.minecraft.world.item.ItemStack;
+import net.frozenblock.lib.event.api.RegistryFreezeEvents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Pseudo;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Pseudo
-@Mixin(FabricItemGroupEntries.class)
-public abstract class FabricItemGroupEntriesMixin implements FabricItemGroupAccessor {
-	@Shadow
-	protected abstract boolean isEnabled(ItemStack stack);
+@Mixin(BuiltInRegistries.class)
+public class BuiltInRegistriesMixin {
 
-	@Unique
-	@Override
-	public boolean enabled(ItemStack itemStack) {
-		return this.isEnabled(itemStack);
+	@Inject(method = "freeze", at = @At("HEAD"))
+	private static void freezeBuiltinsStart(CallbackInfo ci) {
+		RegistryFreezeEvents.START_REGISTRY_FREEZE.invoker().onStartRegistryFreeze(null, true);
+	}
+
+	@Inject(method = "freeze", at = @At("TAIL"))
+	private static void freezeBuiltinsEnd(CallbackInfo ci) {
+		RegistryFreezeEvents.END_REGISTRY_FREEZE.invoker().onEndRegistryFreeze(null, true);
 	}
 }

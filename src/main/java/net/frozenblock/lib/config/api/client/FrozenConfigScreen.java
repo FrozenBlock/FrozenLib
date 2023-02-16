@@ -1,3 +1,21 @@
+/*
+ * Copyright 2023 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib.config.api.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -30,26 +48,30 @@ public class FrozenConfigScreen extends Screen {
 	public void init() {
 		int buttonWidth = Math.min(200, (this.width - 50 - 12) / 3);
 
-		this.cancelButton = new Button(
-				this.width / 2 - buttonWidth - 3,
-				this.height - 26,
-				buttonWidth,
-				20,
+		this.cancelButton = Button.builder(
 				Component.translatable("frozenlib.config.discard"),
 				button -> this.quit()
-		);
-
-		this.saveButton = new Button(
-				this.width / 2 + 3,
-				this.height - 26,
+		).pos(
+				this.width / 2 - buttonWidth - 3,
+				this.height - 26
+		).size(
 				buttonWidth,
-				20,
+				20
+		).build();
+
+		this.saveButton = Button.builder(
 				Component.translatable("frozenlib.config.save"),
 				button -> {
 					this.config.save();
 					this.quit();
 				}
-		);
+		).pos(
+				this.width / 2 + 3,
+				this.height - 26
+		).size(
+				buttonWidth,
+				20
+		).build();
 
 		addRenderableWidget(this.cancelButton);
 		addRenderableWidget(this.saveButton);

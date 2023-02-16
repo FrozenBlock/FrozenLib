@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mixin.server;
+package net.frozenblock.lib.feature_flag.mixin;
 
 import net.frozenblock.lib.feature_flag.api.FrozenFeatureFlags;
 import net.minecraft.world.flag.FeatureFlagRegistry;

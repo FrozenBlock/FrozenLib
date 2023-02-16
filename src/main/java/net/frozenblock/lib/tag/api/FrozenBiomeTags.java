@@ -20,6 +20,7 @@ package net.frozenblock.lib.tag.api;
 
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 
@@ -33,6 +34,6 @@ public final class FrozenBiomeTags {
 	public static final TagKey<Biome> CANNOT_LIGHTNING_OVERRIDE = of("cannot_lightning_override");
 
 	private static TagKey<Biome> of(String path) {
-		return TagKey.create(Registry.BIOME_REGISTRY, FrozenMain.id(path));
+		return TagKey.create(Registries.BIOME, FrozenMain.id(path));
 	}
 }
