@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.testmod.config;
+package net.frozenblock.lib.testmod.config.cloth;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
@@ -25,9 +25,9 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.api.FrozenConfig;
-import static net.frozenblock.lib.testmod.config.TestConfig.text;
-import static net.frozenblock.lib.testmod.config.TestConfig.tooltip;
+import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
+import static net.frozenblock.lib.testmod.config.cloth.TestConfig.text;
+import static net.frozenblock.lib.testmod.config.cloth.TestConfig.tooltip;
 import net.minecraft.resources.ResourceLocation;
 
 @Config(name = "general")
@@ -60,7 +60,7 @@ public class GeneralTestConfig implements ConfigData {
 				.setTooltip(tooltip("test_submenu_boolean"))
 				.build();
 
-		var testSubMenuCategory = FrozenConfig.createSubCategory(entryBuilder, category, text("test_subcategory"),
+		var testSubMenuCategory = FrozenClothConfig.createSubCategory(entryBuilder, category, text("test_subcategory"),
 				false,
 				tooltip("test_subcategory"),
 				testSubMenuBoolean

@@ -16,23 +16,19 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.testmod.config;
+package net.frozenblock.lib.config.api.entry;
 
-import net.frozenblock.lib.FrozenBools;
+import com.google.gson.ExclusionStrategy;
+import com.google.gson.FieldAttributes;
 
-public final class ClothConfigInteractionHandler {
+public class ConfigExclusionStrategy implements ExclusionStrategy {
+	@Override
+	public boolean shouldSkipField(FieldAttributes attributes) {
+		return attributes.getAnnotation(Exclude.class) != null;
+	}
 
-    public static boolean testBoolean() {
-        if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return TestConfig.get().general.testBoolean;
-        }
-        return true;
-    }
-
-    public static boolean testSubMenuBoolean() {
-        if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return TestConfig.get().general.subMenu.testSubMenuBoolean;
-        }
-        return true;
-    }
+	@Override
+	public boolean shouldSkipClass(Class<?> var) {
+		return false;
+	}
 }

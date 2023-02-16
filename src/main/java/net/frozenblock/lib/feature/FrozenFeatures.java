@@ -22,12 +22,14 @@ import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.feature.features.CircularWaterloggedVegetationPatchFeature;
 import net.frozenblock.lib.feature.features.ColumnWithDiskFeature;
 import net.frozenblock.lib.feature.features.DownwardsPillarFeature;
+import net.frozenblock.lib.feature.features.FadingDiskFeature;
 import net.frozenblock.lib.feature.features.NoisePathFeature;
 import net.frozenblock.lib.feature.features.NoisePathSwapUnderWaterFeature;
 import net.frozenblock.lib.feature.features.NoisePathUnderWaterFeature;
 import net.frozenblock.lib.feature.features.NoisePlantFeature;
 import net.frozenblock.lib.feature.features.UpwardsPillarFeature;
 import net.frozenblock.lib.feature.features.config.ColumnWithDiskFeatureConfig;
+import net.frozenblock.lib.feature.features.config.FadingDiskFeatureConfig;
 import net.frozenblock.lib.feature.features.config.PathFeatureConfig;
 import net.frozenblock.lib.feature.features.config.PathSwapUnderWaterFeatureConfig;
 import net.frozenblock.lib.feature.features.config.PillarFeatureConfig;
@@ -45,6 +47,7 @@ public class FrozenFeatures {
 	public static final UpwardsPillarFeature UPWARDS_PILLAR_FEATURE = new UpwardsPillarFeature(PillarFeatureConfig.CODEC);
 	public static final DownwardsPillarFeature DOWNWARDS_PILLAR_FEATURE = new DownwardsPillarFeature(PillarFeatureConfig.CODEC);
 	public static final CircularWaterloggedVegetationPatchFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH = new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
+	public static final FadingDiskFeature FADING_DISK_FEATURE = new FadingDiskFeature(FadingDiskFeatureConfig.CODEC);
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_feature"), NOISE_PATH_FEATURE);
@@ -55,6 +58,7 @@ public class FrozenFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("upwards_pillar"), UPWARDS_PILLAR_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("downwards_pillar"), DOWNWARDS_PILLAR_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("fading_disk_feature"), FADING_DISK_FEATURE);
 	}
 
 }
