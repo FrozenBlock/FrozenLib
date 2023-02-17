@@ -31,10 +31,6 @@ import net.minecraft.core.MappedRegistry;
 
 public class FrozenRegistry {
 
-	@Environment(EnvType.CLIENT)
-    public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenMain.id("entity_texture_override"))
-            .buildAndRegister();
-
 	public static final MappedRegistry<ModIntegrationSupplier> MOD_INTEGRATION = FabricRegistryBuilder.createSimple(ModIntegrationSupplier.class, FrozenMain.id("mod_integration"))
 			.buildAndRegister();
 
