@@ -4,11 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Ported to 23w07a
-- Added Config API with typed entries: See source for more info
-- Added fading disks
-- Added lightning overrides
-- Improved some documentation
-- Fully separated mod into sub packages
-- Added saveable item cooldowns
-- Added functionality to path features
+- Fixed a server crash
