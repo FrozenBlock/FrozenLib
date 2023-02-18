@@ -27,6 +27,7 @@ import net.frozenblock.lib.testmod.config.cloth.ClothConfigInteractionHandler;
 import net.frozenblock.lib.testmod.item.Camera;
 import net.frozenblock.lib.testmod.item.LootTableWhacker;
 import net.minecraft.core.Registry;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Blocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,6 +47,9 @@ public final class FrozenTestMain implements ModInitializer {
     @Override
     public void onInitialize() {
 		LOGGER.info("The test toggle value is " + TestConfig.get().config().testToggle);
+		LOGGER.info("The test vec3 value is " + TestConfig.get().config().typedVecList.value());
+		SoundEvent sound = TestConfig.get().config().randomSound.value();
+		LOGGER.info("The test soundevent value is " + sound + " and its ID is " + sound.getLocation());
         Registry.register(Registry.ITEM, id("camera"), CAMERA);
         Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
 
