@@ -30,9 +30,12 @@ import com.mojang.serialization.JsonOps;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import java.lang.reflect.Type;
+import java.util.Collection;
 import java.util.Objects;
 
 public record TypedEntry<T>(TypedEntryType<T> type, T value) {
+
+	public static final String DEFAULT_MOD_ID = FrozenMain.MOD_ID + "_default";
 
 	public static class Serializer<T> implements JsonSerializer<TypedEntry<T>>, JsonDeserializer<TypedEntry<T>> {
 
@@ -44,29 +47,37 @@ public record TypedEntry<T>(TypedEntryType<T> type, T value) {
 
 		@Override
 		public TypedEntry<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-			if (json.isJsonObject()) {
-				JsonObject object = json.getAsJsonObject();
-				if (object == null) {
-					return null;
-				} else {
-					for (var entry : ConfigRegistry.getAll()) {
-						if (Objects.equals(entry.modId(), this.modId) || Objects.equals(entry.modId(), FrozenMain.MOD_ID)) {
-							var codec = entry.codec();
-							var result = codec.decode(JsonOps.INSTANCE, object);
+			var modEntry = getFromRegistry(json, ConfigRegistry.getForMod(this.modId));
+			if (modEntry != null) {
+				return modEntry;
+			} else {
+				var defaultEntry = getFromRegistry(json, ConfigRegistry.getDefault());
+				if (defaultEntry != null) {
+					return defaultEntry;
+				}
+			}
+			FrozenMain.error("Failed to deserialize typed entry " + json, true);
+			return new TypedEntry<>(null, null);
+		}
 
-							if (result.error().isPresent()) {
-								continue;
-							}
+		private TypedEntry<T> getFromRegistry(JsonElement json, Collection<TypedEntryType<?>> registry) {
+			for (var entryType : registry) {
+				if (Objects.equals(entryType.modId(), this.modId) || Objects.equals(entryType.modId(), DEFAULT_MOD_ID)) {
+					var codec = entryType.codec();
+					var result = codec.decode(JsonOps.INSTANCE, json);
 
-							var optional = result.result();
-							if (optional.isPresent()) {
-								try {
-								    Pair<TypedEntry<T>, JsonElement> type = (Pair<TypedEntry<T>, JsonElement>) optional.get();
-								    return type.getFirst();
-								} catch (ClassCastException e) {
-									continue;
-								}
-							}
+					if (result.error().isPresent()) {
+						continue;
+					}
+
+					var optional = result.result();
+					if (optional.isPresent()) {
+						try {
+							Pair<T, JsonElement> type = (Pair<T, JsonElement>) optional.get();
+							var entry = new TypedEntry<>((TypedEntryType<T>) entryType, type.getFirst());
+							FrozenMain.log("Built entry " + entry, FrozenMain.UNSTABLE_LOGGING);
+							return entry;
+						} catch (ClassCastException ignored) {
 						}
 					}
 				}
@@ -79,7 +90,7 @@ public record TypedEntry<T>(TypedEntryType<T> type, T value) {
 			if (src != null) {
 				var type = src.type();
 				if (type != null) {
-					if (Objects.equals(type.modId(), this.modId) || Objects.equals(type.modId(), FrozenMain.MOD_ID)) {
+					if (Objects.equals(type.modId(), this.modId) || Objects.equals(type.modId(), DEFAULT_MOD_ID)) {
 						var codec = type.codec();
 						if (codec != null) {
 							var encoded = codec.encodeStart(JsonOps.INSTANCE, src.value());
