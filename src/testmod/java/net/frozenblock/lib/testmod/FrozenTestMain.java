@@ -61,8 +61,8 @@ public final class FrozenTestMain implements ModInitializer {
 		LOGGER.info("The test vec3 value is " + TestConfig.get().config().typedVecList.value());
 		SoundEvent sound = TestConfig.get().config().randomSound.value();
 		LOGGER.info("The test soundevent value is " + sound + " and its ID is " + sound.getLocation());
-        Registry.register(Registry.ITEM, id("camera"), CAMERA);
-        Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
+        Registry.register(BuiltInRegistries.ITEM, id("camera"), CAMERA);
+        Registry.register(BuiltInRegistries.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
 
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));

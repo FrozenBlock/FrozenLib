@@ -40,7 +40,7 @@ public class TestConfig {
 	public static final TypedEntryType<SoundEvent> SOUND_EVENT = ConfigRegistry.register(
 			new TypedEntryType<>(
 					FrozenTestMain.MOD_ID,
-					SoundEvent.CODEC
+					SoundEvent.DIRECT_CODEC
 			)
 	);
 
