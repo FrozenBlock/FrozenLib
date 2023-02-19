@@ -6,3 +6,4 @@ Put changelog here:
 -----------------
 - Fixed typed entry deserialization
 - Typed entry deserialization now favors mod defined types over default types
+- Changed default entry type mod id from "frozenlib" to "frozenlib_default"
