@@ -28,6 +28,7 @@ import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
+import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.frozenblock.lib.sound.api.damagesource.PlayerDamageSourceSounds;
@@ -60,6 +61,7 @@ public final class FrozenClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		FrozenClientRegistry.initRegistry();
 		ModIntegrations.initialize(); // Mod integrations must run after normal mod initialization
 		ClientFreezer.onInitializeClient();
 		registerClientTickEvents();
