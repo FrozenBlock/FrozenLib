@@ -4,6 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed typed entry deserialization
-- Typed entry deserialization now favors mod defined types over default types
-- Changed default entry type mod id from "frozenlib" to "frozenlib_default"
+- Fixed a crash when the entity texture override registry isn't loaded

@@ -52,6 +52,7 @@ public class FrozenRegistry {
 	}
 
     public static void initRegistry() {
-
+		// NO-OP
+		// This is just to make sure the registry is initialized.
     }
 }

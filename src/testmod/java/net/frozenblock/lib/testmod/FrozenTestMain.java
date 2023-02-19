@@ -64,6 +64,9 @@ public final class FrozenTestMain implements ModInitializer {
         Registry.register(BuiltInRegistries.ITEM, id("camera"), CAMERA);
         Registry.register(BuiltInRegistries.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
 
+		FrozenCreativeTabs.add(CAMERA, CreativeModeTabs.OP_BLOCKS);
+		FrozenCreativeTabs.add(LOOT_TABLE_WHACKER, CreativeModeTabs.OP_BLOCKS);
+
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
 		if (ClothConfigInteractionHandler.testBoolean()) {
