@@ -30,4 +30,9 @@ public class FrozenClientRegistry {
 
 	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenMain.id("entity_texture_override"))
 			.buildAndRegister();
+
+	public static void initRegistry() {
+		// NO-OP
+		// This is just to make sure the registry is initialized.
+	}
 }
