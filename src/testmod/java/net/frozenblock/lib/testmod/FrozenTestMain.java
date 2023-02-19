@@ -36,6 +36,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Blocks;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
@@ -57,10 +58,11 @@ public final class FrozenTestMain implements ModInitializer {
     public void onInitialize() {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
 		LOGGER.info("The test toggle value is " + TestConfig.get().config().testToggle);
-		Registry.register(BuiltInRegistries.ITEM, id("camera"), CAMERA);
-        Registry.register(BuiltInRegistries.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
-		FrozenCreativeTabs.add(CAMERA, CreativeModeTabs.TOOLS_AND_UTILITIES);
-		FrozenCreativeTabs.add(LOOT_TABLE_WHACKER, CreativeModeTabs.TOOLS_AND_UTILITIES);
+		LOGGER.info("The test vec3 value is " + TestConfig.get().config().typedVecList.value());
+		SoundEvent sound = TestConfig.get().config().randomSound.value();
+		LOGGER.info("The test soundevent value is " + sound + " and its ID is " + sound.getLocation());
+        Registry.register(Registry.ITEM, id("camera"), CAMERA);
+        Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
 
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
