@@ -35,6 +35,8 @@ import java.util.Objects;
 
 public record TypedEntry<T>(TypedEntryType<T> type, T value) {
 
+	public static final String DEFAULT_MOD_ID = FrozenMain.MOD_ID + "_default";
+
 	public static class Serializer<T> implements JsonSerializer<TypedEntry<T>>, JsonDeserializer<TypedEntry<T>> {
 
 		private final String modId;
@@ -60,7 +62,7 @@ public record TypedEntry<T>(TypedEntryType<T> type, T value) {
 
 		private TypedEntry<T> getFromRegistry(JsonElement json, Collection<TypedEntryType<?>> registry) {
 			for (var entryType : registry) {
-				if (Objects.equals(entryType.modId(), this.modId) || Objects.equals(entryType.modId(), FrozenMain.MOD_ID)) {
+				if (Objects.equals(entryType.modId(), this.modId) || Objects.equals(entryType.modId(), DEFAULT_MOD_ID)) {
 					var codec = entryType.codec();
 					var result = codec.decode(JsonOps.INSTANCE, json);
 
@@ -88,7 +90,7 @@ public record TypedEntry<T>(TypedEntryType<T> type, T value) {
 			if (src != null) {
 				var type = src.type();
 				if (type != null) {
-					if (Objects.equals(type.modId(), this.modId) || Objects.equals(type.modId(), FrozenMain.MOD_ID)) {
+					if (Objects.equals(type.modId(), this.modId) || Objects.equals(type.modId(), DEFAULT_MOD_ID)) {
 						var codec = type.codec();
 						if (codec != null) {
 							var encoded = codec.encodeStart(JsonOps.INSTANCE, src.value());

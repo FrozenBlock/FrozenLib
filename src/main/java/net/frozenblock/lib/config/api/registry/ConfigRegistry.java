@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
 
@@ -53,7 +54,7 @@ public class ConfigRegistry {
 		if (TYPED_ENTRY_REGISTRY.contains(entry)) {
 			throw new IllegalStateException("Typed entry already registered.");
 		}
-		if (Objects.equals(entry.modId(), FrozenMain.MOD_ID)) {
+		if (Objects.equals(entry.modId(), TypedEntry.DEFAULT_MOD_ID)) {
 			DEFAULT_TYPED_ENTRY_REGISTRY.add(entry);
 		} else {
 			MOD_TYPED_ENTRY_REGISTRY.computeIfAbsent(entry.modId(), k -> new ArrayList<>()).add(entry);
