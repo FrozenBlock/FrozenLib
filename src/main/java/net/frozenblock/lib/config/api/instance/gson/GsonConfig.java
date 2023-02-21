@@ -21,7 +21,6 @@ package net.frozenblock.lib.config.api.instance.gson;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.entry.ConfigExclusionStrategy;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
@@ -29,6 +28,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import java.awt.*;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -52,7 +52,7 @@ public class GsonConfig<T> extends Config<T> {
 	public GsonConfig(String modId, Class<T> config, Path path, GsonBuilder builder) {
 		super(modId, config);
 		this.gson = builder.setExclusionStrategies(new ConfigExclusionStrategy())
-				.registerTypeHierarchyAdapter(TypedEntry.class, new TypedEntry.Serializer<>(modId))
+				.registerTypeHierarchyAdapter(TypedEntry.class, new TypedEntrySerializer<>(modId))
 				.registerTypeHierarchyAdapter(Component.class, new Component.Serializer())
 				.registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
 				.registerTypeHierarchyAdapter(Color.class, new ColorSerializer())
@@ -61,31 +61,40 @@ public class GsonConfig<T> extends Config<T> {
 				.setPrettyPrinting()
 				.create();
 		this.path = path;
-		this.load();
+
+		if (this.load()) {
+			this.save();
+		};
 	}
 
 	@Override
 	public void save() {
 		FrozenMain.LOGGER.info("Saving config {}", this.configClass().getSimpleName());
 		try {
-			Files.writeString(this.path, this.gson.toJson(config()), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+			Files.createDirectories(this.path.getParent());
+			BufferedWriter writer = Files.newBufferedWriter(this.path, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+			this.gson.toJson(this.config(), writer);
+			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void load() {
+	public boolean load() {
 		FrozenMain.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
-		try {
-			if (Files.notExists(this.path)) {
-				this.save();
-				return;
+		if (Files.exists(this.path)) {
+			try {
+				var reader = Files.newBufferedReader(this.path);
+				this.setConfig(this.gson.fromJson(reader, this.configClass()));
+				reader.close();
+				return true;
+			} catch (IOException e) {
+				e.printStackTrace();
+				return false;
 			}
-
-			this.setConfig(this.gson.fromJson(Files.readString(this.path), configClass()));
-		} catch (IOException e) {
-			e.printStackTrace();
+		} else {
+			return true;
 		}
 	}
 
