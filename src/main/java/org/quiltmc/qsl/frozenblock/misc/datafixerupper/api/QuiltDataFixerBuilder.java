@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
 
+import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.DataFixerBuilder;
 import net.minecraft.SharedConstants;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
+import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
@@ -58,16 +60,13 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
      * Builds the final {@code DataFixer}.
      * <p>
      * This will build either an {@linkplain #buildUnoptimized() unoptimized fixer} or an
-     * {@linkplain #buildOptimized(Executor) optimized fixer}, depending on the vanilla game's settings.
+     * {@linkplain #buildOptimized(Set, Executor) optimized fixer}, depending on the vanilla game's settings.
      *
      * @param executorGetter the executor supplier, only invoked if the game is using optimized data fixers
      * @return the newly built data fixer
      */
-    @Contract(value = "_ -> new")
-    public @NotNull DataFixer build(@NotNull Supplier<Executor> executorGetter) {
-        return switch (SharedConstants.DATAFIXER_OPTIMIZATION_OPTION) {
-            case UNINITIALIZED_UNOPTIMIZED, INITIALIZED_UNOPTIMIZED -> this.buildUnoptimized();
-            case UNINITIALIZED_OPTIMIZED, INITIALIZED_OPTIMIZED -> this.buildOptimized(executorGetter.get());
-        };
+    @Contract(value = "_, _ -> new")
+    public @NotNull DataFixer build(Set<DSL.TypeReference> types, @NotNull Supplier<Executor> executorGetter) {
+		return types.isEmpty() ? this.buildUnoptimized() : this.buildOptimized(types, executorGetter.get());
     }
 }

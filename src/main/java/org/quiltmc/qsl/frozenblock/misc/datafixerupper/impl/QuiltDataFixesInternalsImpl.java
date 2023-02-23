@@ -78,10 +78,12 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
             int modDataVersion = getModDataVersion(compound, entry.getKey());
             DataFixerEntry dataFixerEntry = entry.getValue();
 
-            current = dataFixerEntry.dataFixer()
-                    .update(dataFixTypes.getType(),
-                            current,
-                            modDataVersion, dataFixerEntry.currentVersion());
+			current = dataFixTypes.update(
+					dataFixerEntry.dataFixer(),
+					current,
+					modDataVersion,
+					dataFixerEntry.currentVersion()
+			);
         }
 
         return (CompoundTag) current.getValue();

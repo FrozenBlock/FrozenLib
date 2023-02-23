@@ -70,7 +70,7 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 		}
 
 		if (blockPos == null) {
-			blockPos = new BlockPos(entity.getX(), entity.getY() + 8.0, entity.getZ());
+			blockPos = BlockPos.containing(entity.getX(), entity.getY() + 8.0, entity.getZ());
 		}
 
 		entity.getNavigation().moveTo(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), 1.0);

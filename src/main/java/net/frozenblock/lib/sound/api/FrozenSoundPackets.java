@@ -69,7 +69,7 @@ public final class FrozenSoundPackets {
 			byteBuf.writeFloat(volume);
 			byteBuf.writeFloat(pitch);
 			byteBuf.writeBoolean(distanceDelay);
-			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, new BlockPos(x, y, z))) {
+			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, BlockPos.containing(x, y, z))) {
 				ServerPlayNetworking.send(player, FrozenMain.LOCAL_SOUND_PACKET, byteBuf);
 			}
 		}
@@ -196,7 +196,7 @@ public final class FrozenSoundPackets {
             byteBuf.writeFloat(fadeDist);
             byteBuf.writeFloat(maxDist);
             byteBuf.writeResourceLocation(id);
-            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, new BlockPos(pos.x, pos.y, pos.z))) {
+            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, BlockPos.containing(pos.x, pos.y, pos.z))) {
                 ServerPlayNetworking.send(player, FrozenMain.FADING_DISTANCE_SOUND_PACKET, byteBuf);
             }
         }

@@ -25,6 +25,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
@@ -38,6 +39,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
+import net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterList;
 import org.jetbrains.annotations.ApiStatus;
 import org.slf4j.Logger;
 
@@ -65,58 +67,24 @@ public final class OverworldBiomeData {
 	}
 
     public static boolean canGenerateInOverworld(ResourceKey<Biome> biome) {
-        if (OVERWORLD_BIOMES.isEmpty()) {
-			var biomeRegistry = FrozenRegistry.vanillaRegistries().lookupOrThrow(Registries.BIOME);
-
-            MultiNoiseBiomeSource source = MultiNoiseBiomeSource.Preset.OVERWORLD.biomeSource(biomeRegistry);
-
-            for (Holder<Biome> entry : source.possibleBiomes()) {
-                entry.unwrapKey().ifPresent(OVERWORLD_BIOMES::add);
-            }
-
-            biomeRegistry.getOrThrow(BiomeTags.IS_OVERWORLD).forEach(entry -> {
-                if (!OVERWORLD_BIOMES.contains(entry.unwrapKey().orElseThrow())) {
-                    entry.unwrapKey().ifPresent(OVERWORLD_BIOMES::add);
-                }
-            });
-        }
-
-		return OVERWORLD_BIOMES.contains(biome) || OVERWORLD_BIOME_NOISE_POINTS.containsKey(biome);
+            return MultiNoiseBiomeSourceParameterList.Preset.OVERWORLD.usedBiomes().anyMatch(input -> input.equals(biome));
 	}
 
 	private static void clearBiomeSourceCache() {
 		OVERWORLD_BIOMES.clear(); // Clear cached biome source data
 	}
 
-	private static Climate.ParameterList<Holder<Biome>> withModdedBiomeEntries(Climate.ParameterList<Holder<Biome>> entries, HolderGetter<Biome> biomes) {
+	public static <T> Climate.ParameterList<T> withModdedBiomeEntries(Climate.ParameterList<T> entries, Function<ResourceKey<Biome>, T> biomes) {
 		if (OVERWORLD_BIOME_NOISE_POINTS.isEmpty()) {
 			return entries;
 		}
 
-		ArrayList<Pair<Climate.ParameterPoint, Holder<Biome>>> entryList = new ArrayList<>(entries.values());
+		ArrayList<Pair<Climate.ParameterPoint, T>> entryList = new ArrayList<>(entries.values());
 
         for (Map.Entry<ResourceKey<Biome>, Climate.ParameterPoint> entry : OVERWORLD_BIOME_NOISE_POINTS.entrySet()) {
-			Holder.Reference<Biome> biomeEntry = biomes.get(entry.getKey()).orElse(null);
-
-            if (biomeEntry != null) {
-                entryList.add(Pair.of(entry.getValue(), biomeEntry));
-            } else {
-                LOGGER.warn("Overworld biome {} not loaded", entry.getKey().location());
-            }
+			entryList.add(Pair.of(entry.getValue(), biomes.apply(entry.getKey())));
         }
 
 		return new Climate.ParameterList<>(entryList);
-	}
-
-	public static void modifyBiomeSource(HolderGetter<Biome> biomeRegistry, BiomeSource biomeSource) {
-		if (biomeSource instanceof MultiNoiseBiomeSource multiNoiseBiomeSource) {
-			if (((FrozenBiomeSourceAccess) multiNoiseBiomeSource).frozenLib_shouldModifyBiomeEntries() && multiNoiseBiomeSource.stable(MultiNoiseBiomeSource.Preset.OVERWORLD)) {
-				multiNoiseBiomeSource.parameters = OverworldBiomeData.withModdedBiomeEntries(
-						MultiNoiseBiomeSource.Preset.OVERWORLD.parameterSource.apply(biomeRegistry::getOrThrow),
-						biomeRegistry);
-				multiNoiseBiomeSource.possibleBiomes = multiNoiseBiomeSource.parameters.values().stream().map(Pair::getSecond).collect(Collectors.toSet());
-				((FrozenBiomeSourceAccess) multiNoiseBiomeSource).frozenLib_setModifyBiomeEntries(false);
-			}
-		}
 	}
 }
