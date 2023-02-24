@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.function.Function;
 
 
-@Mixin(targets = "net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList/Preset")
+@Mixin(targets = "net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList$Preset$2")
 public class OverworldBiomePresetMixin {
 
 	@Inject(method = "apply", at = @At("RETURN"), cancellable = true)
