@@ -4,4 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed a crash when the entity texture override registry isn't loaded
+- Ported to 1.19.4-pre1
