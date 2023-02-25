@@ -18,23 +18,33 @@
 
 package net.frozenblock.lib.config.api.entry;
 
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.JsonOps;
+import com.google.gson.reflect.TypeToken;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Objects;
 
-public record TypedEntry<T>(TypedEntryType<T> type, T value) {
+public class TypedEntry<T> {
 
 	public static final String DEFAULT_MOD_ID = FrozenMain.MOD_ID + "_default";
 
+	public static final TypeToken<TypedEntry<?>> TYPE_TOKEN = new TypeToken<>() {
+	};
+
+	private final TypedEntryType<T> type;
+	private T value;
+
+	public TypedEntry(TypedEntryType<T> type, T value) {
+		this.type = type;
+		this.value = value;
+	}
+
+	public TypedEntryType<T> type() {
+		return type;
+	}
+
+	public T value() {
+		return value;
+	}
+
+	public void set(T value) {
+		this.value = value;
+	}
 }

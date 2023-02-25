@@ -25,6 +25,7 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.client.option.Option;
 import net.frozenblock.lib.config.api.client.option.OptionList;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -37,6 +38,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class FrozenConfigScreen extends Screen {
 	private final Screen parent;
@@ -58,6 +60,7 @@ public class FrozenConfigScreen extends Screen {
 		this.backgroundTexture = backgroundTexture;
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public void init() {
 		int buttonWidth = Math.min(200, (this.width - 50 - 12) / 3);
@@ -78,7 +81,11 @@ public class FrozenConfigScreen extends Screen {
 				20,
 				Component.translatable("frozenlib.config.save"),
 				button -> {
-					this.config.save();
+					FrozenMain.log("Saving config from GUI", FrozenMain.UNSTABLE_LOGGING);
+					for (var option : this.config.options()) {
+						((Consumer) option.onValueUpdate()).accept(option.get());
+					}
+					this.config.save().run();
 					this.quit();
 				}
 		);

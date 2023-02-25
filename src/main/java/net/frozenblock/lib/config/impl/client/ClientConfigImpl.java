@@ -21,6 +21,7 @@ package net.frozenblock.lib.config.impl.client;
 import com.google.common.collect.ImmutableList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.client.ClientConfig;
 import net.frozenblock.lib.config.api.client.FrozenConfigScreen;
 import net.frozenblock.lib.config.api.client.option.Option;
@@ -71,15 +72,10 @@ public class ClientConfigImpl<T> implements ClientConfig<T> {
 		return List.copyOf(this.options);
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public Runnable save() {
-		return () -> {
-			for (Option<?> option : this.options()) {
-				((Consumer) option.onValueUpdate()).accept(option.get());
-			}
-			this.onSave.run();
-		};
+		FrozenMain.log("Client config saving", FrozenMain.UNSTABLE_LOGGING);
+		return this.onSave;
 	}
 
 	@Override

@@ -21,6 +21,7 @@ package net.frozenblock.lib.testmod.config;
 import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.client.ClientConfig;
 import net.frozenblock.lib.config.api.client.option.Option;
 import net.frozenblock.lib.config.api.entry.Exclude;
@@ -31,6 +32,7 @@ import net.frozenblock.lib.config.api.instance.gson.GsonConfig;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -110,7 +112,10 @@ public class TestConfig {
 								Component.literal("Test Toggle"),
 								Option.cachedConstantTooltip(Component.translatable("Test Toggle Tooltip")),
 								true,
-								newValue -> this.testToggle = newValue
+								newValue -> {
+									FrozenMain.log("Received new value from save", FrozenMain.UNSTABLE_LOGGING);
+									this.testToggle = newValue;
+								}
 						)
 				)
 				.option(
@@ -132,6 +137,16 @@ public class TestConfig {
 								100,
 								this.testInt,
 								value -> this.testInt = value
+						)
+				)
+				.option(
+						new Option<>(
+								Component.literal("Test Typed Bool"),
+								Option.cachedConstantTooltip(Component.translatable("Test Typed Bool Tooltip")),
+								(caption1, value) -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF,
+								Option.get(this.typedBoolean.value()),
+								this.typedBoolean.value(),
+								value -> this.typedBoolean = new TypedEntry<>(this.typedBoolean.type(), value)
 						)
 				)
 				.save(INSTANCE::save)

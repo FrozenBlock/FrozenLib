@@ -7,6 +7,7 @@ import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Type;
 import java.util.Collection;
@@ -35,6 +36,7 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 		return new TypedEntry<>(null, null);
 	}
 
+	@Nullable
 	private TypedEntry<T> getFromRegistry(JsonElement json, Collection<TypedEntryType<?>> registry) {
 		for (var entryType : registry) {
 			if (Objects.equals(entryType.modId(), this.modId) || Objects.equals(entryType.modId(), TypedEntry.DEFAULT_MOD_ID)) {
@@ -50,9 +52,9 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 					try {
 						Pair<T, JsonElement> type = (Pair<T, JsonElement>) optional.get();
 						var entry = new TypedEntry<>((TypedEntryType<T>) entryType, type.getFirst());
-						FrozenMain.log("Built entry " + entry, FrozenMain.UNSTABLE_LOGGING);
+						FrozenMain.log("Built new typed entry: " + entry + " type: " + entry.type() + " value: " + entry.value(), FrozenMain.UNSTABLE_LOGGING);
 						return entry;
-					} catch (ClassCastException ignored) {
+					} catch (Throwable ignored) {
 					}
 				}
 			}

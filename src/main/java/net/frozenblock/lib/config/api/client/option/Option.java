@@ -147,6 +147,16 @@ public final class Option<T> {
 		return this.onValueUpdate;
 	}
 
+	@SuppressWarnings("unchecked")
+	public static <T> ValueSet<T> get(T value) {
+		if (value instanceof Number) {
+			return (ValueSet<T>) new IntRange(0, 100);
+		} else if (value instanceof Boolean) {
+			return (ValueSet<T>) BOOLEAN_VALUES;
+		}
+		return null;
+	}
+
 	public record AltEnum<T>(
 			List<T> values, List<T> altValues, BooleanSupplier altCondition, CycleableValueSet.ValueSetter<T> valueSetter, Codec<T> codec
 	) implements CycleableValueSet<T> {
@@ -262,7 +272,7 @@ public final class Option<T> {
 		}
 
 		default <R> SliderableValueSet<R> xmap(IntFunction<? extends R> fromSliderValue, ToIntFunction<? super R> toSliderValue) {
-			return new SliderableValueSet<R>() {
+			return new SliderableValueSet<>() {
 				@Override
 				public Optional<R> validateValue(R value) {
 					return IntRangeBase.this.validateValue(toSliderValue.applyAsInt(value)).map(fromSliderValue::apply);
@@ -275,7 +285,7 @@ public final class Option<T> {
 
 				@Override
 				public R fromSliderValue(double value) {
-					return (R)fromSliderValue.apply(IntRangeBase.this.fromSliderValue(value));
+					return (R) fromSliderValue.apply(IntRangeBase.this.fromSliderValue(value));
 				}
 
 				@Override
