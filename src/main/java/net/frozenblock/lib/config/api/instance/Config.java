@@ -18,16 +18,23 @@
 
 package net.frozenblock.lib.config.api.instance;
 
+import java.io.File;
+import java.nio.file.Path;
+
 public abstract class Config<T> {
 
 	private final String modId;
+	private final Path path;
+	private final File file;
 	private final Class<T> config;
 	private T configInstance;
 	private final T defaultInstance;
 
-	public Config(String modId, Class<T> config) {
+	public Config(String modId, Class<T> config, Path path) {
 		this.modId = modId;
 		this.config = config;
+		this.path = path;
+		this.file = path.toFile();
 		try {
 			this.defaultInstance = this.configInstance = config.getConstructor().newInstance();
 		} catch (Throwable e) {
@@ -37,6 +44,14 @@ public abstract class Config<T> {
 
 	public String modId() {
 		return this.modId;
+	}
+
+	public Path path() {
+		return this.path;
+	}
+
+	public File file() {
+		return this.file;
 	}
 
 	public T config() {

@@ -21,17 +21,19 @@ package net.frozenblock.lib.config.api.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.client.option.Option;
-import net.frozenblock.lib.config.api.client.option.OptionType;
+import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.impl.client.ClientConfigImpl;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
-import java.util.Optional;
 import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
-public interface ClientConfig {
+public interface ClientConfig<T> {
+
+	Config<T> config();
 
 	Component title();
 
@@ -43,27 +45,28 @@ public interface ClientConfig {
 
 	@Environment(EnvType.CLIENT)
 	Screen makeScreen(@Nullable Screen parent);
-/*
-	static Builder makeBuilder() {
-		return new ClientConfigImpl.BuilderImpl();
+
+	static <T> Builder<T> makeBuilder() {
+		return new ClientConfigImpl.BuilderImpl<>();
 	}
 
-	static <T> ClientConfig make(Config<T> config, ConfigBuilder<T> builder) {
-		return builder.build(config.defaultInstance(), config.config(), makeBuilder().save(config::save)).build();
+	@SuppressWarnings("unchecked")
+	static <T> ClientConfig<T> make(Config<T> config, ConfigBuilder<T> builder) {
+		return builder.build(config, config.defaultInstance(), config.config(), (Builder<T>) makeBuilder().save(config::save)).build();
 	}
-*/
-	interface Builder {
 
-		Builder title(@NotNull Component title);
+	interface Builder<T> {
 
-		<T> Builder option(@NotNull T value, @NotNull OptionType type, @NotNull Component text, @NotNull Option.Save<T> onSave);
+		Builder<T> config(@NotNull Config<T> config);
 
-		<T> Builder option(@NotNull T value, @NotNull OptionType type, @NotNull Component text, @NotNull Optional<Component> tooltip, @NotNull Option.Save<T> onSave);
+		Builder<T> title(@NotNull Component title);
 
-		Builder save(@NotNull Runnable onSave);
+		<O> Builder<T> option(@NotNull Option<O> option);
 
-		Builder init(@NotNull Consumer<FrozenConfigScreen> initializer);
+		Builder<T> save(@NotNull Runnable onSave);
 
-		ClientConfig build();
+		Builder<T> init(@NotNull Consumer<FrozenConfigScreen> initializer);
+
+		ClientConfig<T> build();
 	}
 }

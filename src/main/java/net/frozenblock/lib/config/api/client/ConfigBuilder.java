@@ -16,11 +16,15 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api;
+package net.frozenblock.lib.config.api.client;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.client.ClientConfig;
+import net.frozenblock.lib.config.api.instance.Config;
 
+@Environment(EnvType.CLIENT)
 @FunctionalInterface
 public interface ConfigBuilder<T> {
-	ClientConfig.Builder build(T defaultInstance, T config, ClientConfig.Builder builder);
+	ClientConfig.Builder<T> build(Config<T> configInstance, T defaultInstance, T config, ClientConfig.Builder<T> builder);
 }

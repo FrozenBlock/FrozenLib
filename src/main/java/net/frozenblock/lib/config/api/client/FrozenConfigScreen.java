@@ -19,6 +19,7 @@
 package net.frozenblock.lib.config.api.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.frozenblock.lib.config.api.client.option.OptionList;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -27,17 +28,18 @@ import java.util.Optional;
 
 public class FrozenConfigScreen extends Screen {
 	private final Screen parent;
-	public final ClientConfig config;
+	public final ClientConfig<?> config;
 	private final Optional<ResourceLocation> backgroundTexture;
 
 	public Button cancelButton;
 	public Button saveButton;
+	public OptionList optionList;
 
-	public FrozenConfigScreen(ClientConfig config, Screen parent) {
+	public FrozenConfigScreen(ClientConfig<?> config, Screen parent) {
 		this(config, parent, Optional.empty());
 	}
 
-	public FrozenConfigScreen(ClientConfig config, Screen parent, Optional<ResourceLocation> backgroundTexture) {
+	public FrozenConfigScreen(ClientConfig<?> config, Screen parent, Optional<ResourceLocation> backgroundTexture) {
 		super(config.title());
 		this.config = config;
 		this.parent = parent;
@@ -69,8 +71,20 @@ public class FrozenConfigScreen extends Screen {
 				}
 		);
 
-		addRenderableWidget(this.cancelButton);
-		addRenderableWidget(this.saveButton);
+		this.optionList = new OptionList(
+				this.config.config(),
+				this.minecraft,
+				this.width,
+				this.height,
+				32,
+				this.height - 32,
+				25
+		);
+
+		this.addRenderableWidget(this.cancelButton);
+		this.addRenderableWidget(this.saveButton);
+
+		this.addWidget(this.optionList);
 
 		this.config.init().accept(this);
 	}
@@ -83,6 +97,7 @@ public class FrozenConfigScreen extends Screen {
 	}
 
 	protected final boolean quit() {
+		assert this.minecraft != null;
 		this.minecraft.setScreen(this.parent);
 		return true;
 	}
