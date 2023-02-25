@@ -64,26 +64,26 @@ public final class Option<T> {
 	final Component caption;
 	T value;
 
-	public static Option<Boolean> createBoolean(String key, boolean initialValue, Consumer<Boolean> onValueUpdate) {
-		return createBoolean(key, noTooltip(), initialValue, onValueUpdate);
+	public static Option<Boolean> createBoolean(Component caption, boolean initialValue, Consumer<Boolean> onValueUpdate) {
+		return createBoolean(caption, noTooltip(), initialValue, onValueUpdate);
 	}
 
-	public static Option<Boolean> createBoolean(String key, boolean initialValue) {
-		return createBoolean(key, noTooltip(), initialValue);
+	public static Option<Boolean> createBoolean(Component caption, boolean initialValue) {
+		return createBoolean(caption, noTooltip(), initialValue);
 	}
 
-	public static Option<Boolean> createBoolean(String key, OptionInstance.TooltipSupplier<Boolean> tooltip, boolean initialValue) {
-		return createBoolean(key, tooltip, initialValue, value -> {
+	public static Option<Boolean> createBoolean(Component caption, OptionInstance.TooltipSupplier<Boolean> tooltip, boolean initialValue) {
+		return createBoolean(caption, tooltip, initialValue, value -> {
 		});
 	}
 
 	public static Option<Boolean> createBoolean(
-			String key, OptionInstance.TooltipSupplier<Boolean> tooltip, boolean initialValue, Consumer<Boolean> onValueUpdate
+			Component caption, OptionInstance.TooltipSupplier<Boolean> tooltip, boolean initialValue, Consumer<Boolean> onValueUpdate
 	) {
 		return new Option<>(
-				key,
+				caption,
 				tooltip,
-				(caption, value) -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF,
+				(caption1, value) -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF,
 				BOOLEAN_VALUES,
 				initialValue,
 				onValueUpdate
@@ -91,18 +91,18 @@ public final class Option<T> {
 	}
 
 	public Option(
-			String key,
+			Component caption,
 			OptionInstance.TooltipSupplier<T> tooltip,
 			CaptionBasedToString<T> textGetter,
 			ValueSet<T> values,
 			T initialValue,
 			Consumer<T> onValueUpdate
 	) {
-		this(key, tooltip, textGetter, values, values.codec(), initialValue, onValueUpdate);
+		this(caption, tooltip, textGetter, values, values.codec(), initialValue, onValueUpdate);
 	}
 
 	public Option(
-			String key,
+			Component caption,
 			OptionInstance.TooltipSupplier<T> tooltip,
 			CaptionBasedToString<T> textGetter,
 			ValueSet<T> values,
@@ -110,7 +110,7 @@ public final class Option<T> {
 			T initialValue,
 			Consumer<T> onValueUpdate
 	) {
-		this.caption = Component.translatable(key);
+		this.caption = caption;
 		this.tooltip = tooltip;
 		this.toString = value -> textGetter.toString(this.caption, value);
 		this.values = values;

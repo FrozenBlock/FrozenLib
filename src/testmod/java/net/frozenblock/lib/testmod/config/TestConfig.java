@@ -21,6 +21,8 @@ package net.frozenblock.lib.testmod.config;
 import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.config.api.client.ClientConfig;
+import net.frozenblock.lib.config.api.client.option.Option;
 import net.frozenblock.lib.config.api.entry.Exclude;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
@@ -29,6 +31,7 @@ import net.frozenblock.lib.config.api.instance.gson.GsonConfig;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.Vec3;
@@ -100,17 +103,18 @@ public class TestConfig {
 
 	@Environment(EnvType.CLIENT)
 	public Screen makeGui(Screen parent) {
-		return null;
-		/*return ClientConfig.makeBuilder()
+		return ClientConfig.makeBuilder()
 				.title(Component.literal("FrozenLib Testmod"))
 				.option(
-						this.testToggle,
-						OptionType.BUTTON,
-						Component.translatable("frozenlib_testmod.config.test_toggle"),
-						newValue -> this.testToggle = newValue
+						Option.createBoolean(
+								Component.literal("Test Toggle"),
+								Option.cachedConstantTooltip(Component.translatable("Test Toggle Tooltip")),
+								true,
+								newValue -> this.testToggle = newValue
+						)
 				)
 				.save(INSTANCE::save)
 				.build()
-				.makeScreen(parent);*/
+				.makeScreen(parent);
 	}
 }
