@@ -137,7 +137,6 @@ public final class Option<T> {
 
 	public void set(T value) {
 		this.value = this.values.validateValue(value).orElse(this.initialValue);
-		this.onValueUpdate.accept(this.value);
 	}
 
 	public ValueSet<T> values() {
