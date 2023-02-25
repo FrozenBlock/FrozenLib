@@ -133,7 +133,7 @@ public final class Option<T> {
 		return (optionText, value) -> value.getCaption();
 	}
 
-	protected static List<FormattedCharSequence> splitTooltip(Minecraft minecraft, Component tooltip) {
+	private static List<FormattedCharSequence> splitTooltip(Minecraft minecraft, Component tooltip) {
 		return minecraft.font.split(tooltip, TOOLTIP_WIDTH);
 	}
 

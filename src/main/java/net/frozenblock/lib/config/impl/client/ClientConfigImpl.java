@@ -48,6 +48,7 @@ public class ClientConfigImpl<T> implements ClientConfig<T> {
 	private final Consumer<FrozenConfigScreen> initializer;
 
 	public ClientConfigImpl(Config<T> config, Component title, Collection<Option<?>> options, Runnable onSave, Consumer<FrozenConfigScreen> initializer) {
+		assert config != null : "Config cannot be null";
 		this.config = config;
 		this.title = title;
 		this.options = ImmutableList.copyOf(options);
@@ -94,10 +95,8 @@ public class ClientConfigImpl<T> implements ClientConfig<T> {
 		private Runnable onSave = () -> {};
 		private Consumer<FrozenConfigScreen> initializer = screen -> {};
 
-		@Override
-		public Builder<T> config(@NotNull Config<T> config) {
+		public BuilderImpl(Config<T> config) {
 			this.config = config;
-			return this;
 		}
 
 		@Override

@@ -103,7 +103,7 @@ public class TestConfig {
 
 	@Environment(EnvType.CLIENT)
 	public Screen makeGui(Screen parent) {
-		return ClientConfig.makeBuilder()
+		return ClientConfig.makeBuilder(INSTANCE)
 				.title(Component.literal("FrozenLib Testmod"))
 				.option(
 						Option.createBoolean(

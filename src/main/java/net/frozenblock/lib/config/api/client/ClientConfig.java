@@ -46,18 +46,16 @@ public interface ClientConfig<T> {
 	@Environment(EnvType.CLIENT)
 	Screen makeScreen(@Nullable Screen parent);
 
-	static <T> Builder<T> makeBuilder() {
-		return new ClientConfigImpl.BuilderImpl<>();
+	static <T> Builder<T> makeBuilder(Config<T> config) {
+		return new ClientConfigImpl.BuilderImpl<>(config);
 	}
 
 	@SuppressWarnings("unchecked")
 	static <T> ClientConfig<T> make(Config<T> config, ConfigBuilder<T> builder) {
-		return builder.build(config, config.defaultInstance(), config.config(), (Builder<T>) makeBuilder().save(config::save)).build();
+		return builder.build(config, config.defaultInstance(), config.config(), (Builder<T>) makeBuilder(config).save(config::save)).build();
 	}
 
 	interface Builder<T> {
-
-		Builder<T> config(@NotNull Config<T> config);
 
 		Builder<T> title(@NotNull Component title);
 
