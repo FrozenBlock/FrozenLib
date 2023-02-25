@@ -71,9 +71,15 @@ public class ClientConfigImpl<T> implements ClientConfig<T> {
 		return List.copyOf(this.options);
 	}
 
+	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Override
 	public Runnable save() {
-		return this.onSave;
+		return () -> {
+			for (Option<?> option : this.options()) {
+				((Consumer) option.onValueUpdate()).accept(option.get());
+			}
+			this.onSave.run();
+		};
 	}
 
 	@Override

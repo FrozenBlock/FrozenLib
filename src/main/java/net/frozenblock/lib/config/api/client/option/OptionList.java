@@ -103,6 +103,10 @@ public class OptionList extends ContainerObjectSelectionList<OptionList.Entry> {
 			});
 		}
 
+		public List<Option<?>> options() {
+			return this.options.keySet().stream().toList();
+		}
+
 		@Override
 		public List<? extends GuiEventListener> children() {
 			return this.children;

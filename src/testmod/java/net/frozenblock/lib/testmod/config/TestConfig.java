@@ -113,6 +113,27 @@ public class TestConfig {
 								newValue -> this.testToggle = newValue
 						)
 				)
+				.option(
+						new Option<>(
+								Component.literal("Test Double"),
+								Option.cachedConstantTooltip(Component.translatable("Test Double Tooltip")),
+								Option::percentValueLabel,
+								new Option.IntRange(0, 100).xmap(val -> (double) val, Double::intValue),
+								Codec.doubleRange(0.0, 1.0),
+								this.testDouble,
+								value -> this.testDouble = value
+						)
+				)
+				.option(
+						Option.createIntSlider(
+								Component.literal("Test Int"),
+								Option.cachedConstantTooltip(Component.translatable("Test Int Tooltip")),
+								0,
+								100,
+								this.testInt,
+								value -> this.testInt = value
+						)
+				)
 				.save(INSTANCE::save)
 				.build()
 				.makeScreen(parent);

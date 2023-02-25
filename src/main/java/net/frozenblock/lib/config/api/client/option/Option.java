@@ -64,32 +64,6 @@ public final class Option<T> {
 	final Component caption;
 	T value;
 
-	public static Option<Boolean> createBoolean(Component caption, boolean initialValue, Consumer<Boolean> onValueUpdate) {
-		return createBoolean(caption, noTooltip(), initialValue, onValueUpdate);
-	}
-
-	public static Option<Boolean> createBoolean(Component caption, boolean initialValue) {
-		return createBoolean(caption, noTooltip(), initialValue);
-	}
-
-	public static Option<Boolean> createBoolean(Component caption, OptionInstance.TooltipSupplier<Boolean> tooltip, boolean initialValue) {
-		return createBoolean(caption, tooltip, initialValue, value -> {
-		});
-	}
-
-	public static Option<Boolean> createBoolean(
-			Component caption, OptionInstance.TooltipSupplier<Boolean> tooltip, boolean initialValue, Consumer<Boolean> onValueUpdate
-	) {
-		return new Option<>(
-				caption,
-				tooltip,
-				(caption1, value) -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF,
-				BOOLEAN_VALUES,
-				initialValue,
-				onValueUpdate
-		);
-	}
-
 	public Option(
 			Component caption,
 			OptionInstance.TooltipSupplier<T> tooltip,
@@ -118,6 +92,14 @@ public final class Option<T> {
 		this.initialValue = initialValue;
 		this.onValueUpdate = onValueUpdate;
 		this.value = this.initialValue;
+	}
+
+	public static Component pixelValueLabel(Component optionText, int value) {
+		return Component.translatable("options.pixel_value", optionText, value);
+	}
+
+	public static Component percentValueLabel(Component optionText, double value) {
+		return Component.translatable("options.percent_value", optionText, (int)(value * 100.0));
 	}
 
 	public static <T> OptionInstance.TooltipSupplier<T> noTooltip() {
@@ -160,6 +142,10 @@ public final class Option<T> {
 
 	public ValueSet<T> values() {
 		return this.values;
+	}
+
+	public Consumer<T> onValueUpdate() {
+		return this.onValueUpdate;
 	}
 
 	public record AltEnum<T>(
@@ -231,7 +217,6 @@ public final class Option<T> {
 					.withInitialValue(option.value)
 					.create(x, y, width, 20, option.caption, (button, value) -> {
 						this.valueSetter().set(option, value);
-						config.save();
 					});
 		}
 
@@ -346,7 +331,6 @@ public final class Option<T> {
 		@Override
 		protected void applyValue() {
 			this.option.set(this.values.fromSliderValue(this.value));
-			this.config.save();
 		}
 
 		@Override
@@ -432,5 +416,45 @@ public final class Option<T> {
 		Optional<T> validateValue(T value);
 
 		Codec<T> codec();
+	}
+
+	public static Option<Boolean> createBoolean(Component caption, boolean initialValue, Consumer<Boolean> onValueUpdate) {
+		return createBoolean(caption, noTooltip(), initialValue, onValueUpdate);
+	}
+
+	public static Option<Boolean> createBoolean(Component caption, boolean initialValue) {
+		return createBoolean(caption, noTooltip(), initialValue);
+	}
+
+	public static Option<Boolean> createBoolean(Component caption, OptionInstance.TooltipSupplier<Boolean> tooltip, boolean initialValue) {
+		return createBoolean(caption, tooltip, initialValue, value -> {
+		});
+	}
+
+	public static Option<Boolean> createBoolean(
+			Component caption, OptionInstance.TooltipSupplier<Boolean> tooltip, boolean initialValue, Consumer<Boolean> onValueUpdate
+	) {
+		return new Option<>(
+				caption,
+				tooltip,
+				(caption1, value) -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF,
+				BOOLEAN_VALUES,
+				initialValue,
+				onValueUpdate
+		);
+	}
+
+	public static Option<Integer> createIntSlider(
+			Component caption, OptionInstance.TooltipSupplier<Integer> tooltip, int min, int max, int initialValue, Consumer<Integer> onValueUpdate
+	) {
+		return new Option<>(
+				caption,
+				tooltip,
+				Option::percentValueLabel,
+				new Option.IntRange(0, 100),
+				Codec.intRange(min, max),
+				initialValue,
+				onValueUpdate
+		);
 	}
 }
