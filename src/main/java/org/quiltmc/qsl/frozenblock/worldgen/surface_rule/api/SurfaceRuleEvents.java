@@ -19,6 +19,7 @@
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.api;
 
 import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.resources.ResourceLocation;
@@ -34,11 +35,11 @@ import org.jetbrains.annotations.NotNull;
  */
 public final class SurfaceRuleEvents {
     /**
-     * Represents the event phase named {@code quilt:remove} for the modification events for which removals may happen.
+     * Represents the event phase named {@code frozenlib:remove} for the modification events for which removals may happen.
      * <p>
      * This phase always happen after the {@link Event#DEFAULT_PHASE default phase}.
      */
-    public static final ResourceLocation REMOVE_PHASE = new ResourceLocation("frozenblock_quilt", "remove");
+    public static final ResourceLocation REMOVE_PHASE = FrozenMain.id("remove");
 
     /**
      * An event indicating that the surface rules for the Overworld dimension may get modified by mods, allowing the injection of modded surface rules.

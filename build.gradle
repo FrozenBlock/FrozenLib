@@ -155,6 +155,7 @@ dependencies {
 		}
 	})
     modImplementation("net.fabricmc:fabric-loader:${loader_version}")
+	testImplementation("net.fabricmc:fabric-loader-junit:${loader_version}")
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
 
@@ -197,6 +198,10 @@ dependencies {
         modRuntimeOnly("maven.modrinth:memoryleakfix:${memoryleakfix_version}")
         modRuntimeOnly("maven.modrinth:no-unused-chunks:${no_unused_chunks_version}")
     }
+}
+
+test {
+	useJUnitPlatform()
 }
 
 processResources {
