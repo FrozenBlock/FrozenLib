@@ -25,24 +25,30 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 public class ItemBlockStateTagUtils {
 
-	public static int getIntProperty(ItemStack stack, String property) {
+	public static int getIntProperty(ItemStack stack, IntegerProperty property, int orElse) {
 		if (stack.getTag() != null) {
 			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
 			if (stateTag != null) {
-				return Integer.parseInt(stateTag.getString(property));
+				String stringValue = stateTag.getString(property.getName());
+				if (stateTag.contains(stringValue)) {
+					return Integer.parseInt(stateTag.getString(stringValue));
+				}
 			}
 		}
-		return 0;
+		return orElse;
 	}
 
-	public static boolean getBoolProperty(ItemStack stack, String property) {
+	public static boolean getBoolProperty(ItemStack stack, BooleanProperty property, boolean orElse) {
 		if (stack.getTag() != null) {
 			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
 			if (stateTag != null) {
-				return stateTag.getString(property).equals("true");
+				String stringValue = stateTag.getString(property.getName());
+				if (stateTag.contains(stringValue)) {
+					return stateTag.getString(stringValue).equals("true");
+				}
 			}
 		}
-		return false;
+		return orElse;
 	}
 
 	public static void setIntProperty(ItemStack stack, IntegerProperty property, int value) {
