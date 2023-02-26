@@ -29,7 +29,7 @@ public class ItemBlockStateTagUtils {
 		if (stack.getTag() != null) {
 			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
 			if (stateTag != null) {
-				String stringValue = stateTag.getString(property.getName());
+				String stringValue = property.getName();
 				if (stateTag.contains(stringValue)) {
 					return Integer.parseInt(stateTag.getString(stringValue));
 				}
@@ -42,7 +42,7 @@ public class ItemBlockStateTagUtils {
 		if (stack.getTag() != null) {
 			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
 			if (stateTag != null) {
-				String stringValue = stateTag.getString(property.getName());
+				String stringValue = property.getName();
 				if (stateTag.contains(stringValue)) {
 					return stateTag.getString(stringValue).equals("true");
 				}
