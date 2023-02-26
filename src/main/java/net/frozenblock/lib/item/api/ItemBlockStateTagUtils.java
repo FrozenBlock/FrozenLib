@@ -21,21 +21,22 @@ package net.frozenblock.lib.item.api;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.level.block.state.properties.IntegerProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import org.jetbrains.annotations.NotNull;
 
 public class ItemBlockStateTagUtils {
 
-	public static int getIntProperty(ItemStack stack, IntegerProperty property, int orElse) {
+	public static <T extends Comparable<T>> T getProperty(ItemStack stack, Property<T> property, T defaultValue) {
 		if (stack.getTag() != null) {
 			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
 			if (stateTag != null) {
 				String stringValue = property.getName();
 				if (stateTag.contains(stringValue)) {
-					return Integer.parseInt(stateTag.getString(stringValue));
+					return property.getValue(stateTag.getString(stringValue)).get();
 				}
 			}
 		}
-		return orElse;
+		return defaultValue;
 	}
 
 	public static boolean getBoolProperty(ItemStack stack, BooleanProperty property, boolean orElse) {
@@ -51,14 +52,20 @@ public class ItemBlockStateTagUtils {
 		return orElse;
 	}
 
-	public static void setIntProperty(ItemStack stack, IntegerProperty property, int value) {
-		CompoundTag stateTag = stack.getOrCreateTag().getCompound("BlockStateTag");
+	public static <T extends Comparable<T>> void setProperty(ItemStack stack, Property<T> property, T value) {
+		CompoundTag stateTag = getOrCreateBlockStateTag(stack.getOrCreateTag());
 		stateTag.putString(property.getName(), property.getName(value));
 	}
 
-	public static void setBoolProperty(ItemStack stack, BooleanProperty property, boolean value) {
-		CompoundTag stateTag = stack.getOrCreateTag().getCompound("BlockStateTag");
-		stateTag.putString(property.getName(), property.getName(value));
+	private static CompoundTag getOrCreateBlockStateTag(@NotNull CompoundTag compoundTag) {
+		CompoundTag blockStateTag;
+		if (compoundTag.contains("BlockStateTag", 10)) {
+			blockStateTag = compoundTag.getCompound("BlockStateTag");
+		} else {
+			blockStateTag = new CompoundTag();
+			compoundTag.put("BlockStateTag", blockStateTag);
+		}
+		return blockStateTag;
 	}
 
 }
