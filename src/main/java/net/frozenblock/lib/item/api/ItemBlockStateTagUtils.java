@@ -20,6 +20,8 @@ package net.frozenblock.lib.item.api;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 
 public class ItemBlockStateTagUtils {
 
@@ -41,6 +43,16 @@ public class ItemBlockStateTagUtils {
 			}
 		}
 		return false;
+	}
+
+	public static void setIntProperty(ItemStack stack, IntegerProperty property, int value) {
+		CompoundTag stateTag = stack.getOrCreateTag().getCompound("BlockStateTag");
+		stateTag.putString(property.getName(), property.getName(value));
+	}
+
+	public static void setBoolProperty(ItemStack stack, BooleanProperty property, boolean value) {
+		CompoundTag stateTag = stack.getOrCreateTag().getCompound("BlockStateTag");
+		stateTag.putString(property.getName(), property.getName(value));
 	}
 
 }
