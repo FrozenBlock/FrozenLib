@@ -29,7 +29,9 @@ public class ModIntegrationSupplier<T extends ModIntegration> {
 	private final T unloadedModIntegration;
 
 	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, String modID) {
-		this(modIntegrationSupplier, () -> (T) new EmptyModIntegration(modID), modID);
+		this.modID = modID;
+		this.optionalIntegration = this.modLoaded() ? Optional.of(modIntegrationSupplier.get()) : Optional.empty();
+		this.unloadedModIntegration = (T) new EmptyModIntegration(modID);
 	}
 
 	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, Supplier<T> unloadedModIntegrationSupplier, String modID) {

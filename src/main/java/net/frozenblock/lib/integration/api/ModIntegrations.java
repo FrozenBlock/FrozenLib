@@ -38,7 +38,7 @@ public final class ModIntegrations {
 	 * @param modID      The id of the mod being integrated
      * @return A {@link ModIntegrationSupplier}.
      */
-    public static <T extends ModIntegration> ModIntegrationSupplier<T> register(Supplier<T> integration, String srcModID, String modID) {
+    public static ModIntegrationSupplier<? extends ModIntegration> register(Supplier<? extends ModIntegration> integration, String srcModID, String modID) {
         return Registry.register(FrozenRegistry.MOD_INTEGRATION, new ResourceLocation(srcModID, modID), new ModIntegrationSupplier<>(integration, modID));
     }
 
