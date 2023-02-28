@@ -56,5 +56,5 @@ public abstract class Config<T> {
 	}
 
 	public abstract void save();
-	public abstract void load();
+	public abstract boolean load();
 }
