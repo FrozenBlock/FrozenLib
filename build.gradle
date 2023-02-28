@@ -340,7 +340,7 @@ artifacts {
     dev(jar)
 }
 
-if (!project.release) {
+if (!(project.release || System.getenv("GITHUB_ACTIONS") == "true")) {
 	build.dependsOn(applyLicenses)
 }
 
