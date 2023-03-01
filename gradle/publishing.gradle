@@ -10,7 +10,7 @@ buildscript {
 import java.nio.file.Files
 
 ext {
-	Properties properties = new Properties()
+	def properties = new Properties()
 	properties.load(new FileInputStream(file("gradle/publishing.properties")))
 	properties.forEach((a, b) -> set(a, b))
 
@@ -37,9 +37,9 @@ static String getChangelog(File changelogFile) {
 }
 
 curseforge {
-	String token = System.getenv("CURSEFORGE_TOKEN")
+	def token = System.getenv("CURSEFORGE_TOKEN")
 	apiKey = token == null || token.isEmpty() ? "unset" : token
-	String gameVersion = curseforge_minecraft_version != "null" ? curseforge_minecraft_version : minecraft_version
+	def gameVersion = curseforge_minecraft_version != "null" ? curseforge_minecraft_version : minecraft_version
 	project {
 		id = curseforge_id
 		changelog = changelog_text
@@ -95,7 +95,7 @@ def getBranch() {
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
 
-tasks.register('github') {
+tasks.register("github") {
 	dependsOn remapJar
 	def env = System.getenv()
 	onlyIf {
@@ -119,7 +119,7 @@ tasks.register('github') {
 	}
 }
 
-tasks.register('publishMod') {
+tasks.register("publishMod") {
 	dependsOn(github)
 	dependsOn(tasks.getByName("curseforge"))
 	dependsOn(tasks.getByName("modrinth"))

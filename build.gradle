@@ -18,13 +18,14 @@ plugins {
     id("eclipse")
     id("idea")
     id("java-library")
+    id("java")
 }
 
 project.ext.release = findProperty("releaseType") == "stable"
 
-setArchivesBaseName(project.archives_base_name)
-setVersion(getVersion())
-setGroup(project.maven_group)
+archivesBaseName = project.archives_base_name
+version = getVersion()
+group = project.maven_group
 
 sourceSets {
     testmod {
@@ -34,7 +35,7 @@ sourceSets {
 }
 
 loom {
-	setRuntimeOnlyLog4j(true)
+    runtimeOnlyLog4j = true
 
     runs {
         testmodClient {
@@ -52,13 +53,13 @@ loom {
     }
 
     mixin {
-        setDefaultRefmapName("mixins.frozenlib.refmap.json")
+        defaultRefmapName = "mixins.frozenlib.refmap.json"
     }
 
-    setAccessWidenerPath(file("src/main/resources/frozenlib.accesswidener"))
+    accessWidenerPath = file("src/main/resources/frozenlib.accesswidener")
 	interfaceInjection {
 		// When enabled injected interfaces from dependecies will be applied.
-		setEnableDependencyInterfaceInjection(true)
+		enableDependencyInterfaceInjection = true
 	}
 }
 
