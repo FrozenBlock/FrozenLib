@@ -104,7 +104,7 @@ public abstract class CreateWorldScreenMixin {
 
 	@Dynamic
 	@Inject(
-			method = {"m_fiszvdug", "method_45681", "lambda$applyNewPackConfig$15"},
+			method = {"m_spzhhpkv", "method_45681", "lambda$applyNewPackConfig$13"},
 			at = @At("HEAD"),
 			require = 1
 	)
@@ -114,7 +114,7 @@ public abstract class CreateWorldScreenMixin {
 	}
 
 	@Inject(
-			method = "m_vjzwlndv(Ljava/util/function/Consumer;Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;",
+			method = "m_fiszvdug(Ljava/util/function/Consumer;Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;",
 			at = @At(
 					value = "INVOKE",
 					target = 	"Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
