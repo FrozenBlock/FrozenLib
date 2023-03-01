@@ -4,4 +4,5 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed a crash when the entity texture override registry isn't loaded
+- Added ItemBlockStateTagUtils
+- Improved config reading and writing
