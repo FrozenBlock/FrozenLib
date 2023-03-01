@@ -18,14 +18,12 @@
 
 package net.frozenblock.lib.config.api.registry;
 
-import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
