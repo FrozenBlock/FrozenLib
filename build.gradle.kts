@@ -214,10 +214,10 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
 
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+    modCompileOnly("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
@@ -226,7 +226,7 @@ dependencies {
 	modCompileOnly("curse.maven:terrablender-fabric-565956:4205731")
 
     //testmodImplementation(sourceSets.main.get().output)
-
+/*
     // only affects runClient, does not affect gradlew build. add -PuseThirdPartyMods=false to not use these
     if (findProperty("useThirdPartyMods") != "false") {
         modRuntimeOnly("maven.modrinth:ferrite-core:${ferritecore_version}")
@@ -251,7 +251,7 @@ dependencies {
         //modRuntimeOnly("maven.modrinth:iris:1.19.x-v1.2.5")
         modRuntimeOnly("maven.modrinth:memoryleakfix:${memoryleakfix_version}")
         modRuntimeOnly("maven.modrinth:no-unused-chunks:${no_unused_chunks_version}")
-    }
+    }*/
 }
 
 quiltflower {
