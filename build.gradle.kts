@@ -354,9 +354,12 @@ public val dev by configurations.creating {
     isCanBeConsumed = true
 }
 
-artifacts {
-    archives(remapJar)
-    archives(sourcesJar)
+tasks {
+    artifacts {
+        archives(remapJar)
+        archives(sourcesJar)
+        add("dev", jar)
+    }
 }
 
 if (!(release || System.getenv("GITHUB_ACTIONS") == "true")) {
