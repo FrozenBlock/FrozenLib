@@ -68,7 +68,7 @@ base {
 version = getVersion()
 group = maven_group
 
-public val release = findProperty("releaseType") == "stable"
+public val release = findProperty("releaseType")?.equals("stable")
 
 public val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
@@ -195,6 +195,7 @@ repositories {
     flatDir {
         dirs("libs")
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -225,7 +226,7 @@ dependencies {
 	// TerraBlender
 	modCompileOnly("curse.maven:terrablender-fabric-565956:4205731")
 
-    //testmodImplementation(sourceSets.main.get().output)
+    "testmodImplementation"(sourceSets.main.get().output)
 /*
     // only affects runClient, does not affect gradlew build. add -PuseThirdPartyMods=false to not use these
     if (findProperty("useThirdPartyMods") != "false") {
@@ -343,7 +344,7 @@ artifacts {
 fun getVersion(): String {
     var version = "$mod_version-$mod_loader+$minecraft_version"
 
-    if (!release) {
+    if (release != null && !release) {
         version += "-unstable"
     }
 
@@ -363,7 +364,7 @@ tasks {
     }
 }
 
-if (!(release || System.getenv("GITHUB_ACTIONS") == "true")) {
+if (!(release == true || System.getenv("GITHUB_ACTIONS") == "true")) {
 	build.dependsOn(applyLicenses)
 }
 

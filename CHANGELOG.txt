@@ -7,3 +7,4 @@ Put changelog here:
 - Ported to 1.19.4-pre3
 - Added ItemBlockStateTagUtils
 - Improved config reading and writing
+- Internal changes
