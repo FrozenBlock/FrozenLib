@@ -6,3 +6,4 @@ Put changelog here:
 -----------------
 - Added ItemBlockStateTagUtils
 - Improved config reading and writing
+- Internal changes
