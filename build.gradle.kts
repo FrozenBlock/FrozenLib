@@ -4,6 +4,7 @@ import com.matthewprenger.cursegradle.CurseRelation
 import java.io.FileInputStream
 import java.nio.file.Files
 import java.util.Properties
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
 	repositories {
@@ -26,6 +27,7 @@ plugins {
     idea
     `java-library`
     java
+    kotlin("jvm") version "1.8.10"
 }
 
 public val minecraft_version: String by project
@@ -195,6 +197,7 @@ repositories {
     flatDir {
         dirs("libs")
     }
+    mavenCentral()
 }
 
 dependencies {
@@ -252,6 +255,7 @@ dependencies {
         modRuntimeOnly("maven.modrinth:memoryleakfix:${memoryleakfix_version}")
         modRuntimeOnly("maven.modrinth:no-unused-chunks:${no_unused_chunks_version}")
     }
+    implementation(kotlin("stdlib-jdk8"))
 }
 
 quiltflower {
@@ -306,6 +310,16 @@ tasks {
         maxParallelForks = Runtime.getRuntime().availableProcessors().div(2)
     }
 }
+
+val compileKotlin: KotlinCompile by tasks
+compileKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+}
+val compileTestKotlin: KotlinCompile by tasks
+compileTestKotlin.kotlinOptions {
+    jvmTarget = "1.8"
+}
+
 
 public val build: Task by tasks
 public val applyLicenses: Task by tasks
