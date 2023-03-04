@@ -4,7 +4,6 @@ import com.matthewprenger.cursegradle.CurseRelation
 import java.io.FileInputStream
 import java.nio.file.Files
 import java.util.Properties
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 buildscript {
 	repositories {
@@ -27,7 +26,6 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version "1.8.10"
 }
 
 public val minecraft_version: String by project
@@ -70,7 +68,7 @@ base {
 version = getVersion()
 group = maven_group
 
-public val release = findProperty("releaseType") == "stable"
+public val release = findProperty("releaseType")?.equals("stable")
 
 public val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
@@ -228,7 +226,7 @@ dependencies {
 	// TerraBlender
 	modCompileOnly("curse.maven:terrablender-fabric-565956:4205731")
 
-    //testmodImplementation(sourceSets.main.get().output)
+    "testmodImplementation"(sourceSets.main.get().output)
 
     // only affects runClient, does not affect gradlew build. add -PuseThirdPartyMods=false to not use these
     if (findProperty("useThirdPartyMods") != "false") {
@@ -255,7 +253,6 @@ dependencies {
         modRuntimeOnly("maven.modrinth:memoryleakfix:${memoryleakfix_version}")
         modRuntimeOnly("maven.modrinth:no-unused-chunks:${no_unused_chunks_version}")
     }
-    implementation(kotlin("stdlib-jdk8"))
 }
 
 quiltflower {
@@ -311,16 +308,6 @@ tasks {
     }
 }
 
-val compileKotlin: KotlinCompile by tasks
-compileKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-}
-val compileTestKotlin: KotlinCompile by tasks
-compileTestKotlin.kotlinOptions {
-    jvmTarget = "1.8"
-}
-
-
 public val build: Task by tasks
 public val applyLicenses: Task by tasks
 public val test: Task by tasks
@@ -356,7 +343,7 @@ artifacts {
 fun getVersion(): String {
     var version = "$mod_version-$mod_loader+$minecraft_version"
 
-    if (!release) {
+    if (release != null && !release) {
         version += "-unstable"
     }
 
@@ -376,7 +363,7 @@ tasks {
     }
 }
 
-if (!(release || System.getenv("GITHUB_ACTIONS") == "true")) {
+if (!(release == true || System.getenv("GITHUB_ACTIONS") == "true")) {
 	build.dependsOn(applyLicenses)
 }
 
