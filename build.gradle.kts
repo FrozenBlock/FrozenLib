@@ -417,79 +417,75 @@ fun getBranch(): String {
     return branch.substring(branch.lastIndexOf("/") + 1)
 }
 
-tasks {
-    curseforge {
-        val token = System.getenv("CURSEFORGE_TOKEN")
-        apiKey = { if (token == null || token.isEmpty()) "unset" else token }
-        val gameVersion = { if (curseforge_minecraft_version != "null") curseforge_minecraft_version else minecraft_version }
-        project(closureOf<CurseProject> {
-            id = curseforge_id
-            changelog = changelog_text
-            releaseType = release_type
-            addGameVersion("Fabric")
-            addGameVersion("Quilt")
-            addGameVersion(gameVersion)
-            relations(closureOf<CurseRelation> {
-                requiredDependency("fabric-api")
-                optionalDependency("cloth-config")
-            })
-            remapJar.get()
-            mainArtifact(file("build/libs/${remapJar.get().archiveBaseName.get()}-${version}.jar"), closureOf<CurseArtifact> {
-                displayName = display_name
-            })
-            afterEvaluate {
-                uploadTask.dependsOn(remapJar)
-            }
+curseforge {
+    val token = System.getenv("CURSEFORGE_TOKEN")
+    apiKey = if (token == null || token.isEmpty()) "unset" else token
+    val gameVersion = if (curseforge_minecraft_version != "null") curseforge_minecraft_version else minecraft_version
+    project(closureOf<CurseProject> {
+        id = curseforge_id
+        changelog = changelog_text
+        releaseType = release_type
+        addGameVersion("Fabric")
+        addGameVersion("Quilt")
+        addGameVersion(gameVersion)
+        relations(closureOf<CurseRelation> {
+            requiredDependency("fabric-api")
+            optionalDependency("cloth-config")
         })
-        curseGradleOptions.forgeGradleIntegration = false
-    }
-
-    modrinth {
-        token.set(System.getenv("MODRINTH_TOKEN"))
-        projectId.set(modrinth_id)
-        versionNumber.set(modrinth_version)
-        versionName.set(display_name)
-        versionType.set(release_type)
-        changelog.set(changelog_text)
-        uploadFile.set(file("build/libs/${remapJar.get().archiveBaseName.get()}-${version}.jar"))
-        gameVersions.set(listOf(minecraft_version))
-        loaders.set(listOf("fabric", "quilt"))
-        dependencies {
-            required.project("fabric-api")
-            optional.project("cloth-config")
+        mainArtifact(file("build/libs/${tasks.remapJar.get().archiveBaseName.get()}-${version}.jar"), closureOf<CurseArtifact> {
+            displayName = display_name
+        })
+        afterEvaluate {
+            uploadTask.dependsOn(remapJar)
         }
+    })
+    curseGradleOptions.forgeGradleIntegration = false
+}
+
+modrinth {
+    token.set(System.getenv("MODRINTH_TOKEN"))
+    projectId.set(modrinth_id)
+    versionNumber.set(modrinth_version)
+    versionName.set(display_name)
+    versionType.set(release_type)
+    changelog.set(changelog_text)
+    uploadFile.set(file("build/libs/${tasks.remapJar.get().archiveBaseName.get()}-${version}.jar"))
+    gameVersions.set(listOf(minecraft_version))
+    loaders.set(listOf("fabric", "quilt"))
+    dependencies {
+        required.project("fabric-api")
+        optional.project("cloth-config")
+    }
+}
+
+val github by tasks.register("github") {
+    dependsOn(remapJar)
+    val env = System.getenv()
+    val token = env["GITHUB_TOKEN"]
+    val repoVar = env["GITHUB_REPOSITORY"]
+    onlyIf {
+        token != null && token != ""
     }
 
+    doLast {
+        val github = org.kohsuke.github.GitHub.connectUsingOAuth(token)
+        val repository = github.getRepository(repoVar)
 
-    val github = register("github") {
-        dependsOn(remapJar)
-        val env = System.getenv()
-        val token = env["GITHUB_TOKEN"]
-        val repoVar = env["GITHUB_REPOSITORY"]
-        onlyIf {
-            token != null && token != ""
-        }
+        val releaseBuilder = org.kohsuke.github.GHReleaseBuilder(repository, makeModrinthVersion(mod_version))
+        releaseBuilder.name(makeName(mod_version))
+        releaseBuilder.body(changelog_text)
+        releaseBuilder.commitish(getBranch())
+        releaseBuilder.prerelease(release_type != "release")
 
-        doLast {
-            val github = org.kohsuke.github.GitHub.connectUsingOAuth(token)
-            val repository = github.getRepository(repoVar)
-
-            val releaseBuilder = org.kohsuke.github.GHReleaseBuilder(repository, makeModrinthVersion(mod_version))
-            releaseBuilder.name(makeName(mod_version))
-            releaseBuilder.body(changelog_text)
-            releaseBuilder.commitish(getBranch())
-            releaseBuilder.prerelease(release_type != "release")
-
-            val ghRelease = releaseBuilder.create()
-            ghRelease.uploadAsset(remapJar.get().archiveFile.get().getAsFile(), "application/java-archive")
-            ghRelease.uploadAsset(remapSourcesJar.get().archiveFile.get().getAsFile(), "application/java-archive")
-            ghRelease.uploadAsset(javadocJar.outputs.files.singleFile, "application/java-archive")
-        }
+        val ghRelease = releaseBuilder.create()
+        ghRelease.uploadAsset(tasks.remapJar.get().archiveFile.get().asFile, "application/java-archive")
+        ghRelease.uploadAsset(tasks.remapSourcesJar.get().archiveFile.get().asFile, "application/java-archive")
+        ghRelease.uploadAsset(javadocJar.outputs.files.singleFile, "application/java-archive")
     }
+}
 
-    register("publishMod") {
-        dependsOn(github)
-        dependsOn(curseforge)
-        dependsOn(modrinth)
-    }
+val publishMod by tasks.register("publishMod") {
+    dependsOn(github)
+    dependsOn(tasks.curseforge)
+    dependsOn(tasks.modrinth)
 }
