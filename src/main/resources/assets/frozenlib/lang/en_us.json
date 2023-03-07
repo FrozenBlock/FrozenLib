@@ -14,5 +14,8 @@
   "option.frozenlib.save_item_cooldowns": "Save Item Cooldowns",
   "option.frozenlib.save_item_cooldowns.false": "§cOFF",
   "option.frozenlib.save_item_cooldowns.true": "§aON",
-  "tooltip.frozenlib.save_item_cooldowns": "Whether or not item cooldowns will save instead of being\ncleared upon switching dimensions or rejoining a world."
+  "tooltip.frozenlib.save_item_cooldowns": "Whether or not item cooldowns will save instead of being\ncleared upon switching dimensions or rejoining a world.",
+
+  "commands.wind.success": "Set wind to %s, %s, %s.",
+  "commands.wind.toggle.success": "Toggled wind override to: %s."
 }
