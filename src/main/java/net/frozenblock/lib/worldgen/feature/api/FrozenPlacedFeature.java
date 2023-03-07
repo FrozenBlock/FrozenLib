@@ -12,9 +12,9 @@ import java.util.Optional;
 public class FrozenPlacedFeature {
 
 	private final ResourceKey<ConfiguredFeature<?, ?>> configuredKey;
-
 	private final ResourceKey<PlacedFeature> key;
 
+	private Holder<ConfiguredFeature<?, ?>> configuredHolder;
 	private Holder<PlacedFeature> holder;
 
 	public FrozenPlacedFeature(ResourceLocation configuredKey, ResourceLocation key) {
@@ -28,6 +28,17 @@ public class FrozenPlacedFeature {
 
 	public ResourceKey<PlacedFeature> getKey() {
 		return key;
+	}
+
+	public Holder<@Nullable ConfiguredFeature<?, ?>> getConfiguredHolder() {
+		if (this.configuredHolder == null)
+			return Holder.direct(null);
+		return this.configuredHolder;
+	}
+
+	public FrozenPlacedFeature setConfiguredHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder) {
+		this.configuredHolder = configuredHolder;
+		return this;
 	}
 
 	public Holder<@Nullable PlacedFeature> getHolder() {
