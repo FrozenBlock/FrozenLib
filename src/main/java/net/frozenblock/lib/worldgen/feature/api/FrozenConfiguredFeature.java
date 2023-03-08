@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
+import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -68,7 +69,12 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 	}
 
 	@SuppressWarnings("unchecked")
-	public <F extends Feature<FC>> FrozenConfiguredFeature<FC, C> makeAndSetHolder(@NotNull F feature, @NotNull FC config) {
+	public <F extends Feature<FC>> FrozenConfiguredFeature<FC, C> makeAndSetHolder(F feature, FC config) {
+		FrozenMain.log("Registering configured feature: " + this.getKey().location(), true);
+
+		assert feature != null: "Feature is null whilst registering " + this.getKey().location();
+		assert config != null: "Feature configuration is null whilst registering " + this.getKey().location();
+
 		Holder<C> holder = (Holder<C>) BOOTSTAP_CONTEXT.register(this.getKey(), new ConfiguredFeature<>(feature, config));
 		return this.setHolder(holder);
 	}

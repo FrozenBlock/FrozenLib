@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
+import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -68,9 +69,8 @@ public class FrozenPlacedFeature {
 		return this;
 	}
 
-	public Holder<@Nullable PlacedFeature> getHolder() {
-		if (this.holder == null)
-			return Holder.direct(null);
+	public Holder<PlacedFeature> getHolder() {
+		assert this.holder != null: "Trying get null holder from placed feature " + this.getKey().location();
 		return this.holder;
 	}
 
@@ -81,7 +81,14 @@ public class FrozenPlacedFeature {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, List<PlacementModifier> modifiers) {
-		this.configuredHolder = (Holder) configuredHolder;
+		this.configuredHolder = configuredHolder;
+
+		FrozenMain.log("Registering placed feature " + this.getKey().location(), true);
+
+		assert BOOTSTAP_CONTEXT != null: "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().location();
+		assert configuredHolder != null: "Configured feature holder for FrozenPlacedFeature " + this.getKey().location() + " null";
+		assert modifiers != null: "Placement modifiers for FrozenPlacedFeature " + this.getKey().location() + " null";
+
 		Holder<PlacedFeature> holder = BOOTSTAP_CONTEXT.register(this.getKey(), new PlacedFeature(configuredHolder, modifiers));
 		return this.setHolder(holder);
 	}
