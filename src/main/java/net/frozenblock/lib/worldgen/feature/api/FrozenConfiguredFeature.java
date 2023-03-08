@@ -42,10 +42,7 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 	 */
 	public static final List<FrozenConfiguredFeature<?, ?>> FEATURES = new ArrayList<>();
 
-	public static BootstapContext<ConfiguredFeature<?, ?>> BOOTSTAP_CONTEXT = null;
-
 	private final ResourceKey<ConfiguredFeature<?, ?>> key;
-	private Holder<C> holder;
 
 	public FrozenConfiguredFeature(ResourceLocation key) {
 		this.key = ResourceKey.create(Registries.CONFIGURED_FEATURE, key);
@@ -56,26 +53,20 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 		return key;
 	}
 
-	public Holder<@Nullable ConfiguredFeature<?, ?>> getHolder() {
-		if (this.holder == null) {
-			return Holder.direct(null);
-		}
-		return (Holder<ConfiguredFeature<?, ?>>) this.holder;
-	}
-
-	public FrozenConfiguredFeature<FC, C> setHolder(Holder<C> holder) {
-		this.holder = holder;
-		return this;
+	public Holder<ConfiguredFeature<?, ?>> getHolder() {
+		return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 	}
 
 	@SuppressWarnings("unchecked")
 	public <F extends Feature<FC>> FrozenConfiguredFeature<FC, C> makeAndSetHolder(F feature, FC config) {
 		FrozenMain.log("Registering configured feature: " + this.getKey().location(), true);
 
+		assert FrozenFeatureUtils.BOOTSTAP_CONTEXT != null: "Bootstrap context is null while registering " + this.getKey().location();
+
 		assert feature != null: "Feature is null whilst registering " + this.getKey().location();
 		assert config != null: "Feature configuration is null whilst registering " + this.getKey().location();
 
-		Holder<C> holder = (Holder<C>) BOOTSTAP_CONTEXT.register(this.getKey(), new ConfiguredFeature<>(feature, config));
-		return this.setHolder(holder);
+		FrozenFeatureUtils.BOOTSTAP_CONTEXT.register((ResourceKey) this.getKey(), new ConfiguredFeature<>(feature, config));
+		return this;
 	}
 }
