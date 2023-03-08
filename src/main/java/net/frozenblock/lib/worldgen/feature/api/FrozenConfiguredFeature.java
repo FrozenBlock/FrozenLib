@@ -28,15 +28,23 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends ConfiguredFeature<FC, ?>> {
+
+	/**
+	 * Can be used for setting all bootstrap contexts on 1.19.3
+	 */
+	public static final List<FrozenConfiguredFeature<?, ?>> FEATURES = new ArrayList<>();
 
 	private final ResourceKey<ConfiguredFeature<?, ?>> key;
 	private Holder<C> holder;
 
 	public FrozenConfiguredFeature(ResourceLocation key) {
 		this.key = ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, key);
+		FEATURES.add(this);
 	}
 
 	public ResourceKey<ConfiguredFeature<?, ?>> getKey() {
