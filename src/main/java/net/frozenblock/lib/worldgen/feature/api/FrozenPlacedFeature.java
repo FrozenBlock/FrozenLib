@@ -7,9 +7,16 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class FrozenPlacedFeature {
+
+	/**
+	 * Can be used for setting all bootstrap contexts on 1.19.3
+	 */
+	public static final List<FrozenPlacedFeature> FEATURES = new ArrayList<>();
 
 	private final ResourceKey<ConfiguredFeature<?, ?>> configuredKey;
 	private final ResourceKey<PlacedFeature> key;
@@ -20,6 +27,7 @@ public class FrozenPlacedFeature {
 	public FrozenPlacedFeature(ResourceLocation configuredKey, ResourceLocation key) {
 		this.configuredKey = ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, configuredKey);
 		this.key = ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, key);
+		FEATURES.add(this);
 	}
 
 	public ResourceKey<ConfiguredFeature<?, ?>> getConfiguredKey() {
