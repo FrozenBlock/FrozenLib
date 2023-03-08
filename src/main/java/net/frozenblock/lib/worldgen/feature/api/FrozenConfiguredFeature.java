@@ -20,6 +20,8 @@ package net.frozenblock.lib.worldgen.feature.api;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -39,11 +41,13 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 	 */
 	public static final List<FrozenConfiguredFeature<?, ?>> FEATURES = new ArrayList<>();
 
+	public static BootstapContext<ConfiguredFeature<?, ?>> BOOTSTAP_CONTEXT = null;
+
 	private final ResourceKey<ConfiguredFeature<?, ?>> key;
 	private Holder<C> holder;
 
 	public FrozenConfiguredFeature(ResourceLocation key) {
-		this.key = ResourceKey.create(Registry.CONFIGURED_FEATURE_REGISTRY, key);
+		this.key = ResourceKey.create(Registries.CONFIGURED_FEATURE, key);
 		FEATURES.add(this);
 	}
 
@@ -51,11 +55,11 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 		return key;
 	}
 
-	public Holder<@Nullable C> getHolder() {
+	public Holder<@Nullable ConfiguredFeature<?, ?>> getHolder() {
 		if (this.holder == null) {
 			return Holder.direct(null);
 		}
-		return this.holder;
+		return (Holder<ConfiguredFeature<?, ?>>) this.holder;
 	}
 
 	public FrozenConfiguredFeature<FC, C> setHolder(Holder<C> holder) {
@@ -65,7 +69,7 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 
 	@SuppressWarnings("unchecked")
 	public <F extends Feature<FC>> FrozenConfiguredFeature<FC, C> makeAndSetHolder(@NotNull F feature, @NotNull FC config) {
-		Holder<C> holder = (Holder<C>) FeatureUtils.register(this.getKey().location().toString(), feature, config);
+		Holder<C> holder = (Holder<C>) BOOTSTAP_CONTEXT.register(this.getKey(), new ConfiguredFeature<>(feature, config));
 		return this.setHolder(holder);
 	}
 }

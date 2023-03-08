@@ -20,6 +20,8 @@ package net.frozenblock.lib.worldgen.feature.api;
 
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.ResourceKey;
@@ -39,13 +41,15 @@ public class FrozenPlacedFeature {
 	 */
 	public static final List<FrozenPlacedFeature> FEATURES = new ArrayList<>();
 
+	public static BootstapContext<PlacedFeature> BOOTSTAP_CONTEXT = null;
+
 	private final ResourceKey<PlacedFeature> key;
 
 	private Holder<ConfiguredFeature<?, ?>> configuredHolder;
 	private Holder<PlacedFeature> holder;
 
 	public FrozenPlacedFeature(ResourceLocation key) {
-		this.key = ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, key);
+		this.key = ResourceKey.create(Registries.PLACED_FEATURE, key);
 		FEATURES.add(this);
 	}
 	public ResourceKey<PlacedFeature> getKey() {
@@ -76,13 +80,13 @@ public class FrozenPlacedFeature {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<FC, ?>> configuredHolder, List<PlacementModifier> modifiers) {
+	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, List<PlacementModifier> modifiers) {
 		this.configuredHolder = (Holder) configuredHolder;
-		Holder<PlacedFeature> holder = PlacementUtils.register(this.getKey().location().toString(), configuredHolder, modifiers);
+		Holder<PlacedFeature> holder = BOOTSTAP_CONTEXT.register(this.getKey(), new PlacedFeature(configuredHolder, modifiers));
 		return this.setHolder(holder);
 	}
 
-	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<FC, ?>> configuredHolder, PlacementModifier... modifiers) {
+	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, PlacementModifier... modifiers) {
 		return this.makeAndSetHolder(configuredHolder, List.of(modifiers));
 	}
 }
