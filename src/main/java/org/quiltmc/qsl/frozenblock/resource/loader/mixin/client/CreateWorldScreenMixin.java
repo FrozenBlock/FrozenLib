@@ -114,7 +114,7 @@ public abstract class CreateWorldScreenMixin {
 	}
 
 	@Inject(
-			method = "m_fiszvdug(Ljava/util/function/Consumer;Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;",
+			method = "method_49629(Ljava/util/function/Consumer;Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;",
 			at = @At(
 					value = "INVOKE",
 					target = 	"Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
