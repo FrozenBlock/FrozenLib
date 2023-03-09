@@ -4,7 +4,5 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Ported to 1.19.4-pre3
-- Added ItemBlockStateTagUtils
-- Improved config reading and writing
-- Internal changes
+- Ported to 1.19.4
+- Added a feature API to make parity between 1.19.2 and 1.19.3 easier
