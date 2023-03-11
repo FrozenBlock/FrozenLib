@@ -19,8 +19,10 @@
 package net.frozenblock.lib.shovel.mixin;
 
 import net.frozenblock.lib.shovel.api.ShovelBehaviors;
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ShovelItem;
@@ -51,9 +53,10 @@ public class ShovelItemMixin {
 					if (player != null) {
 						context.getItemInHand().hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));
 					}
+					CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer)player, blockPos, context.getItemInHand());
 					info.setReturnValue(InteractionResult.SUCCESS);
 				} else {
-					info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
+					info.setReturnValue(InteractionResult.sidedSuccess(true));
 				}
 			}
 		}

@@ -4,4 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed a crash when the entity texture override registry isn't loaded
+- Added a feature API to make parity between 1.19.2 and 1.19.3 easier
