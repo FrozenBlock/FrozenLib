@@ -20,9 +20,11 @@ package net.frozenblock.lib.config.api.entry;
 
 import com.google.gson.reflect.TypeToken;
 import net.frozenblock.lib.FrozenMain;
+import org.jetbrains.annotations.ApiStatus;
 
 public class TypedEntry<T> {
 
+	@ApiStatus.Internal
 	public static final String DEFAULT_MOD_ID = FrozenMain.MOD_ID + "_default";
 
 	public static final TypeToken<TypedEntry<?>> TYPE_TOKEN = new TypeToken<>() {

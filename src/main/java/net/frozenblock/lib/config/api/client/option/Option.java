@@ -86,7 +86,7 @@ public final class Option<T> {
 	) {
 		this.caption = caption;
 		this.tooltip = tooltip;
-		this.toString = value -> textGetter.toString(this.caption, value);
+		this.toString = val -> textGetter.toString(this.caption, val);
 		this.values = values;
 		this.codec = codec;
 		this.initialValue = initialValue;
@@ -168,7 +168,9 @@ public final class Option<T> {
 
 		@Override
 		public Optional<T> validateValue(T value) {
-			return (this.altCondition.getAsBoolean() ? this.altValues : this.values).contains(value) ? Optional.of(value) : Optional.empty();
+			var valueList = this.altCondition.getAsBoolean() ? this.altValues : this.values;
+
+			return valueList.contains(value) ? Optional.of(value) : Optional.empty();
 		}
 	}
 
@@ -180,6 +182,7 @@ public final class Option<T> {
 		implements IntRangeBase,
 		SliderableOrCyclableValueSet<Integer> {
 
+		@Override
 		public Optional<Integer> validateValue(Integer value) {
 			return Optional.of(Mth.clamp(value, this.minInclusive(), this.maxInclusive()));
 		}
@@ -191,11 +194,11 @@ public final class Option<T> {
 
 		@Override
 		public Codec<Integer> codec() {
-			Function<Integer, DataResult<Integer>> function = value -> {
+			Function<Integer, DataResult<Integer>> function = val -> {
 				int i = this.maxInclusive() + 1;
-				return value.compareTo(this.minInclusive()) >= 0 && value.compareTo(i) <= 0
-						? DataResult.success(value)
-						: DataResult.error("Value " + value + " is outside of range [" + this.minInclusive() + ":" + i + "]", value);
+				return val.compareTo(this.minInclusive()) >= 0 && val.compareTo(i) <= 0
+						? DataResult.success(val)
+						: DataResult.error("Value " + val + " is outside of range [" + this.minInclusive() + ":" + i + "]", val);
 			};
 			return Codec.INT.flatXmap(function, function);
 		}
@@ -224,9 +227,9 @@ public final class Option<T> {
 					.withValues(this.valueListSupplier())
 					.withTooltip(tooltip)
 					.withInitialValue(option.value)
-					.create(x, y, width, 20, option.caption, (button, value) -> {
-						this.valueSetter().set(option, value);
-					});
+					.create(x, y, width, 20, option.caption, (button, value) ->
+						this.valueSetter().set(option, value)
+					);
 		}
 
 		@FunctionalInterface
@@ -264,7 +267,7 @@ public final class Option<T> {
 		int maxInclusive();
 
 		default double toSliderValue(Integer value) {
-			return Mth.map((float) value, (float)this.minInclusive(), (float) this.maxInclusive(), 0.0F, 1.0F);
+			return Mth.map(value, this.minInclusive(), this.maxInclusive(), 0.0F, 1.0F);
 		}
 
 		default Integer fromSliderValue(double d) {
@@ -285,7 +288,7 @@ public final class Option<T> {
 
 				@Override
 				public R fromSliderValue(double value) {
-					return (R) fromSliderValue.apply(IntRangeBase.this.fromSliderValue(value));
+					return fromSliderValue.apply(IntRangeBase.this.fromSliderValue(value));
 				}
 
 				@Override
@@ -415,7 +418,7 @@ public final class Option<T> {
 
 		@Override
 		public Codec<Double> codec() {
-			return Codec.either(Codec.doubleRange(0.0, 1.0), Codec.BOOL).xmap(either -> either.map(value -> value, max -> max ? 1.0 : 0.0), Either::left);
+			return Codec.either(Codec.doubleRange(0.0, 1.0), Codec.BOOL).xmap(either -> either.map(val -> val, max -> Boolean.TRUE.equals(max) ? 1.0 : 0.0), Either::left);
 		}
 	}
 
@@ -446,7 +449,7 @@ public final class Option<T> {
 		return new Option<>(
 				caption,
 				tooltip,
-				(caption1, value) -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF,
+				(caption1, value) -> Boolean.TRUE.equals(value) ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF,
 				BOOLEAN_VALUES,
 				initialValue,
 				onValueUpdate
