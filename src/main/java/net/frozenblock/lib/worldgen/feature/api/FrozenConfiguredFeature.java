@@ -20,8 +20,10 @@ package net.frozenblock.lib.worldgen.feature.api;
 
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.resources.ResourceKey;
@@ -55,6 +57,22 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 
 	public Holder<ConfiguredFeature<?, ?>> getHolder() {
 		return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
+	}
+
+	Optional<ConfiguredFeature<?, ?>> getConfiguredFeature() {
+		Optional<ConfiguredFeature<?, ?>> returnedFeature = Optional.empty();
+		Optional<HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>>> configuredFeatures = VanillaRegistries.createLookup().lookup(Registries.CONFIGURED_FEATURE);
+		if (configuredFeatures.isPresent()) {
+			Optional<Holder.Reference<ConfiguredFeature<?, ?>>> optionalConfiguredFeatureReference = configuredFeatures.get().get(this.getKey());
+			if (optionalConfiguredFeatureReference.isPresent()) {
+				returnedFeature = Optional.of(optionalConfiguredFeatureReference.get().value());
+			}
+		}
+		return returnedFeature;
+	}
+
+	ConfiguredFeature<?, ?> getConfiguredFeatureOrThrow() {
+		return VanillaRegistries.createLookup().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey()).value();
 	}
 
 	@SuppressWarnings("unchecked")
