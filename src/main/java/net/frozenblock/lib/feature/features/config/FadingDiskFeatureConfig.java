@@ -31,6 +31,7 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 public class FadingDiskFeatureConfig implements FeatureConfiguration {
     public static final Codec<FadingDiskFeatureConfig> CODEC = RecordCodecBuilder.create(
             (instance) -> instance.group(
+					Codec.BOOL.fieldOf("useHeightMapAndNotCircular").forGetter(config -> config.useHeightMapAndNotCircular),
 					BlockStateProvider.CODEC.fieldOf("innerState").forGetter(config -> config.innerState),
 					BlockStateProvider.CODEC.fieldOf("outerState").forGetter(config -> config.outerState),
 					IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
@@ -43,6 +44,7 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
 			).apply(instance, FadingDiskFeatureConfig::new)
     );
 
+	public final boolean useHeightMapAndNotCircular;
     public final BlockStateProvider innerState;
     public final BlockStateProvider outerState;
     public final IntProvider radius;
@@ -53,7 +55,8 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
 	public final HolderSet<Block> innerReplaceable;
 	public final HolderSet<Block> outerReplaceable;
 
-    public FadingDiskFeatureConfig(BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, HolderSet<Block> innerReplaceable, HolderSet<Block> outerReplaceable) {
+    public FadingDiskFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, HolderSet<Block> innerReplaceable, HolderSet<Block> outerReplaceable) {
+		this.useHeightMapAndNotCircular = useHeightMapAndNotCircular;
 		this.innerState = innerState;
 		this.outerState = outerState;
 		this.radius = radius;
