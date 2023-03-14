@@ -22,6 +22,7 @@ import com.mojang.serialization.Codec;
 import net.frozenblock.lib.feature.features.config.FadingDiskFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
@@ -76,7 +77,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 						if (distance < radius * radius) {
 							mutableDisk.set(x, y, z);
 							BlockState state = level.getBlockState(mutableDisk);
-							if (isBlockExposedToAir(level, mutableDisk)) {
+							if (isBlockExposed(level, mutableDisk)) {
 								boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
 								boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
 								boolean choseInner;
@@ -100,11 +101,12 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
         return bl;
     }
 
-	public static boolean isBlockExposedToAir(WorldGenLevel level, BlockPos blockPos) {
+	public static boolean isBlockExposed(WorldGenLevel level, BlockPos blockPos) {
 		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
 		for (Direction direction : Direction.values()) {
 			mutableBlockPos.move(direction);
-			if (level.getBlockState(mutableBlockPos).isAir()) {
+			BlockState blockState = level.getBlockState(mutableBlockPos);
+			if (blockState.isAir() || blockState.is(BlockTags.FIRE)) {
 				return true;
 			}
 			mutableBlockPos.move(direction, -1);
