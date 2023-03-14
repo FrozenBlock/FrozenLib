@@ -59,7 +59,7 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 		return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 	}
 
-	Optional<ConfiguredFeature<?, ?>> getConfiguredFeature() {
+	public Optional<ConfiguredFeature<?, ?>> getConfiguredFeature() {
 		Optional<ConfiguredFeature<?, ?>> returnedFeature = Optional.empty();
 		Optional<HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>>> configuredFeatures = VanillaRegistries.createLookup().lookup(Registries.CONFIGURED_FEATURE);
 		if (configuredFeatures.isPresent()) {
@@ -71,7 +71,7 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 		return returnedFeature;
 	}
 
-	ConfiguredFeature<?, ?> getConfiguredFeatureOrThrow() {
+	public ConfiguredFeature<?, ?> getConfiguredFeatureOrThrow() {
 		return VanillaRegistries.createLookup().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey()).value();
 	}
 
