@@ -18,24 +18,19 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
-import net.frozenblock.lib.FrozenMain;
-import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.data.worldgen.BootstapContext;
-import net.minecraft.data.worldgen.features.FeatureUtils;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.frozenblock.lib.FrozenMain;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
 public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends ConfiguredFeature<FC, ?>> {
 
@@ -59,9 +54,9 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 		return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 	}
 
-	public Optional<ConfiguredFeature<?, ?>> getConfiguredFeature() {
+	public Optional<ConfiguredFeature<?, ?>> getConfiguredFeature(LevelReader level) {
 		Optional<ConfiguredFeature<?, ?>> returnedFeature = Optional.empty();
-		Optional<HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>>> configuredFeatures = VanillaRegistries.createLookup().lookup(Registries.CONFIGURED_FEATURE);
+		Optional<HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>>> configuredFeatures = level.registryAccess().lookup(Registries.CONFIGURED_FEATURE);
 		if (configuredFeatures.isPresent()) {
 			Optional<Holder.Reference<ConfiguredFeature<?, ?>>> optionalConfiguredFeatureReference = configuredFeatures.get().get(this.getKey());
 			if (optionalConfiguredFeatureReference.isPresent()) {
@@ -71,8 +66,8 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 		return returnedFeature;
 	}
 
-	public ConfiguredFeature<?, ?> getConfiguredFeatureOrThrow() {
-		return VanillaRegistries.createLookup().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey()).value();
+	public ConfiguredFeature<?, ?> getConfiguredFeatureOrThrow(LevelReader level) {
+		return level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey()).value();
 	}
 
 	@SuppressWarnings("unchecked")
