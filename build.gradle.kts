@@ -372,6 +372,7 @@ val env = System.getenv()
 publishing {
     publications {
         create<MavenPublication>("mavenJava") {
+            artifact(remapJar)
             artifact(sourcesJar)
             artifact(javadocJar)
 
