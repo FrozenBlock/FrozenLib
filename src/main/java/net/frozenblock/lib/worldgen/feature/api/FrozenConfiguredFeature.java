@@ -20,10 +20,8 @@ package net.frozenblock.lib.worldgen.feature.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Holder;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -50,24 +48,18 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 		return key;
 	}
 
+	public Holder<ConfiguredFeature<?, ?>> getHolder(LevelReader level) {
+		if (level == null)
+			return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
+		return level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
+	}
+
 	public Holder<ConfiguredFeature<?, ?>> getHolder() {
-		return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
+		return getHolder(null);
 	}
 
-	public Optional<ConfiguredFeature<?, ?>> getConfiguredFeature(LevelReader level) {
-		Optional<ConfiguredFeature<?, ?>> returnedFeature = Optional.empty();
-		Optional<HolderLookup.RegistryLookup<ConfiguredFeature<?, ?>>> configuredFeatures = level.registryAccess().lookup(Registries.CONFIGURED_FEATURE);
-		if (configuredFeatures.isPresent()) {
-			Optional<Holder.Reference<ConfiguredFeature<?, ?>>> optionalConfiguredFeatureReference = configuredFeatures.get().get(this.getKey());
-			if (optionalConfiguredFeatureReference.isPresent()) {
-				returnedFeature = Optional.of(optionalConfiguredFeatureReference.get().value());
-			}
-		}
-		return returnedFeature;
-	}
-
-	public ConfiguredFeature<?, ?> getConfiguredFeatureOrThrow(LevelReader level) {
-		return level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey()).value();
+	public ConfiguredFeature<?, ?> getConfiguredFeature(LevelReader level) {
+		return getHolder(level).value();
 	}
 
 	@SuppressWarnings("unchecked")
