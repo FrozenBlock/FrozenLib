@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.wind.impl;
 
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
@@ -29,10 +30,12 @@ public class WindStorage extends SavedData {
 
 	public WindStorage(WindManager windManager) {
 		this.windManager = windManager;
+		this.setDirty();
 	}
 
 	@Override
 	public CompoundTag save(CompoundTag compoundTag) {
+		compoundTag.putLong("time", this.windManager.time);
 		compoundTag.putBoolean("overrideWind", this.windManager.overrideWind);
 		compoundTag.putDouble("commandWindX", this.windManager.commandWind.x());
 		compoundTag.putDouble("commandWindY", this.windManager.commandWind.y());
@@ -47,24 +50,28 @@ public class WindStorage extends SavedData {
 		compoundTag.putDouble("cloudY", this.windManager.cloudY);
 		compoundTag.putDouble("cloudZ", this.windManager.cloudZ);
 		compoundTag.putLong("seed", this.windManager.seed);
+
+		FrozenMain.log("Saving WindManager data.", FrozenMain.UNSTABLE_LOGGING);
+
 		return compoundTag;
 	}
 
 	public WindStorage load(CompoundTag compoundTag) {
-		if (compoundTag.contains("overrideWind")) this.windManager.overrideWind = compoundTag.getBoolean("overrideWind");
-		if (compoundTag.contains("commandWindX") && compoundTag.contains("commandWindY") && compoundTag.contains("commandWindZ")) {
-			this.windManager.commandWind = new Vec3(compoundTag.getDouble("commandWindX"), compoundTag.getDouble("commandWindY"), compoundTag.getDouble("commandWindZ"));
-		}
-		if (compoundTag.contains("windX")) this.windManager.windX = compoundTag.getDouble("windX");
-		if (compoundTag.contains("windY")) this.windManager.windY = compoundTag.getDouble("windY");
-		if (compoundTag.contains("windZ")) this.windManager.windZ = compoundTag.getDouble("windZ");
-		if (compoundTag.contains("laggedWindX")) this.windManager.laggedWindX = compoundTag.getDouble("laggedWindX");
-		if (compoundTag.contains("laggedWindY")) this.windManager.laggedWindY = compoundTag.getDouble("laggedWindY");
-		if (compoundTag.contains("laggedWindZ")) this.windManager.laggedWindZ = compoundTag.getDouble("laggedWindZ");
-		if (compoundTag.contains("cloudX")) this.windManager.cloudX = compoundTag.getDouble("cloudX");
-		if (compoundTag.contains("cloudY")) this.windManager.cloudY = compoundTag.getDouble("cloudY");
-		if (compoundTag.contains("cloudZ")) this.windManager.cloudZ = compoundTag.getDouble("cloudZ");
-		if (compoundTag.contains("seed")) this.windManager.setSeed(compoundTag.getLong("seed"));
+		this.windManager.time = compoundTag.getLong("time");
+		this.windManager.overrideWind = compoundTag.getBoolean("overrideWind");
+		this.windManager.commandWind = new Vec3(compoundTag.getDouble("commandWindX"), compoundTag.getDouble("commandWindY"), compoundTag.getDouble("commandWindZ"));
+		this.windManager.windX = compoundTag.getDouble("windX");
+		this.windManager.windY = compoundTag.getDouble("windY");
+		this.windManager.windZ = compoundTag.getDouble("windZ");
+		this.windManager.laggedWindX = compoundTag.getDouble("laggedWindX");
+		this.windManager.laggedWindY = compoundTag.getDouble("laggedWindY");
+		this.windManager.laggedWindZ = compoundTag.getDouble("laggedWindZ");
+		this.windManager.cloudX = compoundTag.getDouble("cloudX");
+		this.windManager.cloudY = compoundTag.getDouble("cloudY");
+		this.windManager.cloudZ = compoundTag.getDouble("cloudZ");
+		this.windManager.setSeed(compoundTag.getLong("seed"));
+
+		FrozenMain.log("Loading WindManager data.", FrozenMain.UNSTABLE_LOGGING);
 
 		return this;
 	}
