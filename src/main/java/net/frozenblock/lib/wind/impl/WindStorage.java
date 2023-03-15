@@ -64,7 +64,7 @@ public class WindStorage extends SavedData {
 		if (compoundTag.contains("cloudX")) this.windManager.cloudX = compoundTag.getDouble("cloudX");
 		if (compoundTag.contains("cloudY")) this.windManager.cloudY = compoundTag.getDouble("cloudY");
 		if (compoundTag.contains("cloudZ")) this.windManager.cloudZ = compoundTag.getDouble("cloudZ");
-		if (compoundTag.contains("seed")) this.windManager.seed = compoundTag.getLong("seed");
+		if (compoundTag.contains("seed")) this.windManager.setSeed(compoundTag.getLong("seed"));
 
 		return this;
 	}
