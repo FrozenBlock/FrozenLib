@@ -31,7 +31,6 @@ import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
 import net.frozenblock.lib.screenshake.api.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
-import net.frozenblock.lib.sound.api.damagesource.PlayerDamageSourceSounds;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
@@ -51,7 +50,6 @@ import net.minecraft.server.packs.PackType;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
@@ -82,7 +80,6 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
-		receiveSmallWindSyncPacket();
 		receiveLocalPlayerSoundPacket();
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
@@ -432,24 +429,6 @@ public final class FrozenClient implements ClientModInitializer {
 					ClientWindManager.overrideWind = override;
 					ClientWindManager.commandWind = new Vec3(xa, ya, za);
 					ClientWindManager.hasInitialized = true;
-				}
-			});
-		});
-	}
-
-	private static void receiveSmallWindSyncPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SMALL_WIND_SYNC_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			long windTime = byteBuf.readLong();
-			double x = byteBuf.readDouble();
-			double y = byteBuf.readDouble();
-			double z = byteBuf.readDouble();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					ClientWindManager.time = windTime;
-					ClientWindManager.cloudX = x;
-					ClientWindManager.cloudY = y;
-					ClientWindManager.cloudZ = z;
 				}
 			});
 		});

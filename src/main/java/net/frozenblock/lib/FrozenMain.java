@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib;
 
-import io.netty.buffer.Unpooled;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
@@ -30,7 +29,6 @@ import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.feature.FrozenFeatures;
-import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.sound.api.FrozenSoundPackets;
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
@@ -48,9 +46,7 @@ import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -63,9 +59,8 @@ import org.slf4j.helpers.NOPLogger;
 
 public final class FrozenMain implements ModInitializer {
 	public static final String MOD_ID = "frozenlib";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final Logger LOGGER = LoggerFactory.getLogger("FrozenLib");
 	public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
-	public static boolean DEV_LOGGING = false;
 	public static boolean areConfigsInit;
 
 	/**
@@ -116,7 +111,7 @@ public final class FrozenMain implements ModInitializer {
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
-			windManager.sendFullSyncToPlayer(windManager.createFullSyncByteBuf(), player);
+			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
 		}));
 
 	}
@@ -144,7 +139,6 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation REQUEST_SPOTTING_ICON_SYNC_PACKET = id("request_spotting_icon_sync_packet");
 
 	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
-	public static final ResourceLocation SMALL_WIND_SYNC_PACKET = id("small_wind_sync_packet");
 
 	public static ResourceLocation id(String path) {
 		return new ResourceLocation(MOD_ID, path);
