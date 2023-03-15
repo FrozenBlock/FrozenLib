@@ -82,7 +82,6 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
-		receiveSmallWindSyncPacket();
 		receivePlayerDamagePacket();
 		receiveLocalPlayerSoundPacket();
 
@@ -433,24 +432,6 @@ public final class FrozenClient implements ClientModInitializer {
 					ClientWindManager.overrideWind = override;
 					ClientWindManager.commandWind = new Vec3(xa, ya, za);
 					ClientWindManager.hasInitialized = true;
-				}
-			});
-		});
-	}
-
-	private static void receiveSmallWindSyncPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.SMALL_WIND_SYNC_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			long windTime = byteBuf.readLong();
-			double x = byteBuf.readDouble();
-			double y = byteBuf.readDouble();
-			double z = byteBuf.readDouble();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					ClientWindManager.time = windTime;
-					ClientWindManager.cloudX = x;
-					ClientWindManager.cloudY = y;
-					ClientWindManager.cloudZ = z;
 				}
 			});
 		});

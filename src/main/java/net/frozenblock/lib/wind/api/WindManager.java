@@ -39,6 +39,8 @@ import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 
 public class WindManager {
+	private static final long MIN_TIME_VALUE = Long.MIN_VALUE + 1;
+
 	public boolean overrideWind;
 	public long time;
 	public Vec3 commandWind = Vec3.ZERO;
@@ -61,11 +63,9 @@ public class WindManager {
 	}
 
 	public void tick() {
-		if (this.shouldReset()) {
-			this.reset(this.level);
-		}
+		this.runResetsIfNeeded();
 
-		this.time = this.level.getGameTime();
+		this.time += 1;
 		//WIND
 		float thunderLevel = this.level.getThunderLevel(1F) * 0.03F;
 		double calcTime = this.time * 0.0005;
@@ -87,45 +87,60 @@ public class WindManager {
 		this.cloudZ += (this.laggedWindZ * 0.025);
 		//SYNC WITH CLIENTS IN CASE OF DESYNC
 		if (this.time % 20 == 0) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeLong(this.time);
-			byteBuf.writeDouble(this.cloudX);
-			byteBuf.writeDouble(this.cloudY);
-			byteBuf.writeDouble(this.cloudZ);
-			for (ServerPlayer player : PlayerLookup.world(this.level)) {
-				ServerPlayNetworking.send(player, FrozenMain.SMALL_WIND_SYNC_PACKET, byteBuf);
-			}
+			this.sendSync(this.level);
 		}
 	}
 
 	//Reset values in case of potential overflow
-	private boolean shouldReset() {
-		if (this.windX > Double.MAX_VALUE -10 || this.windX < Double.MIN_VALUE + 10) return true;
-		if (this.windY > Double.MAX_VALUE -10 || this.windY < Double.MIN_VALUE + 10) return true;
-		if (this.windZ > Double.MAX_VALUE -10 || this.windZ < Double.MIN_VALUE + 10) return true;
-		if (this.laggedWindX > Double.MAX_VALUE -10 || this.laggedWindX < Double.MIN_VALUE + 10) return true;
-		if (this.laggedWindY > Double.MAX_VALUE -10 || this.laggedWindY < Double.MIN_VALUE + 10) return true;
-		if (this.laggedWindZ > Double.MAX_VALUE -10 || this.laggedWindZ < Double.MIN_VALUE + 10) return true;
-		if (this.cloudX > Double.MAX_VALUE -10 || this.cloudX < Double.MIN_VALUE + 10) return true;
-		if (this.cloudY > Double.MAX_VALUE -10 || this.cloudY < Double.MIN_VALUE + 10) return true;
-		if (this.cloudZ > Double.MAX_VALUE -10 || this.cloudZ < Double.MIN_VALUE + 10) return true;
-		return false;
+	private boolean runResetsIfNeeded() {
+		boolean needsReset = false;
+		if (this.time == Long.MAX_VALUE || this.time == Long.MIN_VALUE) {
+			needsReset = true;
+			this.time = MIN_TIME_VALUE;
+		}
+		if (this.windX == Double.MAX_VALUE || this.windX == Double.MIN_VALUE) {
+			needsReset = true;
+			this.windX = 0;
+		}
+		if (this.windY == Double.MAX_VALUE || this.windY == Double.MIN_VALUE) {
+			needsReset = true;
+			this.windY = 0;
+		}
+		if (this.windZ == Double.MAX_VALUE || this.windZ == Double.MIN_VALUE) {
+			needsReset = true;
+			this.windZ = 0;
+		}
+		if (this.laggedWindX == Double.MAX_VALUE || this.laggedWindX == Double.MIN_VALUE) {
+			needsReset = true;
+			this.laggedWindX = 0;
+		}
+		if (this.laggedWindY == Double.MAX_VALUE || this.laggedWindY == Double.MIN_VALUE) {
+			needsReset = true;
+			this.laggedWindY = 0;
+		}
+		if (this.laggedWindZ == Double.MAX_VALUE || this.laggedWindZ == Double.MIN_VALUE) {
+			needsReset = true;
+			this.laggedWindZ = 0;
+		}
+		if (this.cloudX == Double.MAX_VALUE || this.cloudX == Double.MIN_VALUE) {
+			needsReset = true;
+			this.cloudX = 0;
+		}
+		if (this.cloudY == Double.MAX_VALUE || this.cloudY == Double.MIN_VALUE) {
+			needsReset = true;
+			this.cloudY = 0;
+		}
+		if (this.cloudZ == Double.MAX_VALUE || this.cloudZ == Double.MIN_VALUE) {
+			needsReset = true;
+			this.cloudZ = 0;
+		}
+		if (needsReset) {
+			this.sendSync(this.level);
+		}
+		return needsReset;
 	}
 
-	private void reset(ServerLevel level) {
-		this.windX = 0;
-		this.windY = 0;
-		this.windZ = 0;
-		this.laggedWindX = 0;
-		this.laggedWindY = 0;
-		this.laggedWindZ = 0;
-		this.cloudX = 0;
-		this.cloudY = 0;
-		this.cloudZ = 0;
-		this.sendFullSync(level);
-	}
-
-	public FriendlyByteBuf createFullSyncByteBuf() {
+	public FriendlyByteBuf createSyncByteBuf() {
 		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 		byteBuf.writeLong(this.time);
 		byteBuf.writeDouble(this.cloudX);
@@ -139,14 +154,14 @@ public class WindManager {
 		return byteBuf;
 	}
 
-	public void sendFullSync(ServerLevel level) {
-		FriendlyByteBuf byteBuf = this.createFullSyncByteBuf();
+	public void sendSync(ServerLevel level) {
+		FriendlyByteBuf byteBuf = this.createSyncByteBuf();
 		for (ServerPlayer player : PlayerLookup.world(level)) {
-			this.sendFullSyncToPlayer(byteBuf, player);
+			this.sendSyncToPlayer(byteBuf, player);
 		}
 	}
 
-	public void sendFullSyncToPlayer(FriendlyByteBuf byteBuf, ServerPlayer player) {
+	public void sendSyncToPlayer(FriendlyByteBuf byteBuf, ServerPlayer player) {
 		ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
 	}
 
