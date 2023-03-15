@@ -28,7 +28,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
-import net.frozenblock.lib.event.api.PlayerJoinEvent;
+import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.feature.FrozenFeatures;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
@@ -42,6 +42,7 @@ import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.OverrideWindCommand;
+import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.minecraft.core.Registry;
@@ -49,10 +50,12 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -104,27 +107,16 @@ public final class FrozenMain implements ModInitializer {
 		}
 
 		ServerWorldEvents.LOAD.register((server, level) -> {
-			if (server != null) {
-				var seed = server.overworld().getSeed();
-				EasyNoiseSampler.setSeed(seed);
-				WindManager.setSeed(seed);
-			}
+			DimensionDataStorage dimensionDataStorage = level.getDataStorage();
+			WindManager windManager = WindManager.getWindManager(level);
+			dimensionDataStorage.computeIfAbsent(windManager::createData, windManager::createData, WindStorage.WIND_FILE_ID);
 		});
 
-		ServerTickEvents.START_SERVER_TICK.register((server) -> WindManager.tick(server, server.overworld()));
+		ServerTickEvents.START_WORLD_TICK.register((serverLevel) -> WindManager.getWindManager(serverLevel).tick());
 
-		PlayerJoinEvent.ON_JOIN.register(((server, player) -> {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeLong(WindManager.time);
-			byteBuf.writeDouble(WindManager.cloudX);
-			byteBuf.writeDouble(WindManager.cloudY);
-			byteBuf.writeDouble(WindManager.cloudZ);
-			byteBuf.writeLong(server.overworld().getSeed());
-			byteBuf.writeBoolean(WindManager.overrideWind);
-			byteBuf.writeDouble(WindManager.commandWind.x());
-			byteBuf.writeDouble(WindManager.commandWind.y());
-			byteBuf.writeDouble(WindManager.commandWind.z());
-			ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
+		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
+			WindManager windManager = WindManager.getWindManager(serverLevel);
+			windManager.sendFullSyncToPlayer(windManager.createFullSyncByteBuf(), player);
 		}));
 
 	}
