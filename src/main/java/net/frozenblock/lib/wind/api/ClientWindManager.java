@@ -82,8 +82,8 @@ public class ClientWindManager {
 		prevLaggedWindX = laggedWindX;
 		prevLaggedWindY = laggedWindY;
 		prevLaggedWindZ = laggedWindZ;
-		double calcLaggedTime = (time - 100) * 0.0005;
-		double calcLaggedTimeY = (time - 140) * 0.00035;
+		double calcLaggedTime = (time - 40) * 0.0005;
+		double calcLaggedTimeY = (time - 60) * 0.00035;
 		Vec3 laggedVec = sampleVec3(perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
 		laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
 		laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
