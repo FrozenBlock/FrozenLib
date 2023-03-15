@@ -415,7 +415,7 @@ publishing {
 
                 pom {
                     groupId = publishGroup
-                    artifactId = rootProject.name.trim(' ')
+                    artifactId = rootProject.base.archivesName.get().lowercase()
                     version = publishVersion
                     withXml {
                         asNode().appendNode("properties").appendNode("hash", hash)
