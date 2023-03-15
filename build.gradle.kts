@@ -411,7 +411,6 @@ publishing {
             create<MavenPublication>("mavenJava") {
                 from(components["java"])
 
-                artifact(remapJar)
                 artifact(sourcesJar)
                 artifact(javadocJar)
 
