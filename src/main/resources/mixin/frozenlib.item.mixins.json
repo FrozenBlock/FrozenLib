@@ -11,6 +11,7 @@
     "ItemCooldownsMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
+    "LivingEntityMixin",
     "ServerItemCooldownsMixin",
     "ServerPlayerMixin"
   ]
