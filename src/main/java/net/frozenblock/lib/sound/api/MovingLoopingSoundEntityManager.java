@@ -28,19 +28,21 @@ import java.util.Objects;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import org.slf4j.Logger;
 
 public class MovingLoopingSoundEntityManager {
     private final ArrayList<SoundLoopData> sounds = new ArrayList<>();
-    public LivingEntity entity;
+    public Entity entity;
 
-    public MovingLoopingSoundEntityManager(LivingEntity entity) {
+    public MovingLoopingSoundEntityManager(Entity entity) {
         this.entity = entity;
     }
 
@@ -77,7 +79,7 @@ public class MovingLoopingSoundEntityManager {
 		if (!this.sounds.isEmpty()) {
 			ArrayList<SoundLoopData> soundsToRemove = new ArrayList<>();
 			for (SoundLoopData nbt : this.sounds) {
-				SoundPredicate.LoopPredicate<LivingEntity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
+				SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
 				if (!predicate.test(this.entity)) {
 					soundsToRemove.add(nbt);
 					predicate.onStop(this.entity);
@@ -86,6 +88,12 @@ public class MovingLoopingSoundEntityManager {
 			this.sounds.removeAll(soundsToRemove);
 		}
     }
+
+	public void syncWithPlayer(ServerPlayer serverPlayer) {
+		for (MovingLoopingSoundEntityManager.SoundLoopData nbt : this.getSounds()) {
+			FrozenSoundPackets.createMovingRestrictionLoopingSound(serverPlayer, this.entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
+		}
+	}
 
     public static class SoundLoopData {
         public final ResourceLocation soundEventID;
@@ -121,17 +129,22 @@ public class MovingLoopingSoundEntityManager {
         public ResourceLocation getSoundEventID() {
             return this.soundEventID;
         }
+
         public String getOrdinal() {
             return this.categoryOrdinal;
         }
+
         public float getVolume() {
             return this.volume;
         }
+
         public float getPitch() {
             return this.pitch;
         }
+
         public ResourceLocation getRestrictionID() {
             return this.restrictionID;
         }
+
     }
 }

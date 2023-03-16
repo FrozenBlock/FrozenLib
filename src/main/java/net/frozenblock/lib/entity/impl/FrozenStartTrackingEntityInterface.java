@@ -16,22 +16,14 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.api;
+package net.frozenblock.lib.entity.impl;
 
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
-public final class FrozenClientPacketInbetween {
-	private FrozenClientPacketInbetween() {
-		throw new UnsupportedOperationException("FrozenClientPacketInbetween contains only static declarations.");
-	}
+@InjectedInterface(Entity.class)
+public interface FrozenStartTrackingEntityInterface {
 
-    public static void requestFrozenSoundSync(int id, ResourceKey<Level> level) {
-        FrozenClientPacketToServer.sendFrozenSoundSyncRequest(id, level);
-    }
-
-	public static void requestFrozenIconSync(int id, ResourceKey<Level> level) {
-		FrozenClientPacketToServer.sendFrozenIconSyncRequest(id, level);
-	}
-
+	void frozenLib$playerStartsTracking(ServerPlayer serverPlayer);
 }

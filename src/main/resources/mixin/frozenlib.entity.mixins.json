@@ -8,6 +8,8 @@
   },
   "mixins": [
     "AbstractFishMixin",
+    "EntityMixin",
+    "ServerEntityMixin",
     "behavior.BehaviorMixin"
   ],
   "client": [
