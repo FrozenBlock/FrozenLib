@@ -365,12 +365,13 @@ public final class FrozenClient implements ClientModInitializer {
 			int duration = byteBuf.readInt();
 			int fallOffStart = byteBuf.readInt();
 			float maxDistance = byteBuf.readFloat();
+			int ticks = byteBuf.readVarInt();
 			ctx.execute(() -> {
 				ClientLevel level = ctx.level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
 					if (entity != null) {
-						ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance);
+						ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
 					}
 				}
 			});

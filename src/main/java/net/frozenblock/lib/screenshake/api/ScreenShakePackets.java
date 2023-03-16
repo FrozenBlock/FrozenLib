@@ -67,16 +67,30 @@ public final class ScreenShakePackets {
 	}
 
 	public static void createScreenShakePacketEntity(Entity entity, Level level, float intensity, int duration, int falloffStart, float maxDistance) {
+		createScreenShakePacketEntity(entity, level, intensity, duration, falloffStart, maxDistance, 0);
+	}
+
+	public static void createScreenShakePacketEntity(Entity entity, Level level, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
 		if (!level.isClientSide) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeVarInt(entity.getId());
-			byteBuf.writeFloat(intensity);
-			byteBuf.writeInt(duration);
-			byteBuf.writeInt(falloffStart);
-			byteBuf.writeFloat(maxDistance);
+			FriendlyByteBuf byteBuf = createEntityScreenShakeByteBuf(entity, intensity, duration, falloffStart, maxDistance, ticks);
 			for (ServerPlayer player : PlayerLookup.world((ServerLevel) level)) {
 				ServerPlayNetworking.send(player, FrozenMain.SCREEN_SHAKE_ENTITY_PACKET, byteBuf);
 			}
 		}
+	}
+
+	public static void sendEntityScreenShakeTo(ServerPlayer player, Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
+		ServerPlayNetworking.send(player, FrozenMain.SCREEN_SHAKE_ENTITY_PACKET, createEntityScreenShakeByteBuf(entity, intensity, duration, falloffStart, maxDistance, ticks));
+	}
+
+	public static FriendlyByteBuf createEntityScreenShakeByteBuf(Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
+		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+		byteBuf.writeVarInt(entity.getId());
+		byteBuf.writeFloat(intensity);
+		byteBuf.writeInt(duration);
+		byteBuf.writeInt(falloffStart);
+		byteBuf.writeFloat(maxDistance);
+		byteBuf.writeInt(ticks);
+		return byteBuf;
 	}
 }

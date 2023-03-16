@@ -91,8 +91,8 @@ public class ScreenShaker {
 		SCREEN_SHAKES.add(new ScreenShake(intensity, duration, falloffStart, pos, maxDistance));
 	}
 
-	public static void addShake(Entity entity, float intensity, int duration, int falloffStart, float maxDistance) {
-		SCREEN_SHAKES.add(new EntityScreenShake(entity, intensity, duration, falloffStart, maxDistance));
+	public static void addShake(Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
+		SCREEN_SHAKES.add(new EntityScreenShake(entity, intensity, duration, falloffStart, maxDistance, ticks));
 	}
 
 	public static class ScreenShake {
@@ -103,12 +103,13 @@ public class ScreenShaker {
 		public final float maxDistance;
 		public int ticks;
 
-		public ScreenShake(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance) {
+		public ScreenShake(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance, int ticks) {
 			this.intensity = intensity;
 			this.duration = duration;
 			this.durationFalloffStart = durationFalloffStart;
 			this.pos = pos;
 			this.maxDistance = maxDistance;
+			this.ticks = ticks;
 		}
 
 		public float getIntensity(Vec3 playerPos) {
@@ -130,8 +131,8 @@ public class ScreenShaker {
 	public static class EntityScreenShake extends ScreenShake {
 		private final Entity entity;
 
-		public EntityScreenShake(Entity entity, float intensity, int duration, int durationFalloffStart, float maxDistance) {
-			super(intensity, duration, durationFalloffStart, entity.position(), maxDistance);
+		public EntityScreenShake(Entity entity, float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
+			super(intensity, duration, durationFalloffStart, entity.position(), maxDistance, ticks);
 			this.entity = entity;
 		}
 
