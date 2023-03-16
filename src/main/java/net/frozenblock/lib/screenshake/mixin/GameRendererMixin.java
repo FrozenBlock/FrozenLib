@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class GameRendererMixin {
 
 	@Inject(method = "renderLevel", at = @At("HEAD"))
-	public void renderLevel(float partialTicks, long finishTimeNano, PoseStack matrixStack, CallbackInfo info) {
+	public void frozenLib$shakeLevel(float partialTicks, long finishTimeNano, PoseStack matrixStack, CallbackInfo info) {
 		ScreenShaker.shake(matrixStack, partialTicks);
 	}
 
