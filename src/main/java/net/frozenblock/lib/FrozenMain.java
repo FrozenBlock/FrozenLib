@@ -23,21 +23,16 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.feature.FrozenFeatures;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
-import net.frozenblock.lib.sound.api.FrozenSoundPackets;
-import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
-import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.OverrideWindCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
@@ -47,10 +42,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 import org.slf4j.Logger;
@@ -79,9 +70,6 @@ public final class FrozenMain implements ModInitializer {
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		FrozenFeatures.init();
-
-		receiveSoundSyncPacket();
-		receiveIconSyncPacket();
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenMain.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 
@@ -129,14 +117,12 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation COOLDOWN_CHANGE_PACKET = id("cooldown_change_packet");
 	public static final ResourceLocation FORCED_COOLDOWN_PACKET = id("forced_cooldown_packet");
 	public static final ResourceLocation COOLDOWN_TICK_COUNT_PACKET = id("cooldown_tick_count_packet");
-	public static final ResourceLocation REQUEST_LOOPING_SOUND_SYNC_PACKET = id("request_looping_sound_sync_packet");
 
 	public static final ResourceLocation SCREEN_SHAKE_PACKET = id("screen_shake_packet");
 	public static final ResourceLocation SCREEN_SHAKE_ENTITY_PACKET = id("screen_shake_entity_packet");
 
 	public static final ResourceLocation SPOTTING_ICON_PACKET = id("spotting_icon_packet");
 	public static final ResourceLocation SPOTTING_ICON_REMOVE_PACKET = id("spotting_icon_remove_packet");
-	public static final ResourceLocation REQUEST_SPOTTING_ICON_SYNC_PACKET = id("request_spotting_icon_sync_packet");
 
 	public static final ResourceLocation HURT_SOUND_PACKET = id("hurt_sound_packet");
 
@@ -167,41 +153,5 @@ public final class FrozenMain implements ModInitializer {
 			LOGGER.error(string);
 		}
 	}
-
-	private static void receiveSoundSyncPacket() {
-		ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_LOOPING_SOUND_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registries.DIMENSION));
-			ctx.execute(() -> {
-				if (dimension != null) {
-					Entity entity = dimension.getEntity(id);
-					if (entity instanceof LivingEntity livingEntity) {
-						for (MovingLoopingSoundEntityManager.SoundLoopData nbt : ((EntityLoopingSoundInterface)livingEntity).getSounds().getSounds()) {
-							FrozenSoundPackets.createMovingRestrictionLoopingSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
-						}
-						for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : ((EntityLoopingFadingDistanceSoundInterface)livingEntity).getFadingDistanceSounds().getSounds()) {
-							FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(player, entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), BuiltInRegistries.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
-						}
-					}
-				}
-			});
-		});
-	}
-
-	private static void receiveIconSyncPacket() {
-		ServerPlayNetworking.registerGlobalReceiver(FrozenMain.REQUEST_SPOTTING_ICON_SYNC_PACKET, (ctx, player, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			Level dimension = ctx.getLevel(byteBuf.readResourceKey(Registries.DIMENSION));
-			ctx.execute(() -> {
-				if (dimension != null) {
-					Entity entity = dimension.getEntity(id);
-					if (entity != null) {
-						if (entity instanceof EntitySpottingIconInterface livingEntity) {
-							livingEntity.getSpottingIconManager().sendIconPacket(player);
-						}
-					}
-				}
-			});
-		});
-	}
+	
 }
