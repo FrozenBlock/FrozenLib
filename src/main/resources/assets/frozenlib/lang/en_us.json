@@ -17,5 +17,7 @@
   "tooltip.frozenlib.save_item_cooldowns": "Whether or not item cooldowns will save instead of being\ncleared upon switching dimensions or rejoining a world.",
 
   "commands.wind.success": "Set wind to %s, %s, %s.",
-  "commands.wind.toggle.success": "Toggled wind override to: %s."
+  "commands.wind.toggle.success": "Toggled wind override to: %s.",
+  "commands.screenshake.success": "Created screen shake at %s, %s, %s, with intensity %s, duration %s, falloff start %s, and distance %s.",
+  "commands.screenshake.entity.success": "Created screen shake appended to %s with intensity %s, duration %s, falloff start %s, and distance %s."
 }
