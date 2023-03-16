@@ -55,7 +55,7 @@ public class ConfigRegistry {
 		if (Objects.equals(entry.modId(), TypedEntry.DEFAULT_MOD_ID)) {
 			DEFAULT_TYPED_ENTRY_REGISTRY.add(entry);
 		} else {
-			MOD_TYPED_ENTRY_REGISTRY.computeIfAbsent(entry.modId(), k -> new ArrayList<>()).add(entry);
+			MOD_TYPED_ENTRY_REGISTRY.computeIfAbsent(entry.modId(), key -> new ArrayList<>()).add(entry);
 		}
 		TYPED_ENTRY_REGISTRY.add(entry);
 		return entry;
