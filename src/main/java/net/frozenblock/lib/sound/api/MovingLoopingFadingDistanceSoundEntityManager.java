@@ -28,19 +28,21 @@ import java.util.Objects;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.minecraft.core.Registry;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Entity;
 import org.slf4j.Logger;
 
 public class MovingLoopingFadingDistanceSoundEntityManager {
     private final ArrayList<FadingDistanceSoundLoopNBT> sounds = new ArrayList<>();
-    public final LivingEntity entity;
+    public final Entity entity;
 
-    public MovingLoopingFadingDistanceSoundEntityManager(LivingEntity entity) {
+    public MovingLoopingFadingDistanceSoundEntityManager(Entity entity) {
         this.entity = entity;
     }
 
@@ -77,13 +79,19 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 		if (!this.sounds.isEmpty()) {
 			ArrayList<FadingDistanceSoundLoopNBT> soundsToRemove = new ArrayList<>();
 			for (FadingDistanceSoundLoopNBT nbt : this.sounds) {
-				SoundPredicate.LoopPredicate<LivingEntity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
+				SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
 				if (!predicate.test(this.entity)) {
 					soundsToRemove.add(nbt);
 					predicate.onStop(this.entity);
 				}
 			}
 			this.sounds.removeAll(soundsToRemove);
+		}
+	}
+
+	public void syncWithPlayer(ServerPlayer serverPlayer) {
+		for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : this.getSounds()) {
+			FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(serverPlayer, this.entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), Registry.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.fadeDist, nbt.maxDist);
 		}
 	}
 
@@ -133,26 +141,34 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         public ResourceLocation getSoundEventID() {
             return this.soundEventID;
         }
+
         public ResourceLocation getSound2EventID() {
             return this.sound2EventID;
         }
+
         public String getOrdinal() {
             return this.categoryOrdinal;
         }
+
         public float getVolume() {
             return this.volume;
         }
+
         public float getPitch() {
             return this.pitch;
         }
+
         public float getFadeDist() {
             return this.fadeDist;
         }
+
         public float getMaxDist() {
             return this.maxDist;
         }
+
         public ResourceLocation getRestrictionID() {
             return this.restrictionID;
         }
+
     }
 }

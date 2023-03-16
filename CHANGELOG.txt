@@ -6,3 +6,5 @@ Put changelog here:
 -----------------
 - Ported to 1.19.4
 - Added a feature API to make parity between 1.19.2 and 1.19.3 easier
+- Added an NBT File API for reading/writing from/to NBT files
+- Wind Managers are now per-level and are savable
