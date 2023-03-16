@@ -20,10 +20,10 @@ package net.frozenblock.lib.wind.api.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
+import com.mojang.brigadier.arguments.DoubleArgumentType;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
@@ -31,9 +31,9 @@ import net.minecraft.world.phys.Vec3;
 public class OverrideWindCommand {
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal("overridewind").requires(source -> source.hasPermission(2))
-				.then(Commands.argument("vec", Vec3Argument.vec3()).executes(context -> setWind(context.getSource(), Vec3Argument.getVec3(context, "vec"))))
-				.then(Commands.argument("enabled", BoolArgumentType.bool()).executes(context -> setWind(context.getSource(), BoolArgumentType.getBool(context, "enabled"))))
+		dispatcher.register(Commands.literal("wind").requires(source -> source.hasPermission(2))
+				.then(Commands.argument("x", DoubleArgumentType.doubleArg()).then(Commands.argument("y", DoubleArgumentType.doubleArg()).then(Commands.argument("z", DoubleArgumentType.doubleArg()).executes(context -> setWind(context.getSource(), DoubleArgumentType.getDouble(context, "x"), DoubleArgumentType.getDouble(context, "y"), DoubleArgumentType.getDouble(context, "z"))))))
+				.then(Commands.argument("overrideEnabled", BoolArgumentType.bool()).executes(context -> setWind(context.getSource(), BoolArgumentType.getBool(context, "overrideEnabled"))))
 		);
 	}
 
@@ -46,16 +46,16 @@ public class OverrideWindCommand {
 		return 1;
 	}
 
-	private static int setWind(CommandSourceStack source, Vec3 vec3) {
+	private static int setWind(CommandSourceStack source, double x, double y, double z) {
 		ServerLevel level = source.getLevel();
 		WindManager windManager = WindManager.getWindManager(level);
 		windManager.overrideWind = true;
-		windManager.windX = vec3.x();
-		windManager.windY = vec3.y();
-		windManager.windZ = vec3.z();
+		windManager.windX = x;
+		windManager.windY = y;
+		windManager.windZ = z;
 		windManager.commandWind = new Vec3(windManager.windX, windManager.windY, windManager.windZ);
 		windManager.sendSync(level);
-		source.sendSuccess(Component.translatable("commands.wind.success", vec3.x(), vec3.y(), vec3.z()), true);
+		source.sendSuccess(Component.translatable("commands.wind.success", x, y, z), true);
 		return 1;
 	}
 
