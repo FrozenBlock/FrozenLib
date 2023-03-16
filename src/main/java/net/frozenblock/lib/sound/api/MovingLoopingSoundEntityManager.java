@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -91,7 +91,7 @@ public class MovingLoopingSoundEntityManager {
 
 	public void syncWithPlayer(ServerPlayer serverPlayer) {
 		for (MovingLoopingSoundEntityManager.SoundLoopData nbt : this.getSounds()) {
-			FrozenSoundPackets.createMovingRestrictionLoopingSound(serverPlayer, this.entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
+			FrozenSoundPackets.createMovingRestrictionLoopingSound(serverPlayer, this.entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
 		}
 	}
 
