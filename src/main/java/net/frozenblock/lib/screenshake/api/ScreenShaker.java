@@ -34,7 +34,6 @@ import net.minecraft.world.phys.Vec3;
 public class ScreenShaker {
 
 	public static final ArrayList<ScreenShake> SCREEN_SHAKES = new ArrayList<>();
-	private static final ArrayList<ScreenShake> SHAKES_TO_REMOVE = new ArrayList<>();
 
 	private static float prevYRot;
 	private static float yRot;
@@ -63,14 +62,10 @@ public class ScreenShaker {
 				highestIntensity = Math.max(shakeIntensity, highestIntensity);
 				amount += 1;
 			}
-			if (shake.ticks > shake.duration) {
-				SHAKES_TO_REMOVE.add(shake);
-			}
 			shake.ticks += 1;
 		}
 		float intensity = (amount > 0 && totalIntensity != 0 && highestIntensity != 0) ? (highestIntensity + ((totalIntensity / amount) * 0.5F)) : 0F;
-		SCREEN_SHAKES.removeAll(SHAKES_TO_REMOVE);
-		SHAKES_TO_REMOVE.clear();
+		SCREEN_SHAKES.removeIf(ScreenShake::shouldRemove);
 		yRot = Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight);
 		xRot = Mth.nextFloat(randomSource, -intensity, intensity);
 		zRot = Mth.nextFloat(randomSource, -intensity, intensity);
@@ -122,9 +117,13 @@ public class ScreenShaker {
 				float timeFromFalloffStart = Math.max(this.ticks - this.durationFalloffStart, 0); //Starts counting up once it reaches falloff start
 				float falloffTime = this.duration - this.durationFalloffStart; //The amount of time the intensity falls off for before reaching 0
 				float lerpedTimeFromFalloffStart = Mth.lerp((float)this.ticks / this.duration, 0, timeFromFalloffStart);
-				return (distanceBasedIntensity * (falloffTime - lerpedTimeFromFalloffStart)) / falloffTime;
+				return distanceBasedIntensity * ((falloffTime - lerpedTimeFromFalloffStart) / falloffTime);
 			}
 			return 0F;
+		}
+
+		public boolean shouldRemove() {
+			return this.ticks > this.duration;
 		}
 	}
 
