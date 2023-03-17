@@ -41,7 +41,6 @@ public class NoisePlantFeature extends Feature<PathFeatureConfig> {
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
         int radiusSquared = config.radius * config.radius;
-        EasyNoiseSampler.setSeed(level.getSeed());
         RandomSource random = level.getRandom();
         ImprovedNoise sampler = config.noise == 1 ? EasyNoiseSampler.perlinLocal : config.noise == 2 ? EasyNoiseSampler.perlinChecked : config.noise == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
         int bx = blockPos.getX();
@@ -53,7 +52,7 @@ public class NoisePlantFeature extends Feature<PathFeatureConfig> {
                 double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
                 if (distance < radiusSquared) {
                     mutable.set(x, level.getHeight(Types.OCEAN_FLOOR, x, z), z);
-                    double sample = EasyNoiseSampler.sample(sampler, mutable, config.multiplier, config.multiplyY, config.useY);
+                    double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
                     if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && level.getBlockState(mutable.below()).is(BlockTags.DIRT)) {
                         generated = true;
                         level.setBlock(mutable, config.pathBlock.getState(random, mutable), 3);

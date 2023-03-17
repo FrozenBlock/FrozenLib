@@ -43,7 +43,6 @@ public class NoisePathUnderWaterFeature extends Feature<PathFeatureConfig> {
         PathFeatureConfig config = context.config();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
-        EasyNoiseSampler.setSeed(level.getSeed());
         ImprovedNoise sampler = config.noise == 1 ? EasyNoiseSampler.perlinLocal : config.noise == 2 ? EasyNoiseSampler.perlinChecked : config.noise == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
         BlockPos.MutableBlockPos mutable = blockPos.mutable();
         int bx = mutable.getX();
@@ -59,7 +58,7 @@ public class NoisePathUnderWaterFeature extends Feature<PathFeatureConfig> {
 					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
 					if (distance < radiusSquared) {
 						mutable.set(x, level.getHeight(Heightmap.Types.OCEAN_FLOOR, x, z) - 1, z);
-						double sample = EasyNoiseSampler.sample(sampler, mutable, config.multiplier, config.multiplyY, config.useY);
+						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
 						if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate) && isWaterNearby(level, mutable, 2)) {
 							generated = true;
 							level.setBlock(mutable, config.pathBlock.getState(random, mutable), 3);
@@ -70,7 +69,7 @@ public class NoisePathUnderWaterFeature extends Feature<PathFeatureConfig> {
 						double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)) + ((by - y) * (by - y)));
 						if (distance < radiusSquared) {
 							mutable.set(x, y, z);
-							double sample = EasyNoiseSampler.sample(sampler, mutable, config.multiplier, config.multiplyY, config.useY);
+							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
 							if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate) && isWaterNearby(level, mutable, 2)) {
 								generated = true;
 								level.setBlock(mutable, config.pathBlock.getState(random, mutable), 3);
