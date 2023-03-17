@@ -44,7 +44,6 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
         int radiusSquared = config.radius * config.radius;
-        EasyNoiseSampler.setSeed(level.getSeed());
         RandomSource random = level.getRandom();
         ImprovedNoise sampler = config.noise == 1 ? EasyNoiseSampler.perlinLocal : config.noise == 2 ? EasyNoiseSampler.perlinChecked : config.noise == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
         int bx = blockPos.getX();
@@ -59,7 +58,7 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
 					if (distance < radiusSquared) {
 						mutable.set(x, level.getHeight(Types.OCEAN_FLOOR, x, z) - 1, z);
-						double sample = EasyNoiseSampler.sample(sampler, mutable, config.multiplier, config.multiplyY, config.useY);
+						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
 						if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
 							generated = true;
 							BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock.getState(random, mutable) : config.pathBlock.getState(random, mutable);
@@ -71,7 +70,7 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 						double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)) + ((by - y) * (by - y)));
 						if (distance < radiusSquared) {
 							mutable.set(x, y, z);
-							double sample = EasyNoiseSampler.sample(sampler, mutable, config.multiplier, config.multiplyY, config.useY);
+							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
 							if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
 								generated = true;
 								BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock.getState(random, mutable) : config.pathBlock.getState(random, mutable);
