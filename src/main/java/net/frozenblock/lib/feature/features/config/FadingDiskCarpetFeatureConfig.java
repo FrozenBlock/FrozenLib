@@ -20,7 +20,7 @@ package net.frozenblock.lib.feature.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.block.Block;
@@ -38,9 +38,9 @@ public class FadingDiskCarpetFeatureConfig implements FeatureConfiguration {
 					Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
 					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
 					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("placeableOn").forGetter((config) -> config.placeableOn),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable)
+					TagKey.codec(Registries.BLOCK).fieldOf("placeableOn").forGetter((config) -> config.placeableOn),
+					TagKey.codec(Registries.BLOCK).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
+					TagKey.codec(Registries.BLOCK).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable)
 			).apply(instance, FadingDiskCarpetFeatureConfig::new)
 	);
 
