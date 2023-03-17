@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.entity.mixin;
 
+import net.frozenblock.lib.entity.impl.FrozenStartTrackingEntityInterface;
 import net.minecraft.server.level.ServerEntity;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -36,7 +37,7 @@ public class ServerEntityMixin {
 
 	@Inject(method = "addPairing", at = @At("TAIL"))
 	public void frozenLib$additionalStartTracking(ServerPlayer player, CallbackInfo info) {
-		this.entity.startSeenByPlayer(player);
+		((FrozenStartTrackingEntityInterface)this.entity).frozenLib$playerStartsTracking(player);
 	}
 
 }

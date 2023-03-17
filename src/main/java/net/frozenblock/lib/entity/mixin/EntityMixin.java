@@ -19,6 +19,7 @@
 package net.frozenblock.lib.entity.mixin;
 
 import net.frozenblock.lib.entity.impl.FrozenStartTrackingEntityInterface;
+import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
@@ -37,6 +38,7 @@ public class EntityMixin implements FrozenStartTrackingEntityInterface {
 		((EntityLoopingSoundInterface)entity).getSoundManager().syncWithPlayer(serverPlayer);
 		((EntityLoopingFadingDistanceSoundInterface)entity).getFadingSoundManager().syncWithPlayer(serverPlayer);
 		((EntitySpottingIconInterface)entity).getSpottingIconManager().sendIconPacket(serverPlayer);
+		((EntityScreenShakeInterface)entity).getScreenShakeManager().syncWithPlayer(serverPlayer);
 	}
 
 }
