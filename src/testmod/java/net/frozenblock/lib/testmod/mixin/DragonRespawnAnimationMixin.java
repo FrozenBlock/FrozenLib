@@ -19,7 +19,7 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import java.util.List;
-import net.frozenblock.lib.screenshake.api.ScreenShakePackets;
+import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.boss.enderdragon.EndCrystal;
@@ -37,7 +37,7 @@ public class DragonRespawnAnimationMixin {
 		@Inject(method = "tick", at = @At("HEAD"))
 		private void startShaking(ServerLevel world, EndDragonFight fight, List<EndCrystal> crystals, int i, BlockPos pos, CallbackInfo ci) {
 			if (i == 0) {
-				ScreenShakePackets.createScreenShakePacket(world, 0.4F, 60, 0, 130, 0, 180);
+				ScreenShakeManager.addScreenShake(world, 0.4F, 60, 0, 130, 0, 180);
 			}
 		}
 	}
@@ -48,7 +48,7 @@ public class DragonRespawnAnimationMixin {
 		@Inject(method = "tick", at = @At("TAIL"))
 		private void startShaking(ServerLevel world, EndDragonFight fight, List<EndCrystal> crystals, int i, BlockPos pos, CallbackInfo ci) {
 			if (i == 0) {
-				ScreenShakePackets.createScreenShakePacket(world, 0.7F, 140, 0, 130, 0, 180);
+				ScreenShakeManager.addScreenShake(world, 0.7F, 140, 0, 130, 0, 180);
 			}
 		}
 	}

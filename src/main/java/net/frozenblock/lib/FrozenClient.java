@@ -29,7 +29,7 @@ import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
-import net.frozenblock.lib.screenshake.api.ScreenShaker;
+import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
@@ -345,11 +345,12 @@ public final class FrozenClient implements ClientModInitializer {
 			double y = byteBuf.readDouble();
 			double z = byteBuf.readDouble();
 			float maxDistance = byteBuf.readFloat();
+			int ticks = byteBuf.readInt();
 			ctx.execute(() -> {
 				ClientLevel level = ctx.level;
 				if (level != null) {
 					Vec3 pos = new Vec3(x, y, z);
-					ScreenShaker.addShake(intensity, duration, fallOffStart, pos, maxDistance);
+					ScreenShaker.addShake(intensity, duration, fallOffStart, pos, maxDistance, ticks);
 				}
 			});
 		});
@@ -362,12 +363,13 @@ public final class FrozenClient implements ClientModInitializer {
 			int duration = byteBuf.readInt();
 			int fallOffStart = byteBuf.readInt();
 			float maxDistance = byteBuf.readFloat();
+			int ticks = byteBuf.readInt();
 			ctx.execute(() -> {
 				ClientLevel level = ctx.level;
 				if (level != null) {
 					Entity entity = level.getEntity(id);
 					if (entity != null) {
-						ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance);
+						ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
 					}
 				}
 			});

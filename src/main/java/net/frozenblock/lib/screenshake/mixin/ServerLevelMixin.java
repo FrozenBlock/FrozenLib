@@ -18,20 +18,22 @@
 
 package net.frozenblock.lib.screenshake.mixin;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.frozenblock.lib.screenshake.api.ScreenShaker;
-import net.minecraft.client.renderer.GameRenderer;
+import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
+import net.frozenblock.lib.screenshake.impl.ScreenShakeManagerInterface;
+import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(GameRenderer.class)
-public class GameRendererMixin {
+@Mixin(ServerLevel.class)
+public class ServerLevelMixin implements ScreenShakeManagerInterface {
 
-	@Inject(method = "renderLevel", at = @At("HEAD"))
-	public void renderLevel(float partialTicks, long finishTimeNano, PoseStack matrixStack, CallbackInfo info) {
-		ScreenShaker.shake(matrixStack, partialTicks);
+	@Unique
+	private final ScreenShakeManager frozenLib$screenShakeManager = new ScreenShakeManager(ServerLevel.class.cast(this));
+
+	@Unique
+	@Override
+	public ScreenShakeManager frozenLib$getScreenShakeManager() {
+		return this.frozenLib$screenShakeManager;
 	}
 
 }

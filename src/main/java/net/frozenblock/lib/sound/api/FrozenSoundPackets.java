@@ -22,6 +22,7 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -32,7 +33,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import org.joml.Vector3d;
 
@@ -116,9 +116,7 @@ public final class FrozenSoundPackets {
             for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
-            if (entity instanceof LivingEntity living) {
-                living.addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
-            }
+			((EntityLoopingSoundInterface)entity).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
         }
     }
 
@@ -148,9 +146,7 @@ public final class FrozenSoundPackets {
             for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
             }
-            if (entity instanceof LivingEntity living) {
-                ((EntityLoopingSoundInterface)living).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
-            }
+			((EntityLoopingFadingDistanceSoundInterface)entity).addFadingDistanceSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), BuiltInRegistries.SOUND_EVENT.getKey(sound2), category, volume, pitch, id, fadeDist, maxDist);
         }
     }
 
@@ -215,9 +211,7 @@ public final class FrozenSoundPackets {
             for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
                 ServerPlayNetworking.send(player, FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
-            if (entity instanceof LivingEntity living) {
-                living.addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
-            }
+			((EntityLoopingSoundInterface)entity).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, id);
         }
     }
 

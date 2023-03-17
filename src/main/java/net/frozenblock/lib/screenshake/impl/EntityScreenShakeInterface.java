@@ -16,15 +16,18 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.impl;
+package net.frozenblock.lib.screenshake.impl;
 
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
+@ApiStatus.Internal
 @InjectedInterface(Entity.class)
-public interface FrozenStartTrackingEntityInterface {
+public interface EntityScreenShakeInterface {
 
-	void frozenLib$playerStartsTracking(ServerPlayer serverPlayer);
+    EntityScreenShakeManager getScreenShakeManager();
+
+    void addScreenShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks);
 
 }
