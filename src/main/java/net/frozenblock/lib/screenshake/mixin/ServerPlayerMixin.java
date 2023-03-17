@@ -52,6 +52,7 @@ public class ServerPlayerMixin {
 		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).getScreenShakeManager();
 		if (!this.frozenLib$hasSyncedScreenShakes && this.connection != null && this.connection.getConnection().isConnected() && !this.isChangingDimension) {
 			entityScreenShakeManager.syncWithPlayer(ServerPlayer.class.cast(this));
+			this.frozenLib$hasSyncedScreenShakes = true;
 		}
 	}
 
