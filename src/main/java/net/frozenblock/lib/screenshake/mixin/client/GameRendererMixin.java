@@ -19,7 +19,7 @@
 package net.frozenblock.lib.screenshake.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.frozenblock.lib.screenshake.api.ScreenShaker;
+import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;

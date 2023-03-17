@@ -29,7 +29,9 @@ import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.feature.FrozenFeatures;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
+import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.wind.api.WindManager;
@@ -95,9 +97,14 @@ public final class FrozenMain implements ModInitializer {
 			DimensionDataStorage dimensionDataStorage = level.getDataStorage();
 			WindManager windManager = WindManager.getWindManager(level);
 			dimensionDataStorage.computeIfAbsent(windManager::createData, windManager::createData, WindStorage.WIND_FILE_ID);
+			ScreenShakeManager screenShakeManager = ScreenShakeManager.getScreenShakeManager(level);
+			dimensionDataStorage.computeIfAbsent(screenShakeManager::createData, screenShakeManager::createData, ScreenShakeStorage.SCREEN_SHAKE_FILE_ID);
 		});
 
-		ServerTickEvents.START_WORLD_TICK.register((serverLevel) -> WindManager.getWindManager(serverLevel).tick());
+		ServerTickEvents.START_WORLD_TICK.register((serverLevel) -> {
+			WindManager.getWindManager(serverLevel).tick();
+			ScreenShakeManager.getScreenShakeManager(serverLevel).tick();
+		});
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getWindManager(serverLevel);

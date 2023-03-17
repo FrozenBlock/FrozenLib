@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.screenshake.api;
+package net.frozenblock.lib.screenshake.api.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
@@ -33,7 +33,7 @@ import net.minecraft.world.phys.Vec3;
 @Environment(EnvType.CLIENT)
 public class ScreenShaker {
 
-	public static final ArrayList<ScreenShake> SCREEN_SHAKES = new ArrayList<>();
+	public static final ArrayList<ClientScreenShake> SCREEN_SHAKES = new ArrayList<>();
 
 	private static float prevYRot;
 	private static float yRot;
@@ -43,7 +43,7 @@ public class ScreenShaker {
 	private static float zRot;
 
 	public static void tick(Camera camera, RandomSource randomSource, int windowWidth, int windowHeight) {
-		SCREEN_SHAKES.removeIf(ScreenShake::shouldRemove);
+		SCREEN_SHAKES.removeIf(ClientScreenShake::shouldRemove);
 		prevYRot = yRot;
 		prevXRot = xRot;
 		prevZRot = zRot;
@@ -56,7 +56,7 @@ public class ScreenShaker {
 		float highestIntensity = 0;
 		float totalIntensity = 0;
 		int amount = 0;
-		for (ScreenShake shake : SCREEN_SHAKES) {
+		for (ClientScreenShake shake : SCREEN_SHAKES) {
 			float shakeIntensity = shake.getIntensity(camera.getPosition());
 			if (shakeIntensity > 0) {
 				totalIntensity += shakeIntensity;
@@ -87,15 +87,15 @@ public class ScreenShaker {
 		camera.setRotation(camera.getYRot() + (Mth.lerp(partialTicks, prevYRot, yRot)), camera.getXRot() + (Mth.lerp(partialTicks, prevXRot, xRot)));
 	}
 
-	public static void addShake(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance) {
-		SCREEN_SHAKES.add(new ScreenShake(intensity, duration, falloffStart, pos, maxDistance));
+	public static void addShake(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance, int ticks) {
+		SCREEN_SHAKES.add(new ClientScreenShake(intensity, duration, falloffStart, pos, maxDistance, ticks));
 	}
 
 	public static void addShake(Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
-		SCREEN_SHAKES.add(new EntityScreenShake(entity, intensity, duration, falloffStart, maxDistance, ticks));
+		SCREEN_SHAKES.add(new ClientEntityScreenShake(entity, intensity, duration, falloffStart, maxDistance, ticks));
 	}
 
-	public static class ScreenShake {
+	public static class ClientScreenShake {
 		private final float intensity;
 		public final int duration;
 		private final int durationFalloffStart;
@@ -103,7 +103,7 @@ public class ScreenShaker {
 		public final float maxDistance;
 		public int ticks;
 
-		public ScreenShake(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance, int ticks) {
+		public ClientScreenShake(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance, int ticks) {
 			this.intensity = intensity;
 			this.duration = duration;
 			this.durationFalloffStart = durationFalloffStart;
@@ -128,10 +128,10 @@ public class ScreenShaker {
 		}
 	}
 
-	public static class EntityScreenShake extends ScreenShake {
+	public static class ClientEntityScreenShake extends ClientScreenShake {
 		private final Entity entity;
 
-		public EntityScreenShake(Entity entity, float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
+		public ClientEntityScreenShake(Entity entity, float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
 			super(intensity, duration, durationFalloffStart, entity.position(), maxDistance, ticks);
 			this.entity = entity;
 		}

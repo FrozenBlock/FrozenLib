@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.screenshake.api.ScreenShakePackets;
+import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -74,7 +74,7 @@ public class EntityScreenShakeManager {
 
 	public void syncWithPlayer(ServerPlayer serverPlayer) {
 		for (EntityScreenShake nbt : this.getShakes()) {
-			ScreenShakePackets.sendEntityScreenShakeTo(serverPlayer, this.entity, nbt.intensity, nbt.duration, nbt.durationFalloffStart, nbt.maxDistance, nbt.ticks);
+			ScreenShakeManager.sendEntityScreenShakeTo(serverPlayer, this.entity, nbt.intensity, nbt.duration, nbt.durationFalloffStart, nbt.maxDistance, nbt.ticks);
 		}
 	}
 

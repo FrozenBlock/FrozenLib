@@ -21,7 +21,8 @@ package net.frozenblock.lib.screenshake.api.command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
-import net.frozenblock.lib.screenshake.api.ScreenShakePackets;
+import java.util.Collection;
+import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -29,7 +30,6 @@ import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import java.util.Collection;
 
 public class ScreenShakeCommand {
 
@@ -50,14 +50,14 @@ public class ScreenShakeCommand {
 
 	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
-		ScreenShakePackets.createScreenShakePacket(source.getLevel(), intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance);
+		ScreenShakeManager.addScreenShake(source.getLevel(), intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance);
 		source.sendSuccess(Component.translatable("commands.screenshake.success", vec3.x(), vec3.y(), vec3.z(), intensity, duration, durationFalloffStart, maxDistance), true);
 		return 1;
 	}
 
 	private static int shake(CommandSourceStack source, Collection<? extends Entity> entities, float intensity, int duration, int durationFalloffStart, float maxDistance) {
 		for (Entity entity : entities) {
-			ScreenShakePackets.createScreenShakePacketEntity(entity, source.getLevel(), intensity, duration, durationFalloffStart, maxDistance);
+			ScreenShakeManager.addEntityScreenShake(entity, intensity, duration, durationFalloffStart, maxDistance);
 			source.sendSuccess(Component.translatable("commands.screenshake.entity.success", entity.getDisplayName(), intensity, duration, durationFalloffStart, maxDistance), true);
 		}
 		return 1;

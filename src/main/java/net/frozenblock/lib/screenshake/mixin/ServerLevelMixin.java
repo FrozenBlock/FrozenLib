@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.screenshake.mixin;
 
-import net.frozenblock.lib.screenshake.impl.ScreenShakeManager;
+import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeManagerInterface;
 import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.Mixin;

@@ -18,10 +18,9 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.screenshake.api.ScreenShakePackets;
+import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Ravager;
-import net.minecraft.world.entity.monster.warden.WardenAi;
 import net.minecraft.world.entity.raid.Raider;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,6 +37,6 @@ public abstract class RavagerMixin extends Raider {
 
 	@Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Ravager;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
 	private void startShaking(CallbackInfo ci) {
-		ScreenShakePackets.createScreenShakePacket(this.level, 0.5F, 17, this.getX(), this.getY(), this.getZ(), 23);
+		ScreenShakeManager.addEntityScreenShake(Ravager.class.cast(this), 0.5F, 17, 23);
 	}
 }

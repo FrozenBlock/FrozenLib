@@ -18,6 +18,8 @@
 
 package net.frozenblock.lib.screenshake.impl;
 
+import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
+
 public interface ScreenShakeManagerInterface {
 
 	public ScreenShakeManager frozenLib$getScreenShakeManager();
