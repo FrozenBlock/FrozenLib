@@ -18,22 +18,22 @@
 
 package net.frozenblock.lib.screenshake.api.client;
 
-import java.util.ArrayList;
+import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import java.util.ArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
 public class ScreenShaker {
-
 	public static final ArrayList<ClientScreenShake> SCREEN_SHAKES = new ArrayList<>();
 
 	private static float prevYRot;
@@ -43,28 +43,38 @@ public class ScreenShaker {
 	private static float prevZRot;
 	private static float zRot;
 
-	public static void tick(Camera camera, RandomSource randomSource, int windowWidth, int windowHeight) {
-		SCREEN_SHAKES.removeIf(ClientScreenShake::shouldRemove);
+	public static void tick(Minecraft client) {
 		prevYRot = yRot;
 		prevXRot = xRot;
 		prevZRot = zRot;
-		if (!Minecraft.getInstance().isMultiplayerServer() && Minecraft.getInstance().isPaused()) {
+		ClientLevel level = client.level;
+		if (level == null) {
+			SCREEN_SHAKES.clear();
+		}
+		if ((!client.isMultiplayerServer() && client.isPaused()) || level == null) {
 			yRot = 0F;
 			xRot = 0F;
 			zRot = 0F;
 			return;
 		}
-		float highestIntensity = 0F;
-		float totalIntensity = 0F;
+		Window window = client.getWindow();
+		int windowWidth = window.getWidth();
+		int windowHeight = window.getHeight();
+		RandomSource randomSource = level.getRandom();
+
+		SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake.shouldRemove(level));
+		float highestIntensity = 0;
+		float totalIntensity = 0;
 		int amount = 0;
-		for (ClientScreenShake shake : SCREEN_SHAKES) {
-			float shakeIntensity = shake.getIntensity(camera.getPosition());
+		for (ClientScreenShake screenShake : SCREEN_SHAKES) {
+			screenShake.tick();
+			float shakeIntensity = screenShake.getIntensity(client.gameRenderer.getMainCamera().getPosition());
 			if (shakeIntensity > 0) {
 				totalIntensity += shakeIntensity;
 				highestIntensity = Math.max(shakeIntensity, highestIntensity);
 				amount += 1;
 			}
-			shake.ticks += 1;
+			screenShake.ticks += 1;
 		}
 		float intensity = (amount > 0 && totalIntensity != 0 && highestIntensity != 0) ? (highestIntensity + ((totalIntensity / amount) * 0.5F)) : 0F;
 		yRot = Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight);
@@ -88,8 +98,8 @@ public class ScreenShaker {
 		camera.setRotation(camera.getYRot() + (Mth.lerp(partialTicks, prevYRot, yRot)), camera.getXRot() + (Mth.lerp(partialTicks, prevXRot, xRot)));
 	}
 
-	public static void addShake(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance, int ticks) {
-		SCREEN_SHAKES.add(new ClientScreenShake(intensity, duration, falloffStart, pos, maxDistance, ticks));
+	public static void addShake(ClientLevel level, float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance, int ticks) {
+		SCREEN_SHAKES.add(new ClientScreenShake(level, intensity, duration, falloffStart, pos, maxDistance, ticks));
 	}
 
 	public static void addShake(Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
@@ -97,6 +107,7 @@ public class ScreenShaker {
 	}
 
 	public static class ClientScreenShake {
+		public ClientLevel level;
 		private final float intensity;
 		public final int duration;
 		private final int durationFalloffStart;
@@ -104,7 +115,8 @@ public class ScreenShaker {
 		public final float maxDistance;
 		public int ticks;
 
-		public ClientScreenShake(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance, int ticks) {
+		public ClientScreenShake(ClientLevel level, float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance, int ticks) {
+			this.level = level;
 			this.intensity = intensity;
 			this.duration = duration;
 			this.durationFalloffStart = durationFalloffStart;
@@ -124,8 +136,12 @@ public class ScreenShaker {
 			return 0F;
 		}
 
-		public boolean shouldRemove() {
-			return this.ticks > this.duration;
+		public void tick() {
+
+		}
+
+		public boolean shouldRemove(ClientLevel level) {
+			return this.ticks > this.duration || level != this.level;
 		}
 	}
 
@@ -133,7 +149,7 @@ public class ScreenShaker {
 		private final Entity entity;
 
 		public ClientEntityScreenShake(Entity entity, float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
-			super(intensity, duration, durationFalloffStart, entity.position(), maxDistance, ticks);
+			super((ClientLevel) entity.level, intensity, duration, durationFalloffStart, entity.position(), maxDistance, ticks);
 			this.entity = entity;
 		}
 
@@ -144,6 +160,21 @@ public class ScreenShaker {
 				return super.getIntensity(playerPos);
 			}
 			return 0F;
+		}
+
+		public Entity getEntity() {
+			return this.entity;
+		}
+
+		@Override
+		public void tick() {
+			super.tick();
+			this.level = (ClientLevel) this.entity.level;
+		}
+
+		@Override
+		public boolean shouldRemove(ClientLevel level) {
+			return super.shouldRemove(level) || entity == null || entity.isRemoved();
 		}
 	}
 
