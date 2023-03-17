@@ -230,6 +230,10 @@ dependencies {
 	// TerraBlender
 	modCompileOnly("curse.maven:terrablender-fabric-565956:4205731")
 
+    // JNoise Library
+    implementation("de.articdive:jnoise-pipeline:4.0.0")
+    includeImplementation("de.articdive:jnoise-pipeline:4.0.0")
+
     "testmodImplementation"(sourceSets.main.get().output)
 
     // only affects runClient, does not affect gradlew build. add -PuseThirdPartyMods=false to not use these
