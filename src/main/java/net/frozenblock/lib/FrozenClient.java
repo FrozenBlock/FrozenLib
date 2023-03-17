@@ -380,7 +380,7 @@ public final class FrozenClient implements ClientModInitializer {
 	}
 
 	private static void receiveRemoveScreenShakePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.REMOVE_SCREEN_SHAKES_PACKET, (ctx, hander, byteBuf, responseSender) -> ctx.execute(ScreenShaker.SCREEN_SHAKES::clear));
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.REMOVE_SCREEN_SHAKES_PACKET, (ctx, hander, byteBuf, responseSender) -> ctx.execute(() -> ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> !(clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake))));
 	}
 
 	private static void receiveRemoveScreenShakeFromEntityPacket() {

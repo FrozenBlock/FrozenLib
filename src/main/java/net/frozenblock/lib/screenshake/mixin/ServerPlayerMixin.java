@@ -16,11 +16,10 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.mixin;
+package net.frozenblock.lib.screenshake.mixin;
 
-import java.util.ArrayList;
-import java.util.Optional;
-import net.frozenblock.lib.item.impl.SaveableItemCooldowns;
+import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
+import net.frozenblock.lib.screenshake.impl.EntityScreenShakeManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -43,40 +42,33 @@ public class ServerPlayerMixin {
 	@Shadow
 	private boolean isChangingDimension;
 
-	@Unique
-	public Optional<ArrayList<SaveableItemCooldowns.SaveableCooldownInstance>> frozenLib$savedItemCooldowns = Optional.empty();
 	@Unique @Nullable
-	private CompoundTag frozenLib$savedCooldownTag;
-
-	@Inject(method = "readAdditionalSaveData", at = @At(value = "TAIL"))
-	public void frozenLib$readAdditionalSaveData(CompoundTag compound, CallbackInfo info) {
-		this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(compound));
-	}
-
-	@Inject(method = "addAdditionalSaveData", at = @At(value = "TAIL"))
-	public void frozenLib$addAdditionalSaveData(CompoundTag compound, CallbackInfo info) {
-		SaveableItemCooldowns.saveCooldowns(compound, ServerPlayer.class.cast(this));
-	}
+	private CompoundTag frozenLib$savedScreenShakesTag;
+	@Unique
+	private boolean frozenLib$hasSyncedScreenShakes = false;
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))
-	public void frozenLib$tick(CallbackInfo info) {
-		if (this.frozenLib$savedItemCooldowns.isPresent() && this.connection != null && this.connection.getConnection().isConnected() && !this.isChangingDimension) {
-			SaveableItemCooldowns.setCooldowns(this.frozenLib$savedItemCooldowns.get(), ServerPlayer.class.cast(this));
-			this.frozenLib$savedItemCooldowns = Optional.empty();
+	public void frozenLib$syncScreenShakes(CallbackInfo info) {
+		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).getScreenShakeManager();
+		if (!this.frozenLib$hasSyncedScreenShakes && this.connection != null && this.connection.getConnection().isConnected() && !this.isChangingDimension) {
+			entityScreenShakeManager.syncWithPlayer(ServerPlayer.class.cast(this));
 		}
 	}
 
 	@Inject(method = "changeDimension", at = @At(value = "HEAD"))
-	public void frozenLib$changeDimensionSaveCooldowns(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
+	public void frozenLib$changeDimensionSaveScreenShakes(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
 		CompoundTag tempTag = new CompoundTag();
-		SaveableItemCooldowns.saveCooldowns(tempTag, ServerPlayer.class.cast(this));
-		this.frozenLib$savedCooldownTag = tempTag;
+		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).getScreenShakeManager();
+		entityScreenShakeManager.save(tempTag);
+		this.frozenLib$savedScreenShakesTag = tempTag;
 	}
 
 	@Inject(method = "changeDimension", at = @At(value = "RETURN"))
-	public void frozenLib$changeDimensionLoadCooldowns(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
-		if (this.frozenLib$savedCooldownTag != null) {
-			this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(this.frozenLib$savedCooldownTag));
+	public void frozenLib$changeDimensionLoadScreenShakes(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
+		if (this.frozenLib$savedScreenShakesTag != null) {
+			EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).getScreenShakeManager();
+			entityScreenShakeManager.load(this.frozenLib$savedScreenShakesTag);
+			this.frozenLib$hasSyncedScreenShakes = false;
 		}
 	}
 

@@ -135,7 +135,7 @@ public class ScreenShakeCommand {
 			source.sendSuccess(Component.translatable(oneEntity ? "commands.screenshake.remove.entity.success" : "commands.screenshake.remove.entity.success.multiple", entityString.toString()), true);
 			return 1;
 		} else {
-			source.sendSuccess(Component.translatable("commands.screenshake.remove.entity.failure"), true);
+			source.sendFailure(Component.translatable("commands.screenshake.remove.entity.failure"));
 			return 0;
 		}
 	}
