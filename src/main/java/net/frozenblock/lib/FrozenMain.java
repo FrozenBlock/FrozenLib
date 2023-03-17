@@ -35,7 +35,7 @@ import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.wind.api.WindManager;
-import net.frozenblock.lib.wind.api.command.OverrideWindCommand;
+import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
@@ -86,7 +86,7 @@ public final class FrozenMain implements ModInitializer {
 			}
 		});
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> OverrideWindCommand.register(dispatcher));
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> WindOverrideCommand.register(dispatcher));
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ScreenShakeCommand.register(dispatcher));
 
 		if (UNSTABLE_LOGGING) {
