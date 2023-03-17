@@ -125,7 +125,7 @@ public class ScreenShakeManager {
 			this.pos = pos;
 			this.maxDistance = maxDistance;
 			this.ticks = ticks;
-			this.chunkPos = new ChunkPos(new BlockPos(pos));
+			this.chunkPos = new ChunkPos(BlockPos.containing(pos));
 		}
 
 		public boolean shouldRemove() {
