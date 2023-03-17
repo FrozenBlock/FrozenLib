@@ -103,7 +103,7 @@ public class ScreenShakeCommand {
 		FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(Unpooled.buffer());
 		for (ServerPlayer serverPlayer : entities) {
 			ServerPlayNetworking.send(serverPlayer, FrozenMain.REMOVE_SCREEN_SHAKES_PACKET, friendlyByteBuf);
-			playerString.append(serverPlayer.getDisplayName().getString()).append(onePlayer ? ", " : "");
+			playerString.append(serverPlayer.getDisplayName().getString()).append(onePlayer ? "" : ", ");
 		}
 		source.sendSuccess(Component.translatable(onePlayer ? "commands.screenshake.remove.player.success" : "commands.screenshake.remove.player.success.multiple", playerString.toString()), true);
 		return 1;
@@ -128,7 +128,7 @@ public class ScreenShakeCommand {
 
 		boolean oneEntity = affectedEntities.size() == 1;
 		for (Entity entity : affectedEntities) {
-			entityString.append(entity.getDisplayName().getString()).append(oneEntity ? ", " : "");
+			entityString.append(entity.getDisplayName().getString()).append(oneEntity ? "" : ", ");
 		}
 
 		if (entityAmount > 0) {
