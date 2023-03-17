@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib;
 
-import com.mojang.blaze3d.platform.Window;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -41,7 +40,6 @@ import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.ClientWindManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
@@ -79,6 +77,8 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveCooldownTickCountPacket();
 		receiveScreenShakePacket();
 		receiveScreenShakeFromEntityPacket();
+		receiveRemoveScreenShakePacket();
+		receiveRemoveScreenShakeFromEntityPacket();
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
@@ -353,7 +353,7 @@ public final class FrozenClient implements ClientModInitializer {
 				ClientLevel level = ctx.level;
 				if (level != null) {
 					Vec3 pos = new Vec3(x, y, z);
-					ScreenShaker.addShake(intensity, duration, fallOffStart, pos, maxDistance, ticks);
+					ScreenShaker.addShake(level, intensity, duration, fallOffStart, pos, maxDistance, ticks);
 				}
 			});
 		});
@@ -373,6 +373,25 @@ public final class FrozenClient implements ClientModInitializer {
 					Entity entity = level.getEntity(id);
 					if (entity != null) {
 						ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
+					}
+				}
+			});
+		});
+	}
+
+	private static void receiveRemoveScreenShakePacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.REMOVE_SCREEN_SHAKES_PACKET, (ctx, hander, byteBuf, responseSender) -> ctx.execute(ScreenShaker.SCREEN_SHAKES::clear));
+	}
+
+	private static void receiveRemoveScreenShakeFromEntityPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.REMOVE_ENTITY_SCREEN_SHAKES_PACKET, (ctx, hander, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			ctx.execute(() -> {
+				ClientLevel level = ctx.level;
+				if (level != null) {
+					Entity entity = level.getEntity(id);
+					if (entity != null) {
+						ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
 					}
 				}
 			});
@@ -458,20 +477,9 @@ public final class FrozenClient implements ClientModInitializer {
 	}
 
 	private static void registerClientTickEvents() {
-		ClientTickEvents.START_WORLD_TICK.register(level -> {
-			Minecraft client = Minecraft.getInstance();
-			if (client.level != null) {
-				FlyBySoundHub.update(client, client.player, true);
-				ClientWindManager.tick(level);
-			}
-		});
-		ClientTickEvents.START_CLIENT_TICK.register(level -> {
-			Minecraft client = Minecraft.getInstance();
-			if (client.level != null) {
-				Window window = client.getWindow();
-				ScreenShaker.tick(client.gameRenderer.getMainCamera(), client.level.getRandom(), window.getWidth(), window.getHeight());
-			}
-		});
+		ClientTickEvents.START_WORLD_TICK.register(ClientWindManager::tick);
+		ClientTickEvents.START_CLIENT_TICK.register(ScreenShaker::tick);
+		ClientTickEvents.START_CLIENT_TICK.register(client -> FlyBySoundHub.update(client, client.player, true));
 	}
 
 }
