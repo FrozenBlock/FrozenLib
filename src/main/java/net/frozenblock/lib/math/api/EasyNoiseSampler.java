@@ -52,78 +52,78 @@ public final class EasyNoiseSampler {
     public static ImprovedNoise perlinLocal = new ImprovedNoise(localRandom);
     public static ImprovedNoise perlinXoro = new ImprovedNoise(xoroRandom);
 
-	public static void sampleTest() {
+	public static void sampleTest(double testWidth) {
 		setSeed(RandomSource.create().nextLong());
 		FrozenMain.LOGGER.info("VANILLA NOISES:");
 		long started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinChecked.noise(d, 0, 0);
 		}
 		FrozenMain.LOGGER.info("PerlinChecked took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinThreadSafe.noise(d, 0, 0);
 		}
 		FrozenMain.LOGGER.info("PerlinThreadSafe took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinLocal.noise(d, 0, 0);
 		}
 		FrozenMain.LOGGER.info("Perlinlocal took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinXoro.noise(d, 0, 0);
 		}
 		FrozenMain.LOGGER.info("PerlinXoro took {} nanoseconds.", System.nanoTime() - started);
 
 		FrozenMain.LOGGER.info("JNOISE NOISES:");
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinCosine.evaluateNoise(d);
 		}
 		FrozenMain.LOGGER.info("PerlinCosine took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinLinear.evaluateNoise(d);
 		}
 		FrozenMain.LOGGER.info("PerlinLineaar took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinQuadratic.evaluateNoise(d);
 		}
 		FrozenMain.LOGGER.info("PerlinQuadratic took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			whiteNoise.evaluateNoise(d);
 		}
 		FrozenMain.LOGGER.info("White took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinCosineFade.evaluateNoise(d);
 		}
 		FrozenMain.LOGGER.info("CosineFade took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinLinearFade.evaluateNoise(d);
 		}
 		FrozenMain.LOGGER.info("LinearFade took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinQuadraticFade.evaluateNoise(d);
 		}
 		FrozenMain.LOGGER.info("QuadraticFade took {} nanoseconds.", System.nanoTime() - started);
 
 		started = System.nanoTime();
-		for (double d = -100; d < 100; d += 0.25) {
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
 			perlinQuarticFade.evaluateNoise(d);
 		}
 		FrozenMain.LOGGER.info("QuarticFade took {} nanoseconds.", System.nanoTime() - started);
