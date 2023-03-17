@@ -18,6 +18,12 @@
 
 package net.frozenblock.lib.math.api;
 
+import de.articdive.jnoise.generators.noise_parameters.fade_functions.FadeFunction;
+import de.articdive.jnoise.generators.noise_parameters.interpolation.Interpolation;
+import de.articdive.jnoise.generators.noisegen.perlin.PerlinNoiseGenerator;
+import de.articdive.jnoise.generators.noisegen.white.WhiteNoiseGenerator;
+import de.articdive.jnoise.pipeline.JNoise;
+import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
@@ -29,8 +35,6 @@ import net.minecraft.world.phys.Vec3;
 
 /**
  * Adds easy-to-use noise sampling and random number generators
- *
- * @author Lunade (2021-2022)
  */
 public final class EasyNoiseSampler {
 
@@ -47,6 +51,117 @@ public final class EasyNoiseSampler {
     public static ImprovedNoise perlinThreadSafe = new ImprovedNoise(threadSafeRandom);
     public static ImprovedNoise perlinLocal = new ImprovedNoise(localRandom);
     public static ImprovedNoise perlinXoro = new ImprovedNoise(xoroRandom);
+
+	public static void sampleTest(double testWidth) {
+		setSeed(RandomSource.create().nextLong());
+		FrozenMain.LOGGER.info("VANILLA NOISES:");
+		long started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinChecked.noise(d, 0, 0);
+		}
+		FrozenMain.LOGGER.info("PerlinChecked took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinThreadSafe.noise(d, 0, 0);
+		}
+		FrozenMain.LOGGER.info("PerlinThreadSafe took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinLocal.noise(d, 0, 0);
+		}
+		FrozenMain.LOGGER.info("Perlinlocal took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinXoro.noise(d, 0, 0);
+		}
+		FrozenMain.LOGGER.info("PerlinXoro took {} nanoseconds.", System.nanoTime() - started);
+
+		FrozenMain.LOGGER.info("JNOISE NOISES:");
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinCosine.evaluateNoise(d);
+		}
+		FrozenMain.LOGGER.info("PerlinCosine took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinLinear.evaluateNoise(d);
+		}
+		FrozenMain.LOGGER.info("PerlinLineaar took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinQuadratic.evaluateNoise(d);
+		}
+		FrozenMain.LOGGER.info("PerlinQuadratic took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			whiteNoise.evaluateNoise(d);
+		}
+		FrozenMain.LOGGER.info("White took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinCosineFade.evaluateNoise(d);
+		}
+		FrozenMain.LOGGER.info("CosineFade took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinLinearFade.evaluateNoise(d);
+		}
+		FrozenMain.LOGGER.info("LinearFade took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinQuadraticFade.evaluateNoise(d);
+		}
+		FrozenMain.LOGGER.info("QuadraticFade took {} nanoseconds.", System.nanoTime() - started);
+
+		started = System.nanoTime();
+		for (double d = -testWidth; d < testWidth; d += 0.25) {
+			perlinQuarticFade.evaluateNoise(d);
+		}
+		FrozenMain.LOGGER.info("QuarticFade took {} nanoseconds.", System.nanoTime() - started);
+	}
+
+	public static PerlinNoiseGenerator perlinCosine = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.COSINE).build();
+	public static PerlinNoiseGenerator perlinLinear = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.LINEAR).build();
+	public static PerlinNoiseGenerator perlinQuadratic = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.QUADRATIC).build();
+	public static PerlinNoiseGenerator perlinQuartic = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.QUARTIC).build();
+	public static WhiteNoiseGenerator whiteNoise = WhiteNoiseGenerator.newBuilder().setSeed(seed).build();
+	public static JNoise perlinCosineFade = JNoise.newBuilder().perlin(seed, Interpolation.COSINE, FadeFunction.IMPROVED_PERLIN_NOISE).build();
+	public static JNoise perlinLinearFade = JNoise.newBuilder().perlin(seed, Interpolation.LINEAR, FadeFunction.IMPROVED_PERLIN_NOISE).build();
+	public static JNoise perlinQuadraticFade = JNoise.newBuilder().perlin(seed, Interpolation.QUADRATIC, FadeFunction.IMPROVED_PERLIN_NOISE).build();
+	public static JNoise perlinQuarticFade = JNoise.newBuilder().perlin(seed, Interpolation.QUARTIC, FadeFunction.IMPROVED_PERLIN_NOISE).build();
+
+	public static void setSeed(long newSeed) {
+		if (newSeed != seed) {
+			seed = newSeed;
+			checkedRandom = new LegacyRandomSource(seed);
+			threadSafeRandom = new ThreadSafeLegacyRandomSource(seed);
+			localRandom = new SingleThreadedRandomSource(seed);
+			xoroRandom = new XoroshiroRandomSource(seed);
+			perlinChecked = new ImprovedNoise(checkedRandom);
+			perlinThreadSafe = new ImprovedNoise(threadSafeRandom);
+			perlinLocal = new ImprovedNoise(localRandom);
+			perlinXoro = new ImprovedNoise(xoroRandom);
+
+			perlinCosine = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.COSINE).build();
+			perlinLinear = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.LINEAR).build();
+			perlinQuadratic = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.QUADRATIC).build();
+			perlinQuartic = PerlinNoiseGenerator.newBuilder().setSeed(seed).setInterpolation(Interpolation.QUARTIC).build();
+			whiteNoise = WhiteNoiseGenerator.newBuilder().setSeed(seed).build();
+			perlinCosineFade = JNoise.newBuilder().perlin(seed, Interpolation.COSINE, FadeFunction.IMPROVED_PERLIN_NOISE).build();
+			perlinLinearFade = JNoise.newBuilder().perlin(seed, Interpolation.LINEAR, FadeFunction.IMPROVED_PERLIN_NOISE).build();
+			perlinQuadraticFade = JNoise.newBuilder().perlin(seed, Interpolation.QUADRATIC, FadeFunction.IMPROVED_PERLIN_NOISE).build();
+			perlinQuarticFade = JNoise.newBuilder().perlin(seed, Interpolation.QUARTIC, FadeFunction.IMPROVED_PERLIN_NOISE).build();
+		}
+	}
 
     public static double sample(ImprovedNoise sampler, BlockPos pos, double multiplier, boolean multiplyY, boolean useY) {
         if (useY) {
@@ -80,20 +195,6 @@ public final class EasyNoiseSampler {
 		double windY = sampler.noise(0, y, 0);
 		double windZ = sampler.noise(0, 0, z);
 		return new Vec3(windX, windY, windZ);
-	}
-
-	public static void setSeed(long newSeed) {
-		if (newSeed != seed) {
-			seed = newSeed;
-			checkedRandom = new LegacyRandomSource(seed);
-			threadSafeRandom = new ThreadSafeLegacyRandomSource(seed);
-			localRandom = new SingleThreadedRandomSource(seed);
-			xoroRandom = new XoroshiroRandomSource(seed);
-			perlinChecked = new ImprovedNoise(checkedRandom);
-			perlinThreadSafe = new ImprovedNoise(threadSafeRandom);
-			perlinLocal = new ImprovedNoise(localRandom);
-			perlinXoro = new ImprovedNoise(xoroRandom);
-		}
 	}
 
 }
