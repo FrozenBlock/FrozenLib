@@ -22,6 +22,8 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import java.util.Collection;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -63,7 +65,7 @@ public class ScreenShakeCommand {
 		FriendlyByteBuf screenShakeByteBuf = ScreenShakeManager.createScreenShakeByteBuf(intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance, 0);
 		StringBuilder playerString = new StringBuilder();
 		for (ServerPlayer serverPlayer : entities) {
-			ScreenShakeManager.addScreenShake(source.getLevel(), intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance);
+			ServerPlayNetworking.send(serverPlayer, FrozenMain.SCREEN_SHAKE_PACKET, screenShakeByteBuf);
 			playerString.append(serverPlayer.getDisplayName()).append(", ");
 		}
 		source.sendSuccess(Component.translatable("commands.screenshake.player.success", playerString.toString(), vec3.x(), vec3.y(), vec3.z(), intensity, duration, durationFalloffStart, maxDistance), true);
