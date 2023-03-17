@@ -50,7 +50,7 @@ public class ServerPlayerMixin {
 	@Inject(method = "tick", at = @At(value = "TAIL"))
 	public void frozenLib$syncScreenShakes(CallbackInfo info) {
 		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).getScreenShakeManager();
-		if (!this.frozenLib$hasSyncedScreenShakes && this.connection != null && this.connection.getConnection().isConnected() && !this.isChangingDimension) {
+		if (!this.frozenLib$hasSyncedScreenShakes && this.connection != null && this.connection.isAcceptingMessages() && !this.isChangingDimension) {
 			entityScreenShakeManager.syncWithPlayer(ServerPlayer.class.cast(this));
 			this.frozenLib$hasSyncedScreenShakes = true;
 		}
