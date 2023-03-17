@@ -19,7 +19,6 @@
 package net.frozenblock.lib.math.test.command;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.DoubleArgumentType;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -28,12 +27,11 @@ import net.minecraft.network.chat.Component;
 public class NoiseTestCommand { //Used to profile noises
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal("noisetest").requires(source -> source.hasPermission(2)).executes(context -> noiseTest(context.getSource(), 100))
-				.then(Commands.argument("testlength", DoubleArgumentType.doubleArg()).executes(context -> noiseTest(context.getSource(), DoubleArgumentType.getDouble(context,"testlength")))));
+		dispatcher.register(Commands.literal("noisetest").requires(source -> source.hasPermission(2)).executes(context -> noiseTest(context.getSource())));
 	}
 
-	private static int noiseTest(CommandSourceStack source, double testlength) {
-		EasyNoiseSampler.sampleTest(testlength);
+	private static int noiseTest(CommandSourceStack source) {
+		EasyNoiseSampler.sampleTest();
 		source.sendSuccess(Component.literal("CHECK LOGS FOR NOISE SPEEDS"), true);
 		return 1;
 	}
