@@ -184,11 +184,7 @@ public class ScreenShakeManager {
 
 	public static void addScreenShake(Level level, float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
 		if (!level.isClientSide) {
-			FriendlyByteBuf byteBuf = createScreenShakeByteBuf(intensity, duration, falloffStart, x, y, z, maxDistance, ticks);
 			ServerLevel serverLevel = (ServerLevel) level;
-			for (ServerPlayer player : PlayerLookup.world(serverLevel)) {
-				ServerPlayNetworking.send(player, FrozenMain.SCREEN_SHAKE_PACKET, byteBuf);
-			}
 			ScreenShakeManager.getScreenShakeManager(serverLevel).addShake(intensity, duration, falloffStart, new Vec3(x, y, z), maxDistance, ticks);
 		}
 	}
