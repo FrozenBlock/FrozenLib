@@ -59,9 +59,10 @@ public class ScreenShakeCommand {
 										.then(Commands.argument("durationFalloffStart", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "entity"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "durationFalloffStart"), 16F))
 												.then(Commands.argument("maxDistance", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "entity"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "durationFalloffStart"), FloatArgumentType.getFloat(context, "maxDistance"))))))));
 
-		LiteralArgumentBuilder<CommandSourceStack> literalArgumentBuilder2 = literalArgumentBuilder.then(Commands.literal("remove"));
-		literalArgumentBuilder2.then(Commands.literal("for").then(Commands.argument("players", EntityArgument.players()).executes(context -> removeShakesFor(context.getSource(), EntityArgument.getPlayers(context, "players")))));
-		literalArgumentBuilder2.then(Commands.literal("from").then(Commands.argument("entities", EntityArgument.entities()).executes(context -> removeShakesFrom(context.getSource(), EntityArgument.getEntities(context, "entity")))));
+		literalArgumentBuilder.then(Commands.literal("remove")
+				.then(Commands.literal("for").then(Commands.argument("players", EntityArgument.players()).executes(context -> removeShakesFor(context.getSource(), EntityArgument.getPlayers(context, "players")))))
+				.then(Commands.literal("from").then(Commands.argument("entities", EntityArgument.entities()).executes(context -> removeShakesFrom(context.getSource(), EntityArgument.getEntities(context, "entity")))))
+		);
 
 		dispatcher.register(literalArgumentBuilder);
 	}
