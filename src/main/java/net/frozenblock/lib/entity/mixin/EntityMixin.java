@@ -18,18 +18,25 @@
 
 package net.frozenblock.lib.entity.mixin;
 
+import net.frozenblock.lib.entity.impl.EntityStepOnBlockInterface;
 import net.frozenblock.lib.entity.impl.FrozenStartTrackingEntityInterface;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Entity.class)
-public class EntityMixin implements FrozenStartTrackingEntityInterface {
+public class EntityMixin implements FrozenStartTrackingEntityInterface, EntityStepOnBlockInterface {
 
 	@Unique
 	@Override
@@ -41,4 +48,26 @@ public class EntityMixin implements FrozenStartTrackingEntityInterface {
 		((EntityScreenShakeInterface)entity).getScreenShakeManager().syncWithPlayer(serverPlayer);
 	}
 
+	@Unique
+	private BlockPos frozenLib$steppedPos;
+	@Unique
+	private BlockState frozenLib$steppedState;
+
+	@ModifyArgs(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V"))
+	public void frozenLib$captureSteppedArgs(Args args) {
+		this.frozenLib$steppedPos = args.get(1);
+		this.frozenLib$steppedState = args.get(2);
+	}
+
+	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V", shift = At.Shift.AFTER))
+	public void frozenLib$runSteppedOn(Args args) {
+		this.frozenLib$onSteppedOnBlock(this.frozenLib$steppedPos, this.frozenLib$steppedState);
+		this.frozenLib$steppedPos = null;
+		this.frozenLib$steppedState = null;
+	}
+
+	@Override
+	public void frozenLib$onSteppedOnBlock(BlockPos blockPos, BlockState blockState) {
+
+	}
 }
