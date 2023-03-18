@@ -20,12 +20,13 @@ package net.frozenblock.lib.entity.impl;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
 @InjectedInterface(Entity.class)
 public interface EntityStepOnBlockInterface {
 
-	void frozenLib$onSteppedOnBlock(BlockPos blockPos, BlockState blockState);
+	void frozenLib$onSteppedOnBlock(Level level, BlockPos blockPos, BlockState blockState);
 
 }
