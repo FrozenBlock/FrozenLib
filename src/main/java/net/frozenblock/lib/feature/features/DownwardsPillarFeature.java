@@ -45,7 +45,7 @@ public class DownwardsPillarFeature extends Feature<PillarFeatureConfig> {
         for (int y = 0; y > height; y--) {
             if (context.config().replaceable.contains(level.getBlockState(mutable).getBlockHolder()) || level.getBlockState(mutable).isAir() || level.getBlockState(mutable).getFluidState() != Fluids.EMPTY.defaultFluidState()) {
                 bl = true;
-                level.setBlock(mutable, context.config().columnBlock, 3);
+                level.setBlock(mutable, context.config().columnBlock, 2);
                 mutable.set(bx, by + y, bz);
             } else {
                 mutable.set(bx, by + y, bz);

@@ -140,7 +140,7 @@ public class CircularWaterloggedVegetationPatchFeature extends VegetationPatchFe
 		if (super.placeVegetation(level, config, chunkGenerator, random, pos.below())) {
 			BlockState blockState = level.getBlockState(pos);
 			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && !(Boolean)blockState.getValue(BlockStateProperties.WATERLOGGED)) {
-				level.setBlock(pos, (BlockState)blockState.setValue(BlockStateProperties.WATERLOGGED, true), 2);
+				level.setBlock(pos, blockState.setValue(BlockStateProperties.WATERLOGGED, true), 2);
 			}
 
 			return true;
