@@ -28,9 +28,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,6 +42,9 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Entity.class)
 public class EntityMixin implements FrozenStartTrackingEntityInterface, EntityStepOnBlockInterface {
+
+	@Shadow
+	public Level level;
 
 	@Unique
 	@Override
@@ -58,19 +63,19 @@ public class EntityMixin implements FrozenStartTrackingEntityInterface, EntitySt
 
 	@ModifyArgs(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V"))
 	public void frozenLib$captureSteppedArgs(Args args) {
-		this.frozenLib$steppedPos = args.get(1);
-		this.frozenLib$steppedState = args.get(2);
+		this.frozenLib$steppedPos = args.get(2);
+		this.frozenLib$steppedState = args.get(3);
 	}
 
 	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V", shift = At.Shift.AFTER))
 	public void frozenLib$runSteppedOn(MoverType type, Vec3 pos, CallbackInfo info) {
-		this.frozenLib$onSteppedOnBlock(this.frozenLib$steppedPos, this.frozenLib$steppedState);
+		this.frozenLib$onSteppedOnBlock(this.level, this.frozenLib$steppedPos, this.frozenLib$steppedState);
 		this.frozenLib$steppedPos = null;
 		this.frozenLib$steppedState = null;
 	}
 
 	@Override
-	public void frozenLib$onSteppedOnBlock(BlockPos blockPos, BlockState blockState) {
+	public void frozenLib$onSteppedOnBlock(Level level, BlockPos blockPos, BlockState blockState) {
 
 	}
 }
