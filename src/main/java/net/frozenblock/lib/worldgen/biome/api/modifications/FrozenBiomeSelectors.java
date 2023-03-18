@@ -22,10 +22,12 @@ import java.util.function.Predicate;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
 import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
 import net.fabricmc.fabric.api.biome.v1.NetherBiomes;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.LevelStem;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 /**
  * Provides several biome selectors with additional functionality.
@@ -36,6 +38,14 @@ public final class FrozenBiomeSelectors {
 
     private FrozenBiomeSelectors() {
     }
+
+	/**
+	 * Returns a biome selector that will match all biomes that have the specified placed feature,
+	 * assuming Vanilla's default biome source is used.
+	 */
+	public static Predicate<BiomeSelectionContext> hasFeature(ResourceKey<PlacedFeature> placedFeature) {
+		return context -> context.hasPlacedFeature(placedFeature);
+	}
 
     /**
      * Returns a biome selector that will match all biomes that would normally spawn in the Overworld,
