@@ -50,7 +50,7 @@ import org.slf4j.helpers.NOPLogger;
 
 public final class FrozenMain implements ModInitializer {
 	public static final String MOD_ID = "frozenlib";
-	public static final Logger LOGGER = LoggerFactory.getLogger("FrozenLib");
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
 	public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
 	public static boolean areConfigsInit;
 
