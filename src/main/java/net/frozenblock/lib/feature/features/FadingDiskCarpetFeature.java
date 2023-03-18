@@ -66,6 +66,8 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 										mutableDisk.move(Direction.UP);
 										level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
 										bl = true;
+									} else {
+										mutableDisk.move(Direction.UP);
 									}
 								}
 							} else {
@@ -75,6 +77,8 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 									mutableDisk.move(Direction.UP);
 									level.setBlock(mutableDisk, placedState, 3);
 									bl = true;
+								} else {
+									mutableDisk.move(Direction.UP);
 								}
 							}
 						}
@@ -96,6 +100,8 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 											mutableDisk.move(Direction.UP);
 											level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
 											bl = true;
+										} else {
+											mutableDisk.move(Direction.UP);
 										}
 									}
 								} else {
@@ -105,6 +111,8 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 										mutableDisk.move(Direction.UP);
 										level.setBlock(mutableDisk, placedState, 3);
 										bl = true;
+									} else {
+										mutableDisk.move(Direction.UP);
 									}
 								}
 							}
