@@ -59,7 +59,7 @@ public class NoisePathFeature extends Feature<PathFeatureConfig> {
 						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
 						if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
 							generated = true;
-							level.setBlock(mutable, config.pathBlock.getState(random, mutable), 3);
+							level.setBlock(mutable, config.pathBlock.getState(random, mutable), 2);
 						}
 					}
 				} else {
@@ -70,7 +70,7 @@ public class NoisePathFeature extends Feature<PathFeatureConfig> {
 							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
 							if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
 								generated = true;
-								level.setBlock(mutable, config.pathBlock.getState(random, mutable), 3);
+								level.setBlock(mutable, config.pathBlock.getState(random, mutable), 2);
 							}
 						}
 					}
