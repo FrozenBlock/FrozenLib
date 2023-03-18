@@ -29,6 +29,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,7 +38,9 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Entity.class)
@@ -56,22 +59,9 @@ public class EntityMixin implements FrozenStartTrackingEntityInterface, EntitySt
 		((EntityScreenShakeInterface)entity).getScreenShakeManager().syncWithPlayer(serverPlayer);
 	}
 
-	@Unique
-	private BlockPos frozenLib$steppedPos;
-	@Unique
-	private BlockState frozenLib$steppedState;
-
-	@ModifyArgs(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V"))
-	public void frozenLib$captureSteppedArgs(Args args) {
-		this.frozenLib$steppedPos = args.get(2);
-		this.frozenLib$steppedState = args.get(3);
-	}
-
-	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V", shift = At.Shift.AFTER))
-	public void frozenLib$runSteppedOn(MoverType type, Vec3 pos, CallbackInfo info) {
-		this.frozenLib$onSteppedOnBlock(this.level, this.frozenLib$steppedPos, this.frozenLib$steppedState);
-		this.frozenLib$steppedPos = null;
-		this.frozenLib$steppedState = null;
+	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
+	public void frozenLib$runSteppedOn(MoverType type, Vec3 pos, CallbackInfo ci, Vec3 vec3, double d, boolean bl, boolean bl2, BlockPos blockPos, BlockState blockState, Block block) {
+		this.frozenLib$onSteppedOnBlock(this.level, blockPos, blockState);
 	}
 
 	@Override
