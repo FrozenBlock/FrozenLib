@@ -20,10 +20,7 @@ package net.frozenblock.lib.feature.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Registry;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
@@ -37,10 +34,7 @@ public class FadingDiskCarpetFeatureConfig implements FeatureConfiguration {
 					Codec.FLOAT.fieldOf("placeChance").forGetter(config -> config.placeChance),
 					Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
 					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
-					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("placeableOn").forGetter((config) -> config.placeableOn),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable)
+					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent)
 			).apply(instance, FadingDiskCarpetFeatureConfig::new)
 	);
 
@@ -52,11 +46,8 @@ public class FadingDiskCarpetFeatureConfig implements FeatureConfiguration {
 	public final float innerChance;
 	public final float innerPercent;
 	public final float startFadePercent;
-	public final TagKey<Block> placeableOn;
-	public final TagKey<Block> innerReplaceable;
-	public final TagKey<Block> outerReplaceable;
 
-    public FadingDiskCarpetFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, TagKey<Block> placeableOn, TagKey<Block> innerReplaceable, TagKey<Block> outerReplaceable) {
+    public FadingDiskCarpetFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent) {
 		this.useHeightMapAndNotCircular = useHeightMapAndNotCircular;
 		this.innerState = innerState;
 		this.outerState = outerState;
@@ -65,8 +56,5 @@ public class FadingDiskCarpetFeatureConfig implements FeatureConfiguration {
 		this.innerChance = innerChance;
 		this.innerPercent = innerPercent;
 		this.startFadePercent = startFadePercent;
-		this.placeableOn = placeableOn;
-		this.innerReplaceable = innerReplaceable;
-		this.outerReplaceable = outerReplaceable;
     }
 }
