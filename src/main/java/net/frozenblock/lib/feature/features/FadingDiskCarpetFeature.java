@@ -64,7 +64,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 									BlockState placedState = config.outerState.getState(random, mutableDisk);
 									if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 										mutableDisk.move(Direction.UP);
-										level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 2);
+										level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
 										bl = true;
 									}
 								}
@@ -73,7 +73,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 								BlockState placedState = choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk);
 								if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 									mutableDisk.move(Direction.UP);
-									level.setBlock(mutableDisk, placedState, 2);
+									level.setBlock(mutableDisk, placedState, 3);
 									bl = true;
 								}
 							}
@@ -94,7 +94,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 										BlockState placedState = config.outerState.getState(random, mutableDisk);
 										if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 											mutableDisk.move(Direction.UP);
-											level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 2);
+											level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
 											bl = true;
 										}
 									}
@@ -103,7 +103,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 									BlockState placedState = choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk);
 									if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 										mutableDisk.move(Direction.UP);
-										level.setBlock(mutableDisk, placedState, 2);
+										level.setBlock(mutableDisk, placedState, 3);
 										bl = true;
 									}
 								}

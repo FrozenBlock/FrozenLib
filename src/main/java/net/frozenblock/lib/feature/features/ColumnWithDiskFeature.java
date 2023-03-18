@@ -64,10 +64,10 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
                             generated = true;
                             if (fade) {
                                 if (random.nextFloat() > 0.65F) {
-                                    level.setBlock(mutableDisk, disk, 2);
+                                    level.setBlock(mutableDisk, disk, 3);
                                 }
                             } else {
-                                level.setBlock(mutableDisk, disk, 2);
+                                level.setBlock(mutableDisk, disk, 3);
                             }
                         }
                     }
@@ -85,7 +85,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
                 break;
             }
             if (state.getBlock() instanceof GrowingPlantBodyBlock || state.getBlock() instanceof BushBlock || state.isAir()) {
-                level.setBlock(pos, column, 2);
+                level.setBlock(pos, column, 3);
                 generated = true;
             }
         }
@@ -98,7 +98,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
                 break;
             }
             if (state.getBlock() instanceof GrowingPlantBodyBlock || state.getBlock() instanceof BushBlock || state.isAir()) {
-                level.setBlock(pos, column, 2);
+                level.setBlock(pos, column, 3);
                 generated = true;
             }
         }
@@ -111,7 +111,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
                 break;
             }
             if (state.getBlock() instanceof GrowingPlantBodyBlock || state.getBlock() instanceof BushBlock || state.isAir()) {
-                level.setBlock(pos, column, 2);
+                level.setBlock(pos, column, 3);
                 generated = true;
             }
         }

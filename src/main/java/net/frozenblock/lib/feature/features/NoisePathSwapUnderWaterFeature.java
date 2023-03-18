@@ -62,7 +62,7 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 						if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
 							generated = true;
 							BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock.getState(random, mutable) : config.pathBlock.getState(random, mutable);
-							level.setBlock(mutable, setState, 2);
+							level.setBlock(mutable, setState, 3);
 						}
 					}
 				} else {
@@ -74,7 +74,7 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 							if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
 								generated = true;
 								BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock.getState(random, mutable) : config.pathBlock.getState(random, mutable);
-								level.setBlock(mutable, setState, 2);
+								level.setBlock(mutable, setState, 3);
 							}
 						}
 					}
