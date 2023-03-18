@@ -6,5 +6,12 @@ Put changelog here:
 -----------------
 - Ported to 1.19.4
 - Added a feature API to make parity between 1.19.2 and 1.19.3 easier
+- Added a Liquid Rendering API
 - Added an NBT File API for reading/writing from/to NBT files
-- Wind Managers are now per-level and are savable
+- Wind Managers are now per-level and are saved
+- Screen shaking is now saved to entities
+- Added command /windoverride with parameters x, y, and z representing the direction and strength of the wind.
+    Additionally, it has parameters true and false to enable and disable the override
+- Added command /screenshake with parameters [entity or position], intensity, duration, falloff start, and distance.
+- Added FadingDiskCarpetFeature
+- Added FadingDiskTagFeature
