@@ -55,7 +55,7 @@ public class NoisePlantFeature extends Feature<PathFeatureConfig> {
                     double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
                     if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && level.getBlockState(mutable.below()).is(BlockTags.DIRT)) {
                         generated = true;
-                        level.setBlock(mutable, config.pathBlock.getState(random, mutable), 3);
+                        level.setBlock(mutable, config.pathBlock.getState(random, mutable), 2);
                     }
                 }
             }

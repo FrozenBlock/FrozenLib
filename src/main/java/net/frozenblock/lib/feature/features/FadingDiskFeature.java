@@ -61,11 +61,11 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 						if (random.nextFloat() < config.placeChance) {
 							if (fade) {
 								if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
-									level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
+									level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 2);
 									bl = true;
 								}
 							} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable)) {
-								level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
+								level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 2);
 								bl = true;
 							}
 						}
@@ -83,11 +83,11 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 								if (random.nextFloat() < config.placeChance) {
 									if (fade) {
 										if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
-											level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
+											level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 2);
 											bl = true;
 										}
 									} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable)) {
-										level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
+										level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 2);
 										bl = true;
 									}
 								}
