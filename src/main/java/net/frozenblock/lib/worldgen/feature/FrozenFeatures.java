@@ -28,6 +28,9 @@ import net.frozenblock.lib.worldgen.feature.features.FadingDiskTagExceptInBiomeF
 import net.frozenblock.lib.worldgen.feature.features.FadingDiskTagFeature;
 import net.frozenblock.lib.worldgen.feature.features.NoisePathFeature;
 import net.frozenblock.lib.worldgen.feature.features.NoisePathSwapUnderWaterFeature;
+import net.frozenblock.lib.worldgen.feature.features.NoisePathSwapUnderWaterTagFeature;
+import net.frozenblock.lib.worldgen.feature.features.NoisePathTagFeature;
+import net.frozenblock.lib.worldgen.feature.features.NoisePathTagUnderWaterFeature;
 import net.frozenblock.lib.worldgen.feature.features.NoisePathUnderWaterFeature;
 import net.frozenblock.lib.worldgen.feature.features.NoisePlantFeature;
 import net.frozenblock.lib.worldgen.feature.features.UpwardsPillarFeature;
@@ -38,6 +41,8 @@ import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskTagBiomeFe
 import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskTagFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.features.config.PathFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.features.config.PathSwapUnderWaterFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.PathSwapUnderWaterTagFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.PathTagFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.features.config.PillarFeatureConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -46,9 +51,12 @@ import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatch
 public class FrozenFeatures {
 
 	public static final NoisePathFeature NOISE_PATH_FEATURE = new NoisePathFeature(PathFeatureConfig.CODEC);
+	public static final NoisePathTagFeature NOISE_PATH_TAG_FEATURE = new NoisePathTagFeature(PathTagFeatureConfig.CODEC);
 	public static final NoisePlantFeature NOISE_PLANT_FEATURE = new NoisePlantFeature(PathFeatureConfig.CODEC);
 	public static final NoisePathSwapUnderWaterFeature NOISE_PATH_SWAP_UNDER_WATER_FEATURE = new NoisePathSwapUnderWaterFeature(PathSwapUnderWaterFeatureConfig.CODEC);
+	public static final NoisePathSwapUnderWaterTagFeature NOISE_PATH_SWAP_UNDER_WATER_TAG_FEATURE = new NoisePathSwapUnderWaterTagFeature(PathSwapUnderWaterTagFeatureConfig.CODEC);
 	public static final NoisePathUnderWaterFeature NOISE_PATH_UNDER_WATER_FEATURE = new NoisePathUnderWaterFeature(PathFeatureConfig.CODEC);
+	public static final NoisePathTagUnderWaterFeature NOISE_PATH_TAG_UNDER_WATER_FEATURE = new NoisePathTagUnderWaterFeature(PathTagFeatureConfig.CODEC);
 	public static final ColumnWithDiskFeature COLUMN_WITH_DISK_FEATURE = new ColumnWithDiskFeature(ColumnWithDiskFeatureConfig.CODEC);
 	public static final UpwardsPillarFeature UPWARDS_PILLAR_FEATURE = new UpwardsPillarFeature(PillarFeatureConfig.CODEC);
 	public static final DownwardsPillarFeature DOWNWARDS_PILLAR_FEATURE = new DownwardsPillarFeature(PillarFeatureConfig.CODEC);
@@ -60,9 +68,12 @@ public class FrozenFeatures {
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_feature"), NOISE_PATH_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_tag_feature"), NOISE_PATH_TAG_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_plant_feature"), NOISE_PLANT_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_swap_under_water_feature"), NOISE_PATH_SWAP_UNDER_WATER_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_swap_under_water_tag_feature"), NOISE_PATH_SWAP_UNDER_WATER_TAG_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_under_water_feature"), NOISE_PATH_UNDER_WATER_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("noise_path_tag_under_water_feature"), NOISE_PATH_TAG_UNDER_WATER_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("column_with_disk_feature"), COLUMN_WITH_DISK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("upwards_pillar"), UPWARDS_PILLAR_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("downwards_pillar"), DOWNWARDS_PILLAR_FEATURE);
