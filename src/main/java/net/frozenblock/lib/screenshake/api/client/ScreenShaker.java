@@ -106,6 +106,10 @@ public class ScreenShaker {
 		SCREEN_SHAKES.add(new ClientEntityScreenShake(entity, intensity, duration, falloffStart, maxDistance, ticks));
 	}
 
+	public static void clear() {
+		SCREEN_SHAKES.clear();
+	}
+
 	public static class ClientScreenShake {
 		public ClientLevel level;
 		private final float intensity;

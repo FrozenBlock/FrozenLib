@@ -27,7 +27,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
-import net.frozenblock.lib.feature.FrozenFeatures;
+import net.frozenblock.lib.worldgen.feature.FrozenFeatures;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
@@ -88,10 +88,6 @@ public final class FrozenMain implements ModInitializer {
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> WindOverrideCommand.register(dispatcher));
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ScreenShakeCommand.register(dispatcher));
-
-		if (UNSTABLE_LOGGING) {
-			//CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> OverrideWindCommand.register(dispatcher));
-		}
 
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			DimensionDataStorage dimensionDataStorage = level.getDataStorage();

@@ -20,6 +20,7 @@ package net.frozenblock.lib;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
@@ -62,7 +63,7 @@ public final class FrozenClient implements ClientModInitializer {
 		FrozenClientRegistry.initRegistry();
 		ModIntegrations.initialize(); // Mod integrations must run after normal mod initialization
 		ClientFreezer.onInitializeClient();
-		registerClientTickEvents();
+		registerClientEvents();
 
 		receiveLocalSoundPacket();
 		receiveMovingRestrictionSoundPacket();
@@ -476,10 +477,11 @@ public final class FrozenClient implements ClientModInitializer {
 		});
 	}
 
-	private static void registerClientTickEvents() {
+	private static void registerClientEvents() {
 		ClientTickEvents.START_WORLD_TICK.register(ClientWindManager::tick);
 		ClientTickEvents.START_CLIENT_TICK.register(ScreenShaker::tick);
 		ClientTickEvents.START_CLIENT_TICK.register(client -> FlyBySoundHub.update(client, client.player, true));
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ScreenShaker.clear());
 	}
 
 }
