@@ -16,31 +16,29 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature.features;
+package net.frozenblock.lib.worldgen.feature.features;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.feature.features.config.PathSwapUnderWaterFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.PathFeatureConfig;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
-public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFeatureConfig> {
-    public NoisePathSwapUnderWaterFeature(Codec<PathSwapUnderWaterFeatureConfig> codec) {
+public class NoisePathFeature extends Feature<PathFeatureConfig> {
+    public NoisePathFeature(Codec<PathFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<PathSwapUnderWaterFeatureConfig> context) {
+    public boolean place(FeaturePlaceContext<PathFeatureConfig> context) {
         boolean generated = false;
-		PathSwapUnderWaterFeatureConfig config = context.config();
+        PathFeatureConfig config = context.config();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
         int radiusSquared = config.radius * config.radius;
@@ -52,8 +50,8 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
         BlockPos.MutableBlockPos mutable = blockPos.mutable();
 		BlockPredicate predicate = config.onlyExposed ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
 
-		for (int x = bx - config.radius; x <= bx + config.radius; x++) {
-			for (int z = bz - config.radius; z <= bz + config.radius; z++) {
+        for (int x = bx - config.radius; x <= bx + config.radius; x++) {
+            for (int z = bz - config.radius; z <= bz + config.radius; z++) {
 				if (!config.is3D) {
 					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
 					if (distance < radiusSquared) {
@@ -61,8 +59,7 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
 						if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
 							generated = true;
-							BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock.getState(random, mutable) : config.pathBlock.getState(random, mutable);
-							level.setBlock(mutable, setState, 3);
+							level.setBlock(mutable, config.pathBlock.getState(random, mutable), 3);
 						}
 					}
 				} else {
@@ -73,14 +70,13 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
 							if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
 								generated = true;
-								BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock.getState(random, mutable) : config.pathBlock.getState(random, mutable);
-								level.setBlock(mutable, setState, 3);
+								level.setBlock(mutable, config.pathBlock.getState(random, mutable), 3);
 							}
 						}
 					}
 				}
-			}
-		}
+            }
+        }
         return generated;
     }
 

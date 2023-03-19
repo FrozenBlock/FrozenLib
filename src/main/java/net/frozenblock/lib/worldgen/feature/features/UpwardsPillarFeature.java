@@ -16,10 +16,10 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature.features;
+package net.frozenblock.lib.worldgen.feature.features;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.feature.features.config.PillarFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.PillarFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -27,8 +27,8 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.material.Fluids;
 
-public class DownwardsPillarFeature extends Feature<PillarFeatureConfig> {
-    public DownwardsPillarFeature(Codec<PillarFeatureConfig> codec) {
+public class UpwardsPillarFeature extends Feature<PillarFeatureConfig> {
+    public UpwardsPillarFeature(Codec<PillarFeatureConfig> codec) {
         super(codec);
     }
 
@@ -41,8 +41,8 @@ public class DownwardsPillarFeature extends Feature<PillarFeatureConfig> {
         int bx = blockPos.getX();
         int bz = blockPos.getZ();
         int by = blockPos.getY();
-        int height = -context.config().height.sample(random);
-        for (int y = 0; y > height; y--) {
+        int height = context.config().height.sample(random);
+        for (int y = 0; y < height; y++) {
             if (context.config().replaceable.contains(level.getBlockState(mutable).getBlockHolder()) || level.getBlockState(mutable).isAir() || level.getBlockState(mutable).getFluidState() != Fluids.EMPTY.defaultFluidState()) {
                 bl = true;
                 level.setBlock(mutable, context.config().columnBlock, 3);

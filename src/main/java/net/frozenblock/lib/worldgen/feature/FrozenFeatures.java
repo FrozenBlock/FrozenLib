@@ -16,27 +16,27 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature;
+package net.frozenblock.lib.worldgen.feature;
 
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.feature.features.CircularWaterloggedVegetationPatchFeature;
-import net.frozenblock.lib.feature.features.ColumnWithDiskFeature;
-import net.frozenblock.lib.feature.features.DownwardsPillarFeature;
-import net.frozenblock.lib.feature.features.FadingDiskCarpetFeature;
-import net.frozenblock.lib.feature.features.FadingDiskFeature;
-import net.frozenblock.lib.feature.features.FadingDiskTagFeature;
-import net.frozenblock.lib.feature.features.NoisePathFeature;
-import net.frozenblock.lib.feature.features.NoisePathSwapUnderWaterFeature;
-import net.frozenblock.lib.feature.features.NoisePathUnderWaterFeature;
-import net.frozenblock.lib.feature.features.NoisePlantFeature;
-import net.frozenblock.lib.feature.features.UpwardsPillarFeature;
-import net.frozenblock.lib.feature.features.config.ColumnWithDiskFeatureConfig;
-import net.frozenblock.lib.feature.features.config.FadingDiskCarpetFeatureConfig;
-import net.frozenblock.lib.feature.features.config.FadingDiskFeatureConfig;
-import net.frozenblock.lib.feature.features.config.FadingDiskTagFeatureConfig;
-import net.frozenblock.lib.feature.features.config.PathFeatureConfig;
-import net.frozenblock.lib.feature.features.config.PathSwapUnderWaterFeatureConfig;
-import net.frozenblock.lib.feature.features.config.PillarFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.CircularWaterloggedVegetationPatchFeature;
+import net.frozenblock.lib.worldgen.feature.features.ColumnWithDiskFeature;
+import net.frozenblock.lib.worldgen.feature.features.DownwardsPillarFeature;
+import net.frozenblock.lib.worldgen.feature.features.FadingDiskCarpetFeature;
+import net.frozenblock.lib.worldgen.feature.features.FadingDiskFeature;
+import net.frozenblock.lib.worldgen.feature.features.FadingDiskTagFeature;
+import net.frozenblock.lib.worldgen.feature.features.NoisePathFeature;
+import net.frozenblock.lib.worldgen.feature.features.NoisePathSwapUnderWaterFeature;
+import net.frozenblock.lib.worldgen.feature.features.NoisePathUnderWaterFeature;
+import net.frozenblock.lib.worldgen.feature.features.NoisePlantFeature;
+import net.frozenblock.lib.worldgen.feature.features.UpwardsPillarFeature;
+import net.frozenblock.lib.worldgen.feature.features.config.ColumnWithDiskFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskCarpetFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskTagFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.PathFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.PathSwapUnderWaterFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.PillarFeatureConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
