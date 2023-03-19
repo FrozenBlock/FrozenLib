@@ -24,6 +24,7 @@ import net.frozenblock.lib.worldgen.feature.features.ColumnWithDiskFeature;
 import net.frozenblock.lib.worldgen.feature.features.DownwardsPillarFeature;
 import net.frozenblock.lib.worldgen.feature.features.FadingDiskCarpetFeature;
 import net.frozenblock.lib.worldgen.feature.features.FadingDiskFeature;
+import net.frozenblock.lib.worldgen.feature.features.FadingDiskTagExceptInBiomeFeature;
 import net.frozenblock.lib.worldgen.feature.features.FadingDiskTagFeature;
 import net.frozenblock.lib.worldgen.feature.features.NoisePathFeature;
 import net.frozenblock.lib.worldgen.feature.features.NoisePathSwapUnderWaterFeature;
@@ -33,6 +34,7 @@ import net.frozenblock.lib.worldgen.feature.features.UpwardsPillarFeature;
 import net.frozenblock.lib.worldgen.feature.features.config.ColumnWithDiskFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskCarpetFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskTagBiomeFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskTagFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.features.config.PathFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.features.config.PathSwapUnderWaterFeatureConfig;
@@ -52,6 +54,7 @@ public class FrozenFeatures {
 	public static final DownwardsPillarFeature DOWNWARDS_PILLAR_FEATURE = new DownwardsPillarFeature(PillarFeatureConfig.CODEC);
 	public static final CircularWaterloggedVegetationPatchFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH = new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 	public static final FadingDiskTagFeature FADING_DISK_TAG_FEATURE = new FadingDiskTagFeature(FadingDiskTagFeatureConfig.CODEC);
+	public static final FadingDiskTagExceptInBiomeFeature FADING_DISK_TAG_EXCEPT_IN_BIOME_FEATURE = new FadingDiskTagExceptInBiomeFeature(FadingDiskTagBiomeFeatureConfig.CODEC);
 	public static final FadingDiskFeature FADING_DISK_FEATURE = new FadingDiskFeature(FadingDiskFeatureConfig.CODEC);
 	public static final FadingDiskCarpetFeature FADING_DISK_CARPET_FEATURE = new FadingDiskCarpetFeature(FadingDiskCarpetFeatureConfig.CODEC);
 
@@ -65,6 +68,7 @@ public class FrozenFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("downwards_pillar"), DOWNWARDS_PILLAR_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("fading_disk_tag_feature"), FADING_DISK_TAG_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("fading_disk_tag_except_in_biome_feature"), FADING_DISK_TAG_EXCEPT_IN_BIOME_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("fading_disk_feature"), FADING_DISK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("fading_disk_carpet_feature"), FADING_DISK_CARPET_FEATURE);
 	}
