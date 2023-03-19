@@ -56,7 +56,7 @@ public class LowerHeightmapPlacement extends PlacementModifier {
 
 	@Override
 	public PlacementModifierType<?> type() {
-		return PlacementModifierType.HEIGHTMAP;
+		return FrozenPlacementModifiers.ACCURATE_HEIGHTMAP;
 	}
 
 	public static final PlacementModifier HEIGHTMAP_MOTION_BLOCKING = LowerHeightmapPlacement.onHeightmap(Heightmap.Types.MOTION_BLOCKING);

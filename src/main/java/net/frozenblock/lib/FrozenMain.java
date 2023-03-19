@@ -37,6 +37,7 @@ import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
+import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.minecraft.core.Registry;
@@ -71,6 +72,7 @@ public final class FrozenMain implements ModInitializer {
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		FrozenFeatures.init();
+		FrozenPlacementModifiers.init();
 
 		Registry.register(Registry.CONDITION, FrozenMain.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 
