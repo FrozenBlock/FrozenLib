@@ -42,8 +42,8 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
 					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
 					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
 					RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
-					RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable)
-					Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap),
+					RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable),
+					Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap)
 			).apply(instance, FadingDiskFeatureConfig::new)
     );
 
