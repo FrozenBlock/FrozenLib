@@ -21,6 +21,7 @@ package net.frozenblock.lib.worldgen.feature.features.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.biome.Biome;
@@ -40,10 +41,10 @@ public class FadingDiskTagBiomeFeatureConfig implements FeatureConfiguration {
 					Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
 					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
 					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable),
+					TagKey.codec(Registries.BLOCK).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
+					TagKey.codec(Registries.BLOCK).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable),
 					Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap),
-					TagKey.codec(Registry.BIOME_REGISTRY).fieldOf("placeExceptIn").forGetter((config) -> config.placeExceptIn)
+					TagKey.codec(Registries.BIOME).fieldOf("placeExceptIn").forGetter((config) -> config.placeExceptIn)
 			).apply(instance, FadingDiskTagBiomeFeatureConfig::new)
     );
 
