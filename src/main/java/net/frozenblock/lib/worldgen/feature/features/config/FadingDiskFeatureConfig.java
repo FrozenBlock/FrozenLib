@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature.features.config;
+package net.frozenblock.lib.worldgen.feature.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,6 +26,7 @@ import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
@@ -41,7 +42,8 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
 					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
 					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
 					RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
-					RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable)
+					RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable),
+					Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap)
 			).apply(instance, FadingDiskFeatureConfig::new)
     );
 
@@ -55,8 +57,9 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
 	public final float startFadePercent;
 	public final HolderSet<Block> innerReplaceable;
 	public final HolderSet<Block> outerReplaceable;
+	public final Heightmap.Types heightmap;
 
-    public FadingDiskFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, HolderSet<Block> innerReplaceable, HolderSet<Block> outerReplaceable) {
+    public FadingDiskFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, HolderSet<Block> innerReplaceable, HolderSet<Block> outerReplaceable, Heightmap.Types heightmap) {
 		this.useHeightMapAndNotCircular = useHeightMapAndNotCircular;
 		this.innerState = innerState;
 		this.outerState = outerState;
@@ -67,5 +70,6 @@ public class FadingDiskFeatureConfig implements FeatureConfiguration {
 		this.startFadePercent = startFadePercent;
 		this.innerReplaceable = innerReplaceable;
 		this.outerReplaceable = outerReplaceable;
+		this.heightmap = heightmap;
     }
 }

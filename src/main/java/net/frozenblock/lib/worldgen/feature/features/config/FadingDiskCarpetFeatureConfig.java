@@ -16,11 +16,12 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature.features.config;
+package net.frozenblock.lib.worldgen.feature.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
@@ -34,7 +35,8 @@ public class FadingDiskCarpetFeatureConfig implements FeatureConfiguration {
 					Codec.FLOAT.fieldOf("placeChance").forGetter(config -> config.placeChance),
 					Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
 					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
-					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent)
+					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
+					Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap)
 			).apply(instance, FadingDiskCarpetFeatureConfig::new)
 	);
 
@@ -46,8 +48,9 @@ public class FadingDiskCarpetFeatureConfig implements FeatureConfiguration {
 	public final float innerChance;
 	public final float innerPercent;
 	public final float startFadePercent;
+	public final Heightmap.Types heightmap;
 
-    public FadingDiskCarpetFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent) {
+    public FadingDiskCarpetFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, Heightmap.Types heightmap) {
 		this.useHeightMapAndNotCircular = useHeightMapAndNotCircular;
 		this.innerState = innerState;
 		this.outerState = outerState;
@@ -56,5 +59,6 @@ public class FadingDiskCarpetFeatureConfig implements FeatureConfiguration {
 		this.innerChance = innerChance;
 		this.innerPercent = innerPercent;
 		this.startFadePercent = startFadePercent;
+		this.heightmap = heightmap;
     }
 }

@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature.features.config;
+package net.frozenblock.lib.worldgen.feature.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -24,6 +24,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
@@ -39,7 +40,8 @@ public class FadingDiskTagFeatureConfig implements FeatureConfiguration {
 					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
 					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
 					TagKey.codec(Registries.BLOCK).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
-					TagKey.codec(Registries.BLOCK).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable)
+					TagKey.codec(Registries.BLOCK).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable),
+					Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap)
 			).apply(instance, FadingDiskTagFeatureConfig::new)
     );
 
@@ -53,8 +55,9 @@ public class FadingDiskTagFeatureConfig implements FeatureConfiguration {
 	public final float startFadePercent;
 	public final TagKey<Block> innerReplaceable;
 	public final TagKey<Block> outerReplaceable;
+	public final Heightmap.Types heightmap;
 
-    public FadingDiskTagFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, TagKey<Block> innerReplaceable, TagKey<Block> outerReplaceable) {
+    public FadingDiskTagFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, TagKey<Block> innerReplaceable, TagKey<Block> outerReplaceable, Heightmap.Types heightmap) {
 		this.useHeightMapAndNotCircular = useHeightMapAndNotCircular;
 		this.innerState = innerState;
 		this.outerState = outerState;
@@ -65,5 +68,6 @@ public class FadingDiskTagFeatureConfig implements FeatureConfiguration {
 		this.startFadePercent = startFadePercent;
 		this.innerReplaceable = innerReplaceable;
 		this.outerReplaceable = outerReplaceable;
+		this.heightmap = heightmap;
     }
 }

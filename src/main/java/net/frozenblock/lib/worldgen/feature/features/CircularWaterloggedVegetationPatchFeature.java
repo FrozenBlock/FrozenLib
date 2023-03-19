@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature.features;
+package net.frozenblock.lib.worldgen.feature.features;
 
 import com.mojang.serialization.Codec;
 import java.util.HashSet;
