@@ -59,21 +59,19 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
 					double distance = ((bx - x) * (bx - x) + (bz - z) * (bz - z));
 					if (distance < radius * radius) {
 						mutableDisk.set(x, level.getHeight(heightmap, x, z) - 1, z);
-						if (!level.getBiome(mutableDisk).is(ignoredBiomes)) {
-							BlockState state = level.getBlockState(mutableDisk);
-							boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
-							boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
-							boolean choseInner;
-							if (random.nextFloat() < config.placeChance) {
-								if (fade) {
-									if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
-										level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
-										bl = true;
-									}
-								} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable)) {
-									level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
+						BlockState state = level.getBlockState(mutableDisk);
+						boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
+						boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
+						boolean choseInner;
+						if (random.nextFloat() < config.placeChance) {
+							if (fade) {
+								if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
+									level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
 									bl = true;
 								}
+							} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
+								level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
+								bl = true;
 							}
 						}
 					}
@@ -84,20 +82,18 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
 							mutableDisk.set(x, y, z);
 							BlockState state = level.getBlockState(mutableDisk);
 							if (isBlockExposedToAir(level, mutableDisk)) {
-								if (!level.getBiome(mutableDisk).is(ignoredBiomes)) {
-									boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
-									boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
-									boolean choseInner;
-									if (random.nextFloat() < config.placeChance) {
-										if (fade) {
-											if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
-												level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
-												bl = true;
-											}
-										} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable)) {
-											level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
+								boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
+								boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
+								boolean choseInner;
+								if (random.nextFloat() < config.placeChance) {
+									if (fade) {
+										if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
+											level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
 											bl = true;
 										}
+									} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
+										level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
+										bl = true;
 									}
 								}
 							}
