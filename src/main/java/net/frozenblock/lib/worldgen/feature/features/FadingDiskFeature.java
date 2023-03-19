@@ -25,6 +25,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
@@ -40,7 +41,8 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
         WorldGenLevel level = context.level();
 		FadingDiskFeatureConfig config = context.config();
 		boolean useHeightMapAndNotCircular = config.useHeightMapAndNotCircular;
-        BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, blockPos.getX(), blockPos.getZ())) : blockPos;
+		Heightmap.Types heightmap = config.heightmap;
+        BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
         RandomSource random = level.getRandom();
         int radius = config.radius.sample(random);
         //DISK
@@ -53,7 +55,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 				if (useHeightMapAndNotCircular) {
 					double distance = ((bx - x) * (bx - x) + (bz - z) * (bz - z));
 					if (distance < radius * radius) {
-						mutableDisk.set(x, level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1, z);
+						mutableDisk.set(x, level.getHeight(heightmap, x, z) - 1, z);
 						BlockState state = level.getBlockState(mutableDisk);
 						boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
 						boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);

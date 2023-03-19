@@ -30,7 +30,7 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 public class LowerHeightmapPlacement extends PlacementModifier {
 	public static final Codec<LowerHeightmapPlacement> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			(Heightmap.Types.CODEC.fieldOf("improved_heightmap")).forGetter(modifier -> modifier.heightmap)
+			(Heightmap.Types.CODEC.fieldOf("heightmap")).forGetter(modifier -> modifier.heightmap)
 	).apply(instance, LowerHeightmapPlacement::new));
 
 	private final Heightmap.Types heightmap;

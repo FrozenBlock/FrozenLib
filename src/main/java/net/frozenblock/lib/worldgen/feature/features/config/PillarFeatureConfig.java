@@ -19,7 +19,6 @@
 package net.frozenblock.lib.worldgen.feature.features.config;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
@@ -40,10 +39,6 @@ public class PillarFeatureConfig implements FeatureConfiguration {
     public final BlockState columnBlock;
     public final IntProvider height;
     public final HolderSet<Block> replaceable;
-
-    private static DataResult<Block> validateBlock(Block block) {
-        return DataResult.success(block);
-    }
 
     public PillarFeatureConfig(BlockState columnBlock, IntProvider height, HolderSet<Block> replaceable) {
         this.columnBlock = columnBlock;
