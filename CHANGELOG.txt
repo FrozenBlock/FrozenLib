@@ -14,3 +14,4 @@ Put changelog here:
 - Added command /screenshake with parameters [entity or position], intensity, duration, falloff start, and distance.
 - Added FadingDiskCarpetFeature
 - Added FadingDiskTagFeature
+- Added support for Toml configs
