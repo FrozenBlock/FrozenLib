@@ -35,8 +35,6 @@ target/
 # fabric
 
 run/
-config/
-logs/
 /remappedSrc/
 /src/main/generated/.cache
 
