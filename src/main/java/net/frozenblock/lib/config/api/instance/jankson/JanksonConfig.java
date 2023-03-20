@@ -1,8 +1,6 @@
-package net.frozenblock.lib.config.api.instance.toml;
+package net.frozenblock.lib.config.api.instance.jankson;
 
-import com.moandjiezana.toml.Toml;
-import com.moandjiezana.toml.TomlWriter;
-import jdk.jfr.Experimental;
+import blue.endless.jankson.Jankson;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.instance.Config;
 import java.io.BufferedWriter;
@@ -12,28 +10,27 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 /**
- * Serializes and deserializes config data with TOML4J.
+ * Serializes and deserializes config data with Jankson (Json5).
  * @deprecated Currently experimental and not finished.
  */
 @Deprecated
-class TomlConfig<T> extends Config<T> {
+class JanksonConfig<T> extends Config<T> {
 
-	public static final String EXTENSION = "toml";
+	public static final String EXTENSION = "json5";
 
-	private final TomlWriter tomlWriter;
+	private final Jankson jankson;
 
-
-	public TomlConfig(String modId, Class<T> config) {
-		this(modId, config, new TomlWriter());
+	public JanksonConfig(String modId, Class<T> config) {
+		this(modId, config, Jankson.builder().build());
 	}
 
-	public TomlConfig(String modId, Class<T> config, TomlWriter writer) {
-		this(modId, config, makePath(modId, EXTENSION), writer);
+	public JanksonConfig(String modId, Class<T> config, Jankson jankson) {
+		this(modId, config, makePath(modId, EXTENSION), jankson);
 	}
 
-	public TomlConfig(String modId, Class<T> config, Path path, TomlWriter writer) {
+	public JanksonConfig(String modId, Class<T> config, Path path, Jankson jankson) {
 		super(modId, config, path);
-		this.tomlWriter = writer;
+		this.jankson = jankson;
 
 		if (this.load()) {
 			this.save();
@@ -46,7 +43,7 @@ class TomlConfig<T> extends Config<T> {
 		try {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-			this.tomlWriter.write(this.config(), writer);
+			writer.write(this.jankson.toJson(this.config()).toJson(true, true));
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -58,12 +55,9 @@ class TomlConfig<T> extends Config<T> {
 		FrozenMain.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
 		if (Files.exists(this.path())) {
 			try {
-				var tomlReader = new Toml();
-				var reader = Files.newBufferedReader(this.path());
-				this.setConfig(tomlReader.read(reader).to(this.configClass()));
-				reader.close();
+				this.setConfig(this.jankson.fromJson(this.jankson.load(this.path().toFile()), this.configClass()));
 				return true;
-			} catch (IOException e) {
+			} catch (Exception e) {
 				e.printStackTrace();
 				return false;
 			}

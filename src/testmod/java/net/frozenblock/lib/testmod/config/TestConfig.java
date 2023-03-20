@@ -26,7 +26,6 @@ import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.gson.GsonConfig;
-import net.frozenblock.lib.config.api.instance.toml.TomlConfig;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.client.gui.screens.Screen;
@@ -54,7 +53,7 @@ public class TestConfig {
 
 	@Exclude
 	private static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
-			new TomlConfig<>(FrozenTestMain.MOD_ID, TestConfig.class)
+			new GsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class)
 	);
 
 	public boolean testToggle = true;

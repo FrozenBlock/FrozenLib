@@ -44,6 +44,8 @@ public val archives_base_name: String by project
 
 public val fabric_version: String by project
 public val fabric_asm_version: String by project
+val toml4j_version: String by project
+val jankson_version: String by project
 
 public val modmenu_version: String by project
 public val cloth_config_version: String by project
@@ -229,6 +231,12 @@ dependencies {
 
 	// TerraBlender
 	modCompileOnly("curse.maven:terrablender-fabric-565956:4205731")
+
+    // Toml
+    implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
+
+    // Jankson
+    implementation("blue.endless:jankson:$jankson_version")//?.let { include(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 
