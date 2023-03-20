@@ -18,25 +18,37 @@
 
 package net.frozenblock.lib.config.api.instance;
 
+import java.nio.file.Path;
+
 public abstract class Config<T> {
 
 	private final String modId;
+	private final Path path;
 	private final Class<T> config;
 	private T configInstance;
 	private final T defaultInstance;
 
-	public Config(String modId, Class<T> config) {
+	public Config(String modId, Class<T> config, Path path) {
 		this.modId = modId;
+		this.path = path;
 		this.config = config;
 		try {
 			this.defaultInstance = this.configInstance = config.getConstructor().newInstance();
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IllegalStateException("No default constructor for default config instance.");
 		}
 	}
 
+	protected static Path makePath(String modId, String extension) {
+		return Path.of("./config/" + modId + "." + extension);
+	}
+
 	public String modId() {
 		return this.modId;
+	}
+
+	public Path path() {
+		return this.path;
 	}
 
 	public T config() {

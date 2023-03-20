@@ -38,19 +38,21 @@ import java.nio.file.StandardOpenOption;
  * Serializes and deserializes config data with GSON.
  */
 public class GsonConfig<T> extends Config<T> {
+
+	public static final String EXTENSION = "json";
+
 	private final Gson gson;
-	private final Path path;
 
 	public GsonConfig(String modId, Class<T> config) {
 		this(modId, config, new GsonBuilder());
 	}
 
 	public GsonConfig(String modId, Class<T> config, GsonBuilder builder) {
-		this(modId, config, Path.of("./config/" + modId + ".json"), builder);
+		this(modId, config, makePath(modId, EXTENSION), builder);
 	}
 
 	public GsonConfig(String modId, Class<T> config, Path path, GsonBuilder builder) {
-		super(modId, config);
+		super(modId, config, path);
 		this.gson = builder.setExclusionStrategies(new ConfigExclusionStrategy())
 				.registerTypeHierarchyAdapter(TypedEntry.class, new TypedEntrySerializer<>(modId))
 				.registerTypeHierarchyAdapter(Component.class, new Component.Serializer())
@@ -60,19 +62,18 @@ public class GsonConfig<T> extends Config<T> {
 				.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
 				.setPrettyPrinting()
 				.create();
-		this.path = path;
 
 		if (this.load()) {
 			this.save();
-		};
+		}
 	}
 
 	@Override
 	public void save() {
 		FrozenMain.LOGGER.info("Saving config {}", this.configClass().getSimpleName());
 		try {
-			Files.createDirectories(this.path.getParent());
-			BufferedWriter writer = Files.newBufferedWriter(this.path, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+			Files.createDirectories(this.path().getParent());
+			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 			this.gson.toJson(this.config(), writer);
 			writer.close();
 		} catch (IOException e) {
@@ -83,9 +84,9 @@ public class GsonConfig<T> extends Config<T> {
 	@Override
 	public boolean load() {
 		FrozenMain.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
-		if (Files.exists(this.path)) {
+		if (Files.exists(this.path())) {
 			try {
-				var reader = Files.newBufferedReader(this.path);
+				var reader = Files.newBufferedReader(this.path());
 				this.setConfig(this.gson.fromJson(reader, this.configClass()));
 				reader.close();
 				return true;
@@ -96,9 +97,5 @@ public class GsonConfig<T> extends Config<T> {
 		} else {
 			return true;
 		}
-	}
-
-	public Path path() {
-		return this.path;
 	}
 }
