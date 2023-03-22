@@ -150,3 +150,6 @@ transitive-accessible    method    net/minecraft/client/Minecraft    isMultiplay
 # Feature Flags
 transitive-mutable    field    net/minecraft/world/flag/FeatureFlags    REGISTRY    Lnet/minecraft/world/flag/FeatureFlagRegistry;
 transitive-mutable    field    net/minecraft/world/flag/FeatureFlags    CODEC    Lcom/mojang/serialization/Codec;
+
+# DataFixerUpper
+transitive-accessible    method    net/minecraft/util/datafix/DataFixers    createRenamer    (Ljava/util/Map;)Ljava/util/function/UnaryOperator;
