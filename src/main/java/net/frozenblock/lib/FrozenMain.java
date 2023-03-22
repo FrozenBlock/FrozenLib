@@ -27,7 +27,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
-import net.frozenblock.lib.worldgen.feature.FrozenFeatures;
+import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;

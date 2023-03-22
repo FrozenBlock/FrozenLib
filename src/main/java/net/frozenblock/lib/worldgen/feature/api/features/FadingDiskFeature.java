@@ -16,30 +16,30 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.features;
+package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskTagFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
-public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
-    public FadingDiskTagFeature(Codec<FadingDiskTagFeatureConfig> codec) {
+public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
+    public FadingDiskFeature(Codec<FadingDiskFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<FadingDiskTagFeatureConfig> context) {
+    public boolean place(FeaturePlaceContext<FadingDiskFeatureConfig> context) {
         boolean bl = false;
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
-		FadingDiskTagFeatureConfig config = context.config();
+		FadingDiskFeatureConfig config = context.config();
 		boolean useHeightMapAndNotCircular = config.useHeightMapAndNotCircular;
 		Heightmap.Types heightmap = config.heightmap;
         BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
@@ -78,7 +78,7 @@ public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
 						if (distance < radius * radius) {
 							mutableDisk.set(x, y, z);
 							BlockState state = level.getBlockState(mutableDisk);
-							if (isBlockExposedToAir(level, mutableDisk)) {
+							if (isBlockExposed(level, mutableDisk)) {
 								boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
 								boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
 								boolean choseInner;
@@ -102,11 +102,12 @@ public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
         return bl;
     }
 
-	public static boolean isBlockExposedToAir(WorldGenLevel level, BlockPos blockPos) {
+	public static boolean isBlockExposed(WorldGenLevel level, BlockPos blockPos) {
 		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
 		for (Direction direction : Direction.values()) {
 			mutableBlockPos.move(direction);
-			if (level.getBlockState(mutableBlockPos).isAir()) {
+			BlockState blockState = level.getBlockState(mutableBlockPos);
+			if (blockState.isAir() || blockState.is(BlockTags.FIRE)) {
 				return true;
 			}
 			mutableBlockPos.move(direction, -1);

@@ -9,9 +9,15 @@ Put changelog here:
 - Added a Liquid Rendering API
 - Added an NBT File API for reading/writing from/to NBT files
 - Wind Managers are now per-level and are saved
-- Screen shaking is now saved to entities
+- Screen shaking is now saved to entities as well as the world
 - Added command /windoverride with parameters x, y, and z representing the direction and strength of the wind.
     Additionally, it has parameters true and false to enable and disable the override
 - Added command /screenshake with parameters [entity or position], intensity, duration, falloff start, and distance.
+- Added LowerHeightmapPlacement
 - Added FadingDiskCarpetFeature
 - Added FadingDiskTagFeature
+- Added FadingDiskExceptInBiomeFeature
+- Added NoisePathSwapUnderWaterTagFeature
+- Added NoisePathTagFeature
+- Added NoisePathTagUnderWaterFeature
+- Added a PlacementModifiers API
