@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.features.config;
+package net.frozenblock.lib.worldgen.feature.api.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;

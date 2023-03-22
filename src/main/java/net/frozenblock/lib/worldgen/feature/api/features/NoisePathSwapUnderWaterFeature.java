@@ -16,11 +16,11 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.features;
+package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
+import net.frozenblock.lib.worldgen.feature.api.features.config.PathSwapUnderWaterFeatureConfig;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
-import net.frozenblock.lib.worldgen.feature.features.config.PathSwapUnderWaterTagFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
@@ -33,14 +33,14 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
-public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWaterTagFeatureConfig> {
-    public NoisePathSwapUnderWaterTagFeature(Codec<PathSwapUnderWaterTagFeatureConfig> codec) {
+public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFeatureConfig> {
+    public NoisePathSwapUnderWaterFeature(Codec<PathSwapUnderWaterFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<PathSwapUnderWaterTagFeatureConfig> context) {
+    public boolean place(FeaturePlaceContext<PathSwapUnderWaterFeatureConfig> context) {
         boolean generated = false;
-		PathSwapUnderWaterTagFeatureConfig config = context.config();
+		PathSwapUnderWaterFeatureConfig config = context.config();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
         int radiusSquared = config.radius * config.radius;

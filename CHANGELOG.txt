@@ -18,5 +18,5 @@ Put changelog here:
 - Added FadingDiskExceptInBiomeFeature
 - Added NoisePathSwapUnderWaterTagFeature
 - Added NoisePathTagFeature
-- Added NoisePathTagUUnderWaterFeature
+- Added NoisePathTagUnderWaterFeature
 - Added a PlacementModifiers API

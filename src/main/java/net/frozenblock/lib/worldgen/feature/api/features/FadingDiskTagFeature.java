@@ -16,30 +16,29 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.features;
+package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskTagFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
-public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
-    public FadingDiskFeature(Codec<FadingDiskFeatureConfig> codec) {
+public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
+    public FadingDiskTagFeature(Codec<FadingDiskTagFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<FadingDiskFeatureConfig> context) {
+    public boolean place(FeaturePlaceContext<FadingDiskTagFeatureConfig> context) {
         boolean bl = false;
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
-		FadingDiskFeatureConfig config = context.config();
+		FadingDiskTagFeatureConfig config = context.config();
 		boolean useHeightMapAndNotCircular = config.useHeightMapAndNotCircular;
 		Heightmap.Types heightmap = config.heightmap;
         BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;

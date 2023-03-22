@@ -16,11 +16,10 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.features;
+package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskTagBiomeFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.features.config.FadingDiskTagBiomeFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskTagBiomeFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.TagKey;

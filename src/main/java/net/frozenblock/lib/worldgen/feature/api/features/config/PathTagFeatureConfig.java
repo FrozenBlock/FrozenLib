@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.features.config;
+package net.frozenblock.lib.worldgen.feature.api.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,10 +26,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class PathSwapUnderWaterTagFeatureConfig implements FeatureConfiguration {
-    public static final Codec<PathSwapUnderWaterTagFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+public class PathTagFeatureConfig implements FeatureConfiguration {
+    public static final Codec<PathTagFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 			BlockStateProvider.CODEC.fieldOf("block").forGetter((config) -> config.pathBlock),
-			BlockStateProvider.CODEC.fieldOf("waterPathBlock").forGetter((config) -> config.waterPathBlock),
 			Codec.intRange(1, 64).fieldOf("radius").orElse(10).forGetter((config) -> config.radius),
 			Codec.intRange(1, 4).fieldOf("noise").orElse(4).forGetter((config) -> config.noise),
 			Codec.doubleRange(0.0001, 128).fieldOf("multiplier").orElse(0.05).forGetter((config) -> config.multiplier),
@@ -40,10 +39,9 @@ public class PathSwapUnderWaterTagFeatureConfig implements FeatureConfiguration 
 			Codec.BOOL.fieldOf("is3D").orElse(false).forGetter((config) -> config.is3D),
 			Codec.BOOL.fieldOf("onlyExposed").orElse(false).forGetter((config) -> config.onlyExposed),
 			TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("replaceable").forGetter((config) -> config.replaceable)
-	).apply(instance, PathSwapUnderWaterTagFeatureConfig::new));
+	).apply(instance, PathTagFeatureConfig::new));
 
     public final BlockStateProvider pathBlock;
-	public final BlockStateProvider waterPathBlock;
     public final int radius;
     public final int noise;
     public final double multiplier;
@@ -55,9 +53,8 @@ public class PathSwapUnderWaterTagFeatureConfig implements FeatureConfiguration 
 	public final boolean onlyExposed;
     public final TagKey<Block> replaceable;
 
-    public PathSwapUnderWaterTagFeatureConfig(BlockStateProvider pathBlock, BlockStateProvider waterPathBlock, int radius, int noise, double multiplier, double minThresh, double maxThresh, boolean useY, boolean multiplyY, boolean is3D, boolean onlyExposed, TagKey<Block> replaceable) {
+    public PathTagFeatureConfig(BlockStateProvider pathBlock, int radius, int noise, double multiplier, double minThresh, double maxThresh, boolean useY, boolean multiplyY, boolean is3D, boolean onlyExposed, TagKey<Block> replaceable) {
         this.pathBlock = pathBlock;
-		this.waterPathBlock = waterPathBlock;
         this.radius = radius;
         this.noise = noise;
         this.multiplier = multiplier;
