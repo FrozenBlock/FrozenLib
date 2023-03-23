@@ -275,8 +275,7 @@ tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        // TODO: change this to minecraft_version when 1.19.4 releases
-        properties["minecraft_version"] = "~1.19.4-"
+        properties["minecraft_version"] = "~1.20-"
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 
