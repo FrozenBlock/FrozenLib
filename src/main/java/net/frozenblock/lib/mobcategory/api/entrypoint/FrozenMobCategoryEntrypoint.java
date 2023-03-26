@@ -22,11 +22,11 @@ import java.util.ArrayList;
 import net.frozenblock.lib.mobcategory.impl.FrozenMobCategory;
 import net.minecraft.resources.ResourceLocation;
 
-public abstract class FrozenMobCategoryEntrypoint {
+public interface FrozenMobCategoryEntrypoint {
 
-	public abstract void newCategories(ArrayList<FrozenMobCategory> context);
+	void newCategories(ArrayList<FrozenMobCategory> context);
 
-	public static FrozenMobCategory createCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
+	static FrozenMobCategory createCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
 		return new FrozenMobCategory(key, max, isFriendly, isPersistent, despawnDistance);
 	}
 
