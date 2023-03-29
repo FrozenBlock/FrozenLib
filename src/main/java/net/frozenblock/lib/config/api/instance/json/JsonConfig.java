@@ -54,7 +54,7 @@ public class JsonConfig<T> extends Config<T> {
 		this(modId, config, false);
 	}
 
-	private JsonConfig(String modId, Class<T> config, boolean json5) {
+	public JsonConfig(String modId, Class<T> config, boolean json5) {
 		this(modId, config, json5, new GsonBuilder());
 	}
 
@@ -64,22 +64,25 @@ public class JsonConfig<T> extends Config<T> {
 
 	public JsonConfig(String modId, Class<T> config, Path path, boolean json5, GsonBuilder builder) {
 		super(modId, config, path);
-		this.gson = builder
+		builder
 			.registerTypeHierarchyAdapter(TypedEntry.class, new TypedEntrySerializer<>(modId))
 			.registerTypeHierarchyAdapter(Component.class, new Component.Serializer())
 			.registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
 			.registerTypeHierarchyAdapter(Color.class, new ColorSerializer())
 			.serializeNulls()
-			.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-			.setPrettyPrinting()
-			.create();
+			.setPrettyPrinting();
+
+		if (!json5) {
+			builder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
+		}
+
+		this.gson = builder.create();
 
 		this.jankson = Jankson.builder()
 				.registerSerializer(TypedEntry.class, new JanksonTypedEntrySerializer<>(modId))
-				//.registerDeserializer(Object.class, TypedEntry.class, new TypedEntryDeserializer<>(modId))
 				.build();
 
-			this.useJankson = json5;
+		this.useJankson = json5;
 
 		if (this.load()) {
 			this.save();
@@ -93,7 +96,7 @@ public class JsonConfig<T> extends Config<T> {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 			if (this.useJankson) {
-				writer.write(this.jankson.toJson(this.config()).toJson(JsonGrammar.STRICT));
+				writer.write(this.jankson.toJson(this.config()).toJson(JsonGrammar.JSON5));
 			} else {
 				this.gson.toJson(this.config(), writer);
 			}

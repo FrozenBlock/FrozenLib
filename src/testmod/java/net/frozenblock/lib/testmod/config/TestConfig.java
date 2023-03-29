@@ -51,7 +51,7 @@ public class TestConfig {
 	);
 
 	private static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
-			new JsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class)
+			new JsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class, true)
 	);
 
 	public boolean testToggle = true;
