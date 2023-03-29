@@ -38,7 +38,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
 /**
- * Serializes and deserializes config data with GSON.
+ * Serializes and deserializes config data with GSON and Jankson.
  */
 public class JsonConfig<T> extends Config<T> {
 
@@ -113,7 +113,6 @@ public class JsonConfig<T> extends Config<T> {
 			try {
 				String json = this.jankson.load(this.path().toFile()).toJson(JsonGrammar.STRICT);
 				var reader = new StringReader(json);
-				FrozenMain.log(json, true);
 				this.setConfig(this.gson.fromJson(reader, this.configClass()));
 				reader.close();
 				return true;
