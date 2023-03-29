@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.testmod.config;
 
+import blue.endless.jankson.Comment;
 import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +26,6 @@ import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
-import net.frozenblock.lib.config.api.instance.toml.TomlConfig;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.client.gui.screens.Screen;
@@ -55,34 +55,45 @@ public class TestConfig {
 			new JsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class, true)
 	);
 
+	@Comment("This is a boolean value.")
 	public boolean testToggle = true;
 
+	@Comment("This is an integer value.")
 	public int testInt = 69;
 
+	@Comment("This is a long value.")
 	public long testLong = 69420L;
 
+	@Comment("This is a float value.")
 	public float testFloat = 69.420F;
 
+	@Comment("This is a double value.")
 	public double testDouble = 69.4206942069420D;
 
+	@Comment("This is an integer list typed entry.")
 	public List<Integer> testIntList = List.of(45);
 
+	@Comment("This is a boolean typed entry.")
 	public TypedEntry<Boolean> typedBoolean = new TypedEntry<>(
 			TypedEntryType.BOOLEAN, true
 	);
 
+	@Comment("This is an integer typed entry.")
 	public TypedEntry<Integer> typedInt = new TypedEntry<>(
 			TypedEntryType.INTEGER, 69
 	);
 
+	@Comment("This is a double list typed entry.")
 	public TypedEntry<List<Double>> typedDoubleList = new TypedEntry<>(
 			TypedEntryType.DOUBLE_LIST, List.of(1D, 2D, 69.69696969696969696969696969420D)
 	);
 
+	@Comment("This is a sound event typed entry.")
 	public TypedEntry<SoundEvent> randomSound = new TypedEntry<>(
 			SOUND_EVENT, SoundEvents.BEE_LOOP
 	);
 
+	@Comment("This is a Vec3 list typed entry.")
 	public TypedEntry<List<Vec3>> typedVecList = new TypedEntry<>(
 			VEC3_LIST, List.of(new Vec3(0, 0, 0), new Vec3(1, 1, 1))
 	);
