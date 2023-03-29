@@ -32,7 +32,6 @@ public abstract class Config<T> {
 
 	public Config(String modId, Class<T> config, Path path) {
 		this.modId = modId;
-		this.path = path;
 		this.config = config;
 		this.path = path;
 		this.file = path.toFile();
