@@ -21,11 +21,10 @@ package net.frozenblock.lib.testmod.config;
 import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.api.entry.Exclude;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.instance.gson.GsonConfig;
+import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.client.gui.screens.Screen;
@@ -51,9 +50,8 @@ public class TestConfig {
 			)
 	);
 
-	@Exclude
 	private static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
-			new GsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class)
+			new JsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class)
 	);
 
 	public boolean testToggle = true;
@@ -87,12 +85,6 @@ public class TestConfig {
 	public TypedEntry<List<Vec3>> typedVecList = new TypedEntry<>(
 			VEC3_LIST, List.of(new Vec3(0, 0, 0), new Vec3(1, 1, 1))
 	);
-
-	@Exclude
-	public boolean notABoolean = false;
-
-	@Exclude
-	public int notAnInt = 0;
 
 	public static Config<TestConfig> get() {
 		return INSTANCE;
