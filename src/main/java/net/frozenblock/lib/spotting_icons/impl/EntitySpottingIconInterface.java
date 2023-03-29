@@ -22,8 +22,6 @@ import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 
 public interface EntitySpottingIconInterface {
 
-	boolean hasSyncedClient();
-
 	SpottingIconManager getSpottingIconManager();
 
 }

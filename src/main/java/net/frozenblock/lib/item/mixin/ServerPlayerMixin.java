@@ -44,39 +44,39 @@ public class ServerPlayerMixin {
 	private boolean isChangingDimension;
 
 	@Unique
-	public Optional<ArrayList<SaveableItemCooldowns.SaveableCooldownInstance>> wilderWild$savedItemCooldowns = Optional.empty();
+	public Optional<ArrayList<SaveableItemCooldowns.SaveableCooldownInstance>> frozenLib$savedItemCooldowns = Optional.empty();
 	@Unique @Nullable
-	private CompoundTag wilderWild$savedCooldownTag;
+	private CompoundTag frozenLib$savedCooldownTag;
 
 	@Inject(method = "readAdditionalSaveData", at = @At(value = "TAIL"))
-	public void wilderWild$readAdditionalSaveData(CompoundTag compound, CallbackInfo info) {
-		this.wilderWild$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(compound));
+	public void frozenLib$readAdditionalSaveData(CompoundTag compound, CallbackInfo info) {
+		this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(compound));
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At(value = "TAIL"))
-	public void wilderWild$addAdditionalSaveData(CompoundTag compound, CallbackInfo info) {
+	public void frozenLib$addAdditionalSaveData(CompoundTag compound, CallbackInfo info) {
 		SaveableItemCooldowns.saveCooldowns(compound, ServerPlayer.class.cast(this));
 	}
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))
-	public void wilderWild$tick(CallbackInfo info) {
-		if (this.wilderWild$savedItemCooldowns.isPresent() && this.connection != null && this.connection.getConnection().isConnected() && !this.isChangingDimension) {
-			SaveableItemCooldowns.setCooldowns(this.wilderWild$savedItemCooldowns.get(), ServerPlayer.class.cast(this));
-			this.wilderWild$savedItemCooldowns = Optional.empty();
+	public void frozenLib$tick(CallbackInfo info) {
+		if (this.frozenLib$savedItemCooldowns.isPresent() && this.connection != null && this.connection.getConnection().isConnected() && !this.isChangingDimension) {
+			SaveableItemCooldowns.setCooldowns(this.frozenLib$savedItemCooldowns.get(), ServerPlayer.class.cast(this));
+			this.frozenLib$savedItemCooldowns = Optional.empty();
 		}
 	}
 
 	@Inject(method = "changeDimension", at = @At(value = "HEAD"))
-	public void wilderWild$changeDimensionSaveCooldowns(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
+	public void frozenLib$changeDimensionSaveCooldowns(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
 		CompoundTag tempTag = new CompoundTag();
 		SaveableItemCooldowns.saveCooldowns(tempTag, ServerPlayer.class.cast(this));
-		this.wilderWild$savedCooldownTag = tempTag;
+		this.frozenLib$savedCooldownTag = tempTag;
 	}
 
 	@Inject(method = "changeDimension", at = @At(value = "RETURN"))
-	public void wilderWild$changeDimensionLoadCooldowns(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
-		if (this.wilderWild$savedCooldownTag != null) {
-			this.wilderWild$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(this.wilderWild$savedCooldownTag));
+	public void frozenLib$changeDimensionLoadCooldowns(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
+		if (this.frozenLib$savedCooldownTag != null) {
+			this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(this.frozenLib$savedCooldownTag));
 		}
 	}
 

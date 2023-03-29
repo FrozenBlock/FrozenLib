@@ -32,14 +32,19 @@ public abstract class Config<T> {
 
 	public Config(String modId, Class<T> config, Path path) {
 		this.modId = modId;
+		this.path = path;
 		this.config = config;
 		this.path = path;
 		this.file = path.toFile();
 		try {
 			this.defaultInstance = this.configInstance = config.getConstructor().newInstance();
-		} catch (Throwable e) {
+		} catch (Exception e) {
 			throw new IllegalStateException("No default constructor for default config instance.");
 		}
+	}
+
+	protected static Path makePath(String modId, String extension) {
+		return Path.of("./config/" + modId + "." + extension);
 	}
 
 	public String modId() {

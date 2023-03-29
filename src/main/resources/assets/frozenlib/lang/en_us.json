@@ -17,5 +17,14 @@
   "tooltip.frozenlib.save_item_cooldowns": "Whether or not item cooldowns will save instead of being\ncleared upon switching dimensions or rejoining a world.",
 
   "commands.wind.success": "Set wind to %s, %s, %s.",
-  "commands.wind.toggle.success": "Toggled wind override to: %s."
+  "commands.wind.toggle.success": "Toggled wind override to: %s.",
+
+  "commands.screenshake.success": "Created screen shake at %s, %s, %s, with intensity %s, duration %s, falloff start %s, and distance %s.",
+  "commands.screenshake.player.success": "Sent screen shake to %sat %s, %s, %s, with intensity %s, duration %s, falloff start %s, and distance %s.",
+  "commands.screenshake.remove.player.success.multiple": "Players %shave had their screen shakes removed.",
+  "commands.screenshake.remove.player.success": "Removed screen shakes for %s.",
+  "commands.screenshake.entity.success": "Created screen shake appended to %swith intensity %s, duration %s, falloff start %s, and distance %s.",
+  "commands.screenshake.remove.entity.success.multiple": "Entities %shave had their screen shakes removed.",
+  "commands.screenshake.remove.entity.success": "Removed screen shakes from entity %s.",
+  "commands.screenshake.remove.entity.failure": "Could not find entities with screen shakes."
 }

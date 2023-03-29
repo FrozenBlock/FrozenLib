@@ -21,6 +21,7 @@ package net.frozenblock.lib.entity.api.rendering;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.function.BiFunction;
+import net.frozenblock.lib.FrozenMain;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -39,7 +40,7 @@ public final class FrozenRenderType {
                         .setOverlayState(RenderStateShard.OVERLAY)
                         .createCompositeState(affectsOutline);
                 return create(
-                        "entity_translucent_emissive_fixed_frozenlib",
+                        FrozenMain.string("entity_translucent_emissive_fixed"),
                         DefaultVertexFormat.NEW_ENTITY,
                         VertexFormat.Mode.QUADS,
                         256,
@@ -52,7 +53,7 @@ public final class FrozenRenderType {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize(
 			((texture, affectsOutline) -> create(
-					"entity_translucent_emissive_always_render_frozenlib",
+					FrozenMain.string("entity_translucent_emissive_always_render"),
 					DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
 					VertexFormat.Mode.QUADS,
 					256,

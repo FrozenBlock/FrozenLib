@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.event.mixin;
 
-import net.frozenblock.lib.event.api.PlayerJoinEvent;
+import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.minecraft.network.Connection;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,7 +37,7 @@ public class PlayerListMixin {
 	private MinecraftServer server;
 
 	@Inject(method = "placeNewPlayer", at = @At("TAIL"))
-	public void placeNewPlayer(Connection netManager, ServerPlayer player, CallbackInfo info) {
-		PlayerJoinEvent.ON_JOIN.invoker().onPlayerJoin(this.server, player);
+	public void frozenLib$onPlayerJoined(Connection netManager, ServerPlayer player, CallbackInfo info) {
+		PlayerJoinEvents.ON_JOIN_SERVER.invoker().onPlayerJoin(this.server, player);
 	}
 }
