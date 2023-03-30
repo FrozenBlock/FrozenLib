@@ -59,7 +59,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	@Unique
 	private boolean frozenLib$hasCheckedGenericEntrypoints;
 
-	@Inject(method = "surfaceRule", at = @At("RETURN"))
+	@Inject(method = "surfaceRule", at = @At("RETURN"), cancellable = true)
 	private void frozenLib$modifyRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
 		SurfaceRules.RuleSource returnValue = cir.getReturnValue();
 		SurfaceRules.RuleSource newRule = null;
