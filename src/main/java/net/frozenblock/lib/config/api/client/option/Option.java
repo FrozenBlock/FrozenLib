@@ -24,6 +24,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.config.api.entry.TypedEntry;
+import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
@@ -155,6 +157,28 @@ public final class Option<T> {
 			return (ValueSet<T>) BOOLEAN_VALUES;
 		}
 		return null;
+	}
+
+	public record TypedEntryValue<T>(
+		TypedEntryType<T> type
+	) implements ValueSet<TypedEntry<T>> {
+
+		@Override
+		public Function<Option<TypedEntry<T>>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<TypedEntry<T>> tooltip, Config<?> config, int x, int y, int width) {
+			return option -> {
+				return null;
+			};
+		}
+
+		@Override
+		public Optional<TypedEntry<T>> validateValue(TypedEntry<T> value) {
+			return value != null && value.type() == this.type ? Optional.of(value) : Optional.empty();
+		}
+
+		@Override
+		public Codec<TypedEntry<T>> codec() {
+			return TypedEntry.codec(this.type);
+		}
 	}
 
 	public record AltEnum<T>(

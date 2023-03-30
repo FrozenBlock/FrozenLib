@@ -14,25 +14,25 @@ import java.util.Arrays;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class AbstractObjectContainerWidget<T> extends AbstractWidget {
+public class AbstractOptionContainerWidget extends AbstractWidget {
 
-	private final List<T> children = new ArrayList<>();
+	private final List<Option> children = new ArrayList<>();
 
-	public AbstractObjectContainerWidget(int x, int y, int width, int height, Component message, List<T> children) {
+	public AbstractOptionContainerWidget(int x, int y, int width, int height, Component message, List<Option> children) {
 		super(x, y, width, height, message);
 		this.children.addAll(children);
 	}
 
 	@SafeVarargs
-	public AbstractObjectContainerWidget(int x, int y, int width, int height, Component message, T... children) {
+	public AbstractOptionContainerWidget(int x, int y, int width, int height, Component message, Option... children) {
 		this(x, y, width, height, message, Arrays.stream(children).toList());
 	}
 
-	public void addChild(T child) {
+	public void addChild(Option child) {
 		this.children.add(child);
 	}
 
-	public List<T> getChildren() {
+	public List<Option> getChildren() {
 		return this.children;
 	}
 

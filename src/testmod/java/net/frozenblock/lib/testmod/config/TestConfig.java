@@ -110,51 +110,61 @@ public class TestConfig {
 	@Environment(EnvType.CLIENT)
 	public Screen makeGui(Screen parent) {
 		return ClientConfig.makeBuilder(INSTANCE)
-				.title(Component.literal("FrozenLib Testmod"))
-				.option(
-						Option.createBoolean(
-								Component.literal("Test Toggle"),
-								Option.cachedConstantTooltip(Component.translatable("Test Toggle Tooltip")),
-								true,
-								newValue -> {
-									FrozenMain.log("Received new value from save", FrozenMain.UNSTABLE_LOGGING);
-									this.testToggle = newValue;
-								}
-						)
+			.title(Component.literal("FrozenLib Testmod"))
+			.option(
+				Option.createBoolean(
+					Component.literal("Test Toggle"),
+					Option.cachedConstantTooltip(Component.translatable("Test Toggle Tooltip")),
+					true,
+					newValue -> {
+						FrozenMain.log("Received new value from save", FrozenMain.UNSTABLE_LOGGING);
+						this.testToggle = newValue;
+					}
+					)
+			)
+			.option(
+				new Option<>(
+					Component.literal("Test Double"),
+					Option.cachedConstantTooltip(Component.translatable("Test Double Tooltip")),
+					Option::percentValueLabel,
+					new Option.IntRange(0, 100).xmap(val -> (double) val, Double::intValue),
+					Codec.doubleRange(0.0, 1.0),
+					this.testDouble,
+					value -> this.testDouble = value
 				)
-				.option(
-						new Option<>(
-								Component.literal("Test Double"),
-								Option.cachedConstantTooltip(Component.translatable("Test Double Tooltip")),
-								Option::percentValueLabel,
-								new Option.IntRange(0, 100).xmap(val -> (double) val, Double::intValue),
-								Codec.doubleRange(0.0, 1.0),
-								this.testDouble,
-								value -> this.testDouble = value
-						)
+			)
+			.option(
+				Option.createIntSlider(
+					Component.literal("Test Int"),
+					Option.cachedConstantTooltip(Component.translatable("Test Int Tooltip")),
+					0,
+					100,
+					this.testInt,
+					value -> this.testInt = value
 				)
-				.option(
-						Option.createIntSlider(
-								Component.literal("Test Int"),
-								Option.cachedConstantTooltip(Component.translatable("Test Int Tooltip")),
-								0,
-								100,
-								this.testInt,
-								value -> this.testInt = value
-						)
+			)
+			.option(
+				new Option<>(
+					Component.literal("Test Typed Bool"),
+					Option.cachedConstantTooltip(Component.translatable("Test Typed Bool Tooltip")),
+					(caption1, value) -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF,
+					Option.get(this.typedBoolean.value()),
+					this.typedBoolean.value(),
+					value -> this.typedBoolean = new TypedEntry<>(this.typedBoolean.type(), value)
 				)
-				.option(
-						new Option<>(
-								Component.literal("Test Typed Bool"),
-								Option.cachedConstantTooltip(Component.translatable("Test Typed Bool Tooltip")),
-								(caption1, value) -> value ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF,
-								Option.get(this.typedBoolean.value()),
-								this.typedBoolean.value(),
-								value -> this.typedBoolean = new TypedEntry<>(this.typedBoolean.type(), value)
-						)
+			)
+			.option(
+				new Option<>(
+					Component.literal("Test Typed Int"),
+					Option.cachedConstantTooltip(Component.translatable("Test Typed Int Tooltip")),
+					Option::percentValueLabel,
+					Option.get(this.typedInt.value()),
+					this.typedInt.value(),
+					value -> this.typedInt = new TypedEntry<>(this.typedInt.type(), value)
 				)
-				.save(INSTANCE::save)
-				.build()
-				.makeScreen(parent);
+			)
+			.save(INSTANCE::save)
+			.build()
+			.makeScreen(parent);
 	}
 }
