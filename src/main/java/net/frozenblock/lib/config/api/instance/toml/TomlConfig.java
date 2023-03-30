@@ -42,16 +42,16 @@ class TomlConfig<T> extends Config<T> {
 
 
 	public TomlConfig(String modId, Class<T> config) {
-		this(modId, config, new TomlWriter());
+		this(modId, config, new TomlWriter.Builder());
 	}
 
-	public TomlConfig(String modId, Class<T> config, TomlWriter writer) {
-		this(modId, config, makePath(modId, EXTENSION), writer);
+	public TomlConfig(String modId, Class<T> config, TomlWriter.Builder builder) {
+		this(modId, config, makePath(modId, EXTENSION), builder);
 	}
 
-	public TomlConfig(String modId, Class<T> config, Path path, TomlWriter writer) {
+	public TomlConfig(String modId, Class<T> config, Path path, TomlWriter.Builder builder) {
 		super(modId, config, path);
-		this.tomlWriter = writer;
+		this.tomlWriter = builder.build();
 
 		if (this.load()) {
 			this.save();
