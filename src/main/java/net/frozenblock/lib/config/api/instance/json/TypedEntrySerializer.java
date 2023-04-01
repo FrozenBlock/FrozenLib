@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.instance.gson;
+package net.frozenblock.lib.config.api.instance.json;
 
 import com.google.gson.*;
 import com.mojang.datafixers.util.Pair;
