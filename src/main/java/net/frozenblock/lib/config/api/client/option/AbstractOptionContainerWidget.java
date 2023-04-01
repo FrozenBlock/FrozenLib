@@ -16,23 +16,23 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 public class AbstractOptionContainerWidget extends AbstractWidget {
 
-	private final List<Option> children = new ArrayList<>();
+	private final List<Option.SubOption<?>> children = new ArrayList<>();
 
-	public AbstractOptionContainerWidget(int x, int y, int width, int height, Component message, List<Option> children) {
+	public AbstractOptionContainerWidget(int x, int y, int width, int height, Component message, List<Option.SubOption<?>> children) {
 		super(x, y, width, height, message);
 		this.children.addAll(children);
 	}
 
 	@SafeVarargs
-	public AbstractOptionContainerWidget(int x, int y, int width, int height, Component message, Option... children) {
+	public AbstractOptionContainerWidget(int x, int y, int width, int height, Component message, Option.SubOption<?>... children) {
 		this(x, y, width, height, message, Arrays.stream(children).toList());
 	}
 
-	public void addChild(Option child) {
+	public void addChild(Option.SubOption<?> child) {
 		this.children.add(child);
 	}
 
-	public List<Option> getChildren() {
+	public List<Option.SubOption<?>> getChildren() {
 		return this.children;
 	}
 

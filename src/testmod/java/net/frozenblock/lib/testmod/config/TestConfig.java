@@ -158,9 +158,50 @@ public class TestConfig {
 					Component.literal("Test Typed Int"),
 					Option.cachedConstantTooltip(Component.translatable("Test Typed Int Tooltip")),
 					Option::percentValueLabel,
-					Option.get(this.typedInt.value()),
+					new Option.TypedEntryValue<>(TypedEntryType.INTEGER),
 					this.typedInt.value(),
 					value -> this.typedInt = new TypedEntry<>(this.typedInt.type(), value)
+				)
+			)
+			.option(
+				new Option<>(
+					Component.literal("Test Typed Double List"),
+					Option.cachedConstantTooltip(Component.translatable("Test Typed Double List Tooltip")),
+					(caption1, value) -> Component.translatable("Test Typed Double List Label", value),
+					new Option.TypedEntryValue<>(this.typedDoubleList.type()),
+					this.typedDoubleList.value(),
+					value -> this.typedDoubleList = new TypedEntry<>(TypedEntryType.DOUBLE_LIST, value)
+				)
+			)
+			.option(
+				new Option<>(
+					Component.literal("Test Typed Sound Event"),
+					Option.cachedConstantTooltip(Component.translatable("Test Typed Sound Event Tooltip")),
+					(caption1, value) -> Component.translatable("Test Typed Sound Event Label", value),
+					new Option.TypedEntryValue<>(this.randomSound.type()),
+					this.randomSound.value(),
+					value -> this.randomSound = new TypedEntry<>(SOUND_EVENT, value)
+				)
+			)
+			.option(
+				new Option<>(
+					Component.literal("Test Typed Vec3 List"),
+					Option.cachedConstantTooltip(Component.translatable("Test Typed Vec3 List Tooltip")),
+					(caption1, value) -> Component.translatable("Test Typed Vec3 List Label", value),
+					new Option.TypedEntryValue<>(this.typedVecList.type()),
+					this.typedVecList.value(),
+					value -> this.typedVecList = new TypedEntry<>(VEC3_LIST, value)
+				)
+			)
+			.option(
+				Option.createBoolean(
+					Component.literal("Test Toggle 2"),
+					Option.cachedConstantTooltip(Component.translatable("Test Toggle 2 Tooltip")),
+					true,
+					newValue -> {
+						FrozenMain.log("Received new value from save", FrozenMain.UNSTABLE_LOGGING);
+						this.testToggle = newValue;
+					}
 				)
 			)
 			.save(INSTANCE::save)

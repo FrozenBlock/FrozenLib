@@ -47,6 +47,7 @@ public final class FrozenTestMain implements ModInitializer {
     @Override
     public void onInitialize() {
 		LOGGER.info("The test toggle value is " + TestConfig.get().config().testToggle);
+		LOGGER.info("The test typed int value is " + TestConfig.get().config().typedInt.value());
 		LOGGER.info("The test vec3 value is " + TestConfig.get().config().typedVecList.value());
 		SoundEvent sound = TestConfig.get().config().randomSound.value();
 		LOGGER.info("The test soundevent value is " + sound + " and its ID is " + sound.getLocation());

@@ -112,6 +112,7 @@ public class JsonConfig<T> extends Config<T> {
 		if (Files.exists(this.path())) {
 			try {
 				String json = this.jankson.load(this.file()).toJson(JsonGrammar.STRICT);
+				FrozenMain.LOGGER.info("Loaded config: {}", json);
 				var reader = new StringReader(json);
 				this.setConfig(this.gson.fromJson(reader, this.configClass()));
 				reader.close();

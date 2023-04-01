@@ -24,6 +24,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -38,7 +39,10 @@ import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.util.OptionEnum;
 import org.jetbrains.annotations.NotNull;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -52,9 +56,9 @@ import java.util.function.ToIntFunction;
 import java.util.stream.IntStream;
 
 @Environment(EnvType.CLIENT)
-public final class Option<T> {
+public class Option<T> {
 
-	public static final Enum<Boolean> BOOLEAN_VALUES = new Enum<>(ImmutableList.of(Boolean.TRUE, Boolean.FALSE), Codec.BOOL);
+	public static final Enum<Boolean> BOOLEAN_VALUES = new Enum<>(List.of(Boolean.TRUE, Boolean.FALSE), Codec.BOOL);
 	private static final int TOOLTIP_WIDTH = 200;
 
 	private final OptionInstance.TooltipSupplier<T> tooltip;
@@ -105,7 +109,7 @@ public final class Option<T> {
 	}
 
 	public static <T> OptionInstance.TooltipSupplier<T> noTooltip() {
-		return value -> ImmutableList.of();
+		return value -> List.of();
 	}
 
 	public static <T> OptionInstance.TooltipSupplier<T> cachedConstantTooltip(Component tooltip) {
@@ -159,25 +163,77 @@ public final class Option<T> {
 		return null;
 	}
 
-	public record TypedEntryValue<T>(
-		TypedEntryType<T> type
-	) implements ValueSet<TypedEntry<T>> {
+	public static class SubOption<T> extends Option<T> {
+		public SubOption(
+			Component caption,
+			OptionInstance.TooltipSupplier<T> tooltip,
+			CaptionBasedToString<T> textGetter,
+			ValueSet<T> values,
+			T initialValue
+		) {
+			this(caption, tooltip, textGetter, values, values.codec(), initialValue);
+		}
 
-		@Override
-		public Function<Option<TypedEntry<T>>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<TypedEntry<T>> tooltip, Config<?> config, int x, int y, int width) {
-			return option -> {
-				return null;
-			};
+		public SubOption(
+			Component caption,
+			OptionInstance.TooltipSupplier<T> tooltip,
+			CaptionBasedToString<T> textGetter,
+			ValueSet<T> values,
+			Codec<T> codec,
+			T initialValue
+		) {
+			super(caption, tooltip, textGetter, values, codec, initialValue, value -> {});
+		}
+	}
+
+	public static class TypedEntryValue<T> implements ValueSet<T> {
+
+		private final TypedEntryType<T> type;
+		private final List<SubOption<?>> children = new ArrayList<>();
+
+		public TypedEntryValue(TypedEntryType<T> type) {
+			this.type = type;
+		}
+
+		public TypedEntryValue<T> option(Component caption, OptionInstance.TooltipSupplier<?> tooltip, CaptionBasedToString<?> textGetter) {
+			SubOption<?> option = new SubOption<>(caption, tooltip, textGetter, values, values.validateValue(null).orElse(null));
+			return this;
 		}
 
 		@Override
-		public Optional<TypedEntry<T>> validateValue(TypedEntry<T> value) {
-			return value != null && value.type() == this.type ? Optional.of(value) : Optional.empty();
+		public Function<Option<T>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<T> tooltip, Config<?> config, int x, int y, int width) {
+			return option -> new AbstractOptionContainerWidget(x, y, width, 20, option.caption, children);
 		}
 
 		@Override
-		public Codec<TypedEntry<T>> codec() {
-			return TypedEntry.codec(this.type);
+		public Optional<T> validateValue(T value) {
+			return value != null ? Optional.of(value) : Optional.empty();
+		}
+
+		@Override
+		public Codec<T> codec() {
+			return this.type.codec();
+		}
+
+		@Override
+		public boolean equals(Object o) {
+			if (this == o) return true;
+			if (o == null || getClass() != o.getClass()) return false;
+			TypedEntryValue<?> that = (TypedEntryValue<?>) o;
+			return type.equals(that.type);
+		}
+
+		@Override
+		public int hashCode() {
+			return 31 * Objects.hash(this.type) + this.children.hashCode();
+		}
+
+		@Override
+		public String toString() {
+			return "TypedEntryValue{"
+				+ "type=" + type
+				+ ", children=" + children
+				+ "}";
 		}
 	}
 
