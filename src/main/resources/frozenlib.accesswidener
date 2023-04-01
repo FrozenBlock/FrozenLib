@@ -62,6 +62,7 @@ transitive-accessible    field    net/minecraft/world/level/block/entity/Randomi
 
 # Render Types
 transitive-accessible    class    net/minecraft/client/renderer/RenderType$CompositeState
+accessible    class    net/minecraft/client/renderer/RenderStateShard$OutputStateShard
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    NO_CULL    Lnet/minecraft/client/renderer/RenderStateShard$CullStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    COLOR_DEPTH_WRITE    Lnet/minecraft/client/renderer/RenderStateShard$WriteMaskStateShard;
@@ -81,6 +82,8 @@ transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    NO_DEPTH_TEST    Lnet/minecraft/client/renderer/RenderStateShard$DepthTestStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    EQUAL_DEPTH_TEST    Lnet/minecraft/client/renderer/RenderStateShard$DepthTestStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    TRANSLUCENT_TARGET    Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;
+transitive-accessible    method    net/minecraft/client/renderer/RenderType    create    (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;ILnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
+transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    POSITION_COLOR_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 
 # Biomes
 transitive-accessible    class    net/minecraft/world/level/chunk/ChunkStatus$SimpleGenerationTask
