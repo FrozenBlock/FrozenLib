@@ -20,7 +20,6 @@ package net.frozenblock.lib.wind.api.wind3d;
 
 import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -37,7 +36,7 @@ public class ClientWindManager3D {
 	public static long seed = 0;
 	public static boolean hasInitialized;
 
-	public static void tick(ClientLevel level) {
+	public static void tick() {
 		time += 1;
 		if (!hasInitialized && time > 80 && FrozenLibConfigValues.CONFIG.getter().useWindOnNonFrozenServers()) {
 			RandomSource randomSource = AdvancedMath.random();
