@@ -27,8 +27,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
-import net.frozenblock.lib.wind.api.wind3d.WindManager3D;
-import net.frozenblock.lib.wind.impl.Wind3DStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
@@ -99,21 +97,16 @@ public final class FrozenMain implements ModInitializer {
 			dimensionDataStorage.computeIfAbsent(windManager::createData, windManager::createData, WindStorage.WIND_FILE_ID);
 			ScreenShakeManager screenShakeManager = ScreenShakeManager.getScreenShakeManager(level);
 			dimensionDataStorage.computeIfAbsent(screenShakeManager::createData, screenShakeManager::createData, ScreenShakeStorage.SCREEN_SHAKE_FILE_ID);
-			WindManager3D windManager3D = WindManager3D.getWindManager3D(level);
-			dimensionDataStorage.computeIfAbsent(windManager3D::createData, windManager3D::createData, Wind3DStorage.WIND_FILE_ID);
 		});
 
 		ServerTickEvents.START_WORLD_TICK.register((serverLevel) -> {
 			WindManager.getWindManager(serverLevel).tick();
-			WindManager3D.getWindManager3D(serverLevel).tick();
 			ScreenShakeManager.getScreenShakeManager(serverLevel).tick();
 		});
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
 			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
-			WindManager3D windManager3D = WindManager3D.getWindManager3D(serverLevel);
-			windManager3D.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
 		}));
 
 	}
@@ -143,7 +136,6 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation HURT_SOUND_PACKET = id("hurt_sound_packet");
 
 	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
-	public static final ResourceLocation WIND_3D_SYNC_PACKET = id("wind_three_d_sync_packet");
 
 	public static ResourceLocation id(String path) {
 		return new ResourceLocation(MOD_ID, path);
