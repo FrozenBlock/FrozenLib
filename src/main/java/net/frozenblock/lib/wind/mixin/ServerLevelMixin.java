@@ -19,7 +19,6 @@
 package net.frozenblock.lib.wind.mixin;
 
 import net.frozenblock.lib.wind.api.WindManager;
-import net.frozenblock.lib.wind.api.wind3d.WindManager3D;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.minecraft.server.level.ServerLevel;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,18 +31,9 @@ public class ServerLevelMixin implements WindManagerInterface {
 	private final WindManager frozenLib$windManager = new WindManager(ServerLevel.class.cast(this));
 
 	@Unique
-	private final WindManager3D frozenLib$windManager3D = new WindManager3D(ServerLevel.class.cast(this));
-
-	@Unique
 	@Override
 	public WindManager frozenLib$getWindManager() {
 		return this.frozenLib$windManager;
-	}
-
-	@Unique
-	@Override
-	public WindManager3D frozenLib$getWindManager3D() {
-		return this.frozenLib$windManager3D;
 	}
 
 }

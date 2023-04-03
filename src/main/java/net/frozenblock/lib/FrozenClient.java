@@ -41,7 +41,6 @@ import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.ClientWindManager;
-import net.frozenblock.lib.wind.api.wind3d.ClientWindManager3D;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
@@ -84,7 +83,6 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
-		receiveWind3DSyncPacket();
 		receivePlayerDamagePacket();
 		receiveLocalPlayerSoundPacket();
 
@@ -456,20 +454,6 @@ public final class FrozenClient implements ClientModInitializer {
 					ClientWindManager.overrideWind = override;
 					ClientWindManager.commandWind = new Vec3(xa, ya, za);
 					ClientWindManager.hasInitialized = true;
-				}
-			});
-		});
-	}
-
-	private static void receiveWind3DSyncPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.WIND_3D_SYNC_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			long windTime = byteBuf.readLong();
-			long seed = byteBuf.readLong();
-			ctx.execute(() -> {
-				if (ctx.level != null) {
-					ClientWindManager3D.time = windTime;
-					ClientWindManager3D.setSeed(seed);
-					ClientWindManager3D.hasInitialized = true;
 				}
 			});
 		});
