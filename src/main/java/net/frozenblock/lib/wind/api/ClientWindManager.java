@@ -221,9 +221,10 @@ public class ClientWindManager {
 	}
 
 	public Vec3 sample3D(Vec3 pos, double stretch) {
-		double windX = this.perlinXoro.noise((pos.x() + this.time) * stretch, 0, 0);
-		double windY = this.perlinXoro.noise(0, (pos.y() + this.time) * stretch, 0);
-		double windZ = this.perlinXoro.noise(0, 0, (pos.z() + this.time) * stretch);
+		double newTime = time * (stretch * 0.5);
+		double windX = perlinXoro.noise(pos.x() * stretch, 0, newTime);
+		double windY = perlinXoro.noise(newTime * 0.5, pos.y * stretch, newTime * 0.5);
+		double windZ = perlinXoro.noise(newTime, 0, pos.z() * stretch);
 		return new Vec3(windX, windY, windZ);
 	}
 }
