@@ -261,7 +261,7 @@ public class WindManager {
 	}
 
 	public Vec3 sample3D(Vec3 pos, double stretch) {
-		double sampledTime = time * 0.005;
+		double sampledTime = time * 0.00035;
 		double halfSampledTime = sampledTime * 0.5;
 		double windX = this.perlinXoro.noise(pos.x() * stretch, 0, time);
 		double windY = this.perlinXoro.noise(halfSampledTime, pos.y() * stretch, halfSampledTime);
