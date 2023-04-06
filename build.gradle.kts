@@ -236,7 +236,7 @@ dependencies {
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    implementation("blue.endless:jankson:$jankson_version")//?.let { include(it) }
+    implementation("blue.endless:jankson:$jankson_version")?.let { include(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 /*
