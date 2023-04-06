@@ -533,6 +533,7 @@ modrinth {
     uploadFile.set(file("build/libs/${tasks.remapJar.get().archiveBaseName.get()}-${version}.jar"))
     gameVersions.set(listOf(minecraft_version))
     loaders.set(listOf("fabric", "quilt"))
+    additionalFiles.set(listOf(tasks.remapSourcesJar.get(), tasks.javadocJar.get()))
     dependencies {
         required.project("fabric-api")
         optional.project("cloth-config")
