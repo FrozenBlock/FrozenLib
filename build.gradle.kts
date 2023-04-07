@@ -236,7 +236,7 @@ dependencies {
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    implementation("blue.endless:jankson:$jankson_version")//?.let { include(it) }
+    implementation("blue.endless:jankson:$jankson_version")?.let { include(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 
@@ -533,6 +533,7 @@ modrinth {
     uploadFile.set(file("build/libs/${tasks.remapJar.get().archiveBaseName.get()}-${version}.jar"))
     gameVersions.set(listOf(minecraft_version))
     loaders.set(listOf("fabric", "quilt"))
+    additionalFiles.set(listOf(tasks.remapSourcesJar.get(), javadocJar))
     dependencies {
         required.project("fabric-api")
         optional.project("cloth-config")
