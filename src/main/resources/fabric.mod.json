@@ -68,6 +68,7 @@
     "mixin/frozenlib.worldgen.biome.mixins.json",
     "mixin/frozenlib.worldgen.structure.mixins.json",
     "mixin/frozenlib.worldgen.surface.mixins.json",
+    "mixin/frozenlib.worldgen.vein.mixins.json",
 
     "mixin/frozenlib_quiltmc_datafixerupper.mixins.json",
     "mixin/frozenlib_quiltmc_registry.mixins.json",
