@@ -117,6 +117,9 @@ transitive-accessible    class    net/minecraft/world/level/levelgen/SurfaceRule
 transitive-accessible    class    net/minecraft/world/level/levelgen/SurfaceRules$SequenceRule
 transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRules$SequenceRule    <init>    (Ljava/util/List;)V
 
+# Ore Veins
+accessible    class    net/minecraft/world/level/levelgen/OreVeinifier$VeinType
+
 # Registry
 transitive-accessible    class    net/minecraft/core/Registry$RegistryBootstrap
 transitive-accessible    class    net/minecraft/data/BuiltinRegistries$RegistryBootstrap
