@@ -52,7 +52,7 @@ public class TestConfig {
 	);
 
 	private static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
-			new JsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class, true)
+			new JsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class, false)
 	);
 
 	@Comment("This is a boolean value.")
@@ -72,16 +72,6 @@ public class TestConfig {
 
 	@Comment("This is an integer list typed entry.")
 	public List<Integer> testIntList = List.of(45);
-
-	@Comment("This is a boolean typed entry.")
-	public TypedEntry<Boolean> typedBoolean = new TypedEntry<>(
-			TypedEntryType.BOOLEAN, true
-	);
-
-	@Comment("This is an integer typed entry.")
-	public TypedEntry<Integer> typedInt = new TypedEntry<>(
-			TypedEntryType.INTEGER, 69
-	);
 
 	@Comment("This is a double list typed entry.")
 	public TypedEntry<List<Double>> typedDoubleList = new TypedEntry<>(

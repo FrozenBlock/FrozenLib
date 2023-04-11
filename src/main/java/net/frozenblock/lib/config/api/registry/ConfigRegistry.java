@@ -52,7 +52,7 @@ public class ConfigRegistry {
 		if (TYPED_ENTRY_REGISTRY.contains(entry)) {
 			throw new IllegalStateException("Typed entry already registered.");
 		}
-		if (Objects.equals(entry.modId(), TypedEntry.DEFAULT_MOD_ID)) {
+		if (entry.modId().equals(TypedEntry.DEFAULT_MOD_ID)) {
 			DEFAULT_TYPED_ENTRY_REGISTRY.add(entry);
 		} else {
 			MOD_TYPED_ENTRY_REGISTRY.computeIfAbsent(entry.modId(), key -> new ArrayList<>()).add(entry);
@@ -66,11 +66,11 @@ public class ConfigRegistry {
 	}
 
 	public static Collection<TypedEntryType<?>> getForMod(String modId) {
-		return MOD_TYPED_ENTRY_REGISTRY.getOrDefault(modId, new ArrayList<>());
+		return Map.copyOf(MOD_TYPED_ENTRY_REGISTRY).getOrDefault(modId, new ArrayList<>());
 	}
 
 	public static Collection<TypedEntryType<?>> getDefault() {
-		return DEFAULT_TYPED_ENTRY_REGISTRY;
+		return List.copyOf(DEFAULT_TYPED_ENTRY_REGISTRY);
 	}
 
 	public static Collection<TypedEntryType<?>> getAll() {

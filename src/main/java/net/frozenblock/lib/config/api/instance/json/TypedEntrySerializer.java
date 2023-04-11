@@ -20,6 +20,7 @@ package net.frozenblock.lib.config.api.instance.json;
 
 import com.google.gson.*;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
@@ -40,38 +41,48 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 
 	@Override
 	public TypedEntry<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
+		TypedEntry<T> result = new TypedEntry<>(null, null);
+
 		var modEntry = getFromRegistry(json, ConfigRegistry.getForMod(this.modId));
 		if (modEntry != null) {
-			return modEntry;
+			result = modEntry;
 		} else {
 			var defaultEntry = getFromRegistry(json, ConfigRegistry.getDefault());
 			if (defaultEntry != null) {
-				return defaultEntry;
+				result = defaultEntry;
+			} else {
+				FrozenMain.error("Failed to deserialize typed entry " + json, true);
 			}
 		}
-		FrozenMain.error("Failed to deserialize typed entry " + json, true);
-		return new TypedEntry<>(null, null);
+		return result;
 	}
 
 	private TypedEntry<T> getFromRegistry(JsonElement json, Collection<TypedEntryType<?>> registry) {
 		for (var entryType : registry) {
-			if (Objects.equals(entryType.modId(), this.modId) || Objects.equals(entryType.modId(), TypedEntry.DEFAULT_MOD_ID)) {
-				var codec = entryType.codec();
-				var result = codec.decode(JsonOps.INSTANCE, json);
+			var entry = getFromType(json, entryType);
+			if (entry != null)
+				return entry;
+		}
+		return null;
+	}
 
-				if (result.error().isPresent()) {
-					continue;
-				}
+	@SuppressWarnings("unchecked")
+	private TypedEntry<T> getFromType(JsonElement json, TypedEntryType<?> entryType) throws ClassCastException {
+		if (entryType.modId().equals(this.modId) || entryType.modId().equals(TypedEntry.DEFAULT_MOD_ID)) {
+			var codec = entryType.codec();
+			DataResult<? extends Pair<?, JsonElement>> result = codec.decode(JsonOps.INSTANCE, json);
 
+			if (result.error().isEmpty()) {
 				var optional = result.result();
+
 				if (optional.isPresent()) {
-					try {
-						Pair<T, JsonElement> type = (Pair<T, JsonElement>) optional.get();
-						var entry = new TypedEntry<>((TypedEntryType<T>) entryType, type.getFirst());
-						FrozenMain.log("Built entry " + entry, FrozenMain.UNSTABLE_LOGGING);
-						return entry;
-					} catch (ClassCastException ignored) {
-					}
+					Pair<?, JsonElement> pair = optional.get();
+					Object first = pair.getFirst();
+					TypedEntryType<T> newType = (TypedEntryType<T>) entryType;
+					T newFirst = (T) first;
+					TypedEntry<T> entry = new TypedEntry<>(newType, newFirst);
+					FrozenMain.log("Built entry " + entry, FrozenMain.UNSTABLE_LOGGING);
+					return entry;
 				}
 			}
 		}
