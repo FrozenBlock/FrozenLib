@@ -25,27 +25,6 @@ import java.util.List;
 
 public record TypedEntryType<T>(String modId, Codec<T> codec) {
 
-	// LISTS
-
-	public static final TypedEntryType<List<Byte>> BYTE_LIST = register(
-			new TypedEntryType<>(TypedEntry.DEFAULT_MOD_ID, Codec.list(Codec.BYTE))
-	);
-	public static final TypedEntryType<List<Short>> SHORT_LIST = register(
-			new TypedEntryType<>(TypedEntry.DEFAULT_MOD_ID, Codec.list(Codec.SHORT))
-	);
-	public static final TypedEntryType<List<Integer>> INTEGER_LIST = register(
-			new TypedEntryType<>(TypedEntry.DEFAULT_MOD_ID, Codec.list(Codec.INT))
-	);
-	public static final TypedEntryType<List<Long>> LONG_LIST = register(
-			new TypedEntryType<>(TypedEntry.DEFAULT_MOD_ID, Codec.list(Codec.LONG))
-	);
-	public static final TypedEntryType<List<Float>> FLOAT_LIST = register(
-			new TypedEntryType<>(TypedEntry.DEFAULT_MOD_ID, Codec.list(Codec.FLOAT))
-	);
-	public static final TypedEntryType<List<Double>> DOUBLE_LIST = register(
-			new TypedEntryType<>(TypedEntry.DEFAULT_MOD_ID, Codec.list(Codec.DOUBLE))
-	);
-
 	public static <T> TypedEntryType<T> register(TypedEntryType<T> type) {
 		return ConfigRegistry.register(type);
 	}

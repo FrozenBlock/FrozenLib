@@ -41,20 +41,13 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 
 	@Override
 	public TypedEntry<T> deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-		TypedEntry<T> result = new TypedEntry<>(null, null);
-
 		var modEntry = getFromRegistry(json, ConfigRegistry.getForMod(this.modId));
 		if (modEntry != null) {
-			result = modEntry;
+			return modEntry;
 		} else {
-			var defaultEntry = getFromRegistry(json, ConfigRegistry.getDefault());
-			if (defaultEntry != null) {
-				result = defaultEntry;
-			} else {
-				FrozenMain.error("Failed to deserialize typed entry " + json, true);
-			}
+			FrozenMain.error("Failed to deserialize typed entry " + json, true);
+			return new TypedEntry<>(null, null);
 		}
-		return result;
 	}
 
 	private TypedEntry<T> getFromRegistry(JsonElement json, Collection<TypedEntryType<?>> registry) {
@@ -68,7 +61,7 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 
 	@SuppressWarnings("unchecked")
 	private TypedEntry<T> getFromType(JsonElement json, TypedEntryType<?> entryType) throws ClassCastException {
-		if (entryType.modId().equals(this.modId) || entryType.modId().equals(TypedEntry.DEFAULT_MOD_ID)) {
+		if (entryType.modId().equals(this.modId)) {
 			var codec = entryType.codec();
 			DataResult<? extends Pair<?, JsonElement>> result = codec.decode(JsonOps.INSTANCE, json);
 
@@ -94,7 +87,7 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 		if (src != null) {
 			var type = src.type();
 			if (type != null) {
-				if (Objects.equals(type.modId(), this.modId) || Objects.equals(type.modId(), TypedEntry.DEFAULT_MOD_ID)) {
+				if (Objects.equals(type.modId(), this.modId)) {
 					var codec = type.codec();
 					if (codec != null) {
 						var encoded = codec.encodeStart(JsonOps.INSTANCE, src.value());

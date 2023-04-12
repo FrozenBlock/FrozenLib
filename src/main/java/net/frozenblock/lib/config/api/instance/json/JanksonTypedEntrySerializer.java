@@ -26,7 +26,7 @@ import net.frozenblock.lib.config.api.entry.TypedEntry;
 import java.util.Objects;
 import java.util.function.BiFunction;
 
-public class JanksonTypedEntrySerializer<T> implements BiFunction<TypedEntry, Marshaller, JsonElement> {
+public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marshaller, JsonElement> {
 
 	private final String modId;
 
@@ -42,7 +42,7 @@ public class JanksonTypedEntrySerializer<T> implements BiFunction<TypedEntry, Ma
 		if (src != null) {
 			var type = src.type();
 			if (type != null) {
-				if (Objects.equals(type.modId(), this.modId) || Objects.equals(type.modId(), TypedEntry.DEFAULT_MOD_ID)) {
+				if (Objects.equals(type.modId(), this.modId)) {
 					var codec = type.codec();
 					if (codec != null) {
 						var encoded = codec.encodeStart(JanksonOps.INSTANCE, src.value());

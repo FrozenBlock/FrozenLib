@@ -79,7 +79,7 @@ public class JsonConfig<T> extends Config<T> {
 		this.gson = builder.create();
 
 		this.jankson = Jankson.builder()
-				.registerSerializer(TypedEntry.class, new JanksonTypedEntrySerializer<>(modId))
+				.registerSerializer(TypedEntry.class, new JanksonTypedEntrySerializer(modId))
 				.build();
 
 		this.useJankson = json5;

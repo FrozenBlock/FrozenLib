@@ -73,11 +73,6 @@ public class TestConfig {
 	@Comment("This is an integer list typed entry.")
 	public List<Integer> testIntList = List.of(45);
 
-	@Comment("This is a double list typed entry.")
-	public TypedEntry<List<Double>> typedDoubleList = new TypedEntry<>(
-			TypedEntryType.DOUBLE_LIST, List.of(1D, 2D, 69.69696969696969696969696969420D)
-	);
-
 	@Comment("This is a sound event typed entry.")
 	public TypedEntry<SoundEvent> randomSound = new TypedEntry<>(
 			SOUND_EVENT, SoundEvents.BEE_LOOP
@@ -87,6 +82,9 @@ public class TestConfig {
 	public TypedEntry<List<Vec3>> typedVecList = new TypedEntry<>(
 			VEC3_LIST, List.of(new Vec3(0, 0, 0), new Vec3(1, 1, 1))
 	);
+
+	@Comment("This is a list of doubles")
+	public List<Double> doubleList = List.of(1D, 2D, 3D, Math.PI);
 
 	public static Config<TestConfig> get() {
 		return INSTANCE;
