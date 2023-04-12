@@ -52,7 +52,7 @@ public class TestConfig {
 	);
 
 	private static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
-			new JsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class, false)
+			new JsonConfig<>(FrozenTestMain.MOD_ID, TestConfig.class, true)
 	);
 
 	@Comment("This is a boolean value.")
