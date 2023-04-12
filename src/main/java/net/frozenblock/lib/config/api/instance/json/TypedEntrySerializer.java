@@ -20,6 +20,7 @@ package net.frozenblock.lib.config.api.instance.json;
 
 import com.google.gson.*;
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
@@ -44,34 +45,37 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 		if (modEntry != null) {
 			return modEntry;
 		} else {
-			var defaultEntry = getFromRegistry(json, ConfigRegistry.getDefault());
-			if (defaultEntry != null) {
-				return defaultEntry;
-			}
+			FrozenMain.error("Failed to deserialize typed entry " + json, true);
+			return new TypedEntry<>(null, null);
 		}
-		FrozenMain.error("Failed to deserialize typed entry " + json, true);
-		return new TypedEntry<>(null, null);
 	}
 
 	private TypedEntry<T> getFromRegistry(JsonElement json, Collection<TypedEntryType<?>> registry) {
 		for (var entryType : registry) {
-			if (Objects.equals(entryType.modId(), this.modId) || Objects.equals(entryType.modId(), TypedEntry.DEFAULT_MOD_ID)) {
-				var codec = entryType.codec();
-				var result = codec.decode(JsonOps.INSTANCE, json);
+			var entry = getFromType(json, entryType);
+			if (entry != null)
+				return entry;
+		}
+		return null;
+	}
 
-				if (result.error().isPresent()) {
-					continue;
-				}
+	@SuppressWarnings("unchecked")
+	private TypedEntry<T> getFromType(JsonElement json, TypedEntryType<?> entryType) throws ClassCastException {
+		if (entryType.modId().equals(this.modId)) {
+			var codec = entryType.codec();
+			DataResult<? extends Pair<?, JsonElement>> result = codec.decode(JsonOps.INSTANCE, json);
 
+			if (result.error().isEmpty()) {
 				var optional = result.result();
+
 				if (optional.isPresent()) {
-					try {
-						Pair<T, JsonElement> type = (Pair<T, JsonElement>) optional.get();
-						var entry = new TypedEntry<>((TypedEntryType<T>) entryType, type.getFirst());
-						FrozenMain.log("Built entry " + entry, FrozenMain.UNSTABLE_LOGGING);
-						return entry;
-					} catch (ClassCastException ignored) {
-					}
+					Pair<?, JsonElement> pair = optional.get();
+					Object first = pair.getFirst();
+					TypedEntryType<T> newType = (TypedEntryType<T>) entryType;
+					T newFirst = (T) first;
+					TypedEntry<T> entry = new TypedEntry<>(newType, newFirst);
+					FrozenMain.log("Built entry " + entry, FrozenMain.UNSTABLE_LOGGING);
+					return entry;
 				}
 			}
 		}
@@ -83,7 +87,7 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 		if (src != null) {
 			var type = src.type();
 			if (type != null) {
-				if (Objects.equals(type.modId(), this.modId) || Objects.equals(type.modId(), TypedEntry.DEFAULT_MOD_ID)) {
+				if (Objects.equals(type.modId(), this.modId)) {
 					var codec = type.codec();
 					if (codec != null) {
 						var encoded = codec.encodeStart(JsonOps.INSTANCE, src.value());
