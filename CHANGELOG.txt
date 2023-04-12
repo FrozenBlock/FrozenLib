@@ -4,19 +4,13 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Added a feature API to make parity between 1.19.2 and 1.19.3 easier
-- Added a Liquid Rendering API
-- Added an NBT File API for reading/writing from/to NBT files
-- Wind Managers are now per-level and are saved
-- Screen shaking is now saved to entities as well as the world
-- Added command /windoverride with parameters x, y, and z representing the direction and strength of the wind.
-    Additionally, it has parameters true and false to enable and disable the override
-- Added command /screenshake with parameters [entity or position], intensity, duration, falloff start, and distance.
-- Added LowerHeightmapPlacement
-- Added FadingDiskCarpetFeature
-- Added FadingDiskTagFeature
-- Added FadingDiskExceptInBiomeFeature
-- Added NoisePathSwapUnderWaterTagFeature
-- Added NoisePathTagFeature
-- Added NoisePathTagUnderWaterFeature
-- Added a PlacementModifiers API
+- Changed FrozenMobCategoryEntrypoint to an interface
+- Added FrozenModInitializer, adding helper methods for the mod initializer
+- Added JSON5 support to configs
+- Renamed GsonConfig to JsonConfig with an added boolean to its constructor to enable JSON5
+- Removed all built in typed entry types
+- Rewrote surface rule injection
+- Added stencil rendering via StencilRenderer
+- Added 3D wind
+- Added additional math tools to AdvancedMath
+- Added FrozenVeinTypes to add custom ore vein types
