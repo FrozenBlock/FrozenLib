@@ -113,7 +113,7 @@ public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
 			serverLevel.getServer().execute(() -> consumer.accept(serverLevel));
 		}
 
-		return bl[0].get();
+		return true;
     }
 
 	public static boolean isBlockExposedToAir(WorldGenLevel level, BlockPos blockPos) {
