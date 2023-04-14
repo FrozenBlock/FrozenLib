@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.testmod.item;
+package net.frozenblock.lib.ingamedevtools.item;
 
 import java.io.File;
 import java.text.DateFormat;
