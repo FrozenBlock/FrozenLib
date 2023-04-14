@@ -113,7 +113,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 			serverLevel.getServer().execute(() -> consumer.accept(serverLevel));
 		}
 
-        return bl[0].get();
+        return true;
     }
 	public static boolean isBlockExposed(WorldGenLevel level, BlockPos blockPos) {
 		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
