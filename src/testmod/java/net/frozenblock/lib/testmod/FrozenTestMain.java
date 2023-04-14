@@ -19,20 +19,13 @@
 package net.frozenblock.lib.testmod;
 
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.testmod.config.TestConfig;
-import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.frozenblock.lib.testmod.config.cloth.ClothConfigInteractionHandler;
-import net.frozenblock.lib.testmod.item.Camera;
-import net.frozenblock.lib.testmod.item.LootTableWhacker;
-import net.minecraft.core.Registry;
+import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.Blocks;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import static net.frozenblock.lib.FrozenMain.id;
 
 public final class FrozenTestMain implements ModInitializer {
 
@@ -41,17 +34,12 @@ public final class FrozenTestMain implements ModInitializer {
 
     public static boolean areConfigsInit = false;
 
-    public static final Camera CAMERA = new Camera(new FabricItemSettings().maxCount(1));
-    public static final LootTableWhacker LOOT_TABLE_WHACKER = new LootTableWhacker(new FabricItemSettings().maxCount(1));
-
     @Override
     public void onInitialize() {
 		LOGGER.info("The test toggle value is " + TestConfig.get().config().testToggle);
 		LOGGER.info("The test vec3 value is " + TestConfig.get().config().typedVecList.value());
 		SoundEvent sound = TestConfig.get().config().randomSound.value();
 		LOGGER.info("The test soundevent value is " + sound + " and its ID is " + sound.getLocation());
-        Registry.register(Registry.ITEM, id("camera"), CAMERA);
-        Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
 
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
