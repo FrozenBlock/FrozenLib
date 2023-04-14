@@ -19,17 +19,19 @@
 package net.frozenblock.lib.ingamedevtools;
 
 import net.fabricmc.fabric.api.item.v1.FabricItemSettings;
+import static net.frozenblock.lib.FrozenMain.id;
 import net.frozenblock.lib.ingamedevtools.item.Camera;
 import net.frozenblock.lib.ingamedevtools.item.LootTableWhacker;
 import net.minecraft.core.Registry;
-import static net.frozenblock.lib.FrozenMain.id;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.item.Item;
 
 public class RegisterInGameDevTools {
-	public static final Camera CAMERA = new Camera(new FabricItemSettings().maxCount(1));
-	public static final LootTableWhacker LOOT_TABLE_WHACKER = new LootTableWhacker(new FabricItemSettings().maxCount(1));
+	public static final Item CAMERA = new Camera(new FabricItemSettings().maxCount(1));
+	public static final Item LOOT_TABLE_WHACKER = new LootTableWhacker(new FabricItemSettings().maxCount(1));
 
 	public static void register() {
-		Registry.register(Registry.ITEM, id("camera"), CAMERA);
-		Registry.register(Registry.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
+		Registry.register(BuiltInRegistries.ITEM, id("camera"), CAMERA);
+		Registry.register(BuiltInRegistries.ITEM, id("loot_table_whacker"), LOOT_TABLE_WHACKER);
 	}
 }
