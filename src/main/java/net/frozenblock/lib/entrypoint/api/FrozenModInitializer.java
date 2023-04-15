@@ -29,7 +29,7 @@ public abstract class FrozenModInitializer implements ModInitializer {
 	private final String modId;
 	private final ModContainer container;
 
-	public FrozenModInitializer(String modId) {
+	protected FrozenModInitializer(String modId) {
 		this.modId = modId;
 		this.container = FabricLoader.getInstance().getModContainer(modId).orElseThrow(() -> new IllegalStateException("Mod container not found for mod id " + modId));
 	}
