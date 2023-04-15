@@ -16,16 +16,20 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.entry;
+package net.frozenblock.lib.worldgen.vein.api.entrypoint;
 
-import com.mojang.serialization.Codec;
-import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import java.util.List;
+import java.util.ArrayList;
+import net.frozenblock.lib.worldgen.vein.impl.FrozenVeinType;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.state.BlockState;
 
-public record TypedEntryType<T>(String modId, Codec<T> codec) {
+public interface FrozenVeinTypeEntrypoint {
 
-	public static <T> TypedEntryType<T> register(TypedEntryType<T> type) {
-		return ConfigRegistry.register(type);
+	void newCategories(ArrayList<FrozenVeinType> context);
+
+	static FrozenVeinType createCategory(ResourceLocation key, BlockState ore, BlockState rawOreBlock, BlockState filler, int minY, int maxY) {
+		return new FrozenVeinType(key, ore, rawOreBlock, filler, minY, maxY);
 	}
+
 }
+

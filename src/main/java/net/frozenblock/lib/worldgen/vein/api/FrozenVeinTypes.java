@@ -16,16 +16,20 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.entry;
+package net.frozenblock.lib.worldgen.vein.api;
 
-import com.mojang.serialization.Codec;
-import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import java.util.List;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import net.minecraft.world.level.levelgen.OreVeinifier;
 
-public record TypedEntryType<T>(String modId, Codec<T> codec) {
+public class FrozenVeinTypes {
+	private static final Map<String, OreVeinifier.VeinType> NEW_VEIN_TYPES = new LinkedHashMap<>();
 
-	public static <T> TypedEntryType<T> register(TypedEntryType<T> type) {
-		return ConfigRegistry.register(type);
+	public static void addVeinType(String id, OreVeinifier.VeinType veinType) {
+		NEW_VEIN_TYPES.put(id, veinType);
+	}
+
+	public static OreVeinifier.VeinType getVeinType(String modId, String name) {
+		return NEW_VEIN_TYPES.get(modId.toUpperCase() + name.toUpperCase());
 	}
 }

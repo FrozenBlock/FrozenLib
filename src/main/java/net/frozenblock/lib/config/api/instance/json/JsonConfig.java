@@ -24,18 +24,16 @@ import blue.endless.jankson.api.SyntaxError;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.config.api.entry.TypedEntry;
-import net.frozenblock.lib.config.api.instance.Config;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
-import java.awt.*;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.config.api.entry.TypedEntry;
+import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.instance.GsonUtils;
 
 /**
  * Serializes and deserializes config data with GSON and Jankson.
@@ -64,22 +62,15 @@ public class JsonConfig<T> extends Config<T> {
 
 	public JsonConfig(String modId, Class<T> config, Path path, boolean json5, GsonBuilder builder) {
 		super(modId, config, path);
-		builder
-			.registerTypeHierarchyAdapter(TypedEntry.class, new TypedEntrySerializer<>(modId))
-			.registerTypeHierarchyAdapter(Component.class, new Component.Serializer())
-			.registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
-			.registerTypeHierarchyAdapter(Color.class, new ColorSerializer())
-			.serializeNulls()
-			.setPrettyPrinting();
 
 		if (!json5) {
 			builder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
 		}
 
-		this.gson = builder.create();
+		this.gson = GsonUtils.createGson(builder, modId);
 
 		this.jankson = Jankson.builder()
-				.registerSerializer(TypedEntry.class, new JanksonTypedEntrySerializer<>(modId))
+				.registerSerializer(TypedEntry.class, new JanksonTypedEntrySerializer(modId))
 				.build();
 
 		this.useJankson = json5;
@@ -111,7 +102,7 @@ public class JsonConfig<T> extends Config<T> {
 		FrozenMain.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
 		if (Files.exists(this.path())) {
 			try {
-				String json = this.jankson.load(this.path().toFile()).toJson(JsonGrammar.STRICT);
+				String json = this.jankson.load(this.path().toFile()).toJson(JsonGrammar.COMPACT);
 				var reader = new StringReader(json);
 				this.setConfig(this.gson.fromJson(reader, this.configClass()));
 				reader.close();

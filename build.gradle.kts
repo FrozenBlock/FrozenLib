@@ -236,7 +236,7 @@ dependencies {
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    implementation("blue.endless:jankson:$jankson_version")//?.let { include(it) }
+    implementation("blue.endless:jankson:$jankson_version")?.let { include(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 /*
@@ -513,11 +513,16 @@ curseforge {
             requiredDependency("fabric-api")
             optionalDependency("cloth-config")
         })
-        mainArtifact(file("build/libs/${tasks.remapJar.get().archiveBaseName.get()}-${version}.jar"), closureOf<CurseArtifact> {
+        mainArtifact(remapJar, closureOf<CurseArtifact> {
             displayName = display_name
         })
+        addArtifact(tasks.remapSourcesJar.get())
+        //addArtifact(javadocJar)
+
         afterEvaluate {
             uploadTask.dependsOn(remapJar)
+            uploadTask.dependsOn(tasks.remapSourcesJar.get())
+            //uploadTask.dependsOn(javadocJar)
         }
     })
     curseGradleOptions.forgeGradleIntegration = false
@@ -530,9 +535,15 @@ modrinth {
     versionName.set(display_name)
     versionType.set(release_type)
     changelog.set(changelog_text)
-    uploadFile.set(file("build/libs/${tasks.remapJar.get().archiveBaseName.get()}-${version}.jar"))
+    uploadFile.set(remapJar)
     gameVersions.set(listOf(minecraft_version))
     loaders.set(listOf("fabric", "quilt"))
+    additionalFiles.set(
+        listOf(
+            tasks.remapSourcesJar.get(),
+            //javadocJar
+        )
+    )
     dependencies {
         required.project("fabric-api")
         optional.project("cloth-config")

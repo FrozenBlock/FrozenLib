@@ -27,6 +27,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
+import net.frozenblock.lib.ingamedevtools.RegisterInGameDevTools;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
@@ -77,6 +78,10 @@ public final class FrozenMain implements ModInitializer {
 		FrozenPlacementModifiers.init();
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenMain.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
+
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+			RegisterInGameDevTools.register();
+		}
 
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
 			try {

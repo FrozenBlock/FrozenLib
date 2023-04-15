@@ -456,7 +456,6 @@ public final class FrozenClient implements ClientModInitializer {
 		});
 	}
 
-
 	private static void registerClientEvents() {
 		ClientTickEvents.START_WORLD_TICK.register(ClientWindManager::tick);
 		ClientTickEvents.START_CLIENT_TICK.register(ScreenShaker::tick);

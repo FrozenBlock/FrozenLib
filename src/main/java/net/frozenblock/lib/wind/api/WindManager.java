@@ -220,4 +220,52 @@ public class WindManager {
 		return this.createData().load(nbt);
 	}
 
+	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double stretch) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
+		return new Vec3(wind.x() * windMultiplier, wind.y() * windMultiplier, wind.z() * windMultiplier);
+	}
+
+	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double multiplier, double stretch) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
+		return new Vec3((wind.x() * windMultiplier) * multiplier, (wind.y() * windMultiplier) * multiplier, (wind.z() * windMultiplier) * multiplier);
+	}
+
+	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double multiplier, double clamp, double stretch) {
+		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
+		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
+		return new Vec3(Mth.clamp((wind.x() * windMultiplier) * multiplier, -clamp, clamp),
+				Mth.clamp((wind.y() * windMultiplier) * multiplier, -clamp, clamp),
+				Mth.clamp((wind.z() * windMultiplier) * multiplier, -clamp, clamp));
+	}
+
+	public Vec3 getWindMovement3D(Vec3 pos, double stretch) {
+		Vec3 wind = this.sample3D(pos, stretch);
+		return new Vec3(wind.x(), wind.y(), wind.z());
+	}
+
+	public Vec3 getWindMovement3D(Vec3 pos, double multiplier, double stretch) {
+		Vec3 wind = this.sample3D(pos, stretch);
+		return new Vec3((wind.x()) * multiplier, (wind.y()) * multiplier, (wind.z()) * multiplier);
+	}
+
+	public Vec3 getWindMovement3D(Vec3 pos, double multiplier, double clamp, double stretch) {
+		Vec3 wind = this.sample3D(pos, stretch);
+		return new Vec3(Mth.clamp((wind.x()) * multiplier, -clamp, clamp),
+				Mth.clamp((wind.y()) * multiplier, -clamp, clamp),
+				Mth.clamp((wind.z()) * multiplier, -clamp, clamp));
+	}
+
+	public Vec3 sample3D(Vec3 pos, double stretch) {
+		double sampledTime = time * 0.1;
+		double xyz = pos.x() + pos.y() + pos.z();
+		double windX = this.perlinXoro.noise((xyz + sampledTime) * stretch, 0, 0);
+		double windY = this.perlinXoro.noise(0, (xyz + sampledTime) * stretch, 0);
+		double windZ = this.perlinXoro.noise(0, 0, (xyz + sampledTime) * stretch);
+		return new Vec3(windX, windY, windZ);
+	}
 }
