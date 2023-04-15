@@ -22,7 +22,11 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import net.minecraft.world.entity.MobCategory;
 
-public class FrozenMobCategories {
+public final class FrozenMobCategories {
+	private FrozenMobCategories() {
+		throw new UnsupportedOperationException("FrozenMobCategories contains only static declarations.");
+	}
+
 	private static final Map<String, MobCategory> NEW_MOB_CATEROGIES = new LinkedHashMap<>();
 
 	public static void addMobCategory(String id, MobCategory category) {
