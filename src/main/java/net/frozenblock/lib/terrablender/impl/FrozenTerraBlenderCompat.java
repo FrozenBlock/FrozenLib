@@ -19,8 +19,14 @@
 package net.frozenblock.lib.terrablender.impl;
 
 import java.util.ArrayList;
+import java.util.List;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
+import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import terrablender.api.SurfaceRuleManager;
 import terrablender.api.TerraBlenderApi;
@@ -29,61 +35,60 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 
 	@Override
 	public void onTerraBlenderInitialized() {
+		//GENERIC
+		ArrayList<FrozenDimensionBoundRuleSource> genericSources = new ArrayList<>();
+		ArrayList<SurfaceRules.RuleSource> overworldSources = new ArrayList<>();
+		ArrayList<SurfaceRules.RuleSource> overworldNoPrelimSources = new ArrayList<>();
+		ArrayList<SurfaceRules.RuleSource> netherRules = new ArrayList<>();
+
+		for (EntrypointContainer<FrozenSurfaceRuleEntrypoint> entrypoint : FrozenMain.SURFACE_RULE_ENTRYPOINTS) {
+			FrozenSurfaceRuleEntrypoint surfaceRuleEntrypoint = entrypoint.getEntrypoint();
+			surfaceRuleEntrypoint.addSurfaceRules(genericSources);
+			surfaceRuleEntrypoint.addOverworldSurfaceRules(overworldSources);
+			surfaceRuleEntrypoint.addOverworldSurfaceRulesNoPrelimSurface(overworldNoPrelimSources);
+			surfaceRuleEntrypoint.addNetherSurfaceRules(netherRules);
+		}
+
+		//TODO: Fix i guess idk
+		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(genericSources);
+		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(overworldSources);
+		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(overworldNoPrelimSources);
+		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(netherRules);
+
 		//OVERWORLD
-		ArrayList<SurfaceRules.RuleSource> overworldRules = new ArrayList<>();
+		for (SurfaceRules.RuleSource ruleSource : overworldSources) {
+			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
+		}
+
+		//OVERWORLD WITHOUT PRELIMINARY SURFACE
 		//TODO: Fix i guess idk
-		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(overworldRules);
-		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(overworldRules)));
+		for (SurfaceRules.RuleSource ruleSource : overworldNoPrelimSources) {
+			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, ruleSource);
+		}
 
-		SurfaceRules.RuleSource overworldSource = null;
-		for (SurfaceRules.RuleSource ruleSource : overworldRules) {
-			if (overworldSource == null) {
-				overworldSource = ruleSource;
-			} else {
-				overworldSource = SurfaceRules.sequence(overworldSource, ruleSource);
+		//OVERWORLD GENERIC
+		for (FrozenDimensionBoundRuleSource dimensionBoundRuleSource : genericSources) {
+			if (dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.OVERWORLD.location())) || dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.OVERWORLD_CAVES.location()))) {
+				FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+				SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
 			}
-		}
-
-		ArrayList<SurfaceRules.RuleSource> overworldNoPrelimRules = new ArrayList<>();
-		//TODO: Fix i guess idk
-		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(overworldNoPrelimRules);
-		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(overworldNoPrelimRules)));
-
-		SurfaceRules.RuleSource overworldNoPrelimSource = null;
-		for (SurfaceRules.RuleSource ruleSource : overworldNoPrelimRules) {
-			if (overworldNoPrelimSource == null) {
-				overworldNoPrelimSource = ruleSource;
-			} else {
-				overworldNoPrelimSource = SurfaceRules.sequence(overworldNoPrelimSource, ruleSource);
-			}
-		}
-
-		if (overworldSource != null) {
-			overworldSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), overworldSource);
-			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 0, overworldSource);
-		}
-
-		if (overworldNoPrelimSource != null) {
-			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 0, overworldNoPrelimSource);
 		}
 
 		//NETHER
-		ArrayList<SurfaceRules.RuleSource> netherRules = new ArrayList<>();
 		//TODO: Fix i guess idk
-		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(netherRules);
-		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(netherRules)));
-
-		SurfaceRules.RuleSource netherSource = null;
 		for (SurfaceRules.RuleSource ruleSource : netherRules) {
-			if (netherSource == null) {
-				netherSource = ruleSource;
-			} else {
-				netherSource = SurfaceRules.sequence(netherSource, ruleSource);
-			}
+			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
 		}
 
-		if (netherSource != null) {
-			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 0, netherSource);
+		//NETHER GENERIC
+		for (FrozenDimensionBoundRuleSource dimensionBoundRuleSource : genericSources) {
+			if (dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.NETHER.location()))) {
+				FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+				SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
+			}
 		}
 	}
 

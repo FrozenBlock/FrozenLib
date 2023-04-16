@@ -19,7 +19,6 @@
 package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.ArrayList;
-import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
@@ -29,10 +28,7 @@ import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -40,11 +36,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(NoiseGeneratorSettings.class)
 public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
-
-	@Shadow
-	@Final
-	@Mutable
-	private SurfaceRules.RuleSource surfaceRule;
 
 	@Unique
 	private SurfaceRules.RuleSource frozenLib$newSurfaceRule;
@@ -63,9 +54,13 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	private void frozenLib$modifyRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
 		SurfaceRules.RuleSource returnValue = cir.getReturnValue();
 		SurfaceRules.RuleSource newRule = null;
+
 		if (this.frozenLib$dimension != null) {
+			boolean isOverworld = this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES);
+			boolean isNether = this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER);
+
 			//OVERWORLD
-			if (!this.frozenLib$hasCheckedOverworldEntrypoints && (this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES)) && !FrozenBools.HAS_TERRABLENDER) {
+			if (!this.frozenLib$hasCheckedOverworldEntrypoints && isOverworld) {
 				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
@@ -122,7 +117,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 			}
 
 			//NETHER
-			if (!this.frozenLib$hasCheckedNetherEntrypoints && this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER) && !FrozenBools.HAS_TERRABLENDER) {
+			if (!this.frozenLib$hasCheckedNetherEntrypoints && isNether) {
 				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
@@ -180,44 +175,44 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 			} else {
 				this.frozenLib$hasCheckedEndEntrypoints = true;
 			}
-		}
 
-		//GENERIC / ALL LEVEL STEMS
-		if (!this.frozenLib$hasCheckedGenericEntrypoints) {
-			ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
+			//GENERIC / ALL LEVEL STEMS
+			if (!this.frozenLib$hasCheckedGenericEntrypoints) {
+				ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
 
-			//TODO: Fix i guess idk
-			SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(sourceHolders);
+				//TODO: Fix i guess idk
+				SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(sourceHolders);
 
-			FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addSurfaceRules(sourceHolders)));
+				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addSurfaceRules(sourceHolders)));
 
-			SurfaceRules.RuleSource newSource = null;
-			for (FrozenDimensionBoundRuleSource dimRuleSource : sourceHolders) {
-				if (this.frozenLib$dimension.is(dimRuleSource.dimension())) {
-					if (newSource == null) {
-						newSource = dimRuleSource.ruleSource();
+				SurfaceRules.RuleSource newSource = null;
+				for (FrozenDimensionBoundRuleSource dimRuleSource : sourceHolders) {
+					if (this.frozenLib$dimension.is(dimRuleSource.dimension())) {
+						if (newSource == null) {
+							newSource = dimRuleSource.ruleSource();
+						} else {
+							newSource = SurfaceRules.sequence(newSource, dimRuleSource.ruleSource());
+						}
+					}
+				}
+				this.frozenLib$hasCheckedGenericEntrypoints = true;
+
+				if (newSource != null) {
+					if (newRule != null) {
+						newRule = SurfaceRules.sequence(newSource, newRule);
 					} else {
-						newSource = SurfaceRules.sequence(newSource, dimRuleSource.ruleSource());
+						newRule = SurfaceRules.sequence(newSource);
 					}
 				}
 			}
-			this.frozenLib$hasCheckedGenericEntrypoints = true;
 
-			if (newSource != null) {
-				if (newRule != null) {
-					newRule = SurfaceRules.sequence(newSource, newRule);
-				} else {
-					newRule = SurfaceRules.sequence(newSource);
-				}
+			if (newRule != null) {
+				this.frozenLib$newSurfaceRule = SurfaceRules.sequence(newRule, returnValue);
 			}
-		}
 
-		if (newRule != null) {
-			this.frozenLib$newSurfaceRule = SurfaceRules.sequence(newRule, returnValue);
-		}
-
-		if (this.frozenLib$newSurfaceRule != null) {
-			cir.setReturnValue(this.frozenLib$newSurfaceRule);
+			if (this.frozenLib$newSurfaceRule != null) {
+				cir.setReturnValue(this.frozenLib$newSurfaceRule);
+			}
 		}
 	}
 
