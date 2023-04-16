@@ -41,11 +41,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(NoiseGeneratorSettings.class)
 public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
-	@Shadow
-	@Final
-	@Mutable
-	private SurfaceRules.RuleSource surfaceRule;
-
 	@Unique
 	private SurfaceRules.RuleSource frozenLib$newSurfaceRule;
 	@Unique
@@ -65,7 +60,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 		SurfaceRules.RuleSource newRule = null;
 		if (this.frozenLib$dimension != null) {
 			//OVERWORLD
-			if (!this.frozenLib$hasCheckedOverworldEntrypoints && (this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES)) && !FrozenBools.HAS_TERRABLENDER) {
+			if (!FrozenBools.HAS_TERRABLENDER && !this.frozenLib$hasCheckedOverworldEntrypoints && (this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES))) {
 				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
@@ -123,7 +118,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 			}
 
 			//NETHER
-			if (!this.frozenLib$hasCheckedNetherEntrypoints && this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER) && !FrozenBools.HAS_TERRABLENDER) {
+			if (!FrozenBools.HAS_TERRABLENDER && !this.frozenLib$hasCheckedNetherEntrypoints && this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER)) {
 				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
