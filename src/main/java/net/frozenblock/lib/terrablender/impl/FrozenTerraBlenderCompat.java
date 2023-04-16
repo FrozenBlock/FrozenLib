@@ -41,7 +41,7 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		ArrayList<SurfaceRules.RuleSource> overworldNoPrelimSources = new ArrayList<>();
 		ArrayList<SurfaceRules.RuleSource> netherRules = new ArrayList<>();
 
-		for (EntrypointContainer<FrozenSurfaceRuleEntrypoint> entrypoint : FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfacerules", FrozenSurfaceRuleEntrypoint.class)) {
+		for (EntrypointContainer<FrozenSurfaceRuleEntrypoint> entrypoint : FrozenMain.SURFACE_RULE_ENTRYPOINTS) {
 			FrozenSurfaceRuleEntrypoint surfaceRuleEntrypoint = entrypoint.getEntrypoint();
 			surfaceRuleEntrypoint.addSurfaceRules(genericSources);
 			surfaceRuleEntrypoint.addOverworldSurfaceRules(overworldSources);

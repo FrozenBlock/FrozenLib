@@ -19,7 +19,6 @@
 package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.ArrayList;
-import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
@@ -29,10 +28,7 @@ import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -62,9 +58,6 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 		if (this.frozenLib$dimension != null) {
 			boolean isOverworld = this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES);
 			boolean isNether = this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER);
-			if ((isOverworld || isNether) && FrozenBools.HAS_TERRABLENDER) {
-				return;
-			}
 
 			//OVERWORLD
 			if (!this.frozenLib$hasCheckedOverworldEntrypoints && isOverworld) {
