@@ -101,13 +101,13 @@
       ]
     },
 	"modmenu": {
-	  "links": {
-		"modmenu.discord": "https://discord.gg/EpkBWm844s"
-	  },
-	  "badges": [
-		"library",
-        "frozenblock"
-	  ]
-	}
+    "links": {
+      "modmenu.discord": "https://discord.gg/EpkBWm844s"
+    },
+    "badges": [
+      "library",
+      "frozenblock"
+    ]
+  }
   }
 }
