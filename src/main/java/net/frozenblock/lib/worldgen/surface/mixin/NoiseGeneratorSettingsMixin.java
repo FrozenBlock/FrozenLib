@@ -41,11 +41,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(NoiseGeneratorSettings.class)
 public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
-	@Shadow
-	@Final
-	@Mutable
-	private SurfaceRules.RuleSource surfaceRule;
-
 	@Unique
 	private SurfaceRules.RuleSource frozenLib$newSurfaceRule;
 	@Unique
@@ -61,164 +56,166 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	@Inject(method = "surfaceRule", at = @At("RETURN"), cancellable = true)
 	private void frozenLib$modifyRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-		SurfaceRules.RuleSource returnValue = cir.getReturnValue();
-		SurfaceRules.RuleSource newRule = null;
-		if (this.frozenLib$dimension != null) {
-			//OVERWORLD
-			if (!this.frozenLib$hasCheckedOverworldEntrypoints && (this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES)) && !FrozenBools.HAS_TERRABLENDER) {
-				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
+		if (!FrozenBools.HAS_TERRABLENDER) {
+			SurfaceRules.RuleSource returnValue = cir.getReturnValue();
+			SurfaceRules.RuleSource newRule = null;
+			if (this.frozenLib$dimension != null) {
+				//OVERWORLD
+				if (!this.frozenLib$hasCheckedOverworldEntrypoints && (this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES)) && !FrozenBools.HAS_TERRABLENDER) {
+					ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
-				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(sourceHolders);
+					//TODO: Fix i guess idk
+					SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(sourceHolders);
 
-				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(sourceHolders)));
+					FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(sourceHolders)));
 
-				SurfaceRules.RuleSource newSource = null;
-				for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
-					if (newSource == null) {
-						newSource = ruleSource;
-					} else {
-						newSource = SurfaceRules.sequence(newSource, ruleSource);
+					SurfaceRules.RuleSource newSource = null;
+					for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
+						if (newSource == null) {
+							newSource = ruleSource;
+						} else {
+							newSource = SurfaceRules.sequence(newSource, ruleSource);
+						}
 					}
-				}
 
-				if (newSource != null) {
-					newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
-				}
-
-				ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
-
-				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(noPrelimSourceHolders);
-
-				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(noPrelimSourceHolders)));
-
-				SurfaceRules.RuleSource noPrelimSource = null;
-				for (SurfaceRules.RuleSource ruleSource : noPrelimSourceHolders) {
-					if (noPrelimSource == null) {
-						noPrelimSource = ruleSource;
-					} else {
-						noPrelimSource = SurfaceRules.sequence(noPrelimSource, ruleSource);
+					if (newSource != null) {
+						newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
 					}
-				}
 
-				this.frozenLib$hasCheckedOverworldEntrypoints = true;
+					ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
 
-				if (newSource != null) {
-					if (newRule != null) {
-						newRule = SurfaceRules.sequence(newSource, newRule);
-					} else {
-						newRule = SurfaceRules.sequence(newSource);
+					//TODO: Fix i guess idk
+					SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(noPrelimSourceHolders);
+
+					FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(noPrelimSourceHolders)));
+
+					SurfaceRules.RuleSource noPrelimSource = null;
+					for (SurfaceRules.RuleSource ruleSource : noPrelimSourceHolders) {
+						if (noPrelimSource == null) {
+							noPrelimSource = ruleSource;
+						} else {
+							noPrelimSource = SurfaceRules.sequence(noPrelimSource, ruleSource);
+						}
 					}
-				}
-				if (noPrelimSource != null) {
-					if (newRule != null) {
-						newRule = SurfaceRules.sequence(noPrelimSource, newRule);
-					} else {
-						newRule = SurfaceRules.sequence(noPrelimSource);
+
+					this.frozenLib$hasCheckedOverworldEntrypoints = true;
+
+					if (newSource != null) {
+						if (newRule != null) {
+							newRule = SurfaceRules.sequence(newSource, newRule);
+						} else {
+							newRule = SurfaceRules.sequence(newSource);
+						}
 					}
-				}
-			} else {
-				this.frozenLib$hasCheckedOverworldEntrypoints = true;
-			}
-
-			//NETHER
-			if (!this.frozenLib$hasCheckedNetherEntrypoints && this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER) && !FrozenBools.HAS_TERRABLENDER) {
-				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
-
-				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(sourceHolders);
-
-				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(sourceHolders)));
-
-				SurfaceRules.RuleSource newSource = null;
-				for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
-					if (newSource == null) {
-						newSource = ruleSource;
-					} else {
-						newSource = SurfaceRules.sequence(newSource, ruleSource);
+					if (noPrelimSource != null) {
+						if (newRule != null) {
+							newRule = SurfaceRules.sequence(noPrelimSource, newRule);
+						} else {
+							newRule = SurfaceRules.sequence(noPrelimSource);
+						}
 					}
-				}
-				this.frozenLib$hasCheckedNetherEntrypoints = true;
-
-				if (newSource != null) {
-					if (newRule != null) {
-						newRule = SurfaceRules.sequence(newSource, newRule);
-					} else {
-						newRule = SurfaceRules.sequence(newSource);
-					}
-				}
-			} else {
-				this.frozenLib$hasCheckedNetherEntrypoints = true;
-			}
-
-			//END
-			if (!this.frozenLib$hasCheckedEndEntrypoints && this.frozenLib$dimension.is(BuiltinDimensionTypes.END)) {
-				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
-
-				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_END.invoker().addRuleSources(sourceHolders);
-
-				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addEndSurfaceRules(sourceHolders)));
-
-				SurfaceRules.RuleSource newSource = null;
-				for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
-					if (newSource == null) {
-						newSource = ruleSource;
-					} else {
-						newSource = SurfaceRules.sequence(newSource, ruleSource);
-					}
-				}
-				this.frozenLib$hasCheckedEndEntrypoints = true;
-
-				if (newSource != null) {
-					if (newRule != null) {
-						newRule = SurfaceRules.sequence(newSource, newRule);
-					} else {
-						newRule = SurfaceRules.sequence(newSource);
-					}
-				}
-			} else {
-				this.frozenLib$hasCheckedEndEntrypoints = true;
-			}
-		}
-
-		//GENERIC / ALL LEVEL STEMS
-		if (!this.frozenLib$hasCheckedGenericEntrypoints) {
-			ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
-
-			//TODO: Fix i guess idk
-			SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(sourceHolders);
-
-			FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addSurfaceRules(sourceHolders)));
-
-			SurfaceRules.RuleSource newSource = null;
-			for (FrozenDimensionBoundRuleSource dimRuleSource : sourceHolders) {
-				if (this.frozenLib$dimension.is(dimRuleSource.dimension())) {
-					if (newSource == null) {
-						newSource = dimRuleSource.ruleSource();
-					} else {
-						newSource = SurfaceRules.sequence(newSource, dimRuleSource.ruleSource());
-					}
-				}
-			}
-			this.frozenLib$hasCheckedGenericEntrypoints = true;
-
-			if (newSource != null) {
-				if (newRule != null) {
-					newRule = SurfaceRules.sequence(newSource, newRule);
 				} else {
-					newRule = SurfaceRules.sequence(newSource);
+					this.frozenLib$hasCheckedOverworldEntrypoints = true;
+				}
+
+				//NETHER
+				if (!this.frozenLib$hasCheckedNetherEntrypoints && this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER) && !FrozenBools.HAS_TERRABLENDER) {
+					ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
+
+					//TODO: Fix i guess idk
+					SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(sourceHolders);
+
+					FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(sourceHolders)));
+
+					SurfaceRules.RuleSource newSource = null;
+					for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
+						if (newSource == null) {
+							newSource = ruleSource;
+						} else {
+							newSource = SurfaceRules.sequence(newSource, ruleSource);
+						}
+					}
+					this.frozenLib$hasCheckedNetherEntrypoints = true;
+
+					if (newSource != null) {
+						if (newRule != null) {
+							newRule = SurfaceRules.sequence(newSource, newRule);
+						} else {
+							newRule = SurfaceRules.sequence(newSource);
+						}
+					}
+				} else {
+					this.frozenLib$hasCheckedNetherEntrypoints = true;
+				}
+
+				//END
+				if (!this.frozenLib$hasCheckedEndEntrypoints && this.frozenLib$dimension.is(BuiltinDimensionTypes.END)) {
+					ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
+
+					//TODO: Fix i guess idk
+					SurfaceRuleEvents.MODIFY_END.invoker().addRuleSources(sourceHolders);
+
+					FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addEndSurfaceRules(sourceHolders)));
+
+					SurfaceRules.RuleSource newSource = null;
+					for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
+						if (newSource == null) {
+							newSource = ruleSource;
+						} else {
+							newSource = SurfaceRules.sequence(newSource, ruleSource);
+						}
+					}
+					this.frozenLib$hasCheckedEndEntrypoints = true;
+
+					if (newSource != null) {
+						if (newRule != null) {
+							newRule = SurfaceRules.sequence(newSource, newRule);
+						} else {
+							newRule = SurfaceRules.sequence(newSource);
+						}
+					}
+				} else {
+					this.frozenLib$hasCheckedEndEntrypoints = true;
 				}
 			}
-		}
 
-		if (newRule != null) {
-			this.frozenLib$newSurfaceRule = SurfaceRules.sequence(newRule, returnValue);
-		}
+			//GENERIC / ALL LEVEL STEMS
+			if (!this.frozenLib$hasCheckedGenericEntrypoints) {
+				ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
 
-		if (this.frozenLib$newSurfaceRule != null) {
-			cir.setReturnValue(this.frozenLib$newSurfaceRule);
+				//TODO: Fix i guess idk
+				SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(sourceHolders);
+
+				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addSurfaceRules(sourceHolders)));
+
+				SurfaceRules.RuleSource newSource = null;
+				for (FrozenDimensionBoundRuleSource dimRuleSource : sourceHolders) {
+					if (this.frozenLib$dimension.is(dimRuleSource.dimension())) {
+						if (newSource == null) {
+							newSource = dimRuleSource.ruleSource();
+						} else {
+							newSource = SurfaceRules.sequence(newSource, dimRuleSource.ruleSource());
+						}
+					}
+				}
+				this.frozenLib$hasCheckedGenericEntrypoints = true;
+
+				if (newSource != null) {
+					if (newRule != null) {
+						newRule = SurfaceRules.sequence(newSource, newRule);
+					} else {
+						newRule = SurfaceRules.sequence(newSource);
+					}
+				}
+			}
+
+			if (newRule != null) {
+				this.frozenLib$newSurfaceRule = SurfaceRules.sequence(newRule, returnValue);
+			}
+
+			if (this.frozenLib$newSurfaceRule != null) {
+				cir.setReturnValue(this.frozenLib$newSurfaceRule);
+			}
 		}
 	}
 
