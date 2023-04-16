@@ -19,8 +19,12 @@
 package net.frozenblock.lib.terrablender.impl;
 
 import java.util.ArrayList;
+import java.util.List;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
+import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -33,25 +37,32 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 	public void onTerraBlenderInitialized() {
 		//GENERIC
 		ArrayList<FrozenDimensionBoundRuleSource> genericSources = new ArrayList<>();
+		ArrayList<SurfaceRules.RuleSource> overworldSources = new ArrayList<>();
+		ArrayList<SurfaceRules.RuleSource> overworldNoPrelimSources = new ArrayList<>();
+		ArrayList<SurfaceRules.RuleSource> netherRules = new ArrayList<>();
+
+		for (EntrypointContainer<FrozenSurfaceRuleEntrypoint> entrypoint : FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfacerules", FrozenSurfaceRuleEntrypoint.class)) {
+			FrozenSurfaceRuleEntrypoint surfaceRuleEntrypoint = entrypoint.getEntrypoint();
+			surfaceRuleEntrypoint.addSurfaceRules(genericSources);
+			surfaceRuleEntrypoint.addOverworldSurfaceRules(overworldSources);
+			surfaceRuleEntrypoint.addOverworldSurfaceRulesNoPrelimSurface(overworldNoPrelimSources);
+			surfaceRuleEntrypoint.addNetherSurfaceRules(netherRules);
+		}
+
 		//TODO: Fix i guess idk
 		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(genericSources);
-		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addSurfaceRules(genericSources)));
+		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(overworldSources);
+		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(overworldNoPrelimSources);
+		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(netherRules);
 
 		//OVERWORLD
-		ArrayList<SurfaceRules.RuleSource> overworldSources = new ArrayList<>();
-		//TODO: Fix i guess idk
-		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(overworldSources);
-		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(overworldSources)));
 		for (SurfaceRules.RuleSource ruleSource : overworldSources) {
 			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
 			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
 		}
 
 		//OVERWORLD WITHOUT PRELIMINARY SURFACE
-		ArrayList<SurfaceRules.RuleSource> overworldNoPrelimSources = new ArrayList<>();
 		//TODO: Fix i guess idk
-		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(overworldNoPrelimSources);
-		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(overworldNoPrelimSources)));
 		for (SurfaceRules.RuleSource ruleSource : overworldNoPrelimSources) {
 			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
 			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, ruleSource);
@@ -66,10 +77,7 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		}
 
 		//NETHER
-		ArrayList<SurfaceRules.RuleSource> netherRules = new ArrayList<>();
 		//TODO: Fix i guess idk
-		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(netherRules);
-		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(netherRules)));
 		for (SurfaceRules.RuleSource ruleSource : netherRules) {
 			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
 			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
