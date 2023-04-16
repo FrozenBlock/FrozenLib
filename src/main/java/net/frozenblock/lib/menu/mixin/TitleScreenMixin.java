@@ -55,7 +55,7 @@ public class TitleScreenMixin {
 			for(int i = 0; i < 6; ++i) {
 				//Panorama isn't valid if one of the six images aren't found- move on to next ResourceLocation in the list.
 				if (Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(namespace, path + "_" + i + ".png")).isEmpty()) {
-					FrozenMain.warn("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", true);
+					FrozenMain.warn("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", FrozenMain.UNSTABLE_LOGGING);
 					break;
 				}
 				//Panorama is valid if all six images are found, add to valid panorama list.
