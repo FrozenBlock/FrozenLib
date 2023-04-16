@@ -31,7 +31,6 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 
 	@Override
 	public void onTerraBlenderInitialized() {
-		FrozenMain.LOGGER.info("TERRABLENDER ENTRYPOINT FOR FROZENLIB RAN");
 		//GENERIC
 		ArrayList<FrozenDimensionBoundRuleSource> genericSources = new ArrayList<>();
 		//TODO: Fix i guess idk
@@ -44,7 +43,8 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(overworldSources);
 		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(overworldSources)));
 		for (SurfaceRules.RuleSource ruleSource : overworldSources) {
-			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), ruleSource));
+			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
 		}
 
 		//OVERWORLD WITHOUT PRELIMINARY SURFACE
@@ -53,13 +53,15 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(overworldNoPrelimSources);
 		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(overworldNoPrelimSources)));
 		for (SurfaceRules.RuleSource ruleSource : overworldNoPrelimSources) {
-			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
+			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, ruleSource);
 		}
 
 		//OVERWORLD GENERIC
 		for (FrozenDimensionBoundRuleSource dimensionBoundRuleSource : genericSources) {
 			if (dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.OVERWORLD.location())) || dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.OVERWORLD_CAVES.location()))) {
-				SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
+				FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+				SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
 			}
 		}
 
@@ -69,12 +71,14 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(netherRules);
 		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(netherRules)));
 		for (SurfaceRules.RuleSource ruleSource : netherRules) {
+			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
 			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
 		}
 
 		//NETHER GENERIC
 		for (FrozenDimensionBoundRuleSource dimensionBoundRuleSource : genericSources) {
 			if (dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.NETHER.location()))) {
+				FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
 				SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
 			}
 		}
