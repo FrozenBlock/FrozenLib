@@ -32,18 +32,22 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 
 	@Override
 	public void onTerraBlenderInitialized() {
+		//GENERIC
+		ArrayList<FrozenDimensionBoundRuleSource> genericSources = new ArrayList<>();
 		ArrayList<SurfaceRules.RuleSource> overworldSources = new ArrayList<>();
 		ArrayList<SurfaceRules.RuleSource> overworldNoPrelimSources = new ArrayList<>();
 		ArrayList<SurfaceRules.RuleSource> netherRules = new ArrayList<>();
 
 		for (EntrypointContainer<FrozenSurfaceRuleEntrypoint> entrypoint : FrozenMain.SURFACE_RULE_ENTRYPOINTS) {
 			FrozenSurfaceRuleEntrypoint surfaceRuleEntrypoint = entrypoint.getEntrypoint();
+			surfaceRuleEntrypoint.addSurfaceRules(genericSources);
 			surfaceRuleEntrypoint.addOverworldSurfaceRules(overworldSources);
 			surfaceRuleEntrypoint.addOverworldSurfaceRulesNoPrelimSurface(overworldNoPrelimSources);
 			surfaceRuleEntrypoint.addNetherSurfaceRules(netherRules);
 		}
 
 		//TODO: Fix i guess idk
+		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(genericSources);
 		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(overworldSources);
 		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(overworldNoPrelimSources);
 		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(netherRules);
@@ -61,11 +65,27 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, ruleSource);
 		}
 
+		//OVERWORLD GENERIC
+		for (FrozenDimensionBoundRuleSource dimensionBoundRuleSource : genericSources) {
+			if (dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.OVERWORLD.location())) || dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.OVERWORLD_CAVES.location()))) {
+				FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+				SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
+			}
+		}
+
 		//NETHER
 		//TODO: Fix i guess idk
 		for (SurfaceRules.RuleSource ruleSource : netherRules) {
 			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
 			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
+		}
+
+		//NETHER GENERIC
+		for (FrozenDimensionBoundRuleSource dimensionBoundRuleSource : genericSources) {
+			if (dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.NETHER.location()))) {
+				FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
+				SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
+			}
 		}
 	}
 
