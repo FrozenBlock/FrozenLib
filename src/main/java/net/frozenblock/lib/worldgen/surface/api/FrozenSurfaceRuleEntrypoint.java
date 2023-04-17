@@ -50,4 +50,18 @@ public interface FrozenSurfaceRuleEntrypoint {
 	 */
 	void addEndSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
 
+	/**
+	 * Adds all surface rules added to the list (context) to and specified world preset.
+	 * <p>
+	 * Context holds {@link FrozenDimensionBoundRuleSource}s, which hold both a {@link SurfaceRules.RuleSource} and a {@link ResourceLocation}.
+	 * <p>
+	 * The {@link ResourceLocation} specifies which world preset to add the {@link SurfaceRules.RuleSource}s to.
+	 * <p>
+	 * <p>
+	 * Example given:
+	 * <p>
+	 * {@code context.add(new FrozenDimensionBoundRuleSource(new ResourceLocation("minecraft", "amplified"), SurfaceRules.ifTrue(SurfaceRules.isBiome(Biomes.Desert), FrozenSurfaceRules.makeStateRule(Blocks.BEDROCK))));}
+	 */
+	void addSurfaceRules(ArrayList<FrozenDimensionBoundRuleSource> context);
+
 }
