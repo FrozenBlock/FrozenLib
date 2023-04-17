@@ -34,50 +34,16 @@ public class SurfaceRuleDataMixin {
 
 	@Inject(method = "overworldLike", at = @At("RETURN"), cancellable = true)
 	private static void frozenlib$injectOverworldLikeRules(boolean abovePreliminarySurface, boolean bedrockRoof, boolean bedrockFloor, CallbackInfoReturnable<SurfaceRules.RuleSource> info) {
-		ArrayList<SurfaceRules.RuleSource> aboveSurfaceRules = new ArrayList<>();
-		ArrayList<SurfaceRules.RuleSource> ignoreSurfaceRules = new ArrayList<>();
+		ArrayList<SurfaceRules.RuleSource> sources = new ArrayList<>();
 
 		//TODO: Fix i guess idk
-		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(aboveSurfaceRules);
-		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(ignoreSurfaceRules);
+		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(sources);
+		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(sources);
 
-		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(aboveSurfaceRules)));
-		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(ignoreSurfaceRules)));
+		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(sources)));
+		FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(sources)));
 
-		SurfaceRules.RuleSource ruleSource = null;
-
-		if (!aboveSurfaceRules.isEmpty()) {
-			SurfaceRules.RuleSource aboveSurfaceSource = null;
-			for (SurfaceRules.RuleSource source : aboveSurfaceRules) {
-				if (aboveSurfaceSource == null) {
-					aboveSurfaceSource = SurfaceRules.sequence(source);
-				} else {
-					aboveSurfaceSource = SurfaceRules.sequence(aboveSurfaceSource, source);
-				}
-			}
-			aboveSurfaceSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), aboveSurfaceSource);
-			ruleSource = SurfaceRules.sequence(aboveSurfaceSource);
-		}
-
-		if (!ignoreSurfaceRules.isEmpty()) {
-			SurfaceRules.RuleSource ignoreSurfaceSource = null;
-			for (SurfaceRules.RuleSource source : ignoreSurfaceRules) {
-				if (ignoreSurfaceSource == null) {
-					ignoreSurfaceSource = SurfaceRules.sequence(source);
-				} else {
-					ignoreSurfaceSource = SurfaceRules.sequence(ignoreSurfaceSource, source);
-				}
-			}
-			if (ruleSource == null)  {
-				ruleSource = SurfaceRules.sequence(ignoreSurfaceSource);
-			} else {
-				ruleSource = SurfaceRules.sequence(ruleSource, ignoreSurfaceSource);
-			}
-		}
-
-		if (ruleSource != null) {
-			info.setReturnValue(ruleSource);
-		}
+		frozenLib$addRuleSources(info, sources);
 	}
 
 	@Inject(method = "nether", at = @At("RETURN"), cancellable = true)
