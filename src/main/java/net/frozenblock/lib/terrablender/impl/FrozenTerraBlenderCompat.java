@@ -58,24 +58,21 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		//OVERWORLD
 		for (SurfaceRules.RuleSource ruleSource : overworldSources) {
 			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
-			SurfaceRuleManager.setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRules.sequence(SurfaceRuleManager.getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD), ruleSource));
-			//SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
 		}
 
 		//OVERWORLD WITHOUT PRELIMINARY SURFACE
 		//TODO: Fix i guess idk
 		for (SurfaceRules.RuleSource ruleSource : overworldNoPrelimSources) {
 			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
-			SurfaceRuleManager.setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRules.sequence(SurfaceRuleManager.getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD), ruleSource));
-			//SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, ruleSource);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, ruleSource);
 		}
 
 		//OVERWORLD GENERIC
 		for (FrozenDimensionBoundRuleSource dimensionBoundRuleSource : genericSources) {
 			if (dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.OVERWORLD.location())) || dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.OVERWORLD_CAVES.location()))) {
 				FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
-				SurfaceRuleManager.setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRules.sequence(SurfaceRuleManager.getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.OVERWORLD), dimensionBoundRuleSource.ruleSource()));
-				//SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
+				SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.OVERWORLD, SurfaceRuleManager.RuleStage.AFTER_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
 			}
 		}
 
@@ -83,16 +80,14 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		//TODO: Fix i guess idk
 		for (SurfaceRules.RuleSource ruleSource : netherRules) {
 			FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
-			SurfaceRuleManager.setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRules.sequence(SurfaceRuleManager.getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.NETHER), ruleSource));
-			//SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
+			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, ruleSource);
 		}
 
 		//NETHER GENERIC
 		for (FrozenDimensionBoundRuleSource dimensionBoundRuleSource : genericSources) {
 			if (dimensionBoundRuleSource.dimension().equals((BuiltinDimensionTypes.NETHER.location()))) {
 				FrozenMain.log("added new rule", FrozenMain.UNSTABLE_LOGGING);
-				SurfaceRuleManager.setDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRules.sequence(SurfaceRuleManager.getDefaultSurfaceRules(SurfaceRuleManager.RuleCategory.NETHER), dimensionBoundRuleSource.ruleSource()));
-				//SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
+				SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 10, dimensionBoundRuleSource.ruleSource());
 			}
 		}
 	}
