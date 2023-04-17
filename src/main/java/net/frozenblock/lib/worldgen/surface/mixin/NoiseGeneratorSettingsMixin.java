@@ -18,24 +18,13 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
-import java.util.ArrayList;
-import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
-import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
-import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
-import net.minecraft.core.Holder;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(NoiseGeneratorSettings.class)
-public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
+public class NoiseGeneratorSettingsMixin {
+	/*
+	implements NoiseGeneratorInterface {
 
 	@Unique
 	private SurfaceRules.RuleSource frozenLib$newSurfaceRule;
@@ -221,5 +210,6 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	public void setDimension(Holder<DimensionType> dimension) {
 		this.frozenLib$dimension = dimension;
 	}
+	 */
 
 }

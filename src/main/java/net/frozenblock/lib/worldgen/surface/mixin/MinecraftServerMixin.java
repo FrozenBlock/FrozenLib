@@ -36,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = MinecraftServer.class, priority = 996)
 public class MinecraftServerMixin {
 
+	/*
 	@Inject(method = "<init>", at = @At("RETURN"))
 	private void onInit(CallbackInfo info) {
 		MinecraftServer server = MinecraftServer.class.cast(this);
@@ -49,5 +50,6 @@ public class MinecraftServerMixin {
 			}
 		}
 	}
+	 */
 
 }
