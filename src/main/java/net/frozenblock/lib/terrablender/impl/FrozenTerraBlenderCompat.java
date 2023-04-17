@@ -19,8 +19,11 @@
 package net.frozenblock.lib.terrablender.impl;
 
 import java.util.ArrayList;
+import java.util.List;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
