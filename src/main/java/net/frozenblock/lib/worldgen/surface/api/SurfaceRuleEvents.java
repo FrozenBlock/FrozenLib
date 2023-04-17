@@ -66,6 +66,16 @@ public class SurfaceRuleEvents {
 		}
 	});
 
+	/**
+	 * Lets you modify the Surface Rules of custom world presets.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
+	 */
+	public static final Event<GenericSurfaceRuleCallback> MODIFY_GENERIC = FrozenEvents.createEnvironmentEvent(GenericSurfaceRuleCallback.class, callbacks -> context -> {
+		for (var callback : callbacks) {
+			callback.addRuleSources(context);
+		}
+	});
+
 	public interface OverworldSurfaceRuleCallback extends CommonEventEntrypoint {
 		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
 	}
@@ -84,5 +94,8 @@ public class SurfaceRuleEvents {
 	public interface EndSurfaceRuleCallback extends CommonEventEntrypoint {
 		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
 	}
-	
+
+	public interface GenericSurfaceRuleCallback extends CommonEventEntrypoint {
+		void addRuleSources(ArrayList<FrozenDimensionBoundRuleSource> context);
+	}
 }
