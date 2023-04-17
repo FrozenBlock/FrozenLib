@@ -19,11 +19,13 @@
 package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.ArrayList;
+import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
 import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
 import net.minecraft.core.Holder;
+import net.minecraft.data.worldgen.SurfaceRuleData;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
@@ -56,7 +58,8 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 		SurfaceRules.RuleSource newRule = null;
 
 		if (this.frozenLib$dimension != null) {
-			boolean isOverworld = this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES);
+			boolean overworldCaves = this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD_CAVES);
+			boolean isOverworld = this.frozenLib$dimension.is(BuiltinDimensionTypes.OVERWORLD) || overworldCaves;
 			boolean isNether = this.frozenLib$dimension.is(BuiltinDimensionTypes.NETHER);
 
 			//OVERWORLD
@@ -67,6 +70,11 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(sourceHolders);
 
 				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(sourceHolders)));
+
+				if (FrozenBools.HAS_C2ME) {
+					sourceHolders.add(SurfaceRuleData.overworldLike(!overworldCaves, overworldCaves, true));
+				}
+
 				SurfaceRules.RuleSource newSource = null;
 				for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
 					if (newSource == null) {
@@ -99,11 +107,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				this.frozenLib$hasCheckedOverworldEntrypoints = true;
 
 				if (newSource != null) {
-					if (newRule != null) {
-						newRule = SurfaceRules.sequence(newSource, newRule);
-					} else {
-						newRule = SurfaceRules.sequence(newSource);
-					}
+					newRule = SurfaceRules.sequence(newSource);
 				}
 				if (noPrelimSource != null) {
 					if (newRule != null) {
@@ -125,6 +129,10 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(sourceHolders)));
 
+				if (FrozenBools.HAS_C2ME) {
+					sourceHolders.add(SurfaceRuleData.nether());
+				}
+
 				SurfaceRules.RuleSource newSource = null;
 				for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
 					if (newSource == null) {
@@ -133,6 +141,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 						newSource = SurfaceRules.sequence(newSource, ruleSource);
 					}
 				}
+
 				this.frozenLib$hasCheckedNetherEntrypoints = true;
 
 				if (newSource != null) {
@@ -155,6 +164,10 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addEndSurfaceRules(sourceHolders)));
 
+				if (FrozenBools.HAS_C2ME) {
+					sourceHolders.add(SurfaceRuleData.end());
+				}
+
 				SurfaceRules.RuleSource newSource = null;
 				for (SurfaceRules.RuleSource ruleSource : sourceHolders) {
 					if (newSource == null) {
@@ -163,6 +176,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 						newSource = SurfaceRules.sequence(newSource, ruleSource);
 					}
 				}
+
 				this.frozenLib$hasCheckedEndEntrypoints = true;
 
 				if (newSource != null) {

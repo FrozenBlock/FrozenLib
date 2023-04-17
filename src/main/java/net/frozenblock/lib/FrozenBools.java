@@ -34,6 +34,7 @@ public class FrozenBools {
     // EXTERNAL MODS
 	public static final boolean HAS_ARCHITECTURY = FabricLoader.getInstance().isModLoaded("architectury");
 	public static final boolean HAS_BCLIB = FabricLoader.getInstance().isModLoaded("bclib");
+	public static final boolean HAS_C2ME = FabricLoader.getInstance().isModLoaded("c2me");
     public static final boolean HAS_CLOTH_CONFIG = FabricLoader.getInstance().isModLoaded("cloth-config");
 	public static final boolean HAS_CONTINUITY = FabricLoader.getInstance().isModLoaded("continuity");
 	public static final boolean HAS_ENTITY_CULLING = FabricLoader.getInstance().isModLoaded("entityculling");
