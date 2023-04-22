@@ -270,7 +270,7 @@ public class LiquidRenderUtils {
 			}
 			return state.getOwnHeight();
 		}
-		if (!blockState.getMaterial().isSolid()) {
+		if (!blockState.isSolid()) {
 			return 0.0f;
 		}
 		return -1.0f;
