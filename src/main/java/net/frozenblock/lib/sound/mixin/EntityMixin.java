@@ -83,8 +83,8 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 
 	@Unique
     @Override
-    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId) {
-        this.frozenLib$loopingSoundManager.addSound(soundID, category, volume, pitch, restrictionId);
+    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
+        this.frozenLib$loopingSoundManager.addSound(soundID, category, volume, pitch, restrictionId, stopOnDeath);
     }
 
 	@Unique
@@ -95,8 +95,8 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 
 	@Unique
     @Override
-    public void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, float fadeDist, float maxDist) {
-        this.frozenLib$loopingFadingDistanceSoundManager.addSound(soundID, sound2ID, category, volume, pitch, restrictionId, fadeDist, maxDist);
+    public void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {
+        this.frozenLib$loopingFadingDistanceSoundManager.addSound(soundID, sound2ID, category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist);
     }
 
 }

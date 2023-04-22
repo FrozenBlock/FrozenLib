@@ -67,8 +67,8 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenDistanceSounds", cursorsNbt));
     }
 
-    public void addSound(ResourceLocation soundID, ResourceLocation soundID2, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, float fadeDist, float maxDist) {
-        this.sounds.add(new FadingDistanceSoundLoopNBT(soundID, soundID2, category, volume, pitch, restrictionId, fadeDist, maxDist));
+    public void addSound(ResourceLocation soundID, ResourceLocation soundID2, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {
+        this.sounds.add(new FadingDistanceSoundLoopNBT(soundID, soundID2, category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist));
     }
 
     public ArrayList<FadingDistanceSoundLoopNBT> getSounds() {
@@ -104,6 +104,7 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         public final float fadeDist;
         public final float maxDist;
         public final ResourceLocation restrictionID;
+		public final boolean stopOnDeath;
 
         public static final Codec<FadingDistanceSoundLoopNBT> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
                 ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(FadingDistanceSoundLoopNBT::getSoundEventID),
@@ -112,28 +113,31 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
                 Codec.FLOAT.fieldOf("volume").forGetter(FadingDistanceSoundLoopNBT::getVolume),
                 Codec.FLOAT.fieldOf("pitch").forGetter(FadingDistanceSoundLoopNBT::getPitch),
                 ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(FadingDistanceSoundLoopNBT::getRestrictionID),
+				Codec.BOOL.fieldOf("stopOnDeath").forGetter(FadingDistanceSoundLoopNBT::getStopOnDeath),
                 Codec.FLOAT.fieldOf("fadeDist").forGetter(FadingDistanceSoundLoopNBT::getFadeDist),
                 Codec.FLOAT.fieldOf("maxDist").forGetter(FadingDistanceSoundLoopNBT::getMaxDist)
         ).apply(instance, FadingDistanceSoundLoopNBT::new));
 
-        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID, ResourceLocation sound2EventID, String ordinal, float vol, float pitch, ResourceLocation restrictionID, float fadeDist, float maxDist) {
+        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID, ResourceLocation sound2EventID, String ordinal, float vol, float pitch, ResourceLocation restrictionID, boolean stopOnDeath, float fadeDist, float maxDist) {
             this.soundEventID = soundEventID;
             this.sound2EventID = sound2EventID;
             this.categoryOrdinal = ordinal;
             this.volume = vol;
             this.pitch = pitch;
             this.restrictionID = restrictionID;
+			this.stopOnDeath = stopOnDeath;
             this.fadeDist = fadeDist;
             this.maxDist = maxDist;
         }
 
-        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID, ResourceLocation sound2EventID, SoundSource category, float vol, float pitch, ResourceLocation restrictionID, float fadeDist, float maxDist) {
+        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID, ResourceLocation sound2EventID, SoundSource category, float vol, float pitch, ResourceLocation restrictionID, boolean stopOnDeath, float fadeDist, float maxDist) {
             this.soundEventID = soundEventID;
             this.sound2EventID = sound2EventID;
             this.categoryOrdinal = category.toString();
             this.volume = vol;
             this.pitch = pitch;
             this.restrictionID = restrictionID;
+			this.stopOnDeath = stopOnDeath;
             this.fadeDist = fadeDist;
             this.maxDist = maxDist;
         }
@@ -169,6 +173,10 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         public ResourceLocation getRestrictionID() {
             return this.restrictionID;
         }
+
+		public boolean getStopOnDeath() {
+			return this.stopOnDeath;
+		}
 
     }
 }

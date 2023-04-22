@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.fallingleaves.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "plugin": "net.frozenblock.lib.fallingleaves.mixin.plugin.RequiresFallingLeavesMixinPlugin",
+  "injectors": {
+	"defaultRequire": 1
+  },
+  "client": [
+    "client.FallingLeafParticleMixin"
+  ]
+}
