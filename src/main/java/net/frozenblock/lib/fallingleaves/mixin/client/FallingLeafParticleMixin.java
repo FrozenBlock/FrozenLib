@@ -38,7 +38,7 @@ public abstract class FallingLeafParticleMixin extends TextureSheetParticle {
 
 	@Inject(method = "tick", at = @At(value = "FIELD", target = "Lrandommcsomethin/fallingleaves/particle/FallingLeafParticle;zd:D", ordinal = 2, shift = At.Shift.AFTER))
 	public void frozenLib$newLeafMovement(CallbackInfo info) {
-		Vec3 frozenLib$wind = ClientWindManager.getWindMovement(this.level, new BlockPos(this.x, this.y, this.z));
+		Vec3 frozenLib$wind = ClientWindManager.getWindMovement(this.level, BlockPos.containing(this.x, this.y, this.z));
 		this.xd = (frozenLib$wind.x() - this.frozenLib$savedXMovement) * (double)this.windCoefficient / 60.0;
 		this.zd = (frozenLib$wind.z() - this.frozenLib$savedZMovement) * (double)this.windCoefficient / 60.0;
 	}
