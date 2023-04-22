@@ -33,12 +33,13 @@ public class RestrictedMovingFadingDistanceSwitchingSound<T extends Entity> exte
 
     private final T entity;
     private final SoundPredicate.LoopPredicate<T> predicate;
+	private final boolean stopOnDeath;
     private final boolean isFarSound;
     private final double maxDist;
     private final double fadeDist;
     private final float maxVol;
 
-    public RestrictedMovingFadingDistanceSwitchingSound(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
+    public RestrictedMovingFadingDistanceSwitchingSound(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, boolean stopOnDeath, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = true;
@@ -46,10 +47,11 @@ public class RestrictedMovingFadingDistanceSwitchingSound<T extends Entity> exte
         this.volume = volume;
         this.pitch = pitch;
 
-        this.x = (float) entity.getX();
-        this.y = (float) entity.getY();
-        this.z = (float) entity.getZ();
+        this.x = entity.getX();
+        this.y = entity.getY();
+        this.z = entity.getZ();
         this.predicate = predicate;
+		this.stopOnDeath = stopOnDeath;
         this.isFarSound = isFarSound;
         this.maxDist = maxDist;
         this.fadeDist = fadeDist;

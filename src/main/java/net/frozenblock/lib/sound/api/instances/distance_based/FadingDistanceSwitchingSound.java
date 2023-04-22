@@ -53,7 +53,7 @@ public class FadingDistanceSwitchingSound extends AbstractTickableSoundInstance 
     public void tick() {
         Minecraft client = Minecraft.getInstance();
         if (client.player != null) {
-            float distance = (float) Math.sqrt(client.player.distanceToSqr(this.x, this.y, this.z));
+            double distance = Math.sqrt(client.player.distanceToSqr(this.x, this.y, this.z));
             if (distance < this.fadeDist) {
                 this.volume = !this.isFarSound ? this.maxVol : 0.001F;
             } else if (distance > this.maxDist) {
