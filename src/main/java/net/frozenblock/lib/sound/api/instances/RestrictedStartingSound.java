@@ -34,12 +34,13 @@ public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundIn
 
     public final T entity;
     public final SoundPredicate.LoopPredicate<T> predicate;
+	public final boolean stopOnDeath;
     public final SoundEvent loopingSound;
     public final SoundEvent startingSound;
     public boolean hasSwitched = false;
     public final AbstractSoundInstance nextSound;
 
-    public RestrictedStartingSound(T entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, AbstractSoundInstance nextSound) {
+    public RestrictedStartingSound(T entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, boolean stopOnDeath, AbstractSoundInstance nextSound) {
         super(startingSound, category, SoundInstance.createUnseededRandom());
         this.startingSound = startingSound;
         this.nextSound = nextSound;
@@ -54,6 +55,8 @@ public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundIn
         this.y = (float) entity.getY();
         this.z = (float) entity.getZ();
         this.predicate = predicate;
+		this.stopOnDeath = stopOnDeath;
+
 		this.predicate.onStart(this.entity);
     }
 
@@ -90,7 +93,7 @@ public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundIn
     @Override
     public void tick() {
         if (!this.isStopped()) {
-            if (this.entity.isRemoved()) {
+            if (this.stopOnDeath && this.entity.isRemoved()) {
                 this.stop();
             } else {
                 if (!this.predicate.test(this.entity)) {
@@ -107,9 +110,9 @@ public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundIn
                         });
                     }
 
-                    this.x = (float) this.entity.getX();
-                    this.y = (float) this.entity.getY();
-                    this.z = (float) this.entity.getZ();
+                    this.x = this.entity.getX();
+                    this.y = this.entity.getY();
+                    this.z = this.entity.getZ();
                 }
             }
         }

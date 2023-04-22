@@ -31,6 +31,6 @@ public interface EntityLoopingSoundInterface {
 
     MovingLoopingSoundEntityManager getSoundManager();
 
-    void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId);
+    void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath);
 
 }
