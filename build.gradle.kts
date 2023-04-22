@@ -240,7 +240,7 @@ dependencies {
     implementation("blue.endless:jankson:$jankson_version")?.let { include(it) }
 
     // Falling Leaves
-    modImplementation("maven.modrinth:fallingleaves:${falling_leaves_version}")
+    modCompileOnly("maven.modrinth:fallingleaves:${falling_leaves_version}")
 
     "testmodImplementation"(sourceSets.main.get().output)
 /*
