@@ -26,6 +26,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BrushableBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 
 import java.util.Arrays;
@@ -46,10 +48,14 @@ public class LootTableWhacker extends Item {
                 String id = stack.getHoverName().getString();
                 List<String> strings = Arrays.stream(id.split(":")).toList();
                 ResourceLocation location = new ResourceLocation(strings.get(0), strings.get(1));
-                if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {
+				BlockEntity blockEntity = level.getBlockEntity(blockPos);
+                if (blockEntity instanceof RandomizableContainerBlockEntity loot) {
                     loot.lootTable = location;
                     FrozenMain.log(location.toString(), true);
-                }
+                } else if (blockEntity instanceof BrushableBlockEntity loot) {
+					loot.lootTable = location;
+					FrozenMain.log(location.toString(), true);
+				}
             }
         }
         return InteractionResult.SUCCESS;
