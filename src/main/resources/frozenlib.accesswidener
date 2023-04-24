@@ -123,6 +123,7 @@ transitive-accessible    method    net/minecraft/core/MappedRegistry    getOrCre
 transitive-accessible    method    net/minecraft/core/registries/BuiltInRegistries    freeze    ()V
 transitive-accessible    method    net/minecraft/core/Holder$Reference    bindValue    (Ljava/lang/Object;)V
 transitive-accessible    class    net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap
+accessible    field    net/minecraft/world/level/storage/loot/BuiltInLootTables    LOCATIONS    Ljava/util/Set;
 
 # Sounds
 transitive-accessible    field    net/minecraft/client/sounds/SoundManager    soundEngine    Lnet/minecraft/client/sounds/SoundEngine;

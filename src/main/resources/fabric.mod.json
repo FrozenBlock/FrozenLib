@@ -54,6 +54,7 @@
     "mixin/frozenlib.feature_flag.mixins.json",
     "mixin/frozenlib.fallingleaves.mixins.json",
     "mixin/frozenlib.item.mixins.json",
+    "mixin/frozenlib.loottable.mixins.json",
     "mixin/frozenlib.menu.mixins.json",
     "mixin/frozenlib.mobcategory.mixins.json",
     "mixin/frozenlib.modmenu.mixins.json",
