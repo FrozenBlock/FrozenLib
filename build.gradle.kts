@@ -320,14 +320,14 @@ tasks {
     }
 }
 
-public val build: Task by tasks
-public val applyLicenses: Task by tasks
-public val test: Task by tasks
-public val runClient: Task by tasks
+val build: Task by tasks
+val applyLicenses: Task by tasks
+val test: Task by tasks
+val runClient: Task by tasks
 
-public val remapJar: Task by tasks
-public val sourcesJar: Task by tasks
-public val javadocJar: Task by tasks
+val remapJar: Task by tasks
+val sourcesJar: Task by tasks
+val javadocJar: Task by tasks
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -362,7 +362,7 @@ fun getVersion(): String {
     return version
 }
 
-public val dev by configurations.creating {
+val dev by configurations.creating {
     isCanBeResolved = false
     isCanBeConsumed = true
 }
@@ -424,7 +424,7 @@ publishing {
                 pom {
                     groupId = publishGroup
                     artifactId = rootProject.base.archivesName.get().lowercase()
-                    version = publishVersion
+                    version = snapshotPublishVersion
                     withXml {
                         asNode().appendNode("properties").appendNode("hash", hash)
                     }
