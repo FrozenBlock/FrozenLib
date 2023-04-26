@@ -67,7 +67,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(sourceHolders);
+				SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldSurfaceRules(sourceHolders);
 
 				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRules(sourceHolders)));
 
@@ -91,7 +91,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(noPrelimSourceHolders);
+				SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimSurfaceRules(noPrelimSourceHolders);
 
 				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addOverworldSurfaceRulesNoPrelimSurface(noPrelimSourceHolders)));
 
@@ -125,7 +125,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(sourceHolders);
+				SurfaceRuleEvents.MODIFY_NETHER.invoker().addNetherSurfaceRules(sourceHolders);
 
 				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addNetherSurfaceRules(sourceHolders)));
 
@@ -160,7 +160,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_END.invoker().addRuleSources(sourceHolders);
+				SurfaceRuleEvents.MODIFY_END.invoker().addEndSurfaceRules(sourceHolders);
 
 				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addEndSurfaceRules(sourceHolders)));
 
@@ -195,7 +195,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 				ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
 
 				//TODO: Fix i guess idk
-				SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(sourceHolders);
+				SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(sourceHolders);
 
 				FrozenMain.SURFACE_RULE_ENTRYPOINTS.forEach((entrypoint -> entrypoint.getEntrypoint().addSurfaceRules(sourceHolders)));
 

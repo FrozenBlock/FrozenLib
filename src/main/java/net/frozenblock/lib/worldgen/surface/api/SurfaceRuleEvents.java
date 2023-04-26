@@ -32,7 +32,7 @@ public class SurfaceRuleEvents {
 	 */
 	public static final Event<OverworldSurfaceRuleCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addRuleSources(context);
+			callback.addOverworldSurfaceRules(context);
 		}
 	});
 
@@ -42,7 +42,7 @@ public class SurfaceRuleEvents {
 	 */
 	public static final Event<OverworldSurfaceRuleNoPrelimSurfaceCallback> MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleNoPrelimSurfaceCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addRuleSources(context);
+			callback.addOverworldNoPrelimSurfaceRules(context);
 		}
 	});
 
@@ -52,7 +52,7 @@ public class SurfaceRuleEvents {
 	 */
 	public static final Event<NetherSurfaceRuleCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addRuleSources(context);
+			callback.addNetherSurfaceRules(context);
 		}
 	});
 
@@ -62,7 +62,7 @@ public class SurfaceRuleEvents {
 	 */
 	public static final Event<EndSurfaceRuleCallback> MODIFY_END = FrozenEvents.createEnvironmentEvent(EndSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addRuleSources(context);
+			callback.addEndSurfaceRules(context);
 		}
 	});
 
@@ -72,30 +72,30 @@ public class SurfaceRuleEvents {
 	 */
 	public static final Event<GenericSurfaceRuleCallback> MODIFY_GENERIC = FrozenEvents.createEnvironmentEvent(GenericSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addRuleSources(context);
+			callback.addGenericSurfaceRules(context);
 		}
 	});
 
 	public interface OverworldSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
+		void addOverworldSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
 	}
 
 
 	public interface OverworldSurfaceRuleNoPrelimSurfaceCallback extends CommonEventEntrypoint {
-		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
+		void addOverworldNoPrelimSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
 	}
 
 
 	public interface NetherSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
+		void addNetherSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
 	}
 
 
 	public interface EndSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
+		void addEndSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
 	}
 
 	public interface GenericSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addRuleSources(ArrayList<FrozenDimensionBoundRuleSource> context);
+		void addGenericSurfaceRules(ArrayList<FrozenDimensionBoundRuleSource> context);
 	}
 }

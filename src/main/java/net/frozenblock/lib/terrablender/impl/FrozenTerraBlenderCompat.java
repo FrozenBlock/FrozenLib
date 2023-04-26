@@ -50,10 +50,10 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		}
 
 		//TODO: Fix i guess idk
-		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(genericSources);
-		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(overworldSources);
-		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(overworldNoPrelimSources);
-		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(netherRules);
+		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(genericSources);
+		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldSurfaceRules(overworldSources);
+		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimSurfaceRules(overworldNoPrelimSources);
+		SurfaceRuleEvents.MODIFY_NETHER.invoker().addNetherSurfaceRules(netherRules);
 
 		//OVERWORLD
 		for (SurfaceRules.RuleSource ruleSource : overworldSources) {
