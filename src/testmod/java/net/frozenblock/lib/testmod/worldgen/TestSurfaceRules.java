@@ -26,13 +26,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Noises;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
-import java.util.ArrayList;
+import java.util.List;
 
 public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleCallback,
 	SurfaceRuleEvents.NetherSurfaceRuleCallback, SurfaceRuleEvents.EndSurfaceRuleCallback,
 	SurfaceRuleEvents.GenericSurfaceRuleCallback {
     @Override
-    public void addOverworldSurfaceRules(ArrayList<SurfaceRules.RuleSource> context) {
+    public void addOverworldSurfaceRules(List<SurfaceRules.RuleSource> context) {
         // When in doubt, T R A N S. Seed 7205143747332514273 is a good one for testing.
         SurfaceRules.ConditionSource blueNoise1 = SurfaceRules.noiseCondition(Noises.CALCITE, 0.05, 0.1);
         SurfaceRules.ConditionSource pinkNoise1 = SurfaceRules.noiseCondition(Noises.CALCITE, 0.1, 0.15);
@@ -62,21 +62,21 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
     }
 
     @Override
-    public void addNetherSurfaceRules(ArrayList<SurfaceRules.RuleSource> context) {
+    public void addNetherSurfaceRules(List<SurfaceRules.RuleSource> context) {
 		context.add(
 			SurfaceRules.state(Blocks.SPONGE.defaultBlockState())
 		);
     }
 
     @Override
-    public void addEndSurfaceRules(ArrayList<SurfaceRules.RuleSource> context) {
+    public void addEndSurfaceRules(List<SurfaceRules.RuleSource> context) {
 		context.add(
 			SurfaceRules.state(Blocks.BIRCH_LOG.defaultBlockState())
 		);
     }
 
     @Override
-    public void addGenericSurfaceRules(ArrayList<FrozenDimensionBoundRuleSource> context) {
+    public void addGenericSurfaceRules(List<FrozenDimensionBoundRuleSource> context) {
 		context.add(new FrozenDimensionBoundRuleSource(
 			new ResourceLocation("overworld"),
 			SurfaceRules.sequence(

@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.worldgen.surface.api;
 
-import java.util.ArrayList;
+import java.util.List;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
@@ -79,25 +79,25 @@ public class SurfaceRuleEvents {
 	});
 
 	public interface OverworldSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addOverworldSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
+		void addOverworldSurfaceRules(List<SurfaceRules.RuleSource> context);
 	}
 
 
 	public interface OverworldSurfaceRuleNoPrelimSurfaceCallback extends CommonEventEntrypoint {
-		void addOverworldNoPrelimSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
+		void addOverworldNoPrelimSurfaceRules(List<SurfaceRules.RuleSource> context);
 	}
 
 
 	public interface NetherSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addNetherSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
+		void addNetherSurfaceRules(List<SurfaceRules.RuleSource> context);
 	}
 
 
 	public interface EndSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addEndSurfaceRules(ArrayList<SurfaceRules.RuleSource> context);
+		void addEndSurfaceRules(List<SurfaceRules.RuleSource> context);
 	}
 
 	public interface GenericSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addGenericSurfaceRules(ArrayList<FrozenDimensionBoundRuleSource> context);
+		void addGenericSurfaceRules(List<FrozenDimensionBoundRuleSource> context);
 	}
 }
