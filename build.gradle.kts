@@ -32,40 +32,40 @@ plugins {
     java
 }
 
-public val minecraft_version: String by project
-public val quilt_mappings: String by project
-public val parchment_mappings: String by project
-public val loader_version: String by project
+val minecraft_version: String by project
+val quilt_mappings: String by project
+val parchment_mappings: String by project
+val loader_version: String by project
 
-public val mod_version: String by project
-public val mod_loader: String by project
-public val maven_group: String by project
-public val archives_base_name: String by project
+val mod_version: String by project
+val mod_loader: String by project
+val maven_group: String by project
+val archives_base_name: String by project
 
-public val fabric_version: String by project
-public val fabric_asm_version: String by project
+val fabric_version: String by project
+val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
 
-public val modmenu_version: String by project
-public val cloth_config_version: String by project
-public val copperpipes_version: String by project
-public val terrablender_version: String by project
+val modmenu_version: String by project
+val cloth_config_version: String by project
+val copperpipes_version: String by project
+val terrablender_version: String by project
 
-public val sodium_version: String by project
-public val iris_version: String by project
-public val indium_version: String by project
-public val sodium_extra_version: String by project
-public val reeses_sodium_options_version: String by project
-public val lithium_version: String by project
-public val fastanim_version: String by project
-public val ferritecore_version: String by project
-public val lazydfu_version: String by project
-public val starlight_version: String by project
-public val entityculling_version: String by project
-public val memoryleakfix_version: String by project
-public val no_unused_chunks_version: String by project
-public val ksyxis_version: String by project
+val sodium_version: String by project
+val iris_version: String by project
+val indium_version: String by project
+val sodium_extra_version: String by project
+val reeses_sodium_options_version: String by project
+val lithium_version: String by project
+val fastanim_version: String by project
+val ferritecore_version: String by project
+val lazydfu_version: String by project
+val starlight_version: String by project
+val entityculling_version: String by project
+val memoryleakfix_version: String by project
+val no_unused_chunks_version: String by project
+val ksyxis_version: String by project
 
 base {
     archivesName.set(archives_base_name)
@@ -74,9 +74,9 @@ base {
 version = getVersion()
 group = maven_group
 
-public val release = findProperty("releaseType")?.equals("stable")
+val release = findProperty("releaseType")?.equals("stable")
 
-public val testmod by sourceSets.registering {
+val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
     compileClasspath += sourceSets.main.get().compileClasspath
 }
@@ -133,7 +133,7 @@ configurations {
     }
 }
 
-public val api by sourceSets.registering {
+val api by sourceSets.registering {
     java {
         compileClasspath += sourceSets.main.get().compileClasspath
     }
@@ -191,6 +191,9 @@ repositories {
         setUrl("https://maven.flashyreese.me/snapshots")
     }
     maven {
+        setUrl("https://maven.minecraftforge.net")
+    }
+    maven {
         setUrl("https://maven.parchmentmc.org")
     }
     maven {
@@ -230,7 +233,7 @@ dependencies {
     }
 
 	// TerraBlender
-	modCompileOnly("curse.maven:terrablender-fabric-565956:4205731")
+    modCompileOnly("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
 
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
@@ -457,15 +460,15 @@ extra {
     }
 }
 
-public val modrinth_id: String by extra
-public val curseforge_id: String by extra
-public val release_type: String by extra
-public val curseforge_minecraft_version: String by extra
-public val changelog_file: String by extra
+val modrinth_id: String by extra
+val curseforge_id: String by extra
+val release_type: String by extra
+val curseforge_minecraft_version: String by extra
+val changelog_file: String by extra
 
-public val modrinth_version = makeModrinthVersion(mod_version)
-public val display_name = makeName(mod_version)
-public val changelog_text = getChangelog(file(changelog_file))
+val modrinth_version = makeModrinthVersion(mod_version)
+val display_name = makeName(mod_version)
+val changelog_text = getChangelog(file(changelog_file))
 
 fun makeName(version: String): String {
     return "${version} (${minecraft_version})"
