@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = MinecraftServer.class, priority = 996)
+@Mixin(MinecraftServer.class)
 public class MinecraftServerMixin {
 
 	@Inject(method = "<init>", at = @At("RETURN"))
@@ -40,7 +40,7 @@ public class MinecraftServerMixin {
 			LevelStem stem = stemEntry.getValue();
 			ChunkGenerator chunkGenerator = stem.generator();
 			if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseBasedChunkGenerator) {
-				NoiseGeneratorInterface.class.cast(noiseBasedChunkGenerator.generatorSettings().value()).setDimension(stem.typeHolder());
+				NoiseGeneratorInterface.class.cast(noiseBasedChunkGenerator.generatorSettings().value()).setDimension(stem.typeHolder().unwrapKey().orElseThrow());
 			}
 		}
 	}

@@ -21,8 +21,9 @@ package net.frozenblock.lib.worldgen.surface.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
 import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
-import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,17 +42,14 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	private SurfaceRules.RuleSource frozenLib$frozenSurfaceRules;
 
 	@Unique
-	private Holder<DimensionType> frozenLib$dimension;
+	private ResourceKey<DimensionType> frozenLib$dimension;
 
 	@ModifyReturnValue(method = "surfaceRule", at = @At("RETURN"))
 	private SurfaceRules.RuleSource frozenLib$modifyRules(SurfaceRules.RuleSource original) {
 
 		if (this.frozenLib$dimension != null) {
-			var optionalKey = this.frozenLib$dimension.unwrapKey();
-
-			if (this.frozenLib$frozenSurfaceRules == null && optionalKey.isPresent()) {
-				var key = optionalKey.get();
-				SurfaceRules.RuleSource frozenSurfaceRules = FrozenSurfaceRules.getSurfaceRules(key);
+			if (this.frozenLib$frozenSurfaceRules == null) {
+				SurfaceRules.RuleSource frozenSurfaceRules = FrozenSurfaceRules.getSurfaceRules(this.frozenLib$dimension);
 
 				if (frozenSurfaceRules != null) {
 					this.frozenLib$frozenSurfaceRules = frozenSurfaceRules;
@@ -65,9 +63,23 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 		return original;
 	}
 
+	@Inject(method = "overworld", at = @At("RETURN"))
+	private static void overworld(boolean amplified, boolean largeBiomes, CallbackInfoReturnable<NoiseGeneratorSettings> cir) {
+		NoiseGeneratorSettings settings = cir.getReturnValue();
+
+		NoiseGeneratorInterface.class.cast(settings).setDimension(BuiltinDimensionTypes.OVERWORLD);
+	}
+
+	@Inject(method = "nether", at = @At("RETURN"))
+	private static void nether(CallbackInfoReturnable<NoiseGeneratorSettings> cir) {
+		NoiseGeneratorSettings settings = cir.getReturnValue();
+
+		NoiseGeneratorInterface.class.cast(settings).setDimension(BuiltinDimensionTypes.NETHER);
+	}
+
 	@Unique
 	@Override
-	public void setDimension(Holder<DimensionType> dimension) {
+	public void setDimension(ResourceKey<DimensionType> dimension) {
 		this.frozenLib$dimension = dimension;
 	}
 
