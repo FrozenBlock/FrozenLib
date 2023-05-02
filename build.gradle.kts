@@ -235,6 +235,9 @@ dependencies {
 	// TerraBlender
     modCompileOnly("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
 
+    // MixinExtras
+    implementation("com.github.LlamaLad7:MixinExtras:0.1.1")?.let { annotationProcessor(it)?.let { include(it) } }
+
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
