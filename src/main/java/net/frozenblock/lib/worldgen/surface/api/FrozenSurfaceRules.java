@@ -82,6 +82,8 @@ public final class FrozenSurfaceRules {
 
 	@Nullable
 	public static SurfaceRules.RuleSource getSurfaceRules(ResourceKey<DimensionType> dimension) {
+		if (dimension == null) return null;
+
 		var location = dimension.location();
 		SurfaceRules.RuleSource returnValue = null;
 
