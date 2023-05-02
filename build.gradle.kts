@@ -423,6 +423,7 @@ publishing {
             }
         } catch (e: Exception) {
             publish = false
+            println("Unable to publish to maven. The maven server may be offline.")
         }
 
         if (publish) {
