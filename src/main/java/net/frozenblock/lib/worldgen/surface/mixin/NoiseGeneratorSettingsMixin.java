@@ -42,9 +42,6 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	@Unique
 	private Holder<DimensionType> frozenLib$dimension;
 
-	@Unique
-	private boolean frozenLib$hasCheckedRules;
-
 	@Inject(method = "surfaceRule", at = @At("RETURN"), cancellable = true)
 	private void frozenLib$modifyRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
 		SurfaceRules.RuleSource returnValue = cir.getReturnValue();
@@ -52,14 +49,13 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 		if (this.frozenLib$dimension != null) {
 			var optionalKey = this.frozenLib$dimension.unwrapKey();
 
-			if (!this.frozenLib$hasCheckedRules && optionalKey.isPresent()) {
+			if (this.frozenLib$frozenSurfaceRules == null && optionalKey.isPresent()) {
 				var key = optionalKey.get();
 				SurfaceRules.RuleSource frozenSurfaceRules = FrozenSurfaceRules.getSurfaceRules(key);
 
 				if (frozenSurfaceRules != null) {
 					this.frozenLib$frozenSurfaceRules = frozenSurfaceRules;
 				}
-				this.frozenLib$hasCheckedRules = true;
 			}
 
 			if (this.frozenLib$frozenSurfaceRules != null) {
