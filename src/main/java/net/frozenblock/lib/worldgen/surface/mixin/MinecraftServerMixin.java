@@ -20,11 +20,13 @@ package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.Map;
 import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -42,6 +44,10 @@ public class MinecraftServerMixin {
 			if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseBasedChunkGenerator) {
 				NoiseGeneratorInterface.class.cast(noiseBasedChunkGenerator.generatorSettings().value()).setDimension(stem.typeHolder().unwrapKey().orElseThrow());
 			}
+		}
+
+		for (NoiseGeneratorSettings settings : Registry.NOISE_GENERATOR_SETTINGS) {
+			
 		}
 	}
 
