@@ -28,7 +28,7 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 
 	@Override
 	public void onTerraBlenderInitialized() {
-		SurfaceRules.RuleSource nullableRule;
+		/*SurfaceRules.RuleSource nullableRule;
 
 		// OVERWORLD
 		nullableRule = FrozenSurfaceRules.getSurfaceRules(BuiltinDimensionTypes.OVERWORLD);
@@ -40,7 +40,7 @@ public class FrozenTerraBlenderCompat implements TerraBlenderApi {
 		nullableRule = FrozenSurfaceRules.getSurfaceRules(BuiltinDimensionTypes.NETHER);
 		if (nullableRule != null) {
 			SurfaceRuleManager.addToDefaultSurfaceRulesAtStage(SurfaceRuleManager.RuleCategory.NETHER, SurfaceRuleManager.RuleStage.BEFORE_BEDROCK, 0, nullableRule);
-		}
+		}*/
 	}
 
 }
