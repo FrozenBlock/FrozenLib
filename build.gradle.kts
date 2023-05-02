@@ -405,8 +405,8 @@ publishing {
     val hash = if (grgit.branch != null && grgit.branch.current() != null) grgit.branch.current().fullName else ""
 
     publications {
+        var publish = true
         try {
-            var publish = true
             if (publishingValid) {
                 try {
                     val xml = ResourceGroovyMethods.getText(URL("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom"))
