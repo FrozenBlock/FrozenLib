@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
 import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
 import net.minecraft.core.Holder;
@@ -42,9 +43,8 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	@Unique
 	private Holder<DimensionType> frozenLib$dimension;
 
-	@Inject(method = "surfaceRule", at = @At("RETURN"), cancellable = true)
-	private void frozenLib$modifyRules(CallbackInfoReturnable<SurfaceRules.RuleSource> cir) {
-		SurfaceRules.RuleSource returnValue = cir.getReturnValue();
+	@ModifyReturnValue(method = "surfaceRule", at = @At("RETURN"))
+	private SurfaceRules.RuleSource frozenLib$modifyRules(SurfaceRules.RuleSource original) {
 
 		if (this.frozenLib$dimension != null) {
 			var optionalKey = this.frozenLib$dimension.unwrapKey();
@@ -59,8 +59,9 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 			}
 
 			if (this.frozenLib$frozenSurfaceRules != null) {
-				cir.setReturnValue(SurfaceRules.sequence(this.frozenLib$frozenSurfaceRules, returnValue));
+				return SurfaceRules.sequence(this.frozenLib$frozenSurfaceRules, returnValue);
 			}
+			return original;
 		}
 	}
 
