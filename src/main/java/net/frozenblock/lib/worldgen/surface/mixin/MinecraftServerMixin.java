@@ -46,8 +46,7 @@ public class MinecraftServerMixin {
 			}
 		}
 
-		for (NoiseGeneratorSettings settings : Registry.NOISE_GENERATOR_SETTINGS) {
-			
+		for (NoiseGeneratorSettings settings : Registry.NOISE_SETTINGS) {
 		}
 	}
 
