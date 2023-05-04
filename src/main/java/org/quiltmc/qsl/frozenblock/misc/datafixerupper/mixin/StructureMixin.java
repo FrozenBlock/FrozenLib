@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(value = StructureTemplate.class, priority = 1001)
 public abstract class StructureMixin {
     @ModifyReturnValue(method = "save", at = @At("RETURN"))
-    private void addModDataVersions(CompoundTag out, CompoundTag compound) {
+    private CompoundTag addModDataVersions(CompoundTag out, CompoundTag compound) {
         QuiltDataFixesInternals.get().addModDataVersions(out);
         return out;
     }

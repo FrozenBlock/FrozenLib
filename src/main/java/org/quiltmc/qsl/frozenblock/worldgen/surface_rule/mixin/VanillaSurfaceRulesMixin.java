@@ -68,7 +68,7 @@ public class VanillaSurfaceRulesMixin {
         method = "end",
         at = @At("RETURN")
     )
-    private static void frozenblock_quilt$injectEndRules(SurfaceRules.RuleSource source) {
+    private static SurfaceRules.RuleSource frozenblock_quilt$injectEndRules(SurfaceRules.RuleSource source) {
         if (!VanillaSurfaceRuleTracker.THE_END.isPaused()) {
             return VanillaSurfaceRuleTracker.THE_END.modifyMaterialRules(new SurfaceRuleContextImpl.TheEndImpl(
                 source
