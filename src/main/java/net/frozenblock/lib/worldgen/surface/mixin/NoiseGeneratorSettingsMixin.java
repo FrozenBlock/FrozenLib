@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = NoiseGeneratorSettings.class, priority = 2000) // apply after terrablender
+@Mixin(value = NoiseGeneratorSettings.class, priority = 990) // apply before default mods
 public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	/**
@@ -44,7 +44,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	@ModifyReturnValue(method = "surfaceRule", at = @At("RETURN"))
 	private SurfaceRules.RuleSource frozenLib$modifyRules(SurfaceRules.RuleSource original) {
 		if (this.frozenLib$frozenSurfaceRules != null) {
-			return SurfaceRules.sequence(this.frozenLib$frozenSurfaceRules, original);
+			return SurfaceRules.sequence(original, this.frozenLib$frozenSurfaceRules);
 		}
 
 		return original;

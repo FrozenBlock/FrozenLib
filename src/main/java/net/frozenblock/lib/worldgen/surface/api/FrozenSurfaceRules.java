@@ -115,41 +115,18 @@ public final class FrozenSurfaceRules {
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
 		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldSurfaceRules(sourceHolders);
+		SurfaceRules.RuleSource newSource = sequence(sourceHolders);
 
-		SurfaceRules.RuleSource newSource = null;
-		for (SurfaceRules.RuleSource rule : sourceHolders) {
-			if (newSource == null) {
-				newSource = rule;
-			} else {
-				newSource = SurfaceRules.sequence(newSource, rule);
-			}
-		}
+		newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
+		newRule = newSource;
 
-		if (newSource != null) {
-			newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
-			newRule = SurfaceRules.sequence(newSource);
-		}
+		// NO PRELIM
 
 		ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
-
 		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimSurfaceRules(noPrelimSourceHolders);
 
-		SurfaceRules.RuleSource noPrelimSource = null;
-		for (SurfaceRules.RuleSource rule : noPrelimSourceHolders) {
-			if (noPrelimSource == null) {
-				noPrelimSource = rule;
-			} else {
-				noPrelimSource = SurfaceRules.sequence(noPrelimSource, rule);
-			}
-		}
-
-		if (noPrelimSource != null) {
-			if (newRule != null) {
-				newRule = SurfaceRules.sequence(noPrelimSource, newRule);
-			} else {
-				newRule = SurfaceRules.sequence(noPrelimSource);
-			}
-		}
+		SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
+		newRule = SurfaceRules.sequence(noPrelimSource, newRule);
 
 		return newRule;
 	}

@@ -86,14 +86,14 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 				)
 			)
 		));
-                context.add(new FrozenDimensionBoundRuleSource(
-                        new ResourceLocation("the_nether"),
-                        SurfaceRules.sequence(
-                                SurfaceRules.ifTrue(
-                                        SurfaceRules.isBiome(Biomes.WARPED_FOREST),
-                                        SurfaceRules.state(Blocks.COARSE_DIRT.defaultBlockState())
-                                )
-                        )
-                ));
+		context.add(new FrozenDimensionBoundRuleSource(
+			new ResourceLocation("the_nether"),
+			SurfaceRules.sequence(
+				SurfaceRules.ifTrue(
+					SurfaceRules.isBiome(Biomes.WARPED_FOREST),
+					SurfaceRules.state(Blocks.COARSE_DIRT.defaultBlockState())
+				)
+			)
+		));
     }
 }

@@ -233,7 +233,7 @@ dependencies {
     }
 
 	// TerraBlender
-    modCompileOnly("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
+    modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
 
     // MixinExtras
     implementation("com.github.LlamaLad7:MixinExtras:0.1.1")?.let { annotationProcessor(it)?.let { include(it) } }
@@ -369,7 +369,7 @@ fun getVersion(): String {
 }
 
 val dev by configurations.creating {
-    isCanBeResolved = false
+    isCanBeResolved = true // maybe do false? idk?
     isCanBeConsumed = true
 }
 

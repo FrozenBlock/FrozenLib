@@ -3,11 +3,13 @@
   "minVersion": "0.8",
   "package": "net.frozenblock.lib.worldgen.surface.mixin",
   "compatibilityLevel": "JAVA_17",
+  "plugin": "net.frozenblock.lib.worldgen.surface.mixin.SurfaceRulePlugin",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
     "MinecraftServerMixin",
-    "NoiseGeneratorSettingsMixin"
+    "NoiseGeneratorSettingsMixin",
+    "terrablender.SurfaceRuleManagerMixin"
   ]
 }
