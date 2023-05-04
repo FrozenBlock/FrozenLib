@@ -52,7 +52,7 @@ public class MinecraftServerMixin {
 			ChunkGenerator chunkGenerator = stem.generator();
 
 			if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator) {
-				var noiseSettings = noiseGenerator.generatorSettings.value();
+				var noiseSettings = noiseGenerator.generatorSettings().value();
 				var dimension = stem.typeHolder().unwrapKey().orElseThrow();
 
 				SurfaceRuleUtil.injectSurfaceRules(noiseSettings, dimension);
