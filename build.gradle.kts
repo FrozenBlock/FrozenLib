@@ -51,6 +51,7 @@ val modmenu_version: String by project
 val cloth_config_version: String by project
 val copperpipes_version: String by project
 val terrablender_version: String by project
+val falling_leaves_version: String by project
 
 val sodium_version: String by project
 val iris_version: String by project
@@ -243,6 +244,9 @@ dependencies {
 
     // Jankson
     implementation("blue.endless:jankson:$jankson_version")?.let { include(it) }
+
+    // Falling Leaves
+    modImplementation("maven.modrinth:fallingleaves:${falling_leaves_version}")
 
     "testmodImplementation"(sourceSets.main.get().output)
 
