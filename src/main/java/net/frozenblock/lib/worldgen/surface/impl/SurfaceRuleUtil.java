@@ -1,5 +1,6 @@
 package net.frozenblock.lib.worldgen.surface.impl;
 
+import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
