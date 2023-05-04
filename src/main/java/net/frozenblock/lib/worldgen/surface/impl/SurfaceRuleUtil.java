@@ -7,12 +7,11 @@ import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 public class SurfaceRuleUtil {
 
     public static void injectSurfaceRules(NoiseGeneratorSettings settings, ResourceKey<DimensionType> dimension) {
-        if (settings instanceof NoiseGeneratorInterface inter) {
-            var newRules = FrozenSurfaceRules.getSurfaceRules(dimension);
+        var inter = NoiseGeneratorInterface.class.cast(settings);
 
-            if (newRules != null) {
-                inter.overwriteSurfaceRules(newRules);
-            }
+        var newRules = FrozenSurfaceRules.getSurfaceRules(dimension);
+        if (newRules != null) {
+            inter.overwriteSurfaceRules(newRules);
         }
     }
 }
