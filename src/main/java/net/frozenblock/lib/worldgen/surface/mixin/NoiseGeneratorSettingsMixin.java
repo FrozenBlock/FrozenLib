@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(NoiseGeneratorSettings.class)
+@Mixin(value = NoiseGeneratorSettings.class, priority = 2000) // apply after terrablender
 public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	/**
@@ -41,46 +41,21 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	@Unique
 	private SurfaceRules.RuleSource frozenLib$frozenSurfaceRules;
 
-	@Unique
-	private ResourceKey<DimensionType> frozenLib$dimension;
-
 	@ModifyReturnValue(method = "surfaceRule", at = @At("RETURN"))
 	private SurfaceRules.RuleSource frozenLib$modifyRules(SurfaceRules.RuleSource original) {
-
-		if (this.frozenLib$dimension != null) {
-			if (this.frozenLib$frozenSurfaceRules == null) {
-				SurfaceRules.RuleSource frozenSurfaceRules = FrozenSurfaceRules.getSurfaceRules(this.frozenLib$dimension);
-
-				if (frozenSurfaceRules != null) {
-					this.frozenLib$frozenSurfaceRules = frozenSurfaceRules;
-				}
-			}
-
-			if (this.frozenLib$frozenSurfaceRules != null) {
-				return SurfaceRules.sequence(this.frozenLib$frozenSurfaceRules, original);
-			}
+		if (this.frozenLib$frozenSurfaceRules != null) {
+			return SurfaceRules.sequence(this.frozenLib$frozenSurfaceRules, original);
 		}
+
 		return original;
-	}
-
-	@Inject(method = "overworld", at = @At("RETURN"))
-	private static void overworld(boolean amplified, boolean largeBiomes, CallbackInfoReturnable<NoiseGeneratorSettings> cir) {
-		NoiseGeneratorSettings settings = cir.getReturnValue();
-
-		NoiseGeneratorInterface.class.cast(settings).setDimension(BuiltinDimensionTypes.OVERWORLD);
-	}
-
-	@Inject(method = "nether", at = @At("RETURN"))
-	private static void nether(CallbackInfoReturnable<NoiseGeneratorSettings> cir) {
-		NoiseGeneratorSettings settings = cir.getReturnValue();
-
-		NoiseGeneratorInterface.class.cast(settings).setDimension(BuiltinDimensionTypes.NETHER);
 	}
 
 	@Unique
 	@Override
-	public void setDimension(ResourceKey<DimensionType> dimension) {
-		this.frozenLib$dimension = dimension;
+	public void overwriteSurfaceRules(SurfaceRules.RuleSource surfaceRule) {
+		if (surfaceRule == null || surfaceRule == this.frozenLib$frozenSurfaceRules) return;
+
+		this.frozenLib$frozenSurfaceRules = surfaceRule;
 	}
 
 }

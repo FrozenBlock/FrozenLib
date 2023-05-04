@@ -27,26 +27,36 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.progress.ChunkProgressListener;
+import net.minecraft.world.level.storage.WorldData;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(MinecraftServer.class)
+@Mixin(value = MinecraftServer.class, priority = 2010) // apply after bclib
 public class MinecraftServerMixin {
 
-	@Inject(method = "<init>", at = @At("RETURN"))
-	private void onInit(CallbackInfo info) {
-		MinecraftServer server = MinecraftServer.class.cast(this);
-		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> stemEntry : server.getWorldData().worldGenSettings().dimensions().entrySet()) {
-			LevelStem stem = stemEntry.getValue();
-			ChunkGenerator chunkGenerator = stem.generator();
-			if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseBasedChunkGenerator) {
-				NoiseGeneratorInterface.class.cast(noiseBasedChunkGenerator.generatorSettings().value()).setDimension(stem.typeHolder().unwrapKey().orElseThrow());
-			}
-		}
+	@Shadow
+	@Final
+	protected WorldData worldData;
 
-		for (NoiseGeneratorSettings settings : Registry.NOISE_SETTINGS) {
+	@Inject(method = "createLevels", at = @At("HEAD"))
+	private void addSurfaceRules(ChunkProgressListener worldGenerationProgressListener, CallbackInfo ci) {
+		var settings = this.worldData.worldGenSettings();
+
+		for (var entry : settings.dimensions().entrySet()) {
+			LevelStem stem = entry.getValue();
+			ChunkGenerator chunkGenerator = stem.generator();
+
+			if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator) {
+				var noiseSettings = noiseGenerator.generatorSettings.value();
+				var dimension = stem.typeHolder().unwrapKey().orElseThrow();
+
+				SurfaceRuleUtil.injectSurfaceRules(noiseSettings, dimension);
+			}
 		}
 	}
 
