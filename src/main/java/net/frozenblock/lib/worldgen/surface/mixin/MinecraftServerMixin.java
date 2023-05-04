@@ -20,6 +20,7 @@ package net.frozenblock.lib.worldgen.surface.mixin;
 
 import java.util.Map;
 import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
+import net.frozenblock.lib.worldgen.surface.impl.SurfaecRuleUtil;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
