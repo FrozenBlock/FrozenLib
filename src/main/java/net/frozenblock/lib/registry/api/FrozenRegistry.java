@@ -33,6 +33,7 @@ import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -84,8 +85,8 @@ public class FrozenRegistry {
 		return createSimple(key, lifecycle, attribute, null);
 	}
 
-	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute, Registry.RegistryBootstrap<T> bootstrap) {
-		var registry = new MappedRegistry<>(key, lifecycle, null);
+	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute, BuiltInRegistries.RegistryBootstrap<T> bootstrap) {
+		var registry = new MappedRegistry<>(key, lifecycle, false);
 		var fabricRegistryBuilder = FabricRegistryBuilder.from(registry);
 
 		if (attribute != null) {
