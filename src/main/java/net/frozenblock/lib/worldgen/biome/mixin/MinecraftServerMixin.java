@@ -34,8 +34,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = MinecraftServer.class, priority = 990)
-public abstract class MinecraftServerMixin {
+@Mixin(value = MinecraftServer.class, priority = 991)
+public class MinecraftServerMixin {
 
     @Shadow
 	@Final
