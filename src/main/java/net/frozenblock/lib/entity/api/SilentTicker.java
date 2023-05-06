@@ -35,7 +35,7 @@ public abstract class SilentTicker extends Marker {
 	@Override
 	public void tick() {
 		this.ticks += 1;
-		this.tick(this.level, this.getPosition(1F), this.blockPosition(), this.ticks);
+		this.tick(this.level(), this.getPosition(1F), this.blockPosition(), this.ticks);
 	}
 
 	@Override
@@ -51,10 +51,6 @@ public abstract class SilentTicker extends Marker {
 	}
 
 	public abstract void tick(Level level, Vec3 vec3, BlockPos pos, int ticks);
-
-	public Level getLevel() {
-		return this.level;
-	}
 
 	public int getTicks() {
 		return this.ticks;

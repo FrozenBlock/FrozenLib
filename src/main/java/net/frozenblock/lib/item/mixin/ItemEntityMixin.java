@@ -80,7 +80,7 @@ public class ItemEntityMixin {
 	@Unique
 	private void hitEntity(Entity entity) {
 		ItemEntity item = ItemEntity.class.cast(this);
-		Entity owner = this.thrower != null ? item.level.getPlayerByUUID(this.thrower) : null;
+		Entity owner = this.thrower != null ? item.level().getPlayerByUUID(this.thrower) : null;
 		if (entity != owner) {
 			DamageSource damageSource = owner.damageSources().mobAttack((LivingEntity) entity);
 			if (owner != null) {
@@ -88,7 +88,7 @@ public class ItemEntityMixin {
 			}
 			if (entity.hurt(damageSource, HeavyItemDamageRegistry.getDamage(this.getItem()))) {
 				//TODO: Bonk sound
-				item.playSound(SoundEvents.ANVIL_LAND, 0.3F, 1.2F / (item.level.random.nextFloat() * 0.2F + 0.9F));
+				item.playSound(SoundEvents.ANVIL_LAND, 0.3F, 1.2F / (item.level().random.nextFloat() * 0.2F + 0.9F));
 			}
 		}
 	}
@@ -96,7 +96,7 @@ public class ItemEntityMixin {
 	@Unique
 	public List<Entity> collidingEntities() {
 		ItemEntity entity = ItemEntity.class.cast(this);
-		return entity.level.getEntities(entity, entity.getBoundingBox().expandTowards(entity.getDeltaMovement()), this::canHitEntity);
+		return entity.level().getEntities(entity, entity.getBoundingBox().expandTowards(entity.getDeltaMovement()), this::canHitEntity);
 	}
 
 	@Unique

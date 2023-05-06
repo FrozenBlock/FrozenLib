@@ -220,9 +220,9 @@ public class ScreenShakeManager {
 	}
 
 	public static void addEntityScreenShake(Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
-		if (!entity.level.isClientSide) {
+		if (!entity.level().isClientSide) {
 			FriendlyByteBuf byteBuf = createEntityScreenShakeByteBuf(entity, intensity, duration, falloffStart, maxDistance, ticks);
-			for (ServerPlayer player : PlayerLookup.world((ServerLevel) entity.level)) {
+			for (ServerPlayer player : PlayerLookup.world((ServerLevel) entity.level())) {
 				ServerPlayNetworking.send(player, FrozenMain.SCREEN_SHAKE_ENTITY_PACKET, byteBuf);
 			}
 			((EntityScreenShakeInterface)entity).addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
