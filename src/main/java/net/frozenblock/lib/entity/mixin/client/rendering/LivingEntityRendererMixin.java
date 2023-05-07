@@ -20,7 +20,6 @@ package net.frozenblock.lib.entity.mixin.client.rendering;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.RenderType;

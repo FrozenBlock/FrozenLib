@@ -19,9 +19,7 @@
 package net.frozenblock.lib.config.api.entry;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import java.util.List;
 
 public record TypedEntryType<T>(String modId, Codec<T> codec) {
 

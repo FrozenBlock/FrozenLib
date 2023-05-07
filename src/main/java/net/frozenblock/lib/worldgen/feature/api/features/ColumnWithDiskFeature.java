@@ -20,7 +20,6 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
 import java.util.Optional;
-
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnWithDiskFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
