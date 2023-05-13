@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixTypes;
@@ -33,14 +34,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(value = DataFixTypes.class, priority = 1001)
 public abstract class DataFixTypesMixin {
-    @Inject(
+    @ModifyReturnValue(
             method = "update(Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/nbt/CompoundTag;II)Lnet/minecraft/nbt/CompoundTag;",
-            at = @At("RETURN"),
-            cancellable = true
+            at = @At("RETURN")
     )
-    private void updateDataWithFixers(DataFixer fixer, CompoundTag compound,
-                                             int oldVersion, int targetVersion, CallbackInfoReturnable<CompoundTag> cir) {
-        var type = DataFixTypes.class.cast(this);
-        cir.setReturnValue(QuiltDataFixesInternals.get().updateWithAllFixers(type, cir.getReturnValue()));
+    private static CompoundTag updateDataWithFixers(CompoundTag original, DataFixer fixer, CompoundTag compound,
+													int oldVersion, int targetVersion) {
+        return QuiltDataFixesInternals.get().updateWithAllFixers(fixTypes, original);
     }
 }

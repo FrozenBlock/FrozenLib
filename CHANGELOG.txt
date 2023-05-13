@@ -10,6 +10,7 @@ Put changelog here:
 - Renamed GsonConfig to JsonConfig with an added boolean to its constructor to enable JSON5
 - Removed all built in typed entry types
 - Rewrote surface rule injection
+- Fixed some issues with injecting surface rules whilst using TerraBlender
 - Added stencil rendering via StencilRenderer
 - Added 3D wind
 - Added additional math tools to AdvancedMath

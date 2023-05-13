@@ -32,40 +32,40 @@ plugins {
     java
 }
 
-public val minecraft_version: String by project
-public val quilt_mappings: String by project
-public val parchment_mappings: String by project
-public val loader_version: String by project
+val minecraft_version: String by project
+val quilt_mappings: String by project
+val parchment_mappings: String by project
+val loader_version: String by project
 
-public val mod_version: String by project
-public val mod_loader: String by project
-public val maven_group: String by project
-public val archives_base_name: String by project
+val mod_version: String by project
+val mod_loader: String by project
+val maven_group: String by project
+val archives_base_name: String by project
 
-public val fabric_version: String by project
-public val fabric_asm_version: String by project
+val fabric_version: String by project
+val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
 
-public val modmenu_version: String by project
-public val cloth_config_version: String by project
-public val copperpipes_version: String by project
-public val terrablender_version: String by project
+val modmenu_version: String by project
+val cloth_config_version: String by project
+val copperpipes_version: String by project
+val terrablender_version: String by project
 
-public val sodium_version: String by project
-public val iris_version: String by project
-public val indium_version: String by project
-public val sodium_extra_version: String by project
-public val reeses_sodium_options_version: String by project
-public val lithium_version: String by project
-public val fastanim_version: String by project
-public val ferritecore_version: String by project
-public val lazydfu_version: String by project
-public val starlight_version: String by project
-public val entityculling_version: String by project
-public val memoryleakfix_version: String by project
-public val no_unused_chunks_version: String by project
-public val ksyxis_version: String by project
+val sodium_version: String by project
+val iris_version: String by project
+val indium_version: String by project
+val sodium_extra_version: String by project
+val reeses_sodium_options_version: String by project
+val lithium_version: String by project
+val fastanim_version: String by project
+val ferritecore_version: String by project
+val lazydfu_version: String by project
+val starlight_version: String by project
+val entityculling_version: String by project
+val memoryleakfix_version: String by project
+val no_unused_chunks_version: String by project
+val ksyxis_version: String by project
 
 base {
     archivesName.set(archives_base_name)
@@ -74,9 +74,9 @@ base {
 version = getVersion()
 group = maven_group
 
-public val release = findProperty("releaseType")?.equals("stable")
+val release = findProperty("releaseType")?.equals("stable")
 
-public val testmod by sourceSets.registering {
+val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
     compileClasspath += sourceSets.main.get().compileClasspath
 }
@@ -133,7 +133,7 @@ configurations {
     }
 }
 
-public val api by sourceSets.registering {
+val api by sourceSets.registering {
     java {
         compileClasspath += sourceSets.main.get().compileClasspath
     }
@@ -191,6 +191,9 @@ repositories {
         setUrl("https://maven.flashyreese.me/snapshots")
     }
     maven {
+        setUrl("https://maven.minecraftforge.net")
+    }
+    maven {
         setUrl("https://maven.parchmentmc.org")
     }
     maven {
@@ -230,13 +233,16 @@ dependencies {
     }
 
 	// TerraBlender
-	modCompileOnly("curse.maven:terrablender-fabric-565956:4205731")
+    modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
+
+    // MixinExtras
+    api("com.github.LlamaLad7:MixinExtras:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { include(it) } }
 
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    implementation("blue.endless:jankson:$jankson_version")?.let { include(it) }
+    api("blue.endless:jankson:$jankson_version")?.let { include(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 /*
@@ -320,14 +326,14 @@ tasks {
     }
 }
 
-public val build: Task by tasks
-public val applyLicenses: Task by tasks
-public val test: Task by tasks
-public val runClient: Task by tasks
+val build: Task by tasks
+val applyLicenses: Task by tasks
+val test: Task by tasks
+val runClient: Task by tasks
 
-public val remapJar: Task by tasks
-public val sourcesJar: Task by tasks
-public val javadocJar: Task by tasks
+val remapJar: Task by tasks
+val sourcesJar: Task by tasks
+val javadocJar: Task by tasks
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -362,8 +368,8 @@ fun getVersion(): String {
     return version
 }
 
-public val dev by configurations.creating {
-    isCanBeResolved = false
+val dev by configurations.creating {
+    isCanBeResolved = true // maybe do false? idk?
     isCanBeConsumed = true
 }
 
@@ -400,19 +406,24 @@ publishing {
 
     publications {
         var publish = true
-        if (publishingValid) {
-            try {
-                val xml = ResourceGroovyMethods.getText(URL("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom"))
-                val metadata = XmlSlurper().parseText(xml)
+        try {
+            if (publishingValid) {
+                try {
+                    val xml = ResourceGroovyMethods.getText(URL("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom"))
+                    val metadata = XmlSlurper().parseText(xml)
 
-                if (metadata.getProperty("hash").equals(hash)) {
-                    publish = false
+                    if (metadata.getProperty("hash").equals(hash)) {
+                        publish = false
+                    }
+                } catch (ignored: FileNotFoundException) {
+                    // No existing version was published, so we can publish
                 }
-            } catch (ignored: FileNotFoundException) {
-                // No existing version was published, so we can publish
+            } else {
+                publish = false
             }
-        } else {
+        } catch (e: Exception) {
             publish = false
+            println("Unable to publish to maven. The maven server may be offline.")
         }
 
         if (publish) {
@@ -424,7 +435,7 @@ publishing {
                 pom {
                     groupId = publishGroup
                     artifactId = rootProject.base.archivesName.get().lowercase()
-                    version = publishVersion
+                    version = snapshotPublishVersion
                     withXml {
                         asNode().appendNode("properties").appendNode("hash", hash)
                     }
@@ -457,15 +468,15 @@ extra {
     }
 }
 
-public val modrinth_id: String by extra
-public val curseforge_id: String by extra
-public val release_type: String by extra
-public val curseforge_minecraft_version: String by extra
-public val changelog_file: String by extra
+val modrinth_id: String by extra
+val curseforge_id: String by extra
+val release_type: String by extra
+val curseforge_minecraft_version: String by extra
+val changelog_file: String by extra
 
-public val modrinth_version = makeModrinthVersion(mod_version)
-public val display_name = makeName(mod_version)
-public val changelog_text = getChangelog(file(changelog_file))
+val modrinth_version = makeModrinthVersion(mod_version)
+val display_name = makeName(mod_version)
+val changelog_text = getChangelog(file(changelog_file))
 
 fun makeName(version: String): String {
     return "${version} (${minecraft_version})"

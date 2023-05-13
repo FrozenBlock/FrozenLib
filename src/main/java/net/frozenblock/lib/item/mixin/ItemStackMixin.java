@@ -50,7 +50,7 @@ public final class ItemStackMixin {
 		}
 	}
 
-	@Inject(at = @At("HEAD"), method = "tagMatches", cancellable = true)
+	@Inject(method = "tagMatches", at = @At("HEAD"), cancellable = true)
 	private static void removeAncientTagAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
 		CompoundTag lTag = left.getTag();
 		if (lTag != null) {
