@@ -25,8 +25,6 @@ import net.minecraft.util.datafix.DataFixTypes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Modified to work on Fabric
@@ -38,8 +36,9 @@ public abstract class DataFixTypesMixin {
             method = "update(Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/nbt/CompoundTag;II)Lnet/minecraft/nbt/CompoundTag;",
             at = @At("RETURN")
     )
-    private static CompoundTag updateDataWithFixers(CompoundTag original, DataFixer fixer, CompoundTag compound,
+    private CompoundTag updateDataWithFixers(CompoundTag original, DataFixer fixer, CompoundTag compound,
 													int oldVersion, int targetVersion) {
-        return QuiltDataFixesInternals.get().updateWithAllFixers(fixTypes, original);
+		var type = DataFixTypes.class.cast(this);
+        return QuiltDataFixesInternals.get().updateWithAllFixers(type, original);
     }
 }
