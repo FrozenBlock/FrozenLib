@@ -19,6 +19,7 @@
 package net.frozenblock.lib.worldgen.surface.mixin.terrablender;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -29,17 +30,17 @@ import terrablender.api.SurfaceRuleManager;
 @Mixin(SurfaceRuleManager.class)
 public class SurfaceRuleManagerMixin {
 
-	@ModifyReturnValue(method = "getDefaultSurfaceRules", at = @At("RETURN"))
-	private static SurfaceRules.RuleSource getDefaultSurfaceRules(SurfaceRules.RuleSource original, SurfaceRuleManager.RuleCategory category) {
-		SurfaceRules.RuleSource newRules;
-		if (category == SurfaceRuleManager.RuleCategory.OVERWORLD) {
-			newRules = FrozenSurfaceRules.getSurfaceRules(BuiltinDimensionTypes.OVERWORLD);
-		} else {
-			newRules = FrozenSurfaceRules.getSurfaceRules(BuiltinDimensionTypes.NETHER);
-		}
+	@ModifyReturnValue(method = "getNamespacedRules", at = @At("RETURN"))
+	private static SurfaceRules.RuleSource getDefaultSurfaceRules(SurfaceRules.RuleSource original, SurfaceRuleManager.RuleCategory category, SurfaceRules.RuleSource fallback) {
+		SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(
+			category == SurfaceRuleManager.RuleCategory.OVERWORLD
+				? BuiltinDimensionTypes.OVERWORLD
+				: BuiltinDimensionTypes.NETHER
+		);
 
 		if (newRules != null) {
-			return SurfaceRules.sequence(original, newRules);
+			FrozenMain.log("Applying FrozenLib's surface rules to TerraBlender", FrozenMain.UNSTABLE_LOGGING);
+			return SurfaceRules.sequence(newRules, original, newRules);
 		}
 		return original;
 	}
