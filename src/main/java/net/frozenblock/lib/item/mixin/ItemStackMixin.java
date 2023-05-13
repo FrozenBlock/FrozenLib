@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public final class ItemStackMixin {
 
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
-	public void removeAncientTag(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
+	public void removeTag(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
 		ItemStack stack = ItemStack.class.cast(this);
 		CompoundTag nbt = stack.getTag();
 		if (nbt != null) {
@@ -50,8 +50,8 @@ public final class ItemStackMixin {
 		}
 	}
 
-	@Inject(at = @At("HEAD"), method = "tagMatches", cancellable = true)
-	private static void removeAncientTagAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
+	@Inject(at = @At("HEAD"), method = "isSameItemSameTags")
+	private static void removeTagAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
 		CompoundTag lTag = left.getTag();
 		if (lTag != null) {
 			for (String key : RemoveableItemTags.keys()) {
@@ -75,21 +75,6 @@ public final class ItemStackMixin {
 				right.tag = null;
 			}
 		}
-
-		if (tagIsNullMatching(left, right)) {
-			info.setReturnValue(true);
-		}
 	}
 
-	@Inject(at = @At(value = "RETURN", ordinal = 2, shift = At.Shift.BEFORE), method = "matches(Lnet/minecraft/world/item/ItemStack;)Z", cancellable = true)
-	private void matches(ItemStack other, CallbackInfoReturnable<Boolean> info) {
-		info.setReturnValue(tagIsNullMatching(ItemStack.class.cast(this), other));
-	}
-
-	@Unique
-	private static boolean tagIsNullMatching(ItemStack stack, ItemStack other) {
-		boolean stackTagEmpty = stack.tag == null || stack.tag.isEmpty();
-		boolean otherTagEmpty = other.tag == null || other.tag.isEmpty();
-		return stackTagEmpty && otherTagEmpty;
-	}
 }
