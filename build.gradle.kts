@@ -329,7 +329,7 @@ tasks {
     }
 
     shadowJar {
-        enabledRelocation(true)
+        enableRelocation(true)
         relocationPrefix = "net.frozenblock.lib.shadow"
 
         configurations = listOf(shadow)
