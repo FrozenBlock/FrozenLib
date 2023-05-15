@@ -1,4 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import com.matthewprenger.cursegradle.CurseArtifact
 import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
@@ -16,7 +15,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.kohsuke:github-api:1.313")
-        classpath("com.github.johnrengelman:shadow:8.1.1")
 	}
 }
 
@@ -33,8 +31,6 @@ plugins {
     `java-library`
     java
 }
-
-apply(plugin = "com.github.johnrengelman.shadow")
 
 val minecraft_version: String by project
 val quilt_mappings: String by project
@@ -328,11 +324,6 @@ tasks {
     withType(Test::class) {
         maxParallelForks = Runtime.getRuntime().availableProcessors().div(2)
     }
-}
-
-closureOf<ShadowJar> {
-    relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.com.llamalad7.mixinextras")
-    mergeServiceFiles()
 }
 
 val build: Task by tasks
