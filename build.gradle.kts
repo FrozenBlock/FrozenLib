@@ -338,6 +338,7 @@ tasks {
     remapJar {
         dependsOn(shadowJar)
         input.set(shadowJar.get().archiveFile)
+        archiveClassifier.set("")
 
         from(project.file("LICENSE"))
     }
