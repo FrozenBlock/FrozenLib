@@ -334,6 +334,11 @@ tasks {
         configurations = listOf(shadowInclude)
         archiveClassifier.set("shadow")
     }
+
+    remapJar {
+        dependsOn(shadowJar)
+        input.set(shadowJar.get().archiveFile)
+    }
 }
 
 val build: Task by tasks
