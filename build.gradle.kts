@@ -236,7 +236,7 @@ dependencies {
     modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
 
     // MixinExtras
-    api("com.github.LlamaLad7:MixinExtras:MixinExtras-Fabric:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { include(it) } }
+    api("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { include(it) } }
 
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
