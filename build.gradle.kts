@@ -330,7 +330,7 @@ tasks {
 
     shadowJar {
         setEnableRelocation(true)
-        relocationPrefix = "net.frozenblock.lib.shadow"
+        setRelocationPrefix("net.frozenblock.lib.shadow")
 
         configurations = listOf(shadow)
         archiveClassifier.set("shadow")
