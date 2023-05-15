@@ -329,8 +329,8 @@ tasks {
     }
 
     shadowJar {
-        enableRelocation.set(true)
-        relocationPrefix.set("net.frozenblock.lib.shadow")
+        enableRelocation = true
+        relocationPrefix = "net.frozenblock.lib.shadow"
         //relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.shadow.llamalad7.mixinextras")
 
         configurations = listOf(shadowInclude)
