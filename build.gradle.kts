@@ -329,6 +329,7 @@ tasks {
     }
 
     shadowJar {
+        enableRelocation(true)
         relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.shadow.llamalad7.mixinextras")
 
         configurations = listOf(shadowInclude)
