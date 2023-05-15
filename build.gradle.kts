@@ -1,4 +1,4 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 import com.matthewprenger.cursegradle.CurseArtifact
 import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
@@ -26,7 +26,6 @@ plugins {
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
 	id("com.matthewprenger.cursegradle") version("+")
-    id("com.github.johnrengelman.shadow") version("+")
     `maven-publish`
     eclipse
     idea
@@ -121,7 +120,7 @@ loom {
 
 val includeModImplementation by configurations.creating
 val includeImplementation by configurations.creating
-val shadow by configurations
+val shadowInclude by configurations.creating
 
 configurations {
     include {
@@ -239,7 +238,7 @@ dependencies {
     modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
 
     // MixinExtras
-    api("com.github.LlamaLad7:MixinExtras:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { shadow(it) } }
+    api("com.github.LlamaLad7:MixinExtras:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { include(it) } }
 
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
@@ -326,21 +325,6 @@ tasks {
 
     withType(Test::class) {
         maxParallelForks = Runtime.getRuntime().availableProcessors().div(2)
-    }
-
-    shadowJar {
-        setEnableRelocation(true)
-        setRelocationPrefix("net.frozenblock.lib.shadow")
-
-        configurations = listOf(shadow)
-        archiveClassifier.set("shadow")
-    }
-
-    remapJar {
-        dependsOn(shadowJar)
-        mustRunAfter(shadowJar)
-
-        inputFile.set(shadowJar.get().archiveFile)
     }
 }
 
