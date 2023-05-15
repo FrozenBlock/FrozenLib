@@ -339,7 +339,6 @@ tasks {
         dependsOn(shadowJar)
         input.set(shadowJar.get().archiveFile)
 
-        archiveClassifier.set(null)
         from(project.file("LICENSE"))
     }
 }
