@@ -16,7 +16,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.kohsuke:github-api:1.313")
-        classpath("com.github.johnrengelman:shadow:8.1.1")
 	}
 }
 
@@ -27,14 +26,13 @@ plugins {
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
 	id("com.matthewprenger.cursegradle") version("+")
+    id("com.github.johnrengelman.shadow") version("+")
     `maven-publish`
     eclipse
     idea
     `java-library`
     java
 }
-
-apply(plugin = "com.github.johnrengelman.shadow")
 
 val minecraft_version: String by project
 val quilt_mappings: String by project
@@ -123,6 +121,7 @@ loom {
 
 val includeModImplementation by configurations.creating
 val includeImplementation by configurations.creating
+val shadowInclude by configurations.creating
 
 configurations {
     include {
@@ -240,7 +239,7 @@ dependencies {
     modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
 
     // MixinExtras
-    api("com.github.LlamaLad7:MixinExtras:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { include(it) } }
+    api("com.github.LlamaLad7:MixinExtras:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { shadowInclude(it) } }
 
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
@@ -328,11 +327,13 @@ tasks {
     withType(Test::class) {
         maxParallelForks = Runtime.getRuntime().availableProcessors().div(2)
     }
-}
 
-closureOf<ShadowJar> {
-    relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.com.llamalad7.mixinextras")
-    mergeServiceFiles()
+    shadowJar {
+        relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.shadow.llamalad7.mixinextras")
+
+        configurations.set(arrayOf(shadowInclude))
+        archiveClassifier.set("shadow")
+    }
 }
 
 val build: Task by tasks
