@@ -121,7 +121,7 @@ loom {
 
 val includeModImplementation by configurations.creating
 val includeImplementation by configurations.creating
-val shadowInclude by configurations.creating
+val shadow by configurations
 
 configurations {
     include {
@@ -239,7 +239,7 @@ dependencies {
     modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
 
     // MixinExtras
-    api("com.github.LlamaLad7:MixinExtras:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { shadowInclude(it) } }
+    api("com.github.LlamaLad7:MixinExtras:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { shadow(it) } }
 
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
@@ -332,7 +332,7 @@ tasks {
         enableRelocation(true)
         relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.shadow.llamalad7.mixinextras")
 
-        configurations = listOf(shadowInclude)
+        configurations = listOf(shadow)
         archiveClassifier.set("shadow")
     }
 
