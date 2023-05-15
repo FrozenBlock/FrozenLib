@@ -119,7 +119,6 @@ loom {
 
 val includeModImplementation by configurations.creating
 val includeImplementation by configurations.creating
-val shadowInclude by configurations.creating
 
 configurations {
     include {
