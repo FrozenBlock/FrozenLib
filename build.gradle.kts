@@ -329,7 +329,6 @@ tasks {
     }
 
     shadowJar {
-        enableRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         //relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.shadow.llamalad7.mixinextras")
 
