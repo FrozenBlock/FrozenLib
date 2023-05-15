@@ -329,8 +329,7 @@ tasks {
     }
 
     shadowJar {
-        relocationPrefix = "net.frozenblock.lib.shadow"
-        //relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.shadow.llamalad7.mixinextras")
+        relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.shadow.llamalad7.mixinextras")
 
         configurations = listOf(shadowInclude)
         archiveClassifier.set("shadow")
@@ -338,7 +337,9 @@ tasks {
 
     remapJar {
         dependsOn(shadowJar)
-        input.set(shadowJar.get().archiveFile)
+        mustRunAfter(shadowJar)
+
+        inputFile.set(shadowJar.get().archiveFile)
     }
 }
 
