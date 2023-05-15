@@ -328,8 +328,13 @@ tasks {
         maxParallelForks = Runtime.getRuntime().availableProcessors().div(2)
     }
 
+    val relocateShadowJar: Task = register("relocateShadowJar", ConfigureShadowRelocation::class) {
+        target = shadowJar
+        prefix = "net.frozenblock.lib.shadow"
+    }
+
     shadowJar {
-        relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.shadow.llamalad7.mixinextras")
+        dependsOn(relocateShadowJar)
 
         configurations = listOf(shadow)
         archiveClassifier.set("shadow")
