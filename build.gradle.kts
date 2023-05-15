@@ -331,7 +331,7 @@ tasks {
     shadowJar {
         relocate("com.llamalad7.mixinextras", "net.frozenblock.lib.shadow.llamalad7.mixinextras")
 
-        configurations.set(arrayOf(shadowInclude))
+        configurations = arrayOf(shadowInclude)
         archiveClassifier.set("shadow")
     }
 }
