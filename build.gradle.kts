@@ -25,6 +25,7 @@ plugins {
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
 	id("com.matthewprenger.cursegradle") version("+")
+    id("com.github.johnrengelman.shadow") version("+")
     `maven-publish`
     eclipse
     idea
@@ -119,6 +120,7 @@ loom {
 
 val includeModImplementation by configurations.creating
 val includeImplementation by configurations.creating
+val shadowInclude by configurations.creating
 
 configurations {
     include {
@@ -236,7 +238,7 @@ dependencies {
     modImplementation("com.github.glitchfiend:TerraBlender-fabric:${minecraft_version}-${terrablender_version}")
 
     // MixinExtras
-    api("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.7")?.let { annotationProcessor(it)?.let { include(it) } }
+    implementation("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.7")?.let { annotationProcessor(it); shadowInclude(it) }
 
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
@@ -323,6 +325,20 @@ tasks {
 
     withType(Test::class) {
         maxParallelForks = Runtime.getRuntime().availableProcessors().div(2)
+    }
+
+    shadowJar {
+        isEnableRelocation = true;
+        relocationPrefix = "net.frozenblock.lib.shadow"
+
+        configurations = listOf(shadowInclude)
+    }
+
+    remapJar {
+        dependsOn(shadowJar)
+        mustRunAfter(shadowJar)
+
+        input.set(shadowJar.get().archiveFile)
     }
 }
 
