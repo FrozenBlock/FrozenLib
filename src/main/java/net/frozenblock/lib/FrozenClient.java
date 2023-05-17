@@ -146,13 +146,14 @@ public final class FrozenClient implements ClientModInitializer {
 			float volume = byteBuf.readFloat();
 			float pitch = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
+			boolean stopOnDeath = byteBuf.readBoolean();
 			ctx.execute(() -> {
 				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						ctx.getSoundManager().play(new RestrictedMovingSound<>(entity, sound, category, volume, pitch, predicate));
+						ctx.getSoundManager().play(new RestrictedMovingSound<>(entity, sound, category, volume, pitch, predicate, stopOnDeath));
 					}
 				}
 			});
@@ -168,13 +169,14 @@ public final class FrozenClient implements ClientModInitializer {
 			float volume = byteBuf.readFloat();
 			float pitch = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
+			boolean stopOnDeath = byteBuf.readBoolean();
 			ctx.execute(() -> {
 				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						ctx.getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, sound, category, volume, pitch, predicate));
+						ctx.getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, sound, category, volume, pitch, predicate, stopOnDeath));
 					}
 				}
 			});
@@ -191,13 +193,14 @@ public final class FrozenClient implements ClientModInitializer {
 			float volume = byteBuf.readFloat();
 			float pitch = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
+			boolean stopOnDeath = byteBuf.readBoolean();
 			ctx.execute(() -> {
 				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						ctx.getSoundManager().play(new RestrictedStartingSound<>(entity, startingSound, loopingSound, category, volume, pitch, predicate, new RestrictedMovingSoundLoop<>(entity, loopingSound, category, volume, pitch, predicate)));
+						ctx.getSoundManager().play(new RestrictedStartingSound<>(entity, startingSound, loopingSound, category, volume, pitch, predicate, stopOnDeath, new RestrictedMovingSoundLoop<>(entity, loopingSound, category, volume, pitch, predicate, stopOnDeath)));
 					}
 				}
 			});
@@ -216,14 +219,15 @@ public final class FrozenClient implements ClientModInitializer {
 			float fadeDist = byteBuf.readFloat();
 			float maxDist = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
+			boolean stopOnDeath = byteBuf.readBoolean();
 			ctx.execute(() -> {
 				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
-						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist, volume, false));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist, volume, true));
 					}
 				}
 			});
@@ -242,14 +246,15 @@ public final class FrozenClient implements ClientModInitializer {
 			float fadeDist = byteBuf.readFloat();
 			float maxDist = byteBuf.readFloat();
 			ResourceLocation predicateId = byteBuf.readResourceLocation();
+			boolean stopOnDeath = byteBuf.readBoolean();
 			ctx.execute(() -> {
 				ClientLevel level = ctx.level;
 				if (level != null) {
 					T entity = (T) level.getEntity(id);
 					if (entity != null) {
 						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, fadeDist, maxDist, volume, false));
-						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, fadeDist, maxDist, volume, true));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist, volume, false));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist, volume, true));
 					}
 				}
 			});

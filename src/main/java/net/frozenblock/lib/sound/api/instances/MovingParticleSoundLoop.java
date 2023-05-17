@@ -33,21 +33,24 @@ public class MovingParticleSoundLoop<T extends Particle> extends AbstractTickabl
 	private final int fadeInTicks;
 	private final float increaseVolumeBy;
 	private int ticks;
+	private final boolean stopOnDeath;
 
-	public MovingParticleSoundLoop(T particle, SoundEvent sound, SoundSource category, float volume, float pitch, int fadeInTicks) {
+	public MovingParticleSoundLoop(T particle, SoundEvent sound, SoundSource category, float volume, float pitch, int fadeInTicks, boolean stopOnDeath) {
 		super(sound, category, SoundInstance.createUnseededRandom());
 		this.particle = particle;
 		this.looping = true;
 		this.delay = 0;
 		this.pitch = pitch;
 
-		this.x = (float) particle.x;
-		this.y = (float) particle.y;
-		this.z = (float) particle.z;
+		this.x = particle.x;
+		this.y = particle.y;
+		this.z = particle.z;
 
 		this.fadeInTicks = fadeInTicks;
 		this.increaseVolumeBy = fadeInTicks != 0 ? (volume / fadeInTicks) : volume;
 		this.volume = fadeInTicks != 0 ? 0 : volume;
+
+		this.stopOnDeath = stopOnDeath;
 	}
 
 	@Override
@@ -66,12 +69,12 @@ public class MovingParticleSoundLoop<T extends Particle> extends AbstractTickabl
 			this.volume += this.increaseVolumeBy;
 			this.ticks += 1;
 		}
-		if (this.particle == null || !this.particle.isAlive()) {
+		if (this.particle == null || (this.stopOnDeath && !this.particle.isAlive())) {
 			this.stop();
 		} else {
-			this.x = (float) this.particle.x;
-			this.y = (float) this.particle.y;
-			this.z = (float) this.particle.z;
+			this.x = this.particle.x;
+			this.y = this.particle.y;
+			this.z = this.particle.z;
 		}
 	}
 

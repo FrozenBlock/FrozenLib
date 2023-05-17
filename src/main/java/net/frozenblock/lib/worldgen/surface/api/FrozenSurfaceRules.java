@@ -16,14 +16,19 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.surface;
+package net.frozenblock.lib.worldgen.surface.api;
 
+import java.util.ArrayList;
 import java.util.List;
+import net.frozenblock.lib.FrozenMain;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.jetbrains.annotations.Nullable;
 
 public final class FrozenSurfaceRules {
 
@@ -74,4 +79,111 @@ public final class FrozenSurfaceRules {
     public static SurfaceRules.RuleSource makeStateRule(Block block) {
         return SurfaceRules.state(block.defaultBlockState());
     }
+
+	@Nullable
+	public static SurfaceRules.RuleSource getSurfaceRules(ResourceKey<DimensionType> dimension) {
+		if (dimension == null) return null;
+
+		var location = dimension.location();
+		SurfaceRules.RuleSource returnValue = null;
+
+		if (location.equals(BuiltinDimensionTypes.OVERWORLD.location()) || location.equals(BuiltinDimensionTypes.OVERWORLD_CAVES.location())) {
+			returnValue = getOverworldSurfaceRules();
+		} else if (location.equals(BuiltinDimensionTypes.NETHER.location())) {
+			returnValue = getNetherSurfaceRules();
+		} else if (location.equals(BuiltinDimensionTypes.END.location())) {
+			returnValue = getEndSurfaceRules();
+		}
+
+		// get generic dimension surface rules
+		SurfaceRules.RuleSource generic = getGenericSurfaceRules(dimension);
+
+		if (generic != null) {
+			if (returnValue == null) {
+				returnValue = generic;
+			} else {
+				returnValue = SurfaceRules.sequence(returnValue, generic);
+			}
+		}
+
+		return returnValue;
+	}
+
+	@Nullable
+	public static SurfaceRules.RuleSource getOverworldSurfaceRules() {
+		SurfaceRules.RuleSource newRule = null;
+		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
+
+		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldSurfaceRules(sourceHolders);
+		SurfaceRules.RuleSource newSource = sequence(sourceHolders);
+
+		newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
+		newRule = newSource;
+
+		// NO PRELIM
+
+		ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
+		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimSurfaceRules(noPrelimSourceHolders);
+
+		SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
+		newRule = SurfaceRules.sequence(noPrelimSource, newRule);
+
+		return newRule;
+	}
+
+	@Nullable
+	public static SurfaceRules.RuleSource getNetherSurfaceRules() {
+		SurfaceRules.RuleSource newSource = null;
+		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
+
+		SurfaceRuleEvents.MODIFY_NETHER.invoker().addNetherSurfaceRules(sourceHolders);
+
+		for (SurfaceRules.RuleSource rule : sourceHolders) {
+			if (newSource == null) {
+				newSource = rule;
+			} else {
+				newSource = SurfaceRules.sequence(newSource, rule);
+			}
+		}
+
+		return newSource;
+	}
+
+	@Nullable
+	public static SurfaceRules.RuleSource getEndSurfaceRules() {
+		SurfaceRules.RuleSource newSource = null;
+		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
+
+		SurfaceRuleEvents.MODIFY_END.invoker().addEndSurfaceRules(sourceHolders);
+
+		for (SurfaceRules.RuleSource rule : sourceHolders) {
+			if (newSource == null) {
+				newSource = rule;
+			} else {
+				newSource = SurfaceRules.sequence(newSource, rule);
+			}
+		}
+
+		return newSource;
+	}
+
+	@Nullable
+	public static SurfaceRules.RuleSource getGenericSurfaceRules(ResourceKey<DimensionType> dimension) {
+		SurfaceRules.RuleSource newSource = null;
+		ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
+
+		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(sourceHolders);
+
+		for (FrozenDimensionBoundRuleSource dimRuleSource : sourceHolders) {
+			if (dimRuleSource.dimension().equals(dimension.location())) {
+				if (newSource == null) {
+					newSource = dimRuleSource.ruleSource();
+				} else {
+					newSource = SurfaceRules.sequence(newSource, dimRuleSource.ruleSource());
+				}
+			}
+		}
+
+		return newSource;
+	}
 }
