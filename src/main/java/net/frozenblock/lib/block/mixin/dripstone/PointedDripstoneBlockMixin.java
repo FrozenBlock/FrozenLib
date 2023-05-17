@@ -74,27 +74,27 @@ public class PointedDripstoneBlockMixin {
         if (FrozenBools.useNewDripstoneLiquid) {
             info.setReturnValue(
 
-            !isStalactite(state) ? Optional.empty() : findRootBlock(level, pos, state, 11).map((posx) -> {
+                !isStalactite(state) ? Optional.empty() : findRootBlock(level, pos, state, 11).map((posx) -> {
 
-                BlockState firstState = level.getBlockState(posx);
-                if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(firstState.getBlock()) && !level.dimensionType().ultraWarm()) {
-                    return new PointedDripstoneBlock.FluidInfo(posx, Fluids.WATER, firstState);
-                } else if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(firstState.getBlock())) {
-                    return new PointedDripstoneBlock.FluidInfo(posx, Fluids.LAVA, firstState);
-                }
-                BlockPos blockPos = posx.above();
-                BlockState blockState = level.getBlockState(blockPos);
-                Fluid fluid;
-                if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
-                    return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState);
-                } else if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock())) {
-                    return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState);
-                } else {
-                    fluid = level.getFluidState(blockPos).getType();
-                }
+                    BlockState firstState = level.getBlockState(posx);
+                    if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(firstState.getBlock()) && !level.dimensionType().ultraWarm()) {
+                        return new PointedDripstoneBlock.FluidInfo(posx, Fluids.WATER, firstState);
+                    } else if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(firstState.getBlock())) {
+                        return new PointedDripstoneBlock.FluidInfo(posx, Fluids.LAVA, firstState);
+                    }
+                    BlockPos blockPos = posx.above();
+                    BlockState blockState = level.getBlockState(blockPos);
+                    Fluid fluid;
+                    if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
+                        return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState);
+                    } else if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock())) {
+                        return new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState);
+                    } else {
+                        fluid = level.getFluidState(blockPos).getType();
+                    }
 
-                return new PointedDripstoneBlock.FluidInfo(blockPos, fluid, blockState);
-            })
+                    return new PointedDripstoneBlock.FluidInfo(blockPos, fluid, blockState);
+                })
             );
         }
     }
@@ -122,7 +122,6 @@ public class PointedDripstoneBlockMixin {
             Predicate<BlockState> predicate = tagPredicate.or(state -> (state.getBlock() instanceof AbstractCauldronBlock && ((AbstractCauldronBlock) state.getBlock()).canReceiveStalactiteDrip(fluid)));
             BiPredicate<BlockPos, BlockState> biPredicate = (pos, state) -> canDripThrough(world, pos, state);
             info.setReturnValue(findBlockVertical(world, pos2, Direction.DOWN.getAxisDirection(), biPredicate, predicate, 11).orElse(null));
-            info.cancel();
         }
 
     }

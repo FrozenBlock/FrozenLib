@@ -16,16 +16,14 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.biome.api.parameters;
+package net.frozenblock.lib;
 
-import java.util.ArrayList;
-import java.util.List;
-import net.minecraft.world.level.biome.Climate;
+import com.llamalad7.mixinextras.MixinExtrasBootstrap;
+import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
 
-public class BiomeParameters {
-	public final List<Climate.ParameterPoint> points = new ArrayList<>();
-
-	public void add(Climate.ParameterPoint... points) {
-		this.points.addAll(List.of(points));
+public class FrozenPreLaunch implements PreLaunchEntrypoint {
+	@Override
+	public void onPreLaunch() {
+		MixinExtrasBootstrap.init();
 	}
 }
