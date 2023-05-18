@@ -39,6 +39,6 @@ public class SequenceMaterialRuleMixin implements QuiltSequenceMaterialRuleHooks
 
     @Override
     public void frozenLib_quilt$freeze() {
-        this.sequence = List.copyOf(this.sequence);
+        this.sequence = List.copyOf(this.sequence); // List.copyOf() is immutable
     }
 }
