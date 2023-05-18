@@ -63,7 +63,7 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 		BlockPos blockPos = null;
 
 		for(BlockPos blockPos2 : iterable) {
-			if (this.givesAir(entity.level, blockPos2)) {
+			if (this.givesAir(entity.level(), blockPos2)) {
 				blockPos = blockPos2;
 				break;
 			}

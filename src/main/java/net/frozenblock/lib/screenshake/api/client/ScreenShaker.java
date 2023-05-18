@@ -153,7 +153,7 @@ public class ScreenShaker {
 		private final Entity entity;
 
 		public ClientEntityScreenShake(Entity entity, float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
-			super((ClientLevel) entity.level, intensity, duration, durationFalloffStart, entity.position(), maxDistance, ticks);
+			super((ClientLevel) entity.level(), intensity, duration, durationFalloffStart, entity.position(), maxDistance, ticks);
 			this.entity = entity;
 		}
 
@@ -173,7 +173,7 @@ public class ScreenShaker {
 		@Override
 		public void tick() {
 			super.tick();
-			this.level = (ClientLevel) this.entity.level;
+			this.level = (ClientLevel) this.entity.level();
 		}
 
 		@Override

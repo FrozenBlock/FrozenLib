@@ -70,7 +70,8 @@ public class ScreenShakeCommand {
 	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
 		ScreenShakeManager.addScreenShake(source.getLevel(), intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance);
-		source.sendSuccess(Component.translatable("commands.screenshake.success", vec3.x(), vec3.y(), vec3.z(), intensity, duration, durationFalloffStart, maxDistance), true);
+		Vec3 finalVec = vec3;
+		source.sendSuccess(() -> Component.translatable("commands.screenshake.success", finalVec.x(), finalVec.y(), finalVec.z(), intensity, duration, durationFalloffStart, maxDistance), true);
 		return 1;
 	}
 
@@ -82,7 +83,8 @@ public class ScreenShakeCommand {
 			ServerPlayNetworking.send(serverPlayer, FrozenMain.SCREEN_SHAKE_PACKET, screenShakeByteBuf);
 			playerString.append(serverPlayer.getDisplayName().getString()).append(", ");
 		}
-		source.sendSuccess(Component.translatable("commands.screenshake.player.success", playerString.toString(), vec3.x(), vec3.y(), vec3.z(), intensity, duration, durationFalloffStart, maxDistance), true);
+		Vec3 finalVec = vec3;
+		source.sendSuccess(() -> Component.translatable("commands.screenshake.player.success", playerString.toString(), finalVec.x(), finalVec.y(), finalVec.z(), intensity, duration, durationFalloffStart, maxDistance), true);
 
 		return 1;
 	}
@@ -93,7 +95,7 @@ public class ScreenShakeCommand {
 			ScreenShakeManager.addEntityScreenShake(entity, intensity, duration, durationFalloffStart, maxDistance);
 			entityString.append(entity.getDisplayName().getString()).append(", ");
 		}
-		source.sendSuccess(Component.translatable("commands.screenshake.entity.success", entityString.toString(), intensity, duration, durationFalloffStart, maxDistance), true);
+		source.sendSuccess(() -> Component.translatable("commands.screenshake.entity.success", entityString.toString(), intensity, duration, durationFalloffStart, maxDistance), true);
 		return 1;
 	}
 
@@ -105,7 +107,7 @@ public class ScreenShakeCommand {
 			ServerPlayNetworking.send(serverPlayer, FrozenMain.REMOVE_SCREEN_SHAKES_PACKET, friendlyByteBuf);
 			playerString.append(serverPlayer.getDisplayName().getString()).append(onePlayer ? "" : ", ");
 		}
-		source.sendSuccess(Component.translatable(onePlayer ? "commands.screenshake.remove.player.success" : "commands.screenshake.remove.player.success.multiple", playerString.toString()), true);
+		source.sendSuccess(() -> Component.translatable(onePlayer ? "commands.screenshake.remove.player.success" : "commands.screenshake.remove.player.success.multiple", playerString.toString()), true);
 		return 1;
 	}
 
@@ -132,7 +134,7 @@ public class ScreenShakeCommand {
 		}
 
 		if (entityAmount > 0) {
-			source.sendSuccess(Component.translatable(oneEntity ? "commands.screenshake.remove.entity.success" : "commands.screenshake.remove.entity.success.multiple", entityString.toString()), true);
+			source.sendSuccess(() -> Component.translatable(oneEntity ? "commands.screenshake.remove.entity.success" : "commands.screenshake.remove.entity.success.multiple", entityString.toString()), true);
 			return 1;
 		} else {
 			source.sendFailure(Component.translatable("commands.screenshake.remove.entity.failure"));

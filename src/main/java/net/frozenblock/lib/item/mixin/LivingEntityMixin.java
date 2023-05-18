@@ -45,7 +45,7 @@ public abstract class LivingEntityMixin {
 				info.cancel();
 				this.useItem = stack;
 				this.useItemRemaining = stack.getUseDuration();
-				if (!entity.level.isClientSide) {
+				if (!entity.level().isClientSide) {
 					this.setLivingEntityFlag(1, true);
 					this.setLivingEntityFlag(2, hand == InteractionHand.OFF_HAND);
 				}
@@ -56,7 +56,7 @@ public abstract class LivingEntityMixin {
 	@Inject(method = "stopUsingItem", at = @At("HEAD"), cancellable = true)
 	public void preventStoppingGameEvent(CallbackInfo info) {
 		LivingEntity entity = LivingEntity.class.cast(this);
-		if (!entity.level.isClientSide) {
+		if (!entity.level().isClientSide) {
 			ItemStack stack = entity.getUseItem();
 			if (stack.is(FrozenItemTags.NO_USE_GAME_EVENTS)) {
 				this.setLivingEntityFlag(1, false);

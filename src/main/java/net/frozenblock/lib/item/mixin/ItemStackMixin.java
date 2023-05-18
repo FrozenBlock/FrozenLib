@@ -50,7 +50,7 @@ public final class ItemStackMixin {
 		}
 	}
 
-	@Inject(method = "tagMatches", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "isSameItemSameTags", at = @At("HEAD"))
 	private static void removeAncientTagAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
 		CompoundTag lTag = left.getTag();
 		if (lTag != null) {
@@ -75,21 +75,5 @@ public final class ItemStackMixin {
 				right.tag = null;
 			}
 		}
-
-		if (tagIsNullMatching(left, right)) {
-			info.setReturnValue(true);
-		}
-	}
-
-	@Inject(at = @At(value = "RETURN", ordinal = 2, shift = At.Shift.BEFORE), method = "matches(Lnet/minecraft/world/item/ItemStack;)Z", cancellable = true)
-	private void matches(ItemStack other, CallbackInfoReturnable<Boolean> info) {
-		info.setReturnValue(tagIsNullMatching(ItemStack.class.cast(this), other));
-	}
-
-	@Unique
-	private static boolean tagIsNullMatching(ItemStack stack, ItemStack other) {
-		boolean stackTagEmpty = stack.tag == null || stack.tag.isEmpty();
-		boolean otherTagEmpty = other.tag == null || other.tag.isEmpty();
-		return stackTagEmpty && otherTagEmpty;
 	}
 }

@@ -47,6 +47,6 @@ public abstract class WardenMixin extends Monster {
 
 	@Inject(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
 	private void startShaking(Entity target, CallbackInfoReturnable<Boolean> cir) {
-		ScreenShakeManager.addScreenShake(this.level, 0.6F, 8, this.getX(), this.getY(), this.getZ(), 15);
+		ScreenShakeManager.addScreenShake(this.level(), 0.6F, 8, this.getX(), this.getY(), this.getZ(), 15);
 	}
 }

@@ -19,6 +19,7 @@
 package net.frozenblock.lib.config.api.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -80,10 +81,10 @@ public class FrozenConfigScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
-		renderBackground(matrices);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		renderBackground(graphics);
 
-		super.render(matrices, mouseX, mouseY, delta);
+		super.render(graphics, mouseX, mouseY, delta);
 	}
 
 	protected final boolean quit() {
