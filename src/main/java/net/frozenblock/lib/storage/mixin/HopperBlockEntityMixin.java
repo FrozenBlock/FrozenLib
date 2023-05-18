@@ -38,6 +38,7 @@ public class HopperBlockEntityMixin {
     @Inject(at = @At("HEAD"), method = "ejectItems", cancellable = true)
     private static void preventEjection(Level world, BlockPos pos, BlockState state, Container inventory, CallbackInfoReturnable<Boolean> info) {
         if (HopperUntouchableList.inventoryContainsBlacklisted(getAttachedContainer(world, pos, state))) {
+            info.cancel();
             info.setReturnValue(false);
         }
     }
@@ -45,6 +46,7 @@ public class HopperBlockEntityMixin {
     @Inject(at = @At("HEAD"), method = "suckInItems", cancellable = true)
     private static void preventInsertion(Level world, Hopper hopper, CallbackInfoReturnable<Boolean> info) {
         if (HopperUntouchableList.inventoryContainsBlacklisted(getSourceContainer(world, hopper))) {
+            info.cancel();
             info.setReturnValue(false);
         }
     }

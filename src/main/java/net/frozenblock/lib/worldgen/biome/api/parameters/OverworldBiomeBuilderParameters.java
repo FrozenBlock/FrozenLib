@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceKey;
@@ -32,11 +31,7 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.biome.Climate;
 
-public final class OverworldBiomeBuilderParameters {
-	private OverworldBiomeBuilderParameters() {
-		throw new UnsupportedOperationException("OverworldBiomeBuilderParameters contains only static declarations.");
-	}
-
+public class OverworldBiomeBuilderParameters {
 	public static final float VALLEY_SIZE = 0.05F;
 	public static final float LOW_START = 0.26666668F;
 	public static final float HIGH_START = 0.4F;
@@ -124,7 +119,7 @@ public final class OverworldBiomeBuilderParameters {
 			{null, null, null, null, null}
 	};
 
-	public static final Map<ResourceLocation, BiomeParameters> BIOMES = new LinkedHashMap<>();
+	public static final HashMap<ResourceLocation, BiomeParameters> BIOMES = new LinkedHashMap<>();
 	private static boolean hasRun = false;
 
 	public static BiomeParameters getParameters(ResourceLocation location) {
@@ -178,8 +173,7 @@ public final class OverworldBiomeBuilderParameters {
 		}
 	}
 
-	private static final List<Climate.ParameterPoint> OFF_COAST_POINTS = new ArrayList<>();
-
+	private static List<Climate.ParameterPoint> OFF_COAST_POINTS = new ArrayList<>();
 	public static List<Climate.ParameterPoint> getOffCoastPoints() {
 		runBiomes();
 		return OFF_COAST_POINTS;
@@ -374,8 +368,8 @@ public final class OverworldBiomeBuilderParameters {
 
 			for(int j = 0; j < HUMIDITIES.length; ++j) {
 				Climate.Parameter humidity = HUMIDITIES[j];
-				ResourceLocation resourceLocation = pickMiddleBiomeOrBadlandsIfHot(i, j, param);
-				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, resourceLocation);
+				ResourceLocation ResourceLocation = pickMiddleBiomeOrBadlandsIfHot(i, j, param);
+				addSurfaceBiome(consumer, temperature, humidity, Climate.Parameter.span(MID_INLAND_CONTINENTALNESS, FAR_INLAND_CONTINENTALNESS), Climate.Parameter.span(EROSIONS[0], EROSIONS[1]), param, 0.0F, ResourceLocation);
 			}
 		}
 
@@ -391,8 +385,8 @@ public final class OverworldBiomeBuilderParameters {
 		if (param.max() < 0L) {
 			return MIDDLE_BIOMES[temperature][humidity];
 		} else {
-			ResourceLocation resourceLocation = MIDDLE_BIOMES_VARIANT[temperature][humidity];
-			return resourceLocation == null ? MIDDLE_BIOMES[temperature][humidity] : resourceLocation;
+			ResourceLocation ResourceLocation = MIDDLE_BIOMES_VARIANT[temperature][humidity];
+			return ResourceLocation == null ? MIDDLE_BIOMES[temperature][humidity] : ResourceLocation;
 		}
 	}
 
@@ -409,8 +403,8 @@ public final class OverworldBiomeBuilderParameters {
 	}
 
 	private static ResourceLocation pickShatteredCoastBiome(int temperature, int humidity, Climate.Parameter param) {
-		ResourceLocation resourceLocation = param.max() >= 0L ? pickMiddleBiome(temperature, humidity, param) : pickBeachBiome(temperature, humidity);
-		return maybePickWindsweptSavannaBiome(temperature, humidity, param, resourceLocation);
+		ResourceLocation ResourceLocation = param.max() >= 0L ? pickMiddleBiome(temperature, humidity, param) : pickBeachBiome(temperature, humidity);
+		return maybePickWindsweptSavannaBiome(temperature, humidity, param, ResourceLocation);
 	}
 
 	private static ResourceLocation pickBeachBiome(int temperature, int humidity) {
@@ -433,8 +427,8 @@ public final class OverworldBiomeBuilderParameters {
 		if (param.max() < 0L) {
 			return PLATEAU_BIOMES[temperature][humidity];
 		} else {
-			ResourceLocation resourceLocation = PLATEAU_BIOMES_VARIANT[temperature][humidity];
-			return resourceLocation == null ? PLATEAU_BIOMES[temperature][humidity] : resourceLocation;
+			ResourceLocation ResourceLocation = PLATEAU_BIOMES_VARIANT[temperature][humidity];
+			return ResourceLocation == null ? PLATEAU_BIOMES[temperature][humidity] : ResourceLocation;
 		}
 	}
 
@@ -455,8 +449,8 @@ public final class OverworldBiomeBuilderParameters {
 	}
 
 	private static ResourceLocation pickShatteredBiome(int temperature, int humidity, Climate.Parameter param) {
-		ResourceLocation resourceLocation = SHATTERED_BIOMES[temperature][humidity];
-		return resourceLocation == null ? pickMiddleBiome(temperature, humidity, param) : resourceLocation;
+		ResourceLocation ResourceLocation = SHATTERED_BIOMES[temperature][humidity];
+		return ResourceLocation == null ? pickMiddleBiome(temperature, humidity, param) : ResourceLocation;
 	}
 
 	private static void addSurfaceBiome(Consumer<Pair<ResourceLocation, Climate.ParameterPoint>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness, ResourceLocation key) {

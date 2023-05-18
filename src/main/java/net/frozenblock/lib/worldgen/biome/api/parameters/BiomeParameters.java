@@ -23,7 +23,10 @@ import java.util.List;
 import net.minecraft.world.level.biome.Climate;
 
 public class BiomeParameters {
-	public final List<Climate.ParameterPoint> points = new ArrayList<>();
+	public final ArrayList<Climate.ParameterPoint> points = new ArrayList<>();
+
+	public BiomeParameters() {
+	}
 
 	public void add(Climate.ParameterPoint... points) {
 		this.points.addAll(List.of(points));

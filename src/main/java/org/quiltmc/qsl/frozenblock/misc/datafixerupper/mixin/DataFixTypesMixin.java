@@ -18,13 +18,14 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.datafixers.DataFixer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 /**
  * Modified to work on Fabric
@@ -32,13 +33,14 @@ import org.spongepowered.asm.mixin.injection.At;
  */
 @Mixin(value = DataFixTypes.class, priority = 1001)
 public abstract class DataFixTypesMixin {
-    @ModifyReturnValue(
+    @Inject(
             method = "update(Lcom/mojang/datafixers/DataFixer;Lnet/minecraft/nbt/CompoundTag;II)Lnet/minecraft/nbt/CompoundTag;",
-            at = @At("RETURN")
+            at = @At("RETURN"),
+            cancellable = true
     )
-    private CompoundTag updateDataWithFixers(CompoundTag original, DataFixer fixer, CompoundTag compound,
-													int oldVersion, int targetVersion) {
-		var type = DataFixTypes.class.cast(this);
-        return QuiltDataFixesInternals.get().updateWithAllFixers(type, original);
+    private void updateDataWithFixers(DataFixer fixer, CompoundTag compound,
+                                             int oldVersion, int targetVersion, CallbackInfoReturnable<CompoundTag> cir) {
+        var type = DataFixTypes.class.cast(this);
+        cir.setReturnValue(QuiltDataFixesInternals.get().updateWithAllFixers(type, cir.getReturnValue()));
     }
 }

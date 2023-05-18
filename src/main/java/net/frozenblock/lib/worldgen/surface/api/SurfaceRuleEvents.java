@@ -18,86 +18,84 @@
 
 package net.frozenblock.lib.worldgen.surface.api;
 
-import java.util.List;
+import java.util.ArrayList;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
-/**
- * Events that allows adding surface rules to dimensions.
- * <p>
- * Defined with the {@code frozenlib:events} key in {@code fabric.mod.json}.
- * <p>
- * Compatible with TerraBlender.
- */
 public class SurfaceRuleEvents {
 
 	/**
 	 * Lets you modify the Surface Rules of Overworld-based world presets.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
 	public static final Event<OverworldSurfaceRuleCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addOverworldSurfaceRules(context);
+			callback.addRuleSources(context);
 		}
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of Overworld-based world presets without checking the preliminary surface.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
 	public static final Event<OverworldSurfaceRuleNoPrelimSurfaceCallback> MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleNoPrelimSurfaceCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addOverworldNoPrelimSurfaceRules(context);
+			callback.addRuleSources(context);
 		}
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of Nether-based world presets.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
 	public static final Event<NetherSurfaceRuleCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addNetherSurfaceRules(context);
+			callback.addRuleSources(context);
 		}
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of End-based world presets.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
 	public static final Event<EndSurfaceRuleCallback> MODIFY_END = FrozenEvents.createEnvironmentEvent(EndSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addEndSurfaceRules(context);
+			callback.addRuleSources(context);
 		}
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of custom world presets.
+	 * Currently does not work, use {@link FrozenSurfaceRuleEntrypoint} instead.
 	 */
 	public static final Event<GenericSurfaceRuleCallback> MODIFY_GENERIC = FrozenEvents.createEnvironmentEvent(GenericSurfaceRuleCallback.class, callbacks -> context -> {
 		for (var callback : callbacks) {
-			callback.addGenericSurfaceRules(context);
+			callback.addRuleSources(context);
 		}
 	});
 
 	public interface OverworldSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addOverworldSurfaceRules(List<SurfaceRules.RuleSource> context);
+		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
 	}
 
 
 	public interface OverworldSurfaceRuleNoPrelimSurfaceCallback extends CommonEventEntrypoint {
-		void addOverworldNoPrelimSurfaceRules(List<SurfaceRules.RuleSource> context);
+		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
 	}
 
 
 	public interface NetherSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addNetherSurfaceRules(List<SurfaceRules.RuleSource> context);
+		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
 	}
 
 
 	public interface EndSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addEndSurfaceRules(List<SurfaceRules.RuleSource> context);
+		void addRuleSources(ArrayList<SurfaceRules.RuleSource> context);
 	}
 
 	public interface GenericSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addGenericSurfaceRules(List<FrozenDimensionBoundRuleSource> context);
+		void addRuleSources(ArrayList<FrozenDimensionBoundRuleSource> context);
 	}
 }

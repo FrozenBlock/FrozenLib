@@ -18,81 +18,38 @@
 
 package net.frozenblock.lib.registry.api;
 
-import com.mojang.serialization.Lifecycle;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.MappedRegistry;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.resources.ResourceKey;
 
 public class FrozenRegistry {
-	private FrozenRegistry() {
-		throw new UnsupportedOperationException("FrozenRegistry contains only static declarations.");
-	}
 
-	public static final ResourceKey<Registry<ModIntegrationSupplier<?>>> MOD_INTEGRATION_REGISTRY = ResourceKey.createRegistryKey(FrozenMain.id("mod_integration"));
-	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenMain.id("sound_predicate"));
-	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenMain.id("sound_predicate_unsynced"));
-	public static final ResourceKey<Registry<SpottingIconPredicate<?>>> SPOTTING_ICON_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenMain.id("spotting_icon_predicate"));
+	public static final MappedRegistry<ModIntegrationSupplier> MOD_INTEGRATION = FabricRegistryBuilder.createSimple(ModIntegrationSupplier.class, FrozenMain.id("mod_integration"))
+			.buildAndRegister();
 
+	public static final MappedRegistry<SoundPredicate> SOUND_PREDICATE = FabricRegistryBuilder.createSimple(SoundPredicate.class, FrozenMain.id("sound_predicate_synced"))
+			.attribute(RegistryAttribute.SYNCED)
+			.buildAndRegister();
 
-	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = createSimple(MOD_INTEGRATION_REGISTRY, Lifecycle.stable(), null,
-		registry -> Registry.register(registry, FrozenMain.id("dummy"), new ModIntegrationSupplier<>(() -> new ModIntegration("dummy") {
-			@Override
-			public void init() {
-			}
-		}, "dummy"))
-	);
+	public static final MappedRegistry<SoundPredicate> SOUND_PREDICATE_UNSYNCED = FabricRegistryBuilder.createSimple(SoundPredicate.class, FrozenMain.id("sound_predicate"))
+			.buildAndRegister();
 
-	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE = createSimple(SOUND_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
-		registry -> Registry.register(registry, FrozenMain.id("dummy"), new SoundPredicate<>(entity -> false))
-	);
-
-	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE_UNSYNCED = createSimple(SOUND_PREDICATE_UNSYNCED_REGISTRY, Lifecycle.stable(), null,
-		registry -> Registry.register(registry, FrozenMain.id("dummy"), new SoundPredicate<>(entity -> false))
-	);
-
-	public static final MappedRegistry<SpottingIconPredicate<?>> SPOTTING_ICON_PREDICATE = createSimple(SPOTTING_ICON_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
-		registry -> Registry.register(registry, FrozenMain.id("dummy"), new SpottingIconPredicate<>(entity -> false))
-	);
+	public static final MappedRegistry<SpottingIconPredicate> SPOTTING_ICON_PREDICATE = FabricRegistryBuilder.createSimple(SpottingIconPredicate.class, FrozenMain.id("spotting_icon_predicate_synced"))
+			.attribute(RegistryAttribute.SYNCED)
+			.buildAndRegister();
 
 	public static HolderLookup.Provider vanillaRegistries() {
 		return VanillaRegistries.createLookup();
 	}
 
     public static void initRegistry() {
+		// NO-OP
+		// This is just to make sure the registry is initialized.
     }
-
-	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle) {
-		return createSimple(key, lifecycle, null);
-	}
-
-	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute) {
-		return createSimple(key, lifecycle, attribute, null);
-	}
-
-	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute, BuiltInRegistries.RegistryBootstrap<T> bootstrap) {
-		var registry = new MappedRegistry<>(key, lifecycle, false);
-		var fabricRegistryBuilder = FabricRegistryBuilder.from(registry);
-
-		if (attribute != null) {
-			fabricRegistryBuilder.attribute(attribute);
-		}
-
-		var registeredRegistry = fabricRegistryBuilder.buildAndRegister();
-
-		if (bootstrap != null) {
-			bootstrap.run(registeredRegistry);
-		}
-
-		return registeredRegistry;
-	}
 }

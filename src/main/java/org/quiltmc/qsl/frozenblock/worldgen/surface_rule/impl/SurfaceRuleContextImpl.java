@@ -18,7 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl;
 
-import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
+import net.frozenblock.lib.worldgen.surface.FrozenSurfaceRules;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.world.level.levelgen.SurfaceRules;

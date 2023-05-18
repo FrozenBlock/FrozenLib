@@ -40,6 +40,7 @@ import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
+import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -63,6 +64,7 @@ public final class FrozenMain implements ModInitializer {
 	 */
 	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
 
+	public static final List<EntrypointContainer<FrozenSurfaceRuleEntrypoint>> SURFACE_RULE_ENTRYPOINTS = FabricLoader.getInstance().getEntrypointContainers("frozenlib:surfacerules", FrozenSurfaceRuleEntrypoint.class);
 	public static final List<EntrypointContainer<BuiltInLootTablesEntrypoint>> LOOT_TABLE_ENTRYPOINTS = FabricLoader.getInstance().getEntrypointContainers("frozenlib:loottables", BuiltInLootTablesEntrypoint.class);
 
 	@Override

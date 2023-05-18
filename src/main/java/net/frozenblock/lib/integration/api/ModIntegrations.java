@@ -55,7 +55,7 @@ public final class ModIntegrations {
 		return Registry.register(FrozenRegistry.MOD_INTEGRATION, new ResourceLocation(srcModID, modID), new ModIntegrationSupplier<>(integration, unloadedIntegration, modID));
 	}
 
-    public static List<ModIntegrationSupplier<?>> getIntegrationSuppliers() {
+    public static List<ModIntegrationSupplier> getIntegrationSuppliers() {
         return FrozenRegistry.MOD_INTEGRATION.stream().toList();
     }
 

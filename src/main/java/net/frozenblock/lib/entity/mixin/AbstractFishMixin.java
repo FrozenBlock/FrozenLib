@@ -39,8 +39,8 @@ public abstract class AbstractFishMixin extends WaterAnimal {
 	private void noFlop(CallbackInfo ci) {
 		AbstractFish fish = AbstractFish.class.cast(this);
 		if (fish instanceof NoFlopAbstractFish) {
-			super.aiStep();
 			ci.cancel();
+			super.aiStep();
 		}
 	}
 }

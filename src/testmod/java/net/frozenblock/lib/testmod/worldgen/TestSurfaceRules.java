@@ -1,38 +1,34 @@
 /*
- * Copyright 2023 QuiltMC
  * Copyright 2023 FrozenBlock
- * Modified to work on Fabric
+ * This file is part of FrozenLib.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.testmod.worldgen;
 
 import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
-import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.biome.Biomes;
+import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRuleEntrypoint;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Noises;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
-import java.util.List;
+import java.util.ArrayList;
 
-public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleCallback,
-	SurfaceRuleEvents.NetherSurfaceRuleCallback, SurfaceRuleEvents.EndSurfaceRuleCallback,
-	SurfaceRuleEvents.GenericSurfaceRuleCallback {
+public class TestSurfaceRules implements FrozenSurfaceRuleEntrypoint {
     @Override
-    public void addOverworldSurfaceRules(List<SurfaceRules.RuleSource> context) {
+    public void addOverworldSurfaceRules(ArrayList<SurfaceRules.RuleSource> context) {
         // When in doubt, T R A N S. Seed 7205143747332514273 is a good one for testing.
         SurfaceRules.ConditionSource blueNoise1 = SurfaceRules.noiseCondition(Noises.CALCITE, 0.05, 0.1);
         SurfaceRules.ConditionSource pinkNoise1 = SurfaceRules.noiseCondition(Noises.CALCITE, 0.1, 0.15);
@@ -62,38 +58,18 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
     }
 
     @Override
-    public void addNetherSurfaceRules(List<SurfaceRules.RuleSource> context) {
-		context.add(
-			SurfaceRules.state(Blocks.SPONGE.defaultBlockState())
-		);
+    public void addOverworldSurfaceRulesNoPrelimSurface(ArrayList<SurfaceRules.RuleSource> context) {
     }
 
     @Override
-    public void addEndSurfaceRules(List<SurfaceRules.RuleSource> context) {
-		context.add(
-			SurfaceRules.state(Blocks.BIRCH_LOG.defaultBlockState())
-		);
+    public void addNetherSurfaceRules(ArrayList<SurfaceRules.RuleSource> context) {
     }
 
     @Override
-    public void addGenericSurfaceRules(List<FrozenDimensionBoundRuleSource> context) {
-		context.add(new FrozenDimensionBoundRuleSource(
-			new ResourceLocation("overworld"),
-			SurfaceRules.sequence(
-				SurfaceRules.ifTrue(
-					SurfaceRules.isBiome(Biomes.BIRCH_FOREST),
-					SurfaceRules.state(Blocks.HAY_BLOCK.defaultBlockState())
-				)
-			)
-		));
-		context.add(new FrozenDimensionBoundRuleSource(
-			new ResourceLocation("the_nether"),
-			SurfaceRules.sequence(
-				SurfaceRules.ifTrue(
-					SurfaceRules.isBiome(Biomes.WARPED_FOREST),
-					SurfaceRules.state(Blocks.COARSE_DIRT.defaultBlockState())
-				)
-			)
-		));
+    public void addEndSurfaceRules(ArrayList<SurfaceRules.RuleSource> context) {
+    }
+
+    @Override
+    public void addSurfaceRules(ArrayList<FrozenDimensionBoundRuleSource> context) {
     }
 }

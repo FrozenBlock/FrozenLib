@@ -18,7 +18,6 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
@@ -33,9 +32,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(value = StructureTemplate.class, priority = 1001)
 public abstract class StructureTemplateMixin {
-    @ModifyReturnValue(method = "save", at = @At("RETURN"))
-    private CompoundTag addModDataVersions(CompoundTag out, CompoundTag compound) {
+    @Inject(method = "save", at = @At("TAIL"), cancellable = true)
+    private void addModDataVersions(CompoundTag compound, CallbackInfoReturnable<CompoundTag> cir) {
+        CompoundTag out = cir.getReturnValue();
         QuiltDataFixesInternals.get().addModDataVersions(out);
-        return out;
+        cir.setReturnValue(out);
     }
 }
