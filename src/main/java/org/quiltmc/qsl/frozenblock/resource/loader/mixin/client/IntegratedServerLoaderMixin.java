@@ -49,9 +49,9 @@ public abstract class IntegratedServerLoaderMixin {
             method = "loadWorldDataBlocking",
             at = @At("HEAD")
     )
-    private void onStartDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
-									 WorldLoader.ResultFactory resultFactory,
-                                     CallbackInfoReturnable<WorldStem> cir) {
+    private <D, R> void onStartDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<D> savePropertiesSupplier,
+									 WorldLoader.ResultFactory<D, R> resultFactory,
+                                     CallbackInfoReturnable<R> cir) {
         ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
     }
 
@@ -59,10 +59,12 @@ public abstract class IntegratedServerLoaderMixin {
             method = "loadWorldDataBlocking",
             at = @At("RETURN")
     )
-    private void onEndDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
-								   WorldLoader.ResultFactory resultFactory,
-                                   CallbackInfoReturnable<WorldStem> cir) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, cir.getReturnValue().resourceManager(), null);
+    private <D, R> void onEndDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<D> savePropertiesSupplier,
+								   WorldLoader.ResultFactory<D, R> resultFactory,
+                                   CallbackInfoReturnable<R> cir) {
+		if (cir.getReturnValue() instanceof WorldStem worldStem) {
+			ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, worldStem.resourceManager(), null);
+		}
     }
 
     @ModifyArg(
