@@ -105,7 +105,7 @@ public class CircularWaterloggedVegetationPatchFeature extends VegetationPatchFe
 	@Override
 	protected Set<BlockPos> placeGroundPatch(WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos pos, Predicate<BlockState> state, int xRadius, int zRadius) {
 		Set<BlockPos> set = this.placeCircularGroundPatch(level, config, random, pos, state, xRadius, zRadius);
-		Set<BlockPos> set2 = new HashSet();
+		Set<BlockPos> set2 = new HashSet<>();
 		MutableBlockPos mutableBlockPos = new MutableBlockPos();
 		Iterator<BlockPos> var11 = set.iterator();
 

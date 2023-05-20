@@ -110,7 +110,7 @@ public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
 			consumer.accept(level);
 		} else {
 			ServerLevel serverLevel = level.getLevel();
-			serverLevel.getServer().execute(() -> consumer.accept(serverLevel));
+			serverLevel.getServer().executeBlocking(() -> consumer.accept(serverLevel));
 		}
 
 		return true;
