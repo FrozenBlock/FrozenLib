@@ -24,6 +24,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.jetbrains.annotations.NotNull;
 
 public final class BiomeTagConditionSource implements SurfaceRules.ConditionSource {
 	public static final KeyDispatchDataCodec<BiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.mapCodec((instance) ->
@@ -37,6 +38,7 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 
 	private final TagKey<Biome> biomeTagKey;
 
+	@NotNull
 	public static BiomeTagConditionSource isBiomeTag(TagKey<Biome> biomeTagKey) {
 		return new BiomeTagConditionSource(biomeTagKey);
 	}
@@ -45,16 +47,21 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 		this.biomeTagKey = biomeTagKey;
 	}
 
+	@Override
+	@NotNull
 	public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
 		return CODEC;
 	}
 
+	@Override
+	@NotNull
 	public SurfaceRules.Condition apply(SurfaceRules.Context context) {
 		class BiomeTagCondition extends SurfaceRules.LazyYCondition {
-			BiomeTagCondition(SurfaceRules.Context context) {
+			BiomeTagCondition(@NotNull SurfaceRules.Context context) {
 				super(context);
 			}
 
+			@Override
 			protected boolean compute() {
 				return this.context.biome.get().is(BiomeTagConditionSource.this.biomeTagKey);
 			}
@@ -63,6 +70,7 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 		return new BiomeTagCondition(context);
 	}
 
+	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
 			return true;
@@ -73,10 +81,13 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		return this.biomeTagKey.hashCode();
 	}
 
+	@Override
+	@NotNull
 	public String toString() {
 		return "BiomeConditionSource[biomeTagKey=" + this.biomeTagKey + "]";
 	}

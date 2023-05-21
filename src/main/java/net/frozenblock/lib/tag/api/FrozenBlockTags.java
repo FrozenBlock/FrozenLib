@@ -19,7 +19,6 @@
 package net.frozenblock.lib.tag.api;
 
 import net.frozenblock.lib.FrozenMain;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;

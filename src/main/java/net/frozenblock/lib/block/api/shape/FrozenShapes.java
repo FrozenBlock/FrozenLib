@@ -19,11 +19,11 @@
 package net.frozenblock.lib.block.api.shape;
 
 import com.google.common.collect.Maps;
+import java.util.Map;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import java.util.Map;
 
 public class FrozenShapes {
 	private static final VoxelShape UP_PLANE = Block.box(0.0, 15.0, 0.0, 16.0, 16.0, 16.0);

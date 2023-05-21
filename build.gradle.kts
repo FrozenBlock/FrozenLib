@@ -48,10 +48,11 @@ val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
 
-val modmenu_version: String by project
-val cloth_config_version: String by project
-val copperpipes_version: String by project
-val terrablender_version: String by project
+public val modmenu_version: String by project
+public val cloth_config_version: String by project
+public val copperpipes_version: String by project
+public val terrablender_version: String by project
+public val falling_leaves_version: String by project
 
 val sodium_version: String by project
 val iris_version: String by project
@@ -213,9 +214,6 @@ dependencies {
     // To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:$minecraft_version")
 	mappings(loom.layered {
-		// please annoy treetrain if this doesnt work
-		mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
-        parchment("org.parchmentmc.data:parchment-1.19.3:$parchment_mappings@zip")
 		officialMojangMappings {
 			nameSyntheticMembers = false
 		}
@@ -245,6 +243,9 @@ dependencies {
 
     // Jankson
     api("blue.endless:jankson:$jankson_version")?.let { include(it) }
+
+    // Falling Leaves
+    modCompileOnly("maven.modrinth:fallingleaves:${falling_leaves_version}")
 
     "testmodImplementation"(sourceSets.main.get().output)
 /*
@@ -294,13 +295,6 @@ tasks {
 
     test {
         useJUnitPlatform()
-    }
-
-    license {
-        rule(file("codeformat/QUILT_MODIFIED_HEADER"))
-        rule(file("codeformat/HEADER"))
-
-        include("**//*.java")
     }
 
     register("javadocJar", Jar::class) {

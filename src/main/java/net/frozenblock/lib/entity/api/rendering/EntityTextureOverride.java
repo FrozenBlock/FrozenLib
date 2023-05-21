@@ -22,7 +22,6 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;

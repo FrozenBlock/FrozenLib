@@ -18,6 +18,8 @@
 
 package net.frozenblock.lib.item.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Holder;
@@ -30,8 +32,6 @@ import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A class used for adding items to {@link CreativeModeTab}s.

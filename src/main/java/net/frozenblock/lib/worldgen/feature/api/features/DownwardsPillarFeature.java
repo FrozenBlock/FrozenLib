@@ -26,13 +26,14 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.NotNull;
 
 public class DownwardsPillarFeature extends Feature<PillarFeatureConfig> {
     public DownwardsPillarFeature(Codec<PillarFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<PillarFeatureConfig> context) {
+    public boolean place(@NotNull FeaturePlaceContext<PillarFeatureConfig> context) {
         boolean bl = false;
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
