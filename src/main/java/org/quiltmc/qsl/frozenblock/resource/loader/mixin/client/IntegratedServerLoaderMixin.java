@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(WorldOpenFlows.class)
 public abstract class IntegratedServerLoaderMixin {
     @Shadow
-    private static void safeCloseAccess(LevelStorageSource.LevelStorageAccess storageSession, String worlName) {
+    private static void safeCloseAccess(LevelStorageSource.LevelStorageAccess storageSession, String worldName) {
         throw new IllegalStateException("Mixin injection failed.");
     }
 
