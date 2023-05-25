@@ -42,6 +42,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 
 	@Override
     public boolean place(FeaturePlaceContext<FadingDiskFeatureConfig> context) {
+		AtomicBoolean success = new AtomicBoolean();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
 		FadingDiskFeatureConfig config = context.config();
@@ -60,11 +61,18 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 				for (int z = bz - radius; z <= bz + radius; z++) {
 					if (useHeightMapAndNotCircular) {
 						double distance = Math.pow((double) bx - x, 2) + Math.pow((double) bz - z, 2);
-						placeAtPos(level, config, s, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z) - 1, z, distance, useHeightMapAndNotCircular);
+						if (placeAtPos(level, config, s, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z) - 1, z, distance, true)) {
+							this.markAboveForPostProcessing(level, mutableDisk);
+							success.set(true);
+						}
 					} else {
-						for (int y = by - radius; y <= by + radius; y++) {
+						int maxY = by + radius;
+						for (int y = by - radius; y <= maxY; y++) {
 							double distance = Math.pow((double) bx - x, 2) + Math.pow((double) by - y, 2) + Math.pow((double) bz - z, 2);
-							placeAtPos(level, config, s, random, radius, mutableDisk, x, y, z, distance, useHeightMapAndNotCircular);
+							if (placeAtPos(level, config, s, random, radius, mutableDisk, x, y, z, distance, false)) {
+								this.markAboveForPostProcessing(level, mutableDisk);
+								success.set(true);
+							}
 						}
 					}
 				}
@@ -78,10 +86,10 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 			serverLevel.getServer().execute(() -> consumer.accept(serverLevel));
 		}
 
-        return true;
+        return success.get();
     }
 
-	private static void placeAtPos(WorldGenLevel level, FadingDiskFeatureConfig config, BlockPos s, RandomSource random, int radius, BlockPos.MutableBlockPos mutableDisk, int x, int y, int z, double distance, boolean useHeightMapAndNotCircular) {
+	private static boolean placeAtPos(WorldGenLevel level, FadingDiskFeatureConfig config, BlockPos s, RandomSource random, int radius, BlockPos.MutableBlockPos mutableDisk, int x, int y, int z, double distance, boolean useHeightMapAndNotCircular) {
 		if (distance < Math.pow(radius, 2)) {
 			mutableDisk.set(x, y, z);
 			BlockState state = level.getBlockState(mutableDisk);
@@ -91,18 +99,21 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 				if (random.nextFloat() < config.placeChance) {
 					if (fade) {
 						if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
-							level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
+							level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 2);
+							return true;
 						}
 					} else {
 						boolean choseInner = inner && random.nextFloat() < config.innerChance;
 						if (state.is(choseInner ? config.innerReplaceable : config.outerReplaceable)) {
 							BlockStateProvider newState = choseInner ? config.innerState : config.outerState;
-							level.setBlock(mutableDisk, newState.getState(random, mutableDisk), 3);
+							level.setBlock(mutableDisk, newState.getState(random, mutableDisk), 2);
+							return true;
 						}
 					}
 				}
 			}
 		}
+		return false;
 	}
 
 	public static boolean isBlockExposed(WorldGenLevel level, BlockPos blockPos) {
