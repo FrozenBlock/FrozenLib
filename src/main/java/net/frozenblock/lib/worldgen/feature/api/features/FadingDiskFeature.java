@@ -60,12 +60,18 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 				for (int z = bz - radius; z <= bz + radius; z++) {
 					if (useHeightMapAndNotCircular) {
 						double distance = Math.pow((double) bx - x, 2) + Math.pow((double) bz - z, 2);
-						success.set(placeAtPos(level, config, s, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z) - 1, z, distance, true));
+						if (placeAtPos(level, config, s, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z) - 1, z, distance, true)) {
+							this.markAboveForPostProcessing(level, mutableDisk);
+							success.set(true);
+						}
 					} else {
 						int maxY = by + radius;
 						for (int y = by - radius; y <= maxY; y++) {
 							double distance = Math.pow((double) bx - x, 2) + Math.pow((double) by - y, 2) + Math.pow((double) bz - z, 2);
-							success.set(placeAtPos(level, config, s, random, radius, mutableDisk, x, y, z, distance, false));
+							if (placeAtPos(level, config, s, random, radius, mutableDisk, x, y, z, distance, false)) {
+								this.markAboveForPostProcessing(level, mutableDisk);
+								success.set(true);
+							}
 						}
 					}
 				}
