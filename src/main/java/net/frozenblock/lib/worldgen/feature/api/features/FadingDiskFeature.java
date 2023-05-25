@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
@@ -39,8 +40,9 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
         super(codec);
     }
 
+	@Override
     public boolean place(FeaturePlaceContext<FadingDiskFeatureConfig> context) {
-		final AtomicBoolean[] bl = {new AtomicBoolean(false)};
+		AtomicBoolean success = new AtomicBoolean();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
 		FadingDiskFeatureConfig config = context.config();
@@ -54,51 +56,22 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
         int bx = s.getX();
 		int by = s.getY();
         int bz = s.getZ();
-		Consumer<LevelAccessor> consumer = (levelAccessor) -> {
+		Consumer<LevelAccessor> consumer = levelAccessor -> {
 			for (int x = bx - radius; x <= bx + radius; x++) {
 				for (int z = bz - radius; z <= bz + radius; z++) {
 					if (useHeightMapAndNotCircular) {
-						double distance = ((bx - x) * (bx - x) + (bz - z) * (bz - z));
-						if (distance < radius * radius) {
-							mutableDisk.set(x, level.getHeight(heightmap, x, z) - 1, z);
-							BlockState state = level.getBlockState(mutableDisk);
-							boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
-							boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
-							boolean choseInner;
-							if (random.nextFloat() < config.placeChance) {
-								if (fade) {
-									if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
-										level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
-										bl[0].set(true);
-									}
-								} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable)) {
-									level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
-									bl[0].set(true);
-								}
-							}
+						double distance = Math.pow((double) bx - x, 2) + Math.pow((double) bz - z, 2);
+						if (placeAtPos(level, config, s, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z) - 1, z, distance, true)) {
+							this.markAboveForPostProcessing(level, mutableDisk);
+							success.set(true);
 						}
 					} else {
-						for (int y = by - radius; y <= by + radius; y++) {
-							double distance = ((bx - x) * (bx - x) + (by - y) * (by - y) + (bz - z) * (bz - z));
-							if (distance < radius * radius) {
-								mutableDisk.set(x, y, z);
-								BlockState state = level.getBlockState(mutableDisk);
-								if (isBlockExposed(level, mutableDisk)) {
-									boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
-									boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
-									boolean choseInner;
-									if (random.nextFloat() < config.placeChance) {
-										if (fade) {
-											if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
-												level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
-												bl[0].set(true);
-											}
-										} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable)) {
-											level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
-											bl[0].set(true);
-										}
-									}
-								}
+						int maxY = by + radius;
+						for (int y = by - radius; y <= maxY; y++) {
+							double distance = Math.pow((double) bx - x, 2) + Math.pow((double) by - y, 2) + Math.pow((double) bz - z, 2);
+							if (placeAtPos(level, config, s, random, radius, mutableDisk, x, y, z, distance, false)) {
+								this.markAboveForPostProcessing(level, mutableDisk);
+								success.set(true);
 							}
 						}
 					}
@@ -113,8 +86,36 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 			serverLevel.getServer().execute(() -> consumer.accept(serverLevel));
 		}
 
-        return true;
+        return success.get();
     }
+
+	private static boolean placeAtPos(WorldGenLevel level, FadingDiskFeatureConfig config, BlockPos s, RandomSource random, int radius, BlockPos.MutableBlockPos mutableDisk, int x, int y, int z, double distance, boolean useHeightMapAndNotCircular) {
+		if (distance < Math.pow(radius, 2)) {
+			mutableDisk.set(x, y, z);
+			BlockState state = level.getBlockState(mutableDisk);
+			if (!useHeightMapAndNotCircular && isBlockExposed(level, mutableDisk)) {
+				boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
+				boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
+				if (random.nextFloat() < config.placeChance) {
+					if (fade) {
+						if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
+							level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 2);
+							return true;
+						}
+					} else {
+						boolean choseInner = inner && random.nextFloat() < config.innerChance;
+						if (state.is(choseInner ? config.innerReplaceable : config.outerReplaceable)) {
+							BlockStateProvider newState = choseInner ? config.innerState : config.outerState;
+							level.setBlock(mutableDisk, newState.getState(random, mutableDisk), 2);
+							return true;
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
 	public static boolean isBlockExposed(WorldGenLevel level, BlockPos blockPos) {
 		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
 		for (Direction direction : Direction.values()) {
