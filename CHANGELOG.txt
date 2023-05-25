@@ -6,6 +6,6 @@ Put changelog here:
 -----------------
 - Added "stopOnDeath" boolean to restricted sounds
 - Rewrote Surface Rules API
-- Fixed a bug where custom surface rules could only change vanilla biomes
+- Fixed a bug where custom surface rules could only change vanilla biomes whilst using TerraBlender
 - Changed some mixins to use more compatible injection methods via Mixin Extras
 - Reduced clutter in "FadingDiskFeature" class
