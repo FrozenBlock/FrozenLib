@@ -4,14 +4,8 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Changed FrozenMobCategoryEntrypoint to an interface
-- Added FrozenModInitializer, adding helper methods for the mod initializer
-- Added JSON5 support to configs
-- Renamed GsonConfig to JsonConfig with an added boolean to its constructor to enable JSON5
-- Removed all built in typed entry types
-- Rewrote surface rule injection
-- Fixed some issues with injecting surface rules whilst using TerraBlender
-- Added stencil rendering via StencilRenderer
-- Added 3D wind
-- Added additional math tools to AdvancedMath
-- Added FrozenVeinTypes to add custom ore vein types
+- Added "stopOnDeath" boolean to restricted sounds
+- Rewrote Surface Rules API
+- Fixed a bug where custom surface rules could only change vanilla biomes
+- Changed some mixins to use more compatible injection methods via Mixin Extras
+- Reduced clutter in "FadingDiskFeature" class
