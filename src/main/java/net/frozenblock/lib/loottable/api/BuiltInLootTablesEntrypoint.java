@@ -16,21 +16,18 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.surface.impl;
+package net.frozenblock.lib.loottable.api;
 
-import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import java.util.ArrayList;
+import net.minecraft.resources.ResourceLocation;
 
-public class SurfaceRuleUtil {
+/**
+ * An entrypoint that lets you register new built in loot tables.
+ * <p>
+ * Defined with the {@code frozenlib:loottables} key in {@code fabric.mod.json}.
+ */
+public interface BuiltInLootTablesEntrypoint {
 
-    public static void injectSurfaceRules(NoiseGeneratorSettings settings, ResourceKey<DimensionType> dimension) {
-        var inter = NoiseGeneratorInterface.class.cast(settings);
+	void addLootTables(ArrayList<ResourceLocation> context);
 
-        var newRules = FrozenSurfaceRules.getSurfaceRules(dimension);
-        if (newRules != null) {
-            inter.overwriteSurfaceRules(newRules);
-        }
-    }
 }

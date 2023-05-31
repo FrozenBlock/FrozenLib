@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import java.util.Set;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -33,7 +33,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
-import java.util.Set;
 
 public final class FrozenConfiguredFeatureUtils {
 	private FrozenConfiguredFeatureUtils() {

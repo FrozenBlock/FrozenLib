@@ -18,13 +18,12 @@
 
 package net.frozenblock.lib.config.api.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import java.util.Optional;
 
 public class FrozenConfigScreen extends Screen {
 	private final Screen parent;
@@ -81,10 +80,10 @@ public class FrozenConfigScreen extends Screen {
 	}
 
 	@Override
-	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-		renderBackground(graphics);
+	public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
+		renderBackground(guiGraphics);
 
-		super.render(graphics, mouseX, mouseY, delta);
+		super.render(guiGraphics, mouseX, mouseY, delta);
 	}
 
 	protected final boolean quit() {

@@ -19,13 +19,13 @@
 package net.frozenblock.lib.file.nbt;
 
 import com.mojang.logging.LogUtils;
+import java.io.File;
+import java.io.IOException;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-import java.io.File;
-import java.io.IOException;
 
 public class NbtFileUtils {
 	private static final Logger LOGGER = LogUtils.getLogger();

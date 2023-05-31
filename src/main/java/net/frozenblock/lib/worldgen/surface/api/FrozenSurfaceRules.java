@@ -114,7 +114,7 @@ public final class FrozenSurfaceRules {
 		SurfaceRules.RuleSource newRule = null;
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
-		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldSurfaceRules(sourceHolders);
+		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addRuleSources(sourceHolders);
 		SurfaceRules.RuleSource newSource = sequence(sourceHolders);
 
 		newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
@@ -123,7 +123,7 @@ public final class FrozenSurfaceRules {
 		// NO PRELIM
 
 		ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
-		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimSurfaceRules(noPrelimSourceHolders);
+		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addRuleSources(noPrelimSourceHolders);
 
 		SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
 		newRule = SurfaceRules.sequence(noPrelimSource, newRule);
@@ -136,7 +136,7 @@ public final class FrozenSurfaceRules {
 		SurfaceRules.RuleSource newSource = null;
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
-		SurfaceRuleEvents.MODIFY_NETHER.invoker().addNetherSurfaceRules(sourceHolders);
+		SurfaceRuleEvents.MODIFY_NETHER.invoker().addRuleSources(sourceHolders);
 
 		for (SurfaceRules.RuleSource rule : sourceHolders) {
 			if (newSource == null) {
@@ -154,7 +154,7 @@ public final class FrozenSurfaceRules {
 		SurfaceRules.RuleSource newSource = null;
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
-		SurfaceRuleEvents.MODIFY_END.invoker().addEndSurfaceRules(sourceHolders);
+		SurfaceRuleEvents.MODIFY_END.invoker().addRuleSources(sourceHolders);
 
 		for (SurfaceRules.RuleSource rule : sourceHolders) {
 			if (newSource == null) {
@@ -172,7 +172,7 @@ public final class FrozenSurfaceRules {
 		SurfaceRules.RuleSource newSource = null;
 		ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
 
-		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(sourceHolders);
+		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addRuleSources(sourceHolders);
 
 		for (FrozenDimensionBoundRuleSource dimRuleSource : sourceHolders) {
 			if (dimRuleSource.dimension().equals(dimension.location())) {

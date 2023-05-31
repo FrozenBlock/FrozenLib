@@ -18,7 +18,7 @@
     "fabric-datagen": [
       "net.frozenblock.lib.testmod.datagen.FrozenLibTestDatagen"
     ],
-    "frozenlib:events": [
+    "frozenlib:surfacerules": [
       "net.frozenblock.lib.testmod.worldgen.TestSurfaceRules"
     ],
     "modmenu": [

@@ -19,25 +19,19 @@
 package net.frozenblock.lib.registry.api;
 
 import com.mojang.serialization.Lifecycle;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.entity.api.rendering.EntityTextureOverride;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
-import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.resources.ResourceKey;
 
 public class FrozenRegistry {
 	private FrozenRegistry() {

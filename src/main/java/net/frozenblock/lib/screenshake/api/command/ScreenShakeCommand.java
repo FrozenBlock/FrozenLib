@@ -85,7 +85,6 @@ public class ScreenShakeCommand {
 		}
 		Vec3 finalVec = vec3;
 		source.sendSuccess(() -> Component.translatable("commands.screenshake.player.success", playerString.toString(), finalVec.x(), finalVec.y(), finalVec.z(), intensity, duration, durationFalloffStart, maxDistance), true);
-
 		return 1;
 	}
 

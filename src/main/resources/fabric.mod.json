@@ -14,7 +14,6 @@
     "Treetrain1",
     "Luna",
     "Liukrast",
-    "Merp",
     "Xfrtrex",
     "Soro"
   ],
@@ -46,7 +45,7 @@
       "net.frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
     ],
     "terrablender": [
-      "net.frozenblock.lib.worldgen.surface.impl.terrablender.FrozenTerraBlenderCompat"
+      "net.frozenblock.lib.terrablender.impl.FrozenTerraBlenderCompat"
     ]
   },
   "mixins": [
@@ -55,7 +54,9 @@
     "mixin/frozenlib.entity.mixins.json",
     "mixin/frozenlib.event.mixins.json",
     "mixin/frozenlib.feature_flag.mixins.json",
+    "mixin/frozenlib.fallingleaves.mixins.json",
     "mixin/frozenlib.item.mixins.json",
+    "mixin/frozenlib.loottable.mixins.json",
     "mixin/frozenlib.menu.mixins.json",
     "mixin/frozenlib.mobcategory.mixins.json",
     "mixin/frozenlib.modmenu.mixins.json",

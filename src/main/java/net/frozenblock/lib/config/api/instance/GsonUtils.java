@@ -20,12 +20,12 @@ package net.frozenblock.lib.config.api.instance;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import java.awt.*;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.instance.json.ColorSerializer;
 import net.frozenblock.lib.config.api.instance.json.TypedEntrySerializer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
-import java.awt.*;
 
 public class GsonUtils {
 	private GsonUtils() {

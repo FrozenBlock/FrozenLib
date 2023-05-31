@@ -19,6 +19,11 @@
 package net.frozenblock.lib.config.impl.client;
 
 import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.client.ClientConfig;
@@ -30,11 +35,6 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)

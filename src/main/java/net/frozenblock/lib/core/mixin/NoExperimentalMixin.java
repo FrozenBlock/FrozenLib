@@ -37,7 +37,7 @@ public class NoExperimentalMixin {
     private Lifecycle worldGenSettingsLifecycle;
 
     @Inject(method = "<init>*", at = @At("TAIL"))
-    private void init(CallbackInfo info) {
+    private void frozenLib$init(CallbackInfo info) {
         this.worldGenSettingsLifecycle = Lifecycle.stable();
     }
 

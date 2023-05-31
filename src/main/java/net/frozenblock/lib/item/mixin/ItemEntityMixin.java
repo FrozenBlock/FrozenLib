@@ -20,7 +20,6 @@ package net.frozenblock.lib.item.mixin;
 
 import java.util.List;
 import java.util.UUID;
-
 import net.frozenblock.lib.item.api.HeavyItemDamageRegistry;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.sounds.SoundEvents;
