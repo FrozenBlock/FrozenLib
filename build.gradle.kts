@@ -296,6 +296,13 @@ tasks {
         useJUnitPlatform()
     }
 
+    license {
+        rule(file("codeformat/QUILT_MODIFIED_HEADER"))
+        rule(file("codeformat/HEADER"))
+
+        include("**//*.java")
+    }
+
     register("javadocJar", Jar::class) {
         dependsOn(javadoc)
         archiveClassifier.set("javadoc")
