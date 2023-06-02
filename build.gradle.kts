@@ -52,6 +52,7 @@ val modmenu_version: String by project
 val cloth_config_version: String by project
 val copperpipes_version: String by project
 val terrablender_version: String by project
+val c2me_version: String by project
 
 val sodium_version: String by project
 val iris_version: String by project
@@ -247,6 +248,9 @@ dependencies {
     api("blue.endless:jankson:$jankson_version")?.let { include(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
+
+    // C2ME
+    modRuntimeOnly("maven.modrinth:c2me-fabric:${c2me_version}")
 /*
     // only affects runClient, does not affect gradlew build. add -PuseThirdPartyMods=false to not use these
     if (findProperty("useThirdPartyMods") != "false") {

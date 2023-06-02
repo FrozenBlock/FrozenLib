@@ -18,23 +18,14 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
-import java.util.Map;
-import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
-import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.Registries;
 import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.progress.ChunkProgressListener;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.storage.WorldData;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -42,12 +33,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(value = MinecraftServer.class, priority = 2010) // apply after bclib
 public class MinecraftServerMixin {
 
-	@Shadow
-	@Final
-	protected WorldData worldData;
-
 	@Inject(method = "createLevels", at = @At("HEAD"))
-	private void addSurfaceRules(ChunkProgressListener worldGenerationProgressListener, CallbackInfo ci) {
+	private void frozenLib$addSurfaceRules(ChunkProgressListener worldGenerationProgressListener, CallbackInfo ci) {
 		var server = MinecraftServer.class.cast(this);
 		var registryAccess = server.registryAccess();
 		var levelStems = registryAccess.registryOrThrow(Registries.LEVEL_STEM);

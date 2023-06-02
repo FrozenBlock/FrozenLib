@@ -24,6 +24,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.jetbrains.annotations.NotNull;
 
 public final class BiomeTagConditionSource implements SurfaceRules.ConditionSource {
 	public static final KeyDispatchDataCodec<BiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.mapCodec((instance) ->
@@ -37,7 +38,8 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 
 	private final TagKey<Biome> biomeTagKey;
 
-	public static BiomeTagConditionSource isBiomeTag(TagKey<Biome> biomeTagKey) {
+	@NotNull
+	public static BiomeTagConditionSource isBiomeTag(@NotNull TagKey<Biome> biomeTagKey) {
 		return new BiomeTagConditionSource(biomeTagKey);
 	}
 
@@ -45,11 +47,14 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 		this.biomeTagKey = biomeTagKey;
 	}
 
+	@Override
 	public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
 		return CODEC;
 	}
 
-	public SurfaceRules.Condition apply(SurfaceRules.Context context) {
+	@Override
+	@NotNull
+	public SurfaceRules.Condition apply(@NotNull SurfaceRules.Context context) {
 		class BiomeTagCondition extends SurfaceRules.LazyYCondition {
 			BiomeTagCondition(SurfaceRules.Context context) {
 				super(context);
@@ -63,6 +68,7 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 		return new BiomeTagCondition(context);
 	}
 
+	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
 			return true;
@@ -73,15 +79,18 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		return this.biomeTagKey.hashCode();
 	}
 
+	@Override
+	@NotNull
 	public String toString() {
 		return "BiomeConditionSource[biomeTagKey=" + this.biomeTagKey + "]";
 	}
 
-	private static TagKey<Biome> getBiomeTagKey(Object o) {
+	private static TagKey<Biome> getBiomeTagKey(@NotNull Object o) {
 		return ((BiomeTagConditionSource)o).biomeTagKey;
 	}
 }

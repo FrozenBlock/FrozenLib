@@ -19,20 +19,14 @@
 package net.frozenblock.lib.worldgen.surface.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
 import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = NoiseGeneratorSettings.class, priority = 990) // apply before default mods
+@Mixin(value = NoiseGeneratorSettings.class, priority = 990) // Apply before default mods
 public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	/**
@@ -41,10 +35,13 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	@Unique
 	private SurfaceRules.RuleSource frozenLib$frozenSurfaceRules;
 
+	@Unique
+	private SurfaceRules.RuleSource frozenLib$mergedSurfaceRules;
+
 	@ModifyReturnValue(method = "surfaceRule", at = @At("RETURN"))
 	private SurfaceRules.RuleSource frozenLib$modifyRules(SurfaceRules.RuleSource original) {
 		if (this.frozenLib$frozenSurfaceRules != null) {
-			return SurfaceRules.sequence(this.frozenLib$frozenSurfaceRules, original);
+			return this.frozenLib$mergedSurfaceRules == null ? this.frozenLib$mergedSurfaceRules = SurfaceRules.sequence(this.frozenLib$frozenSurfaceRules, original) : this.frozenLib$mergedSurfaceRules;
 		}
 
 		return original;
@@ -52,7 +49,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	@Unique
 	@Override
-	public void overwriteSurfaceRules(SurfaceRules.RuleSource surfaceRule) {
+	public void writeSurfaceRules(SurfaceRules.RuleSource surfaceRule) {
 		if (surfaceRule == null || surfaceRule == this.frozenLib$frozenSurfaceRules) return;
 
 		this.frozenLib$frozenSurfaceRules = surfaceRule;

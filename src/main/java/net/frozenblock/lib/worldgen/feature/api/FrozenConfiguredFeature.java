@@ -29,6 +29,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import org.jetbrains.annotations.Nullable;
 
 public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends ConfiguredFeature<FC, ?>> {
 
@@ -48,7 +49,7 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 		return key;
 	}
 
-	public Holder<ConfiguredFeature<?, ?>> getHolder(LevelReader level) {
+	public Holder<ConfiguredFeature<?, ?>> getHolder(@Nullable LevelReader level) {
 		if (level == null)
 			return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 		return level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
