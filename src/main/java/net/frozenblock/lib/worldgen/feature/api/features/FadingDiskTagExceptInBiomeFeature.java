@@ -48,12 +48,12 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
 		FadingDiskTagBiomeFeatureConfig config = context.config();
-		boolean useHeightMapAndNotCircular = config.useHeightMapAndNotCircular;
-		Types heightmap = config.heightmap;
+		boolean useHeightMapAndNotCircular = config.useHeightMapAndNotCircular();
+		Types heightmap = config.heightmap();
         BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
         RandomSource random = level.getRandom();
-        int radius = config.radius.sample(random);
-		TagKey<Biome> ignoredBiomes = config.placeExceptIn;
+        int radius = config.radius().sample(random);
+		TagKey<Biome> ignoredBiomes = config.placeExceptIn();
         //DISK
         BlockPos.MutableBlockPos mutableDisk = s.mutable();
         int bx = s.getX();
@@ -68,17 +68,17 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
 						if (distance < radius * radius) {
 							mutableDisk.set(x, level.getHeight(heightmap, x, z) - 1, z);
 							BlockState state = level.getBlockState(mutableDisk);
-							boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
-							boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
+							boolean inner = mutableDisk.closerThan(s, radius * config.innerChance());
+							boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent());
 							boolean choseInner;
-							if (random.nextFloat() < config.placeChance) {
+							if (random.nextFloat() < config.placeChance()) {
 								if (fade) {
-									if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
-										level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
+									if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable()) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
+										level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
 										bl[0].set(true);
 									}
-								} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
-									level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
+								} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance())) ? config.innerReplaceable() : config.outerReplaceable()) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
+									level.setBlock(mutableDisk, choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk), 3);
 									bl[0].set(true);
 								}
 							}
@@ -90,17 +90,17 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
 								mutableDisk.set(x, y, z);
 								BlockState state = level.getBlockState(mutableDisk);
 								if (isBlockExposedToAir(level, mutableDisk)) {
-									boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
-									boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
+									boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent());
+									boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent());
 									boolean choseInner;
-									if (random.nextFloat() < config.placeChance) {
+									if (random.nextFloat() < config.placeChance()) {
 										if (fade) {
-											if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
-												level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
+											if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable()) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
+												level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
 												bl[0].set(true);
 											}
-										} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance)) ? config.innerReplaceable : config.outerReplaceable) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
-											level.setBlock(mutableDisk, choseInner ? config.innerState.getState(random, mutableDisk) : config.outerState.getState(random, mutableDisk), 3);
+										} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance())) ? config.innerReplaceable() : config.outerReplaceable()) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
+											level.setBlock(mutableDisk, choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk), 3);
 											bl[0].set(true);
 										}
 									}
