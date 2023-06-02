@@ -47,6 +47,7 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 		this.base = root.getChild("base");
 	}
 
+	@NotNull
 	public static LayerDefinition getTexturedModelData() {
 		MeshDefinition modelData = new MeshDefinition();
 		PartDefinition modelPartData = modelData.getRoot();
@@ -56,6 +57,7 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 
 	private final Quaternionf rotation = new Quaternionf(0F, 0F, 0F, 1F);
 
+	@Override
 	public void render(@NotNull T entity, float tickDelta, @NotNull PoseStack poseStack, @NotNull MultiBufferSource vertexConsumers, int light, int overlay) {
 		this.rotation.set(0.0f, 0.0f, 0.0f, 1.0f);
 		this.rotation.mul(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().yRot));

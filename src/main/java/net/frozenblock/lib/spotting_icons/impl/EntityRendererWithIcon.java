@@ -27,6 +27,6 @@ import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 @InjectedInterface(EntityRenderer.class)
 public interface EntityRendererWithIcon {
 
-    <T extends Entity> void renderIcon(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight);
+    <T extends Entity> void frozenLib$renderIcon(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight);
 
 }

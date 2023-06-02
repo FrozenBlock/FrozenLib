@@ -41,7 +41,7 @@ public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIc
 	private Level level;
 
 	@Unique
-	public <E extends Entity> void renderIcon(E entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+	public <E extends Entity> void frozenLib$renderIcon(E entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
 		EntityRenderer<? super E> entityRenderer = this.getRenderer(entity);
 		try {
 			Vec3 vec3 = entityRenderer.getRenderOffset(entity, partialTicks);
@@ -50,7 +50,7 @@ public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIc
 			double f = z + vec3.z();
 			matrixStack.pushPose();
 			matrixStack.translate(d, e, f);
-			((EntityRendererWithIcon) entityRenderer).renderIcon(entity, rotationYaw, partialTicks, matrixStack, buffer, packedLight);
+			((EntityRendererWithIcon) entityRenderer).frozenLib$renderIcon(entity, rotationYaw, partialTicks, matrixStack, buffer, packedLight);
 			matrixStack.popPose();
 		} catch (Throwable throwable) {
 			CrashReport crashReport = CrashReport.forThrowable(throwable, "Rendering entity icon in world");
