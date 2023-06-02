@@ -32,13 +32,16 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import org.jetbrains.annotations.NotNull;
 
 public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWaterTagFeatureConfig> {
+
     public NoisePathSwapUnderWaterTagFeature(Codec<PathSwapUnderWaterTagFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<PathSwapUnderWaterTagFeatureConfig> context) {
+	@Override
+    public boolean place(@NotNull FeaturePlaceContext<PathSwapUnderWaterTagFeatureConfig> context) {
         boolean generated = false;
 		PathSwapUnderWaterTagFeatureConfig config = context.config();
         BlockPos blockPos = context.origin();

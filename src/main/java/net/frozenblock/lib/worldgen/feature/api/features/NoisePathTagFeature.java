@@ -30,13 +30,16 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import org.jetbrains.annotations.NotNull;
 
 public class NoisePathTagFeature extends Feature<PathTagFeatureConfig> {
+
     public NoisePathTagFeature(Codec<PathTagFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<PathTagFeatureConfig> context) {
+	@Override
+    public boolean place(@NotNull FeaturePlaceContext<PathTagFeatureConfig> context) {
         boolean generated = false;
         PathTagFeatureConfig config = context.config();
         BlockPos blockPos = context.origin();

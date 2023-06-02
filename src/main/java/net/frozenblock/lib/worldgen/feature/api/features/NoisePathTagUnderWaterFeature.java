@@ -32,13 +32,16 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import org.jetbrains.annotations.NotNull;
 
 public class NoisePathTagUnderWaterFeature extends Feature<PathTagFeatureConfig> {
+
     public NoisePathTagUnderWaterFeature(Codec<PathTagFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<PathTagFeatureConfig> context) {
+	@Override
+    public boolean place(@NotNull FeaturePlaceContext<PathTagFeatureConfig> context) {
         boolean generated = false;
 		PathTagFeatureConfig config = context.config();
         BlockPos blockPos = context.origin();
@@ -91,7 +94,7 @@ public class NoisePathTagUnderWaterFeature extends Feature<PathTagFeatureConfig>
 		return false;
 	}
 
-    public static boolean isWaterNearby(WorldGenLevel level, BlockPos blockPos, int x) {
+    public static boolean isWaterNearby(WorldGenLevel level, @NotNull BlockPos blockPos, int x) {
         Iterator<BlockPos> var2 = BlockPos.betweenClosed(blockPos.offset(-x, -x, -x), blockPos.offset(x, x, x)).iterator();
         BlockPos blockPos2;
         do {

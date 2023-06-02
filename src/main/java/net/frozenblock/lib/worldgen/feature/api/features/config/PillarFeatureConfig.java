@@ -28,22 +28,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public class PillarFeatureConfig implements FeatureConfiguration {
-    public static final Codec<PillarFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
-            instance.group(
-                    BlockState.CODEC.fieldOf("columnBlock").forGetter((config) -> config.columnBlock),
-                    IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter((config) -> config.height),
-                    RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter((config) -> config.replaceable)
-            ).apply(instance, PillarFeatureConfig::new));
-
-    public final BlockState columnBlock;
-    public final IntProvider height;
-    public final HolderSet<Block> replaceable;
-
-    public PillarFeatureConfig(BlockState columnBlock, IntProvider height, HolderSet<Block> replaceable) {
-        this.columnBlock = columnBlock;
-        this.height = height;
-        this.replaceable = replaceable;
-    }
-
+public record PillarFeatureConfig(BlockState columnBlock, IntProvider height, HolderSet<Block> replaceable) implements FeatureConfiguration {
+	public static final Codec<PillarFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
+		instance.group(
+			BlockState.CODEC.fieldOf("columnBlock").forGetter((config) -> config.columnBlock),
+			IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter((config) -> config.height),
+			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter((config) -> config.replaceable)
+		).apply(instance, PillarFeatureConfig::new));
 }

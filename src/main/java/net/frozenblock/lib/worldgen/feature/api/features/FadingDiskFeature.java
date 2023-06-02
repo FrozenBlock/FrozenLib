@@ -34,14 +34,16 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import org.jetbrains.annotations.NotNull;
 
 public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
+
     public FadingDiskFeature(Codec<FadingDiskFeatureConfig> codec) {
         super(codec);
     }
 
 	@Override
-    public boolean place(FeaturePlaceContext<FadingDiskFeatureConfig> context) {
+    public boolean place(@NotNull FeaturePlaceContext<FadingDiskFeatureConfig> context) {
 		AtomicBoolean success = new AtomicBoolean();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
@@ -110,7 +112,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 		return false;
 	}
 
-	public static boolean isBlockExposed(WorldGenLevel level, BlockPos blockPos) {
+	public static boolean isBlockExposed(WorldGenLevel level, @NotNull BlockPos blockPos) {
 		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
 		for (Direction direction : Direction.values()) {
 			mutableBlockPos.move(direction);

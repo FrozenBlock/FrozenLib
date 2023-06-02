@@ -34,13 +34,16 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import org.jetbrains.annotations.NotNull;
 
 public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiomeFeatureConfig> {
+
     public FadingDiskTagExceptInBiomeFeature(Codec<FadingDiskTagBiomeFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<FadingDiskTagBiomeFeatureConfig> context) {
+	@Override
+    public boolean place(@NotNull FeaturePlaceContext<FadingDiskTagBiomeFeatureConfig> context) {
 		final AtomicBoolean[] bl = {new AtomicBoolean(false)};
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
@@ -119,7 +122,7 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
 		return true;
     }
 
-	public static boolean isBlockExposedToAir(WorldGenLevel level, BlockPos blockPos) {
+	public static boolean isBlockExposedToAir(WorldGenLevel level, @NotNull BlockPos blockPos) {
 		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
 		for (Direction direction : Direction.values()) {
 			mutableBlockPos.move(direction);
