@@ -250,7 +250,7 @@ dependencies {
     "testmodImplementation"(sourceSets.main.get().output)
 
     // C2ME
-    modRuntimeOnly("maven.modrinth:c2me-fabric:${c2me_version}")
+    modCompileOnly("maven.modrinth:c2me-fabric:${c2me_version}")
 /*
     // only affects runClient, does not affect gradlew build. add -PuseThirdPartyMods=false to not use these
     if (findProperty("useThirdPartyMods") != "false") {
