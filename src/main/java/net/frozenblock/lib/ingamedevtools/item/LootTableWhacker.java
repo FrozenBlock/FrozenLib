@@ -18,6 +18,8 @@
 
 package net.frozenblock.lib.ingamedevtools.item;
 
+import java.util.Arrays;
+import java.util.List;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -27,9 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-
-import java.util.Arrays;
-import java.util.List;
 
 public class LootTableWhacker extends Item {
 

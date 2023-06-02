@@ -20,7 +20,6 @@ package net.frozenblock.lib.worldgen.biome.api.parameters;
 
 import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;

@@ -18,10 +18,6 @@
 
 package net.frozenblock.lib.worldgen.surface.impl.terrablender;
 
-import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
-import net.minecraft.world.level.levelgen.SurfaceRules;
-import terrablender.api.SurfaceRuleManager;
 import terrablender.api.TerraBlenderApi;
 
 public class FrozenTerraBlenderCompat implements TerraBlenderApi {

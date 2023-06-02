@@ -18,13 +18,12 @@
 
 package net.frozenblock.lib.config.api.client;
 
-import com.mojang.blaze3d.vertex.PoseStack;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import java.util.Optional;
 
 public class FrozenConfigScreen extends Screen {
 	private final Screen parent;

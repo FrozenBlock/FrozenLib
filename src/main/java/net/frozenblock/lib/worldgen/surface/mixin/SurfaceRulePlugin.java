@@ -18,13 +18,13 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
+import java.util.List;
+import java.util.Set;
 import net.frozenblock.lib.FrozenBools;
 import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
-import java.util.List;
-import java.util.Set;
 
 public class SurfaceRulePlugin implements IMixinConfigPlugin {
 	@Override

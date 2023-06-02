@@ -20,8 +20,8 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
 import java.util.Iterator;
-import net.frozenblock.lib.worldgen.feature.api.features.config.PathFeatureConfig;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
+import net.frozenblock.lib.worldgen.feature.api.features.config.PathFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
