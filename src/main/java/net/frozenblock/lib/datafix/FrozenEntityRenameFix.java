@@ -42,7 +42,7 @@ public abstract class FrozenEntityRenameFix extends DataFix {
     public TypeRewriteRule makeRule() {
         Type<Pair<String, String>> type = DSL.named(References.ENTITY_NAME.typeName(), NamespacedSchema.namespacedString());
         if (!Objects.equals(this.getInputSchema().getType(References.ENTITY_NAME), type)) {
-            throw new IllegalStateException("entity name type is not what was expected.");
+            throw new IllegalStateException("Unexpected entity name type.");
         } else {
             return this.fixTypeEverywhere(this.name, type, dynamicOps -> pair -> pair.mapSecond(this::fixEntity));
         }

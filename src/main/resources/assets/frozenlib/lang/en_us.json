@@ -26,5 +26,10 @@
   "commands.screenshake.entity.success": "Created screen shake appended to %swith intensity %s, duration %s, falloff start %s, and distance %s.",
   "commands.screenshake.remove.entity.success.multiple": "Entities %shave had their screen shakes removed.",
   "commands.screenshake.remove.entity.success": "Removed screen shakes from entity %s.",
-  "commands.screenshake.remove.entity.failure": "Could not find entities with screen shakes."
+  "commands.screenshake.remove.entity.failure": "Could not find entities with screen shakes.",
+
+  "frozenlib.loot_table_whacker.fail.no_name": "Loot Table Whacker has not been named!",
+  "frozenlib.loot_table_whacker.fail.no_colon": "Invalid ResourceLocation: No : present!",
+  "frozenlib.loot_table_whacker.fail.no_loot_table": "Loot table does not exist: %s",
+  "frozenlib.loot_table_whacker.success": "Set loot table to: %s"
 }

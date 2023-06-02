@@ -22,13 +22,18 @@ import java.util.Arrays;
 import java.util.List;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
+import net.minecraft.world.level.storage.loot.LootTable;
+import org.jetbrains.annotations.NotNull;
 
 public class LootTableWhacker extends Item {
 
@@ -36,21 +41,40 @@ public class LootTableWhacker extends Item {
         super(settings);
     }
 
-    public InteractionResult useOn(UseOnContext context) {
+	private static final MutableComponent FAIL_NO_NAME = Component.translatable("frozenlib.loot_table_whacker.fail.no_name");
+	private static final MutableComponent FAIL_NO_COLON = Component.translatable("frozenlib.loot_table_whacker.fail.no_colon");
+
+	@Override
+    public InteractionResult useOn(@NotNull UseOnContext context) {
         Level level = context.getLevel();
         BlockPos blockPos = context.getClickedPos();
         ItemStack stack = context.getItemInHand();
+		Player player = context.getPlayer();
+		if (player == null) {
+			return InteractionResult.PASS;
+		}
         if (stack.hasCustomHoverName()) {
             if (stack.getHoverName().getString().contains(":")) {
                 String id = stack.getHoverName().getString();
                 List<String> strings = Arrays.stream(id.split(":")).toList();
                 ResourceLocation location = new ResourceLocation(strings.get(0), strings.get(1));
-                if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {
-                    loot.lootTable = location;
-                    FrozenMain.log(location.toString(), true);
-                }
-            }
-        }
+				if (!level.isClientSide) {
+					if (level.getServer().getLootData().getLootTable(location) != LootTable.EMPTY) {
+						if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {
+							loot.lootTable = location;
+							player.displayClientMessage(Component.translatable("frozenlib.loot_table_whacker.success", location.toString()), true);
+							FrozenMain.log(location.toString(), true);
+						}
+					} else {
+						player.displayClientMessage(Component.translatable("frozenlib.loot_table_whacker.fail.no_loot_table", location.toString()), true);
+					}
+				}
+            } else {
+				player.displayClientMessage(FAIL_NO_COLON, true);
+			}
+        } else {
+			player.displayClientMessage(FAIL_NO_NAME, true);
+		}
         return InteractionResult.SUCCESS;
     }
 

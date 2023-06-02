@@ -24,6 +24,7 @@ import java.io.IOException;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
@@ -36,13 +37,13 @@ public class NbtFileUtils {
 		saveToFile(compoundTag, new File(CONFIG_PATH, withNBTExtension(fileName)));
 	}
 
-	public static void saveToFile(CompoundTag compoundTag, File file, String fileName) {
+	public static void saveToFile(CompoundTag compoundTag, @NotNull File file, String fileName) {
 		file.mkdirs();
 		File destFile = new File(file, withNBTExtension(fileName));
 		saveToFile(compoundTag, destFile);
 	}
 
-	public static void saveToFile(CompoundTag compoundTag, File file) {
+	public static void saveToFile(CompoundTag compoundTag, @NotNull File file) {
 		file.mkdirs();
 		try {
 			NbtIo.writeCompressed(compoundTag, file);

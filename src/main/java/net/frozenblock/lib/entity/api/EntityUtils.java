@@ -22,10 +22,11 @@ import java.util.Optional;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityUtils {
 
-	public static Optional<Direction> getMovementDirectionHorizontal(Entity entity) {
+	public static Optional<Direction> getMovementDirectionHorizontal(@NotNull Entity entity) {
 		Direction direction = null;
 		Vec3 deltaMovement = entity.getDeltaMovement();
 		if (deltaMovement.horizontalDistance() > 0) {

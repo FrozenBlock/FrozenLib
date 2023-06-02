@@ -36,7 +36,7 @@ public class BlockEntityTypeMixin {
 	 * This allows custom sign and hanging sign blocks to be added to their block entities
 	 */
 	@Inject(method = "isValid", at = @At("RETURN"), cancellable = true)
-	private void isValid(BlockState state, CallbackInfoReturnable<Boolean> info) {
+	private void frozenLib$isValid(BlockState state, CallbackInfoReturnable<Boolean> info) {
 		var type = BlockEntityType.class.cast(this);
 
 		if ((type == BlockEntityType.SIGN &&
