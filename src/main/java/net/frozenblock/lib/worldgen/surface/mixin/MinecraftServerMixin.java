@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
+import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
 import net.minecraft.core.RegistryAccess;
@@ -45,6 +46,7 @@ public abstract class MinecraftServerMixin {
 		var registryAccess = server.registryAccess();
 		var levelStems = registryAccess.registryOrThrow(Registries.LEVEL_STEM);
 
+		OptimizedBiomeTagConditionSource.INSTANCES.clear();
 		for (var entry : levelStems.entrySet()) {
 			LevelStem stem = entry.getValue();
 			ChunkGenerator chunkGenerator = stem.generator();
@@ -58,6 +60,7 @@ public abstract class MinecraftServerMixin {
 		}
 
 		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().registryOrThrow(Registries.BIOME));
+		FrozenMain.log("Optimized tag source count: " + OptimizedBiomeTagConditionSource.INSTANCES.size(), FrozenMain.UNSTABLE_LOGGING);
 	}
 
 }
