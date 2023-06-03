@@ -60,6 +60,12 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 		return optimizedBiomeTagConditionSource;
 	}
 
+	public static void optimizeAll(@NotNull Registry<Biome> biomeRegistry) {
+		for (OptimizedBiomeTagConditionSource optimizedBiomeTagConditionSource : INSTANCES) {
+			optimizedBiomeTagConditionSource.optimize(biomeRegistry);
+		}
+	}
+
 	public void optimize(@NotNull Registry<Biome> biomeRegistry) {
 		this.biomes = null;
 		this.biomeNameTest = null;

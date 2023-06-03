@@ -20,12 +20,10 @@ package net.frozenblock.lib.worldgen.surface.mixin;
 
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.progress.ChunkProgressListener;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
@@ -59,10 +57,7 @@ public abstract class MinecraftServerMixin {
 			}
 		}
 
-		Registry<Biome> biomeRegistry = this.registryAccess().registryOrThrow(Registries.BIOME);
-		for (OptimizedBiomeTagConditionSource optimizedBiomeTagConditionSource : OptimizedBiomeTagConditionSource.INSTANCES) {
-			optimizedBiomeTagConditionSource.optimize(biomeRegistry);
-		}
+		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().registryOrThrow(Registries.BIOME));
 	}
 
 }
