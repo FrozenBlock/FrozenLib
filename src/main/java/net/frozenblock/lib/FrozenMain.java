@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.ingamedevtools.RegisterInGameDevTools;
@@ -68,6 +69,7 @@ public final class FrozenMain implements ModInitializer {
 		SpottingIconPredicate.init();
 		FrozenFeatures.init();
 		FrozenPlacementModifiers.init();
+		DataPackReloadMarker.init();
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenMain.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 
@@ -107,7 +109,6 @@ public final class FrozenMain implements ModInitializer {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
 			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
 		}));
-
 	}
 
 	//IDENTIFIERS
