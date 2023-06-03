@@ -38,12 +38,7 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 
 	private final TagKey<Biome> biomeTagKey;
 
-	@NotNull
-	public static BiomeTagConditionSource isBiomeTag(@NotNull TagKey<Biome> biomeTagKey) {
-		return new BiomeTagConditionSource(biomeTagKey);
-	}
-
-	BiomeTagConditionSource(TagKey<Biome> biomeTagKey) {
+	public BiomeTagConditionSource(TagKey<Biome> biomeTagKey) {
 		this.biomeTagKey = biomeTagKey;
 	}
 

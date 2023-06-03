@@ -20,7 +20,9 @@ package net.frozenblock.lib.worldgen.surface.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -75,6 +77,10 @@ public final class FrozenSurfaceRules {
     public static SurfaceRules.ConditionSource isBiome(@NotNull List<ResourceKey<Biome>> biomes) {
         return SurfaceRules.isBiome(biomes);
     }
+
+	public static SurfaceRules.ConditionSource isBiomeTag(@NotNull TagKey<Biome> biomeTagKey) {
+		return new BiomeTagConditionSource(biomeTagKey);
+	}
 
     public static SurfaceRules.RuleSource makeStateRule(@NotNull Block block) {
         return SurfaceRules.state(block.defaultBlockState());
