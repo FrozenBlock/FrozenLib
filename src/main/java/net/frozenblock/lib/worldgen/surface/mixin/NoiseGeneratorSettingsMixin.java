@@ -35,9 +35,6 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 	@Unique
 	private SurfaceRules.RuleSource frozenLib$frozenSurfaceRules;
 
-	@Unique
-	private SurfaceRules.RuleSource frozenLib$mergedSurfaceRules;
-
 	@ModifyReturnValue(method = "surfaceRule", at = @At("RETURN"))
 	private SurfaceRules.RuleSource frozenLib$modifyRules(SurfaceRules.RuleSource original) {
 		if (this.frozenLib$frozenSurfaceRules != null) {
