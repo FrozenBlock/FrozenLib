@@ -18,20 +18,30 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
+import java.util.Set;
+import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = MinecraftServer.class, priority = 2010) // apply after bclib
-public class MinecraftServerMixin {
+public abstract class MinecraftServerMixin {
+
+	@Shadow
+	public abstract RegistryAccess.Frozen registryAccess();
 
 	@Inject(method = "createLevels", at = @At("HEAD"))
 	private void frozenLib$addSurfaceRules(ChunkProgressListener worldGenerationProgressListener, CallbackInfo ci) {
@@ -49,6 +59,16 @@ public class MinecraftServerMixin {
 
 				SurfaceRuleUtil.injectSurfaceRules(noiseSettings, dimension);
 			}
+		}
+
+		for (OptimizedBiomeTagConditionSource optimizedBiomeTagConditionSource : OptimizedBiomeTagConditionSource.INSTANCES) {
+			this.registryAccess().registryOrThrow(Registries.BIOME).getTag(optimizedBiomeTagConditionSource.biomeTagKey).ifPresent((biomeList -> {
+				for (Holder<Biome> biomeHolder : biomeList) {
+					biomeHolder.unwrapKey().ifPresent(biomeResourceKey -> optimizedBiomeTagConditionSource.biomes.add(biomeResourceKey));
+				}
+			}));
+			optimizedBiomeTagConditionSource.biomeNameTest = Set.copyOf(optimizedBiomeTagConditionSource.biomes)::contains;
+			FrozenMain.log("OPTIMIZED A SOURCE LOL", FrozenMain.UNSTABLE_LOGGING);
 		}
 	}
 
