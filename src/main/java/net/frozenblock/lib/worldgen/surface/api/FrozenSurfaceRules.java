@@ -21,6 +21,7 @@ package net.frozenblock.lib.worldgen.surface.api;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
+import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -80,6 +81,10 @@ public final class FrozenSurfaceRules {
 
 	public static SurfaceRules.ConditionSource isBiomeTag(@NotNull TagKey<Biome> biomeTagKey) {
 		return new BiomeTagConditionSource(biomeTagKey);
+	}
+
+	public static SurfaceRules.ConditionSource isBiomeTagOptimized(@NotNull TagKey<Biome> biomeTagKey) {
+		return new OptimizedBiomeTagConditionSource(biomeTagKey);
 	}
 
     public static SurfaceRules.RuleSource makeStateRule(@NotNull Block block) {

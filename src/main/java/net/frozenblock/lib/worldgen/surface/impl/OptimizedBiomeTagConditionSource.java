@@ -53,13 +53,6 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 
 	public static final List<OptimizedBiomeTagConditionSource> INSTANCES = new ArrayList<>();
 
-	@NotNull
-	public static OptimizedBiomeTagConditionSource isBiomeTag(@NotNull TagKey<Biome> biomeTagKey) {
-		OptimizedBiomeTagConditionSource optimizedBiomeTagConditionSource = new OptimizedBiomeTagConditionSource(biomeTagKey);
-		INSTANCES.add(optimizedBiomeTagConditionSource);
-		return optimizedBiomeTagConditionSource;
-	}
-
 	public static void optimizeAll(@NotNull Registry<Biome> biomeRegistry) {
 		INSTANCES.forEach(optimizedBiomeTagConditionSource -> optimizedBiomeTagConditionSource.optimize(biomeRegistry));
 	}
@@ -83,8 +76,9 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 		}
 	}
 
-	OptimizedBiomeTagConditionSource(TagKey<Biome> biomeTagKey) {
+	public OptimizedBiomeTagConditionSource(TagKey<Biome> biomeTagKey) {
 		this.biomeTagKey = biomeTagKey;
+		INSTANCES.add(this);
 	}
 
 	@Override
