@@ -18,11 +18,9 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
-import java.util.Set;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
-import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
@@ -61,14 +59,9 @@ public abstract class MinecraftServerMixin {
 			}
 		}
 
+		Registry<Biome> biomeRegistry = this.registryAccess().registryOrThrow(Registries.BIOME);
 		for (OptimizedBiomeTagConditionSource optimizedBiomeTagConditionSource : OptimizedBiomeTagConditionSource.INSTANCES) {
-			this.registryAccess().registryOrThrow(Registries.BIOME).getTag(optimizedBiomeTagConditionSource.biomeTagKey).ifPresent((biomeList -> {
-				for (Holder<Biome> biomeHolder : biomeList) {
-					biomeHolder.unwrapKey().ifPresent(biomeResourceKey -> optimizedBiomeTagConditionSource.biomes.add(biomeResourceKey));
-				}
-			}));
-			optimizedBiomeTagConditionSource.biomeNameTest = Set.copyOf(optimizedBiomeTagConditionSource.biomes)::contains;
-			FrozenMain.log("OPTIMIZED A SOURCE LOL", FrozenMain.UNSTABLE_LOGGING);
+			optimizedBiomeTagConditionSource.optimize(biomeRegistry);
 		}
 	}
 

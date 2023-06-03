@@ -20,6 +20,8 @@ package net.frozenblock.lib.worldgen.surface.impl;
 
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.FrozenMain;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -30,6 +32,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Predicate;
 
 public final class OptimizedBiomeTagConditionSource implements SurfaceRules.ConditionSource {
@@ -43,7 +46,8 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 	);
 
 	public final TagKey<Biome> biomeTagKey;
-	public List<ResourceKey<Biome>> biomes = new ArrayList<>();
+	@Nullable
+	public List<ResourceKey<Biome>> biomes;
 	@Nullable
 	public Predicate<ResourceKey<Biome>> biomeNameTest;
 
@@ -54,6 +58,25 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 		OptimizedBiomeTagConditionSource optimizedBiomeTagConditionSource = new OptimizedBiomeTagConditionSource(biomeTagKey);
 		INSTANCES.add(optimizedBiomeTagConditionSource);
 		return optimizedBiomeTagConditionSource;
+	}
+
+	public void optimize(@NotNull Registry<Biome> biomeRegistry) {
+		this.biomes = null;
+		this.biomeNameTest = null;
+		ArrayList<ResourceKey<Biome>> biomeList = new ArrayList<>();
+
+		biomeRegistry.getTag(this.biomeTagKey).ifPresent((biomes -> {
+			for (Holder<Biome> biomeHolder : biomes) {
+				biomeHolder.unwrapKey().ifPresent(biomeList::add);
+			}
+			this.biomes = biomeList;
+		}));
+		if (this.biomes != null) {
+			this.biomeNameTest = Set.copyOf(this.biomes)::contains;
+			FrozenMain.log("OPTIMIZED A SOURCE :D", FrozenMain.UNSTABLE_LOGGING);
+		} else {
+			FrozenMain.log("COULDN'T OPTIMIZE A SOURCE :(", FrozenMain.UNSTABLE_LOGGING);
+		}
 	}
 
 	OptimizedBiomeTagConditionSource(TagKey<Biome> biomeTagKey) {
@@ -76,10 +99,8 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 			protected boolean compute() {
 				if (OptimizedBiomeTagConditionSource.this.biomeNameTest != null) {
 					return this.context.biome.get().is(OptimizedBiomeTagConditionSource.this.biomeNameTest);
-				} else {
-					FrozenMain.warn("IT DIDNT WORK NOOOOOOOOOOOO", FrozenMain.UNSTABLE_LOGGING);
 				}
-				return false;
+				return this.context.biome.get().is(OptimizedBiomeTagConditionSource.this.biomeTagKey);
 			}
 		}
 
