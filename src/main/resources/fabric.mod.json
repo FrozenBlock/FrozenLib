@@ -39,9 +39,6 @@
     "preLaunch": [
       "net.frozenblock.lib.FrozenPreLaunch"
     ],
-    "frozenlib:events": [
-      "org.quiltmc.qsl.frozenblock.worldgen.surface_rule.impl.QuiltSurfaceRuleInitializer"
-    ],
     "modmenu": [
       "net.frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
     ],
