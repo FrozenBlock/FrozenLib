@@ -226,7 +226,7 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
     // Mod Menu
-    modCompileOnly("com.terraformersmc:modmenu:${modmenu_version}")
+    modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
     modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
