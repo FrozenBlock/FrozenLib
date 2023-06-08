@@ -4,4 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Removed port of QuiltMC's Surface Rule API in favor of our own
+- Fixed incomplete sound packets being sent
