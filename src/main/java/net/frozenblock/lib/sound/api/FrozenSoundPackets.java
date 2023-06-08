@@ -122,7 +122,7 @@ public final class FrozenSoundPackets {
         }
     }
 
-    public static void createMovingRestrictionLoopingSound(ServerPlayer player, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id) {
+    public static void createMovingRestrictionLoopingSound(ServerPlayer player, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id, boolean stopOnDeath) {
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeVarInt(entity.getId());
         byteBuf.writeId(Registry.SOUND_EVENT, sound);
@@ -130,6 +130,7 @@ public final class FrozenSoundPackets {
         byteBuf.writeFloat(volume);
         byteBuf.writeFloat(pitch);
         byteBuf.writeResourceLocation(id);
+		byteBuf.writeBoolean(stopOnDeath);
         ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
     }
 
