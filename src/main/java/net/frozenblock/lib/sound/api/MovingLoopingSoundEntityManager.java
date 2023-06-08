@@ -91,7 +91,7 @@ public class MovingLoopingSoundEntityManager {
 
 	public void syncWithPlayer(ServerPlayer serverPlayer) {
 		for (MovingLoopingSoundEntityManager.SoundLoopData nbt : this.getSounds()) {
-			FrozenSoundPackets.createMovingRestrictionLoopingSound(serverPlayer, this.entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, true);
+			FrozenSoundPackets.createMovingRestrictionLoopingSound(serverPlayer, this.entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.stopOnDeath);
 		}
 	}
 
