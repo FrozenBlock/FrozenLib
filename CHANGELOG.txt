@@ -4,4 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Updated to 1.20-pre7
+- Removed port of QuiltMC's Surface Rule API in favor of our own
