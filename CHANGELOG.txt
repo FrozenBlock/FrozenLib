@@ -4,4 +4,11 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Removed port of QuiltMC's Surface Rule API in favor of our own
+- Fixed worldgen disk features causing crashes (prevented them from accessing the world across multiple threads at the same time.)
+- The Loot Table Whacker now displays error and success messages above the hotbar.
+- Converted feature configurations to records.
+- Added the Optimized Biome Tag Condition Source, allowing surface rules to utilize tags without causing lag.
+    - Each time a server is loaded or a datapack is reloaded, all Optimized Biome Tag Condition Sources will iterate through the entries in their specified tag, and add them to a list.
+    - This means that the previous iteration using tags no longer need to iterate through the tag for every single block it checks, only needing to use a already-existing list, matching the performance of regular Biome Condition Sources.
+- Cleaned up and improved some mixins.
+- Some internal cleanup and annotation.
