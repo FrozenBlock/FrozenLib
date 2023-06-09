@@ -4,7 +4,7 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed worldgen disk features causing crashes (prevented them from accessing the world across multiple threads at the same time.)
+- Fixed disk features causing crashes during worldgen (they can no longer access the world from multiple threads at the same time.)
 - The Loot Table Whacker now displays error and success messages above the hotbar.
 - Converted feature configurations to records.
 - Added the Optimized Biome Tag Condition Source, allowing surface rules to utilize tags without causing lag.
