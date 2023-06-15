@@ -49,7 +49,8 @@ public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWate
         int radiusSquared = config.radius() * config.radius();
         RandomSource random = level.getRandom();
         ImprovedNoise sampler = config.noise() == 1 ? EasyNoiseSampler.perlinLocal : config.noise() == 2 ? EasyNoiseSampler.perlinChecked : config.noise() == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-        int bx = blockPos.getX();
+        float chance = config.chance();
+		int bx = blockPos.getX();
 		int by = blockPos.getY();
         int bz = blockPos.getZ();
         BlockPos.MutableBlockPos mutable = blockPos.mutable();
@@ -62,7 +63,7 @@ public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWate
 					if (distance < radiusSquared) {
 						mutable.set(x, level.getHeight(Types.OCEAN_FLOOR, x, z) - 1, z);
 						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier(), config.multiplyY(), config.useY());
-						if (sample > config.minThresh() && sample < config.maxThresh() && level.getBlockState(mutable).is(config.replaceable()) && checkSurroundingBlocks(level, mutable, predicate)) {
+						if (sample > config.minThresh() && sample < config.maxThresh() && level.getBlockState(mutable).is(config.replaceable()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 							generated = true;
 							BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock().getState(random, mutable) : config.pathBlock().getState(random, mutable);
 							level.setBlock(mutable, setState, 3);
@@ -74,7 +75,7 @@ public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWate
 						if (distance < radiusSquared) {
 							mutable.set(x, y, z);
 							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier(), config.multiplyY(), config.useY());
-							if (sample > config.minThresh() && sample < config.maxThresh() && level.getBlockState(mutable).is(config.replaceable()) && checkSurroundingBlocks(level, mutable, predicate)) {
+							if (sample > config.minThresh() && sample < config.maxThresh() && level.getBlockState(mutable).is(config.replaceable()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 								generated = true;
 								BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock().getState(random, mutable) : config.pathBlock().getState(random, mutable);
 								level.setBlock(mutable, setState, 3);

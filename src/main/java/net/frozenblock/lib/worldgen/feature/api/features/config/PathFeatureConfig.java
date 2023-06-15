@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record PathFeatureConfig(BlockStateProvider pathBlock, int radius, int noise, double multiplier, double minThresh, double maxThresh, boolean useY, boolean multiplyY, boolean is3D, boolean onlyExposed, HolderSet<Block> replaceable) implements FeatureConfiguration {
+public record PathFeatureConfig(BlockStateProvider pathBlock, int radius, int noise, double multiplier, double minThresh, double maxThresh, boolean useY, boolean multiplyY, boolean is3D, boolean onlyExposed, HolderSet<Block> replaceable, float chance) implements FeatureConfiguration {
 	public static final Codec<PathFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("block").forGetter((config) -> config.pathBlock),
 		Codec.intRange(1, 64).fieldOf("radius").orElse(10).forGetter((config) -> config.radius),
@@ -39,6 +39,7 @@ public record PathFeatureConfig(BlockStateProvider pathBlock, int radius, int no
 		Codec.BOOL.fieldOf("multiplyY").orElse(false).forGetter((config) -> config.multiplyY),
 		Codec.BOOL.fieldOf("is3D").orElse(false).forGetter((config) -> config.is3D),
 		Codec.BOOL.fieldOf("onlyExposed").orElse(false).forGetter((config) -> config.onlyExposed),
-		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter((config) -> config.replaceable)
+		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter((config) -> config.replaceable),
+		Codec.floatRange(0, 1).fieldOf("chance").orElse(1F).forGetter((config) -> config.chance)
 	).apply(instance, PathFeatureConfig::new));
 }
