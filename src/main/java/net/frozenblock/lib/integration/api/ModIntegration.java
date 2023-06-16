@@ -35,10 +35,12 @@ public abstract class ModIntegration {
 
     private final String modID;
 	private final String modRegistryID;
+	private final boolean isModLoaded;
 
 	public ModIntegration(String modID, String modRegistryID) {
 		this.modID = modID;
 		this.modRegistryID = modRegistryID;
+		this.isModLoaded = FabricLoader.getInstance().isModLoaded(this.modID);
 	}
 
     public ModIntegration(String modID) {
@@ -99,7 +101,7 @@ public abstract class ModIntegration {
     }
 
     public boolean modLoaded() {
-        return FabricLoader.getInstance().isModLoaded(this.modID);
+        return this.isModLoaded;
     }
 
     public abstract void init();
