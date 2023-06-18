@@ -4,15 +4,12 @@
   "package": "org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-	"ChunkSerializerMixin",
     "DataFixTypesMixin",
-    "PlayerMixin",
-    "StructureTemplateMixin"
+    "NbtUtilsMixin"
   ],
   "client": [
-    "client.HotbarManagerMixin"
   ],
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   }
 }

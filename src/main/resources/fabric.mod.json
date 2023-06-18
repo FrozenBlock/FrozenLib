@@ -99,9 +99,6 @@
       ],
       "net/minecraft/class_4766": [
         "net/frozenblock/lib/worldgen/biome/api/FrozenBiomeSourceAccess"
-      ],
-      "net/minecraft/class_6686/class_6710": [
-        "org/quiltmc/qsl/frozenblock/worldgen/surface_rule/impl/QuiltSequenceMaterialRuleHooks"
       ]
     },
 	"modmenu": {
