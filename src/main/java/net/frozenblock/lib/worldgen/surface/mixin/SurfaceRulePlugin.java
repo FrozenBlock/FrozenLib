@@ -18,12 +18,13 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
+import java.util.List;
+import java.util.Set;
 import net.frozenblock.lib.FrozenBools;
+import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
-import java.util.List;
-import java.util.Set;
 
 public class SurfaceRulePlugin implements IMixinConfigPlugin {
 	@Override
@@ -37,7 +38,7 @@ public class SurfaceRulePlugin implements IMixinConfigPlugin {
 	}
 
 	@Override
-	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+	public boolean shouldApplyMixin(String targetClassName, @NotNull String mixinClassName) {
 		if (mixinClassName.contains("terrablender"))
 			return FrozenBools.HAS_TERRABLENDER;
 		return true;

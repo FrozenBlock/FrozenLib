@@ -25,6 +25,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PrickOnUseItem extends Item {
@@ -40,6 +41,7 @@ public class PrickOnUseItem extends Item {
     }
 
     @Override
+	@NotNull
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
         if (this.isEdible()) {
             user.hurt(world.damageSources().source(this.damageType),this.damage);

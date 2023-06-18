@@ -92,6 +92,7 @@ transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard
 transitive-accessible    class    net/minecraft/world/level/chunk/ChunkStatus$SimpleGenerationTask
 transitive-accessible    method    net/minecraft/data/worldgen/biome/OverworldBiomes    calculateSkyColor    (F)I
 transitive-accessible    method    net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider    <init>    (Lnet/minecraft/world/level/block/state/BlockState;)V
+transitive-accessible    method    net/minecraft/world/level/biome/OverworldBiomeBuilder    addBiomes    (Ljava/util/function/Consumer;)V
 
 # Noise
 transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/data/worldgen/BootstapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V

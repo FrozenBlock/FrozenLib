@@ -32,48 +32,52 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import org.jetbrains.annotations.NotNull;
 
 public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWaterTagFeatureConfig> {
+
     public NoisePathSwapUnderWaterTagFeature(Codec<PathSwapUnderWaterTagFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<PathSwapUnderWaterTagFeatureConfig> context) {
+	@Override
+    public boolean place(@NotNull FeaturePlaceContext<PathSwapUnderWaterTagFeatureConfig> context) {
         boolean generated = false;
 		PathSwapUnderWaterTagFeatureConfig config = context.config();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
-        int radiusSquared = config.radius * config.radius;
+        int radiusSquared = config.radius() * config.radius();
         RandomSource random = level.getRandom();
-        ImprovedNoise sampler = config.noise == 1 ? EasyNoiseSampler.perlinLocal : config.noise == 2 ? EasyNoiseSampler.perlinChecked : config.noise == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-        int bx = blockPos.getX();
+        ImprovedNoise sampler = config.noise() == 1 ? EasyNoiseSampler.perlinLocal : config.noise() == 2 ? EasyNoiseSampler.perlinChecked : config.noise() == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
+        float chance = config.chance();
+		int bx = blockPos.getX();
 		int by = blockPos.getY();
         int bz = blockPos.getZ();
         BlockPos.MutableBlockPos mutable = blockPos.mutable();
-		BlockPredicate predicate = config.onlyExposed ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
+		BlockPredicate predicate = config.onlyExposed() ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
 
-		for (int x = bx - config.radius; x <= bx + config.radius; x++) {
-			for (int z = bz - config.radius; z <= bz + config.radius; z++) {
-				if (!config.is3D) {
+		for (int x = bx - config.radius(); x <= bx + config.radius(); x++) {
+			for (int z = bz - config.radius(); z <= bz + config.radius(); z++) {
+				if (!config.is3D()) {
 					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
 					if (distance < radiusSquared) {
 						mutable.set(x, level.getHeight(Types.OCEAN_FLOOR, x, z) - 1, z);
-						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
-						if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
+						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier(), config.multiplyY(), config.useY());
+						if (sample > config.minThresh() && sample < config.maxThresh() && level.getBlockState(mutable).is(config.replaceable()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 							generated = true;
-							BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock.getState(random, mutable) : config.pathBlock.getState(random, mutable);
+							BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock().getState(random, mutable) : config.pathBlock().getState(random, mutable);
 							level.setBlock(mutable, setState, 3);
 						}
 					}
 				} else {
-					for (int y = by - config.radius; y <= by + config.radius; y++) {
+					for (int y = by - config.radius(); y <= by + config.radius(); y++) {
 						double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)) + ((by - y) * (by - y)));
 						if (distance < radiusSquared) {
 							mutable.set(x, y, z);
-							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier, config.multiplyY, config.useY);
-							if (sample > config.minThresh && sample < config.maxThresh && level.getBlockState(mutable).is(config.replaceable) && checkSurroundingBlocks(level, mutable, predicate)) {
+							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier(), config.multiplyY(), config.useY());
+							if (sample > config.minThresh() && sample < config.maxThresh() && level.getBlockState(mutable).is(config.replaceable()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 								generated = true;
-								BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock.getState(random, mutable) : config.pathBlock.getState(random, mutable);
+								BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.waterPathBlock().getState(random, mutable) : config.pathBlock().getState(random, mutable);
 								level.setBlock(mutable, setState, 3);
 							}
 						}

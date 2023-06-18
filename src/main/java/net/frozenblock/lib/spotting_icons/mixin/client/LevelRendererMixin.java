@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.spotting_icons.mixin.client;
 
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.spotting_icons.impl.EntityRenderDispatcherWithIcon;
 import net.minecraft.client.Camera;
@@ -32,6 +31,7 @@ import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
@@ -68,23 +68,18 @@ public class LevelRendererMixin {
 					entity.yOld = entity.getY();
 					entity.zOld = entity.getZ();
 				}
-				this.renderEntityIcon(entity, d, e, f, partialTick, poseStack, (MultiBufferSource) bufferSource);
+				this.renderEntityIcon(entity, d, e, f, partialTick, poseStack, bufferSource);
 			}
 		}
 	}
 
 	@Unique
-	private void renderEntityIcon(Entity entity, double camX, double camY, double camZ, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource) {
+	private void renderEntityIcon(@NotNull Entity entity, double camX, double camY, double camZ, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource) {
 		double d = Mth.lerp(partialTick, entity.xOld, entity.getX());
 		double e = Mth.lerp(partialTick, entity.yOld, entity.getY());
 		double f = Mth.lerp(partialTick, entity.zOld, entity.getZ());
 		float g = Mth.lerp(partialTick, entity.yRotO, entity.getYRot());
-		((EntityRenderDispatcherWithIcon)this.entityRenderDispatcher).renderIcon(entity, d - camX, e - camY, f - camZ, g, partialTick, poseStack, bufferSource, this.entityRenderDispatcher.getPackedLightCoords(entity, partialTick));
-	}
-
-	@Shadow
-	private BufferBuilder.RenderedBuffer buildClouds(BufferBuilder builder, double x, double y, double z, Vec3 cloudColor) {
-		throw new AssertionError("Mixin injection failed - FrozenLib LevelRendererMixin");
+		((EntityRenderDispatcherWithIcon)this.entityRenderDispatcher).frozenLib$renderIcon(entity, d - camX, e - camY, f - camZ, g, partialTick, poseStack, bufferSource, this.entityRenderDispatcher.getPackedLightCoords(entity, partialTick));
 	}
 
 }

@@ -22,15 +22,16 @@ import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
+import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.jetbrains.annotations.NotNull;
 
 public class SurfaceRuleUtil {
 
-    public static void injectSurfaceRules(NoiseGeneratorSettings settings, ResourceKey<DimensionType> dimension) {
-        var inter = NoiseGeneratorInterface.class.cast(settings);
-
-        var newRules = FrozenSurfaceRules.getSurfaceRules(dimension);
+    public static void injectSurfaceRules(@NotNull NoiseGeneratorSettings settings, ResourceKey<DimensionType> dimension) {
+		NoiseGeneratorInterface inter = NoiseGeneratorInterface.class.cast(settings);
+		SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(dimension);
         if (newRules != null) {
-            inter.overwriteSurfaceRules(newRules);
+            inter.writeSurfaceRules(newRules);
         }
     }
 }

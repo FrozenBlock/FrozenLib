@@ -18,21 +18,16 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
-import java.util.Map;
-import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
-import net.minecraft.core.Registry;
+import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
+import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.progress.ChunkProgressListener;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.storage.WorldData;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -40,18 +35,18 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = MinecraftServer.class, priority = 2010) // apply after bclib
-public class MinecraftServerMixin {
+public abstract class MinecraftServerMixin {
 
 	@Shadow
-	@Final
-	protected WorldData worldData;
+	public abstract RegistryAccess.Frozen registryAccess();
 
 	@Inject(method = "createLevels", at = @At("HEAD"))
-	private void addSurfaceRules(ChunkProgressListener worldGenerationProgressListener, CallbackInfo ci) {
+	private void frozenLib$addSurfaceRules(ChunkProgressListener worldGenerationProgressListener, CallbackInfo ci) {
 		var server = MinecraftServer.class.cast(this);
 		var registryAccess = server.registryAccess();
 		var levelStems = registryAccess.registryOrThrow(Registries.LEVEL_STEM);
 
+		OptimizedBiomeTagConditionSource.INSTANCES.clear();
 		for (var entry : levelStems.entrySet()) {
 			LevelStem stem = entry.getValue();
 			ChunkGenerator chunkGenerator = stem.generator();
@@ -63,6 +58,9 @@ public class MinecraftServerMixin {
 				SurfaceRuleUtil.injectSurfaceRules(noiseSettings, dimension);
 			}
 		}
+
+		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().registryOrThrow(Registries.BIOME));
+		FrozenMain.log("Optimized tag source count: " + OptimizedBiomeTagConditionSource.INSTANCES.size(), FrozenMain.UNSTABLE_LOGGING);
 	}
 
 }

@@ -20,14 +20,17 @@ package net.frozenblock.lib.worldgen.surface.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
+import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class FrozenSurfaceRules {
@@ -68,15 +71,23 @@ public final class FrozenSurfaceRules {
     public static final SurfaceRules.RuleSource CRIMSON_NYLIUM = makeStateRule(Blocks.CRIMSON_NYLIUM);
     public static final SurfaceRules.RuleSource ENDSTONE = makeStateRule(Blocks.END_STONE);
 
-    public static SurfaceRules.SequenceRuleSource sequence(List<SurfaceRules.RuleSource> list) {
+    public static SurfaceRules.SequenceRuleSource sequence(@NotNull List<SurfaceRules.RuleSource> list) {
         return new SurfaceRules.SequenceRuleSource(list);
     }
 
-    public static SurfaceRules.ConditionSource isBiome(List<ResourceKey<Biome>> biomes) {
+    public static SurfaceRules.ConditionSource isBiome(@NotNull List<ResourceKey<Biome>> biomes) {
         return SurfaceRules.isBiome(biomes);
     }
 
-    public static SurfaceRules.RuleSource makeStateRule(Block block) {
+	public static SurfaceRules.ConditionSource isBiomeTag(@NotNull TagKey<Biome> biomeTagKey) {
+		return new BiomeTagConditionSource(biomeTagKey);
+	}
+
+	public static SurfaceRules.ConditionSource isBiomeTagOptimized(@NotNull TagKey<Biome> biomeTagKey) {
+		return new OptimizedBiomeTagConditionSource(biomeTagKey);
+	}
+
+    public static SurfaceRules.RuleSource makeStateRule(@NotNull Block block) {
         return SurfaceRules.state(block.defaultBlockState());
     }
 

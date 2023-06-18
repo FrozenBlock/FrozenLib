@@ -20,14 +20,13 @@ package net.frozenblock.lib.item.api;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class PrickOnUseBlockItem extends BlockItem {
@@ -35,18 +34,15 @@ public class PrickOnUseBlockItem extends BlockItem {
     public final SoundEvent hurtSound;
     public final ResourceKey<DamageType> damageType;
 
-    @Deprecated
-    private final Block block;
-
     public PrickOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, ResourceKey<DamageType> damageType) {
         super(block, properties);
-        this.block = block;
         this.damage = damage;
         this.hurtSound = sound;
         this.damageType = damageType;
     }
 
     @Override
+	@NotNull
     public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
         if (this.isEdible()) {
             user.hurt(world.damageSources().source(this.damageType),this.damage);

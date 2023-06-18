@@ -46,7 +46,7 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 
 	@Unique
 	@Override
-	public <T extends Entity> void renderIcon(T entity, float entityYaw, float partialTick, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+	public <T extends Entity> void frozenLib$renderIcon(T entity, float entityYaw, float partialTick, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
 		SpottingIconManager iconManager = ((EntitySpottingIconInterface) entity).getSpottingIconManager();
 		SpottingIconManager.SpottingIcon icon = iconManager.icon;
 		if (icon != null) {

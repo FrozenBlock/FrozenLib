@@ -18,56 +18,34 @@
 
 package net.frozenblock.lib.item.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
 	@Shadow
 	protected ItemStack useItem;
-	@Shadow
-	protected int useItemRemaining;
 
-	@Inject(method = "startUsingItem", at = @At("HEAD"), cancellable = true)
-	private void preventStartingGameEvent(InteractionHand hand, CallbackInfo info) {
-		LivingEntity entity = LivingEntity.class.cast(this);
-		ItemStack stack = entity.getItemInHand(hand);
-		if (!stack.isEmpty() && !entity.isUsingItem()) {
-			if (stack.is(FrozenItemTags.NO_USE_GAME_EVENTS)) {
-				info.cancel();
-				this.useItem = stack;
-				this.useItemRemaining = stack.getUseDuration();
-				if (!entity.level().isClientSide) {
-					this.setLivingEntityFlag(1, true);
-					this.setLivingEntityFlag(2, hand == InteractionHand.OFF_HAND);
-				}
-			}
+	@WrapOperation(method = "startUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/world/level/gameevent/GameEvent;)V"))
+	private void frozenLib$preventStartingGameEvent(LivingEntity livingEntity, GameEvent gameEvent, Operation original) {
+		if (!livingEntity.getUseItem().is(FrozenItemTags.NO_USE_GAME_EVENTS)) {
+			original.call(livingEntity, gameEvent);
 		}
 	}
 
-	@Inject(method = "stopUsingItem", at = @At("HEAD"), cancellable = true)
-	public void preventStoppingGameEvent(CallbackInfo info) {
-		LivingEntity entity = LivingEntity.class.cast(this);
-		if (!entity.level().isClientSide) {
-			ItemStack stack = entity.getUseItem();
-			if (stack.is(FrozenItemTags.NO_USE_GAME_EVENTS)) {
-				this.setLivingEntityFlag(1, false);
-				info.cancel();
-			}
+	@WrapOperation(method = "stopUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/world/level/gameevent/GameEvent;)V"))
+	private void frozenLib$preventStoppingGameEvent(LivingEntity livingEntity, GameEvent gameEvent, Operation original) {
+		if (!livingEntity.getUseItem().is(FrozenItemTags.NO_USE_GAME_EVENTS)) {
+			original.call(livingEntity, gameEvent);
 		}
-	}
-
-	@Shadow
-	protected void setLivingEntityFlag(int mask, boolean value) {
-		throw new UnsupportedOperationException("Mixin injection failed. - FrozenLib LivingEntityMixin.");
 	}
 
 }

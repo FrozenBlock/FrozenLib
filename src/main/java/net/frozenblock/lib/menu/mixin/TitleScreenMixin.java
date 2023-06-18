@@ -53,7 +53,7 @@ public class TitleScreenMixin {
 			String namespace = panLocation.getNamespace();
 			String path = panLocation.getPath();
 			for(int i = 0; i < 6; ++i) {
-				//Panorama isn't valid if one of the six images aren't found- move on to next ResourceLocation in the list.
+				//Panorama isn't valid if one of the six images aren't found; move on to next ResourceLocation in the list.
 				if (Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(namespace, path + "_" + i + ".png")).isEmpty()) {
 					FrozenMain.warn("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", FrozenMain.UNSTABLE_LOGGING);
 					break;

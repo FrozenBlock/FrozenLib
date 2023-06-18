@@ -24,6 +24,7 @@ import net.frozenblock.lib.worldgen.biome.impl.OverworldBiomeData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * API that exposes the internals of Minecraft's overworld biome code.
@@ -40,7 +41,7 @@ public final class FrozenOverworldBiomes {
 	 * @param targetPoint	data about the given {@link Biome}'s spawning information in the Overworld.
 	 * @see Climate.TargetPoint
 	 */
-    public static void addOverworldBiome(ResourceKey<Biome> biome, Climate.TargetPoint targetPoint) {
+    public static void addOverworldBiome(ResourceKey<Biome> biome, Climate.@NotNull TargetPoint targetPoint) {
         OverworldBiomeData.addOverworldBiome(biome, Climate.parameters(
                 targetPoint.temperature(),
                 targetPoint.humidity(),

@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public final class ItemStackMixin {
 
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
-	public void removeAncientTag(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
+	public void frozenLib$removeTags(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
 		ItemStack stack = ItemStack.class.cast(this);
 		CompoundTag nbt = stack.getTag();
 		if (nbt != null) {
@@ -51,8 +51,16 @@ public final class ItemStackMixin {
 	}
 
 	@Inject(method = "isSameItemSameTags", at = @At("HEAD"))
-	private static void removeAncientTagAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
+	private static void frozenLib$removeTagsAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
 		CompoundTag lTag = left.getTag();
+		frozenLib$fixEmptyTags(left, lTag);
+
+		CompoundTag rTag = right.tag;
+		frozenLib$fixEmptyTags(right, rTag);
+	}
+
+	@Unique
+	private static void frozenLib$fixEmptyTags(ItemStack left, CompoundTag lTag) {
 		if (lTag != null) {
 			for (String key : RemoveableItemTags.keys()) {
 				if (lTag.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
@@ -63,17 +71,6 @@ public final class ItemStackMixin {
 				left.tag = null;
 			}
 		}
-
-		CompoundTag rTag = right.tag;
-		if (rTag != null) {
-			for (String key : RemoveableItemTags.keys()) {
-				if (rTag.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
-					rTag.remove(key);
-				}
-			}
-			if (rTag.isEmpty()) {
-				right.tag = null;
-			}
-		}
 	}
+
 }

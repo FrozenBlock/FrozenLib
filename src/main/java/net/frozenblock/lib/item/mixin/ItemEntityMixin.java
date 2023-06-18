@@ -20,7 +20,6 @@ package net.frozenblock.lib.item.mixin;
 
 import java.util.List;
 import java.util.UUID;
-
 import net.frozenblock.lib.item.api.HeavyItemDamageRegistry;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.sounds.SoundEvents;
@@ -31,6 +30,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -100,7 +100,7 @@ public class ItemEntityMixin {
 	}
 
 	@Unique
-	public boolean canHitEntity(Entity entity) {
+	public boolean canHitEntity(@NotNull Entity entity) {
 		ItemEntity item = ItemEntity.class.cast(this);
 		Vec3 itemMovement = item.getDeltaMovement();
 		if (!entity.isSpectator() && entity.isAlive() && entity.isPickable() && entity instanceof LivingEntity && itemMovement.length() > 0.3) {

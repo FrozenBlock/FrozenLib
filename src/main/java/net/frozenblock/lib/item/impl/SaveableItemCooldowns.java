@@ -41,6 +41,7 @@ import org.slf4j.Logger;
 
 public class SaveableItemCooldowns {
 
+	@NotNull
 	public static ArrayList<SaveableCooldownInstance> makeSaveableCooldownInstanceList(@NotNull ServerPlayer player) {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		int tickCount = player.getCooldowns().tickCount;
@@ -62,6 +63,7 @@ public class SaveableItemCooldowns {
 				.ifPresent((savedItemCooldownsNbt) -> tag.put("FrozenLibSavedItemCooldowns", savedItemCooldownsNbt));
 	}
 
+	@NotNull
 	public static ArrayList<SaveableCooldownInstance> readCooldowns(@NotNull CompoundTag tag) {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		if (tag.contains("FrozenLibSavedItemCooldowns", 9)) {
@@ -119,6 +121,7 @@ public class SaveableItemCooldowns {
 			this.totalCooldownTime = totalCooldownTime;
 		}
 
+		@NotNull
 		public static SaveableCooldownInstance makeFromCooldownInstance(@NotNull Item item, @NotNull ItemCooldowns.CooldownInstance cooldownInstance, int tickCount) {
 			ResourceLocation resourceLocation = BuiltInRegistries.ITEM.getKey(item);
 			int cooldownLeft = cooldownInstance.endTime - tickCount;

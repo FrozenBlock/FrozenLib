@@ -31,7 +31,7 @@ import terrablender.api.SurfaceRuleManager;
 public class SurfaceRuleManagerMixin {
 
 	@ModifyReturnValue(method = "getNamespacedRules", at = @At("RETURN"))
-	private static SurfaceRules.RuleSource getDefaultSurfaceRules(SurfaceRules.RuleSource original, SurfaceRuleManager.RuleCategory category, SurfaceRules.RuleSource fallback) {
+	private static SurfaceRules.RuleSource frozenLib$getDefaultSurfaceRules(SurfaceRules.RuleSource original, SurfaceRuleManager.RuleCategory category, SurfaceRules.RuleSource fallback) {
 		SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(
 			category == SurfaceRuleManager.RuleCategory.OVERWORLD
 				? BuiltinDimensionTypes.OVERWORLD

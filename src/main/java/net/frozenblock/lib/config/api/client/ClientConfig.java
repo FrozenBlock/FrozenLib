@@ -18,6 +18,9 @@
 
 package net.frozenblock.lib.config.api.client;
 
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.client.option.Option;
@@ -26,9 +29,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public interface ClientConfig {

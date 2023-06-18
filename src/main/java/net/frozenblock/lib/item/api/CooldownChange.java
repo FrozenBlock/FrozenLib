@@ -22,6 +22,7 @@ import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
+import org.jetbrains.annotations.NotNull;
 
 public final class CooldownChange {
 
@@ -29,7 +30,7 @@ public final class CooldownChange {
 		throw new UnsupportedOperationException("CooldownChange contains only static declarations.");
 	}
 
-	public static void changeCooldown(Player player, Item item, int additionalCooldown, int min) {
+	public static void changeCooldown(@NotNull Player player, Item item, int additionalCooldown, int min) {
 		ItemCooldowns manager = player.getCooldowns();
 		ItemCooldowns.CooldownInstance entry = manager.cooldowns.get(item);
 		if (entry != null) {

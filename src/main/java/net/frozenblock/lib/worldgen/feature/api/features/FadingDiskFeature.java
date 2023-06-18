@@ -19,11 +19,13 @@
 package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
@@ -32,25 +34,25 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.function.Consumer;
+import org.jetbrains.annotations.NotNull;
 
 public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
+
     public FadingDiskFeature(Codec<FadingDiskFeatureConfig> codec) {
         super(codec);
     }
 
 	@Override
-    public boolean place(FeaturePlaceContext<FadingDiskFeatureConfig> context) {
+    public boolean place(@NotNull FeaturePlaceContext<FadingDiskFeatureConfig> context) {
 		AtomicBoolean success = new AtomicBoolean();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
 		FadingDiskFeatureConfig config = context.config();
-		boolean useHeightMapAndNotCircular = config.useHeightMapAndNotCircular;
-		Heightmap.Types heightmap = config.heightmap;
+		boolean useHeightMapAndNotCircular = config.useHeightMapAndNotCircular();
+		Heightmap.Types heightmap = config.heightmap();
         BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
         RandomSource random = level.getRandom();
-        int radius = config.radius.sample(random);
+        int radius = config.radius().sample(random);
         //DISK
         BlockPos.MutableBlockPos mutableDisk = s.mutable();
         int bx = s.getX();
@@ -77,7 +79,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 			consumer.accept(level);
 		} else {
 			ServerLevel serverLevel = level.getLevel();
-			serverLevel.getServer().execute(() -> consumer.accept(serverLevel));
+			serverLevel.getServer().executeBlocking(() -> consumer.accept(serverLevel));
 		}
 
         return success.get();
@@ -88,18 +90,18 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 			mutableDisk.set(x, y, z);
 			BlockState state = level.getBlockState(mutableDisk);
 			if (!useHeightMapAndNotCircular && isBlockExposed(level, mutableDisk)) {
-				boolean inner = mutableDisk.closerThan(s, radius * config.innerPercent);
-				boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent);
-				if (random.nextFloat() < config.placeChance) {
+				boolean inner = mutableDisk.closerThan(s, radius * config.innerChance());
+				boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent());
+				if (random.nextFloat() < config.placeChance()) {
 					if (fade) {
-						if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable)) {
-							level.setBlock(mutableDisk, config.outerState.getState(random, mutableDisk), 3);
+						if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable())) {
+							level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
 							return true;
 						}
 					} else {
-						boolean choseInner = inner && random.nextFloat() < config.innerChance;
-						if (state.is(choseInner ? config.innerReplaceable : config.outerReplaceable)) {
-							BlockStateProvider newState = choseInner ? config.innerState : config.outerState;
+						boolean choseInner = inner && random.nextFloat() < config.innerChance();
+						if (state.is(choseInner ? config.innerReplaceable() : config.outerReplaceable())) {
+							BlockStateProvider newState = choseInner ? config.innerState() : config.outerState();
 							level.setBlock(mutableDisk, newState.getState(random, mutableDisk), 3);
 							return true;
 						}
@@ -110,7 +112,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 		return false;
 	}
 
-	public static boolean isBlockExposed(WorldGenLevel level, BlockPos blockPos) {
+	public static boolean isBlockExposed(WorldGenLevel level, @NotNull BlockPos blockPos) {
 		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
 		for (Direction direction : Direction.values()) {
 			mutableBlockPos.move(direction);
