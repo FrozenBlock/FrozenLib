@@ -32,7 +32,7 @@ public class ItemBlockStateTagUtils {
 			if (stateTag != null) {
 				String stringValue = property.getName();
 				if (stateTag.contains(stringValue)) {
-					return property.getValue(stateTag.getString(stringValue)).get();
+					return property.getValue(stateTag.getString(stringValue)).orElse(defaultValue);
 				}
 			}
 		}
