@@ -85,7 +85,6 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 				current,
 				modDataVersion,
 				dataFixerEntry.currentVersion()
-
 			);
         }
 
@@ -100,15 +99,6 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 
         return compound;
     }
-
-	@Override
-	public @NotNull JsonObject addModDataVersions(@NotNull JsonObject object) {
-		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-			object.addProperty(entry.getKey() + "_DataVersion", entry.getValue().currentVersion());
-		}
-
-		return object;
-	}
 
     @Override
     public void freeze() {

@@ -47,6 +47,12 @@ public abstract class QuiltDataFixesInternals {
         return compound.getInt(modId + "_DataVersion");
     }
 
+	@Contract(pure = true)
+	@Range(from = 0, to = Integer.MAX_VALUE)
+	public static int getModDataVersion(@NotNull JsonObject json, @NotNull String modId) {
+		return json.get(modId + "_DataVersion").getAsInt();
+	}
+
     private static QuiltDataFixesInternals instance;
 
     public static @NotNull QuiltDataFixesInternals get() {
@@ -80,11 +86,9 @@ public abstract class QuiltDataFixesInternals {
     @Contract(value = "-> new", pure = true)
     public abstract @NotNull Schema createBaseSchema();
 
-    public abstract @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> compound);
+    public abstract @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic);
 
     public abstract @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound);
-
-	public abstract @NotNull JsonObject addModDataVersions(@NotNull JsonObject object);
 
     public abstract void freeze();
 

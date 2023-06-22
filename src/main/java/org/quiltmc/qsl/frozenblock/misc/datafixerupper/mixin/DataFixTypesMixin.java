@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
+import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
@@ -39,9 +40,14 @@ public class DataFixTypesMixin {
             method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
             at = @At("RETURN")
     )
-    private Dynamic<Tag> updateDataWithFixers(Dynamic<Tag> original, DataFixer fixer, Dynamic<Tag> dynamic,
+    private Dynamic updateDataWithFixers(Dynamic original, DataFixer fixer, Dynamic dynamic,
 											  int oldVersion, int targetVersion) {
 		var type = DataFixTypes.class.cast(this);
-		return QuiltDataFixesInternals.get().updateWithAllFixers(type, original);
+		var value = original.getValue();
+
+		if (value instanceof Tag) {
+			return QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) original);
+		}
+		return original;
 	}
 }

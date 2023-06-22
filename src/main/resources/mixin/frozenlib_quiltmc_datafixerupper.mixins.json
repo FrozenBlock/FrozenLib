@@ -6,9 +6,7 @@
   "mixins": [
     "DataFixTypesAccessor",
     "DataFixTypesMixin",
-    "NbtUtilsMixin",
-    "PlayerAdvancementsMixin",
-    "ServerStatsCounterMixin"
+    "NbtUtilsMixin"
   ],
   "client": [
   ],

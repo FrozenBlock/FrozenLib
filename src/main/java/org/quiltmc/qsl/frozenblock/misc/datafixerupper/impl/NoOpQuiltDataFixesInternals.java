@@ -70,11 +70,6 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
         return compound;
     }
 
-	@Override
-	public @NotNull JsonObject addModDataVersions(@NotNull JsonObject object) {
-		return object;
-	}
-
     @Override
     public void freeze() {
         this.frozen = true;
