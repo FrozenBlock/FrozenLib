@@ -4,4 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed incomplete sound packets being sent
+- Allowed malformed properties in ItemBlockStateTagUtils.getProperty()
