@@ -18,17 +18,19 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
+import com.google.gson.JsonObject;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin.DataFixTypesAccessor;
 
 import java.util.Collections;
 import java.util.Map;
@@ -71,22 +73,23 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     }
 
     @Override
-    public @NotNull CompoundTag updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull CompoundTag compound) {
-        var current = new Dynamic<>(NbtOps.INSTANCE, compound);
+    public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> current) {
+        var compound = (CompoundTag) current.getValue();
 
         for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
             int modDataVersion = getModDataVersion(compound, entry.getKey());
             DataFixerEntry dataFixerEntry = entry.getValue();
 
-			current = dataFixTypes.update(
-					dataFixerEntry.dataFixer(),
-					current,
-					modDataVersion,
-					dataFixerEntry.currentVersion()
+			current = dataFixerEntry.dataFixer().update(
+				DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
+				current,
+				modDataVersion,
+				dataFixerEntry.currentVersion()
+
 			);
         }
 
-        return (CompoundTag) current.getValue();
+        return current;
     }
 
     @Override
@@ -97,6 +100,15 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 
         return compound;
     }
+
+	@Override
+	public @NotNull JsonObject addModDataVersions(@NotNull JsonObject object) {
+		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
+			object.addProperty(entry.getKey() + "_DataVersion", entry.getValue().currentVersion());
+		}
+
+		return object;
+	}
 
     @Override
     public void freeze() {
