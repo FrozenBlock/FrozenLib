@@ -5,4 +5,5 @@ Make sure to clear this after each release
 Put changelog here:
 -----------------
 - Allowed malformed properties in ItemBlockStateTagUtils.getProperty()
+- Expanded the Splash Text API
 - Slightly improved the DataFixerUpper API

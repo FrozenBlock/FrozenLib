@@ -25,16 +25,35 @@ import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
-public class Splashes {
+public final class SplashTextAPI {
+	private SplashTextAPI() {
+	}
 
-	private static final List<ResourceLocation> SPLASHES = new ArrayList<>();
+	private static final List<ResourceLocation> SPLASH_FILES = new ArrayList<>();
+	private static final List<String> ADDITIONS = new ArrayList<>();
+	private static final List<String> REMOVALS = new ArrayList<>();
 
 	public static void addSplashLocation(ResourceLocation location) {
-		SPLASHES.add(location);
+		SPLASH_FILES.add(location);
 	}
 
-	public static List<ResourceLocation> getSplashes() {
-		return SPLASHES;
+	public static void add(String text) {
+		ADDITIONS.add(text);
 	}
 
+	public static void remove(String text) {
+		REMOVALS.add(text);
+	}
+
+	public static List<ResourceLocation> getSplashFiles() {
+		return List.copyOf(SPLASH_FILES);
+	}
+
+	public static List<String> getAdditions() {
+		return List.copyOf(ADDITIONS);
+	}
+
+	public static List<String> getRemovals() {
+		return List.copyOf(REMOVALS);
+	}
 }
