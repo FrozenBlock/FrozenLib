@@ -53,17 +53,17 @@ public class NoisePlacementFilter extends PlacementFilter {
 	@Override
 	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
 		WorldGenLevel level = context.level;
-		ImprovedNoise sampler = this.noiseIndex == 1 ? EasyNoiseSampler.perlinLocal : this.noiseIndex == 2 ? EasyNoiseSampler.perlinChecked : this.noiseIndex == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;;
+		ImprovedNoise sampler = this.noiseIndex == 1 ? EasyNoiseSampler.perlinLocal : this.noiseIndex == 2 ? EasyNoiseSampler.perlinChecked : this.noiseIndex == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
 		double sample = EasyNoiseSampler.sample(level, sampler, pos, this.multiplier, this.multiplyY, this.useY);
 		if (sample > this.minThresh && sample < this.maxThresh) {
 			return true;
 		}
 		if (this.fadeDist > 0) {
 			if (sample > this.minFadeThresh && sample < this.minThresh) {
-				return random.nextDouble() > (this.minThresh - sample) / this.fadeDist;
+				return random.nextDouble() > Math.abs((this.minThresh - sample) / this.fadeDist);
 			}
 			if (sample < this.maxFadeThresh && sample > this.maxThresh) {
-				return random.nextDouble() < (this.maxFadeThresh - sample) / this.fadeDist;
+				return random.nextDouble() > Math.abs((this.maxThresh - sample) / this.fadeDist);
 			}
 		}
 		return false;
