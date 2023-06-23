@@ -19,7 +19,8 @@ public class NoisePlacementFilter extends PlacementFilter {
 		Codec.doubleRange(-1, 1).fieldOf("maxThresh").orElse(1D).forGetter((config) -> config.maxThresh),
 		Codec.doubleRange(0, 1).fieldOf("fadeDist").orElse(0D).forGetter((config) -> config.fadeDist),
 		Codec.BOOL.fieldOf("useY").orElse(false).forGetter((config) -> config.useY),
-		Codec.BOOL.fieldOf("multiplyY").orElse(false).forGetter((config) -> config.multiplyY)
+		Codec.BOOL.fieldOf("multiplyY").orElse(false).forGetter((config) -> config.multiplyY),
+		Codec.BOOL.fieldOf("inside").orElse(false).forGetter((config) -> config.inside)
 		).apply(instance, NoisePlacementFilter::new));
 
 	private final int noiseIndex;
@@ -31,8 +32,9 @@ public class NoisePlacementFilter extends PlacementFilter {
 	private final double fadeDist;
 	private final boolean useY;
 	private final boolean multiplyY;
+	private final boolean inside;
 
-	public NoisePlacementFilter(int noiseIndex, double multiplier, double minThresh, double maxThresh, double fadeDist, boolean useY, boolean multiplyY) {
+	public NoisePlacementFilter(int noiseIndex, double multiplier, double minThresh, double maxThresh, double fadeDist, boolean useY, boolean multiplyY, boolean inside) {
 		this.noiseIndex = noiseIndex;
 		this.multiplier = multiplier;
 		this.minThresh = minThresh;
@@ -42,6 +44,7 @@ public class NoisePlacementFilter extends PlacementFilter {
 		this.maxFadeThresh = maxThresh + fadeDist;
 		this.useY = useY;
 		this.multiplyY = multiplyY;
+		this.inside = inside;
 		if (this.minThresh >= this.maxThresh) {
 			throw new IllegalArgumentException("NoisePlacementFilter minThresh cannot be greater than or equal to maxThresh!");
 		}
@@ -53,20 +56,21 @@ public class NoisePlacementFilter extends PlacementFilter {
 	@Override
 	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
 		WorldGenLevel level = context.level;
+		boolean isInside = false;
 		ImprovedNoise sampler = this.noiseIndex == 1 ? EasyNoiseSampler.perlinLocal : this.noiseIndex == 2 ? EasyNoiseSampler.perlinChecked : this.noiseIndex == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
 		double sample = EasyNoiseSampler.sample(level, sampler, pos, this.multiplier, this.multiplyY, this.useY);
 		if (sample > this.minThresh && sample < this.maxThresh) {
-			return true;
+			isInside = true;
 		}
 		if (this.fadeDist > 0) {
 			if (sample > this.minFadeThresh && sample < this.minThresh) {
-				return random.nextDouble() > Math.abs((this.minThresh - sample) / this.fadeDist);
+				isInside = random.nextDouble() > Math.abs((this.minThresh - sample) / this.fadeDist);
 			}
 			if (sample < this.maxFadeThresh && sample > this.maxThresh) {
-				return random.nextDouble() > Math.abs((this.maxThresh - sample) / this.fadeDist);
+				isInside = random.nextDouble() > Math.abs((this.maxThresh - sample) / this.fadeDist);
 			}
 		}
-		return false;
+		return this.inside == isInside;
 	}
 
 	@Override
