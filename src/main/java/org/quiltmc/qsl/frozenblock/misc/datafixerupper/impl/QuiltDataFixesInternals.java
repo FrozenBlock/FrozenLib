@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 QuiltMC
+ * Copyright 2023 The Quilt Project
  * Copyright 2023 FrozenBlock
  * Modified to work on Fabric
  *
@@ -18,12 +18,15 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
+import com.google.gson.JsonObject;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.logging.LogUtils;
+import com.mojang.serialization.Dynamic;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.util.datafix.DataFixers;
 import org.jetbrains.annotations.*;
@@ -43,6 +46,12 @@ public abstract class QuiltDataFixesInternals {
     public static int getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
         return compound.getInt(modId + "_DataVersion");
     }
+
+	@Contract(pure = true)
+	@Range(from = 0, to = Integer.MAX_VALUE)
+	public static int getModDataVersion(@NotNull JsonObject json, @NotNull String modId) {
+		return json.get(modId + "_DataVersion").getAsInt();
+	}
 
     private static QuiltDataFixesInternals instance;
 
@@ -77,7 +86,7 @@ public abstract class QuiltDataFixesInternals {
     @Contract(value = "-> new", pure = true)
     public abstract @NotNull Schema createBaseSchema();
 
-    public abstract @NotNull CompoundTag updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull CompoundTag compound);
+    public abstract @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic);
 
     public abstract @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound);
 

@@ -16,25 +16,16 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.menu.api;
+package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
-import java.util.ArrayList;
-import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
+import com.mojang.datafixers.DSL;
+import net.minecraft.util.datafix.DataFixTypes;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-@Environment(EnvType.CLIENT)
-public class Splashes {
+@Mixin(DataFixTypes.class)
+public interface DataFixTypesAccessor {
 
-	private static final List<ResourceLocation> SPLASHES = new ArrayList<>();
-
-	public static void addSplashLocation(ResourceLocation location) {
-		SPLASHES.add(location);
-	}
-
-	public static List<ResourceLocation> getSplashes() {
-		return SPLASHES;
-	}
-
+	@Accessor
+	DSL.TypeReference getType();
 }

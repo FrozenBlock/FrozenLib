@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 QuiltMC
+ * Copyright 2023 The Quilt Project
  * Copyright 2023 FrozenBlock
  * Modified to work on Fabric
  *

@@ -31,7 +31,7 @@ public class ItemBlockStateTagUtils {
 			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
 			String stringValue = property.getName();
 			if (stateTag.contains(stringValue)) {
-				return property.getValue(stateTag.getString(stringValue)).get();
+				return property.getValue(stateTag.getString(stringValue)).orElse(defaultValue);
 			}
 		}
 		return defaultValue;
