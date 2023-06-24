@@ -72,8 +72,8 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 
 	protected void moveMobToBlock() {
 		this.mob
-				.getNavigation()
-				.moveTo(this.blockPos.getX() + 0.5, this.blockPos.getY() + 1, this.blockPos.getZ() + 0.5, this.speedModifier);
+			.getNavigation()
+			.moveTo(this.blockPos.getX() + 0.5, this.blockPos.getY() + 1, this.blockPos.getZ() + 0.5, this.speedModifier);
 	}
 
 	public double acceptedDistance() {
