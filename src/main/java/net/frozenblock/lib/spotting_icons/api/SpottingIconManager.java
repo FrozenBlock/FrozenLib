@@ -54,7 +54,7 @@ public class SpottingIconManager {
 			this.ticksToCheck = 20;
 			if (this.icon != null) {
 				if (this.entity.level.isClientSide) {
-					this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.getTexture());
+					this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.texture());
 				}
 				if (!SpottingIconPredicate.getPredicate(this.icon.restrictionID).test(this.entity)) {
 					this.removeIcon();
@@ -76,7 +76,7 @@ public class SpottingIconManager {
 				ServerPlayNetworking.send(player, FrozenMain.SPOTTING_ICON_PACKET, byteBuf);
 			}
 		} else {
-			this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.getTexture());
+			this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.texture());
 		}
 		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onAdded(this.entity);
 	}
@@ -106,7 +106,7 @@ public class SpottingIconManager {
 	}
 
 	public void load(CompoundTag nbt) {
-		nbt.putInt("frozenSpottingIconTicksToCheck", this.ticksToCheck);
+		this.ticksToCheck = nbt.getInt("frozenSpottingIconTicksToCheck");
 		if (nbt.contains("frozenSpottingIcons")) {
 			this.icon = null;
 			DataResult<SpottingIcon> var10000 = SpottingIcon.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getCompound("frozenSpottingIcons")));
@@ -118,7 +118,7 @@ public class SpottingIconManager {
 	}
 
 	public void save(CompoundTag nbt) {
-		this.ticksToCheck = nbt.getInt("frozenSpottingIconTicksToCheck");
+		nbt.putInt("frozenSpottingIconTicksToCheck", this.ticksToCheck);
 		if (this.icon != null) {
 			DataResult<Tag> var10000 = SpottingIcon.CODEC.encodeStart(NbtOps.INSTANCE, this.icon);
 			Logger var10001 = FrozenMain.LOGGER4;
@@ -129,40 +129,12 @@ public class SpottingIconManager {
 		}
 	}
 
-	public static class SpottingIcon {
-		public final ResourceLocation texture;
-		public final float startFadeDist;
-		public final float endFadeDist;
-		public final ResourceLocation restrictionID;
-
-		public static final Codec<SpottingIcon> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-				ResourceLocation.CODEC.fieldOf("texture").forGetter(SpottingIcon::getTexture),
-				Codec.FLOAT.fieldOf("startFadeDist").forGetter(SpottingIcon::getStartFadeDist),
-				Codec.FLOAT.fieldOf("endFadeDist").forGetter(SpottingIcon::getEndFadeDist),
-				ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(SpottingIcon::getRestrictionID)
-		).apply(instance, SpottingIcon::new));
-
-		public SpottingIcon(ResourceLocation texture, float startFadeDist, float endFadeDist, ResourceLocation restrictionID) {
-			this.texture = texture;
-			this.startFadeDist = startFadeDist;
-			this.endFadeDist = endFadeDist;
-			this.restrictionID = restrictionID;
-		}
-
-		public ResourceLocation getTexture() {
-			return this.texture;
-		}
-
-		public float getStartFadeDist() {
-			return this.startFadeDist;
-		}
-
-		public float getEndFadeDist() {
-			return this.endFadeDist;
-		}
-
-		public ResourceLocation getRestrictionID() {
-			return this.restrictionID;
-		}
+	public record SpottingIcon(ResourceLocation texture, float startFadeDist, float endFadeDist, ResourceLocation restrictionID) {
+			public static final Codec<SpottingIcon> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+				ResourceLocation.CODEC.fieldOf("texture").forGetter(SpottingIcon::texture),
+				Codec.FLOAT.fieldOf("startFadeDist").forGetter(SpottingIcon::startFadeDist),
+				Codec.FLOAT.fieldOf("endFadeDist").forGetter(SpottingIcon::endFadeDist),
+				ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(SpottingIcon::restrictionID)
+			).apply(instance, SpottingIcon::new));
 	}
 }
