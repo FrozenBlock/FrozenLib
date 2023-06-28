@@ -4,4 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Allowed malformed properties in ItemBlockStateTagUtils.getProperty()
+- Fixed mob spawners not running `finalizeSpawn()` when spawning mobs
