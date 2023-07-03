@@ -69,6 +69,7 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 
     public void addSound(ResourceLocation soundID, ResourceLocation soundID2, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {
         this.sounds.add(new FadingDistanceSoundLoopNBT(soundID, soundID2, category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist));
+		SoundPredicate.getPredicate(restrictionId).onStart(this.entity);
     }
 
     public ArrayList<FadingDistanceSoundLoopNBT> getSounds() {
