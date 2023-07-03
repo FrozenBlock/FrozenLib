@@ -4,4 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed mob spawners not running `finalizeSpawn()` when spawning mobs
+- Fixed Moving Looping sound managers not sending new sounds to the client when the player was already tracking an entity.
