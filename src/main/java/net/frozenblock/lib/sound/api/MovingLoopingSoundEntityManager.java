@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -67,9 +68,16 @@ public class MovingLoopingSoundEntityManager {
         var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenSounds", cursorsNbt));
     }
 
-    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
-        this.sounds.add(new SoundLoopData(soundID, category, volume, pitch, restrictionId, stopOnDeath));
-    }
+	public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
+		this.sounds.add(new SoundLoopData(soundID, category, volume, pitch, restrictionId, stopOnDeath));
+	}
+
+    public void addSoundAndSendPacket(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
+        addSound(soundID, category, volume, pitch, restrictionId, stopOnDeath);
+		for (ServerPlayer serverPlayer : PlayerLookup.tracking(this.entity)) {
+			FrozenSoundPackets.createMovingRestrictionLoopingSound(serverPlayer, this.entity, BuiltInRegistries.SOUND_EVENT.get(soundID), category, volume, pitch, restrictionId, stopOnDeath);
+		}
+	}
 
     public List<SoundLoopData> getSounds() {
         return this.sounds;
