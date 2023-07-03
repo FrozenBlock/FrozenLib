@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -70,6 +71,13 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
     public void addSound(ResourceLocation soundID, ResourceLocation soundID2, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {
         this.sounds.add(new FadingDistanceSoundLoopNBT(soundID, soundID2, category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist));
     }
+
+	public void addSoundAndSendPacket(ResourceLocation soundID, ResourceLocation soundID2, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {
+		this.sounds.add(new FadingDistanceSoundLoopNBT(soundID, soundID2, category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist));
+		for (ServerPlayer serverPlayer : PlayerLookup.tracking(this.entity)) {
+			FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(serverPlayer, this.entity, BuiltInRegistries.SOUND_EVENT.get(soundID), BuiltInRegistries.SOUND_EVENT.get(soundID2), category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist);
+		}
+	}
 
     public ArrayList<FadingDistanceSoundLoopNBT> getSounds() {
         return this.sounds;
