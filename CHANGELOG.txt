@@ -4,4 +4,5 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed Moving Looping sound managers not sending new sounds to the client when the player was already tracking an entity.
+- Fixed sound managers not sending new sounds to the client when the player was already tracking an entity.
+- Sound managers now also run the onStart() sound predicate method on the server as well as client.
