@@ -19,27 +19,43 @@
 package net.frozenblock.lib.item.mixin;
 
 import net.frozenblock.lib.item.api.RemoveableItemTags;
-import net.frozenblock.lib.item.impl.ItemStackInterface;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
-public final class ItemStackMixin implements ItemStackInterface {
+public final class ItemStackMixin {
+
+	@Inject(at = @At("TAIL"), method = "inventoryTick")
+	public void frozenLib$removeTags(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
+		ItemStack stack = ItemStack.class.cast(this);
+		CompoundTag nbt = stack.getTag();
+		if (nbt != null) {
+			for (String key : RemoveableItemTags.keys()) {
+				if (nbt.get(key) != null && RemoveableItemTags.canRemoveTag(key, level, entity, slot, selected)) {
+					nbt.remove(key);
+				}
+			}
+
+			if (nbt.isEmpty()) {
+				stack.tag = null;
+			}
+		}
+	}
 
 	@Inject(method = "isSameItemSameTags", at = @At("HEAD"))
 	private static void frozenLib$removeTagsAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
 		CompoundTag lTag = left.getTag();
 		frozenLib$fixEmptyTags(left, lTag);
 
-		CompoundTag rTag = right.getTag();
+		CompoundTag rTag = right.tag;
 		frozenLib$fixEmptyTags(right, rTag);
 	}
 
@@ -57,21 +73,4 @@ public final class ItemStackMixin implements ItemStackInterface {
 		}
 	}
 
-	@Unique
-	@Override
-	public void frozenLib$tickInInventory(Level level, Entity entity, Inventory inventory, int slot, boolean selected) {
-		ItemStack stack = ItemStack.class.cast(this);
-		CompoundTag nbt = stack.getTag();
-		if (nbt != null) {
-			for (String key : RemoveableItemTags.keys()) {
-				if (nbt.get(key) != null && RemoveableItemTags.canRemoveTag(key, level, entity, inventory, slot, selected)) {
-					nbt.remove(key);
-				}
-			}
-
-			if (nbt.isEmpty()) {
-				stack.tag = null;
-			}
-		}
-	}
 }

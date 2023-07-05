@@ -22,7 +22,6 @@ import java.util.LinkedHashMap;
 import java.util.Set;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.level.Level;
 
 public class RemoveableItemTags {
@@ -33,10 +32,10 @@ public class RemoveableItemTags {
 		REMOVEABLE_ITEM_TAGS.put(tagKey, new RemoveableItemTag(tagKey, removalPredicate, removeOnStackMerge));
 	}
 
-	public static boolean canRemoveTag(String tagKey, Level level, Entity entity, Inventory inventory, int slot, boolean selected) {
+	public static boolean canRemoveTag(String tagKey, Level level, Entity entity, int slot, boolean selected) {
 		RemoveableItemTag removeableItemTag = REMOVEABLE_ITEM_TAGS.get(tagKey);
 		if (removeableItemTag != null) {
-			return removeableItemTag.shouldRemoveTag(level, entity, inventory, slot, selected);
+			return removeableItemTag.shouldRemoveTag(level, entity, slot, selected);
 		} else {
 			FrozenMain.error("Unable to find RemoveableItemTag data for TagKey " + tagKey + "!", true);
 			FrozenMain.error("Please make sure " + tagKey + " is registered in RemoveableItemTags.class!", true);
@@ -74,8 +73,8 @@ public class RemoveableItemTags {
 			return this.tagKey;
 		}
 
-		public boolean shouldRemoveTag(Level level, Entity entity, Inventory inventory, int slot, boolean selected) {
-			return this.removalPredicate.shouldRemove(level, entity, inventory, slot, selected);
+		public boolean shouldRemoveTag(Level level, Entity entity, int slot, boolean selected) {
+			return this.removalPredicate.shouldRemove(level, entity, slot, selected);
 		}
 
 		public boolean shouldRemoveOnStackMerge() {
@@ -84,7 +83,7 @@ public class RemoveableItemTags {
 
 		@FunctionalInterface
 		public interface RemovalPredicate {
-			boolean shouldRemove(Level level, Entity entity, Inventory inventory, int slot, boolean selected);
+			boolean shouldRemove(Level level, Entity entity, int slot, boolean selected);
 		}
 	}
 }

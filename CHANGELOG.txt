@@ -6,4 +6,3 @@ Put changelog here:
 -----------------
 - Fixed sound managers not sending new sounds to the client when the player was already tracking an entity.
 - Sound managers now also run the onStart() sound predicate method on the server as well as client.
-- Added a new tickInInventory method to ItemStack to fix problems caused with Wilder Wild's "Ancient" tag.
