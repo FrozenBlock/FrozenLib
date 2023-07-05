@@ -19,11 +19,7 @@
 package net.frozenblock.lib.item.impl;
 
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemCooldowns;
-import net.minecraft.world.item.ServerItemCooldowns;
-import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
-@InjectedInterface({ItemCooldowns.class, ServerItemCooldowns.class})
 public interface CooldownInterface {
 
     void changeCooldown(Item item, int additional);

@@ -18,12 +18,9 @@
 
 package net.frozenblock.lib.screenshake.impl;
 
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
 @ApiStatus.Internal
-@InjectedInterface(Entity.class)
 public interface EntityScreenShakeInterface {
 
     EntityScreenShakeManager getScreenShakeManager();

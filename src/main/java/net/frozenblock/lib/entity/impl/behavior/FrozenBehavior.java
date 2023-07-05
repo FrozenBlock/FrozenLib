@@ -18,10 +18,6 @@
 
 package net.frozenblock.lib.entity.impl.behavior;
 
-import net.minecraft.world.entity.ai.behavior.Behavior;
-import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
-
-@InjectedInterface(Behavior.class)
 public interface FrozenBehavior {
 
 	int getDuration();

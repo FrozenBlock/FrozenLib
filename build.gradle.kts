@@ -238,7 +238,7 @@ dependencies {
     modCompileOnly("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
 
     // MixinExtras
-    implementation("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.8")?.let { annotationProcessor(it); shadowInclude(it) }
+    implementation("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.8")?.let { annotationProcessor(it); include(it) }
 
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
@@ -317,7 +317,7 @@ tasks {
     }
 
     withType(JavaCompile::class) {
-        options.setEncoding("UTF-8")
+        options.encoding = "UTF-8"
         // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
         options.release.set(17)
         options.isFork = true
