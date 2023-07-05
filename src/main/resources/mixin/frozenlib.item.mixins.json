@@ -4,15 +4,16 @@
   "package": "net.frozenblock.lib.item.mixin",
   "compatibilityLevel": "JAVA_17",
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   },
   "mixins": [
-    "bonemeal.BoneMealItemMixin",
+    "InventoryMixin",
     "ItemCooldownsMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "ServerItemCooldownsMixin",
-    "ServerPlayerMixin"
+    "ServerPlayerMixin",
+    "bonemeal.BoneMealItemMixin"
   ]
 }
