@@ -19,6 +19,7 @@
 package net.frozenblock.lib.item.mixin;
 
 import net.frozenblock.lib.item.api.RemoveableItemTags;
+import net.frozenblock.lib.item.impl.ItemStackExtension;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -31,7 +32,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
-public final class ItemStackMixin {
+public final class ItemStackMixin implements ItemStackExtension {
+
+	@Unique
+	private boolean frozenLib$inContainer = false;
 
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
 	public void frozenLib$removeTags(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
@@ -52,25 +56,43 @@ public final class ItemStackMixin {
 
 	@Inject(method = "isSameItemSameTags", at = @At("HEAD"))
 	private static void frozenLib$removeTagsAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
-		CompoundTag lTag = left.getTag();
-		frozenLib$fixEmptyTags(left, lTag);
+		var extendedLeft = ItemStackExtension.class.cast(left);
+		var extendedRight = ItemStackExtension.class.cast(right);
 
-		CompoundTag rTag = right.tag;
-		frozenLib$fixEmptyTags(right, rTag);
+		if (extendedLeft.frozenLib$inContainer()) {
+			CompoundTag lTag = left.getTag();
+			frozenLib$fixEmptyTags(left, lTag);
+			extendedLeft.frozenLib$setInContainer(false);
+		}
+
+		if (extendedRight.frozenLib$inContainer()) {
+			CompoundTag rTag = right.tag;
+			frozenLib$fixEmptyTags(right, rTag);
+			extendedRight.frozenLib$setInContainer(false);
+		}
 	}
 
 	@Unique
-	private static void frozenLib$fixEmptyTags(ItemStack left, CompoundTag lTag) {
-		if (lTag != null) {
+	private static void frozenLib$fixEmptyTags(ItemStack stack, CompoundTag nbt) {
+		if (nbt != null) {
 			for (String key : RemoveableItemTags.keys()) {
-				if (lTag.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
-					lTag.remove(key);
+				if (nbt.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
+					nbt.remove(key);
 				}
 			}
-			if (lTag.isEmpty()) {
-				left.tag = null;
+			if (nbt.isEmpty()) {
+				stack.tag = null;
 			}
 		}
 	}
 
+	@Override
+	public boolean frozenLib$inContainer() {
+		return this.frozenLib$inContainer;
+	}
+
+	@Override
+	public void frozenLib$setInContainer(boolean inContainer) {
+		this.frozenLib$inContainer = true;
+	}
 }
