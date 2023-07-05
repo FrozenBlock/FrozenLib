@@ -21,8 +21,8 @@ package net.frozenblock.lib.item.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.item.impl.ItemStackInterface;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
@@ -32,9 +32,9 @@ import org.spongepowered.asm.mixin.injection.At;
 public final class InventoryMixin {
 
 	@WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;inventoryTick(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/entity/Entity;IZ)V"), method = "tick")
-	public void frozenLib$runTickInInventory(ItemStack stack, Level level, Entity entity, int i, boolean selected, Operation<Void> operation) {
-		operation.call(stack, level, entity, i, selected);
-		ItemStackInterface.class.cast(stack).frozenLib$tickInInventory(level, entity, Inventory.class.cast(this), i, selected);
+	public void frozenLib$runTickInInventory(ItemStack stack, Level level, Player player, int i, boolean selected, Operation<Void> operation) {
+		operation.call(stack, level, player, i, selected);
+		ItemStackInterface.class.cast(stack).frozenLib$tickInInventory(level, player, Inventory.class.cast(this), i, selected);
 	}
 
 }
