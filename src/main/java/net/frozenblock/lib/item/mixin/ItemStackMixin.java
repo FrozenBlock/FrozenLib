@@ -52,7 +52,7 @@ public final class ItemStackMixin {
 
 	@Inject(method = "isSameItemSameTags", at = @At("HEAD"))
 	private static void frozenLib$removeTagsAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
-		CompoundTag lTag = left.getTag();
+		CompoundTag lTag = left.tag;
 		frozenLib$fixEmptyTags(left, lTag);
 
 		CompoundTag rTag = right.tag;
@@ -60,15 +60,15 @@ public final class ItemStackMixin {
 	}
 
 	@Unique
-	private static void frozenLib$fixEmptyTags(ItemStack left, CompoundTag lTag) {
-		if (lTag != null) {
+	private static void frozenLib$fixEmptyTags(ItemStack stack, CompoundTag tag) {
+		if (tag != null) {
 			for (String key : RemoveableItemTags.keys()) {
-				if (lTag.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
-					lTag.remove(key);
+				if (tag.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
+					tag.remove(key);
 				}
 			}
-			if (lTag.isEmpty()) {
-				left.tag = null;
+			if (tag.isEmpty()) {
+				stack.tag = null;
 			}
 		}
 	}
