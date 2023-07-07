@@ -87,13 +87,15 @@ public final class ItemStackMixin implements ItemStackExtension {
 		}
 	}
 
+	@Unique
 	@Override
 	public boolean frozenLib$inContainer() {
 		return this.frozenLib$inContainer;
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$setInContainer(boolean inContainer) {
-		this.frozenLib$inContainer = true;
+		this.frozenLib$inContainer = inContainer;
 	}
 }
