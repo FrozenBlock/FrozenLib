@@ -31,7 +31,7 @@ import java.util.function.Supplier;
 @Mixin(AbstractContainerMenu.class)
 public class AbstractContainerMenuMixin {
 
-	@Inject(method = "triggerSlotListeners", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;matches(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
+	@Inject(method = "triggerSlotListeners", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;matches(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
 	private void triggerSlotListeners(int slotIndex, ItemStack stack, Supplier<ItemStack> supplier, CallbackInfo ci, ItemStack itemStack) {
 		ItemStackExtension.class.cast(itemStack).frozenLib$setInContainer(true);
 	}
