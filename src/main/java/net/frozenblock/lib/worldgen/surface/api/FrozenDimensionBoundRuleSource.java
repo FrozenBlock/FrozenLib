@@ -18,6 +18,8 @@
 
 package net.frozenblock.lib.worldgen.surface.api;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
@@ -26,4 +28,11 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
  * The ResourceLocation denotes the dimension to be modified, and the RuleSource are the rules to be applied to it.
  */
 public record FrozenDimensionBoundRuleSource(ResourceLocation dimension, SurfaceRules.RuleSource ruleSource) {
+
+	public static final Codec<FrozenDimensionBoundRuleSource> CODEC = RecordCodecBuilder.create(instance ->
+		instance.group(
+			ResourceLocation.CODEC.fieldOf("dimension").forGetter(FrozenDimensionBoundRuleSource::dimension),
+			SurfaceRules.RuleSource.CODEC.fieldOf("rule_source").forGetter(FrozenDimensionBoundRuleSource::ruleSource)
+		).apply(instance, FrozenDimensionBoundRuleSource::new)
+	);
 }
