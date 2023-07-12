@@ -20,6 +20,7 @@ package net.frozenblock.lib.worldgen.feature.api;
 
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.worldgen.feature.api.features.CircularWaterloggedVegetationPatchFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.CircularWaterloggedVegetationPatchLessBordersFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.ColumnWithDiskFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.DownwardsPillarFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskCarpetFeature;
@@ -61,6 +62,8 @@ public class FrozenFeatures {
 	public static final UpwardsPillarFeature UPWARDS_PILLAR_FEATURE = new UpwardsPillarFeature(PillarFeatureConfig.CODEC);
 	public static final DownwardsPillarFeature DOWNWARDS_PILLAR_FEATURE = new DownwardsPillarFeature(PillarFeatureConfig.CODEC);
 	public static final CircularWaterloggedVegetationPatchFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH = new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
+	public static final CircularWaterloggedVegetationPatchLessBordersFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS = new CircularWaterloggedVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
+
 	public static final FadingDiskTagFeature FADING_DISK_TAG_FEATURE = new FadingDiskTagFeature(FadingDiskTagFeatureConfig.CODEC);
 	public static final FadingDiskTagExceptInBiomeFeature FADING_DISK_TAG_EXCEPT_IN_BIOME_FEATURE = new FadingDiskTagExceptInBiomeFeature(FadingDiskTagBiomeFeatureConfig.CODEC);
 	public static final FadingDiskFeature FADING_DISK_FEATURE = new FadingDiskFeature(FadingDiskFeatureConfig.CODEC);
@@ -78,6 +81,7 @@ public class FrozenFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("upwards_pillar"), UPWARDS_PILLAR_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("downwards_pillar"), DOWNWARDS_PILLAR_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("circular_waterlogged_vegetation_patch_less_borders"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("fading_disk_tag_feature"), FADING_DISK_TAG_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("fading_disk_tag_except_in_biome_feature"), FADING_DISK_TAG_EXCEPT_IN_BIOME_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenMain.id("fading_disk_feature"), FADING_DISK_FEATURE);
