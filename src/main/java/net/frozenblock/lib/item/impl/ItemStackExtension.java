@@ -20,8 +20,8 @@ package net.frozenblock.lib.item.impl;
 
 public interface ItemStackExtension {
 
-	boolean frozenLib$inContainer();
+	boolean frozenLib$canRemoveTags();
 
-	void frozenLib$setInContainer(boolean inContainer);
+	void frozenLib$setCanRemoveTags(boolean canRemoveTags);
 
 }
