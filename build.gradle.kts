@@ -20,7 +20,7 @@ buildscript {
 
 plugins {
 	id("fabric-loom") version("+")
-	id("io.github.juuxel.loom-quiltflower") version("+")
+	id("io.github.juuxel.loom-vineflower") version("+")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -186,12 +186,12 @@ repositories {
         setName("Siphalor"s Maven")
         setUrl("https://maven.siphalor.de")
     }*/
-    maven {
+    /*maven {
         setUrl("https://maven.flashyreese.me/releases")
     }
     maven {
         setUrl("https://maven.flashyreese.me/snapshots")
-    }
+    }*/
     maven {
         setUrl("https://maven.minecraftforge.net")
     }
@@ -276,15 +276,11 @@ dependencies {
     }*/
 }
 
-quiltflower {
-    quiltflowerVersion.set("1.8.0")
-}
-
 tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = "~1.20-"
+        properties["minecraft_version"] = "~$minecraft_version-"
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 
