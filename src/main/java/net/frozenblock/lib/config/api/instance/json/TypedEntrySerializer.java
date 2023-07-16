@@ -49,8 +49,7 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 		if (modEntry != null) {
 			return modEntry;
 		} else {
-			FrozenMain.error("Failed to deserialize typed entry " + json, true);
-			return new TypedEntry<>(null, null);
+			throw new JsonParseException("Failed to deserialize typed entry " + json);
 		}
 	}
 
@@ -105,6 +104,6 @@ public class TypedEntrySerializer<T> implements JsonSerializer<TypedEntry<T>>, J
 				}
 			}
 		}
-		return JsonOps.INSTANCE.empty();
+		throw new JsonParseException("Failed to serialize typed entry " + src);
 	}
 }

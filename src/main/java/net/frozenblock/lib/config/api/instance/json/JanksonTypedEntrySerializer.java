@@ -23,6 +23,7 @@ import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.api.Marshaller;
 import java.util.Objects;
 import java.util.function.BiFunction;
+import com.google.gson.JsonParseException;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 
 public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marshaller, JsonElement> {
@@ -55,6 +56,6 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 				}
 			}
 		}
-		return new JsonObject();
+		throw new JsonParseException("Failed to serialize typed entry " + src);
 	}
 }
