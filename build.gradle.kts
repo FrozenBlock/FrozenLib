@@ -237,7 +237,7 @@ dependencies {
     modCompileOnly("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
 
     // MixinExtras
-    modApi("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.9")?.let { annotationProcessor(it); include(it) }
+    modImplementation("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.9")?.let { annotationProcessor(it); include(it) }
 
     // Toml
     implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
@@ -290,14 +290,16 @@ tasks {
 
     test {
         useJUnitPlatform()
+
+        license {
+            rule(file("codeformat/QUILT_MODIFIED_HEADER"))
+            rule(file("codeformat/HEADER"))
+
+            include("**//*.java")
+        }
     }
 
-    license {
-        rule(file("codeformat/QUILT_MODIFIED_HEADER"))
-        rule(file("codeformat/HEADER"))
 
-        include("**//*.java")
-    }
 
     register("javadocJar", Jar::class) {
         dependsOn(javadoc)
@@ -321,18 +323,6 @@ tasks {
 
     withType(Test::class) {
         maxParallelForks = Runtime.getRuntime().availableProcessors().div(2)
-    }
-
-    shadowJar {
-        isEnableRelocation = true;
-        relocationPrefix = "net.frozenblock.lib.shadow"
-    }
-
-    remapJar {
-        dependsOn(shadowJar)
-        mustRunAfter(shadowJar)
-
-        input.set(shadowJar.get().archiveFile)
     }
 }
 
