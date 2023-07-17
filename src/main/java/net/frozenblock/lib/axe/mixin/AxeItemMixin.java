@@ -26,6 +26,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -34,22 +35,20 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import java.util.Optional;
 
 @Mixin(AxeItem.class)
 public class AxeItemMixin {
 
-	@Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
-	public void frozenlib$_axeBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
-		Level level = context.getLevel();
-		BlockPos blockPos = context.getClickedPos();
-		BlockState state = level.getBlockState(blockPos);
+	@Inject(method = "useOn", at = @At(value = "INVOKE", target = "Ljava/util/Optional;isPresent()Z", ordinal = 0, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+	public void frozenlib$_axeBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> info, Level level, BlockPos blockPos, Player player, BlockState blockState, Optional<BlockState> optional, Optional <BlockState>optional2, Optional<BlockState> optional3, ItemStack itemStack, Optional<BlockState> optional4) {
 		Direction direction = context.getClickedFace();
 		Direction horizontal = context.getHorizontalDirection();
-		if (AxeBehaviors.AXE_BEHAVIORS.containsKey(state.getBlock())) {
-			if (AxeBehaviors.AXE_BEHAVIORS.get(state.getBlock()).axe(context, level, blockPos, state, direction, horizontal)) {
+		if (AxeBehaviors.AXE_BEHAVIORS.containsKey(blockState.getBlock())) {
+			if (AxeBehaviors.AXE_BEHAVIORS.get(blockState.getBlock()).axe(context, level, blockPos, blockState, direction, horizontal)) {
 				if (!level.isClientSide) {
-					Player player = context.getPlayer();
-					level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, state));
+					level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockState));
 					if (player != null) {
 						context.getItemInHand().hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));
 					}
