@@ -8,8 +8,8 @@
     "server.MainMixin"
   ],
   "client": [
-    "client.IntegratedServerLoaderMixin",
-    "client.CreateWorldScreenMixin"
+    "client.CreateWorldScreenMixin",
+    "client.IntegratedServerLoaderMixin"
   ],
   "injectors": {
 	"defaultRequire": 1

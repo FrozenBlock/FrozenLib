@@ -19,6 +19,9 @@
 package org.quiltmc.qsl.frozenblock.core.registry.impl;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Stream;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.WritableRegistry;
@@ -28,9 +31,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Stream;
 
 /**
  * Represents the context implementation for the {@link RegistryEvents#DYNAMIC_REGISTRY_SETUP} event.

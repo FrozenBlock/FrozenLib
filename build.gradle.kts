@@ -7,7 +7,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.net.URL
 import java.nio.file.Files
-import java.util.Properties
+import java.util.*
 
 buildscript {
 	repositories {

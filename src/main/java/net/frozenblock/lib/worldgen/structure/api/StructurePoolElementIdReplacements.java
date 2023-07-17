@@ -18,12 +18,12 @@
 
 package net.frozenblock.lib.worldgen.structure.api;
 
-import java.util.HashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
 import net.minecraft.resources.ResourceLocation;
 
 public class StructurePoolElementIdReplacements {
 
-    public static final Map<ResourceLocation, ResourceLocation> RESOURCE_LOCATION_REPLACEMENTS = new HashMap<>();
+    public static final Map<ResourceLocation, ResourceLocation> RESOURCE_LOCATION_REPLACEMENTS = new Object2ObjectOpenHashMap<>();
 
 }

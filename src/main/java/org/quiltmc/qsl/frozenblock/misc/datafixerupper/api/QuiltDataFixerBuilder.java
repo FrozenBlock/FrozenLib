@@ -21,14 +21,12 @@ package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.DataFixerBuilder;
-import net.minecraft.SharedConstants;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Range;
-
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
 
 /**
  * An extended variant of the {@link DataFixerBuilder} class, which provides an extra method.

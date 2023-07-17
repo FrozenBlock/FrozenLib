@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.tick.api;
 
-import java.util.HashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BlockScheduledTicks {
 
-    public static final Map<Block, InjectedScheduledTick> TICKS = new HashMap<>();
+    public static final Map<Block, InjectedScheduledTick> TICKS = new Object2ObjectOpenHashMap<>();
 
     @FunctionalInterface
     public interface InjectedScheduledTick {

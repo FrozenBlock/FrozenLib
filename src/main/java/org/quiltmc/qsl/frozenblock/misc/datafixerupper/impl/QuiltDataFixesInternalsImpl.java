@@ -18,11 +18,12 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
-import com.google.gson.JsonObject;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
+import java.util.Collections;
+import java.util.Map;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
@@ -31,9 +32,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin.DataFixTypesAccessor;
-
-import java.util.Collections;
-import java.util.Map;
 
 /**
  * Modified to work on Fabric

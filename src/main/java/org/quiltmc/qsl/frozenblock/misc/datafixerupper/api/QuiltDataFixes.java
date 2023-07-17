@@ -18,27 +18,24 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
 
+import static com.google.common.base.Preconditions.checkArgument;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
-import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.SharedConstants;
-import net.minecraft.Util;
-import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Range;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
-
+import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
-
-import static com.google.common.base.Preconditions.checkArgument;
-import static java.util.Objects.requireNonNull;
+import net.fabricmc.loader.api.ModContainer;
+import net.minecraft.SharedConstants;
+import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Range;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 
 /**
  * Provides methods to register custom {@link DataFixer}s.

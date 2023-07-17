@@ -20,9 +20,9 @@ package net.frozenblock.lib.worldgen.biome.impl;
 
 import com.google.common.base.Preconditions;
 import com.mojang.datafixers.util.Pair;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -37,9 +37,9 @@ import org.slf4j.Logger;
 @ApiStatus.Internal
 public final class OverworldBiomeData {
 
-	private static final Set<ResourceKey<Biome>> OVERWORLD_BIOMES = new HashSet<>();
+	private static final Set<ResourceKey<Biome>> OVERWORLD_BIOMES = new ObjectOpenHashSet<>();
 
-	private static final Map<ResourceKey<Biome>, Climate.ParameterPoint> OVERWORLD_BIOME_NOISE_POINTS = new HashMap<>();
+	private static final Map<ResourceKey<Biome>, Climate.ParameterPoint> OVERWORLD_BIOME_NOISE_POINTS = new Object2ObjectOpenHashMap<>();
 
 	private static final Logger LOGGER = FrozenMain.LOGGER;
 

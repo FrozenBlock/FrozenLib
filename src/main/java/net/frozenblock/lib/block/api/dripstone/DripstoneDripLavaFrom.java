@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.block.api.dripstone;
 
-import java.util.HashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.block.PointedDripstoneBlock;
 
 public class DripstoneDripLavaFrom {
 
-    public static final Map<Block, InjectedOnDrip> ON_DRIP_BLOCK = new HashMap<>();
+    public static final Map<Block, InjectedOnDrip> ON_DRIP_BLOCK = new Object2ObjectOpenHashMap<>();
 
     @FunctionalInterface
     public interface InjectedOnDrip {
