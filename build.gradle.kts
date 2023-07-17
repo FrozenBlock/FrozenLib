@@ -299,8 +299,6 @@ tasks {
         }
     }
 
-
-
     register("javadocJar", Jar::class) {
         dependsOn(javadoc)
         archiveClassifier.set("javadoc")
@@ -315,7 +313,6 @@ tasks {
 
     withType(JavaCompile::class) {
         options.encoding = "UTF-8"
-        // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
         options.release.set(17)
         options.isFork = true
         options.isIncremental = true
