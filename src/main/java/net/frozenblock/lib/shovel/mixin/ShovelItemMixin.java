@@ -44,16 +44,18 @@ public class ShovelItemMixin {
 		Direction direction = context.getClickedFace();
 		Direction horizontal = context.getHorizontalDirection();
 		if (ShovelBehaviors.SHOVEL_BEHAVIORS.containsKey(blockState.getBlock())) {
-			if (!level.isClientSide && ShovelBehaviors.SHOVEL_BEHAVIORS.get(blockState.getBlock()).shovel(context, level, blockPos, blockState, direction, horizontal)) {
-				Player player = context.getPlayer();
-				level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockState));
-				if (player != null) {
-					context.getItemInHand().hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));
+			if (ShovelBehaviors.SHOVEL_BEHAVIORS.get(blockState.getBlock()).shovel(context, level, blockPos, blockState, direction, horizontal)) {
+				if (!level.isClientSide) {
+					Player player = context.getPlayer();
+					level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockState));
+					if (player != null) {
+						context.getItemInHand().hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));
+					}
+					CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, blockPos, context.getItemInHand());
+					info.setReturnValue(InteractionResult.SUCCESS);
+				} else {
+					info.setReturnValue(InteractionResult.sidedSuccess(true));
 				}
-				CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer)player, blockPos, context.getItemInHand());
-				info.setReturnValue(InteractionResult.SUCCESS);
-			} else {
-				info.setReturnValue(InteractionResult.sidedSuccess(true));
 			}
 		}
 	}
