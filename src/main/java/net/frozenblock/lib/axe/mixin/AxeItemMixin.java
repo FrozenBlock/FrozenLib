@@ -46,15 +46,15 @@ public class AxeItemMixin {
 		Direction direction = context.getClickedFace();
 		Direction horizontal = context.getHorizontalDirection();
 		if (AxeBehaviors.AXE_BEHAVIORS.containsKey(blockState.getBlock())) {
-			if (!level.isClientSide && AxeBehaviors.AXE_BEHAVIORS.get(blockState.getBlock()).axe(context, level, blockPos, blockState, direction, horizontal)) {
+			if (AxeBehaviors.AXE_BEHAVIORS.get(blockState.getBlock()).axe(context, level, blockPos, blockState, direction, horizontal)) {
 				level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockState));
 				if (player != null) {
 					context.getItemInHand().hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));
 				}
 				CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer)player, blockPos, context.getItemInHand());
 				info.setReturnValue(InteractionResult.SUCCESS);
-			} else {
-				info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
+			} else if (level.isClientSide) {
+				info.setReturnValue(InteractionResult.sidedSuccess(true));
 			}
 		}
 	}
