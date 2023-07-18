@@ -93,9 +93,9 @@ public class ClientWindManager {
 		prevCloudX = cloudX;
 		prevCloudY = cloudY;
 		prevCloudZ = cloudZ;
-		cloudX += (laggedWindX * 0.01225);
+		cloudX += (laggedWindX * 0.0055);
 		cloudY += (laggedWindY * 0.01);
-		cloudZ += (laggedWindZ * 0.01225);
+		cloudZ += (laggedWindZ * 0.0055);
 
 		if (!hasInitialized && time > 80D && FrozenLibConfigValues.CONFIG.getter().useWindOnNonFrozenServers()) {
 			RandomSource randomSource = AdvancedMath.random();

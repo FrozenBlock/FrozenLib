@@ -7,4 +7,5 @@ Put changelog here:
 - Fixed sound managers not sending new sounds to the client when the player was already tracking an entity.
 - Sound managers now also run the onStart() sound predicate method on the server as well as client.
 - Added Circular Waterlogged Vegetation Patches with Less Borders.
-- Fixed Removable Item Tags
+- Fixed Removable Item Tags.
+- Decreased Cloud movement speed.
