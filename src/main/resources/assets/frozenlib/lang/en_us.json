@@ -10,7 +10,7 @@
   "tooltip.frozenlib.datafixer": "Contains options for DataFixers",
 
   "option.frozenlib.disabled_datafix_types": "Disabled DataFix Types",
-  "tooltip.frozenlib.disabled_datafix_types": "Disabled DataFix types\nWorldgen settings are disabled by default to prevent a compatibility issue with Lithium + BCLib\nThe vanilla DataFix types are...\n'level', 'player', 'chunk', 'hotbar', 'options', 'structure', 'stats',\n'saved_data', 'advancements', 'poi_chunk', 'entity_chunk',\nand 'world_gen_settings'",
+  "tooltip.frozenlib.disabled_datafix_types": "A list of DataFix types that are excluded from running through\nthe modified DataFixerUpper API by The Quilt Project\n\nWorldgen settings are disabled by default to\nprevent a compatibility issue with Lithium + BCLib\n\nThe vanilla DataFix types are...\n'level', 'player', 'chunk', 'hotbar', 'options', 'structure', 'stats',\n'saved_data', 'advancements', 'poi_chunk', 'entity_chunk',\nand 'world_gen_settings'",
 
   "option.frozenlib.use_wind_on_non_frozenlib_servers": "Wind On Non-FrozenLib Servers",
   "option.frozenlib.use_wind_on_non_frozenlib_servers.false": "§cOFF",
