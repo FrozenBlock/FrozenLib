@@ -82,9 +82,9 @@ public class WindManager {
 		this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
 		this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 		//CLOUDS
-		this.cloudX += (this.laggedWindX * 0.0055);
+		this.cloudX += (this.laggedWindX * 0.007);
 		this.cloudY += (this.laggedWindY * 0.01);
-		this.cloudZ += (this.laggedWindZ * 0.0055);
+		this.cloudZ += (this.laggedWindZ * 0.007);
 		//SYNC WITH CLIENTS IN CASE OF DESYNC
 		if (this.time % 20 == 0) {
 			this.sendSync(this.level);
