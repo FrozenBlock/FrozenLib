@@ -85,9 +85,6 @@
     "quilted_fabric_api": "4.0.0-beta.8"
   },
   "custom": {
-    "lithium:options": {
-      "alloc.nbt": false
-    },
     "loom:injected_interfaces": {
       "net/minecraft/class_1796": [
         "net/frozenblock/lib/item/impl/CooldownInterface"

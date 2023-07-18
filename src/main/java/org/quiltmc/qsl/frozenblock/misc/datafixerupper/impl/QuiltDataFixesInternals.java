@@ -51,12 +51,6 @@ public abstract class QuiltDataFixesInternals {
         return compound.getInt(modId + "_DataVersion");
     }
 
-	@Contract(pure = true)
-	@Range(from = 0, to = Integer.MAX_VALUE)
-	public static int getModDataVersion(@NotNull JsonObject json, @NotNull String modId) {
-		return json.get(modId + "_DataVersion").getAsInt();
-	}
-
     private static QuiltDataFixesInternals instance;
 
     public static @NotNull QuiltDataFixesInternals get() {

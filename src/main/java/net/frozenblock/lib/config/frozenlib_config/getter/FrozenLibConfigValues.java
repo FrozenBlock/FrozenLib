@@ -18,6 +18,8 @@
 
 package net.frozenblock.lib.config.frozenlib_config.getter;
 
+import java.util.List;
+
 public class FrozenLibConfigValues {
 	public static FrozenConfigGetter CONFIG = new FrozenConfigGetter(
 			new ConfigInterface() {
@@ -30,6 +32,11 @@ public class FrozenLibConfigValues {
 				public boolean saveItemCooldowns() {
 					return DefaultFrozenLibConfigValues.SAVE_ITEM_COOLDOWNS;
 				}
+
+				@Override
+				public List<String> disabledDataFixTypes() {
+					return DefaultFrozenLibConfigValues.DISABLED_DATAFIX_TYPES;
+				}
 			}
 	);
 
@@ -40,10 +47,16 @@ public class FrozenLibConfigValues {
 	public static class DefaultFrozenLibConfigValues {
 		public static final boolean USE_WIND_ON_NON_FROZENLIB_SERVERS = true;
 		public static final boolean SAVE_ITEM_COOLDOWNS = true;
+
+		// DATA FIXER
+		public static final List<String> DISABLED_DATAFIX_TYPES = List.of(
+			"world_gen_settings"
+		);
 	}
 
 	public interface ConfigInterface {
 		boolean useWindOnNonFrozenServers();
 		boolean saveItemCooldowns();
+		List<String> disabledDataFixTypes();
 	}
 }

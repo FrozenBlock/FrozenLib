@@ -32,6 +32,7 @@ import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import java.util.List;
 
 @Config(name = FrozenMain.MOD_ID)
 public class FrozenLibConfig extends PartitioningSerializer.GlobalData {
@@ -54,6 +55,11 @@ public class FrozenLibConfig extends PartitioningSerializer.GlobalData {
 						@Override
 						public boolean saveItemCooldowns() {
 							return FrozenLibConfig.get().config.saveItemCooldowns;
+						}
+
+						@Override
+						public List<String> disabledDataFixTypes() {
+							return FrozenLibConfig.get().config.dataFixer.disabledDataFixTypes;
 						}
 					}
 			);

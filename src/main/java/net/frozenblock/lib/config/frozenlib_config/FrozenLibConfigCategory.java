@@ -20,6 +20,7 @@ package net.frozenblock.lib.config.frozenlib_config;
 
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
@@ -27,7 +28,9 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenMain;
 import static net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig.text;
 import static net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig.tooltip;
+import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
+import java.util.List;
 
 /**
  * The main config category for FrozenLib
@@ -36,7 +39,11 @@ import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
 public final class FrozenLibConfigCategory implements ConfigData {
 
 	public boolean useWindOnNonFrozenServers = FrozenLibConfigValues.DefaultFrozenLibConfigValues.USE_WIND_ON_NON_FROZENLIB_SERVERS;
+
 	public boolean saveItemCooldowns = FrozenLibConfigValues.DefaultFrozenLibConfigValues.SAVE_ITEM_COOLDOWNS;
+
+	@ConfigEntry.Gui.CollapsibleObject
+	public final DataFixerConfig dataFixer = new DataFixerConfig();
 
     @Environment(EnvType.CLIENT)
     static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
@@ -56,5 +63,23 @@ public final class FrozenLibConfigCategory implements ConfigData {
 				.setTooltip(tooltip("save_item_cooldowns"))
 				.build()
 		);
+
+
+		var disabledDataFixTypes = entryBuilder.startStrList(text("disabled_datafix_types"), config.dataFixer.disabledDataFixTypes)
+			.setDefaultValue(FrozenLibConfigValues.DefaultFrozenLibConfigValues.DISABLED_DATAFIX_TYPES)
+			.setSaveConsumer(newValue -> config.dataFixer.disabledDataFixTypes = newValue)
+			.setTooltip(tooltip("disabled_datafix_types"))
+			.requireRestart()
+			.build();
+
+		var datafixerCategory = FrozenClothConfig.createSubCategory(entryBuilder, category, text("datafixer"),
+			false,
+			tooltip("datafixer"),
+			disabledDataFixTypes
+		);
     }
+
+	public static class DataFixerConfig {
+		public List<String> disabledDataFixTypes = FrozenLibConfigValues.DefaultFrozenLibConfigValues.DISABLED_DATAFIX_TYPES;
+	}
 }
