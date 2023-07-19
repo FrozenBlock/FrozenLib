@@ -9,6 +9,8 @@ Put changelog here:
 - Moved config file to root config directory
 - Added a config option to exclude DataFix types from running through the modified DataFixerUpper API by The Quilt Project
 - Fixed missing overworld settings error when a mod uses the DataFixerUpper API and both Lithium and BCLib are installed (Fixed through config)
+- Added support for extending `WindManager`s and the `ClientWindManager`
+- Removed built in cloud wind
 - Fixed sound managers not sending new sounds to the client when the player was already tracking an entity.
 - Sound managers now also run the onStart() sound predicate method on the server as well as client.
 - Added Circular Waterlogged Vegetation Patches with Less Borders.
