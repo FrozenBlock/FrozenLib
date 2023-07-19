@@ -26,7 +26,6 @@ import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
-import net.frozenblock.lib.integration.api.client.ClientModIntegrations;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
@@ -62,7 +61,6 @@ public final class FrozenClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		FrozenClientRegistry.initRegistry();
 		ModIntegrations.initialize(); // Mod integrations must run after normal mod initialization
-		ClientModIntegrations.initialize(); // Client mod integrations must run after normal mod initialization
 		ClientFreezer.onInitializeClient();
 		registerClientEvents();
 

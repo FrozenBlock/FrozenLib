@@ -18,6 +18,8 @@
 
 package net.frozenblock.lib.integration.api;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
@@ -105,4 +107,8 @@ public abstract class ModIntegration {
     }
 
     public abstract void init();
+
+	@Environment(EnvType.CLIENT)
+	public void clientInit() {
+	}
 }
