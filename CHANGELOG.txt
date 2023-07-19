@@ -5,6 +5,8 @@ Make sure to clear this after each release
 Put changelog here:
 -----------------
 - Added the ability to use the config without Cloth Config installed
+- Changed config file to a JSON5 file
+- Moved config file to root config directory
 - Added a config option to exclude DataFix types from running through the modified DataFixerUpper API by The Quilt Project
 - Fixed missing overworld settings error when a mod uses the DataFixerUpper API and both Lithium and BCLib are installed (Fixed through config)
 - Fixed sound managers not sending new sounds to the client when the player was already tracking an entity.
