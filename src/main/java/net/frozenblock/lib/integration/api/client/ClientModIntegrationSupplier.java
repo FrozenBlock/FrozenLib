@@ -22,11 +22,12 @@ import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
+import net.frozenblock.lib.integration.impl.client.EmptyClientModIntegration;
 
 @Environment(EnvType.CLIENT)
 public class ClientModIntegrationSupplier<T extends ClientModIntegration> extends ModIntegrationSupplier<T> {
 	public ClientModIntegrationSupplier(Supplier<T> modIntegrationSupplier, String modID) {
-		super(modIntegrationSupplier, modID);
+		super(modIntegrationSupplier, () -> (T) new EmptyClientModIntegration(modID), modID);
 	}
 
 	public ClientModIntegrationSupplier(Supplier<T> modIntegrationSupplier, Supplier<T> unloadedModIntegrationSupplier, String modID) {
