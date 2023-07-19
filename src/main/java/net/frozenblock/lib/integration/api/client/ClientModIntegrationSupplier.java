@@ -24,7 +24,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 
 @Environment(EnvType.CLIENT)
-public class ClientModIntegrationSupplier<T extends ClientModIntegration> extends ModIntegrationSupplier {
+public class ClientModIntegrationSupplier<T extends ClientModIntegration> extends ModIntegrationSupplier<T> {
 	public ClientModIntegrationSupplier(Supplier<T> modIntegrationSupplier, String modID) {
 		super(modIntegrationSupplier, modID);
 	}
