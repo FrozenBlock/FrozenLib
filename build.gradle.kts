@@ -224,25 +224,25 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+    modApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
 
 	// TerraBlender
-    modCompileOnly("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
+    modCompileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
 
     // MixinExtras
-    modImplementation("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.9")?.let { annotationProcessor(it); include(it) }
+    modApi("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.9")?.let { annotationProcessor(it); include(it) }
 
     // Toml
-    implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
+    modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    api("blue.endless:jankson:$jankson_version")?.let { include(it) }
+    modApi("blue.endless:jankson:$jankson_version")?.let { include(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 
