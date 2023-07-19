@@ -18,18 +18,54 @@
 
 package net.frozenblock.lib.registry.api.client;
 
+import com.mojang.serialization.Lifecycle;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.entity.api.rendering.EntityTextureOverride;
+import net.frozenblock.lib.integration.api.client.ClientModIntegration;
+import net.frozenblock.lib.integration.api.client.ClientModIntegrationSupplier;
 import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 
 @Environment(EnvType.CLIENT)
 public class FrozenClientRegistry {
 
 	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenMain.id("entity_texture_override"))
 			.buildAndRegister();
+
+	public static final ResourceKey<Registry<ClientModIntegrationSupplier<?>>> CLIENT_MOD_INTEGRATION_REGISTRY = ResourceKey.createRegistryKey(FrozenMain.id("client_mod_integration"));
+
+	public static final MappedRegistry<ClientModIntegrationSupplier<?>> CLIENT_MOD_INTEGRATION = createSimple(CLIENT_MOD_INTEGRATION_REGISTRY, Lifecycle.stable(), null,
+		registry -> Registry.register(registry, FrozenMain.id("dummy"), new ClientModIntegrationSupplier<>(() -> new ClientModIntegration("dummy") {
+				@Override
+				public void init() {}
+			},
+				"dummy"
+			)
+		)
+	);
+
+	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute, BuiltInRegistries.RegistryBootstrap<T> bootstrap) {
+		var registry = new MappedRegistry<>(key, lifecycle, false);
+		var fabricRegistryBuilder = FabricRegistryBuilder.from(registry);
+
+		if (attribute != null) {
+			fabricRegistryBuilder.attribute(attribute);
+		}
+
+		var registeredRegistry = fabricRegistryBuilder.buildAndRegister();
+
+		if (bootstrap != null) {
+			bootstrap.run(registeredRegistry);
+		}
+
+		return registeredRegistry;
+	}
 
 	public static void initRegistry() {
 		// NO-OP

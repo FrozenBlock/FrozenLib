@@ -7,8 +7,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
-import net.frozenblock.lib.config.frozenlib_config.defaults.DefaultFrozenLibConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.config.frozenlib_config.defaults.DefaultFrozenLibConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 

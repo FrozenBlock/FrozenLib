@@ -19,6 +19,8 @@
 package net.frozenblock.lib.wind.api;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -34,7 +36,8 @@ import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
-import java.util.List;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public final class ClientWindManager {
@@ -62,7 +65,15 @@ public final class ClientWindManager {
 	public static long seed = 0;
 	public static boolean hasInitialized;
 
-	public static void tick(ClientLevel level) {
+	public static void addExtension(@Nullable Supplier<ClientWindManagerExtension> extension) {
+		if (extension != null) addExtension(extension.get());
+	}
+
+	public static void addExtension(@Nullable ClientWindManagerExtension extension) {
+		if (extension != null) EXTENSIONS.add(extension);
+	}
+
+	public static void tick(@NotNull ClientLevel level) {
 		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
 		//WIND
 		prevWindX = windX;
@@ -101,7 +112,8 @@ public final class ClientWindManager {
 		}
 	}
 
-	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
+	@NotNull
+	public static Vec3 sampleVec3(@NotNull ImprovedNoise sampler, double x, double y, double z) {
 		if (shouldUseWind()) {
 			if (!overrideWind) {
 				double windX = sampler.noise(x, 0D, 0D);
@@ -128,19 +140,22 @@ public final class ClientWindManager {
 		}
 	}
 
-	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos) {
+	@NotNull
+	public static Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15D - brightness, 0D))), 0D) * 0.0667);
 		return shouldUseWind() ? new Vec3(windX * windMultiplier, windY * windMultiplier, windZ * windMultiplier) : Vec3.ZERO;
 	}
 
-	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier) {
+	@NotNull
+	public static Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15D - brightness, 0D))), 0D) * 0.0667);
 		return shouldUseWind() ? new Vec3((windX * windMultiplier) * multiplier, (windY * windMultiplier) * multiplier, (windZ * windMultiplier) * multiplier) : Vec3.ZERO;
 	}
 
-	public static Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier, double clamp) {
+	@NotNull
+	public static Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier, double clamp) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15D - brightness, 0D))), 0D) * 0.0667);
 		return shouldUseWind() ? new Vec3(Mth.clamp((windX * windMultiplier) * multiplier, -clamp, clamp),
@@ -164,21 +179,24 @@ public final class ClientWindManager {
 		return hasInitialized || FrozenLibConfig.get().useWindOnNonFrozenServers;
 	}
 
-	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull LevelReader reader, @NotNull BlockPos pos, double stretch) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15D - brightness, 0D))), 0D) * 0.0667);
 		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
 		return new Vec3(wind.x() * windMultiplier, wind.y() * windMultiplier, wind.z() * windMultiplier);
 	}
 
-	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double multiplier, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier, double stretch) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15D - brightness, 0D))), 0D) * 0.0667);
 		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
 		return new Vec3((wind.x() * windMultiplier) * multiplier, (wind.y() * windMultiplier) * multiplier, (wind.z() * windMultiplier) * multiplier);
 	}
 
-	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double multiplier, double clamp, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier, double clamp, double stretch) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15D - brightness, 0D))), 0D) * 0.0667);
 		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
@@ -187,33 +205,33 @@ public final class ClientWindManager {
 				Mth.clamp((wind.z() * windMultiplier) * multiplier, -clamp, clamp));
 	}
 
-	public Vec3 getWindMovement3D(Vec3 pos, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double stretch) {
 		Vec3 wind = this.sample3D(pos, stretch);
 		return new Vec3(wind.x(), wind.y(), wind.z());
 	}
 
-	public Vec3 getWindMovement3D(Vec3 pos, double multiplier, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double multiplier, double stretch) {
 		Vec3 wind = this.sample3D(pos, stretch);
 		return new Vec3((wind.x()) * multiplier, (wind.y()) * multiplier, (wind.z()) * multiplier);
 	}
 
-	public Vec3 getWindMovement3D(Vec3 pos, double multiplier, double clamp, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double multiplier, double clamp, double stretch) {
 		Vec3 wind = this.sample3D(pos, stretch);
 		return new Vec3(Mth.clamp((wind.x()) * multiplier, -clamp, clamp),
 				Mth.clamp((wind.y()) * multiplier, -clamp, clamp),
 				Mth.clamp((wind.z()) * multiplier, -clamp, clamp));
 	}
 
-	public Vec3 sample3D(Vec3 pos, double stretch) {
+	@NotNull
+	public Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
 		double sampledTime = time * 0.1;
 		double xyz = pos.x() + pos.y() + pos.z();
 		double windX = perlinXoro.noise((xyz + sampledTime) * stretch, 0D, 0D);
 		double windY = perlinXoro.noise(0D, (xyz + sampledTime) * stretch, 0D);
 		double windZ = perlinXoro.noise(0D, 0D, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
-	}
-
-	public static void addExtension(ClientWindManagerExtension extension) {
-		if (extension != null) EXTENSIONS.add(extension);
 	}
 }

@@ -18,7 +18,6 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
-import com.google.gson.JsonObject;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
