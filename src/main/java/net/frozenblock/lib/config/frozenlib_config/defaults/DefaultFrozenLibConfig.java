@@ -16,24 +16,20 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.frozenlib_config;
+package net.frozenblock.lib.config.frozenlib_config.defaults;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenBools;
-import net.minecraft.client.gui.screens.Screen;
+import java.util.List;
 
-@Environment(EnvType.CLIENT)
-public final class ModMenuIntegration implements ModMenuApi {
+public final class DefaultFrozenLibConfig {
+	private DefaultFrozenLibConfig() {
+		throw new UnsupportedOperationException("DefaultFrozenLibConfig contains only static declarations.");
+	}
 
-    @Override
-    public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-        if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return ClientScreenBuilder.buildScreen();
-        }
-        return (screen -> null);
-    }
+	public static final boolean USE_WIND_ON_NON_FROZENLIB_SERVERS = true;
+	public static final boolean SAVE_ITEM_COOLDOWNS = true;
+	// DATA FIXER
+	public static final List<String> DISABLED_DATAFIX_TYPES = List.of(
+		"world_gen_settings"
+	);
 
 }

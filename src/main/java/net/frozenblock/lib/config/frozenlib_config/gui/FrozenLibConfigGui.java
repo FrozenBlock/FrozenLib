@@ -1,4 +1,4 @@
-package net.frozenblock.lib.config.frozenlib_config;
+package net.frozenblock.lib.config.frozenlib_config.gui;
 
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -7,7 +7,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
-import net.frozenblock.lib.config.frozenlib_config.getter.DefaultFrozenLibConfig;
+import net.frozenblock.lib.config.frozenlib_config.defaults.DefaultFrozenLibConfig;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 

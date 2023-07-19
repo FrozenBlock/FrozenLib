@@ -5,7 +5,7 @@ import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import net.frozenblock.lib.config.frozenlib_config.getter.DefaultFrozenLibConfig;
+import net.frozenblock.lib.config.frozenlib_config.defaults.DefaultFrozenLibConfig;
 import java.util.List;
 
 // NOTE: Refrain from using Typed Entries as Cloth Config is used for Mod Menu Integration

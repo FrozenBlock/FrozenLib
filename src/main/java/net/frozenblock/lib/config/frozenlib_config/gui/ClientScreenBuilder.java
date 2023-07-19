@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.frozenlib_config;
+package net.frozenblock.lib.config.frozenlib_config.gui;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import net.minecraft.client.gui.screens.Screen;
