@@ -11,7 +11,7 @@ Put changelog here:
 - Fixed missing overworld settings error when a mod uses the DataFixerUpper API and both Lithium and BCLib are installed (Fixed through config)
 - Fixed sound managers not sending new sounds to the client when the player was already tracking an entity.
 - Sound managers now also run the onStart() sound predicate method on the server as well as client.
-- Added "Circular" Waterlogged Vegetation Patches With Less Borders".
+- Added "Circular Waterlogged Vegetation Patches With Less Borders".
 - Fixed Removable Item Tags.
 - Added Client-Sided Mod Integrations.
 - Added support for extending "WindManager" and "ClientWindManager."
