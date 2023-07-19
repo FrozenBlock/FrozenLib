@@ -20,6 +20,7 @@ package net.frozenblock.lib.wind.impl;
 
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.wind.api.WindManager;
+import net.frozenblock.lib.wind.api.WindManagerExtension;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
@@ -46,10 +47,10 @@ public class WindStorage extends SavedData {
 		compoundTag.putDouble("laggedWindX", this.windManager.laggedWindX);
 		compoundTag.putDouble("laggedWindY", this.windManager.laggedWindY);
 		compoundTag.putDouble("laggedWindZ", this.windManager.laggedWindZ);
-		compoundTag.putDouble("cloudX", this.windManager.cloudX);
-		compoundTag.putDouble("cloudY", this.windManager.cloudY);
-		compoundTag.putDouble("cloudZ", this.windManager.cloudZ);
 		compoundTag.putLong("seed", this.windManager.seed);
+
+		// EXTENSIONS
+		for (WindManagerExtension extension : this.windManager.attachedExtensions) extension.save(compoundTag);
 
 		FrozenMain.log("Saving WindManager data.", FrozenMain.UNSTABLE_LOGGING);
 
@@ -66,10 +67,10 @@ public class WindStorage extends SavedData {
 		this.windManager.laggedWindX = compoundTag.getDouble("laggedWindX");
 		this.windManager.laggedWindY = compoundTag.getDouble("laggedWindY");
 		this.windManager.laggedWindZ = compoundTag.getDouble("laggedWindZ");
-		this.windManager.cloudX = compoundTag.getDouble("cloudX");
-		this.windManager.cloudY = compoundTag.getDouble("cloudY");
-		this.windManager.cloudZ = compoundTag.getDouble("cloudZ");
 		this.windManager.setSeed(compoundTag.getLong("seed"));
+
+		// EXTENSIONS
+		for (WindManagerExtension extension : this.windManager.attachedExtensions) extension.load(compoundTag);
 
 		FrozenMain.log("Loading WindManager data.", FrozenMain.UNSTABLE_LOGGING);
 

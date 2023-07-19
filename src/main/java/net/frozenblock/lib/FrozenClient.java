@@ -40,6 +40,9 @@ import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.ClientWindManager;
+import net.frozenblock.lib.wind.api.ClientWindManagerExtension;
+import net.frozenblock.lib.wind.api.WindManager;
+import net.frozenblock.lib.wind.api.WindManagerExtension;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
@@ -438,26 +441,23 @@ public final class FrozenClient implements ClientModInitializer {
 	private static void receiveWindSyncPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.WIND_SYNC_PACKET, (ctx, handler, byteBuf, responseSender) -> {
 			long windTime = byteBuf.readLong();
-			double x = byteBuf.readDouble();
-			double y = byteBuf.readDouble();
-			double z = byteBuf.readDouble();
 			long seed = byteBuf.readLong();
 			boolean override = byteBuf.readBoolean();
-			double xa = byteBuf.readDouble();
-			double ya = byteBuf.readDouble();
-			double za = byteBuf.readDouble();
+			double commandX = byteBuf.readDouble();
+			double commandY = byteBuf.readDouble();
+			double commandZ = byteBuf.readDouble();
 			ctx.execute(() -> {
 				if (ctx.level != null) {
 					ClientWindManager.time = windTime;
-					ClientWindManager.cloudX = x;
-					ClientWindManager.cloudY = y;
-					ClientWindManager.cloudZ = z;
 					ClientWindManager.setSeed(seed);
 					ClientWindManager.overrideWind = override;
-					ClientWindManager.commandWind = new Vec3(xa, ya, za);
+					ClientWindManager.commandWind = new Vec3(commandX, commandY, commandZ);
 					ClientWindManager.hasInitialized = true;
 				}
 			});
+
+			// EXTENSIONS
+			for (ClientWindManagerExtension extension : ClientWindManager.EXTENSIONS) extension.receiveSyncPacket(byteBuf, ctx);
 		});
 	}
 

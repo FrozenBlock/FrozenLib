@@ -1,16 +1,19 @@
 package net.frozenblock.lib.wind.api;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 
 public interface WindManagerExtension {
 
-	void tick(WindManager manager);
-
-	void clientTick();
+	void tick();
 
 	void baseTick();
 
-	boolean runResetsIfNeeded(WindManager manager);
+	boolean runResetsIfNeeded();
 
-	FriendlyByteBuf createSyncByteBuf(WindManager manager, FriendlyByteBuf original);
+	void createSyncByteBuf(FriendlyByteBuf original);
+
+	void load(CompoundTag compoundTag);
+
+	void save(CompoundTag compoundTag);
 }

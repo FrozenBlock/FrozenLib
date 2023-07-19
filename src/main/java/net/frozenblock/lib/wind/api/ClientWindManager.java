@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.wind.api;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -33,9 +34,13 @@ import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
-public class ClientWindManager {
+public final class ClientWindManager {
+
+	public static final List<ClientWindManagerExtension> EXTENSIONS = new ObjectArrayList<>();
+
 	public static long time;
 	public static boolean overrideWind;
 	public static Vec3 commandWind = Vec3.ZERO;
@@ -53,13 +58,6 @@ public class ClientWindManager {
 	public static double laggedWindX;
 	public static double laggedWindY;
 	public static double laggedWindZ;
-
-	public static double prevCloudX;
-	public static double prevCloudY;
-	public static double prevCloudZ;
-	public static double cloudX;
-	public static double cloudY;
-	public static double cloudZ;
 
 	public static long seed = 0;
 	public static boolean hasInitialized;
@@ -90,17 +88,10 @@ public class ClientWindManager {
 		laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 
 		// EXTENSIONS
-		for (WindManagerExtension extension : WindManager.EXTENSIONS) {
+		for (ClientWindManagerExtension extension : EXTENSIONS) {
 			extension.baseTick();
 			extension.clientTick();
 		}
-		//CLOUDS
-		prevCloudX = cloudX;
-		prevCloudY = cloudY;
-		prevCloudZ = cloudZ;
-		cloudX += (laggedWindX * 0.007);
-		cloudY += (laggedWindY * 0.01);
-		cloudZ += (laggedWindZ * 0.007);
 
 		if (!hasInitialized && time > 80D && FrozenLibConfig.get().useWindOnNonFrozenServers) {
 			RandomSource randomSource = AdvancedMath.random();
@@ -169,18 +160,6 @@ public class ClientWindManager {
 		return Mth.lerp(partialTick, prevWindZ, windZ);
 	}
 
-	public static double getCloudX(float partialTick) {
-		return Mth.lerp(partialTick, prevCloudX, cloudX);
-	}
-
-	public static double getCloudY(float partialTick) {
-		return Mth.lerp(partialTick, prevCloudY, cloudY);
-	}
-
-	public static double getCloudZ(float partialTick) {
-		return Mth.lerp(partialTick, prevCloudZ, cloudZ);
-	}
-
 	public static boolean shouldUseWind() {
 		return hasInitialized || FrozenLibConfig.get().useWindOnNonFrozenServers;
 	}
@@ -232,5 +211,9 @@ public class ClientWindManager {
 		double windY = perlinXoro.noise(0D, (xyz + sampledTime) * stretch, 0D);
 		double windZ = perlinXoro.noise(0D, 0D, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
+	}
+
+	public static void addExtension(ClientWindManagerExtension extension) {
+		if (extension != null) EXTENSIONS.add(extension);
 	}
 }

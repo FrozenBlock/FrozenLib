@@ -39,10 +39,13 @@ import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 import java.util.List;
+import java.util.function.Function;
 
 public class WindManager {
 	private static final long MIN_TIME_VALUE = Long.MIN_VALUE + 1;
-	protected static final List<WindManagerExtension> EXTENSIONS = new ObjectArrayList<>();
+	public static final List<Function<WindManager, WindManagerExtension>> EXTENSION_PROVIDERS = new ObjectArrayList<>();
+
+	public final List<WindManagerExtension> attachedExtensions;
 
 	public boolean overrideWind;
 	public long time;
@@ -53,9 +56,6 @@ public class WindManager {
 	public double laggedWindX;
 	public double laggedWindY;
 	public double laggedWindZ;
-	public double cloudX;
-	public double cloudY;
-	public double cloudZ;
 	public long seed = 0;
 
 	private final ServerLevel level;
@@ -63,6 +63,12 @@ public class WindManager {
 	public WindManager(ServerLevel level) {
 		this.level = level;
 		this.setSeed(level.getRandom().nextLong());
+		List<WindManagerExtension> extensions = new ObjectArrayList<>();
+		for (Function<WindManager, WindManagerExtension> extensionFunc : EXTENSION_PROVIDERS) {
+			var extension = extensionFunc.apply(this);
+			extensions.add(extension);
+		}
+		this.attachedExtensions = extensions;
 	}
 
 	public void tick() {
@@ -86,15 +92,10 @@ public class WindManager {
 		this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 
 		//EXTENSIONS
-		for (WindManagerExtension extension : EXTENSIONS) {
+		for (WindManagerExtension extension : this.attachedExtensions) {
 			extension.baseTick();
-			extension.tick(this);
+			extension.tick();
 		}
-
-		//CLOUDS
-		this.cloudX += (this.laggedWindX * 0.007);
-		this.cloudY += (this.laggedWindY * 0.01);
-		this.cloudZ += (this.laggedWindZ * 0.007);
 
 		//SYNC WITH CLIENTS IN CASE OF DESYNC
 		if (this.time % 20 == 0) {
@@ -135,24 +136,12 @@ public class WindManager {
 		}
 
 		//EXTENSIONS
-		for (WindManagerExtension extension : EXTENSIONS) {
-			if (extension.runResetsIfNeeded(this)) {
+		for (WindManagerExtension extension : this.attachedExtensions) {
+			if (extension.runResetsIfNeeded()) {
 				needsReset = true;
 			}
 		}
 
-		if (this.cloudX == Double.MAX_VALUE || this.cloudX == Double.MIN_VALUE) {
-			needsReset = true;
-			this.cloudX = 0;
-		}
-		if (this.cloudY == Double.MAX_VALUE || this.cloudY == Double.MIN_VALUE) {
-			needsReset = true;
-			this.cloudY = 0;
-		}
-		if (this.cloudZ == Double.MAX_VALUE || this.cloudZ == Double.MIN_VALUE) {
-			needsReset = true;
-			this.cloudZ = 0;
-		}
 		if (needsReset) {
 			this.sendSync(this.level);
 		}
@@ -169,12 +158,9 @@ public class WindManager {
 		byteBuf.writeDouble(this.commandWind.z());
 
 		//EXTENSIONS
-		for (WindManagerExtension extension : EXTENSIONS) {
-			extension.createSyncByteBuf(this, byteBuf);
+		for (WindManagerExtension extension : this.attachedExtensions) {
+			extension.createSyncByteBuf(byteBuf);
 		}
-		byteBuf.writeDouble(this.cloudX);
-		byteBuf.writeDouble(this.cloudY);
-		byteBuf.writeDouble(this.cloudZ);
 
 		return byteBuf;
 	}
@@ -294,7 +280,8 @@ public class WindManager {
 		return new Vec3(windX, windY, windZ);
 	}
 
-	public static void addExtension(WindManagerExtension extension) {
-		if (extension != null) EXTENSIONS.add(extension);
+	public static void addExtension(Function<WindManager, WindManagerExtension> extension, ClientWindManagerExtension clientExtension) {
+		if (extension != null) EXTENSION_PROVIDERS.add(extension);
+		if (clientExtension != null) ClientWindManager.addExtension(clientExtension);
 	}
 }
