@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -47,7 +47,7 @@ public class SaveableItemCooldowns {
 		int tickCount = player.getCooldowns().tickCount;
 		player.getCooldowns().cooldowns.forEach(
 				((item, cooldownInstance) -> {
-					if (item.builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS) || FrozenLibConfigValues.CONFIG.getter().saveItemCooldowns()) {
+					if (item.builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS) || FrozenLibConfig.get().saveItemCooldowns) {
 						saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(item, cooldownInstance, tickCount));
 					}
 				})

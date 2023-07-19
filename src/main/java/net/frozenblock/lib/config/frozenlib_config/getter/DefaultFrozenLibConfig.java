@@ -16,15 +16,20 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.frozenlib_config;
+package net.frozenblock.lib.config.frozenlib_config.getter;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import net.minecraft.client.gui.screens.Screen;
+import java.util.List;
 
-public final class ClientScreenBuilder {
+public final class DefaultFrozenLibConfig {
+	private DefaultFrozenLibConfig() {
+		throw new UnsupportedOperationException("DefaultFrozenLibConfig contains only static declarations.");
+	}
 
-    public static ConfigScreenFactory<Screen> buildScreen() {
-        return FrozenLibConfigGui::buildScreen;
-    }
+	public static final boolean USE_WIND_ON_NON_FROZENLIB_SERVERS = true;
+	public static final boolean SAVE_ITEM_COOLDOWNS = true;
+	// DATA FIXER
+	public static final List<String> DISABLED_DATAFIX_TYPES = List.of(
+		"world_gen_settings"
+	);
 
 }

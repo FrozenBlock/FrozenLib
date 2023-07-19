@@ -20,7 +20,7 @@ package net.frozenblock.lib.wind.api;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -97,7 +97,7 @@ public class ClientWindManager {
 		cloudY += (laggedWindY * 0.01);
 		cloudZ += (laggedWindZ * 0.007);
 
-		if (!hasInitialized && time > 80D && FrozenLibConfigValues.CONFIG.getter().useWindOnNonFrozenServers()) {
+		if (!hasInitialized && time > 80D && FrozenLibConfig.get().useWindOnNonFrozenServers) {
 			RandomSource randomSource = AdvancedMath.random();
 			setSeed(randomSource.nextLong());
 			time = randomSource.nextLong();
@@ -177,7 +177,7 @@ public class ClientWindManager {
 	}
 
 	public static boolean shouldUseWind() {
-		return hasInitialized || FrozenLibConfigValues.CONFIG.getter().useWindOnNonFrozenServers();
+		return hasInitialized || FrozenLibConfig.get().useWindOnNonFrozenServers;
 	}
 
 	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double stretch) {

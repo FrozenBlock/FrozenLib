@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
-import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
@@ -51,7 +51,7 @@ public class DataFixTypesMixin {
 		var type = DataFixTypes.class.cast(this);
 		var value = original.getValue();
 
-		if (value instanceof Tag && !FrozenLibConfigValues.CONFIG.getter().disabledDataFixTypes().contains(this.type.typeName())) {
+		if (value instanceof Tag && !FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(this.type.typeName())) {
 			return QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) original);
 		}
 		return original;
