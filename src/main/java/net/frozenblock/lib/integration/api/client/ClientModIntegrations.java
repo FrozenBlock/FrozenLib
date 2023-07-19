@@ -66,7 +66,7 @@ public final class ClientModIntegrations {
      * Initialize all mod integrations.
      */
     public static void initialize() {
-        for (ClientModIntegrationSupplier<?> integration : FrozenClientRegistry.CLIENT_MOD_INTEGRATION) {
+        for (var integration : FrozenClientRegistry.CLIENT_MOD_INTEGRATION) {
             integration.getIntegration().init();
         }
     }
