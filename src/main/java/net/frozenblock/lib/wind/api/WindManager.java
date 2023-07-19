@@ -19,6 +19,7 @@
 package net.frozenblock.lib.wind.api;
 
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
@@ -37,9 +38,11 @@ import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
+import java.util.List;
 
 public class WindManager {
 	private static final long MIN_TIME_VALUE = Long.MIN_VALUE + 1;
+	protected static final List<WindManagerExtension> EXTENSIONS = new ObjectArrayList<>();
 
 	public boolean overrideWind;
 	public long time;
@@ -81,10 +84,18 @@ public class WindManager {
 		this.laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
 		this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
 		this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+
+		//EXTENSIONS
+		for (WindManagerExtension extension : EXTENSIONS) {
+			extension.baseTick();
+			extension.tick(this);
+		}
+
 		//CLOUDS
 		this.cloudX += (this.laggedWindX * 0.007);
 		this.cloudY += (this.laggedWindY * 0.01);
 		this.cloudZ += (this.laggedWindZ * 0.007);
+
 		//SYNC WITH CLIENTS IN CASE OF DESYNC
 		if (this.time % 20 == 0) {
 			this.sendSync(this.level);
@@ -122,6 +133,14 @@ public class WindManager {
 			needsReset = true;
 			this.laggedWindZ = 0;
 		}
+
+		//EXTENSIONS
+		for (WindManagerExtension extension : EXTENSIONS) {
+			if (extension.runResetsIfNeeded(this)) {
+				needsReset = true;
+			}
+		}
+
 		if (this.cloudX == Double.MAX_VALUE || this.cloudX == Double.MIN_VALUE) {
 			needsReset = true;
 			this.cloudX = 0;
@@ -143,14 +162,20 @@ public class WindManager {
 	public FriendlyByteBuf createSyncByteBuf() {
 		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 		byteBuf.writeLong(this.time);
-		byteBuf.writeDouble(this.cloudX);
-		byteBuf.writeDouble(this.cloudY);
-		byteBuf.writeDouble(this.cloudZ);
 		byteBuf.writeLong(this.seed);
 		byteBuf.writeBoolean(this.overrideWind);
 		byteBuf.writeDouble(this.commandWind.x());
 		byteBuf.writeDouble(this.commandWind.y());
 		byteBuf.writeDouble(this.commandWind.z());
+
+		//EXTENSIONS
+		for (WindManagerExtension extension : EXTENSIONS) {
+			extension.createSyncByteBuf(this, byteBuf);
+		}
+		byteBuf.writeDouble(this.cloudX);
+		byteBuf.writeDouble(this.cloudY);
+		byteBuf.writeDouble(this.cloudZ);
+
 		return byteBuf;
 	}
 
@@ -267,5 +292,9 @@ public class WindManager {
 		double windY = this.perlinXoro.noise(0, (xyz + sampledTime) * stretch, 0);
 		double windZ = this.perlinXoro.noise(0, 0, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
+	}
+
+	public static void addExtension(WindManagerExtension extension) {
+		if (extension != null) EXTENSIONS.add(extension);
 	}
 }

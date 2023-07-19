@@ -89,6 +89,11 @@ public class ClientWindManager {
 		laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
 		laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 
+		// EXTENSIONS
+		for (WindManagerExtension extension : WindManager.EXTENSIONS) {
+			extension.baseTick();
+			extension.clientTick();
+		}
 		//CLOUDS
 		prevCloudX = cloudX;
 		prevCloudY = cloudY;
