@@ -19,8 +19,12 @@
 package net.frozenblock.lib.wind.api;
 
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -44,7 +48,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class WindManager {
 	private static final long MIN_TIME_VALUE = Long.MIN_VALUE + 1;
-	public static final List<Function<WindManager, WindManagerExtension>> EXTENSION_PROVIDERS = new ObjectArrayList<>();
+	public static final Map<Function<WindManager, WindManagerExtension>, Integer> EXTENSION_PROVIDERS = new Object2ObjectOpenHashMap<>();
 
 	public final List<WindManagerExtension> attachedExtensions;
 
@@ -61,19 +65,27 @@ public class WindManager {
 
 	private final ServerLevel level;
 
+	@SuppressWarnings("unchecked")
 	public WindManager(@NotNull ServerLevel level) {
 		this.level = level;
 		this.setSeed(level.getRandom().nextLong());
 		List<WindManagerExtension> extensions = new ObjectArrayList<>();
-		for (Function<WindManager, WindManagerExtension> extensionFunc : EXTENSION_PROVIDERS) {
-			var extension = extensionFunc.apply(this);
+		Map.Entry<Function<WindManager, WindManagerExtension>, Integer>[] extensionProviders = EXTENSION_PROVIDERS.entrySet().toArray(new Map.Entry[0]);
+		Arrays.sort(extensionProviders, Map.Entry.comparingByValue());
+
+		for (Map.Entry<Function<WindManager, WindManagerExtension>, Integer> extensionFunc : extensionProviders) {
+			var extension = extensionFunc.getKey().apply(this);
 			extensions.add(extension);
 		}
 		this.attachedExtensions = extensions;
 	}
 
+	public static void addExtension(Function<WindManager, WindManagerExtension> extension, int priority) {
+		if (extension != null) EXTENSION_PROVIDERS.put(extension, priority);
+	}
+
 	public static void addExtension(Function<WindManager, WindManagerExtension> extension) {
-		if (extension != null) EXTENSION_PROVIDERS.add(extension);
+		addExtension(extension, 1000);
 	}
 
 	public ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(this.seed));
