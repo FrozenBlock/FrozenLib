@@ -13,6 +13,6 @@ Put changelog here:
 - Sound managers now also run the onStart() sound predicate method on the server as well as client.
 - Added "Circular Waterlogged Vegetation Patches With Less Borders".
 - Fixed Removable Item Tags.
-- Added a clientInit method to mod integrations.
+- Added a `clientInit()` method to mod integrations.
 - Added support for extending "WindManager" and "ClientWindManager."
 - Removed built-in Cloud movement.
