@@ -20,10 +20,9 @@ package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
 
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.templates.TypeTemplate;
-import org.jetbrains.annotations.Range;
-
 import java.util.Map;
 import java.util.function.Supplier;
+import org.jetbrains.annotations.Range;
 
 /**
  * Represents a {@link Schema} that has no parent.

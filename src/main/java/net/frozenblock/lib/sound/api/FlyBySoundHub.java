@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.sound.api;
 
-import java.util.HashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,10 +35,10 @@ import net.minecraft.world.phys.Vec3;
 @Environment(EnvType.CLIENT)
 public class FlyBySoundHub {
 
-    public static final Map<EntityType<?>, FlyBySound> AUTO_ENTITIES_AND_SOUNDS = new HashMap<>();
+    public static final Map<EntityType<?>, FlyBySound> AUTO_ENTITIES_AND_SOUNDS = new Object2ObjectOpenHashMap<>();
 
-    public static final Map<Entity, FlyBySound> FLYBY_ENTITIES_AND_SOUNDS = new HashMap<>();
-    public static final Map<Entity, Integer> ENTITY_COOLDOWNS = new HashMap<>();
+    public static final Map<Entity, FlyBySound> FLYBY_ENTITIES_AND_SOUNDS = new Object2ObjectOpenHashMap<>();
+    public static final Map<Entity, Integer> ENTITY_COOLDOWNS = new Object2ObjectOpenHashMap<>();
     private static int checkAroundCooldown;
 
     public static void update(Minecraft client, Player player, boolean autoSounds) {

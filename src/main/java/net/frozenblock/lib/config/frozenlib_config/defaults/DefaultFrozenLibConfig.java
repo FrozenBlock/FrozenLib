@@ -16,22 +16,20 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.api.dripstone;
+package net.frozenblock.lib.config.frozenlib_config.defaults;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import java.util.Map;
-import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.PointedDripstoneBlock;
+import java.util.List;
 
-public class DripstoneDripWaterFrom {
+public final class DefaultFrozenLibConfig {
+	private DefaultFrozenLibConfig() {
+		throw new UnsupportedOperationException("DefaultFrozenLibConfig contains only static declarations.");
+	}
 
-    public static final Map<Block, InjectedOnDrip> ON_DRIP_BLOCK = new Object2ObjectOpenHashMap<>();
-
-    @FunctionalInterface
-    public interface InjectedOnDrip {
-        void drip(ServerLevel world, PointedDripstoneBlock.FluidInfo fluidInfo, BlockPos pos);
-    }
+	public static final boolean USE_WIND_ON_NON_FROZENLIB_SERVERS = true;
+	public static final boolean SAVE_ITEM_COOLDOWNS = true;
+	// DATA FIXER
+	public static final List<String> DISABLED_DATAFIX_TYPES = List.of(
+		"world_gen_settings"
+	);
 
 }

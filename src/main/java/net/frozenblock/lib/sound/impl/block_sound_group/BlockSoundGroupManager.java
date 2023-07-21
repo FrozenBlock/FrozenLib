@@ -23,9 +23,9 @@ import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -59,7 +59,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	public static final BlockSoundGroupManager INSTANCE = new BlockSoundGroupManager();
 
 	private Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites;
-	private final Map<ResourceLocation, BlockSoundGroupOverwrite> queuedOverwrites = new HashMap<>();
+	private final Map<ResourceLocation, BlockSoundGroupOverwrite> queuedOverwrites = new Object2ObjectOpenHashMap<>();
 
 	@Nullable
 	public List<BlockSoundGroupOverwrite> getOverwrites() {
@@ -152,7 +152,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	public static class SoundGroupLoader {
 		private final ResourceManager manager;
 		private final ProfilerFiller profiler;
-		private final Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites = new HashMap<>();
+		private final Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites = new Object2ObjectOpenHashMap<>();
 
 		public SoundGroupLoader(ResourceManager manager, ProfilerFiller profiler) {
 			this.manager = manager;

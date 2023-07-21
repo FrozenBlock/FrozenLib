@@ -24,10 +24,10 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.integration.impl.EmptyModIntegration;
 
 public class ModIntegrationSupplier<T extends ModIntegration> {
-	private final String modID;
-	private final boolean isModLoaded;
-	private final Optional<T> optionalIntegration;
-	private final T unloadedModIntegration;
+	protected final String modID;
+	protected final boolean isModLoaded;
+	protected final Optional<T> optionalIntegration;
+	protected final T unloadedModIntegration;
 
 	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, String modID) {
 		this.modID = modID;

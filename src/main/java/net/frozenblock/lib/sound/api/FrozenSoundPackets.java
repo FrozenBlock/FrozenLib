@@ -83,8 +83,11 @@ public final class FrozenSoundPackets {
 			byteBuf.writeEnum(category);
 			byteBuf.writeFloat(volume);
 			byteBuf.writeFloat(pitch);
-			for (ServerPlayer player : PlayerLookup.around((ServerLevel) world, entity.blockPosition(), 128)) {
+			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
 				ServerPlayNetworking.send(player, FrozenMain.FLYBY_SOUND_PACKET, byteBuf);
+			}
+			if (entity instanceof ServerPlayer serverPlayer) {
+				ServerPlayNetworking.send(serverPlayer, FrozenMain.FLYBY_SOUND_PACKET, byteBuf);
 			}
 		}
 	}
@@ -99,9 +102,12 @@ public final class FrozenSoundPackets {
             byteBuf.writeFloat(pitch);
             byteBuf.writeResourceLocation(predicate);
 			byteBuf.writeBoolean(stopOnDeath);
-            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
+            for (ServerPlayer player : PlayerLookup.tracking(entity)) {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, byteBuf);
             }
+			if (entity instanceof ServerPlayer serverPlayer) {
+				ServerPlayNetworking.send(serverPlayer, FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, byteBuf);
+			}
         }
     }
 
@@ -115,9 +121,12 @@ public final class FrozenSoundPackets {
             byteBuf.writeFloat(pitch);
             byteBuf.writeResourceLocation(predicate);
 			byteBuf.writeBoolean(stopOnDeath);
-            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
+            for (ServerPlayer player : PlayerLookup.tracking(entity)) {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
+			if (entity instanceof ServerPlayer serverPlayer) {
+				ServerPlayNetworking.send(serverPlayer, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
+			}
 			((EntityLoopingSoundInterface)entity).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, predicate, stopOnDeath);
         }
     }
@@ -147,9 +156,12 @@ public final class FrozenSoundPackets {
             byteBuf.writeFloat(maxDist);
             byteBuf.writeResourceLocation(predicate);
 			byteBuf.writeBoolean(stopOnDeath);
-            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
+            for (ServerPlayer player : PlayerLookup.tracking(entity)) {
                 ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
             }
+			if (entity instanceof ServerPlayer serverPlayer) {
+				ServerPlayNetworking.send(serverPlayer, FrozenMain.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
+			}
 			((EntityLoopingFadingDistanceSoundInterface)entity).addFadingDistanceSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), BuiltInRegistries.SOUND_EVENT.getKey(sound2), category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist);
         }
     }
@@ -216,9 +228,12 @@ public final class FrozenSoundPackets {
             byteBuf.writeFloat(pitch);
             byteBuf.writeResourceLocation(predicate);
 			byteBuf.writeBoolean(stopOnDeath);
-            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) world, entity.blockPosition())) {
+            for (ServerPlayer player : PlayerLookup.tracking(entity)) {
                 ServerPlayNetworking.send(player, FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
             }
+			if (entity instanceof ServerPlayer serverPlayer) {
+				ServerPlayNetworking.send(serverPlayer, FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
+			}
 			((EntityLoopingSoundInterface)entity).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, predicate, stopOnDeath);
         }
     }

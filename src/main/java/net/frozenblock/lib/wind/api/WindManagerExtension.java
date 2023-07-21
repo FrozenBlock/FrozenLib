@@ -16,15 +16,22 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.frozenlib_config;
+package net.frozenblock.lib.wind.api;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.FriendlyByteBuf;
 
-public final class ClientScreenBuilder {
+public interface WindManagerExtension {
 
-    public static ConfigScreenFactory<Screen> buildScreen() {
-        return FrozenLibConfig::buildScreen;
-    }
+	void tick();
 
+	void baseTick();
+
+	boolean runResetsIfNeeded();
+
+	void createSyncByteBuf(FriendlyByteBuf original);
+
+	void load(CompoundTag compoundTag);
+
+	void save(CompoundTag compoundTag);
 }

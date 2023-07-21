@@ -47,9 +47,11 @@ public class FrozenRegistry {
 	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = createSimple(MOD_INTEGRATION_REGISTRY, Lifecycle.stable(), null,
 		registry -> Registry.register(registry, FrozenMain.id("dummy"), new ModIntegrationSupplier<>(() -> new ModIntegration("dummy") {
 			@Override
-			public void init() {
-			}
-		}, "dummy"))
+			public void init() {}
+			},
+				"dummy"
+			)
+		)
 	);
 
 	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE = createSimple(SOUND_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,

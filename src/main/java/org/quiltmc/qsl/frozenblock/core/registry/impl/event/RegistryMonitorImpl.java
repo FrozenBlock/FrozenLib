@@ -24,7 +24,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEventStorage;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEntryContext;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryMonitor;

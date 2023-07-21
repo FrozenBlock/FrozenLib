@@ -19,11 +19,10 @@
 package net.frozenblock.lib.config.api.instance.json;
 
 import blue.endless.jankson.JsonElement;
-import blue.endless.jankson.JsonObject;
 import blue.endless.jankson.api.Marshaller;
+import com.google.gson.JsonParseException;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import com.google.gson.JsonParseException;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 
 public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marshaller, JsonElement> {

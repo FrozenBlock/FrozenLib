@@ -18,15 +18,17 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
-import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.nbt.CompoundTag;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
@@ -36,7 +38,11 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = DataFixTypes.class, priority = 1001)
 public class DataFixTypesMixin {
 
-    @ModifyReturnValue(
+	@Shadow
+	@Final
+	private DSL.TypeReference type;
+
+	@ModifyReturnValue(
             method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
             at = @At("RETURN")
     )
@@ -45,7 +51,7 @@ public class DataFixTypesMixin {
 		var type = DataFixTypes.class.cast(this);
 		var value = original.getValue();
 
-		if (value instanceof Tag) {
+		if (value instanceof Tag && !FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(this.type.typeName())) {
 			return QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) original);
 		}
 		return original;

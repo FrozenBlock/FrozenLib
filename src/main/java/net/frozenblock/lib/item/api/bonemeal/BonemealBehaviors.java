@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.item.api.bonemeal;
 
-import java.util.HashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,7 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class BonemealBehaviors {
 
-    public static final Map<Block, BonemealBehavior> BONEMEAL_BEHAVIORS = new HashMap<>();
+    public static final Map<Block, BonemealBehavior> BONEMEAL_BEHAVIORS = new Object2ObjectOpenHashMap<>();
 
     @FunctionalInterface
     public interface BonemealBehavior {

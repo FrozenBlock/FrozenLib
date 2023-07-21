@@ -40,7 +40,7 @@
       "net.frozenblock.lib.FrozenPreLaunch"
     ],
     "modmenu": [
-      "net.frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
+      "net.frozenblock.lib.config.frozenlib_config.gui.ModMenuIntegration"
     ],
     "terrablender": [
       "net.frozenblock.lib.worldgen.surface.impl.terrablender.FrozenTerraBlenderCompat"

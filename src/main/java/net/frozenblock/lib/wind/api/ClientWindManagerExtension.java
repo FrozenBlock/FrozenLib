@@ -16,17 +16,19 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.api;
+package net.frozenblock.lib.wind.api;
 
-import java.util.HashMap;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.sounds.SoundEvent;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 
-public class StartingSounds {
+@Environment(EnvType.CLIENT)
+public interface ClientWindManagerExtension {
 
-    /**
-     * Use this to associate a {@link SoundEvent} to a {@link ResourceKey} for later use as a starting sound.
-     */
-	public static final HashMap<ResourceKey<?>, SoundEvent> STARTING_SOUNDS = new HashMap<>();
+	void clientTick();
 
+	void baseTick();
+
+	void receiveSyncPacket(FriendlyByteBuf byteBuf, Minecraft minecraft);
 }

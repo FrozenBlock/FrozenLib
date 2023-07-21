@@ -19,6 +19,13 @@
 package net.frozenblock.lib.wind.api;
 
 import io.netty.buffer.Unpooled;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
@@ -37,9 +44,13 @@ import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class WindManager {
 	private static final long MIN_TIME_VALUE = Long.MIN_VALUE + 1;
+	public static final Map<Function<WindManager, WindManagerExtension>, Integer> EXTENSION_PROVIDERS = new Object2ObjectOpenHashMap<>();
+
+	public final List<WindManagerExtension> attachedExtensions;
 
 	public boolean overrideWind;
 	public long time;
@@ -50,16 +61,59 @@ public class WindManager {
 	public double laggedWindX;
 	public double laggedWindY;
 	public double laggedWindZ;
-	public double cloudX;
-	public double cloudY;
-	public double cloudZ;
 	public long seed = 0;
 
 	private final ServerLevel level;
 
-	public WindManager(ServerLevel level) {
+	@SuppressWarnings("unchecked")
+	public WindManager(@NotNull ServerLevel level) {
 		this.level = level;
 		this.setSeed(level.getRandom().nextLong());
+		List<WindManagerExtension> extensions = new ObjectArrayList<>();
+		Map.Entry<Function<WindManager, WindManagerExtension>, Integer>[] extensionProviders = EXTENSION_PROVIDERS.entrySet().toArray(new Map.Entry[0]);
+		Arrays.sort(extensionProviders, Map.Entry.comparingByValue());
+
+		for (Map.Entry<Function<WindManager, WindManagerExtension>, Integer> extensionFunc : extensionProviders) {
+			var extension = extensionFunc.getKey().apply(this);
+			extensions.add(extension);
+		}
+		this.attachedExtensions = extensions;
+	}
+
+	public static void addExtension(Function<WindManager, WindManagerExtension> extension, int priority) {
+		if (extension != null) EXTENSION_PROVIDERS.put(extension, priority);
+	}
+
+	public static void addExtension(Function<WindManager, WindManagerExtension> extension) {
+		addExtension(extension, 1000);
+	}
+
+	public ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(this.seed));
+	public ImprovedNoise perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(this.seed));
+	public ImprovedNoise perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(this.seed));
+
+	public void setSeed(long newSeed) {
+		if (newSeed != this.seed) {
+			this.seed = newSeed;
+			this.perlinChecked = new ImprovedNoise(new LegacyRandomSource(this.seed));
+			this.perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(this.seed));
+			this.perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(this.seed));
+		}
+	}
+
+	@NotNull
+	public static WindManager getWindManager(@NotNull ServerLevel level) {
+		return ((WindManagerInterface)level).frozenLib$getWindManager();
+	}
+
+	@NotNull
+	public WindStorage createData() {
+		return new WindStorage(this);
+	}
+
+	@NotNull
+	public WindStorage createData(@NotNull CompoundTag nbt) {
+		return this.createData().load(nbt);
 	}
 
 	public void tick() {
@@ -81,10 +135,13 @@ public class WindManager {
 		this.laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
 		this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
 		this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
-		//CLOUDS
-		this.cloudX += (this.laggedWindX * 0.025);
-		this.cloudY += (this.laggedWindY * 0.01);
-		this.cloudZ += (this.laggedWindZ * 0.025);
+
+		//EXTENSIONS
+		for (WindManagerExtension extension : this.attachedExtensions) {
+			extension.baseTick();
+			extension.tick();
+		}
+
 		//SYNC WITH CLIENTS IN CASE OF DESYNC
 		if (this.time % 20 == 0) {
 			this.sendSync(this.level);
@@ -122,50 +179,51 @@ public class WindManager {
 			needsReset = true;
 			this.laggedWindZ = 0;
 		}
-		if (this.cloudX == Double.MAX_VALUE || this.cloudX == Double.MIN_VALUE) {
-			needsReset = true;
-			this.cloudX = 0;
+
+		//EXTENSIONS
+		for (WindManagerExtension extension : this.attachedExtensions) {
+			if (extension.runResetsIfNeeded()) {
+				needsReset = true;
+			}
 		}
-		if (this.cloudY == Double.MAX_VALUE || this.cloudY == Double.MIN_VALUE) {
-			needsReset = true;
-			this.cloudY = 0;
-		}
-		if (this.cloudZ == Double.MAX_VALUE || this.cloudZ == Double.MIN_VALUE) {
-			needsReset = true;
-			this.cloudZ = 0;
-		}
+
 		if (needsReset) {
 			this.sendSync(this.level);
 		}
 		return needsReset;
 	}
 
+	@NotNull
 	public FriendlyByteBuf createSyncByteBuf() {
 		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 		byteBuf.writeLong(this.time);
-		byteBuf.writeDouble(this.cloudX);
-		byteBuf.writeDouble(this.cloudY);
-		byteBuf.writeDouble(this.cloudZ);
 		byteBuf.writeLong(this.seed);
 		byteBuf.writeBoolean(this.overrideWind);
 		byteBuf.writeDouble(this.commandWind.x());
 		byteBuf.writeDouble(this.commandWind.y());
 		byteBuf.writeDouble(this.commandWind.z());
+
+		//EXTENSIONS
+		for (WindManagerExtension extension : this.attachedExtensions) {
+			extension.createSyncByteBuf(byteBuf);
+		}
+
 		return byteBuf;
 	}
 
-	public void sendSync(ServerLevel level) {
+	public void sendSync(@NotNull ServerLevel level) {
 		FriendlyByteBuf byteBuf = this.createSyncByteBuf();
 		for (ServerPlayer player : PlayerLookup.world(level)) {
 			this.sendSyncToPlayer(byteBuf, player);
 		}
 	}
 
-	public void sendSyncToPlayer(FriendlyByteBuf byteBuf, ServerPlayer player) {
+	public void sendSyncToPlayer(@NotNull FriendlyByteBuf byteBuf, @NotNull ServerPlayer player) {
 		ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
 	}
 
-	public Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
+	@NotNull
+	public Vec3 sampleVec3(@NotNull ImprovedNoise sampler, double x, double y, double z) {
 		if (!this.overrideWind) {
 			double windX = sampler.noise(x, 0, 0);
 			double windY = sampler.noise(0, y, 0);
@@ -175,32 +233,22 @@ public class WindManager {
 		return this.commandWind;
 	}
 
-	public ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(this.seed));
-	public ImprovedNoise perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(this.seed));
-	public ImprovedNoise perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(this.seed));
-
-	public void setSeed(long newSeed) {
-		if (newSeed != this.seed) {
-			this.seed = newSeed;
-			this.perlinChecked = new ImprovedNoise(new LegacyRandomSource(this.seed));
-			this.perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(this.seed));
-			this.perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(this.seed));
-		}
-	}
-
-	public Vec3 getWindMovement(LevelReader reader, BlockPos pos) {
+	@NotNull
+	public Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
 		return new Vec3(this.windX * windMultiplier, this.windY * windMultiplier, this.windZ * windMultiplier);
 	}
 
-	public Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier) {
+	@NotNull
+	public Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
 		return new Vec3((this.windX * windMultiplier) * multiplier, (this.windY * windMultiplier) * multiplier, (this.windZ * windMultiplier) * multiplier);
 	}
 
-	public Vec3 getWindMovement(LevelReader reader, BlockPos pos, double multiplier, double clamp) {
+	@NotNull
+	public Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier, double clamp) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
 		return new Vec3(Mth.clamp((this.windX * windMultiplier) * multiplier, -clamp, clamp),
@@ -208,33 +256,24 @@ public class WindManager {
 				Mth.clamp((this.windZ * windMultiplier) * multiplier, -clamp, clamp));
 	}
 
-	public static WindManager getWindManager(ServerLevel level) {
-		return ((WindManagerInterface)level).frozenLib$getWindManager();
-	}
-
-	public WindStorage createData() {
-		return new WindStorage(this);
-	}
-
-	public WindStorage createData(CompoundTag nbt) {
-		return this.createData().load(nbt);
-	}
-
-	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull LevelReader reader, @NotNull BlockPos pos, double stretch) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
 		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
 		return new Vec3(wind.x() * windMultiplier, wind.y() * windMultiplier, wind.z() * windMultiplier);
 	}
 
-	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double multiplier, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier, double stretch) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
 		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
 		return new Vec3((wind.x() * windMultiplier) * multiplier, (wind.y() * windMultiplier) * multiplier, (wind.z() * windMultiplier) * multiplier);
 	}
 
-	public Vec3 getWindMovement3D(LevelReader reader, BlockPos pos, double multiplier, double clamp, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier, double clamp, double stretch) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
 		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
@@ -243,24 +282,28 @@ public class WindManager {
 				Mth.clamp((wind.z() * windMultiplier) * multiplier, -clamp, clamp));
 	}
 
-	public Vec3 getWindMovement3D(Vec3 pos, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double stretch) {
 		Vec3 wind = this.sample3D(pos, stretch);
 		return new Vec3(wind.x(), wind.y(), wind.z());
 	}
 
-	public Vec3 getWindMovement3D(Vec3 pos, double multiplier, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double multiplier, double stretch) {
 		Vec3 wind = this.sample3D(pos, stretch);
 		return new Vec3((wind.x()) * multiplier, (wind.y()) * multiplier, (wind.z()) * multiplier);
 	}
 
-	public Vec3 getWindMovement3D(Vec3 pos, double multiplier, double clamp, double stretch) {
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double multiplier, double clamp, double stretch) {
 		Vec3 wind = this.sample3D(pos, stretch);
 		return new Vec3(Mth.clamp((wind.x()) * multiplier, -clamp, clamp),
 				Mth.clamp((wind.y()) * multiplier, -clamp, clamp),
 				Mth.clamp((wind.z()) * multiplier, -clamp, clamp));
 	}
 
-	public Vec3 sample3D(Vec3 pos, double stretch) {
+	@NotNull
+	public Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
 		double sampledTime = time * 0.1;
 		double xyz = pos.x() + pos.y() + pos.z();
 		double windX = this.perlinXoro.noise((xyz + sampledTime) * stretch, 0, 0);

@@ -18,7 +18,6 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
-import com.google.gson.JsonObject;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
@@ -29,7 +28,11 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.util.datafix.DataFixers;
-import org.jetbrains.annotations.*;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Range;
 import org.slf4j.Logger;
 
 /**
@@ -46,12 +49,6 @@ public abstract class QuiltDataFixesInternals {
     public static int getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
         return compound.getInt(modId + "_DataVersion");
     }
-
-	@Contract(pure = true)
-	@Range(from = 0, to = Integer.MAX_VALUE)
-	public static int getModDataVersion(@NotNull JsonObject json, @NotNull String modId) {
-		return json.get(modId + "_DataVersion").getAsInt();
-	}
 
     private static QuiltDataFixesInternals instance;
 

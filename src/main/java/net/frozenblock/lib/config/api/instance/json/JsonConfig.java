@@ -21,19 +21,14 @@ package net.frozenblock.lib.config.api.instance.json;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonGrammar;
 import blue.endless.jankson.api.SyntaxError;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.StringReader;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.instance.GsonUtils;
+import net.frozenblock.lib.config.api.instance.ConfigSerialization;
 
 /**
  * Serializes and deserializes config data with GSON and Jankson.
@@ -43,37 +38,24 @@ public class JsonConfig<T> extends Config<T> {
 	public static final String GSON_EXTENSION = "json";
 	public static final String JANKSON_EXTENSION = "json5";
 
-	private final Gson gson;
 	private final Jankson jankson;
 
-	private final boolean useJankson;
+	private final boolean json5;
 
 	public JsonConfig(String modId, Class<T> config) {
 		this(modId, config, false);
 	}
 
 	public JsonConfig(String modId, Class<T> config, boolean json5) {
-		this(modId, config, json5, new GsonBuilder());
+		this(modId, config, makePath(modId, json5 ? JANKSON_EXTENSION : GSON_EXTENSION), json5);
 	}
 
-	public JsonConfig(String modId, Class<T> config, boolean json5, GsonBuilder builder) {
-		this(modId, config, makePath(modId, json5 ? JANKSON_EXTENSION : GSON_EXTENSION), json5, builder);
-	}
-
-	public JsonConfig(String modId, Class<T> config, Path path, boolean json5, GsonBuilder builder) {
+	public JsonConfig(String modId, Class<T> config, Path path, boolean json5) {
 		super(modId, config, path);
+		var janksonBuilder = Jankson.builder();
 
-		if (!json5) {
-			builder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
-		}
-
-		this.gson = GsonUtils.createGson(builder, modId);
-
-		this.jankson = Jankson.builder()
-				.registerSerializer(TypedEntry.class, new JanksonTypedEntrySerializer(modId))
-				.build();
-
-		this.useJankson = json5;
+		this.jankson = ConfigSerialization.createJankson(janksonBuilder, modId);
+		this.json5 = json5;
 
 		if (this.load()) {
 			this.save();
@@ -86,11 +68,7 @@ public class JsonConfig<T> extends Config<T> {
 		try {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-			if (this.useJankson) {
-				writer.write(this.jankson.toJson(this.config()).toJson(JsonGrammar.JSON5));
-			} else {
-				this.gson.toJson(this.config(), writer);
-			}
+			writer.write(this.jankson.toJson(this.config()).toJson(this.json5 ? JsonGrammar.JSON5 : JsonGrammar.STRICT));
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -102,10 +80,7 @@ public class JsonConfig<T> extends Config<T> {
 		FrozenMain.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
 		if (Files.exists(this.path())) {
 			try {
-				String json = this.jankson.load(this.path().toFile()).toJson(JsonGrammar.COMPACT);
-				var reader = new StringReader(json);
-				this.setConfig(this.gson.fromJson(reader, this.configClass()));
-				reader.close();
+				this.setConfig(this.jankson.fromJson(this.jankson.load(this.path().toFile()), this.configClass()));
 				return true;
 			} catch (IOException | SyntaxError e) {
 				e.printStackTrace();

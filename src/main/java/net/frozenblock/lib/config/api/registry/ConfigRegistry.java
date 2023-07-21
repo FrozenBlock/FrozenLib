@@ -18,9 +18,10 @@
 
 package net.frozenblock.lib.config.api.registry;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
@@ -28,10 +29,10 @@ import net.frozenblock.lib.config.api.instance.Config;
 
 public class ConfigRegistry {
 
-	private static final List<Config<?>> CONFIG_REGISTRY = new ArrayList<>();
+	private static final List<Config<?>> CONFIG_REGISTRY = new ObjectArrayList<>();
 
-	private static final Map<String, List<TypedEntryType<?>>> MOD_TYPED_ENTRY_REGISTRY = new HashMap<>();
-	private static final List<TypedEntryType<?>> TYPED_ENTRY_REGISTRY = new ArrayList<>();
+	private static final Map<String, List<TypedEntryType<?>>> MOD_TYPED_ENTRY_REGISTRY = new Object2ObjectOpenHashMap<>();
+	private static final List<TypedEntryType<?>> TYPED_ENTRY_REGISTRY = new ObjectArrayList<>();
 
 	public static <T> Config<T> register(Config<T> config) {
 		if (CONFIG_REGISTRY.contains(config)) {

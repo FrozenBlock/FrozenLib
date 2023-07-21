@@ -7,7 +7,7 @@
 	"defaultRequire": 1
   },
   "mixins": [
-    "FeatureFlagsMixin",
-    "FeatureFlagBuilderMixin"
+    "FeatureFlagBuilderMixin",
+    "FeatureFlagsMixin"
   ]
 }

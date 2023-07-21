@@ -7,7 +7,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.net.URL
 import java.nio.file.Files
-import java.util.Properties
+import java.util.*
 
 buildscript {
 	repositories {
@@ -25,7 +25,6 @@ plugins {
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
 	id("com.matthewprenger.cursegradle") version("+")
-    id("com.github.johnrengelman.shadow") version("+")
     `maven-publish`
     eclipse
     idea
@@ -185,12 +184,12 @@ repositories {
         setName("Siphalor"s Maven")
         setUrl("https://maven.siphalor.de")
     }*/
-    maven {
+    /*maven {
         setUrl("https://maven.flashyreese.me/releases")
     }
     maven {
         setUrl("https://maven.flashyreese.me/snapshots")
-    }
+    }*/
     maven {
         setUrl("https://maven.minecraftforge.net")
     }
@@ -225,25 +224,25 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+    modApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modCompileOnly("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
 
 	// TerraBlender
-    modCompileOnly("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
+    modCompileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
 
     // MixinExtras
     modApi("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.9")?.let { annotationProcessor(it); include(it) }
 
     // Toml
-    implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
+    modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    api("blue.endless:jankson:$jankson_version")?.let { include(it) }
+    modApi("blue.endless:jankson:$jankson_version")?.let { include(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 
@@ -275,15 +274,11 @@ dependencies {
     }*/
 }
 
-vineflower {
-    //toolVersion.set("1.8.0")
-}
-
 tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = "~1.20-"
+        properties["minecraft_version"] = "~$minecraft_version-"
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 
@@ -294,13 +289,13 @@ tasks {
 
     test {
         useJUnitPlatform()
-    }
 
-    license {
-        rule(file("codeformat/QUILT_MODIFIED_HEADER"))
-        rule(file("codeformat/HEADER"))
+        license {
+            rule(file("codeformat/QUILT_MODIFIED_HEADER"))
+            rule(file("codeformat/HEADER"))
 
-        include("**//*.java")
+            include("**//*.java")
+        }
     }
 
     register("javadocJar", Jar::class) {
@@ -317,7 +312,6 @@ tasks {
 
     withType(JavaCompile::class) {
         options.encoding = "UTF-8"
-        // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
         options.release.set(17)
         options.isFork = true
         options.isIncremental = true
@@ -325,18 +319,6 @@ tasks {
 
     withType(Test::class) {
         maxParallelForks = Runtime.getRuntime().availableProcessors().div(2)
-    }
-
-    shadowJar {
-        isEnableRelocation = true;
-        relocationPrefix = "net.frozenblock.lib.shadow"
-    }
-
-    remapJar {
-        dependsOn(shadowJar)
-        mustRunAfter(shadowJar)
-
-        input.set(shadowJar.get().archiveFile)
     }
 }
 
@@ -362,7 +344,7 @@ java {
 tasks {
     jar {
         from("LICENSE") {
-            rename { "${it}_${base.archivesName}" }
+            rename { "${it}_${base.archivesName.get()}" }
         }
     }
 }

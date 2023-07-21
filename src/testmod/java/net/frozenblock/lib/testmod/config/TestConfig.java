@@ -20,6 +20,7 @@ package net.frozenblock.lib.testmod.config;
 
 import blue.endless.jankson.Comment;
 import com.mojang.serialization.Codec;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
@@ -32,7 +33,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.Vec3;
-import java.util.List;
 
 public class TestConfig {
 

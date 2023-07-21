@@ -18,8 +18,8 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 
+import java.util.List;
 import net.fabricmc.fabric.mixin.registry.sync.DebugChunkGeneratorAccessor;
-import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +27,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import java.util.List;
 
 @Mixin(BuiltInRegistries.class)
 public class BuiltInRegistriesMixin {

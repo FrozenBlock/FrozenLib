@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public final class ItemStackMixin implements ItemStackExtension {
 
 	@Unique
-	private boolean frozenLib$inContainer = false;
+	private boolean frozenLib$canRemoveTags = false;
 
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
 	public void frozenLib$removeTags(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
@@ -59,16 +59,17 @@ public final class ItemStackMixin implements ItemStackExtension {
 		var extendedLeft = ItemStackExtension.class.cast(left);
 		var extendedRight = ItemStackExtension.class.cast(right);
 
-		if (extendedLeft.frozenLib$inContainer()) {
+
+		if (extendedLeft.frozenLib$canRemoveTags()) {
 			CompoundTag lTag = left.getTag();
 			frozenLib$fixEmptyTags(left, lTag);
-			extendedLeft.frozenLib$setInContainer(false);
+			extendedLeft.frozenLib$setCanRemoveTags(false);
 		}
 
-		if (extendedRight.frozenLib$inContainer()) {
+		if (extendedRight.frozenLib$canRemoveTags()) {
 			CompoundTag rTag = right.tag;
 			frozenLib$fixEmptyTags(right, rTag);
-			extendedRight.frozenLib$setInContainer(false);
+			extendedRight.frozenLib$setCanRemoveTags(false);
 		}
 	}
 
@@ -86,13 +87,15 @@ public final class ItemStackMixin implements ItemStackExtension {
 		}
 	}
 
+	@Unique
 	@Override
-	public boolean frozenLib$inContainer() {
-		return this.frozenLib$inContainer;
+	public boolean frozenLib$canRemoveTags() {
+		return this.frozenLib$canRemoveTags;
 	}
 
+	@Unique
 	@Override
-	public void frozenLib$setInContainer(boolean inContainer) {
-		this.frozenLib$inContainer = true;
+	public void frozenLib$setCanRemoveTags(boolean canRemoveTags) {
+		this.frozenLib$canRemoveTags = canRemoveTags;
 	}
 }

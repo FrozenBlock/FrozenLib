@@ -69,6 +69,7 @@ public class MovingLoopingSoundEntityManager {
 
     public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
         this.sounds.add(new SoundLoopData(soundID, category, volume, pitch, restrictionId, stopOnDeath));
+		SoundPredicate.getPredicate(restrictionId).onStart(this.entity);
     }
 
     public List<SoundLoopData> getSounds() {
