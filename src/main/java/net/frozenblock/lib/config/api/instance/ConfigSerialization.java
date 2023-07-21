@@ -19,6 +19,7 @@
 package net.frozenblock.lib.config.api.instance;
 
 import blue.endless.jankson.Jankson;
+import blue.endless.jankson.JsonElement;
 import com.google.gson.FieldNamingPolicy;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -61,8 +62,10 @@ public class ConfigSerialization {
 	// JANKSON
 
 	public static Jankson createJankson(Jankson.Builder builder, String modId) {
+		JanksonTypedEntrySerializer typedEntrySerializer = new JanksonTypedEntrySerializer(modId);
 		return builder
-			.registerSerializer(TypedEntry.class, new JanksonTypedEntrySerializer(modId))
+			.registerSerializer(TypedEntry.class, typedEntrySerializer)
+			.registerDeserializer(JsonElement.class, TypedEntry.class, typedEntrySerializer)
 			.build();
 	}
 
