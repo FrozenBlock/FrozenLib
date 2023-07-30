@@ -20,43 +20,11 @@ package net.frozenblock.lib.config.api.instance;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonElement;
-import com.google.gson.FieldNamingPolicy;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import java.awt.*;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
-import net.frozenblock.lib.config.api.instance.json.ColorSerializer;
 import net.frozenblock.lib.config.api.instance.json.JanksonTypedEntrySerializer;
-import net.frozenblock.lib.config.api.instance.json.TypedEntrySerializer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 
 public class ConfigSerialization {
 	private ConfigSerialization() {
-	}
-
-	// GSON
-
-	public static Gson createGson(GsonBuilder builder, String modId, boolean lowerCaseWithUnderscores) {
-		builder
-			.registerTypeHierarchyAdapter(TypedEntry.class, new TypedEntrySerializer<>(modId))
-			.registerTypeHierarchyAdapter(Component.class, new Component.Serializer())
-			.registerTypeHierarchyAdapter(Style.class, new Style.Serializer())
-			.registerTypeHierarchyAdapter(Color.class, new ColorSerializer())
-			.serializeNulls()
-			.setPrettyPrinting();
-
-		if (lowerCaseWithUnderscores) builder.setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES);
-
-		return builder.create();
-	}
-
-	public static Gson createGson(String modId, boolean lowerCaseWithUnderscores) {
-		return createGson(new GsonBuilder(), modId, lowerCaseWithUnderscores);
-	}
-
-	public static Gson createGson(String modId) {
-		return createGson(modId, true);
 	}
 
 	// JANKSON

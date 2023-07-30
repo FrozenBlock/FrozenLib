@@ -72,9 +72,7 @@ public final class FrozenMain implements ModInitializer {
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenMain.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 
-		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-			RegisterInGameDevTools.register();
-		}
+		RegisterInGameDevTools.register();
 
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
 			try {
