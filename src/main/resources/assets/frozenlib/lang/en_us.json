@@ -22,6 +22,11 @@
   "option.frozenlib.save_item_cooldowns.true": "§aON",
   "tooltip.frozenlib.save_item_cooldowns": "Whether or not item cooldowns will save instead of being\ncleared upon switching dimensions or rejoining a world.",
 
+  "option.frozenlib.remove_experimental_warning": "Remove Experimental Warning",
+  "option.frozenlib.remove_experimental_warning.false": "§cOFF",
+  "option.frozenlib.remove_experimental_warning.true": "§aON",
+  "tooltip.frozenlib.remove_experimental_warning": "Whether or not the Experimental Features warning can show on world creation.",
+
   "commands.wind.success": "Set wind to %s, %s, %s.",
   "commands.wind.toggle.success": "Toggled wind override to: %s.",
 

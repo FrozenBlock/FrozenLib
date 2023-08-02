@@ -19,6 +19,7 @@
 package net.frozenblock.lib.core.mixin;
 
 import com.mojang.serialization.Lifecycle;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.world.level.storage.PrimaryLevelData;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,7 +39,8 @@ public class NoExperimentalMixin {
 
     @Inject(method = "<init>*", at = @At("TAIL"))
     private void frozenLib$init(CallbackInfo ci) {
-        this.worldGenSettingsLifecycle = Lifecycle.stable();
+		if (FrozenLibConfig.get().removeExperimentalWarning)
+			this.worldGenSettingsLifecycle = Lifecycle.stable();
     }
 
 }

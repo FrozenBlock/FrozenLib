@@ -52,6 +52,13 @@ public final class FrozenLibConfigGui {
 			.build()
 		);
 
+		var removeExperimentalWarning = category.addEntry(entryBuilder.startBooleanToggle(text("remove_experimental_warning"), config.removeExperimentalWarning)
+			.setDefaultValue(DefaultFrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING)
+			.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
+			.setTooltip(tooltip("remove_experimental_warning"))
+			.build()
+		);
+
 
 		var disabledDataFixTypes = entryBuilder.startStrList(text("disabled_datafix_types"), dataFixer.disabledDataFixTypes)
 			.setDefaultValue(DefaultFrozenLibConfig.DISABLED_DATAFIX_TYPES)

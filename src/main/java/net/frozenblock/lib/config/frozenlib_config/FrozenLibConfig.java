@@ -41,6 +41,8 @@ public class FrozenLibConfig {
 
 	public boolean saveItemCooldowns = DefaultFrozenLibConfig.SAVE_ITEM_COOLDOWNS;
 
+	public boolean removeExperimentalWarning = DefaultFrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING;
+
 	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();
 
