@@ -52,7 +52,7 @@ public class Camera extends Item {
                     File directory1 = new File(directory, "screenshots");
                     directory1.mkdir();
                     directory1.mkdirs();
-                    client.grabPanoramixScreenshot(directory, 2048, 2048);
+                    client.grabPanoramixScreenshot(directory, 1024, 1024);
                     canGo = false;
                 }
             }
