@@ -28,6 +28,7 @@ public final class DefaultFrozenLibConfig {
 	public static final boolean USE_WIND_ON_NON_FROZENLIB_SERVERS = true;
 	public static final boolean SAVE_ITEM_COOLDOWNS = true;
 	public static final boolean REMOVE_EXPERIMENTAL_WARNING = false;
+	public static final boolean WARDEN_SPAWN_TRACKER_COMMAND = false;
 	// DATA FIXER
 	public static final List<String> DISABLED_DATAFIX_TYPES = List.of(
 		"world_gen_settings"

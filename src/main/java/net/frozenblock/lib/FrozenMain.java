@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
@@ -42,6 +43,7 @@ import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.commands.WardenSpawnTrackerCommand;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 import org.slf4j.Logger;
@@ -88,6 +90,9 @@ public final class FrozenMain implements ModInitializer {
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> WindOverrideCommand.register(dispatcher));
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ScreenShakeCommand.register(dispatcher));
+
+		if (FrozenLibConfig.get().wardenSpawnTrackerCommand)
+			CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> WardenSpawnTrackerCommand.register(dispatcher)));
 
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			DimensionDataStorage dimensionDataStorage = level.getDataStorage();

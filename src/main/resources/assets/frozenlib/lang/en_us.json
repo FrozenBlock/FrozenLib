@@ -27,6 +27,11 @@
   "option.frozenlib.remove_experimental_warning.true": "§aON",
   "tooltip.frozenlib.remove_experimental_warning": "Whether or not the Experimental Features warning can show on world creation.",
 
+  "option.frozenlib.warden_spawn_tracker_command": "Warden Spawn Tracker Command",
+  "option.frozenlib.warden_spawn_tracker_command.false": "§cOFF",
+  "option.frozenlib.warden_spawn_tracker_command.true": "§aON",
+  "tooltip.frozenlib.warden_spawn_tracker_command": "Enables or disables the Warden Spawn Tracker command.",
+
   "commands.wind.success": "Set wind to %s, %s, %s.",
   "commands.wind.toggle.success": "Toggled wind override to: %s.",
 
@@ -38,6 +43,11 @@
   "commands.screenshake.remove.entity.success.multiple": "Entities %shave had their screen shakes removed.",
   "commands.screenshake.remove.entity.success": "Removed screen shakes from entity %s.",
   "commands.screenshake.remove.entity.failure": "Could not find entities with screen shakes.",
+
+  "commands.warden_spawn_tracker.clear.success.multiple": "Cleared warden spawn warnings from %s players",
+  "commands.warden_spawn_tracker.clear.success.single": "Cleared warden spawn warnings from %s",
+  "commands.warden_spawn_tracker.set.success.multiple": "Set warden spawn warning %s to %s players",
+  "commands.warden_spawn_tracker.set.success.single": "Set warden spawn warning %s to %s",
 
   "frozenlib.loot_table_whacker.fail.no_name": "Loot Table Whacker has not been named!",
   "frozenlib.loot_table_whacker.fail.no_colon": "Invalid ResourceLocation: No : present!",

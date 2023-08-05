@@ -59,6 +59,13 @@ public final class FrozenLibConfigGui {
 			.build()
 		);
 
+		var wardenSpawnTrackerCommand = category.addEntry(entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), config.wardenSpawnTrackerCommand)
+			.setDefaultValue(DefaultFrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND)
+			.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
+			.setTooltip(tooltip("warden_spawn_tracker_command"))
+			.build()
+		);
+
 
 		var disabledDataFixTypes = entryBuilder.startStrList(text("disabled_datafix_types"), dataFixer.disabledDataFixTypes)
 			.setDefaultValue(DefaultFrozenLibConfig.DISABLED_DATAFIX_TYPES)

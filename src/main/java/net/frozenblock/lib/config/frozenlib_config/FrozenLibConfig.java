@@ -43,6 +43,8 @@ public class FrozenLibConfig {
 
 	public boolean removeExperimentalWarning = DefaultFrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING;
 
+	public boolean wardenSpawnTrackerCommand = DefaultFrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND;
+
 	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();
 
