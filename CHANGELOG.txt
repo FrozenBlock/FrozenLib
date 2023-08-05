@@ -6,3 +6,5 @@ Put changelog here:
 -----------------
 - Added stack traces to network decoder exceptions
 - Added a config option to allow disabling the experimental world warning
+- Updated Camera resolution to 1024x1024 to match Vanilla panoramas
+- Slightly changed Typed Entry serialization
