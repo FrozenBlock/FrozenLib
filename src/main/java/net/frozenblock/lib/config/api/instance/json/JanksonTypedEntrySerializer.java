@@ -70,6 +70,7 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 	 * Deserializes a {@link JsonElement} to a {@link TypedEntry}.
 	 */
 	@Override
+	@SuppressWarnings("rawtypes")
 	public TypedEntry apply(JsonElement json, Marshaller m) throws DeserializationException {
 		var modEntry = getFromRegistry(json, ConfigRegistry.getForMod(this.modId));
 		if (modEntry != null) {
@@ -78,9 +79,11 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 		throw new DeserializationException("Failed to deserialize typed entry " + json);
 	}
 
-	private TypedEntry<?> getFromRegistry(JsonElement json, Collection<TypedEntryType<?>> registry) {
-		for (var entryType : registry) {
-			var entry = getFromType(json, entryType);
+	@SuppressWarnings("unchecked")
+	private <T> TypedEntry<T> getFromRegistry(JsonElement json, Collection<TypedEntryType<?>> registry) throws ClassCastException {
+		for (TypedEntryType<?> entryType : registry) {
+			TypedEntryType<T> newType = (TypedEntryType<T>) entryType;
+			TypedEntry<T> entry = getFromType(json, newType);
 			if (entry != null) {
 				return entry;
 			}
@@ -88,21 +91,18 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
-	private <T> TypedEntry<T> getFromType(JsonElement json, TypedEntryType<?> entryType) throws ClassCastException {
+	private <T> TypedEntry<T> getFromType(JsonElement json, TypedEntryType<T> entryType) throws ClassCastException {
 		if (entryType.modId().equals(modId)) {
 			var codec = entryType.codec();
-			DataResult<? extends Pair<?, JsonElement>> result = codec.decode(JanksonOps.INSTANCE, json);
+			DataResult<Pair<T, JsonElement>> result = codec.decode(JanksonOps.INSTANCE, json);
 
 			if (result.error().isEmpty()) {
 				var optional = result.result();
 
 				if (optional.isPresent()) {
-					Pair<?, JsonElement> pair = optional.get();
-					Object first = pair.getFirst();
-					TypedEntryType<T> newType = (TypedEntryType<T>) entryType;
-					T newFirst = (T) first;
-					TypedEntry<T> entry = new TypedEntry<>(newType, newFirst);
+					Pair<T, JsonElement> pair = optional.get();
+					T first = pair.getFirst();
+					TypedEntry<T> entry = new TypedEntry<>(entryType, first);
 					FrozenMain.log("Built typed entry " + entry, FrozenMain.UNSTABLE_LOGGING);
 					return entry;
 				}
