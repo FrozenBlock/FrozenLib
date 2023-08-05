@@ -523,13 +523,13 @@ curseforge {
         mainArtifact(remapJar, closureOf<CurseArtifact> {
             displayName = display_name
         })
-        //addArtifact(tasks.remapSourcesJar.get())
-        //addArtifact(javadocJar)
+        addArtifact(tasks.remapSourcesJar.get())
+        addArtifact(javadocJar)
 
         afterEvaluate {
             uploadTask.dependsOn(remapJar)
-            //uploadTask.dependsOn(tasks.remapSourcesJar.get())
-            //uploadTask.dependsOn(javadocJar)
+            uploadTask.dependsOn(tasks.remapSourcesJar.get())
+            uploadTask.dependsOn(javadocJar)
         }
     })
     curseGradleOptions.forgeGradleIntegration = false
@@ -547,8 +547,8 @@ modrinth {
     loaders.set(listOf("fabric", "quilt"))
     additionalFiles.set(
         listOf(
-            //tasks.remapSourcesJar.get(),
-            //javadocJar
+            tasks.remapSourcesJar.get(),
+            javadocJar
         )
     )
     dependencies {
