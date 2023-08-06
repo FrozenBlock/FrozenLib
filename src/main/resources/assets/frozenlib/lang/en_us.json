@@ -44,6 +44,9 @@
   "commands.screenshake.remove.entity.success": "Removed screen shakes from entity %s.",
   "commands.screenshake.remove.entity.failure": "Could not find entities with screen shakes.",
 
+  "commands.frozenlib_config.reload.single": "Reloaded 1 config from %s.",
+  "commands.frozenlib_config.reload.multiple": "Reloaded %s configs from %s.",
+
   "commands.warden_spawn_tracker.clear.success.multiple": "Cleared warden spawn warnings from %s players",
   "commands.warden_spawn_tracker.clear.success.single": "Cleared warden spawn warnings from %s",
   "commands.warden_spawn_tracker.set.success.multiple": "Set warden spawn warning %s to %s players",

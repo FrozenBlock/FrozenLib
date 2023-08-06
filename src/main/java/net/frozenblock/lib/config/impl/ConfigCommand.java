@@ -19,12 +19,12 @@
 package net.frozenblock.lib.config.impl;
 
 import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 import java.util.Collection;
 
 public final class ConfigCommand {
@@ -33,18 +33,22 @@ public final class ConfigCommand {
 		dispatcher.register(Commands.literal("frozenlib_config")
 			.then(Commands.literal("reload")
 				.then(Commands.argument("modId", StringArgumentType.string())
-					.executes(context -> reloadConfigs(StringArgumentType.getString(context, "modId")))
+					.executes(context -> reloadConfigs(context.getSource(), StringArgumentType.getString(context, "modId")))
 				)
 			)
 		);
 	}
 
-	private static int reloadConfigs(String modId) {
+	private static int reloadConfigs(CommandSourceStack source, String modId) {
 		Collection<Config<?>> configs = ConfigRegistry.getConfigsForMod(modId);
 		for (Config<?> config : configs) {
 			config.load();
 		}
 
+		if (configs.size() == 1)
+			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.single", modId), true);
+		else
+			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.multiple", configs.size(), modId), true);
 		return 1;
 	}
 }
