@@ -4,8 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Added stack traces to network decoder exceptions
-- Added a config option to allow disabling the experimental world warning
-- Added a config option to enable the hidden /warden_spawn_tracker command
-- Updated Camera resolution to 1024x1024 to match Vanilla panoramas
-- Slightly changed Typed Entry serialization
+- Updated included Jankson to 1.2.3
