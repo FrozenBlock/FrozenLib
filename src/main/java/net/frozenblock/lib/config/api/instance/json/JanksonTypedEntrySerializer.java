@@ -72,7 +72,7 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 	@Override
 	@SuppressWarnings("rawtypes")
 	public TypedEntry apply(JsonElement json, Marshaller m) throws DeserializationException {
-		var modEntry = getFromRegistry(json, ConfigRegistry.getForMod(this.modId));
+		var modEntry = getFromRegistry(json, ConfigRegistry.getTypedEntryTypesForMod(this.modId));
 		if (modEntry != null) {
 			return modEntry;
 		}
