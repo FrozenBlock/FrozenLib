@@ -39,6 +39,7 @@ public class ConfigRegistry {
 		if (CONFIG_REGISTRY.contains(config)) {
 			throw new IllegalStateException("Config already registered.");
 		}
+		MOD_CONFIG_REGISTRY.computeIfAbsent(config.modId(), key -> new ArrayList<>()).add(config);
 		CONFIG_REGISTRY.add(config);
 		return config;
 	}
