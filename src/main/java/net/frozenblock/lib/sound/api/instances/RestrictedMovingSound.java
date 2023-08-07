@@ -40,9 +40,9 @@ public class RestrictedMovingSound<T extends Entity> extends RestrictedSoundInst
         this.looping = false;
         this.volume = volume;
         this.pitch = pitch;
-        this.x = (float) entity.getX();
-        this.y = (float) entity.getY();
-        this.z = (float) entity.getZ();
+        this.x = entity.getX();
+        this.y = entity.getY();
+        this.z = entity.getZ();
         this.predicate = predicate;
 		this.stopOnDeath = stopOnDeath;
 
@@ -70,9 +70,9 @@ public class RestrictedMovingSound<T extends Entity> extends RestrictedSoundInst
             if (!this.predicate.test(this.entity)) {
                 this.stop();
             } else {
-                this.x = (float) this.entity.getX();
-                this.y = (float) this.entity.getY();
-                this.z = (float) this.entity.getZ();
+                this.x = this.entity.getX();
+                this.y = this.entity.getY();
+                this.z = this.entity.getZ();
             }
         }
     }
