@@ -37,12 +37,14 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -107,13 +109,8 @@ public class WindManager {
 	}
 
 	@NotNull
-	public WindStorage createData() {
-		return new WindStorage(this);
-	}
-
-	@NotNull
-	public WindStorage createData(@NotNull CompoundTag nbt) {
-		return this.createData().load(nbt);
+	public SavedData.Factory<WindStorage> createData() {
+		return new SavedData.Factory<>(() -> new WindStorage(this), tag -> WindStorage.load(tag, this), DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES);
 	}
 
 	public void tick() {

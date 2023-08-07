@@ -224,10 +224,10 @@ dependencies {
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
     // Mod Menu
-    modApi("com.terraformersmc:modmenu:${modmenu_version}")
+    modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
@@ -278,7 +278,7 @@ tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = "~$minecraft_version-"
+        properties["minecraft_version"] = "~1.20.2-"
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 

@@ -37,8 +37,10 @@ public class ScreenShakeStorage extends SavedData {
 		return compoundTag;
 	}
 
-	public ScreenShakeStorage load(CompoundTag compoundTag) {
-		this.screenShakeManager.load(compoundTag);
-		return this;
+	public static ScreenShakeStorage load(CompoundTag compoundTag, ScreenShakeManager manager) {
+		ScreenShakeStorage storage = new ScreenShakeStorage(manager);
+
+		storage.screenShakeManager.load(compoundTag);
+		return storage;
 	}
 }

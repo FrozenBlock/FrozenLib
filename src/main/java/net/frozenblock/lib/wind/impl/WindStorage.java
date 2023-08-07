@@ -57,23 +57,25 @@ public class WindStorage extends SavedData {
 		return compoundTag;
 	}
 
-	public WindStorage load(CompoundTag compoundTag) {
-		this.windManager.time = compoundTag.getLong("time");
-		this.windManager.overrideWind = compoundTag.getBoolean("overrideWind");
-		this.windManager.commandWind = new Vec3(compoundTag.getDouble("commandWindX"), compoundTag.getDouble("commandWindY"), compoundTag.getDouble("commandWindZ"));
-		this.windManager.windX = compoundTag.getDouble("windX");
-		this.windManager.windY = compoundTag.getDouble("windY");
-		this.windManager.windZ = compoundTag.getDouble("windZ");
-		this.windManager.laggedWindX = compoundTag.getDouble("laggedWindX");
-		this.windManager.laggedWindY = compoundTag.getDouble("laggedWindY");
-		this.windManager.laggedWindZ = compoundTag.getDouble("laggedWindZ");
-		this.windManager.setSeed(compoundTag.getLong("seed"));
+	public static WindStorage load(CompoundTag compoundTag, WindManager manager) {
+		WindStorage windStorage = new WindStorage(manager);
+
+		windStorage.windManager.time = compoundTag.getLong("time");
+		windStorage.windManager.overrideWind = compoundTag.getBoolean("overrideWind");
+		windStorage.windManager.commandWind = new Vec3(compoundTag.getDouble("commandWindX"), compoundTag.getDouble("commandWindY"), compoundTag.getDouble("commandWindZ"));
+		windStorage.windManager.windX = compoundTag.getDouble("windX");
+		windStorage.windManager.windY = compoundTag.getDouble("windY");
+		windStorage.windManager.windZ = compoundTag.getDouble("windZ");
+		windStorage.windManager.laggedWindX = compoundTag.getDouble("laggedWindX");
+		windStorage.windManager.laggedWindY = compoundTag.getDouble("laggedWindY");
+		windStorage.windManager.laggedWindZ = compoundTag.getDouble("laggedWindZ");
+		windStorage.windManager.setSeed(compoundTag.getLong("seed"));
 
 		// EXTENSIONS
-		for (WindManagerExtension extension : this.windManager.attachedExtensions) extension.load(compoundTag);
+		for (WindManagerExtension extension : windStorage.windManager.attachedExtensions) extension.load(compoundTag);
 
 		FrozenMain.log("Loading WindManager data.", FrozenMain.UNSTABLE_LOGGING);
 
-		return this;
+		return windStorage;
 	}
 }
