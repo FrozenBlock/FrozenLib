@@ -22,6 +22,7 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.minecraft.core.BlockPos;
@@ -77,17 +78,12 @@ public final class FrozenSoundPackets {
 
 	public static void createFlybySound(Level world, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch) {
 		if (!world.isClientSide) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeVarInt(entity.getId());
-			byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-			byteBuf.writeEnum(category);
-			byteBuf.writeFloat(volume);
-			byteBuf.writeFloat(pitch);
+			var packet = new FlyBySoundPacket(entity.getId(), sound, category, volume, pitch);
 			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-				ServerPlayNetworking.send(player, FrozenMain.FLYBY_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, packet);
 			}
 			if (entity instanceof ServerPlayer serverPlayer) {
-				ServerPlayNetworking.send(serverPlayer, FrozenMain.FLYBY_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(serverPlayer, packet);
 			}
 		}
 	}
