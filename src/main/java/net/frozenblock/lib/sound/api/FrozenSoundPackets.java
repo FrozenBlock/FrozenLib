@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
+import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.minecraft.core.BlockPos;
@@ -61,17 +62,9 @@ public final class FrozenSoundPackets {
 
 	public static void createLocalSound(Level level, double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay) {
 		if (!level.isClientSide) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeDouble(x);
-			byteBuf.writeDouble(y);
-			byteBuf.writeDouble(z);
-			byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-			byteBuf.writeEnum(source);
-			byteBuf.writeFloat(volume);
-			byteBuf.writeFloat(pitch);
-			byteBuf.writeBoolean(distanceDelay);
+			var packet = new LocalSoundPacket(x, y, z, sound, source, volume, pitch, distanceDelay);
 			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, BlockPos.containing(x, y, z))) {
-				ServerPlayNetworking.send(player, FrozenMain.LOCAL_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, packet);
 			}
 		}
 	}

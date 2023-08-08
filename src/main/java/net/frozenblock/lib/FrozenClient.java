@@ -37,6 +37,7 @@ import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
+import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
@@ -104,22 +105,7 @@ public final class FrozenClient implements ClientModInitializer {
 	}
 
 	private static void receiveLocalSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_SOUND_PACKET, (client, handler, buf, responseSender) -> {
-			double x = buf.readDouble();
-			double y = buf.readDouble();
-			double z = buf.readDouble();
-			SoundEvent sound = buf.readById(BuiltInRegistries.SOUND_EVENT);
-			SoundSource source = buf.readEnum(SoundSource.class);
-			float volume = buf.readFloat();
-			float pitch = buf.readFloat();
-			boolean distanceDelay = buf.readBoolean();
-			client.execute(() -> {
-				ClientLevel level = client.level;
-				if (level != null) {
-					level.playLocalSound(x, y, z, sound, source, volume, pitch, distanceDelay);
-				}
-			});
-		});
+		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket::receive);
 	}
 
 	private static void receiveLocalPlayerSoundPacket() {
