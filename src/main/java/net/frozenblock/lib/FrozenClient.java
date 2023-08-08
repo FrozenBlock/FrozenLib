@@ -272,14 +272,7 @@ public final class FrozenClient implements ClientModInitializer {
 	}
 
 	private static void receiveFlybySoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FlyBySoundPacket.PACKET_TYPE, (packet, player, responseSender) -> {
-			ClientLevel level = player.clientLevel;
-			Entity entity = level.getEntity(packet.id());
-			if (entity != null) {
-				FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(packet.pitch(), packet.volume(), packet.category(), packet.sound());
-				FlyBySoundHub.addEntity(entity, flyBySound);
-			}
-		});
+		ClientPlayNetworking.registerGlobalReceiver(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket::receive);
 	}
 
 	private static void receiveCooldownChangePacket() {
