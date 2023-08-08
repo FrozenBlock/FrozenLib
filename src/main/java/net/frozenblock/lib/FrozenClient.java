@@ -38,6 +38,7 @@ import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwit
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
+import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
@@ -66,14 +67,14 @@ public final class FrozenClient implements ClientModInitializer {
 		ClientFreezer.onInitializeClient();
 		registerClientEvents();
 
-		receiveLocalSoundPacket();
-		receiveMovingRestrictionSoundPacket();
+		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket::receive);
+		ClientPlayNetworking.registerGlobalReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket::receive);
 		receiveRestrictedMovingSoundLoopPacket();
 		receiveStartingRestrictedMovingSoundLoopPacket();
 		receiveMovingRestrictionLoopingFadingDistanceSoundPacket();
 		receiveMovingFadingDistanceSoundPacket();
 		receiveFadingDistanceSoundPacket();
-		receiveFlybySoundPacket();
+		ClientPlayNetworking.registerGlobalReceiver(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket::receive);
 		receiveCooldownChangePacket();
 		receiveForcedCooldownPacket();
 		receiveCooldownTickCountPacket();
@@ -104,10 +105,6 @@ public final class FrozenClient implements ClientModInitializer {
 		});
 	}
 
-	private static void receiveLocalSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket::receive);
-	}
-
 	private static void receiveLocalPlayerSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_PLAYER_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
 			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
@@ -119,29 +116,6 @@ public final class FrozenClient implements ClientModInitializer {
 					if (player != null) {
 						assert sound != null;
 						ctx.getSoundManager().play(new EntityBoundSoundInstance(sound, SoundSource.PLAYERS, volume, pitch, player, ctx.level.random.nextLong()));
-					}
-				}
-			});
-		});
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
-			SoundSource category = byteBuf.readEnum(SoundSource.class);
-			float volume = byteBuf.readFloat();
-			float pitch = byteBuf.readFloat();
-			ResourceLocation predicateId = byteBuf.readResourceLocation();
-			boolean stopOnDeath = byteBuf.readBoolean();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					T entity = (T) level.getEntity(id);
-					if (entity != null) {
-						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						ctx.getSoundManager().play(new RestrictedMovingSound<>(entity, sound, category, volume, pitch, predicate, stopOnDeath));
 					}
 				}
 			});
@@ -269,10 +243,6 @@ public final class FrozenClient implements ClientModInitializer {
 				}
 			});
 		});
-	}
-
-	private static void receiveFlybySoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket::receive);
 	}
 
 	private static void receiveCooldownChangePacket() {
