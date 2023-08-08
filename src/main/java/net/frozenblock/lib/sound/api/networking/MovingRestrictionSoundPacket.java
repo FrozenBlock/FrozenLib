@@ -8,6 +8,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
+import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,7 +20,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
-public record MovingRestrictionSoundPacket(int id, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation predicateId, boolean stopOnDeath) implements FabricPacket {
+public record MovingRestrictionSoundPacket(int id, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation predicateId, boolean stopOnDeath, boolean looping) implements FabricPacket {
 	public static final PacketType<MovingRestrictionSoundPacket> PACKET_TYPE = PacketType.create(FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, MovingRestrictionSoundPacket::new);
 
 	public MovingRestrictionSoundPacket(FriendlyByteBuf buf) {
@@ -30,6 +31,7 @@ public record MovingRestrictionSoundPacket(int id, SoundEvent sound, SoundSource
 			buf.readFloat(),
 			buf.readFloat(),
 			buf.readResourceLocation(),
+			buf.readBoolean(),
 			buf.readBoolean()
 		);
 	}
@@ -43,6 +45,7 @@ public record MovingRestrictionSoundPacket(int id, SoundEvent sound, SoundSource
 		buf.writeFloat(this.pitch);
 		buf.writeResourceLocation(predicateId);
 		buf.writeBoolean(this.stopOnDeath);
+		buf.writeBoolean(this.looping);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -51,7 +54,10 @@ public record MovingRestrictionSoundPacket(int id, SoundEvent sound, SoundSource
 		T entity = (T) level.getEntity(packet.id());
 		if (entity != null) {
 			SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
-			Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSound<>(entity, packet.sound(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
+			if (packet.looping())
+				Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, packet.sound(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
+			else
+				Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSound<>(entity, packet.sound(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
 		}
 	}
 
