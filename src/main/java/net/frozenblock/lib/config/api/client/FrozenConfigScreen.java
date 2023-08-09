@@ -28,11 +28,13 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.client.option.Option;
 import net.frozenblock.lib.config.api.client.option.OptionList;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.AbstractWidget;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.TooltipAccessor;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
@@ -120,33 +122,21 @@ public class FrozenConfigScreen extends Screen {
 	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
 		renderBackground(graphics);
 		this.optionList.render(graphics, mouseX, mouseY, delta);
-		drawCenteredString(matrices, this.font, this.title, this.width / 2, 8, 16777215);
+		graphics.drawCenteredString(this.font, this.title, this.width / 2, 8, 16777215);
 
 		super.render(graphics, mouseX, mouseY, delta);
 
-		List<FormattedCharSequence> tooltips = tooltipAt(this.optionList, mouseX, mouseY);
-		this.renderTooltip(graphics, tooltips, mouseX, mouseY);
+		//List<FormattedCharSequence> tooltips = tooltipAt(this.optionList, mouseX, mouseY);
+		//graphics.renderTooltip(Minecraft.getInstance().font, tooltips, mouseX, mouseY);
 	}
 
 	@Override
-	public void renderDirtBackground(int vOffset) {
+	public void renderDirtBackground(GuiGraphics graphics) {
+		graphics.setColor(0.25F, 0.25F, 0.25F, 1.0F);
 		var backgroundLocation = this.backgroundTexture.orElse(BACKGROUND_LOCATION);
 
-		Tesselator tesselator = Tesselator.getInstance();
-		BufferBuilder bufferBuilder = tesselator.getBuilder();
-		RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
-		RenderSystem.setShaderTexture(0, backgroundLocation);
-		RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-		float f = 32.0F;
-		bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX_COLOR);
-		bufferBuilder.vertex(0.0, (double)this.height, 0.0).uv(0.0F, (float)this.height / 32.0F + (float)vOffset).color(64, 64, 64, 255).endVertex();
-		bufferBuilder.vertex((double)this.width, (double)this.height, 0.0)
-				.uv((float)this.width / 32.0F, (float)this.height / 32.0F + (float)vOffset)
-				.color(64, 64, 64, 255)
-				.endVertex();
-		bufferBuilder.vertex(this.width, 0.0, 0.0).uv((float)this.width / 32.0F, (float)vOffset).color(64, 64, 64, 255).endVertex();
-		bufferBuilder.vertex(0.0, 0.0, 0.0).uv(0.0F, (float)vOffset).color(64, 64, 64, 255).endVertex();
-		tesselator.end();
+		graphics.blit(backgroundLocation, 0, 0, 0, 0.0F, 0.0F, this.width, this.height, 32, 32);
+		graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 
 	protected final boolean quit() {
@@ -161,10 +151,10 @@ public class FrozenConfigScreen extends Screen {
 		this.quit();
 	}
 
-	public static List<FormattedCharSequence> tooltipAt(OptionList list, int mouseX, int mouseY) {
+	/*public static List<FormattedCharSequence> tooltipAt(OptionList list, int mouseX, int mouseY) {
 		Optional<AbstractWidget> optional = list.getMouseOver(mouseX, mouseY);
-		return optional.isPresent() && optional.get() instanceof TooltipAccessor
+		return optional.isPresent() && optional.get() instanceof OptionInstance.TooltipSupplier<?>
 				? ((TooltipAccessor)optional.get()).getTooltip()
 				: ImmutableList.of();
-	}
+	}*/
 }

@@ -32,7 +32,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.OptionInstance;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.CycleButton;
-import net.minecraft.client.gui.components.TooltipAccessor;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.FormattedCharSequence;
@@ -109,20 +109,15 @@ public class Option<T> {
 	}
 
 	public static <T> OptionInstance.TooltipSupplier<T> noTooltip() {
-		return value -> List.of();
+		return value -> null;
 	}
 
 	public static <T> OptionInstance.TooltipSupplier<T> cachedConstantTooltip(Component tooltip) {
-		List<FormattedCharSequence> list = splitTooltip(Minecraft.getInstance(), tooltip);
-		return value -> list;
+		return value -> Tooltip.create(tooltip);
 	}
 
 	public static <T extends OptionEnum> CaptionBasedToString<T> forOptionEnum() {
 		return (optionText, value) -> value.getCaption();
-	}
-
-	private static List<FormattedCharSequence> splitTooltip(Minecraft minecraft, Component tooltip) {
-		return minecraft.font.split(tooltip, TOOLTIP_WIDTH);
 	}
 
 	public AbstractWidget createButton(Config<?> config, int x, int y, int width) {
@@ -161,80 +156,6 @@ public class Option<T> {
 			return (ValueSet<T>) BOOLEAN_VALUES;
 		}
 		return null;
-	}
-
-	public static class SubOption<T> extends Option<T> {
-		public SubOption(
-			Component caption,
-			OptionInstance.TooltipSupplier<T> tooltip,
-			CaptionBasedToString<T> textGetter,
-			ValueSet<T> values,
-			T initialValue
-		) {
-			this(caption, tooltip, textGetter, values, values.codec(), initialValue);
-		}
-
-		public SubOption(
-			Component caption,
-			OptionInstance.TooltipSupplier<T> tooltip,
-			CaptionBasedToString<T> textGetter,
-			ValueSet<T> values,
-			Codec<T> codec,
-			T initialValue
-		) {
-			super(caption, tooltip, textGetter, values, codec, initialValue, value -> {});
-		}
-	}
-
-	public static class TypedEntryValue<T> implements ValueSet<T> {
-
-		private final TypedEntryType<T> type;
-		private final List<SubOption<?>> children = new ArrayList<>();
-
-		public TypedEntryValue(TypedEntryType<T> type) {
-			this.type = type;
-		}
-
-		public TypedEntryValue<T> option(Component caption, OptionInstance.TooltipSupplier<?> tooltip, CaptionBasedToString<?> textGetter) {
-			SubOption<?> option = new SubOption<>(caption, tooltip, textGetter, values, values.validateValue(null).orElse(null));
-			return this;
-		}
-
-		@Override
-		public Function<Option<T>, AbstractWidget> createButton(OptionInstance.TooltipSupplier<T> tooltip, Config<?> config, int x, int y, int width) {
-			return option -> new AbstractOptionContainerWidget(x, y, width, 20, option.caption, children);
-		}
-
-		@Override
-		public Optional<T> validateValue(T value) {
-			return value != null ? Optional.of(value) : Optional.empty();
-		}
-
-		@Override
-		public Codec<T> codec() {
-			return this.type.codec();
-		}
-
-		@Override
-		public boolean equals(Object o) {
-			if (this == o) return true;
-			if (o == null || getClass() != o.getClass()) return false;
-			TypedEntryValue<?> that = (TypedEntryValue<?>) o;
-			return type.equals(that.type);
-		}
-
-		@Override
-		public int hashCode() {
-			return 31 * Objects.hash(this.type) + this.children.hashCode();
-		}
-
-		@Override
-		public String toString() {
-			return "TypedEntryValue{"
-				+ "type=" + type
-				+ ", children=" + children
-				+ "}";
-		}
 	}
 
 	public record AltEnum<T>(
@@ -278,7 +199,7 @@ public class Option<T> {
 				int i = this.maxInclusive() + 1;
 				return val.compareTo(this.minInclusive()) >= 0 && val.compareTo(i) <= 0
 						? DataResult.success(val)
-						: DataResult.error("Value " + val + " is outside of range [" + this.minInclusive() + ":" + i + "]", val);
+						: DataResult.error(() -> "Value " + val + " is outside of range [" + this.minInclusive() + ":" + i + "]", val);
 			};
 			return Codec.INT.flatXmap(function, function);
 		}
@@ -393,7 +314,7 @@ public class Option<T> {
 		}
 	}
 
-	static final class OptionSliderButton<N> extends AbstractOptionSliderButton implements TooltipAccessor {
+	static final class OptionSliderButton<N> extends AbstractOptionSliderButton {
 		private final Option<N> option;
 		private final SliderableValueSet<N> values;
 		private final OptionInstance.TooltipSupplier<N> tooltip;
@@ -418,17 +339,12 @@ public class Option<T> {
 		@Override
 		protected void updateMessage() {
 			this.setMessage(this.option.toString.apply(this.option.get()));
+			this.setTooltip(this.tooltip.apply(this.values.fromSliderValue(this.value)));
 		}
 
 		@Override
 		protected void applyValue() {
 			this.option.set(this.values.fromSliderValue(this.value));
-		}
-
-		@Override
-		@NotNull
-		public List<FormattedCharSequence> getTooltip() {
-			return this.tooltip.apply(this.values.fromSliderValue(this.value));
 		}
 	}
 

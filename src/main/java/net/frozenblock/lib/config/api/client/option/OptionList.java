@@ -7,6 +7,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -96,10 +97,10 @@ public class OptionList extends ContainerObjectSelectionList<OptionList.Entry> {
 		}
 
 		@Override
-		public void render(PoseStack poseStack, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
+		public void render(GuiGraphics graphics, int index, int top, int left, int width, int height, int mouseX, int mouseY, boolean isMouseOver, float partialTick) {
 			this.children.forEach(button -> {
-				button.y = top;
-				button.render(poseStack, mouseX, mouseY, partialTick);
+				button.setY(top);
+				button.render(graphics, mouseX, mouseY, partialTick);
 			});
 		}
 
