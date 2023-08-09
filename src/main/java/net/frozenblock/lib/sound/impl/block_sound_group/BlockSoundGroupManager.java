@@ -23,9 +23,9 @@ import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -36,7 +36,7 @@ import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
 import net.frozenblock.lib.sound.api.block_sound_group.SoundCodecs;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -59,7 +59,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	public static final BlockSoundGroupManager INSTANCE = new BlockSoundGroupManager();
 
 	private Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites;
-	private final Map<ResourceLocation, BlockSoundGroupOverwrite> queuedOverwrites = new HashMap<>();
+	private final Map<ResourceLocation, BlockSoundGroupOverwrite> queuedOverwrites = new Object2ObjectOpenHashMap<>();
 
 	@Nullable
 	public List<BlockSoundGroupOverwrite> getOverwrites() {
@@ -78,7 +78,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	 * Adds a block with the specified {@link ResourceLocation}.
 	 */
 	public void addBlock(ResourceLocation key, SoundType sounds, BooleanSupplier condition) {
-		if (!Registry.BLOCK.containsKey(key)) {
+		if (!BuiltInRegistries.BLOCK.containsKey(key)) {
 			FrozenMain.log("Error whilst adding a block to BlockSoundGroupOverwrites: The specified block id has not been added to the Registry", true);
 		} else {
 			this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
@@ -102,19 +102,20 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	}
 
 	public void addBlock(Block block, SoundType sounds, BooleanSupplier condition) {
-		var key = Registry.BLOCK.getKey(block);
+		var key = BuiltInRegistries.BLOCK.getKey(block);
 		addBlock(key, sounds, condition);
 	}
 
 	public void addBlocks(Block[] blocks, SoundType sounds, BooleanSupplier condition) {
 		for (Block block : blocks) {
-			var key = Registry.BLOCK.getKey(block);
+			var key = BuiltInRegistries.BLOCK.getKey(block);
 			addBlock(key, sounds, condition);
 		}
 	}
 
 	public void addBlockTag(TagKey<Block> tag, SoundType sounds, BooleanSupplier condition) {
-		var tagIterable = Registry.BLOCK.getTag(tag);
+
+		var tagIterable = BuiltInRegistries.BLOCK.getTag(tag);
 		if (tagIterable.isEmpty()) {
 			FrozenMain.log("Error whilst adding a tag to BlockSoundGroupOverwrites: Tag is invalid", true);
 		} else {
@@ -151,7 +152,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	public static class SoundGroupLoader {
 		private final ResourceManager manager;
 		private final ProfilerFiller profiler;
-		private final Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites = new HashMap<>();
+		private final Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites = new Object2ObjectOpenHashMap<>();
 
 		public SoundGroupLoader(ResourceManager manager, ProfilerFiller profiler) {
 			this.manager = manager;

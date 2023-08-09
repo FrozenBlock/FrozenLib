@@ -59,7 +59,7 @@ public class EntityMixin implements EntitySpottingIconInterface {
     @Inject(method = "tick", at = @At("TAIL"))
     public void frozenLib$tickIcon(CallbackInfo info) {
 		Entity entity = Entity.class.cast(this);
-        if (!entity.level.isClientSide) {
+        if (!entity.level().isClientSide) {
 			this.frozenLib$SpottingIconManager.tick();
         }
     }

@@ -18,19 +18,17 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
+import java.util.ArrayList;
+import java.util.List;
+import net.frozenblock.lib.FrozenMain;
 import net.minecraft.core.Holder;
-import net.minecraft.core.Registry;
-import net.minecraft.data.worldgen.features.FeatureUtils;
-import net.minecraft.data.worldgen.placement.PlacementUtils;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import org.jetbrains.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FrozenPlacedFeature {
 
@@ -42,47 +40,45 @@ public class FrozenPlacedFeature {
 	private final ResourceKey<PlacedFeature> key;
 
 	private Holder<ConfiguredFeature<?, ?>> configuredHolder;
-	private Holder<PlacedFeature> holder;
 
 	public FrozenPlacedFeature(ResourceLocation key) {
-		this.key = ResourceKey.create(Registry.PLACED_FEATURE_REGISTRY, key);
+		this.key = ResourceKey.create(Registries.PLACED_FEATURE, key);
 		FEATURES.add(this);
 	}
 	public ResourceKey<PlacedFeature> getKey() {
 		return key;
 	}
 
-	public Holder<@Nullable ConfiguredFeature<?, ?>> getConfiguredHolder() {
-		if (this.configuredHolder == null)
-			return Holder.direct(null);
+	public Holder<ConfiguredFeature<?, ?>> getConfiguredHolder() {
+		assert this.configuredHolder.value() != null: "Trying get null holder from placed feature " + this.getKey().location();
 		return this.configuredHolder;
 	}
 
-	@SuppressWarnings("unchecked")
-	public <FC extends FeatureConfiguration> FrozenPlacedFeature setConfiguredHolder(Holder<ConfiguredFeature<FC, ?>> configuredHolder) {
-		this.configuredHolder = (Holder) configuredHolder;
+	public FrozenPlacedFeature setConfiguredHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder) {
+		this.configuredHolder = configuredHolder;
 		return this;
 	}
 
-	public Holder<@Nullable PlacedFeature> getHolder() {
-		if (this.holder == null)
-			return Holder.direct(null);
-		return this.holder;
-	}
-
-	public FrozenPlacedFeature setHolder(Holder<PlacedFeature> holder) {
-		this.holder = holder;
-		return this;
+	public Holder<PlacedFeature> getHolder() {
+		return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.PLACED_FEATURE).getOrThrow(this.getKey());
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<FC, ?>> configuredHolder, List<PlacementModifier> modifiers) {
-		this.configuredHolder = (Holder) configuredHolder;
-		Holder<PlacedFeature> holder = PlacementUtils.register(this.getKey().location().toString(), configuredHolder, modifiers);
-		return this.setHolder(holder);
+	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, List<PlacementModifier> modifiers) {
+		setConfiguredHolder(configuredHolder);
+
+		FrozenMain.log("Registering placed feature " + this.getKey().location(), true);
+
+		assert FrozenFeatureUtils.BOOTSTAP_CONTEXT != null: "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().location();
+		assert configuredHolder != null: "Configured feature holder for FrozenPlacedFeature " + this.getKey().location() + " null";
+		assert modifiers != null: "Placement modifiers for FrozenPlacedFeature " + this.getKey().location() + " null";
+
+		FrozenFeatureUtils.BOOTSTAP_CONTEXT.register((ResourceKey) this.getKey(), new PlacedFeature(configuredHolder, modifiers));
+
+		return this;
 	}
 
-	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<FC, ?>> configuredHolder, PlacementModifier... modifiers) {
+	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, PlacementModifier... modifiers) {
 		return this.makeAndSetHolder(configuredHolder, List.of(modifiers));
 	}
 }

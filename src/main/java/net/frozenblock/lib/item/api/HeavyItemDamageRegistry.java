@@ -22,6 +22,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 public class HeavyItemDamageRegistry {
 
@@ -31,7 +32,7 @@ public class HeavyItemDamageRegistry {
 		HEAVY_ITEM_DAMAGE.put(item, new HeavyItemDamage(startDamage, maxStackDamage));
 	}
 
-	public static float getDamage(ItemStack stack) {
+	public static float getDamage(@NotNull ItemStack stack) {
 		Item item = stack.getItem();
 		if (HEAVY_ITEM_DAMAGE.containsKey(item)) {
 			HeavyItemDamage heavyItemDamage = HEAVY_ITEM_DAMAGE.get(item);

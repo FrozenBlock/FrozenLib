@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 QuiltMC
+ * Copyright 2023 The Quilt Project
  * Copyright 2023 FrozenBlock
  * Modified to work on Fabric
  *
@@ -27,9 +27,11 @@ import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 import net.frozenblock.lib.datafix.api.BlockStateRenameFix;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;
-import net.minecraft.util.datafix.fixes.RenameBiomesFix;
+import net.minecraft.util.datafix.fixes.NamespacedTypeRenameFix;
+import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.util.datafix.fixes.SimplestEntityRenameFix;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import org.jetbrains.annotations.NotNull;
@@ -155,7 +157,7 @@ public final class SimpleFixes {
      * @param name    the fix's name
      * @param changes a map of old biome identifiers to new biome identifiers
      * @param schema  the schema this fixer should be a part of
-     * @see RenameBiomesFix
+     * @see NamespacedTypeRenameFix
      */
     public static void addBiomeRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
                                          @NotNull Map<ResourceLocation, ResourceLocation> changes,
@@ -169,6 +171,6 @@ public final class SimpleFixes {
         for (var entry : changes.entrySet()) {
             mapBuilder.put(entry.getKey().toString(), entry.getValue().toString());
         }
-        builder.addFixer(new RenameBiomesFix(schema, false, name, mapBuilder.build()));
+        builder.addFixer(new NamespacedTypeRenameFix(schema, name, References.BIOME, DataFixers.createRenamer(mapBuilder.build())));
     }
 }

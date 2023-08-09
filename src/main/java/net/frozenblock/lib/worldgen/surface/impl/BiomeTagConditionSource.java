@@ -19,16 +19,17 @@
 package net.frozenblock.lib.worldgen.surface.impl;
 
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.SurfaceRules;
+import org.jetbrains.annotations.NotNull;
 
 public final class BiomeTagConditionSource implements SurfaceRules.ConditionSource {
 	public static final KeyDispatchDataCodec<BiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.mapCodec((instance) ->
 			instance.group(
-					TagKey.codec(Registry.BIOME_REGISTRY)
+					TagKey.codec(Registries.BIOME)
 							.fieldOf("biome_tag")
 							.forGetter(BiomeTagConditionSource::getBiomeTagKey))
 					.apply(instance, BiomeTagConditionSource::new)
@@ -37,19 +38,18 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 
 	private final TagKey<Biome> biomeTagKey;
 
-	public static BiomeTagConditionSource isBiomeTag(TagKey<Biome> biomeTagKey) {
-		return new BiomeTagConditionSource(biomeTagKey);
-	}
-
-	BiomeTagConditionSource(TagKey<Biome> biomeTagKey) {
+	public BiomeTagConditionSource(TagKey<Biome> biomeTagKey) {
 		this.biomeTagKey = biomeTagKey;
 	}
 
+	@Override
 	public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
 		return CODEC;
 	}
 
-	public SurfaceRules.Condition apply(SurfaceRules.Context context) {
+	@Override
+	@NotNull
+	public SurfaceRules.Condition apply(@NotNull SurfaceRules.Context context) {
 		class BiomeTagCondition extends SurfaceRules.LazyYCondition {
 			BiomeTagCondition(SurfaceRules.Context context) {
 				super(context);
@@ -63,6 +63,7 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 		return new BiomeTagCondition(context);
 	}
 
+	@Override
 	public boolean equals(Object object) {
 		if (this == object) {
 			return true;
@@ -73,15 +74,18 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 		}
 	}
 
+	@Override
 	public int hashCode() {
 		return this.biomeTagKey.hashCode();
 	}
 
+	@Override
+	@NotNull
 	public String toString() {
 		return "BiomeConditionSource[biomeTagKey=" + this.biomeTagKey + "]";
 	}
 
-	private static TagKey<Biome> getBiomeTagKey(Object o) {
+	private static TagKey<Biome> getBiomeTagKey(@NotNull Object o) {
 		return ((BiomeTagConditionSource)o).biomeTagKey;
 	}
 }

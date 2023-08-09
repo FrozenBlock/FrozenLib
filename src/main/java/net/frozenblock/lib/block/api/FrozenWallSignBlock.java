@@ -22,6 +22,7 @@ import java.util.Objects;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.WallSignBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
+import org.jetbrains.annotations.NotNull;
 
 public class FrozenWallSignBlock extends WallSignBlock {
     public final ResourceLocation lootTable;
@@ -32,11 +33,13 @@ public class FrozenWallSignBlock extends WallSignBlock {
     }
 
     @Override
+	@NotNull
     public ResourceLocation getLootTable() {
         if (!Objects.equals(this.drops, this.lootTable)) {
             this.drops = this.lootTable;
         }
 
-        return this.drops;
+		assert this.drops != null;
+		return this.drops;
     }
 }

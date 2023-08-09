@@ -103,10 +103,94 @@ public final class AdvancedMath {
         }
     }
 
-    /**
-     * @param axis The axis that should be used to determine a random direction.
-     * @return A random {@linkplain Direction} on a specific {@linkplain Direction.Axis}.
-     */
+	public static int factorial(int n) {
+		if (n < 0) {
+			throw new IllegalArgumentException("Factorial of negative numbers is undefined");
+		}
+		int result = 1;
+		for (int i = 2; i <= n; i++) {
+			result *= i;
+		}
+		return result;
+	}
+
+	public static int permutations(int n, int r) {
+		if (n < 0 || r < 0 || r > n) {
+			throw new IllegalArgumentException("Invalid input: n must be non-negative, r must be non-negative and not greater than n");
+		}
+		int result = 1;
+		for (int i = n; i > n - r; i--) {
+			result *= i;
+		}
+		return result;
+	}
+
+	public static int combinations(int n, int r) {
+		if (n < 0 || r < 0 || r > n) {
+			throw new IllegalArgumentException("Invalid input: n must be non-negative, r must be non-negative and not greater than n");
+		}
+		int numerator = 1;
+		for (int i = n; i > n - r; i--) {
+			numerator *= i;
+		}
+		int denominator = 1;
+		for (int i = r; i > 0; i--) {
+			denominator *= i;
+		}
+		return numerator / denominator;
+	}
+
+	/**
+	 * Solves a quadratic equation of the form ax^2 + bx + c = 0.
+	 *
+	 * @param a the coefficient of x^2 (must be non-zero)
+	 * @param b the coefficient of x
+	 * @param c the constant term
+	 * @return an array containing the real roots of the equation, or null if no real roots exist
+	 * @throws IllegalArgumentException if a is zero
+	 */
+	public static double[] solveQuadraticEquation(double a, double b, double c) {
+		if (a == 0) {
+			throw new IllegalArgumentException("a cannot be zero");
+		}
+		double discriminant = b * b - 4 * a * c;
+		if (discriminant < 0) {
+			return null;
+		} else if (discriminant == 0) {
+			double root = -b / (2 * a);
+			return new double[]{root};
+		} else {
+			double root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+			double root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+			return new double[]{root1, root2};
+		}
+	}
+
+	/**
+	 * Calculates the greatest common divisor (GCD) of two numbers using the Euclidean algorithm.
+	 *
+	 * @param a the first number
+	 * @param b the second number
+	 * @return the GCD of a and b
+	 */
+	public static int greatestCommonDivisor(int a, int b) {
+		if (a == 0 || b == 0) {
+			return Math.abs(a + b); // GCD(0, b) == b; GCD(a, 0) == a; GCD(0, 0) == 0
+		}
+
+		while (b != 0) {
+			int temp = b;
+			b = a % b;
+			a = temp;
+		}
+
+		return Math.abs(a);
+	}
+
+	/**
+	 * @param axis The axis that should be used to determine a random direction.
+	 * @return A random {@linkplain Direction} on a specific {@linkplain Direction.Axis}.
+	 */
     public static Direction randomDir(final Direction.Axis axis) {
         double random = random().nextDouble();
 		switch (axis) {

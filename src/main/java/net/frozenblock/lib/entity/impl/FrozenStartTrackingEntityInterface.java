@@ -19,10 +19,7 @@
 package net.frozenblock.lib.entity.impl;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
-import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
-@InjectedInterface(Entity.class)
 public interface FrozenStartTrackingEntityInterface {
 
 	void frozenLib$playerStartsTracking(ServerPlayer serverPlayer);

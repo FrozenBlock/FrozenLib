@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.sound.api.damagesource;
 
-import java.util.HashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.resources.ResourceLocation;
@@ -31,8 +31,8 @@ public final class PlayerDamageSourceSounds {
 		throw new UnsupportedOperationException("PlayerDamageSourceSounds contains only static declarations.");
 	}
 
-    private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_RESOURCE_LOCATION_MAP = new HashMap<>();
-	private static final Map<ResourceLocation, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new HashMap<>();
+    private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_RESOURCE_LOCATION_MAP = new Object2ObjectOpenHashMap<>();
+	private static final Map<ResourceLocation, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new Object2ObjectOpenHashMap<>();
 	private static final ResourceLocation DEFAULT_ID = FrozenMain.id("default_damage_source");
 
 	public static void addDamageSound(DamageSource source, SoundEvent sound, ResourceLocation registry) {

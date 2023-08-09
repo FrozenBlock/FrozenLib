@@ -37,17 +37,14 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Entity.class)
-public class EntityMixin implements FrozenStartTrackingEntityInterface, EntityStepOnBlockInterface {
+public abstract class EntityMixin implements FrozenStartTrackingEntityInterface, EntityStepOnBlockInterface {
 
 	@Shadow
-	public Level level;
+	public abstract Level level();
 
 	@Unique
 	@Override
@@ -61,7 +58,7 @@ public class EntityMixin implements FrozenStartTrackingEntityInterface, EntitySt
 
 	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
 	public void frozenLib$runSteppedOn(MoverType type, Vec3 pos, CallbackInfo ci, Vec3 vec3, double d, boolean bl, boolean bl2, BlockPos blockPos, BlockState blockState, Block block) {
-		this.frozenLib$onSteppedOnBlock(this.level, blockPos, blockState);
+		this.frozenLib$onSteppedOnBlock(this.level(), blockPos, blockState);
 	}
 
 	@Override

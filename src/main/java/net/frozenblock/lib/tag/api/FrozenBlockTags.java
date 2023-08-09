@@ -19,7 +19,7 @@
 package net.frozenblock.lib.tag.api;
 
 import net.frozenblock.lib.FrozenMain;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
@@ -37,6 +37,6 @@ public final class FrozenBlockTags {
 	public static final TagKey<Block> CAN_INTERACT_WHILE_CROUCHING = bind("can_interact_while_crouching");
 
     private static TagKey<Block> bind(String path) {
-        return TagKey.create(Registry.BLOCK_REGISTRY, FrozenMain.id(path));
+        return TagKey.create(Registries.BLOCK, FrozenMain.id(path));
     }
 }

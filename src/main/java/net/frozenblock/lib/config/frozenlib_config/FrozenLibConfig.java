@@ -18,65 +18,45 @@
 
 package net.frozenblock.lib.config.frozenlib_config;
 
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.annotation.Config;
-import me.shedaniel.autoconfig.annotation.ConfigEntry.Category;
-import me.shedaniel.autoconfig.annotation.ConfigEntry.Gui.TransitiveObject;
-import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
-import me.shedaniel.autoconfig.serializer.PartitioningSerializer;
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
-import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import java.util.List;
+import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.config.frozenlib_config.getter.FrozenLibConfigValues;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
+import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.instance.json.JsonConfig;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.frozenlib_config.defaults.DefaultFrozenLibConfig;
 
-@Config(name = FrozenMain.MOD_ID)
-public class FrozenLibConfig extends PartitioningSerializer.GlobalData {
+// NOTE: Refrain from using Typed Entries as Cloth Config is used for Mod Menu Integration
+public class FrozenLibConfig {
 
-    @Category("config")
-    @TransitiveObject
-    public final FrozenLibConfigCategory config = new FrozenLibConfigCategory();
+	private static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
+		new JsonConfig<>(
+			FrozenMain.MOD_ID,
+			FrozenLibConfig.class,
+			true
+		)
+	);
 
-    public static FrozenLibConfig get() {
-        if (!FrozenMain.areConfigsInit) {
-            AutoConfig.register(FrozenLibConfig.class, PartitioningSerializer.wrap(GsonConfigSerializer::new));
-			FrozenMain.areConfigsInit = true;
-			FrozenLibConfigValues.CONFIG = new FrozenLibConfigValues.FrozenConfigGetter(
-					new FrozenLibConfigValues.ConfigInterface() {
-						@Override
-						public boolean useWindOnNonFrozenServers() {
-							return FrozenLibConfig.get().config.useWindOnNonFrozenServers;
-						}
+	public boolean useWindOnNonFrozenServers = DefaultFrozenLibConfig.USE_WIND_ON_NON_FROZENLIB_SERVERS;
 
-						@Override
-						public boolean saveItemCooldowns() {
-							return FrozenLibConfig.get().config.saveItemCooldowns;
-						}
-					}
-			);
-        }
-        return AutoConfig.getConfigHolder(FrozenLibConfig.class).getConfig();
-    }
+	public boolean saveItemCooldowns = DefaultFrozenLibConfig.SAVE_ITEM_COOLDOWNS;
 
-    @Environment(EnvType.CLIENT)
-    public static Screen buildScreen(Screen parent) {
-        var configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(text("component.title"));
-        configBuilder.setSavingRunnable(() -> AutoConfig.getConfigHolder(FrozenLibConfig.class).save());
-        var config = configBuilder.getOrCreateCategory(text("config"));
-        ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();
-        FrozenLibConfigCategory.setupEntries(config, entryBuilder);
-        return configBuilder.build();
-    }
+	public boolean removeExperimentalWarning = DefaultFrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING;
 
-	public static Component text(String key) {
-		return Component.translatable("option." + FrozenMain.MOD_ID + "." + key);
+	public boolean wardenSpawnTrackerCommand = DefaultFrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND;
+
+	@ConfigEntry.Gui.CollapsibleObject
+	public final DataFixerConfig dataFixer = new DataFixerConfig();
+
+	public static FrozenLibConfig get() {
+		return INSTANCE.config();
 	}
 
-	public static Component tooltip(String key) {
-		return Component.translatable("tooltip." + FrozenMain.MOD_ID + "." + key);
+	public static Config<FrozenLibConfig> getConfigInstance() {
+		return INSTANCE;
 	}
 
+	public static class DataFixerConfig {
+		public List<String> disabledDataFixTypes = DefaultFrozenLibConfig.DISABLED_DATAFIX_TYPES;
+	}
 }

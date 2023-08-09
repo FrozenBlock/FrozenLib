@@ -20,13 +20,10 @@ package net.frozenblock.lib.spotting_icons.impl;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.world.entity.Entity;
-import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
-@InjectedInterface(EntityRenderDispatcher.class)
 public interface EntityRenderDispatcherWithIcon {
 
-    <E extends Entity> void renderIcon(E entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight);
+    <E extends Entity> void frozenLib$renderIcon(E entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight);
 
 }

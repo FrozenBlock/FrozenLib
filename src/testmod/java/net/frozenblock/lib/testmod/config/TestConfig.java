@@ -20,6 +20,7 @@ package net.frozenblock.lib.testmod.config;
 
 import blue.endless.jankson.Comment;
 import com.mojang.serialization.Codec;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenMain;
@@ -37,7 +38,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.Vec3;
-import java.util.List;
 
 public class TestConfig {
 
@@ -45,7 +45,7 @@ public class TestConfig {
 	public static final TypedEntryType<SoundEvent> SOUND_EVENT = ConfigRegistry.register(
 			new TypedEntryType<>(
 					FrozenTestMain.MOD_ID,
-					SoundEvent.CODEC
+					SoundEvent.DIRECT_CODEC
 			)
 	);
 
@@ -78,21 +78,6 @@ public class TestConfig {
 	@Comment("This is an integer list typed entry.")
 	public List<Integer> testIntList = List.of(45);
 
-	@Comment("This is a boolean typed entry.")
-	public TypedEntry<Boolean> typedBoolean = new TypedEntry<>(
-			TypedEntryType.BOOLEAN, true
-	);
-
-	@Comment("This is an integer typed entry.")
-	public TypedEntry<Integer> typedInt = new TypedEntry<>(
-			TypedEntryType.INTEGER, 69
-	);
-
-	@Comment("This is a double list typed entry.")
-	public TypedEntry<List<Double>> typedDoubleList = new TypedEntry<>(
-			TypedEntryType.DOUBLE_LIST, List.of(1D, 2D, 69.69696969696969696969696969420D)
-	);
-
 	@Comment("This is a sound event typed entry.")
 	public TypedEntry<SoundEvent> randomSound = new TypedEntry<>(
 			SOUND_EVENT, SoundEvents.BEE_LOOP
@@ -102,6 +87,9 @@ public class TestConfig {
 	public TypedEntry<List<Vec3>> typedVecList = new TypedEntry<>(
 			VEC3_LIST, List.of(new Vec3(0, 0, 0), new Vec3(1, 1, 1))
 	);
+
+	@Comment("This is a list of doubles")
+	public List<Double> doubleList = List.of(1D, 2D, 3D, Math.PI);
 
 	public static Config<TestConfig> get() {
 		return INSTANCE;

@@ -32,17 +32,20 @@ public class RestrictedMovingSound<T extends Entity> extends RestrictedSoundInst
 
     private final T entity;
     private final SoundPredicate.LoopPredicate<T> predicate;
+	private final boolean stopOnDeath;
 
-    public RestrictedMovingSound(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate) {
+    public RestrictedMovingSound(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, boolean stopOnDeath) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.entity = entity;
         this.looping = false;
         this.volume = volume;
         this.pitch = pitch;
-        this.x = (float) entity.getX();
-        this.y = (float) entity.getY();
-        this.z = (float) entity.getZ();
+        this.x = entity.getX();
+        this.y = entity.getY();
+        this.z = entity.getZ();
         this.predicate = predicate;
+		this.stopOnDeath = stopOnDeath;
+
 		this.predicate.onStart(this.entity);
     }
 
@@ -61,15 +64,15 @@ public class RestrictedMovingSound<T extends Entity> extends RestrictedSoundInst
 	}
 
     public void tick() {
-        if (this.entity.isRemoved()) {
+        if (this.stopOnDeath && this.entity.isRemoved()) {
             this.stop();
         } else {
             if (!this.predicate.test(this.entity)) {
                 this.stop();
             } else {
-                this.x = (float) this.entity.getX();
-                this.y = (float) this.entity.getY();
-                this.z = (float) this.entity.getZ();
+                this.x = this.entity.getX();
+                this.y = this.entity.getY();
+                this.z = this.entity.getZ();
             }
         }
     }

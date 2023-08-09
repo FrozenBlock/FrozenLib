@@ -21,29 +21,18 @@ package net.frozenblock.lib.worldgen.feature.api.features.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public class PillarFeatureConfig implements FeatureConfiguration {
-    public static final Codec<PillarFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
-            instance.group(
-                    BlockState.CODEC.fieldOf("columnBlock").forGetter((config) -> config.columnBlock),
-                    IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter((config) -> config.height),
-                    RegistryCodecs.homogeneousList(Registry.BLOCK_REGISTRY).fieldOf("replaceable").forGetter((config) -> config.replaceable)
-            ).apply(instance, PillarFeatureConfig::new));
-
-    public final BlockState columnBlock;
-    public final IntProvider height;
-    public final HolderSet<Block> replaceable;
-
-    public PillarFeatureConfig(BlockState columnBlock, IntProvider height, HolderSet<Block> replaceable) {
-        this.columnBlock = columnBlock;
-        this.height = height;
-        this.replaceable = replaceable;
-    }
-
+public record PillarFeatureConfig(BlockState columnBlock, IntProvider height, HolderSet<Block> replaceable) implements FeatureConfiguration {
+	public static final Codec<PillarFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
+		instance.group(
+			BlockState.CODEC.fieldOf("columnBlock").forGetter((config) -> config.columnBlock),
+			IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter((config) -> config.height),
+			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter((config) -> config.replaceable)
+		).apply(instance, PillarFeatureConfig::new));
 }

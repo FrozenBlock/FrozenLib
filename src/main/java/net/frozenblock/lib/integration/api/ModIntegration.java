@@ -18,9 +18,14 @@
 
 package net.frozenblock.lib.integration.api;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Registry;
-import net.minecraft.data.BuiltinRegistries;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -32,10 +37,12 @@ public abstract class ModIntegration {
 
     private final String modID;
 	private final String modRegistryID;
+	private final boolean isModLoaded;
 
 	public ModIntegration(String modID, String modRegistryID) {
 		this.modID = modID;
 		this.modRegistryID = modRegistryID;
+		this.isModLoaded = FabricLoader.getInstance().isModLoaded(this.modID);
 	}
 
     public ModIntegration(String modID) {
@@ -51,32 +58,32 @@ public abstract class ModIntegration {
     }
 
     public Block getBlock(String path) {
-        return Registry.BLOCK.get(id(path));
+        return BuiltInRegistries.BLOCK.get(id(path));
     }
 
     public Item getItem(String path) {
-        return Registry.ITEM.get(id(path));
+        return BuiltInRegistries.ITEM.get(id(path));
     }
 
     public ResourceKey<Biome> getBiomeKey(String path) {
-        return ResourceKey.create(Registry.BIOME_REGISTRY, id(path));
+        return ResourceKey.create(Registries.BIOME, id(path));
     }
 
     public TagKey<Block> getBlockTag(String path) {
         var key = id(path);
-        var registry = Registry.BLOCK;
+        var registry = BuiltInRegistries.BLOCK;
         return getTag(registry, key);
     }
 
     public TagKey<Item> getItemTag(String path) {
         var key = id(path);
-        var registry = Registry.ITEM;
+        var registry = BuiltInRegistries.ITEM;
         return getTag(registry, key);
     }
 
     public TagKey<Biome> getBiomeTag(String path) {
         var key = id(path);
-        var registry = BuiltinRegistries.BIOME;
+        var registry = VanillaRegistries.createLookup().lookupOrThrow(Registries.BIOME);
         return getTag(registry, key);
     }
 
@@ -87,9 +94,21 @@ public abstract class ModIntegration {
                 .orElse(TagKey.create(registry.key(), key));
     }
 
+    @SuppressWarnings("unchecked")
+    public <T> TagKey<T> getTag(HolderLookup.RegistryLookup<T> lookup, ResourceLocation key) {
+        return lookup.listTagIds()
+                .filter(tag -> tag.location().equals(key))
+                .findAny()
+                .orElse(TagKey.create((ResourceKey<Registry<T>>) lookup.key(), key));
+    }
+
     public boolean modLoaded() {
-        return FabricLoader.getInstance().isModLoaded(this.modID);
+        return this.isModLoaded;
     }
 
     public abstract void init();
+
+	@Environment(EnvType.CLIENT)
+	public void clientInit() {
+	}
 }

@@ -8,6 +8,8 @@
   },
   "mixins": [
     "BlockEntityTypeMixin",
-    "NoExperimentalMixin"
+    "DecoderExceptionMixin",
+    "NoExperimentalMixin",
+    "WardenSpawnTrackerCommandMixin"
   ]
 }

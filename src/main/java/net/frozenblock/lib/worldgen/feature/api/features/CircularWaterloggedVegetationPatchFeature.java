@@ -36,6 +36,7 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 public class CircularWaterloggedVegetationPatchFeature extends VegetationPatchFeature {
 
@@ -44,7 +45,7 @@ public class CircularWaterloggedVegetationPatchFeature extends VegetationPatchFe
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<VegetationPatchConfiguration> context) {
+	public boolean place(@NotNull FeaturePlaceContext<VegetationPatchConfiguration> context) {
 		WorldGenLevel worldGenLevel = context.level();
 		VegetationPatchConfiguration vegetationPatchConfiguration = context.config();
 		RandomSource randomSource = context.random();
@@ -56,12 +57,12 @@ public class CircularWaterloggedVegetationPatchFeature extends VegetationPatchFe
 		return !set.isEmpty();
 	}
 
-	public Set<BlockPos> placeCircularGroundPatch(WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos pos, Predicate<BlockState> state, int xRadius, int zRadius) {
+	public Set<BlockPos> placeCircularGroundPatch(WorldGenLevel level, @NotNull VegetationPatchConfiguration config, RandomSource random, @NotNull BlockPos pos, Predicate<BlockState> state, int xRadius, int zRadius) {
 		MutableBlockPos mutableBlockPos = pos.mutable();
 		MutableBlockPos mutableBlockPos2 = mutableBlockPos.mutable();
 		Direction direction = config.surface.getDirection();
 		Direction direction2 = direction.getOpposite();
-		Set<BlockPos> set = new HashSet();
+		Set<BlockPos> set = new HashSet<>();
 
 		for(int i = -xRadius; i <= xRadius; ++i) {
 			boolean bl = i == -xRadius || i == xRadius;
@@ -105,14 +106,14 @@ public class CircularWaterloggedVegetationPatchFeature extends VegetationPatchFe
 	@Override
 	protected Set<BlockPos> placeGroundPatch(WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos pos, Predicate<BlockState> state, int xRadius, int zRadius) {
 		Set<BlockPos> set = this.placeCircularGroundPatch(level, config, random, pos, state, xRadius, zRadius);
-		Set<BlockPos> set2 = new HashSet();
+		Set<BlockPos> set2 = new HashSet<>();
 		MutableBlockPos mutableBlockPos = new MutableBlockPos();
 		Iterator<BlockPos> var11 = set.iterator();
 
 		BlockPos blockPos;
 		while(var11.hasNext()) {
 			blockPos = var11.next();
-			if (!isExposed(level, set, blockPos, mutableBlockPos)) {
+			if (!isExposed(level, blockPos, mutableBlockPos)) {
 				set2.add(blockPos);
 			}
 		}
@@ -127,20 +128,21 @@ public class CircularWaterloggedVegetationPatchFeature extends VegetationPatchFe
 		return set2;
 	}
 
-	private static boolean isExposed(WorldGenLevel level, Set<BlockPos> positions, BlockPos pos, MutableBlockPos mutablePos) {
+	private static boolean isExposed(WorldGenLevel level, BlockPos pos, MutableBlockPos mutablePos) {
 		return isExposedDirection(level, pos, mutablePos, Direction.NORTH) || isExposedDirection(level, pos, mutablePos, Direction.EAST) || isExposedDirection(level, pos, mutablePos, Direction.SOUTH) || isExposedDirection(level, pos, mutablePos, Direction.WEST) || isExposedDirection(level, pos, mutablePos, Direction.DOWN);
 	}
 
-	private static boolean isExposedDirection(WorldGenLevel level, BlockPos pos, MutableBlockPos mutablePos, Direction direction) {
+	private static boolean isExposedDirection(@NotNull WorldGenLevel level, BlockPos pos, @NotNull MutableBlockPos mutablePos, Direction direction) {
 		mutablePos.setWithOffset(pos, direction);
 		return !level.getBlockState(mutablePos).isFaceSturdy(level, mutablePos, direction.getOpposite());
 	}
 
-	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, BlockPos pos) {
+	@Override
+	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, @NotNull BlockPos pos) {
 		if (super.placeVegetation(level, config, chunkGenerator, random, pos.below())) {
 			BlockState blockState = level.getBlockState(pos);
 			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && !(Boolean)blockState.getValue(BlockStateProperties.WATERLOGGED)) {
-				level.setBlock(pos, (BlockState)blockState.setValue(BlockStateProperties.WATERLOGGED, true), 2);
+				level.setBlock(pos, blockState.setValue(BlockStateProperties.WATERLOGGED, true), 2);
 			}
 
 			return true;

@@ -28,7 +28,7 @@ import java.util.Objects;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -67,11 +67,12 @@ public class MovingLoopingSoundEntityManager {
         var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenSounds", cursorsNbt));
     }
 
-    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId) {
-        this.sounds.add(new SoundLoopData(soundID, category, volume, pitch, restrictionId));
+    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
+        this.sounds.add(new SoundLoopData(soundID, category, volume, pitch, restrictionId, stopOnDeath));
+		SoundPredicate.getPredicate(restrictionId).onStart(this.entity);
     }
 
-    public ArrayList<SoundLoopData> getSounds() {
+    public List<SoundLoopData> getSounds() {
         return this.sounds;
     }
 
@@ -91,7 +92,7 @@ public class MovingLoopingSoundEntityManager {
 
 	public void syncWithPlayer(ServerPlayer serverPlayer) {
 		for (MovingLoopingSoundEntityManager.SoundLoopData nbt : this.getSounds()) {
-			FrozenSoundPackets.createMovingRestrictionLoopingSound(serverPlayer, this.entity, Registry.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID);
+			FrozenSoundPackets.createMovingRestrictionLoopingSound(serverPlayer, this.entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.stopOnDeath);
 		}
 	}
 
@@ -101,29 +102,33 @@ public class MovingLoopingSoundEntityManager {
         public final float volume;
         public final float pitch;
         public final ResourceLocation restrictionID;
+		public final boolean stopOnDeath;
 
-        public static final Codec<SoundLoopData> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+        public static final Codec<SoundLoopData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(SoundLoopData::getSoundEventID),
                 Codec.STRING.fieldOf("categoryOrdinal").forGetter(SoundLoopData::getOrdinal),
                 Codec.FLOAT.fieldOf("volume").forGetter(SoundLoopData::getVolume),
                 Codec.FLOAT.fieldOf("pitch").forGetter(SoundLoopData::getPitch),
-                ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(SoundLoopData::getRestrictionID)
+                ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(SoundLoopData::getRestrictionID),
+				Codec.BOOL.fieldOf("stopOnDeath").forGetter(SoundLoopData::getStopOnDeath)
         ).apply(instance, SoundLoopData::new));
 
-        public SoundLoopData(ResourceLocation soundEventID, String ordinal, float vol, float pitch, ResourceLocation restrictionID) {
+        public SoundLoopData(ResourceLocation soundEventID, String ordinal, float vol, float pitch, ResourceLocation restrictionID, boolean stopOnDeath) {
             this.soundEventID = soundEventID;
             this.categoryOrdinal = ordinal;
             this.volume = vol;
             this.pitch = pitch;
             this.restrictionID = restrictionID;
+			this.stopOnDeath = stopOnDeath;
         }
 
-        public SoundLoopData(ResourceLocation soundEventID, SoundSource category, float vol, float pitch, ResourceLocation restrictionID) {
+        public SoundLoopData(ResourceLocation soundEventID, SoundSource category, float vol, float pitch, ResourceLocation restrictionID, boolean stopOnDeath) {
             this.soundEventID = soundEventID;
             this.categoryOrdinal = category.toString();
             this.volume = vol;
             this.pitch = pitch;
             this.restrictionID = restrictionID;
+			this.stopOnDeath = stopOnDeath;
         }
 
         public ResourceLocation getSoundEventID() {
@@ -145,6 +150,10 @@ public class MovingLoopingSoundEntityManager {
         public ResourceLocation getRestrictionID() {
             return this.restrictionID;
         }
+
+		public boolean getStopOnDeath() {
+			return this.stopOnDeath;
+		}
 
     }
 }

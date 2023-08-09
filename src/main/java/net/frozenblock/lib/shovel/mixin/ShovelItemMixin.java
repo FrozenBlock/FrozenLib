@@ -34,26 +34,24 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ShovelItem.class)
 public class ShovelItemMixin {
 
-	@Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
-	public void frozenlib$_shovelBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
-		Level level = context.getLevel();
-		BlockPos blockPos = context.getClickedPos();
-		BlockState state = level.getBlockState(blockPos);
+	@Inject(method = "useOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/context/UseOnContext;getClickedFace()Lnet/minecraft/core/Direction;", shift = At.Shift.BEFORE, ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+	public void frozenlib$_shovelBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> info, Level level, BlockPos blockPos, BlockState blockState) {
 		Direction direction = context.getClickedFace();
 		Direction horizontal = context.getHorizontalDirection();
-		if (ShovelBehaviors.SHOVEL_BEHAVIORS.containsKey(state.getBlock())) {
-			if (ShovelBehaviors.SHOVEL_BEHAVIORS.get(state.getBlock()).shovel(context, level, blockPos, state, direction, horizontal)) {
+		if (ShovelBehaviors.SHOVEL_BEHAVIORS.containsKey(blockState.getBlock())) {
+			if (ShovelBehaviors.SHOVEL_BEHAVIORS.get(blockState.getBlock()).shovel(context, level, blockPos, blockState, direction, horizontal)) {
 				if (!level.isClientSide) {
 					Player player = context.getPlayer();
-					level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, state));
+					level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockState));
 					if (player != null) {
 						context.getItemInHand().hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));
 					}
-					CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer)player, blockPos, context.getItemInHand());
+					CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, blockPos, context.getItemInHand());
 					info.setReturnValue(InteractionResult.SUCCESS);
 				} else {
 					info.setReturnValue(InteractionResult.sidedSuccess(true));

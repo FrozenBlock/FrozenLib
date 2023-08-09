@@ -24,18 +24,21 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.integration.impl.EmptyModIntegration;
 
 public class ModIntegrationSupplier<T extends ModIntegration> {
-	private final String modID;
-	private final Optional<T> optionalIntegration;
-	private final T unloadedModIntegration;
+	protected final String modID;
+	protected final boolean isModLoaded;
+	protected final Optional<T> optionalIntegration;
+	protected final T unloadedModIntegration;
 
 	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, String modID) {
 		this.modID = modID;
+		this.isModLoaded = FabricLoader.getInstance().isModLoaded(this.modID);
 		this.optionalIntegration = this.modLoaded() ? Optional.of(modIntegrationSupplier.get()) : Optional.empty();
 		this.unloadedModIntegration = (T) new EmptyModIntegration(modID);
 	}
 
 	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, Supplier<T> unloadedModIntegrationSupplier, String modID) {
 		this.modID = modID;
+		this.isModLoaded = FabricLoader.getInstance().isModLoaded(this.modID);
 		this.optionalIntegration = this.modLoaded() ? Optional.of(modIntegrationSupplier.get()) : Optional.empty();
 		this.unloadedModIntegration = unloadedModIntegrationSupplier.get();
 	}
@@ -49,6 +52,6 @@ public class ModIntegrationSupplier<T extends ModIntegration> {
 	}
 
 	public boolean modLoaded() {
-		return FabricLoader.getInstance().isModLoaded(this.modID);
+		return isModLoaded;
 	}
 }

@@ -19,7 +19,7 @@
 package net.frozenblock.lib.tag.api;
 
 import net.frozenblock.lib.FrozenMain;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
@@ -34,6 +34,6 @@ public final class FrozenItemTags {
 	public static final TagKey<Item> ALWAYS_SAVE_COOLDOWNS = of("always_save_cooldowns");
 
 	private static TagKey<Item> of(String path) {
-		return TagKey.create(Registry.ITEM_REGISTRY, FrozenMain.id(path));
+		return TagKey.create(Registries.ITEM, FrozenMain.id(path));
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 QuiltMC
+ * Copyright 2023 The Quilt Project
  * Copyright 2023 FrozenBlock
  * Modified to work on Fabric
  *
@@ -22,16 +22,16 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
+import java.util.Collections;
+import java.util.Map;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-
-import java.util.Collections;
-import java.util.Map;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin.DataFixTypesAccessor;
 
 /**
  * Modified to work on Fabric
@@ -71,20 +71,22 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     }
 
     @Override
-    public @NotNull CompoundTag updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull CompoundTag compound) {
-        var current = new Dynamic<>(NbtOps.INSTANCE, compound);
+    public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> current) {
+        var compound = (CompoundTag) current.getValue();
 
         for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
             int modDataVersion = getModDataVersion(compound, entry.getKey());
             DataFixerEntry dataFixerEntry = entry.getValue();
 
-            current = dataFixerEntry.dataFixer()
-                    .update(dataFixTypes.getType(),
-                            current,
-                            modDataVersion, dataFixerEntry.currentVersion());
+			current = dataFixerEntry.dataFixer().update(
+				DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
+				current,
+				modDataVersion,
+				dataFixerEntry.currentVersion()
+			);
         }
 
-        return (CompoundTag) current.getValue();
+        return current;
     }
 
     @Override

@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 QuiltMC
+ * Copyright 2023 The Quilt Project
  * Copyright 2023 FrozenBlock
  * Modified to work on Fabric
  *
@@ -24,7 +24,6 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.Nullable;
-//import org.quiltmc.qsl.resource.loader.api.reloader.IdentifiableResourceReloader;
 
 /**
  * Events related to the resource loader.

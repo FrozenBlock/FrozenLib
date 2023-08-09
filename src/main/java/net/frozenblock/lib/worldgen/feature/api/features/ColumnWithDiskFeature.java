@@ -20,7 +20,6 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
 import java.util.Optional;
-
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnWithDiskFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -34,21 +33,24 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import org.jetbrains.annotations.NotNull;
 
 public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> {
+
     public ColumnWithDiskFeature(Codec<ColumnWithDiskFeatureConfig> codec) {
         super(codec);
     }
 
-    public boolean place(FeaturePlaceContext<ColumnWithDiskFeatureConfig> context) {
+	@Override
+    public boolean place(@NotNull FeaturePlaceContext<ColumnWithDiskFeatureConfig> context) {
         boolean generated = false;
         ColumnWithDiskFeatureConfig config = context.config();
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
         BlockPos s = blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, blockPos.getX(), blockPos.getZ()) - 1);
         RandomSource random = level.getRandom();
-        int radius = config.radius.sample(random);
-        Optional<Holder<Block>> diskOptional = config.diskBlocks.getRandomElement(random);
+        int radius = config.radius().sample(random);
+        Optional<Holder<Block>> diskOptional = config.diskBlocks().getRandomElement(random);
         //DISK
         if (diskOptional.isPresent()) {
             BlockPos.MutableBlockPos mutableDisk = s.mutable();
@@ -61,7 +63,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
                     if (distance < radius * radius) {
                         mutableDisk.set(x, level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1, z);
                         boolean fade = !mutableDisk.closerThan(s, radius * 0.8);
-                        if (level.getBlockState(mutableDisk).is(config.replaceable)) {
+                        if (level.getBlockState(mutableDisk).is(config.replaceable())) {
                             generated = true;
                             if (fade) {
                                 if (random.nextFloat() > 0.65F) {
@@ -77,9 +79,9 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
         }
         //COLUMN / TERMITE MOUND
         BlockPos startPos = blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, blockPos.getX(), blockPos.getZ()) - 1);
-        BlockState column = config.columnBlock;
+        BlockState column = config.columnBlock();
         BlockPos.MutableBlockPos pos = startPos.mutable();
-        for (int i = 0; i < config.height.sample(random); i++) {
+        for (int i = 0; i < config.height().sample(random); i++) {
             pos.set(pos.above());
             BlockState state = level.getBlockState(pos);
             if (level.getBlockState(pos.below()).is(Blocks.WATER)) {
@@ -91,32 +93,27 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
             }
         }
         startPos = startPos.offset(-1, 0, 0);
-        pos.set(startPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, startPos.getX(), startPos.getZ()) - 1).mutable());
-        for (int i = 0; i < config.height2.sample(random); i++) {
-            pos.set(pos.above());
-            BlockState state = level.getBlockState(pos);
-            if (level.getBlockState(pos.below()).is(Blocks.WATER)) {
-                break;
-            }
-            if (state.getBlock() instanceof GrowingPlantBodyBlock || state.getBlock() instanceof BushBlock || state.isAir()) {
-                level.setBlock(pos, column, 3);
-                generated = true;
-            }
-        }
-        startPos = startPos.offset(1, 0, 1);
-        pos.set(startPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, startPos.getX(), startPos.getZ()) - 1).mutable());
-        for (int i = 0; i < config.height2.sample(random); i++) {
-            pos.set(pos.above());
-            BlockState state = level.getBlockState(pos);
-            if (level.getBlockState(pos.below()).is(Blocks.WATER)) {
-                break;
-            }
-            if (state.getBlock() instanceof GrowingPlantBodyBlock || state.getBlock() instanceof BushBlock || state.isAir()) {
-                level.setBlock(pos, column, 3);
-                generated = true;
-            }
-        }
-        return generated;
+		generated = generated || place(config, level, random, startPos, column, pos);
+		startPos = startPos.offset(1, 0, 1);
+		generated = generated || place(config, level, random, startPos, column, pos);
+		return generated;
     }
+
+	private boolean place(@NotNull ColumnWithDiskFeatureConfig config, @NotNull WorldGenLevel level, RandomSource random, @NotNull BlockPos startPos, BlockState column, BlockPos.@NotNull MutableBlockPos pos) {
+		boolean generated = false;
+		pos.set(startPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, startPos.getX(), startPos.getZ()) - 1).mutable());
+		for (int i = 0; i < config.height2().sample(random); i++) {
+			pos.set(pos.above());
+			BlockState state = level.getBlockState(pos);
+			if (level.getBlockState(pos.below()).is(Blocks.WATER)) {
+				break;
+			}
+			if (state.getBlock() instanceof GrowingPlantBodyBlock || state.getBlock() instanceof BushBlock || state.isAir()) {
+				level.setBlock(pos, column, 3);
+				generated = true;
+			}
+		}
+		return generated;
+	}
 
 }

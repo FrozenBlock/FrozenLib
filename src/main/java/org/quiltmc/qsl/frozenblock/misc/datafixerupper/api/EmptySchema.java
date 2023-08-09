@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 QuiltMC
+ * Copyright 2023 The Quilt Project
  * Copyright 2023 FrozenBlock
  * Modified to work on Fabric
  *
@@ -23,10 +23,9 @@ import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.Type;
 import com.mojang.datafixers.types.templates.TypeTemplate;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMaps;
-import org.jetbrains.annotations.Range;
-
 import java.util.Map;
 import java.util.function.Supplier;
+import org.jetbrains.annotations.Range;
 
 /**
  * Represents an empty {@link Schema}, having no parent and containing no type definitions.

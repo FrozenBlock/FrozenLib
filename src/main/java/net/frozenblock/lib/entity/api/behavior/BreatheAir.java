@@ -30,6 +30,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 	public BreatheAir() {
@@ -51,7 +52,7 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 		this.findAirPosition(entity);
 	}
 
-	private void findAirPosition(E entity) {
+	private void findAirPosition(@NotNull E entity) {
 		Iterable<BlockPos> iterable = BlockPos.betweenClosed(
 				Mth.floor(entity.getX() - 1.0),
 				entity.getBlockY(),
@@ -62,15 +63,15 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 		);
 		BlockPos blockPos = null;
 
-		for(BlockPos blockPos2 : iterable) {
-			if (this.givesAir(entity.level, blockPos2)) {
+		for (BlockPos blockPos2 : iterable) {
+			if (this.givesAir(entity.level(), blockPos2)) {
 				blockPos = blockPos2;
 				break;
 			}
 		}
 
 		if (blockPos == null) {
-			blockPos = new BlockPos(entity.getX(), entity.getY() + 8.0, entity.getZ());
+			blockPos = BlockPos.containing(entity.getX(), entity.getY() + 8.0, entity.getZ());
 		}
 
 		entity.getNavigation().moveTo(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), 1.0);
@@ -83,7 +84,7 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 		entity.move(MoverType.SELF, entity.getDeltaMovement());
 	}
 
-	private boolean givesAir(LevelReader level, BlockPos pos) {
+	private boolean givesAir(@NotNull LevelReader level, @NotNull BlockPos pos) {
 		BlockState blockState = level.getBlockState(pos);
 		return (level.getFluidState(pos).isEmpty() || blockState.is(Blocks.BUBBLE_COLUMN)) && blockState.isPathfindable(level, pos, PathComputationType.LAND);
 	}

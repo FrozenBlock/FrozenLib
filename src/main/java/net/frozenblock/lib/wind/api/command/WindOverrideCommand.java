@@ -42,7 +42,7 @@ public class WindOverrideCommand {
 		WindManager windManager = WindManager.getWindManager(level);
 		windManager.overrideWind = bl;
 		windManager.sendSync(level);
-		source.sendSuccess(Component.translatable("commands.wind.toggle.success", bl), true);
+		source.sendSuccess(() -> Component.translatable("commands.wind.toggle.success", bl), true);
 		return 1;
 	}
 
@@ -55,7 +55,7 @@ public class WindOverrideCommand {
 		windManager.windZ = z;
 		windManager.commandWind = new Vec3(windManager.windX, windManager.windY, windManager.windZ);
 		windManager.sendSync(level);
-		source.sendSuccess(Component.translatable("commands.wind.success", x, y, z), true);
+		source.sendSuccess(() -> Component.translatable("commands.wind.success", x, y, z), true);
 		return 1;
 	}
 

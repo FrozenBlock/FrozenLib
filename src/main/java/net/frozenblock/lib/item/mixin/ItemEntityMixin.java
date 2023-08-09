@@ -20,7 +20,6 @@ package net.frozenblock.lib.item.mixin;
 
 import java.util.List;
 import java.util.UUID;
-import net.frozenblock.lib.damagesource.api.FrozenDamageSource;
 import net.frozenblock.lib.item.api.HeavyItemDamageRegistry;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.sounds.SoundEvents;
@@ -31,6 +30,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -80,15 +80,15 @@ public class ItemEntityMixin {
 	@Unique
 	private void hitEntity(Entity entity) {
 		ItemEntity item = ItemEntity.class.cast(this);
-		Entity owner = this.thrower != null ? item.level.getPlayerByUUID(this.thrower) : null;
+		Entity owner = this.thrower != null ? item.level().getPlayerByUUID(this.thrower) : null;
 		if (entity != owner) {
-			DamageSource damageSource = FrozenDamageSource.source("heavy_item");
+			DamageSource damageSource = owner.damageSources().mobAttack((LivingEntity) entity);
 			if (owner != null) {
 				((LivingEntity) owner).setLastHurtMob(entity);
 			}
 			if (entity.hurt(damageSource, HeavyItemDamageRegistry.getDamage(this.getItem()))) {
 				//TODO: Bonk sound
-				item.playSound(SoundEvents.ANVIL_LAND, 0.3F, 1.2F / (item.level.random.nextFloat() * 0.2F + 0.9F));
+				item.playSound(SoundEvents.ANVIL_LAND, 0.3F, 1.2F / (item.level().random.nextFloat() * 0.2F + 0.9F));
 			}
 		}
 	}
@@ -96,11 +96,11 @@ public class ItemEntityMixin {
 	@Unique
 	public List<Entity> collidingEntities() {
 		ItemEntity entity = ItemEntity.class.cast(this);
-		return entity.level.getEntities(entity, entity.getBoundingBox().expandTowards(entity.getDeltaMovement()), this::canHitEntity);
+		return entity.level().getEntities(entity, entity.getBoundingBox().expandTowards(entity.getDeltaMovement()), this::canHitEntity);
 	}
 
 	@Unique
-	public boolean canHitEntity(Entity entity) {
+	public boolean canHitEntity(@NotNull Entity entity) {
 		ItemEntity item = ItemEntity.class.cast(this);
 		Vec3 itemMovement = item.getDeltaMovement();
 		if (!entity.isSpectator() && entity.isAlive() && entity.isPickable() && entity instanceof LivingEntity && itemMovement.length() > 0.3) {

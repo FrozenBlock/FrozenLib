@@ -18,40 +18,5 @@
 
 package net.frozenblock.lib.config.api.entry;
 
-import com.google.gson.reflect.TypeToken;
-import com.mojang.serialization.Codec;
-import net.frozenblock.lib.FrozenMain;
-import org.jetbrains.annotations.ApiStatus;
-
-public class TypedEntry<T> {
-
-	@ApiStatus.Internal
-	public static final String DEFAULT_MOD_ID = FrozenMain.MOD_ID + "_default";
-
-	public static final TypeToken<TypedEntry<?>> TYPE_TOKEN = new TypeToken<>() {
-	};
-
-	public static <T> Codec<TypedEntry<T>> codec(TypedEntryType<T> type) {
-		return type.codec().xmap(value -> new TypedEntry<>(type, value), TypedEntry::value);
-	}
-
-	private final TypedEntryType<T> type;
-	private T value;
-
-	public TypedEntry(TypedEntryType<T> type, T value) {
-		this.type = type;
-		this.value = value;
-	}
-
-	public TypedEntryType<T> type() {
-		return type;
-	}
-
-	public T value() {
-		return value;
-	}
-
-	public void set(T value) {
-		this.value = value;
-	}
+public record TypedEntry<T>(TypedEntryType<T> type, T value) {
 }

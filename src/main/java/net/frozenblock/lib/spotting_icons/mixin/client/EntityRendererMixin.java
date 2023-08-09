@@ -20,8 +20,6 @@ package net.frozenblock.lib.spotting_icons.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix3f;
-import com.mojang.math.Matrix4f;
 import net.frozenblock.lib.entity.api.rendering.FrozenRenderType;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntityRendererWithIcon;
@@ -32,6 +30,8 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import org.joml.Matrix3f;
+import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -46,14 +46,14 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 
 	@Unique
 	@Override
-	public <T extends Entity> void renderIcon(T entity, float entityYaw, float partialTick, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+	public <T extends Entity> void frozenLib$renderIcon(T entity, float entityYaw, float partialTick, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
 		SpottingIconManager iconManager = ((EntitySpottingIconInterface) entity).getSpottingIconManager();
 		SpottingIconManager.SpottingIcon icon = iconManager.icon;
 		if (icon != null) {
 			double dist = Mth.sqrt((float) this.entityRenderDispatcher.distanceToSqr(entity));
-			if (dist > icon.startFadeDist && iconManager.clientHasIconResource) {
-				float endDist = icon.endFadeDist - icon.startFadeDist;
-				dist -= icon.startFadeDist;
+			if (dist > icon.startFadeDist() && iconManager.clientHasIconResource) {
+				float endDist = icon.endFadeDist() - icon.startFadeDist();
+				dist -= icon.startFadeDist();
 				float alpha = dist > endDist ? 1F : (float) Math.min(1F, dist / endDist);
 				float f = entity.getBbHeight() + 1F;
 				matrixStack.pushPose();
@@ -63,7 +63,7 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 				Matrix4f matrix4f = matrixStack.last().pose();
 				Matrix3f matrix3f = matrixStack.last().normal();
 				int overlay = OverlayTexture.pack(OverlayTexture.u(0F), OverlayTexture.v(false));
-				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveAlwaysRender(((EntitySpottingIconInterface) entity).getSpottingIconManager().icon.getTexture()));
+				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveAlwaysRender(((EntitySpottingIconInterface) entity).getSpottingIconManager().icon.texture()));
 				vertexConsumer
 						.vertex(matrix4f, -0.5F, -0.5F, 0.0F)
 						.color(1, 1, 1, alpha)

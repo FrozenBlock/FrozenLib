@@ -25,40 +25,18 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class FadingDiskCarpetFeatureConfig implements FeatureConfiguration {
-    public static final Codec<FadingDiskCarpetFeatureConfig> CODEC = RecordCodecBuilder.create(
-            (instance) -> instance.group(
-					Codec.BOOL.fieldOf("useHeightMapAndNotCircular").forGetter(config -> config.useHeightMapAndNotCircular),
-					BlockStateProvider.CODEC.fieldOf("innerState").forGetter(config -> config.innerState),
-					BlockStateProvider.CODEC.fieldOf("outerState").forGetter(config -> config.outerState),
-					IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
-					Codec.FLOAT.fieldOf("placeChance").forGetter(config -> config.placeChance),
-					Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
-					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
-					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
-					Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap)
-			).apply(instance, FadingDiskCarpetFeatureConfig::new)
+public record FadingDiskCarpetFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, Heightmap.Types heightmap) implements FeatureConfiguration {
+	public static final Codec<FadingDiskCarpetFeatureConfig> CODEC = RecordCodecBuilder.create(
+		(instance) -> instance.group(
+			Codec.BOOL.fieldOf("useHeightMapAndNotCircular").forGetter(config -> config.useHeightMapAndNotCircular),
+			BlockStateProvider.CODEC.fieldOf("innerState").forGetter(config -> config.innerState),
+			BlockStateProvider.CODEC.fieldOf("outerState").forGetter(config -> config.outerState),
+			IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
+			Codec.FLOAT.fieldOf("placeChance").forGetter(config -> config.placeChance),
+			Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
+			Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
+			Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
+			Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap)
+		).apply(instance, FadingDiskCarpetFeatureConfig::new)
 	);
-
-	public final boolean useHeightMapAndNotCircular;
-    public final BlockStateProvider innerState;
-    public final BlockStateProvider outerState;
-    public final IntProvider radius;
-	public final float placeChance;
-	public final float innerChance;
-	public final float innerPercent;
-	public final float startFadePercent;
-	public final Heightmap.Types heightmap;
-
-    public FadingDiskCarpetFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, Heightmap.Types heightmap) {
-		this.useHeightMapAndNotCircular = useHeightMapAndNotCircular;
-		this.innerState = innerState;
-		this.outerState = outerState;
-		this.radius = radius;
-		this.placeChance = placeChance;
-		this.innerChance = innerChance;
-		this.innerPercent = innerPercent;
-		this.startFadePercent = startFadePercent;
-		this.heightmap = heightmap;
-    }
 }

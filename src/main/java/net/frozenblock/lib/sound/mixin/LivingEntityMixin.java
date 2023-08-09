@@ -18,62 +18,31 @@
 
 package net.frozenblock.lib.sound.mixin;
 
-import io.netty.buffer.Unpooled;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.damagesource.PlayerDamageSourceSounds;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
-    @Inject(method = "hurt", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;broadcastEntityEvent(Lnet/minecraft/world/entity/Entity;B)V", ordinal = 2), locals = LocalCapture.CAPTURE_FAILHARD)
-    private void hurt(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir, float f, boolean bl, float g, boolean bl2, Entity entity2, byte event) {
-        var entity = LivingEntity.class.cast(this);
-        if (entity instanceof Player && event == EntityEvent.HURT && PlayerDamageSourceSounds.containsSource(source)) {
-            FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-            byteBuf.writeVarInt(entity.getId());
-            byteBuf.writeResourceLocation(PlayerDamageSourceSounds.getDamageID(source));
-            byteBuf.writeFloat(this.getSoundVolume());
-            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) entity.level, entity.blockPosition())) {
-                ServerPlayNetworking.send(player, FrozenMain.HURT_SOUND_PACKET, byteBuf);
-            }
-        }
-    }
-
-    @Redirect(method = "handleEntityEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getHurtSound(Lnet/minecraft/world/damagesource/DamageSource;)Lnet/minecraft/sounds/SoundEvent;"))
-	public SoundEvent stopHurtSoundIfTwo(LivingEntity par1, DamageSource par2, byte id) {
-		if (par1 instanceof Player && id == EntityEvent.HURT && PlayerDamageSourceSounds.containsSource(par2)) {
-			return null;
+	@ModifyVariable(method = "playHurtSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
+	private SoundEvent playHurtSound(SoundEvent original, DamageSource source) {
+		if (PlayerDamageSourceSounds.containsSource(source)) {
+			return PlayerDamageSourceSounds.getDamageSound(source);
 		}
-		return this.getHurtSound(par2);
+		return original;
 	}
 
-	@Shadow
-	@Nullable
-	protected SoundEvent getHurtSound(DamageSource damageSource) {
-		throw new RuntimeException("Mixin injection failed - FrozenLib LivingEntityMixin");
+	@ModifyVariable(method = "handleDamageEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
+	private SoundEvent handleDamageEvent(SoundEvent original, DamageSource source) {
+		if (PlayerDamageSourceSounds.containsSource(source)) {
+			return PlayerDamageSourceSounds.getDamageSound(source);
+		}
+		return original;
 	}
 
-	@Shadow
-	protected float getSoundVolume() {
-		throw new RuntimeException("Mixin injection failed - FrozenLib LivingEntityMixin");
-	}
 }

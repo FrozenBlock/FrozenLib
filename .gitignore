@@ -37,6 +37,7 @@ target/
 run/
 /remappedSrc/
 /src/main/generated/.cache
+/config/
 
 # java
 
@@ -44,3 +45,4 @@ hs_err_*.log
 replay_*.log
 *.hprof
 *.jfr
+/logs/

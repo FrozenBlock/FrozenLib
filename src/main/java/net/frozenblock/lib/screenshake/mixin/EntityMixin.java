@@ -51,14 +51,14 @@ public class EntityMixin implements EntityScreenShakeInterface {
     }
 
 	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
-    public void frozenLib$loadScreenShaleData(CompoundTag compoundTag, CallbackInfo info) {
+    public void frozenLib$loadScreenShakeData(CompoundTag compoundTag, CallbackInfo info) {
         this.frozenLib$entityScreenShakeManager.load(compoundTag);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void frozenLib$tickScreenShake(CallbackInfo info) {
 		Entity entity = Entity.class.cast(this);
-        if (!entity.level.isClientSide) {
+        if (!entity.level().isClientSide) {
             this.frozenLib$entityScreenShakeManager.tick();
         }
     }

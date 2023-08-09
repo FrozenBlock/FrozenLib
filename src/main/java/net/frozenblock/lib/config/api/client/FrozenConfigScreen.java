@@ -29,6 +29,8 @@ import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.client.option.Option;
 import net.frozenblock.lib.config.api.client.option.OptionList;
 import net.minecraft.client.gui.components.AbstractWidget;
+import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.TooltipAccessor;
 import net.minecraft.client.gui.screens.Screen;
@@ -65,20 +67,18 @@ public class FrozenConfigScreen extends Screen {
 	public void init() {
 		int buttonWidth = Math.min(200, (this.width - 50 - 12) / 3);
 
-		this.cancelButton = new Button(
-				this.width / 2 - buttonWidth - 3,
-				this.height - 26,
-				buttonWidth,
-				20,
+		this.cancelButton = Button.builder(
 				Component.translatable("frozenlib.config.discard"),
 				button -> this.quit()
-		);
-
-		this.saveButton = new Button(
-				this.width / 2 + 3,
-				this.height - 26,
+		).pos(
+				this.width / 2 - buttonWidth - 3,
+				this.height - 26
+		).size(
 				buttonWidth,
-				20,
+				20
+		).build();
+
+		this.saveButton = Button.builder(
 				Component.translatable("frozenlib.config.save"),
 				button -> {
 					FrozenMain.log("Saving config from GUI", FrozenMain.UNSTABLE_LOGGING);
@@ -88,7 +88,13 @@ public class FrozenConfigScreen extends Screen {
 					this.config.save().run();
 					this.quit();
 				}
-		);
+		).pos(
+				this.width / 2 + 3,
+				this.height - 26
+		).size(
+				buttonWidth,
+				20
+		).build();
 
 		this.optionList = new OptionList(
 				this.config.config(),
@@ -111,15 +117,15 @@ public class FrozenConfigScreen extends Screen {
 	}
 
 	@Override
-	public void render(PoseStack matrices, int mouseX, int mouseY, float delta) {
-		renderBackground(matrices);
-		this.optionList.render(matrices, mouseX, mouseY, delta);
+	public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+		renderBackground(graphics);
+		this.optionList.render(graphics, mouseX, mouseY, delta);
 		drawCenteredString(matrices, this.font, this.title, this.width / 2, 8, 16777215);
 
-		super.render(matrices, mouseX, mouseY, delta);
+		super.render(graphics, mouseX, mouseY, delta);
 
 		List<FormattedCharSequence> tooltips = tooltipAt(this.optionList, mouseX, mouseY);
-		this.renderTooltip(matrices, tooltips, mouseX, mouseY);
+		this.renderTooltip(graphics, tooltips, mouseX, mouseY);
 	}
 
 	@Override

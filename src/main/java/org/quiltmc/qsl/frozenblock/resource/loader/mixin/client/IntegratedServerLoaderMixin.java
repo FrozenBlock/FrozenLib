@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 QuiltMC
+ * Copyright 2023 The Quilt Project
  * Copyright 2023 FrozenBlock
  * Modified to work on Fabric
  *
@@ -23,7 +23,6 @@ import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
 import net.minecraft.server.WorldLoader;
 import net.minecraft.server.WorldStem;
 import net.minecraft.world.level.storage.LevelStorageSource;
-import net.minecraft.world.level.storage.WorldData;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(WorldOpenFlows.class)
 public abstract class IntegratedServerLoaderMixin {
     @Shadow
-    private static void safeCloseAccess(LevelStorageSource.LevelStorageAccess storageSession, String worlName) {
+    private static void safeCloseAccess(LevelStorageSource.LevelStorageAccess storageSession, String worldName) {
         throw new IllegalStateException("Mixin injection failed.");
     }
 
@@ -46,21 +45,25 @@ public abstract class IntegratedServerLoaderMixin {
     protected abstract void doLoadLevel(Screen parentScreen, String worldName, boolean safeMode, boolean requireBackup);
 
     @Inject(
-            method = "loadWorldStem(Lnet/minecraft/server/WorldLoader$PackConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;)Lnet/minecraft/server/WorldStem;",
+            method = "loadWorldDataBlocking",
             at = @At("HEAD")
     )
-    private void onStartDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
-                                     CallbackInfoReturnable<WorldStem> cir) {
+    private <D, R> void onStartDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<D> savePropertiesSupplier,
+									 WorldLoader.ResultFactory<D, R> resultFactory,
+                                     CallbackInfoReturnable<R> cir) {
         ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
     }
 
     @Inject(
-            method = "loadWorldStem(Lnet/minecraft/server/WorldLoader$PackConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;)Lnet/minecraft/server/WorldStem;",
+            method = "loadWorldDataBlocking",
             at = @At("RETURN")
     )
-    private void onEndDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<WorldData> savePropertiesSupplier,
-                                   CallbackInfoReturnable<WorldStem> cir) {
-        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, cir.getReturnValue().resourceManager(), null);
+    private <D, R> void onEndDataPackLoad(WorldLoader.PackConfig dataPackConfig, WorldLoader.WorldDataSupplier<D> savePropertiesSupplier,
+								   WorldLoader.ResultFactory<D, R> resultFactory,
+                                   CallbackInfoReturnable<R> cir) {
+		if (cir.getReturnValue() instanceof WorldStem worldStem) {
+			ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, worldStem.resourceManager(), null);
+		}
     }
 
     @ModifyArg(

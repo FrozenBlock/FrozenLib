@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "org.quiltmc.qsl.frozenblock.core.registry.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+	"BuiltInRegistriesMixin",
+	"MappedRegistryMixin",
+	"RegistryDataLoaderMixin"
+  ],
+  "injectors": {
+	"defaultRequire": 1
+  }
+}

@@ -18,32 +18,49 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
-import java.util.Map;
-import net.frozenblock.lib.worldgen.surface.impl.NoiseGeneratorInterface;
-import net.minecraft.resources.ResourceKey;
+import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
+import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.progress.ChunkProgressListener;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(value = MinecraftServer.class, priority = 996)
-public class MinecraftServerMixin {
+@Mixin(value = MinecraftServer.class, priority = 2010) // apply after bclib
+public abstract class MinecraftServerMixin {
 
-	@Inject(method = "<init>", at = @At("RETURN"))
-	private void onInit(CallbackInfo info) {
-		MinecraftServer server = MinecraftServer.class.cast(this);
-		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> stemEntry : server.getWorldData().worldGenSettings().dimensions().entrySet()) {
-			LevelStem stem = stemEntry.getValue();
+	@Shadow
+	public abstract RegistryAccess.Frozen registryAccess();
+
+	@Inject(method = "createLevels", at = @At("HEAD"))
+	private void frozenLib$addSurfaceRules(ChunkProgressListener worldGenerationProgressListener, CallbackInfo ci) {
+		var server = MinecraftServer.class.cast(this);
+		var registryAccess = server.registryAccess();
+		var levelStems = registryAccess.registryOrThrow(Registries.LEVEL_STEM);
+
+		OptimizedBiomeTagConditionSource.INSTANCES.clear();
+		for (var entry : levelStems.entrySet()) {
+			LevelStem stem = entry.getValue();
 			ChunkGenerator chunkGenerator = stem.generator();
-			if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseBasedChunkGenerator) {
-				NoiseGeneratorInterface.class.cast(noiseBasedChunkGenerator.generatorSettings().value()).setDimension(stem.typeHolder());
+
+			if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator) {
+				var noiseSettings = noiseGenerator.generatorSettings().value();
+				var dimension = stem.type().unwrapKey().orElseThrow();
+
+				SurfaceRuleUtil.injectSurfaceRules(noiseSettings, dimension);
 			}
 		}
+
+		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().registryOrThrow(Registries.BIOME));
+		FrozenMain.log("Optimized tag source count: " + OptimizedBiomeTagConditionSource.INSTANCES.size(), FrozenMain.UNSTABLE_LOGGING);
 	}
 
 }
-

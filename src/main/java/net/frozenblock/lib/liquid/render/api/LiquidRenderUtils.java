@@ -118,8 +118,8 @@ public class LiquidRenderUtils {
 			ag = aa;
 			float al = (z + ab + ad + af) / 4.0f;
 			ah = (aa + ac + ae + ag) / 4.0f;
-			ai = (float)textureAtlasSprite.getWidth() / (textureAtlasSprite.getU1() - textureAtlasSprite.getU0());
-			aj = (float)textureAtlasSprite.getHeight() / (textureAtlasSprite.getV1() - textureAtlasSprite.getV0());
+			ai = (float)textureAtlasSprite.contents().width() / (textureAtlasSprite.getU1() - textureAtlasSprite.getU0());
+			aj = (float)textureAtlasSprite.contents().height() / (textureAtlasSprite.getV1() - textureAtlasSprite.getV0());
 			ak = 4.0f / Math.max(aj, ai);
 			z = Mth.lerp(ak, z, al);
 			ab = Mth.lerp(ak, ab, al);
@@ -270,7 +270,7 @@ public class LiquidRenderUtils {
 			}
 			return state.getOwnHeight();
 		}
-		if (!blockState.getMaterial().isSolid()) {
+		if (!blockState.isSolid()) {
 			return 0.0f;
 		}
 		return -1.0f;

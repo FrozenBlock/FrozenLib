@@ -46,16 +46,13 @@ public class ServerPlayerGameModeMixin {
 	private BlockState frozenLib$usedOnBlockState;
 
 	@Inject(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isSecondaryUseActive()Z"), locals = LocalCapture.CAPTURE_FAILSOFT)
-	public void useItemOn(
-			ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> info,
-			BlockPos blockPos, BlockState blockState, boolean bl
-						  ) {
+	public void frozenLib$useItemOn(ServerPlayer player, Level level, ItemStack stack, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<InteractionResult> info, BlockPos blockPos, BlockState blockState, boolean bl) {
 		this.frozenLib$usedOnBlockState = blockState;
 		this.frozenLib$bl = bl;
 	}
 
 	@ModifyVariable(method = "useItemOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;isSecondaryUseActive()Z"))
-	private boolean useItemOn(boolean original) {
+	private boolean frozenLib$useItemOn(boolean original) {
 		if (this.frozenLib$usedOnBlockState.is(FrozenBlockTags.CAN_INTERACT_WHILE_CROUCHING)) {
 			return this.frozenLib$bl;
 		}

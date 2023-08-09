@@ -1,6 +1,6 @@
 {
   "required": true,
-  "minVersion": "0.8",
+  "minVersion": "0.8.5",
   "package": "org.quiltmc.qsl.frozenblock.resource.loader.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
@@ -8,8 +8,8 @@
     "server.MainMixin"
   ],
   "client": [
-    "client.IntegratedServerLoaderMixin",
-    "client.CreateWorldScreenMixin"
+    "client.CreateWorldScreenMixin",
+    "client.IntegratedServerLoaderMixin"
   ],
   "injectors": {
 	"defaultRequire": 1

@@ -21,16 +21,13 @@ package net.frozenblock.lib.sound.impl;
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
-import org.quiltmc.qsl.frozenblock.core.base.api.util.InjectedInterface;
 
 @ApiStatus.Internal
-@InjectedInterface(Entity.class)
 public interface EntityLoopingFadingDistanceSoundInterface {
 
     MovingLoopingFadingDistanceSoundEntityManager getFadingSoundManager();
 
-    void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, float fadeDist, float maxDist);
+    void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist);
 
 }

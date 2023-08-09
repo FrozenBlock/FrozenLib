@@ -20,6 +20,8 @@ package net.frozenblock.lib.integration.api;
 
 import java.util.List;
 import java.util.function.Supplier;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -55,7 +57,7 @@ public final class ModIntegrations {
 		return Registry.register(FrozenRegistry.MOD_INTEGRATION, new ResourceLocation(srcModID, modID), new ModIntegrationSupplier<>(integration, unloadedIntegration, modID));
 	}
 
-    public static List<ModIntegrationSupplier> getIntegrationSuppliers() {
+    public static List<ModIntegrationSupplier<?>> getIntegrationSuppliers() {
         return FrozenRegistry.MOD_INTEGRATION.stream().toList();
     }
 
@@ -65,6 +67,9 @@ public final class ModIntegrations {
     public static void initialize() {
         for (var integration : FrozenRegistry.MOD_INTEGRATION) {
             integration.getIntegration().init();
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+				integration.getIntegration().clientInit();
+			}
         }
     }
 

@@ -19,6 +19,7 @@
 package net.frozenblock.lib.item.mixin;
 
 import net.frozenblock.lib.item.api.RemoveableItemTags;
+import net.frozenblock.lib.item.impl.ItemStackExtension;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
@@ -31,10 +32,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ItemStack.class)
-public final class ItemStackMixin {
+public final class ItemStackMixin implements ItemStackExtension {
+
+	@Unique
+	private boolean frozenLib$canRemoveTags = false;
 
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
-	public void removeAncientTag(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
+	public void frozenLib$removeTags(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
 		ItemStack stack = ItemStack.class.cast(this);
 		CompoundTag nbt = stack.getTag();
 		if (nbt != null) {
@@ -50,46 +54,48 @@ public final class ItemStackMixin {
 		}
 	}
 
-	@Inject(at = @At("HEAD"), method = "tagMatches", cancellable = true)
-	private static void removeAncientTagAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
-		CompoundTag lTag = left.getTag();
-		if (lTag != null) {
-			for (String key : RemoveableItemTags.keys()) {
-				if (lTag.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
-					lTag.remove(key);
-				}
-			}
-			if (lTag.isEmpty()) {
-				left.tag = null;
-			}
+	@Inject(method = "isSameItemSameTags", at = @At("HEAD"))
+	private static void frozenLib$removeTagsAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
+		var extendedLeft = ItemStackExtension.class.cast(left);
+		var extendedRight = ItemStackExtension.class.cast(right);
+
+
+		if (extendedLeft.frozenLib$canRemoveTags()) {
+			CompoundTag lTag = left.getTag();
+			frozenLib$fixEmptyTags(left, lTag);
+			extendedLeft.frozenLib$setCanRemoveTags(false);
 		}
 
-		CompoundTag rTag = right.tag;
-		if (rTag != null) {
-			for (String key : RemoveableItemTags.keys()) {
-				if (rTag.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
-					rTag.remove(key);
-				}
-			}
-			if (rTag.isEmpty()) {
-				right.tag = null;
-			}
+		if (extendedRight.frozenLib$canRemoveTags()) {
+			CompoundTag rTag = right.tag;
+			frozenLib$fixEmptyTags(right, rTag);
+			extendedRight.frozenLib$setCanRemoveTags(false);
 		}
-
-		if (tagIsNullMatching(left, right)) {
-			info.setReturnValue(true);
-		}
-	}
-
-	@Inject(at = @At(value = "RETURN", ordinal = 2, shift = At.Shift.BEFORE), method = "matches(Lnet/minecraft/world/item/ItemStack;)Z", cancellable = true)
-	private void matches(ItemStack other, CallbackInfoReturnable<Boolean> info) {
-		info.setReturnValue(tagIsNullMatching(ItemStack.class.cast(this), other));
 	}
 
 	@Unique
-	private static boolean tagIsNullMatching(ItemStack stack, ItemStack other) {
-		boolean stackTagEmpty = stack.tag == null || stack.tag.isEmpty();
-		boolean otherTagEmpty = other.tag == null || other.tag.isEmpty();
-		return stackTagEmpty && otherTagEmpty;
+	private static void frozenLib$fixEmptyTags(ItemStack stack, CompoundTag nbt) {
+		if (nbt != null) {
+			for (String key : RemoveableItemTags.keys()) {
+				if (nbt.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
+					nbt.remove(key);
+				}
+			}
+			if (nbt.isEmpty()) {
+				stack.tag = null;
+			}
+		}
+	}
+
+	@Unique
+	@Override
+	public boolean frozenLib$canRemoveTags() {
+		return this.frozenLib$canRemoveTags;
+	}
+
+	@Unique
+	@Override
+	public void frozenLib$setCanRemoveTags(boolean canRemoveTags) {
+		this.frozenLib$canRemoveTags = canRemoveTags;
 	}
 }

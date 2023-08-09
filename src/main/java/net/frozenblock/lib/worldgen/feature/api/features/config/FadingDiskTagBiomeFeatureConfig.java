@@ -20,7 +20,7 @@ package net.frozenblock.lib.worldgen.feature.api.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.biome.Biome;
@@ -29,49 +29,21 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class FadingDiskTagBiomeFeatureConfig implements FeatureConfiguration {
-    public static final Codec<FadingDiskTagBiomeFeatureConfig> CODEC = RecordCodecBuilder.create(
-            (instance) -> instance.group(
-					Codec.BOOL.fieldOf("useHeightMapAndNotCircular").forGetter(config -> config.useHeightMapAndNotCircular),
-					BlockStateProvider.CODEC.fieldOf("innerState").forGetter(config -> config.innerState),
-					BlockStateProvider.CODEC.fieldOf("outerState").forGetter(config -> config.outerState),
-					IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
-					Codec.FLOAT.fieldOf("placeChance").forGetter(config -> config.placeChance),
-					Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
-					Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
-					Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
-					TagKey.codec(Registry.BLOCK_REGISTRY).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable),
-					Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap),
-					TagKey.codec(Registry.BIOME_REGISTRY).fieldOf("placeExceptIn").forGetter((config) -> config.placeExceptIn)
-			).apply(instance, FadingDiskTagBiomeFeatureConfig::new)
-    );
-
-	public final boolean useHeightMapAndNotCircular;
-    public final BlockStateProvider innerState;
-    public final BlockStateProvider outerState;
-    public final IntProvider radius;
-	public final float placeChance;
-	public final float innerChance;
-	public final float innerPercent;
-	public final float startFadePercent;
-	public final TagKey<Block> innerReplaceable;
-	public final TagKey<Block> outerReplaceable;
-	public final Heightmap.Types heightmap;
-	public final TagKey<Biome> placeExceptIn;
-
-    public FadingDiskTagBiomeFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, TagKey<Block> innerReplaceable, TagKey<Block> outerReplaceable, Heightmap.Types heightmap, TagKey<Biome> placeExceptIn) {
-		this.useHeightMapAndNotCircular = useHeightMapAndNotCircular;
-		this.innerState = innerState;
-		this.outerState = outerState;
-		this.radius = radius;
-		this.placeChance = placeChance;
-		this.innerChance = innerChance;
-		this.innerPercent = innerPercent;
-		this.startFadePercent = startFadePercent;
-		this.innerReplaceable = innerReplaceable;
-		this.outerReplaceable = outerReplaceable;
-		this.heightmap = heightmap;
-		this.placeExceptIn = placeExceptIn;
-    }
+public record FadingDiskTagBiomeFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, TagKey<Block> innerReplaceable, TagKey<Block> outerReplaceable, Heightmap.Types heightmap, TagKey<Biome> placeExceptIn) implements FeatureConfiguration {
+	public static final Codec<FadingDiskTagBiomeFeatureConfig> CODEC = RecordCodecBuilder.create(
+		(instance) -> instance.group(
+			Codec.BOOL.fieldOf("useHeightMapAndNotCircular").forGetter(config -> config.useHeightMapAndNotCircular),
+			BlockStateProvider.CODEC.fieldOf("innerState").forGetter(config -> config.innerState),
+			BlockStateProvider.CODEC.fieldOf("outerState").forGetter(config -> config.outerState),
+			IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
+			Codec.FLOAT.fieldOf("placeChance").forGetter(config -> config.placeChance),
+			Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
+			Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
+			Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
+			TagKey.codec(Registries.BLOCK).fieldOf("innerReplaceable").forGetter((config) -> config.innerReplaceable),
+			TagKey.codec(Registries.BLOCK).fieldOf("outerReplaceable").forGetter((config) -> config.outerReplaceable),
+			Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap),
+			TagKey.codec(Registries.BIOME).fieldOf("placeExceptIn").forGetter((config) -> config.placeExceptIn)
+		).apply(instance, FadingDiskTagBiomeFeatureConfig::new)
+	);
 }

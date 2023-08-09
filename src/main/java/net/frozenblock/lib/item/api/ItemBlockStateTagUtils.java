@@ -26,37 +26,34 @@ import org.jetbrains.annotations.NotNull;
 
 public class ItemBlockStateTagUtils {
 
-	public static <T extends Comparable<T>> T getProperty(ItemStack stack, Property<T> property, T defaultValue) {
+	public static <T extends Comparable<T>> T getProperty(@NotNull ItemStack stack, Property<T> property, T defaultValue) {
 		if (stack.getTag() != null) {
 			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
-			if (stateTag != null) {
-				String stringValue = property.getName();
-				if (stateTag.contains(stringValue)) {
-					return property.getValue(stateTag.getString(stringValue)).get();
-				}
+			String stringValue = property.getName();
+			if (stateTag.contains(stringValue)) {
+				return property.getValue(stateTag.getString(stringValue)).orElse(defaultValue);
 			}
 		}
 		return defaultValue;
 	}
 
-	public static boolean getBoolProperty(ItemStack stack, BooleanProperty property, boolean orElse) {
+	public static boolean getBoolProperty(@NotNull ItemStack stack, BooleanProperty property, boolean orElse) {
 		if (stack.getTag() != null) {
 			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
-			if (stateTag != null) {
-				String stringValue = property.getName();
-				if (stateTag.contains(stringValue)) {
-					return stateTag.getString(stringValue).equals("true");
-				}
+			String stringValue = property.getName();
+			if (stateTag.contains(stringValue)) {
+				return stateTag.getString(stringValue).equals("true");
 			}
 		}
 		return orElse;
 	}
 
-	public static <T extends Comparable<T>> void setProperty(ItemStack stack, Property<T> property, T value) {
+	public static <T extends Comparable<T>> void setProperty(@NotNull ItemStack stack, @NotNull Property<T> property, T value) {
 		CompoundTag stateTag = getOrCreateBlockStateTag(stack.getOrCreateTag());
 		stateTag.putString(property.getName(), property.getName(value));
 	}
 
+	@NotNull
 	private static CompoundTag getOrCreateBlockStateTag(@NotNull CompoundTag compoundTag) {
 		CompoundTag blockStateTag;
 		if (compoundTag.contains("BlockStateTag", 10)) {
@@ -67,5 +64,4 @@ public class ItemBlockStateTagUtils {
 		}
 		return blockStateTag;
 	}
-
 }

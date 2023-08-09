@@ -7,9 +7,9 @@
 	"defaultRequire": 1
   },
   "mixins": [
+    "BuiltInRegistriesMixin",
     "MappedRegistryMixin",
     "PlayerListMixin",
-    "RegistryMixin",
     "ServerLevelMixin"
   ]
 }

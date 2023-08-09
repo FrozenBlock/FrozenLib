@@ -6,7 +6,7 @@
   ],
   "version": "${version}",
   "name": "FrozenLib",
-  "description": "A library that contains many tools for modders. Includes advanced math operations, noise sampling, animation tools, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, and much more! Provides a Fabric implementation of QuiltMC's DataFixerUpper API and Surface Rule API.",
+  "description": "A library that contains many tools for modders. Includes advanced math operations, noise sampling, animation tools, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, and much more! Provides a Fabric implementation of QuiltMC's DataFixerUpper API.",
   "authors": [
 	"FrozenBlock"
   ],
@@ -27,20 +27,23 @@
   "icon": "assets/frozenlib/icon.png",
   "environment": "*",
   "entrypoints": {
-	"main": [
-	  "net.frozenblock.lib.FrozenMain"
-	],
-	"client": [
-	  "net.frozenblock.lib.FrozenClient"
-	],
+	  "main": [
+	    "net.frozenblock.lib.FrozenMain"
+	  ],
+	  "client": [
+	    "net.frozenblock.lib.FrozenClient"
+	  ],
     "server": [
       "net.frozenblock.lib.FrozenServer"
     ],
+    "preLaunch": [
+      "net.frozenblock.lib.FrozenPreLaunch"
+    ],
     "modmenu": [
-      "net.frozenblock.lib.config.frozenlib_config.ModMenuIntegration"
+      "net.frozenblock.lib.config.frozenlib_config.gui.ModMenuIntegration"
     ],
     "terrablender": [
-      "net.frozenblock.lib.terrablender.impl.FrozenTerraBlenderCompat"
+      "net.frozenblock.lib.worldgen.surface.impl.terrablender.FrozenTerraBlenderCompat"
     ]
   },
   "mixins": [
@@ -48,6 +51,7 @@
     "mixin/frozenlib.core.mixins.json",
     "mixin/frozenlib.entity.mixins.json",
     "mixin/frozenlib.event.mixins.json",
+    "mixin/frozenlib.feature_flag.mixins.json",
     "mixin/frozenlib.item.mixins.json",
     "mixin/frozenlib.menu.mixins.json",
     "mixin/frozenlib.mobcategory.mixins.json",
@@ -64,16 +68,17 @@
     "mixin/frozenlib.worldgen.biome.mixins.json",
     "mixin/frozenlib.worldgen.structure.mixins.json",
     "mixin/frozenlib.worldgen.surface.mixins.json",
+    "mixin/frozenlib.worldgen.vein.mixins.json",
 
     "mixin/frozenlib_quiltmc_datafixerupper.mixins.json",
-    "mixin/frozenlib_quiltmc_surface_rule.mixins.json",
+    "mixin/frozenlib_quiltmc_registry.mixins.json",
     "mixin/frozenlib_quiltmc_resource_loader.mixins.json"
   ],
   "accessWidener": "frozenlib.accesswidener",
   "depends": {
-	"fabricloader": ">=0.14.12",
+	"fabricloader": ">=0.14.13",
 	"fabric-api": ">=0.73.0",
-	"minecraft": ">=${minecraft_version}",
+	"minecraft": "${minecraft_version}",
 	"java": ">=17"
   },
   "breaks": {
@@ -94,19 +99,16 @@
       ],
       "net/minecraft/class_4766": [
         "net/frozenblock/lib/worldgen/biome/api/FrozenBiomeSourceAccess"
-      ],
-      "net/minecraft/class_6686/class_6710": [
-        "org/quiltmc/qsl/frozenblock/worldgen/surface_rule/impl/QuiltSequenceMaterialRuleHooks"
       ]
     },
 	"modmenu": {
-	  "links": {
-		"modmenu.discord": "https://discord.gg/EpkBWm844s"
-	  },
-	  "badges": [
-		"library",
-        "frozenblock"
-	  ]
-	}
+    "links": {
+      "modmenu.discord": "https://discord.gg/EpkBWm844s"
+    },
+    "badges": [
+      "library",
+      "frozenblock"
+    ]
+  }
   }
 }

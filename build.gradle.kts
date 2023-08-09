@@ -7,7 +7,7 @@ import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.net.URL
 import java.nio.file.Files
-import java.util.Properties
+import java.util.*
 
 buildscript {
 	repositories {
@@ -20,7 +20,7 @@ buildscript {
 
 plugins {
 	id("fabric-loom") version("+")
-	id("io.github.juuxel.loom-quiltflower") version("+")
+	id("io.github.juuxel.loom-vineflower") version("+")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -32,40 +32,40 @@ plugins {
     java
 }
 
-public val minecraft_version: String by project
-public val quilt_mappings: String by project
-public val parchment_mappings: String by project
-public val loader_version: String by project
+val minecraft_version: String by project
+val quilt_mappings: String by project
+val parchment_mappings: String by project
+val loader_version: String by project
 
-public val mod_version: String by project
-public val mod_loader: String by project
-public val maven_group: String by project
-public val archives_base_name: String by project
+val mod_version: String by project
+val mod_loader: String by project
+val maven_group: String by project
+val archives_base_name: String by project
 
-public val fabric_version: String by project
-public val fabric_asm_version: String by project
+val fabric_version: String by project
+val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
 
-public val modmenu_version: String by project
-public val cloth_config_version: String by project
-public val copperpipes_version: String by project
-public val terrablender_version: String by project
+val modmenu_version: String by project
+val cloth_config_version: String by project
+val copperpipes_version: String by project
+val terrablender_version: String by project
 
-public val sodium_version: String by project
-public val iris_version: String by project
-public val indium_version: String by project
-public val sodium_extra_version: String by project
-public val reeses_sodium_options_version: String by project
-public val lithium_version: String by project
-public val fastanim_version: String by project
-public val ferritecore_version: String by project
-public val lazydfu_version: String by project
-public val starlight_version: String by project
-public val entityculling_version: String by project
-public val memoryleakfix_version: String by project
-public val no_unused_chunks_version: String by project
-public val ksyxis_version: String by project
+val sodium_version: String by project
+val iris_version: String by project
+val indium_version: String by project
+val sodium_extra_version: String by project
+val reeses_sodium_options_version: String by project
+val lithium_version: String by project
+val fastanim_version: String by project
+val ferritecore_version: String by project
+val lazydfu_version: String by project
+val starlight_version: String by project
+val entityculling_version: String by project
+val memoryleakfix_version: String by project
+val no_unused_chunks_version: String by project
+val ksyxis_version: String by project
 
 base {
     archivesName.set(archives_base_name)
@@ -74,9 +74,9 @@ base {
 version = getVersion()
 group = maven_group
 
-public val release = findProperty("releaseType")?.equals("stable")
+val release = findProperty("releaseType")?.equals("stable")
 
-public val testmod by sourceSets.registering {
+val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
     compileClasspath += sourceSets.main.get().compileClasspath
 }
@@ -133,7 +133,7 @@ configurations {
     }
 }
 
-public val api by sourceSets.registering {
+val api by sourceSets.registering {
     java {
         compileClasspath += sourceSets.main.get().compileClasspath
     }
@@ -184,11 +184,14 @@ repositories {
         setName("Siphalor"s Maven")
         setUrl("https://maven.siphalor.de")
     }*/
-    maven {
+    /*maven {
         setUrl("https://maven.flashyreese.me/releases")
     }
     maven {
         setUrl("https://maven.flashyreese.me/snapshots")
+    }*/
+    maven {
+        setUrl("https://maven.minecraftforge.net")
     }
     maven {
         setUrl("https://maven.parchmentmc.org")
@@ -206,40 +209,44 @@ repositories {
 
 dependencies {
     // To change the versions see the gradle.properties file
-    minecraft("com.mojang:minecraft:${minecraft_version}")
+    minecraft("com.mojang:minecraft:$minecraft_version")
 	mappings(loom.layered {
 		// please annoy treetrain if this doesnt work
-		mappings("org.quiltmc:quilt-mappings:${minecraft_version}+build.${quilt_mappings}:intermediary-v2")
-        parchment("org.parchmentmc.data:parchment-1.19.2:${parchment_mappings}@zip")
+		mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
+        parchment("org.parchmentmc.data:parchment-1.19.3:$parchment_mappings@zip")
 		officialMojangMappings {
 			nameSyntheticMembers = false
 		}
 	})
-    modImplementation("net.fabricmc:fabric-loader:${loader_version}")
-	testImplementation("net.fabricmc:fabric-loader-junit:${loader_version}")
+    modImplementation("net.fabricmc:fabric-loader:$loader_version")
+	testImplementation("net.fabricmc:fabric-loader-junit:$loader_version")
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation("net.fabricmc.fabric-api:fabric-api:${fabric_version}")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
     // Mod Menu
-    modImplementation("com.terraformersmc:modmenu:${modmenu_version}")
+    modApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
 
 	// TerraBlender
-	modCompileOnly("curse.maven:terrablender-fabric-565956:4205731")
+    modCompileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
+
+    // MixinExtras
+    modApi("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.9")?.let { annotationProcessor(it); include(it) }
 
     // Toml
-    implementation("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
+    modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    implementation("blue.endless:jankson:$jankson_version")//?.let { include(it) }
+    modApi("blue.endless:jankson:$jankson_version")?.let { include(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 
+/*
     // only affects runClient, does not affect gradlew build. add -PuseThirdPartyMods=false to not use these
     if (findProperty("useThirdPartyMods") != "false") {
         modRuntimeOnly("maven.modrinth:ferrite-core:${ferritecore_version}")
@@ -264,18 +271,14 @@ dependencies {
         //modRuntimeOnly("maven.modrinth:iris:1.19.x-v1.2.5")
         modRuntimeOnly("maven.modrinth:memoryleakfix:${memoryleakfix_version}")
         modRuntimeOnly("maven.modrinth:no-unused-chunks:${no_unused_chunks_version}")
-    }
-}
-
-quiltflower {
-    quiltflowerVersion.set("1.9.0")
+    }*/
 }
 
 tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = minecraft_version
+        properties["minecraft_version"] = "~$minecraft_version-"
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 
@@ -286,13 +289,13 @@ tasks {
 
     test {
         useJUnitPlatform()
-    }
 
-    license {
-        rule(file("codeformat/QUILT_MODIFIED_HEADER"))
-        rule(file("codeformat/HEADER"))
+        license {
+            rule(file("codeformat/QUILT_MODIFIED_HEADER"))
+            rule(file("codeformat/HEADER"))
 
-        include("**//*.java")
+            include("**//*.java")
+        }
     }
 
     register("javadocJar", Jar::class) {
@@ -308,8 +311,7 @@ tasks {
     }
 
     withType(JavaCompile::class) {
-        options.setEncoding("UTF-8")
-        // Minecraft 1.18 (1.18-pre2) upwards uses Java 17.
+        options.encoding = "UTF-8"
         options.release.set(17)
         options.isFork = true
         options.isIncremental = true
@@ -320,14 +322,14 @@ tasks {
     }
 }
 
-public val build: Task by tasks
-public val applyLicenses: Task by tasks
-public val test: Task by tasks
-public val runClient: Task by tasks
+val build: Task by tasks
+val applyLicenses: Task by tasks
+val test: Task by tasks
+val runClient: Task by tasks
 
-public val remapJar: Task by tasks
-public val sourcesJar: Task by tasks
-public val javadocJar: Task by tasks
+val remapJar: Task by tasks
+val sourcesJar: Task by tasks
+val javadocJar: Task by tasks
 
 java {
     sourceCompatibility = JavaVersion.VERSION_17
@@ -342,7 +344,7 @@ java {
 tasks {
     jar {
         from("LICENSE") {
-            rename { "${it}_${base.archivesName}" }
+            rename { "${it}_${base.archivesName.get()}" }
         }
     }
 }
@@ -362,8 +364,8 @@ fun getVersion(): String {
     return version
 }
 
-public val dev by configurations.creating {
-    isCanBeResolved = false
+val dev by configurations.creating {
+    isCanBeResolved = true // maybe do false? idk?
     isCanBeConsumed = true
 }
 
@@ -400,19 +402,24 @@ publishing {
 
     publications {
         var publish = true
-        if (publishingValid) {
-            try {
-                val xml = ResourceGroovyMethods.getText(URL("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom"))
-                val metadata = XmlSlurper().parseText(xml)
+        try {
+            if (publishingValid) {
+                try {
+                    val xml = ResourceGroovyMethods.getText(URL("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom"))
+                    val metadata = XmlSlurper().parseText(xml)
 
-                if (metadata.getProperty("hash").equals(hash)) {
-                    publish = false
+                    if (metadata.getProperty("hash").equals(hash)) {
+                        publish = false
+                    }
+                } catch (ignored: FileNotFoundException) {
+                    // No existing version was published, so we can publish
                 }
-            } catch (ignored: FileNotFoundException) {
-                // No existing version was published, so we can publish
+            } else {
+                publish = false
             }
-        } else {
+        } catch (e: Exception) {
             publish = false
+            println("Unable to publish to maven. The maven server may be offline.")
         }
 
         if (publish) {
@@ -424,7 +431,7 @@ publishing {
                 pom {
                     groupId = publishGroup
                     artifactId = rootProject.base.archivesName.get().lowercase()
-                    version = publishVersion
+                    version = snapshotPublishVersion
                     withXml {
                         asNode().appendNode("properties").appendNode("hash", hash)
                     }
@@ -457,15 +464,15 @@ extra {
     }
 }
 
-public val modrinth_id: String by extra
-public val curseforge_id: String by extra
-public val release_type: String by extra
-public val curseforge_minecraft_version: String by extra
-public val changelog_file: String by extra
+val modrinth_id: String by extra
+val curseforge_id: String by extra
+val release_type: String by extra
+val curseforge_minecraft_version: String by extra
+val changelog_file: String by extra
 
-public val modrinth_version = makeModrinthVersion(mod_version)
-public val display_name = makeName(mod_version)
-public val changelog_text = getChangelog(file(changelog_file))
+val modrinth_version = makeModrinthVersion(mod_version)
+val display_name = makeName(mod_version)
+val changelog_text = getChangelog(file(changelog_file))
 
 fun makeName(version: String): String {
     return "${version} (${minecraft_version})"
@@ -513,11 +520,16 @@ curseforge {
             requiredDependency("fabric-api")
             optionalDependency("cloth-config")
         })
-        mainArtifact(file("build/libs/${tasks.remapJar.get().archiveBaseName.get()}-${version}.jar"), closureOf<CurseArtifact> {
+        mainArtifact(remapJar, closureOf<CurseArtifact> {
             displayName = display_name
         })
+        addArtifact(tasks.remapSourcesJar.get())
+        addArtifact(javadocJar)
+
         afterEvaluate {
             uploadTask.dependsOn(remapJar)
+            uploadTask.dependsOn(tasks.remapSourcesJar.get())
+            uploadTask.dependsOn(javadocJar)
         }
     })
     curseGradleOptions.forgeGradleIntegration = false
@@ -530,9 +542,15 @@ modrinth {
     versionName.set(display_name)
     versionType.set(release_type)
     changelog.set(changelog_text)
-    uploadFile.set(file("build/libs/${tasks.remapJar.get().archiveBaseName.get()}-${version}.jar"))
+    uploadFile.set(remapJar)
     gameVersions.set(listOf(minecraft_version))
     loaders.set(listOf("fabric", "quilt"))
+    additionalFiles.set(
+        listOf(
+            tasks.remapSourcesJar.get(),
+            javadocJar
+        )
+    )
     dependencies {
         required.project("fabric-api")
         optional.project("cloth-config")
