@@ -125,9 +125,6 @@ public class FrozenConfigScreen extends Screen {
 		graphics.drawCenteredString(this.font, this.title, this.width / 2, 8, 16777215);
 
 		super.render(graphics, mouseX, mouseY, delta);
-
-		//List<FormattedCharSequence> tooltips = tooltipAt(this.optionList, mouseX, mouseY);
-		//graphics.renderTooltip(Minecraft.getInstance().font, tooltips, mouseX, mouseY);
 	}
 
 	@Override
@@ -150,11 +147,4 @@ public class FrozenConfigScreen extends Screen {
 		assert this.minecraft != null;
 		this.quit();
 	}
-
-	/*public static List<FormattedCharSequence> tooltipAt(OptionList list, int mouseX, int mouseY) {
-		Optional<AbstractWidget> optional = list.getMouseOver(mouseX, mouseY);
-		return optional.isPresent() && optional.get() instanceof OptionInstance.TooltipSupplier<?>
-				? ((TooltipAccessor)optional.get()).getTooltip()
-				: ImmutableList.of();
-	}*/
 }

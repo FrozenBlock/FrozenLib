@@ -86,14 +86,14 @@ public class OptionList extends ContainerObjectSelectionList<OptionList.Entry> {
 		}
 
 		public static Entry big(Config<?> config, int guiWidth, Option<?> option) {
-			return new Entry(ImmutableMap.of(option, option.createButton(config, guiWidth / 2 - 155, 0, 310)));
+			return new Entry(Map.of(option, option.createButton(config, guiWidth / 2 - 155, 0, 310)));
 		}
 
 		public static Entry small(Config<?> config, int guiWidth, Option<?> leftOption, @Nullable Option<?> rightOption) {
 			AbstractWidget abstractWidget = leftOption.createButton(config, guiWidth / 2 - 155, 0, 150);
 			return rightOption == null
-					? new Entry(ImmutableMap.of(leftOption, abstractWidget))
-					: new Entry(ImmutableMap.of(leftOption, abstractWidget, rightOption, rightOption.createButton(config, guiWidth / 2 - 155 + 160, 0, 150)));
+					? new Entry(Map.of(leftOption, abstractWidget))
+					: new Entry(Map.of(leftOption, abstractWidget, rightOption, rightOption.createButton(config, guiWidth / 2 - 155 + 160, 0, 150)));
 		}
 
 		@Override

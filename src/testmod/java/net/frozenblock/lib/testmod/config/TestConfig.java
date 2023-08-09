@@ -20,6 +20,7 @@ package net.frozenblock.lib.testmod.config;
 
 import blue.endless.jankson.Comment;
 import com.mojang.serialization.Codec;
+import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -76,7 +77,9 @@ public class TestConfig {
 	public double testDouble = 69.4206942069420D;
 
 	@Comment("This is an integer list typed entry.")
-	public List<Integer> testIntList = List.of(45);
+	public List<Integer> testIntList = new ArrayList<>(
+		List.of(45)
+	);
 
 	@Comment("This is a sound event typed entry.")
 	public TypedEntry<SoundEvent> randomSound = new TypedEntry<>(
@@ -89,7 +92,9 @@ public class TestConfig {
 	);
 
 	@Comment("This is a list of doubles")
-	public List<Double> doubleList = List.of(1D, 2D, 3D, Math.PI);
+	public List<Double> doubleList = new ArrayList<>(
+		List.of(1D, 2D, 3D, Math.PI)
+	);
 
 	public static Config<TestConfig> get() {
 		return INSTANCE;
@@ -108,7 +113,7 @@ public class TestConfig {
 						FrozenMain.log("Received new value from save", FrozenMain.UNSTABLE_LOGGING);
 						this.testToggle = newValue;
 					}
-					)
+				)
 			)
 			.option(
 				new Option<>(
