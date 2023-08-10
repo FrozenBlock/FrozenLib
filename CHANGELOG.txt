@@ -4,6 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Updated to 23w31a
-- Updated included Jankson to 1.2.3
-- Added a config reload command to reload configs from a mod (/frozenlib_config reload modId)
+- Updated to 23w32a
