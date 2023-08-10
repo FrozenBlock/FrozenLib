@@ -38,6 +38,7 @@ public record StartingMovingRestrictionSoundLoopPacket(int id, SoundEvent starti
 	@Override
 	public void write(FriendlyByteBuf buf) {
 		buf.writeVarInt(this.id);
+		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.startingSound);
 		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.sound);
 		buf.writeEnum(this.category);
 		buf.writeFloat(this.volume);
