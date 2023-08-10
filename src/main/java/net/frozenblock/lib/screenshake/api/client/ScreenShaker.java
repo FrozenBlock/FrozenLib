@@ -159,7 +159,7 @@ public class ScreenShaker {
 		}
 
 		@Override
-		public float getIntensity(Vec3 playerPos) {
+		public float getIntensity(@NotNull Vec3 playerPos) {
 			if (this.entity != null && !this.entity.isRemoved()) {
 				this.pos = this.entity.position();
 				return super.getIntensity(playerPos);
