@@ -32,31 +32,38 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 	SurfaceRuleEvents.GenericSurfaceRuleCallback {
     @Override
     public void addOverworldSurfaceRules(List<SurfaceRules.RuleSource> context) {
-        // When in doubt, T R A N S. Seed 7205143747332514273 is a good one for testing.
-        SurfaceRules.ConditionSource blueNoise1 = SurfaceRules.noiseCondition(Noises.CALCITE, 0.05, 0.1);
-        SurfaceRules.ConditionSource pinkNoise1 = SurfaceRules.noiseCondition(Noises.CALCITE, 0.1, 0.15);
+        SurfaceRules.ConditionSource greenNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.05, 0.1);
+        SurfaceRules.ConditionSource orangeNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.1, 0.15);
         SurfaceRules.ConditionSource whiteNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.15, 0.20);
-        SurfaceRules.ConditionSource pinkNoise2 = SurfaceRules.noiseCondition(Noises.CALCITE, 0.20, 0.25);
-        SurfaceRules.ConditionSource blueNoise2 = SurfaceRules.noiseCondition(Noises.CALCITE, 0.25, 0.30);
+        SurfaceRules.ConditionSource redNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.20, 0.25);
+        SurfaceRules.ConditionSource cyanNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.25, 0.30);
+		SurfaceRules.ConditionSource purpleNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.30, 0.35);
+		SurfaceRules.ConditionSource waterNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.35, 0.40);
 
-        SurfaceRules.RuleSource LIGHT_BLUE_CONCRETE = SurfaceRules.state(Blocks.LIGHT_BLUE_CONCRETE.defaultBlockState());
-        SurfaceRules.RuleSource PINK_CONCRETE = SurfaceRules.state(Blocks.PINK_CONCRETE.defaultBlockState());
-        SurfaceRules.RuleSource WHITE_CONCRETE = SurfaceRules.state(Blocks.WHITE_CONCRETE.defaultBlockState());
+        SurfaceRules.RuleSource greenConcrete = SurfaceRules.state(Blocks.GREEN_CONCRETE.defaultBlockState());
+        SurfaceRules.RuleSource orangeConcrete = SurfaceRules.state(Blocks.ORANGE_CONCRETE.defaultBlockState());
+        SurfaceRules.RuleSource whiteConcrete = SurfaceRules.state(Blocks.WHITE_CONCRETE.defaultBlockState());
+		SurfaceRules.RuleSource redConcrete = SurfaceRules.state(Blocks.RED_CONCRETE.defaultBlockState());
+		SurfaceRules.RuleSource cyanConcrete = SurfaceRules.state(Blocks.CYAN_CONCRETE.defaultBlockState());
+		SurfaceRules.RuleSource purpleConcrete = SurfaceRules.state(Blocks.PURPLE_CONCRETE.defaultBlockState());
+		SurfaceRules.RuleSource water = SurfaceRules.state(Blocks.WATER.defaultBlockState());
 
         context.add(
-                SurfaceRules.ifTrue(
-                        SurfaceRules.abovePreliminarySurface(),
-                        SurfaceRules.ifTrue(
-                                SurfaceRules.ON_FLOOR,
-                                SurfaceRules.sequence(
-                                        SurfaceRules.ifTrue(blueNoise1, LIGHT_BLUE_CONCRETE),
-                                        SurfaceRules.ifTrue(pinkNoise1, PINK_CONCRETE),
-                                        SurfaceRules.ifTrue(whiteNoise, WHITE_CONCRETE),
-                                        SurfaceRules.ifTrue(pinkNoise2, PINK_CONCRETE),
-                                        SurfaceRules.ifTrue(blueNoise2, LIGHT_BLUE_CONCRETE)
-                                )
-                        )
-                )
+			SurfaceRules.ifTrue(
+				SurfaceRules.abovePreliminarySurface(),
+				SurfaceRules.ifTrue(
+					SurfaceRules.ON_FLOOR,
+					SurfaceRules.sequence(
+						SurfaceRules.ifTrue(greenNoise, greenConcrete),
+						SurfaceRules.ifTrue(orangeNoise, orangeConcrete),
+						SurfaceRules.ifTrue(whiteNoise, whiteConcrete),
+						SurfaceRules.ifTrue(redNoise, redConcrete),
+						SurfaceRules.ifTrue(cyanNoise, cyanConcrete),
+						SurfaceRules.ifTrue(purpleNoise, purpleConcrete),
+						SurfaceRules.ifTrue(waterNoise, water)
+					)
+				)
+			)
         );
     }
 

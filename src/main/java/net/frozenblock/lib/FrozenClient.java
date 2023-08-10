@@ -36,6 +36,10 @@ import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
+import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
+import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
+import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
+import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
@@ -64,14 +68,13 @@ public final class FrozenClient implements ClientModInitializer {
 		ClientFreezer.onInitializeClient();
 		registerClientEvents();
 
-		receiveLocalSoundPacket();
-		receiveMovingRestrictionSoundPacket();
-		receiveRestrictedMovingSoundLoopPacket();
+		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket::receive);
+		ClientPlayNetworking.registerGlobalReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket::receive);
 		receiveStartingRestrictedMovingSoundLoopPacket();
 		receiveMovingRestrictionLoopingFadingDistanceSoundPacket();
 		receiveMovingFadingDistanceSoundPacket();
 		receiveFadingDistanceSoundPacket();
-		receiveFlybySoundPacket();
+		ClientPlayNetworking.registerGlobalReceiver(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket::receive);
 		receiveCooldownChangePacket();
 		receiveForcedCooldownPacket();
 		receiveCooldownTickCountPacket();
@@ -82,7 +85,7 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
-		receiveLocalPlayerSoundPacket();
+		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket::receive);
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
@@ -99,88 +102,6 @@ public final class FrozenClient implements ClientModInitializer {
 			} catch (Throwable ignored) {
 
 			}
-		});
-	}
-
-	private static void receiveLocalSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_SOUND_PACKET, (client, handler, buf, responseSender) -> {
-			double x = buf.readDouble();
-			double y = buf.readDouble();
-			double z = buf.readDouble();
-			SoundEvent sound = buf.readById(BuiltInRegistries.SOUND_EVENT);
-			SoundSource source = buf.readEnum(SoundSource.class);
-			float volume = buf.readFloat();
-			float pitch = buf.readFloat();
-			boolean distanceDelay = buf.readBoolean();
-			client.execute(() -> {
-				ClientLevel level = client.level;
-				if (level != null) {
-					level.playLocalSound(x, y, z, sound, source, volume, pitch, distanceDelay);
-				}
-			});
-		});
-	}
-
-	private static void receiveLocalPlayerSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.LOCAL_PLAYER_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
-			float volume = byteBuf.readFloat();
-			float pitch = byteBuf.readFloat();
-			ctx.execute(() -> {
-				if (ctx.level != null) {
-					LocalPlayer player = ctx.player;
-					if (player != null) {
-						assert sound != null;
-						ctx.getSoundManager().play(new EntityBoundSoundInstance(sound, SoundSource.PLAYERS, volume, pitch, player, ctx.level.random.nextLong()));
-					}
-				}
-			});
-		});
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
-			SoundSource category = byteBuf.readEnum(SoundSource.class);
-			float volume = byteBuf.readFloat();
-			float pitch = byteBuf.readFloat();
-			ResourceLocation predicateId = byteBuf.readResourceLocation();
-			boolean stopOnDeath = byteBuf.readBoolean();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					T entity = (T) level.getEntity(id);
-					if (entity != null) {
-						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						ctx.getSoundManager().play(new RestrictedMovingSound<>(entity, sound, category, volume, pitch, predicate, stopOnDeath));
-					}
-				}
-			});
-		});
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T extends Entity> void receiveRestrictedMovingSoundLoopPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
-			SoundSource category = byteBuf.readEnum(SoundSource.class);
-			float volume = byteBuf.readFloat();
-			float pitch = byteBuf.readFloat();
-			ResourceLocation predicateId = byteBuf.readResourceLocation();
-			boolean stopOnDeath = byteBuf.readBoolean();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					T entity = (T) level.getEntity(id);
-					if (entity != null) {
-						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						ctx.getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, sound, category, volume, pitch, predicate, stopOnDeath));
-					}
-				}
-			});
 		});
 	}
 
@@ -279,26 +200,6 @@ public final class FrozenClient implements ClientModInitializer {
 				if (level != null) {
 					ctx.getSoundManager().play(new FadingDistanceSwitchingSound(sound, category, volume, pitch, fadeDist, maxDist, volume, false, x, y, z));
 					ctx.getSoundManager().play(new FadingDistanceSwitchingSound(sound2, category, volume, pitch, fadeDist, maxDist, volume, true, x, y, z));
-				}
-			});
-		});
-	}
-
-	private static void receiveFlybySoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.FLYBY_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
-			SoundSource category = byteBuf.readEnum(SoundSource.class);
-			float volume = byteBuf.readFloat();
-			float pitch = byteBuf.readFloat();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity != null) {
-						FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(pitch, volume, category, sound);
-						FlyBySoundHub.addEntity(entity, flyBySound);
-					}
 				}
 			});
 		});

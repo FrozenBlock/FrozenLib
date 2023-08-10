@@ -22,6 +22,10 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
+import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
+import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
+import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.minecraft.core.BlockPos;
@@ -43,104 +47,62 @@ public final class FrozenSoundPackets {
 
 	public static void createLocalSound(Level level, BlockPos pos, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay) {
 		if (!level.isClientSide) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeDouble(pos.getX());
-			byteBuf.writeDouble(pos.getY());
-			byteBuf.writeDouble(pos.getZ());
-			byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-			byteBuf.writeEnum(source);
-			byteBuf.writeFloat(volume);
-			byteBuf.writeFloat(pitch);
-			byteBuf.writeBoolean(distanceDelay);
+			var packet = new LocalSoundPacket(pos.getX(), pos.getY(), pos.getZ(), sound, source, volume, pitch, distanceDelay);
 			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, pos)) {
-				ServerPlayNetworking.send(player, FrozenMain.LOCAL_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, packet);
 			}
 		}
 	}
 
 	public static void createLocalSound(Level level, double x, double y, double z, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay) {
 		if (!level.isClientSide) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeDouble(x);
-			byteBuf.writeDouble(y);
-			byteBuf.writeDouble(z);
-			byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-			byteBuf.writeEnum(source);
-			byteBuf.writeFloat(volume);
-			byteBuf.writeFloat(pitch);
-			byteBuf.writeBoolean(distanceDelay);
+			var packet = new LocalSoundPacket(x, y, z, sound, source, volume, pitch, distanceDelay);
 			for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, BlockPos.containing(x, y, z))) {
-				ServerPlayNetworking.send(player, FrozenMain.LOCAL_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, packet);
 			}
 		}
 	}
 
 	public static void createFlybySound(Level world, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch) {
 		if (!world.isClientSide) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeVarInt(entity.getId());
-			byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-			byteBuf.writeEnum(category);
-			byteBuf.writeFloat(volume);
-			byteBuf.writeFloat(pitch);
+			var packet = new FlyBySoundPacket(entity.getId(), sound, category, volume, pitch);
 			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-				ServerPlayNetworking.send(player, FrozenMain.FLYBY_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, packet);
 			}
 			if (entity instanceof ServerPlayer serverPlayer) {
-				ServerPlayNetworking.send(serverPlayer, FrozenMain.FLYBY_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(serverPlayer, packet);
 			}
 		}
 	}
 
     public static void createMovingRestrictionSound(Level world, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation predicate, boolean stopOnDeath) {
         if (!world.isClientSide) {
-            FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-            byteBuf.writeVarInt(entity.getId());
-            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-            byteBuf.writeEnum(category);
-            byteBuf.writeFloat(volume);
-            byteBuf.writeFloat(pitch);
-            byteBuf.writeResourceLocation(predicate);
-			byteBuf.writeBoolean(stopOnDeath);
+            var packet = new MovingRestrictionSoundPacket(entity.getId(), sound, category, volume, pitch, predicate, stopOnDeath, false);
             for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-                ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, byteBuf);
+                ServerPlayNetworking.send(player, packet);
             }
 			if (entity instanceof ServerPlayer serverPlayer) {
-				ServerPlayNetworking.send(serverPlayer, FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(serverPlayer, packet);
 			}
         }
     }
 
     public static void createMovingRestrictionLoopingSound(Level world, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation predicate, boolean stopOnDeath) {
         if (!world.isClientSide) {
-            FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-            byteBuf.writeVarInt(entity.getId());
-            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-            byteBuf.writeEnum(category);
-            byteBuf.writeFloat(volume);
-            byteBuf.writeFloat(pitch);
-            byteBuf.writeResourceLocation(predicate);
-			byteBuf.writeBoolean(stopOnDeath);
+			var packet = new MovingRestrictionSoundPacket(entity.getId(), sound, category, volume, pitch, predicate, stopOnDeath, true);
             for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-                ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
+                ServerPlayNetworking.send(player, packet);
             }
 			if (entity instanceof ServerPlayer serverPlayer) {
-				ServerPlayNetworking.send(serverPlayer, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(serverPlayer, packet);
 			}
 			((EntityLoopingSoundInterface)entity).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, predicate, stopOnDeath);
         }
     }
 
     public static void createMovingRestrictionLoopingSound(ServerPlayer player, Entity entity, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation id, boolean stopOnDeath) {
-        FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-        byteBuf.writeVarInt(entity.getId());
-        byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-        byteBuf.writeEnum(category);
-        byteBuf.writeFloat(volume);
-        byteBuf.writeFloat(pitch);
-        byteBuf.writeResourceLocation(id);
-		byteBuf.writeBoolean(stopOnDeath);
-        ServerPlayNetworking.send(player, FrozenMain.MOVING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
+        var packet = new MovingRestrictionSoundPacket(entity.getId(), sound, category, volume, pitch, id, stopOnDeath, true);
+		ServerPlayNetworking.send(player, packet);
     }
 
     public static void createMovingRestrictionLoopingFadingDistanceSound(Level world, Entity entity, SoundEvent sound, SoundEvent sound2, SoundSource category, float volume, float pitch, ResourceLocation predicate, boolean stopOnDeath, float fadeDist, float maxDist) {
@@ -252,11 +214,8 @@ public final class FrozenSoundPackets {
     }
 
 	public static void createLocalPlayerSound(ServerPlayer player, SoundEvent sound, float volume, float pitch) {
-		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-		byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-		byteBuf.writeFloat(volume);
-		byteBuf.writeFloat(pitch);
-		ServerPlayNetworking.send(player, FrozenMain.LOCAL_PLAYER_SOUND_PACKET, byteBuf);
+		var packet = new LocalPlayerSoundPacket(sound, volume, pitch);
+		ServerPlayNetworking.send(player, packet);
 	}
 
 }

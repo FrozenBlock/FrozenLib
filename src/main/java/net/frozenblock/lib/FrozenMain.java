@@ -118,7 +118,6 @@ public final class FrozenMain implements ModInitializer {
 	//IDENTIFIERS
 	public static final ResourceLocation FLYBY_SOUND_PACKET = id("flyby_sound_packet");
 	public static final ResourceLocation LOCAL_SOUND_PACKET = id("local_sound_packet");
-	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_SOUND_PACKET = id("moving_restriction_looping_sound_packet");
 	public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = id("starting_moving_restriction_looping_sound_packet");
 	public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = id("moving_restriction_sound_packet");
 	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = id("moving_restriction_looping_fading_distance_sound_packet");
