@@ -47,7 +47,7 @@ public final class BlockSoundGroupOverwrites {
 	}
 
 	@Nullable
-	public BlockSoundGroupOverwrite getOverwrite(ResourceLocation id) {
+	public static BlockSoundGroupOverwrite getOverwrite(ResourceLocation id) {
 		return MANAGER.getOverwrite(id);
 	}
 
