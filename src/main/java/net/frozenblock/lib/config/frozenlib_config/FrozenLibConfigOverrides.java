@@ -18,6 +18,9 @@
 
 package net.frozenblock.lib.config.frozenlib_config;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class FrozenLibConfigOverrides {
 
     public static Boolean useWindOnNonFrozenServers = null;
