@@ -51,10 +51,16 @@ public class FrozenLibConfig {
 	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();
 
+	public static class DataFixerConfig {
+
+		@Comment("Mods can only add to this list. User settings will always apply.")
+		public List<String> disabledDataFixTypes = DefaultFrozenLibConfig.DISABLED_DATAFIX_TYPES;
+	}
+
 	public static FrozenLibConfig get(boolean real) {
 		var realConfig = INSTANCE.config();
 		if (real) {
-			return realConfig
+			return realConfig;
 		}
 
 		var fake = new FrozenLibConfig();
@@ -87,11 +93,5 @@ public class FrozenLibConfig {
 
 	public static Config<FrozenLibConfig> getConfigInstance() {
 		return INSTANCE;
-	}
-
-	public static class DataFixerConfig {
-
-		@Comment("Mods can only add to this list. User settings will always apply.")
-		public List<String> disabledDataFixTypes = DefaultFrozenLibConfig.DISABLED_DATAFIX_TYPES;
 	}
 }
