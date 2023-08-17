@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.config.frozenlib_config;
 
+import blue.endless.jankson.api.annotation.Comment;
 import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.frozenblock.lib.FrozenMain;
@@ -37,6 +38,8 @@ public class FrozenLibConfig {
 		)
 	);
 
+	@Comment("Mods may override any of these options, but the config file will not change.")
+
 	public boolean useWindOnNonFrozenServers = DefaultFrozenLibConfig.USE_WIND_ON_NON_FROZENLIB_SERVERS;
 
 	public boolean saveItemCooldowns = DefaultFrozenLibConfig.SAVE_ITEM_COOLDOWNS;
@@ -48,8 +51,38 @@ public class FrozenLibConfig {
 	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();
 
+	public static FrozenLibConfig get(boolean real) {
+		var realConfig = INSTANCE.config();
+		if (real) {
+			return realConfig
+		}
+
+		var fake = new FrozenLibConfig();
+
+		// mirror real config before changing
+		fake.useWindOnNonFrozenServers = real.useWindOnNonFrozenServers;
+		fake.saveItemCooldowns = real.saveItemCooldowns;
+		fake.removeExperimentalWarning = real.removeExperimentalWarning;
+		fake.wardenSpawnTrackerCommand = real.wardenSpawnTrackerCommand;
+		fake.dataFixer.disabledDataFixTypes = new ArrayList<>(real.dataFixer.disabledDataFixTypes);
+
+		// apply mod overrides without changing the actual config
+		if (FrozenLibConfigOverrides.useWindOnNonFrozenServers != null) {
+			fake.useWindOnNonFrozenServers = FrozenLibConfigOverrides.useWindOnNonFrozenServers;
+		}
+		if (FrozenLibConfigOverrides.saveItemCooldowns != null) {
+			fake.saveItemCooldowns = FrozenLibConfigOverrides.saveItemCooldowns;
+		}
+		if (FrozenLibConfigOverrides.removeExperimentalWarning != null) {
+			fake.removeExperimentalWarning = FrozenLibConfigOverrides.removeExperimentalWarning;
+		}
+		fake.dataFixer.disabledDataFixTypes.addAll(FrozenLibConfigOverrides.dataFixer.disabledDataFixTypes);
+
+		return fake;
+	}
+
 	public static FrozenLibConfig get() {
-		return INSTANCE.config();
+		return get(false);
 	}
 
 	public static Config<FrozenLibConfig> getConfigInstance() {

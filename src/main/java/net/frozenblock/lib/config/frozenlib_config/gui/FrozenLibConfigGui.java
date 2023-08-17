@@ -34,7 +34,7 @@ import net.minecraft.network.chat.Component;
 public final class FrozenLibConfigGui {
 
 	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
-		var config = FrozenLibConfig.get();
+		var config = FrozenLibConfig.get(true);
 		var dataFixer = config.dataFixer;
 		category.setBackground(FrozenMain.id("config.png"));
 
