@@ -90,6 +90,8 @@ public class FrozenLibConfig {
 	}
 
 	public static class DataFixerConfig {
+
+		@Comment("Mods can only add to this list. User settings will always apply.")
 		public List<String> disabledDataFixTypes = DefaultFrozenLibConfig.DISABLED_DATAFIX_TYPES;
 	}
 }
