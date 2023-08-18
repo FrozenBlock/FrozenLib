@@ -58,10 +58,10 @@ public class FrozenLibConfig {
 		public List<String> disabledDataFixTypes = DefaultFrozenLibConfig.DISABLED_DATAFIX_TYPES;
 	}
 
-	public static FrozenLibConfig get(boolean real) {
-		var realConfig = INSTANCE.config();
-		if (real) {
-			return realConfig;
+	public static FrozenLibConfig get(boolean getReal) {
+		var real = INSTANCE.config();
+		if (getReal) {
+			return real;
 		}
 
 		var fake = new FrozenLibConfig();
