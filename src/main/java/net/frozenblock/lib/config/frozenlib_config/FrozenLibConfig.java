@@ -19,6 +19,7 @@
 package net.frozenblock.lib.config.frozenlib_config;
 
 import blue.endless.jankson.Comment;
+import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.frozenblock.lib.FrozenMain;
