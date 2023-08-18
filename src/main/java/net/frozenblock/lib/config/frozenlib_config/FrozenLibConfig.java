@@ -82,7 +82,7 @@ public class FrozenLibConfig {
 		if (FrozenLibConfigOverrides.removeExperimentalWarning != null) {
 			fake.removeExperimentalWarning = FrozenLibConfigOverrides.removeExperimentalWarning;
 		}
-		fake.dataFixer.disabledDataFixTypes.addAll(FrozenLibConfigOverrides.disabledDataFixTypes);
+		fake.dataFixer.disabledDataFixTypes.addAll(FrozenLibConfigOverrides.additionalDisabledDataFixTypes);
 
 		return fake;
 	}
