@@ -39,7 +39,6 @@ public class FlyBySoundHub {
 
     public static final Map<Entity, FlyBySound> FLYBY_ENTITIES_AND_SOUNDS = new Object2ObjectOpenHashMap<>();
     public static final Map<Entity, Integer> ENTITY_COOLDOWNS = new Object2ObjectOpenHashMap<>();
-    private static int checkAroundCooldown;
 
     public static void update(Minecraft client, Player player, boolean autoSounds) {
         for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet()) {
@@ -53,15 +52,15 @@ public class FlyBySoundHub {
                 Vec3 entityPos = entity.position();
                 Vec3 playerPos = player.getEyePosition();
                 double distanceTo = entityPos.distanceTo(playerPos);
-                double newDistanceTo = entityPos.add(vel).add(vel).distanceTo(playerPos.add(playerVel));
+                double newDistanceTo = entityPos.add(vel.scale(2)).distanceTo(playerPos.add(playerVel));
 
                 int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
                 ENTITY_COOLDOWNS.put(entity, cooldown);
-                if ((distanceTo > newDistanceTo && distanceTo < (vel.lengthSqr() + playerVel.length()) * 2) && cooldown <= 0) {
+                if ((distanceTo > newDistanceTo && distanceTo < ((vel.lengthSqr() + playerVel.length()) * 2)) && cooldown <= 0) {
                     FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
                     float volume = (float) (flyBy.volume + (vel.length() / 2));
                     client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.category, volume, flyBy.pitch, entity, client.level.random.nextLong()));
-                    ENTITY_COOLDOWNS.put(entity, 40);
+                    ENTITY_COOLDOWNS.put(entity, 10);
                 }
             }
         }
@@ -73,19 +72,14 @@ public class FlyBySoundHub {
         }
 
         if (!AUTO_ENTITIES_AND_SOUNDS.isEmpty()) {
-            if (checkAroundCooldown > 0) {
-                --checkAroundCooldown;
-            } else {
-                if (client.level != null && autoSounds) {
-                    checkAroundCooldown = 1;
-                    AABB box = new AABB(player.blockPosition().offset(-3, -3, -3), player.blockPosition().offset(3, 3, 3));
-                    for (Entity entity : client.level.getEntities(player, box)) {
-                        EntityType<?> type = entity.getType();
-                        if (AUTO_ENTITIES_AND_SOUNDS.containsKey(type)) {
-                            addEntity(entity, AUTO_ENTITIES_AND_SOUNDS.get(type));
-                        }
-                    }
-                }
+			if (client.level != null && autoSounds) {
+				AABB box = new AABB(player.getEyePosition().add(-2, -2, -2), player.getEyePosition().add(2, 2, 2));
+				for (Entity entity : client.level.getEntities(player, box)) {
+					EntityType<?> type = entity.getType();
+					if (AUTO_ENTITIES_AND_SOUNDS.containsKey(type)) {
+						addEntity(entity, AUTO_ENTITIES_AND_SOUNDS.get(type));
+					}
+				}
             }
         }
     }
