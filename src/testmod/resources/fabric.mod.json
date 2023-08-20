@@ -15,6 +15,9 @@
     "client": [
       "net.frozenblock.lib.testmod.FrozenTestClient"
     ],
+    "preLaunch": [
+      "net.frozenblock.lib.testmod.FrozenTestPreLaunch"
+    ],
     "fabric-datagen": [
       "net.frozenblock.lib.testmod.datagen.FrozenLibTestDatagen"
     ],

@@ -35,25 +35,21 @@ public class RestrictedStartingSound<T extends Entity> extends RestrictedSoundIn
     public final T entity;
     public final SoundPredicate.LoopPredicate<T> predicate;
 	public final boolean stopOnDeath;
-    public final SoundEvent loopingSound;
-    public final SoundEvent startingSound;
     public boolean hasSwitched = false;
     public final AbstractSoundInstance nextSound;
 
-    public RestrictedStartingSound(T entity, SoundEvent startingSound, SoundEvent loopingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, boolean stopOnDeath, AbstractSoundInstance nextSound) {
+    public RestrictedStartingSound(T entity, SoundEvent startingSound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, boolean stopOnDeath, AbstractSoundInstance nextSound) {
         super(startingSound, category, SoundInstance.createUnseededRandom());
-        this.startingSound = startingSound;
         this.nextSound = nextSound;
-        this.loopingSound = loopingSound;
         this.entity = entity;
         this.looping = false;
         this.delay = 0;
         this.volume = volume;
         this.pitch = pitch;
 
-        this.x = (float) entity.getX();
-        this.y = (float) entity.getY();
-        this.z = (float) entity.getZ();
+        this.x = entity.getX();
+        this.y = entity.getY();
+        this.z = entity.getZ();
         this.predicate = predicate;
 		this.stopOnDeath = stopOnDeath;
 

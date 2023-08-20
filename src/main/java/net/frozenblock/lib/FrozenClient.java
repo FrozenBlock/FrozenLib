@@ -40,6 +40,7 @@ import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
 import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
@@ -70,7 +71,7 @@ public final class FrozenClient implements ClientModInitializer {
 
 		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket::receive);
-		receiveStartingRestrictedMovingSoundLoopPacket();
+		ClientPlayNetworking.registerGlobalReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket::receive);
 		receiveMovingRestrictionLoopingFadingDistanceSoundPacket();
 		receiveMovingFadingDistanceSoundPacket();
 		receiveFadingDistanceSoundPacket();
@@ -102,30 +103,6 @@ public final class FrozenClient implements ClientModInitializer {
 			} catch (Throwable ignored) {
 
 			}
-		});
-	}
-
-	@SuppressWarnings("unchecked")
-	private static <T extends Entity> void receiveStartingRestrictedMovingSoundLoopPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			SoundEvent startingSound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
-			SoundEvent loopingSound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
-			SoundSource category = byteBuf.readEnum(SoundSource.class);
-			float volume = byteBuf.readFloat();
-			float pitch = byteBuf.readFloat();
-			ResourceLocation predicateId = byteBuf.readResourceLocation();
-			boolean stopOnDeath = byteBuf.readBoolean();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					T entity = (T) level.getEntity(id);
-					if (entity != null) {
-						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
-						ctx.getSoundManager().play(new RestrictedStartingSound<>(entity, startingSound, loopingSound, category, volume, pitch, predicate, stopOnDeath, new RestrictedMovingSoundLoop<>(entity, loopingSound, category, volume, pitch, predicate, stopOnDeath)));
-					}
-				}
-			});
 		});
 	}
 

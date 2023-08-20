@@ -26,6 +26,7 @@ import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
 import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.minecraft.core.BlockPos;
@@ -181,20 +182,12 @@ public final class FrozenSoundPackets {
 
     public static void createStartingMovingRestrictionLoopingSound(Level world, Entity entity, SoundEvent startingSound, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation predicate, boolean stopOnDeath) {
         if (!world.isClientSide) {
-            FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-            byteBuf.writeVarInt(entity.getId());
-            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, startingSound);
-            byteBuf.writeId(BuiltInRegistries.SOUND_EVENT, sound);
-            byteBuf.writeEnum(category);
-            byteBuf.writeFloat(volume);
-            byteBuf.writeFloat(pitch);
-            byteBuf.writeResourceLocation(predicate);
-			byteBuf.writeBoolean(stopOnDeath);
+            var packet = new StartingMovingRestrictionSoundLoopPacket(entity.getId(), startingSound, sound, category, volume, pitch, predicate, stopOnDeath);
             for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-                ServerPlayNetworking.send(player, FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
+                ServerPlayNetworking.send(player, packet);
             }
 			if (entity instanceof ServerPlayer serverPlayer) {
-				ServerPlayNetworking.send(serverPlayer, FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(serverPlayer, packet);
 			}
 			((EntityLoopingSoundInterface)entity).addSound(BuiltInRegistries.SOUND_EVENT.getKey(sound), category, volume, pitch, predicate, stopOnDeath);
         }
