@@ -14,12 +14,12 @@ buildscript {
 		gradlePluginPortal()
 	}
 	dependencies {
-		classpath("org.kohsuke:github-api:1.313")
+		classpath("org.kohsuke:github-api:1.316")
 	}
 }
 
 plugins {
-	id("fabric-loom") version("1.3.8")
+	id("fabric-loom") version("+")
 	id("io.github.juuxel.loom-vineflower") version("+")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
