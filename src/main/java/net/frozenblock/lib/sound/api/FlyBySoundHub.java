@@ -40,9 +40,19 @@ public final class FlyBySoundHub {
     private static final int AUTO_ENTITY_DISTANCE = 3;
     private static final int AUTO_ENTITY_COOLDOWN = 1;
 
+    /**
+     * plays sounds automatically when a certain entity is near
+     */
     public static final Map<EntityType<?>, FlyBySound> AUTO_ENTITIES_AND_SOUNDS = new Object2ObjectOpenHashMap<>();
 
+    /**
+     * the currently playing flyby sounds
+    */
     public static final Map<Entity, FlyBySound> FLYBY_ENTITIES_AND_SOUNDS = new Object2ObjectOpenHashMap<>();
+
+    /**
+     * cooldowns for playing a sound from the same entity
+     */
     public static final Map<Entity, Integer> ENTITY_COOLDOWNS = new Object2ObjectOpenHashMap<>();
     private static int checkAroundCooldown;
 
@@ -96,6 +106,10 @@ public final class FlyBySoundHub {
 
     public static void addEntity(Entity entity, FlyBySound flyBySound) {
         FLYBY_ENTITIES_AND_SOUNDS.put(entity, flyBySound);
+    }
+
+    public static void addEntityType(EntityType<?> type, FlyBySound flyBySound) {
+        AUTO_ENTITIES_AND_SOUNDS.put(type, flyBySound);
     }
 
     public record FlyBySound(float pitch, float volume, SoundSource category, SoundEvent sound) {
