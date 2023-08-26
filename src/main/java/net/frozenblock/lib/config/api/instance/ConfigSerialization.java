@@ -20,6 +20,7 @@ package net.frozenblock.lib.config.api.instance;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonElement;
+import blue.endless.jankson.JsonGrammar;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.instance.json.JanksonTypedEntrySerializer;
 
@@ -28,6 +29,13 @@ public class ConfigSerialization {
 	}
 
 	// JANKSON
+
+	public static final JsonGrammar JSON5_UNQUOTED_KEYS = JsonGrammar.builder()
+		.withComments(true)
+		.printTrailingCommas(true)
+		.bareSpecialNumerics(true)
+		.printUnquotedKeys(true)
+		.build();
 
 	public static Jankson createJankson(Jankson.Builder builder, String modId) {
 		JanksonTypedEntrySerializer typedEntrySerializer = new JanksonTypedEntrySerializer(modId);

@@ -25,6 +25,7 @@ import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
+import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.defaults.DefaultFrozenLibConfig;
 
@@ -35,7 +36,7 @@ public class FrozenLibConfig {
 		new JsonConfig<>(
 			FrozenMain.MOD_ID,
 			FrozenLibConfig.class,
-			true
+			JsonType.JSON5_UNQUOTED_KEYS
 		)
 	);
 
