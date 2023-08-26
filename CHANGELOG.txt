@@ -4,5 +4,7 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Updated included Jankson to 1.2.3
-- Added a config reload command to reload configs from a mod (/frozenlib_config reload modId)
+- Added `FrozenLibConfigOverrides`, where mods can override user settings if necessary
+    - The config file will not be changed, only the functionality.
+- Added a new JSON file format that uses JSON5 files but supports unquoted keys.
+- Includes breaking changes for configs. Mods using FrozenLib's configs will need to update.
