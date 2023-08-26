@@ -53,7 +53,7 @@ public final class FlyBySoundHub {
      * Cooldowns for playing a sound from the same entity.
      */
     public static final Map<Entity, Integer> ENTITY_COOLDOWNS = new Object2ObjectOpenHashMap<>();
-	private static int checkAroundCooldown;
+	//private static int checkAroundCooldown;
 
     public static void update(Minecraft client, Entity cameraEntity, boolean autoSounds) {
 		if (client.level != null && cameraEntity != null) {
@@ -64,24 +64,22 @@ public final class FlyBySoundHub {
 
 			for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet()) {
 				if (entity != null) {
-					Vec3 entityVelocity = entity.getPosition(1F).subtract(entity.getPosition(0F));
-					entityVelocity = entityVelocity.multiply(1.6, 0.45, 1.6);
+					Vec3 entityVelocity = (entity.getPosition(1F).subtract(entity.getPosition(0F))).scale(1.75);
+					entityVelocity = entityVelocity.multiply(1, 0.3, 1);
 					double entityVelocityLength = entityVelocity.length();
 					AABB entityBox = entity.getBoundingBox().inflate(0.7D + (entityVelocityLength * 5));
 
 					if (playerHeadBox.intersects(entityBox)) {
-						if (entityVelocityLength > 0.05) {
-							Vec3 entityPos = entity.position();
-							int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
-							ENTITY_COOLDOWNS.put(entity, cooldown);
-							Vec3 movedPos = entityPos.add(entityVelocity.scale(3));
-							if (hasPassed(cameraPos, cameraEntityWidth, entityPos, movedPos) && cooldown <= 0) {
-								double deltaDistance = entityPos.distanceTo(cameraPos) - movedPos.distanceTo(cameraPos);
-								FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
-								float volume = (float) (flyBy.volume + (deltaDistance));
-								client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.category, volume, flyBy.pitch, entity, client.level.random.nextLong()));
-								ENTITY_COOLDOWNS.put(entity, PLAY_COOLDOWN);
-							}
+						Vec3 entityPos = entity.getPosition(1F);
+						int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
+						ENTITY_COOLDOWNS.put(entity, cooldown);
+						Vec3 movedPos = entityPos.add(entityVelocity.scale(3));
+						if (hasPassed(cameraPos, cameraEntityWidth, entityPos, movedPos) && cooldown <= 0) {
+							double deltaDistance = Math.abs(entityPos.distanceTo(cameraPos) - movedPos.distanceTo(cameraPos));
+							FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
+							float volume = (float) (flyBy.volume + (deltaDistance));
+							client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.category, volume, flyBy.pitch, entity, client.level.random.nextLong()));
+							ENTITY_COOLDOWNS.put(entity, PLAY_COOLDOWN);
 						}
 					}
 				}
@@ -100,7 +98,7 @@ public final class FlyBySoundHub {
 				//	--checkAroundCooldown;
 				//} else
 				if (autoSounds) {
-					checkAroundCooldown = AUTO_ENTITY_COOLDOWN;
+					//checkAroundCooldown = AUTO_ENTITY_COOLDOWN;
 					AABB box = new AABB(cameraPos.add(-AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE), cameraPos.add(AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE));
 					for (Entity entity : client.level.getEntities(cameraEntity, box)) {
 						EntityType<?> type = entity.getType();
