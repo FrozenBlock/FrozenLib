@@ -36,7 +36,7 @@ public final class FlyBySoundHub {
 
     private static final int PLAY_COOLDOWN = 40;
     private static final int MIN_DISTANCE_FOR_REMOVAL = 16;
-    private static final int AUTO_ENTITY_DISTANCE = 3;
+    private static final double AUTO_ENTITY_DISTANCE = 3;
     private static final int AUTO_ENTITY_COOLDOWN = 1;
 
     /**
@@ -65,7 +65,7 @@ public final class FlyBySoundHub {
 			for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet()) {
 				if (entity != null) {
 					Vec3 entityVelocity = entity.getPosition(1F).subtract(entity.getPosition(0F));
-					entityVelocity = entityVelocity.multiply(1.6, 0.65, 1.6);
+					entityVelocity = entityVelocity.multiply(1.6, 0.45, 1.6);
 					double entityVelocityLength = entityVelocity.length();
 					AABB entityBox = entity.getBoundingBox().inflate(0.7D + (entityVelocityLength * 5));
 
@@ -74,7 +74,7 @@ public final class FlyBySoundHub {
 							Vec3 entityPos = entity.position();
 							int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
 							ENTITY_COOLDOWNS.put(entity, cooldown);
-							Vec3 movedPos = entityPos.add(entityVelocity.scale(2));
+							Vec3 movedPos = entityPos.add(entityVelocity.scale(3));
 							if (hasPassed(cameraPos, cameraEntityWidth, entityPos, movedPos) && cooldown <= 0) {
 								double deltaDistance = entityPos.distanceTo(cameraPos) - movedPos.distanceTo(cameraPos);
 								FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
@@ -89,18 +89,19 @@ public final class FlyBySoundHub {
 
 			//Remove entities that aren't active
 			for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet().stream().toList()) {
-				if (entity == null || entity.isRemoved() || entity.isSilent() || (entity.distanceTo(entity) > MIN_DISTANCE_FOR_REMOVAL)) {
+				if (entity == null || entity.isRemoved() || entity.isSilent() || (cameraPos.distanceTo(entity.position()) > MIN_DISTANCE_FOR_REMOVAL)) {
 					FLYBY_ENTITIES_AND_SOUNDS.remove(entity);
 				}
 			}
 
 			//Check for entities in the auto flyby list
 			if (!AUTO_ENTITIES_AND_SOUNDS.isEmpty()) {
-				if (checkAroundCooldown > 0) {
-					--checkAroundCooldown;
-				} else if (autoSounds) {
+				//if (checkAroundCooldown > 0) {
+				//	--checkAroundCooldown;
+				//} else
+				if (autoSounds) {
 					checkAroundCooldown = AUTO_ENTITY_COOLDOWN;
-					AABB box = new AABB(cameraEntity.blockPosition().offset(-AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE), cameraEntity.blockPosition().offset(AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE));
+					AABB box = new AABB(cameraPos.add(-AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE), cameraPos.add(AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE));
 					for (Entity entity : client.level.getEntities(cameraEntity, box)) {
 						EntityType<?> type = entity.getType();
 						if (AUTO_ENTITIES_AND_SOUNDS.containsKey(type)) {
