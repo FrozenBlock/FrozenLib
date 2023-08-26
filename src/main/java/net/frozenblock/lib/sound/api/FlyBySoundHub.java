@@ -57,38 +57,30 @@ public final class FlyBySoundHub {
 
     public static void update(Minecraft client, Entity cameraEntity, boolean autoSounds) {
 		if (client.level != null && cameraEntity != null) {
-			Vec3 playerPos = cameraEntity.getEyePosition();
-			double playerBBWidth = cameraEntity.getBbWidth() * 2;
-			AABB playerHeadBox = new AABB(cameraEntity.getEyePosition().add(-playerBBWidth, -playerBBWidth, -playerBBWidth), cameraEntity.getEyePosition().add(playerBBWidth, playerBBWidth, playerBBWidth));
+			Vec3 cameraPos = cameraEntity.getEyePosition();
+			double cameraEntityWidth = cameraEntity.getBbWidth();
+			double detectionWidth = cameraEntityWidth * 2;
+			AABB playerHeadBox = new AABB(cameraEntity.getEyePosition().add(-detectionWidth, -detectionWidth, -detectionWidth), cameraEntity.getEyePosition().add(detectionWidth, detectionWidth, detectionWidth));
 
 			for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet()) {
-				//Stop if level isn't loaded
-				if (client.level == null) {
-					FLYBY_ENTITIES_AND_SOUNDS.clear();
-					return;
-				}
-
 				if (entity != null) {
 					Vec3 entityVelocity = entity.getPosition(1F).subtract(entity.getPosition(0F));
-					entityVelocity = entityVelocity.multiply(1.2, 0.6, 1.2);
+					entityVelocity = entityVelocity.multiply(1.6, 0.65, 1.6);
 					double entityVelocityLength = entityVelocity.length();
 					AABB entityBox = entity.getBoundingBox().inflate(0.7D + (entityVelocityLength * 5));
 
 					if (playerHeadBox.intersects(entityBox)) {
 						if (entityVelocityLength > 0.05) {
 							Vec3 entityPos = entity.position();
-							double distanceTo = entityPos.distanceTo(playerPos);
-							double newDistanceTo = entityPos.add(entityVelocity.scale(2)).distanceTo(playerPos);
 							int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
 							ENTITY_COOLDOWNS.put(entity, cooldown);
-							if (distanceTo > newDistanceTo && newDistanceTo < entityVelocityLength * 2 && cooldown <= 0) {
-								double deltaDistance = distanceTo - newDistanceTo;
-								if (deltaDistance > 0.05) {
-									FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
-									float volume = (float) (flyBy.volume + (deltaDistance));
-									client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.category, volume, flyBy.pitch, entity, client.level.random.nextLong()));
-									ENTITY_COOLDOWNS.put(entity, PLAY_COOLDOWN);
-								}
+							Vec3 movedPos = entityPos.add(entityVelocity.scale(2));
+							if (hasPassed(cameraPos, cameraEntityWidth, entityPos, movedPos) && cooldown <= 0) {
+								double deltaDistance = entityPos.distanceTo(cameraPos) - movedPos.distanceTo(cameraPos);
+								FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
+								float volume = (float) (flyBy.volume + (deltaDistance));
+								client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.category, volume, flyBy.pitch, entity, client.level.random.nextLong()));
+								ENTITY_COOLDOWNS.put(entity, PLAY_COOLDOWN);
 							}
 						}
 					}
@@ -117,7 +109,29 @@ public final class FlyBySoundHub {
 					}
 				}
 			}
+		} else {
+			FLYBY_ENTITIES_AND_SOUNDS.clear();
 		}
+	}
+
+	public static boolean hasPassed(Vec3 cameraPos, double cameraWidth, Vec3 oldCoord, Vec3 newCoord) {
+		return hasPassedCoordinate(cameraPos.x(), cameraWidth, 0.35, oldCoord.x(), newCoord.x()) ||
+			hasPassedCoordinate(cameraPos.z(), cameraWidth, 0.35, oldCoord.z(), newCoord.z()) ||
+			hasPassedCoordinate(cameraPos.y(), cameraWidth, 0.25, oldCoord.y(), newCoord.y());
+	}
+
+	public static boolean hasPassedCoordinate(double cameraCoord, double cameraWidth, double triggerWidth, double oldCoord, double newCoord) {
+		double cameraTriggerWidth = cameraWidth * triggerWidth;
+		double minCamera = cameraCoord - cameraWidth;
+		double minCameraTrigger = cameraCoord - cameraTriggerWidth;
+		double maxCamera = cameraCoord + cameraWidth;
+		double maxCameraTrigger = cameraCoord + cameraTriggerWidth;
+		if (oldCoord < minCamera) {
+			return newCoord > minCameraTrigger;
+		} else if (oldCoord > maxCamera) {
+			return newCoord < maxCameraTrigger;
+		}
+		return false;
 	}
 
     public static void addEntity(Entity entity, FlyBySound flyBySound) {
