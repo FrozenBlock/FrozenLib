@@ -38,6 +38,12 @@ public final class FlyBySoundHub {
     private static final int MIN_DISTANCE_FOR_REMOVAL = 16;
     private static final double AUTO_ENTITY_DISTANCE = 3;
     private static final int AUTO_ENTITY_COOLDOWN = 1;
+	private static final int PREDICTION_TICKS = 3;
+	private static final double OVERALL_SENSITIVITY = 1.75;
+	private static final double HORIZONTAL_SENSITIVITY = 1;
+	private static final double VERTICAL_SENSITIVITY = 0.3;
+	private static final double BASE_ENTITY_BOUNDING_BOX_EXPANSION = 0.7;
+	private static final double BOUNDING_BOX_EXPANSION_PER_VELOCITY = 5;
 
     /**
      * Plays sounds automatically when a certain entity is near.
@@ -64,16 +70,17 @@ public final class FlyBySoundHub {
 
 			for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet()) {
 				if (entity != null) {
-					Vec3 entityVelocity = (entity.getPosition(1F).subtract(entity.getPosition(0F))).scale(1.75);
-					entityVelocity = entityVelocity.multiply(1, 0.3, 1);
+					Vec3 entityVelocity = (entity.getPosition(1F).subtract(entity.getPosition(0F))).scale(OVERALL_SENSITIVITY);
+					entityVelocity = entityVelocity.multiply(HORIZONTAL_SENSITIVITY, VERTICAL_SENSITIVITY, HORIZONTAL_SENSITIVITY);
 					double entityVelocityLength = entityVelocity.length();
-					AABB entityBox = entity.getBoundingBox().inflate(0.7D + (entityVelocityLength * 5));
+					AABB entityBox = entity.getBoundingBox().inflate(BASE_ENTITY_BOUNDING_BOX_EXPANSION + (entityVelocityLength * BOUNDING_BOX_EXPANSION_PER_VELOCITY));
 
 					if (playerHeadBox.intersects(entityBox)) {
 						Vec3 entityPos = entity.getPosition(1F);
 						int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
 						ENTITY_COOLDOWNS.put(entity, cooldown);
-						Vec3 movedPos = entityPos.add(entityVelocity.scale(3));
+						Vec3 movedPos = entityPos.add(entityVelocity.scale(PREDICTION_TICKS));
+
 						if (hasPassed(cameraPos, cameraEntityWidth, entityPos, movedPos) && cooldown <= 0) {
 							double deltaDistance = Math.abs(entityPos.distanceTo(cameraPos) - movedPos.distanceTo(cameraPos));
 							FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
