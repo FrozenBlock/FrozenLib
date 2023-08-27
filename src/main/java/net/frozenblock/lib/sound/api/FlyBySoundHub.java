@@ -39,9 +39,11 @@ public final class FlyBySoundHub {
     private static final double AUTO_ENTITY_DISTANCE = 3;
     private static final int AUTO_ENTITY_COOLDOWN = 1;
 	private static final int PREDICTION_TICKS = 3;
+	private static final int PLAYER_PREDICTION_TICKS = 2;
 	private static final double OVERALL_SENSITIVITY = 1.75;
 	private static final double HORIZONTAL_SENSITIVITY = 1;
 	private static final double VERTICAL_SENSITIVITY = 0.3;
+	private static final double PLAYER_SENSITIVITY = 1.75;
 	private static final double BASE_ENTITY_BOUNDING_BOX_EXPANSION = 0.7;
 	private static final double BOUNDING_BOX_EXPANSION_PER_VELOCITY = 5;
 
@@ -64,6 +66,7 @@ public final class FlyBySoundHub {
     public static void update(Minecraft client, Entity cameraEntity, boolean autoSounds) {
 		if (client.level != null && cameraEntity != null) {
 			Vec3 cameraPos = cameraEntity.getEyePosition();
+			Vec3 cameraVelocity = (cameraEntity.getPosition(1F).subtract(cameraEntity.getPosition(0F))).scale(PLAYER_SENSITIVITY);
 			double cameraEntityWidth = cameraEntity.getBbWidth();
 			double detectionWidth = cameraEntityWidth * 2;
 			AABB playerHeadBox = new AABB(cameraEntity.getEyePosition().add(-detectionWidth, -detectionWidth, -detectionWidth), cameraEntity.getEyePosition().add(detectionWidth, detectionWidth, detectionWidth));
@@ -80,8 +83,9 @@ public final class FlyBySoundHub {
 						int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
 						ENTITY_COOLDOWNS.put(entity, cooldown);
 						Vec3 movedPos = entityPos.add(entityVelocity.scale(PREDICTION_TICKS));
+						Vec3 movedCameraPos = cameraPos.add(cameraVelocity.scale(PLAYER_PREDICTION_TICKS));
 
-						if (hasPassed(cameraPos, cameraEntityWidth, entityPos, movedPos) && cooldown <= 0) {
+						if (hasPassed(cameraPos, movedCameraPos, cameraEntityWidth, entityPos, movedPos) && cooldown <= 0) {
 							double deltaDistance = Math.abs(entityPos.distanceTo(cameraPos) - movedPos.distanceTo(cameraPos));
 							FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
 							float volume = (float) (flyBy.volume + (deltaDistance));
@@ -120,18 +124,18 @@ public final class FlyBySoundHub {
 		}
 	}
 
-	public static boolean hasPassed(Vec3 cameraPos, double cameraWidth, Vec3 oldCoord, Vec3 newCoord) {
-		return hasPassedCoordinate(cameraPos.x(), cameraWidth, 0.35, oldCoord.x(), newCoord.x()) ||
-			hasPassedCoordinate(cameraPos.z(), cameraWidth, 0.35, oldCoord.z(), newCoord.z()) ||
-			hasPassedCoordinate(cameraPos.y(), cameraWidth, 0.25, oldCoord.y(), newCoord.y());
+	public static boolean hasPassed(Vec3 oldCameraPos, Vec3 newCameraPos, double cameraWidth, Vec3 oldPos, Vec3 newPos) {
+		return hasPassedCoordinate(oldCameraPos.x(), newCameraPos.x(), cameraWidth, 0.35, oldPos.x(), newPos.x()) ||
+			hasPassedCoordinate(oldCameraPos.y(), newCameraPos.y(), cameraWidth, 0.25, oldPos.y(), newPos.y()) ||
+			hasPassedCoordinate(oldCameraPos.z(), newCameraPos.z(), cameraWidth, 0.35, oldPos.z(), newPos.z());
 	}
 
-	public static boolean hasPassedCoordinate(double cameraCoord, double cameraWidth, double triggerWidth, double oldCoord, double newCoord) {
+	public static boolean hasPassedCoordinate(double oldCameraCoord, double newCameraCoord, double cameraWidth, double triggerWidth, double oldCoord, double newCoord) {
 		double cameraTriggerWidth = cameraWidth * triggerWidth;
-		double minCamera = cameraCoord - cameraWidth;
-		double minCameraTrigger = cameraCoord - cameraTriggerWidth;
-		double maxCamera = cameraCoord + cameraWidth;
-		double maxCameraTrigger = cameraCoord + cameraTriggerWidth;
+		double minCamera = oldCameraCoord - cameraWidth;
+		double minCameraTrigger = newCameraCoord - cameraTriggerWidth;
+		double maxCamera = oldCameraCoord + cameraWidth;
+		double maxCameraTrigger = newCameraCoord + cameraTriggerWidth;
 		if (oldCoord < minCamera) {
 			return newCoord > minCameraTrigger;
 		} else if (oldCoord > maxCamera) {

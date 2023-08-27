@@ -4,7 +4,7 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Tweaked how Flyby Sounds work.
+- Fixed Flyby Sounds, now properly working instead of being extremely finicky and unpolished.
 - Added `FrozenLibConfigOverrides`, where mods can override user settings if necessary
     - The config file will not be changed, only the functionality.
 - Added a new JSON file format that uses JSON5 files but supports unquoted keys.
