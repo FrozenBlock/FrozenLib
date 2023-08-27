@@ -42,7 +42,7 @@ public final class FlyBySoundHub {
 	private static final int PLAYER_PREDICTION_TICKS = 2;
 	private static final double OVERALL_SENSITIVITY = 1.75;
 	private static final double HORIZONTAL_SENSITIVITY = 1;
-	private static final double VERTICAL_SENSITIVITY = 0.2;
+	private static final double VERTICAL_SENSITIVITY = 0.3;
 	private static final double PLAYER_SENSITIVITY = 1.75;
 	private static final double BASE_ENTITY_BOUNDING_BOX_EXPANSION = 0.7;
 	private static final double BOUNDING_BOX_EXPANSION_PER_VELOCITY = 5;
