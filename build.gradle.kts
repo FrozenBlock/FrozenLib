@@ -14,7 +14,7 @@ buildscript {
 		gradlePluginPortal()
 	}
 	dependencies {
-		classpath("org.kohsuke:github-api:1.313")
+		classpath("org.kohsuke:github-api:1.316")
 	}
 }
 

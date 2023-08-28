@@ -40,22 +40,22 @@ public class JsonConfig<T> extends Config<T> {
 
 	private final Jankson jankson;
 
-	private final boolean json5;
+	private final JsonType type;
 
 	public JsonConfig(String modId, Class<T> config) {
-		this(modId, config, false);
+		this(modId, config, JsonType.JSON);
 	}
 
-	public JsonConfig(String modId, Class<T> config, boolean json5) {
-		this(modId, config, makePath(modId, json5 ? JANKSON_EXTENSION : GSON_EXTENSION), json5);
+	public JsonConfig(String modId, Class<T> config, JsonType type) {
+		this(modId, config, makePath(modId, type.getSerializedName()), type);
 	}
 
-	public JsonConfig(String modId, Class<T> config, Path path, boolean json5) {
+	public JsonConfig(String modId, Class<T> config, Path path, JsonType type) {
 		super(modId, config, path);
 		var janksonBuilder = Jankson.builder();
 
 		this.jankson = ConfigSerialization.createJankson(janksonBuilder, modId);
-		this.json5 = json5;
+		this.type = type;
 
 		if (this.load()) {
 			this.save();
@@ -68,7 +68,7 @@ public class JsonConfig<T> extends Config<T> {
 		try {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-			writer.write(this.jankson.toJson(this.config()).toJson(this.json5 ? JsonGrammar.JSON5 : JsonGrammar.STRICT));
+			writer.write(this.jankson.toJson(this.config()).toJson(this.type.getGrammar()));
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
