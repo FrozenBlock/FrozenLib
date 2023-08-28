@@ -340,7 +340,7 @@ public final class FrozenClient implements ClientModInitializer {
 	private static void registerClientEvents() {
 		ClientTickEvents.START_WORLD_TICK.register(ClientWindManager::tick);
 		ClientTickEvents.START_CLIENT_TICK.register(ScreenShaker::tick);
-		ClientTickEvents.START_CLIENT_TICK.register(client -> FlyBySoundHub.update(client, client.player, true));
+		ClientTickEvents.START_CLIENT_TICK.register(client -> FlyBySoundHub.update(client, client.getCameraEntity(), true));
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ScreenShaker.clear());
 	}
 
