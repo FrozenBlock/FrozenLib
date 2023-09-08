@@ -23,7 +23,7 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
-public class NoInteractionStorage<T> extends Storage<T> {
+public class NoInteractionStorage<T> implements Storage<T> {
 
     @Override
     public long insert(T resource, long maxAmount, TransactionContext transaction) {
