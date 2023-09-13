@@ -18,6 +18,9 @@
 
 package net.frozenblock.lib.gametest.api;
 
+/**
+ * @since 1.3.8
+ */
 public enum PositionType {
 	/**
 	 * Converts absolute positions to relative

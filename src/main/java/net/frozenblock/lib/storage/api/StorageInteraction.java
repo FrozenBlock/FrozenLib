@@ -16,11 +16,24 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.gametest.api;
+package net.frozenblock.lib.storage.api;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
+/**
+ * @param <T> The type of resource being moved.
+ * @since 1.3.8
+ */
+@FunctionalInterface
 public interface StorageInteraction<T> {
-	long moveResources(Storage<T> storage, T resource, long maxAmount, Transaction transaction, boolean simulate);
+	long moveResources(Storage<T> storage, T resource, long maxAmount, TransactionContext transaction);
+
+	default long moveResources(Storage<T> storage, T resource, long maxAmount, TransactionContext transaction, boolean simulate) {
+		TransactionContext transactionContext = transaction;
+		if (simulate)
+			transactionContext = transaction.openNested();
+
+		return moveResources(storage, resource, maxAmount, transactionContext);
+	}
 }

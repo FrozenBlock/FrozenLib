@@ -24,7 +24,18 @@ import net.minecraft.core.Vec3i;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3dc;
+import org.joml.Vector3fc;
+import org.joml.Vector3ic;
 
+/**
+ *
+ * @param type The {@link PositionType} linked to {@link #pos}.
+ * @param pos The position
+ * @param opposite The position in the opposite position type
+ * @param <T> The type of position being tracked
+ * @since 1.3.8
+ */
 public record TrackedPosition<T>(PositionType type, T pos, T opposite) {
 
 	/**
@@ -113,8 +124,14 @@ public record TrackedPosition<T>(PositionType type, T pos, T opposite) {
 			helper.assertBlockPresent(block, blockPos);
 		} else if (relative instanceof Vec3i vec3i) {
 			helper.assertBlockPresent(block, new BlockPos(vec3i));
+		} else if (relative instanceof Vector3ic vec3i) {
+			helper.assertBlockPresent(block, new BlockPos(vec3i.x(), vec3i.y(), vec3i.z()));
+		} else if (relative instanceof Vector3fc vec3f) {
+			helper.assertBlockPresent(block, BlockPos.containing(vec3f.x(), vec3f.y(), vec3f.z()));
+		} else if (relative instanceof Vector3dc vec3d) {
+			helper.assertBlockPresent(block, BlockPos.containing(vec3d.x(), vec3d.y(), vec3d.z()));
 		} else
-			throw new IllegalStateException("Unknown position type: " + relative.getClass().getName());
+			throw new IllegalStateException("Invalid position type: " + relative.getClass().getName());
 		return this;
 	}
 }

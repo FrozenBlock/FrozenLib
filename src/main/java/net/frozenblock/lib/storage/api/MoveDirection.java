@@ -16,22 +16,19 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.gametest.api;
+package net.frozenblock.lib.storage.api;
 
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 
+/**
+ * @since 1.3.8
+ */
 public enum MoveDirection {
-	IN((inventory, resource, maxAmount, transaction, simulate) ->
-		simulate ? StorageUtil.simulateInsert(inventory, resource, maxAmount, transaction)
-			: inventory.insert(resource, maxAmount, transaction)
-	),
-	OUT((inventory, resource, maxAmount, transaction, simulate) ->
-		simulate ? StorageUtil.simulateExtract(inventory, resource, maxAmount, transaction)
-			: inventory.extract(resource, maxAmount, transaction)
-	);
+	IN(Storage::insert),
+	OUT(Storage::extract);
 
 	private final StorageInteraction<ItemVariant> interaction;
 
@@ -39,7 +36,11 @@ public enum MoveDirection {
 		this.interaction = interaction;
 	}
 
-	public long moveResources(Storage<ItemVariant> inventory, ItemVariant resource, long maxAmount, Transaction transaction, boolean simulate) {
-		return this.interaction.moveResources(inventory, resource, maxAmount, transaction, simulate);
+	public long moveResources(Storage<ItemVariant> inventory, ItemVariant resource, long maxAmount, Transaction transaction) {
+		return this.interaction.moveResources(inventory, resource, maxAmount, transaction);
+	}
+
+	public long simulateMoveResources(Storage<ItemVariant> inventory, ItemVariant resource, long maxAmount, Transaction transaction) {
+		return this.interaction.moveResources(inventory, resource, maxAmount, transaction, true);
 	}
 }
