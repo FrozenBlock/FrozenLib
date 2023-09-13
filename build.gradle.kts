@@ -25,11 +25,13 @@ plugins {
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
 	id("com.matthewprenger.cursegradle") version("+")
+    id("com.github.johnrengelman.shadow") version("+")
     `maven-publish`
     eclipse
     idea
     `java-library`
     java
+    kotlin("jvm") version("1.9.10")
 }
 
 val minecraft_version: String by project
@@ -43,6 +45,7 @@ val maven_group: String by project
 val archives_base_name: String by project
 
 val fabric_version: String by project
+val fabric_kotlin_version: String by project
 val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
@@ -107,18 +110,18 @@ loom {
     }
 
     mixin {
-        defaultRefmapName.set("mixins.frozenlib.refmap.json")
+        defaultRefmapName = "mixins.frozenlib.refmap.json"
     }
 
-    accessWidenerPath.set(file("src/main/resources/frozenlib.accesswidener"))
+    accessWidenerPath = file("src/main/resources/frozenlib.accesswidener")
 	interfaceInjection {
 		// When enabled, injected interfaces from dependecies will be applied.
-		enableDependencyInterfaceInjection.set(true)
+		enableDependencyInterfaceInjection = true
 	}
 }
 
-val includeModImplementation by configurations.creating
-val includeImplementation by configurations.creating
+val includeModImplementation: Configuration by configurations.creating
+val includeImplementation: Configuration by configurations.creating
 
 configurations {
     include {
@@ -137,6 +140,10 @@ val api by sourceSets.registering {
     java {
         compileClasspath += sourceSets.main.get().compileClasspath
     }
+}
+
+val relocModApi: Configuration by configurations.creating {
+    configurations.modApi.get().extendsFrom(this)
 }
 
 sourceSets {
@@ -220,8 +227,12 @@ dependencies {
 	})
     modImplementation("net.fabricmc:fabric-loader:$loader_version")
 	testImplementation("net.fabricmc:fabric-loader-junit:$loader_version")
+
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
+
+    // Fabric Language Kotlin. Required to use the Kotlin language.
+    modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // Mod Menu
     modApi("com.terraformersmc:modmenu:${modmenu_version}")
@@ -236,13 +247,13 @@ dependencies {
     modCompileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
 
     // MixinExtras
-    modApi("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-beta.9")?.let { annotationProcessor(it); include(it) }
+    modApi("com.github.llamalad7.mixinextras:mixinextras-fabric:0.2.0-rc.2")?.let { annotationProcessor(it); include(it) }
 
     // Toml
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    modApi("blue.endless:jankson:$jankson_version")?.let { include(it) }
+    relocModApi("blue.endless:jankson:$jankson_version")
 
     "testmodImplementation"(sourceSets.main.get().output)
 
@@ -279,6 +290,7 @@ tasks {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
         properties["minecraft_version"] = "~$minecraft_version-"
+        properties["fabric_kotlin_version"] = fabric_kotlin_version
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 
@@ -295,7 +307,16 @@ tasks {
             rule(file("codeformat/HEADER"))
 
             include("**//*.java")
+            include("**//*.kt")
         }
+    }
+
+    shadowJar {
+        configurations = listOf(relocModApi)
+        isEnableRelocation = true
+        relocationPrefix = "net.frozenblock.lib.shadow"
+
+        //relocate("blue.endless.jankson", "net.frozenblock.lib.config.api.jankson")
     }
 
     register("javadocJar", Jar::class) {
@@ -308,6 +329,11 @@ tasks {
         dependsOn(classes)
         archiveClassifier.set("sources")
         from(sourceSets.main.get().allSource)
+    }
+
+    remapJar {
+        dependsOn(shadowJar)
+        input.set(shadowJar.get().archiveFile)
     }
 
     withType(JavaCompile::class) {

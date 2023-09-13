@@ -3,6 +3,8 @@
   "frozenlib.config.save": "Save changes",
 
   "option.frozenlib.component.title": "FrozenLib Options",
+  "option.frozenlib.false": "§cDisabled",
+  "option.frozenlib.true": "§aEnabled",
 
   "option.frozenlib.config": "FrozenLib Config",
 

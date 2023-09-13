@@ -5,3 +5,6 @@ Make sure to clear this after each release
 Put changelog here:
 -----------------
 - Changed NoInteractionStorage from an interface to a class
+- Internally added a source set for Kotlin files
+- Added utilities for creating GUI config entries for Typed Entries with Cloth Config
+    - Only available in Kotlin
