@@ -3,6 +3,8 @@ import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
+import org.kohsuke.github.GHReleaseBuilder
+import org.kohsuke.github.GitHub
 import java.io.FileInputStream
 import java.io.FileNotFoundException
 import java.net.URL
@@ -69,6 +71,8 @@ val entityculling_version: String by project
 val memoryleakfix_version: String by project
 val no_unused_chunks_version: String by project
 val ksyxis_version: String by project
+
+val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
 
 base {
     archivesName.set(archives_base_name)
@@ -403,7 +407,7 @@ tasks {
     }
 }
 
-if (!(release == true || System.getenv("GITHUB_ACTIONS") == "true")) {
+if (!(release == true || githubActions)) {
 	build.dependsOn(applyLicenses)
 }
 
@@ -593,10 +597,10 @@ val github by tasks.register("github") {
     }
 
     doLast {
-        val github = org.kohsuke.github.GitHub.connectUsingOAuth(token)
+        val github = GitHub.connectUsingOAuth(token)
         val repository = github.getRepository(repoVar)
 
-        val releaseBuilder = org.kohsuke.github.GHReleaseBuilder(repository, makeModrinthVersion(mod_version))
+        val releaseBuilder = GHReleaseBuilder(repository, makeModrinthVersion(mod_version))
         releaseBuilder.name(makeName(mod_version))
         releaseBuilder.body(changelog_text)
         releaseBuilder.commitish(getBranch())

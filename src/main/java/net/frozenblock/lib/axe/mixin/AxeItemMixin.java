@@ -41,8 +41,8 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(AxeItem.class)
 public class AxeItemMixin {
 
-	@Inject(method = "useOn", at = @At(value = "INVOKE", target = "Ljava/util/Optional;isPresent()Z", ordinal = 0, shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-	public void frozenlib$_axeBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> info, Level level, BlockPos blockPos, Player player, BlockState blockState, Optional<BlockState> optional, Optional <BlockState>optional2, Optional<BlockState> optional3, ItemStack itemStack, Optional<BlockState> optional4) {
+	@Inject(method = "useOn", at = @At(value = "INVOKE", target = "Ljava/util/Optional;isPresent()Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+	public void frozenlib$_axeBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, Level level, BlockPos blockPos, Player player, BlockState blockState, Optional<BlockState> optional, Optional<BlockState> optional2, Optional<BlockState> optional3, ItemStack itemStack, Optional<BlockState> optional4) {
 		Direction direction = context.getClickedFace();
 		Direction horizontal = context.getHorizontalDirection();
 		if (AxeBehaviors.AXE_BEHAVIORS.containsKey(blockState.getBlock())) {
@@ -50,12 +50,12 @@ public class AxeItemMixin {
 				if (!level.isClientSide) {
 					level.gameEvent(GameEvent.BLOCK_CHANGE, blockPos, GameEvent.Context.of(player, blockState));
 					if (player != null) {
-						context.getItemInHand().hurtAndBreak(1, player, (p) -> p.broadcastBreakEvent(context.getHand()));
+						context.getItemInHand().hurtAndBreak(1, player, p -> p.broadcastBreakEvent(context.getHand()));
 					}
 					CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer)player, blockPos, context.getItemInHand());
-					info.setReturnValue(InteractionResult.SUCCESS);
+					cir.setReturnValue(InteractionResult.SUCCESS);
 				} else {
-					info.setReturnValue(InteractionResult.sidedSuccess(true));
+					cir.setReturnValue(InteractionResult.sidedSuccess(true));
 				}
 			}
 		}
