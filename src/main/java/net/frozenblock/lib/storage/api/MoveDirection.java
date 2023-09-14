@@ -18,10 +18,8 @@
 
 package net.frozenblock.lib.storage.api;
 
-import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageUtil;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 /**
  * @since 1.3.8
@@ -30,17 +28,19 @@ public enum MoveDirection {
 	IN(Storage::insert),
 	OUT(Storage::extract);
 
-	private final StorageInteraction<ItemVariant> interaction;
+	private final StorageInteraction<Object> interaction;
 
-	MoveDirection(StorageInteraction<ItemVariant> interaction) {
+	MoveDirection(StorageInteraction<Object> interaction) {
 		this.interaction = interaction;
 	}
 
-	public long moveResources(Storage<ItemVariant> inventory, ItemVariant resource, long maxAmount, Transaction transaction) {
-		return this.interaction.moveResources(inventory, resource, maxAmount, transaction);
+	@SuppressWarnings("unchecked")
+	public <T> long moveResources(Storage<T> inventory, T resource, long maxAmount, TransactionContext transaction) {
+		return this.interaction.moveResources((Storage<Object>) inventory, resource, maxAmount, transaction);
 	}
 
-	public long simulateMoveResources(Storage<ItemVariant> inventory, ItemVariant resource, long maxAmount, Transaction transaction) {
-		return this.interaction.moveResources(inventory, resource, maxAmount, transaction, true);
+	@SuppressWarnings("unchecked")
+	public <T> long simulateMoveResources(Storage<T> inventory, T resource, long maxAmount, TransactionContext transaction) {
+		return this.interaction.moveResources((Storage<Object>) inventory, resource, maxAmount, transaction, true);
 	}
 }
