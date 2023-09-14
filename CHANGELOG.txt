@@ -4,8 +4,9 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed Flyby Sounds, now properly working instead of being extremely finicky and unpolished.
-- Added `FrozenLibConfigOverrides`, where mods can override user settings if necessary
-    - The config file will not be changed, only the functionality.
-- Added a new JSON file format that uses JSON5 files but supports unquoted keys.
-- Includes breaking changes for configs. Mods using FrozenLib's configs will need to update.
+- Changed NoInteractionStorage from an interface to a class
+- Internally added a source set for Kotlin files
+- Added utilities for creating GUI config entries for Typed Entries with Cloth Config
+    - Only available in Kotlin
+- Added `TrackedPosition`, a class for use alongside the GameTest framework for relative and absolute positions
+- Added `MoveDirection`, a class for interacting with Fabric's Transfer API.

@@ -18,45 +18,29 @@
 
 package net.frozenblock.lib.storage.api;
 
-import java.util.Iterator;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
-public class NoInteractionStorage<T> implements Storage<T> {
+/**
+ * @since 1.3.8
+ */
+public enum MoveDirection {
+	IN(Storage::insert),
+	OUT(Storage::extract);
 
-    @Override
-    public long insert(T resource, long maxAmount, TransactionContext transaction) {
-        return 0;
-    }
+	private final StorageInteraction<Object> interaction;
 
-    @Override
-    public long extract(T resource, long maxAmount, TransactionContext transaction) {
-        return 0;
-    }
+	MoveDirection(StorageInteraction<Object> interaction) {
+		this.interaction = interaction;
+	}
 
-    @Override
-    public boolean supportsInsertion() {
-        return false;
-    }
+	@SuppressWarnings("unchecked")
+	public <T> long moveResources(Storage<T> inventory, T resource, long maxAmount, TransactionContext transaction) {
+		return this.interaction.moveResources((Storage<Object>) inventory, resource, maxAmount, transaction);
+	}
 
-    @Override
-    public boolean supportsExtraction() {
-        return false;
-    }
-
-    @Override
-    public Iterator<StorageView<T>> iterator() {
-        return new Iterator<>() {
-            @Override
-            public boolean hasNext() {
-                return false;
-            }
-
-            @Override
-            public StorageView<T> next() {
-                return null;
-            }
-        };
-    }
+	@SuppressWarnings("unchecked")
+	public <T> long simulateMoveResources(Storage<T> inventory, T resource, long maxAmount, TransactionContext transaction) {
+		return this.interaction.moveResources((Storage<Object>) inventory, resource, maxAmount, transaction, true);
+	}
 }

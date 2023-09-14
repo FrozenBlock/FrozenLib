@@ -81,7 +81,7 @@ public interface DynamicRegistryManagerSetupContext {
 	 */
 	@Contract(pure = true)
 	default @Nullable RegistryMap getRegistries(@NotNull Set<ResourceKey<? extends Registry<?>>> registryKeys) {
-		if (registryKeys.size() == 0) throw new IllegalArgumentException("Please provide at least one registry to gather.");
+		if (registryKeys.isEmpty()) throw new IllegalArgumentException("Please provide at least one registry to gather.");
 
 		Map<ResourceKey<? extends Registry<?>>, Registry<?>> foundRegistries = null;
 
