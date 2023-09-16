@@ -4,9 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Changed NoInteractionStorage from an interface to a class
-- Internally added a source set for Kotlin files
-- Added utilities for creating GUI config entries for Typed Entries with Cloth Config
-    - Only available in Kotlin
-- Added `TrackedPosition`, a class for use alongside the GameTest framework for relative and absolute positions
-- Added `MoveDirection`, a class for interacting with Fabric's Transfer API.
+- Fixed transaction depth crash
