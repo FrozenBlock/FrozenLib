@@ -19,6 +19,7 @@
 package net.frozenblock.lib.storage.api;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 /**
@@ -34,6 +35,13 @@ public interface StorageInteraction<T> {
 		if (simulate)
 			transactionContext = transaction.openNested();
 
-		return moveResources(storage, resource, maxAmount, transactionContext);
-	}
+		long ret = moveResources(storage, resource, maxAmount, transactionContext);
+		if (simulate) {
+			// can safely cast to transaction because openNested returns a Transaction
+			// parent transaction should never be committed or aborted by any means
+			var transaction1 = (Transaction) transaction;
+			transaction1.close();
+		}
+        return ret;
+    }
 }
