@@ -32,6 +32,8 @@ public interface StorageInteraction<T> {
 
 	default long moveResources(Storage<T> storage, T resource, long maxAmount, TransactionContext transaction, boolean simulate) {
 		if (simulate) {
+			// closes this automatically
+			// check functionality of AutoCloseable class
 			try (Transaction simulateTransaction = Transaction.openNested(transaction)) {
 				return moveResources(storage, resource, maxAmount, simulateTransaction);
 			}
