@@ -31,17 +31,12 @@ public interface StorageInteraction<T> {
 	long moveResources(Storage<T> storage, T resource, long maxAmount, TransactionContext transaction);
 
 	default long moveResources(Storage<T> storage, T resource, long maxAmount, TransactionContext transaction, boolean simulate) {
-		TransactionContext transactionContext = transaction;
-		if (simulate)
-			transactionContext = transaction.openNested();
-
-		long ret = moveResources(storage, resource, maxAmount, transactionContext);
 		if (simulate) {
-			// can safely cast to transaction because openNested returns a Transaction
-			// parent transaction should never be committed or aborted by any means
-			var transaction1 = (Transaction) transaction;
-			transaction1.close();
+			try (Transaction simulateTransaction = Transaction.openNested(transaction)) {
+				return moveResources(storage, resource, maxAmount, simulateTransaction);
+			}
 		}
-        return ret;
+
+		return moveResources(storage, resource, maxAmount, transaction);
     }
 }
