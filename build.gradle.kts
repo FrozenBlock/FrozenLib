@@ -3,6 +3,8 @@ import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
 import java.io.FileInputStream
@@ -345,6 +347,10 @@ tasks {
         options.release.set(17)
         options.isFork = true
         options.isIncremental = true
+    }
+
+    withType(KotlinCompile::class) {
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
     }
 
     withType(Test::class) {
