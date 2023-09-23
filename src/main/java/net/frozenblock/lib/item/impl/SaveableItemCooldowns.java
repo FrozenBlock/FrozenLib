@@ -86,10 +86,10 @@ public class SaveableItemCooldowns {
 			ServerPlayNetworking.send(player, FrozenMain.COOLDOWN_TICK_COUNT_PACKET, tickCountByteBuf);
 
 			for (SaveableCooldownInstance saveableCooldownInstance : saveableCooldownInstances) {
-				int cooldownLeft = saveableCooldownInstance.getCooldownLeft();
-				int startTime = tickCount - (saveableCooldownInstance.getTotalCooldownTime() - cooldownLeft);
+				int cooldownLeft = saveableCooldownInstance.cooldownLeft();
+				int startTime = tickCount - (saveableCooldownInstance.totalCooldownTime() - cooldownLeft);
 				int endTime = tickCount + cooldownLeft;
-				Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(saveableCooldownInstance.getItemResourceLocation());
+				Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(saveableCooldownInstance.itemResourceLocation());
 				if (optionalItem.isPresent()) {
 					Item item = optionalItem.get();
 					itemCooldowns.cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
@@ -103,24 +103,14 @@ public class SaveableItemCooldowns {
 		}
 	}
 
-	public static class SaveableCooldownInstance {
-
-		private final ResourceLocation itemResourceLocation;
-		private final int cooldownLeft;
-		private final int totalCooldownTime;
+	public record SaveableCooldownInstance(ResourceLocation itemResourceLocation, int cooldownLeft, int totalCooldownTime) {
 
 		public static final Codec<SaveableCooldownInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-				ResourceLocation.CODEC.fieldOf("ItemResourceLocation").forGetter(SaveableCooldownInstance::getItemResourceLocation),
-				Codec.INT.fieldOf("CooldownLeft").orElse(0).forGetter(SaveableCooldownInstance::getCooldownLeft),
-				Codec.INT.fieldOf("TotalCooldownTime").orElse(0).forGetter(SaveableCooldownInstance::getTotalCooldownTime)
+			ResourceLocation.CODEC.fieldOf("ItemResourceLocation").forGetter(SaveableCooldownInstance::itemResourceLocation),
+			Codec.INT.fieldOf("CooldownLeft").orElse(0).forGetter(SaveableCooldownInstance::cooldownLeft),
+			Codec.INT.fieldOf("TotalCooldownTime").orElse(0).forGetter(SaveableCooldownInstance::totalCooldownTime)
 		).apply(instance, SaveableCooldownInstance::new));
 
-
-		public SaveableCooldownInstance(ResourceLocation itemResourceLocation, int cooldownLeft, int totalCooldownTime) {
-			this.itemResourceLocation = itemResourceLocation;
-			this.cooldownLeft = cooldownLeft;
-			this.totalCooldownTime = totalCooldownTime;
-		}
 
 		@NotNull
 		public static SaveableCooldownInstance makeFromCooldownInstance(@NotNull Item item, @NotNull ItemCooldowns.CooldownInstance cooldownInstance, int tickCount) {
@@ -129,19 +119,5 @@ public class SaveableItemCooldowns {
 			int totalCooldownTime = cooldownInstance.endTime - cooldownInstance.startTime;
 			return new SaveableCooldownInstance(resourceLocation, cooldownLeft, totalCooldownTime);
 		}
-
-		public ResourceLocation getItemResourceLocation() {
-			return this.itemResourceLocation;
-		}
-
-		public int getCooldownLeft() {
-			return this.cooldownLeft;
-		}
-
-		public int getTotalCooldownTime() {
-			return this.totalCooldownTime;
-		}
-
 	}
-
 }
