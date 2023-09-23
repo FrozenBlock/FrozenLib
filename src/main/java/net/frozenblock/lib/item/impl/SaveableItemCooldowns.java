@@ -22,8 +22,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
-import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
@@ -37,14 +37,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
-import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 public class SaveableItemCooldowns {
 
 	@NotNull
-	public static ArrayList<SaveableCooldownInstance> makeSaveableCooldownInstanceList(@NotNull ServerPlayer player) {
+	public static List<SaveableCooldownInstance> makeSaveableCooldownInstanceList(@NotNull ServerPlayer player) {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		int tickCount = player.getCooldowns().tickCount;
 		player.getCooldowns().cooldowns.forEach(
@@ -66,7 +65,7 @@ public class SaveableItemCooldowns {
 	}
 
 	@NotNull
-	public static ArrayList<SaveableCooldownInstance> readCooldowns(@NotNull CompoundTag tag) {
+	public static List<SaveableCooldownInstance> readCooldowns(@NotNull CompoundTag tag) {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		if (tag.contains("FrozenLibSavedItemCooldowns", 9)) {
 			Logger logger = FrozenMain.LOGGER;
@@ -77,33 +76,31 @@ public class SaveableItemCooldowns {
 		return saveableCooldownInstances;
 	}
 
-	public static void setCooldowns(@NotNull ArrayList<SaveableCooldownInstance> saveableCooldownInstances, @NotNull ServerPlayer player) {
-		try (Level level = player.level()) {
-			if (!level.isClientSide) {
-				ItemCooldowns itemCooldowns = player.getCooldowns();
-				int tickCount = itemCooldowns.tickCount;
+	public static void setCooldowns(@NotNull List<SaveableCooldownInstance> saveableCooldownInstances, @NotNull ServerPlayer player) {
+		if (!player.level().isClientSide) {
+			ItemCooldowns itemCooldowns = player.getCooldowns();
+			int tickCount = itemCooldowns.tickCount;
 
-				FriendlyByteBuf tickCountByteBuf = new FriendlyByteBuf(Unpooled.buffer());
-				tickCountByteBuf.writeInt(tickCount);
-				ServerPlayNetworking.send(player, FrozenMain.COOLDOWN_TICK_COUNT_PACKET, tickCountByteBuf);
+			FriendlyByteBuf tickCountByteBuf = new FriendlyByteBuf(Unpooled.buffer());
+			tickCountByteBuf.writeInt(tickCount);
+			ServerPlayNetworking.send(player, FrozenMain.COOLDOWN_TICK_COUNT_PACKET, tickCountByteBuf);
 
-				for (SaveableCooldownInstance saveableCooldownInstance : saveableCooldownInstances) {
-					int cooldownLeft = saveableCooldownInstance.cooldownLeft();
-					int startTime = tickCount - (saveableCooldownInstance.totalCooldownTime() - cooldownLeft);
-					int endTime = tickCount + cooldownLeft;
-					Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(saveableCooldownInstance.itemResourceLocation());
-					if (optionalItem.isPresent()) {
-						Item item = optionalItem.get();
-						itemCooldowns.cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
-						FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-						byteBuf.writeId(BuiltInRegistries.ITEM, item);
-						byteBuf.writeVarInt(startTime);
-						byteBuf.writeVarInt(endTime);
-						ServerPlayNetworking.send(player, FrozenMain.FORCED_COOLDOWN_PACKET, byteBuf);
-					}
+			for (SaveableCooldownInstance saveableCooldownInstance : saveableCooldownInstances) {
+				int cooldownLeft = saveableCooldownInstance.cooldownLeft();
+				int startTime = tickCount - (saveableCooldownInstance.totalCooldownTime() - cooldownLeft);
+				int endTime = tickCount + cooldownLeft;
+				Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(saveableCooldownInstance.itemResourceLocation());
+				if (optionalItem.isPresent()) {
+					Item item = optionalItem.get();
+					itemCooldowns.cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
+					FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+					byteBuf.writeId(BuiltInRegistries.ITEM, item);
+					byteBuf.writeVarInt(startTime);
+					byteBuf.writeVarInt(endTime);
+					ServerPlayNetworking.send(player, FrozenMain.FORCED_COOLDOWN_PACKET, byteBuf);
 				}
 			}
-		} catch (IOException ignored) {}
+		}
 	}
 
 	public record SaveableCooldownInstance(ResourceLocation itemResourceLocation, int cooldownLeft, int totalCooldownTime) {
@@ -113,6 +110,7 @@ public class SaveableItemCooldowns {
 			Codec.INT.fieldOf("CooldownLeft").orElse(0).forGetter(SaveableCooldownInstance::cooldownLeft),
 			Codec.INT.fieldOf("TotalCooldownTime").orElse(0).forGetter(SaveableCooldownInstance::totalCooldownTime)
 		).apply(instance, SaveableCooldownInstance::new));
+
 
 		@NotNull
 		public static SaveableCooldownInstance makeFromCooldownInstance(@NotNull Item item, @NotNull ItemCooldowns.CooldownInstance cooldownInstance, int tickCount) {

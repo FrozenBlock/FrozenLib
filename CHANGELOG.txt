@@ -4,4 +4,7 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Updated to 1.20.2
+- Added `MutableParameter` and `MutableParameterPoint` classes
+    - Only available in Kotlin
+- Fixed chunk loading error
+- Updated embedded MixinExtras to 0.2.0-rc.4
