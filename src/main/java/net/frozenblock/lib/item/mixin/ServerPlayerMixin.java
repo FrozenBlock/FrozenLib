@@ -19,6 +19,7 @@
 package net.frozenblock.lib.item.mixin;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.item.impl.SaveableItemCooldowns;
 import net.minecraft.nbt.CompoundTag;
@@ -44,7 +45,7 @@ public class ServerPlayerMixin {
 	private boolean isChangingDimension;
 
 	@Unique
-	public Optional<ArrayList<SaveableItemCooldowns.SaveableCooldownInstance>> frozenLib$savedItemCooldowns = Optional.empty();
+	public Optional<List<SaveableItemCooldowns.SaveableCooldownInstance>> frozenLib$savedItemCooldowns = Optional.empty();
 	@Unique @Nullable
 	private CompoundTag frozenLib$savedCooldownTag;
 
