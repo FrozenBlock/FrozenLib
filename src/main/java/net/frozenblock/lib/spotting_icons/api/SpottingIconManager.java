@@ -28,6 +28,7 @@ import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -110,7 +111,7 @@ public class SpottingIconManager {
 		if (nbt.contains("frozenSpottingIcons")) {
 			this.icon = null;
 			DataResult<SpottingIcon> var10000 = SpottingIcon.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getCompound("frozenSpottingIcons")));
-			Logger var10001 = FrozenMain.LOGGER4;
+			Logger var10001 = FrozenSharedConstants.LOGGER4;
 			Objects.requireNonNull(var10001);
 			Optional<SpottingIcon> icon = var10000.resultOrPartial(var10001::error);
 			icon.ifPresent(spottingIcon -> this.icon = spottingIcon);
@@ -121,7 +122,7 @@ public class SpottingIconManager {
 		nbt.putInt("frozenSpottingIconTicksToCheck", this.ticksToCheck);
 		if (this.icon != null) {
 			DataResult<Tag> var10000 = SpottingIcon.CODEC.encodeStart(NbtOps.INSTANCE, this.icon);
-			Logger var10001 = FrozenMain.LOGGER4;
+			Logger var10001 = FrozenSharedConstants.LOGGER4;
 			Objects.requireNonNull(var10001);
 			var10000.resultOrPartial(var10001::error).ifPresent((iconNBT) -> nbt.put("frozenSpottingIcons", iconNBT));
 		} else if (nbt.contains("frozenSpottingIcons")) {

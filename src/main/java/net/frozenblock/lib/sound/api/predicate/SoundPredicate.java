@@ -19,6 +19,7 @@
 package net.frozenblock.lib.sound.api.predicate;
 
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -57,7 +58,7 @@ public final class SoundPredicate<T extends Entity> {
 					return predicate.predicate;
 				}
 			}
-			FrozenMain.LOGGER.error("Unable to find sound predicate " + id + "! Using default sound predicate instead!");
+			FrozenSharedConstants.LOGGER.error("Unable to find sound predicate " + id + "! Using default sound predicate instead!");
         }
         return defaultPredicate();
     }

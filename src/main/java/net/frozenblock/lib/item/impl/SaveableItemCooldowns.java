@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -57,7 +58,7 @@ public class SaveableItemCooldowns {
 	}
 
 	public static void saveCooldowns(@NotNull CompoundTag tag,  @NotNull ServerPlayer player) {
-		Logger logger = FrozenMain.LOGGER;
+		Logger logger = FrozenSharedConstants.LOGGER;
 		SaveableCooldownInstance.CODEC.listOf()
 				.encodeStart(NbtOps.INSTANCE, makeSaveableCooldownInstanceList(player))
 				.resultOrPartial(logger::error)
@@ -68,7 +69,7 @@ public class SaveableItemCooldowns {
 	public static List<SaveableCooldownInstance> readCooldowns(@NotNull CompoundTag tag) {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		if (tag.contains("FrozenLibSavedItemCooldowns", 9)) {
-			Logger logger = FrozenMain.LOGGER;
+			Logger logger = FrozenSharedConstants.LOGGER;
 			SaveableCooldownInstance.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, tag.getList("FrozenLibSavedItemCooldowns", 10)))
 					.resultOrPartial(logger::error)
 					.ifPresent(saveableCooldownInstances::addAll);

@@ -19,6 +19,7 @@
 package net.frozenblock.lib.spotting_icons.api;
 
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -46,7 +47,7 @@ public final class SpottingIconPredicate<T extends Entity> {
 					return predicate.predicate;
 				}
 			}
-			FrozenMain.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
+			FrozenSharedConstants.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
         }
         return defaultPredicate();
     }

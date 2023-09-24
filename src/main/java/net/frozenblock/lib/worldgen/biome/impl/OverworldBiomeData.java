@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
@@ -41,7 +41,7 @@ public final class OverworldBiomeData {
 
 	private static final Map<ResourceKey<Biome>, Climate.ParameterPoint> OVERWORLD_BIOME_NOISE_POINTS = new Object2ObjectOpenHashMap<>();
 
-	private static final Logger LOGGER = FrozenMain.LOGGER;
+	private static final Logger LOGGER = FrozenSharedConstants.LOGGER;
 
 	private OverworldBiomeData() {
 	}

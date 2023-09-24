@@ -31,6 +31,7 @@ import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeManagerInterface;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
@@ -87,16 +88,16 @@ public class ScreenShakeManager {
 		if (nbt.contains("ScreenShakes", 9)) {
 			this.getShakes().clear();
 			DataResult<List<ScreenShake>> var10000 = ScreenShake.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("ScreenShakes", 10)));
-			Logger var10001 = FrozenMain.LOGGER4;
-			Objects.requireNonNull(var10001);
-			Optional<List<ScreenShake>> list = var10000.resultOrPartial(var10001::error);
+			Logger logger = FrozenSharedConstants.LOGGER4;
+			Objects.requireNonNull(logger);
+			Optional<List<ScreenShake>> list = var10000.resultOrPartial(logger::error);
 			list.ifPresent(this.getShakes()::addAll);
 		}
 	}
 
 	public void save(CompoundTag nbt) {
 		DataResult<Tag> var10000 = ScreenShake.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.shakes);
-		Logger var10001 = FrozenMain.LOGGER4;
+		Logger var10001 = FrozenSharedConstants.LOGGER4;
 		Objects.requireNonNull(var10001);
 		var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("ScreenShakes", cursorsNbt));
 	}

@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -50,7 +50,7 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         if (nbt.contains("frozenDistanceSounds", 9)) {
             this.sounds.clear();
             DataResult<List<FadingDistanceSoundLoopNBT>> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenDistanceSounds", 10)));
-            Logger var10001 = FrozenMain.LOGGER4;
+            Logger var10001 = FrozenSharedConstants.LOGGER4;
             Objects.requireNonNull(var10001);
             Optional<List<FadingDistanceSoundLoopNBT>> list = var10000.resultOrPartial(var10001::error);
             if (list.isPresent()) {
@@ -62,7 +62,7 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 
     public void save(CompoundTag nbt) {
         DataResult<Tag> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
-        Logger var10001 = FrozenMain.LOGGER4;
+        Logger var10001 = FrozenSharedConstants.LOGGER4;
         Objects.requireNonNull(var10001);
         var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenDistanceSounds", cursorsNbt));
     }

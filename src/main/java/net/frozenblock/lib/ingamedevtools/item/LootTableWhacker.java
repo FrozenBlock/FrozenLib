@@ -20,7 +20,8 @@ package net.frozenblock.lib.ingamedevtools.item;
 
 import java.util.Arrays;
 import java.util.List;
-import net.frozenblock.lib.FrozenMain;
+
+import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -63,7 +64,7 @@ public class LootTableWhacker extends Item {
 						if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {
 							loot.lootTable = location;
 							player.displayClientMessage(Component.translatable("frozenlib.loot_table_whacker.success", location.toString()), true);
-							FrozenMain.log(location.toString(), true);
+							FrozenLogUtils.log(location.toString(), true);
 						}
 					} else {
 						player.displayClientMessage(Component.translatable("frozenlib.loot_table_whacker.fail.no_loot_table", location.toString()), true);

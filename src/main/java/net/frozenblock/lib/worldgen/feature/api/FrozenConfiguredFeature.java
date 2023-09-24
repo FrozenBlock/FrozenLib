@@ -20,7 +20,7 @@ package net.frozenblock.lib.worldgen.feature.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -65,7 +65,7 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 
 	@SuppressWarnings("unchecked")
 	public <F extends Feature<FC>> FrozenConfiguredFeature<FC, C> makeAndSetHolder(F feature, FC config) {
-		FrozenMain.log("Registering configured feature: " + this.getKey().location(), true);
+		FrozenLogUtils.log("Registering configured feature: " + this.getKey().location(), true);
 
 		assert FrozenFeatureUtils.BOOTSTAP_CONTEXT != null: "Bootstrap context is null while registering " + this.getKey().location();
 

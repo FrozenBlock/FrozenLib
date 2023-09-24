@@ -19,14 +19,13 @@
 package net.frozenblock.lib.config.api.instance.json;
 
 import blue.endless.jankson.Jankson;
-import blue.endless.jankson.JsonGrammar;
 import blue.endless.jankson.api.SyntaxError;
 import java.io.BufferedWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigSerialization;
 
@@ -34,9 +33,6 @@ import net.frozenblock.lib.config.api.instance.ConfigSerialization;
  * Serializes and deserializes config data with GSON and Jankson.
  */
 public class JsonConfig<T> extends Config<T> {
-
-	public static final String GSON_EXTENSION = "json";
-	public static final String JANKSON_EXTENSION = "json5";
 
 	private final Jankson jankson;
 
@@ -64,7 +60,7 @@ public class JsonConfig<T> extends Config<T> {
 
 	@Override
 	public void save() {
-		FrozenMain.LOGGER.info("Saving config {}", this.configClass().getSimpleName());
+		FrozenSharedConstants.LOGGER.info("Saving config {}", this.configClass().getSimpleName());
 		try {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
@@ -77,7 +73,7 @@ public class JsonConfig<T> extends Config<T> {
 
 	@Override
 	public boolean load() {
-		FrozenMain.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
+		FrozenSharedConstants.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
 		if (Files.exists(this.path())) {
 			try {
 				this.setConfig(this.jankson.fromJson(this.jankson.load(this.path().toFile()), this.configClass()));

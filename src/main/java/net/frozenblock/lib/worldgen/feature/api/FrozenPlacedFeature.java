@@ -20,7 +20,8 @@ package net.frozenblock.lib.worldgen.feature.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.FrozenMain;
+
+import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -67,7 +68,7 @@ public class FrozenPlacedFeature {
 	public <FC extends FeatureConfiguration> FrozenPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, List<PlacementModifier> modifiers) {
 		setConfiguredHolder(configuredHolder);
 
-		FrozenMain.log("Registering placed feature " + this.getKey().location(), true);
+		FrozenLogUtils.log("Registering placed feature " + this.getKey().location(), true);
 
 		assert FrozenFeatureUtils.BOOTSTAP_CONTEXT != null: "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().location();
 		assert configuredHolder != null: "Configured feature holder for FrozenPlacedFeature " + this.getKey().location() + " null";

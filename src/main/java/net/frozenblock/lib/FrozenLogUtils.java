@@ -16,11 +16,29 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.util
+package net.frozenblock.lib;
 
-import net.minecraft.resources.ResourceLocation
-import java.net.URI
+import org.jetbrains.annotations.ApiStatus;
 
-fun String.uri(): URI = URI.create(this)
+@ApiStatus.Internal
+public final class FrozenLogUtils {
+	private FrozenLogUtils() {}
 
-fun vanillaId(path: String): ResourceLocation = ResourceLocation(path)
+	public static void log(String string, boolean should) {
+		if (should) {
+			FrozenSharedConstants.LOGGER.info(string);
+		}
+	}
+
+	public static void warn(String string, boolean should) {
+		if (should) {
+			FrozenSharedConstants.LOGGER.warn(string);
+		}
+	}
+
+	public static void error(String string, boolean should) {
+		if (should) {
+			FrozenSharedConstants.LOGGER.error(string);
+		}
+	}
+}

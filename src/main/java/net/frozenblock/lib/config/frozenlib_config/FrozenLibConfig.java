@@ -22,7 +22,7 @@ import blue.endless.jankson.Comment;
 import java.util.ArrayList;
 import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
@@ -34,7 +34,7 @@ public class FrozenLibConfig {
 
 	private static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
 		new JsonConfig<>(
-			FrozenMain.MOD_ID,
+			FrozenSharedConstants.MOD_ID,
 			FrozenLibConfig.class,
 			JsonType.JSON5_UNQUOTED_KEYS
 		)

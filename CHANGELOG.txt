@@ -4,7 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Added `MutableParameter` and `MutableParameterPoint` classes
-    - Only available in Kotlin
-- Fixed chunk loading error
-- Updated embedded MixinExtras to 0.2.0-rc.4
+- Prevented loading Minecraft classes when initializing configs

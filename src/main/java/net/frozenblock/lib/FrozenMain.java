@@ -47,21 +47,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.commands.WardenSpawnTrackerCommand;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.NOPLogger;
 
 public final class FrozenMain implements ModInitializer {
-	public static final String MOD_ID = "frozenlib";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
-	public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
-
-	/**
-	 * Used for features that may be unstable and crash in public builds.
-	 * <p>
-	 * It's smart to use this for at least registries.
-	 */
-	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	@Override
 	public void onInitialize() {
@@ -139,29 +126,11 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
 
 	public static ResourceLocation id(String path) {
-		return new ResourceLocation(MOD_ID, path);
+		return new ResourceLocation(FrozenSharedConstants.MOD_ID, path);
 	}
 
 	public static String string(String path) {
 		return id(path).toString();
-	}
-
-	public static void log(String string, boolean should) {
-		if (should) {
-			LOGGER.info(string);
-		}
-	}
-
-	public static void warn(String string, boolean should) {
-		if (should) {
-			LOGGER.warn(string);
-		}
-	}
-
-	public static void error(String string, boolean should) {
-		if (should) {
-			LOGGER.error(string);
-		}
 	}
 
 }
