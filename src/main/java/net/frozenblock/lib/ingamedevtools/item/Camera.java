@@ -22,7 +22,7 @@ import java.io.File;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -46,7 +46,7 @@ public class Camera extends Item {
         if (entity instanceof Player player) {
             if (player.getCooldowns().isOnCooldown(this) && player.getCooldowns().getCooldownPercent(this, 0) == 0.9F) {
                 if (world.isClientSide && canGo) {
-                    FrozenMain.LOGGER.warn("PLAYER HAS ACCESS TO DEV CAMERA AND HAS JUST USED IT");
+                    FrozenSharedConstants.LOGGER.warn("PLAYER HAS ACCESS TO DEV CAMERA AND HAS JUST USED IT");
                     Minecraft client = Minecraft.getInstance();
                     File directory = getPanoramaFolderName(new File(client.gameDirectory, "panoramas"));
                     File directory1 = new File(directory, "screenshots");

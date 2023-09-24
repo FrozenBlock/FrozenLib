@@ -23,7 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -70,9 +71,9 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 		}));
 		if (this.biomes != null) {
 			this.biomeNameTest = Set.copyOf(this.biomes)::contains;
-			FrozenMain.log("OPTIMIZED A SOURCE :D", FrozenMain.UNSTABLE_LOGGING);
+			FrozenLogUtils.log("OPTIMIZED A SOURCE :D", FrozenSharedConstants.UNSTABLE_LOGGING);
 		} else {
-			FrozenMain.log("COULDN'T OPTIMIZE A SOURCE :(", FrozenMain.UNSTABLE_LOGGING);
+			FrozenLogUtils.log("COULDN'T OPTIMIZE A SOURCE :(", FrozenSharedConstants.UNSTABLE_LOGGING);
 		}
 	}
 

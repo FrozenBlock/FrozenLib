@@ -24,6 +24,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.frozenlib_config.defaults.DefaultFrozenLibConfig;
@@ -91,10 +92,10 @@ public final class FrozenLibConfigGui {
 	}
 
 	public static Component text(String key) {
-		return Component.translatable("option." + FrozenMain.MOD_ID + "." + key);
+		return Component.translatable("option." + FrozenSharedConstants.MOD_ID + "." + key);
 	}
 
 	public static Component tooltip(String key) {
-		return Component.translatable("tooltip." + FrozenMain.MOD_ID + "." + key);
+		return Component.translatable("tooltip." + FrozenSharedConstants.MOD_ID + "." + key);
 	}
 }

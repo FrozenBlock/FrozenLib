@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -47,7 +47,7 @@ public class EntityScreenShakeManager {
         if (nbt.contains("ScreenShakes", 9)) {
             this.shakes.clear();
             DataResult<List<EntityScreenShake>> var10000 = EntityScreenShake.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("ScreenShakes", 10)));
-            Logger var10001 = FrozenMain.LOGGER4;
+            Logger var10001 = FrozenSharedConstants.LOGGER4;
             Objects.requireNonNull(var10001);
             Optional<List<EntityScreenShake>> list = var10000.resultOrPartial(var10001::error);
 			list.ifPresent(this.shakes::addAll);
@@ -56,7 +56,7 @@ public class EntityScreenShakeManager {
 
     public void save(CompoundTag nbt) {
         DataResult<Tag> var10000 = EntityScreenShake.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.shakes);
-        Logger var10001 = FrozenMain.LOGGER4;
+        Logger var10001 = FrozenSharedConstants.LOGGER4;
         Objects.requireNonNull(var10001);
         var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("ScreenShakes", cursorsNbt));
     }

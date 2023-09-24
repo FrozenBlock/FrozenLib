@@ -19,7 +19,8 @@
 package net.frozenblock.lib.menu.mixin;
 
 import java.util.ArrayList;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.minecraft.client.Minecraft;
@@ -55,7 +56,7 @@ public class TitleScreenMixin {
 			for(int i = 0; i < 6; ++i) {
 				//Panorama isn't valid if one of the six images aren't found; move on to next ResourceLocation in the list.
 				if (Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(namespace, path + "_" + i + ".png")).isEmpty()) {
-					FrozenMain.warn("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", FrozenMain.UNSTABLE_LOGGING);
+					FrozenLogUtils.warn("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", FrozenSharedConstants.UNSTABLE_LOGGING);
 					break;
 				}
 				//Panorama is valid if all six images are found, add to valid panorama list.

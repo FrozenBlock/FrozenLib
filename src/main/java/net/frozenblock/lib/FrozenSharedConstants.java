@@ -16,11 +16,25 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.util
+package net.frozenblock.lib;
 
-import net.minecraft.resources.ResourceLocation
-import java.net.URI
+import net.fabricmc.loader.api.FabricLoader;
+import org.jetbrains.annotations.ApiStatus;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.slf4j.helpers.NOPLogger;
 
-fun String.uri(): URI = URI.create(this)
+@ApiStatus.Internal
+public final class FrozenSharedConstants {
+	public static final String MOD_ID = "frozenlib";
+	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
+	/**
+	 * Used for features that may be unstable and crash in public builds.
+	 * <p>
+	 * It's smart to use this for at least registries.
+	 */
+	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
 
-fun vanillaId(path: String): ResourceLocation = ResourceLocation(path)
+	private FrozenSharedConstants() {}
+}

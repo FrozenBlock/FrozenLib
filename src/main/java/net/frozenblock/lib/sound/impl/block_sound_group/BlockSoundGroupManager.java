@@ -32,6 +32,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
+import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
 import net.frozenblock.lib.sound.api.block_sound_group.SoundCodecs;
@@ -79,7 +80,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	 */
 	public void addBlock(ResourceLocation key, SoundType sounds, BooleanSupplier condition) {
 		if (!BuiltInRegistries.BLOCK.containsKey(key)) {
-			FrozenMain.log("Error whilst adding a block to BlockSoundGroupOverwrites: The specified block id has not been added to the Registry", true);
+			FrozenLogUtils.log("Error whilst adding a block to BlockSoundGroupOverwrites: The specified block id has not been added to the Registry", true);
 		} else {
 			this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
 		}
@@ -117,7 +118,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 
 		var tagIterable = BuiltInRegistries.BLOCK.getTag(tag);
 		if (tagIterable.isEmpty()) {
-			FrozenMain.log("Error whilst adding a tag to BlockSoundGroupOverwrites: Tag is invalid", true);
+			FrozenLogUtils.log("Error whilst adding a tag to BlockSoundGroupOverwrites: Tag is invalid", true);
 		} else {
 			for (Holder<Block> block : tagIterable.get()) {
 				var key = block.unwrapKey().orElseThrow().location();

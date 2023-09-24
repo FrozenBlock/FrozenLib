@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 
 /**
@@ -59,7 +59,7 @@ class TomlConfig<T> extends Config<T> {
 
 	@Override
 	public void save() {
-		FrozenMain.LOGGER.info("Saving config {}", this.configClass().getSimpleName());
+		FrozenSharedConstants.LOGGER.info("Saving config {}", this.configClass().getSimpleName());
 		try {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
@@ -72,7 +72,7 @@ class TomlConfig<T> extends Config<T> {
 
 	@Override
 	public boolean load() {
-		FrozenMain.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
+		FrozenSharedConstants.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
 		if (Files.exists(this.path())) {
 			try {
 				var tomlReader = new Toml();
