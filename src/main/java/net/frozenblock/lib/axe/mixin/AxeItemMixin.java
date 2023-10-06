@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.axe.mixin;
 
-import java.util.Optional;
 import net.frozenblock.lib.axe.api.AxeBehaviors;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -27,7 +26,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class AxeItemMixin {
 
 	@Inject(method = "useOn", at = @At(value = "INVOKE", target = "Ljava/util/Optional;isPresent()Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-	public void frozenlib$_axeBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, Level level, BlockPos blockPos, Player player, BlockState blockState, Optional<BlockState> optional, Optional<BlockState> optional2, Optional<BlockState> optional3, ItemStack itemStack, Optional<BlockState> optional4) {
+	public void frozenlib$_axeBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, Level level, BlockPos blockPos, Player player, BlockState blockState) {
 		Direction direction = context.getClickedFace();
 		Direction horizontal = context.getHorizontalDirection();
 		if (AxeBehaviors.AXE_BEHAVIORS.containsKey(blockState.getBlock())) {
