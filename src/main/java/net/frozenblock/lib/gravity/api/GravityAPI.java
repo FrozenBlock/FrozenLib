@@ -23,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -96,22 +98,56 @@ public final class GravityAPI {
         return optionalGravityBelt;
     }
 
-    public record GravityBelt(double minY, double maxY, boolean renderBottom, boolean renderTop, GravityFunction function) {
+    public record GravityBelt<T extends GravityFunction>(double minY, double maxY, boolean renderBottom, boolean renderTop, T function) {
 
         public boolean affectsPosition(double y) {
             return y >= minY && y < maxY;
         }
 
-        protected double getGravity(@Nullable Entity entity, double y) {
+        private double getGravity(@Nullable Entity entity, double y) {
             if (this.affectsPosition(y)) {
                 return this.function.get(entity, y);
             }
             return 1.0;
         }
+
+		public static <T extends GravityFunction> Codec<GravityBelt<T>> codec(SerializableGravityFunction<T> gravityFunction) {
+			return RecordCodecBuilder.create(instance ->
+				instance.group(
+					Codec.DOUBLE.fieldOf("minY").forGetter(GravityBelt::minY),
+					Codec.DOUBLE.fieldOf("maxY").forGetter(GravityBelt::maxY),
+					Codec.BOOL.fieldOf("renderBottom").forGetter(GravityBelt::renderBottom),
+					Codec.BOOL.fieldOf("renderTop").forGetter(GravityBelt::renderTop),
+					gravityFunction.codec().fieldOf("gravityFunction").forGetter(belt -> belt.function() instanceof SerializableGravityFunction<?> abs ? (T) abs : null)
+				).apply(instance, GravityBelt::new)
+			);
+		}
     }
+
+	public record AbsoluteGravityFunction(double gravity) implements SerializableGravityFunction<AbsoluteGravityFunction> {
+		public static final Codec<AbsoluteGravityFunction> CODEC = RecordCodecBuilder.create(instance ->
+			instance.group(
+				Codec.DOUBLE.fieldOf("gravity").forGetter(AbsoluteGravityFunction::gravity)
+			).apply(instance, AbsoluteGravityFunction::new)
+		);
+
+		@Override
+		public double get(@Nullable Entity entity, double y) {
+			return gravity();
+		}
+
+		@Override
+		public Codec<AbsoluteGravityFunction> codec() {
+			return CODEC;
+		}
+	}
 
     @FunctionalInterface
     public interface GravityFunction {
         double get(@Nullable Entity entity, double y);
     }
+
+	public interface SerializableGravityFunction<T extends GravityFunction> extends GravityFunction {
+		Codec<T> codec();
+	}
 }

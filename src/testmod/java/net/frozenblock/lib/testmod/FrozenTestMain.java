@@ -59,7 +59,7 @@ public final class FrozenTestMain implements ModInitializer {
 
 		}
 
-		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityAPI.GravityBelt(300, 319, true, true, (entity, y) -> 0.1));
+		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityAPI.GravityBelt<>(300, 319, true, true, new GravityAPI.AbsoluteGravityFunction(0.1)));
 		assert GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300) == 0.1;
         //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
         //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
