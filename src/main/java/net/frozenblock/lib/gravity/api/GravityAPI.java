@@ -1,3 +1,21 @@
+/*
+ * Copyright 2023 FrozenBlock
+ * This file is part of FrozenLib.
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Lesser General Public
+ * License as published by the Free Software Foundation; either
+ * version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License
+ * along with this program; if not, see <https://www.gnu.org/licenses/>.
+ */
+
 package net.frozenblock.lib.gravity.api;
 
 import java.util.ArrayList;
@@ -12,14 +30,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
 import org.jetbrains.annotations.Nullable;
 
-public final class GravityCalculator {
-    private GravityCalculator() {}
+public final class GravityAPI {
+    private GravityAPI() {}
 
     private static final Map<ResourceKey<DimensionType>, List<GravityBelt>> GRAVITY_BELTS = new HashMap<>();
 
     public static void register(ResourceKey<DimensionType> dimension, GravityBelt gravityBelt) {
-        if (!GRAVITY_BELTS.containsKey(dimension)) GRAVITY_BELTS.put(dimension, new ArrayList<>());
-        GRAVITY_BELTS.get(dimension).add(gravityBelt);
+		GRAVITY_BELTS.computeIfAbsent(dimension, dimension1 -> new ArrayList<>()).add(gravityBelt);
     }
 
     @Nullable
@@ -53,9 +70,8 @@ public final class GravityCalculator {
             Optional<GravityBelt> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(dimension), y);
             if (optionalGravityBelt.isPresent()) {
                 GravityBelt belt = optionalGravityBelt.get();
-                double gravity = belt.getGravity(entity, y);
                 // at some point add extensions or something
-                return gravity;
+                return belt.getGravity(entity, y);
             }
         }
         return 1.0;

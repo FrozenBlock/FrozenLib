@@ -23,6 +23,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.frozenblock.lib.testmod.config.cloth.ClothConfigInteractionHandler;
 import net.frozenblock.lib.tick.api.BlockScheduledTicks;
@@ -30,6 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.SimpleFixes;
@@ -56,6 +58,9 @@ public final class FrozenTestMain implements ModInitializer {
 		if (ClothConfigInteractionHandler.testBoolean()) {
 
 		}
+
+		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityAPI.GravityBelt(300, 319, true, true, (entity, y) -> 0.1));
+		assert GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300) == 0.1;
         //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
         //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
         //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
