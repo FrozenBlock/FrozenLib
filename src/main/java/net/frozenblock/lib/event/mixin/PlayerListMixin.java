@@ -22,7 +22,6 @@ import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.minecraft.network.Connection;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.players.PlayerList;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,7 +37,7 @@ public class PlayerListMixin {
 	private MinecraftServer server;
 
 	@Inject(method = "placeNewPlayer", at = @At("TAIL"))
-	public void frozenLib$onPlayerJoined(Connection connection, ServerPlayer player, CommonListenerCookie commonListenerCookie, CallbackInfo ci) {
+	public void frozenLib$onPlayerJoined(Connection connection, ServerPlayer player, int i, CallbackInfo ci) {
 		PlayerJoinEvents.ON_JOIN_SERVER.invoker().onPlayerJoin(this.server, player);
 	}
 }
