@@ -45,8 +45,9 @@ public final class FrozenCreativeTabs {
 	}
 
 	public static void add(ItemLike item, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+		if (item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
+			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				var stack = new ItemStack(item);
 				stack.setCount(1);
 				entries.accept(stack);
@@ -67,11 +68,12 @@ public final class FrozenCreativeTabs {
 	 * @param item	The item that is going to be added
 	 */
 	public static void addBefore(ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			var stack = new ItemStack(item);
 			stack.setCount(1);
 			List<ItemStack> list = List.of(stack);
-			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> entries.addBefore(comparedItem, list, tabVisibility));
+			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> entries.addBefore(comparedItem, list, tabVisibility));
 		}
 	}
 
@@ -80,6 +82,7 @@ public final class FrozenCreativeTabs {
 	 * @param item	The item that is going to be added
 	 */
 	public static void addBefore(ItemLike comparedItem, ItemLike item, String path, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			var stack = new ItemStack(item);
 			stack.setCount(1);
@@ -104,6 +107,7 @@ public final class FrozenCreativeTabs {
 	 * @param item	The item that is going to be added
 	 */
 	public static void addAfter(ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			var stack = new ItemStack(item);
 			stack.setCount(1);
@@ -117,6 +121,7 @@ public final class FrozenCreativeTabs {
 	 * @param item	The item that is going to be added
 	 */
 	public static void addAfter(ItemLike comparedItem, ItemLike item, String path, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			var stack = new ItemStack(item);
 			stack.setCount(1);
@@ -129,6 +134,7 @@ public final class FrozenCreativeTabs {
 	}
 
 	public static void addInstrument(Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+		if (instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
@@ -144,9 +150,10 @@ public final class FrozenCreativeTabs {
 	 * @param comparedItem	The item that the added item is compared to
 	 * @param instrument	The instrument that is going to be added
 	 */
-	public static void addInstrumentBefore(Item comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+	public static void addInstrumentBefore(ItemLike comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
+			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				List<ItemStack> list = new ArrayList<>();
 				for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
 					var stack = InstrumentItem.create(instrument, holder);
@@ -163,6 +170,7 @@ public final class FrozenCreativeTabs {
 	 * @param instrument	The instrument that is going to be added
 	 */
 	public static void addInstrumentAfter(Item comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				List<ItemStack> list = new ArrayList<>();
