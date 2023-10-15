@@ -5,3 +5,4 @@ Make sure to clear this after each release
 Put changelog here:
 -----------------
 - Improved safety of Creative Tab API
+- Added Gravity API
