@@ -4,4 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Prevented loading Minecraft classes when initializing configs
+- Improved safety of Creative Tab API
