@@ -235,6 +235,12 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 
 	@Override
 	@NotNull
+	public Holder<T> registerMapping(int rawId, ResourceKey<T> key, T entry, Lifecycle lifecycle) {
+		throw new UnsupportedOperationException("DelayedRegistry does not support set.");
+	}
+
+	@Override
+	@NotNull
 	public Reference<T> register(ResourceKey<T> key, T entry, Lifecycle lifecycle) {
 		this.delayedEntries.add(new DelayedEntry<>(key, entry, lifecycle));
 		return Holder.Reference.createStandAlone(this.wrapped.holderOwner(), key);
