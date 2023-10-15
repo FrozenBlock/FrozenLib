@@ -6,3 +6,4 @@ Put changelog here:
 -----------------
 - Improved safety of Creative Tab API
 - Added Gravity API
+- Updated embedded MixinExtras version to 0.2.0
