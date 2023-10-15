@@ -35,26 +35,26 @@ import org.jetbrains.annotations.Nullable;
 public final class GravityAPI {
     private GravityAPI() {}
 
-    private static final Map<ResourceKey<DimensionType>, List<GravityBelt>> GRAVITY_BELTS = new HashMap<>();
+    private static final Map<ResourceKey<DimensionType>, List<GravityBelt<?>>> GRAVITY_BELTS = new HashMap<>();
 
-    public static void register(ResourceKey<DimensionType> dimension, GravityBelt gravityBelt) {
+    public static void register(ResourceKey<DimensionType> dimension, GravityBelt<?> gravityBelt) {
 		GRAVITY_BELTS.computeIfAbsent(dimension, dimension1 -> new ArrayList<>()).add(gravityBelt);
     }
 
     @Nullable
-    public static List<GravityBelt> getAllBelts(ResourceKey<DimensionType> dimension) {
+    public static List<GravityBelt<?>> getAllBelts(ResourceKey<DimensionType> dimension) {
         return GRAVITY_BELTS.get(dimension);
     }
 
-    public static List<GravityBelt> getAllBelts(Level level) {
+    public static List<GravityBelt<?>> getAllBelts(Level level) {
         return getAllBelts(level.dimensionTypeId());
     }
 
     public static double calculateGravity(ResourceKey<DimensionType> dimension, double y) {
         if (GRAVITY_BELTS.containsKey(dimension)) {
-            Optional<GravityBelt> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(dimension), y);
+            Optional<GravityBelt<?>> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(dimension), y);
             if (optionalGravityBelt.isPresent()) {
-                GravityBelt belt = optionalGravityBelt.get();
+                GravityBelt<?> belt = optionalGravityBelt.get();
                 return belt.getGravity(null, y);
             }
         }
@@ -69,9 +69,9 @@ public final class GravityAPI {
         ResourceKey<DimensionType> dimension = entity.level().dimensionTypeId();
         if (GRAVITY_BELTS.containsKey(dimension)) {
             double y = entity.getY();
-            Optional<GravityBelt> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(dimension), y);
+            Optional<GravityBelt<?>> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(dimension), y);
             if (optionalGravityBelt.isPresent()) {
-                GravityBelt belt = optionalGravityBelt.get();
+                GravityBelt<?> belt = optionalGravityBelt.get();
                 // at some point add extensions or something
                 return belt.getGravity(entity, y);
             }
@@ -87,9 +87,9 @@ public final class GravityAPI {
         return getGravityDirection(entity) == Direction.DOWN;
     }
 
-    public static Optional<GravityBelt> getAffectingGravityBelt(List<GravityBelt> belts, double y) {
-        Optional<GravityBelt> optionalGravityBelt = Optional.empty();
-        for (GravityBelt belt : belts) {
+    public static Optional<GravityBelt<?>> getAffectingGravityBelt(List<GravityBelt<?>> belts, double y) {
+        Optional<GravityBelt<?>> optionalGravityBelt = Optional.empty();
+        for (GravityBelt<?> belt : belts) {
             if (belt.affectsPosition(y)) {
                 optionalGravityBelt = Optional.of(belt);
                 break;
