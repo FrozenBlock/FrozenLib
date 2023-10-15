@@ -37,7 +37,7 @@ public class PlayerListMixin {
 	private MinecraftServer server;
 
 	@Inject(method = "placeNewPlayer", at = @At("TAIL"))
-	public void frozenLib$onPlayerJoined(Connection connection, ServerPlayer player, int i, CallbackInfo ci) {
+	public void frozenLib$onPlayerJoined(Connection netManager, ServerPlayer player, CallbackInfo info) {
 		PlayerJoinEvents.ON_JOIN_SERVER.invoker().onPlayerJoin(this.server, player);
 	}
 }

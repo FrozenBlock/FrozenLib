@@ -42,11 +42,9 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -166,8 +164,12 @@ public class ScreenShakeManager {
 		return ((ScreenShakeManagerInterface)level).frozenLib$getScreenShakeManager();
 	}
 
-	public SavedData.Factory<ScreenShakeStorage> createData() {
-		return new SavedData.Factory<>(() -> new ScreenShakeStorage(this), tag -> ScreenShakeStorage.load(tag, this), DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES);
+	public ScreenShakeStorage createData() {
+		return new ScreenShakeStorage(this);
+	}
+
+	public ScreenShakeStorage createData(CompoundTag nbt) {
+		return this.createData().load(nbt);
 	}
 
 	public static void addScreenShake(Level level, float intensity, double x, double y, double z, float maxDistance) {
