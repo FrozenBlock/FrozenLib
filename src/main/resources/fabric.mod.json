@@ -77,8 +77,8 @@
   ],
   "accessWidener": "frozenlib.accesswidener",
   "depends": {
-    "fabricloader": "${fabric_loader_version}",
-    "fabric-api": "${fabric_api_version}",
+    "fabricloader": ">=0.14.22",
+    "fabric-api": ">=0.88.1",
     "minecraft": "${minecraft_version}"
   },
   "suggests": {

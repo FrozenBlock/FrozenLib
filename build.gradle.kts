@@ -3,8 +3,6 @@ import com.matthewprenger.cursegradle.CurseProject
 import com.matthewprenger.cursegradle.CurseRelation
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
 import java.io.FileInputStream
@@ -47,7 +45,7 @@ val mod_loader: String by project
 val maven_group: String by project
 val archives_base_name: String by project
 
-val fabric_api_version: String by project
+val fabric_version: String by project
 val fabric_kotlin_version: String by project
 val mixin_extras_version: String by project
 val fabric_asm_version: String by project
@@ -235,7 +233,7 @@ dependencies {
 	testImplementation("net.fabricmc:fabric-loader-junit:$loader_version")
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
 
     // Fabric Language Kotlin. Required to use the Kotlin language.
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
@@ -295,11 +293,8 @@ tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = minecraft_version
-
-        properties["fabric_loader_version"] = ">=$loader_version"
-        properties["fabric_api_version"] = ">=$fabric_api_version"
-        properties["fabric_kotlin_version"] = ">=$fabric_kotlin_version"
+        properties["minecraft_version"] = "~1.20.2-"
+        properties["fabric_kotlin_version"] = fabric_kotlin_version
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 
@@ -350,10 +345,6 @@ tasks {
         options.release.set(17)
         options.isFork = true
         options.isIncremental = true
-    }
-
-    withType(KotlinCompile::class) {
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
     }
 
     withType(Test::class) {
