@@ -49,7 +49,7 @@ class TomlConfig<T> extends Config<T> {
 	}
 
 	public TomlConfig(String modId, Class<T> config, Path path, TomlWriter.Builder builder) {
-		super(modId, config, path);
+		super(modId, config, path, true);
 		this.tomlWriter = builder.build();
 
 		if (this.load()) {

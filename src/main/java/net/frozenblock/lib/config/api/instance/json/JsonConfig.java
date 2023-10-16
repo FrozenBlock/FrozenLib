@@ -39,15 +39,27 @@ public class JsonConfig<T> extends Config<T> {
 	private final JsonType type;
 
 	public JsonConfig(String modId, Class<T> config) {
-		this(modId, config, JsonType.JSON);
+		this(modId, config, true);
 	}
 
 	public JsonConfig(String modId, Class<T> config, JsonType type) {
-		this(modId, config, makePath(modId, type.getSerializedName()), type);
+		this(modId, config, type, true);
 	}
 
 	public JsonConfig(String modId, Class<T> config, Path path, JsonType type) {
-		super(modId, config, path);
+		this(modId, config, path, type, true);
+	}
+
+	public JsonConfig(String modId, Class<T> config, boolean supportsModification) {
+		this(modId, config, JsonType.JSON, supportsModification);
+	}
+
+	public JsonConfig(String modId, Class<T> config, JsonType type, boolean supportsModification) {
+		this(modId, config, makePath(modId, type.getSerializedName()), type, supportsModification);
+	}
+
+	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, boolean supportsModification) {
+		super(modId, config, path, supportsModification);
 		var janksonBuilder = Jankson.builder();
 
 		this.jankson = ConfigSerialization.createJankson(janksonBuilder, modId);
