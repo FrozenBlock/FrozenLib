@@ -84,7 +84,7 @@ public final class FrozenLibConfigGui {
 
 	public static Screen buildScreen(Screen parent) {
 		var configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(text("component.title"));
-		configBuilder.setSavingRunnable(() -> FrozenLibConfig.getConfigInstance().save());
+		configBuilder.setSavingRunnable(FrozenLibConfig.INSTANCE::save);
 		var config = configBuilder.getOrCreateCategory(text("config"));
 		ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();
 		setupEntries(config, entryBuilder);

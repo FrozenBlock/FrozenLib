@@ -57,11 +57,17 @@ public abstract class Config<T> {
 		return this.supportsModification;
 	}
 
+	/**
+	 * @return The current config instance with modifications if applicable
+	 */
 	public T config() {
-		if (this.supportsModification()) return ConfigModification.modifyConfig(this.configClass(), this.instance());
+		if (this.supportsModification()) return ConfigModification.modifyConfig(this, this.instance());
 		return this.instance();
 	}
 
+	/**
+	 * @return The unmodified current config instance
+	 */
 	public T instance() {
 		return this.configInstance;
 	}
@@ -80,5 +86,5 @@ public abstract class Config<T> {
 
 	public abstract void save();
 	public abstract boolean load();
-	
+
 }

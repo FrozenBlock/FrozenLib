@@ -23,6 +23,9 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.config.api.instance.ConfigModification;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.frozenblock.lib.testmod.config.cloth.ClothConfigInteractionHandler;
@@ -58,6 +61,12 @@ public final class FrozenTestMain implements ModInitializer {
 		if (ClothConfigInteractionHandler.testBoolean()) {
 
 		}
+		ConfigRegistry.register(FrozenLibConfig.INSTANCE, new ConfigModification<>(FrozenLibConfig.INSTANCE, config -> {
+			config.saveItemCooldowns = true;
+			config.useWindOnNonFrozenServers = true;
+			config.removeExperimentalWarning = true;
+			config.wardenSpawnTrackerCommand = true;
+		}));
 
 		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityAPI.GravityBelt<>(300, 319, true, true, new GravityAPI.AbsoluteGravityFunction(0.1)));
 		assert GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300) == 0.1;

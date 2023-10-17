@@ -32,11 +32,12 @@ import net.frozenblock.lib.config.frozenlib_config.defaults.DefaultFrozenLibConf
 // NOTE: Refrain from using Typed Entries as Cloth Config is used for Mod Menu Integration
 public class FrozenLibConfig {
 
-	private static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
+	public static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
 		new JsonConfig<>(
 			FrozenSharedConstants.MOD_ID,
 			FrozenLibConfig.class,
-			JsonType.JSON5_UNQUOTED_KEYS
+			JsonType.JSON5_UNQUOTED_KEYS,
+			true
 		)
 	);
 
@@ -60,40 +61,13 @@ public class FrozenLibConfig {
 	}
 
 	public static FrozenLibConfig get(boolean getReal) {
-		var real = INSTANCE.config();
-		if (getReal) {
-			return real;
-		}
+		if (getReal)
+			return INSTANCE.instance();
 
-		var fake = new FrozenLibConfig();
-
-		// mirror real config before changing
-		fake.useWindOnNonFrozenServers = real.useWindOnNonFrozenServers;
-		fake.saveItemCooldowns = real.saveItemCooldowns;
-		fake.removeExperimentalWarning = real.removeExperimentalWarning;
-		fake.wardenSpawnTrackerCommand = real.wardenSpawnTrackerCommand;
-		fake.dataFixer.disabledDataFixTypes = new ArrayList<>(real.dataFixer.disabledDataFixTypes);
-
-		// apply mod overrides without changing the actual config
-		if (FrozenLibConfigOverrides.useWindOnNonFrozenServers != null) {
-			fake.useWindOnNonFrozenServers = FrozenLibConfigOverrides.useWindOnNonFrozenServers;
-		}
-		if (FrozenLibConfigOverrides.saveItemCooldowns != null) {
-			fake.saveItemCooldowns = FrozenLibConfigOverrides.saveItemCooldowns;
-		}
-		if (FrozenLibConfigOverrides.removeExperimentalWarning != null) {
-			fake.removeExperimentalWarning = FrozenLibConfigOverrides.removeExperimentalWarning;
-		}
-		fake.dataFixer.disabledDataFixTypes.addAll(FrozenLibConfigOverrides.additionalDisabledDataFixTypes);
-
-		return fake;
+		return INSTANCE.config();
 	}
 
 	public static FrozenLibConfig get() {
 		return get(false);
-	}
-
-	public static Config<FrozenLibConfig> getConfigInstance() {
-		return INSTANCE;
 	}
 }

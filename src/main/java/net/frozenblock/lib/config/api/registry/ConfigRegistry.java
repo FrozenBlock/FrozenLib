@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.instance.ConfigModification;
 
 public class ConfigRegistry {
 
