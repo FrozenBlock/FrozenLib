@@ -61,12 +61,6 @@ public final class FrozenTestMain implements ModInitializer {
 		if (ClothConfigInteractionHandler.testBoolean()) {
 
 		}
-		ConfigRegistry.register(FrozenLibConfig.INSTANCE, new ConfigModification<>(config -> {
-			config.saveItemCooldowns = true;
-			config.useWindOnNonFrozenServers = true;
-			config.removeExperimentalWarning = true;
-			config.wardenSpawnTrackerCommand = true;
-		}));
 
 		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityAPI.GravityBelt<>(300, 319, true, true, new GravityAPI.AbsoluteGravityFunction(0.1)));
 		assert GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300) == 0.1;
