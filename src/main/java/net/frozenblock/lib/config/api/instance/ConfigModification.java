@@ -35,7 +35,6 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			T instance = config.configClass().getConstructor().newInstance();
 			copyInto(original, instance);
 
-
 			// modify
 			for (ConfigModification<T> modification : ConfigRegistry.getModificationsForConfig(config)) {
 				modification.modification.accept(instance);
