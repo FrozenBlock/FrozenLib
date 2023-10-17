@@ -45,7 +45,7 @@ val mod_loader: String by project
 val maven_group: String by project
 val archives_base_name: String by project
 
-val fabric_version: String by project
+val fabric_api_version: String by project
 val fabric_kotlin_version: String by project
 val mixin_extras_version: String by project
 val fabric_asm_version: String by project
@@ -233,7 +233,7 @@ dependencies {
 	testImplementation("net.fabricmc:fabric-loader-junit:$loader_version")
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_version")
+    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
     // Fabric Language Kotlin. Required to use the Kotlin language.
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
