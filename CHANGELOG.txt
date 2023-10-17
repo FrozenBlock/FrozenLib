@@ -4,6 +4,9 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Improved safety of Creative Tab API
-- Added Gravity API
-- Updated embedded MixinExtras version to 0.2.0
+- Added config modification tools
+    - Config instances will have to be publicly available to be able to be modified.
+    - Mods utilizing Cloth Config for a GUI will need to update to use `Config.instance()` for the GUI.
+- Removed FrozenLibConfigOverrides in favor of the new config modification tools
+    - Breaking change, mods using this will need to update.
+- Lowered Fabric Loader dependency to 0.14.22

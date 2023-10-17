@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.instance.ConfigModification;
 
 public class ConfigRegistry {
 
@@ -34,6 +35,8 @@ public class ConfigRegistry {
 
 	private static final Map<String, List<TypedEntryType<?>>> MOD_TYPED_ENTRY_REGISTRY = new Object2ObjectOpenHashMap<>();
 	private static final List<TypedEntryType<?>> TYPED_ENTRY_REGISTRY = new ObjectArrayList<>();
+
+	private static final Map<Config<?>, List<ConfigModification<?>>> MODIFICATION_REGISTRY = new Object2ObjectOpenHashMap<>();
 
 	public static <T> Config<T> register(Config<T> config) {
 		if (CONFIG_REGISTRY.contains(config)) {
@@ -75,5 +78,15 @@ public class ConfigRegistry {
 
 	public static Collection<TypedEntryType<?>> getAllTypedEntryTypes() {
 		return List.copyOf(TYPED_ENTRY_REGISTRY);
+	}
+
+	public static <T> ConfigModification<T> register(Config<T> config, ConfigModification<T> modification) {
+		if (!contains(config)) throw new IllegalStateException("Config " + config + " not in registry!");
+		MODIFICATION_REGISTRY.computeIfAbsent(config, a -> new ArrayList<>()).add(modification);
+		return modification;
+	}
+
+	public static <T> Collection<ConfigModification<T>> getModificationsForConfig(Config<T> config) {
+		return (Collection<ConfigModification<T>>) (Collection) Map.copyOf(MODIFICATION_REGISTRY).getOrDefault(config, new ArrayList<>());
 	}
 }

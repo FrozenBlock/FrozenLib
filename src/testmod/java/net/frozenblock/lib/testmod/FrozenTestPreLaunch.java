@@ -19,12 +19,19 @@
 package net.frozenblock.lib.testmod;
 
 import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
-import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfigOverrides;
+import net.frozenblock.lib.config.api.instance.ConfigModification;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 
 public class FrozenTestPreLaunch implements PreLaunchEntrypoint {
 
     @Override
     public void onPreLaunch() {
-        FrozenLibConfigOverrides.wardenSpawnTrackerCommand = true;
+		ConfigRegistry.register(FrozenLibConfig.INSTANCE, new ConfigModification<>(config -> {
+			config.saveItemCooldowns = true;
+			config.useWindOnNonFrozenServers = true;
+			config.removeExperimentalWarning = true;
+			config.wardenSpawnTrackerCommand = true;
+		}));
     }
 }

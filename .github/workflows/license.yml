@@ -4,6 +4,7 @@
 
 name: license
 on:
+  push:
   workflow_dispatch:
 
 jobs:

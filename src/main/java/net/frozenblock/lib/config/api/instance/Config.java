@@ -24,13 +24,15 @@ public abstract class Config<T> {
 
 	private final String modId;
 	private final Path path;
+	private final boolean supportsModification;
 	private final Class<T> config;
 	private T configInstance;
 	private final T defaultInstance;
 
-	public Config(String modId, Class<T> config, Path path) {
+	public Config(String modId, Class<T> config, Path path, boolean supportsModification) {
 		this.modId = modId;
 		this.path = path;
+		this.supportsModification = supportsModification;
 		this.config = config;
 		try {
 			this.defaultInstance = this.configInstance = config.getConstructor().newInstance();
@@ -51,7 +53,22 @@ public abstract class Config<T> {
 		return this.path;
 	}
 
+	public boolean supportsModification() {
+		return this.supportsModification;
+	}
+
+	/**
+	 * @return The current config instance with modifications if applicable
+	 */
 	public T config() {
+		if (this.supportsModification()) return ConfigModification.modifyConfig(this, this.instance());
+		return this.instance();
+	}
+
+	/**
+	 * @return The unmodified current config instance
+	 */
+	public T instance() {
 		return this.configInstance;
 	}
 
@@ -69,4 +86,5 @@ public abstract class Config<T> {
 
 	public abstract void save();
 	public abstract boolean load();
+
 }
