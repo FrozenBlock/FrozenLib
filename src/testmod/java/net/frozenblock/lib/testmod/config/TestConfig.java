@@ -52,7 +52,7 @@ public class TestConfig {
 			)
 	);
 
-	private static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
+	public static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
 			new JsonConfig<>(
 				FrozenTestMain.MOD_ID,
 				TestConfig.class,
@@ -91,23 +91,15 @@ public class TestConfig {
 	@Comment("This is a list of doubles")
 	public List<Double> doubleList = List.of(1D, 2D, 3D, Math.PI);
 
-	public static Config<TestConfig> get() {
-		return INSTANCE;
+	@Comment("Sub menu!")
+	public SubMenu subMenu = new SubMenu();
+
+	public static class SubMenu {
+		@Comment("Crazy sub option ngl")
+		public boolean subOption = true;
 	}
 
-	@Environment(EnvType.CLIENT)
-	public Screen makeGui(Screen parent) {
-		return null;
-		/*return ClientConfig.makeBuilder()
-				.title(Component.literal("FrozenLib Testmod"))
-				.option(
-						this.testToggle,
-						OptionType.BUTTON,
-						Component.translatable("frozenlib_testmod.config.test_toggle"),
-						newValue -> this.testToggle = newValue
-				)
-				.save(INSTANCE::save)
-				.build()
-				.makeScreen(parent);*/
+	public static TestConfig get() {
+		return INSTANCE.config();
 	}
 }

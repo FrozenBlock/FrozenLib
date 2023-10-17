@@ -25,7 +25,7 @@
       "net.frozenblock.lib.testmod.worldgen.TestSurfaceRules"
     ],
     "modmenu": [
-      "net.frozenblock.lib.testmod.config.ModMenuInit"
+      "net.frozenblock.lib.testmod.config.gui.ModMenuInit"
     ]
   },
   "depends": {
