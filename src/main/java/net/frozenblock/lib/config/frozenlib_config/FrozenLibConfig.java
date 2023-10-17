@@ -28,7 +28,6 @@ import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 
-// NOTE: Refrain from using Typed Entries as Cloth Config is used for Mod Menu Integration
 public class FrozenLibConfig {
 
 	public static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
