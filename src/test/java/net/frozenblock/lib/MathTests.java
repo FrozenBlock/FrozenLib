@@ -18,11 +18,12 @@
 
 package net.frozenblock.lib;
 
+import net.frozenblock.lib.math.api.AdvancedMath;
 import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 
-public class FrozenLibTest {
+public class MathTests {
 
 	@Test
 	void testFactorial() {
