@@ -61,7 +61,7 @@ public final class FrozenTestMain implements ModInitializer {
 		if (ClothConfigInteractionHandler.testBoolean()) {
 
 		}
-		ConfigRegistry.register(FrozenLibConfig.INSTANCE, new ConfigModification<>(FrozenLibConfig.INSTANCE, config -> {
+		ConfigRegistry.register(FrozenLibConfig.INSTANCE, new ConfigModification<>(config -> {
 			config.saveItemCooldowns = true;
 			config.useWindOnNonFrozenServers = true;
 			config.removeExperimentalWarning = true;
