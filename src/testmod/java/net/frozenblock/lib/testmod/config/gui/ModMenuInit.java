@@ -16,11 +16,16 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api;
+package net.frozenblock.lib.testmod.config;
 
-import net.frozenblock.lib.config.api.client.ClientConfig;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ModMenuApi;
+import net.minecraft.client.gui.screens.Screen;
 
-@FunctionalInterface
-public interface ConfigBuilder<T> {
-	ClientConfig.Builder build(T defaultInstance, T config, ClientConfig.Builder builder);
+public class ModMenuInit implements ModMenuApi {
+
+	@Override
+	public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
+		return TestConfigGui::makeScreen;
+	}
 }

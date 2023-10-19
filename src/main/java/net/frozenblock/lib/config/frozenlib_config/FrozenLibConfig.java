@@ -27,9 +27,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import net.frozenblock.lib.config.frozenlib_config.defaults.DefaultFrozenLibConfig;
 
-// NOTE: Refrain from using Typed Entries as Cloth Config is used for Mod Menu Integration
 public class FrozenLibConfig {
 
 	public static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
@@ -43,13 +41,13 @@ public class FrozenLibConfig {
 
 	@Comment("Mods may override any of these options, but the config file will not change.")
 
-	public boolean useWindOnNonFrozenServers = DefaultFrozenLibConfig.USE_WIND_ON_NON_FROZENLIB_SERVERS;
+	public boolean useWindOnNonFrozenServers = true;
 
-	public boolean saveItemCooldowns = DefaultFrozenLibConfig.SAVE_ITEM_COOLDOWNS;
+	public boolean saveItemCooldowns = false;
 
-	public boolean removeExperimentalWarning = DefaultFrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING;
+	public boolean removeExperimentalWarning = false;
 
-	public boolean wardenSpawnTrackerCommand = DefaultFrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND;
+	public boolean wardenSpawnTrackerCommand = false;
 
 	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();
@@ -57,7 +55,9 @@ public class FrozenLibConfig {
 	public static class DataFixerConfig {
 
 		@Comment("Mods can only add to this list. User settings will always apply.")
-		public List<String> disabledDataFixTypes = DefaultFrozenLibConfig.DISABLED_DATAFIX_TYPES;
+		public List<String> disabledDataFixTypes = List.of(
+			"world_gen_settings"
+		);
 	}
 
 	public static FrozenLibConfig get(boolean getReal) {

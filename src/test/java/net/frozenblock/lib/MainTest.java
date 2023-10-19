@@ -16,22 +16,20 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.frozenlib_config.defaults;
+package net.frozenblock.lib;
 
-import java.util.List;
+import net.minecraft.SharedConstants;
+import net.minecraft.server.Bootstrap;
+import org.junit.jupiter.api.Assertions;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
-public final class DefaultFrozenLibConfig {
-	private DefaultFrozenLibConfig() {
-		throw new UnsupportedOperationException("DefaultFrozenLibConfig contains only static declarations.");
-	}
+public class MainTest {
 
-	public static final boolean USE_WIND_ON_NON_FROZENLIB_SERVERS = true;
-	public static final boolean SAVE_ITEM_COOLDOWNS = true;
-	public static final boolean REMOVE_EXPERIMENTAL_WARNING = false;
-	public static final boolean WARDEN_SPAWN_TRACKER_COMMAND = false;
-	// DATA FIXER
-	public static final List<String> DISABLED_DATAFIX_TYPES = List.of(
-		"world_gen_settings"
-	);
-
+    @BeforeAll
+    public static void setup() {
+        SharedConstants.tryDetectVersion();
+        Bootstrap.bootStrap();
+    }
 }

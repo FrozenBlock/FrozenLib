@@ -9,4 +9,6 @@ Put changelog here:
     - Mods utilizing Cloth Config for a GUI will need to update to use `Config.instance()` for the GUI.
 - Removed FrozenLibConfigOverrides in favor of the new config modification tools
     - Breaking change, mods using this will need to update.
+- Removed `DefaultFrozenLibConfig` class in favor of `Config.defaultInstance()`
+- Changed default setting to `saveItemCooldowns` to `false`
 - Lowered Fabric Loader dependency to 0.14.22

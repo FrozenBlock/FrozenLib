@@ -19,20 +19,11 @@
 package net.frozenblock.lib;
 
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.minecraft.SharedConstants;
-import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class FrozenLibTest {
-
-	@BeforeAll
-	public static void setup() {
-		SharedConstants.tryDetectVersion();
-		Bootstrap.bootStrap();
-	}
+public class MathTests {
 
 	@Test
 	void testFactorial() {
