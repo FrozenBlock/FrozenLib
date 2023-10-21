@@ -60,8 +60,8 @@ public class FrozenLibConfig {
 		);
 	}
 
-	public static FrozenLibConfig get(boolean getReal) {
-		if (getReal)
+	public static FrozenLibConfig get(boolean real) {
+		if (real)
 			return INSTANCE.instance();
 
 		return INSTANCE.config();

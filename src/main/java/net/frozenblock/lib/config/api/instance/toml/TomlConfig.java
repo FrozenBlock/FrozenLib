@@ -63,7 +63,7 @@ class TomlConfig<T> extends Config<T> {
 		try {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-			this.tomlWriter.write(this.config(), writer);
+			this.tomlWriter.write(this.instance(), writer);
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
