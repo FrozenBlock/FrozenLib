@@ -293,8 +293,11 @@ tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = "~$minecraft_version-"
-        properties["fabric_kotlin_version"] = fabric_kotlin_version
+        properties["minecraft_version"] = minecraft_version
+
+        properties["fabric_loader_version"] = ">=0.14.22"
+        properties["fabric_api_version"] = ">=$fabric_api_version"
+        properties["fabric_kotlin_version"] = ">=$fabric_kotlin_version"
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 
@@ -345,6 +348,10 @@ tasks {
         options.release.set(17)
         options.isFork = true
         options.isIncremental = true
+    }
+
+    withType(KotlinCompile::class) {
+        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
     }
 
     withType(Test::class) {

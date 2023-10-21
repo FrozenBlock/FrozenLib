@@ -100,6 +100,11 @@ public class TestConfig {
 	}
 
 	public static TestConfig get() {
+		return get(false);
+	}
+
+	public static TestConfig get(boolean real) {
+		if (real) return INSTANCE.instance();
 		return INSTANCE.config();
 	}
 }

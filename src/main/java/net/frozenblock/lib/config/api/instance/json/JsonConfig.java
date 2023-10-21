@@ -76,7 +76,7 @@ public class JsonConfig<T> extends Config<T> {
 		try {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-			writer.write(this.jankson.toJson(this.config()).toJson(this.type.getGrammar()));
+			writer.write(this.jankson.toJson(this.instance()).toJson(this.type.getGrammar()));
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();
