@@ -35,6 +35,7 @@ plugins {
     `java-library`
     java
     kotlin("jvm") version("1.9.10")
+    kotlin("plugin.serialization") version("1.9.10")
 }
 
 val minecraft_version: String by project
