@@ -36,13 +36,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(WorldOpenFlows.class)
 public abstract class IntegratedServerLoaderMixin {
-    @Shadow
-    private static void safeCloseAccess(LevelStorageSource.LevelStorageAccess storageSession, String worldName) {
-        throw new IllegalStateException("Mixin injection failed.");
-    }
-
-    @Shadow
-    protected abstract void doLoadLevel(Screen parentScreen, String worldName, boolean safeMode, boolean requireBackup);
 
     @Inject(
             method = "loadWorldDataBlocking",
@@ -67,7 +60,7 @@ public abstract class IntegratedServerLoaderMixin {
     }
 
     @ModifyArg(
-            method = {"createFreshLevel", "doLoadLevel(Lnet/minecraft/client/gui/screens/Screen;Ljava/lang/String;ZZ)V"},
+            method = {"createFreshLevel", "loadLevel"},
             at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V", remap = false),
             index = 1
     )

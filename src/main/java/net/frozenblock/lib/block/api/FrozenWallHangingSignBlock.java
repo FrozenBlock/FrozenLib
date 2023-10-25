@@ -29,7 +29,7 @@ public class FrozenWallHangingSignBlock extends WallHangingSignBlock {
 	public final ResourceLocation lootTable;
 
 	public FrozenWallHangingSignBlock(Properties settings, WoodType signType, ResourceLocation lootTable) {
-		super(settings, signType);
+		super(signType, settings);
 		this.lootTable = lootTable;
 	}
 
