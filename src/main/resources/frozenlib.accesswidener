@@ -1,5 +1,29 @@
 accessWidener    v2    named
 
+# Advancement
+transitive-accessible field net/minecraft/advancements/Advancement parent Ljava/util/Optional;
+transitive-accessible field net/minecraft/advancements/Advancement display Ljava/util/Optional;
+transitive-accessible field net/minecraft/advancements/Advancement rewards Lnet/minecraft/advancements/AdvancementRewards;
+transitive-accessible field net/minecraft/advancements/Advancement criteria Ljava/util/Map;
+transitive-accessible field net/minecraft/advancements/Advancement requirements Lnet/minecraft/advancements/AdvancementRequirements;
+transitive-accessible field net/minecraft/advancements/Advancement sendsTelemetryEvent Z
+transitive-accessible field net/minecraft/advancements/Advancement name Ljava/util/Optional;
+transitive-mutable field net/minecraft/advancements/Advancement parent Ljava/util/Optional;
+transitive-mutable field net/minecraft/advancements/Advancement display Ljava/util/Optional;
+transitive-mutable field net/minecraft/advancements/Advancement rewards Lnet/minecraft/advancements/AdvancementRewards;
+transitive-mutable field net/minecraft/advancements/Advancement criteria Ljava/util/Map;
+transitive-mutable field net/minecraft/advancements/Advancement requirements Lnet/minecraft/advancements/AdvancementRequirements;
+transitive-mutable field net/minecraft/advancements/Advancement sendsTelemetryEvent Z
+transitive-mutable field net/minecraft/advancements/Advancement name Ljava/util/Optional;
+transitive-accessible field net/minecraft/advancements/AdvancementRequirements requirements [[Ljava/lang/String;
+transitive-mutable field net/minecraft/advancements/AdvancementRequirements requirements [[Ljava/lang/String;
+transitive-accessible field net/minecraft/advancements/AdvancementRewards loot [Lnet/minecraft/resources/ResourceLocation;
+transitive-mutable field net/minecraft/advancements/AdvancementRewards loot [Lnet/minecraft/resources/ResourceLocation;
+transitive-accessible field net/minecraft/advancements/AdvancementRewards recipes [Lnet/minecraft/resources/ResourceLocation;
+transitive-mutable field net/minecraft/advancements/AdvancementRewards recipes [Lnet/minecraft/resources/ResourceLocation;
+transitive-accessible field net/minecraft/advancements/AdvancementRewards experience I
+transitive-mutable field net/minecraft/advancements/AdvancementRewards experience I
+
 # Sculk Spreading
 transitive-accessible    class    net/minecraft/world/level/block/SculkVeinBlock$SculkVeinSpreaderConfig
 
