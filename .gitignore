@@ -37,6 +37,7 @@ target/
 run/
 /remappedSrc/
 /src/main/generated/.cache
+/src/testmod/generated/.cache
 /config/
 
 # java

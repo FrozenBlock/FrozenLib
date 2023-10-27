@@ -52,7 +52,7 @@ public interface AdvancementContext {
 
 	void addRequirements(AdvancementRequirements requirements);
 
-	void addLoot(List<Item> loot);
+	void addLootTables(List<ResourceLocation> lootTables);
 
 	void addRecipes(Collection<ResourceLocation> recipes);
 

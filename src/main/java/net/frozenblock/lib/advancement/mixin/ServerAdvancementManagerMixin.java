@@ -21,6 +21,7 @@ package net.frozenblock.lib.advancement.mixin;
 import com.google.gson.JsonElement;
 import net.frozenblock.lib.advancement.api.AdvancementContext;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
+import net.frozenblock.lib.advancement.impl.AdvancementContextImpl;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
@@ -59,96 +60,10 @@ public class ServerAdvancementManagerMixin {
 			target = "Lnet/minecraft/advancements/AdvancementTree;<init>()V"
 		)
 	)
-	private void apply(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
+	private void modifyAdvancement(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
 
 		for (AdvancementHolder holder : advancements.values()) {
-			var advancement = holder.value();
-			var context = new AdvancementContext() {
-				@Override
-				public ResourceLocation key() {
-					return holder.id();
-				}
-
-				@Override
-				public Optional<ResourceLocation> parent() {
-					return advancement.parent();
-				}
-
-				@Override
-				public Optional<DisplayInfo> display() {
-					return advancement.display();
-				}
-
-				@Override
-				public AdvancementRewards rewards() {
-					return advancement.rewards();
-				}
-
-				@Override
-				public Map<String, Criterion<?>> criteria() {
-					return advancement.criteria();
-				}
-
-				@Override
-				public AdvancementRequirements requirements() {
-					return advancement.requirements();
-				}
-
-				@Override
-				public boolean sendsTelemetryEvent() {
-					return advancement.sendsTelemetryEvent();
-				}
-
-				@Override
-				public Optional<Component> name() {
-					return advancement.name();
-				}
-
-				@Override
-				public void addCriteria(String key, Criterion<?> criteria) {
-					if (!(advancement.criteria() instanceof HashMap<String, Criterion<?>>)) {
-                        advancement.criteria = new HashMap<>(advancement.criteria());
-					}
-					advancement.criteria().putIfAbsent(key, criteria);
-				}
-
-				@Override
-				public void addRequirements(AdvancementRequirements requirements) {
-					List<String[]> list = new ArrayList<>();
-					list.addAll(Arrays.stream(advancement.requirements.requirements).toList());
-					list.addAll(Arrays.stream(requirements.requirements).toList());
-					advancement.requirements.requirements = list.toArray(new String[][]{});
-				}
-
-				@Override
-				public void addLoot(List<Item> loot) {
-					var rewards = this.rewards();
-					List<ResourceLocation> newLoot = new ArrayList<>(Arrays.stream(rewards.loot).toList());
-					newLoot.addAll(loot.stream().map(BuiltInRegistries.ITEM::getKey).toList());
-					rewards.loot = newLoot.toArray(new ResourceLocation[]{});
-				}
-
-				@Override
-				public void addRecipes(Collection<ResourceLocation> recipes) {
-					var rewards = this.rewards();
-					List<ResourceLocation> newLoot = new ArrayList<>(Arrays.stream(rewards.recipes).toList());
-					newLoot.addAll(recipes);
-					rewards.recipes = newLoot.toArray(new ResourceLocation[]{});
-				}
-
-				@Override
-				public void setExperience(int experience) {
-					var rewards = this.rewards();
-					rewards.experience = experience;
-				}
-
-				@Override
-				public void setTelemetry(boolean telemetry) {
-					advancement.sendsTelemetryEvent = telemetry;
-				}
-			};
-
-			AdvancementEvents.INIT.invoker().onInit(context);
+			//AdvancementEvents.INIT.invoker().onInit(new AdvancementContextImpl(holder));
 		}
 	}
 }
