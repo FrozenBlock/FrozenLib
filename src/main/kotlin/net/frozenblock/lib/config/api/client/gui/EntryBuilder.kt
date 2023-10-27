@@ -34,15 +34,26 @@ import java.util.function.Consumer
 @Environment(EnvType.CLIENT)
 data class EntryBuilder<T>(
     @JvmField val title: Component,
+
     @JvmField val value: T?,
-    @JvmField val defaultValue: T & Any, // not nullable
+
+    @JvmField val defaultValue: T & Any , // not nullable
+
     @JvmField val saveConsumer: Consumer<T>,
+
     @JvmField val tooltip: Component? = null,
+
     @JvmField val requiresRestart: Boolean? = false,
+
+    /**
+     * @since 1.4
+     */
     @JvmField val requirement: Requirement? = null
 ) {
     companion object {
         private const val CONSUMER_ERROR = "Invalid consumer"
+
+        private fun consumerError(): Nothing = throw IllegalArgumentException(CONSUMER_ERROR)
     }
 
     /**
@@ -53,7 +64,7 @@ data class EntryBuilder<T>(
         val usedValue: T = value ?: defaultValue
         return when (usedValue) {
             is Boolean -> {
-                val consumer = saveConsumer as? Consumer<Boolean> ?: throw IllegalArgumentException(CONSUMER_ERROR)
+                val consumer = saveConsumer as? Consumer<Boolean> ?: consumerError()
                 entryBuilder.startBooleanToggle(title, usedValue)
                     .setDefaultValue(defaultValue as Boolean)
                     .setSaveConsumer(consumer)
@@ -65,7 +76,7 @@ data class EntryBuilder<T>(
                     }.build()
             }
             is Int -> {
-                val consumer = saveConsumer as? Consumer<Int> ?: throw IllegalArgumentException(CONSUMER_ERROR)
+                val consumer = saveConsumer as? Consumer<Int> ?: consumerError()
                 entryBuilder.startIntField(title, usedValue)
                     .setDefaultValue(defaultValue as Int)
                     .setSaveConsumer(consumer)
@@ -76,7 +87,7 @@ data class EntryBuilder<T>(
                     }.build()
             }
             is Long -> {
-                val consumer = saveConsumer as? Consumer<Long> ?: throw IllegalArgumentException(CONSUMER_ERROR)
+                val consumer = saveConsumer as? Consumer<Long> ?: consumerError()
                 entryBuilder.startLongField(title, usedValue)
                     .setDefaultValue(defaultValue as Long)
                     .setSaveConsumer(consumer)
@@ -87,7 +98,7 @@ data class EntryBuilder<T>(
                     }.build()
             }
             is Float -> {
-                val consumer = saveConsumer as? Consumer<Float> ?: throw IllegalArgumentException(CONSUMER_ERROR)
+                val consumer = saveConsumer as? Consumer<Float> ?: consumerError()
                 entryBuilder.startFloatField(title, usedValue)
                     .setDefaultValue(defaultValue as Float)
                     .setSaveConsumer(consumer)
@@ -98,7 +109,7 @@ data class EntryBuilder<T>(
                     }.build()
             }
             is Double -> {
-                val consumer = saveConsumer as? Consumer<Double> ?: throw IllegalArgumentException(CONSUMER_ERROR)
+                val consumer = saveConsumer as? Consumer<Double> ?: consumerError()
                 entryBuilder.startDoubleField(title, usedValue)
                     .setDefaultValue(defaultValue as Double)
                     .setSaveConsumer(consumer)
@@ -109,7 +120,7 @@ data class EntryBuilder<T>(
                     }.build()
             }
             is String -> {
-                val consumer = saveConsumer as? Consumer<String> ?: throw IllegalArgumentException(CONSUMER_ERROR)
+                val consumer = saveConsumer as? Consumer<String> ?: consumerError()
                 entryBuilder.startStrField(title, usedValue)
                     .setDefaultValue(defaultValue as String)
                     .setSaveConsumer(consumer)
@@ -120,7 +131,7 @@ data class EntryBuilder<T>(
                     }.build()
             }
             is Color -> {
-                val consumer = saveConsumer as? Consumer<Color> ?: throw IllegalArgumentException(CONSUMER_ERROR)
+                val consumer = saveConsumer as? Consumer<Color> ?: consumerError()
                 entryBuilder.startColorField(title, usedValue.color)
                     .setDefaultValue((defaultValue as Color).color)
                     .setSaveConsumer { color -> consumer.accept(Color(color))}
@@ -131,7 +142,7 @@ data class EntryBuilder<T>(
                     }.build()
             }
             is Slider -> {
-                val consumer = saveConsumer as? Consumer<Slider> ?: throw IllegalArgumentException(CONSUMER_ERROR)
+                val consumer = saveConsumer as? Consumer<Slider> ?: consumerError()
                 entryBuilder.startIntSlider(value.value, value.min, value.max)
                     .setDefaultValue((defaultValue as Slider).value)
                     .setSaveConsumer { newValue -> consumer.accept(Slider(newValue, value.min, value.max))}
