@@ -18,6 +18,8 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
+import kotlinx.serialization.Serializable
+
 /**
  * An [Int] wrapper that represents a color.
  * [<P>]
@@ -25,6 +27,7 @@ package net.frozenblock.lib.config.api.client.gui
  * @param color The [Int] representation of the color
  * @since 1.3.8
  */
+@Serializable
 data class Color(@JvmField val color: Int) {
 
     override fun toString(): String = "Color[$color]"

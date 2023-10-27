@@ -35,6 +35,7 @@ plugins {
     `java-library`
     java
     kotlin("jvm") version("1.9.10")
+    kotlin("plugin.serialization") version("1.9.10")
 }
 
 val minecraft_version: String by project
@@ -124,6 +125,31 @@ loom {
 		// When enabled, injected interfaces from dependecies will be applied.
 		enableDependencyInterfaceInjection = true
 	}
+}
+
+sourceSets {
+    testmod {
+        resources {
+            srcDirs("src/testmod/generated")
+        }
+    }
+}
+
+loom {
+    runs {
+        register("testmodDatagen") {
+            client()
+            name("Testmod Data Generation")
+            source(testmod.get())
+            vmArg("-Dfabric-api.datagen")
+            vmArg("-Dfabric-api.datagen.output-dir=${file("src/testmod/generated")}")
+            //vmArg("-Dfabric-api.datagen.strict-validation")
+            vmArg("-Dfabric-api.datagen.modid=frozenlib_testmod")
+
+            ideConfigGenerated(true)
+            runDir = "build/test_datagen"
+        }
+    }
 }
 
 val includeModImplementation: Configuration by configurations.creating
