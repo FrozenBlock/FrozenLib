@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 /**
@@ -30,11 +31,22 @@ import kotlinx.serialization.Serializable
  * @since 1.4
  */
 @Serializable
-data class Slider(
-    val value: Int?,
-    val min: Int,
-    val max: Int
+data class Slider<T>(
+    @Contextual
+    val value: Number,
+    @Contextual
+    val min: Number,
+    @Contextual
+    val max: Number,
+    val type: SliderType<T>
 ) {
 
     override fun toString(): String = "Slider[value=$value, min=$min, max=$max]"
+}
+
+@Serializable
+sealed class SliderType<T> {
+    data object INT : SliderType<Int>()
+
+    data object LONG : SliderType<Long>()
 }

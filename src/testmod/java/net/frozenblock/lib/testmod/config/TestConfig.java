@@ -28,6 +28,7 @@ import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
+import net.frozenblock.lib.config.api.instance.toml.TomlConfig;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.client.gui.screens.Screen;
@@ -38,25 +39,11 @@ import net.minecraft.world.phys.Vec3;
 public class TestConfig {
 
 	// Make sure to define TypedEntryTypes at top of class.
-	public static final TypedEntryType<SoundEvent> SOUND_EVENT = ConfigRegistry.register(
-			new TypedEntryType<>(
-					FrozenTestMain.MOD_ID,
-					SoundEvent.DIRECT_CODEC
-			)
-	);
-
-	public static final TypedEntryType<List<Vec3>> VEC3_LIST = ConfigRegistry.register(
-			new TypedEntryType<>(
-					FrozenTestMain.MOD_ID,
-					Codec.list(Vec3.CODEC)
-			)
-	);
 
 	public static final Config<TestConfig> INSTANCE = ConfigRegistry.register(
-			new JsonConfig<>(
+			new TomlConfig<>(
 				FrozenTestMain.MOD_ID,
-				TestConfig.class,
-				JsonType.JSON5_UNQUOTED_KEYS
+				TestConfig.class
 			)
 	);
 
@@ -79,14 +66,10 @@ public class TestConfig {
 	public List<Integer> testIntList = List.of(45);
 
 	@Comment("This is a sound event typed entry.")
-	public TypedEntry<SoundEvent> randomSound = new TypedEntry<>(
-			SOUND_EVENT, SoundEvents.BEE_LOOP
-	);
+	public SoundEvent randomSound = SoundEvents.BEE_LOOP;
 
 	@Comment("This is a Vec3 list typed entry.")
-	public TypedEntry<List<Vec3>> typedVecList = new TypedEntry<>(
-			VEC3_LIST, List.of(new Vec3(0, 0, 0), new Vec3(1, 1, 1))
-	);
+	public List<Vec3> typedVecList = List.of(new Vec3(0, 0, 0), new Vec3(1, 1, 1));
 
 	@Comment("This is a list of doubles")
 	public List<Double> doubleList = List.of(1D, 2D, 3D, Math.PI);

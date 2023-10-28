@@ -141,16 +141,32 @@ data class EntryBuilder<T>(
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }.build()
             }
-            is Slider -> {
-                val consumer = saveConsumer as? Consumer<Slider> ?: consumerError()
-                entryBuilder.startIntSlider(value.value, value.min, value.max)
-                    .setDefaultValue((defaultValue as Slider).value)
-                    .setSaveConsumer { newValue -> consumer.accept(Slider(newValue, value.min, value.max))}
-                    .apply {
-                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
-                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
-                        requirement?.let { requirement -> this.setRequirement(requirement) }
-                    }.build()
+            is Slider<*> -> {
+                when (usedValue.type) {
+                    SliderType.INT -> {
+                        val consumer = saveConsumer as? Consumer<Slider<Int>> ?: consumerError()
+                        return entryBuilder.startIntSlider(title, usedValue.value.toInt(), usedValue.min.toInt(), usedValue.max.toInt())
+                            .setDefaultValue((defaultValue as Slider<Int>).value.toInt())
+                            .setSaveConsumer { newValue -> consumer.accept(Slider(newValue, usedValue.min.toInt(), usedValue.max.toInt(), SliderType.INT))}
+                            .apply {
+                                tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                                requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                                requirement?.let { requirement -> this.setRequirement(requirement) }
+                            }.build()
+                    }
+                    SliderType.LONG -> {
+                        val consumer = saveConsumer as? Consumer<Slider<Long>> ?: consumerError()
+                        return entryBuilder.startLongSlider(title, usedValue.value.toLong(), usedValue.min.toLong(), usedValue.max.toLong())
+                            .setDefaultValue((defaultValue as Slider<Long>).value.toLong())
+                            .setSaveConsumer { newValue -> consumer.accept(Slider<Long>(newValue, usedValue.min.toLong(), usedValue.max.toLong(), SliderType.LONG)) }
+                            .apply {
+                                tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                                requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                                requirement?.let { requirement -> this.setRequirement(requirement) }
+                            }.build()
+                    }
+                    else -> throw IllegalArgumentException("Unsupported slider type: ${usedValue.type}")
+                }
             }
             else -> throw IllegalArgumentException("Unsupported type: ${usedValue!!::class.java}")
         }
