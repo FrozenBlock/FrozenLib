@@ -22,9 +22,12 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.advancements.FrameType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +51,26 @@ public interface AdvancementContext {
 
 	Optional<Component> name();
 
+	Optional<Component> title();
+
+	Optional<Component> description();
+
+	Optional<ItemStack> icon();
+
+	Optional<ResourceLocation> background();
+
+	Optional<FrameType> frame();
+
+	Optional<Boolean> showToast();
+
+	Optional<Boolean> announceChat();
+
+	Optional<Boolean> hidden();
+
+	Optional<Float> x();
+
+	Optional<Float> y();
+
 	void setParent(Optional<ResourceLocation> parentLocation);
 
 	void addCriteria(String key, Criterion<?> criteria);
@@ -61,4 +84,24 @@ public interface AdvancementContext {
 	void setExperience(int experience);
 
 	void setTelemetry(boolean telemetry);
+
+	void setTitle(Component title);
+
+	void setDescription(Component description);
+
+	void setIcon(ItemStack icon);
+
+	void setBackground(@Nullable ResourceLocation background);
+
+	void setFrame(FrameType frame);
+
+	void setShowsToast(boolean showToast);
+
+	void setAnnounceChat(boolean announceChat);
+
+	void setHidden(boolean hidden);
+
+	void setX(float x);
+
+	void setY(float y);
 }

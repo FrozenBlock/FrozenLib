@@ -74,7 +74,7 @@ public final class FrozenTestMain implements ModInitializer {
 				context.addRequirements(AdvancementRequirements.allOf(List.of("diarrhea")));
 				context.setExperience(1000);
 				context.setParent(Optional.of(new ResourceLocation("story/smelt_iron")));
-				context.
+				context.set
 			}
 		});
 		//StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));

@@ -32,8 +32,11 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.advancements.FrameType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 public record AdvancementContextImpl(AdvancementHolder holder) implements AdvancementContext {
 
@@ -86,6 +89,56 @@ public record AdvancementContextImpl(AdvancementHolder holder) implements Advanc
 	}
 
 	@Override
+	public Optional<Component> title() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$title();
+	}
+
+	@Override
+	public Optional<Component> description() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$description();
+	}
+
+	@Override
+	public Optional<ItemStack> icon() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$icon();
+	}
+
+	@Override
+	public Optional<ResourceLocation> background() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$background();
+	}
+
+	@Override
+	public Optional<FrameType> frame() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$frame();
+	}
+
+	@Override
+	public Optional<Boolean> showToast() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$showToast();
+	}
+
+	@Override
+	public Optional<Boolean> announceChat() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$announceChat();
+	}
+
+	@Override
+	public Optional<Boolean> hidden() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$hidden();
+	}
+
+	@Override
+	public Optional<Float> x() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$x();
+	}
+
+	@Override
+	public Optional<Float> y() {
+		return (AdvancementInteraction.class.cast(holder().value())).frozenLib$y();
+	}
+
+	@Override
 	public void setParent(Optional<ResourceLocation> parentLocation) {
 		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setParent(parentLocation);
 	}
@@ -131,5 +184,55 @@ public record AdvancementContextImpl(AdvancementHolder holder) implements Advanc
 	@Override
 	public void setTelemetry(boolean telemetry) {
 		getInteraction().frozenLib$setSendsTelemetryEvent(telemetry);
+	}
+
+	@Override
+	public void setTitle(Component title) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setTitle(title);
+	}
+
+	@Override
+	public void setDescription(Component description) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setDescription(description);
+	}
+
+	@Override
+	public void setIcon(ItemStack icon) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setIcon(icon);
+	}
+
+	@Override
+	public void setBackground(@Nullable ResourceLocation background) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setBackground(background);
+	}
+
+	@Override
+	public void setFrame(FrameType frame) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setFrame(frame);
+	}
+
+	@Override
+	public void setShowsToast(boolean showToast) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setShowsToast(showToast);
+	}
+
+	@Override
+	public void setAnnounceChat(boolean announceChat) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setAnnounceChat(announceChat);
+	}
+
+	@Override
+	public void setHidden(boolean hidden) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setHidden(hidden);
+	}
+
+	@Override
+	public void setX(float x) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setX(x);
+	}
+
+	@Override
+	public void setY(float y) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setY(y);
 	}
 }
