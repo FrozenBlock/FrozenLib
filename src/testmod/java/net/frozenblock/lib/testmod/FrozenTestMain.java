@@ -33,6 +33,7 @@ import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
@@ -74,7 +75,7 @@ public final class FrozenTestMain implements ModInitializer {
 				context.addRequirements(AdvancementRequirements.allOf(List.of("diarrhea")));
 				context.setExperience(1000);
 				context.setParent(Optional.of(new ResourceLocation("story/smelt_iron")));
-				context.set
+				context.setTitle(Component.literal("DIE"));
 			}
 		});
 		//StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
