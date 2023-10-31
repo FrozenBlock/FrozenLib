@@ -30,6 +30,8 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.frozenblock.lib.tick.api.BlockScheduledTicks;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
@@ -65,8 +67,7 @@ public final class FrozenTestMain implements ModInitializer {
 
 		AdvancementEvents.INIT.register(context -> {
 			if (context.key().equals(new ResourceLocation("recipes/tools/stone_pickaxe"))) {
-				context.addLootTables(List.of(id("test_loottable")));
-				context.addLootTables(BuiltInLootTables.all().stream().toList());
+				context.addCriteria("diarrhea", CriteriaTriggers.INVENTORY_CHANGED.createCriterion(InventoryChangeTrigger.TriggerInstance.hasItems(Items.BROWN_DYE).triggerInstance()));
 				context.setExperience(1000);
 			}
 		});
