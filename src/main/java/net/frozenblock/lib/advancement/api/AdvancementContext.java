@@ -48,7 +48,7 @@ public interface AdvancementContext {
 
 	Optional<Component> name();
 
-	void setParent(ResourceLocation parentLocation);
+	void setParent(Optional<ResourceLocation> parentLocation);
 
 	void addCriteria(String key, Criterion<?> criteria);
 

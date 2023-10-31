@@ -86,8 +86,8 @@ public record AdvancementContextImpl(AdvancementHolder holder) implements Advanc
 	}
 
 	@Override
-	public void setParent(ResourceLocation parentLocation) {
-		holder().value().p
+	public void setParent(Optional<ResourceLocation> parentLocation) {
+		(AdvancementInteraction.class.cast(holder().value())).frozenLib$setParent(parentLocation);
 	}
 
 	@Override
