@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.config.api.instance;
 
+import net.frozenblock.lib.FrozenSharedConstants;
 import java.nio.file.Path;
 
 public abstract class Config<T> {
@@ -84,7 +85,17 @@ public abstract class Config<T> {
 		return this.config;
 	}
 
-	public abstract void save();
-	public abstract boolean load();
+	protected abstract void onSave();
+	public abstract boolean onLoad();
+
+	public final void save() {
+		FrozenSharedConstants.LOGGER.info("Saving config {} from {}", this.configClass().getSimpleName(), this.modId());
+		this.onSave();
+	}
+
+	public final boolean load() {
+		FrozenSharedConstants.LOGGER.info("Loading config {} from {}", this.configClass().getSimpleName(), this.modId());
+		return this.onLoad();
+	}
 
 }

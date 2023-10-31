@@ -4,4 +4,4 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Prevented accidental saving of modified configs
+- Added Advancement API

@@ -115,14 +115,22 @@ public final class GravityAPI {
             return 1.0;
         }
 
-		public static <T extends GravityFunction> Codec<GravityBelt<T>> codec(SerializableGravityFunction<T> gravityFunction) {
+		@SuppressWarnings("unchecked")
+		public static <T extends SerializableGravityFunction<T>> Codec<GravityBelt<T>> codec(Codec<T> gravityFunction) {
 			return RecordCodecBuilder.create(instance ->
 				instance.group(
 					Codec.DOUBLE.fieldOf("minY").forGetter(GravityBelt::minY),
 					Codec.DOUBLE.fieldOf("maxY").forGetter(GravityBelt::maxY),
-					gravityFunction.codec().fieldOf("gravityFunction").forGetter(belt -> belt.function() instanceof SerializableGravityFunction<?> abs ? (T) abs : null)
+					gravityFunction.fieldOf("gravityFunction").forGetter(GravityBelt::function)
 				).apply(instance, GravityBelt::new)
 			);
+		}
+
+		@Nullable
+		public static <T extends SerializableGravityFunction<T>> Codec<GravityBelt<T>> codec(T gravityFunction) {
+			Codec<T> codec = gravityFunction.codec();
+			if (codec == null) return null;
+			return codec(codec);
 		}
     }
 
@@ -132,6 +140,8 @@ public final class GravityAPI {
 				Codec.DOUBLE.fieldOf("gravity").forGetter(AbsoluteGravityFunction::gravity)
 			).apply(instance, AbsoluteGravityFunction::new)
 		);
+
+		public static final Codec<GravityBelt<AbsoluteGravityFunction>> BELT_CODEC = GravityBelt.codec(CODEC);
 
 		@Override
 		public double get(@Nullable Entity entity, double y) {
