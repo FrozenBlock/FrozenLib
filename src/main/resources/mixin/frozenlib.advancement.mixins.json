@@ -9,6 +9,7 @@
   "mixins": [
     "AdvancementHolderMixin",
     "AdvancementMixin",
+    "DisplayInfoMixin",
     "ServerAdvancementManagerMixin"
   ]
 }

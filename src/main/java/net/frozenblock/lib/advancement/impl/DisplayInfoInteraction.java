@@ -18,67 +18,33 @@
 
 package net.frozenblock.lib.advancement.impl;
 
-import net.minecraft.advancements.AdvancementRequirements;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.Criterion;
-import net.minecraft.advancements.DisplayInfo;
 import net.minecraft.advancements.FrameType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import java.util.Map;
-import java.util.Optional;
 
-public interface AdvancementInteraction {
+public interface DisplayInfoInteraction {
 
-	Optional<ResourceLocation> frozenLib$parent();
+	Component frozenLib$title();
 
-	Optional<DisplayInfo> frozenLib$display();
+	Component frozenLib$description();
 
-	AdvancementRewards frozenLib$rewards();
+	ItemStack frozenLib$icon();
 
-	Map<String, Criterion<?>> frozenLib$criteria();
+	ResourceLocation frozenLib$background();
 
-	AdvancementRequirements frozenLib$requirements();
+	FrameType frozenLib$frame();
 
-	boolean frozenLib$sendsTelemetryEvent();
+	boolean frozenLib$showToast();
 
-	Optional<Component> frozenLib$name();
+	boolean frozenLib$announceChat();
 
-	Optional<Component> frozenLib$title();
+	boolean frozenLib$hidden();
 
-	Optional<Component> frozenLib$description();
+	float frozenLib$x();
 
-	Optional<ItemStack> frozenLib$icon();
-
-	Optional<ResourceLocation> frozenLib$background();
-
-	Optional<FrameType> frozenLib$frame();
-
-	Optional<Boolean> frozenLib$showToast();
-
-	Optional<Boolean> frozenLib$announceChat();
-
-	Optional<Boolean> frozenLib$hidden();
-
-	Optional<Float> frozenLib$x();
-
-	Optional<Float> frozenLib$y();
-
-	void frozenLib$setParent(Optional<ResourceLocation> parent);
-
-	void frozenLib$setDisplay(Optional<DisplayInfo> display);
-
-	void frozenLib$setRewards(AdvancementRewards rewards);
-
-	void frozenLib$setCriteria(Map<String, Criterion<?>> criteria);
-
-	void frozenLib$setRequirements(AdvancementRequirements requirements);
-
-	void frozenLib$setSendsTelemetryEvent(boolean sendsTelemetryEvent);
-
-	void frozenLib$setName(Optional<Component> name);
+	float frozenLib$y();
 
 	void frozenLib$setTitle(Component title);
 

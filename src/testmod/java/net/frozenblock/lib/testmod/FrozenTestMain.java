@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public final class FrozenTestMain implements ModInitializer {
 
@@ -68,11 +69,12 @@ public final class FrozenTestMain implements ModInitializer {
 		assert GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300) == 0.1;
 
 		AdvancementEvents.INIT.register(context -> {
-			if (context.key().equals(new ResourceLocation("recipes/tools/stone_pickaxe"))) {
-				context.addCriteria("diarrhea", CriteriaTriggers.INVENTORY_CHANGED.createCriterion(InventoryChangeTrigger.TriggerInstance.hasItems(Items.BROWN_DYE).triggerInstance()));
+			if (context.key().equals(new ResourceLocation("story/mine_stone"))) {
+				context.addCriteria("diarrhea", CriteriaTriggers.INVENTORY_CHANGED.createCriterion(InventoryChangeTrigger.TriggerInstance.hasItems(Items.DIRT).triggerInstance()));
 				context.addRequirements(AdvancementRequirements.allOf(List.of("diarrhea")));
 				context.setExperience(1000);
-				context.parent()
+				context.setParent(Optional.of(new ResourceLocation("story/smelt_iron")));
+				context.
 			}
 		});
 		//StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
