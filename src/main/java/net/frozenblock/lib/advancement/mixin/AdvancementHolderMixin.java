@@ -19,7 +19,6 @@
 package net.frozenblock.lib.advancement.mixin;
 
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
-import net.frozenblock.lib.advancement.impl.AdvancementContextImpl;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.network.FriendlyByteBuf;
@@ -35,11 +34,11 @@ public class AdvancementHolderMixin {
 
 	@Inject(method = "read", at = @At("RETURN"))
 	private static void modifyAdvancement(FriendlyByteBuf buf, CallbackInfoReturnable<AdvancementHolder> cir) {
-		//AdvancementEvents.INIT.invoker().onInit(new AdvancementContextImpl(cir.getReturnValue()));
+		AdvancementEvents.INIT.invoker().onInit(cir.getReturnValue());
 	}
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void init(ResourceLocation resourceLocation, Advancement advancement, CallbackInfo ci) {
-		AdvancementEvents.INIT.invoker().onInit(new AdvancementContextImpl((AdvancementHolder) (Object) this));
+		//AdvancementEvents.INIT.invoker().onInit((AdvancementHolder) (Object) this);
 	}
 }
