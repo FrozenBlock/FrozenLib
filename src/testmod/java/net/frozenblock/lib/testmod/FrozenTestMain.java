@@ -30,6 +30,7 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.frozenblock.lib.tick.api.BlockScheduledTicks;
+import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.resources.ResourceLocation;
@@ -44,6 +45,7 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.SimpleFixes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
 import java.util.List;
 
 public final class FrozenTestMain implements ModInitializer {
@@ -68,6 +70,7 @@ public final class FrozenTestMain implements ModInitializer {
 		AdvancementEvents.INIT.register(context -> {
 			if (context.key().equals(new ResourceLocation("recipes/tools/stone_pickaxe"))) {
 				context.addCriteria("diarrhea", CriteriaTriggers.INVENTORY_CHANGED.createCriterion(InventoryChangeTrigger.TriggerInstance.hasItems(Items.BROWN_DYE).triggerInstance()));
+				context.addRequirements(AdvancementRequirements.allOf(List.of("diarrhea")));
 				context.setExperience(1000);
 			}
 		});
