@@ -72,6 +72,7 @@ public final class FrozenTestMain implements ModInitializer {
 				context.addCriteria("diarrhea", CriteriaTriggers.INVENTORY_CHANGED.createCriterion(InventoryChangeTrigger.TriggerInstance.hasItems(Items.BROWN_DYE).triggerInstance()));
 				context.addRequirements(AdvancementRequirements.allOf(List.of("diarrhea")));
 				context.setExperience(1000);
+				context.parent()
 			}
 		});
 		//StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));

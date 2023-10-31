@@ -86,6 +86,11 @@ public record AdvancementContextImpl(AdvancementHolder holder) implements Advanc
 	}
 
 	@Override
+	public void setParent(ResourceLocation parentLocation) {
+		holder().value().p
+	}
+
+	@Override
 	public void addCriteria(String key, Criterion<?> criteria) {
 		if (!(holder().value().criteria() instanceof HashMap<String, Criterion<?>>)) {
 			getInteraction().frozenLib$setCriteria(new HashMap<>(holder().value().criteria()));
