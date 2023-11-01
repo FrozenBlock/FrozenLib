@@ -18,7 +18,7 @@ buildscript {
 		gradlePluginPortal()
 	}
 	dependencies {
-		classpath("org.kohsuke:github-api:1.316")
+		classpath("org.kohsuke:github-api:+")
 	}
 }
 
@@ -34,8 +34,8 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("1.9.10")
-    kotlin("plugin.serialization") version("1.9.10")
+    kotlin("jvm") version("1.9.20")
+    kotlin("plugin.serialization") version("1.9.20")
 }
 
 val minecraft_version: String by project
@@ -125,6 +125,31 @@ loom {
 		// When enabled, injected interfaces from dependecies will be applied.
 		enableDependencyInterfaceInjection = true
 	}
+}
+
+sourceSets {
+    testmod {
+        resources {
+            srcDirs("src/testmod/generated")
+        }
+    }
+}
+
+loom {
+    runs {
+        register("testmodDatagen") {
+            client()
+            name("Testmod Data Generation")
+            source(testmod.get())
+            vmArg("-Dfabric-api.datagen")
+            vmArg("-Dfabric-api.datagen.output-dir=${file("src/testmod/generated")}")
+            //vmArg("-Dfabric-api.datagen.strict-validation")
+            vmArg("-Dfabric-api.datagen.modid=frozenlib_testmod")
+
+            ideConfigGenerated(true)
+            runDir = "build/test_datagen"
+        }
+    }
 }
 
 val includeModImplementation: Configuration by configurations.creating
@@ -300,7 +325,7 @@ tasks {
 
         properties["fabric_loader_version"] = ">=0.14.22"
         properties["fabric_api_version"] = ">=$fabric_api_version"
-        properties["fabric_kotlin_version"] = ">=$fabric_kotlin_version"
+        properties["fabric_kotlin_version"] = fabric_kotlin_version
 
         properties.forEach { (a, b) -> inputs.property(a, b) }
 

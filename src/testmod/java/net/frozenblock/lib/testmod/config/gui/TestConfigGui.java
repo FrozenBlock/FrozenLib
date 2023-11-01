@@ -23,6 +23,9 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.config.api.client.gui.EntryBuilder;
+import net.frozenblock.lib.config.api.client.gui.Slider;
+import net.frozenblock.lib.config.api.client.gui.SliderType;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.frozenblock.lib.testmod.config.TestConfig;
@@ -35,7 +38,7 @@ public class TestConfigGui {
 
 	@Environment(EnvType.CLIENT)
 	public static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
-		var config = TestConfig.get();
+		var config = TestConfig.get(true);
 		var defaultConfig = TestConfig.INSTANCE.defaultInstance();
 		var subMenu = config.subMenu;
 		category.setBackground(new ResourceLocation("textures/block/packed_mud.png"));
@@ -47,6 +50,14 @@ public class TestConfigGui {
 				.build()
 		);
 
+		var sliderTest = new EntryBuilder<>(Component.literal("This is wild"), new Slider<>(config.testInt, 0, 100, SliderType.INT.INSTANCE),
+			new Slider<>(defaultConfig.testInt, 0, 100, SliderType.INT.INSTANCE),
+			newValue -> config.testInt = newValue.getValue().intValue(),
+			null,
+			false,
+			null
+		).build(entryBuilder);
+
 		var testSubMenuBoolean = entryBuilder.startBooleanToggle(text("sub_option"), subMenu.subOption)
 				.setDefaultValue(defaultConfig.subMenu.subOption)
 				.setSaveConsumer(newValue -> subMenu.subOption = newValue)
@@ -56,7 +67,7 @@ public class TestConfigGui {
 		var testSubMenuCategory = FrozenClothConfig.createSubCategory(entryBuilder, category, text("test_subcategory"),
 				false,
 				tooltip("test_subcategory"),
-				testSubMenuBoolean
+				testSubMenuBoolean, sliderTest
 		);
 	}
 
