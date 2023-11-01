@@ -26,7 +26,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.commands.CommandFunction;
+import net.minecraft.commands.CacheableFunction;
 import net.minecraft.resources.ResourceLocation;
 
 public final class AdvancementAPI {
@@ -39,7 +39,7 @@ public final class AdvancementAPI {
 	 */
 	public static void setupRewards(Advancement advancement) {
 		if (advancement.rewards == AdvancementRewards.EMPTY) {
-			advancement.rewards = new AdvancementRewards(0, new ResourceLocation[0], new ResourceLocation[0], new CommandFunction.CacheableFunction((ResourceLocation) null));
+			advancement.rewards = new AdvancementRewards(0, new ResourceLocation[0], new ResourceLocation[0], new CacheableFunction(null));
 		}
 	}
 
