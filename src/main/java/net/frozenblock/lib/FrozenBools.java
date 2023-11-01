@@ -30,6 +30,7 @@ public class FrozenBools {
 			|| FabricLoader.getInstance().isModLoaded("quilted_fabric_api"));
 	public static final boolean IS_QUILT = FabricLoader.getInstance().isModLoaded("qsl")
 			|| FabricLoader.getInstance().isModLoaded("quilted_fabric_api");
+	public static final boolean IS_FORGE = FabricLoader.getInstance().isModLoaded("connector");
 
     // EXTERNAL MODS
 	public static final boolean HAS_ARCHITECTURY = FabricLoader.getInstance().isModLoaded("architectury");

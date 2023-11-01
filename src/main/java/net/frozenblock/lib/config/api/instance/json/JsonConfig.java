@@ -65,14 +65,13 @@ public class JsonConfig<T> extends Config<T> {
 		this.jankson = ConfigSerialization.createJankson(janksonBuilder, modId);
 		this.type = type;
 
-		if (this.load()) {
-			this.save();
+		if (this.onLoad()) {
+			this.onSave();
 		}
 	}
 
 	@Override
-	public void save() {
-		FrozenSharedConstants.LOGGER.info("Saving config {}", this.configClass().getSimpleName());
+	public void onSave() {
 		try {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
@@ -84,8 +83,7 @@ public class JsonConfig<T> extends Config<T> {
 	}
 
 	@Override
-	public boolean load() {
-		FrozenSharedConstants.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
+	public boolean onLoad() {
 		if (Files.exists(this.path())) {
 			try {
 				this.setConfig(this.jankson.fromJson(this.jankson.load(this.path().toFile()), this.configClass()));

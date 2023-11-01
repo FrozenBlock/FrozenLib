@@ -49,9 +49,9 @@ public class LiquidRenderUtils {
 		float southEastHeight;
 		float northWestHeight;
 		float northEastHeight;
-		float f = (float)(0xFFFFFF >> 16 & 0xFF) / 255.0f;
-		float g = (float)(0xFFFFFF >> 8 & 0xFF) / 255.0f;
-		float h = (float)(0xFFFFFF & 0xFF) / 255.0f;
+		float f = (0xFFFFFF >> 16 & 0xFF) / 255.0f;
+		float g = (0xFFFFFF >> 8 & 0xFF) / 255.0f;
+		float h = (0xFFFFFF & 0xFF) / 255.0f;
 		BlockState downBlockState = level.getBlockState(pos.relative(Direction.DOWN));
 		FluidState downFluidState = downBlockState.getFluidState();
 		BlockState upBlockState = level.getBlockState(pos.relative(Direction.UP));
@@ -133,15 +133,15 @@ public class LiquidRenderUtils {
 			float an = k * f;
 			ao = k * g;
 			ap = k * h;
-			vertex(vertexConsumer, d + 0.0, e + (double)northWestHeight, w + 0.0, an, ao, ap, z, aa, am);
-			vertex(vertexConsumer, d + 0.0, e + (double)southWestHeight, w + 1.0, an, ao, ap, ab, ac, am);
-			vertex(vertexConsumer, d + 1.0, e + (double)southEastHeight, w + 1.0, an, ao, ap, ad, ae, am);
-			vertex(vertexConsumer, d + 1.0, e + (double)northEastHeight, w + 0.0, an, ao, ap, af, ag, am);
+			vertex(vertexConsumer, d + 0.0, e + northWestHeight, w + 0.0, an, ao, ap, z, aa, am);
+			vertex(vertexConsumer, d + 0.0, e + southWestHeight, w + 1.0, an, ao, ap, ab, ac, am);
+			vertex(vertexConsumer, d + 1.0, e + southEastHeight, w + 1.0, an, ao, ap, ad, ae, am);
+			vertex(vertexConsumer, d + 1.0, e + northEastHeight, w + 0.0, an, ao, ap, af, ag, am);
 			if (fluidState.shouldRenderBackwardUpFace(level, pos.above()) || !blockState.equals(downBlockState)) {
-				vertex(vertexConsumer, d + 0.0, e + (double)northWestHeight, w + 0.0, an, ao, ap, z, aa, am);
-				vertex(vertexConsumer, d + 1.0, e + (double)northEastHeight, w + 0.0, an, ao, ap, af, ag, am);
-				vertex(vertexConsumer, d + 1.0, e + (double)southEastHeight, w + 1.0, an, ao, ap, ad, ae, am);
-				vertex(vertexConsumer, d + 0.0, e + (double)southWestHeight, w + 1.0, an, ao, ap, ab, ac, am);
+				vertex(vertexConsumer, d + 0.0, e + northWestHeight, w + 0.0, an, ao, ap, z, aa, am);
+				vertex(vertexConsumer, d + 1.0, e + northEastHeight, w + 0.0, an, ao, ap, af, ag, am);
+				vertex(vertexConsumer, d + 1.0, e + southEastHeight, w + 1.0, an, ao, ap, ad, ae, am);
+				vertex(vertexConsumer, d + 0.0, e + southWestHeight, w + 1.0, an, ao, ap, ab, ac, am);
 			}
 		}
 		if (shouldRenderDown) {
@@ -153,15 +153,15 @@ public class LiquidRenderUtils {
 			ac = j * f;
 			ae = j * g;
 			ag = j * h;
-			vertex(vertexConsumer, d, e + (double)y, w + 1.0, ac, ae, ag, z, af, aq);
-			vertex(vertexConsumer, d, e + (double)y, w, ac, ae, ag, z, ad, aq);
-			vertex(vertexConsumer, d + 1.0, e + (double)y, w, ac, ae, ag, ab, ad, aq);
-			vertex(vertexConsumer, d + 1.0, e + (double)y, w + 1.0, ac, ae, ag, ab, af, aq);
+			vertex(vertexConsumer, d, e + y, w + 1.0, ac, ae, ag, z, af, aq);
+			vertex(vertexConsumer, d, e + y, w, ac, ae, ag, z, ad, aq);
+			vertex(vertexConsumer, d + 1.0, e + y, w, ac, ae, ag, ab, ad, aq);
+			vertex(vertexConsumer, d + 1.0, e + y, w + 1.0, ac, ae, ag, ab, af, aq);
 			if (!downFluidState.equals(fluidState) && downBlockState.getBlock() != blockState.getBlock() && !downBlockState.canOcclude()) {
-				vertex(vertexConsumer, d, e + (double)y, w + 1.0, ac, ae, ag, z, af, aq);
-				vertex(vertexConsumer, d + 1.0, e + (double)y, w + 1.0, ac, ae, ag, z, ad, aq);
-				vertex(vertexConsumer, d + 1.0, e + (double)y, w, ac, ae, ag, ab, ad, aq);
-				vertex(vertexConsumer, d, e + (double)y, w, ac, ae, ag, ab, af, aq);
+				vertex(vertexConsumer, d, e + y, w + 1.0, ac, ae, ag, z, af, aq);
+				vertex(vertexConsumer, d + 1.0, e + y, w + 1.0, ac, ae, ag, z, ad, aq);
+				vertex(vertexConsumer, d + 1.0, e + y, w, ac, ae, ag, ab, ad, aq);
+				vertex(vertexConsumer, d, e + y, w, ac, ae, ag, ab, af, aq);
 			}
 		}
 		int ar = getLightColor(level, pos);
@@ -177,8 +177,8 @@ public class LiquidRenderUtils {
 					aa = northEastHeight;
 					as = d;
 					at = d + 1.0;
-					au = w + (double)0.001f;
-					av = w + (double)0.001f;
+					au = w + 0.001f;
+					av = w + 0.001f;
 					yield shouldRenderNorth;
 				}
 				case SOUTH -> {
@@ -186,15 +186,15 @@ public class LiquidRenderUtils {
 					aa = southWestHeight;
 					as = d + 1.0;
 					at = d;
-					au = w + 1.0 - (double)0.001f;
-					av = w + 1.0 - (double)0.001f;
+					au = w + 1.0 - 0.001f;
+					av = w + 1.0 - 0.001f;
 					yield bl5;
 				}
 				case WEST -> {
 					af = southWestHeight;
 					aa = northWestHeight;
-					as = d + (double)0.001f;
-					at = d + (double)0.001f;
+					as = d + 0.001f;
+					at = d + 0.001f;
 					au = w + 1.0;
 					av = w;
 					yield bl6;
@@ -202,8 +202,8 @@ public class LiquidRenderUtils {
 				default -> {
 					af = northEastHeight;
 					aa = southEastHeight;
-					as = d + 1.0 - (double)0.001f;
-					at = d + 1.0 - (double)0.001f;
+					as = d + 1.0 - 0.001f;
+					at = d + 1.0 - 0.001f;
 					au = w;
 					av = w + 1.0;
 					yield bl7;
@@ -218,14 +218,14 @@ public class LiquidRenderUtils {
 			float ba = k * az * f;
 			float bb = k * az * g;
 			float bc = k * az * h;
-			vertex(vertexConsumer, as, e + (double)af, au, ba, bb, bc, ao, aw, ar);
-			vertex(vertexConsumer, at, e + (double)aa, av, ba, bb, bc, ap, ax, ar);
-			vertex(vertexConsumer, at, e + (double)y, av, ba, bb, bc, ap, ay, ar);
-			vertex(vertexConsumer, as, e + (double)y, au, ba, bb, bc, ao, ay, ar);
-			vertex(vertexConsumer, as, e + (double)y, au, ba, bb, bc, ao, ay, ar);
-			vertex(vertexConsumer, at, e + (double)y, av, ba, bb, bc, ap, ay, ar);
-			vertex(vertexConsumer, at, e + (double)aa, av, ba, bb, bc, ap, ax, ar);
-			vertex(vertexConsumer, as, e + (double)af, au, ba, bb, bc, ao, aw, ar);
+			vertex(vertexConsumer, as, e + af, au, ba, bb, bc, ao, aw, ar);
+			vertex(vertexConsumer, at, e + aa, av, ba, bb, bc, ap, ax, ar);
+			vertex(vertexConsumer, at, e + y, av, ba, bb, bc, ap, ay, ar);
+			vertex(vertexConsumer, as, e + y, au, ba, bb, bc, ao, ay, ar);
+			vertex(vertexConsumer, as, e + y, au, ba, bb, bc, ao, ay, ar);
+			vertex(vertexConsumer, at, e + y, av, ba, bb, bc, ap, ay, ar);
+			vertex(vertexConsumer, at, e + aa, av, ba, bb, bc, ap, ax, ar);
+			vertex(vertexConsumer, as, e + af, au, ba, bb, bc, ao, aw, ar);
 		}
 	}
 
@@ -288,7 +288,7 @@ public class LiquidRenderUtils {
 		int l = j & 0xFF;
 		int m = i >> 16 & 0xFF;
 		int n = j >> 16 & 0xFF;
-		return (k > l ? k : l) | (m > n ? m : n) << 16;
+		return (Math.max(k, l)) | (Math.max(m, n)) << 16;
 	}
 
 	private static boolean isNeighborSameFluidAndBlock(FluidState firstState, FluidState secondState, BlockState firstBlock, BlockState secondBlock) {

@@ -18,17 +18,35 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
+import kotlinx.serialization.Contextual
 import kotlinx.serialization.Serializable
 
 /**
- * An [Int] wrapper that represents a color.
+ * A wrapper of a value, minimum, and maximum that represents a slider.
  * [<P>]
  * Should only be used if Fabric Language Kotlin is installed.
- * @param color The [Int] representation of the color
- * @since 1.3.8
+ * @param value The current [Int] value of the slider
+ * @param min The minimum [Int] of the slider
+ * @param max The maximum [Int] of the slider
+ * @since 1.4
  */
 @Serializable
-data class Color(@JvmField val color: Int) {
+data class Slider<T>(
+    @Contextual
+    val value: Number,
+    @Contextual
+    val min: Number,
+    @Contextual
+    val max: Number,
+    val type: SliderType<T>
+) {
 
-    override fun toString(): String = "Color[$color]"
+    override fun toString(): String = "Slider[value=$value, min=$min, max=$max]"
+}
+
+@Serializable
+sealed class SliderType<T> {
+    data object INT : SliderType<Int>()
+
+    data object LONG : SliderType<Long>()
 }

@@ -30,6 +30,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.dimension.DimensionType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class GravityAPI {
@@ -38,12 +39,12 @@ public final class GravityAPI {
     private static final Map<ResourceKey<DimensionType>, List<GravityBelt<?>>> GRAVITY_BELTS = new HashMap<>();
 
     public static void register(ResourceKey<DimensionType> dimension, GravityBelt<?> gravityBelt) {
-		GRAVITY_BELTS.computeIfAbsent(dimension, dimension1 -> new ArrayList<>()).add(gravityBelt);
+		getAllBelts(dimension).add(gravityBelt);
     }
 
-    @Nullable
+	@NotNull
     public static List<GravityBelt<?>> getAllBelts(ResourceKey<DimensionType> dimension) {
-        return GRAVITY_BELTS.get(dimension);
+        return GRAVITY_BELTS.computeIfAbsent(dimension, dimension1 -> new ArrayList<>());
     }
 
     public static List<GravityBelt<?>> getAllBelts(Level level) {
@@ -99,6 +100,9 @@ public final class GravityAPI {
     }
 
     public record GravityBelt<T extends GravityFunction>(double minY, double maxY, boolean renderBottom, boolean renderTop, T function) {
+		public GravityBelt(double minY, double maxY, T function) {
+			this(minY, maxY, false, false, function);
+		}
 
         public boolean affectsPosition(double y) {
             return y >= minY && y < maxY;
@@ -111,16 +115,22 @@ public final class GravityAPI {
             return 1.0;
         }
 
-		public static <T extends GravityFunction> Codec<GravityBelt<T>> codec(SerializableGravityFunction<T> gravityFunction) {
+		@SuppressWarnings("unchecked")
+		public static <T extends SerializableGravityFunction<T>> Codec<GravityBelt<T>> codec(Codec<T> gravityFunction) {
 			return RecordCodecBuilder.create(instance ->
 				instance.group(
 					Codec.DOUBLE.fieldOf("minY").forGetter(GravityBelt::minY),
 					Codec.DOUBLE.fieldOf("maxY").forGetter(GravityBelt::maxY),
-					Codec.BOOL.fieldOf("renderBottom").forGetter(GravityBelt::renderBottom),
-					Codec.BOOL.fieldOf("renderTop").forGetter(GravityBelt::renderTop),
-					gravityFunction.codec().fieldOf("gravityFunction").forGetter(belt -> belt.function() instanceof SerializableGravityFunction<?> abs ? (T) abs : null)
+					gravityFunction.fieldOf("gravityFunction").forGetter(GravityBelt::function)
 				).apply(instance, GravityBelt::new)
 			);
+		}
+
+		@Nullable
+		public static <T extends SerializableGravityFunction<T>> Codec<GravityBelt<T>> codec(T gravityFunction) {
+			Codec<T> codec = gravityFunction.codec();
+			if (codec == null) return null;
+			return codec(codec);
 		}
     }
 
@@ -130,6 +140,8 @@ public final class GravityAPI {
 				Codec.DOUBLE.fieldOf("gravity").forGetter(AbsoluteGravityFunction::gravity)
 			).apply(instance, AbsoluteGravityFunction::new)
 		);
+
+		public static final Codec<GravityBelt<AbsoluteGravityFunction>> BELT_CODEC = GravityBelt.codec(CODEC);
 
 		@Override
 		public double get(@Nullable Entity entity, double y) {

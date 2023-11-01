@@ -16,16 +16,23 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.testmod.config.gui;
+package net.frozenblock.lib.advancement.api;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.minecraft.client.gui.screens.Screen;
+import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.event.api.FrozenEvents;
+import net.minecraft.advancements.AdvancementHolder;
 
-public class ModMenuInit implements ModMenuApi {
+public final class AdvancementEvents {
+	private AdvancementEvents() {}
 
-	@Override
-	public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-		return TestConfigGui::buildScreen;
+	public static final Event<AdvancementInit> INIT = FrozenEvents.createEnvironmentEvent(AdvancementInit.class, callbacks -> context -> {
+		for (AdvancementInit callback : callbacks) {
+			callback.onInit(context);
+		}
+	});
+
+	@FunctionalInterface
+	public interface AdvancementInit {
+		void onInit(AdvancementHolder holder);
 	}
 }

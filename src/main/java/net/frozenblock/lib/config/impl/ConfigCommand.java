@@ -42,7 +42,7 @@ public final class ConfigCommand {
 	private static int reloadConfigs(CommandSourceStack source, String modId) {
 		Collection<Config<?>> configs = ConfigRegistry.getConfigsForMod(modId);
 		for (Config<?> config : configs) {
-			config.load();
+			config.onLoad();
 		}
 
 		if (configs.size() == 1)

@@ -19,16 +19,28 @@
 package net.frozenblock.lib.testmod.datagen;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricLootTableProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
 import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.LootPool;
+import net.minecraft.world.level.storage.loot.LootTable;
+import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 
@@ -37,6 +49,7 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		var pack = fabricDataGenerator.createPack();
 		pack.addProvider(TestBiomeTagProvider::new);
 		pack.addProvider(TestBlockTagProvider::new);
+		pack.addProvider(TestAdvancementLootTableProvider::new);
 	}
 
 	private static class TestBiomeTagProvider extends FrozenBiomeTagProvider {
@@ -70,6 +83,25 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		private void generateUtilityTags() {
 			this.getOrCreateTagBuilder(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON)
 					.add(Blocks.DIAMOND_BLOCK);
+		}
+	}
+
+	private static class TestAdvancementLootTableProvider extends SimpleFabricLootTableProvider {
+		public TestAdvancementLootTableProvider(FabricDataOutput output) {
+			super(output, LootContextParamSets.ADVANCEMENT_REWARD);
+		}
+
+		@Override
+		public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
+			output.accept(
+				FrozenTestMain.id("test_loottable"),
+				LootTable.lootTable()
+					.withPool(
+						LootPool.lootPool()
+							.setRolls(ConstantValue.exactly(1.0F))
+							.add(LootItem.lootTableItem(Items.DRAGON_EGG))
+				)
+			);
 		}
 	}
 }

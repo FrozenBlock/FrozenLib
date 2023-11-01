@@ -27,13 +27,14 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * Serializes and deserializes config data with TOML4J.
- * @deprecated Currently experimental and not finished.
+ * @since 1.4
  */
-@Deprecated
-class TomlConfig<T> extends Config<T> {
+@ApiStatus.Experimental
+public class TomlConfig<T> extends Config<T> {
 
 	public static final String EXTENSION = "toml";
 
@@ -52,14 +53,13 @@ class TomlConfig<T> extends Config<T> {
 		super(modId, config, path, true);
 		this.tomlWriter = builder.build();
 
-		if (this.load()) {
-			this.save();
+		if (this.onLoad()) {
+			this.onSave();
 		}
 	}
 
 	@Override
-	public void save() {
-		FrozenSharedConstants.LOGGER.info("Saving config {}", this.configClass().getSimpleName());
+	public void onSave() {
 		try {
 			Files.createDirectories(this.path().getParent());
 			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
@@ -71,11 +71,10 @@ class TomlConfig<T> extends Config<T> {
 	}
 
 	@Override
-	public boolean load() {
-		FrozenSharedConstants.LOGGER.info("Loading config {}", this.configClass().getSimpleName());
+	public boolean onLoad() {
 		if (Files.exists(this.path())) {
 			try {
-				var tomlReader = new Toml();
+				var tomlReader = getDefaultToml();
 				var reader = Files.newBufferedReader(this.path());
 				this.setConfig(tomlReader.read(reader).to(this.configClass()));
 				reader.close();
@@ -86,5 +85,10 @@ class TomlConfig<T> extends Config<T> {
 			}
 		}
 		return true;
+	}
+
+	private Toml getDefaultToml() {
+		Toml toml = new Toml();
+		return new Toml(toml.read(tomlWriter.write(defaultInstance())));
 	}
 }

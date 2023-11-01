@@ -47,6 +47,7 @@
     ]
   },
   "mixins": [
+    "mixin/frozenlib.advancement.mixins.json",
     "mixin/frozenlib.axe.mixins.json",
     "mixin/frozenlib.core.mixins.json",
     "mixin/frozenlib.entity.mixins.json",
@@ -82,11 +83,12 @@
     "minecraft": "${minecraft_version}"
   },
   "suggests": {
-    "fabric-language-kotlin": "${fabric_kotlin_version}",
+    "fabric-language-kotlin": ">=${fabric_kotlin_version}",
     "cloth-config": "*"
   },
   "breaks": {
-    "quilted_fabric_api": "4.0.0-beta.8"
+    "quilted_fabric_api": "4.0.0-beta.8",
+    "fabric-language-kotlin": "<${fabric_kotlin_version}"
   },
   "custom": {
     "loom:injected_interfaces": {
