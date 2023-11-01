@@ -20,6 +20,7 @@ package net.frozenblock.lib.advancement.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -53,11 +54,20 @@ public final class AdvancementAPI {
 		}
 	}
 
+	public static void setupCriteria(Advancement advancement) {
+		if (!(advancement.criteria instanceof HashMap<String, Criterion<?>>)) {
+			advancement.criteria = new HashMap<>(advancement.criteria);
+		}
+	}
+
 	public static void addCriteria(Advancement advancement, String key, Criterion<?> criterion) {
+		if (criterion == null) return;
+		setupCriteria(advancement);
 		advancement.criteria().putIfAbsent(key, criterion);
 	}
 
 	public static void addRequirements(Advancement advancement, AdvancementRequirements requirements) {
+		if (requirements == null || requirements.isEmpty()) return;
 		setupRequirements(advancement);
 		List<String[]> list = new ArrayList<>();
 		list.addAll(Arrays.stream(advancement.requirements().requirements).toList());
@@ -66,6 +76,7 @@ public final class AdvancementAPI {
 	}
 
 	public static void addLootTables(Advancement advancement, List<ResourceLocation> lootTables) {
+		if (lootTables.isEmpty()) return;
 		setupRewards(advancement);
 		AdvancementRewards rewards = advancement.rewards();
 		List<ResourceLocation> newLoot = new ArrayList<>(Arrays.stream(rewards.loot).toList());

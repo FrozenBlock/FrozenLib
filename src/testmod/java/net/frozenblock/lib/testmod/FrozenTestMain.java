@@ -19,6 +19,7 @@
 package net.frozenblock.lib.testmod;
 
 import com.mojang.datafixers.schemas.Schema;
+import java.util.List;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -29,9 +30,13 @@ import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.minecraft.advancements.Advancement;
+import net.minecraft.advancements.AdvancementRequirements;
+import net.minecraft.advancements.critereon.LocationPredicate;
+import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
+import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
@@ -39,7 +44,6 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.SimpleFixes;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.List;
 
 public final class FrozenTestMain implements ModInitializer {
 
@@ -69,6 +73,14 @@ public final class FrozenTestMain implements ModInitializer {
 				}
 				case "minecraft:story/upgrade_tools" -> {
 					AdvancementAPI.addLootTables(advancement, List.of(id("test_loottable")));
+					AdvancementAPI.addCriteria(
+						advancement,
+						"minecraft:plains",
+						PlayerTrigger.TriggerInstance.located(
+							LocationPredicate.Builder.inBiome(Biomes.PLAINS)
+						)
+					);
+					AdvancementAPI.addRequirements(advancement, new AdvancementRequirements(new String[][]{{"minecraft:plains"}}));
 					advancement.rewards.experience = 1000;
 				}
 				default -> {}
