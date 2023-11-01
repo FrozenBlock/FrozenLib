@@ -30,7 +30,6 @@ import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.resources.ResourceLocation;
@@ -77,10 +76,10 @@ public final class FrozenTestMain implements ModInitializer {
 						advancement,
 						"minecraft:plains",
 						PlayerTrigger.TriggerInstance.located(
-							LocationPredicate.Builder.inBiome(Biomes.PLAINS)
+							LocationPredicate.inBiome(Biomes.PLAINS)
 						)
 					);
-					AdvancementAPI.addRequirements(advancement, new AdvancementRequirements(new String[][]{{"minecraft:plains"}}));
+					AdvancementAPI.addRequirements(advancement, new String[][]{{"minecraft:plains"}});
 					advancement.rewards.experience = 1000;
 				}
 				default -> {}

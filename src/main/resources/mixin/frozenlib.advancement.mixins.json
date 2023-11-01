@@ -7,7 +7,9 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AdvancementHolderMixin",
-    "ServerAdvancementManagerMixin"
+    "AdvancementListMixin"
+  ],
+  "client": [
+    "ClientAdvancementsMixin"
   ]
 }

@@ -2,22 +2,20 @@ accessWidener    v2    named
 
 # Advancement
 accessible method net/minecraft/world/item/ItemStack <init> (Lnet/minecraft/world/level/ItemLike;ILjava/util/Optional;)V
-transitive-accessible field net/minecraft/advancements/Advancement parent Ljava/util/Optional;
-transitive-accessible field net/minecraft/advancements/Advancement display Ljava/util/Optional;
+transitive-accessible field net/minecraft/advancements/Advancement parent Lnet/minecraft/advancements/Advancement;
+transitive-accessible field net/minecraft/advancements/Advancement display Lnet/minecraft/advancements/DisplayInfo;
 transitive-accessible field net/minecraft/advancements/Advancement rewards Lnet/minecraft/advancements/AdvancementRewards;
 transitive-accessible field net/minecraft/advancements/Advancement criteria Ljava/util/Map;
 transitive-accessible field net/minecraft/advancements/Advancement requirements [[Ljava/lang/String;
 transitive-accessible field net/minecraft/advancements/Advancement sendsTelemetryEvent Z
-transitive-accessible field net/minecraft/advancements/Advancement name Ljava/util/Optional;
-transitive-mutable field net/minecraft/advancements/Advancement parent Ljava/util/Optional;
-transitive-mutable field net/minecraft/advancements/Advancement display Ljava/util/Optional;
+transitive-accessible field net/minecraft/advancements/Advancement chatComponent Lnet/minecraft/network/chat/Component;
+transitive-mutable field net/minecraft/advancements/Advancement parent Lnet/minecraft/advancements/Advancement;
+transitive-mutable field net/minecraft/advancements/Advancement display Lnet/minecraft/advancements/DisplayInfo;
 transitive-mutable field net/minecraft/advancements/Advancement rewards Lnet/minecraft/advancements/AdvancementRewards;
 transitive-mutable field net/minecraft/advancements/Advancement criteria Ljava/util/Map;
 transitive-mutable field net/minecraft/advancements/Advancement requirements [[Ljava/lang/String;
 transitive-mutable field net/minecraft/advancements/Advancement sendsTelemetryEvent Z
-transitive-mutable field net/minecraft/advancements/Advancement name Ljava/util/Optional;
-transitive-accessible field net/minecraft/advancements/AdvancementRequirements requirements [[Ljava/lang/String;
-transitive-mutable field net/minecraft/advancements/AdvancementRequirements requirements [[Ljava/lang/String;
+transitive-mutable field net/minecraft/advancements/Advancement chatComponent Lnet/minecraft/network/chat/Component;
 transitive-accessible field net/minecraft/advancements/AdvancementRewards loot [Lnet/minecraft/resources/ResourceLocation;
 transitive-mutable field net/minecraft/advancements/AdvancementRewards loot [Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible field net/minecraft/advancements/AdvancementRewards recipes [Lnet/minecraft/resources/ResourceLocation;
