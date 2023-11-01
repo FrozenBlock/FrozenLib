@@ -10,6 +10,7 @@ Put changelog here:
 - Added `Slider` class for use in `EntryBuilder`s
     - Kotlin only
 - Updated Kotlin to 1.9.20
+- Updated embedded Mixin Extras to 0.2.1-beta.2
 - Marked as broken with FLK versions lower than 0.10.11
 - Improved saving/loading config logging
 - Improved internal testmod
