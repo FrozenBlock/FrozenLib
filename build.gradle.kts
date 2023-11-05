@@ -76,6 +76,7 @@ val no_unused_chunks_version: String by project
 val ksyxis_version: String by project
 
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
+val licenseChecks: Boolean = githubActions
 
 base {
     archivesName.set(archives_base_name)
@@ -334,16 +335,18 @@ tasks {
         }
     }
 
-    test {
-        useJUnitPlatform()
-
-        license {
+    license {
+        if (licenseChecks) {
             rule(file("codeformat/QUILT_MODIFIED_HEADER"))
             rule(file("codeformat/HEADER"))
 
             include("**//*.java")
             include("**//*.kt")
         }
+    }
+
+    test {
+        useJUnitPlatform()
     }
 
     shadowJar {

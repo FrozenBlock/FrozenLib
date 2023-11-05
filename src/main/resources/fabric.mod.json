@@ -58,6 +58,7 @@
     "mixin/frozenlib.menu.mixins.json",
     "mixin/frozenlib.mobcategory.mixins.json",
     "mixin/frozenlib.modmenu.mixins.json",
+    "mixin/frozenlib.recipe.mixins.json",
     "mixin/frozenlib.screenshake.mixins.json",
     "mixin/frozenlib.shovel.mixins.json",
     "mixin/frozenlib.sound.mixins.json",
@@ -92,6 +93,9 @@
   },
   "custom": {
     "loom:injected_interfaces": {
+      "net/minecraft/class_2447": [
+        "net/frozenblock/lib/recipe/api/ShapedRecipeBuilderExtension"
+      ],
       "net/minecraft/class_1796": [
         "net/frozenblock/lib/item/impl/CooldownInterface"
       ],

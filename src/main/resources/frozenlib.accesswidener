@@ -25,6 +25,11 @@ transitive-mutable field net/minecraft/advancements/AdvancementRewards experienc
 transitive-accessible field net/minecraft/advancements/AdvancementRewards function Lnet/minecraft/commands/CommandFunction$CacheableFunction;
 transitive-mutable field net/minecraft/advancements/AdvancementRewards function Lnet/minecraft/commands/CommandFunction$CacheableFunction;
 
+# Recipe
+transitive-accessible method net/minecraft/world/item/crafting/Ingredient$ItemValue <init> (Lnet/minecraft/world/item/ItemStack;)V
+transitive-accessible field net/minecraft/world/item/crafting/CraftingRecipeCodecs ITEMSTACK_NONAIR_CODEC Lcom/mojang/serialization/Codec;
+transitive-accessible class net/minecraft/data/recipes/ShapedRecipeBuilder$Result
+
 # Sculk Spreading
 transitive-accessible    class    net/minecraft/world/level/block/SculkVeinBlock$SculkVeinSpreaderConfig
 
