@@ -56,18 +56,6 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 		return this.tag;
 	}
 
-	/*@Redirect(
-		method = "save",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/data/recipes/RecipeOutput;accept(Lnet/minecraft/data/recipes/FinishedRecipe;)V"
-		)
-	)
-	private void modifySave(RecipeOutput output, FinishedRecipe finishedRecipe) {
-		((ShapedRecipeBuilderExtension) finishedRecipe).frozenLib$tag(this.tag);
-		output.accept(finishedRecipe);
-	}*/
-
 	@WrapOperation(
 		method = "save",
 		at = @At(
