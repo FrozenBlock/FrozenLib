@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "E": {
+      "item": "minecraft:dragon_egg"
+    }
+  },
+  "pattern": [
+    "EEE",
+    "EEE",
+    "EEE"
+  ],
+  "result": {
+    "item": "minecraft:goat_horn",
+    "tag": {
+      "instrument": "minecraft:dream_goat_horn"
+    }
+  },
+  "show_notification": true
+}

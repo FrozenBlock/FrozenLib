@@ -24,15 +24,28 @@ import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricLootTableProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
+import net.fabricmc.fabric.api.recipe.v1.ingredient.DefaultCustomIngredients;
 import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider;
+import net.frozenblock.lib.ingamedevtools.RegisterInGameDevTools;
+import net.frozenblock.lib.recipe.api.ShapedRecipeUtil;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.frozenblock.lib.testmod.FrozenTestMain;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.IntTag;
+import net.minecraft.nbt.StringTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
+import net.minecraft.world.item.Instruments;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -47,9 +60,32 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 	@Override
 	public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
 		var pack = fabricDataGenerator.createPack();
+		pack.addProvider(TestRecipeProvider::new);
 		pack.addProvider(TestBiomeTagProvider::new);
 		pack.addProvider(TestBlockTagProvider::new);
 		pack.addProvider(TestAdvancementLootTableProvider::new);
+	}
+
+	private static class TestRecipeProvider extends FabricRecipeProvider {
+
+		public TestRecipeProvider(FabricDataOutput output) {
+			super(output);
+		}
+
+		@Override
+		public void buildRecipes(RecipeOutput exporter) {
+			ShapedRecipeUtil.withResultTag(
+				ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, Items.GOAT_HORN)
+					.define('E', Items.DRAGON_EGG)
+					.pattern("EEE")
+					.pattern("EEE")
+					.pattern("EEE")
+					.unlockedBy("has_dragon_egg", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DRAGON_EGG)),
+				new CompoundTag() {{
+					put("instrument", StringTag.valueOf(Instruments.DREAM_GOAT_HORN.location().toString()));
+				}}
+			).save(exporter, FrozenTestMain.id("dream_goat_horn").toString());
+		}
 	}
 
 	private static class TestBiomeTagProvider extends FrozenBiomeTagProvider {
