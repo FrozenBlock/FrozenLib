@@ -58,6 +58,7 @@
     "mixin/frozenlib.menu.mixins.json",
     "mixin/frozenlib.mobcategory.mixins.json",
     "mixin/frozenlib.modmenu.mixins.json",
+    "mixin/frozenlib.recipe.mixins.json",
     "mixin/frozenlib.screenshake.mixins.json",
     "mixin/frozenlib.shovel.mixins.json",
     "mixin/frozenlib.sound.mixins.json",

@@ -334,16 +334,16 @@ tasks {
         }
     }
 
+    license {
+        rule(file("codeformat/QUILT_MODIFIED_HEADER"))
+        rule(file("codeformat/HEADER"))
+
+        include("**//*.java")
+        include("**//*.kt")
+    }
+
     test {
         useJUnitPlatform()
-
-        license {
-            rule(file("codeformat/QUILT_MODIFIED_HEADER"))
-            rule(file("codeformat/HEADER"))
-
-            include("**//*.java")
-            include("**//*.kt")
-        }
     }
 
     shadowJar {
