@@ -93,6 +93,9 @@
   },
   "custom": {
     "loom:injected_interfaces": {
+      "net/minecraft/class_2447": [
+        "net/frozenblock/lib/recipe/api/ShapedRecipeBuilderExtension"
+      ],
       "net/minecraft/class_1796": [
         "net/frozenblock/lib/item/impl/CooldownInterface"
       ],

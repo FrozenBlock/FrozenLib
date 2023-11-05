@@ -5,5 +5,5 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Added support for an optional `data` entry on Recipe results
+- Added support for an optional `tag` entry on Recipe results
   - In the form of a `CompoundTag`

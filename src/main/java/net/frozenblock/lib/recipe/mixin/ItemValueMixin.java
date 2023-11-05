@@ -22,37 +22,26 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.ExtraCodecs;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipeCodecs;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.world.item.crafting.Ingredient;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import java.util.Optional;
 import java.util.function.Function;
 
-/**
- * Adds {@link CompoundTag} data support to crafting recipes.
- * @since 1.4.1
- */
-@Mixin(CraftingRecipeCodecs.class)
-public class CraftingRecipeCodecsMixin {
-
-	@Shadow
-	@Final
-	private static Codec<Item> ITEM_NONAIR_CODEC;
+@Mixin(Ingredient.ItemValue.class)
+public class ItemValueMixin {
 
 	@Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/codecs/RecordCodecBuilder;create(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;", ordinal = 0))
-	private static Codec<ItemStack> newItemStackCodec(Function<RecordCodecBuilder.Instance<ItemStack>, ? extends App<RecordCodecBuilder.Mu<ItemStack>, ItemStack>> builder) {
+	private static Codec<Ingredient.ItemValue> newCodec(Function<RecordCodecBuilder.Instance<Ingredient.ItemValue>, ? extends App<RecordCodecBuilder.Mu<Ingredient.ItemValue>, Ingredient.ItemValue>> builder) {
 		return RecordCodecBuilder.create(instance ->
 			instance.group(
-				ITEM_NONAIR_CODEC.fieldOf("item").forGetter(ItemStack::getItem),
-				ExtraCodecs.strictOptionalField(ExtraCodecs.POSITIVE_INT, "count", 1).forGetter(ItemStack::getCount),
-				CompoundTag.CODEC.optionalFieldOf("tag").forGetter(stack -> Optional.ofNullable(stack.getTag()))
-			).apply(instance, ItemStack::new)
+				CraftingRecipeCodecs.ITEMSTACK_NONAIR_CODEC.fieldOf("item").forGetter(Ingredient.ItemValue::item),
+				CompoundTag.CODEC.optionalFieldOf("tag").forGetter(itemValue -> Optional.ofNullable(itemValue.item().getTag()))
+			).apply(instance, (item, data) -> {
+                data.ifPresent(item::setTag);
+                return new Ingredient.ItemValue(item); })
 		);
 	}
 }
