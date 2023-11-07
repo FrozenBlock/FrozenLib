@@ -111,8 +111,8 @@ public class LiquidRenderUtils {
 			z = textureAtlasSprite.getU(0.0F);
 			aa = textureAtlasSprite.getV(0.0F);
 			ab = z;
-			ac = textureAtlasSprite.getV(16.0F);
-			ad = textureAtlasSprite.getU(16.0F);
+			ac = textureAtlasSprite.getV(1.0F);
+			ad = textureAtlasSprite.getU(1.0F);
 			ae = ac;
 			af = ad;
 			ag = aa;
@@ -210,10 +210,10 @@ public class LiquidRenderUtils {
 				}
 			}) || isFaceOccludedByNeighbor(level, pos, direction, Math.max(af, aa), level.getBlockState(pos.relative(direction)), level.getBlockState(pos.relative(direction)))) continue;
 			ao = textureAtlasSprite.getU(0);
-			ap = textureAtlasSprite.getU(16);
+			ap = textureAtlasSprite.getU(1);
 			float aw = textureAtlasSprite.getV(0);
 			float ax = textureAtlasSprite.getV(0);
-			float ay = textureAtlasSprite.getV(16);
+			float ay = textureAtlasSprite.getV(1);
 			float az = direction.getAxis() == Direction.Axis.Z ? l : m;
 			float ba = k * az * f;
 			float bb = k * az * g;
