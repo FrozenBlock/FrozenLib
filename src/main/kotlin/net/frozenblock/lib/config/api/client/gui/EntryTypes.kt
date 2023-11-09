@@ -18,6 +18,8 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
+import kotlin.reflect.KClass
+
 /**
  * An [Int] wrapper that represents a color.
  * [<P>]
