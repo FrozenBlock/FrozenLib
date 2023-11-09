@@ -216,7 +216,7 @@ data class EntryBuilder<T>(
                     }
                     .build()
             }
-            is EnumEntry<*> {
+            is EnumEntry<*> -> {
                 val consumer = saveConsumer as? Consumer<EnumEntry<*>> ?: consumerError()
                 entryBuilder.startEnumSelector(title, usedValue.`class`.java, usedValue.value)
                     .setDefaultValue((defaultValue as EnumEntry<*>).value)
@@ -228,7 +228,7 @@ data class EntryBuilder<T>(
                     }
                     .build()
             }
-            is SelectorEntry<*> {
+            is SelectorEntry<*> -> {
                 val consumer = saveConsumer as? Consumer<SelectorEntry<*>> ?: consumerError()
                 entryBuilder.startSelector(title, usedValue.valuesArray, usedValue.value)
                     .setDefaultValue((defaultValue as SelectorEntry<*>).value)
