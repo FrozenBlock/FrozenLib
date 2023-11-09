@@ -168,6 +168,51 @@ data class EntryBuilder<T>(
                     else -> throw IllegalArgumentException("Unsupported slider type: ${usedValue.type}")
                 }
             }
+            is StringList -> {
+                val consumer = saveConsumer as? Consumer<StringList> ?: consumerError()
+                entryBuilder.startStrList(title, usedValue.list)
+                    .setDefaultValue((defaultValue as StringList).list)
+                    .setSaveConsumer { strList -> consumer.accept(StringList(strList)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+            }
+            is IntList -> {
+                val consumer = saveConsumer as? Consumer<IntList> ?: consumerError()
+                entryBuilder.startIntList(title, usedValue.list)
+                    .setDefaultValue((defaultValue as IntList).list)
+                    .setSaveConsumer { intList -> consumer.accept(IntList(intList)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+            }
+            is LongList -> {
+                val consumer = saveConsumer as? Consumer<LongList> ?: consumerError()
+                entryBuilder.startLongList(title, usedValue.list)
+                    .setDefaultValue((defaultValue as LongList).list)
+                    .setSaveConsumer { longList -> consumer.accept(LongList(longList)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+            }
+            is FloatList -> {
+                val consumer = saveConsumer as? Consumer<FloatList> ?: consumerError()
+                entryBuilder.startFloatList(title, usedValue.list)
+                    .setDefaultValue((defaultValue as FloatList).list)
+                    .setSaveConsumer { floatList -> consumer.accept(FloatList(floatList)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+            }
+            TODO("add the other new entries")
             else -> throw IllegalArgumentException("Unsupported type: ${usedValue!!::class.java}")
         }
     }

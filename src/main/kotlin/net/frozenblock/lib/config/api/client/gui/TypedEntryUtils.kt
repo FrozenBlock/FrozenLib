@@ -35,7 +35,18 @@ import java.util.function.Supplier
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-fun <T> makeTypedEntryList(entryBuilder: ConfigEntryBuilder, title: Component, entrySupplier: Supplier<TypedEntry<List<T>>?>?, defaultValue: Supplier<TypedEntry<List<T>>>, expandedByDefault: Boolean = false, tooltip: Component, setterConsumer: Consumer<TypedEntry<List<T>>>, cellCreator: BiFunction<T, NestedListListEntry<T, AbstractConfigListEntry<T>>, AbstractConfigListEntry<T>>, requiresRestart: Boolean = false): NestedListListEntry<T, AbstractConfigListEntry<T>> {
+fun <T> makeTypedEntryList(
+    entryBuilder: ConfigEntryBuilder,
+    title: Component,
+    entrySupplier: Supplier<TypedEntry<List<T>>?>?,
+    defaultValue: Supplier<TypedEntry<List<T>>>,
+    expandedByDefault: Boolean = false,
+    tooltip: Component,
+    setterConsumer: Consumer<TypedEntry<List<T>>>,
+    cellCreator: BiFunction<T, NestedListListEntry<T, AbstractConfigListEntry<T>>, AbstractConfigListEntry<T>>,
+    requiresRestart: Boolean = false,
+    requirement: Requirement? = null
+): NestedListListEntry<T, AbstractConfigListEntry<T>> {
     val typedEntry: TypedEntry<List<T>> = entrySupplier?.get() ?: defaultValue.get()
 
     return NestedListListEntry(
@@ -63,14 +74,28 @@ fun <T> makeTypedEntryList(entryBuilder: ConfigEntryBuilder, title: Component, e
         true,
         // New Cell Creation
         cellCreator
-    ).let {it.isRequiresRestart = requiresRestart; it}
+    ).apply {
+        this.isRequiresRestart = requiresRestart
+        this.requirement = requirement
+    }
 }
 
 /**
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-fun <T> makeNestedList(entryBuilder: ConfigEntryBuilder, title: Component, entrySupplier: Supplier<List<T>?>?, defaultValue: Supplier<List<T>>, expandedByDefault: Boolean = false, tooltip: Component, setterConsumer: Consumer<List<T>>, cellCreator: BiFunction<T, NestedListListEntry<T, AbstractConfigListEntry<T>>, AbstractConfigListEntry<T>>, requiresRestart: Boolean = false): NestedListListEntry<T, out AbstractConfigListEntry<T>> {
+fun <T> makeNestedList(
+    entryBuilder: ConfigEntryBuilder,
+    title: Component,
+    entrySupplier: Supplier<List<T>?>?,
+    defaultValue: Supplier<List<T>>,
+    expandedByDefault: Boolean = false,
+    tooltip: Component,
+    setterConsumer: Consumer<List<T>>,
+    cellCreator: BiFunction<T, NestedListListEntry<T, AbstractConfigListEntry<T>>, AbstractConfigListEntry<T>>,
+    requiresRestart: Boolean = false,
+    requirement: Requirement? = null
+): NestedListListEntry<T, out AbstractConfigListEntry<T>> {
     val value: List<T> = entrySupplier?.get() ?: defaultValue.get()
 
     return NestedListListEntry(
@@ -98,17 +123,30 @@ fun <T> makeNestedList(entryBuilder: ConfigEntryBuilder, title: Component, entry
         true,
         // New Cell Creation
         cellCreator
-    ).let {it.isRequiresRestart = requiresRestart; it}
+    ).apply {
+        this.isRequiresRestart = requiresRestart
+        this.requirement = requirement
+    }
 }
 
 /**
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-fun <T> makeMultiElementEntry(title: Component, value: T, defaultExpanded: Boolean = true, vararg entries: AbstractConfigListEntry<out Any>, requiresRestart: Boolean = false): MultiElementListEntry<T> =
+fun <T> makeMultiElementEntry(
+    title: Component,
+    value: T,
+    defaultExpanded: Boolean = true,
+    vararg entries: AbstractConfigListEntry<out Any>,
+    requiresRestart: Boolean = false,
+    requirement: Requirement? = null
+): MultiElementListEntry<T> =
     MultiElementListEntry(
         title,
         value, // Default Value
         entries.asList(),
         defaultExpanded
-    ).let { it.isRequiresRestart = requiresRestart; it }
+    ).apply {
+        this.isRequiresRestart = requiresRestart
+        this.requirement = requirement
+    }

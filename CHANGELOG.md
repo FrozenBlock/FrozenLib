@@ -5,5 +5,13 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Added support for an optional `tag` entry on Recipe results
-  - In the form of a `CompoundTag`
+- Added support for Cloth Config's `Dependency` in `TypedEntryUtils`
+- Added support for lists in `EntryBuilder`
+  - Via the new `StringList`, `IntList`, `LongList`, `FloatList`, and `DoubleList` data classes
+  - Kotlin only
+- Added support for enums in `EntryBuilder`
+  - Via the new `EnumEntry` data class
+  - Kotlin only
+- Added support for array selectors in `EntryBuilder`
+  - Via the new `SelectorEntry` data class
+  - Kotlin only

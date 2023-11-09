@@ -21,11 +21,9 @@ package net.frozenblock.lib.util
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import kotlinx.serialization.Serializable
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.level.biome.Climate
 
-@Serializable
 data class MutableParameter(
     @JvmField var min: Long?,
     @JvmField var max: Long?
@@ -52,7 +50,6 @@ data class MutableParameter(
 
 fun Climate.Parameter.mutable(): MutableParameter = MutableParameter(min, max)
 
-@Serializable
 data class MutableParameterPoint(
     @JvmField var temperature: MutableParameter?,
     @JvmField var humidity: MutableParameter?,
