@@ -178,6 +178,7 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
             is IntList -> {
                 val consumer = saveConsumer as? Consumer<IntList> ?: consumerError()
@@ -189,6 +190,7 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
             is LongList -> {
                 val consumer = saveConsumer as? Consumer<LongList> ?: consumerError()
@@ -200,6 +202,7 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
             is FloatList -> {
                 val consumer = saveConsumer as? Consumer<FloatList> ?: consumerError()
@@ -211,8 +214,32 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
-            TODO("add the other new entries")
+            is EnumEntry<*> {
+                val consumer = saveConsumer as? Consumer<EnumEntry<*>> ?: consumerError()
+                entryBuilder.startEnumSelector(title, usedValue.`class`.java, usedValue.value)
+                    .setDefaultValue((defaultValue as EnumEntry<*>).value)
+                    .setSaveConsumer { newValue -> consumer.accept(EnumEntry((defaultValue as EnumEntry<*>).`class`.java, newValue)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+                    .build()
+            }
+            is SelectorEntry<*> {
+                val consumer = saveConsumer as? Consumer<SelectorEntry<*>> ?: consumerError()
+                entryBuilder.startSelector(title, usedValue.valuesArray, usedValue.value)
+                    .setDefaultValue((defaultValue as SelectorEntry<*>).value)
+                    .setSaveConsumer { newValue -> consumer.accept(SelectorEntry((defaultValue as SelectorEntry<*>).valuesArray, newValue)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+                    .build()
+            }
             else -> throw IllegalArgumentException("Unsupported type: ${usedValue!!::class.java}")
         }
     }
