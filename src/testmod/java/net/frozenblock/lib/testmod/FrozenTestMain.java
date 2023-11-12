@@ -26,7 +26,10 @@ import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.advancement.api.AdvancementAPI;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
+import net.frozenblock.lib.gravity.api.GravityBelt;
+import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
 import net.frozenblock.lib.gravity.api.GravityAPI;
+import net.frozenblock.lib.gravity.api.functions.InterpolatedGravityFunction;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.minecraft.advancements.Advancement;
@@ -61,8 +64,10 @@ public final class FrozenTestMain implements ModInitializer {
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
 
-		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityAPI.GravityBelt<>(300, 319, true, true, new GravityAPI.AbsoluteGravityFunction(0.1)));
+		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(300, 319, true, true, new AbsoluteGravityFunction(0.1)));
 		assert GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300) == 0.1;
+
+		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0, 192, new InterpolatedGravityFunction(0.1, 1.0, 1.0, 30, 160)));
 
 		AdvancementEvents.INIT.register(holder -> {
 			Advancement advancement = holder.value();
@@ -80,7 +85,7 @@ public final class FrozenTestMain implements ModInitializer {
 							LocationPredicate.Builder.inBiome(Biomes.PLAINS)
 						)
 					);
-					AdvancementAPI.addRequirements(advancement, new AdvancementRequirements(new String[][]{{"minecraft:plains"}}));
+					AdvancementAPI.addRequirements(advancement, AdvancementRequirements.anyOf(List.of("minecraft:plains")));
 					advancement.rewards.experience = 1000;
 				}
 				default -> {}

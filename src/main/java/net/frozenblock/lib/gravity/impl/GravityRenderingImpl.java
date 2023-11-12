@@ -27,6 +27,7 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import net.frozenblock.lib.gravity.api.GravityAPI;
+import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
@@ -47,7 +48,7 @@ public final class GravityRenderingImpl {
 		RenderSystem.defaultBlendFunc();
 		BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
 		double y = camera.getPosition().y();
-		for (GravityAPI.GravityBelt<?> gravityBelt : GravityAPI.getAllBelts(level)) {
+		for (GravityBelt<?> gravityBelt : GravityAPI.getAllBelts(level)) {
 			poseStack.pushPose();
 			poseStack.mulPose(Axis.YP.rotationDegrees(-90F));
 			if (gravityBelt.renderTop()) {

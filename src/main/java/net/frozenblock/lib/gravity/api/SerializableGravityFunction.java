@@ -16,29 +16,10 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.client.gui
+package net.frozenblock.lib.gravity.api;
 
-/**
- * A wrapper of a value, minimum, and maximum that represents a slider.
- * [<P>]
- * Should only be used if Fabric Language Kotlin is installed.
- * @param value The current [Int] value of the slider
- * @param min The minimum [Int] of the slider
- * @param max The maximum [Int] of the slider
- * @since 1.4
- */
-data class Slider<T>(
-    val value: Number,
-    val min: Number,
-    val max: Number,
-    val type: SliderType<T>
-) {
+import com.mojang.serialization.Codec;
 
-    override fun toString(): String = "Slider[value=$value, min=$min, max=$max]"
-}
-
-sealed class SliderType<T> {
-    data object INT : SliderType<Int>()
-
-    data object LONG : SliderType<Long>()
+public interface SerializableGravityFunction<T extends GravityFunction> extends GravityFunction {
+	Codec<T> codec();
 }
