@@ -23,7 +23,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui.text as text
+import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui.text
 import net.minecraft.network.chat.Component
 import java.util.function.Consumer
 
@@ -52,8 +52,11 @@ data class EntryBuilder<T>(
 ) {
     companion object {
         private const val CONSUMER_ERROR = "Invalid consumer"
+        private const val DEFAULT_VALUE_ERROR = "Invalid default value"
 
-        private fun consumerError(): Nothing = throw IllegalArgumentException(CONSUMER_ERROR)
+        internal fun consumerError(): Nothing = throw IllegalArgumentException(CONSUMER_ERROR)
+
+        internal fun defaultValueError(): Nothing = throw IllegalArgumentException(DEFAULT_VALUE_ERROR)
     }
 
     /**
@@ -216,29 +219,9 @@ data class EntryBuilder<T>(
                     }
                     .build()
             }
-            is EnumEntry<*> -> {
-                val consumer = saveConsumer as? Consumer<EnumEntry<*>> ?: consumerError()
-                entryBuilder.startEnumSelector(title, usedValue.`class`.java, usedValue.value)
-                    .setDefaultValue((defaultValue as EnumEntry<*>).value)
-                    .setSaveConsumer { newValue -> consumer.accept(EnumEntry((defaultValue as EnumEntry<*>).`class`.java, newValue)) }
-                    .apply {
-                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
-                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
-                        requirement?.let { requirement -> this.setRequirement(requirement) }
-                    }
-                    .build()
-            }
-            is SelectorEntry<*> -> {
-                val consumer = saveConsumer as? Consumer<SelectorEntry<*>> ?: consumerError()
-                entryBuilder.startSelector(title, usedValue.valuesArray, usedValue.value)
-                    .setDefaultValue((defaultValue as SelectorEntry<*>).value)
-                    .setSaveConsumer { newValue -> consumer.accept(SelectorEntry((defaultValue as SelectorEntry<*>).valuesArray, newValue)) }
-                    .apply {
-                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
-                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
-                        requirement?.let { requirement -> this.setRequirement(requirement) }
-                    }
-                    .build()
+            is ConfigEntry<*> -> {
+                val consumer = saveConsumer as? Consumer<ConfigEntry<*>> ?: consumerError()
+                usedValue.makeEntry(entryBuilder, title, defaultValue, consumer, tooltip, requiresRestart, requirement)
             }
             else -> throw IllegalArgumentException("Unsupported type: ${usedValue!!::class.java}")
         }

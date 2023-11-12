@@ -17,6 +17,7 @@
  */
 
 @file:Environment(EnvType.CLIENT)
+@file:Suppress("experimental")
 
 package net.frozenblock.lib.config.api.client.gui
 
@@ -122,7 +123,7 @@ fun <T> makeNestedList(
         // Insert In Front
         true,
         // New Cell Creation
-        cellCreator
+        cellCreator,
     ).apply {
         this.isRequiresRestart = requiresRestart
         this.requirement = requirement

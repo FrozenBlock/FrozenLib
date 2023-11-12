@@ -18,11 +18,10 @@
 
 package net.frozenblock.lib;
 
+import net.frozenblock.lib.gravity.api.GravityBelt;
+import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
 import net.frozenblock.lib.gravity.api.GravityAPI;
-import net.minecraft.SharedConstants;
-import net.minecraft.server.Bootstrap;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
-import org.junit.jupiter.api.Assertions;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -37,11 +36,11 @@ class GravityTests {
     @Test
     void testGravity() {
         // gravity 0.1 y 300..319
-        GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityAPI.GravityBelt<>(300.0, 319.0, new GravityAPI.AbsoluteGravityFunction(0.1)));
+        GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(300.0, 319.0, new AbsoluteGravityFunction(0.1)));
         // gravity 100.0 y -64..-32
-        GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityAPI.GravityBelt<>(-64.0, -32.0, new GravityAPI.AbsoluteGravityFunction(100.0)));
+        GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(-64.0, -32.0, new AbsoluteGravityFunction(100.0)));
         // gravity 0.5 y 0..15
-        GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityAPI.GravityBelt<>(0.0, 15.0, new GravityAPI.AbsoluteGravityFunction(0.5)));
+        GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0.0, 15.0, new AbsoluteGravityFunction(0.5)));
 
         assertEquals(0.1, GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300));
         assertEquals(100.0, GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, -64));
