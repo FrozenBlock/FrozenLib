@@ -9,6 +9,7 @@
   "mixins": [
     "ItemStackMixin",
     "ItemValueMixin",
-    "ShapedRecipeBuilderMixin"
+    "ShapedRecipeBuilderMixin",
+    "ShapedRecipeMixin"
   ]
 }

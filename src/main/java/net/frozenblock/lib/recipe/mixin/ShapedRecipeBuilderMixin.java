@@ -21,10 +21,13 @@ package net.frozenblock.lib.recipe.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
+import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -57,9 +60,9 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 			target = "Lnet/minecraft/data/recipes/RecipeOutput;accept(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/world/item/crafting/Recipe;Lnet/minecraft/advancements/AdvancementHolder;)V"
 		)
 	)
-	private void modifySave(RecipeOutput instance, ResourceLocation recipe, Operation<?> operation) {
+	private void modifySave(RecipeOutput instance, ResourceLocation recipeId, Recipe<?> recipe, AdvancementHolder holder, Operation<ShapedRecipe> operation) {
 		((ShapedRecipeBuilderExtension) recipe).frozenLib$tag(this.tag);
-		operation.call(instance, recipe);
+		operation.call(instance, recipeId, recipe, holder);
 	}
 
 	/*@Mixin(ShapedRecipeBuilder.Result.class)
