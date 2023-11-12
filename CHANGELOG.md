@@ -6,6 +6,7 @@ Put changelog here:
 
 -----------------
 - Refactored Gravity API
+- Fixed `LiquidRenderUtils` rendering 16x16 (256) textures instead of 1
 - Added support for Cloth Config's `Dependency` in `TypedEntryUtils`
 - Added support for lists in `EntryBuilder`
   - Via the new `StringList`, `IntList`, `LongList`, `FloatList`, and `DoubleList` data classes
