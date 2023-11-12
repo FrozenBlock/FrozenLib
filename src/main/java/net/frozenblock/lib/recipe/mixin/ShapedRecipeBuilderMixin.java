@@ -18,23 +18,17 @@
 
 package net.frozenblock.lib.recipe.mixin;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.mojang.serialization.JsonOps;
 import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
-import net.minecraft.data.recipes.FinishedRecipe;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(ShapedRecipeBuilder.class)
 public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
@@ -60,15 +54,15 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 		method = "save",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/data/recipes/RecipeOutput;accept(Lnet/minecraft/data/recipes/FinishedRecipe;)V"
+			target = "Lnet/minecraft/data/recipes/RecipeOutput;accept(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/world/item/crafting/Recipe;Lnet/minecraft/advancements/AdvancementHolder;)V"
 		)
 	)
-	private void modifySave(RecipeOutput instance, FinishedRecipe recipe, Operation<?> operation) {
+	private void modifySave(RecipeOutput instance, ResourceLocation recipe, Operation<?> operation) {
 		((ShapedRecipeBuilderExtension) recipe).frozenLib$tag(this.tag);
 		operation.call(instance, recipe);
 	}
 
-	@Mixin(ShapedRecipeBuilder.Result.class)
+	/*@Mixin(ShapedRecipeBuilder.Result.class)
 	private static class ResultMixin implements ShapedRecipeBuilderExtension {
 
 		@Unique
@@ -92,5 +86,5 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 				jsonObject2.add("tag", CompoundTag.CODEC.encodeStart(JsonOps.INSTANCE, this.tag).getOrThrow(false, str -> {}));
 			}
 		}
-	}
+	}*/
 }

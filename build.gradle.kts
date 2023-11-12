@@ -195,7 +195,7 @@ repositories {
         setUrl("https://jitpack.io")
     }
     maven {
-        setName("Modrinth")
+        name = "Modrinth"
         setUrl("https://api.modrinth.com/maven")
 
         content {
@@ -236,7 +236,7 @@ repositories {
         setUrl("https://maven.parchmentmc.org")
     }
     maven {
-        setName("Quilt")
+        name = "Quilt"
         setUrl("https://maven.quiltmc.org/repository/release")
     }
 
@@ -251,7 +251,8 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraft_version")
 	mappings(loom.layered {
 		// please annoy treetrain if this doesnt work
-		mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
+        // TODO: Add back Quilt Mappings when it's updated
+		//mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
         parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
 		officialMojangMappings {
 			nameSyntheticMembers = false

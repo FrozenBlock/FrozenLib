@@ -22,7 +22,7 @@ import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.crafting.CraftingRecipeCodecs;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,7 +37,7 @@ public class ItemValueMixin {
 	private static Codec<Ingredient.ItemValue> newCodec(Function<RecordCodecBuilder.Instance<Ingredient.ItemValue>, ? extends App<RecordCodecBuilder.Mu<Ingredient.ItemValue>, Ingredient.ItemValue>> builder) {
 		return RecordCodecBuilder.create(instance ->
 			instance.group(
-				CraftingRecipeCodecs.ITEMSTACK_NONAIR_CODEC.fieldOf("item").forGetter(Ingredient.ItemValue::item),
+				ItemStack.SINGLE_ITEM_CODEC.fieldOf("item").forGetter(Ingredient.ItemValue::item),
 				CompoundTag.CODEC.optionalFieldOf("tag").forGetter(itemValue -> Optional.ofNullable(itemValue.item().getTag()))
 			).apply(instance, (item, data) -> {
                 data.ifPresent(item::setTag);

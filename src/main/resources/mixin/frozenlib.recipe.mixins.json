@@ -7,9 +7,8 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "CraftingRecipeCodecsMixin",
+    "ItemStackMixin",
     "ItemValueMixin",
-    "ShapedRecipeBuilderMixin",
-    "ShapedRecipeBuilderMixin$ResultMixin"
+    "ShapedRecipeBuilderMixin"
   ]
 }
