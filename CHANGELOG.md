@@ -5,6 +5,7 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
+- Refactored Gravity API
 - Added support for Cloth Config's `Dependency` in `TypedEntryUtils`
 - Added support for lists in `EntryBuilder`
   - Via the new `StringList`, `IntList`, `LongList`, `FloatList`, and `DoubleList` data classes
