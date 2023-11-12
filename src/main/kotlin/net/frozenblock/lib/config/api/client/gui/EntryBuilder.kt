@@ -23,7 +23,7 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui.text as text
+import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui.text
 import net.minecraft.network.chat.Component
 import java.util.function.Consumer
 
@@ -52,8 +52,11 @@ data class EntryBuilder<T>(
 ) {
     companion object {
         private const val CONSUMER_ERROR = "Invalid consumer"
+        private const val DEFAULT_VALUE_ERROR = "Invalid default value"
 
-        private fun consumerError(): Nothing = throw IllegalArgumentException(CONSUMER_ERROR)
+        internal fun consumerError(): Nothing = throw IllegalArgumentException(CONSUMER_ERROR)
+
+        internal fun defaultValueError(): Nothing = throw IllegalArgumentException(DEFAULT_VALUE_ERROR)
     }
 
     /**
@@ -167,6 +170,58 @@ data class EntryBuilder<T>(
                     }
                     else -> throw IllegalArgumentException("Unsupported slider type: ${usedValue.type}")
                 }
+            }
+            is StringList -> {
+                val consumer = saveConsumer as? Consumer<StringList> ?: consumerError()
+                entryBuilder.startStrList(title, usedValue.list)
+                    .setDefaultValue((defaultValue as StringList).list)
+                    .setSaveConsumer { strList -> consumer.accept(StringList(strList)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+                    .build()
+            }
+            is IntList -> {
+                val consumer = saveConsumer as? Consumer<IntList> ?: consumerError()
+                entryBuilder.startIntList(title, usedValue.list)
+                    .setDefaultValue((defaultValue as IntList).list)
+                    .setSaveConsumer { intList -> consumer.accept(IntList(intList)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+                    .build()
+            }
+            is LongList -> {
+                val consumer = saveConsumer as? Consumer<LongList> ?: consumerError()
+                entryBuilder.startLongList(title, usedValue.list)
+                    .setDefaultValue((defaultValue as LongList).list)
+                    .setSaveConsumer { longList -> consumer.accept(LongList(longList)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+                    .build()
+            }
+            is FloatList -> {
+                val consumer = saveConsumer as? Consumer<FloatList> ?: consumerError()
+                entryBuilder.startFloatList(title, usedValue.list)
+                    .setDefaultValue((defaultValue as FloatList).list)
+                    .setSaveConsumer { floatList -> consumer.accept(FloatList(floatList)) }
+                    .apply {
+                        tooltip?.let { tooltip -> this.setTooltip(tooltip) }
+                        requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
+                        requirement?.let { requirement -> this.setRequirement(requirement) }
+                    }
+                    .build()
+            }
+            is ConfigEntry<*> -> {
+                val consumer = saveConsumer as? Consumer<ConfigEntry<*>> ?: consumerError()
+                usedValue.makeEntry(entryBuilder, title, defaultValue, consumer, tooltip, requiresRestart, requirement)
             }
             else -> throw IllegalArgumentException("Unsupported type: ${usedValue!!::class.java}")
         }

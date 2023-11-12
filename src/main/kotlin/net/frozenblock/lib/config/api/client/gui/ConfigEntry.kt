@@ -18,17 +18,20 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
-import kotlinx.serialization.Serializable
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
+import me.shedaniel.clothconfig2.api.Requirement
+import net.minecraft.network.chat.Component
 
-/**
- * An [Int] wrapper that represents a color.
- * [<P>]
- * Should only be used if Fabric Language Kotlin is installed.
- * @param color The [Int] representation of the color
- * @since 1.3.8
- */
-@Serializable
-data class Color(@JvmField val color: Int) {
+fun interface ConfigEntry<T> {
 
-    override fun toString(): String = "Color[$color]"
+    fun makeEntry(
+        entryBuilder: ConfigEntryBuilder,
+        title: Component,
+        defaultValue: Any,
+        saveConsumer: Any,
+        tooltip: Component?,
+        requiresRestart: Boolean?,
+        requirement: Requirement?
+    ): AbstractConfigListEntry<*>
 }
