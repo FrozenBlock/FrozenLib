@@ -79,6 +79,11 @@ public final class SoundPredicate<T extends Entity> {
     public interface LoopPredicate<T extends Entity> {
         boolean test(T entity);
 
+		@Nullable
+		default Boolean firstTickTest(T entity) {
+			return null;
+		}
+
 		default void onStart(@Nullable T entity) {
 		}
 

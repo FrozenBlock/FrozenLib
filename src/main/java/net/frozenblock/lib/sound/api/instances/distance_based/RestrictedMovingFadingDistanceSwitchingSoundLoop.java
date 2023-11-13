@@ -29,18 +29,15 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
-public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> extends RestrictedSoundInstance {
+public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> extends RestrictedSoundInstance<T> {
 
-    private final T entity;
-    private final SoundPredicate.LoopPredicate<T> predicate;
     private final boolean isFarSound;
     private final double maxDist;
     private final double fadeDist;
     private final float maxVol;
 
     public RestrictedMovingFadingDistanceSwitchingSoundLoop(T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, boolean stopOnDeath, double fadeDist, double maxDist, float maxVol, boolean isFarSound) {
-        super(sound, category, SoundInstance.createUnseededRandom());
-        this.entity = entity;
+        super(sound, category, SoundInstance.createUnseededRandom(), entity, predicate);
         this.looping = true;
         this.delay = 0;
         this.volume = volume;
@@ -49,7 +46,6 @@ public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> 
         this.x = (float) entity.getX();
         this.y = (float) entity.getY();
         this.z = (float) entity.getZ();
-        this.predicate = predicate;
         this.isFarSound = isFarSound;
         this.maxDist = maxDist;
         this.fadeDist = fadeDist;
@@ -57,28 +53,12 @@ public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> 
     }
 
     @Override
-    public boolean canPlaySound() {
-        return !this.entity.isSilent();
-    }
-
-    @Override
-    public boolean canStartSilent() {
-        return true;
-    }
-
-	@Override
-	public void stop() {
-		this.predicate.onStop(this.entity);
-		super.stop();
-	}
-
-    @Override
     public void tick() {
         Minecraft client = Minecraft.getInstance();
         if (this.entity.isRemoved()) {
             this.stop();
         } else {
-            if (!this.predicate.test(this.entity)) {
+            if (!this.test()) {
                 this.stop();
             } else {
                 this.x = (float) this.entity.getX();

@@ -38,7 +38,17 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
-public record MovingRestrictionSoundPacket(int id, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation predicateId, boolean stopOnDeath, boolean looping) implements FabricPacket {
+public record MovingRestrictionSoundPacket(
+	int id,
+	SoundEvent sound,
+	SoundSource category,
+	float volume,
+	float pitch,
+	ResourceLocation predicateId,
+	boolean stopOnDeath,
+	boolean looping
+) implements FabricPacket {
+
 	public static final PacketType<MovingRestrictionSoundPacket> PACKET_TYPE = PacketType.create(FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, MovingRestrictionSoundPacket::new);
 
 	public MovingRestrictionSoundPacket(FriendlyByteBuf buf) {
