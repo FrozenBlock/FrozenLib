@@ -38,7 +38,7 @@ public record InterpolatedGravityFunction(
 
 	public static final Codec<InterpolatedGravityFunction> CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
-			Codec.DOUBLE.fieldOf("gravity").forGetter(InterpolatedGravityFunction::gravity),
+			Codec.DOUBLE.fieldOf("gravity").forGetter(InterpolatedGravityFunction::gravity)
 			//Codec.DOUBLE.fieldOf("minLerpGravity").forGetter(InterpolatedGravityFunction::minLerpGravity),
 			//Codec.DOUBLE.fieldOf("maxLerpGravity").forGetter(InterpolatedGravityFunction::maxLerpY),
 			//Codec.DOUBLE.fieldOf("minLerpY").forGetter(InterpolatedGravityFunction::minLerpY),

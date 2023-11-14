@@ -21,6 +21,7 @@ package net.frozenblock.lib.gravity.api;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.dimension.DimensionType;
+import org.jetbrains.annotations.Nullable;
 
 public class GravityContext {
 
