@@ -24,3 +24,8 @@ import java.net.URI
 fun String.uri(): URI = URI.create(this)
 
 fun vanillaId(path: String): ResourceLocation = ResourceLocation(path)
+
+val String.asResourceLocation
+    get() {
+        return ResourceLocation(this)
+    }

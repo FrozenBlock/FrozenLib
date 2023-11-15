@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -32,6 +35,12 @@ import org.jetbrains.annotations.NotNull;
 
 public final class GravityAPI {
     private GravityAPI() {}
+
+    public static final Event<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(GravityModification.class, callbacks -> context -> {
+        for (GravityModification callback : callbacks) {
+            callback.modifyGravity(context);
+        }
+    });
 
     private static final Map<ResourceKey<DimensionType>, List<GravityBelt<?>>> GRAVITY_BELTS = new HashMap<>();
 
@@ -48,15 +57,22 @@ public final class GravityAPI {
         return getAllBelts(level.dimensionTypeId());
     }
 
-    public static double calculateGravity(ResourceKey<DimensionType> dimension, double y) {
-        if (GRAVITY_BELTS.containsKey(dimension)) {
-            Optional<GravityBelt<?>> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(dimension), y);
-            if (optionalGravityBelt.isPresent()) {
-                GravityBelt<?> belt = optionalGravityBelt.get();
-                return belt.getGravity(null, y);
+    static {
+        MODIFICATIONS.register(context -> {
+            if (GRAVITY_BELTS.containsKey(context.dimension)) {
+                Optional<GravityBelt<?>> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(context.dimension), context.y);
+                if (optionalGravityBelt.isPresent()) {
+                    GravityBelt<?> belt = optionalGravityBelt.get();
+                    context.gravity = belt.getGravity(null, y);
+                }
             }
-        }
-        return 1.0;
+        });
+    }
+
+    public static double calculateGravity(ResourceKey<DimensionType> dimension, double y) {
+        GravityContext context = new GravityContext(dimension, y, null);
+        MODIFICATIONS.invoker().modifyGravity(context);
+        return context.gravity;
     }
 
     public static double calculateGravity(Level level, double y) {
@@ -65,16 +81,10 @@ public final class GravityAPI {
 
     public static double calculateGravity(Entity entity) {
         ResourceKey<DimensionType> dimension = entity.level().dimensionTypeId();
-        if (GRAVITY_BELTS.containsKey(dimension)) {
-            double y = entity.getY();
-            Optional<GravityBelt<?>> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(dimension), y);
-            if (optionalGravityBelt.isPresent()) {
-                GravityBelt<?> belt = optionalGravityBelt.get();
-                // at some point add extensions or something
-                return belt.getGravity(entity, y);
-            }
-        }
-        return 1.0;
+        double y = entity.get();
+        GravityContext context = new GravityContext(dimension, y, entity);
+        MODIFICATIONS.invoker().modifyGravity(context);
+        return context.gravity;
     }
 
     public static Direction getGravityDirection(Entity entity) {
@@ -96,4 +106,8 @@ public final class GravityAPI {
         return optionalGravityBelt;
     }
 
+    @FunctionalInterface
+    public interface GravityModification extends CommonEventEntrypoint {
+        void modifyGravity(GravityContext context);
+    }
 }
