@@ -29,7 +29,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 public record InterpolatedGravityFunction(
-	double gravity,
+	double gravity
 	//double minLerpGravity,
 	//double maxLerpGravity,
 	//double minLerpY,

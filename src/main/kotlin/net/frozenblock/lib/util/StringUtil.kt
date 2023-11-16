@@ -25,7 +25,7 @@ fun String.uri(): URI = URI.create(this)
 
 fun vanillaId(path: String): ResourceLocation = ResourceLocation(path)
 
-val String.asResourceLocation
+val String.asResourceLocation: ResourceLocation
     get() {
         return ResourceLocation(this)
     }
