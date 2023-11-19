@@ -51,8 +51,11 @@ public class DataFixTypesMixin {
 		var type = DataFixTypes.class.cast(this);
 		var value = original.getValue();
 
-		if (value instanceof Tag && !FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(this.type.typeName())) {
-			return QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) original);
+		if (!FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(this.type.typeName())) {
+			if (value instanceof Tag tag) {
+				return QuiltDataFixesInternals.get().updateWithAllFixers(type, new Dynamic<>(original.getOps(), tag.copy()));
+			}
+			return QuiltDataFixesInternals.get().updateWithAllFixers(type, original);
 		}
 		return original;
 	}

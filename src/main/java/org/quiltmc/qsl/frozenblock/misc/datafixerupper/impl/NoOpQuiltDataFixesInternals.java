@@ -60,8 +60,8 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     }
 
     @Override
-    public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic) {
-        return new Dynamic<>(dynamic.getOps(), dynamic.getValue().copy());
+    public <T> @NotNull Dynamic<T> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<T> dynamic) {
+        return new Dynamic<>(dynamic.getOps(), dynamic.getValue());
     }
 
     @Override
