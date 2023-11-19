@@ -63,7 +63,7 @@ public final class GravityAPI {
                 Optional<GravityBelt<?>> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(context.dimension), context.y);
                 if (optionalGravityBelt.isPresent()) {
                     GravityBelt<?> belt = optionalGravityBelt.get();
-                    context.gravity = belt.getGravity(null, y);
+                    context.gravity = belt.getGravity(null, context.y);
                 }
             }
         });
@@ -81,7 +81,7 @@ public final class GravityAPI {
 
     public static double calculateGravity(Entity entity) {
         ResourceKey<DimensionType> dimension = entity.level().dimensionTypeId();
-        double y = entity.get();
+        double y = entity.getY();
         GravityContext context = new GravityContext(dimension, y, entity);
         MODIFICATIONS.invoker().modifyGravity(context);
         return context.gravity;

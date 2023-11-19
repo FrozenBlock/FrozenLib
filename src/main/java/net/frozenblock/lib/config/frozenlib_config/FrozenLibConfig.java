@@ -27,6 +27,8 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 
 public class FrozenLibConfig {
 
@@ -35,7 +37,9 @@ public class FrozenLibConfig {
 			FrozenSharedConstants.MOD_ID,
 			FrozenLibConfig.class,
 			JsonType.JSON5_UNQUOTED_KEYS,
-			true
+			true,
+			QuiltDataFixes.buildFixer(new QuiltDataFixerBuilder(0)),
+			0
 		)
 	);
 

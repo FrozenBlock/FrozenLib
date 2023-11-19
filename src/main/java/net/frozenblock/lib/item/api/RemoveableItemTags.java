@@ -38,8 +38,8 @@ public class RemoveableItemTags {
 		if (removeableItemTag != null) {
 			return removeableItemTag.shouldRemoveTag(level, entity, slot, selected);
 		} else {
-			FrozenLogUtils.error("Unable to find RemoveableItemTag data for TagKey " + tagKey + "!", true);
-			FrozenLogUtils.error("Please make sure " + tagKey + " is registered in RemoveableItemTags.class!", true);
+			FrozenLogUtils.error("Unable to find RemoveableItemTag data for TagKey " + tagKey + "!", true, null);
+			FrozenLogUtils.error("Please make sure " + tagKey + " is registered in RemoveableItemTags.class!", true, null);
 			return false;
 		}
 	}
@@ -49,8 +49,8 @@ public class RemoveableItemTags {
 		if (removeableItemTag != null) {
 			return removeableItemTag.shouldRemoveOnStackMerge();
 		} else {
-			FrozenLogUtils.error("Unable to find RemoveableItemTag data for TagKey " + tagKey + "!", true);
-			FrozenLogUtils.error("Please make sure " + tagKey + " is registered in RemoveableItemTags.class!", true);
+			FrozenLogUtils.error("Unable to find RemoveableItemTag data for TagKey " + tagKey + "!", true, null);
+			FrozenLogUtils.error("Please make sure " + tagKey + " is registered in RemoveableItemTags.class!", true, null);
 			return true;
 		}
 	}

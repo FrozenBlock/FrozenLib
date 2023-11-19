@@ -37,7 +37,7 @@ public class GravityContext {
     @Nullable
     public final Entity entity;
 
-    public GravityBelt(ResourceKey<DimensionType> dimension, double y, @Nullable Entity entity) {
+    public GravityContext(ResourceKey<DimensionType> dimension, double y, @Nullable Entity entity) {
         this(dimension, y, 1.0, entity);
     }
 
