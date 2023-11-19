@@ -71,7 +71,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     }
 
     @Override
-    public <T> @NotNull Dynamic<T> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<T> current) {
+    public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> current) {
         var compound = (CompoundTag) current.getValue();
 
         for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
