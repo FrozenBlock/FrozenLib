@@ -50,38 +50,28 @@ public class TomlConfig<T> extends Config<T> {
 	}
 
 	public TomlConfig(String modId, Class<T> config, Path path, TomlWriter.Builder builder) {
-		super(modId, config, path, true);
+		super(modId, config, path, true, null, null);
 		this.tomlWriter = builder.build();
 
-		if (this.onLoad()) {
-			this.onSave();
+		if (this.load()) {
+			this.save();
 		}
 	}
 
 	@Override
-	public void onSave() {
-		try {
-			Files.createDirectories(this.path().getParent());
-			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
-			this.tomlWriter.write(this.instance(), writer);
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void onSave() throws Exception {
+		Files.createDirectories(this.path().getParent());
+		BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+		this.tomlWriter.write(this.instance(), writer);
+		writer.close();
 	}
 
 	@Override
-	public boolean onLoad() {
+	public boolean onLoad() throws Exception {
 		if (Files.exists(this.path())) {
-			try {
-				var tomlReader = getDefaultToml();
-				var reader = Files.newBufferedReader(this.path());
+			var tomlReader = getDefaultToml();
+			try (var reader = Files.newBufferedReader(this.path())) {
 				this.setConfig(tomlReader.read(reader).to(this.configClass()));
-				reader.close();
-				return true;
-			} catch (IOException e) {
-				e.printStackTrace();
-				return false;
 			}
 		}
 		return true;

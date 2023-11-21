@@ -67,9 +67,11 @@ public final class QuiltDataFixes {
      * @param currentVersion the current version of the mod's data
      * @param dataFixer      the data fixer
      */
-    public static void registerFixer(@NotNull String modId,
-                                     @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
-                                     @NotNull DataFixer dataFixer) {
+    public static void registerFixer(
+		@NotNull String modId,
+		@Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
+		@NotNull DataFixer dataFixer
+	) {
         requireNonNull(modId, "modId cannot be null");
         //noinspection ConstantConditions
         checkArgument(currentVersion >= 0, "currentVersion must be positive");
@@ -89,9 +91,11 @@ public final class QuiltDataFixes {
      * @param currentVersion the current version of the mod's data
      * @param dataFixer      the data fixer
      */
-    public static void registerFixer(@NotNull ModContainer mod,
-                                     @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
-                                     @NotNull DataFixer dataFixer) {
+    public static void registerFixer(
+		@NotNull ModContainer mod,
+		@Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
+		@NotNull DataFixer dataFixer
+	) {
         requireNonNull(mod, "mod cannot be null");
 
         registerFixer(mod.getMetadata().getId(), currentVersion, dataFixer);
@@ -103,18 +107,31 @@ public final class QuiltDataFixes {
      * @param mod              the mod container
      * @param dataFixerBuilder the data fixer builder
      */
-    public static void buildAndRegisterFixer(@NotNull ModContainer mod,
-                                             @NotNull QuiltDataFixerBuilder dataFixerBuilder) {
+    public static void buildAndRegisterFixer(
+		@NotNull ModContainer mod,
+		@NotNull QuiltDataFixerBuilder dataFixerBuilder
+	) {
         requireNonNull(mod, "mod cannot be null");
         requireNonNull(dataFixerBuilder, "data fixer builder cannot be null");
 
+        registerFixer(mod.getMetadata().getId(), dataFixerBuilder.getDataVersion(), buildFixer(dataFixerBuilder));
+    }
+
+	/**
+	 * Builds a new data fixer.
+	 *
+	 * @param dataFixerBuilder the data fixer builder
+	 * @return The built data fixer.
+	 */
+	public static DataFixer buildFixer(@NotNull QuiltDataFixerBuilder dataFixerBuilder) {
+		requireNonNull(dataFixerBuilder, "data fixer builder cannot be null");
+
 		Supplier<Executor> executor = () -> Executors.newSingleThreadExecutor(
-				new ThreadFactoryBuilder().setNameFormat("FrozenLib Quilt Datafixer Bootstrap").setDaemon(true).setPriority(1).build()
+			new ThreadFactoryBuilder().setNameFormat("FrozenLib Quilt Datafixer Bootstrap").setDaemon(true).setPriority(1).build()
 		);
 
-        registerFixer(mod.getMetadata().getId(), dataFixerBuilder.getDataVersion(),
-                dataFixerBuilder.build(SharedConstants.DATA_FIX_TYPES_TO_OPTIMIZE, executor));
-    }
+		return dataFixerBuilder.build(SharedConstants.DATA_FIX_TYPES_TO_OPTIMIZE, executor);
+	}
 
     /**
      * Gets a mod's data fixer.

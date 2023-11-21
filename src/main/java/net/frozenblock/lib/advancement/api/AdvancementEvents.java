@@ -19,6 +19,7 @@
 package net.frozenblock.lib.advancement.api;
 
 import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +36,7 @@ public final class AdvancementEvents {
 	public record AdvancementHolder(ResourceLocation id, Advancement value) {}
 
 	@FunctionalInterface
-	public interface AdvancementInit {
+	public interface AdvancementInit extends CommonEventEntrypoint {
 		void onInit(AdvancementHolder holder);
 	}
 }
