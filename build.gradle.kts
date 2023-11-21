@@ -174,7 +174,7 @@ val api by sourceSets.registering {
     }
 }
 
-val relocModApi: Configuration by configurations.creating {
+val relocModImplementation: Configuration by configurations.creating {
     configurations.modApi.get().extendsFrom(this)
 }
 
@@ -285,7 +285,7 @@ dependencies {
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    relocModApi("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
+    relocModImplementation("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
 
     "testmodImplementation"(sourceSets.main.get().output)
 
@@ -349,9 +349,12 @@ tasks {
     }
 
     shadowJar {
-        configurations = listOf(relocModApi)
+        configurations = listOf(relocModImplementation)
         isEnableRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
+        dependencies {
+            exclude(dependency("net.fabricmc:fabric-loader:.*"))
+        }
 
         //relocate("blue.endless.jankson", "net.frozenblock.lib.config.api.jankson")
     }
