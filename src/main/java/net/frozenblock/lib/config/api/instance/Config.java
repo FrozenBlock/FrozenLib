@@ -37,7 +37,7 @@ public abstract class Config<T> {
 	private T configInstance;
 	private final T defaultInstance;
 
-	public Config(String modId, Class<T> config, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+	protected Config(String modId, Class<T> config, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this.modId = modId;
 		this.path = path;
 		this.supportsModification = supportsModification;
