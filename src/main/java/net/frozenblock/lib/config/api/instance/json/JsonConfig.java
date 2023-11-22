@@ -93,7 +93,7 @@ public class JsonConfig<T> extends Config<T> {
 
 	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		super(modId, config, path, supportsModification, dataFixer, version);
-		var janksonBuilder = Jankson.builder().withFixer(dataFixer).withVersion(version);
+		var janksonBuilder = Jankson.builder().withFixer(dataFixer).version(version);
 
 		this.jankson = ConfigSerialization.createJankson(janksonBuilder, modId);
 		this.type = type;
