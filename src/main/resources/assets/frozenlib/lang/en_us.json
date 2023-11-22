@@ -49,6 +49,9 @@
   "commands.frozenlib_config.reload.single": "Reloaded 1 config from %s.",
   "commands.frozenlib_config.reload.multiple": "Reloaded %s configs from %s.",
 
+  "commands.frozenlib.taglist.footer": "Listed %s tags in %s.",
+  "commands.frozenlib.taglist.tag.invalid": "Invalid tag: %s",
+
   "commands.warden_spawn_tracker.clear.success.multiple": "Cleared warden spawn warnings from %s players",
   "commands.warden_spawn_tracker.clear.success.single": "Cleared warden spawn warnings from %s",
   "commands.warden_spawn_tracker.set.success.multiple": "Set warden spawn warning %s to %s players",
