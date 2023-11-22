@@ -353,7 +353,9 @@ tasks {
         isEnableRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         dependencies {
-            exclude(dependency("net.fabricmc:fabric-loader:.*"))
+            exclude {
+                it.moduleGroup.contains("fabric")
+            }
         }
 
         //relocate("blue.endless.jankson", "net.frozenblock.lib.config.api.jankson")
