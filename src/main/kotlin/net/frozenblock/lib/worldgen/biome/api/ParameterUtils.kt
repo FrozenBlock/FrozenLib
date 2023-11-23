@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.util
+package net.frozenblock.lib.worldgen.biome.api
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
@@ -69,7 +69,8 @@ data class MutableParameterPoint(
                 MutableParameter.CODEC.fieldOf("erosion").forGetter(MutableParameterPoint::erosion),
                 MutableParameter.CODEC.fieldOf("depth").forGetter(MutableParameterPoint::depth),
                 MutableParameter.CODEC.fieldOf("weirdness").forGetter(MutableParameterPoint::weirdness),
-                Codec.floatRange(0.0F, 1.0F).fieldOf("offset").xmap(Climate::quantizeCoord, Climate::unquantizeCoord).forGetter(MutableParameterPoint::offset)
+                Codec.floatRange(0.0F, 1.0F).fieldOf("offset").xmap(Climate::quantizeCoord, Climate::unquantizeCoord).forGetter(
+                    MutableParameterPoint::offset)
             ).apply(instance, ::MutableParameterPoint)
         }
     }

@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.util
+package net.frozenblock.lib.sound.api
 
 import com.mojang.serialization.Codec
 import net.minecraft.core.Holder
@@ -48,8 +48,7 @@ val Music.asMutable: MutableMusic
 
 val MutableMusic?.asImmutable: Music?
     get() {
-        if (this == null) return null
-        val event = this.event ?: return null
+        val event = this?.event ?: return null
         val minDelay = this.minDelay ?: return null
         val maxDelay = this.maxDelay ?: return null
         val replaceCurrentMusic = this.replaceCurrentMusic ?: return null
