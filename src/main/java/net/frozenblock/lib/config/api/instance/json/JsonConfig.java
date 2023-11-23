@@ -25,9 +25,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import com.mojang.datafixers.DataFixer;
+import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigSerialization;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Serializes and deserializes config data with GSON and Jankson.
@@ -38,62 +41,81 @@ public class JsonConfig<T> extends Config<T> {
 
 	private final JsonType type;
 
+	@Deprecated(forRemoval = true)
 	public JsonConfig(String modId, Class<T> config) {
-		this(modId, config, true);
+		this(modId, config, (@Nullable DataFixer) null, null);
 	}
 
+	public JsonConfig(String modId, Class<T> config, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+		this(modId, config, true, dataFixer, version);
+	}
+
+	@Deprecated(forRemoval = true)
 	public JsonConfig(String modId, Class<T> config, JsonType type) {
-		this(modId, config, type, true);
+		this(modId, config, type, null, null);
 	}
 
+	public JsonConfig(String modId, Class<T> config, JsonType type, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+		this(modId, config, type, true, dataFixer, version);
+	}
+
+	@Deprecated(forRemoval = true)
 	public JsonConfig(String modId, Class<T> config, Path path, JsonType type) {
-		this(modId, config, path, type, true);
+		this(modId, config, path, type, null, null);
 	}
 
+	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+		this(modId, config, path, type, true, dataFixer, version);
+	}
+
+	@Deprecated(forRemoval = true)
 	public JsonConfig(String modId, Class<T> config, boolean supportsModification) {
-		this(modId, config, JsonType.JSON, supportsModification);
+		this(modId, config, supportsModification, null, null);
 	}
 
+	public JsonConfig(String modId, Class<T> config, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+		this(modId, config, JsonType.JSON, supportsModification, dataFixer, version);
+	}
+
+	@Deprecated(forRemoval = true)
 	public JsonConfig(String modId, Class<T> config, JsonType type, boolean supportsModification) {
-		this(modId, config, makePath(modId, type.getSerializedName()), type, supportsModification);
+		this(modId, config, type, supportsModification, null, null);
 	}
 
+	public JsonConfig(String modId, Class<T> config, JsonType type, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+		this(modId, config, makePath(modId, type.getSerializedName()), type, supportsModification, dataFixer, version);
+	}
+
+	@Deprecated(forRemoval = true)
 	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, boolean supportsModification) {
-		super(modId, config, path, supportsModification);
-		var janksonBuilder = Jankson.builder();
+		this(modId, config, path, type, supportsModification, null, null);
+	}
+
+	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+		super(modId, config, path, supportsModification, dataFixer, version);
+		var janksonBuilder = Jankson.builder().withFixer(dataFixer).withVersion(version);
 
 		this.jankson = ConfigSerialization.createJankson(janksonBuilder, modId);
 		this.type = type;
 
-		if (this.onLoad()) {
-			this.onSave();
+		if (this.load()) {
+			this.save();
 		}
 	}
 
 	@Override
-	public void onSave() {
-		try {
-			Files.createDirectories(this.path().getParent());
-			BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-			writer.write(this.jankson.toJson(this.instance()).toJson(this.type.getGrammar()));
-			writer.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	public void onSave() throws Exception {
+		Files.createDirectories(this.path().getParent());
+		BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
+		writer.write(this.jankson.toJson(this.instance()).toJson(this.type.getGrammar()));
+		writer.close();
 	}
 
 	@Override
-	public boolean onLoad() {
+	public boolean onLoad() throws Exception {
 		if (Files.exists(this.path())) {
-			try {
-				this.setConfig(this.jankson.fromJson(this.jankson.load(this.path().toFile()), this.configClass()));
-				return true;
-			} catch (IOException | SyntaxError e) {
-				e.printStackTrace();
-				return false;
-			}
-		} else {
-			return true;
+			this.setConfig(this.jankson.fromJson(this.jankson.load(this.path().toFile()), this.configClass()));
 		}
+		return true;
 	}
 }

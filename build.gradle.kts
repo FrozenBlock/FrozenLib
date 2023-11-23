@@ -192,18 +192,18 @@ repositories {
     // You should only use this when depending on other mods because
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
     maven {
-        setUrl("https://jitpack.io")
+        url = uri("https://jitpack.io")
     }
     maven {
         name = "Modrinth"
-        setUrl("https://api.modrinth.com/maven")
+        url = uri("https://api.modrinth.com/maven")
 
         content {
             includeGroup("maven.modrinth")
         }
     }
     maven {
-        setUrl("https://maven.terraformersmc.com")
+        url = uri("https://maven.terraformersmc.com")
 
         content {
             includeGroup("com.terraformersmc")
@@ -286,7 +286,7 @@ dependencies {
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    relocModApi("blue.endless:jankson:$jankson_version")
+    relocModApi("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
 
     "testmodImplementation"(sourceSets.main.get().output)
 
@@ -353,36 +353,41 @@ tasks {
         configurations = listOf(relocModApi)
         isEnableRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
+        dependencies {
+            exclude {
+                it.moduleGroup.contains("fabric")
+            }
+        }
 
         //relocate("blue.endless.jankson", "net.frozenblock.lib.config.api.jankson")
     }
 
     register("javadocJar", Jar::class) {
         dependsOn(javadoc)
-        archiveClassifier.set("javadoc")
+        archiveClassifier = "javadoc"
         from(javadoc.get().destinationDir)
     }
 
     register("sourcesJar", Jar::class) {
         dependsOn(classes)
-        archiveClassifier.set("sources")
+        archiveClassifier = "sources"
         from(sourceSets.main.get().allSource)
     }
 
     remapJar {
         dependsOn(shadowJar)
-        input.set(shadowJar.get().archiveFile)
+        input = shadowJar.get().archiveFile
     }
 
     withType(JavaCompile::class) {
         options.encoding = "UTF-8"
-        options.release.set(17)
+        options.release = 17
         options.isFork = true
         options.isIncremental = true
     }
 
     withType(KotlinCompile::class) {
-        compilerOptions.jvmTarget.set(JvmTarget.JVM_17)
+        compilerOptions.jvmTarget = JvmTarget.JVM_17
     }
 
     withType(Test::class) {
@@ -473,7 +478,9 @@ publishing {
         try {
             if (publishingValid) {
                 try {
-                    val xml = ResourceGroovyMethods.getText(URL("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom"))
+                    val xml = ResourceGroovyMethods.getText(
+                        URL("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom")
+                    )
                     val metadata = XmlSlurper().parseText(xml)
 
                     if (metadata.getProperty("hash").equals(hash)) {
@@ -604,21 +611,20 @@ curseforge {
 }
 
 modrinth {
-    token.set(System.getenv("MODRINTH_TOKEN"))
-    projectId.set(modrinth_id)
-    versionNumber.set(modrinth_version)
-    versionName.set(display_name)
-    versionType.set(release_type)
-    changelog.set(changelog_text)
-    uploadFile.set(remapJar)
-    gameVersions.set(listOf(minecraft_version))
-    loaders.set(listOf("fabric", "quilt"))
-    additionalFiles.set(
-        listOf(
-            tasks.remapSourcesJar.get(),
-            javadocJar
-        )
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = modrinth_id
+    versionNumber = modrinth_version
+    versionName = display_name
+    versionType = release_type
+    changelog = changelog_text
+    uploadFile = remapJar
+    gameVersions = listOf(minecraft_version)
+    loaders = listOf("fabric", "quilt")
+    additionalFiles = listOf(
+        tasks.remapSourcesJar.get(),
+        javadocJar
     )
+
     dependencies {
         required.project("fabric-api")
         optional.project("cloth-config")

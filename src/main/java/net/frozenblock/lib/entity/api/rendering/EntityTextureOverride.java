@@ -42,7 +42,7 @@ public record EntityTextureOverride<T extends LivingEntity>(EntityType<T> type, 
 	}
 
 	public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, boolean caseSensitive, String... names) {
-		return register(key, type, texture, (entity) -> {
+		return register(key, type, texture, entity -> {
 			String entityName = ChatFormatting.stripFormatting(entity.getName().getString());
 			AtomicBoolean isNameCorrect = new AtomicBoolean(false);
 			if (names.length == 0) {

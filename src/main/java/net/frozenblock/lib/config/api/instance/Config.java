@@ -18,7 +18,10 @@
 
 package net.frozenblock.lib.config.api.instance;
 
+import com.mojang.datafixers.DataFixer;
+import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
+import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
 
 public abstract class Config<T> {
@@ -26,11 +29,15 @@ public abstract class Config<T> {
 	private final String modId;
 	private final Path path;
 	private final boolean supportsModification;
+	@Nullable
+	private final DataFixer dataFixer;
+	@Nullable
+	private final Integer version;
 	private final Class<T> config;
 	private T configInstance;
 	private final T defaultInstance;
 
-	public Config(String modId, Class<T> config, Path path, boolean supportsModification) {
+	protected Config(String modId, Class<T> config, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this.modId = modId;
 		this.path = path;
 		this.supportsModification = supportsModification;
@@ -40,6 +47,8 @@ public abstract class Config<T> {
 		} catch (Exception e) {
 			throw new IllegalStateException("No default constructor for default config instance.");
 		}
+		this.dataFixer = dataFixer;
+		this.version = version;
 	}
 
 	protected static Path makePath(String modId, String extension) {
@@ -56,6 +65,16 @@ public abstract class Config<T> {
 
 	public boolean supportsModification() {
 		return this.supportsModification;
+	}
+
+	@Nullable
+	public DataFixer dataFixer() {
+		return this.dataFixer;
+	}
+
+	@Nullable
+	public Integer version() {
+		return this.version;
 	}
 
 	/**
@@ -85,17 +104,28 @@ public abstract class Config<T> {
 		return this.config;
 	}
 
-	protected abstract void onSave();
-	public abstract boolean onLoad();
+	protected abstract void onSave() throws Exception;
+	public abstract boolean onLoad() throws Exception;
 
 	public final void save() {
-		FrozenSharedConstants.LOGGER.info("Saving config {} from {}", this.configClass().getSimpleName(), this.modId());
-		this.onSave();
+		String formatted = String.format("config %s from %s", this.configClass().getSimpleName(), this.modId());
+		FrozenSharedConstants.LOGGER.info("Saving " + formatted);
+		try {
+			this.onSave();
+		} catch (Exception e) {
+			FrozenLogUtils.error("Error while saving " + formatted, true, e);
+		}
 	}
 
 	public final boolean load() {
-		FrozenSharedConstants.LOGGER.info("Loading config {} from {}", this.configClass().getSimpleName(), this.modId());
-		return this.onLoad();
+		String formatted = String.format("config %s from %s", this.configClass().getSimpleName(), this.modId());
+		FrozenSharedConstants.LOGGER.info("Loading " + formatted);
+		try {
+			return this.onLoad();
+		} catch (Exception e) {
+			FrozenLogUtils.error("Error while loading " + formatted, true, e);
+			return false;
+		}
 	}
 
 }

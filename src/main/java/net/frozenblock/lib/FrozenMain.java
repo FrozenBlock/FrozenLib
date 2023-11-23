@@ -35,12 +35,15 @@ import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
+import net.frozenblock.lib.tag.api.TagKeyArgument;
+import net.frozenblock.lib.tag.api.TagListCommand;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -76,9 +79,19 @@ public final class FrozenMain implements ModInitializer {
 			}
 		});
 
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> WindOverrideCommand.register(dispatcher));
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ScreenShakeCommand.register(dispatcher));
-		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> ConfigCommand.register(dispatcher));
+		ArgumentTypeInfos.register(
+			BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
+			string("tag_key"),
+			ArgumentTypeInfos.fixClassType(TagKeyArgument.class),
+			new TagKeyArgument.Info<>()
+		);
+
+		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+			WindOverrideCommand.register(dispatcher);
+			ScreenShakeCommand.register(dispatcher);
+			ConfigCommand.register(dispatcher);
+			TagListCommand.register(dispatcher);
+		});
 
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand)
 			CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> WardenSpawnTrackerCommand.register(dispatcher)));

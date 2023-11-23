@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.datafix;
+package net.frozenblock.lib.datafix.api;
 
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFix;

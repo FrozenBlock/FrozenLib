@@ -19,6 +19,7 @@
 package net.frozenblock.lib;
 
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.Internal
 public final class FrozenLogUtils {
@@ -36,9 +37,9 @@ public final class FrozenLogUtils {
 		}
 	}
 
-	public static void error(String string, boolean should) {
+	public static void error(String string, boolean should, @Nullable Throwable throwable) {
 		if (should) {
-			FrozenSharedConstants.LOGGER.error(string);
+			FrozenSharedConstants.LOGGER.error(string, throwable);
 		}
 	}
 }
