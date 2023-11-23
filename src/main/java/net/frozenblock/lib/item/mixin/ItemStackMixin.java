@@ -40,16 +40,9 @@ public final class ItemStackMixin implements ItemStackExtension {
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
 	public void frozenLib$removeTags(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
 		ItemStack stack = ItemStack.class.cast(this);
-		CompoundTag nbt = stack.getTag();
-		if (nbt != null) {
-			for (String key : RemoveableItemTags.keys()) {
-				if (nbt.get(key) != null && RemoveableItemTags.canRemoveTag(key, level, entity, slot, selected)) {
-					nbt.remove(key);
-				}
-			}
-
-			if (nbt.isEmpty()) {
-				stack.tag = null;
+		for (String key : RemoveableItemTags.keys()) {
+			if (RemoveableItemTags.canRemoveTag(key, level, entity, slot, selected)) {
+				stack.removeTagKey(key);
 			}
 		}
 	}
@@ -62,27 +55,22 @@ public final class ItemStackMixin implements ItemStackExtension {
 
 		if (extendedLeft.frozenLib$canRemoveTags()) {
 			CompoundTag lTag = left.getTag();
-			frozenLib$fixEmptyTags(left, lTag);
+			frozenLib$fixEmptyTags(left);
 			extendedLeft.frozenLib$setCanRemoveTags(false);
 		}
 
 		if (extendedRight.frozenLib$canRemoveTags()) {
 			CompoundTag rTag = right.tag;
-			frozenLib$fixEmptyTags(right, rTag);
+			frozenLib$fixEmptyTags(right);
 			extendedRight.frozenLib$setCanRemoveTags(false);
 		}
 	}
 
 	@Unique
-	private static void frozenLib$fixEmptyTags(ItemStack stack, CompoundTag nbt) {
-		if (nbt != null) {
-			for (String key : RemoveableItemTags.keys()) {
-				if (nbt.get(key) != null && RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
-					nbt.remove(key);
-				}
-			}
-			if (nbt.isEmpty()) {
-				stack.tag = null;
+	private static void frozenLib$fixEmptyTags(ItemStack stack) {
+		for (String key : RemoveableItemTags.keys()) {
+			if (RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
+				stack.removeTagKey(key);
 			}
 		}
 	}

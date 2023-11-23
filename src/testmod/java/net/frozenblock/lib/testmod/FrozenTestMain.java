@@ -66,7 +66,7 @@ public final class FrozenTestMain implements ModInitializer {
 		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(300, 319, true, true, new AbsoluteGravityFunction(0.1)));
 		assert GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300) == 0.1;
 
-		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0, 192, new InterpolatedGravityFunction(0.1)));
+		//GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0, 192, new InterpolatedGravityFunction(0.1)));
 
 		AdvancementEvents.INIT.register(holder -> {
 			Advancement advancement = holder.value();
