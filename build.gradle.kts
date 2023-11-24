@@ -252,7 +252,7 @@ dependencies {
 	mappings(loom.layered {
 		// please annoy treetrain if this doesnt work
         // TODO: Add back Quilt Mappings when it's updated
-		//mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
+		mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
         parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
 		officialMojangMappings {
 			nameSyntheticMembers = false
