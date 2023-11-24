@@ -91,6 +91,6 @@ public final class ResourceLoaderEvents {
          * @param resourceManager the resource manager, may be {@code null} if the data pack reload failed
          * @param error           present if the data pack reload failed, or {@code null} otherwise
          */
-        void onEndDataPackReload(@Nullable MinecraftServer server, ResourceManager resourceManager, @Nullable Throwable error);
+        void onEndDataPackReload(@Nullable MinecraftServer server, @Nullable ResourceManager resourceManager, @Nullable Throwable error);
     }
 }

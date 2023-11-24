@@ -103,9 +103,9 @@ public class JsonConfig<T> extends Config<T> {
 	@Override
 	public void onSave() throws Exception {
 		Files.createDirectories(this.path().getParent());
-		BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		writer.write(this.jankson.toJson(this.instance()).toJson(this.type.getGrammar()));
-		writer.close();
+		try (BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+			writer.write(this.jankson.toJson(this.instance()).toJson(this.type.getGrammar()));
+		}
 	}
 
 	@Override

@@ -18,9 +18,13 @@
 
 package net.frozenblock.lib.config.api.instance;
 
+import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.config.api.network.ConfigSyncModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -29,24 +33,26 @@ import java.util.function.Consumer;
  * @param <T> The type of the config class
  */
 public record ConfigModification<T>(Consumer<T> modification) {
-    public static <T> T modifyConfig(Config<T> config, T original) {
+    public static <T> T modifyConfig(Config<T> config, T original, boolean excludeSync) {
         try {
 			// clone
 			T instance = config.configClass().getConstructor().newInstance();
 			copyInto(original, instance);
 
 			// modify
-			for (ConfigModification<T> modification : ConfigRegistry.getModificationsForConfig(config)) {
-				modification.modification.accept(instance);
+			for (Map.Entry<ConfigModification<T>, Integer> modification : ConfigRegistry.getModificationsForConfig(config).entrySet().stream().sorted(Map.Entry.comparingByValue()).toList()) {
+				var consumer = modification.getKey().modification;
+				if (excludeSync && consumer instanceof ConfigSyncModification) continue;
+				modification.getKey().modification.accept(instance);
 			}
 			return instance;
-		} catch (Exception ignored) {
-			ignored.printStackTrace();
+		} catch (Exception e) {
+			FrozenLogUtils.error("Failed to modify config, returning original.", true, e);
 			return original;
 		}
     }
 
-    private static <T> void copyInto(T source, T destination) {
+    public static <T> void copyInto(T source, T destination) {
         Class<?> clazz = source.getClass();
         while (!clazz.equals(Object.class)) {
             for (Field field : clazz.getDeclaredFields()) {
@@ -55,7 +61,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
                 try {
                     field.set(destination, field.get(source));
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+					FrozenLogUtils.error("Failed to copy field " + field.getName(), true, e);
                 }
             }
             clazz = clazz.getSuperclass();

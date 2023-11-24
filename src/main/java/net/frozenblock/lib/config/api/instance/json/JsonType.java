@@ -21,6 +21,7 @@ package net.frozenblock.lib.config.api.instance.json;
 import blue.endless.jankson.JsonGrammar;
 import net.frozenblock.lib.config.api.instance.ConfigSerialization;
 import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 public enum JsonType implements StringRepresentable {
 	JSON("json", JsonGrammar.STRICT),
@@ -30,19 +31,24 @@ public enum JsonType implements StringRepresentable {
 	 */
 	JSON5_UNQUOTED_KEYS("json5", ConfigSerialization.JSON5_UNQUOTED_KEYS);
 
+	@NotNull
 	private final String name;
+
+	@NotNull
 	private final JsonGrammar grammar;
 
-	JsonType(String name, JsonGrammar grammar) {
+	JsonType(@NotNull String name, @NotNull JsonGrammar grammar) {
 		this.name = name;
 		this.grammar = grammar;
 	}
 
 	@Override
+	@NotNull
 	public String getSerializedName() {
 		return this.name;
 	}
 
+	@NotNull
 	public JsonGrammar getGrammar() {
 		return this.grammar;
 	}

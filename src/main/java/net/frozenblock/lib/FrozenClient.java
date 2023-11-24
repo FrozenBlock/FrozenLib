@@ -24,6 +24,9 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.impl.CooldownInterface;
@@ -31,9 +34,6 @@ import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
-import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
-import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
-import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
@@ -47,8 +47,6 @@ import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.frozenblock.lib.wind.api.ClientWindManagerExtension;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
@@ -87,6 +85,12 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket::receive);
+		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> ConfigSyncPacket.receive(packet)));
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+			for (Config<?> config : ConfigRegistry.getAllConfigs()) {
+				ConfigRegistry.setSyncData(config, null);
+			}
+		});
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
