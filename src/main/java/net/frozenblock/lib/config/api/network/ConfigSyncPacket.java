@@ -84,20 +84,28 @@ public record ConfigSyncPacket<T>(
         }
     }
 
-	public static void sendS2C(ServerPlayer player) {
-		for (Config<?> config : ConfigRegistry.getAllConfigs()) {
+	public static void sendS2C(ServerPlayer player, Iterable<Config<?>> configs) {
+		for (Config<?> config : configs) {
 			if (!config.supportsModification()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.configWithoutSync());
 			ServerPlayNetworking.send(player, packet);
 		}
 	}
 
-	public static void sendC2S() {
-		for (Config<?> config : ConfigRegistry.getAllConfigs()) {
+	public static void sendS2C(ServerPlayer player) {
+		sendS2C(player, ConfigRegistry.getAllConfigs());
+	}
+
+	public static void sendC2S(Iterable<Config<?>> configs) {
+		for (Config<?> config : configs) {
 			if (!config.supportsModification()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.configWithoutSync());
 			ClientPlayNetworking.send(packet);
 		}
+	}
+
+	public static void sendC2S() {
+		sendC2S(ConfigRegistry.getAllConfigs());
 	}
 
 	@Override
