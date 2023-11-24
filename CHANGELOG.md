@@ -22,7 +22,6 @@ Put changelog here:
   - Lists all entries in a specified tag
   - Registries are determined via sub commands `biome`, `block`, `entity_type`, `fluid`, `instrument`, `item`, and `structure`
 - Updated minimum (optional) requirement for Fabric Language Kotlin to 1.10.14
-
 - Added `MutableMusic`
   - `MutableMusic` can be converted to `Music` via `asImmutable`
   - `Music` can be converted to `MutableMusic` via `asMutable`
