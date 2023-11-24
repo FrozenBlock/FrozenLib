@@ -31,6 +31,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.network.ConfigSyncData;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 public class ConfigRegistry {
 
@@ -42,7 +43,7 @@ public class ConfigRegistry {
 
 	private static final Map<Config<?>, Map<ConfigModification<?>, Integer>> MODIFICATION_REGISTRY = new Object2ObjectOpenHashMap<>();
 
-	private static final Map<Config<?>, ConfigSyncData<?>> CONFIG_SYNC_DATA = new Object2ObjectOpenHashMap<>();
+	private static final Map<Config<?>, @Nullable ConfigSyncData<?>> CONFIG_SYNC_DATA = new Object2ObjectOpenHashMap<>();
 
 	public static <T> Config<T> register(Config<T> config) {
 		if (CONFIG_REGISTRY.contains(config)) {
@@ -101,13 +102,15 @@ public class ConfigRegistry {
 	}
 
 	@ApiStatus.Internal
-	public static <T> ConfigSyncData<T> setSyncData(Config<T> config, ConfigSyncData<T> data) {
+	@Nullable
+	public static <T> ConfigSyncData<T> setSyncData(Config<T> config, @Nullable ConfigSyncData<T> data) {
 		if (!contains(config)) throw new IllegalStateException("Config " + config + " not in registry!");
 		CONFIG_SYNC_DATA.put(config, data);
 		return data;
 	}
 
 	@ApiStatus.Internal
+	@Nullable
 	public static <T> ConfigSyncData<T> getSyncData(Config<T> config) {
 		return (ConfigSyncData<T>) CONFIG_SYNC_DATA.get(config);
 	}
