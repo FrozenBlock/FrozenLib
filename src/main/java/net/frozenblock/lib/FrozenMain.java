@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib;
 
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -26,9 +25,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
@@ -55,11 +52,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.commands.WardenSpawnTrackerCommand;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
-import java.util.List;
 
 public final class FrozenMain implements ModInitializer {
 
@@ -127,13 +122,13 @@ public final class FrozenMain implements ModInitializer {
 		}));
 
 		PlayerJoinEvents.ON_JOIN_SERVER.register(((server, player) -> {
-			ConfigSyncPacket.sendS2CConfigSyncPacket(player);
+			ConfigSyncPacket.sendS2C(player);
 		}));
 
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
 			if (error != null || server == null) return;
 			for (ServerPlayer player : PlayerLookup.all(server)) {
-				ConfigSyncPacket.sendS2CConfigSyncPacket(player);
+				ConfigSyncPacket.sendS2C(player);
 			}
 		});
 	}

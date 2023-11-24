@@ -84,7 +84,7 @@ public record ConfigSyncPacket<T>(
         }
     }
 
-	public static void sendS2CConfigSyncPacket(ServerPlayer player) {
+	public static void sendS2C(ServerPlayer player) {
 		for (Config<?> config : ConfigRegistry.getAllConfigs()) {
 			if (!config.supportsModification()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.configWithoutSync());
@@ -92,7 +92,7 @@ public record ConfigSyncPacket<T>(
 		}
 	}
 
-	public static void sendC2SConfigSyncPacket() {
+	public static void sendC2S() {
 		for (Config<?> config : ConfigRegistry.getAllConfigs()) {
 			if (!config.supportsModification()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.configWithoutSync());
