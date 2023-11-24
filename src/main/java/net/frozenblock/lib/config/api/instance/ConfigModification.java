@@ -18,9 +18,12 @@
 
 package net.frozenblock.lib.config.api.instance;
 
+import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
+import java.util.Map;
 import java.util.function.Consumer;
 
 /**
@@ -36,17 +39,17 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			copyInto(original, instance);
 
 			// modify
-			for (ConfigModification<T> modification : ConfigRegistry.getModificationsForConfig(config)) {
-				modification.modification.accept(instance);
+			for (Map.Entry<ConfigModification<T>, Integer> modification : ConfigRegistry.getModificationsForConfig(config).entrySet().stream().sorted(Map.Entry.comparingByValue()).toList()) {
+				modification.getKey().modification.accept(instance);
 			}
 			return instance;
-		} catch (Exception ignored) {
-			ignored.printStackTrace();
+		} catch (Exception e) {
+			FrozenLogUtils.error("Failed to modify config, returning original.", true, e);
 			return original;
 		}
     }
 
-    private static <T> void copyInto(T source, T destination) {
+    public static <T> void copyInto(T source, T destination) {
         Class<?> clazz = source.getClass();
         while (!clazz.equals(Object.class)) {
             for (Field field : clazz.getDeclaredFields()) {
@@ -55,7 +58,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
                 try {
                     field.set(destination, field.get(source));
                 } catch (IllegalAccessException e) {
-                    e.printStackTrace();
+					FrozenLogUtils.error("Failed to copy field " + field.getName(), true, e);
                 }
             }
             clazz = clazz.getSuperclass();

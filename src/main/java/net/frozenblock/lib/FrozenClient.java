@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.impl.CooldownInterface;
@@ -87,6 +88,7 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket::receive);
+		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket::receive);
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
