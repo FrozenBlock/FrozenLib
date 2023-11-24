@@ -19,8 +19,11 @@
 package net.frozenblock.lib.config.api.instance;
 
 import com.mojang.datafixers.DataFixer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
 import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
 
@@ -122,6 +125,8 @@ public abstract class Config<T> {
 		FrozenSharedConstants.LOGGER.info("Saving " + formatted);
 		try {
 			this.onSave();
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+				ConfigSyncPacket.trySendC2S(this);
 		} catch (Exception e) {
 			FrozenLogUtils.error("Error while saving " + formatted, true, e);
 		}

@@ -19,6 +19,8 @@
 package net.frozenblock.lib.config.api.network;
 
 import blue.endless.jankson.api.SyntaxError;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
@@ -28,9 +30,13 @@ import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
+import java.util.List;
 
 /**
  * @since 1.4.5
@@ -96,6 +102,7 @@ public record ConfigSyncPacket<T>(
 		sendS2C(player, ConfigRegistry.getAllConfigs());
 	}
 
+	@Environment(EnvType.CLIENT)
 	public static void sendC2S(Iterable<Config<?>> configs) {
 		for (Config<?> config : configs) {
 			if (!config.supportsModification()) continue;
@@ -104,8 +111,21 @@ public record ConfigSyncPacket<T>(
 		}
 	}
 
+	@Environment(EnvType.CLIENT)
 	public static void sendC2S() {
 		sendC2S(ConfigRegistry.getAllConfigs());
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static <T> void trySendC2S(Config<T> config) {
+		ClientPacketListener listener = Minecraft.getInstance().getConnection();
+		if (listener == null) return;
+
+		LocalPlayer player = Minecraft.getInstance().player;
+		if (player == null) return;
+
+		if (player.hasPermissions(2))
+			sendC2S(List.of(config));
 	}
 
 	@Override
