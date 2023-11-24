@@ -83,7 +83,7 @@ public record ConfigSyncPacket<T>(
 					new ConfigModification<>(
 						new ConfigSyncModification<>(config, ConfigRegistry::getSyncData)
 					),
-					Integer.MIN_VALUE // make sure its set first
+					Integer.MIN_VALUE // make sure it's the first modification
 				);
 			}
 			break;
