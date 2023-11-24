@@ -141,7 +141,7 @@ public final class FrozenMain implements ModInitializer {
 	private static void sendConfigSyncPacket(ServerPlayer player) {
 		for (Config<?> config : ConfigRegistry.getAllConfigs()) {
 			if (!config.supportsModification()) continue;
-			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.config());
+			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.instance());
 			ServerPlayNetworking.send(player, packet);
 		}
 	}
