@@ -9,7 +9,7 @@ import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
 import java.io.FileInputStream
 import java.io.FileNotFoundException
-import java.net.URL
+import java.net.URI
 import java.nio.file.Files
 import java.util.*
 
@@ -453,14 +453,14 @@ if (!(release == true || githubActions)) {
 	build.dependsOn(applyLicenses)
 }
 
-val env = System.getenv()
+val env: MutableMap<String, String> = System.getenv()
 
 publishing {
     val mavenUrl = env["MAVEN_URL"]
     val mavenUsername = env["MAVEN_USERNAME"]
     val mavenPassword = env["MAVEN_PASSWORD"]
 
-    val release = mavenUrl?.contains("release")
+    //val release = mavenUrl?.contains("release")
     val snapshot = mavenUrl?.contains("snapshot")
 
     val publishingValid = rootProject == project && !mavenUrl.isNullOrEmpty() && !mavenUsername.isNullOrEmpty() && !mavenPassword.isNullOrEmpty()
@@ -478,7 +478,7 @@ publishing {
             if (publishingValid) {
                 try {
                     val xml = ResourceGroovyMethods.getText(
-                        URL("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom")
+                        URI.create("$mavenUrl/${publishGroup.replace('.', '/')}/$snapshotPublishVersion/$publishVersion.pom").toURL()
                     )
                     val metadata = XmlSlurper().parseText(xml)
 
