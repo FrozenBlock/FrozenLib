@@ -31,6 +31,7 @@ import net.minecraft.server.level.ServerPlayer;
 import java.util.Collection;
 
 public final class ConfigCommand {
+	private ConfigCommand() {}
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("frozenlib_config")
@@ -55,6 +56,6 @@ public final class ConfigCommand {
 			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.single", modId), true);
 		else
 			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.multiple", configs.size(), modId), true);
-		return 1;
+		return configs.size();
 	}
 }
