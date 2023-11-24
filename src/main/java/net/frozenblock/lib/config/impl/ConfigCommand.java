@@ -20,11 +20,14 @@ package net.frozenblock.lib.config.impl;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerPlayer;
 import java.util.Collection;
 
 public final class ConfigCommand {
@@ -43,6 +46,9 @@ public final class ConfigCommand {
 		Collection<Config<?>> configs = ConfigRegistry.getConfigsForMod(modId);
 		for (Config<?> config : configs) {
 			config.load();
+		}
+		for (ServerPlayer player : PlayerLookup.all(source.getServer())) {
+			ConfigSyncPacket.sendS2C(player, configs);
 		}
 
 		if (configs.size() == 1)
