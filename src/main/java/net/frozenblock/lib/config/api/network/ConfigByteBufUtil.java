@@ -25,7 +25,11 @@ import blue.endless.jankson.api.SyntaxError;
 import net.frozenblock.lib.config.api.instance.ConfigSerialization;
 import net.minecraft.network.FriendlyByteBuf;
 
-public class ConfigByteBufUtil {
+/**
+ * @since 1.4.5
+ */
+public final class ConfigByteBufUtil {
+	private ConfigByteBufUtil() {}
 
 	public static <T> T readJankson(FriendlyByteBuf buf, String modId, String className) throws SyntaxError, ClassNotFoundException {
 		Jankson jankson = ConfigSerialization.createJankson(modId);

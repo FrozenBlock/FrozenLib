@@ -18,5 +18,8 @@
 
 package net.frozenblock.lib.config.api.network;
 
+/**
+ * @since 1.4.5
+ */
 public record ConfigSyncData<T>(T instance) {
 }

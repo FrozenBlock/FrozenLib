@@ -138,14 +138,6 @@ public final class FrozenMain implements ModInitializer {
 		});
 	}
 
-	private static void sendConfigSyncPacket(ServerPlayer player) {
-		for (Config<?> config : ConfigRegistry.getAllConfigs()) {
-			if (!config.supportsModification()) continue;
-			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.instance());
-			ServerPlayNetworking.send(player, packet);
-		}
-	}
-
 	//IDENTIFIERS
 	public static final ResourceLocation FLYBY_SOUND_PACKET = id("flyby_sound_packet");
 	public static final ResourceLocation LOCAL_SOUND_PACKET = id("local_sound_packet");

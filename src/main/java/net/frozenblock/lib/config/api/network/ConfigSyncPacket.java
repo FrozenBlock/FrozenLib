@@ -19,20 +19,22 @@
 package net.frozenblock.lib.config.api.network;
 
 import blue.endless.jankson.api.SyntaxError;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * @since 1.4.5
+ */
 public record ConfigSyncPacket<T>(
 	String modId,
 	String className,
@@ -81,6 +83,22 @@ public record ConfigSyncPacket<T>(
 			break;
         }
     }
+
+	public static void sendS2CConfigSyncPacket(ServerPlayer player) {
+		for (Config<?> config : ConfigRegistry.getAllConfigs()) {
+			if (!config.supportsModification()) continue;
+			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.configWithoutSync());
+			ServerPlayNetworking.send(player, packet);
+		}
+	}
+
+	public static void sendC2SConfigSyncPacket() {
+		for (Config<?> config : ConfigRegistry.getAllConfigs()) {
+			if (!config.supportsModification()) continue;
+			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.configWithoutSync());
+			ClientPlayNetworking.send(packet);
+		}
+	}
 
 	@Override
 	public PacketType<?> getType() {

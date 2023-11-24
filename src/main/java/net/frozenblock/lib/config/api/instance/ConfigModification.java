@@ -19,6 +19,7 @@
 package net.frozenblock.lib.config.api.instance;
 
 import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.config.api.network.ConfigSyncModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
 import java.lang.reflect.Field;
@@ -32,7 +33,7 @@ import java.util.function.Consumer;
  * @param <T> The type of the config class
  */
 public record ConfigModification<T>(Consumer<T> modification) {
-    public static <T> T modifyConfig(Config<T> config, T original) {
+    public static <T> T modifyConfig(Config<T> config, T original, boolean excludeSync) {
         try {
 			// clone
 			T instance = config.configClass().getConstructor().newInstance();
@@ -40,6 +41,8 @@ public record ConfigModification<T>(Consumer<T> modification) {
 
 			// modify
 			for (Map.Entry<ConfigModification<T>, Integer> modification : ConfigRegistry.getModificationsForConfig(config).entrySet().stream().sorted(Map.Entry.comparingByValue()).toList()) {
+				var consumer = modification.getKey().modification;
+				if (excludeSync && consumer instanceof ConfigSyncModification) continue;
 				modification.getKey().modification.accept(instance);
 			}
 			return instance;

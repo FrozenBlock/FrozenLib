@@ -24,6 +24,9 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 
+/**
+ * @since 1.4.5
+ */
 public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSupplier) implements Consumer<T> {
 
 	@Override
