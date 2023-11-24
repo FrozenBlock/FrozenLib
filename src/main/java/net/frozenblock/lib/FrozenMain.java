@@ -89,6 +89,8 @@ public final class FrozenMain implements ModInitializer {
 			}
 		});
 
+		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> ConfigSyncPacket.receive(packet)));
+
 		ArgumentTypeInfos.register(
 			BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
 			string("tag_key"),
