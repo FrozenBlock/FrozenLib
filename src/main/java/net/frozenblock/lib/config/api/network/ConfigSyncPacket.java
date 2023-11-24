@@ -69,7 +69,7 @@ public record ConfigSyncPacket<T>(
 		ConfigByteBufUtil.writeJankson(buf, modId, configData);
 	}
 
-	public static <T> void receive(ConfigSyncPacket<T> packet) {
+	public static <T> void receive(ConfigSyncPacket<T> packet, EnvType envType) {
 		String modId = packet.modId();
 		String className = packet.className();
         for (Config<?> raw : ConfigRegistry.getConfigsForMod(modId)) {
