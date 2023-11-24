@@ -127,13 +127,13 @@ public final class FrozenMain implements ModInitializer {
 		}));
 
 		PlayerJoinEvents.ON_JOIN_SERVER.register(((server, player) -> {
-			sendConfigSyncPacket(player);
+			ConfigSyncPacket.sendS2CConfigSyncPacket(player);
 		}));
 
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
 			if (error != null || server == null) return;
 			for (ServerPlayer player : PlayerLookup.all(server)) {
-				sendConfigSyncPacket(player);
+				ConfigSyncPacket.sendS2CConfigSyncPacket(player);
 			}
 		});
 	}
