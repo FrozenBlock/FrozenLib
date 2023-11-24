@@ -25,6 +25,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -118,7 +119,11 @@ public record ConfigSyncPacket<T>(
 
 	@Environment(EnvType.CLIENT)
 	public static <T> void trySendC2S(Config<T> config) {
-		ClientPacketListener listener = Minecraft.getInstance().getConnection();
+		Object gameInstance = FabricLoader.getInstance().getGameInstance();
+		if (gameInstance == null) return;
+
+		Minecraft minecraft = (Minecraft) gameInstance;
+		ClientPacketListener listener = minecraft.getConnection();
 		if (listener == null) return;
 
 		LocalPlayer player = Minecraft.getInstance().player;
