@@ -24,6 +24,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
@@ -35,6 +36,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 import java.util.List;
@@ -79,6 +81,10 @@ public record ConfigSyncPacket<T>(
 			if (envType == EnvType.SERVER) {
 				ConfigModification.copyInto(packet.configData(), config.instance());
 				config.save();
+				MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
+				for (ServerPlayer player : PlayerLookup.all(server)) {
+					sendS2C(player);
+				}
 			} else {
 				boolean shouldAddModification = !ConfigRegistry.containsSyncData(config);
 				ConfigRegistry.setSyncData(config, new ConfigSyncData<>(packet.configData()));
