@@ -22,7 +22,10 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
@@ -48,8 +51,10 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.commands.WardenSpawnTrackerCommand;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
+import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
 public final class FrozenMain implements ModInitializer {
 
@@ -78,6 +83,11 @@ public final class FrozenMain implements ModInitializer {
 
 			}
 		});
+
+		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> {
+			if (player.hasPermissions(2))
+				ConfigSyncPacket.receive(packet);
+		}));
 
 		ArgumentTypeInfos.register(
 			BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
@@ -113,6 +123,17 @@ public final class FrozenMain implements ModInitializer {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
 			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
 		}));
+
+		PlayerJoinEvents.ON_JOIN_SERVER.register(((server, player) -> {
+			ConfigSyncPacket.sendS2C(player);
+		}));
+
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
+			if (error != null || server == null) return;
+			for (ServerPlayer player : PlayerLookup.all(server)) {
+				ConfigSyncPacket.sendS2C(player);
+			}
+		});
 	}
 
 	//IDENTIFIERS
@@ -137,6 +158,8 @@ public final class FrozenMain implements ModInitializer {
 	public static final ResourceLocation SPOTTING_ICON_REMOVE_PACKET = id("spotting_icon_remove_packet");
 
 	public static final ResourceLocation WIND_SYNC_PACKET = id("wind_sync_packet");
+
+	public static final ResourceLocation CONFIG_SYNC_PACKET = id("config_sync_packet");
 
 	public static ResourceLocation id(String path) {
 		return new ResourceLocation(FrozenSharedConstants.MOD_ID, path);

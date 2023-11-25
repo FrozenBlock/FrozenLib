@@ -33,7 +33,13 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
-public record FlyBySoundPacket(int id, SoundEvent sound, SoundSource category, float volume, float pitch) implements FabricPacket {
+public record FlyBySoundPacket(
+	int id,
+	SoundEvent sound,
+	SoundSource category,
+	float volume,
+	float pitch
+) implements FabricPacket {
 	public static final PacketType<FlyBySoundPacket> PACKET_TYPE = PacketType.create(FrozenMain.FLYBY_SOUND_PACKET, FlyBySoundPacket::new);
 
 	public FlyBySoundPacket(FriendlyByteBuf buf) {

@@ -7,4 +7,7 @@ Put changelog here:
 -----------------
 - Added `DripstoneUtils`
   - Currently only contains the `getDripstoneFluid` method
-
+- Added config syncing
+  - Configs will sync from server to client when joining a server, on datapack reload, and on use of `/frozenlib_config reload`
+  - Configs will sync from client to server any time the client config is saved and the player has permission level 2 or greater
+    - An example of this is saving a config via Cloth Config or other GUI

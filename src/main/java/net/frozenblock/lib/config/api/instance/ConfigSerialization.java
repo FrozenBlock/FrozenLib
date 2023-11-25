@@ -27,8 +27,7 @@ import net.frozenblock.lib.config.api.instance.json.JanksonTypedEntrySerializer;
 import org.jetbrains.annotations.Nullable;
 
 public class ConfigSerialization {
-	private ConfigSerialization() {
-	}
+	private ConfigSerialization() {}
 
 	// JANKSON
 
