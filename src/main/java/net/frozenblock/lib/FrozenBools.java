@@ -25,7 +25,7 @@ public class FrozenBools {
 	/**
 	 * Will be removed soon
 	 */
-	public static final boolean SHOULD_SYNC_CONFIGS = false;
+	public static final boolean SHOULD_SYNC_CONFIGS = true;
 
     public static boolean useNewDripstoneLiquid = false;
 

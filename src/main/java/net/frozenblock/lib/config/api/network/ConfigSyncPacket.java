@@ -76,16 +76,21 @@ public record ConfigSyncPacket<T>(
 			String configClassName = raw.configClass().getName();
             if (!configClassName.equals(className)) continue;
 			Config<T> config = (Config<T>) raw;
-			boolean shouldAddModification = !ConfigRegistry.containsSyncData(config);
-			ConfigRegistry.setSyncData(config, new ConfigSyncData<>(packet.configData()));
-            if (shouldAddModification) {
-				ConfigRegistry.register(
-					config,
-					new ConfigModification<>(
-						new ConfigSyncModification<>(config, ConfigRegistry::getSyncData)
-					),
-					Integer.MIN_VALUE // make sure it's the first modification
-				);
+			if (envType == EnvType.SERVER) {
+				ConfigModification.copyInto(packet.configData(), config.instance());
+				config.save();
+			} else {
+				boolean shouldAddModification = !ConfigRegistry.containsSyncData(config);
+				ConfigRegistry.setSyncData(config, new ConfigSyncData<>(packet.configData()));
+				if (shouldAddModification) {
+					ConfigRegistry.register(
+						config,
+						new ConfigModification<>(
+							new ConfigSyncModification<>(config, ConfigRegistry::getSyncData)
+						),
+						Integer.MIN_VALUE // make sure it's the first modification
+					);
+				}
 			}
 			break;
         }
@@ -94,7 +99,7 @@ public record ConfigSyncPacket<T>(
 	public static void sendS2C(ServerPlayer player, Iterable<Config<?>> configs) {
 		for (Config<?> config : configs) {
 			if (!config.supportsModification()) continue;
-			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.configWithoutSync());
+			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.config());
 			ServerPlayNetworking.send(player, packet);
 		}
 	}
@@ -107,7 +112,7 @@ public record ConfigSyncPacket<T>(
 	public static void sendC2S(Iterable<Config<?>> configs) {
 		for (Config<?> config : configs) {
 			if (!config.supportsModification()) continue;
-			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.configWithoutSync());
+			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.instance());
 			ClientPlayNetworking.send(packet);
 		}
 	}
