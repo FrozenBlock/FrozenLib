@@ -44,4 +44,3 @@ fun <T> JsonConfig(
         version
     )
 }
-
