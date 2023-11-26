@@ -29,50 +29,75 @@ import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibConfigGui {
 
-	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
+	private static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
 		var config = FrozenLibConfig.get(true);
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
 		category.setBackground(FrozenMain.id("config.png"));
 
-		var useWindOnNonFrozenServers = category.addEntry(entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), config.useWindOnNonFrozenServers)
-			.setDefaultValue(defaultConfig.useWindOnNonFrozenServers)
-			.setSaveConsumer(newValue -> config.useWindOnNonFrozenServers = newValue)
-			.setTooltip(tooltip("use_wind_on_non_frozenlib_servers"))
+		var useWindOnNonFrozenServers = category.addEntry(
+			FrozenClothConfig.makeFieldBuilderWithSyncData(
+				entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), config.useWindOnNonFrozenServers)
+					.setDefaultValue(defaultConfig.useWindOnNonFrozenServers)
+					.setSaveConsumer(newValue -> config.useWindOnNonFrozenServers = newValue)
+					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers")),
+					config.getClass(),
+					"useWindOnNonFrozenServers"
+				)
 			.build()
 		);
 
-		var saveItemCooldowns = category.addEntry(entryBuilder.startBooleanToggle(text("save_item_cooldowns"), config.saveItemCooldowns)
-			.setDefaultValue(defaultConfig.saveItemCooldowns)
-			.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
-			.setTooltip(tooltip("save_item_cooldowns"))
+		var saveItemCooldowns = category.addEntry(
+			FrozenClothConfig.makeFieldBuilderWithSyncData(
+				entryBuilder.startBooleanToggle(text("save_item_cooldowns"), config.saveItemCooldowns)
+					.setDefaultValue(defaultConfig.saveItemCooldowns)
+					.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
+					.setTooltip(tooltip("save_item_cooldowns")),
+					config.getClass(),
+					"saveItemCooldowns"
+				)
 			.build()
 		);
 
-		var removeExperimentalWarning = category.addEntry(entryBuilder.startBooleanToggle(text("remove_experimental_warning"), config.removeExperimentalWarning)
-			.setDefaultValue(defaultConfig.removeExperimentalWarning)
-			.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
-			.setTooltip(tooltip("remove_experimental_warning"))
+		var removeExperimentalWarning = category.addEntry(
+			FrozenClothConfig.makeFieldBuilderWithSyncData(
+				entryBuilder.startBooleanToggle(text("remove_experimental_warning"), config.removeExperimentalWarning)
+					.setDefaultValue(defaultConfig.removeExperimentalWarning)
+					.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
+					.setTooltip(tooltip("remove_experimental_warning")),
+					config.getClass(),
+					"removeExperimentalWarning"
+				)
 			.build()
 		);
 
-		var wardenSpawnTrackerCommand = category.addEntry(entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), config.wardenSpawnTrackerCommand)
-			.setDefaultValue(defaultConfig.wardenSpawnTrackerCommand)
-			.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
-			.setTooltip(tooltip("warden_spawn_tracker_command"))
+		var wardenSpawnTrackerCommand = category.addEntry(
+			FrozenClothConfig.makeFieldBuilderWithSyncData(
+				entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), config.wardenSpawnTrackerCommand)
+					.setDefaultValue(defaultConfig.wardenSpawnTrackerCommand)
+					.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
+					.setTooltip(tooltip("warden_spawn_tracker_command")),
+					config.getClass(),
+					"wardenSpawnTrackerCommand"
+				)
 			.build()
 		);
 
-
-		var disabledDataFixTypes = entryBuilder.startStrList(text("disabled_datafix_types"), dataFixer.disabledDataFixTypes)
-			.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
-			.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)
-			.setTooltip(tooltip("disabled_datafix_types"))
-			.requireRestart()
+		var disabledDataFixTypes =
+			FrozenClothConfig.makeFieldBuilderWithSyncData(
+				entryBuilder.startStrList(text("disabled_datafix_types"), dataFixer.disabledDataFixTypes)
+					.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
+					.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)
+					.setTooltip(tooltip("disabled_datafix_types"))
+					.requireRestart(),
+					config.getClass(),
+					"disabledDataFixTypes"
+				)
 			.build();
 
 		var datafixerCategory = FrozenClothConfig.createSubCategory(entryBuilder, category, text("datafixer"),

@@ -72,17 +72,16 @@ public record ConfigSyncPacket<T>(
 		ConfigByteBufUtil.writeJankson(buf, modId, configData);
 	}
 
-	public static <T> void receive(@NotNull ConfigSyncPacket<T> packet, EnvType envType) {
+	public static <T> void receive(@NotNull ConfigSyncPacket<T> packet, @Nullable MinecraftServer server) {
 		String modId = packet.modId();
 		String className = packet.className();
         for (Config<?> raw : ConfigRegistry.getConfigsForMod(modId)) {
 			String configClassName = raw.configClass().getName();
             if (!configClassName.equals(className)) continue;
 			Config<T> config = (Config<T>) raw;
-			if (envType == EnvType.SERVER) {
+			if (server != null) {
 				ConfigModification.copyInto(packet.configData(), config.instance());
 				config.save();
-				MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
 				for (ServerPlayer player : PlayerLookup.all(server)) {
 					sendS2C(player);
 				}
@@ -130,18 +129,27 @@ public record ConfigSyncPacket<T>(
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static <T> void trySendC2S(Config<T> config) {
+	public static boolean hasPermissionsToSendSync() {
+		if (notConnected()) return false;
+		return Minecraft.getInstance().player.hasPermissions(2);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static boolean notConnected() {
 		Object gameInstance = FabricLoader.getInstance().getGameInstance();
-		if (gameInstance == null) return;
+		if (gameInstance == null) return true;
 
 		Minecraft minecraft = (Minecraft) gameInstance;
 		ClientPacketListener listener = minecraft.getConnection();
-		if (listener == null) return;
+		if (listener == null) return true;
 
 		LocalPlayer player = Minecraft.getInstance().player;
-		if (player == null) return;
+		return player == null;
+	}
 
-		if (player.hasPermissions(2))
+	@Environment(EnvType.CLIENT)
+	public static <T> void trySendC2S(Config<T> config) {
+		if (hasPermissionsToSendSync())
 			sendC2S(List.of(config));
 	}
 

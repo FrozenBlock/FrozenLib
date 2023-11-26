@@ -23,9 +23,14 @@ import java.util.Arrays;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigListEntryInterface;
+import net.frozenblock.lib.config.clothconfig.impl.FieldBuilderInterface;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenClothConfig {
@@ -41,7 +46,7 @@ public final class FrozenClothConfig {
 	 * @param entries the entries to be added to the subcategory
 	 * @return the newly created subcategory
 	 */
-	public static ConfigCategory createSubCategory(ConfigEntryBuilder entryBuilder, ConfigCategory parentCategory, Component key, boolean expanded, Component tooltip, AbstractConfigListEntry... entries) {
+	public static ConfigCategory createSubCategory(@NotNull ConfigEntryBuilder entryBuilder, ConfigCategory parentCategory, Component key, boolean expanded, Component tooltip, AbstractConfigListEntry... entries) {
 		// Check if the required parameters are not null
 		Preconditions.checkArgument(entryBuilder != null, "ConfigEntryBuilder is null");
 		Preconditions.checkArgument(parentCategory != null, "Parent Category is null");
@@ -64,6 +69,23 @@ public final class FrozenClothConfig {
 				.setTooltip(tooltip)
 				.build()
 		);
+	}
+
+	/**
+	 * Creates a builder that will interact with config syncing
+	 */
+	public static <T extends FieldBuilder> T makeFieldBuilderWithSyncData(T builder, Class clazz, String identifier) {
+		((FieldBuilderInterface)builder).addSyncData(clazz, identifier);
+		return builder;
+	}
+
+	@Nullable
+	public static FieldBuilder getFieldBuilder(AbstractConfigListEntry abstractConfigListEntry) {
+		return ((AbstractConfigListEntryInterface)abstractConfigListEntry).getFieldBuilder();
+	}
+
+	public static FieldBuilderInterface getFieldBuilderInterface(FieldBuilder fieldBuilder) {
+		return (FieldBuilderInterface) fieldBuilder;
 	}
 
 }

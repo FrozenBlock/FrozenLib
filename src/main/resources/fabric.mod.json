@@ -49,6 +49,7 @@
   "mixins": [
     "mixin/frozenlib.advancement.mixins.json",
     "mixin/frozenlib.axe.mixins.json",
+    "mixin/frozenlib.clothconfig.mixins.json",
     "mixin/frozenlib.core.mixins.json",
     "mixin/frozenlib.entity.mixins.json",
     "mixin/frozenlib.event.mixins.json",

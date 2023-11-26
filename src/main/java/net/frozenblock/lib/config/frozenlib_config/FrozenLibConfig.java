@@ -22,6 +22,8 @@ import blue.endless.jankson.Comment;
 import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.config.api.annotation.FieldIdentifier;
+import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
@@ -44,12 +46,18 @@ public class FrozenLibConfig {
 
 	@Comment("Mods may override any of these options, but the config file will not change.")
 
+	@UnsyncableEntry
+	@FieldIdentifier(identifier = "useWindOnNonFrozenServers")
 	public boolean useWindOnNonFrozenServers = true;
 
+	@FieldIdentifier(identifier = "saveItemCooldowns")
 	public boolean saveItemCooldowns = false;
 
+	@UnsyncableEntry
+	@FieldIdentifier(identifier = "removeExperimentalWarning")
 	public boolean removeExperimentalWarning = false;
 
+	@FieldIdentifier(identifier = "wardenSpawnTrackerCommand")
 	public boolean wardenSpawnTrackerCommand = false;
 
 	@ConfigEntry.Gui.CollapsibleObject
@@ -58,6 +66,7 @@ public class FrozenLibConfig {
 	public static class DataFixerConfig {
 
 		@Comment("Mods can only add to this list. User settings will always apply.")
+		@FieldIdentifier(identifier = "disabledDataFixTypes")
 		public List<String> disabledDataFixTypes = List.of(
 			"world_gen_settings"
 		);

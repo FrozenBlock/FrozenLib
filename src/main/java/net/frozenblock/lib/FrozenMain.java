@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib;
 
-import net.fabricmc.api.EnvType;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -87,7 +86,7 @@ public final class FrozenMain implements ModInitializer {
 
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> {
 			if (FrozenBools.SHOULD_SYNC_CONFIGS && player.hasPermissions(2))
-				ConfigSyncPacket.receive(packet, EnvType.SERVER);
+				ConfigSyncPacket.receive(packet, player.server);
 		}));
 
 		ArgumentTypeInfos.register(

@@ -23,8 +23,10 @@ import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.function.Consumer;
 import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.network.ConfigSyncModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Wrapper class for modifying configs
@@ -51,12 +53,13 @@ public record ConfigModification<T>(Consumer<T> modification) {
 		}
     }
 
-    public static <T> void copyInto(T source, T destination) {
+    public static <T> void copyInto(@NotNull T source, T destination, boolean isSyncModification) {
         Class<?> clazz = source.getClass();
         while (!clazz.equals(Object.class)) {
             for (Field field : clazz.getDeclaredFields()) {
 				if (Modifier.isStatic(field.getModifiers())) continue;
                 field.setAccessible(true);
+				if (isSyncModification && field.isAnnotationPresent(UnsyncableEntry.class)) continue;
                 try {
                     field.set(destination, field.get(source));
                 } catch (IllegalAccessException e) {
@@ -66,4 +69,8 @@ public record ConfigModification<T>(Consumer<T> modification) {
             clazz = clazz.getSuperclass();
         }
     }
+
+	public static <T> void copyInto(@NotNull T source, T destination) {
+		copyInto(source, destination, false);
+	}
 }

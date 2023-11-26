@@ -19,7 +19,6 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -88,7 +87,7 @@ public final class FrozenClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> {
 			if (FrozenBools.SHOULD_SYNC_CONFIGS)
-				ConfigSyncPacket.receive(packet, EnvType.CLIENT);
+				ConfigSyncPacket.receive(packet, null);
 		}));
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
 			if (FrozenBools.SHOULD_SYNC_CONFIGS) {

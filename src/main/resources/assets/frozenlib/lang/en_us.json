@@ -1,4 +1,7 @@
 {
+  "tooltip.frozenlib.locked_but_not_synced": "This entry cannot be modified without operator permissions.",
+  "tooltip.frozenlib.locked_and_synced": "This entry is overriden by the server and\ncannot be modified without operator permissions.",
+
   "frozenlib.config.discard": "Discard changes",
   "frozenlib.config.save": "Save changes",
 
