@@ -48,8 +48,8 @@ public class FieldBuilderMixin<T, A extends AbstractConfigListEntry, SELF extend
 	private ConfigSyncModification.ModifyType frozenLib$modifyType = ConfigSyncModification.ModifyType.CAN_MODIFY;
 
 	@Inject(method = "finishBuilding", at = @At(value = "RETURN", ordinal = 1), remap = false)
-	public void frozenLib$finishBuilding(A gui, CallbackInfoReturnable<A> cir) {
-		((AbstractConfigListEntryInterface)gui).setFieldBuilder(FieldBuilder.class.cast(this));
+	public void finishBuilding(A gui, CallbackInfoReturnable<A> cir) {
+		((AbstractConfigListEntryInterface)gui).frozenLib$setFieldBuilder(FieldBuilder.class.cast(this));
 	}
 
 	@Override

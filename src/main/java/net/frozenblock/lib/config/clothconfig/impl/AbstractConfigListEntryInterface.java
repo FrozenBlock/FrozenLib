@@ -23,12 +23,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("rawtypes")
 @Environment(EnvType.CLIENT)
 public interface AbstractConfigListEntryInterface {
 
-	void setFieldBuilder(FieldBuilder fieldBuilder);
+	void frozenLib$setFieldBuilder(FieldBuilder fieldBuilder);
 
 	@Nullable
-	FieldBuilder getFieldBuilder();
+	FieldBuilder frozenLib$getFieldBuilder();
 
 }

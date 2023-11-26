@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
+@SuppressWarnings("rawtypes")
 @Environment(EnvType.CLIENT)
 @Mixin(AbstractConfigListEntry.class)
 public class AbstractConfigListEntryMixin implements AbstractConfigListEntryInterface {
@@ -37,13 +38,14 @@ public class AbstractConfigListEntryMixin implements AbstractConfigListEntryInte
 
 
 	@Override
-	public void setFieldBuilder(FieldBuilder fieldBuilder) {
+	public void frozenLib$setFieldBuilder(FieldBuilder fieldBuilder) {
 		this.frozenLib$fieldBuilder = fieldBuilder;
 	}
 
 	@Override
+	@Unique
 	@Nullable
-	public FieldBuilder getFieldBuilder() {
+	public FieldBuilder frozenLib$getFieldBuilder() {
 		return this.frozenLib$fieldBuilder;
 	}
 

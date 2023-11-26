@@ -36,8 +36,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class TooltipListEntryMixin {
 
 	@Inject(method = "getTooltip()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true, remap = false)
-	public void frozenLib$getTooltip(CallbackInfoReturnable<Optional<Component[]>> info) {
-		FieldBuilder fieldBuilder = FrozenClothConfig.getFieldBuilder(TooltipListEntry.class.cast(this));
+	public void getTooltip(CallbackInfoReturnable<Optional<Component[]>> info) {
+		FieldBuilder<?, ?, ?> fieldBuilder = FrozenClothConfig.getFieldBuilder(TooltipListEntry.class.cast(this));
 		if (fieldBuilder != null) {
 			FieldBuilderInterface fieldBuilderInterface = FrozenClothConfig.getFieldBuilderInterface(fieldBuilder);
 			if (!fieldBuilderInterface.getModifyType().canModify) {

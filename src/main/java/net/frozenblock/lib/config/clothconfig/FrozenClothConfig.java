@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.config.clothconfig;
 
-import com.google.common.base.Preconditions;
 import java.util.Arrays;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -34,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenClothConfig {
+	private FrozenClothConfig() {}
 
 	/**
 	 * Creates a subcategory in the parent config category with the specified key and adds entries to it.
@@ -46,13 +46,8 @@ public final class FrozenClothConfig {
 	 * @param entries the entries to be added to the subcategory
 	 * @return the newly created subcategory
 	 */
-	public static ConfigCategory createSubCategory(@NotNull ConfigEntryBuilder entryBuilder, ConfigCategory parentCategory, Component key, boolean expanded, Component tooltip, AbstractConfigListEntry... entries) {
-		// Check if the required parameters are not null
-		Preconditions.checkArgument(entryBuilder != null, "ConfigEntryBuilder is null");
-		Preconditions.checkArgument(parentCategory != null, "Parent Category is null");
-		Preconditions.checkArgument(key != null, "Sub Category key is null");
-		Arrays.stream(entries).forEach(entry -> Preconditions.checkArgument(entry != null, "Config List Entry is null"));
-
+	@SuppressWarnings("rawtypes")
+	public static ConfigCategory createSubCategory(@NotNull ConfigEntryBuilder entryBuilder, @NotNull ConfigCategory parentCategory, @NotNull Component key, boolean expanded, Component tooltip, @NotNull AbstractConfigListEntry... entries) {
 		// Create the subcategory
 		var subCategory = entryBuilder.startSubCategory(key, Arrays.stream(entries).toList());
 
@@ -73,18 +68,25 @@ public final class FrozenClothConfig {
 
 	/**
 	 * Creates a builder that will interact with config syncing
+	 * @since 1.4.5
 	 */
-	public static <T extends FieldBuilder> T makeFieldBuilderWithSyncData(T builder, Class clazz, String identifier) {
+	public static <T extends FieldBuilder<?, ?, ?>> T makeFieldBuilderWithSyncData(T builder, Class<?> clazz, String identifier) {
 		((FieldBuilderInterface)builder).addSyncData(clazz, identifier);
 		return builder;
 	}
 
+	/**
+	 * @since 1.4.5
+	 */
 	@Nullable
-	public static FieldBuilder getFieldBuilder(AbstractConfigListEntry abstractConfigListEntry) {
-		return ((AbstractConfigListEntryInterface)abstractConfigListEntry).getFieldBuilder();
+	public static FieldBuilder<?, ?, ?> getFieldBuilder(AbstractConfigListEntry<?> abstractConfigListEntry) {
+		return ((AbstractConfigListEntryInterface)abstractConfigListEntry).frozenLib$getFieldBuilder();
 	}
 
-	public static FieldBuilderInterface getFieldBuilderInterface(FieldBuilder fieldBuilder) {
+	/**
+	 * @since 1.4.5
+	 */
+	public static FieldBuilderInterface getFieldBuilderInterface(FieldBuilder<?, ?, ?> fieldBuilder) {
 		return (FieldBuilderInterface) fieldBuilder;
 	}
 
