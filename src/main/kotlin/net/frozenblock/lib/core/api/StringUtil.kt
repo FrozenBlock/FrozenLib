@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.util
+package net.frozenblock.lib.core.api
 
 import net.minecraft.resources.ResourceLocation
 import java.net.URI
