@@ -85,16 +85,13 @@ public final class FrozenClient implements ClientModInitializer {
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket::receive);
-		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> {
-			if (FrozenBools.SHOULD_SYNC_CONFIGS)
-				ConfigSyncPacket.receive(packet, null);
-		}));
+		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, player, responseSender) ->
+			ConfigSyncPacket.receive(packet, null)
+		);
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-			if (FrozenBools.SHOULD_SYNC_CONFIGS) {
 				for (Config<?> config : ConfigRegistry.getAllConfigs()) {
 					ConfigRegistry.setSyncData(config, null);
 				}
-			}
 		});
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));

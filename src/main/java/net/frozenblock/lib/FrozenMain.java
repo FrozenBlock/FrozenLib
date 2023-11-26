@@ -85,7 +85,7 @@ public final class FrozenMain implements ModInitializer {
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> {
-			if (FrozenBools.SHOULD_SYNC_CONFIGS && player.hasPermissions(2))
+			if (player.hasPermissions(2))
 				ConfigSyncPacket.receive(packet, player.server);
 		}));
 

@@ -41,7 +41,13 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			copyInto(original, instance);
 
 			// modify
-			for (Map.Entry<ConfigModification<T>, Integer> modification : ConfigRegistry.getModificationsForConfig(config).entrySet().stream().sorted(Map.Entry.comparingByValue()).toList()) {
+			var list = ConfigRegistry.getModificationsForConfig(config)
+				.entrySet()
+				.stream()
+				.sorted(Map.Entry.comparingByValue())
+				.toList();
+
+			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
 				if (excludeSync && consumer instanceof ConfigSyncModification) continue;
 				modification.getKey().modification.accept(instance);

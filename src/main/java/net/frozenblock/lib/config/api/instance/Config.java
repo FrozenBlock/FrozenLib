@@ -54,7 +54,7 @@ public abstract class Config<T> {
 		this.version = version;
 	}
 
-	protected static Path makePath(String modId, String extension) {
+	public static Path makePath(String modId, String extension) {
 		return Path.of("./config/" + modId + "." + extension);
 	}
 

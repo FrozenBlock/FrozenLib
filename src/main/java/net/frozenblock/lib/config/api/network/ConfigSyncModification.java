@@ -37,8 +37,10 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 
 	@Override
 	public void accept(T destination) {
-		T source = dataSupplier.get(config).instance();
-		ConfigModification.copyInto(source, destination, true);
+		try {
+			T source = dataSupplier.get(config).instance();
+			ConfigModification.copyInto(source, destination, true);
+		} catch (NullPointerException ignored) {}
 	}
 
 	@FunctionalInterface
