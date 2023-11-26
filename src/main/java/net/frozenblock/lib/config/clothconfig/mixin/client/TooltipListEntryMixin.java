@@ -44,7 +44,7 @@ public class TooltipListEntryMixin {
 				boolean present = fieldBuilderInterface.frozenLib$getModifyType().tooltip.isPresent();
 				info.setReturnValue(
 					present ?
-						Optional.of(fieldBuilderInterface.frozenLib$getModifyType().tooltip.get().toFlatList().toArray(new Component[0]))
+						Optional.of(fieldBuilderInterface.frozenLib$getModifyType().tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
 						:
 						Optional.empty()
 				);

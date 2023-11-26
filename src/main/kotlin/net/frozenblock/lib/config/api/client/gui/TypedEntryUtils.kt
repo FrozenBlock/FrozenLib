@@ -36,7 +36,7 @@ import java.util.function.Supplier
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-fun <T> makeTypedEntryList(
+fun <T> typedEntryList(
     entryBuilder: ConfigEntryBuilder,
     title: Component,
     entrySupplier: Supplier<TypedEntry<List<T>>?>?,
@@ -85,7 +85,7 @@ fun <T> makeTypedEntryList(
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-fun <T> makeNestedList(
+fun <T> nestedList(
     entryBuilder: ConfigEntryBuilder,
     title: Component,
     entrySupplier: Supplier<List<T>?>?,
@@ -134,7 +134,7 @@ fun <T> makeNestedList(
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-fun <T> makeMultiElementEntry(
+fun <T> multiElementEntry(
     title: Component,
     value: T,
     defaultExpanded: Boolean = true,
