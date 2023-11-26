@@ -19,10 +19,8 @@
 package net.frozenblock.lib.config.api.network;
 
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 
 /**
  * @since 1.4.5

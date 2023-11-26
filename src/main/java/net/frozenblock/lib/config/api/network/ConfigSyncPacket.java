@@ -19,6 +19,7 @@
 package net.frozenblock.lib.config.api.network;
 
 import blue.endless.jankson.api.SyntaxError;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -38,8 +39,8 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.List;
 
 /**
  * @since 1.4.5
@@ -52,7 +53,7 @@ public record ConfigSyncPacket<T>(
 	public static final PacketType<ConfigSyncPacket<?>> PACKET_TYPE = PacketType.create(FrozenMain.CONFIG_SYNC_PACKET, ConfigSyncPacket::create);
 
 	@Nullable
-	public static <T> ConfigSyncPacket<T> create(FriendlyByteBuf buf) {
+	public static <T> ConfigSyncPacket<T> create(@NotNull FriendlyByteBuf buf) {
 		String modId = buf.readUtf();
 		String className = buf.readUtf();
 		try {
@@ -65,13 +66,13 @@ public record ConfigSyncPacket<T>(
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buf) {
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeUtf(modId);
 		buf.writeUtf(className);
 		ConfigByteBufUtil.writeJankson(buf, modId, configData);
 	}
 
-	public static <T> void receive(ConfigSyncPacket<T> packet, EnvType envType) {
+	public static <T> void receive(@NotNull ConfigSyncPacket<T> packet, EnvType envType) {
 		String modId = packet.modId();
 		String className = packet.className();
         for (Config<?> raw : ConfigRegistry.getConfigsForMod(modId)) {
@@ -102,7 +103,7 @@ public record ConfigSyncPacket<T>(
         }
     }
 
-	public static void sendS2C(ServerPlayer player, Iterable<Config<?>> configs) {
+	public static void sendS2C(ServerPlayer player, @NotNull Iterable<Config<?>> configs) {
 		for (Config<?> config : configs) {
 			if (!config.supportsModification()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.config());
@@ -115,7 +116,7 @@ public record ConfigSyncPacket<T>(
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void sendC2S(Iterable<Config<?>> configs) {
+	public static void sendC2S(@NotNull Iterable<Config<?>> configs) {
 		for (Config<?> config : configs) {
 			if (!config.supportsModification()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.instance());

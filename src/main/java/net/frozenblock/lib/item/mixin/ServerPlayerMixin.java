@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.item.mixin;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.item.impl.SaveableItemCooldowns;

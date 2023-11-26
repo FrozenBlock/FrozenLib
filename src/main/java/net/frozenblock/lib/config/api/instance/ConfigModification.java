@@ -18,14 +18,13 @@
 
 package net.frozenblock.lib.config.api.instance;
 
-import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.config.api.network.ConfigSyncModification;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.function.Consumer;
+import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.config.api.network.ConfigSyncModification;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 
 /**
  * Wrapper class for modifying configs

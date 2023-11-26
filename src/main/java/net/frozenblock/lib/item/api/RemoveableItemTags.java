@@ -20,7 +20,6 @@ package net.frozenblock.lib.item.api;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
-
 import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;

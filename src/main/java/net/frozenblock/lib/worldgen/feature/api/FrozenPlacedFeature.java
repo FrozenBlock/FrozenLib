@@ -20,7 +20,6 @@ package net.frozenblock.lib.worldgen.feature.api;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
