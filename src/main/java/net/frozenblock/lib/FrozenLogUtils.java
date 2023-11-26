@@ -31,15 +31,35 @@ public final class FrozenLogUtils {
 		}
 	}
 
-	public static void warn(String string, boolean should) {
+	public static void log(String string) {
+		log(string, true);
+	}
+
+	public static void logWarning(String string, boolean should) {
 		if (should) {
 			FrozenSharedConstants.LOGGER.warn(string);
 		}
 	}
 
-	public static void error(String string, boolean should, @Nullable Throwable throwable) {
+	public static void logWarning(String string) {
+		logWarning(string, true);
+	}
+
+	public static void logError(String string, boolean should, @Nullable Throwable throwable) {
 		if (should) {
 			FrozenSharedConstants.LOGGER.error(string, throwable);
 		}
+	}
+
+	public static void logError(String string, boolean should) {
+		logError(string, should, null);
+	}
+
+	public static void logError(String string, @Nullable Throwable throwable) {
+		logError(string, true, throwable);
+	}
+
+	public static void logError(String string) {
+		logError(string, true, null);
 	}
 }

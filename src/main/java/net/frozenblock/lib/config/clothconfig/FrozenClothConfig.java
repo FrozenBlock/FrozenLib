@@ -70,8 +70,8 @@ public final class FrozenClothConfig {
 	 * Creates a builder that will interact with config syncing
 	 * @since 1.4.5
 	 */
-	public static <T extends FieldBuilder<?, ?, ?>> T makeFieldBuilderWithSyncData(T builder, Class<?> clazz, String identifier) {
-		((FieldBuilderInterface)builder).addSyncData(clazz, identifier);
+	public static <T extends FieldBuilder<?, ?, ?>> T syncedBuilder(T builder, Class<?> clazz, String identifier) {
+		((FieldBuilderInterface)builder).frozenLib$addSyncData(clazz, identifier);
 		return builder;
 	}
 

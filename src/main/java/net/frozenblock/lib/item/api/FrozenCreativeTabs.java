@@ -88,7 +88,7 @@ public final class FrozenCreativeTabs {
 			stack.setCount(1);
 			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				FrozenLogUtils.error("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
+				FrozenLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.addBefore(comparedItem, list, tabVisibility);
 			});
 		}
@@ -127,7 +127,7 @@ public final class FrozenCreativeTabs {
 			stack.setCount(1);
 			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				FrozenLogUtils.error("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
+				FrozenLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.addAfter(comparedItem, list, tabVisibility);
 			});
 		}

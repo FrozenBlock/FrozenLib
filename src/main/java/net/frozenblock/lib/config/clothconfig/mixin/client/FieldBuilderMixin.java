@@ -24,6 +24,7 @@ import me.shedaniel.clothconfig2.api.Requirement;
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.annotation.FieldIdentifier;
 import net.frozenblock.lib.config.api.network.ConfigSyncModification;
@@ -53,22 +54,23 @@ public class FieldBuilderMixin<T, A extends AbstractConfigListEntry, SELF extend
 	}
 
 	@Override
-	public void addSyncData(@NotNull Class<?> clazz, String identifier) {
+	@Unique
+	public void frozenLib$addSyncData(@NotNull Class<?> clazz, String identifier) {
 		Field field = null;
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
-			if (fieldToCheck.isAnnotationPresent(FieldIdentifier.class)) {
-				if (fieldToCheck.getAnnotation(FieldIdentifier.class).identifier().equals(identifier)) {
-					if (field != null) FrozenLogUtils.error("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
-					field = fieldToCheck;
-				}
+			if (
+				fieldToCheck.isAnnotationPresent(FieldIdentifier.class)
+				&& fieldToCheck.getAnnotation(FieldIdentifier.class).identifier().equals(identifier)
+			) {
+				if (field != null) FrozenLogUtils.logError("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
+				field = fieldToCheck;
 			}
 		}
 		Field finalField = field;
 		Requirement nonSyncRequirement = () -> {
 			this.frozenLib$modifyType = ConfigSyncModification.canModifyField(finalField);
-			return this.frozenLib$modifyType.canModify;
+			return FrozenBools.connectedToLocalServer() || this.frozenLib$modifyType.canModify;
 		};
-		nonSyncRequirement.check();
 		if (this.enableRequirement != null) {
 			this.setRequirement(Requirement.all(this.enableRequirement, nonSyncRequirement));
 		} else {
@@ -77,7 +79,8 @@ public class FieldBuilderMixin<T, A extends AbstractConfigListEntry, SELF extend
 	}
 
 	@Override
-	public ConfigSyncModification.ModifyType getModifyType() {
+	@Unique
+	public ConfigSyncModification.ModifyType frozenLib$getModifyType() {
 		return this.frozenLib$modifyType;
 	}
 

@@ -128,7 +128,7 @@ public abstract class Config<T> {
 			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
 				ConfigSyncPacket.trySendC2S(this);
 		} catch (Exception e) {
-			FrozenLogUtils.error("Error while saving " + formatted, true, e);
+			FrozenLogUtils.logError("Error while saving " + formatted, true, e);
 		}
 	}
 
@@ -138,7 +138,7 @@ public abstract class Config<T> {
 		try {
 			return this.onLoad();
 		} catch (Exception e) {
-			FrozenLogUtils.error("Error while loading " + formatted, true, e);
+			FrozenLogUtils.logError("Error while loading " + formatted, true, e);
 			return false;
 		}
 	}

@@ -40,11 +40,11 @@ public class TooltipListEntryMixin {
 		FieldBuilder<?, ?, ?> fieldBuilder = FrozenClothConfig.getFieldBuilder(TooltipListEntry.class.cast(this));
 		if (fieldBuilder != null) {
 			FieldBuilderInterface fieldBuilderInterface = FrozenClothConfig.getFieldBuilderInterface(fieldBuilder);
-			if (!fieldBuilderInterface.getModifyType().canModify) {
-				boolean present = fieldBuilderInterface.getModifyType().tooltip.isPresent();
+			if (!fieldBuilderInterface.frozenLib$getModifyType().canModify) {
+				boolean present = fieldBuilderInterface.frozenLib$getModifyType().tooltip.isPresent();
 				info.setReturnValue(
 					present ?
-						Optional.of(fieldBuilderInterface.getModifyType().tooltip.get().toFlatList().toArray(new Component[0]))
+						Optional.of(fieldBuilderInterface.frozenLib$getModifyType().tooltip.get().toFlatList().toArray(new Component[0]))
 						:
 						Optional.empty()
 				);

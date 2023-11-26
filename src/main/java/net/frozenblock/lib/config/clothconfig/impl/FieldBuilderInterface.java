@@ -25,8 +25,8 @@ import net.frozenblock.lib.config.api.network.ConfigSyncModification;
 @Environment(EnvType.CLIENT)
 public interface FieldBuilderInterface {
 
-	void addSyncData(Class<?> clazz, String identifier);
+	void frozenLib$addSyncData(Class<?> clazz, String identifier);
 
-	ConfigSyncModification.ModifyType getModifyType();
+	ConfigSyncModification.ModifyType frozenLib$getModifyType();
 
 }

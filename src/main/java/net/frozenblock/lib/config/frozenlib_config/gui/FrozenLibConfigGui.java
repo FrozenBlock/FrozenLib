@@ -41,7 +41,7 @@ public final class FrozenLibConfigGui {
 		category.setBackground(FrozenMain.id("config.png"));
 
 		var useWindOnNonFrozenServers = category.addEntry(
-			FrozenClothConfig.makeFieldBuilderWithSyncData(
+			FrozenClothConfig.syncedBuilder(
 				entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), config.useWindOnNonFrozenServers)
 					.setDefaultValue(defaultConfig.useWindOnNonFrozenServers)
 					.setSaveConsumer(newValue -> config.useWindOnNonFrozenServers = newValue)
@@ -53,7 +53,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var saveItemCooldowns = category.addEntry(
-			FrozenClothConfig.makeFieldBuilderWithSyncData(
+			FrozenClothConfig.syncedBuilder(
 				entryBuilder.startBooleanToggle(text("save_item_cooldowns"), config.saveItemCooldowns)
 					.setDefaultValue(defaultConfig.saveItemCooldowns)
 					.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
@@ -65,7 +65,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var removeExperimentalWarning = category.addEntry(
-			FrozenClothConfig.makeFieldBuilderWithSyncData(
+			FrozenClothConfig.syncedBuilder(
 				entryBuilder.startBooleanToggle(text("remove_experimental_warning"), config.removeExperimentalWarning)
 					.setDefaultValue(defaultConfig.removeExperimentalWarning)
 					.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
@@ -77,7 +77,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var wardenSpawnTrackerCommand = category.addEntry(
-			FrozenClothConfig.makeFieldBuilderWithSyncData(
+			FrozenClothConfig.syncedBuilder(
 				entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), config.wardenSpawnTrackerCommand)
 					.setDefaultValue(defaultConfig.wardenSpawnTrackerCommand)
 					.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
@@ -89,7 +89,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var disabledDataFixTypes =
-			FrozenClothConfig.makeFieldBuilderWithSyncData(
+			FrozenClothConfig.syncedBuilder(
 				entryBuilder.startStrList(text("disabled_datafix_types"), dataFixer.disabledDataFixTypes)
 					.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
 					.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)

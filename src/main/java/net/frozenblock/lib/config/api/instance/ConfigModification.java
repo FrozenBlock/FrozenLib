@@ -54,7 +54,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			}
 			return instance;
 		} catch (Exception e) {
-			FrozenLogUtils.error("Failed to modify config, returning original.", true, e);
+			FrozenLogUtils.logError("Failed to modify config, returning original.", true, e);
 			return original;
 		}
     }
@@ -69,7 +69,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
                 try {
                     field.set(destination, field.get(source));
                 } catch (IllegalAccessException e) {
-					FrozenLogUtils.error("Failed to copy field " + field.getName(), true, e);
+					FrozenLogUtils.logError("Failed to copy field " + field.getName(), true, e);
                 }
             }
             clazz = clazz.getSuperclass();

@@ -60,7 +60,7 @@ public record ConfigSyncPacket<T>(
 			T configData = ConfigByteBufUtil.readJankson(buf, modId, className);
 			return new ConfigSyncPacket<>(modId, className, configData);
 		} catch (SyntaxError | ClassNotFoundException e) {
-			FrozenLogUtils.error("Failed to read config data from packet.", true, e);
+			FrozenLogUtils.logError("Failed to read config data from packet.", true, e);
 			return null;
 		}
 	}
