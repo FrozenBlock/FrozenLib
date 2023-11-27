@@ -68,7 +68,7 @@ public class FieldBuilderMixin<T, A extends AbstractConfigListEntry, SELF extend
 		}
 		Field finalField = field;
 		if (finalField == null) {
-			FrozenLogUtils.error("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!", true, null);
+			FrozenLogUtils.logError("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!", true, null);
 		}
 		Requirement nonSyncRequirement = () -> {
 			this.frozenLib$modifyType = ConfigSyncModification.canModifyField(finalField);
