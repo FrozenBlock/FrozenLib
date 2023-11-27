@@ -82,7 +82,7 @@ public record ConfigSyncPacket<T>(
 			Config<T> config = (Config<T>) raw;
 			if (server != null) {
 				ConfigModification.copyInto(packet.configData(), config.instance());
-				if (!FrozenBools.connectedToLocalServer())
+				if (!FrozenBools.isSinglePlayer())
 					config.save();
 				for (ServerPlayer player : PlayerLookup.all(server)) {
 					sendS2C(player);
