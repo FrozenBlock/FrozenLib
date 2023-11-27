@@ -101,7 +101,7 @@ public final class FrozenLibConfigGui {
 					.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)
 					.setTooltip(tooltip("disabled_datafix_types"))
 					.requireRestart(),
-					config.getClass(),
+					dataFixer.getClass(),
 					"disabledDataFixTypes",
 					configInstance
 				)
