@@ -18,11 +18,11 @@
 
 package net.frozenblock.lib.config.clothconfig.impl;
 
+import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public interface FieldBuilderInterface {

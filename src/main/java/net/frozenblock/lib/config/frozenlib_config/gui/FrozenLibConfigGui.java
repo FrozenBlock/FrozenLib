@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.config.frozenlib_config.gui;
 
+import java.util.function.Supplier;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -31,7 +32,6 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
-import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibConfigGui {
