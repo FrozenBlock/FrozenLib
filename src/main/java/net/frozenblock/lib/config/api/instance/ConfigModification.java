@@ -25,6 +25,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.network.ConfigSyncModification;
@@ -56,7 +57,8 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
 				if (consumer instanceof ConfigSyncModification) {
-					config.setSynced(true);
+					if (FrozenBools.connectedToServer())
+						config.setSynced(true);
 					modification.getKey().modification.accept(instance);
 				} else if (!excludeNonSync) {
 					modification.getKey().modification.accept(instance);
