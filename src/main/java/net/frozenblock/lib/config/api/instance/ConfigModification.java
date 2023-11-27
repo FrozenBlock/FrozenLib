@@ -60,7 +60,6 @@ public record ConfigModification<T>(Consumer<T> modification) {
 					modificationType = ModificationType.SYNC;
 					modification.getKey().modification.accept(instance);
 				} else if (!excludeNonSync) {
-					modificationType = ModificationType.MODIFICATION;
 					modification.getKey().modification.accept(instance);
 				}
 			}
@@ -96,8 +95,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 
 	public enum ModificationType {
 		NONE(true, true),
-		SYNC(false, true),
-		MODIFICATION(true, false);
+		SYNC(false, true);
 
 		public final boolean canModify;
 		public final boolean canOperatorOverride;
