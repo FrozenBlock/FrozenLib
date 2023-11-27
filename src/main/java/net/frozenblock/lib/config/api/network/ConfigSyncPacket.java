@@ -28,6 +28,7 @@ import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -81,7 +82,8 @@ public record ConfigSyncPacket<T>(
 			Config<T> config = (Config<T>) raw;
 			if (server != null) {
 				ConfigModification.copyInto(packet.configData(), config.instance());
-				config.save();
+				if (!FrozenBools.connectedToLocalServer())
+					config.save();
 				for (ServerPlayer player : PlayerLookup.all(server)) {
 					sendS2C(player);
 				}
