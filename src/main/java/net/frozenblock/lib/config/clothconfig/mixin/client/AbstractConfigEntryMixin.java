@@ -36,7 +36,7 @@ public class AbstractConfigEntryMixin implements AbstractConfigEntryInterface {
 	@Unique
 	private boolean frozenLib$canSave;
 
-	@Inject(method = "save", at = @At("HEAD"), cancellable = true)
+	@Inject(method = "save", at = @At("HEAD"), cancellable = true, remap = false)
 	public void frozenLib$save(CallbackInfo info) {
 		if (!this.frozenLib$canSave()) {
 			info.cancel();
