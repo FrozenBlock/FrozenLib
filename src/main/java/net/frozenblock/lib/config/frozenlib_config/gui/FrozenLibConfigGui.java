@@ -36,7 +36,8 @@ import org.jetbrains.annotations.NotNull;
 public final class FrozenLibConfigGui {
 
 	private static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
-		var config = FrozenLibConfig.get();
+		var config = FrozenLibConfig.get(true);
+		var modifiedConfig = FrozenLibConfig.get();
 		Config<?> configInstance = FrozenLibConfig.INSTANCE;
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
@@ -44,7 +45,7 @@ public final class FrozenLibConfigGui {
 
 		var useWindOnNonFrozenServers = category.addEntry(
 			FrozenClothConfig.syncedBuilder(
-				entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), config.useWindOnNonFrozenServers)
+				entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), modifiedConfig.useWindOnNonFrozenServers)
 					.setDefaultValue(defaultConfig.useWindOnNonFrozenServers)
 					.setSaveConsumer(newValue -> config.useWindOnNonFrozenServers = newValue)
 					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers")),
@@ -57,7 +58,7 @@ public final class FrozenLibConfigGui {
 
 		var saveItemCooldowns = category.addEntry(
 			FrozenClothConfig.syncedBuilder(
-				entryBuilder.startBooleanToggle(text("save_item_cooldowns"), config.saveItemCooldowns)
+				entryBuilder.startBooleanToggle(text("save_item_cooldowns"), modifiedConfig.saveItemCooldowns)
 					.setDefaultValue(defaultConfig.saveItemCooldowns)
 					.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
 					.setTooltip(tooltip("save_item_cooldowns")),
@@ -70,7 +71,7 @@ public final class FrozenLibConfigGui {
 
 		var removeExperimentalWarning = category.addEntry(
 			FrozenClothConfig.syncedBuilder(
-				entryBuilder.startBooleanToggle(text("remove_experimental_warning"), config.removeExperimentalWarning)
+				entryBuilder.startBooleanToggle(text("remove_experimental_warning"), modifiedConfig.removeExperimentalWarning)
 					.setDefaultValue(defaultConfig.removeExperimentalWarning)
 					.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
 					.setTooltip(tooltip("remove_experimental_warning")),
@@ -83,7 +84,7 @@ public final class FrozenLibConfigGui {
 
 		var wardenSpawnTrackerCommand = category.addEntry(
 			FrozenClothConfig.syncedBuilder(
-				entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), config.wardenSpawnTrackerCommand)
+				entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), modifiedConfig.wardenSpawnTrackerCommand)
 					.setDefaultValue(defaultConfig.wardenSpawnTrackerCommand)
 					.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
 					.setTooltip(tooltip("warden_spawn_tracker_command")),
@@ -96,7 +97,7 @@ public final class FrozenLibConfigGui {
 
 		var disabledDataFixTypes =
 			FrozenClothConfig.syncedBuilder(
-				entryBuilder.startStrList(text("disabled_datafix_types"), dataFixer.disabledDataFixTypes)
+				entryBuilder.startStrList(text("disabled_datafix_types"), modifiedConfig.dataFixer.disabledDataFixTypes)
 					.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
 					.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)
 					.setTooltip(tooltip("disabled_datafix_types"))
