@@ -19,14 +19,16 @@
 package net.frozenblock.lib.config.clothconfig.mixin.client;
 
 import java.lang.reflect.Field;
+import java.util.function.Supplier;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.Requirement;
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.annotation.FieldIdentifier;
+import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.network.ConfigSyncModification;
 import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigListEntryInterface;
 import net.frozenblock.lib.config.clothconfig.impl.FieldBuilderInterface;
@@ -46,16 +48,16 @@ public class FieldBuilderMixin<T, A extends AbstractConfigListEntry, SELF extend
 	protected Requirement enableRequirement;
 
 	@Unique
-	private ConfigSyncModification.ModifyType frozenLib$modifyType = ConfigSyncModification.ModifyType.CAN_MODIFY;
+	private ConfigModification.EntryPermissionType frozenLib$entryPermissionType = ConfigModification.EntryPermissionType.CAN_MODIFY;
 
 	@Inject(method = "finishBuilding", at = @At(value = "RETURN", ordinal = 1), remap = false)
-	public void finishBuilding(A gui, CallbackInfoReturnable<A> cir) {
+	public void frozenLib$finishBuilding(A gui, CallbackInfoReturnable<A> cir) {
 		((AbstractConfigListEntryInterface)gui).frozenLib$setFieldBuilder(FieldBuilder.class.cast(this));
 	}
 
 	@Override
 	@Unique
-	public void frozenLib$addSyncData(@NotNull Class<?> clazz, String identifier) {
+	public void frozenLib$addSyncData(@NotNull Class<?> clazz, String identifier, Supplier<Config<?>> configSupplier) {
 		Field field = null;
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
 			if (
@@ -67,12 +69,10 @@ public class FieldBuilderMixin<T, A extends AbstractConfigListEntry, SELF extend
 			}
 		}
 		Field finalField = field;
-		if (finalField == null) {
-			FrozenLogUtils.logError("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!", true, null);
-		}
+		FrozenLogUtils.logError("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!", finalField == null, null);
 		Requirement nonSyncRequirement = () -> {
-			this.frozenLib$modifyType = ConfigSyncModification.canModifyField(finalField);
-			return FrozenBools.connectedToLocalServer() || this.frozenLib$modifyType.canModify;
+			this.frozenLib$entryPermissionType = ConfigSyncModification.canModifyField(finalField, configSupplier.get());
+			return this.frozenLib$entryPermissionType.canModify;
 		};
 		if (this.enableRequirement != null) {
 			this.setRequirement(Requirement.all(this.enableRequirement, nonSyncRequirement));
@@ -83,8 +83,8 @@ public class FieldBuilderMixin<T, A extends AbstractConfigListEntry, SELF extend
 
 	@Override
 	@Unique
-	public ConfigSyncModification.ModifyType frozenLib$getModifyType() {
-		return this.frozenLib$modifyType;
+	public ConfigModification.EntryPermissionType frozenLib$getEntryPermissionType() {
+		return this.frozenLib$entryPermissionType;
 	}
 
 	@Shadow

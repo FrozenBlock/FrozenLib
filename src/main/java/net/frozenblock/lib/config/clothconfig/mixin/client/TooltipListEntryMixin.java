@@ -36,15 +36,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class TooltipListEntryMixin {
 
 	@Inject(method = "getTooltip()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true, remap = false)
-	public void getTooltip(CallbackInfoReturnable<Optional<Component[]>> info) {
+	public void frozenLib$getTooltip(CallbackInfoReturnable<Optional<Component[]>> info) {
 		FieldBuilder<?, ?, ?> fieldBuilder = FrozenClothConfig.getFieldBuilder(TooltipListEntry.class.cast(this));
 		if (fieldBuilder != null) {
 			FieldBuilderInterface fieldBuilderInterface = FrozenClothConfig.getFieldBuilderInterface(fieldBuilder);
-			if (!fieldBuilderInterface.frozenLib$getModifyType().canModify) {
-				boolean present = fieldBuilderInterface.frozenLib$getModifyType().tooltip.isPresent();
+			if (!fieldBuilderInterface.frozenLib$getEntryPermissionType().canModify) {
+				boolean present = fieldBuilderInterface.frozenLib$getEntryPermissionType().tooltip.isPresent();
 				info.setReturnValue(
 					present ?
-						Optional.of(fieldBuilderInterface.frozenLib$getModifyType().tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
+						Optional.of(fieldBuilderInterface.frozenLib$getEntryPermissionType().tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
 						:
 						Optional.empty()
 				);

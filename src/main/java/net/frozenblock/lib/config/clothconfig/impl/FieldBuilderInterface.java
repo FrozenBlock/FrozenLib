@@ -20,13 +20,15 @@ package net.frozenblock.lib.config.clothconfig.impl;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.api.network.ConfigSyncModification;
+import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.instance.ConfigModification;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public interface FieldBuilderInterface {
 
-	void frozenLib$addSyncData(Class<?> clazz, String identifier);
+	void frozenLib$addSyncData(Class<?> clazz, String identifier, Supplier<Config<?>> configSupplier);
 
-	ConfigSyncModification.ModifyType frozenLib$getModifyType();
+	ConfigModification.EntryPermissionType frozenLib$getEntryPermissionType();
 
 }

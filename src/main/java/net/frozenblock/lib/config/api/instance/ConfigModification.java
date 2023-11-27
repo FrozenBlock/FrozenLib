@@ -21,11 +21,15 @@ package net.frozenblock.lib.config.api.instance;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.network.ConfigSyncModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -34,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
  * @param <T> The type of the config class
  */
 public record ConfigModification<T>(Consumer<T> modification) {
+
     public static <T> T modifyConfig(Config<T> config, T original, boolean excludeSync) {
         try {
 			// clone
@@ -47,11 +52,22 @@ public record ConfigModification<T>(Consumer<T> modification) {
 				.sorted(Map.Entry.comparingByValue())
 				.toList();
 
+			ModificationType modificationType = ModificationType.NONE;
+
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
-				if (excludeSync && consumer instanceof ConfigSyncModification) continue;
-				modification.getKey().modification.accept(instance);
+				if (consumer instanceof ConfigSyncModification) {
+					if (!excludeSync) {
+						modificationType = ModificationType.SYNC;
+						modification.getKey().modification.accept(instance);
+					}
+				} else {
+					modificationType = ModificationType.MODIFICATION;
+					modification.getKey().modification.accept(instance);
+				}
 			}
+			config.setModificationType(modificationType);
+
 			return instance;
 		} catch (Exception e) {
 			FrozenLogUtils.logError("Failed to modify config, returning original.", true, e);
@@ -78,5 +94,36 @@ public record ConfigModification<T>(Consumer<T> modification) {
 
 	public static <T> void copyInto(@NotNull T source, T destination) {
 		copyInto(source, destination, false);
+	}
+
+	public enum ModificationType {
+		NONE(true, true),
+		SYNC(false, true),
+		MODIFICATION(false, false);
+
+		public final boolean canModify;
+		public final boolean canOperatorOverride;
+
+		ModificationType(boolean canModify, boolean canOperatorOverride) {
+			this.canModify = canModify;
+			this.canOperatorOverride = canOperatorOverride;
+		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	public enum EntryPermissionType {
+		CAN_MODIFY(true, Optional.empty()),
+		LOCKED_FOR_UNKNOWN_REASON(false, Optional.empty()),
+		LOCKED_DUE_TO_SERVER(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_server"))),
+		LOCKED_DUE_TO_SYNC(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_sync"))),
+		LOCKED_DUE_TO_MODIFICATION(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_modification")));
+
+		public final boolean canModify;
+		public final Optional<Component> tooltip;
+
+		EntryPermissionType(boolean canModify, Optional<Component> tooltip) {
+			this.canModify = canModify;
+			this.tooltip = tooltip;
+		}
 	}
 }

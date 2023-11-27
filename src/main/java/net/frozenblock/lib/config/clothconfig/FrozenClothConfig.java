@@ -19,12 +19,14 @@
 package net.frozenblock.lib.config.clothconfig;
 
 import java.util.Arrays;
+import java.util.function.Supplier;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigListEntryInterface;
 import net.frozenblock.lib.config.clothconfig.impl.FieldBuilderInterface;
 import net.minecraft.network.chat.Component;
@@ -70,8 +72,8 @@ public final class FrozenClothConfig {
 	 * Creates a builder that will interact with config syncing
 	 * @since 1.4.5
 	 */
-	public static <T extends FieldBuilder<?, ?, ?>> T syncedBuilder(T builder, Class<?> clazz, String identifier) {
-		((FieldBuilderInterface)builder).frozenLib$addSyncData(clazz, identifier);
+	public static <T extends FieldBuilder<?, ?, ?>> T syncedBuilder(T builder, Class<?> clazz, String identifier, Supplier<Config<?>> configSupplier) {
+		((FieldBuilderInterface)builder).frozenLib$addSyncData(clazz, identifier, configSupplier);
 		return builder;
 	}
 

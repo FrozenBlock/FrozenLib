@@ -25,17 +25,20 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
+import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibConfigGui {
 
 	private static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
 		var config = FrozenLibConfig.get(true);
+		Supplier<Config<?>> configSupplier = () -> FrozenLibConfig.INSTANCE;
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
 		category.setBackground(FrozenMain.id("config.png"));
@@ -47,7 +50,8 @@ public final class FrozenLibConfigGui {
 					.setSaveConsumer(newValue -> config.useWindOnNonFrozenServers = newValue)
 					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers")),
 					config.getClass(),
-					"useWindOnNonFrozenServers"
+					"useWindOnNonFrozenServers",
+					configSupplier
 				)
 			.build()
 		);
@@ -59,7 +63,8 @@ public final class FrozenLibConfigGui {
 					.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
 					.setTooltip(tooltip("save_item_cooldowns")),
 					config.getClass(),
-					"saveItemCooldowns"
+					"saveItemCooldowns",
+					configSupplier
 				)
 			.build()
 		);
@@ -71,7 +76,8 @@ public final class FrozenLibConfigGui {
 					.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
 					.setTooltip(tooltip("remove_experimental_warning")),
 					config.getClass(),
-					"removeExperimentalWarning"
+					"removeExperimentalWarning",
+					configSupplier
 				)
 			.build()
 		);
@@ -83,7 +89,8 @@ public final class FrozenLibConfigGui {
 					.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
 					.setTooltip(tooltip("warden_spawn_tracker_command")),
 					config.getClass(),
-					"wardenSpawnTrackerCommand"
+					"wardenSpawnTrackerCommand",
+					configSupplier
 				)
 			.build()
 		);
@@ -96,7 +103,8 @@ public final class FrozenLibConfigGui {
 					.setTooltip(tooltip("disabled_datafix_types"))
 					.requireRestart(),
 					config.getClass(),
-					"disabledDataFixTypes"
+					"disabledDataFixTypes",
+					configSupplier
 				)
 			.build();
 
