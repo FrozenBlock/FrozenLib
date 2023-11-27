@@ -19,6 +19,7 @@
 package net.frozenblock.lib.config.clothconfig;
 
 import java.util.Arrays;
+import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -26,6 +27,7 @@ import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigEntryInterface;
 import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigListEntryInterface;
 import net.frozenblock.lib.config.clothconfig.impl.FieldBuilderInterface;
 import net.minecraft.network.chat.Component;
@@ -89,6 +91,13 @@ public final class FrozenClothConfig {
 	 */
 	public static FieldBuilderInterface getFieldBuilderInterface(FieldBuilder<?, ?, ?> fieldBuilder) {
 		return (FieldBuilderInterface) fieldBuilder;
+	}
+
+	/**
+	 * @since 1.4.5
+	 */
+	public static AbstractConfigEntryInterface getAbstractConfigEntryInterface(AbstractConfigEntry<?> abstractConfigEntry) {
+		return (AbstractConfigEntryInterface) abstractConfigEntry;
 	}
 
 }

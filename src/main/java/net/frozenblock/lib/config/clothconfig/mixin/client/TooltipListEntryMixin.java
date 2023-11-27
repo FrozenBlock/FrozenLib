@@ -24,6 +24,7 @@ import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
+import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigEntryInterface;
 import net.frozenblock.lib.config.clothconfig.impl.FieldBuilderInterface;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,6 +39,8 @@ public class TooltipListEntryMixin {
 	@Inject(method = "getTooltip()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true, remap = false)
 	public void frozenLib$getTooltip(CallbackInfoReturnable<Optional<Component[]>> info) {
 		FieldBuilder<?, ?, ?> fieldBuilder = FrozenClothConfig.getFieldBuilder(TooltipListEntry.class.cast(this));
+		AbstractConfigEntryInterface abstractConfigEntryInterface = FrozenClothConfig.getAbstractConfigEntryInterface(TooltipListEntry.class.cast(this));
+		boolean canSave = true;
 		if (fieldBuilder != null) {
 			FieldBuilderInterface fieldBuilderInterface = FrozenClothConfig.getFieldBuilderInterface(fieldBuilder);
 			if (!fieldBuilderInterface.frozenLib$getEntryPermissionType().canModify) {
@@ -48,8 +51,10 @@ public class TooltipListEntryMixin {
 						:
 						Optional.empty()
 				);
+				canSave = false;
 			}
 		}
+		abstractConfigEntryInterface.frozenLib$setCanSave(canSave);
 	}
 
 }
