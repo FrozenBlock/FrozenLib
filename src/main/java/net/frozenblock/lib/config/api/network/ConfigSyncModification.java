@@ -63,8 +63,6 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 			boolean isOperator = FrozenBools.connectedToIntegratedServer() || ConfigSyncPacket.hasPermissionsToSendSync();
 			if (modificationType.canModify || (modificationType.canOperatorOverride && isOperator)) {
 				return ConfigModification.EntryPermissionType.CAN_MODIFY;
-			} else if (config.getModificationType() == ConfigModification.ModificationType.MODIFICATION) {
-				return ConfigModification.EntryPermissionType.LOCKED_DUE_TO_MODIFICATION;
 			} else if (isSyncable(field)) {
 				return ConfigModification.EntryPermissionType.LOCKED_DUE_TO_SYNC;
 			} else if (isLockedWhenSynced(field)) {

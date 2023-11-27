@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
  */
 public record ConfigModification<T>(Consumer<T> modification) {
 
-    public static <T> T modifyConfig(Config<T> config, T original, boolean excludeSync) {
+    public static <T> T modifyConfig(Config<T> config, T original, boolean excludeNonSync) {
         try {
 			// clone
 			T instance = config.configClass().getConstructor().newInstance();
@@ -57,11 +57,9 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
 				if (consumer instanceof ConfigSyncModification) {
-					if (!excludeSync) {
-						modificationType = ModificationType.SYNC;
-						modification.getKey().modification.accept(instance);
-					}
-				} else {
+					modificationType = ModificationType.SYNC;
+					modification.getKey().modification.accept(instance);
+				} else if (!excludeNonSync) {
 					modificationType = ModificationType.MODIFICATION;
 					modification.getKey().modification.accept(instance);
 				}
@@ -115,8 +113,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 		CAN_MODIFY(true, Optional.empty()),
 		LOCKED_FOR_UNKNOWN_REASON(false, Optional.empty()),
 		LOCKED_DUE_TO_SERVER(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_server"))),
-		LOCKED_DUE_TO_SYNC(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_sync"))),
-		LOCKED_DUE_TO_MODIFICATION(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_modification")));
+		LOCKED_DUE_TO_SYNC(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_sync")));
 
 		public final boolean canModify;
 		public final Optional<Component> tooltip;

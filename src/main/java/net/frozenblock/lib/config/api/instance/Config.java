@@ -90,14 +90,14 @@ public abstract class Config<T> {
 	}
 
 	/**
-	 * @return The current config instance with modifications, except for config sync modifications
+	 * @return The current config instance with config sync modifications
 	 * @throws IllegalStateException If the config does not support modification
 	 * @since 1.4.5
 	 */
-	/*public T configWithoutSync() throws IllegalStateException {
+	public T configWithSync() throws IllegalStateException {
 		if (!this.supportsModification()) throw new IllegalStateException("Config does not support modification.");
 		return ConfigModification.modifyConfig(this, this.instance(), true);
-	}*/
+	}
 
 	/**
 	 * @return The unmodified current config instance
