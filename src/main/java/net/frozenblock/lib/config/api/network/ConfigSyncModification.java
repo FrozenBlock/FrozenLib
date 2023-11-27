@@ -59,9 +59,8 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 	@Environment(EnvType.CLIENT)
 	public static ConfigModification.EntryPermissionType canModifyField(@Nullable Field field, @Nullable Config<?> config) {
 		if (config != null && field != null) {
-			ConfigModification.ModificationType modificationType = config.getModificationType();
 			boolean isOperator = FrozenBools.connectedToIntegratedServer() || ConfigSyncPacket.hasPermissionsToSendSync();
-			if (modificationType.canModify || (modificationType.canOperatorOverride && isOperator)) {
+			if (!config.isSynced() || isOperator) {
 				return ConfigModification.EntryPermissionType.CAN_MODIFY;
 			} else if (isSyncable(field)) {
 				return ConfigModification.EntryPermissionType.LOCKED_DUE_TO_SYNC;

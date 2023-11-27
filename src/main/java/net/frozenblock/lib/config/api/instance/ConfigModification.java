@@ -52,18 +52,16 @@ public record ConfigModification<T>(Consumer<T> modification) {
 				.sorted(Map.Entry.comparingByValue())
 				.toList();
 
-			ModificationType modificationType = ModificationType.NONE;
-
+			config.setSynced(false);
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
 				if (consumer instanceof ConfigSyncModification) {
-					modificationType = ModificationType.SYNC;
+					config.setSynced(true);
 					modification.getKey().modification.accept(instance);
 				} else if (!excludeNonSync) {
 					modification.getKey().modification.accept(instance);
 				}
 			}
-			config.setModificationType(modificationType);
 
 			return instance;
 		} catch (Exception e) {
@@ -91,19 +89,6 @@ public record ConfigModification<T>(Consumer<T> modification) {
 
 	public static <T> void copyInto(@NotNull T source, T destination) {
 		copyInto(source, destination, false);
-	}
-
-	public enum ModificationType {
-		NONE(true, true),
-		SYNC(false, true);
-
-		public final boolean canModify;
-		public final boolean canOperatorOverride;
-
-		ModificationType(boolean canModify, boolean canOperatorOverride) {
-			this.canModify = canModify;
-			this.canOperatorOverride = canOperatorOverride;
-		}
 	}
 
 	@Environment(EnvType.CLIENT)

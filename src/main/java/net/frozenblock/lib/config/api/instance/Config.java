@@ -39,7 +39,7 @@ public abstract class Config<T> {
 	private final Class<T> config;
 	private T configInstance;
 	private final T defaultInstance;
-	private ConfigModification.ModificationType modificationType = ConfigModification.ModificationType.NONE;
+	private boolean synced = false;
 
 	protected Config(String modId, Class<T> config, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this.modId = modId;
@@ -121,12 +121,12 @@ public abstract class Config<T> {
 		return this.config;
 	}
 
-	public void setModificationType(ConfigModification.ModificationType modificationType) {
-		this.modificationType = modificationType;
+	public void setSynced(boolean synced) {
+		this.synced = synced;
 	}
 
-	public ConfigModification.ModificationType getModificationType() {
-		return this.modificationType;
+	public boolean isSynced() {
+		return this.synced;
 	}
 
 	protected abstract void onSave() throws Exception;
