@@ -96,7 +96,8 @@ public abstract class Config<T> {
 	 */
 	public T configWithSync() throws IllegalStateException {
 		if (!this.supportsModification()) {
-			FrozenLogUtils.logWarning("Config does not support modification, returning unmodified instance.");
+			String formatted = String.format("Config %s from %s", this.configClass().getSimpleName(), this.modId());
+			FrozenLogUtils.logWarning(formatted + " does not support modification, returning unmodified instance.");
 			return this.instance();
 		}
 		return ConfigModification.modifyConfig(this, this.instance(), true);
