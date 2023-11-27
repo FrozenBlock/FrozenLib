@@ -25,6 +25,8 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.instance.ConfigModification;
+import net.frozenblock.lib.config.api.network.ConfigSyncModification;
 import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
@@ -91,6 +93,15 @@ public final class FrozenClient implements ClientModInitializer {
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
 				for (Config<?> config : ConfigRegistry.getAllConfigs()) {
 					ConfigRegistry.setSyncData(config, null);
+					var list = ConfigRegistry.getModificationsForConfig(config)
+						.entrySet()
+						.stream()
+						.filter(entry -> entry.getKey().modification() instanceof ConfigSyncModification<?>)
+						.toList();
+					if (list.isEmpty())
+						config.setModificationType(ConfigModification.ModificationType.NONE);
+					else
+						config.setModificationType(ConfigModification.ModificationType.MODIFICATION);
 				}
 		});
 

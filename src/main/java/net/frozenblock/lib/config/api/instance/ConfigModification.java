@@ -97,7 +97,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 	public enum ModificationType {
 		NONE(true, true),
 		SYNC(false, true),
-		MODIFICATION(false, false);
+		MODIFICATION(true, false);
 
 		public final boolean canModify;
 		public final boolean canOperatorOverride;
