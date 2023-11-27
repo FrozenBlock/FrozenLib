@@ -82,4 +82,8 @@ public class FrozenLibConfig {
 	public static FrozenLibConfig get() {
 		return get(false);
 	}
+
+	public static FrozenLibConfig getWithSync() {
+		return INSTANCE.configWithSync();
+	}
 }

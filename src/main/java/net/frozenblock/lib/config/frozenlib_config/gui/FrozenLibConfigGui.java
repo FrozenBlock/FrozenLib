@@ -37,7 +37,7 @@ public final class FrozenLibConfigGui {
 
 	private static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
 		var config = FrozenLibConfig.get(true);
-		var modifiedConfig = FrozenLibConfig.get();
+		var modifiedConfig = FrozenLibConfig.getWithSync();
 		Config<?> configInstance = FrozenLibConfig.INSTANCE;
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
