@@ -19,7 +19,6 @@
 package net.frozenblock.lib.config.clothconfig.mixin.client;
 
 import java.lang.reflect.Field;
-import java.util.function.Supplier;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.Requirement;
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
@@ -57,7 +56,7 @@ public class FieldBuilderMixin<T, A extends AbstractConfigListEntry, SELF extend
 
 	@Override
 	@Unique
-	public void frozenLib$addSyncData(@NotNull Class<?> clazz, String identifier, Supplier<Config<?>> configSupplier) {
+	public void frozenLib$addSyncData(@NotNull Class<?> clazz, String identifier, Config<?> configInstance) {
 		Field field = null;
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
 			if (
@@ -71,7 +70,7 @@ public class FieldBuilderMixin<T, A extends AbstractConfigListEntry, SELF extend
 		Field finalField = field;
 		FrozenLogUtils.logError("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!", finalField == null, null);
 		Requirement nonSyncRequirement = () -> {
-			this.frozenLib$entryPermissionType = ConfigSyncModification.canModifyField(finalField, configSupplier.get());
+			this.frozenLib$entryPermissionType = ConfigSyncModification.canModifyField(finalField, configInstance);
 			return this.frozenLib$entryPermissionType.canModify;
 		};
 		if (this.enableRequirement != null) {

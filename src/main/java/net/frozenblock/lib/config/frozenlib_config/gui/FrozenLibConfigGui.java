@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.config.frozenlib_config.gui;
 
-import java.util.function.Supplier;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -38,7 +37,7 @@ public final class FrozenLibConfigGui {
 
 	private static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
 		var config = FrozenLibConfig.get(true);
-		Supplier<Config<?>> configSupplier = () -> FrozenLibConfig.INSTANCE;
+		Config<?> configInstance = FrozenLibConfig.INSTANCE;
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
 		category.setBackground(FrozenMain.id("config.png"));
@@ -51,7 +50,7 @@ public final class FrozenLibConfigGui {
 					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers")),
 					config.getClass(),
 					"useWindOnNonFrozenServers",
-					configSupplier
+					configInstance
 				)
 			.build()
 		);
@@ -64,7 +63,7 @@ public final class FrozenLibConfigGui {
 					.setTooltip(tooltip("save_item_cooldowns")),
 					config.getClass(),
 					"saveItemCooldowns",
-					configSupplier
+					configInstance
 				)
 			.build()
 		);
@@ -77,7 +76,7 @@ public final class FrozenLibConfigGui {
 					.setTooltip(tooltip("remove_experimental_warning")),
 					config.getClass(),
 					"removeExperimentalWarning",
-					configSupplier
+					configInstance
 				)
 			.build()
 		);
@@ -90,7 +89,7 @@ public final class FrozenLibConfigGui {
 					.setTooltip(tooltip("warden_spawn_tracker_command")),
 					config.getClass(),
 					"wardenSpawnTrackerCommand",
-					configSupplier
+					configInstance
 				)
 			.build()
 		);
@@ -104,7 +103,7 @@ public final class FrozenLibConfigGui {
 					.requireRestart(),
 					config.getClass(),
 					"disabledDataFixTypes",
-					configSupplier
+					configInstance
 				)
 			.build();
 

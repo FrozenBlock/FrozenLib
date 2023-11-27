@@ -19,7 +19,6 @@
 package net.frozenblock.lib.config.clothconfig;
 
 import java.util.Arrays;
-import java.util.function.Supplier;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -72,8 +71,8 @@ public final class FrozenClothConfig {
 	 * Creates a builder that will interact with config syncing
 	 * @since 1.4.5
 	 */
-	public static <T extends FieldBuilder<?, ?, ?>> T syncedBuilder(T builder, Class<?> clazz, String identifier, Supplier<Config<?>> configSupplier) {
-		((FieldBuilderInterface)builder).frozenLib$addSyncData(clazz, identifier, configSupplier);
+	public static <T extends FieldBuilder<?, ?, ?>> T syncedBuilder(T builder, Class<?> clazz, String identifier, Config<?> configInstance) {
+		((FieldBuilderInterface)builder).frozenLib$addSyncData(clazz, identifier, configInstance);
 		return builder;
 	}
 
