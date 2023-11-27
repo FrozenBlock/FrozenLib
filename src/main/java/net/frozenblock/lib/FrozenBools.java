@@ -57,7 +57,7 @@ public class FrozenBools {
     public static final boolean HAS_TERRALITH = FabricLoader.getInstance().isModLoaded("terralith");
 
 	@SuppressWarnings("deprecation")
-	public static boolean isSinglePlayer() {
+	public static boolean connectedToIntegratedServer() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
 			return false;
 		Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
