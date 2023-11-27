@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 public final class FrozenLibConfigGui {
 
 	private static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
-		var config = FrozenLibConfig.get(false);
+		var config = FrozenLibConfig.get();
 		Config<?> configInstance = FrozenLibConfig.INSTANCE;
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
