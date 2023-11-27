@@ -91,10 +91,9 @@ public abstract class Config<T> {
 
 	/**
 	 * @return The current config instance with config sync modifications
-	 * @throws IllegalStateException If the config does not support modification
 	 * @since 1.4.5
 	 */
-	public T configWithSync() throws IllegalStateException {
+	public T configWithSync() {
 		if (!this.supportsModification()) {
 			String formatted = String.format("Config %s from %s", this.configClass().getSimpleName(), this.modId());
 			FrozenLogUtils.logWarning(formatted + " does not support modification, returning unmodified instance.");
