@@ -46,7 +46,7 @@ public class NoisePlantFeature extends Feature<PathFeatureConfig> {
         int radiusSquared = config.radius() * config.radius();
         RandomSource random = level.getRandom();
         ImprovedNoise sampler = config.noise() == 1 ? EasyNoiseSampler.perlinLocal : config.noise() == 2 ? EasyNoiseSampler.perlinChecked : config.noise() == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-        float chance = config.placementProbability();
+        float chance = config.placementChance();
 		int bx = blockPos.getX();
         int bz = blockPos.getZ();
         BlockPos.MutableBlockPos mutable = blockPos.mutable();

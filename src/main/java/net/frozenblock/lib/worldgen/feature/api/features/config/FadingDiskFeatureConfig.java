@@ -29,16 +29,16 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record FadingDiskFeatureConfig(boolean useHeightmapInsteadOfCircularPlacement, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placemenProbability, float innerProbability, float innerPercent, float fadeStartDistancePercent, HolderSet<Block> innerReplaceableBlocks, HolderSet<Block> outerReplaceableBlocks, Heightmap.Types heightmap) implements FeatureConfiguration {
+public record FadingDiskFeatureConfig(boolean useHeightmapInsteadOfCircularPlacement, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placementChance, float innerChance, float innerPercent, float fadeStartDistancePercent, HolderSet<Block> innerReplaceableBlocks, HolderSet<Block> outerReplaceableBlocks, Heightmap.Types heightmap) implements FeatureConfiguration {
 	public static final Codec<FadingDiskFeatureConfig> CODEC = RecordCodecBuilder.create(
 		(instance) -> instance.group(
 			Codec.BOOL.fieldOf("use_heightmap_instead_of_circular_placement").forGetter(config -> config.useHeightmapInsteadOfCircularPlacement),
 			BlockStateProvider.CODEC.fieldOf("inner_state").forGetter(config -> config.innerState),
 			BlockStateProvider.CODEC.fieldOf("outer_state").forGetter(config -> config.outerState),
 			IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
-			Codec.FLOAT.fieldOf("placement_probability").forGetter(config -> config.placemenProbability),
-			Codec.FLOAT.fieldOf("inner_probability").forGetter(config -> config.innerProbability),
-			Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
+			Codec.FLOAT.fieldOf("placement_chance").forGetter(config -> config.placementChance),
+			Codec.FLOAT.fieldOf("inner_chance").forGetter(config -> config.innerChance),
+			Codec.FLOAT.fieldOf("inner_percent").forGetter(config -> config.innerPercent),
 			Codec.FLOAT.fieldOf("fade_start_distance_percent").forGetter(config -> config.fadeStartDistancePercent),
 			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("inner_replaceable_blocks").forGetter((config) -> config.innerReplaceableBlocks),
 			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("outer_replaceable_blocks").forGetter((config) -> config.outerReplaceableBlocks),

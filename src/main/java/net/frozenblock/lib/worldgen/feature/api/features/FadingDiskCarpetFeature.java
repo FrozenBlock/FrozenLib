@@ -65,10 +65,10 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 						if (distance < radius * radius) {
 							mutableDisk.set(x, level.getHeight(heightmap, x, z), z);
 							BlockState state = level.getBlockState(mutableDisk);
-							boolean inner = mutableDisk.closerThan(s, radius * config.innerProbability());
+							boolean inner = mutableDisk.closerThan(s, radius * config.innerChance());
 							boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.fadeStartDistancePercent());
 							boolean choseInner;
-							if (random.nextFloat() < config.placementProbability() && state.isAir()) {
+							if (random.nextFloat() < config.placementChance() && state.isAir()) {
 								if (fade) {
 									if (random.nextFloat() > 0.5F) {
 										BlockState placedState = config.outerState().getState(random, mutableDisk);
@@ -81,7 +81,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 										}
 									}
 								} else {
-									choseInner = (inner && random.nextFloat() < config.innerProbability());
+									choseInner = (inner && random.nextFloat() < config.innerChance());
 									BlockState placedState = choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk);
 									if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 										mutableDisk.move(Direction.UP);
@@ -99,10 +99,10 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 							if (distance < radius * radius) {
 								mutableDisk.set(x, y, z);
 								BlockState state = level.getBlockState(mutableDisk);
-								boolean inner = mutableDisk.closerThan(s, radius * config.innerProbability());
+								boolean inner = mutableDisk.closerThan(s, radius * config.innerChance());
 								boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.fadeStartDistancePercent());
 								boolean choseInner;
-								if (random.nextFloat() < config.placementProbability() && state.isAir()) {
+								if (random.nextFloat() < config.placementChance() && state.isAir()) {
 									if (fade) {
 										if (random.nextFloat() > 0.5F) {
 											BlockState placedState = config.outerState().getState(random, mutableDisk);
@@ -115,7 +115,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 											}
 										}
 									} else {
-										choseInner = (inner && random.nextFloat() < config.innerProbability());
+										choseInner = (inner && random.nextFloat() < config.innerChance());
 										BlockState placedState = choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk);
 										if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 											mutableDisk.move(Direction.UP);

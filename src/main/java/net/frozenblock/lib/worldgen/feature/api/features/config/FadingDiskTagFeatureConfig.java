@@ -28,15 +28,15 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record FadingDiskTagFeatureConfig(boolean useHeightmapInsteadOfCircularPlacement, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placementProbability, float innerProbability, float innerPercent, float fadeStartDistancePercent, TagKey<Block> innerReplaceableBlocks, TagKey<Block> outerReplaceableBlocks, Heightmap.Types heightmap) implements FeatureConfiguration {
+public record FadingDiskTagFeatureConfig(boolean useHeightmapInsteadOfCircularPlacement, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placementChance, float innerChance, float innerPercent, float fadeStartDistancePercent, TagKey<Block> innerReplaceableBlocks, TagKey<Block> outerReplaceableBlocks, Heightmap.Types heightmap) implements FeatureConfiguration {
 	public static final Codec<FadingDiskTagFeatureConfig> CODEC = RecordCodecBuilder.create(
 		(instance) -> instance.group(
 			Codec.BOOL.fieldOf("use_heightmap_instead_of_circular_placement").forGetter(config -> config.useHeightmapInsteadOfCircularPlacement),
 			BlockStateProvider.CODEC.fieldOf("inner_state").forGetter(config -> config.innerState),
 			BlockStateProvider.CODEC.fieldOf("outer_state").forGetter(config -> config.outerState),
 			IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
-			Codec.FLOAT.fieldOf("placement_probability").forGetter(config -> config.placementProbability),
-			Codec.FLOAT.fieldOf("inner_probability").forGetter(config -> config.innerProbability),
+			Codec.FLOAT.fieldOf("placement_chance").forGetter(config -> config.placementChance),
+			Codec.FLOAT.fieldOf("inner_chance").forGetter(config -> config.innerChance),
 			Codec.FLOAT.fieldOf("inner_percent").forGetter(config -> config.innerPercent),
 			Codec.FLOAT.fieldOf("fade_start_distance_percent").forGetter(config -> config.fadeStartDistancePercent),
 			TagKey.codec(Registries.BLOCK).fieldOf("inner_replaceable_blocks").forGetter((config) -> config.innerReplaceableBlocks),

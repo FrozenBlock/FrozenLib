@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record PathSwapUnderWaterTagFeatureConfig(BlockStateProvider state, BlockStateProvider underWaterState, int radius, int noise, double noiseScale, double minThreshold, double maxThreshold, boolean useY, boolean scaleY, boolean is3D, boolean onlyPlaceWhenExposed, TagKey<Block> replaceableBlocks, float placementProbability) implements FeatureConfiguration {
+public record PathSwapUnderWaterTagFeatureConfig(BlockStateProvider state, BlockStateProvider underWaterState, int radius, int noise, double noiseScale, double minThreshold, double maxThreshold, boolean useY, boolean scaleY, boolean is3D, boolean onlyPlaceWhenExposed, TagKey<Block> replaceableBlocks, float placementChance) implements FeatureConfiguration {
 	public static final Codec<PathSwapUnderWaterTagFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("state").forGetter((config) -> config.state),
 		BlockStateProvider.CODEC.fieldOf("under_water_state").forGetter((config) -> config.underWaterState),
@@ -40,6 +40,6 @@ public record PathSwapUnderWaterTagFeatureConfig(BlockStateProvider state, Block
 		Codec.BOOL.fieldOf("is_3d").orElse(false).forGetter((config) -> config.is3D),
 		Codec.BOOL.fieldOf("only_place_when_exposed").orElse(false).forGetter((config) -> config.onlyPlaceWhenExposed),
 		TagKey.codec(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter((config) -> config.replaceableBlocks),
-		Codec.floatRange(0, 1).fieldOf("placement_probability").orElse(1F).forGetter((config) -> config.placementProbability)
+		Codec.floatRange(0, 1).fieldOf("placement_chance").orElse(1F).forGetter((config) -> config.placementChance)
 	).apply(instance, PathSwapUnderWaterTagFeatureConfig::new));
 }

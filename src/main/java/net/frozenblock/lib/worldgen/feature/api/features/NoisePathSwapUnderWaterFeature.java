@@ -49,7 +49,7 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
         int radiusSquared = config.radius() * config.radius();
         RandomSource random = level.getRandom();
         ImprovedNoise sampler = config.noise() == 1 ? EasyNoiseSampler.perlinLocal : config.noise() == 2 ? EasyNoiseSampler.perlinChecked : config.noise() == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-        float chance = config.placementProbability();
+        float chance = config.placement_chance();
 		int bx = blockPos.getX();
 		int by = blockPos.getY();
         int bz = blockPos.getZ();

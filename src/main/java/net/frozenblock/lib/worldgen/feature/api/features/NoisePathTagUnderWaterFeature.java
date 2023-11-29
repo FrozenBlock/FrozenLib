@@ -47,7 +47,7 @@ public class NoisePathTagUnderWaterFeature extends Feature<PathTagFeatureConfig>
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
         ImprovedNoise sampler = config.noise() == 1 ? EasyNoiseSampler.perlinLocal : config.noise() == 2 ? EasyNoiseSampler.perlinChecked : config.noise() == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-        float chance = config.placementProbability();
+        float chance = config.placementChance();
 		BlockPos.MutableBlockPos mutable = blockPos.mutable();
         int bx = mutable.getX();
 		int by = mutable.getY();

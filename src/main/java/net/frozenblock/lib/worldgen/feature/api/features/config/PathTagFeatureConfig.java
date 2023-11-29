@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record PathTagFeatureConfig(BlockStateProvider state, int radius, int noise, double noiseScale, double minThreshold, double maxThreshold, boolean useY, boolean scaleY, boolean is3D, boolean onlyPlaceWhenExposed, TagKey<Block> replaceableBlocks, float placementProbability) implements FeatureConfiguration {
+public record PathTagFeatureConfig(BlockStateProvider state, int radius, int noise, double noiseScale, double minThreshold, double maxThreshold, boolean useY, boolean scaleY, boolean is3D, boolean onlyPlaceWhenExposed, TagKey<Block> replaceableBlocks, float placementChance) implements FeatureConfiguration {
 	public static final Codec<PathTagFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("state").forGetter((config) -> config.state),
 		Codec.intRange(1, 64).fieldOf("radius").orElse(10).forGetter((config) -> config.radius),
@@ -39,6 +39,6 @@ public record PathTagFeatureConfig(BlockStateProvider state, int radius, int noi
 		Codec.BOOL.fieldOf("is_3d").orElse(false).forGetter((config) -> config.is3D),
 		Codec.BOOL.fieldOf("only_place_when_exposed").orElse(false).forGetter((config) -> config.onlyPlaceWhenExposed),
 		TagKey.codec(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter((config) -> config.replaceableBlocks),
-		Codec.floatRange(0, 1).fieldOf("placement_probability").orElse(1F).forGetter((config) -> config.placementProbability)
+		Codec.floatRange(0, 1).fieldOf("placement_chance").orElse(1F).forGetter((config) -> config.placementChance)
 	).apply(instance, PathTagFeatureConfig::new));
 }
