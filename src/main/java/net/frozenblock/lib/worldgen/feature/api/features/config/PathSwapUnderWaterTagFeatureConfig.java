@@ -26,20 +26,20 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record PathSwapUnderWaterTagFeatureConfig(BlockStateProvider pathBlock, BlockStateProvider waterPathBlock, int radius, int noise, double multiplier, double minThresh, double maxThresh, boolean useY, boolean multiplyY, boolean is3D, boolean onlyExposed, TagKey<Block> replaceable, float chance) implements FeatureConfiguration {
+public record PathSwapUnderWaterTagFeatureConfig(BlockStateProvider state, BlockStateProvider underWaterState, int radius, int noise, double noiseScale, double minThreshold, double maxThreshold, boolean useY, boolean scaleY, boolean is3D, boolean onlyPlaceWhenExposed, TagKey<Block> replaceableBlocks, float placementProbability) implements FeatureConfiguration {
 	public static final Codec<PathSwapUnderWaterTagFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-		BlockStateProvider.CODEC.fieldOf("block").forGetter((config) -> config.pathBlock),
-		BlockStateProvider.CODEC.fieldOf("waterPathBlock").forGetter((config) -> config.waterPathBlock),
+		BlockStateProvider.CODEC.fieldOf("state").forGetter((config) -> config.state),
+		BlockStateProvider.CODEC.fieldOf("under_water_state").forGetter((config) -> config.underWaterState),
 		Codec.intRange(1, 64).fieldOf("radius").orElse(10).forGetter((config) -> config.radius),
 		Codec.intRange(1, 4).fieldOf("noise").orElse(4).forGetter((config) -> config.noise),
-		Codec.doubleRange(0.0001, 128).fieldOf("multiplier").orElse(0.05).forGetter((config) -> config.multiplier),
-		Codec.doubleRange(-1, 1).fieldOf("minThresh").orElse(0.2).forGetter((config) -> config.minThresh),
-		Codec.doubleRange(-1, 1).fieldOf("maxThresh").orElse(1D).forGetter((config) -> config.maxThresh),
-		Codec.BOOL.fieldOf("useY").orElse(false).forGetter((config) -> config.useY),
-		Codec.BOOL.fieldOf("multiplyY").orElse(false).forGetter((config) -> config.multiplyY),
-		Codec.BOOL.fieldOf("is3D").orElse(false).forGetter((config) -> config.is3D),
-		Codec.BOOL.fieldOf("onlyExposed").orElse(false).forGetter((config) -> config.onlyExposed),
-		TagKey.codec(Registries.BLOCK).fieldOf("replaceable").forGetter((config) -> config.replaceable),
-		Codec.floatRange(0, 1).fieldOf("chance").orElse(1F).forGetter((config) -> config.chance)
+		Codec.doubleRange(0.0001, 128).fieldOf("noise_scale").orElse(0.05).forGetter((config) -> config.noiseScale),
+		Codec.doubleRange(-1, 1).fieldOf("min_threshold").orElse(0.2).forGetter((config) -> config.minThreshold),
+		Codec.doubleRange(-1, 1).fieldOf("max_threshold").orElse(1D).forGetter((config) -> config.maxThreshold),
+		Codec.BOOL.fieldOf("use_y").orElse(false).forGetter((config) -> config.useY),
+		Codec.BOOL.fieldOf("scale_y").orElse(false).forGetter((config) -> config.scaleY),
+		Codec.BOOL.fieldOf("is_3d").orElse(false).forGetter((config) -> config.is3D),
+		Codec.BOOL.fieldOf("only_place_when_exposed").orElse(false).forGetter((config) -> config.onlyPlaceWhenExposed),
+		TagKey.codec(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter((config) -> config.replaceableBlocks),
+		Codec.floatRange(0, 1).fieldOf("placement_probability").orElse(1F).forGetter((config) -> config.placementProbability)
 	).apply(instance, PathSwapUnderWaterTagFeatureConfig::new));
 }

@@ -28,67 +28,68 @@ import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
+import org.jetbrains.annotations.NotNull;
 
 public class NoisePlacementFilter extends PlacementFilter {
 	public static final Codec<NoisePlacementFilter> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-		Codec.intRange(1, 4).fieldOf("noise").orElse(4).forGetter((config) -> config.noiseIndex),
-		Codec.doubleRange(0.0001, 128).fieldOf("multiplier").orElse(0.05).forGetter((config) -> config.multiplier),
-		Codec.doubleRange(-1, 1).fieldOf("minThresh").orElse(0.2).forGetter((config) -> config.minThresh),
-		Codec.doubleRange(-1, 1).fieldOf("maxThresh").orElse(1D).forGetter((config) -> config.maxThresh),
-		Codec.doubleRange(0, 1).fieldOf("fadeDist").orElse(0D).forGetter((config) -> config.fadeDist),
-		Codec.BOOL.fieldOf("useY").orElse(false).forGetter((config) -> config.useY),
-		Codec.BOOL.fieldOf("multiplyY").orElse(false).forGetter((config) -> config.multiplyY),
-		Codec.BOOL.fieldOf("inside").orElse(false).forGetter((config) -> config.inside)
+		Codec.intRange(1, 4).fieldOf("noise").orElse(4).forGetter((config) -> config.noise),
+		Codec.doubleRange(0.0001, 128).fieldOf("noise_scale").orElse(0.05).forGetter((config) -> config.noiseScale),
+		Codec.doubleRange(-1, 1).fieldOf("min_threshold").orElse(0.2).forGetter((config) -> config.minThreshold),
+		Codec.doubleRange(-1, 1).fieldOf("maxThresh").orElse(1D).forGetter((config) -> config.maxThreshold),
+		Codec.doubleRange(0, 1).fieldOf("fade_distance").orElse(0D).forGetter((config) -> config.fadeDistance),
+		Codec.BOOL.fieldOf("use_y").orElse(false).forGetter((config) -> config.useY),
+		Codec.BOOL.fieldOf("scale_y").orElse(false).forGetter((config) -> config.scaleY),
+		Codec.BOOL.fieldOf("must_be_inside").orElse(false).forGetter((config) -> config.mustBeInside)
 		).apply(instance, NoisePlacementFilter::new));
 
-	private final int noiseIndex;
-	private final double multiplier;
-	private final double minThresh;
-	private final double minFadeThresh;
-	private final double maxThresh;
-	private final double maxFadeThresh;
-	private final double fadeDist;
+	private final int noise;
+	private final double noiseScale;
+	private final double minThreshold;
+	private final double minFadeThreshold;
+	private final double maxThreshold;
+	private final double maxFadeThreshold;
+	private final double fadeDistance;
 	private final boolean useY;
-	private final boolean multiplyY;
-	private final boolean inside;
+	private final boolean scaleY;
+	private final boolean mustBeInside;
 
-	public NoisePlacementFilter(int noiseIndex, double multiplier, double minThresh, double maxThresh, double fadeDist, boolean useY, boolean multiplyY, boolean inside) {
-		this.noiseIndex = noiseIndex;
-		this.multiplier = multiplier;
-		this.minThresh = minThresh;
-		this.maxThresh = maxThresh;
-		this.fadeDist = fadeDist;
-		this.minFadeThresh = minThresh - fadeDist;
-		this.maxFadeThresh = maxThresh + fadeDist;
+	public NoisePlacementFilter(int noise, double noiseScale, double minThreshold, double maxThreshold, double fadeDistance, boolean useY, boolean scaleY, boolean mustBeInside) {
+		this.noise = noise;
+		this.noiseScale = noiseScale;
+		this.minThreshold = minThreshold;
+		this.maxThreshold = maxThreshold;
+		this.fadeDistance = fadeDistance;
+		this.minFadeThreshold = minThreshold - fadeDistance;
+		this.maxFadeThreshold = maxThreshold + fadeDistance;
 		this.useY = useY;
-		this.multiplyY = multiplyY;
-		this.inside = inside;
-		if (this.minThresh >= this.maxThresh) {
-			throw new IllegalArgumentException("NoisePlacementFilter minThresh cannot be greater than or equal to maxThresh!");
+		this.scaleY = scaleY;
+		this.mustBeInside = mustBeInside;
+		if (this.minThreshold >= this.maxThreshold) {
+			throw new IllegalArgumentException("NoisePlacementFilter minThresh cannot be greater than or equal to maxThreshold!");
 		}
-		if (this.fadeDist < 0) {
-			throw new IllegalArgumentException("NoisePlacementFilter fadeDist cannot be less than 0!");
+		if (this.fadeDistance < 0) {
+			throw new IllegalArgumentException("NoisePlacementFilter fadeDistance cannot be less than 0!");
 		}
 	}
 
 	@Override
-	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
+	protected boolean shouldPlace(@NotNull PlacementContext context, RandomSource random, BlockPos pos) {
 		WorldGenLevel level = context.level;
 		boolean isInside = false;
-		ImprovedNoise sampler = this.noiseIndex == 1 ? EasyNoiseSampler.perlinLocal : this.noiseIndex == 2 ? EasyNoiseSampler.perlinChecked : this.noiseIndex == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-		double sample = EasyNoiseSampler.sample(level, sampler, pos, this.multiplier, this.multiplyY, this.useY);
-		if (sample > this.minThresh && sample < this.maxThresh) {
+		ImprovedNoise sampler = this.noise == 1 ? EasyNoiseSampler.perlinLocal : this.noise == 2 ? EasyNoiseSampler.perlinChecked : this.noise == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
+		double sample = EasyNoiseSampler.sample(level, sampler, pos, this.noiseScale, this.scaleY, this.useY);
+		if (sample > this.minThreshold && sample < this.maxThreshold) {
 			isInside = true;
 		}
-		if (this.fadeDist > 0) {
-			if (sample > this.minFadeThresh && sample < this.minThresh) {
-				isInside = random.nextDouble() > Math.abs((this.minThresh - sample) / this.fadeDist);
+		if (this.fadeDistance > 0) {
+			if (sample > this.minFadeThreshold && sample < this.minThreshold) {
+				isInside = random.nextDouble() > Math.abs((this.minThreshold - sample) / this.fadeDistance);
 			}
-			if (sample < this.maxFadeThresh && sample > this.maxThresh) {
-				isInside = random.nextDouble() > Math.abs((this.maxThresh - sample) / this.fadeDist);
+			if (sample < this.maxFadeThreshold && sample > this.maxThreshold) {
+				isInside = random.nextDouble() > Math.abs((this.maxThreshold - sample) / this.fadeDistance);
 			}
 		}
-		return this.inside == isInside;
+		return this.mustBeInside == isInside;
 	}
 
 	@Override

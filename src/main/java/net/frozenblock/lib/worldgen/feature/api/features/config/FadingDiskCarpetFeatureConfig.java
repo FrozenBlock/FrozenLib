@@ -25,17 +25,17 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record FadingDiskCarpetFeatureConfig(boolean useHeightMapAndNotCircular, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placeChance, float innerChance, float innerPercent, float startFadePercent, Heightmap.Types heightmap) implements FeatureConfiguration {
+public record FadingDiskCarpetFeatureConfig(boolean useHeightmapInsteadOfCircularPlacement, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placementProbability, float innerPercent, float innerProbability, float fadeStartDistancePercent, Heightmap.Types heightmap) implements FeatureConfiguration {
 	public static final Codec<FadingDiskCarpetFeatureConfig> CODEC = RecordCodecBuilder.create(
 		(instance) -> instance.group(
-			Codec.BOOL.fieldOf("useHeightMapAndNotCircular").forGetter(config -> config.useHeightMapAndNotCircular),
-			BlockStateProvider.CODEC.fieldOf("innerState").forGetter(config -> config.innerState),
-			BlockStateProvider.CODEC.fieldOf("outerState").forGetter(config -> config.outerState),
+			Codec.BOOL.fieldOf("use_heightmap_instead_of_circular_placement").forGetter(config -> config.useHeightmapInsteadOfCircularPlacement),
+			BlockStateProvider.CODEC.fieldOf("inner_state").forGetter(config -> config.innerState),
+			BlockStateProvider.CODEC.fieldOf("outer_state").forGetter(config -> config.outerState),
 			IntProvider.CODEC.fieldOf("radius").forGetter(config -> config.radius),
-			Codec.FLOAT.fieldOf("placeChance").forGetter(config -> config.placeChance),
-			Codec.FLOAT.fieldOf("innerChance").forGetter(config -> config.innerChance),
+			Codec.FLOAT.fieldOf("placement_probability").forGetter(config -> config.placementProbability),
+			Codec.FLOAT.fieldOf("inner_probability").forGetter(config -> config.innerProbability),
 			Codec.FLOAT.fieldOf("innerPercent").forGetter(config -> config.innerPercent),
-			Codec.FLOAT.fieldOf("startFadePercent").forGetter(config -> config.startFadePercent),
+			Codec.FLOAT.fieldOf("fade_start_distance_percent").forGetter(config -> config.fadeStartDistancePercent),
 			Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap)
 		).apply(instance, FadingDiskCarpetFeatureConfig::new)
 	);

@@ -48,7 +48,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
 		FadingDiskFeatureConfig config = context.config();
-		boolean useHeightMapAndNotCircular = config.useHeightMapAndNotCircular();
+		boolean useHeightMapAndNotCircular = config.useHeightmapInsteadOfCircularPlacement();
 		Heightmap.Types heightmap = config.heightmap();
         BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
         RandomSource random = level.getRandom();
@@ -90,17 +90,17 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 			mutableDisk.set(x, y, z);
 			BlockState state = level.getBlockState(mutableDisk);
 			if (!useHeightMapAndNotCircular && isBlockExposed(level, mutableDisk)) {
-				boolean inner = mutableDisk.closerThan(s, radius * config.innerChance());
-				boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.startFadePercent());
-				if (random.nextFloat() < config.placeChance()) {
+				boolean inner = mutableDisk.closerThan(s, radius * config.innerProbability());
+				boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.fadeStartDistancePercent());
+				if (random.nextFloat() < config.placemenProbability()) {
 					if (fade) {
-						if (random.nextFloat() > 0.5F && state.is(config.outerReplaceable())) {
+						if (random.nextFloat() > 0.5F && state.is(config.outerReplaceableBlocks())) {
 							level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
 							return true;
 						}
 					} else {
-						boolean choseInner = inner && random.nextFloat() < config.innerChance();
-						if (state.is(choseInner ? config.innerReplaceable() : config.outerReplaceable())) {
+						boolean choseInner = inner && random.nextFloat() < config.innerProbability();
+						if (state.is(choseInner ? config.innerReplaceableBlocks() : config.outerReplaceableBlocks())) {
 							BlockStateProvider newState = choseInner ? config.innerState() : config.outerState();
 							level.setBlock(mutableDisk, newState.getState(random, mutableDisk), 3);
 							return true;

@@ -63,7 +63,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
                     if (distance < radius * radius) {
                         mutableDisk.set(x, level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1, z);
                         boolean fade = !mutableDisk.closerThan(s, radius * 0.8);
-                        if (level.getBlockState(mutableDisk).is(config.replaceable())) {
+                        if (level.getBlockState(mutableDisk).is(config.replaceableBlocks())) {
                             generated = true;
                             if (fade) {
                                 if (random.nextFloat() > 0.65F) {
@@ -79,7 +79,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
         }
         //COLUMN / TERMITE MOUND
         BlockPos startPos = blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, blockPos.getX(), blockPos.getZ()) - 1);
-        BlockState column = config.columnBlock();
+        BlockState column = config.state();
         BlockPos.MutableBlockPos pos = startPos.mutable();
         for (int i = 0; i < config.height().sample(random); i++) {
             pos.set(pos.above());
@@ -102,7 +102,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 	private boolean place(@NotNull ColumnWithDiskFeatureConfig config, @NotNull WorldGenLevel level, RandomSource random, @NotNull BlockPos startPos, BlockState column, BlockPos.@NotNull MutableBlockPos pos) {
 		boolean generated = false;
 		pos.set(startPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, startPos.getX(), startPos.getZ()) - 1).mutable());
-		for (int i = 0; i < config.height2().sample(random); i++) {
+		for (int i = 0; i < config.additionalHeight().sample(random); i++) {
 			pos.set(pos.above());
 			BlockState state = level.getBlockState(pos);
 			if (level.getBlockState(pos.below()).is(Blocks.WATER)) {
