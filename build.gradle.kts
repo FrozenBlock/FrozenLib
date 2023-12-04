@@ -279,7 +279,7 @@ dependencies {
     modCompileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
 
     // MixinExtras
-    modApi("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")?.let { annotationProcessor(it); include(it) }
+    modApi("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")?.let { annotationProcessor(it) }
 
     // Toml
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }

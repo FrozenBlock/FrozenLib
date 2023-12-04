@@ -12,4 +12,4 @@ Put changelog here:
   - Configs will sync from client to server any time the client config is saved and the player has permission level 2 or greater
     - An example of this is saving a config via Cloth Config or other GUI
 - Refactored Configured Features and Placement Modifiers
-- Upgraded embedded MixinExtras to 0.2.1
+- Removed embedded Mixin Extras in favor of Fabric Loader 0.15.0
