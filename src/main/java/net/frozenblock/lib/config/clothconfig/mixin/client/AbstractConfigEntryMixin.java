@@ -28,7 +28,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@SuppressWarnings("rawtypes")
 @Environment(EnvType.CLIENT)
 @Mixin(AbstractConfigEntry.class)
 public class AbstractConfigEntryMixin implements AbstractConfigEntryInterface {

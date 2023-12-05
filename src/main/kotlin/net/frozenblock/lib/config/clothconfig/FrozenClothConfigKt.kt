@@ -20,10 +20,11 @@
 
 package net.frozenblock.lib.config.clothconfig
 
+import me.shedaniel.clothconfig2.api.DisableableWidget
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder
 import net.frozenblock.lib.config.api.instance.Config
 import kotlin.reflect.KClass
 
-fun <T : FieldBuilder<*, *, *>> T.synced(clazz: KClass<*>, identifier: String, config: Config<*>): T = this.apply {
-    FrozenClothConfig.syncedBuilder(this, clazz.java, identifier, config)
+fun <T : DisableableWidget> T.synced(clazz: KClass<*>, identifier: String, config: Config<*>): T = this.apply {
+    FrozenClothConfig.syncedEntry(this, clazz.java, identifier, config)
 }

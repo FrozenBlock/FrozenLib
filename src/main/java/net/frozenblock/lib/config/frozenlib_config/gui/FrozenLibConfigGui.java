@@ -44,69 +44,68 @@ public final class FrozenLibConfigGui {
 		category.setBackground(FrozenMain.id("config.png"));
 
 		var useWindOnNonFrozenServers = category.addEntry(
-			FrozenClothConfig.syncedBuilder(
+			FrozenClothConfig.syncedEntry(
 				entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), modifiedConfig.useWindOnNonFrozenServers)
 					.setDefaultValue(defaultConfig.useWindOnNonFrozenServers)
 					.setSaveConsumer(newValue -> config.useWindOnNonFrozenServers = newValue)
-					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers")),
+					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers"))
+					.build(),
 					config.getClass(),
 					"useWindOnNonFrozenServers",
 					configInstance
 				)
-			.build()
 		);
 
 		var saveItemCooldowns = category.addEntry(
-			FrozenClothConfig.syncedBuilder(
+			FrozenClothConfig.syncedEntry(
 				entryBuilder.startBooleanToggle(text("save_item_cooldowns"), modifiedConfig.saveItemCooldowns)
 					.setDefaultValue(defaultConfig.saveItemCooldowns)
 					.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
-					.setTooltip(tooltip("save_item_cooldowns")),
+					.setTooltip(tooltip("save_item_cooldowns"))
+					.build(),
 					config.getClass(),
 					"saveItemCooldowns",
 					configInstance
 				)
-			.build()
 		);
 
 		var removeExperimentalWarning = category.addEntry(
-			FrozenClothConfig.syncedBuilder(
+			FrozenClothConfig.syncedEntry(
 				entryBuilder.startBooleanToggle(text("remove_experimental_warning"), modifiedConfig.removeExperimentalWarning)
 					.setDefaultValue(defaultConfig.removeExperimentalWarning)
 					.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
-					.setTooltip(tooltip("remove_experimental_warning")),
+					.setTooltip(tooltip("remove_experimental_warning"))
+					.build(),
 					config.getClass(),
 					"removeExperimentalWarning",
 					configInstance
 				)
-			.build()
 		);
 
 		var wardenSpawnTrackerCommand = category.addEntry(
-			FrozenClothConfig.syncedBuilder(
+			FrozenClothConfig.syncedEntry(
 				entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), modifiedConfig.wardenSpawnTrackerCommand)
 					.setDefaultValue(defaultConfig.wardenSpawnTrackerCommand)
 					.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
-					.setTooltip(tooltip("warden_spawn_tracker_command")),
+					.setTooltip(tooltip("warden_spawn_tracker_command"))
+					.build(),
 					config.getClass(),
 					"wardenSpawnTrackerCommand",
 					configInstance
 				)
-			.build()
 		);
 
-		var disabledDataFixTypes =
-			FrozenClothConfig.syncedBuilder(
-				entryBuilder.startStrList(text("disabled_datafix_types"), modifiedConfig.dataFixer.disabledDataFixTypes)
-					.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
-					.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)
-					.setTooltip(tooltip("disabled_datafix_types"))
-					.requireRestart(),
-					dataFixer.getClass(),
-					"disabledDataFixTypes",
-					configInstance
-				)
-			.build();
+		var disabledDataFixTypes = FrozenClothConfig.syncedEntry(
+			entryBuilder.startStrList(text("disabled_datafix_types"), modifiedConfig.dataFixer.disabledDataFixTypes)
+				.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
+				.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)
+				.setTooltip(tooltip("disabled_datafix_types"))
+				.requireRestart()
+				.build(),
+			dataFixer.getClass(),
+			"disabledDataFixTypes",
+			configInstance
+		);
 
 		var datafixerCategory = FrozenClothConfig.createSubCategory(entryBuilder, category, text("datafixer"),
 			false,

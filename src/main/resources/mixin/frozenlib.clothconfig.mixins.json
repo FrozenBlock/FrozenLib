@@ -9,8 +9,7 @@
   },
   "client": [
     "client.AbstractConfigEntryMixin",
-    "client.AbstractConfigListEntryMixin",
-    "client.FieldBuilderMixin",
+    "client.DynamicEntryListWidgetEntryMixin",
     "client.TooltipListEntryMixin"
   ]
 }

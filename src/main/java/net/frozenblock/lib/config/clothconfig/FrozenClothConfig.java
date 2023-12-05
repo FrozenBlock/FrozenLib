@@ -19,20 +19,17 @@
 package net.frozenblock.lib.config.clothconfig;
 
 import java.util.Arrays;
-import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.api.DisableableWidget;
 import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigEntryInterface;
-import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigListEntryInterface;
-import net.frozenblock.lib.config.clothconfig.impl.FieldBuilderInterface;
+import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenClothConfig {
@@ -70,34 +67,11 @@ public final class FrozenClothConfig {
 	}
 
 	/**
-	 * Creates a builder that will interact with config syncing
+	 * Creates an entry that will interact with config syncing
 	 * @since 1.4.5
 	 */
-	public static <T extends FieldBuilder<?, ?, ?>> T syncedBuilder(T builder, Class<?> clazz, String identifier, Config<?> configInstance) {
-		((FieldBuilderInterface)builder).frozenLib$addSyncData(clazz, identifier, configInstance);
-		return builder;
+	public static <T extends DisableableWidget> T syncedEntry(T entry, Class<?> clazz, String identifier, Config<?> configInstance) {
+		((DisableableWidgetInterface) entry).frozenLib$addSyncData(clazz, identifier, configInstance);
+		return entry;
 	}
-
-	/**
-	 * @since 1.4.5
-	 */
-	@Nullable
-	public static FieldBuilder<?, ?, ?> getFieldBuilder(AbstractConfigListEntry<?> abstractConfigListEntry) {
-		return ((AbstractConfigListEntryInterface)abstractConfigListEntry).frozenLib$getFieldBuilder();
-	}
-
-	/**
-	 * @since 1.4.5
-	 */
-	public static FieldBuilderInterface getFieldBuilderInterface(FieldBuilder<?, ?, ?> fieldBuilder) {
-		return (FieldBuilderInterface) fieldBuilder;
-	}
-
-	/**
-	 * @since 1.4.5
-	 */
-	public static AbstractConfigEntryInterface getAbstractConfigEntryInterface(AbstractConfigEntry<?> abstractConfigEntry) {
-		return (AbstractConfigEntryInterface) abstractConfigEntry;
-	}
-
 }

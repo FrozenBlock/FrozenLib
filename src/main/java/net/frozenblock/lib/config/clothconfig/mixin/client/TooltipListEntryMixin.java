@@ -20,12 +20,11 @@ package net.frozenblock.lib.config.clothconfig.mixin.client;
 
 import java.util.Optional;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
-import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigEntryInterface;
-import net.frozenblock.lib.config.clothconfig.impl.FieldBuilderInterface;
+import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,21 +37,18 @@ public class TooltipListEntryMixin {
 
 	@Inject(method = "getTooltip()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true, remap = false)
 	public void frozenLib$getTooltip(CallbackInfoReturnable<Optional<Component[]>> info) {
-		FieldBuilder<?, ?, ?> fieldBuilder = FrozenClothConfig.getFieldBuilder(TooltipListEntry.class.cast(this));
-		AbstractConfigEntryInterface abstractConfigEntryInterface = FrozenClothConfig.getAbstractConfigEntryInterface(TooltipListEntry.class.cast(this));
+		AbstractConfigEntryInterface abstractConfigEntryInterface = (AbstractConfigEntryInterface) this;
 		boolean canSave = true;
-		if (fieldBuilder != null) {
-			FieldBuilderInterface fieldBuilderInterface = FrozenClothConfig.getFieldBuilderInterface(fieldBuilder);
-			if (!fieldBuilderInterface.frozenLib$getEntryPermissionType().canModify) {
-				boolean present = fieldBuilderInterface.frozenLib$getEntryPermissionType().tooltip.isPresent();
-				info.setReturnValue(
-					present ?
-						Optional.of(fieldBuilderInterface.frozenLib$getEntryPermissionType().tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
-						:
-						Optional.empty()
-				);
-				canSave = false;
-			}
+		DisableableWidgetInterface disableableWidgetInterface = (DisableableWidgetInterface) this;
+		if (!disableableWidgetInterface.frozenLib$getEntryPermissionType().canModify) {
+			boolean present = disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip.isPresent();
+			info.setReturnValue(
+				present ?
+					Optional.of(disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
+					:
+					Optional.empty()
+			);
+			canSave = false;
 		}
 		abstractConfigEntryInterface.frozenLib$setCanSave(canSave);
 	}
