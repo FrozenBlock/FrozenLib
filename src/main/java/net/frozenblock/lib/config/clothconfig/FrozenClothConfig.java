@@ -22,8 +22,7 @@ import java.util.Arrays;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.api.DisableableWidget;
-import me.shedaniel.clothconfig2.impl.builders.FieldBuilder;
+import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -70,7 +69,7 @@ public final class FrozenClothConfig {
 	 * Creates an entry that will interact with config syncing
 	 * @since 1.4.5
 	 */
-	public static <T extends DisableableWidget> T syncedEntry(T entry, Class<?> clazz, String identifier, Config<?> configInstance) {
+	public static <T extends DynamicEntryListWidget.Entry<?>> T syncedEntry(T entry, Class<?> clazz, String identifier, Config<?> configInstance) {
 		((DisableableWidgetInterface) entry).frozenLib$addSyncData(clazz, identifier, configInstance);
 		return entry;
 	}

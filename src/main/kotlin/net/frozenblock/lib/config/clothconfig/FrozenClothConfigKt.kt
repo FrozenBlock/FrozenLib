@@ -17,14 +17,16 @@
  */
 
 @file:JvmName("FrozenClothConfigKt")
+@file:Environment(EnvType.CLIENT)
 
 package net.frozenblock.lib.config.clothconfig
 
-import me.shedaniel.clothconfig2.api.DisableableWidget
-import me.shedaniel.clothconfig2.impl.builders.FieldBuilder
+import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.api.instance.Config
 import kotlin.reflect.KClass
 
-fun <T : DisableableWidget> T.synced(clazz: KClass<*>, identifier: String, config: Config<*>): T = this.apply {
+fun <T : DynamicEntryListWidget.Entry<*>> T.synced(clazz: KClass<*>, identifier: String, config: Config<*>): T = this.apply {
     FrozenClothConfig.syncedEntry(this, clazz.java, identifier, config)
 }
