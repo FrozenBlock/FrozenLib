@@ -35,9 +35,6 @@
     "server": [
       "net.frozenblock.lib.FrozenServer"
     ],
-    "preLaunch": [
-      "net.frozenblock.lib.FrozenPreLaunch"
-    ],
     "modmenu": [
       "net.frozenblock.lib.config.frozenlib_config.gui.ModMenuIntegration"
     ],
