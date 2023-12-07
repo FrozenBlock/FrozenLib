@@ -53,6 +53,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.commands.WardenSpawnTrackerCommand;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.storage.DimensionDataStorage;
+import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
+import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
@@ -61,7 +63,15 @@ public final class FrozenMain implements ModInitializer {
 	@Override
 	public void onInitialize() {
 		FrozenRegistry.initRegistry();
+
+		// QUILT INIT
+
 		ServerFreezer.onInitialize();
+		ModProtocol.loadVersions();
+		ServerRegistrySync.registerHandlers();
+
+		// CONTINUE FROZENLIB INIT
+
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		FrozenFeatures.init();

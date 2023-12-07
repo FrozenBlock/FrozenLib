@@ -49,7 +49,7 @@ public abstract class Config<T> {
 		try {
 			this.defaultInstance = this.configInstance = config.getConstructor().newInstance();
 		} catch (Exception e) {
-			throw new IllegalStateException("No default constructor for default config instance.");
+			throw new IllegalStateException("No default constructor for default config instance.", e);
 		}
 		this.dataFixer = dataFixer;
 		this.version = version;

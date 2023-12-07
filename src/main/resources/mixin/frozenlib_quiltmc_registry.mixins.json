@@ -4,11 +4,17 @@
   "package": "org.quiltmc.qsl.frozenblock.core.registry.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-	"BuiltInRegistriesMixin",
-	"MappedRegistryMixin",
-	"RegistryDataLoaderMixin"
+    "BuiltInRegistriesMixin",
+    "ConnectionMixin",
+    "MappedRegistryMixin",
+    "RegistryDataLoaderMixin",
+    "ServerConfigurationPacketListenerMixin",
+    "ServerStatusVersionMixin"
   ],
   "injectors": {
-	"defaultRequire": 1
-  }
+    "defaultRequire": 1
+  },
+  "client": [
+    "client.ServerDataMixin"
+  ]
 }
