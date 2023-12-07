@@ -91,7 +91,7 @@ public abstract class Config<T> {
 
 	/**
 	 * @return The current config instance with config sync modifications
-	 * @since 1.4.5
+	 * @since 1.5
 	 */
 	public T configWithSync() {
 		if (!this.supportsModification()) {

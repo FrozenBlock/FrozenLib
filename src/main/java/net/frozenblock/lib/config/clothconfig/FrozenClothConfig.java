@@ -67,7 +67,7 @@ public final class FrozenClothConfig {
 
 	/**
 	 * Creates an entry that will interact with config syncing
-	 * @since 1.4.5
+	 * @since 1.5
 	 */
 	public static <T extends DynamicEntryListWidget.Entry<?>> T syncedEntry(T entry, Class<?> clazz, String identifier, Config<?> configInstance) {
 		((DisableableWidgetInterface) entry).frozenLib$addSyncData(clazz, identifier, configInstance);
