@@ -30,6 +30,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.network.ConfigSyncModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -41,7 +42,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 	private ConfigModification.EntryPermissionType frozenLib$entryPermissionType = ConfigModification.EntryPermissionType.CAN_MODIFY;
 
 	@Override
-    public void frozenLib$addSyncData(Class<?> clazz, String identifier, Config<?> configInstance) {
+    public void frozenLib$addSyncData(@NotNull Class<?> clazz, String identifier, Config<?> configInstance) {
 		Field field = null;
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
 			if (

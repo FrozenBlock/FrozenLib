@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class AbstractConfigEntryMixin implements AbstractConfigEntryInterface {
 
 	@Unique
-	private boolean frozenLib$canSave;
+	private boolean frozenLib$canSave = true;
 
 	@Inject(method = "save", at = @At("HEAD"), cancellable = true, remap = false)
 	public void frozenLib$save(CallbackInfo info) {
