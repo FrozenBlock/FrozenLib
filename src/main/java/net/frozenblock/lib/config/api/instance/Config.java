@@ -130,6 +130,7 @@ public abstract class Config<T> {
 	}
 
 	protected abstract void onSave() throws Exception;
+
 	public abstract boolean onLoad() throws Exception;
 
 	public final void save() {
