@@ -24,7 +24,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to identify config fields so their attributes can impact GUIs
+ * Used to identify config fields so their attributes can impact GUIs.
  * @since 1.4.5
  */
 @Retention(RetentionPolicy.RUNTIME)

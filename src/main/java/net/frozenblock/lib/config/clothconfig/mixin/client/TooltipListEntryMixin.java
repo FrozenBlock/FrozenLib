@@ -22,7 +22,7 @@ import java.util.Optional;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
+import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigEntryInterface;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.minecraft.network.chat.Component;
@@ -46,7 +46,7 @@ public class TooltipListEntryMixin {
 				present ?
 					Optional.of(disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
 					:
-					Optional.empty()
+					Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
 			);
 			canSave = false;
 		}
