@@ -1,6 +1,7 @@
 {
   "tooltip.frozenlib.locked_due_to_server": "This entry cannot be modified while connected to the server.\nRequires operator permissions to modify while connectednopera.\nYou can leave the server to modify this entry, and rejoin afterwards.",
   "tooltip.frozenlib.locked_due_to_sync": "This entry is overriden by the server.\nRequires operator permissions to modify.",
+  "tooltip.frozenlib.locked_due_to_unknown_reason": "This entry cannot be modified for an unknown reason.\nPlease submit an issue report for this mod.",
 
   "frozenlib.config.discard": "Discard changes",
   "frozenlib.config.save": "Save changes",

@@ -96,7 +96,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 	@Environment(EnvType.CLIENT)
 	public enum EntryPermissionType {
 		CAN_MODIFY(true, Optional.empty()),
-		LOCKED_FOR_UNKNOWN_REASON(false, Optional.empty()),
+		LOCKED_FOR_UNKNOWN_REASON(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_unknown_reason"))),
 		LOCKED_DUE_TO_SERVER(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_server"))),
 		LOCKED_DUE_TO_SYNC(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_sync")));
 
