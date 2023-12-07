@@ -26,7 +26,7 @@ import java.lang.annotation.Target;
 /**
  * Used to mark a config field as locked if the config is synced.
  * May be useful for blocking off unsyncable fields that you don't want to be modified whilst connected to a server.
- * @since 1.4.5
+ * @since 1.5
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

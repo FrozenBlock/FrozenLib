@@ -27,7 +27,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * @since 1.4.5
+ * @since 1.5
  */
 public final class ConfigByteBufUtil {
 	private ConfigByteBufUtil() {}

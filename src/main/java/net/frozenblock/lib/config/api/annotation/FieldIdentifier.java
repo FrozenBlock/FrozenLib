@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * Used to identify config fields so their attributes can impact GUIs.
- * @since 1.4.5
+ * @since 1.5
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

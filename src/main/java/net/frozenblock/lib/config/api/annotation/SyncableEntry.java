@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * Used to note when a config field is syncable, is the default behavior regardless of annotation.
- * @since 1.4.5
+ * @since 1.5
  */
 @Retention(RetentionPolicy.CLASS)
 @Target(ElementType.FIELD)
