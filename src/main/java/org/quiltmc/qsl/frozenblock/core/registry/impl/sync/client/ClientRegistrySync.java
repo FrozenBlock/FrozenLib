@@ -27,6 +27,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.LiteralContents;
@@ -66,7 +69,7 @@ public final class ClientRegistrySync {
 
 	public static void registerHandlers() {
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.Handshake.PACKET_TYPE, ClientRegistrySync::handleHelloPacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.End.PACKET_TYPE, ClientRegistrySync::handleEndPacket);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.End.PACKET_TYPE.getId(), ClientRegistrySync::handleEndPacket);
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.PACKET_TYPE, ClientRegistrySync::handleErrorStylePacket);
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.PACKET_TYPE, ClientRegistrySync::handleModProtocol);
 	}
@@ -109,7 +112,7 @@ public final class ClientRegistrySync {
 		}
 	}
 
-	private static void handleEndPacket(ServerPackets.End end, PacketSender sender) {
+	private static void handleEndPacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
 		syncVersion = -1;
 
 		if (mustDisconnect) {
@@ -126,7 +129,7 @@ public final class ClientRegistrySync {
 				entry.append(errorStyleFooter);
 			}
 
-			sender.sendPacket(new ClientboundDisconnectPacket(entry));
+			handler.onDisconnect(entry);
 
 			LOGGER.warn(builder.asString());
 		} else {
