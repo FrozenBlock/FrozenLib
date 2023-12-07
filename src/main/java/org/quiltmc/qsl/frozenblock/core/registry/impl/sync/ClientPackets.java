@@ -18,14 +18,11 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync;
 
-import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.frozenblock.lib.FrozenMain;
+import static net.frozenblock.lib.FrozenMain.id;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -34,7 +31,7 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public final class ClientPackets {
 	/**
-	 * Response for {@link ServerPackets.Handshake#ID}. Selects the registry sync version to be used from the server's supported options.
+	 * Response for {@link ServerPackets.Handshake#PACKET_TYPE}. Selects the registry sync version to be used from the server's supported options.
 	 *
 	 * <pre><code>
 	 * {
@@ -43,7 +40,7 @@ public final class ClientPackets {
 	 * </code></pre>
 	 */
 	public record Handshake(int version) implements FabricPacket {
-		public static final PacketType<Handshake> PACKET_TYPE = PacketType.create(ClientPackets.id("registry_sync/handshake_client"), Handshake::new);
+		public static final PacketType<Handshake> PACKET_TYPE = PacketType.create(id("registry_sync/handshake_client"), Handshake::new);
 
 		public Handshake(FriendlyByteBuf buf) {
 			this(
@@ -64,7 +61,7 @@ public final class ClientPackets {
 
 	/**
 	 * Sent after receiving Mod Protocol request packet from server.
-	 * Returns all latest supported by client version of requested Mod Protocols see {@link ServerPackets.ModProtocol#ID}
+	 * Returns all latest supported by client version of requested Mod Protocols see {@link ServerPackets.ModProtocol#PACKET_TYPE}
 	 *
 	 * <pre><code>
 	 * {
@@ -76,8 +73,8 @@ public final class ClientPackets {
 	 * }
 	 * </code></pre>
 	 */
-	public record ModProtocol(Object2IntOpenHashMap<String> protocols) implements CustomPacketPayload {
-		public static final ResourceLocation ID = ClientPackets.id("registry_sync/mod_protocol");
+	public record ModProtocol(Object2IntOpenHashMap<String> protocols) implements FabricPacket {
+		public static final PacketType<ModProtocol> PACKET_TYPE = PacketType.create(id("registry_sync/mod_protocol"), ModProtocol::new);
 
 		public ModProtocol(FriendlyByteBuf buf) {
 			this(read(buf));
@@ -105,16 +102,16 @@ public final class ClientPackets {
 		}
 
 		@Override
-		public ResourceLocation id() {
-			return ID;
+		public PacketType<ModProtocol> getType() {
+			return PACKET_TYPE;
 		}
 	}
 
 	/**
 	 * Ends registry sync. No data
 	 */
-	public record End() implements CustomPacketPayload {
-		public static final ResourceLocation ID = ClientPackets.id("registry_sync/end");
+	public record End() implements FabricPacket {
+		public static final PacketType<End> PACKET_TYPE = PacketType.create(id("registry_sync/end"), End::new);
 
 		public End(FriendlyByteBuf buf) {
 			this();
@@ -125,12 +122,8 @@ public final class ClientPackets {
 		}
 
 		@Override
-		public ResourceLocation id() {
-			return ID;
+		public PacketType<?> getType() {
+			return PACKET_TYPE;
 		}
-	}
-
-	private static ResourceLocation id(String path) {
-		return FrozenMain.id(path);
 	}
 }

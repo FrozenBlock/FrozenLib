@@ -63,20 +63,20 @@ public final class ServerRegistrySync {
 			}
 		}));
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE, ServerRegistrySync::handleHandshake);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.ID, ServerRegistrySync::handleModProtocol);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.ID, ServerRegistrySync::handleEnd);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE, ServerRegistrySync::handleModProtocol);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE, ServerRegistrySync::handleEnd);
 	}
 
 	public static void handleHandshake(ClientPackets.Handshake handshake, ServerConfigurationPacketListenerImpl handler, PacketSender sender) {
 		((SyncTaskHolder) handler).frozenLib$getQuiltSyncTask().handleHandshake(handshake);
 	}
 
-	public static void handleModProtocol(MinecraftServer server, ServerConfigurationPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
-		((SyncTaskHolder) handler).frozenLib$getQuiltSyncTask().handleModProtocol(new ClientPackets.ModProtocol(buf));
+	public static void handleModProtocol(ClientPackets.ModProtocol modProtocol, ServerConfigurationPacketListener handler, PacketSender sender) {
+		((SyncTaskHolder) handler).frozenLib$getQuiltSyncTask().handleModProtocol(modProtocol);
 	}
 
-	public static void handleEnd(MinecraftServer server, ServerConfigurationPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
-		((SyncTaskHolder) handler).frozenLib$getQuiltSyncTask().handleEnd(new ClientPackets.End(buf));
+	public static void handleEnd(ClientPackets.End end, ServerConfigurationPacketListener handler, PacketSender sender) {
+		((SyncTaskHolder) handler).frozenLib$getQuiltSyncTask().handleEnd(end);
 	}
 
 	private static Component text(String string) {
@@ -131,19 +131,10 @@ public final class ServerRegistrySync {
 	}
 
 	public static void sendModProtocol(PacketSender sender) {
-		FriendlyByteBuf buf = PacketByteBufs.create();
-		buf.writeUtf(ModProtocol.prioritizedId);
-		buf.writeCollection(ModProtocol.ALL, ModProtocolDef::write);
-
-		sender.sendPacket(ServerPackets.ModProtocol.ID, buf);
+		sender.sendPacket(new ServerPackets.ModProtocol(ModProtocol.prioritizedId, ModProtocol.ALL));
 	}
 
 	private static void sendErrorStylePacket(PacketSender sender) {
-		FriendlyByteBuf buf = PacketByteBufs.create();
-		buf.writeComponent(errorStyleHeader);
-		buf.writeComponent(errorStyleFooter);
-		buf.writeBoolean(showErrorDetails);
-
-		sender.sendPacket(ServerPackets.ErrorStyle.ID, buf);
+		sender.sendPacket(new ServerPackets.ErrorStyle(errorStyleHeader, errorStyleFooter, showErrorDetails));
 	}
 }

@@ -26,7 +26,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenMain;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol.ModProtocolDef;
@@ -46,7 +45,7 @@ public final class ServerPackets {
 	 * </code></pre>
 	 */
 	public record Handshake(IntList supportedVersions) implements FabricPacket {
-		public static final PacketType<Handshake> PACKET_TYPE = PacketType.create(ServerPackets.id("registry_sync/handshake_server"), Handshake::new);
+		public static final PacketType<Handshake> PACKET_TYPE = PacketType.create(ServerPackets.id("registry_sync/handshake"), Handshake::new);
 
 		public Handshake(FriendlyByteBuf buf) {
 			this(buf.readIntIdList());
@@ -96,8 +95,8 @@ public final class ServerPackets {
 	 * }
 	 * </code></pre>
 	 */
-	public record ErrorStyle(Component errorHeader, Component errorFooter, boolean showError) implements CustomPacketPayload {
-		public static final ResourceLocation ID = ServerPackets.id("registry_sync/error_style");
+	public record ErrorStyle(Component errorHeader, Component errorFooter, boolean showError) implements FabricPacket {
+		public static final PacketType<ErrorStyle> PACKET_TYPE = PacketType.create(ServerPackets.id("registry_sync/error_style"), ErrorStyle::new);
 
 		public ErrorStyle(FriendlyByteBuf buf) {
 			this(buf.readComponent(), buf.readComponent(), buf.readBoolean());
@@ -111,8 +110,8 @@ public final class ServerPackets {
 		}
 
 		@Override
-		public ResourceLocation id() {
-			return ID;
+		public PacketType<?> getType() {
+			return PACKET_TYPE;
 		}
 	}
 
@@ -132,8 +131,8 @@ public final class ServerPackets {
 	 * }
 	 * </code></pre>
 	 */
-	public record ModProtocol(String prioritizedId, Collection<ModProtocolDef> protocols) implements CustomPacketPayload {
-		public static final ResourceLocation ID = ServerPackets.id("registry_sync/mod_protocol");
+	public record ModProtocol(String prioritizedId, Collection<ModProtocolDef> protocols) implements FabricPacket {
+		public static final PacketType<ModProtocol> PACKET_TYPE = PacketType.create(ServerPackets.id("registry_sync/mod_protocol"), ModProtocol::new);
 
 		public ModProtocol(FriendlyByteBuf buf) {
 			this(buf.readUtf(), buf.readList(ModProtocolDef::read));
@@ -146,8 +145,8 @@ public final class ServerPackets {
 		}
 
 		@Override
-		public ResourceLocation id() {
-			return ID;
+		public PacketType<?> getType() {
+			return PACKET_TYPE;
 		}
 	}
 

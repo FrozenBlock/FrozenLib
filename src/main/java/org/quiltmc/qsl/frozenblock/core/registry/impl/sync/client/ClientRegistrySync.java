@@ -25,20 +25,12 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
-import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
-import net.minecraft.network.protocol.configuration.ClientConfigurationPacketListener;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
@@ -75,13 +67,13 @@ public final class ClientRegistrySync {
 	public static void registerHandlers() {
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.Handshake.PACKET_TYPE, ClientRegistrySync::handleHelloPacket);
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.End.PACKET_TYPE, ClientRegistrySync::handleEndPacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.ID, ClientRegistrySync::handleErrorStylePacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.ID, ClientRegistrySync::handleModProtocol);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.PACKET_TYPE, ClientRegistrySync::handleErrorStylePacket);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.PACKET_TYPE, ClientRegistrySync::handleModProtocol);
 	}
 
-	private static void handleModProtocol(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		var prioritizedId = buf.readUtf();
-		var protocols = buf.readList(ModProtocolDef::read);
+	private static void handleModProtocol(ServerPackets.ModProtocol modProtocol, PacketSender sender) {
+		var prioritizedId = modProtocol.prioritizedId();
+		var protocols = modProtocol.protocols();
 
 		var values = new Object2IntOpenHashMap<String>(protocols.size());
 		var unsupportedList = new ArrayList<ModProtocolDef>();
@@ -105,7 +97,7 @@ public final class ClientRegistrySync {
 		}
 
 		if (disconnect) {
-			markDisconnected(handler, RegistrySyncText.unsupportedModVersion(unsupportedList, missingPrioritized));
+			markDisconnected(RegistrySyncText.unsupportedModVersion(unsupportedList, missingPrioritized));
 
 			builder.pushT("unsupported_protocol", "Unsupported Mod Protocol");
 
@@ -166,10 +158,10 @@ public final class ClientRegistrySync {
 		sender.sendPacket(new ClientPackets.ModProtocol(values));
 	}
 
-	private static void handleErrorStylePacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		errorStyleHeader = buf.readComponent();
-		errorStyleFooter = buf.readComponent();
-		showErrorDetails = buf.readBoolean();
+	private static void handleErrorStylePacket(ServerPackets.ErrorStyle errorStyle, PacketSender sender) {
+		errorStyleHeader = errorStyle.errorHeader();
+		errorStyleFooter = errorStyle.errorFooter();
+		showErrorDetails = errorStyle.showError();
 	}
 
 	private static void handleHelloPacket(ServerPackets.Handshake handshake, PacketSender sender) {
@@ -179,7 +171,7 @@ public final class ClientRegistrySync {
 		builder.clear();
 	}
 
-	private static void markDisconnected(ClientConfigurationPacketListenerImpl handler, Component reason) {
+	private static void markDisconnected(Component reason) {
 		if (disconnectMainReason == null) {
 			disconnectMainReason = reason;
 		}
