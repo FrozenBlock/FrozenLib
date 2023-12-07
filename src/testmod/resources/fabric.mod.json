@@ -46,6 +46,9 @@
         "modmenu.discord": "https://discord.gg/EpkBWm844s"
       },
       "parent": "frozenlib"
+    },
+    "frozenlib_registry": {
+      "mod_protocol": 69420
     }
   }
 }

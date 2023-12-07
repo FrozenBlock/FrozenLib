@@ -56,6 +56,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
+import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
 public final class FrozenClient implements ClientModInitializer {
@@ -64,7 +65,13 @@ public final class FrozenClient implements ClientModInitializer {
 	public void onInitializeClient() {
 		FrozenClientRegistry.initRegistry();
 		ModIntegrations.initialize(); // Mod integrations must run after normal mod initialization
+
+		// QUILT INIT
 		ClientFreezer.onInitializeClient();
+		ClientRegistrySync.registerHandlers();
+
+		// CONTINUE FROZENLIB INIT
+
 		registerClientEvents();
 
 		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket::receive);
