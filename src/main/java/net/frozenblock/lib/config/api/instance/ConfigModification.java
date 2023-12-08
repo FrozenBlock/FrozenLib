@@ -53,10 +53,6 @@ public record ConfigModification<T>(Consumer<T> modification) {
 				.sorted(Map.Entry.comparingByValue())
 				.toList();
 
-			if (list.isEmpty()) {
-				return original;
-			}
-
 			config.setSynced(false);
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
