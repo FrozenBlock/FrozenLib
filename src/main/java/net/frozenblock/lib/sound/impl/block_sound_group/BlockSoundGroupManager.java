@@ -33,7 +33,7 @@ import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
 import net.frozenblock.lib.sound.api.block_sound_group.SoundCodecs;
 import net.minecraft.core.Holder;
@@ -147,7 +147,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	@Override
 	@NotNull
 	public ResourceLocation getFabricId() {
-		return FrozenMain.id("block_sound_group_reloader");
+		return FrozenSharedConstants.id("block_sound_group_reloader");
 	}
 
 	public static class SoundGroupLoader {

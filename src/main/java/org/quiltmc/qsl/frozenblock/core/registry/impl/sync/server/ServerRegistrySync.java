@@ -20,17 +20,11 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import java.util.function.Consumer;
-import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.configuration.ServerConfigurationPacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
@@ -39,7 +33,6 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ProtocolVersions;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ServerPackets;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol.ModProtocolDef;
 
 @ApiStatus.Internal
 public final class ServerRegistrySync {

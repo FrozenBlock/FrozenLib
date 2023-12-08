@@ -18,22 +18,23 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
-import net.frozenblock.lib.FrozenMain;
+import java.util.ArrayList;
+import java.util.Map;
+import net.frozenblock.lib.FrozenSharedConstants;
+import org.jetbrains.annotations.NotNull;
 
 public interface ModProtocolContainer {
 	Codec<Map<String, IntList>> MAP_CODEC = Codec.unboundedMap(Codec.STRING, Codec.list(Codec.INT).xmap(IntArrayList::new, ArrayList::new));
 
+	@NotNull
 	static <E> Codec<E> createCodec(Codec<E> codec) {
-		final String modProtocol = FrozenMain.string("mod_protocol");
+		final String modProtocol = FrozenSharedConstants.string("mod_protocol");
 
 		return new Codec<>() {
 			@Override

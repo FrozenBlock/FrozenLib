@@ -21,8 +21,11 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
-import me.shedaniel.clothconfig2.api.*
-import me.shedaniel.clothconfig2.gui.entries.*
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
+import me.shedaniel.clothconfig2.api.Requirement
+import me.shedaniel.clothconfig2.gui.entries.MultiElementListEntry
+import me.shedaniel.clothconfig2.gui.entries.NestedListListEntry
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.api.entry.TypedEntry

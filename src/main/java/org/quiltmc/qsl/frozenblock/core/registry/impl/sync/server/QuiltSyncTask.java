@@ -18,19 +18,20 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 
+import java.util.function.Consumer;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.network.ConfigurationTask;
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ProtocolVersions;
-import java.util.function.Consumer;
 
 public class QuiltSyncTask implements ConfigurationTask {
-	public static final Type TYPE = new Type(FrozenMain.string("registry_sync"));
+	public static final Type TYPE = new Type(FrozenSharedConstants.string("registry_sync"));
 	private final ServerConfigurationPacketListenerImpl packetHandler;
 	private final ExtendedConnection extendedConnection;
 	private Consumer<Packet<?>> sender;
@@ -55,12 +56,12 @@ public class QuiltSyncTask implements ConfigurationTask {
 		ServerRegistrySync.sendSyncPackets(sender, this.syncVersion);
 	}
 
-	public void handleHandshake(ClientPackets.Handshake handshake) {
+	public void handleHandshake(ClientPackets.@NotNull Handshake handshake) {
 		this.syncVersion = handshake.version();
 		this.sendSyncPackets(ServerConfigurationNetworking.getSender(this.packetHandler));
 	}
 
-	public void handleModProtocol(ClientPackets.ModProtocol modProtocol, PacketSender sender) {
+	public void handleModProtocol(ClientPackets.@NotNull ModProtocol modProtocol, PacketSender sender) {
 		modProtocol.protocols().forEach(this.extendedConnection::frozenLib$setModProtocol);
 	}
 

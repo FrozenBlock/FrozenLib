@@ -21,6 +21,8 @@ package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.serialization.Codec;
 import it.unimi.dsi.fastutil.ints.IntList;
+import java.util.HashMap;
+import java.util.Map;
 import net.minecraft.network.protocol.status.ServerStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol.ModProtocolContainer;
@@ -32,9 +34,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import java.util.HashMap;
-import java.util.Map;
 
 @Mixin(ServerStatus.Version.class)
 public class ServerStatusVersionMixin implements ModProtocolContainer {

@@ -18,11 +18,10 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync;
 
-import java.util.stream.IntStream;
-
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.ints.IntSet;
+import java.util.stream.IntStream;
 
 public class ProtocolVersions {
 	public static final int CURRENT_VERSION = 1;

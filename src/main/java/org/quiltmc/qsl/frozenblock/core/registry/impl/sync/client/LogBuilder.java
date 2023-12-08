@@ -20,7 +20,6 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;

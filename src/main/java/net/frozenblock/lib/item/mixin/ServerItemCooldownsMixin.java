@@ -20,8 +20,8 @@ package net.frozenblock.lib.item.mixin;
 
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.item.impl.CooldownInterface;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -55,7 +55,7 @@ public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownI
         FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
         byteBuf.writeId(BuiltInRegistries.ITEM, item);
         byteBuf.writeVarInt(additional);
-        ServerPlayNetworking.send(this.player, FrozenMain.COOLDOWN_CHANGE_PACKET, byteBuf);
+        ServerPlayNetworking.send(this.player, FrozenNetworking.COOLDOWN_CHANGE_PACKET, byteBuf);
     }
 
 }

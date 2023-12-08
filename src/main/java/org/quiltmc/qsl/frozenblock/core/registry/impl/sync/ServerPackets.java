@@ -18,16 +18,16 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync;
 
-import java.util.Collection;
-
 import it.unimi.dsi.fastutil.ints.IntList;
+import java.util.Collection;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol.ModProtocolDef;
 
 /**
@@ -47,12 +47,12 @@ public final class ServerPackets {
 	public record Handshake(IntList supportedVersions) implements FabricPacket {
 		public static final PacketType<Handshake> PACKET_TYPE = PacketType.create(ServerPackets.id("registry_sync/handshake"), Handshake::new);
 
-		public Handshake(FriendlyByteBuf buf) {
+		public Handshake(@NotNull FriendlyByteBuf buf) {
 			this(buf.readIntIdList());
 		}
 
 		@Override
-		public void write(FriendlyByteBuf buf) {
+		public void write(@NotNull FriendlyByteBuf buf) {
 			buf.writeIntIdList(this.supportedVersions);
 		}
 
@@ -98,12 +98,12 @@ public final class ServerPackets {
 	public record ErrorStyle(Component errorHeader, Component errorFooter, boolean showError) implements FabricPacket {
 		public static final PacketType<ErrorStyle> PACKET_TYPE = PacketType.create(ServerPackets.id("registry_sync/error_style"), ErrorStyle::new);
 
-		public ErrorStyle(FriendlyByteBuf buf) {
+		public ErrorStyle(@NotNull FriendlyByteBuf buf) {
 			this(buf.readComponent(), buf.readComponent(), buf.readBoolean());
 		}
 
 		@Override
-		public void write(FriendlyByteBuf buf) {
+		public void write(@NotNull FriendlyByteBuf buf) {
 			buf.writeComponent(this.errorHeader);
 			buf.writeComponent(this.errorFooter);
 			buf.writeBoolean(this.showError);
@@ -134,12 +134,12 @@ public final class ServerPackets {
 	public record ModProtocol(String prioritizedId, Collection<ModProtocolDef> protocols) implements FabricPacket {
 		public static final PacketType<ModProtocol> PACKET_TYPE = PacketType.create(ServerPackets.id("registry_sync/mod_protocol"), ModProtocol::new);
 
-		public ModProtocol(FriendlyByteBuf buf) {
+		public ModProtocol(@NotNull FriendlyByteBuf buf) {
 			this(buf.readUtf(), buf.readList(ModProtocolDef::read));
 		}
 
 		@Override
-		public void write(FriendlyByteBuf buf) {
+		public void write(@NotNull FriendlyByteBuf buf) {
 			buf.writeUtf(this.prioritizedId);
 			buf.writeCollection(this.protocols, ModProtocolDef::write);
 		}
@@ -151,6 +151,6 @@ public final class ServerPackets {
 	}
 
 	private static ResourceLocation id(String path) {
-		return FrozenMain.id(path);
+		return FrozenSharedConstants.id(path);
 	}
 }

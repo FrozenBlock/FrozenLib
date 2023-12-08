@@ -20,7 +20,7 @@ package net.frozenblock.lib.sound.api.damagesource;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -33,7 +33,7 @@ public final class PlayerDamageSourceSounds {
 
     private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_RESOURCE_LOCATION_MAP = new Object2ObjectOpenHashMap<>();
 	private static final Map<ResourceLocation, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new Object2ObjectOpenHashMap<>();
-	private static final ResourceLocation DEFAULT_ID = FrozenMain.id("default_damage_source");
+	private static final ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default_damage_source");
 
 	public static void addDamageSound(DamageSource source, SoundEvent sound, ResourceLocation registry) {
 		DAMAGE_SOURCE_RESOURCE_LOCATION_MAP.put(source, registry);

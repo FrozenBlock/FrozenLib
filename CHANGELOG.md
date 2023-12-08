@@ -17,3 +17,6 @@ Put changelog here:
 - Replaced `frozenlib:main` entrypoint with an environment event (`frozenlib:events`)
 - Replaced `frozenlib:client` entrypoint with an environment event (`frozenlib:client_events`)
 - Removed embedded Mixin Extras in favor of Fabric Loader 0.15.0
+- Moved all Packets to 'FrozenNetworking'
+    - Moved client-side networking to 'FrozenClientNetworking'
+- Moved the 'id' and 'string' methods to 'FrozenSharedConstants' and maked the methods in 'FrozenMain' as deprecated.

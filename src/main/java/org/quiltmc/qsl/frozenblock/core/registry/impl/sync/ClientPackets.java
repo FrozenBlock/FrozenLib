@@ -21,9 +21,10 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
-import static net.frozenblock.lib.FrozenMain.id;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Identifiers of packets sent by server.
@@ -40,16 +41,16 @@ public final class ClientPackets {
 	 * </code></pre>
 	 */
 	public record Handshake(int version) implements FabricPacket {
-		public static final PacketType<Handshake> PACKET_TYPE = PacketType.create(id("registry_sync/handshake_client"), Handshake::new);
+		public static final PacketType<Handshake> PACKET_TYPE = PacketType.create(FrozenSharedConstants.id("registry_sync/handshake_client"), Handshake::new);
 
-		public Handshake(FriendlyByteBuf buf) {
+		public Handshake(@NotNull FriendlyByteBuf buf) {
 			this(
 				buf.readVarInt()
 			);
 		}
 
 		@Override
-		public void write(FriendlyByteBuf buf) {
+		public void write(@NotNull FriendlyByteBuf buf) {
 			buf.writeVarInt(this.version);
 		}
 
@@ -74,13 +75,13 @@ public final class ClientPackets {
 	 * </code></pre>
 	 */
 	public record ModProtocol(Object2IntOpenHashMap<String> protocols) implements FabricPacket {
-		public static final PacketType<ModProtocol> PACKET_TYPE = PacketType.create(id("registry_sync/mod_protocol"), ModProtocol::new);
+		public static final PacketType<ModProtocol> PACKET_TYPE = PacketType.create(FrozenSharedConstants.id("registry_sync/mod_protocol"), ModProtocol::new);
 
 		public ModProtocol(FriendlyByteBuf buf) {
 			this(read(buf));
 		}
 
-		private static Object2IntOpenHashMap<String> read(FriendlyByteBuf buf) {
+		private static @NotNull Object2IntOpenHashMap<String> read(@NotNull FriendlyByteBuf buf) {
 			Object2IntOpenHashMap<String> protocols = new Object2IntOpenHashMap<>();
 
 			int count = buf.readVarInt();
@@ -93,7 +94,7 @@ public final class ClientPackets {
 		}
 
 		@Override
-		public void write(FriendlyByteBuf buf) {
+		public void write(@NotNull FriendlyByteBuf buf) {
 			buf.writeVarInt(this.protocols.size());
 			for (var entry : this.protocols.object2IntEntrySet()) {
 				buf.writeUtf(entry.getKey());
@@ -111,7 +112,7 @@ public final class ClientPackets {
 	 * Ends registry sync. No data
 	 */
 	public record End() implements FabricPacket {
-		public static final PacketType<End> PACKET_TYPE = PacketType.create(id("registry_sync/end"), End::new);
+		public static final PacketType<End> PACKET_TYPE = PacketType.create(FrozenSharedConstants.id("registry_sync/end"), End::new);
 
 		public End(FriendlyByteBuf buf) {
 			this();

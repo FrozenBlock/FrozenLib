@@ -20,7 +20,6 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol;
 
 import it.unimi.dsi.fastutil.ints.IntCollection;
 import it.unimi.dsi.fastutil.ints.IntList;
-
 import net.minecraft.network.FriendlyByteBuf;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ProtocolVersions;
 

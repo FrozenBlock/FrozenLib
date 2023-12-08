@@ -21,7 +21,7 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client;
 import com.mojang.logging.LogUtils;
 import it.unimi.dsi.fastutil.ints.IntList;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-
+import java.util.ArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
@@ -33,7 +33,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
 import net.minecraft.network.chat.contents.LiteralContents;
-import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
@@ -43,7 +42,6 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ServerPackets;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol.ModProtocolDef;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.slf4j.Logger;
-import java.util.ArrayList;
 
 
 @ApiStatus.Internal

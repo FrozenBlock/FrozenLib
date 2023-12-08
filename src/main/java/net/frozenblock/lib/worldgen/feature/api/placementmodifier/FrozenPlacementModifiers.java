@@ -19,18 +19,20 @@
 package net.frozenblock.lib.worldgen.feature.api.placementmodifier;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import org.jetbrains.annotations.NotNull;
 
 public class FrozenPlacementModifiers {
 	public static final PlacementModifierType<LowerHeightmapPlacement> ACCURATE_HEIGHTMAP = register("improved_heightmap", LowerHeightmapPlacement.CODEC);
 	public static final PlacementModifierType<NoisePlacementFilter> NOISE_FILTER = register("noise_filter", NoisePlacementFilter.CODEC);
 
+	@NotNull
 	private static <P extends PlacementModifier> PlacementModifierType<P> register(String name, Codec<P> codec) {
-		return Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, FrozenMain.id(name), () -> codec);
+		return Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, FrozenSharedConstants.id(name), () -> codec);
 	}
 
 	public static void init() {

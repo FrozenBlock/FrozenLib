@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.minecraft.core.BlockPos;
@@ -214,7 +214,7 @@ public class WindManager {
 	}
 
 	public void sendSyncToPlayer(@NotNull FriendlyByteBuf byteBuf, @NotNull ServerPlayer player) {
-		ServerPlayNetworking.send(player, FrozenMain.WIND_SYNC_PACKET, byteBuf);
+		ServerPlayNetworking.send(player, FrozenNetworking.WIND_SYNC_PACKET, byteBuf);
 	}
 
 	@NotNull
