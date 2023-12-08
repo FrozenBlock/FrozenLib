@@ -57,9 +57,12 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
 				if (consumer instanceof ConfigSyncModification) {
-					if (FrozenNetworking.connectedToServer())
+					if (FrozenNetworking.connectedToServer()) {
 						config.setSynced(true);
-					modification.getKey().modification.accept(instance);
+						modification.getKey().modification.accept(instance);
+					} else {
+						FrozenLogUtils.logError("Attempted to sync config " + config.path() + " for mod " + config.modId() + " outside a server!");
+					}
 				} else if (!excludeNonSync) {
 					modification.getKey().modification.accept(instance);
 				}
