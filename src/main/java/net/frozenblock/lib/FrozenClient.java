@@ -20,6 +20,7 @@ package net.frozenblock.lib;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -95,12 +96,12 @@ public final class FrozenClient implements ClientModInitializer {
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, player, responseSender) ->
 			ConfigSyncPacket.receive(packet, null)
 		);
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
-				for (Config<?> config : ConfigRegistry.getAllConfigs()) {
-					ConfigRegistry.setSyncData(config, null);
-					config.setSynced(false);
-				}
-		});
+		ClientConfigurationConnectionEvents.DISCONNECT.register(((handler, client) -> {
+			for (Config<?> config : ConfigRegistry.getAllConfigs()) {
+				ConfigRegistry.setSyncData(config, null);
+				config.setSynced(false);
+			}
+		}));
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 

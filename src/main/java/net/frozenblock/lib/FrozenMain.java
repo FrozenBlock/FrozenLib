@@ -23,11 +23,14 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
+import net.frozenblock.lib.config.impl.sync.ConfigSyncTask;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
@@ -134,9 +137,12 @@ public final class FrozenMain implements ModInitializer {
 			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
 		}));
 
-		PlayerJoinEvents.ON_JOIN_SERVER.register(((server, player) -> {
-			ConfigSyncPacket.sendS2C(player);
-		}));
+		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
+			// You must check to see if the client can handle your config task
+			if (ServerConfigurationNetworking.canSend(handler, ConfigSyncPacket.PACKET_TYPE)) {
+				handler.addTask(new ConfigSyncTask());
+			}
+		});
 
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
 			if (error != null || server == null) return;
