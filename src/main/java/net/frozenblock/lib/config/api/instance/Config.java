@@ -25,6 +25,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class Config<T> {
@@ -55,6 +57,8 @@ public abstract class Config<T> {
 		this.version = version;
 	}
 
+	@NotNull
+	@Contract(pure = true)
 	public static Path makePath(String modId, String extension) {
 		return Path.of("./config/" + modId + "." + extension);
 	}
