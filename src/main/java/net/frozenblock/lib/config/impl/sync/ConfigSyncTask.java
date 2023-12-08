@@ -33,7 +33,7 @@ public class ConfigSyncTask implements ConfigurationTask {
 	@Override
 	public void start(Consumer<Packet<?>> sender) {
 		for (Config<?> config : ConfigRegistry.getAllConfigs()) {
-			if (!config.supportsModification()) continue;
+			if (!config.supportsSync()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.config());
 			sender.accept(ServerConfigurationNetworking.createS2CPacket(packet));
 		}

@@ -24,10 +24,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to note when a config field is syncable, is the default behavior regardless of annotation.
+ * Used to mark a config class as syncable. Without it, the config will not sync.
  * @since 1.5
  */
-@Retention(RetentionPolicy.CLASS)
-@Target(ElementType.FIELD)
-public @interface SyncableEntry {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface SyncableConfig {
 }

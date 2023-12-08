@@ -105,7 +105,7 @@ public record ConfigSyncPacket<T>(
 
 	public static void sendS2C(ServerPlayer player, @NotNull Iterable<Config<?>> configs) {
 		for (Config<?> config : configs) {
-			if (!config.supportsModification()) continue;
+			if (!config.supportsSync()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.config());
 			ServerPlayNetworking.send(player, packet);
 		}
@@ -118,7 +118,7 @@ public record ConfigSyncPacket<T>(
 	@Environment(EnvType.CLIENT)
 	public static void sendC2S(@NotNull Iterable<Config<?>> configs) {
 		for (Config<?> config : configs) {
-			if (!config.supportsModification()) continue;
+			if (!config.supportsSync()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.instance());
 			ClientPlayNetworking.send(packet);
 		}

@@ -23,6 +23,7 @@ import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.annotation.FieldIdentifier;
+import net.frozenblock.lib.config.api.annotation.SyncableConfig;
 import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
@@ -31,6 +32,7 @@ import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 
+@SyncableConfig
 public class FrozenLibConfig {
 
 	public static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(

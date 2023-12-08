@@ -23,6 +23,7 @@ import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.annotation.LockWhenSynced;
+import net.frozenblock.lib.config.api.annotation.SyncableConfig;
 import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
@@ -58,7 +59,7 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 
 	@Environment(EnvType.CLIENT)
 	public static ConfigModification.EntryPermissionType canModifyField(@Nullable Field field, @Nullable Config<?> config) {
-		if (config != null && field != null) {
+		if (config != null && field != null && config.supportsSync()) {
 			boolean isOperator = FrozenNetworking.connectedToIntegratedServer() || ConfigSyncPacket.hasPermissionsToSendSync();
 			if (!config.isSynced() || isOperator) {
 				return ConfigModification.EntryPermissionType.CAN_MODIFY;
