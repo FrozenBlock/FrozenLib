@@ -13,6 +13,5 @@ Put changelog here:
     - An example of this is saving a config via Cloth Config or other GUI
 - Added Mod Protocol API
   - A partial implementation of The Quilt Project's Registry Sync API.
-  - Only 1.20.2+
 - Refactored Configured Features and Placement Modifiers
 - Removed embedded Mixin Extras in favor of Fabric Loader 0.15.0
