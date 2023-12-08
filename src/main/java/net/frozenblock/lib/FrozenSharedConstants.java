@@ -29,8 +29,9 @@ import org.slf4j.helpers.NOPLogger;
 
 @ApiStatus.Internal
 public final class FrozenSharedConstants {
+	public static final String PROJECT_ID = "FrozenLib";
 	public static final String MOD_ID = "frozenlib";
-	public static final Logger LOGGER = LoggerFactory.getLogger(MOD_ID);
+	public static final Logger LOGGER = LoggerFactory.getLogger(PROJECT_ID);
 	public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
 	/**
 	 * Used for features that may be unstable and crash in public builds.
