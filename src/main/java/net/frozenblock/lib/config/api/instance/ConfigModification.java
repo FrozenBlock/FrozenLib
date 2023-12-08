@@ -57,8 +57,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
 				if (consumer instanceof ConfigSyncModification) {
-					if (FrozenNetworking.connectedToServer())
-						config.setSynced(true);
+					config.setSynced(true);
 					modification.getKey().modification.accept(instance);
 				} else if (!excludeNonSync) {
 					modification.getKey().modification.accept(instance);
