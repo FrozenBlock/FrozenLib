@@ -14,5 +14,6 @@ Put changelog here:
 - Added Mod Protocol API
   - A partial implementation of The Quilt Project's Registry Sync API.
 - Refactored Configured Features and Placement Modifiers
-- Replaced `frozenlib:client` entrypoint with an environment event
+- Replaced `frozenlib:main` entrypoint with an environment event (`frozenlib:events`)
+- Replaced `frozenlib:client` entrypoint with an environment event (`frozenlib:client_events`)
 - Removed embedded Mixin Extras in favor of Fabric Loader 0.15.0

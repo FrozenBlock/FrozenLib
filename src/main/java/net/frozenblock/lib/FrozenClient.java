@@ -23,15 +23,11 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
-import net.frozenblock.lib.event.api.FrozenEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.menu.api.Panoramas;
@@ -64,12 +60,6 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistry
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
 public final class FrozenClient implements ClientModInitializer {
-
-	public static final Event<FrozenClientEntrypoint> INIT_EVENT = EventFactory.createArrayBacked(FrozenClientEntrypoint.class, callbacks -> context -> {
-		for (var callback : callbacks) {
-			callback.init();
-		}
-	});
 
 	@Override
 	public void onInitializeClient() {

@@ -85,17 +85,7 @@ public final class FrozenMain implements ModInitializer {
 
 		RegisterInGameDevTools.register();
 
-		FabricLoader.getInstance().getEntrypointContainers("frozenlib:main", FrozenMainEntrypoint.class).forEach(entrypoint -> {
-			try {
-				FrozenMainEntrypoint mainPoint = entrypoint.getEntrypoint();
-				mainPoint.init();
-				if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-					mainPoint.initDevOnly();
-				}
-			} catch (Throwable ignored) {
-
-			}
-		});
+		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
 
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> {
 			if (player.hasPermissions(2))
