@@ -60,15 +60,15 @@ public class QuiltSyncTask implements ConfigurationTask {
 		this.sendSyncPackets(ServerConfigurationNetworking.getSender(this.packetHandler));
 	}
 
-	public void handleModProtocol(ClientPackets.ModProtocol modProtocol) {
+	public void handleModProtocol(ClientPackets.ModProtocol modProtocol, PacketSender sender) {
 		modProtocol.protocols().forEach(this.extendedConnection::frozenLib$setModProtocol);
 	}
 
 	public void handleEnd(ClientPackets.End end) {
 		if (this.syncVersion == ProtocolVersions.NO_PROTOCOL && ServerRegistrySync.requiresSync()) {
-			this.packetHandler.onDisconnect(ServerRegistrySync.noRegistrySyncMessage);
+			this.packetHandler.disconnect(ServerRegistrySync.noRegistrySyncMessage);
 		} else {
-			((SyncTaskHolder) this.packetHandler).frozenLib$finishQuiltSyncTask();
+			this.packetHandler.completeTask(TYPE);
 		}
 	}
 }

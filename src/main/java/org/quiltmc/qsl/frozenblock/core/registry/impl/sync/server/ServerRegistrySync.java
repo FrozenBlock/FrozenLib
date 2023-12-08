@@ -49,34 +49,37 @@ public final class ServerRegistrySync {
 	public static Component errorStyleHeader = Component.empty();
 	public static Component errorStyleFooter = Component.empty();
 	public static boolean forceDisable = false;
-	public static boolean showErrorDetails = false;
+	public static boolean showErrorDetails = true;
 
 	public static IntList SERVER_SUPPORTED_PROTOCOL = new IntArrayList(ProtocolVersions.IMPL_SUPPORTED_VERSIONS);
 
 	public static void registerHandlers() {
 		ServerConfigurationConnectionEvents.CONFIGURE.register(((handler, server) -> {
 			// You must check to see if the client can handle your config task
-			if (ServerConfigurationNetworking.canSend(handler, ServerPackets.Handshake.PACKET_TYPE)) {
+			if (
+				ServerConfigurationNetworking.canSend(handler, ServerPackets.Handshake.PACKET_TYPE)
+				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ErrorStyle.PACKET_TYPE)
+				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ModProtocol.PACKET_TYPE)
+				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.End.PACKET_TYPE)
+			) {
 				handler.addTask(new QuiltSyncTask(handler, handler.connection));
-			} else {
-				handler.disconnect(ServerRegistrySync.noRegistrySyncMessage);
 			}
 		}));
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE, ServerRegistrySync::handleHandshake);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE, ServerRegistrySync::handleModProtocol);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE, ServerRegistrySync::handleEnd);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE.getId(), ServerRegistrySync::handleHandshake);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE.getId(), ServerRegistrySync::handleModProtocol);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE.getId(), ServerRegistrySync::handleEnd);
 	}
 
-	public static void handleHandshake(ClientPackets.Handshake handshake, ServerConfigurationPacketListenerImpl handler, PacketSender sender) {
-		((SyncTaskHolder) handler).frozenLib$getQuiltSyncTask().handleHandshake(handshake);
+	public static void handleHandshake(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+		((QuiltSyncTask) handler.currentTask).handleHandshake(new ClientPackets.Handshake(buf));
 	}
 
-	public static void handleModProtocol(ClientPackets.ModProtocol modProtocol, ServerConfigurationPacketListener handler, PacketSender sender) {
-		((SyncTaskHolder) handler).frozenLib$getQuiltSyncTask().handleModProtocol(modProtocol);
+	public static void handleModProtocol(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+		((QuiltSyncTask) handler.currentTask).handleModProtocol(new ClientPackets.ModProtocol(buf), sender);
 	}
 
-	public static void handleEnd(ClientPackets.End end, ServerConfigurationPacketListener handler, PacketSender sender) {
-		((SyncTaskHolder) handler).frozenLib$getQuiltSyncTask().handleEnd(end);
+	public static void handleEnd(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+		((QuiltSyncTask) handler.currentTask).handleEnd(new ClientPackets.End(buf));
 	}
 
 	private static Component text(String string) {

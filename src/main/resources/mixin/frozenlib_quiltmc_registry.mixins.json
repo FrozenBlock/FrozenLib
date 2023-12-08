@@ -8,13 +8,13 @@
     "ConnectionMixin",
     "MappedRegistryMixin",
     "RegistryDataLoaderMixin",
-    "ServerConfigurationPacketListenerMixin",
     "ServerStatusVersionMixin"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
+    "client.MinecraftMixin",
     "client.ServerDataMixin"
   ]
 }

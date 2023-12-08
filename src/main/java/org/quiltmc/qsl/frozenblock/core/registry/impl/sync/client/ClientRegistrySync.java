@@ -68,13 +68,14 @@ public final class ClientRegistrySync {
 	private static boolean mustDisconnect;
 
 	public static void registerHandlers() {
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.Handshake.PACKET_TYPE, ClientRegistrySync::handleHelloPacket);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.Handshake.PACKET_TYPE.getId(), ClientRegistrySync::handleHelloPacket);
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.End.PACKET_TYPE.getId(), ClientRegistrySync::handleEndPacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.PACKET_TYPE, ClientRegistrySync::handleErrorStylePacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.PACKET_TYPE, ClientRegistrySync::handleModProtocol);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.PACKET_TYPE.getId(), ClientRegistrySync::handleErrorStylePacket);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.PACKET_TYPE.getId(), ClientRegistrySync::handleModProtocol);
 	}
 
-	private static void handleModProtocol(ServerPackets.ModProtocol modProtocol, PacketSender sender) {
+	private static void handleModProtocol(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+		var modProtocol = new ServerPackets.ModProtocol(buf);
 		var prioritizedId = modProtocol.prioritizedId();
 		var protocols = modProtocol.protocols();
 
@@ -129,7 +130,7 @@ public final class ClientRegistrySync {
 				entry.append(errorStyleFooter);
 			}
 
-			handler.onDisconnect(entry);
+			handler.connection.disconnect(entry);
 
 			LOGGER.warn(builder.asString());
 		} else {
@@ -161,14 +162,16 @@ public final class ClientRegistrySync {
 		sender.sendPacket(new ClientPackets.ModProtocol(values));
 	}
 
-	private static void handleErrorStylePacket(ServerPackets.ErrorStyle errorStyle, PacketSender sender) {
+	private static void handleErrorStylePacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+		var errorStyle = new ServerPackets.ErrorStyle(buf);
+
 		errorStyleHeader = errorStyle.errorHeader();
 		errorStyleFooter = errorStyle.errorFooter();
 		showErrorDetails = errorStyle.showError();
 	}
 
-	private static void handleHelloPacket(ServerPackets.Handshake handshake, PacketSender sender) {
-		syncVersion = ProtocolVersions.getHighestSupportedLocal(handshake.supportedVersions());
+	private static void handleHelloPacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+		syncVersion = ProtocolVersions.getHighestSupportedLocal(new ServerPackets.Handshake(buf).supportedVersions());
 
 		sender.sendPacket(new ClientPackets.Handshake(syncVersion));
 		builder.clear();
@@ -184,5 +187,12 @@ public final class ClientRegistrySync {
 
 	private static boolean isTextEmpty(Component text) {
 		return (text.getContents() == ComponentContents.EMPTY || (text.getContents() instanceof LiteralContents literalContents && literalContents.text().isEmpty())) && text.getSiblings().isEmpty();
+	}
+
+	public static void disconnectCleanup(Minecraft client) {
+		errorStyleHeader = ServerRegistrySync.errorStyleHeader;
+		errorStyleFooter = ServerRegistrySync.errorStyleFooter;
+		showErrorDetails = ServerRegistrySync.showErrorDetails;
+		disconnectMainReason = null;
 	}
 }
