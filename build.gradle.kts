@@ -219,16 +219,6 @@ repositories {
             includeGroup("curse.maven")
         }
     }
-    /*maven {
-        setName("Siphalor"s Maven")
-        setUrl("https://maven.siphalor.de")
-    }*/
-    /*maven {
-        setUrl("https://maven.flashyreese.me/releases")
-    }
-    maven {
-        setUrl("https://maven.flashyreese.me/snapshots")
-    }*/
     maven {
         setUrl("https://maven.minecraftforge.net")
     }
@@ -250,7 +240,7 @@ dependencies {
     // To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:$minecraft_version")
 	mappings(loom.layered {
-		// please annoy treetrain if this doesnt work
+		// please annoy treetrain if this doesn't work
 		mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
         parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
 		officialMojangMappings {
@@ -288,33 +278,6 @@ dependencies {
     relocModApi("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
 
     "testmodImplementation"(sourceSets.main.get().output)
-
-/*
-    // only affects runClient, does not affect gradlew build. add -PuseThirdPartyMods=false to not use these
-    if (findProperty("useThirdPartyMods") != "false") {
-        modRuntimeOnly("maven.modrinth:ferrite-core:${ferritecore_version}")
-        modRuntimeOnly("maven.modrinth:lazydfu:${lazydfu_version}")
-        //modRuntimeOnly("maven.modrinth:starlight:${starlight_version}")
-        modRuntimeOnly("maven.modrinth:lithium:${lithium_version}")
-
-        // Sodium Related
-
-        /*modRuntimeOnly "maven.modrinth:iris:${iris_version}"
-        modRuntimeOnly "maven.modrinth:indium:${indium_version}"
-        modRuntimeOnly("me.flashyreese.mods:reeses-sodium-options:${reeses_sodium_options_version}") {
-            exclude group: "net.coderbot.iris_mc1_19", module: "iris"
-        }
-        modRuntimeOnly "me.flashyreese.mods:sodium-extra-fabric:${sodium_extra_version}"
-        modRuntimeOnly "io.github.douira:glsl-transformer:0.27.0"
-        modRuntimeOnly "net.caffeinemc:mixin-config:1.0.0+1.17"*/
-
-        modRuntimeOnly("maven.modrinth:entityculling:${entityculling_version}")
-        //modRuntimeOnly("maven.modrinth:c2me-fabric:0.2.0+alpha.8.32+1.19.1-rc3")
-        modRuntimeOnly("maven.modrinth:ksyxis:${ksyxis_version}")
-        //modRuntimeOnly("maven.modrinth:iris:1.19.x-v1.2.5")
-        modRuntimeOnly("maven.modrinth:memoryleakfix:${memoryleakfix_version}")
-        modRuntimeOnly("maven.modrinth:no-unused-chunks:${no_unused_chunks_version}")
-    }*/
 }
 
 tasks {
