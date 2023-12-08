@@ -18,10 +18,7 @@
 
 package net.frozenblock.lib;
 
-import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
 
 public class FrozenBools {
 
@@ -56,26 +53,4 @@ public class FrozenBools {
 	public static final boolean HAS_STARLIGHT = FabricLoader.getInstance().isModLoaded("starlight");
     public static final boolean HAS_TERRABLENDER = FabricLoader.getInstance().isModLoaded("terrablender");
     public static final boolean HAS_TERRALITH = FabricLoader.getInstance().isModLoaded("terralith");
-
-	@SuppressWarnings("deprecation")
-	public static boolean connectedToIntegratedServer() {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-			return false;
-		Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
-		return minecraft.hasSingleplayerServer();
-	}
-
-	/**
-	 * @return if the client is connected to any server
-	 */
-	@SuppressWarnings("deprecation")
-	public static boolean connectedToServer() {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-			return false;
-		Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
-		ClientPacketListener listener = minecraft.getConnection();
-		if (listener == null)
-			return false;
-		return listener.getConnection().isConnected();
-	}
 }

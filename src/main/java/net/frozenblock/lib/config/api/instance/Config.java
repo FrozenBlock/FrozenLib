@@ -99,6 +99,7 @@ public abstract class Config<T> {
 	 */
 	public T configWithSync() {
 		if (!this.supportsModification()) {
+			//TODO: Possibly remove before release? This causes log spam. Up to you, Tree. Might be best with JavaDoc instead.
 			String formatted = String.format("Config %s from %s", this.configClass().getSimpleName(), this.modId());
 			FrozenLogUtils.logWarning(formatted + " does not support modification, returning unmodified instance.");
 			return this.instance();

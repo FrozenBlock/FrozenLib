@@ -28,7 +28,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.network.ConfigurationTask;
 
 public class ConfigSyncTask implements ConfigurationTask {
-	public static final Type TYPE = new Type(FrozenSharedConstants.string("config_sync"));
+	public static final Type CONFIG_SYNC_TYPE = new Type(FrozenSharedConstants.string("config_sync"));
 
 	@Override
 	public void start(Consumer<Packet<?>> sender) {
@@ -41,6 +41,6 @@ public class ConfigSyncTask implements ConfigurationTask {
 
 	@Override
 	public Type type() {
-		return TYPE;
+		return CONFIG_SYNC_TYPE;
 	}
 }

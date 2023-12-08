@@ -18,14 +18,18 @@
 
 package net.frozenblock.lib.networking;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.impl.sync.ConfigSyncTask;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.wind.api.WindManager;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
@@ -74,6 +78,28 @@ public final class FrozenNetworking {
 				ConfigSyncPacket.sendS2C(player);
 			}
 		});
+	}
+
+	@SuppressWarnings("deprecation")
+	public static boolean connectedToIntegratedServer() {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+			return false;
+		Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
+		return minecraft.hasSingleplayerServer();
+	}
+
+	/**
+	 * @return if the client is connected to any server
+	 */
+	@SuppressWarnings("deprecation")
+	public static boolean connectedToServer() {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+			return false;
+		Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
+		ClientPacketListener listener = minecraft.getConnection();
+		if (listener == null)
+			return false;
+		return listener.getConnection().isConnected();
 	}
 
 }

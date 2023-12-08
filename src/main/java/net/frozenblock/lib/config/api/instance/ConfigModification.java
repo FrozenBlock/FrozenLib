@@ -25,11 +25,11 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.network.ConfigSyncModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,11 +53,15 @@ public record ConfigModification<T>(Consumer<T> modification) {
 				.sorted(Map.Entry.comparingByValue())
 				.toList();
 
+			if (list.isEmpty()) {
+				return original;
+			}
+
 			config.setSynced(false);
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
 				if (consumer instanceof ConfigSyncModification) {
-					if (FrozenBools.connectedToServer())
+					if (FrozenNetworking.connectedToServer())
 						config.setSynced(true);
 					modification.getKey().modification.accept(instance);
 				} else if (!excludeNonSync) {

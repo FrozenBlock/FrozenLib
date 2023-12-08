@@ -22,11 +22,11 @@ import java.lang.reflect.Field;
 import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.config.api.annotation.LockWhenSynced;
 import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,7 +59,7 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 	@Environment(EnvType.CLIENT)
 	public static ConfigModification.EntryPermissionType canModifyField(@Nullable Field field, @Nullable Config<?> config) {
 		if (config != null && field != null) {
-			boolean isOperator = FrozenBools.connectedToIntegratedServer() || ConfigSyncPacket.hasPermissionsToSendSync();
+			boolean isOperator = FrozenNetworking.connectedToIntegratedServer() || ConfigSyncPacket.hasPermissionsToSendSync();
 			if (!config.isSynced() || isOperator) {
 				return ConfigModification.EntryPermissionType.CAN_MODIFY;
 			} else if (isSyncable(field)) {
