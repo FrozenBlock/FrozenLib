@@ -25,7 +25,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.annotation.SyncableConfig;
-import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
+import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

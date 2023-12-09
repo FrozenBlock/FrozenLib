@@ -27,7 +27,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
-import net.frozenblock.lib.config.api.network.ConfigSyncModification;
+import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.network.chat.Component;

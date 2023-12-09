@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.network;
+package net.frozenblock.lib.config.impl.network;
 
 import blue.endless.jankson.api.SyntaxError;
 import java.util.List;
@@ -31,6 +31,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
+import net.frozenblock.lib.config.api.network.ConfigByteBufUtil;
+import net.frozenblock.lib.config.api.network.ConfigSyncData;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
@@ -50,6 +52,9 @@ public record ConfigSyncPacket<T>(
 	String className,
 	T configData
 ) implements FabricPacket {
+
+	public static final int PERMISSION_LEVEL = 2;
+
 	public static final PacketType<ConfigSyncPacket<?>> PACKET_TYPE = PacketType.create(FrozenNetworking.CONFIG_SYNC_PACKET, ConfigSyncPacket::create);
 
 	@Nullable
@@ -80,13 +85,15 @@ public record ConfigSyncPacket<T>(
             if (!configClassName.equals(className)) continue;
 			Config<T> config = (Config<T>) raw;
 			if (server != null) {
+				// C2S logic
 				ConfigModification.copyInto(packet.configData(), config.instance());
 				if (!FrozenNetworking.connectedToIntegratedServer())
 					config.save();
 				for (ServerPlayer player : PlayerLookup.all(server)) {
-					sendS2C(player);
+					sendS2C(player, List.of(config));
 				}
 			} else {
+				// S2C logic
 				boolean shouldAddModification = !ConfigRegistry.containsSyncData(config);
 				ConfigRegistry.setSyncData(config, new ConfigSyncData<>(packet.configData()));
 				if (shouldAddModification) {
@@ -104,6 +111,9 @@ public record ConfigSyncPacket<T>(
     }
 
 	public static void sendS2C(ServerPlayer player, @NotNull Iterable<Config<?>> configs) {
+		if (!ServerPlayNetworking.canSend(player, PACKET_TYPE) || FrozenNetworking.isLocalPlayer(player))
+			return;
+
 		for (Config<?> config : configs) {
 			if (!config.supportsSync()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.config());
@@ -117,6 +127,8 @@ public record ConfigSyncPacket<T>(
 
 	@Environment(EnvType.CLIENT)
 	public static void sendC2S(@NotNull Iterable<Config<?>> configs) {
+		if (!ClientPlayNetworking.canSend(PACKET_TYPE)) return;
+
 		for (Config<?> config : configs) {
 			if (!config.supportsSync()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.instance());
@@ -132,7 +144,7 @@ public record ConfigSyncPacket<T>(
 	@Environment(EnvType.CLIENT)
 	public static boolean hasPermissionsToSendSync() {
 		if (notConnected()) return false;
-		return Minecraft.getInstance().player.hasPermissions(2);
+		return Minecraft.getInstance().player.hasPermissions(PERMISSION_LEVEL);
 	}
 
 	@Environment(EnvType.CLIENT)

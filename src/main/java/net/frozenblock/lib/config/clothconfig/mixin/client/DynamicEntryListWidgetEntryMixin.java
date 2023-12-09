@@ -28,7 +28,7 @@ import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.annotation.FieldIdentifier;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.api.network.ConfigSyncModification;
+import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;

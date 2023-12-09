@@ -22,16 +22,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
-import net.frozenblock.lib.config.impl.sync.ConfigSyncTask;
+import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
 public final class FrozenNetworking {
@@ -65,11 +66,8 @@ public final class FrozenNetworking {
 			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
 		}));
 
-		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) -> {
-			// You must check to see if the client can handle your config task
-			if (ServerConfigurationNetworking.canSend(handler, ConfigSyncPacket.PACKET_TYPE)) {
-				handler.addTask(new ConfigSyncTask());
-			}
+		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {
+			ConfigSyncPacket.sendS2C(player);
 		});
 
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
@@ -80,22 +78,27 @@ public final class FrozenNetworking {
 		});
 	}
 
-	@SuppressWarnings("deprecation")
+	public static boolean isLocalPlayer(Player player) {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+			return false;
+
+		return Minecraft.getInstance().isLocalPlayer(player.getGameProfile().getId());
+	}
+
 	public static boolean connectedToIntegratedServer() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
 			return false;
-		Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
+		Minecraft minecraft = Minecraft.getInstance();
 		return minecraft.hasSingleplayerServer();
 	}
 
 	/**
 	 * @return if the client is connected to any server
 	 */
-	@SuppressWarnings("deprecation")
 	public static boolean connectedToServer() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
 			return false;
-		Minecraft minecraft = (Minecraft) FabricLoader.getInstance().getGameInstance();
+		Minecraft minecraft = Minecraft.getInstance();
 		ClientPacketListener listener = minecraft.getConnection();
 		if (listener == null)
 			return false;

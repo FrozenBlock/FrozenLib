@@ -16,17 +16,17 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.network;
+package net.frozenblock.lib.config.impl.network;
 
 import java.lang.reflect.Field;
 import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.annotation.LockWhenSynced;
-import net.frozenblock.lib.config.api.annotation.SyncableConfig;
 import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
+import net.frozenblock.lib.config.api.network.ConfigSyncData;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +39,9 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 	@Override
 	public void accept(T destination) {
 		try {
-			T source = dataSupplier.get(config).instance();
+			ConfigSyncData<T> syncData = dataSupplier.get(config);
+			if (syncData == null) return;
+			T source = syncData.instance();
 			ConfigModification.copyInto(source, destination, true);
 		} catch (NullPointerException ignored) {}
 	}

@@ -23,7 +23,7 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import java.util.Collection;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
+import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;

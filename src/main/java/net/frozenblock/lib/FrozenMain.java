@@ -21,7 +21,7 @@ package net.frozenblock.lib;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
+import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
@@ -73,7 +73,7 @@ public final class FrozenMain implements ModInitializer {
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
 
-		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, responseSender) -> {
+		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, sender) -> {
 			if (player.hasPermissions(2))
 				ConfigSyncPacket.receive(packet, player.server);
 		}));
