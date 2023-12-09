@@ -51,7 +51,7 @@ public abstract class WardenSpawnTrackerCommandMixin {
 		return 0;
 	}
 
-	@WrapOperation(method = "register", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;register(Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;)Lcom/mojang/brigadier/tree/LiteralCommandNode;"))
+	@WrapOperation(method = "register", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;register(Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;)Lcom/mojang/brigadier/tree/LiteralCommandNode;", remap = false))
 	private static LiteralCommandNode<CommandSourceStack> register(CommandDispatcher<CommandSourceStack> dispatcher, LiteralArgumentBuilder<CommandSourceStack> builder, Operation<LiteralCommandNode<CommandSourceStack>> operation) {
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
 			return dispatcher.register(

@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
 
 /**
  * Used to identify config fields so their attributes can impact GUIs.
+ * See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig} and {@link net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui} for an example.
  * @since 1.5
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -24,7 +24,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.config.api.annotation.SyncableConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -106,14 +105,6 @@ public abstract class Config<T> {
 			return this.instance();
 		}
 		return ConfigModification.modifyConfig(this, this.instance(), true);
-	}
-
-	/**
-	 * @return If the current config supports modification and has the {@link SyncableConfig} annotation.
-	 * @since 1.5
-	 */
-	public boolean supportsSync() {
-		return this.supportsModification() && this.instance().getClass().isAnnotationPresent(SyncableConfig.class);
 	}
 
 	/**

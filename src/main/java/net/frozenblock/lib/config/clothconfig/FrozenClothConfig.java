@@ -67,6 +67,11 @@ public final class FrozenClothConfig {
 
 	/**
 	 * Creates an entry that will interact with config syncing
+	 *
+	 * @param entry The config entry to be used
+	 * @param clazz The class of the config file being accessed
+	 * @param identifier The {@link net.frozenblock.lib.config.api.annotation.FieldIdentifier} of the field used for the config
+	 * @param configInstance The main instance of the config (See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig#INSTANCE} for an example)
 	 * @since 1.5
 	 */
 	public static <T extends DynamicEntryListWidget.Entry<?>> T syncedEntry(T entry, Class<?> clazz, String identifier, Config<?> configInstance) {
