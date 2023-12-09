@@ -26,7 +26,9 @@ import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
+import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.ingamedevtools.RegisterInGameDevTools;
+import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
@@ -96,6 +98,11 @@ public final class FrozenMain implements ModInitializer {
 			CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> WardenSpawnTrackerCommand.register(dispatcher)));
 
 		FrozenNetworking.registerNetworking();
+
+		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
+			if (!allRegistries) return;
+			ModIntegrations.initialize();
+		});
 	}
 
 	@Deprecated(forRemoval = true)

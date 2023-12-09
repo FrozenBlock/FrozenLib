@@ -28,6 +28,5 @@ public class FrozenServer implements DedicatedServerModInitializer {
 
     @Override
     public void onInitializeServer() {
-        ModIntegrations.initialize(); // Mod integrations must run after normal mod initialization
     }
 }

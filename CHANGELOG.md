@@ -20,3 +20,4 @@ Put changelog here:
 - Moved all Packets to 'FrozenNetworking'
     - Moved client-side networking to 'FrozenClientNetworking'
 - Moved the 'id' and 'string' methods to 'FrozenSharedConstants' and maked the methods in 'FrozenMain' as deprecated.
+- Moved mod integration initialization to a registry freeze event
