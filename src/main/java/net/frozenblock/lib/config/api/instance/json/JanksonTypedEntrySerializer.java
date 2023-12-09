@@ -48,19 +48,18 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 	 * Serializes a {@link TypedEntry} to a {@link JsonElement}.
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public JsonElement apply(TypedEntry src, Marshaller marshaller) {
 		if (src != null) {
 			var type = src.type();
-			if (type != null) {
-				if (Objects.equals(type.modId(), this.modId)) {
-					var codec = type.codec();
-					if (codec != null) {
-						var encoded = codec.encodeStart(JanksonOps.INSTANCE, src.value());
-						if (encoded != null && encoded.error().isEmpty()) {
-							var optional = encoded.result();
-							if (optional.isPresent()) {
-								return (JsonElement) optional.get();
-							}
+			if (type != null && Objects.equals(type.modId(), this.modId)) {
+				var codec = type.codec();
+				if (codec != null) {
+					var encoded = codec.encodeStart(JanksonOps.INSTANCE, src.value());
+					if (encoded != null && encoded.error().isEmpty()) {
+						var optional = encoded.result();
+						if (optional.isPresent()) {
+							return (JsonElement) optional.get();
 						}
 					}
 				}

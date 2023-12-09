@@ -111,7 +111,7 @@ public record ConfigSyncPacket<T>(
     }
 
 	public static void sendS2C(ServerPlayer player, @NotNull Iterable<Config<?>> configs) {
-		if (!ServerPlayNetworking.canSend(player, PACKET_TYPE) || FrozenNetworking.isLocalPlayer(player))
+		if (FrozenNetworking.isLocalPlayer(player))
 			return;
 
 		for (Config<?> config : configs) {
