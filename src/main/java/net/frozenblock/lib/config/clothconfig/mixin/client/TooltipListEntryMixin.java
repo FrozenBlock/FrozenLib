@@ -23,7 +23,6 @@ import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigEntryInterface;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,8 +36,6 @@ public class TooltipListEntryMixin {
 
 	@Inject(method = "getTooltip()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true, remap = false)
 	public void frozenLib$getTooltip(CallbackInfoReturnable<Optional<Component[]>> info) {
-		AbstractConfigEntryInterface abstractConfigEntryInterface = (AbstractConfigEntryInterface) this;
-		boolean canSave = true;
 		DisableableWidgetInterface disableableWidgetInterface = (DisableableWidgetInterface) this;
 		if (!disableableWidgetInterface.frozenLib$getEntryPermissionType().canModify) {
 			boolean present = disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip.isPresent();
@@ -48,9 +45,7 @@ public class TooltipListEntryMixin {
 					:
 					Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
 			);
-			canSave = false;
 		}
-		abstractConfigEntryInterface.frozenLib$setCanSave(canSave);
 	}
 
 }

@@ -21,36 +21,20 @@ package net.frozenblock.lib.config.clothconfig.mixin.client;
 import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.clothconfig.impl.AbstractConfigEntryInterface;
+import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(AbstractConfigEntry.class)
-public class AbstractConfigEntryMixin implements AbstractConfigEntryInterface {
-
-	@Unique
-	private boolean frozenLib$canSave = true;
+public class AbstractConfigEntryMixin {
 
 	@Inject(method = "save", at = @At("HEAD"), cancellable = true, remap = false)
 	public void frozenLib$save(CallbackInfo info) {
-		if (!this.frozenLib$canSave()) {
+		if (!((DisableableWidgetInterface) this).frozenLib$getEntryPermissionType().canModify) {
 			info.cancel();
 		}
-	}
-
-	@Unique
-	@Override
-	public void frozenLib$setCanSave(boolean canSave) {
-		this.frozenLib$canSave = canSave;
-	}
-
-	@Unique
-	@Override
-	public boolean frozenLib$canSave() {
-		return this.frozenLib$canSave;
 	}
 }

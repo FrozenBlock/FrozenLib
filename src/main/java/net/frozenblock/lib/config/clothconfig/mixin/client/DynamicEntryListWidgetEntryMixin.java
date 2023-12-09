@@ -45,10 +45,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
     public void frozenLib$addSyncData(@NotNull Class<?> clazz, String identifier, Config<?> configInstance) {
 		Field field = null;
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
-			if (
-				fieldToCheck.isAnnotationPresent(FieldIdentifier.class)
-					&& fieldToCheck.getAnnotation(FieldIdentifier.class).identifier().equals(identifier)
-			) {
+			if (fieldToCheck.isAnnotationPresent(FieldIdentifier.class) && fieldToCheck.getAnnotation(FieldIdentifier.class).identifier().equals(identifier)) {
 				if (field != null) FrozenLogUtils.logError("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
 				field = fieldToCheck;
 			}
