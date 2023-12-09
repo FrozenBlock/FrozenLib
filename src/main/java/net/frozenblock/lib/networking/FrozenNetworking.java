@@ -33,6 +33,8 @@ import net.minecraft.world.entity.player.Player;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
 public final class FrozenNetworking {
+	private FrozenNetworking() {}
+
 	public static final ResourceLocation FLYBY_SOUND_PACKET = FrozenSharedConstants.id("flyby_sound_packet");
 	public static final ResourceLocation LOCAL_SOUND_PACKET = FrozenSharedConstants.id("local_sound_packet");
 	public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = FrozenSharedConstants.id("starting_moving_restriction_looping_sound_packet");
