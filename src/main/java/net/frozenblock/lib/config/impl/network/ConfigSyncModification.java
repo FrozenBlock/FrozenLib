@@ -27,7 +27,7 @@ import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.network.ConfigSyncData;
-import net.frozenblock.lib.networking.FrozenNetworking;
+import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,7 +62,7 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 	@Environment(EnvType.CLIENT)
 	public static ConfigModification.EntryPermissionType canModifyField(@Nullable Field field, @Nullable Config<?> config) {
 		if (config != null && field != null && config.supportsSync()) {
-			boolean isOperator = FrozenNetworking.connectedToIntegratedServer() || ConfigSyncPacket.hasPermissionsToSendSync();
+			boolean isOperator = ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false);
 			if (!config.isSynced() || isOperator) {
 				return ConfigModification.EntryPermissionType.CAN_MODIFY;
 			} else if (isSyncable(field)) {

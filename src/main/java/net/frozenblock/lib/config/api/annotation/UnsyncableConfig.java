@@ -24,8 +24,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Used to mark a config as unsyncable
+ * Used to mark a config as unsyncable.
  * Without this annotation, the config will sync if it allows modifications.
+ * For the per-field version, see {@link UnsyncableEntry}.
  * @since 1.5
  */
 @Retention(RetentionPolicy.RUNTIME)

@@ -26,6 +26,7 @@ import java.lang.annotation.Target;
 /**
  * Used to mark a config field as unsyncable, useful for client-only options.
  * Without this annotation, the field will sync as its default behavior.
+ * For the class version, see {@link  UnsyncableConfig}.
  * @since 1.5
  */
 @Retention(RetentionPolicy.RUNTIME)

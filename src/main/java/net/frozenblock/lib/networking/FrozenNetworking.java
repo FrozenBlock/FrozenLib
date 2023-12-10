@@ -78,7 +78,7 @@ public final class FrozenNetworking {
 		});
 
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, sender) -> {
-			if (player.hasPermissions(2))
+			if (ConfigSyncPacket.hasPermissionsToSendSync(player, true))
 				ConfigSyncPacket.receive(packet, player.server);
 		}));
 	}

@@ -23,7 +23,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
-import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;

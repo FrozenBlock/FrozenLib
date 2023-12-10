@@ -27,6 +27,7 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
@@ -40,6 +41,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -124,6 +126,17 @@ public record ConfigSyncPacket<T>(
 		sendS2C(player, ConfigRegistry.getAllConfigs());
 	}
 
+	public static boolean hasPermissionsToSendSync(@Nullable Player player, boolean serverSide) {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+			return player.hasPermissions(PERMISSION_LEVEL);
+
+		if (notConnected())
+			return false;
+
+		boolean isHost = serverSide && FrozenNetworking.isLocalPlayer(player);
+		return FrozenNetworking.connectedToIntegratedServer() || isHost || player.hasPermissions(PERMISSION_LEVEL);
+	}
+
 	@Environment(EnvType.CLIENT)
 	public static void sendC2S(@NotNull Iterable<Config<?>> configs) {
 		if (!ClientPlayNetworking.canSend(PACKET_TYPE)) return;
@@ -141,12 +154,6 @@ public record ConfigSyncPacket<T>(
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static boolean hasPermissionsToSendSync() {
-		if (notConnected()) return false;
-		return Minecraft.getInstance().player.hasPermissions(PERMISSION_LEVEL);
-	}
-
-	@Environment(EnvType.CLIENT)
 	public static boolean notConnected() {
 		Minecraft minecraft = Minecraft.getInstance();
 		ClientPacketListener listener = minecraft.getConnection();
@@ -158,7 +165,7 @@ public record ConfigSyncPacket<T>(
 
 	@Environment(EnvType.CLIENT)
 	public static <T> void trySendC2S(Config<T> config) {
-		if (hasPermissionsToSendSync())
+		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false))
 			sendC2S(List.of(config));
 	}
 
