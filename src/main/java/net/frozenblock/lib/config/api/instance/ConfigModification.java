@@ -98,17 +98,19 @@ public record ConfigModification<T>(Consumer<T> modification) {
 
 	@Environment(EnvType.CLIENT)
 	public enum EntryPermissionType {
-		CAN_MODIFY(true, Optional.empty()),
-		LOCKED_FOR_UNKNOWN_REASON(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_unknown_reason"))),
-		LOCKED_DUE_TO_SERVER(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_server"))),
-		LOCKED_DUE_TO_SYNC(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_sync")));
+		CAN_MODIFY(true, Optional.empty(), Optional.empty()),
+		LOCKED_FOR_UNKNOWN_REASON(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_unknown_reason")), Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_unknown_reason"))),
+		LOCKED_DUE_TO_SERVER(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_server")), Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_server_lan"))),
+		LOCKED_DUE_TO_SYNC(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_sync")), Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_sync_lan")));
 
 		public final boolean canModify;
 		public final Optional<Component> tooltip;
+		public final Optional<Component> lanTooltip;
 
-		EntryPermissionType(boolean canModify, Optional<Component> tooltip) {
+		EntryPermissionType(boolean canModify, Optional<Component> tooltip, Optional<Component> lanTooltip) {
 			this.canModify = canModify;
 			this.tooltip = tooltip;
+			this.lanTooltip = lanTooltip;
 		}
 	}
 }

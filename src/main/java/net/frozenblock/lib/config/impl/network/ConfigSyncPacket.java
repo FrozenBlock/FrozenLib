@@ -34,10 +34,9 @@ import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.network.ConfigByteBufUtil;
 import net.frozenblock.lib.config.api.network.ConfigSyncData;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -130,7 +129,7 @@ public record ConfigSyncPacket<T>(
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
 			return player.hasPermissions(PERMISSION_LEVEL);
 
-		if (notConnected())
+		if (FrozenClientNetworking.notConnected())
 			return false;
 
 		boolean isHost = serverSide && FrozenNetworking.isLocalPlayer(player);
@@ -151,16 +150,6 @@ public record ConfigSyncPacket<T>(
 	@Environment(EnvType.CLIENT)
 	public static void sendC2S() {
 		sendC2S(ConfigRegistry.getAllConfigs());
-	}
-
-	@Environment(EnvType.CLIENT)
-	public static boolean notConnected() {
-		Minecraft minecraft = Minecraft.getInstance();
-		ClientPacketListener listener = minecraft.getConnection();
-		if (listener == null) return true;
-
-		LocalPlayer player = Minecraft.getInstance().player;
-		return player == null;
 	}
 
 	@Environment(EnvType.CLIENT)

@@ -24,6 +24,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
+import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,10 +39,12 @@ public class TooltipListEntryMixin {
 	public void frozenLib$getTooltip(CallbackInfoReturnable<Optional<Component[]>> info) {
 		DisableableWidgetInterface disableableWidgetInterface = (DisableableWidgetInterface) this;
 		if (!disableableWidgetInterface.frozenLib$getEntryPermissionType().canModify) {
-			boolean present = disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip.isPresent();
+			Optional<Component> optionalComponent = FrozenClientNetworking.connectedToLan() ?
+					disableableWidgetInterface.frozenLib$getEntryPermissionType().lanTooltip
+					: disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip;
 			info.setReturnValue(
-				present ?
-					Optional.of(disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
+				optionalComponent.isPresent() ?
+					Optional.of(optionalComponent.orElseThrow().toFlatList().toArray(new Component[0]))
 					:
 					Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
 			);

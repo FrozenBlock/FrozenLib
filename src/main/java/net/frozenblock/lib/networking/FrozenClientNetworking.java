@@ -38,7 +38,11 @@ import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.frozenblock.lib.wind.api.ClientWindManagerExtension;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -310,6 +314,22 @@ public final class FrozenClientNetworking {
 			// EXTENSIONS
 			for (ClientWindManagerExtension extension : ClientWindManager.EXTENSIONS) extension.receiveSyncPacket(byteBuf, ctx);
 		});
+	}
+
+	public static boolean notConnected() {
+		Minecraft minecraft = Minecraft.getInstance();
+		ClientPacketListener listener = minecraft.getConnection();
+		if (listener == null) return true;
+
+		LocalPlayer player = Minecraft.getInstance().player;
+		return player == null;
+	}
+
+	public static boolean connectedToLan() {
+		if (notConnected()) return false;
+		ServerData serverData = Minecraft.getInstance().getCurrentServer();
+		if (serverData == null) return false;
+		return serverData.isLan();
 	}
 
 }
