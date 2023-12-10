@@ -25,6 +25,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.config.api.annotation.UnsyncableConfig;
 import net.frozenblock.lib.config.api.registry.ConfigLoadEvent;
 import net.frozenblock.lib.config.api.registry.ConfigSaveEvent;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
@@ -101,13 +102,21 @@ public abstract class Config<T> {
 	 * @since 1.5
 	 */
 	public T configWithSync() {
-		if (!this.supportsModification()) {
+		if (!this.supportsSync()) {
 			//TODO: Possibly remove before release? This causes log spam. Up to you, Tree. Might be best with JavaDoc instead.
 			String formatted = String.format("Config %s from %s", this.configClass().getSimpleName(), this.modId());
 			FrozenLogUtils.logWarning(formatted + " does not support modification, returning unmodified instance.");
 			return this.instance();
 		}
 		return ConfigModification.modifyConfig(this, this.instance(), true);
+	}
+
+	/**
+	 * @return If the current config supports modification and does not have the {@link UnsyncableConfig} annotation.
+	 * @since 1.5
+	 */
+	public boolean supportsSync() {
+		return this.supportsModification() && !this.configClass().isAnnotationPresent(UnsyncableConfig.class);
 	}
 
 	/**

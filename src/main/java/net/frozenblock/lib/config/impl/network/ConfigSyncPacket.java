@@ -114,7 +114,7 @@ public record ConfigSyncPacket<T>(
 			return;
 
 		for (Config<?> config : configs) {
-			if (!config.supportsModification()) continue;
+			if (!config.supportsSync()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.config());
 			ServerPlayNetworking.send(player, packet);
 		}
@@ -129,7 +129,7 @@ public record ConfigSyncPacket<T>(
 		if (!ClientPlayNetworking.canSend(PACKET_TYPE)) return;
 
 		for (Config<?> config : configs) {
-			if (!config.supportsModification()) continue;
+			if (!config.supportsSync()) continue;
 			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.instance());
 			ClientPlayNetworking.send(packet);
 		}
