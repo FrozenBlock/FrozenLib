@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.config.api.registry;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
@@ -31,7 +30,10 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.network.ConfigSyncData;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 public class ConfigRegistry {
 
@@ -45,6 +47,8 @@ public class ConfigRegistry {
 
 	private static final Map<Config<?>, @Nullable ConfigSyncData<?>> CONFIG_SYNC_DATA = new Object2ObjectOpenHashMap<>();
 
+	@NotNull
+	@Contract("_ -> param1")
 	public static <T> Config<T> register(Config<T> config) {
 		if (CONFIG_REGISTRY.contains(config)) {
 			throw new IllegalStateException("Config already registered.");
@@ -62,10 +66,14 @@ public class ConfigRegistry {
 		return Map.copyOf(MOD_CONFIG_REGISTRY).getOrDefault(modId, new ArrayList<>());
 	}
 
+	@Unmodifiable
+	@Contract(pure = true)
 	public static Collection<Config<?>> getAllConfigs() {
 		return List.copyOf(CONFIG_REGISTRY);
 	}
 
+	@NotNull
+	@Contract("_ -> param1")
 	public static <T> TypedEntryType<T> register(TypedEntryType<T> entry) {
 		if (TYPED_ENTRY_REGISTRY.contains(entry)) {
 			throw new IllegalStateException("Typed entry already registered.");
@@ -83,6 +91,8 @@ public class ConfigRegistry {
 		return Map.copyOf(MOD_TYPED_ENTRY_REGISTRY).getOrDefault(modId, new ArrayList<>());
 	}
 
+	@Unmodifiable
+	@Contract(pure = true)
 	public static Collection<TypedEntryType<?>> getAllTypedEntryTypes() {
 		return List.copyOf(TYPED_ENTRY_REGISTRY);
 	}

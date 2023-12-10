@@ -20,15 +20,15 @@ package net.frozenblock.lib.config.impl;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import java.util.Collection;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import java.util.Collection;
 
 public final class ConfigCommand {
 	private ConfigCommand() {}

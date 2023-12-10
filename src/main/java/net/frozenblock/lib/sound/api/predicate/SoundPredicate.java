@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.sound.api.predicate;
 
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
@@ -27,8 +26,8 @@ import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Nullable;
 
 public final class SoundPredicate<T extends Entity> {
-	public static final ResourceLocation DEFAULT_ID = FrozenMain.id("default");
-	public static final ResourceLocation NOT_SILENT_AND_ALIVE_ID = FrozenMain.id("not_silent_and_alive");
+	public static final ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default");
+	public static final ResourceLocation NOT_SILENT_AND_ALIVE_ID = FrozenSharedConstants.id("not_silent_and_alive");
 
 	private final LoopPredicate<T> predicate;
 

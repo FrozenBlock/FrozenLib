@@ -23,7 +23,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
@@ -36,11 +36,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 public record StartingMovingRestrictionSoundLoopPacket(int id, SoundEvent startingSound, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation predicateId, boolean stopOnDeath) implements FabricPacket {
-	public static final PacketType<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = PacketType.create(FrozenMain.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, StartingMovingRestrictionSoundLoopPacket::new);
+	public static final PacketType<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = PacketType.create(FrozenNetworking.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, StartingMovingRestrictionSoundLoopPacket::new);
 
-	public StartingMovingRestrictionSoundLoopPacket(FriendlyByteBuf buf) {
+	public StartingMovingRestrictionSoundLoopPacket(@NotNull FriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
 			buf.readById(BuiltInRegistries.SOUND_EVENT),
@@ -54,7 +55,7 @@ public record StartingMovingRestrictionSoundLoopPacket(int id, SoundEvent starti
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buf) {
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.id);
 		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.startingSound);
 		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.sound);
@@ -66,7 +67,7 @@ public record StartingMovingRestrictionSoundLoopPacket(int id, SoundEvent starti
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static <T extends Entity> void receive(StartingMovingRestrictionSoundLoopPacket packet, LocalPlayer player, PacketSender responseSender) {
+	public static <T extends Entity> void receive(@NotNull StartingMovingRestrictionSoundLoopPacket packet, @NotNull LocalPlayer player, PacketSender responseSender) {
 		ClientLevel level = player.clientLevel;
 		T entity = (T) level.getEntity(packet.id());
 		if (entity != null) {

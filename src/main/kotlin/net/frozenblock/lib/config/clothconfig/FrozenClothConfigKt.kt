@@ -16,16 +16,17 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.util
+@file:JvmName("FrozenClothConfigKt")
+@file:Environment(EnvType.CLIENT)
 
-import net.minecraft.resources.ResourceLocation
-import java.net.URI
+package net.frozenblock.lib.config.clothconfig
 
-fun String.uri(): URI = URI.create(this)
+import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+import net.frozenblock.lib.config.api.instance.Config
+import kotlin.reflect.KClass
 
-fun vanillaId(path: String): ResourceLocation = ResourceLocation(path)
-
-val String.asResourceLocation: ResourceLocation
-    get() {
-        return ResourceLocation(this)
-    }
+fun <T : DynamicEntryListWidget.Entry<*>> T.synced(clazz: KClass<*>, identifier: String, config: Config<*>): T = this.apply {
+    FrozenClothConfig.syncedEntry(this, clazz.java, identifier, config)
+}

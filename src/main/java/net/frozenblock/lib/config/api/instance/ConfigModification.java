@@ -18,14 +18,20 @@
 
 package net.frozenblock.lib.config.api.instance;
 
-import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.config.api.network.ConfigSyncModification;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import org.spongepowered.asm.mixin.injection.struct.InjectorGroupInfo;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Consumer;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
+import net.frozenblock.lib.networking.FrozenNetworking;
+import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Wrapper class for modifying configs
@@ -33,38 +39,76 @@ import java.util.function.Consumer;
  * @param <T> The type of the config class
  */
 public record ConfigModification<T>(Consumer<T> modification) {
-    public static <T> T modifyConfig(Config<T> config, T original, boolean excludeSync) {
+
+    public static <T> T modifyConfig(Config<T> config, T original, boolean excludeNonSync) {
         try {
 			// clone
 			T instance = config.configClass().getConstructor().newInstance();
 			copyInto(original, instance);
 
 			// modify
-			for (Map.Entry<ConfigModification<T>, Integer> modification : ConfigRegistry.getModificationsForConfig(config).entrySet().stream().sorted(Map.Entry.comparingByValue()).toList()) {
+			var list = ConfigRegistry.getModificationsForConfig(config)
+				.entrySet()
+				.stream()
+				.sorted(Map.Entry.comparingByValue())
+				.toList();
+
+			config.setSynced(false);
+			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				var consumer = modification.getKey().modification;
-				if (excludeSync && consumer instanceof ConfigSyncModification) continue;
-				modification.getKey().modification.accept(instance);
+				if (consumer instanceof ConfigSyncModification) {
+					if (FrozenNetworking.connectedToServer()) {
+						config.setSynced(true);
+						modification.getKey().modification.accept(instance);
+					} else {
+						FrozenLogUtils.logError("Attempted to sync config " + config.path() + " for mod " + config.modId() + " outside a server!");
+					}
+				} else if (!excludeNonSync) {
+					modification.getKey().modification.accept(instance);
+				}
 			}
+
 			return instance;
 		} catch (Exception e) {
-			FrozenLogUtils.error("Failed to modify config, returning original.", true, e);
+			FrozenLogUtils.logError("Failed to modify config, returning original.", true, e);
 			return original;
 		}
     }
 
-    public static <T> void copyInto(T source, T destination) {
+    public static <T> void copyInto(@NotNull T source, T destination, boolean isSyncModification) {
         Class<?> clazz = source.getClass();
         while (!clazz.equals(Object.class)) {
             for (Field field : clazz.getDeclaredFields()) {
 				if (Modifier.isStatic(field.getModifiers())) continue;
                 field.setAccessible(true);
+				if (isSyncModification && field.isAnnotationPresent(UnsyncableEntry.class)) continue;
                 try {
                     field.set(destination, field.get(source));
                 } catch (IllegalAccessException e) {
-					FrozenLogUtils.error("Failed to copy field " + field.getName(), true, e);
+					FrozenLogUtils.logError("Failed to copy field " + field.getName(), true, e);
                 }
             }
             clazz = clazz.getSuperclass();
         }
     }
+
+	public static <T> void copyInto(@NotNull T source, T destination) {
+		copyInto(source, destination, false);
+	}
+
+	@Environment(EnvType.CLIENT)
+	public enum EntryPermissionType {
+		CAN_MODIFY(true, Optional.empty()),
+		LOCKED_FOR_UNKNOWN_REASON(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_unknown_reason"))),
+		LOCKED_DUE_TO_SERVER(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_server"))),
+		LOCKED_DUE_TO_SYNC(false, Optional.of(Component.translatable("tooltip.frozenlib.locked_due_to_sync")));
+
+		public final boolean canModify;
+		public final Optional<Component> tooltip;
+
+		EntryPermissionType(boolean canModify, Optional<Component> tooltip) {
+			this.canModify = canModify;
+			this.tooltip = tooltip;
+		}
+	}
 }

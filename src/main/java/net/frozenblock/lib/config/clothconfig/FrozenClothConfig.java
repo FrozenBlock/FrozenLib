@@ -18,17 +18,21 @@
 
 package net.frozenblock.lib.config.clothconfig;
 
-import com.google.common.base.Preconditions;
 import java.util.Arrays;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenClothConfig {
+	private FrozenClothConfig() {}
 
 	/**
 	 * Creates a subcategory in the parent config category with the specified key and adds entries to it.
@@ -41,13 +45,8 @@ public final class FrozenClothConfig {
 	 * @param entries the entries to be added to the subcategory
 	 * @return the newly created subcategory
 	 */
-	public static ConfigCategory createSubCategory(ConfigEntryBuilder entryBuilder, ConfigCategory parentCategory, Component key, boolean expanded, Component tooltip, AbstractConfigListEntry... entries) {
-		// Check if the required parameters are not null
-		Preconditions.checkArgument(entryBuilder != null, "ConfigEntryBuilder is null");
-		Preconditions.checkArgument(parentCategory != null, "Parent Category is null");
-		Preconditions.checkArgument(key != null, "Sub Category key is null");
-		Arrays.stream(entries).forEach(entry -> Preconditions.checkArgument(entry != null, "Config List Entry is null"));
-
+	@SuppressWarnings("rawtypes")
+	public static ConfigCategory createSubCategory(@NotNull ConfigEntryBuilder entryBuilder, @NotNull ConfigCategory parentCategory, @NotNull Component key, boolean expanded, Component tooltip, @NotNull AbstractConfigListEntry... entries) {
 		// Create the subcategory
 		var subCategory = entryBuilder.startSubCategory(key, Arrays.stream(entries).toList());
 
@@ -66,4 +65,17 @@ public final class FrozenClothConfig {
 		);
 	}
 
+	/**
+	 * Creates an entry that will interact with config syncing
+	 *
+	 * @param entry The config entry to be used
+	 * @param clazz The class of the config file being accessed
+	 * @param identifier The {@link net.frozenblock.lib.config.api.annotation.FieldIdentifier} of the field used for the config
+	 * @param configInstance The main instance of the config (See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig#INSTANCE} for an example)
+	 * @since 1.5
+	 */
+	public static <T extends DynamicEntryListWidget.Entry<?>> T syncedEntry(T entry, Class<?> clazz, String identifier, Config<?> configInstance) {
+		((DisableableWidgetInterface) entry).frozenLib$addSyncData(clazz, identifier, configInstance);
+		return entry;
+	}
 }

@@ -30,6 +30,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public final class FlyBySoundHub {
@@ -61,7 +62,7 @@ public final class FlyBySoundHub {
     public static final Map<Entity, Integer> ENTITY_COOLDOWNS = new Object2ObjectOpenHashMap<>();
 	//private static int checkAroundCooldown;
 
-    public static void update(Minecraft client, Entity cameraEntity, boolean autoSounds) {
+    public static void update(@NotNull Minecraft client, Entity cameraEntity, boolean autoSounds) {
 		if (client.level != null && cameraEntity != null) {
 			Vec3 cameraPos = cameraEntity.getEyePosition();
 			double cameraEntityWidth = cameraEntity.getBbWidth();
@@ -120,7 +121,7 @@ public final class FlyBySoundHub {
 		}
 	}
 
-	public static boolean hasPassed(Vec3 cameraPos, double cameraWidth, Vec3 oldCoord, Vec3 newCoord) {
+	public static boolean hasPassed(@NotNull Vec3 cameraPos, double cameraWidth, @NotNull Vec3 oldCoord, @NotNull Vec3 newCoord) {
 		return hasPassedCoordinate(cameraPos.x(), cameraWidth, 0.35, oldCoord.x(), newCoord.x()) ||
 			hasPassedCoordinate(cameraPos.z(), cameraWidth, 0.35, oldCoord.z(), newCoord.z()) ||
 			hasPassedCoordinate(cameraPos.y(), cameraWidth, 0.25, oldCoord.y(), newCoord.y());

@@ -16,14 +16,19 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib;
+package net.frozenblock.lib.config.api.annotation;
 
-import com.llamalad7.mixinextras.MixinExtrasBootstrap;
-import net.fabricmc.loader.api.entrypoint.PreLaunchEntrypoint;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-public class FrozenPreLaunch implements PreLaunchEntrypoint {
-	@Override
-	public void onPreLaunch() {
-		MixinExtrasBootstrap.init();
-	}
+/**
+ * Used to mark a config field as unsyncable, useful for client-only options.
+ * Without this annotation, the field will sync as its default behavior.
+ * @since 1.5
+ */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.FIELD)
+public @interface UnsyncableEntry {
 }

@@ -28,7 +28,7 @@ import java.util.Collection;
 import java.util.List;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.minecraft.commands.CommandSourceStack;
@@ -80,7 +80,7 @@ public class ScreenShakeCommand {
 		FriendlyByteBuf screenShakeByteBuf = ScreenShakeManager.createScreenShakeByteBuf(intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance, 0);
 		StringBuilder playerString = new StringBuilder();
 		for (ServerPlayer serverPlayer : entities) {
-			ServerPlayNetworking.send(serverPlayer, FrozenMain.SCREEN_SHAKE_PACKET, screenShakeByteBuf);
+			ServerPlayNetworking.send(serverPlayer, FrozenNetworking.SCREEN_SHAKE_PACKET, screenShakeByteBuf);
 			playerString.append(serverPlayer.getDisplayName().getString()).append(", ");
 		}
 		Vec3 finalVec = vec3;
@@ -104,7 +104,7 @@ public class ScreenShakeCommand {
 		boolean onePlayer = entities.size() == 1;
 		FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(Unpooled.buffer());
 		for (ServerPlayer serverPlayer : entities) {
-			ServerPlayNetworking.send(serverPlayer, FrozenMain.REMOVE_SCREEN_SHAKES_PACKET, friendlyByteBuf);
+			ServerPlayNetworking.send(serverPlayer, FrozenNetworking.REMOVE_SCREEN_SHAKES_PACKET, friendlyByteBuf);
 			playerString.append(serverPlayer.getDisplayName().getString()).append(onePlayer ? "" : ", ");
 		}
 		source.sendSuccess(() -> Component.translatable(onePlayer ? "commands.screenshake.remove.player.success" : "commands.screenshake.remove.player.success.multiple", playerString.toString()), true);
@@ -122,7 +122,7 @@ public class ScreenShakeCommand {
 				affectedEntities.add(entity);
 				((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().clear();
 				for (ServerPlayer serverPlayer : PlayerLookup.tracking(source.getLevel(), entity.blockPosition())) {
-					ServerPlayNetworking.send(serverPlayer, FrozenMain.REMOVE_ENTITY_SCREEN_SHAKES_PACKET, friendlyByteBuf);
+					ServerPlayNetworking.send(serverPlayer, FrozenNetworking.REMOVE_ENTITY_SCREEN_SHAKES_PACKET, friendlyByteBuf);
 				}
 				entityAmount += 1;
 			}

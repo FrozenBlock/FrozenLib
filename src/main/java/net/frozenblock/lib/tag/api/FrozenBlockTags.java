@@ -18,10 +18,11 @@
 
 package net.frozenblock.lib.tag.api;
 
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 public final class FrozenBlockTags {
 
@@ -36,7 +37,8 @@ public final class FrozenBlockTags {
 	 */
 	public static final TagKey<Block> CAN_INTERACT_WHILE_CROUCHING = bind("can_interact_while_crouching");
 
+	@NotNull
     private static TagKey<Block> bind(String path) {
-        return TagKey.create(Registries.BLOCK, FrozenMain.id(path));
+        return TagKey.create(Registries.BLOCK, FrozenSharedConstants.id(path));
     }
 }

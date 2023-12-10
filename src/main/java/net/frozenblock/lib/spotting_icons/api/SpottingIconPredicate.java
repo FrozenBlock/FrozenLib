@@ -18,12 +18,13 @@
 
 package net.frozenblock.lib.spotting_icons.api;
 
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class SpottingIconPredicate<T extends Entity> {
@@ -64,11 +65,13 @@ public final class SpottingIconPredicate<T extends Entity> {
 		}
     }
 
+	@NotNull
+	@Contract(pure = true)
 	public static <T extends Entity> IconPredicate<T> defaultPredicate() {
 		return Entity::isAlive;
 	}
 
-    public static ResourceLocation DEFAULT_ID = FrozenMain.id("default");
+    public static ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default");
 
     public static void init() {
         register(DEFAULT_ID, defaultPredicate());

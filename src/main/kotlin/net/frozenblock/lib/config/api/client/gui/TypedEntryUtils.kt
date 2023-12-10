@@ -21,8 +21,11 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
-import me.shedaniel.clothconfig2.api.*
-import me.shedaniel.clothconfig2.gui.entries.*
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
+import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
+import me.shedaniel.clothconfig2.api.Requirement
+import me.shedaniel.clothconfig2.gui.entries.MultiElementListEntry
+import me.shedaniel.clothconfig2.gui.entries.NestedListListEntry
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.api.entry.TypedEntry
@@ -36,7 +39,7 @@ import java.util.function.Supplier
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-fun <T> makeTypedEntryList(
+fun <T> typedEntryList(
     entryBuilder: ConfigEntryBuilder,
     title: Component,
     entrySupplier: Supplier<TypedEntry<List<T>>?>?,
@@ -85,7 +88,7 @@ fun <T> makeTypedEntryList(
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-fun <T> makeNestedList(
+fun <T> nestedList(
     entryBuilder: ConfigEntryBuilder,
     title: Component,
     entrySupplier: Supplier<List<T>?>?,
@@ -134,7 +137,7 @@ fun <T> makeNestedList(
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
-fun <T> makeMultiElementEntry(
+fun <T> multiElementEntry(
     title: Component,
     value: T,
     defaultExpanded: Boolean = true,

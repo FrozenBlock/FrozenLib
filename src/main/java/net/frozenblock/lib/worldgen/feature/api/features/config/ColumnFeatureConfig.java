@@ -28,11 +28,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public record PillarFeatureConfig(BlockState columnBlock, IntProvider height, HolderSet<Block> replaceable) implements FeatureConfiguration {
-	public static final Codec<PillarFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
+public record ColumnFeatureConfig(BlockState state, IntProvider height, HolderSet<Block> replaceableBlocks) implements FeatureConfiguration {
+	public static final Codec<ColumnFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
 		instance.group(
-			BlockState.CODEC.fieldOf("columnBlock").forGetter((config) -> config.columnBlock),
+			BlockState.CODEC.fieldOf("state").forGetter((config) -> config.state),
 			IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter((config) -> config.height),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter((config) -> config.replaceable)
-		).apply(instance, PillarFeatureConfig::new));
+			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter((config) -> config.replaceableBlocks)
+		).apply(instance, ColumnFeatureConfig::new));
 }

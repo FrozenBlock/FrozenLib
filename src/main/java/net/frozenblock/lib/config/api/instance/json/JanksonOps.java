@@ -40,6 +40,8 @@ import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
 import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class JanksonOps implements DynamicOps<JsonElement> {
@@ -302,7 +304,7 @@ public class JanksonOps implements DynamicOps<JsonElement> {
 	}
 
 	@Override
-	public JsonElement createMap(final Stream<Pair<JsonElement, JsonElement>> map) {
+	public JsonElement createMap(final @NotNull Stream<Pair<JsonElement, JsonElement>> map) {
 		final JsonObject result = new JsonObject();
 		map.forEach(p -> result.put(((JsonPrimitive) p.getFirst()).asString(), p.getSecond()));
 		return result;
@@ -329,7 +331,7 @@ public class JanksonOps implements DynamicOps<JsonElement> {
 	}
 
 	@Override
-	public JsonElement createList(final Stream<JsonElement> input) {
+	public JsonElement createList(final @NotNull Stream<JsonElement> input) {
 		final JsonArray result = new JsonArray();
 		input.forEach(result::add);
 		return result;
@@ -429,13 +431,17 @@ public class JanksonOps implements DynamicOps<JsonElement> {
 			super(JanksonOps.this);
 		}
 
+		@NotNull
+		@Contract(value = " -> new", pure = true)
 		@Override
 		protected JsonObject initBuilder() {
 			return new JsonObject();
 		}
 
+		@NotNull
+		@Contract("_, _, _ -> param3")
 		@Override
-		protected JsonObject append(final String key, final JsonElement value, final JsonObject builder) {
+		protected JsonObject append(final String key, final JsonElement value, final @NotNull JsonObject builder) {
 			builder.put(key, value);
 			return builder;
 		}

@@ -16,27 +16,19 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.network;
+package net.frozenblock.lib.config.api.annotation;
 
-import java.util.function.Consumer;
-import java.util.function.Supplier;
-import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
- * @since 1.4.5
+ * Used to mark a config as unsyncable
+ * Without this annotation, the config will sync if it allows modifications.
+ * @since 1.5
  */
-public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSupplier) implements Consumer<T> {
-
-	@Override
-	public void accept(T destination) {
-		T source = dataSupplier.get(config).instance();
-		ConfigModification.copyInto(source, destination);
-	}
-
-	@FunctionalInterface
-	public interface DataSupplier<T> {
-		ConfigSyncData<T> get(Config<T> config);
-	}
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface UnsyncableConfig {
 }
