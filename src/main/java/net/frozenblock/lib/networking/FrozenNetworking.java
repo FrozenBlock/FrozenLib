@@ -20,6 +20,7 @@ package net.frozenblock.lib.networking;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
@@ -75,6 +76,11 @@ public final class FrozenNetworking {
 				ConfigSyncPacket.sendS2C(player);
 			}
 		});
+
+		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, sender) -> {
+			if (player.hasPermissions(2))
+				ConfigSyncPacket.receive(packet, player.server);
+		}));
 	}
 
 	public static boolean isLocalPlayer(Player player) {
