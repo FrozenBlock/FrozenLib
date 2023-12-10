@@ -153,7 +153,7 @@ public abstract class Config<T> {
 		FrozenSharedConstants.LOGGER.info("Saving " + formatted);
 		try {
 			this.onSave();
-			if (FrozenBools.isInitialized && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT && FrozenBools.isInitialized)
 				ConfigSyncPacket.trySendC2S(this);
 
 			invokeSaveEvents();
