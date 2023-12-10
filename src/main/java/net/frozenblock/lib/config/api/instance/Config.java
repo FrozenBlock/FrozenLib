@@ -25,6 +25,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.config.api.registry.ConfigLoadEvent;
+import net.frozenblock.lib.config.api.registry.ConfigSaveEvent;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -135,31 +137,67 @@ public abstract class Config<T> {
 		return this.synced;
 	}
 
+	/**
+	 * @since 1.5
+	 */
+	protected String formattedName() {
+		return String.format("config %s from %s", this.configClass().getSimpleName(), this.modId());
+	}
+
 	protected abstract void onSave() throws Exception;
 
-	public abstract boolean onLoad() throws Exception;
+	protected abstract boolean onLoad() throws Exception;
 
 	public final void save() {
-		String formatted = String.format("config %s from %s", this.configClass().getSimpleName(), this.modId());
+		String formatted = this.formattedName();
 		FrozenSharedConstants.LOGGER.info("Saving " + formatted);
 		try {
 			this.onSave();
 			if (FrozenBools.isInitialized && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
 				ConfigSyncPacket.trySendC2S(this);
+
+			invokeSaveEvents();
 		} catch (Exception e) {
-			FrozenLogUtils.logError("Error while saving " + formatted, true, e);
+			FrozenLogUtils.logError("Error while saving " + formatted, e);
 		}
 	}
 
 	public final boolean load() {
-		String formatted = String.format("config %s from %s", this.configClass().getSimpleName(), this.modId());
+		String formatted = this.formattedName();
 		FrozenSharedConstants.LOGGER.info("Loading " + formatted);
 		try {
-			return this.onLoad();
+			boolean loadVal = this.onLoad();
+			invokeLoadEvents();
+			return loadVal;
 		} catch (Exception e) {
-			FrozenLogUtils.logError("Error while loading " + formatted, true, e);
+			FrozenLogUtils.logError("Error while loading " + formatted, e);
 			return false;
 		}
 	}
 
+	private void invokeSaveEvents() {
+		String formatted = this.formattedName();
+		try {
+			ConfigSaveEvent.EVENT.invoker().onSave(this);
+
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+				ConfigSaveEvent.Client.EVENT.invoker().onSave(this);
+			}
+		} catch (Exception e) {
+			FrozenLogUtils.logError("Error in config save events for " + formatted, e);
+		}
+	}
+
+	private void invokeLoadEvents() {
+		String formatted = this.formattedName();
+		try {
+			ConfigLoadEvent.EVENT.invoker().onLoad(this);
+
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+				ConfigLoadEvent.Client.EVENT.invoker().onLoad(this);
+			}
+		} catch (Exception e) {
+			FrozenLogUtils.logError("Error in config load events for " + formatted, e);
+		}
+	}
 }
