@@ -27,7 +27,6 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
@@ -149,10 +148,7 @@ public record ConfigSyncPacket<T>(
 
 	@Environment(EnvType.CLIENT)
 	public static boolean notConnected() {
-		Object gameInstance = FabricLoader.getInstance().getGameInstance();
-		if (gameInstance == null) return true;
-
-		Minecraft minecraft = (Minecraft) gameInstance;
+		Minecraft minecraft = Minecraft.getInstance();
 		ClientPacketListener listener = minecraft.getConnection();
 		if (listener == null) return true;
 
