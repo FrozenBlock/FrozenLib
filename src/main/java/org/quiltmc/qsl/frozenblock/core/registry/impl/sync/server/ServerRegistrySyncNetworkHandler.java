@@ -122,7 +122,7 @@ public final class ServerRegistrySyncNetworkHandler implements ServerGamePacketL
 		((DelayedPacketsHolder) this.player).frozenLib$setPacketList(this.delayedPackets);
 
 		ServerRegistrySync.sendHelloPacket(connection);
-		connection.send(new ServerboundPingRequestPacket(HELLO_PING));
+		connection.send(new ClientboundPingPacket(HELLO_PING));
 	}
 
 	@SuppressWarnings("deprecation")
