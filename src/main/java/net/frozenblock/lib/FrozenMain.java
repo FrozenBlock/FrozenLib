@@ -92,6 +92,7 @@ public final class FrozenMain implements ModInitializer {
 
 		FrozenNetworking.registerNetworking();
 
+		ModIntegrations.initializePreFreeze();
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (!allRegistries) return;
 			ModIntegrations.initialize();
