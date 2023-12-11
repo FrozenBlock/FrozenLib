@@ -6,13 +6,12 @@
   ],
   "version": "${version}",
   "name": "FrozenLib",
-  "description": "A library that contains many tools for modders. Includes advanced math operations, noise sampling, animation tools, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, and much more! Provides a Fabric implementation of QuiltMC's DataFixerUpper API.",
+  "description": "A library that contains many tools for modders. Includes advanced math operations, noise sampling, animation tools, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, syncable configs, and much more! Provides a Fabric implementation of QuiltMC's DataFixerUpper API.",
   "authors": [
-	"FrozenBlock"
+    "Treetrain1",
+    "Luna"
   ],
   "contributors": [
-    "Treetrain1",
-    "Luna",
     "Liukrast",
     "Merp",
     "Xfrtrex",
@@ -36,9 +35,6 @@
     "server": [
       "net.frozenblock.lib.FrozenServer"
     ],
-    "preLaunch": [
-      "net.frozenblock.lib.FrozenPreLaunch"
-    ],
     "modmenu": [
       "net.frozenblock.lib.config.frozenlib_config.gui.ModMenuIntegration"
     ],
@@ -49,6 +45,7 @@
   "mixins": [
     "mixin/frozenlib.advancement.mixins.json",
     "mixin/frozenlib.axe.mixins.json",
+    "mixin/frozenlib.clothconfig.mixins.json",
     "mixin/frozenlib.core.mixins.json",
     "mixin/frozenlib.entity.mixins.json",
     "mixin/frozenlib.event.mixins.json",
@@ -111,14 +108,14 @@
         "net/frozenblock/lib/worldgen/biome/api/FrozenBiomeSourceAccess"
       ]
     },
-	"modmenu": {
-    "links": {
-      "modmenu.discord": "https://discord.gg/EpkBWm844s"
-    },
-    "badges": [
-      "library",
-      "frozenblock"
-    ]
-  }
+    "modmenu": {
+      "links": {
+        "modmenu.discord": "https://discord.gg/frozenblock-modding-oasis-780746010614956112"
+      },
+      "badges": [
+        "library",
+        "frozenblock"
+      ]
+    }
   }
 }

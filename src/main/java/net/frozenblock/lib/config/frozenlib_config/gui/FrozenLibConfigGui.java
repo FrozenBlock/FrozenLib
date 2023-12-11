@@ -23,57 +23,88 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibConfigGui {
 
-	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
+	private static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
 		var config = FrozenLibConfig.get(true);
+		var modifiedConfig = FrozenLibConfig.getWithSync();
+		Config<?> configInstance = FrozenLibConfig.INSTANCE;
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
-		category.setBackground(FrozenMain.id("config.png"));
+		category.setBackground(FrozenSharedConstants.id("config.png"));
 
-		var useWindOnNonFrozenServers = category.addEntry(entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), config.useWindOnNonFrozenServers)
-			.setDefaultValue(defaultConfig.useWindOnNonFrozenServers)
-			.setSaveConsumer(newValue -> config.useWindOnNonFrozenServers = newValue)
-			.setTooltip(tooltip("use_wind_on_non_frozenlib_servers"))
-			.build()
+		var useWindOnNonFrozenServers = category.addEntry(
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), modifiedConfig.useWindOnNonFrozenServers)
+					.setDefaultValue(defaultConfig.useWindOnNonFrozenServers)
+					.setSaveConsumer(newValue -> config.useWindOnNonFrozenServers = newValue)
+					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers"))
+					.build(),
+					config.getClass(),
+					"useWindOnNonFrozenServers",
+					configInstance
+				)
 		);
 
-		var saveItemCooldowns = category.addEntry(entryBuilder.startBooleanToggle(text("save_item_cooldowns"), config.saveItemCooldowns)
-			.setDefaultValue(defaultConfig.saveItemCooldowns)
-			.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
-			.setTooltip(tooltip("save_item_cooldowns"))
-			.build()
+		var saveItemCooldowns = category.addEntry(
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startBooleanToggle(text("save_item_cooldowns"), modifiedConfig.saveItemCooldowns)
+					.setDefaultValue(defaultConfig.saveItemCooldowns)
+					.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
+					.setTooltip(tooltip("save_item_cooldowns"))
+					.build(),
+					config.getClass(),
+					"saveItemCooldowns",
+					configInstance
+				)
 		);
 
-		var removeExperimentalWarning = category.addEntry(entryBuilder.startBooleanToggle(text("remove_experimental_warning"), config.removeExperimentalWarning)
-			.setDefaultValue(defaultConfig.removeExperimentalWarning)
-			.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
-			.setTooltip(tooltip("remove_experimental_warning"))
-			.build()
+		var removeExperimentalWarning = category.addEntry(
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startBooleanToggle(text("remove_experimental_warning"), modifiedConfig.removeExperimentalWarning)
+					.setDefaultValue(defaultConfig.removeExperimentalWarning)
+					.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
+					.setTooltip(tooltip("remove_experimental_warning"))
+					.build(),
+					config.getClass(),
+					"removeExperimentalWarning",
+					configInstance
+				)
 		);
 
-		var wardenSpawnTrackerCommand = category.addEntry(entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), config.wardenSpawnTrackerCommand)
-			.setDefaultValue(defaultConfig.wardenSpawnTrackerCommand)
-			.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
-			.setTooltip(tooltip("warden_spawn_tracker_command"))
-			.build()
+		var wardenSpawnTrackerCommand = category.addEntry(
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), modifiedConfig.wardenSpawnTrackerCommand)
+					.setDefaultValue(defaultConfig.wardenSpawnTrackerCommand)
+					.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
+					.setTooltip(tooltip("warden_spawn_tracker_command"))
+					.build(),
+					config.getClass(),
+					"wardenSpawnTrackerCommand",
+					configInstance
+				)
 		);
 
-
-		var disabledDataFixTypes = entryBuilder.startStrList(text("disabled_datafix_types"), dataFixer.disabledDataFixTypes)
-			.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
-			.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)
-			.setTooltip(tooltip("disabled_datafix_types"))
-			.requireRestart()
-			.build();
+		var disabledDataFixTypes = FrozenClothConfig.syncedEntry(
+			entryBuilder.startStrList(text("disabled_datafix_types"), modifiedConfig.dataFixer.disabledDataFixTypes)
+				.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
+				.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)
+				.setTooltip(tooltip("disabled_datafix_types"))
+				.requireRestart()
+				.build(),
+			dataFixer.getClass(),
+			"disabledDataFixTypes",
+			configInstance
+		);
 
 		var datafixerCategory = FrozenClothConfig.createSubCategory(entryBuilder, category, text("datafixer"),
 			false,

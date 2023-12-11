@@ -19,7 +19,7 @@
 package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.worldgen.feature.api.features.config.PillarFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -28,14 +28,14 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
-public class DownwardsPillarFeature extends Feature<PillarFeatureConfig> {
+public class UpwardsColumnFeature extends Feature<ColumnFeatureConfig> {
 
-    public DownwardsPillarFeature(Codec<PillarFeatureConfig> codec) {
+    public UpwardsColumnFeature(Codec<ColumnFeatureConfig> codec) {
         super(codec);
     }
 
 	@Override
-    public boolean place(@NotNull FeaturePlaceContext<PillarFeatureConfig> context) {
+    public boolean place(@NotNull FeaturePlaceContext<ColumnFeatureConfig> context) {
         boolean bl = false;
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
@@ -44,11 +44,11 @@ public class DownwardsPillarFeature extends Feature<PillarFeatureConfig> {
         int bx = blockPos.getX();
         int bz = blockPos.getZ();
         int by = blockPos.getY();
-        int height = -context.config().height().sample(random);
-        for (int y = 0; y > height; y--) {
-            if (context.config().replaceable().contains(level.getBlockState(mutable).getBlockHolder()) || level.getBlockState(mutable).isAir() || level.getBlockState(mutable).getFluidState() != Fluids.EMPTY.defaultFluidState()) {
+        int height = context.config().height().sample(random);
+        for (int y = 0; y < height; y++) {
+            if (context.config().replaceableBlocks().contains(level.getBlockState(mutable).getBlockHolder()) || level.getBlockState(mutable).isAir() || level.getBlockState(mutable).getFluidState() != Fluids.EMPTY.defaultFluidState()) {
                 bl = true;
-                level.setBlock(mutable, context.config().columnBlock(), 3);
+                level.setBlock(mutable, context.config().state(), 3);
                 mutable.set(bx, by + y, bz);
             } else {
                 mutable.set(bx, by + y, bz);

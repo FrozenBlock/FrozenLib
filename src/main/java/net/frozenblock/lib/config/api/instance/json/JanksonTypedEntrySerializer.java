@@ -23,16 +23,18 @@ import blue.endless.jankson.api.DeserializationException;
 import blue.endless.jankson.api.DeserializerFunction;
 import blue.endless.jankson.api.Marshaller;
 import com.google.gson.JsonParseException;
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.DataResult;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marshaller, JsonElement>, DeserializerFunction<JsonElement, TypedEntry> {
 
@@ -46,19 +48,18 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 	 * Serializes a {@link TypedEntry} to a {@link JsonElement}.
 	 */
 	@Override
+	@SuppressWarnings("unchecked")
 	public JsonElement apply(TypedEntry src, Marshaller marshaller) {
 		if (src != null) {
 			var type = src.type();
-			if (type != null) {
-				if (Objects.equals(type.modId(), this.modId)) {
-					var codec = type.codec();
-					if (codec != null) {
-						var encoded = codec.encodeStart(JanksonOps.INSTANCE, src.value());
-						if (encoded != null && encoded.error().isEmpty()) {
-							var optional = encoded.result();
-							if (optional.isPresent()) {
-								return (JsonElement) optional.get();
-							}
+			if (type != null && Objects.equals(type.modId(), this.modId)) {
+				var codec = type.codec();
+				if (codec != null) {
+					var encoded = codec.encodeStart(JanksonOps.INSTANCE, src.value());
+					if (encoded != null && encoded.error().isEmpty()) {
+						var optional = encoded.result();
+						if (optional.isPresent()) {
+							return (JsonElement) optional.get();
 						}
 					}
 				}
@@ -80,8 +81,9 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 		throw new DeserializationException("Failed to deserialize typed entry " + json);
 	}
 
+	@Nullable
 	@SuppressWarnings("unchecked")
-	private <T> TypedEntry<T> getFromRegistry(JsonElement json, Collection<TypedEntryType<?>> registry) throws ClassCastException {
+	private <T> TypedEntry<T> getFromRegistry(JsonElement json, @NotNull Collection<TypedEntryType<?>> registry) throws ClassCastException {
 		for (TypedEntryType<?> entryType : registry) {
 			TypedEntryType<T> newType = (TypedEntryType<T>) entryType;
 			TypedEntry<T> entry = getFromType(json, newType);
@@ -92,7 +94,8 @@ public class JanksonTypedEntrySerializer implements BiFunction<TypedEntry, Marsh
 		return null;
 	}
 
-	private <T> TypedEntry<T> getFromType(JsonElement json, TypedEntryType<T> entryType) throws ClassCastException {
+	@Nullable
+	private <T> TypedEntry<T> getFromType(JsonElement json, @NotNull TypedEntryType<T> entryType) throws ClassCastException {
 		if (entryType.modId().equals(modId)) {
 			var codec = entryType.codec();
 			DataResult<Pair<T, JsonElement>> result = codec.decode(JanksonOps.INSTANCE, json);

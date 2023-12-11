@@ -19,15 +19,11 @@
 package net.frozenblock.lib.config.api.instance.json;
 
 import blue.endless.jankson.Jankson;
-import blue.endless.jankson.api.SyntaxError;
+import com.mojang.datafixers.DataFixer;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import com.mojang.datafixers.DataFixer;
-import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigSerialization;
 import org.jetbrains.annotations.Nullable;
@@ -106,9 +102,9 @@ public class JsonConfig<T> extends Config<T> {
 	@Override
 	public void onSave() throws Exception {
 		Files.createDirectories(this.path().getParent());
-		BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-		writer.write(this.jankson.toJson(this.instance()).toJson(this.type.getGrammar()));
-		writer.close();
+		try (BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+			writer.write(this.jankson.toJson(this.instance()).toJson(this.type.getGrammar()));
+		}
 	}
 
 	@Override

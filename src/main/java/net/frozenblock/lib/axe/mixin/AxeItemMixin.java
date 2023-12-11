@@ -54,9 +54,8 @@ public class AxeItemMixin {
 					}
 					CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer)player, blockPos, context.getItemInHand());
 					cir.setReturnValue(InteractionResult.SUCCESS);
-				} else {
-					cir.setReturnValue(InteractionResult.sidedSuccess(true));
 				}
+				cir.setReturnValue(InteractionResult.sidedSuccess(true));
 			}
 		}
 	}

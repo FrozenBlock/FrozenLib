@@ -28,14 +28,14 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public record ColumnWithDiskFeatureConfig(BlockState columnBlock, IntProvider radius, IntProvider height, IntProvider height2, HolderSet<Block> replaceable, HolderSet<Block> diskBlocks) implements FeatureConfiguration {
+public record ColumnWithDiskFeatureConfig(BlockState state, IntProvider radius, IntProvider height, IntProvider additionalHeight, HolderSet<Block> replaceableBlocks, HolderSet<Block> diskBlocks) implements FeatureConfiguration {
 	public static final Codec<ColumnWithDiskFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
 		instance.group(
-			BlockState.CODEC.fieldOf("columnBlock").forGetter((config) -> config.columnBlock),
+			BlockState.CODEC.fieldOf("state").forGetter((config) -> config.state),
 			IntProvider.NON_NEGATIVE_CODEC.fieldOf("radius").forGetter((config) -> config.radius),
 			IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter((config) -> config.height),
-			IntProvider.NON_NEGATIVE_CODEC.fieldOf("height2").forGetter((config) -> config.height2),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter((config) -> config.replaceable),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("diskBlocks").forGetter((config) -> config.diskBlocks)
+			IntProvider.NON_NEGATIVE_CODEC.fieldOf("additional_height").forGetter((config) -> config.additionalHeight),
+			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter((config) -> config.replaceableBlocks),
+			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("disk_blocks").forGetter((config) -> config.diskBlocks)
 		).apply(instance, ColumnWithDiskFeatureConfig::new));
 }

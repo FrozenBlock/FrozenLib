@@ -27,8 +27,8 @@ import java.util.Objects;
 import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -74,7 +74,7 @@ public class SpottingIconManager {
 			byteBuf.writeFloat(endFade);
 			byteBuf.writeResourceLocation(restrictionID);
 			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
-				ServerPlayNetworking.send(player, FrozenMain.SPOTTING_ICON_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, FrozenNetworking.SPOTTING_ICON_PACKET, byteBuf);
 			}
 		} else {
 			this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.texture());
@@ -89,7 +89,7 @@ public class SpottingIconManager {
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 			byteBuf.writeVarInt(this.entity.getId());
 			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
-				ServerPlayNetworking.send(player, FrozenMain.SPOTTING_ICON_REMOVE_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, FrozenNetworking.SPOTTING_ICON_REMOVE_PACKET, byteBuf);
 			}
 		}
 	}
@@ -102,7 +102,7 @@ public class SpottingIconManager {
 			byteBuf.writeFloat(this.icon.startFadeDist);
 			byteBuf.writeFloat(this.icon.endFadeDist);
 			byteBuf.writeResourceLocation(this.icon.restrictionID);
-			ServerPlayNetworking.send(player, FrozenMain.SPOTTING_ICON_PACKET, byteBuf);
+			ServerPlayNetworking.send(player, FrozenNetworking.SPOTTING_ICON_PACKET, byteBuf);
 		}
 	}
 

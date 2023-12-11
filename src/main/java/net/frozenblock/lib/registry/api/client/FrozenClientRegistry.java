@@ -21,14 +21,14 @@ package net.frozenblock.lib.registry.api.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.entity.api.rendering.EntityTextureOverride;
 import net.minecraft.core.MappedRegistry;
 
 @Environment(EnvType.CLIENT)
 public class FrozenClientRegistry {
 
-	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenMain.id("entity_texture_override"))
+	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenSharedConstants.id("entity_texture_override"))
 			.buildAndRegister();
 
 	public static void initRegistry() {

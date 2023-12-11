@@ -61,6 +61,18 @@ public final class ModIntegrations {
         return FrozenRegistry.MOD_INTEGRATION.stream().toList();
     }
 
+	/**
+	 * Runs prior to registries freezing in order to allow for the registering of things.
+	 */
+	public static void initializePreFreeze() {
+		for (var integration : FrozenRegistry.MOD_INTEGRATION) {
+			integration.getIntegration().initPreFreeze();
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+				integration.getIntegration().clientInitPreFreeze();
+			}
+		}
+	}
+
     /**
      * Initialize all mod integrations.
      */

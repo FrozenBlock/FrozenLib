@@ -19,8 +19,14 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.Bootstrap;
 
 public class FrozenBools {
+
+	/**
+	 * This is set to true when {@link Bootstrap#bootStrap()} is finished.
+	 */
+	public static boolean isInitialized;
 
     public static boolean useNewDripstoneLiquid = false;
 

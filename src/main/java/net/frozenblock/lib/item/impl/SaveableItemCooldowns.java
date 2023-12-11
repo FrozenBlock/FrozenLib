@@ -26,9 +26,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -84,7 +84,7 @@ public class SaveableItemCooldowns {
 
 			FriendlyByteBuf tickCountByteBuf = new FriendlyByteBuf(Unpooled.buffer());
 			tickCountByteBuf.writeInt(tickCount);
-			ServerPlayNetworking.send(player, FrozenMain.COOLDOWN_TICK_COUNT_PACKET, tickCountByteBuf);
+			ServerPlayNetworking.send(player, FrozenNetworking.COOLDOWN_TICK_COUNT_PACKET, tickCountByteBuf);
 
 			for (SaveableCooldownInstance saveableCooldownInstance : saveableCooldownInstances) {
 				int cooldownLeft = saveableCooldownInstance.cooldownLeft();
@@ -98,7 +98,7 @@ public class SaveableItemCooldowns {
 					byteBuf.writeId(BuiltInRegistries.ITEM, item);
 					byteBuf.writeVarInt(startTime);
 					byteBuf.writeVarInt(endTime);
-					ServerPlayNetworking.send(player, FrozenMain.FORCED_COOLDOWN_PACKET, byteBuf);
+					ServerPlayNetworking.send(player, FrozenNetworking.FORCED_COOLDOWN_PACKET, byteBuf);
 				}
 			}
 		}

@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.item.mixin;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.item.impl.SaveableItemCooldowns;
@@ -60,7 +59,7 @@ public class ServerPlayerMixin {
 	}
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))
-	public void wilderWild$tick(CallbackInfo info) {
+	public void tick(CallbackInfo info) {
 		if (this.frozenLib$savedItemCooldowns.isPresent() && this.connection != null && this.connection.isAcceptingMessages() && !this.isChangingDimension) {
 			SaveableItemCooldowns.setCooldowns(this.frozenLib$savedItemCooldowns.get(), ServerPlayer.class.cast(this));
 			this.frozenLib$savedItemCooldowns = Optional.empty();

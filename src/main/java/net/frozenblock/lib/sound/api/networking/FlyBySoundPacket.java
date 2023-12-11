@@ -23,7 +23,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -32,11 +32,18 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
-public record FlyBySoundPacket(int id, SoundEvent sound, SoundSource category, float volume, float pitch) implements FabricPacket {
-	public static final PacketType<FlyBySoundPacket> PACKET_TYPE = PacketType.create(FrozenMain.FLYBY_SOUND_PACKET, FlyBySoundPacket::new);
+public record FlyBySoundPacket(
+	int id,
+	SoundEvent sound,
+	SoundSource category,
+	float volume,
+	float pitch
+) implements FabricPacket {
+	public static final PacketType<FlyBySoundPacket> PACKET_TYPE = PacketType.create(FrozenNetworking.FLYBY_SOUND_PACKET, FlyBySoundPacket::new);
 
-	public FlyBySoundPacket(FriendlyByteBuf buf) {
+	public FlyBySoundPacket(@NotNull FriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
 			buf.readById(BuiltInRegistries.SOUND_EVENT),
@@ -47,7 +54,7 @@ public record FlyBySoundPacket(int id, SoundEvent sound, SoundSource category, f
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buf) {
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.id);
 		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.sound);
 		buf.writeEnum(this.category);
@@ -56,7 +63,7 @@ public record FlyBySoundPacket(int id, SoundEvent sound, SoundSource category, f
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void receive(FlyBySoundPacket packet, LocalPlayer player, PacketSender responseSender) {
+	public static void receive(@NotNull FlyBySoundPacket packet, @NotNull LocalPlayer player, PacketSender responseSender) {
 		ClientLevel level = player.clientLevel;
 		Entity entity = level.getEntity(packet.id());
 		if (entity != null) {

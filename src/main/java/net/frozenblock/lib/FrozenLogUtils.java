@@ -25,21 +25,41 @@ import org.jetbrains.annotations.Nullable;
 public final class FrozenLogUtils {
 	private FrozenLogUtils() {}
 
-	public static void log(String string, boolean should) {
+	public static void log(Object string, boolean should) {
 		if (should) {
-			FrozenSharedConstants.LOGGER.info(string);
+			FrozenSharedConstants.LOGGER.info(string.toString());
 		}
 	}
 
-	public static void warn(String string, boolean should) {
+	public static void log(Object string) {
+		log(string, true);
+	}
+
+	public static void logWarning(Object string, boolean should) {
 		if (should) {
-			FrozenSharedConstants.LOGGER.warn(string);
+			FrozenSharedConstants.LOGGER.warn(string.toString());
 		}
 	}
 
-	public static void error(String string, boolean should, @Nullable Throwable throwable) {
+	public static void logWarning(Object string) {
+		logWarning(string, true);
+	}
+
+	public static void logError(Object string, boolean should, @Nullable Throwable throwable) {
 		if (should) {
-			FrozenSharedConstants.LOGGER.error(string, throwable);
+			FrozenSharedConstants.LOGGER.error(string.toString(), throwable);
 		}
+	}
+
+	public static void logError(Object string, boolean should) {
+		logError(string, should, null);
+	}
+
+	public static void logError(Object string, @Nullable Throwable throwable) {
+		logError(string, true, throwable);
+	}
+
+	public static void logError(Object string) {
+		logError(string, true, null);
 	}
 }
