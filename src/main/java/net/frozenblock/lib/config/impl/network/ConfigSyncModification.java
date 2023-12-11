@@ -22,11 +22,13 @@ import java.lang.reflect.Field;
 import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.config.api.annotation.LockWhenSynced;
 import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.network.ConfigSyncData;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -40,8 +42,12 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 	public void accept(T destination) {
 		try {
 			ConfigSyncData<T> syncData = dataSupplier.get(config);
-			if (syncData == null) return;
+			if (syncData == null || !FrozenNetworking.connectedToServer()) {
+				FrozenLogUtils.logError("Attempted to sync config " + config.path() + " for mod " + config.modId() + " outside a server!");
+				return;
+			}
 			T source = syncData.instance();
+			config.setSynced(true);
 			ConfigModification.copyInto(source, destination, true);
 		} catch (NullPointerException ignored) {}
 	}
