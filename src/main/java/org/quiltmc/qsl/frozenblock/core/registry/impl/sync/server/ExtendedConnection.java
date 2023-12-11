@@ -18,13 +18,14 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 
-import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
+
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 
 public interface ExtendedConnection {
 	void frozenLib$setModProtocol(String id, int version);
 	int frozenLib$getModProtocol(String id);
 
-	static ExtendedConnection from(ServerConfigurationPacketListenerImpl handler) {
+	static ExtendedConnection from(ServerGamePacketListenerImpl handler) {
 		return (ExtendedConnection) handler.connection;
 	}
 }

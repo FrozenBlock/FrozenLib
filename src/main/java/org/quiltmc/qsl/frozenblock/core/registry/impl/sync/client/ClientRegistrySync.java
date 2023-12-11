@@ -24,11 +24,11 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.util.ArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentContents;
@@ -66,13 +66,13 @@ public final class ClientRegistrySync {
 	private static boolean mustDisconnect;
 
 	public static void registerHandlers() {
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.Handshake.PACKET_TYPE.getId(), ClientRegistrySync::handleHelloPacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.End.PACKET_TYPE.getId(), ClientRegistrySync::handleEndPacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.PACKET_TYPE.getId(), ClientRegistrySync::handleErrorStylePacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.PACKET_TYPE.getId(), ClientRegistrySync::handleModProtocol);
+		ClientPlayNetworking.registerGlobalReceiver(ServerPackets.Handshake.PACKET_TYPE.getId(), ClientRegistrySync::handleHelloPacket);
+		ClientPlayNetworking.registerGlobalReceiver(ServerPackets.End.PACKET_TYPE.getId(), ClientRegistrySync::handleEndPacket);
+		ClientPlayNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.PACKET_TYPE.getId(), ClientRegistrySync::handleErrorStylePacket);
+		ClientPlayNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.PACKET_TYPE.getId(), ClientRegistrySync::handleModProtocol);
 	}
 
-	private static void handleModProtocol(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+	private static void handleModProtocol(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
 		var modProtocol = new ServerPackets.ModProtocol(buf);
 		var prioritizedId = modProtocol.prioritizedId();
 		var protocols = modProtocol.protocols();
@@ -111,7 +111,7 @@ public final class ClientRegistrySync {
 		}
 	}
 
-	private static void handleEndPacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+	private static void handleEndPacket(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
 		syncVersion = -1;
 
 		if (mustDisconnect) {
@@ -128,7 +128,7 @@ public final class ClientRegistrySync {
 				entry.append(errorStyleFooter);
 			}
 
-			handler.connection.disconnect(entry);
+			handler.getConnection().disconnect(entry);
 
 			LOGGER.warn(builder.asString());
 		} else {
@@ -160,7 +160,7 @@ public final class ClientRegistrySync {
 		sender.sendPacket(new ClientPackets.ModProtocol(values));
 	}
 
-	private static void handleErrorStylePacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+	private static void handleErrorStylePacket(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
 		var errorStyle = new ServerPackets.ErrorStyle(buf);
 
 		errorStyleHeader = errorStyle.errorHeader();
@@ -168,7 +168,7 @@ public final class ClientRegistrySync {
 		showErrorDetails = errorStyle.showError();
 	}
 
-	private static void handleHelloPacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+	private static void handleHelloPacket(Minecraft client, ClientPacketListener handler, FriendlyByteBuf buf, PacketSender sender) {
 		syncVersion = ProtocolVersions.getHighestSupportedLocal(new ServerPackets.Handshake(buf).supportedVersions());
 
 		sender.sendPacket(new ClientPackets.Handshake(syncVersion));

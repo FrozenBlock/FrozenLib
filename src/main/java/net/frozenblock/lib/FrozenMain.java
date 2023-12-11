@@ -57,7 +57,6 @@ public final class FrozenMain implements ModInitializer {
 
 		ServerFreezer.onInitialize();
 		ModProtocol.loadVersions();
-		ServerRegistrySync.registerHandlers();
 
 		// CONTINUE FROZENLIB INIT
 

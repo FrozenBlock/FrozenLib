@@ -20,7 +20,7 @@ package net.frozenblock.lib.networking;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
@@ -77,7 +77,7 @@ public final class FrozenClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, player, responseSender) ->
 			ConfigSyncPacket.receive(packet, null)
 		);
-		ClientConfigurationConnectionEvents.DISCONNECT.register(((handler, client) -> {
+		ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
 			for (Config<?> config : ConfigRegistry.getAllConfigs()) {
 				ConfigRegistry.setSyncData(config, null);
 				config.setSynced(false);

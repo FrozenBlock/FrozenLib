@@ -20,14 +20,17 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.Connection;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
@@ -45,35 +48,6 @@ public final class ServerRegistrySync {
 	public static boolean showErrorDetails = true;
 
 	public static IntList SERVER_SUPPORTED_PROTOCOL = new IntArrayList(ProtocolVersions.IMPL_SUPPORTED_VERSIONS);
-
-	public static void registerHandlers() {
-		ServerConfigurationConnectionEvents.CONFIGURE.register(((handler, server) -> {
-			// You must check to see if the client can handle your config task
-			if (
-				ServerConfigurationNetworking.canSend(handler, ServerPackets.Handshake.PACKET_TYPE)
-				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ErrorStyle.PACKET_TYPE)
-				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ModProtocol.PACKET_TYPE)
-				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.End.PACKET_TYPE)
-			) {
-				handler.addTask(new QuiltSyncTask(handler, handler.connection));
-			}
-		}));
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE.getId(), ServerRegistrySync::handleHandshake);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE.getId(), ServerRegistrySync::handleModProtocol);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE.getId(), ServerRegistrySync::handleEnd);
-	}
-
-	public static void handleHandshake(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		((QuiltSyncTask) handler.currentTask).handleHandshake(new ClientPackets.Handshake(buf));
-	}
-
-	public static void handleModProtocol(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		((QuiltSyncTask) handler.currentTask).handleModProtocol(new ClientPackets.ModProtocol(buf), sender);
-	}
-
-	public static void handleEnd(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		((QuiltSyncTask) handler.currentTask).handleEnd(new ClientPackets.End(buf));
-	}
 
 	private static Component text(String string) {
 		if (string == null || string.isEmpty()) {
@@ -112,25 +86,31 @@ public final class ServerRegistrySync {
 		return false;
 	}
 
-	public static void sendSyncPackets(PacketSender sender, int syncVersion) {
+	public static void sendSyncPackets(Connection sender, ServerPlayer player, int syncVersion) {
 		sendErrorStylePacket(sender);
 
 		if (ModProtocol.enabled) {
 			sendModProtocol(sender);
 		}
 
-		sender.sendPacket(new ServerPackets.End());
+		sender.send(ServerPlayNetworking.createS2CPacket(ServerPackets.End.PACKET_TYPE.getId(), PacketByteBufs.empty()));
 	}
 
-	public static void sendHelloPacket(PacketSender sender) {
-		sender.sendPacket(new ServerPackets.Handshake(SERVER_SUPPORTED_PROTOCOL));
+	public static void sendHelloPacket(Connection sender) {
+		var buf = PacketByteBufs.create();
+		new ServerPackets.Handshake(SERVER_SUPPORTED_PROTOCOL).write(buf);
+		sender.send(ServerPlayNetworking.createS2CPacket(ServerPackets.Handshake.PACKET_TYPE.getId(), buf));
 	}
 
-	public static void sendModProtocol(PacketSender sender) {
-		sender.sendPacket(new ServerPackets.ModProtocol(ModProtocol.prioritizedId, ModProtocol.ALL));
+	public static void sendModProtocol(Connection sender) {
+		var buf = PacketByteBufs.create();
+		new ServerPackets.ModProtocol(ModProtocol.prioritizedId, ModProtocol.ALL).write(buf);
+		sender.send(ServerPlayNetworking.createS2CPacket(ServerPackets.ModProtocol.PACKET_TYPE.getId(), buf));
 	}
 
-	private static void sendErrorStylePacket(PacketSender sender) {
-		sender.sendPacket(new ServerPackets.ErrorStyle(errorStyleHeader, errorStyleFooter, showErrorDetails));
+	private static void sendErrorStylePacket(Connection sender) {
+		var buf = PacketByteBufs.create();
+		new ServerPackets.ErrorStyle(errorStyleHeader, errorStyleFooter, showErrorDetails).write(buf);
+		sender.send(ServerPlayNetworking.createS2CPacket(ServerPackets.ErrorStyle.PACKET_TYPE.getId(), buf));
 	}
 }

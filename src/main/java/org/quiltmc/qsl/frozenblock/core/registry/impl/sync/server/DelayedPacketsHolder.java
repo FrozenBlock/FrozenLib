@@ -18,6 +18,13 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 
-public interface SyncTaskHolder {
-	QuiltSyncTask frozenLib$getQuiltSyncTask();
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ServerboundCustomPayloadPacket;
+import org.jetbrains.annotations.ApiStatus;
+import java.util.List;
+
+@ApiStatus.Internal
+public interface DelayedPacketsHolder {
+	void frozenLib$setPacketList(List<ServerboundCustomPayloadPacket> packetList);
+	List<Packet<?>> frozenLib$getPacketList();
 }

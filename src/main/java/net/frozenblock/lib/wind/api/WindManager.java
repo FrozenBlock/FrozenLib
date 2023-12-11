@@ -31,6 +31,7 @@ import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;

@@ -87,7 +87,8 @@ public final class FrozenNetworking {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
 			return false;
 
-		return Minecraft.getInstance().isLocalPlayer(player.getGameProfile().getId());
+		if (Minecraft.getInstance().player == null) return false;
+		return player.getGameProfile().getId().equals(Minecraft.getInstance().player.getGameProfile().getId());
 	}
 
 	public static boolean connectedToIntegratedServer() {
