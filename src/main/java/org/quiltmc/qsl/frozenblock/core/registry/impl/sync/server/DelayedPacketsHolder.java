@@ -26,5 +26,5 @@ import java.util.List;
 @ApiStatus.Internal
 public interface DelayedPacketsHolder {
 	void frozenLib$setPacketList(List<ServerboundCustomPayloadPacket> packetList);
-	List<Packet<?>> frozenLib$getPacketList();
+	List<ServerboundCustomPayloadPacket> frozenLib$getPacketList();
 }

@@ -7,8 +7,10 @@
     "BuiltInRegistriesMixin",
     "ConnectionMixin",
     "MappedRegistryMixin",
+    "PlayerListMixin",
     "RegistryDataLoaderMixin",
     "ServerLoginNetworkHandlerMixin",
+    "ServerPlayerMixin",
     "ServerStatusVersionMixin"
   ],
   "injectors": {
