@@ -46,7 +46,7 @@ public class NoisePlantFeature extends Feature<PathFeatureConfig> {
         int radiusSquared = config.radius() * config.radius();
         RandomSource random = level.getRandom();
         ImprovedNoise sampler = config.noise() == 1 ? EasyNoiseSampler.perlinLocal : config.noise() == 2 ? EasyNoiseSampler.perlinChecked : config.noise() == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-        float chance = config.chance();
+        float chance = config.placementChance();
 		int bx = blockPos.getX();
         int bz = blockPos.getZ();
         BlockPos.MutableBlockPos mutable = blockPos.mutable();
@@ -56,10 +56,10 @@ public class NoisePlantFeature extends Feature<PathFeatureConfig> {
                 double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
                 if (distance < radiusSquared) {
                     mutable.set(x, level.getHeight(Types.OCEAN_FLOOR, x, z), z);
-                    double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier(), config.multiplyY(), config.useY());
-                    if (sample > config.minThresh() && sample < config.maxThresh() && level.getBlockState(mutable).is(config.replaceable()) && level.getBlockState(mutable.below()).is(BlockTags.DIRT) && random.nextFloat() <= chance) {
+                    double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
+                    if (sample > config.minThreshold() && sample < config.maxThreshold() && level.getBlockState(mutable).is(config.replaceableBlocks()) && level.getBlockState(mutable.below()).is(BlockTags.DIRT) && random.nextFloat() <= chance) {
                         generated = true;
-                        level.setBlock(mutable, config.pathBlock().getState(random, mutable), 3);
+                        level.setBlock(mutable, config.state().getState(random, mutable), 3);
                     }
                 }
             }

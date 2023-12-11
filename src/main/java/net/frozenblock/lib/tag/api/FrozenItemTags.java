@@ -18,10 +18,11 @@
 
 package net.frozenblock.lib.tag.api;
 
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
 
 public final class FrozenItemTags {
 
@@ -33,7 +34,8 @@ public final class FrozenItemTags {
 	public static final TagKey<Item> HEAVY_ITEMS = bind("heavy_items");
 	public static final TagKey<Item> ALWAYS_SAVE_COOLDOWNS = bind("always_save_cooldowns");
 
+	@NotNull
 	private static TagKey<Item> bind(String path) {
-		return TagKey.create(Registries.ITEM, FrozenMain.id(path));
+		return TagKey.create(Registries.ITEM, FrozenSharedConstants.id(path));
 	}
 }

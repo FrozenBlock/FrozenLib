@@ -54,9 +54,9 @@ public class TitleScreenMixin {
 			String namespace = panLocation.getNamespace();
 			String path = panLocation.getPath();
 			for(int i = 0; i < 6; ++i) {
-				//Panorama isn't valid if one of the six images aren't found; move on to next ResourceLocation in the list.
+				//Panorama isn't valid if one of the six images isn't found; move on to the next ResourceLocation in the list.
 				if (Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(namespace, path + "_" + i + ".png")).isEmpty()) {
-					FrozenLogUtils.warn("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", FrozenSharedConstants.UNSTABLE_LOGGING);
+					FrozenLogUtils.logWarning("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", FrozenSharedConstants.UNSTABLE_LOGGING);
 					break;
 				}
 				//Panorama is valid if all six images are found, add to valid panorama list.
@@ -66,12 +66,12 @@ public class TitleScreenMixin {
 			}
 		}
 		if (!frozenLib$validPanoramas.isEmpty()) {
-			//Set panorama from valid list.
+			//Set panorama from a valid list.
 			this.panorama = new PanoramaRenderer(new CubeMap(frozenLib$validPanoramas.get(AdvancedMath.random().nextInt(this.frozenLib$validPanoramas.size()))));
 			//Clear valid list to save a bit on resources.
 			frozenLib$validPanoramas.clear();
 		} else {
-			//Use original panorama in case panorama list is accidentally emptied.
+			//Use the original panorama in case the panorama list is accidentally emptied.
 			this.panorama = new PanoramaRenderer(new CubeMap(new ResourceLocation("textures/gui/title/background/panorama")));
 		}
 	}

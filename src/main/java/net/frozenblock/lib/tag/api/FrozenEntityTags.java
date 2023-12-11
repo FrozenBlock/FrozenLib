@@ -18,10 +18,11 @@
 
 package net.frozenblock.lib.tag.api;
 
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
 
 public final class FrozenEntityTags {
 
@@ -31,7 +32,8 @@ public final class FrozenEntityTags {
 
     public static final TagKey<EntityType<?>> CREEPER_IGNORES = bind("creeper_ignores");
 
+	@NotNull
     private static TagKey<EntityType<?>> bind(String path) {
-        return TagKey.create(Registries.ENTITY_TYPE, FrozenMain.id(path));
+        return TagKey.create(Registries.ENTITY_TYPE, FrozenSharedConstants.id(path));
     }
 }

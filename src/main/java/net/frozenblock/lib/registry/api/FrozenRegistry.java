@@ -21,7 +21,7 @@ package net.frozenblock.lib.registry.api;
 import com.mojang.serialization.Lifecycle;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
@@ -38,14 +38,14 @@ public class FrozenRegistry {
 		throw new UnsupportedOperationException("FrozenRegistry contains only static declarations.");
 	}
 
-	public static final ResourceKey<Registry<ModIntegrationSupplier<?>>> MOD_INTEGRATION_REGISTRY = ResourceKey.createRegistryKey(FrozenMain.id("mod_integration"));
-	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenMain.id("sound_predicate"));
-	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenMain.id("sound_predicate_unsynced"));
-	public static final ResourceKey<Registry<SpottingIconPredicate<?>>> SPOTTING_ICON_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenMain.id("spotting_icon_predicate"));
+	public static final ResourceKey<Registry<ModIntegrationSupplier<?>>> MOD_INTEGRATION_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("mod_integration"));
+	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("sound_predicate"));
+	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("sound_predicate_unsynced"));
+	public static final ResourceKey<Registry<SpottingIconPredicate<?>>> SPOTTING_ICON_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("spotting_icon_predicate"));
 
 
 	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = createSimple(MOD_INTEGRATION_REGISTRY, Lifecycle.stable(), null,
-		registry -> Registry.register(registry, FrozenMain.id("dummy"), new ModIntegrationSupplier<>(() -> new ModIntegration("dummy") {
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new ModIntegrationSupplier<>(() -> new ModIntegration("dummy") {
 			@Override
 			public void init() {}
 			},
@@ -55,15 +55,15 @@ public class FrozenRegistry {
 	);
 
 	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE = createSimple(SOUND_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
-		registry -> Registry.register(registry, FrozenMain.id("dummy"), new SoundPredicate<>(entity -> false))
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(entity -> false))
 	);
 
 	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE_UNSYNCED = createSimple(SOUND_PREDICATE_UNSYNCED_REGISTRY, Lifecycle.stable(), null,
-		registry -> Registry.register(registry, FrozenMain.id("dummy"), new SoundPredicate<>(entity -> false))
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(entity -> false))
 	);
 
 	public static final MappedRegistry<SpottingIconPredicate<?>> SPOTTING_ICON_PREDICATE = createSimple(SPOTTING_ICON_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
-		registry -> Registry.register(registry, FrozenMain.id("dummy"), new SpottingIconPredicate<>(entity -> false))
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SpottingIconPredicate<>(entity -> false))
 	);
 
 	public static HolderLookup.Provider vanillaRegistries() {

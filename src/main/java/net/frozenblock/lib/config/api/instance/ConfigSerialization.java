@@ -24,11 +24,11 @@ import blue.endless.jankson.JsonGrammar;
 import com.mojang.datafixers.DataFixer;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.instance.json.JanksonTypedEntrySerializer;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ConfigSerialization {
-	private ConfigSerialization() {
-	}
+	private ConfigSerialization() {}
 
 	// JANKSON
 
@@ -39,7 +39,7 @@ public class ConfigSerialization {
 		.printUnquotedKeys(true)
 		.build();
 
-	public static Jankson createJankson(Jankson.Builder builder, String modId) {
+	public static Jankson createJankson(@NotNull Jankson.Builder builder, String modId) {
 		JanksonTypedEntrySerializer typedEntrySerializer = new JanksonTypedEntrySerializer(modId);
 		return builder
 			.registerSerializer(TypedEntry.class, typedEntrySerializer)

@@ -23,8 +23,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
-import net.frozenblock.lib.FrozenMain;
-import net.frozenblock.lib.sound.api.FlyBySoundHub;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
@@ -37,6 +36,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 public record MovingRestrictionSoundPacket(
 	int id,
@@ -49,9 +49,9 @@ public record MovingRestrictionSoundPacket(
 	boolean looping
 ) implements FabricPacket {
 
-	public static final PacketType<MovingRestrictionSoundPacket> PACKET_TYPE = PacketType.create(FrozenMain.MOVING_RESTRICTION_SOUND_PACKET, MovingRestrictionSoundPacket::new);
+	public static final PacketType<MovingRestrictionSoundPacket> PACKET_TYPE = PacketType.create(FrozenNetworking.MOVING_RESTRICTION_SOUND_PACKET, MovingRestrictionSoundPacket::new);
 
-	public MovingRestrictionSoundPacket(FriendlyByteBuf buf) {
+	public MovingRestrictionSoundPacket(@NotNull FriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
 			buf.readById(BuiltInRegistries.SOUND_EVENT),
@@ -65,7 +65,7 @@ public record MovingRestrictionSoundPacket(
 	}
 
 	@Override
-	public void write(FriendlyByteBuf buf) {
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.id);
 		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.sound);
 		buf.writeEnum(this.category);
@@ -77,7 +77,7 @@ public record MovingRestrictionSoundPacket(
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static <T extends Entity> void receive(MovingRestrictionSoundPacket packet, LocalPlayer player, PacketSender responseSender) {
+	public static <T extends Entity> void receive(@NotNull MovingRestrictionSoundPacket packet, @NotNull LocalPlayer player, PacketSender responseSender) {
 		ClientLevel level = player.clientLevel;
 		T entity = (T) level.getEntity(packet.id());
 		if (entity != null) {

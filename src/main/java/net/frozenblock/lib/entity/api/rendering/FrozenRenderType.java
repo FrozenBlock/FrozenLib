@@ -23,15 +23,17 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.function.BiFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import org.lwjgl.opengl.GL32C;
+import org.lwjgl.opengl.GL11C;
+import org.lwjgl.opengl.GL20C;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenRenderType {
+	private FrozenRenderType() {}
 
     public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize(
             ((identifier, affectsOutline) -> {
@@ -44,7 +46,7 @@ public final class FrozenRenderType {
                         .setOverlayState(RenderStateShard.OVERLAY)
                         .createCompositeState(affectsOutline);
                 return create(
-                        FrozenMain.string("entity_translucent_emissive_fixed"),
+					FrozenSharedConstants.string("entity_translucent_emissive_fixed"),
                         DefaultVertexFormat.NEW_ENTITY,
                         VertexFormat.Mode.QUADS,
                         256,
@@ -57,7 +59,7 @@ public final class FrozenRenderType {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize(
 			((texture, affectsOutline) -> create(
-					FrozenMain.string("entity_translucent_emissive_always_render"),
+				FrozenSharedConstants.string("entity_translucent_emissive_always_render"),
 					DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
 					VertexFormat.Mode.QUADS,
 					256,
@@ -116,34 +118,34 @@ public final class FrozenRenderType {
 		return DYNAMIC_LIGHT_COLOR;
 	}
 
-	public static RenderStateShard.OutputStateShard STENCIL_SETUP_AND_LEAK = new RenderStateShard.OutputStateShard("stencil_setup_and_leak", () -> {
-		GL32C.glClear(1024);
-		GL32C.glColorMask(false, false, false, false);
-		GL32C.glEnable(2929);
-		GL32C.glDepthMask(true);
-		GL32C.glEnable(2960);
-		GL32C.glDepthMask(false);
-		GL32C.glEnable(34383);
-		GL32C.glDisable(2884);
-		GL32C.glStencilFunc(519, 0, 255);
-		GL32C.glStencilOpSeparate(1029, 7680, 34055, 7680);
-		GL32C.glStencilOpSeparate(1028, 7680, 34056, 7680);
+	public static final RenderStateShard.OutputStateShard STENCIL_SETUP_AND_LEAK = new RenderStateShard.OutputStateShard("stencil_setup_and_leak", () -> {
+		GL11C.glClear(GL11C.GL_STENCIL_BUFFER_BIT);
+		GL11C.glColorMask(false, false, false, false);
+		GL11C.glEnable(GL11C.GL_DEPTH_TEST);
+		GL11C.glDepthMask(true);
+		GL11C.glEnable(GL11C.GL_STENCIL_TEST);
+		GL11C.glDepthMask(false);
+		GL11C.glEnable(34383);
+		GL11C.glDisable(2884);
+		GL11C.glStencilFunc(519, 0, 255);
+		GL20C.glStencilOpSeparate(1029, 7680, 34055, 7680);
+		GL20C.glStencilOpSeparate(1028, 7680, 34056, 7680);
 	}, () -> {
-		GL32C.glDisable(34383);
-		GL32C.glEnable(2884);
-		GL32C.glColorMask(true, true, true, true);
+		GL11C.glDisable(34383);
+		GL11C.glEnable(2884);
+		GL11C.glColorMask(true, true, true, true);
 	});
 
-	public static RenderStateShard.OutputStateShard STENCIL_RENDER_AND_CLEAR = new RenderStateShard.OutputStateShard("stencil_render_and_clear", () -> {
-		GL32C.glStencilFunc(514, 1, 255);
-		GL32C.glDepthFunc(516);
-		GL32C.glCullFace(1028);
-		GL32C.glStencilOpSeparate(1028, 7680, 7680, 7680);
+	public static final RenderStateShard.OutputStateShard STENCIL_RENDER_AND_CLEAR = new RenderStateShard.OutputStateShard("stencil_render_and_clear", () -> {
+		GL11C.glStencilFunc(514, 1, 255);
+		GL11C.glDepthFunc(516);
+		GL11C.glCullFace(1028);
+		GL20C.glStencilOpSeparate(1028, 7680, 7680, 7680);
 	}, () -> {
-		GL32C.glDepthFunc(515);
-		GL32C.glCullFace(1029);
-		GL32C.glDepthMask(true);
-		GL32C.glDisable(2960);
+		GL11C.glDepthFunc(515);
+		GL11C.glCullFace(1029);
+		GL11C.glDepthMask(true);
+		GL11C.glDisable(2960);
 	});
 
 	private static final RenderType DYNAMIC_LIGHT_STENCIL = RenderType.create("dynamic_light_stencil", DefaultVertexFormat.POSITION_COLOR, VertexFormat.Mode.TRIANGLES, 256, RenderType.CompositeState.builder().setShaderState(RenderStateShard.POSITION_COLOR_SHADER).setOutputState(STENCIL_SETUP_AND_LEAK).createCompositeState(false));

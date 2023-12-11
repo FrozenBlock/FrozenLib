@@ -47,12 +47,12 @@ public class NoisePathTagFeature extends Feature<PathTagFeatureConfig> {
         int radiusSquared = config.radius() * config.radius();
         RandomSource random = level.getRandom();
         ImprovedNoise sampler = config.noise() == 1 ? EasyNoiseSampler.perlinLocal : config.noise() == 2 ? EasyNoiseSampler.perlinChecked : config.noise() == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-        float chance = config.chance();
+        float chance = config.placementChance();
 		int bx = blockPos.getX();
 		int by = blockPos.getY();
         int bz = blockPos.getZ();
         BlockPos.MutableBlockPos mutable = blockPos.mutable();
-		BlockPredicate predicate = config.onlyExposed() ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
+		BlockPredicate predicate = config.onlyPlaceWhenExposed() ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
 
         for (int x = bx - config.radius(); x <= bx + config.radius(); x++) {
             for (int z = bz - config.radius(); z <= bz + config.radius(); z++) {
@@ -60,10 +60,10 @@ public class NoisePathTagFeature extends Feature<PathTagFeatureConfig> {
 					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
 					if (distance < radiusSquared) {
 						mutable.set(x, level.getHeight(Types.OCEAN_FLOOR, x, z) - 1, z);
-						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier(), config.multiplyY(), config.useY());
-						if (sample > config.minThresh() && sample < config.maxThresh() && level.getBlockState(mutable).is(config.replaceable()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
+						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
+						if (sample > config.minThreshold() && sample < config.maxThreshold() && level.getBlockState(mutable).is(config.replaceableBlocks()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 							generated = true;
-							level.setBlock(mutable, config.pathBlock().getState(random, mutable), 3);
+							level.setBlock(mutable, config.state().getState(random, mutable), 3);
 						}
 					}
 				} else {
@@ -71,10 +71,10 @@ public class NoisePathTagFeature extends Feature<PathTagFeatureConfig> {
 						double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)) + ((by - y) * (by - y)));
 						if (distance < radiusSquared) {
 							mutable.set(x, y, z);
-							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.multiplier(), config.multiplyY(), config.useY());
-							if (sample > config.minThresh() && sample < config.maxThresh() && level.getBlockState(mutable).is(config.replaceable()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
+							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
+							if (sample > config.minThreshold() && sample < config.maxThreshold() && level.getBlockState(mutable).is(config.replaceableBlocks()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 								generated = true;
-								level.setBlock(mutable, config.pathBlock().getState(random, mutable), 3);
+								level.setBlock(mutable, config.state().getState(random, mutable), 3);
 							}
 						}
 					}

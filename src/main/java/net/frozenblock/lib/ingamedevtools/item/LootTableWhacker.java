@@ -20,7 +20,6 @@ package net.frozenblock.lib.ingamedevtools.item;
 
 import java.util.Arrays;
 import java.util.List;
-
 import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;

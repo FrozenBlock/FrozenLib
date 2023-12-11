@@ -16,16 +16,10 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.util
+package net.frozenblock.lib.config.api.network;
 
-import net.minecraft.resources.ResourceLocation
-import java.net.URI
-
-fun String.uri(): URI = URI.create(this)
-
-fun vanillaId(path: String): ResourceLocation = ResourceLocation(path)
-
-val String.asResourceLocation: ResourceLocation
-    get() {
-        return ResourceLocation(this)
-    }
+/**
+ * @since 1.5
+ */
+public record ConfigSyncData<T>(T instance) {
+}

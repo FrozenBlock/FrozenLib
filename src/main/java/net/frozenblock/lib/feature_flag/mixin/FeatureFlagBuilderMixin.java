@@ -18,15 +18,23 @@
 
 package net.frozenblock.lib.feature_flag.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.flag.FeatureFlagRegistry;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.Constant;
-import org.spongepowered.asm.mixin.injection.ModifyConstant;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(value = FeatureFlagRegistry.Builder.class, priority = 1001)
 public class FeatureFlagBuilderMixin {
 
-	@ModifyConstant(method = "create", constant = @Constant(intValue = 64))
+	@ModifyExpressionValue(
+		method = "create",
+		at = @At(
+			value = "CONSTANT",
+			args = {
+				"intValue=64"
+			}
+		)
+	)
 	private int increaseMax(int constant) {
 		return Math.max(constant, 512);
 	}

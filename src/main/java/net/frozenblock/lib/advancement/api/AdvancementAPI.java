@@ -64,7 +64,7 @@ public final class AdvancementAPI {
 		List<String[]> list = new ArrayList<>();
 		list.addAll(Arrays.stream(advancement.requirements).toList());
 		list.addAll(Arrays.stream(requirements).toList());
-		advancement.requirements = list.toArray(new String[][]{});
+		advancement.requirements = list.toArray(new String[0][]);
 	}
 
 	public static void addLootTables(Advancement advancement, List<ResourceLocation> lootTables) {
@@ -73,13 +73,13 @@ public final class AdvancementAPI {
 		AdvancementRewards rewards = advancement.rewards;
 		List<ResourceLocation> newLoot = new ArrayList<>(Arrays.stream(rewards.loot).toList());
 		newLoot.addAll(lootTables);
-		rewards.loot = newLoot.toArray(new ResourceLocation[]{});
+		rewards.loot = newLoot.toArray(new ResourceLocation[0]);
 	}
 
 	public static void addRecipes(Advancement advancement, List<ResourceLocation> recipes) {
 		AdvancementRewards rewards = advancement.rewards;
 		List<ResourceLocation> newLoot = new ArrayList<>(Arrays.stream(rewards.recipes).toList());
 		newLoot.addAll(recipes);
-		rewards.recipes = newLoot.toArray(new ResourceLocation[]{});
+		rewards.recipes = newLoot.toArray(new ResourceLocation[0]);
 	}
 }

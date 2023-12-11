@@ -28,6 +28,12 @@ transitive-accessible field net/minecraft/advancements/critereon/EffectsChangedT
 transitive-accessible field net/minecraft/advancements/critereon/MobEffectsPredicate effects Ljava/util/Map;
 transitive-mutable field net/minecraft/advancements/critereon/MobEffectsPredicate effects Ljava/util/Map;
 
+# Network
+transitive-accessible field net/minecraft/client/multiplayer/ClientCommonPacketListenerImpl connection Lnet/minecraft/network/Connection;
+transitive-accessible field net/minecraft/server/network/ServerCommonPacketListenerImpl connection Lnet/minecraft/network/Connection;
+transitive-accessible method net/minecraft/server/network/ServerConfigurationPacketListenerImpl finishCurrentTask (Lnet/minecraft/server/network/ConfigurationTask$Type;)V
+transitive-accessible field net/minecraft/server/network/ServerConfigurationPacketListenerImpl currentTask Lnet/minecraft/server/network/ConfigurationTask;
+
 # Command
 transitive-accessible method net/minecraft/commands/synchronization/ArgumentTypeInfos register (Lnet/minecraft/core/Registry;Ljava/lang/String;Ljava/lang/Class;Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;)Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;
 transitive-accessible method net/minecraft/commands/synchronization/ArgumentTypeInfos fixClassType (Ljava/lang/Class;)Ljava/lang/Class;

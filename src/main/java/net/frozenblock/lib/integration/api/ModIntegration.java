@@ -106,6 +106,19 @@ public abstract class ModIntegration {
         return this.isModLoaded;
     }
 
+	/**
+	 * Runs prior to registries freezing in order to allow for the registering of things.
+	 */
+	public void initPreFreeze() {
+	}
+
+	/**
+	 * Runs prior to registries freezing in order to allow for registering things.
+	 */
+	@Environment(EnvType.CLIENT)
+	public void clientInitPreFreeze() {
+	}
+
     public abstract void init();
 
 	@Environment(EnvType.CLIENT)

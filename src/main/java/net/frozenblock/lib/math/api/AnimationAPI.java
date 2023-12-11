@@ -18,8 +18,8 @@
 
 package net.frozenblock.lib.math.api;
 
-import org.jetbrains.annotations.ApiStatus;
 import java.awt.geom.Point2D;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * This class is used to make animations with easings.

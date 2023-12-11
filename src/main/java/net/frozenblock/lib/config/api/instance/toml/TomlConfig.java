@@ -21,13 +21,12 @@ package net.frozenblock.lib.config.api.instance.toml;
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 import java.io.BufferedWriter;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
-import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Serializes and deserializes config data with TOML4J.
@@ -49,7 +48,7 @@ public class TomlConfig<T> extends Config<T> {
 		this(modId, config, makePath(modId, EXTENSION), builder);
 	}
 
-	public TomlConfig(String modId, Class<T> config, Path path, TomlWriter.Builder builder) {
+	public TomlConfig(String modId, Class<T> config, Path path, TomlWriter.@NotNull Builder builder) {
 		super(modId, config, path, true, null, null);
 		this.tomlWriter = builder.build();
 
@@ -77,6 +76,7 @@ public class TomlConfig<T> extends Config<T> {
 		return true;
 	}
 
+	@NotNull
 	private Toml getDefaultToml() {
 		Toml toml = new Toml();
 		return new Toml(toml.read(tomlWriter.write(defaultInstance())));

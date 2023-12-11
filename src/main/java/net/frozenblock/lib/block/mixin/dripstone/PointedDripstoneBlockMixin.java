@@ -73,7 +73,6 @@ public class PointedDripstoneBlockMixin {
     private static void getFluidAboveStalactite(Level level, BlockPos pos, BlockState state, CallbackInfoReturnable<Optional<PointedDripstoneBlock.FluidInfo>> info) {
         if (FrozenBools.useNewDripstoneLiquid) {
             info.setReturnValue(
-
                 !isStalactite(state) ? Optional.empty() : findRootBlock(level, pos, state, 11).map((posx) -> {
 
                     BlockState firstState = level.getBlockState(posx);

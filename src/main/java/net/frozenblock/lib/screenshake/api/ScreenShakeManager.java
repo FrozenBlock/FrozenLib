@@ -30,8 +30,8 @@ import java.util.Objects;
 import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeManagerInterface;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
@@ -192,7 +192,7 @@ public class ScreenShakeManager {
 	}
 
 	public static void sendScreenShakePacketTo(ServerPlayer player, float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
-		ServerPlayNetworking.send(player, FrozenMain.SCREEN_SHAKE_PACKET, createScreenShakeByteBuf(intensity, duration, falloffStart, x, y, z, maxDistance, ticks));
+		ServerPlayNetworking.send(player, FrozenNetworking.SCREEN_SHAKE_PACKET, createScreenShakeByteBuf(intensity, duration, falloffStart, x, y, z, maxDistance, ticks));
 	}
 
 	public static FriendlyByteBuf createScreenShakeByteBuf(float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
@@ -225,14 +225,14 @@ public class ScreenShakeManager {
 		if (!entity.level().isClientSide) {
 			FriendlyByteBuf byteBuf = createEntityScreenShakeByteBuf(entity, intensity, duration, falloffStart, maxDistance, ticks);
 			for (ServerPlayer player : PlayerLookup.world((ServerLevel) entity.level())) {
-				ServerPlayNetworking.send(player, FrozenMain.SCREEN_SHAKE_ENTITY_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, FrozenNetworking.SCREEN_SHAKE_ENTITY_PACKET, byteBuf);
 			}
 			((EntityScreenShakeInterface)entity).addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
 		}
 	}
 
 	public static void sendEntityScreenShakeTo(ServerPlayer player, Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
-		ServerPlayNetworking.send(player, FrozenMain.SCREEN_SHAKE_ENTITY_PACKET, createEntityScreenShakeByteBuf(entity, intensity, duration, falloffStart, maxDistance, ticks));
+		ServerPlayNetworking.send(player, FrozenNetworking.SCREEN_SHAKE_ENTITY_PACKET, createEntityScreenShakeByteBuf(entity, intensity, duration, falloffStart, maxDistance, ticks));
 	}
 
 	@NotNull
