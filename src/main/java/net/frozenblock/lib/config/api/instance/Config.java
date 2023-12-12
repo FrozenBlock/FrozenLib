@@ -162,10 +162,13 @@ public abstract class Config<T> {
 		FrozenSharedConstants.LOGGER.info("Saving " + formatted);
 		try {
 			this.onSave();
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT && FrozenBools.isInitialized)
-				ConfigSyncPacket.trySendC2S(this);
 
-			invokeSaveEvents();
+			if (FrozenBools.isInitialized) {
+				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
+					ConfigSyncPacket.trySendC2S(this);
+
+				invokeSaveEvents();
+			}
 		} catch (Exception e) {
 			FrozenLogUtils.logError("Error while saving " + formatted, e);
 		}
@@ -176,7 +179,10 @@ public abstract class Config<T> {
 		FrozenSharedConstants.LOGGER.info("Loading " + formatted);
 		try {
 			boolean loadVal = this.onLoad();
-			invokeLoadEvents();
+
+			if (FrozenBools.isInitialized) {
+				invokeLoadEvents();
+			}
 			return loadVal;
 		} catch (Exception e) {
 			FrozenLogUtils.logError("Error while loading " + formatted, e);
