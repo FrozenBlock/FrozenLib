@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.chat.MutableComponent;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol.ModProtocolDef;
+import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
 
 public class RegistrySyncText {
 

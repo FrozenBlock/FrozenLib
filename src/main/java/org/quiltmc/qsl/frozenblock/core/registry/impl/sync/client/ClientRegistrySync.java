@@ -39,7 +39,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ProtocolVersions;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.RegistrySyncText;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ServerPackets;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol.ModProtocolDef;
+import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.slf4j.Logger;
 
