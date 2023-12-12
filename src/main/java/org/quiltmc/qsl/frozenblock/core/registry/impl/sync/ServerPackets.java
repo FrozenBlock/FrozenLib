@@ -28,7 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.mod_protocol.ModProtocolDef;
+import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
 
 /**
  * Identifiers of packets sent by server.

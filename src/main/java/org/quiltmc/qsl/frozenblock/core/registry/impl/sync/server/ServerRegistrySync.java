@@ -49,7 +49,7 @@ public final class ServerRegistrySync {
 
 	public static IntList SERVER_SUPPORTED_PROTOCOL = new IntArrayList(ProtocolVersions.IMPL_SUPPORTED_VERSIONS);
 
-	private static Component text(String string) {
+	public static Component text(String string) {
 		if (string == null || string.isEmpty()) {
 			return Component.empty();
 		}
