@@ -75,7 +75,7 @@ public final class ServerRegistrySync {
 		((QuiltSyncTask) handler.currentTask).handleEnd(new ClientPackets.End(buf));
 	}
 
-	private static Component text(String string) {
+	public static Component text(String string) {
 		if (string == null || string.isEmpty()) {
 			return Component.empty();
 		}
