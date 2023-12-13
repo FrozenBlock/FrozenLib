@@ -43,7 +43,7 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 		try {
 			ConfigSyncData<T> syncData = dataSupplier.get(config);
 			if (syncData == null || !FrozenNetworking.connectedToServer()) {
-				new Exception("Attempted to sync config " + config.path() + " for mod " + config.modId() + " outside a server!").printStackTrace();
+				//new Exception("Attempted to sync config " + config.path() + " for mod " + config.modId() + " outside a server!").printStackTrace();
 				return;
 			}
 			T source = syncData.instance();
