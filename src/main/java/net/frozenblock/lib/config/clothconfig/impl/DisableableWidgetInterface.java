@@ -28,5 +28,9 @@ public interface DisableableWidgetInterface {
 
 	void frozenLib$addSyncData(Class<?> clazz, String identifier, Config<?> configInstance);
 
+	boolean frozenLib$isSyncable();
+
+	boolean frozenLib$hasValidData();
+
 	ConfigModification.EntryPermissionType frozenLib$getEntryPermissionType();
 }

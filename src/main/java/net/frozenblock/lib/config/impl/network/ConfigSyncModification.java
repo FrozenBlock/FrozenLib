@@ -23,11 +23,11 @@ import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.config.api.annotation.LockWhenSynced;
-import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.api.network.ConfigSyncData;
+import net.frozenblock.lib.config.api.sync.SyncBehavior;
+import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
+import net.frozenblock.lib.config.api.sync.network.ConfigSyncData;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +43,7 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 		try {
 			ConfigSyncData<T> syncData = dataSupplier.get(config);
 			if (syncData == null || !FrozenNetworking.connectedToServer()) {
-				FrozenLogUtils.logError("Attempted to sync config " + config.path() + " for mod " + config.modId() + " outside a server!");
+				new Exception("Attempted to sync config " + config.path() + " for mod " + config.modId() + " outside a server!").printStackTrace();
 				return;
 			}
 			T source = syncData.instance();
@@ -58,11 +58,13 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 	}
 
 	public static boolean isSyncable(@NotNull Field field) {
-		return !field.isAnnotationPresent(UnsyncableEntry.class);
+		EntrySyncData entrySyncData = field.getAnnotation(EntrySyncData.class);
+		return entrySyncData == null || entrySyncData.behavior().canSync();
 	}
 
 	public static boolean isLockedWhenSynced(@NotNull Field field) {
-		return field.isAnnotationPresent(LockWhenSynced.class);
+		EntrySyncData entrySyncData = field.getAnnotation(EntrySyncData.class);
+		return entrySyncData != null && entrySyncData.behavior() == SyncBehavior.LOCK_WHEN_SYNCED;
 	}
 
 	@Environment(EnvType.CLIENT)

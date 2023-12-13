@@ -26,10 +26,8 @@ import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
-import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,7 +72,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
             for (Field field : clazz.getDeclaredFields()) {
 				if (Modifier.isStatic(field.getModifiers())) continue;
                 field.setAccessible(true);
-				if (isSyncModification && field.isAnnotationPresent(UnsyncableEntry.class)) continue;
+				if (isSyncModification && !ConfigSyncModification.isSyncable(field)) continue;
                 try {
                     field.set(destination, field.get(source));
                 } catch (IllegalAccessException e) {

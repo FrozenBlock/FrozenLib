@@ -28,7 +28,7 @@ import java.util.Map;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.api.network.ConfigSyncData;
+import net.frozenblock.lib.config.api.sync.network.ConfigSyncData;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
