@@ -52,7 +52,8 @@ public class TooltipListEntryMixin {
 					:
 					Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]));
 		} else if (
-				disableableWidgetInterface.frozenLib$isSyncable()
+				disableableWidgetInterface.frozenLib$hasValidData()
+				&& disableableWidgetInterface.frozenLib$isSyncable()
 				&& FrozenNetworking.isMultiplayer()
 				&& ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false)
 		) {

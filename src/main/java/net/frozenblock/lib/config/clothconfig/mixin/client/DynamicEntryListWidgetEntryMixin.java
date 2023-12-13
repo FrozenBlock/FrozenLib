@@ -45,9 +45,15 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 	private boolean frozenLib$isSyncable = true;
 
 	@Unique
+	private boolean frozenLib$hasValidData = false;
+
+	@Unique
 	@Override
     public void frozenLib$addSyncData(@NotNull Class<?> clazz, @NotNull String identifier, Config<?> configInstance) {
-		if (identifier.equals("")) new Exception("Cannot process sync value with empty identifier!").printStackTrace();
+		if (identifier.equals("")) {
+			new Exception("Cannot process sync value with empty identifier!").printStackTrace();
+			return;
+		}
 		Field field = null;
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
 			EntrySyncData entrySyncData = fieldToCheck.getAnnotation(EntrySyncData.class);
@@ -59,6 +65,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 		final Field finalField = field;
 		if (finalField == null) {
 			new Exception("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!").printStackTrace();
+			return;
 		}
 		Requirement nonSyncRequirement = () -> {
 			this.frozenLib$entryPermissionType = ConfigSyncModification.canModifyField(finalField, configInstance);
@@ -67,15 +74,23 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 		};
 		if (this.getRequirement() != null) {
 			this.setRequirement(Requirement.all(this.getRequirement(), nonSyncRequirement));
+
 		} else {
 			this.setRequirement(nonSyncRequirement);
 		}
+		this.frozenLib$hasValidData = true;
 	}
 
 	@Unique
 	@Override
 	public boolean frozenLib$isSyncable() {
 		return this.frozenLib$isSyncable;
+	}
+
+	@Unique
+	@Override
+	public boolean frozenLib$hasValidData() {
+		return this.frozenLib$hasValidData;
 	}
 
 	@Unique

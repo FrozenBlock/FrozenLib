@@ -30,5 +30,7 @@ public interface DisableableWidgetInterface {
 
 	boolean frozenLib$isSyncable();
 
+	boolean frozenLib$hasValidData();
+
 	ConfigModification.EntryPermissionType frozenLib$getEntryPermissionType();
 }
