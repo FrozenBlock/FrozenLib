@@ -5,7 +5,8 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Moved `ModProtocolDef` to api
-- Made `ServerRegistrySync.text()` public
-- Fixed loading `ResourceLocation` too early
-- Fixed language entries for mod protocols
+- Updated embedded Jankson
+  - Adds `SaveToggle` annotation
+- Moved all field annotations for config syncing to `EntrySyncData` for easier use
+  - Fixed a small bug with `Locked When Synced` fields syncing instead of remaining stagnant
+  - Added an additional tooltip to notify Server Operators and LAN Hosts when a config value will sync

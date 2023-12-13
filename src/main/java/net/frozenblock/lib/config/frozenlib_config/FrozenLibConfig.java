@@ -22,12 +22,12 @@ import blue.endless.jankson.Comment;
 import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.config.api.annotation.FieldIdentifier;
-import net.frozenblock.lib.config.api.annotation.UnsyncableEntry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.api.sync.SyncBehavior;
+import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 
@@ -46,18 +46,16 @@ public class FrozenLibConfig {
 
 	@Comment("Mods may override any of these options, but the config file will not change.")
 
-	@UnsyncableEntry
-	@FieldIdentifier(identifier = "useWindOnNonFrozenServers")
+	@EntrySyncData(value = "useWindOnNonFrozenServers", behavior = SyncBehavior.UNSYNCABLE)
 	public boolean useWindOnNonFrozenServers = true;
 
-	@FieldIdentifier(identifier = "saveItemCooldowns")
+	@EntrySyncData("saveItemCooldowns")
 	public boolean saveItemCooldowns = false;
 
-	@UnsyncableEntry
-	@FieldIdentifier(identifier = "removeExperimentalWarning")
+	@EntrySyncData(value = "removeExperimentalWarning", behavior = SyncBehavior.UNSYNCABLE)
 	public boolean removeExperimentalWarning = false;
 
-	@FieldIdentifier(identifier = "wardenSpawnTrackerCommand")
+	@EntrySyncData("wardenSpawnTrackerCommand")
 	public boolean wardenSpawnTrackerCommand = false;
 
 	@ConfigEntry.Gui.CollapsibleObject
@@ -66,7 +64,7 @@ public class FrozenLibConfig {
 	public static class DataFixerConfig {
 
 		@Comment("Mods can only add to this list. User settings will always apply.")
-		@FieldIdentifier(identifier = "disabledDataFixTypes")
+		@EntrySyncData("disabledDataFixTypes")
 		public List<String> disabledDataFixTypes = List.of(
 			"world_gen_settings"
 		);

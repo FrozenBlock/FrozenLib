@@ -16,10 +16,19 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.network;
+package net.frozenblock.lib.config.api.sync.annotation;
+
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 /**
+ * Used to mark a config as unsyncable.
+ * Without this annotation, the config will sync if it allows modifications.
  * @since 1.5
  */
-public record ConfigSyncData<T>(T instance) {
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.TYPE)
+public @interface UnsyncableConfig {
 }
