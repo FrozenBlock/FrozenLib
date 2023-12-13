@@ -51,7 +51,11 @@ public class TooltipListEntryMixin {
 					Optional.of(optionalComponent.orElseThrow().toFlatList().toArray(new Component[0]))
 					:
 					Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]));
-		} else if (FrozenNetworking.isMultiplayer() && ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false)) {
+		} else if (
+				disableableWidgetInterface.frozenLib$isSyncable()
+				&& FrozenNetworking.isMultiplayer()
+				&& ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false)
+		) {
 			Component entrySyncNotice = Component.translatable("tooltip.frozenlib.entry_sync_notice");
 			return list.isEmpty() ?
 					Optional.of(entrySyncNotice.toFlatList().toArray(new Component[0]))

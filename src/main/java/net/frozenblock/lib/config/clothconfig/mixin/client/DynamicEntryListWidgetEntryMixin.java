@@ -41,6 +41,10 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 	@Unique
 	private ConfigModification.EntryPermissionType frozenLib$entryPermissionType = ConfigModification.EntryPermissionType.CAN_MODIFY;
 
+	@Unique
+	private boolean frozenLib$isSyncable = true;
+
+	@Unique
 	@Override
     public void frozenLib$addSyncData(@NotNull Class<?> clazz, @NotNull String identifier, Config<?> configInstance) {
 		if (identifier.equals("")) new Exception("Cannot process sync value with empty identifier!").printStackTrace();
@@ -58,6 +62,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 		}
 		Requirement nonSyncRequirement = () -> {
 			this.frozenLib$entryPermissionType = ConfigSyncModification.canModifyField(finalField, configInstance);
+			this.frozenLib$isSyncable = ConfigSyncModification.isSyncable(finalField);
 			return this.frozenLib$entryPermissionType.canModify;
 		};
 		if (this.getRequirement() != null) {
@@ -67,6 +72,13 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 		}
 	}
 
+	@Unique
+	@Override
+	public boolean frozenLib$isSyncable() {
+		return this.frozenLib$isSyncable;
+	}
+
+	@Unique
 	@Override
     public ConfigModification.EntryPermissionType frozenLib$getEntryPermissionType() {
 		return this.frozenLib$entryPermissionType;
