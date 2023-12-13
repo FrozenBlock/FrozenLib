@@ -4,6 +4,7 @@
   "tooltip.frozenlib.locked_due_to_server_lan": "Entry cannot be modified while connected to this world.\nMust be host or have operator permissions to modify.\nYou can leave the world to modify this entry, and rejoin afterwards.",
   "tooltip.frozenlib.locked_due_to_sync_lan": "Entry is overriden by this world.\nMust be host or have operator permissions to modify.",
   "tooltip.frozenlib.locked_due_to_unknown_reason": "Entry cannot be modified for an unknown reason.\nPlease submit an issue report for this mod.",
+  "tooltip.frozenlib.entry_sync_notice": "Entry will sync with all clients.",
 
   "frozenlib.config.discard": "Discard changes",
   "frozenlib.config.save": "Save changes",

@@ -110,4 +110,14 @@ public final class FrozenNetworking {
 		return listener.getConnection().isConnected();
 	}
 
+	/**
+	 * @return if the current server is multiplayer (LAN/dedicated) or not (singleplayer)
+	 */
+	public static boolean isMultiplayer() {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
+			return true;
+
+		return !Minecraft.getInstance().isSingleplayer();
+	}
+
 }

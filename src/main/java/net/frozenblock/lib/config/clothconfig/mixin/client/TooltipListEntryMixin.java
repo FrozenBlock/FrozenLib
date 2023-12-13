@@ -18,37 +18,46 @@
 
 package net.frozenblock.lib.config.clothconfig.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.util.Optional;
+import java.util.stream.Stream;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
+import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
+import net.frozenblock.lib.networking.FrozenNetworking;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(TooltipListEntry.class)
 public class TooltipListEntryMixin {
 
-	@Inject(method = "getTooltip()Ljava/util/Optional;", at = @At("HEAD"), cancellable = true, remap = false)
-	public void frozenLib$getTooltip(CallbackInfoReturnable<Optional<Component[]>> info) {
+	@ModifyReturnValue(method = "getTooltip()Ljava/util/Optional;", at = @At("RETURN"), remap = false)
+	public Optional<Component[]> frozenLib$getTooltip(Optional<Component[]> list) {
 		DisableableWidgetInterface disableableWidgetInterface = (DisableableWidgetInterface) this;
 		if (!disableableWidgetInterface.frozenLib$getEntryPermissionType().canModify) {
 			Optional<Component> optionalComponent = FrozenClientNetworking.connectedToLan() ?
 					disableableWidgetInterface.frozenLib$getEntryPermissionType().lanTooltip
 					: disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip;
-			info.setReturnValue(
-				optionalComponent.isPresent() ?
+
+			return optionalComponent.isPresent() ?
 					Optional.of(optionalComponent.orElseThrow().toFlatList().toArray(new Component[0]))
 					:
-					Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]))
-			);
+					Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]));
+		} else if (FrozenNetworking.isMultiplayer() && ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false)) {
+			Component entrySyncNotice = Component.translatable("tooltip.frozenlib.entry_sync_notice");
+			return list.isEmpty() ?
+					Optional.of(entrySyncNotice.toFlatList().toArray(new Component[0]))
+					:
+					Optional.of(Stream.concat(list.stream(), Stream.of(entrySyncNotice)).toArray(Component[]::new));
 		}
+		return list;
 	}
 
 }

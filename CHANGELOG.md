@@ -9,3 +9,4 @@ Put changelog here:
   - Adds `SaveToggle` annotation
 - Moved all field annotations for config syncing to `EntrySyncData` for easier use
   - Fixed a small bug with `Locked When Synced` fields syncing instead of remaining stagnant
+  - Added an additional tooltip to notify Server Operators and LAN Hosts when a config value will sync
