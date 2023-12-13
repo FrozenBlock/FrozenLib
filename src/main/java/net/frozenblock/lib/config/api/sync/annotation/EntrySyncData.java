@@ -16,19 +16,32 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.annotation;
+package net.frozenblock.lib.config.api.sync.annotation;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import net.frozenblock.lib.config.api.sync.SyncBehavior;
 
 /**
- * Used to mark a config field as locked if the config is synced.
- * May be useful for blocking off unsyncable fields that you don't want to be modified whilst connected to a server.
+ * Provides the attributes of a syncable config entry.
+ * See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig} and {@link net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui} for an example.
  * @since 1.5
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)
-public @interface LockWhenSynced {
+public @interface EntrySyncData {
+
+	/**
+	 * Used to identify config entries so their attributes can impact GUIs.
+	 * Without this, it isn't possible to find the field needed in order to access their unique attributes for syncing.
+	 */
+	 String value() default "";
+
+	/**
+	 * Used to determine the behavior of a config entry on a server/LAN world.
+	 */
+	 SyncBehavior behavior() default SyncBehavior.SYNCABLE;
+
 }

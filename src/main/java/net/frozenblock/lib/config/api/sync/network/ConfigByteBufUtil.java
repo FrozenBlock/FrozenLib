@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.api.network;
+package net.frozenblock.lib.config.api.sync.network;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonElement;
