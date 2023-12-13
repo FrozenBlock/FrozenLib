@@ -70,7 +70,7 @@ public final class FrozenClothConfig {
 	 *
 	 * @param entry The config entry to be used
 	 * @param clazz The class of the config file being accessed
-	 * @param identifier The identifier of the field used for the config (Use {@link net.frozenblock.lib.config.api.sync.annotation.EntrySyncData for this)
+	 * @param identifier The identifier of the field used for the config (Use {@link net.frozenblock.lib.config.api.sync.annotation.EntrySyncData} for this)
 	 * @param configInstance The main instance of the config (See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig#INSTANCE} for an example)
 	 * @since 1.5
 	 */
