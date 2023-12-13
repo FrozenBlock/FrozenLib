@@ -19,6 +19,7 @@
 package net.frozenblock.lib.config.clothconfig.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
 import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
@@ -55,7 +56,7 @@ public class TooltipListEntryMixin {
 			return list.isEmpty() ?
 					Optional.of(entrySyncNotice.toFlatList().toArray(new Component[0]))
 					:
-					Optional.of(Stream.concat(list.stream(), Stream.of(entrySyncNotice)).toArray(Component[]::new));
+					Optional.of(Stream.concat(Arrays.stream(list.get()), Stream.of(entrySyncNotice)).toArray(Component[]::new));
 		}
 		return list;
 	}
