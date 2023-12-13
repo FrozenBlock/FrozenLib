@@ -46,8 +46,8 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 		if (identifier.equals("")) new Exception("Cannot process sync value with empty identifier!").printStackTrace();
 		Field field = null;
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
-			EntrySyncData entrySyncData = field.getAnnotation(EntrySyncData.class);
-			if (entrySyncData!= null && !entrySyncData.value().equals("") && entrySyncData.value().equals(identifier)) {
+			EntrySyncData entrySyncData = fieldToCheck.getAnnotation(EntrySyncData.class);
+			if (entrySyncData != null && !entrySyncData.value().equals("") && entrySyncData.value().equals(identifier)) {
 				if (field != null) FrozenLogUtils.logError("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
 				field = fieldToCheck;
 			}
