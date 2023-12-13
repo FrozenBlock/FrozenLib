@@ -53,7 +53,9 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 			}
 		}
 		final Field finalField = field;
-		FrozenLogUtils.logError("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!", finalField == null, null);
+		if (finalField == null) {
+			new Exception("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!").printStackTrace();
+		}
 		Requirement nonSyncRequirement = () -> {
 			this.frozenLib$entryPermissionType = ConfigSyncModification.canModifyField(finalField, configInstance);
 			return this.frozenLib$entryPermissionType.canModify;
