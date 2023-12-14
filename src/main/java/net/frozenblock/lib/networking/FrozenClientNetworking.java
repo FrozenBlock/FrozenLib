@@ -26,7 +26,14 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.item.impl.CooldownInterface;
+import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
+import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
+import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
+import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
@@ -36,6 +43,8 @@ import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
+import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.frozenblock.lib.wind.api.ClientWindManagerExtension;
 import net.minecraft.client.Minecraft;
@@ -162,134 +171,113 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveCooldownChangePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.COOLDOWN_CHANGE_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			Item item = byteBuf.readById(BuiltInRegistries.ITEM);
-			int additional = byteBuf.readVarInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null && ctx.player != null) {
-					((CooldownInterface) ctx.player.getCooldowns()).changeCooldown(item, additional);
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			Item item = packet.item();
+			int additional = packet.additional();
+			if (player != null) {
+				((CooldownInterface) player.getCooldowns()).frozenLib$changeCooldown(item, additional);
+			}
 		});
 	}
 
 	private static void receiveForcedCooldownPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.FORCED_COOLDOWN_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			Item item = byteBuf.readById(BuiltInRegistries.ITEM);
-			int startTime = byteBuf.readVarInt();
-			int endTime = byteBuf.readVarInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null && ctx.player != null) {
-					ctx.player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			Item item = packet.item();
+			int startTime = packet.startTime();
+			int endTime = packet.endTime();
+			if (player != null) {
+				player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
+			}
 		});
 	}
 
 	private static void receiveCooldownTickCountPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.COOLDOWN_TICK_COUNT_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int tickCount = byteBuf.readInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null && ctx.player != null) {
-					ctx.player.getCooldowns().tickCount = tickCount;
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			if (player != null) {
+				player.getCooldowns().tickCount = packet.count();
+			}
 		});
 	}
 
 	private static void receiveScreenShakePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.SCREEN_SHAKE_PACKET, (ctx, hander, byteBuf, responseSender) -> {
-			float intensity = byteBuf.readFloat();
-			int duration = byteBuf.readInt();
-			int fallOffStart = byteBuf.readInt();
-			double x = byteBuf.readDouble();
-			double y = byteBuf.readDouble();
-			double z = byteBuf.readDouble();
-			float maxDistance = byteBuf.readFloat();
-			int ticks = byteBuf.readInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Vec3 pos = new Vec3(x, y, z);
-					ScreenShaker.addShake(level, intensity, duration, fallOffStart, pos, maxDistance, ticks);
-				}
-			});
-		});
+		ClientPlayNetworking.registerGlobalReceiver(ScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			float intensity = packet.intensity();
+			int duration = packet.duration();
+			int fallOffStart = packet.falloffStart();
+			double x = packet.x();
+			double y = packet.y();
+			double z = packet.z();
+			float maxDistance = packet.maxDistance();
+			int ticks = packet.ticks();
+
+			ClientLevel level = player.clientLevel;
+            Vec3 pos = new Vec3(x, y, z);
+            ScreenShaker.addShake(level, intensity, duration, fallOffStart, pos, maxDistance, ticks);
+        });
 	}
 
 	private static void receiveScreenShakeFromEntityPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.SCREEN_SHAKE_ENTITY_PACKET, (ctx, hander, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			float intensity = byteBuf.readFloat();
-			int duration = byteBuf.readInt();
-			int fallOffStart = byteBuf.readInt();
-			float maxDistance = byteBuf.readFloat();
-			int ticks = byteBuf.readInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity != null) {
-						ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
-					}
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(EntityScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			int id = packet.entityId();
+			float intensity = packet.intensity();
+			int duration = packet.duration();
+			int fallOffStart = packet.falloffStart();
+			float maxDistance = packet.maxDistance();
+			int ticks = packet.ticks();
+
+			ClientLevel level = player.clientLevel;
+            Entity entity = level.getEntity(id);
+            if (entity != null) {
+                ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
+            }
 		});
 	}
 
 	private static void receiveRemoveScreenShakePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.REMOVE_SCREEN_SHAKES_PACKET, (ctx, hander, byteBuf, responseSender) -> ctx.execute(() -> ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> !(clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake))));
+		ClientPlayNetworking.registerGlobalReceiver(RemoveScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) ->
+			ScreenShaker.SCREEN_SHAKES.removeIf(
+				clientScreenShake -> !(clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake)
+			)
+		);
 	}
 
 	private static void receiveRemoveScreenShakeFromEntityPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.REMOVE_ENTITY_SCREEN_SHAKES_PACKET, (ctx, hander, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity != null) {
-						ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
-					}
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(RemoveEntityScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			int id = packet.entityId();
+
+			ClientLevel level = player.clientLevel;
+            Entity entity = level.getEntity(id);
+            if (entity != null) {
+                ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
+            }
 		});
 	}
 
 	private static void receiveIconPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.SPOTTING_ICON_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			ResourceLocation texture = byteBuf.readResourceLocation();
-			float startFade = byteBuf.readFloat();
-			float endFade = byteBuf.readFloat();
-			ResourceLocation predicate = byteBuf.readResourceLocation();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity instanceof EntitySpottingIconInterface livingEntity) {
-						livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
-					}
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(SpottingIconPacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			int id = packet.entityId();
+			ResourceLocation texture = packet.texture();
+			float startFade = packet.startFade();
+			float endFade = packet.endFade();
+			ResourceLocation predicate = packet.restrictionID();
+
+			ClientLevel level = player.clientLevel;
+            Entity entity = level.getEntity(id);
+            if (entity instanceof EntitySpottingIconInterface livingEntity) {
+                livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
+            }
 		});
 	}
 
 	private static void receiveIconRemovePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.SPOTTING_ICON_REMOVE_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity instanceof EntitySpottingIconInterface livingEntity) {
-						livingEntity.getSpottingIconManager().icon = null;
-					}
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(SpottingIconRemovePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			int id = packet.entityId();
+
+			ClientLevel level = player.clientLevel;
+            Entity entity = level.getEntity(id);
+            if (entity instanceof EntitySpottingIconInterface livingEntity) {
+                livingEntity.getSpottingIconManager().icon = null;
+            }
 		});
 	}
 

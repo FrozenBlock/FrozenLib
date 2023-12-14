@@ -26,11 +26,15 @@ import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
+import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -77,10 +81,10 @@ public class ScreenShakeCommand {
 
 	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance, Collection<? extends ServerPlayer> entities) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
-		FriendlyByteBuf screenShakeByteBuf = ScreenShakeManager.createScreenShakeByteBuf(intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance, 0);
+		ScreenShakePacket packet = new ScreenShakePacket(intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance, 0);
 		StringBuilder playerString = new StringBuilder();
 		for (ServerPlayer serverPlayer : entities) {
-			ServerPlayNetworking.send(serverPlayer, FrozenNetworking.SCREEN_SHAKE_PACKET, screenShakeByteBuf);
+			ServerPlayNetworking.send(serverPlayer, packet);
 			playerString.append(serverPlayer.getDisplayName().getString()).append(", ");
 		}
 		Vec3 finalVec = vec3;
@@ -102,9 +106,9 @@ public class ScreenShakeCommand {
 	private static int removeShakesFor(CommandSourceStack source, Collection<? extends ServerPlayer> entities) {
 		StringBuilder playerString = new StringBuilder();
 		boolean onePlayer = entities.size() == 1;
-		FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(Unpooled.buffer());
+		FabricPacket packet = new RemoveScreenShakePacket();
 		for (ServerPlayer serverPlayer : entities) {
-			ServerPlayNetworking.send(serverPlayer, FrozenNetworking.REMOVE_SCREEN_SHAKES_PACKET, friendlyByteBuf);
+			ServerPlayNetworking.send(serverPlayer, packet);
 			playerString.append(serverPlayer.getDisplayName().getString()).append(onePlayer ? "" : ", ");
 		}
 		source.sendSuccess(() -> Component.translatable(onePlayer ? "commands.screenshake.remove.player.success" : "commands.screenshake.remove.player.success.multiple", playerString.toString()), true);
@@ -117,12 +121,11 @@ public class ScreenShakeCommand {
 		List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
 			if (!((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().isEmpty()) {
-				FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(Unpooled.buffer());
-				friendlyByteBuf.writeVarInt(entity.getId());
+				FabricPacket packet = new RemoveEntityScreenShakePacket(entity.getId());
 				affectedEntities.add(entity);
 				((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().clear();
 				for (ServerPlayer serverPlayer : PlayerLookup.tracking(source.getLevel(), entity.blockPosition())) {
-					ServerPlayNetworking.send(serverPlayer, FrozenNetworking.REMOVE_ENTITY_SCREEN_SHAKES_PACKET, friendlyByteBuf);
+					ServerPlayNetworking.send(serverPlayer, packet);
 				}
 				entityAmount += 1;
 			}
