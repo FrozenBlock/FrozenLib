@@ -32,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class OverworldBiomePresetMixin {
 
 	@ModifyReturnValue(method = "apply", at = @At("RETURN"))
-	private <T> void Climate.ParameterList<T> apply(Climate.ParameterList<T> original, Function<ResourceKey<Biome>, T> function) {
+	private <T> Climate.ParameterList<T> apply(Climate.ParameterList<T> original, Function<ResourceKey<Biome>, T> function) {
 		return OverworldBiomeData.withModdedBiomeEntries(original, function);
 	}
 }
