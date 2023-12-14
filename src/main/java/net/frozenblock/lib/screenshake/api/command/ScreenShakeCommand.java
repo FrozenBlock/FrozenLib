@@ -26,11 +26,13 @@ import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
+import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -103,9 +105,9 @@ public class ScreenShakeCommand {
 	private static int removeShakesFor(CommandSourceStack source, Collection<? extends ServerPlayer> entities) {
 		StringBuilder playerString = new StringBuilder();
 		boolean onePlayer = entities.size() == 1;
-		FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(Unpooled.buffer());
+		FabricPacket packet = new RemoveScreenShakePacket();
 		for (ServerPlayer serverPlayer : entities) {
-			ServerPlayNetworking.send(serverPlayer, FrozenNetworking.REMOVE_SCREEN_SHAKES_PACKET, friendlyByteBuf);
+			ServerPlayNetworking.send(serverPlayer, packet);
 			playerString.append(serverPlayer.getDisplayName().getString()).append(onePlayer ? "" : ", ");
 		}
 		source.sendSuccess(() -> Component.translatable(onePlayer ? "commands.screenshake.remove.player.success" : "commands.screenshake.remove.player.success.multiple", playerString.toString()), true);

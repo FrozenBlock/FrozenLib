@@ -31,6 +31,7 @@ import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
@@ -232,7 +233,11 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveRemoveScreenShakePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.REMOVE_SCREEN_SHAKES_PACKET, (ctx, hander, byteBuf, responseSender) -> ctx.execute(() -> ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> !(clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake))));
+		ClientPlayNetworking.registerGlobalReceiver(RemoveScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) ->
+			ScreenShaker.SCREEN_SHAKES.removeIf(
+				clientScreenShake -> !(clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake)
+			)
+		);
 	}
 
 	private static void receiveRemoveScreenShakeFromEntityPacket() {
