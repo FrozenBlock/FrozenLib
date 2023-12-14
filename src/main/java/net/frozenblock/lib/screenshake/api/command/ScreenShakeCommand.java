@@ -32,6 +32,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
+import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.minecraft.commands.CommandSourceStack;
@@ -120,12 +121,11 @@ public class ScreenShakeCommand {
 		List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
 			if (!((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().isEmpty()) {
-				FriendlyByteBuf friendlyByteBuf = new FriendlyByteBuf(Unpooled.buffer());
-				friendlyByteBuf.writeVarInt(entity.getId());
+				FabricPacket packet = new RemoveEntityScreenShakePacket(entity.getId());
 				affectedEntities.add(entity);
 				((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().clear();
 				for (ServerPlayer serverPlayer : PlayerLookup.tracking(source.getLevel(), entity.blockPosition())) {
-					ServerPlayNetworking.send(serverPlayer, FrozenNetworking.REMOVE_ENTITY_SCREEN_SHAKES_PACKET, friendlyByteBuf);
+					ServerPlayNetworking.send(serverPlayer, packet);
 				}
 				entityAmount += 1;
 			}

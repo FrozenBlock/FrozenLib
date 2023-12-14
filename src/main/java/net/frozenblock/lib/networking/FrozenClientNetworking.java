@@ -31,6 +31,7 @@ import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
@@ -241,17 +242,14 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveRemoveScreenShakeFromEntityPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.REMOVE_ENTITY_SCREEN_SHAKES_PACKET, (ctx, hander, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity != null) {
-						ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
-					}
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(RemoveEntityScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			int id = packet.entityId();
+
+			ClientLevel level = player.clientLevel;
+            Entity entity = level.getEntity(id);
+            if (entity != null) {
+                ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
+            }
 		});
 	}
 
