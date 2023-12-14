@@ -36,16 +36,11 @@ import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 public final class FrozenNetworking {
 	private FrozenNetworking() {}
 
-	public static final ResourceLocation FLYBY_SOUND_PACKET = FrozenSharedConstants.id("flyby_sound_packet");
-	public static final ResourceLocation LOCAL_SOUND_PACKET = FrozenSharedConstants.id("local_sound_packet");
 	public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = FrozenSharedConstants.id("starting_moving_restriction_looping_sound_packet");
-	public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = FrozenSharedConstants.id("moving_restriction_sound_packet");
 	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_restriction_looping_fading_distance_sound_packet");
 	public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("fading_distance_sound_packet");
 	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_fading_distance_sound_packet");
-	public static final ResourceLocation LOCAL_PLAYER_SOUND_PACKET = FrozenSharedConstants.id("local_player_sound_packet");
 
-	public static final ResourceLocation SCREEN_SHAKE_ENTITY_PACKET = FrozenSharedConstants.id("screen_shake_entity_packet");
 	public static final ResourceLocation REMOVE_SCREEN_SHAKES_PACKET = FrozenSharedConstants.id("remove_screen_shakes_packet");
 	public static final ResourceLocation REMOVE_ENTITY_SCREEN_SHAKES_PACKET = FrozenSharedConstants.id("remove_entity_screen_shakes_packet");
 

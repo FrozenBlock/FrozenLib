@@ -22,8 +22,8 @@ import net.minecraft.world.item.Item;
 
 public interface CooldownInterface {
 
-    void changeCooldown(Item item, int additional);
+    void frozenLib$changeCooldown(Item item, int additional);
 
-    void onCooldownChanged(Item item, int additional);
+    void frozenLib$onCooldownChanged(Item item, int additional);
 
 }

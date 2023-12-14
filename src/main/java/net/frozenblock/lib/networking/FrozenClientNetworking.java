@@ -30,6 +30,7 @@ import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
+import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
@@ -170,7 +171,7 @@ public final class FrozenClientNetworking {
 			Item item = packet.item();
 			int additional = packet.additional();
 			if (player != null) {
-				player.getCooldowns().changeCooldown(item, additional);
+				((CooldownInterface) player.getCooldowns()).frozenLib$changeCooldown(item, additional);
 			}
 		});
 	}
@@ -212,22 +213,19 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveScreenShakeFromEntityPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.SCREEN_SHAKE_ENTITY_PACKET, (ctx, hander, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			float intensity = byteBuf.readFloat();
-			int duration = byteBuf.readInt();
-			int fallOffStart = byteBuf.readInt();
-			float maxDistance = byteBuf.readFloat();
-			int ticks = byteBuf.readInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity != null) {
-						ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
-					}
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(EntityScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			int id = packet.entityId();
+			float intensity = packet.intensity();
+			int duration = packet.duration();
+			int fallOffStart = packet.falloffStart();
+			float maxDistance = packet.maxDistance();
+			int ticks = packet.ticks();
+
+			ClientLevel level = player.clientLevel;
+            Entity entity = level.getEntity(id);
+            if (entity != null) {
+                ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
+            }
 		});
 	}
 
