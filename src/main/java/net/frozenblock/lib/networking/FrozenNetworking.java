@@ -44,8 +44,6 @@ public final class FrozenNetworking {
 	public static final ResourceLocation REMOVE_SCREEN_SHAKES_PACKET = FrozenSharedConstants.id("remove_screen_shakes_packet");
 	public static final ResourceLocation REMOVE_ENTITY_SCREEN_SHAKES_PACKET = FrozenSharedConstants.id("remove_entity_screen_shakes_packet");
 
-	public static final ResourceLocation SPOTTING_ICON_REMOVE_PACKET = FrozenSharedConstants.id("spotting_icon_remove_packet");
-
 	public static final ResourceLocation WIND_SYNC_PACKET = FrozenSharedConstants.id("wind_sync_packet");
 
 	public static void registerNetworking() {

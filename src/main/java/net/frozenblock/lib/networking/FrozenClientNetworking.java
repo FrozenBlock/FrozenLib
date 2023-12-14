@@ -42,6 +42,7 @@ import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLo
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
+import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.frozenblock.lib.wind.api.ClientWindManagerExtension;
 import net.minecraft.client.Minecraft;
@@ -266,17 +267,14 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveIconRemovePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.SPOTTING_ICON_REMOVE_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity instanceof EntitySpottingIconInterface livingEntity) {
-						livingEntity.getSpottingIconManager().icon = null;
-					}
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(SpottingIconRemovePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			int id = packet.entityId();
+
+			ClientLevel level = player.clientLevel;
+            Entity entity = level.getEntity(id);
+            if (entity instanceof EntitySpottingIconInterface livingEntity) {
+                livingEntity.getSpottingIconManager().icon = null;
+            }
 		});
 	}
 
