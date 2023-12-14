@@ -28,6 +28,8 @@ import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
+import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -82,9 +84,7 @@ public class SaveableItemCooldowns {
 			ItemCooldowns itemCooldowns = player.getCooldowns();
 			int tickCount = itemCooldowns.tickCount;
 
-			FriendlyByteBuf tickCountByteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			tickCountByteBuf.writeInt(tickCount);
-			ServerPlayNetworking.send(player, FrozenNetworking.COOLDOWN_TICK_COUNT_PACKET, tickCountByteBuf);
+			ServerPlayNetworking.send(player, new CooldownTickCountPacket(tickCount));
 
 			for (SaveableCooldownInstance saveableCooldownInstance : saveableCooldownInstances) {
 				int cooldownLeft = saveableCooldownInstance.cooldownLeft();
@@ -94,11 +94,7 @@ public class SaveableItemCooldowns {
 				if (optionalItem.isPresent()) {
 					Item item = optionalItem.get();
 					itemCooldowns.cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
-					FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-					byteBuf.writeId(BuiltInRegistries.ITEM, item);
-					byteBuf.writeVarInt(startTime);
-					byteBuf.writeVarInt(endTime);
-					ServerPlayNetworking.send(player, FrozenNetworking.FORCED_COOLDOWN_PACKET, byteBuf);
+					ServerPlayNetworking.send(player, new ForcedCooldownPacket(item, startTime, endTime));
 				}
 			}
 		}

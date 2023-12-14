@@ -36,7 +36,7 @@ public final class CooldownChange {
 		if (entry != null) {
 			int between = entry.endTime - entry.startTime;
 			if ((between + additionalCooldown) > min) {
-				((CooldownInterface)player.getCooldowns()).changeCooldown(item, additionalCooldown);
+				((CooldownInterface)player.getCooldowns()).frozenLib$changeCooldown(item, additionalCooldown);
 			}
 		}
 	}

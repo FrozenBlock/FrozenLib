@@ -36,29 +36,12 @@ import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 public final class FrozenNetworking {
 	private FrozenNetworking() {}
 
-	public static final ResourceLocation FLYBY_SOUND_PACKET = FrozenSharedConstants.id("flyby_sound_packet");
-	public static final ResourceLocation LOCAL_SOUND_PACKET = FrozenSharedConstants.id("local_sound_packet");
 	public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = FrozenSharedConstants.id("starting_moving_restriction_looping_sound_packet");
-	public static final ResourceLocation MOVING_RESTRICTION_SOUND_PACKET = FrozenSharedConstants.id("moving_restriction_sound_packet");
 	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_restriction_looping_fading_distance_sound_packet");
 	public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("fading_distance_sound_packet");
 	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_fading_distance_sound_packet");
-	public static final ResourceLocation LOCAL_PLAYER_SOUND_PACKET = FrozenSharedConstants.id("local_player_sound_packet");
-	public static final ResourceLocation COOLDOWN_CHANGE_PACKET = FrozenSharedConstants.id("cooldown_change_packet");
-	public static final ResourceLocation FORCED_COOLDOWN_PACKET = FrozenSharedConstants.id("forced_cooldown_packet");
-	public static final ResourceLocation COOLDOWN_TICK_COUNT_PACKET = FrozenSharedConstants.id("cooldown_tick_count_packet");
-
-	public static final ResourceLocation SCREEN_SHAKE_PACKET = FrozenSharedConstants.id("screen_shake_packet");
-	public static final ResourceLocation SCREEN_SHAKE_ENTITY_PACKET = FrozenSharedConstants.id("screen_shake_entity_packet");
-	public static final ResourceLocation REMOVE_SCREEN_SHAKES_PACKET = FrozenSharedConstants.id("remove_screen_shakes_packet");
-	public static final ResourceLocation REMOVE_ENTITY_SCREEN_SHAKES_PACKET = FrozenSharedConstants.id("remove_entity_screen_shakes_packet");
-
-	public static final ResourceLocation SPOTTING_ICON_PACKET = FrozenSharedConstants.id("spotting_icon_packet");
-	public static final ResourceLocation SPOTTING_ICON_REMOVE_PACKET = FrozenSharedConstants.id("spotting_icon_remove_packet");
 
 	public static final ResourceLocation WIND_SYNC_PACKET = FrozenSharedConstants.id("wind_sync_packet");
-
-	public static final ResourceLocation CONFIG_SYNC_PACKET = FrozenSharedConstants.id("config_sync_packet");
 
 	public static void registerNetworking() {
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {

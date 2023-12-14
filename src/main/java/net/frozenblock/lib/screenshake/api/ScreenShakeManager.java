@@ -34,6 +34,8 @@ import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeManagerInterface;
+import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -108,7 +110,7 @@ public class ScreenShakeManager {
 		public final float maxDistance;
 		public int ticks;
 
-		public ArrayList<ServerPlayer> trackingPlayers = new ArrayList<>();
+		public List<ServerPlayer> trackingPlayers = new ArrayList<>();
 		public final ChunkPos chunkPos;
 
 		public static final Codec<ScreenShake> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
@@ -192,20 +194,7 @@ public class ScreenShakeManager {
 	}
 
 	public static void sendScreenShakePacketTo(ServerPlayer player, float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
-		ServerPlayNetworking.send(player, FrozenNetworking.SCREEN_SHAKE_PACKET, createScreenShakeByteBuf(intensity, duration, falloffStart, x, y, z, maxDistance, ticks));
-	}
-
-	public static FriendlyByteBuf createScreenShakeByteBuf(float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
-		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-		byteBuf.writeFloat(intensity);
-		byteBuf.writeInt(duration);
-		byteBuf.writeInt(falloffStart);
-		byteBuf.writeDouble(x);
-		byteBuf.writeDouble(y);
-		byteBuf.writeDouble(z);
-		byteBuf.writeFloat(maxDistance);
-		byteBuf.writeInt(ticks);
-		return byteBuf;
+		ServerPlayNetworking.send(player, new ScreenShakePacket(intensity, duration, falloffStart, x, y, z, maxDistance, ticks));
 	}
 
 	//With Entity
@@ -223,28 +212,15 @@ public class ScreenShakeManager {
 
 	public static void addEntityScreenShake(@NotNull Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
 		if (!entity.level().isClientSide) {
-			FriendlyByteBuf byteBuf = createEntityScreenShakeByteBuf(entity, intensity, duration, falloffStart, maxDistance, ticks);
+			EntityScreenShakePacket packet = new EntityScreenShakePacket(entity.getId(), intensity, duration, falloffStart, maxDistance, ticks);
 			for (ServerPlayer player : PlayerLookup.world((ServerLevel) entity.level())) {
-				ServerPlayNetworking.send(player, FrozenNetworking.SCREEN_SHAKE_ENTITY_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, packet);
 			}
 			((EntityScreenShakeInterface)entity).addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
 		}
 	}
 
 	public static void sendEntityScreenShakeTo(ServerPlayer player, Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
-		ServerPlayNetworking.send(player, FrozenNetworking.SCREEN_SHAKE_ENTITY_PACKET, createEntityScreenShakeByteBuf(entity, intensity, duration, falloffStart, maxDistance, ticks));
+		ServerPlayNetworking.send(player, new EntityScreenShakePacket(entity.getId(), intensity, duration, falloffStart, maxDistance, ticks));
 	}
-
-	@NotNull
-	public static FriendlyByteBuf createEntityScreenShakeByteBuf(@NotNull Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
-		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-		byteBuf.writeVarInt(entity.getId());
-		byteBuf.writeFloat(intensity);
-		byteBuf.writeInt(duration);
-		byteBuf.writeInt(falloffStart);
-		byteBuf.writeFloat(maxDistance);
-		byteBuf.writeInt(ticks);
-		return byteBuf;
-	}
-
 }

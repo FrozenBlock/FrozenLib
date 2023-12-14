@@ -23,6 +23,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
@@ -33,7 +34,10 @@ import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.NotNull;
 
 public record LocalSoundPacket(double x, double y, double z, SoundEvent sound, SoundSource category, float volume, float pitch, boolean distanceDelay) implements FabricPacket {
-	public static final PacketType<LocalSoundPacket> PACKET_TYPE = PacketType.create(FrozenNetworking.LOCAL_SOUND_PACKET, LocalSoundPacket::new);
+	public static final PacketType<LocalSoundPacket> PACKET_TYPE = PacketType.create(
+		FrozenSharedConstants.id("local_sound_packet"),
+		LocalSoundPacket::new
+	);
 
 	public LocalSoundPacket(@NotNull FriendlyByteBuf buf) {
 		this(

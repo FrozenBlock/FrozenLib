@@ -21,6 +21,7 @@ package net.frozenblock.lib.item.mixin;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.item.impl.CooldownInterface;
+import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
@@ -41,21 +42,17 @@ public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownI
 
 	@Unique
 	@Override
-    public void changeCooldown(Item item, int additional) {
-        if (this.cooldowns.containsKey(item)) {
-            CooldownInstance cooldown = this.cooldowns.get(item);
-            this.cooldowns.put(item, new CooldownInstance(cooldown.startTime, cooldown.endTime + additional));
-            this.onCooldownChanged(item, additional);
-        }
+    public void frozenLib$changeCooldown(Item item, int additional) {
+		this.cooldowns.computeIfPresent(item, (item1, cooldown) -> {
+            this.frozenLib$onCooldownChanged(item, additional);
+			return new CooldownInstance(cooldown.startTime, cooldown.endTime + additional);
+        });
     }
 
 	@Unique
 	@Override
-    public void onCooldownChanged(Item item, int additional) {
-        FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-        byteBuf.writeId(BuiltInRegistries.ITEM, item);
-        byteBuf.writeVarInt(additional);
-        ServerPlayNetworking.send(this.player, FrozenNetworking.COOLDOWN_CHANGE_PACKET, byteBuf);
+    public void frozenLib$onCooldownChanged(Item item, int additional) {
+		ServerPlayNetworking.send(this.player, new CooldownChangePacket(item, additional));
     }
 
 }

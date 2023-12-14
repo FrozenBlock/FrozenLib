@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
@@ -55,7 +56,10 @@ public record ConfigSyncPacket<T>(
 
 	public static final int PERMISSION_LEVEL = 2;
 
-	public static final PacketType<ConfigSyncPacket<?>> PACKET_TYPE = PacketType.create(FrozenNetworking.CONFIG_SYNC_PACKET, ConfigSyncPacket::create);
+	public static final PacketType<ConfigSyncPacket<?>> PACKET_TYPE = PacketType.create(
+		FrozenSharedConstants.id("config_sync_packet"),
+		ConfigSyncPacket::create
+	);
 
 	@Nullable
 	public static <T> ConfigSyncPacket<T> create(@NotNull FriendlyByteBuf buf) {

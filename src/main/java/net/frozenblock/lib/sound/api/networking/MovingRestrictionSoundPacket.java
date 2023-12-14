@@ -23,6 +23,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
@@ -49,7 +50,10 @@ public record MovingRestrictionSoundPacket(
 	boolean looping
 ) implements FabricPacket {
 
-	public static final PacketType<MovingRestrictionSoundPacket> PACKET_TYPE = PacketType.create(FrozenNetworking.MOVING_RESTRICTION_SOUND_PACKET, MovingRestrictionSoundPacket::new);
+	public static final PacketType<MovingRestrictionSoundPacket> PACKET_TYPE = PacketType.create(
+		FrozenSharedConstants.id("moving_restriction_sound_packet"),
+		MovingRestrictionSoundPacket::new
+	);
 
 	public MovingRestrictionSoundPacket(@NotNull FriendlyByteBuf buf) {
 		this(

@@ -36,17 +36,16 @@ public class ItemCooldownsMixin implements CooldownInterface {
 
 	@Unique
 	@Override
-    public void changeCooldown(Item item, int additional) {
-        if (this.cooldowns.containsKey(item)) {
-            ItemCooldowns.CooldownInstance cooldown = this.cooldowns.get(item);
-            this.cooldowns.put(item, new ItemCooldowns.CooldownInstance(cooldown.startTime, cooldown.endTime + additional));
-            this.onCooldownChanged(item, additional);
-        }
+    public void frozenLib$changeCooldown(Item item, int additional) {
+		this.cooldowns.computeIfPresent(item, (item1, cooldown) -> {
+            this.frozenLib$onCooldownChanged(item, additional);
+			return new ItemCooldowns.CooldownInstance(cooldown.startTime, cooldown.endTime + additional);
+        });
     }
 
 	@Unique
 	@Override
-    public void onCooldownChanged(Item item, int additional) {
+    public void frozenLib$onCooldownChanged(Item item, int additional) {
     }
 
 }
