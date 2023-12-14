@@ -26,7 +26,9 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.item.impl.CooldownInterface;
+import net.frozenblock.lib.item.impl.CooldownTickCountPacket;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
+import net.frozenblock.lib.screenshake.impl.ScreenShakePacket;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
@@ -189,35 +191,28 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveCooldownTickCountPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.COOLDOWN_TICK_COUNT_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int tickCount = byteBuf.readInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null && ctx.player != null) {
-					ctx.player.getCooldowns().tickCount = tickCount;
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			if (player != null) {
+				player.getCooldowns().tickCount = packet.count();
+			}
 		});
 	}
 
 	private static void receiveScreenShakePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.SCREEN_SHAKE_PACKET, (ctx, hander, byteBuf, responseSender) -> {
-			float intensity = byteBuf.readFloat();
-			int duration = byteBuf.readInt();
-			int fallOffStart = byteBuf.readInt();
-			double x = byteBuf.readDouble();
-			double y = byteBuf.readDouble();
-			double z = byteBuf.readDouble();
-			float maxDistance = byteBuf.readFloat();
-			int ticks = byteBuf.readInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Vec3 pos = new Vec3(x, y, z);
-					ScreenShaker.addShake(level, intensity, duration, fallOffStart, pos, maxDistance, ticks);
-				}
-			});
-		});
+		ClientPlayNetworking.registerGlobalReceiver(ScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			float intensity = packet.intensity();
+			int duration = packet.duration();
+			int fallOffStart = packet.falloffStart();
+			double x = packet.x();
+			double y = packet.y();
+			double z = packet.z();
+			float maxDistance = packet.maxDistance();
+			int ticks = packet.ticks();
+
+			ClientLevel level = player.clientLevel;
+            Vec3 pos = new Vec3(x, y, z);
+            ScreenShaker.addShake(level, intensity, duration, fallOffStart, pos, maxDistance, ticks);
+        });
 	}
 
 	private static void receiveScreenShakeFromEntityPacket() {

@@ -82,9 +82,7 @@ public class SaveableItemCooldowns {
 			ItemCooldowns itemCooldowns = player.getCooldowns();
 			int tickCount = itemCooldowns.tickCount;
 
-			FriendlyByteBuf tickCountByteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			tickCountByteBuf.writeInt(tickCount);
-			ServerPlayNetworking.send(player, FrozenNetworking.COOLDOWN_TICK_COUNT_PACKET, tickCountByteBuf);
+			ServerPlayNetworking.send(player, new CooldownTickCountPacket(tickCount));
 
 			for (SaveableCooldownInstance saveableCooldownInstance : saveableCooldownInstances) {
 				int cooldownLeft = saveableCooldownInstance.cooldownLeft();

@@ -46,9 +46,7 @@ public final class FrozenNetworking {
 	public static final ResourceLocation LOCAL_PLAYER_SOUND_PACKET = FrozenSharedConstants.id("local_player_sound_packet");
 	public static final ResourceLocation COOLDOWN_CHANGE_PACKET = FrozenSharedConstants.id("cooldown_change_packet");
 	public static final ResourceLocation FORCED_COOLDOWN_PACKET = FrozenSharedConstants.id("forced_cooldown_packet");
-	public static final ResourceLocation COOLDOWN_TICK_COUNT_PACKET = FrozenSharedConstants.id("cooldown_tick_count_packet");
 
-	public static final ResourceLocation SCREEN_SHAKE_PACKET = FrozenSharedConstants.id("screen_shake_packet");
 	public static final ResourceLocation SCREEN_SHAKE_ENTITY_PACKET = FrozenSharedConstants.id("screen_shake_entity_packet");
 	public static final ResourceLocation REMOVE_SCREEN_SHAKES_PACKET = FrozenSharedConstants.id("remove_screen_shakes_packet");
 	public static final ResourceLocation REMOVE_ENTITY_SCREEN_SHAKES_PACKET = FrozenSharedConstants.id("remove_entity_screen_shakes_packet");

@@ -34,6 +34,7 @@ import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeManagerInterface;
+import net.frozenblock.lib.screenshake.impl.ScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -190,20 +191,7 @@ public class ScreenShakeManager {
 	}
 
 	public static void sendScreenShakePacketTo(ServerPlayer player, float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
-		ServerPlayNetworking.send(player, FrozenNetworking.SCREEN_SHAKE_PACKET, createScreenShakeByteBuf(intensity, duration, falloffStart, x, y, z, maxDistance, ticks));
-	}
-
-	public static FriendlyByteBuf createScreenShakeByteBuf(float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
-		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-		byteBuf.writeFloat(intensity);
-		byteBuf.writeInt(duration);
-		byteBuf.writeInt(falloffStart);
-		byteBuf.writeDouble(x);
-		byteBuf.writeDouble(y);
-		byteBuf.writeDouble(z);
-		byteBuf.writeFloat(maxDistance);
-		byteBuf.writeInt(ticks);
-		return byteBuf;
+		ServerPlayNetworking.send(player, new ScreenShakePacket(intensity, duration, falloffStart, x, y, z, maxDistance, ticks));
 	}
 
 	//With Entity

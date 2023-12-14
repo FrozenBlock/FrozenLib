@@ -31,6 +31,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
+import net.frozenblock.lib.screenshake.impl.ScreenShakePacket;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -77,10 +78,10 @@ public class ScreenShakeCommand {
 
 	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance, Collection<? extends ServerPlayer> entities) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
-		FriendlyByteBuf screenShakeByteBuf = ScreenShakeManager.createScreenShakeByteBuf(intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance, 0);
+		ScreenShakePacket packet = new ScreenShakePacket(intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance, 0);
 		StringBuilder playerString = new StringBuilder();
 		for (ServerPlayer serverPlayer : entities) {
-			ServerPlayNetworking.send(serverPlayer, FrozenNetworking.SCREEN_SHAKE_PACKET, screenShakeByteBuf);
+			ServerPlayNetworking.send(serverPlayer, packet);
 			playerString.append(serverPlayer.getDisplayName().getString()).append(", ");
 		}
 		Vec3 finalVec = vec3;
