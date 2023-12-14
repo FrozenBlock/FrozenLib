@@ -27,7 +27,7 @@ import net.frozenblock.lib.config.api.sync.SyncBehavior;
 /**
  * Provides the attributes of a syncable config entry.
  * See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig} and {@link net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui} for an example.
- * @since 1.5
+ * @since 1.5.2
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.FIELD)

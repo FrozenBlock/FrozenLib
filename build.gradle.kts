@@ -512,7 +512,7 @@ val display_name = makeName(mod_version)
 val changelog_text = getChangelog(file(changelog_file))
 
 fun makeName(version: String): String {
-    return "${version} (${minecraft_version})"
+    return "$version (${minecraft_version})"
 }
 
 fun makeModrinthVersion(version: String): String {
