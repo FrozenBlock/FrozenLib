@@ -45,7 +45,6 @@ public class BoneMealItemMixin {
             if (BonemealBehaviors.BONEMEAL_BEHAVIORS.get(state.getBlock()).bonemeal(context, level, blockPos, state, direction, horizontal) && !level.isClientSide) {
                 context.getItemInHand().shrink(1);
                 info.setReturnValue(InteractionResult.SUCCESS);
-                info.cancel();
             } else {
                 info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
             }

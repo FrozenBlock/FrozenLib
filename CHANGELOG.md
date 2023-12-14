@@ -11,3 +11,4 @@ Put changelog here:
   - Fixed a small bug with `Locked When Synced` fields syncing instead of remaining stagnant
   - Added an additional tooltip to notify Server Operators and LAN Hosts when a config value will sync
 - Moved most packets from channels to `FabricPacket`s
+- Improved compatibility of Overworld Biome API
