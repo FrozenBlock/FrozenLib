@@ -41,6 +41,7 @@ import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.frozenblock.lib.wind.api.ClientWindManagerExtension;
 import net.minecraft.client.Minecraft;
@@ -249,21 +250,18 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveIconPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.SPOTTING_ICON_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			int id = byteBuf.readVarInt();
-			ResourceLocation texture = byteBuf.readResourceLocation();
-			float startFade = byteBuf.readFloat();
-			float endFade = byteBuf.readFloat();
-			ResourceLocation predicate = byteBuf.readResourceLocation();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null) {
-					Entity entity = level.getEntity(id);
-					if (entity instanceof EntitySpottingIconInterface livingEntity) {
-						livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
-					}
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(SpottingIconPacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			int id = packet.entityId();
+			ResourceLocation texture = packet.texture();
+			float startFade = packet.startFade();
+			float endFade = packet.endFade();
+			ResourceLocation predicate = packet.restrictionID();
+
+			ClientLevel level = player.clientLevel;
+            Entity entity = level.getEntity(id);
+            if (entity instanceof EntitySpottingIconInterface livingEntity) {
+                livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
+            }
 		});
 	}
 

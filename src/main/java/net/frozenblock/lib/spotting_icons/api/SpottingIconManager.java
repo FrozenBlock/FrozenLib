@@ -25,10 +25,12 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import java.util.Objects;
 import java.util.Optional;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -67,14 +69,9 @@ public class SpottingIconManager {
 	public void setIcon(ResourceLocation texture, float startFade, float endFade, ResourceLocation restrictionID) {
 		this.icon = new SpottingIcon(texture, startFade, endFade, restrictionID);
 		if (!this.entity.level().isClientSide) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeVarInt(this.entity.getId());
-			byteBuf.writeResourceLocation(texture);
-			byteBuf.writeFloat(startFade);
-			byteBuf.writeFloat(endFade);
-			byteBuf.writeResourceLocation(restrictionID);
+			FabricPacket packet = new SpottingIconPacket(this.entity.getId(), texture, startFade, endFade, restrictionID);
 			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
-				ServerPlayNetworking.send(player, FrozenNetworking.SPOTTING_ICON_PACKET, byteBuf);
+				ServerPlayNetworking.send(player, packet);
 			}
 		} else {
 			this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.texture());
@@ -102,7 +99,16 @@ public class SpottingIconManager {
 			byteBuf.writeFloat(this.icon.startFadeDist);
 			byteBuf.writeFloat(this.icon.endFadeDist);
 			byteBuf.writeResourceLocation(this.icon.restrictionID);
-			ServerPlayNetworking.send(player, FrozenNetworking.SPOTTING_ICON_PACKET, byteBuf);
+			ServerPlayNetworking.send(
+				player,
+				new SpottingIconPacket(
+					this.entity.getId(),
+					this.icon.texture,
+					this.icon.startFadeDist(),
+					this.icon.endFadeDist(),
+					this.icon.restrictionID()
+				)
+			);
 		}
 	}
 
