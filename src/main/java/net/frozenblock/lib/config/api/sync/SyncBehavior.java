@@ -18,10 +18,12 @@
 
 package net.frozenblock.lib.config.api.sync;
 
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+
 /**
  * Used to provide the behavior for a config entry when syncing is in action.
- * See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig} for an example.
- * @since 1.5
+ * See {@link FrozenLibConfig} for an example.
+ * @since 1.5.2
  */
 public enum SyncBehavior {
 
@@ -49,7 +51,7 @@ public enum SyncBehavior {
 
 	private final boolean canSync;
 
-	private SyncBehavior(boolean canSync) {
+	SyncBehavior(boolean canSync) {
 		this.canSync = canSync;
 	}
 
