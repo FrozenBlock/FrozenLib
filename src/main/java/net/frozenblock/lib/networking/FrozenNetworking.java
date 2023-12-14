@@ -44,8 +44,6 @@ public final class FrozenNetworking {
 	public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("fading_distance_sound_packet");
 	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_fading_distance_sound_packet");
 	public static final ResourceLocation LOCAL_PLAYER_SOUND_PACKET = FrozenSharedConstants.id("local_player_sound_packet");
-	public static final ResourceLocation COOLDOWN_CHANGE_PACKET = FrozenSharedConstants.id("cooldown_change_packet");
-	public static final ResourceLocation FORCED_COOLDOWN_PACKET = FrozenSharedConstants.id("forced_cooldown_packet");
 
 	public static final ResourceLocation SCREEN_SHAKE_ENTITY_PACKET = FrozenSharedConstants.id("screen_shake_entity_packet");
 	public static final ResourceLocation REMOVE_SCREEN_SHAKES_PACKET = FrozenSharedConstants.id("remove_screen_shakes_packet");

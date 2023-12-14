@@ -34,7 +34,7 @@ import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeManagerInterface;
-import net.frozenblock.lib.screenshake.impl.ScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

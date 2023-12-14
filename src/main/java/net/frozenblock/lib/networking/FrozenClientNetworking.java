@@ -26,9 +26,11 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.item.impl.CooldownInterface;
-import net.frozenblock.lib.item.impl.CooldownTickCountPacket;
+import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
+import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
+import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
-import net.frozenblock.lib.screenshake.impl.ScreenShakePacket;
+import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
 import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
@@ -164,29 +166,23 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveCooldownChangePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.COOLDOWN_CHANGE_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			Item item = byteBuf.readById(BuiltInRegistries.ITEM);
-			int additional = byteBuf.readVarInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null && ctx.player != null) {
-					((CooldownInterface) ctx.player.getCooldowns()).changeCooldown(item, additional);
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			Item item = packet.item();
+			int additional = packet.additional();
+			if (player != null) {
+				player.getCooldowns().changeCooldown(item, additional);
+			}
 		});
 	}
 
 	private static void receiveForcedCooldownPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.FORCED_COOLDOWN_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			Item item = byteBuf.readById(BuiltInRegistries.ITEM);
-			int startTime = byteBuf.readVarInt();
-			int endTime = byteBuf.readVarInt();
-			ctx.execute(() -> {
-				ClientLevel level = ctx.level;
-				if (level != null && ctx.player != null) {
-					ctx.player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
-				}
-			});
+		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, player, responseSender) -> {
+			Item item = packet.item();
+			int startTime = packet.startTime();
+			int endTime = packet.endTime();
+			if (player != null) {
+				player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
+			}
 		});
 	}
 
