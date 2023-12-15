@@ -4,4 +4,5 @@ Make sure to clear this after each release
 
 Put changelog here:
 -----------------
-- Fixed mob spawners not running `finalizeSpawn()` when spawning mobs
+- Fixed support for Fabric Loader 0.15+
+  - Thank you Fourmisain
