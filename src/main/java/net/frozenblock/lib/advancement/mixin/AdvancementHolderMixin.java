@@ -36,9 +36,4 @@ public class AdvancementHolderMixin {
 	private static void modifyAdvancement(FriendlyByteBuf buf, CallbackInfoReturnable<AdvancementHolder> cir) {
 		AdvancementEvents.INIT.invoker().onInit(cir.getReturnValue());
 	}
-
-	@Inject(method = "<init>", at = @At("TAIL"))
-	private void init(ResourceLocation resourceLocation, Advancement advancement, CallbackInfo ci) {
-		//AdvancementEvents.INIT.invoker().onInit((AdvancementHolder) (Object) this);
-	}
 }
