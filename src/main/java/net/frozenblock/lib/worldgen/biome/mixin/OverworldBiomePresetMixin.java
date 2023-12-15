@@ -19,21 +19,20 @@
 package net.frozenblock.lib.worldgen.biome.mixin;
 
 import java.util.function.Function;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.worldgen.biome.impl.OverworldBiomeData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 
 @Mixin(targets = "net/minecraft/world/level/biome/MultiNoiseBiomeSourceParameterList$Preset$2", priority = 991)
 public class OverworldBiomePresetMixin {
 
-	@Inject(method = "apply", at = @At("RETURN"), cancellable = true)
-	public <T> void apply(Function<ResourceKey<Biome>, T> function, CallbackInfoReturnable<Climate.ParameterList<T>> cir) {
-		cir.setReturnValue(OverworldBiomeData.withModdedBiomeEntries(cir.getReturnValue(), function));
+	@ModifyReturnValue(method = "apply", at = @At("RETURN"))
+	private <T> Climate.ParameterList<T> apply(Climate.ParameterList<T> original, Function<ResourceKey<Biome>, T> function) {
+		return OverworldBiomeData.withModdedBiomeEntries(original, function);
 	}
 }
