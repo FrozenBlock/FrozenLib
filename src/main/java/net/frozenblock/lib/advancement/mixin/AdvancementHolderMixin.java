@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(AdvancementHolder.class)
+@Mixin(value = AdvancementHolder.class, priority = 500)
 public class AdvancementHolderMixin {
 
 	@Inject(method = "read", at = @At("RETURN"))
