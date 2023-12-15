@@ -18,10 +18,10 @@
 
 package net.frozenblock.lib.menu.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 import net.frozenblock.lib.menu.api.SplashTextAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SplashManager;
@@ -34,7 +34,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SplashManager.class)
 public class SplashManagerMixin {
@@ -52,34 +51,33 @@ public class SplashManagerMixin {
 		}
 	}
 
-	@Inject(method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;", at = @At("RETURN"))
-	public void addSplashFiles(ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfoReturnable<List<String>> info) {
+	@ModifyReturnValue(method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;", at = @At("RETURN"))
+	public List<String> addSplashFiles(List<String> original, ResourceManager resourceManager, ProfilerFiller profiler) {
 		for (ResourceLocation splashLocation : SplashTextAPI.getSplashFiles()) {
 			try {
 				BufferedReader bufferedReader = Minecraft.getInstance().getResourceManager().openAsReader(splashLocation);
 
 				List<String> var4;
 				try {
-					var4 = bufferedReader.lines().map(String::trim).filter((splashText) -> splashText.hashCode() != 125780783).collect(Collectors.toList());
+					var4 = bufferedReader.lines().map(String::trim).filter(splashText -> splashText.hashCode() != 125780783).toList();
 				} catch (Throwable var7) {
-					if (bufferedReader != null) {
-						try {
-							bufferedReader.close();
-						} catch (Throwable var6) {
-							var7.addSuppressed(var6);
-						}
-					}
+                    try {
+                        bufferedReader.close();
+                    } catch (Throwable var6) {
+                        var7.addSuppressed(var6);
+                    }
 
-					throw var7;
+                    throw var7;
 				}
 
 				bufferedReader.close();
 
-				info.getReturnValue().addAll(var4);
+				original.addAll(var4);
 			} catch (IOException ignored) {
 
 			}
 		}
+		return original;
 	}
 
 }

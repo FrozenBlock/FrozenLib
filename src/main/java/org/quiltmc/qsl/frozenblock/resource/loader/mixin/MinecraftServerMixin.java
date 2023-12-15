@@ -20,6 +20,7 @@ package org.quiltmc.qsl.frozenblock.resource.loader.mixin;
 
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
@@ -43,12 +44,13 @@ public abstract class MinecraftServerMixin {
                 this.getResourceManager());
     }
 
-    @Inject(method = "reloadResources", at = @At("TAIL"))
-    private void onReloadResourcesEnd(Collection<String> collection, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
-        cir.getReturnValue().handleAsync((value, throwable) -> {
+    @ModifyReturnValue(method = "reloadResources", at = @At("RETURN"))
+    private CompletableFuture<Void> onReloadResourcesEnd(CompletableFuture<Void> original) {
+        original.handleAsync((value, throwable) -> {
             ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload((MinecraftServer) (Object) this,
                     this.getResourceManager(), throwable);
             return value;
         }, (MinecraftServer) (Object) this);
-    }
+		return original;
+	}
 }
