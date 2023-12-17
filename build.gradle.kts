@@ -286,7 +286,7 @@ tasks {
         properties["version"] = project.version
         properties["minecraft_version"] = minecraft_version
 
-        properties["fabric_loader_version"] = ">=0.14.22"
+        properties["fabric_loader_version"] = ">=0.15.1"
         properties["fabric_api_version"] = ">=$fabric_api_version"
         properties["fabric_kotlin_version"] = fabric_kotlin_version
 
