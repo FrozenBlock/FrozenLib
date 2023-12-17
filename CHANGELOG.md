@@ -6,3 +6,4 @@ Put changelog here:
 
 -----------------
 - Fixed Mod Integration pre-freeze timing
+- Updated Fabric Loader requirement to 0.15.1+
