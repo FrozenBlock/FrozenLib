@@ -149,6 +149,12 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 
 	@Override
 	@NotNull
+	public Optional<Reference<T>> getHolder(ResourceLocation key) {
+		return this.wrapped.getHolder(key);
+	}
+
+	@Override
+	@NotNull
 	public Optional<Reference<T>> getHolder(ResourceKey<T> key) {
 		return this.wrapped.getHolder(key);
 	}

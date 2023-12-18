@@ -18,34 +18,25 @@
 
 package net.frozenblock.lib.item.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.WrapWithCondition;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
-	@Shadow
-	protected ItemStack useItem;
-
-	@WrapOperation(method = "startUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/world/level/gameevent/GameEvent;)V"))
-	private void frozenLib$preventStartingGameEvent(LivingEntity livingEntity, GameEvent gameEvent, Operation original) {
-		if (!livingEntity.getUseItem().is(FrozenItemTags.NO_USE_GAME_EVENTS)) {
-			original.call(livingEntity, gameEvent);
-		}
+	@WrapWithCondition(method = "startUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/core/Holder;)V"))
+	private boolean preventStartingGameEvent(LivingEntity entity, Holder<GameEvent> event) {
+		return !entity.getUseItem().is(FrozenItemTags.NO_USE_GAME_EVENTS);
 	}
 
-	@WrapOperation(method = "stopUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/world/level/gameevent/GameEvent;)V"))
-	private void frozenLib$preventStoppingGameEvent(LivingEntity livingEntity, GameEvent gameEvent, Operation original) {
-		if (!livingEntity.getUseItem().is(FrozenItemTags.NO_USE_GAME_EVENTS)) {
-			original.call(livingEntity, gameEvent);
-		}
+	@WrapWithCondition(method = "stopUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/core/Holder;)V"))
+	private boolean preventStoppingGameEvent(LivingEntity entity, Holder<GameEvent> event) {
+		return !entity.getUseItem().is(FrozenItemTags.NO_USE_GAME_EVENTS);
 	}
 
 }
