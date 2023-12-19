@@ -27,8 +27,8 @@ import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
-import net.frozenblock.lib.particle.api.DebugPosParticle;
-import net.frozenblock.lib.particle.impl.RegisterFrozenParticles;
+import net.frozenblock.lib.particle.impl.DebugPosParticle;
+import net.frozenblock.lib.particle.api.FrozenParticleTypes;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
@@ -57,7 +57,7 @@ public final class FrozenClient implements ClientModInitializer {
 		// PARTICLES
 		ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
 
-		particleRegistry.register(RegisterFrozenParticles.DEBUG_POS, DebugPosParticle.DebugPosParticleFactory::new);
+		particleRegistry.register(FrozenParticleTypes.DEBUG_POS, DebugPosParticle.Provider::new);
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 

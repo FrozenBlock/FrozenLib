@@ -1,4 +1,4 @@
-package net.frozenblock.lib.particle.api;
+package net.frozenblock.lib.particle.impl;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -14,10 +14,9 @@ import org.jetbrains.annotations.NotNull;
 @Environment(EnvType.CLIENT)
 public class DebugPosParticle extends TextureSheetParticle {
 
-	DebugPosParticle(@NotNull ClientLevel level, @NotNull SpriteSet spriteProvider, double x, double y, double z) {
-		super(level, x, y, z, 0, 0, 0);
+	DebugPosParticle(@NotNull ClientLevel level, double x, double y, double z) {
+		super(level, x, y, z);
 		this.setSize(0.1F, 0.1F);
-		this.pickSprite(spriteProvider);
 		this.quadSize = 1F;
 		this.lifetime = 1;
 		this.hasPhysics = false;
@@ -26,7 +25,7 @@ public class DebugPosParticle extends TextureSheetParticle {
 
 	@Override
 	public void tick() {
-		this.remove();
+
 	}
 
 	@Override
@@ -36,11 +35,19 @@ public class DebugPosParticle extends TextureSheetParticle {
 	}
 
 	@Environment(EnvType.CLIENT)
-	public record DebugPosParticleFactory(@NotNull SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
+	public static class Provider implements ParticleProvider<SimpleParticleType> {
+		private final SpriteSet sprite;
+
+		public Provider(SpriteSet sprites) {
+			this.sprite = sprites;
+		}
+
 		@Override
 		@NotNull
 		public Particle createParticle(@NotNull SimpleParticleType defaultParticleType, @NotNull ClientLevel clientLevel, double x, double y, double z, double g, double h, double i) {
-			return new DebugPosParticle(clientLevel, this.spriteProvider, x, y, z);
+			DebugPosParticle debugPosParticle = new DebugPosParticle(clientLevel, x, y, z);
+			debugPosParticle.pickSprite(this.sprite);
+			return debugPosParticle;
 		}
 	}
 }

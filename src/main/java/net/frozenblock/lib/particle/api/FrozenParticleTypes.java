@@ -1,4 +1,4 @@
-package net.frozenblock.lib.particle.impl;
+package net.frozenblock.lib.particle.api;
 
 import com.mojang.serialization.Codec;
 import java.util.function.Function;
@@ -11,10 +11,10 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
-public final class RegisterFrozenParticles {
+public final class FrozenParticleTypes {
 	public static final SimpleParticleType DEBUG_POS = register("debug_pos");
 
-	private RegisterFrozenParticles() {
+	private FrozenParticleTypes() {
 		throw new UnsupportedOperationException("RegisterParticles contains only static declarations.");
 	}
 
