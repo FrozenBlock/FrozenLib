@@ -35,7 +35,7 @@ public class DebugPosParticle extends TextureSheetParticle {
 	DebugPosParticle(@NotNull ClientLevel level, double x, double y, double z) {
 		super(level, x, y, z);
 		this.setSize(0.1F, 0.1F);
-		this.quadSize = 1F;
+		this.quadSize = 0.01F;
 		this.lifetime = 1;
 		this.hasPhysics = false;
 		this.gravity = 0.0F;
@@ -43,7 +43,7 @@ public class DebugPosParticle extends TextureSheetParticle {
 
 	@Override
 	public void tick() {
-
+		this.remove();
 	}
 
 	@Override
