@@ -28,6 +28,7 @@ import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.ingamedevtools.RegisterInGameDevTools;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.particle.impl.RegisterFrozenParticles;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
@@ -70,6 +71,7 @@ public final class FrozenMain implements ModInitializer {
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 
 		RegisterInGameDevTools.register();
+		RegisterFrozenParticles.registerParticles();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
 
