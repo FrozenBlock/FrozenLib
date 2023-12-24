@@ -226,7 +226,7 @@ repositories {
         setUrl("https://maven.parchmentmc.org")
     }
     maven {
-        setName("Quilt")
+        name = "Quilt"
         setUrl("https://maven.quiltmc.org/repository/release")
     }
 
