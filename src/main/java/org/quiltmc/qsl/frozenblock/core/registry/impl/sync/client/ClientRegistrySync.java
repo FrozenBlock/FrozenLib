@@ -31,7 +31,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.contents.PlainTextContents;
+import net.minecraft.network.chat.ComponentContents;
+import net.minecraft.network.chat.contents.LiteralContents;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
@@ -183,7 +184,7 @@ public final class ClientRegistrySync {
 	}
 
 	private static boolean isTextEmpty(Component text) {
-		return (text.getContents().equals(PlainTextContents.EMPTY) || (text.getContents() instanceof PlainTextContents literalContents && literalContents.text().isEmpty())) && text.getSiblings().isEmpty();
+		return (text.getContents() == ComponentContents.EMPTY || (text.getContents() instanceof LiteralContents literalContents && literalContents.text().isEmpty())) && text.getSiblings().isEmpty();
 	}
 
 	public static void disconnectCleanup(Minecraft client) {
