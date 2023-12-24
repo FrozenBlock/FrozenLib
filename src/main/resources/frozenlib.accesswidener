@@ -24,8 +24,8 @@ transitive-accessible field net/minecraft/advancements/AdvancementRewards recipe
 transitive-mutable field net/minecraft/advancements/AdvancementRewards recipes [Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible field net/minecraft/advancements/AdvancementRewards experience I
 transitive-mutable field net/minecraft/advancements/AdvancementRewards experience I
-transitive-accessible field net/minecraft/advancements/AdvancementRewards function Ljava/util/Optional;
-transitive-mutable field net/minecraft/advancements/AdvancementRewards function Ljava/util/Optional;
+transitive-accessible field net/minecraft/advancements/AdvancementRewards function Lnet/minecraft/commands/CommandFunction$CacheableFunction;
+transitive-mutable field net/minecraft/advancements/AdvancementRewards function Lnet/minecraft/commands/CommandFunction$CacheableFunction;
 transitive-accessible field net/minecraft/advancements/critereon/EffectsChangedTrigger$TriggerInstance effects Ljava/util/Optional;
 transitive-accessible field net/minecraft/advancements/critereon/MobEffectsPredicate effectMap Ljava/util/Map;
 transitive-mutable field net/minecraft/advancements/critereon/MobEffectsPredicate effectMap Ljava/util/Map;
