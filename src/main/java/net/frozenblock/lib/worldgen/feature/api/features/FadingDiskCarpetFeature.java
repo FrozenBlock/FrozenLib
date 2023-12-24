@@ -42,7 +42,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 
 @Override
     public boolean place(@NotNull FeaturePlaceContext<FadingDiskCarpetFeatureConfig> context) {
-		final AtomicBoolean[] bl = {new AtomicBoolean(false)};
+		final AtomicBoolean bl = new AtomicBoolean(false);
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
 		FadingDiskCarpetFeatureConfig config = context.config();
@@ -75,7 +75,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 										if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 											mutableDisk.move(Direction.UP);
 											level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
-											bl[0].set(true);
+											bl.set(true);
 										} else {
 											mutableDisk.move(Direction.UP);
 										}
@@ -86,7 +86,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 									if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 										mutableDisk.move(Direction.UP);
 										level.setBlock(mutableDisk, placedState, 3);
-										bl[0].set(true);
+										bl.set(true);
 									} else {
 										mutableDisk.move(Direction.UP);
 									}
@@ -109,7 +109,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 											if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 												mutableDisk.move(Direction.UP);
 												level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
-												bl[0].set(true);
+												bl.set(true);
 											} else {
 												mutableDisk.move(Direction.UP);
 											}
@@ -120,7 +120,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 										if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
 											mutableDisk.move(Direction.UP);
 											level.setBlock(mutableDisk, placedState, 3);
-											bl[0].set(true);
+											bl.set(true);
 										} else {
 											mutableDisk.move(Direction.UP);
 										}
@@ -140,7 +140,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 			serverLevel.getServer().executeBlocking(() -> consumer.accept(serverLevel));
 		}
 
-		return true;
+		return bl.get();
     }
 
 	public static boolean isBlockExposedToAir(WorldGenLevel level, @NotNull BlockPos blockPos) {

@@ -44,7 +44,7 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
 
 	@Override
     public boolean place(@NotNull FeaturePlaceContext<FadingDiskTagBiomeFeatureConfig> context) {
-		final AtomicBoolean[] bl = {new AtomicBoolean(false)};
+		final AtomicBoolean bl = new AtomicBoolean(false);
         BlockPos blockPos = context.origin();
         WorldGenLevel level = context.level();
 		FadingDiskTagBiomeFeatureConfig config = context.config();
@@ -75,11 +75,11 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
 								if (fade) {
 									if (random.nextFloat() > 0.5F && state.is(config.outerReplaceableBlocks()) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
 										level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
-										bl[0].set(true);
+										bl.set(true);
 									}
 								} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance())) ? config.innerReplaceableBlocks() : config.outerReplaceableBlocks()) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
 									level.setBlock(mutableDisk, choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk), 3);
-									bl[0].set(true);
+									bl.set(true);
 								}
 							}
 						}
@@ -97,11 +97,11 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
 										if (fade) {
 											if (random.nextFloat() > 0.5F && state.is(config.outerReplaceableBlocks()) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
 												level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
-												bl[0].set(true);
+												bl.set(true);
 											}
 										} else if (state.is((choseInner = (inner && random.nextFloat() < config.innerChance())) ? config.innerReplaceableBlocks() : config.outerReplaceableBlocks()) && !level.getBiome(mutableDisk).is(ignoredBiomes)) {
 											level.setBlock(mutableDisk, choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk), 3);
-											bl[0].set(true);
+											bl.set(true);
 										}
 									}
 								}
@@ -119,7 +119,7 @@ public class FadingDiskTagExceptInBiomeFeature extends Feature<FadingDiskTagBiom
 			serverLevel.getServer().executeBlocking(() -> consumer.accept(serverLevel));
 		}
 
-		return true;
+		return bl.get();
     }
 
 	public static boolean isBlockExposedToAir(WorldGenLevel level, @NotNull BlockPos blockPos) {

@@ -27,6 +27,7 @@ import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskCarpetFeature
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskTagExceptInBiomeFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskTagFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskWithPileTagFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathSwapUnderWaterFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathSwapUnderWaterTagFeature;
@@ -68,6 +69,7 @@ public class FrozenFeatures {
 	public static final FadingDiskTagExceptInBiomeFeature FADING_DISK_TAG_EXCEPT_IN_BIOME_FEATURE = new FadingDiskTagExceptInBiomeFeature(FadingDiskTagBiomeFeatureConfig.CODEC);
 	public static final FadingDiskFeature FADING_DISK_FEATURE = new FadingDiskFeature(FadingDiskFeatureConfig.CODEC);
 	public static final FadingDiskCarpetFeature FADING_DISK_CARPET_FEATURE = new FadingDiskCarpetFeature(FadingDiskCarpetFeatureConfig.CODEC);
+	public static final FadingDiskWithPileTagFeature FADING_DISK_WITH_PILE_TAG_FEATURE = new FadingDiskWithPileTagFeature(FadingDiskTagFeatureConfig.CODEC);
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_feature"), NOISE_PATH_FEATURE);
@@ -86,6 +88,7 @@ public class FrozenFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_tag_except_in_biome_feature"), FADING_DISK_TAG_EXCEPT_IN_BIOME_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_feature"), FADING_DISK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_carpet_feature"), FADING_DISK_CARPET_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_with_pile_tag_feature"), FADING_DISK_WITH_PILE_TAG_FEATURE);
 	}
 
 }
