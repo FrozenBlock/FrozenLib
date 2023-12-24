@@ -46,7 +46,7 @@ public class NbtFileUtils {
 	public static void saveToFile(CompoundTag compoundTag, @NotNull File file) {
 		file.mkdirs();
 		try {
-			NbtIo.writeCompressed(compoundTag, file.toPath());
+			NbtIo.writeCompressed(compoundTag, file);
 		} catch (IOException iOException) {
 			LOGGER.error("Could not save data {}", file, iOException);
 		}
@@ -66,7 +66,7 @@ public class NbtFileUtils {
 	public static CompoundTag readFromFile(File file) {
 		CompoundTag compoundTag = null;
 		try {
-			compoundTag = NbtIo.read(file.toPath());
+			compoundTag = NbtIo.read(file);
 		} catch (IOException iOException) {
 			LOGGER.error("Could not read data {}", file, iOException);
 		}
