@@ -35,14 +35,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import java.util.Optional;
 
 @Mixin(AxeItem.class)
 public class AxeItemMixin {
 
-	@Inject(method = "useOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/context/UseOnContext;getItemInHand()Lnet/minecraft/world/item/ItemStack;", ordinal = 0, shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
-	public void frozenlib$_axeBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, Level level, BlockPos blockPos, Player player, Optional<BlockState> optional) {
-		BlockState blockState = level.getBlockState(blockPos);
+	@Inject(method = "useOn", at = @At(value = "INVOKE", target = "Ljava/util/Optional;isPresent()Z", ordinal = 0), locals = LocalCapture.CAPTURE_FAILHARD, cancellable = true)
+	public void frozenlib$_axeBehaviors(UseOnContext context, CallbackInfoReturnable<InteractionResult> cir, Level level, BlockPos blockPos, Player player, BlockState blockState) {
 		Direction direction = context.getClickedFace();
 		Direction horizontal = context.getHorizontalDirection();
 		if (AxeBehaviors.AXE_BEHAVIORS.containsKey(blockState.getBlock())) {

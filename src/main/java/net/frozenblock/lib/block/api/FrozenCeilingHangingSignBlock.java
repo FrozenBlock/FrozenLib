@@ -30,7 +30,7 @@ public class FrozenCeilingHangingSignBlock extends CeilingHangingSignBlock {
 	public final ResourceLocation lootTable;
 
 	public FrozenCeilingHangingSignBlock(BlockBehaviour.Properties settings, WoodType signType, ResourceLocation lootTable) {
-		super(signType, settings);
+		super(settings, signType);
 		this.lootTable = lootTable;
 	}
 

@@ -28,7 +28,7 @@ public class FrozenSignBlock extends StandingSignBlock {
     public final ResourceLocation lootTable;
 
     public FrozenSignBlock(Properties settings, WoodType signType, ResourceLocation lootTable) {
-        super(signType, settings);
+        super(settings, signType);
         this.lootTable = lootTable;
     }
 
