@@ -19,6 +19,7 @@
 package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
+import java.util.Iterator;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskTagFeatureConfig;
@@ -28,15 +29,17 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.BlockPileConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
+public class FadingDiskWithPileTagFeature extends Feature<FadingDiskTagFeatureConfig> {
 
-    public FadingDiskTagFeature(Codec<FadingDiskTagFeatureConfig> codec) {
+    public FadingDiskWithPileTagFeature(Codec<FadingDiskTagFeatureConfig> codec) {
         super(codec);
     }
 
@@ -116,6 +119,8 @@ public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
 			serverLevel.getServer().executeBlocking(() -> consumer.accept(serverLevel));
 		}
 
+		bl.set(this.placePile(context) || bl.get());
+
 		return bl.get();
     }
 
@@ -129,6 +134,43 @@ public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
 			mutableBlockPos.move(direction, -1);
 		}
 		return false;
+	}
+
+	public boolean placePile(@NotNull FeaturePlaceContext<FadingDiskTagFeatureConfig> context) {
+		BlockPos blockPos = context.origin();
+		WorldGenLevel worldGenLevel = context.level();
+		RandomSource randomSource = context.random();
+		FadingDiskTagFeatureConfig config = context.config();
+		if (blockPos.getY() < worldGenLevel.getMinBuildHeight() + 5) {
+			return false;
+		} else {
+			int i = 2 + randomSource.nextInt(2);
+			int j = 2 + randomSource.nextInt(2);
+
+			for (BlockPos blockPos2 : BlockPos.betweenClosed(blockPos.offset(-i, 0, -j), blockPos.offset(i, 1, j))) {
+				int k = blockPos.getX() - blockPos2.getX();
+				int l = blockPos.getZ() - blockPos2.getZ();
+				if ((float) (k * k + l * l) <= randomSource.nextFloat() * 10.0F - randomSource.nextFloat() * 6.0F) {
+					this.tryPlaceBlock(worldGenLevel, blockPos2, randomSource, config);
+				} else if ((double) randomSource.nextFloat() < 0.031D) {
+					this.tryPlaceBlock(worldGenLevel, blockPos2, randomSource, config);
+				}
+			}
+
+			return true;
+		}
+	}
+
+	private boolean mayPlaceOn(@NotNull LevelAccessor level, @NotNull BlockPos pos, RandomSource random) {
+		BlockPos blockPos = pos.below();
+		BlockState blockState = level.getBlockState(blockPos);
+		return blockState.is(Blocks.DIRT_PATH) ? random.nextBoolean() : blockState.isFaceSturdy(level, blockPos, Direction.UP);
+	}
+
+	private void tryPlaceBlock(@NotNull LevelAccessor level, BlockPos pos, RandomSource random, FadingDiskTagFeatureConfig config) {
+		if (level.isEmptyBlock(pos) && this.mayPlaceOn(level, pos, random)) {
+			level.setBlock(pos, config.innerState().getState(random, pos), 4);
+		}
 	}
 
 }

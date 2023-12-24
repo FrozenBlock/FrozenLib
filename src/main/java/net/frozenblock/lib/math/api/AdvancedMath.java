@@ -22,6 +22,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Adds more math operations.
@@ -36,6 +39,8 @@ public final class AdvancedMath {
 		throw new UnsupportedOperationException("AdvancedMath contains only static declarations.");
 	}
 
+	@Contract(" -> new")
+	@NotNull
 	public static RandomSource random() {
 		return RandomSource.create();
 	}
@@ -61,7 +66,7 @@ public final class AdvancedMath {
         return cond1 && cond2;
     }
 
-    public static BlockPos offset(final BlockPos pos, final Direction dir, final int a) {
+    public static BlockPos offset(final BlockPos pos, final @NotNull Direction dir, final int a) {
         return switch (dir) {
             case WEST -> pos.west(a);
             case EAST -> pos.east(a);
@@ -149,7 +154,7 @@ public final class AdvancedMath {
 	 * @return an array containing the real roots of the equation, or null if no real roots exist
 	 * @throws IllegalArgumentException if a is zero
 	 */
-	public static double[] solveQuadraticEquation(double a, double b, double c) {
+	public static double @Nullable [] solveQuadraticEquation(double a, double b, double c) {
 		if (a == 0) {
 			throw new IllegalArgumentException("a cannot be zero");
 		}
@@ -191,7 +196,8 @@ public final class AdvancedMath {
 	 * @param axis The axis that should be used to determine a random direction.
 	 * @return A random {@linkplain Direction} on a specific {@linkplain Direction.Axis}.
 	 */
-    public static Direction randomDir(final Direction.Axis axis) {
+	@NotNull
+    public static Direction randomDir(@NotNull final Direction.Axis axis) {
         double random = random().nextDouble();
 		switch (axis) {
 			case X -> {
@@ -206,9 +212,23 @@ public final class AdvancedMath {
 		}
     }
 
-	public static Vec3 rotateAboutXZ(Vec3 original, double distanceFrom, double angle) {
-		double calcAngle = angle * (Math.PI / 180);
+	@NotNull
+	public static Vec3 rotateAboutXZ(@NotNull Vec3 original, double distanceFrom, double angle) {
+		double calcAngle = angle * (Math.PI / 180D);
 		Vec3 offsetVec = original.add(distanceFrom, 0, distanceFrom);
+		double originX = original.x;
+		double originZ = original.z;
+		double distancedX = offsetVec.x;
+		double distancedZ = offsetVec.z;
+		double x = originX + (distancedX - originX) * Math.cos(calcAngle) - (distancedZ - originZ) * Math.sin(calcAngle);
+		double z = originZ + (distancedX - originX) * Math.sin(calcAngle) + (distancedZ - originZ) * Math.cos(calcAngle);
+		return new Vec3(x, original.y, z);
+	}
+
+	@NotNull
+	public static Vec3 rotateAboutX(@NotNull Vec3 original, double distanceFrom, double angle) {
+		double calcAngle = angle * (Math.PI / 180D);
+		Vec3 offsetVec = original.add(distanceFrom, 0, 0);
 		double originX = original.x;
 		double originZ = original.z;
 		double distancedX = offsetVec.x;
