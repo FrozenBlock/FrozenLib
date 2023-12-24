@@ -284,9 +284,9 @@ tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = "~1.20.5-"
+        properties["minecraft_version"] = minecraft_version
 
-        properties["fabric_loader_version"] = ">=0.15.3"
+        properties["fabric_loader_version"] = ">=0.15.1"
         properties["fabric_api_version"] = ">=$fabric_api_version"
         properties["fabric_kotlin_version"] = fabric_kotlin_version
 
