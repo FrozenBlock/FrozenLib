@@ -5,5 +5,10 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Fixed Mod Integration pre-freeze timing
-- Updated Fabric Loader requirement to 0.15.1+
+- Added `FadingDiskWithPileTagFeature`
+- Added `rotateAboutX` to `AdvancedMath`
+- Added `DebugPosParticle`
+  - A particle for marking a position.
+- Slight optimizations
+- Slightly improved Gravity API compatibility
+- Populated more annotations
