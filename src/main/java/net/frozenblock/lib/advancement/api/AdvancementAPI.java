@@ -20,10 +20,8 @@ package net.frozenblock.lib.advancement.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
@@ -41,7 +39,7 @@ public final class AdvancementAPI {
 	 */
 	public static void setupRewards(Advancement advancement) {
 		if (advancement.rewards == AdvancementRewards.EMPTY) {
-			advancement.rewards = new AdvancementRewards(0, List.of(), List.of(), Optional.empty());
+			advancement.rewards = new AdvancementRewards(0, new ResourceLocation[0], new ResourceLocation[0], new CacheableFunction(null));
 		}
 	}
 
@@ -52,7 +50,7 @@ public final class AdvancementAPI {
 	 */
 	public static void setupRequirements(Advancement advancement) {
 		if (advancement.requirements == AdvancementRequirements.EMPTY) {
-			advancement.requirements = new AdvancementRequirements(List.of());
+			advancement.requirements = new AdvancementRequirements(new String[0][]);
 		}
 	}
 
@@ -71,24 +69,25 @@ public final class AdvancementAPI {
 	public static void addRequirements(Advancement advancement, AdvancementRequirements requirements) {
 		if (requirements == null || requirements.isEmpty()) return;
 		setupRequirements(advancement);
-		List<List<String>> list = new ArrayList<>(advancement.requirements().requirements);
-		list.addAll(requirements.requirements);
-		advancement.requirements().requirements = Collections.unmodifiableList(list);
+		List<String[]> list = new ArrayList<>();
+		list.addAll(Arrays.stream(advancement.requirements().requirements).toList());
+		list.addAll(Arrays.stream(requirements.requirements).toList());
+		advancement.requirements().requirements = list.toArray(new String[][]{});
 	}
 
 	public static void addLootTables(Advancement advancement, List<ResourceLocation> lootTables) {
 		if (lootTables.isEmpty()) return;
 		setupRewards(advancement);
 		AdvancementRewards rewards = advancement.rewards();
-		List<ResourceLocation> newLoot = new ArrayList<>(rewards.loot);
+		List<ResourceLocation> newLoot = new ArrayList<>(Arrays.stream(rewards.loot).toList());
 		newLoot.addAll(lootTables);
-		rewards.loot = Collections.unmodifiableList(newLoot);
+		rewards.loot = newLoot.toArray(new ResourceLocation[]{});
 	}
 
 	public static void addRecipes(Advancement advancement, List<ResourceLocation> recipes) {
 		AdvancementRewards rewards = advancement.rewards();
-		List<ResourceLocation> newLoot = new ArrayList<>(rewards.recipes);
+		List<ResourceLocation> newLoot = new ArrayList<>(Arrays.stream(rewards.recipes).toList());
 		newLoot.addAll(recipes);
-		rewards.recipes = Collections.unmodifiableList(newLoot);
+		rewards.recipes = newLoot.toArray(new ResourceLocation[]{});
 	}
 }

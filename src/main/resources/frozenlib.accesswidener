@@ -1,6 +1,7 @@
 accessWidener    v2    named
 
 # Advancement
+accessible method net/minecraft/world/item/ItemStack <init> (Lnet/minecraft/world/level/ItemLike;ILjava/util/Optional;)V
 transitive-accessible field net/minecraft/advancements/Advancement parent Ljava/util/Optional;
 transitive-accessible field net/minecraft/advancements/Advancement display Ljava/util/Optional;
 transitive-accessible field net/minecraft/advancements/Advancement rewards Lnet/minecraft/advancements/AdvancementRewards;
@@ -15,12 +16,12 @@ transitive-mutable field net/minecraft/advancements/Advancement criteria Ljava/u
 transitive-mutable field net/minecraft/advancements/Advancement requirements Lnet/minecraft/advancements/AdvancementRequirements;
 transitive-mutable field net/minecraft/advancements/Advancement sendsTelemetryEvent Z
 transitive-mutable field net/minecraft/advancements/Advancement name Ljava/util/Optional;
-transitive-accessible field net/minecraft/advancements/AdvancementRequirements requirements Ljava/util/List;
-transitive-mutable field net/minecraft/advancements/AdvancementRequirements requirements Ljava/util/List;
-transitive-accessible field net/minecraft/advancements/AdvancementRewards loot Ljava/util/List;
-transitive-mutable field net/minecraft/advancements/AdvancementRewards loot Ljava/util/List;
-transitive-accessible field net/minecraft/advancements/AdvancementRewards recipes Ljava/util/List;
-transitive-mutable field net/minecraft/advancements/AdvancementRewards recipes Ljava/util/List;
+transitive-accessible field net/minecraft/advancements/AdvancementRequirements requirements [[Ljava/lang/String;
+transitive-mutable field net/minecraft/advancements/AdvancementRequirements requirements [[Ljava/lang/String;
+transitive-accessible field net/minecraft/advancements/AdvancementRewards loot [Lnet/minecraft/resources/ResourceLocation;
+transitive-mutable field net/minecraft/advancements/AdvancementRewards loot [Lnet/minecraft/resources/ResourceLocation;
+transitive-accessible field net/minecraft/advancements/AdvancementRewards recipes [Lnet/minecraft/resources/ResourceLocation;
+transitive-mutable field net/minecraft/advancements/AdvancementRewards recipes [Lnet/minecraft/resources/ResourceLocation;
 transitive-accessible field net/minecraft/advancements/AdvancementRewards experience I
 transitive-mutable field net/minecraft/advancements/AdvancementRewards experience I
 transitive-accessible field net/minecraft/advancements/AdvancementRewards function Ljava/util/Optional;
@@ -41,7 +42,8 @@ transitive-accessible method net/minecraft/commands/synchronization/ArgumentType
 
 # Recipe
 transitive-accessible method net/minecraft/world/item/crafting/Ingredient$ItemValue <init> (Lnet/minecraft/world/item/ItemStack;)V
-transitive-accessible field net/minecraft/world/item/ItemStack ITEM_NON_AIR_CODEC Lcom/mojang/serialization/Codec;
+transitive-accessible field net/minecraft/world/item/crafting/CraftingRecipeCodecs ITEMSTACK_NONAIR_CODEC Lcom/mojang/serialization/Codec;
+transitive-accessible class net/minecraft/data/recipes/ShapedRecipeBuilder$Result
 
 # Sculk Spreading
 transitive-accessible    class    net/minecraft/world/level/block/SculkVeinBlock$SculkVeinSpreaderConfig
