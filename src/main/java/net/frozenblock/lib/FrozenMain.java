@@ -20,22 +20,29 @@ package net.frozenblock.lib;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
+import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.ingamedevtools.RegisterInGameDevTools;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.api.FrozenParticleTypes;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
+import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.tag.api.TagListCommand;
+import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
+import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
@@ -44,6 +51,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.commands.WardenSpawnTrackerCommand;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
@@ -88,6 +96,25 @@ public final class FrozenMain implements ModInitializer {
 			ConfigCommand.register(dispatcher);
 			TagListCommand.register(dispatcher);
 		});
+
+
+		ServerWorldEvents.LOAD.register((server, level) -> {
+			DimensionDataStorage dimensionDataStorage = level.getDataStorage();
+			WindManager windManager = WindManager.getWindManager(level);
+			dimensionDataStorage.computeIfAbsent(windManager.createData(), WindStorage.WIND_FILE_ID);
+			ScreenShakeManager screenShakeManager = ScreenShakeManager.getScreenShakeManager(level);
+			dimensionDataStorage.computeIfAbsent(screenShakeManager.createData(), ScreenShakeStorage.SCREEN_SHAKE_FILE_ID);
+		});
+
+		ServerTickEvents.START_WORLD_TICK.register(serverLevel -> {
+			WindManager.getWindManager(serverLevel).tick();
+			ScreenShakeManager.getScreenShakeManager(serverLevel).tick();
+		});
+
+		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
+			WindManager windManager = WindManager.getWindManager(serverLevel);
+			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
+		}));
 
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand)
 			CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> WardenSpawnTrackerCommand.register(dispatcher)));
