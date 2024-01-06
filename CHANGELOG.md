@@ -6,3 +6,4 @@ Put changelog here:
 
 -----------------
 - Fixed Wind and some server-controlled Screen Shakes not working
+- Added a new /scale command (1.20.5+ only)
