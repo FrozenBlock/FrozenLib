@@ -61,19 +61,21 @@ public class ScreenShakeManager {
 		this.level = level;
 	}
 
-	public void tick() {
-		this.getShakes().removeIf(ScreenShake::shouldRemove);
-		for (ScreenShake shake : this.getShakes()) {
-			if (this.level.getChunkSource().hasChunk(shake.chunkPos.x, shake.chunkPos.z)) {
-				shake.ticks += 1;
-				Collection<ServerPlayer> playersTrackingChunk = PlayerLookup.tracking(this.level, shake.chunkPos);
-				for (ServerPlayer serverPlayer : playersTrackingChunk) {
-					if (!shake.trackingPlayers.contains(serverPlayer)) {
-						ScreenShakeManager.sendScreenShakePacketTo(serverPlayer, shake.getIntensity(), shake.getDuration(), shake.getDurationFalloffStart(), shake.getPos().x(), shake.getPos().y(), shake.getPos().z(), shake.getMaxDistance(), shake.getTicks());
+	public void tick(@NotNull ServerLevel level) {
+		if (level.tickRateManager().runsNormally()) {
+			this.getShakes().removeIf(ScreenShake::shouldRemove);
+			for (ScreenShake shake : this.getShakes()) {
+				if (this.level.getChunkSource().hasChunk(shake.chunkPos.x, shake.chunkPos.z)) {
+					shake.ticks += 1;
+					Collection<ServerPlayer> playersTrackingChunk = PlayerLookup.tracking(this.level, shake.chunkPos);
+					for (ServerPlayer serverPlayer : playersTrackingChunk) {
+						if (!shake.trackingPlayers.contains(serverPlayer)) {
+							ScreenShakeManager.sendScreenShakePacketTo(serverPlayer, shake.getIntensity(), shake.getDuration(), shake.getDurationFalloffStart(), shake.getPos().x(), shake.getPos().y(), shake.getPos().z(), shake.getMaxDistance(), shake.getTicks());
+						}
 					}
+					shake.trackingPlayers.clear();
+					shake.trackingPlayers.addAll(playersTrackingChunk);
 				}
-				shake.trackingPlayers.clear();
-				shake.trackingPlayers.addAll(playersTrackingChunk);
 			}
 		}
 	}

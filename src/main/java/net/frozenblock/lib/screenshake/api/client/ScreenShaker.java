@@ -44,43 +44,42 @@ public class ScreenShaker {
 	private static float prevZRot;
 	private static float zRot;
 
-	public static void tick(@NotNull Minecraft client) {
-		prevYRot = yRot;
-		prevXRot = xRot;
-		prevZRot = zRot;
-		ClientLevel level = client.level;
-		if (level == null) {
-			SCREEN_SHAKES.clear();
-		}
-		if ((!client.isMultiplayerServer() && client.isPaused()) || level == null) {
-			yRot = 0F;
-			xRot = 0F;
-			zRot = 0F;
-			return;
-		}
-		Window window = client.getWindow();
-		int windowWidth = window.getWidth();
-		int windowHeight = window.getHeight();
-		RandomSource randomSource = level.getRandom();
-
-		SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake.shouldRemove(level));
-		float highestIntensity = 0;
-		float totalIntensity = 0;
-		int amount = 0;
-		for (ClientScreenShake screenShake : SCREEN_SHAKES) {
-			screenShake.tick();
-			float shakeIntensity = screenShake.getIntensity(client.gameRenderer.getMainCamera().getPosition());
-			if (shakeIntensity > 0) {
-				totalIntensity += shakeIntensity;
-				highestIntensity = Math.max(shakeIntensity, highestIntensity);
-				amount += 1;
+	public static void tick(@NotNull ClientLevel level) {
+		if (level.tickRateManager().runsNormally()) {
+			Minecraft client = Minecraft.getInstance();
+			prevYRot = yRot;
+			prevXRot = xRot;
+			prevZRot = zRot;
+			if (!client.isMultiplayerServer() && client.isPaused()) {
+				yRot = 0F;
+				xRot = 0F;
+				zRot = 0F;
+				return;
 			}
-			screenShake.ticks += 1;
+			Window window = client.getWindow();
+			int windowWidth = window.getWidth();
+			int windowHeight = window.getHeight();
+			RandomSource randomSource = level.getRandom();
+
+			SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake.shouldRemove(level));
+			float highestIntensity = 0;
+			float totalIntensity = 0;
+			int amount = 0;
+			for (ClientScreenShake screenShake : SCREEN_SHAKES) {
+				screenShake.tick();
+				float shakeIntensity = screenShake.getIntensity(client.gameRenderer.getMainCamera().getPosition());
+				if (shakeIntensity > 0) {
+					totalIntensity += shakeIntensity;
+					highestIntensity = Math.max(shakeIntensity, highestIntensity);
+					amount += 1;
+				}
+				screenShake.ticks += 1;
+			}
+			float intensity = (amount > 0 && totalIntensity != 0 && highestIntensity != 0) ? (highestIntensity + ((totalIntensity / amount) * 0.5F)) : 0F;
+			yRot = Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight);
+			xRot = Mth.nextFloat(randomSource, -intensity, intensity);
+			zRot = Mth.nextFloat(randomSource, -intensity, intensity);
 		}
-		float intensity = (amount > 0 && totalIntensity != 0 && highestIntensity != 0) ? (highestIntensity + ((totalIntensity / amount) * 0.5F)) : 0F;
-		yRot = Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight);
-		xRot = Mth.nextFloat(randomSource, -intensity, intensity);
-		zRot = Mth.nextFloat(randomSource, -intensity, intensity);
 	}
 
 	public static void shake(@NotNull PoseStack poseStack, float partialTicks) {

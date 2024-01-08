@@ -34,6 +34,7 @@ import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.wind.api.ClientWindManager;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
@@ -69,8 +70,8 @@ public final class FrozenClient implements ClientModInitializer {
 
 	private static void registerClientEvents() {
 		ClientTickEvents.START_WORLD_TICK.register(ClientWindManager::tick);
-		ClientTickEvents.START_CLIENT_TICK.register(ScreenShaker::tick);
-		ClientTickEvents.START_CLIENT_TICK.register(client -> FlyBySoundHub.update(client, client.getCameraEntity(), true));
+		ClientTickEvents.START_WORLD_TICK.register(ScreenShaker::tick);
+		ClientTickEvents.START_WORLD_TICK.register(level -> FlyBySoundHub.update(Minecraft.getInstance(), Minecraft.getInstance().getCameraEntity(), true));
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ScreenShaker.clear());
 	}
 

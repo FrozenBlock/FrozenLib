@@ -63,7 +63,7 @@ public final class FlyBySoundHub {
 	//private static int checkAroundCooldown;
 
     public static void update(@NotNull Minecraft client, Entity cameraEntity, boolean autoSounds) {
-		if (client.level != null && cameraEntity != null) {
+		if (client.level != null && cameraEntity != null && client.level.tickRateManager().runsNormally()) {
 			Vec3 cameraPos = cameraEntity.getEyePosition();
 			double cameraEntityWidth = cameraEntity.getBbWidth();
 			double detectionWidth = cameraEntityWidth * 2;
