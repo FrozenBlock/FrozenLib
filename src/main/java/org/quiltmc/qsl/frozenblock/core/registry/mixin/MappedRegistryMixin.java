@@ -18,7 +18,6 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.serialization.Lifecycle;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
@@ -34,10 +33,8 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
  * Stores and invokes registry events.
@@ -65,25 +62,19 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 	}
 
 
-	@Inject(
+	@ModifyVariable(
 		method = "registerMapping(ILnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/core/Holder$Reference;",
-		slice = @Slice(
-			from = @At(
-				value = "INVOKE",
-				target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;",
-				remap = false
-			)
-		),
 		at = @At(
 			value = "INVOKE",
-			target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;",
-			shift = At.Shift.BEFORE,
+			target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;",
 			ordinal = 0
-		),
-		locals = LocalCapture.CAPTURE_FAILEXCEPTION
+		)
 	)
-	private void quilt$eagerFillReference(int id, ResourceKey<V> key, V value, Lifecycle lifecycle, CallbackInfoReturnable<Holder.Reference<V>> info, Holder.Reference<V> reference) {
-		reference.bindValue(value);
+	private Object quilt$eagerFillReference(Object object, int id, ResourceKey<V> key, V value, Lifecycle lifecycle) {
+		if (object instanceof Holder.Reference reference) {
+			reference.bindValue(value);
+		}
+		return object;
 	}
 
 	/**
