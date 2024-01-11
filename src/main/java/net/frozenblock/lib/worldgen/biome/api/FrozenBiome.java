@@ -28,9 +28,7 @@ public abstract class FrozenBiome {
 
 	public abstract float downfall();
 
-	public boolean hasPrecipitation() {
-		return true;
-	}
+	public abstract boolean hasPrecipitation();
 
 	public Biome.TemperatureModifier temperatureModifier() {
 		return Biome.TemperatureModifier.NONE;
