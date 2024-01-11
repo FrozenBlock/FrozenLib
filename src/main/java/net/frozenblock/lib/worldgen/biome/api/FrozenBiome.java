@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.worldgen.biome.api;
 
+import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstapContext;
@@ -31,12 +32,21 @@ import net.minecraft.world.level.biome.AmbientParticleSettings;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
+import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
 
 public abstract class FrozenBiome {
+	private static final List<FrozenBiome> BIOMES = new ArrayList<>();
 	private final ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, new ResourceLocation(this.modID(), this.biomeID()));
+
+	protected FrozenBiome() {
+		BIOMES.add(this);
+	}
 
     public abstract String modID();
 
@@ -126,8 +136,27 @@ public abstract class FrozenBiome {
 
 	public abstract void addSpawns(MobSpawnSettings.Builder spawns);
 
+	public abstract void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters);
+
 	public ResourceKey<Biome> getKey() {
 		return this.key;
+	}
+
+	protected final void addSurfaceBiome(@NotNull Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness, ResourceKey<Biome> key) {
+		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(0.0F), depth, weirdness), key));
+		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(1.0F), depth, weirdness), key));
+	}
+
+	protected final void addSemiDeepBiome(@NotNull Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset, ResourceKey<Biome> biome) {
+		parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.4F, 1.0F), weirdness, offset), biome));
+	}
+
+	protected final void addUndergroundBiome(@NotNull Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness, ResourceKey<Biome> key) {
+		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.2F, 0.9F), depth, weirdness), key));
+	}
+
+	protected final void addBottomBiome(@NotNull Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temerature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness, ResourceKey<Biome> key) {
+		consumer.accept(Pair.of(Climate.parameters(temerature, humidity, continentalness, erosion, Climate.Parameter.point(1.1F), depth, weirdness), key));
 	}
 
 }
