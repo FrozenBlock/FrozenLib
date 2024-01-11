@@ -5,5 +5,8 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Fixed Wind and some server-controlled Screen Shakes not working
-- Added a new /scale command (1.20.5+ only)
+- Fixed Wind and some server-controlled Screen Shakes not working.
+- Added a new /scale command (1.20.5+ only.)
+- Added the `FrozenBiome` class, meant to make biome creation easier.
+  - Contains an `injectToOverworld` method to directly add the biome to Overworld worldgen.
+  - Be sure to create a public static final instance of your FrozenBiome in order to properly access and register it.
