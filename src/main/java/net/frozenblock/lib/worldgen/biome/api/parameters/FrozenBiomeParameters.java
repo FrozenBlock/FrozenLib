@@ -97,7 +97,6 @@ public final class FrozenBiomeParameters {
 		return Climate.Parameter.span(parameter.min() + squish, parameter.max() - squish);
 	}
 
-	@NotNull
 	public static boolean isWeird(@NotNull Climate.ParameterPoint point) {
 		return point.weirdness().max() < 0L;
 	}

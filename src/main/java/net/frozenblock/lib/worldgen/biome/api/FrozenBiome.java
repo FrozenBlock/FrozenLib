@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.worldgen.biome.api;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -157,6 +158,11 @@ public abstract class FrozenBiome {
 
 	protected final void addBottomBiome(@NotNull Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temerature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter depth, float weirdness) {
 		consumer.accept(Pair.of(Climate.parameters(temerature, humidity, continentalness, erosion, Climate.Parameter.point(1.1F), depth, weirdness), this.getKey()));
+	}
+
+	@NotNull
+	public static ImmutableList<FrozenBiome> getFrozenBiomes() {
+		return ImmutableList.copyOf(BIOMES);
 	}
 
 }
