@@ -137,7 +137,7 @@ public abstract class FrozenBiome {
 
 	public abstract void addSpawns(MobSpawnSettings.Builder spawns);
 
-	public abstract void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters);
+	public abstract void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer);
 
 	public ResourceKey<Biome> getKey() {
 		return this.key;

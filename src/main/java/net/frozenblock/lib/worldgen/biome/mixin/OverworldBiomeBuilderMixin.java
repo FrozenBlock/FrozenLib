@@ -35,9 +35,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class OverworldBiomeBuilderMixin {
 
 	@Inject(method = "addBiomes", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/biome/OverworldBiomeBuilder;addUndergroundBiomes(Ljava/util/function/Consumer;)V", shift = At.Shift.AFTER))
-	public void frozenLib$injectFrozenBiomesToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, CallbackInfo info) {
+	public void frozenLib$injectFrozenBiomesToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, CallbackInfo info) {
 		for (FrozenBiome frozenBiome : FrozenBiome.getFrozenBiomes()) {
-			frozenBiome.injectToOverworld(parameters);
+			frozenBiome.injectToOverworld(consumer);
 		}
 	}
 }
