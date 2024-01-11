@@ -412,10 +412,6 @@ tasks {
     }
 }
 
-if (!(release == true || githubActions)) {
-	build.dependsOn(applyLicenses)
-}
-
 val env: MutableMap<String, String> = System.getenv()
 
 publishing {
