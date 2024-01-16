@@ -48,6 +48,7 @@ import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
+import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -79,6 +80,7 @@ public final class FrozenMain implements ModInitializer {
 		DataPackReloadMarker.init();
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
+		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC.codec());
 
 		RegisterInGameDevTools.register();
 		FrozenParticleTypes.registerParticles();
