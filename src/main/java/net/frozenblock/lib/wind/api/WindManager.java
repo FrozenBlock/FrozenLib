@@ -27,6 +27,8 @@ import java.util.Map;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.datafix.api.FrozenDataFixTypes;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
@@ -35,7 +37,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
@@ -108,7 +109,11 @@ public class WindManager {
 
 	@NotNull
 	public SavedData.Factory<WindStorage> createData() {
-		return new SavedData.Factory<>(() -> new WindStorage(this), tag -> WindStorage.load(tag, this), DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES);
+		return new SavedData.Factory<>(
+			() -> new WindStorage(this),
+			tag -> WindStorage.load(tag, this),
+			FrozenDataFixTypes.getDataFixType(FrozenSharedConstants.MOD_ID, "saved_data_wind")
+		);
 	}
 
 	public void tick(@NotNull ServerLevel level) {
