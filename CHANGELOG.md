@@ -15,3 +15,4 @@ Put changelog here:
 - Added the `frozenlib:data_fix_types` entrypoint, using the class `FrozenMobCategoryEntrypoint.`
   - This is used for saved data, some Vanilla examples being Raids and Map data.
   - Custom Data Fix Types can be retrieved using the `getDataFixType` method in `FrozenDataFixTypes.`
+- Improved the quality of the `AxeBehaviors` class.
