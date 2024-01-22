@@ -18,38 +18,39 @@
 
 package net.frozenblock.lib.item.impl.network;
 
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.Item;
+import org.jetbrains.annotations.NotNull;
 
 public record ForcedCooldownPacket(
 	Item item,
 	int startTime,
 	int endTime
-) implements FabricPacket {
+) implements CustomPacketPayload {
 
-	public static final PacketType<ForcedCooldownPacket> PACKET_TYPE = PacketType.create(
-		FrozenSharedConstants.id("forced_cooldown_packet"),
-		ForcedCooldownPacket::new
+	public static final Type<ForcedCooldownPacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("forced_cooldown_packet")
 	);
+	public static final StreamCodec<RegistryFriendlyByteBuf, ForcedCooldownPacket> CODEC = StreamCodec.ofMember(ForcedCooldownPacket::write, ForcedCooldownPacket::new);
 
-	public ForcedCooldownPacket(FriendlyByteBuf buf) {
-		this(buf.readById(BuiltInRegistries.ITEM), buf.readVarInt(), buf.readVarInt());
+	public ForcedCooldownPacket(RegistryFriendlyByteBuf buf) {
+		this(ByteBufCodecs.registry(Registries.ITEM).decode(buf), buf.readVarInt(), buf.readVarInt());
 	}
 
-
-	@Override
-	public void write(FriendlyByteBuf buf) {
-		buf.writeId(BuiltInRegistries.ITEM, this.item());
+	public void write(RegistryFriendlyByteBuf buf) {
+		ByteBufCodecs.registry(Registries.ITEM).encode(buf, this.item());
 		buf.writeVarInt(this.startTime());
 		buf.writeVarInt(this.endTime());
 	}
 
 	@Override
-	public PacketType<?> getType() {
+	@NotNull
+	public Type<?> type() {
 		return PACKET_TYPE;
 	}
 }

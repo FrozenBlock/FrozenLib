@@ -22,14 +22,13 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import io.netty.buffer.Unpooled;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
@@ -39,8 +38,8 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
@@ -81,7 +80,7 @@ public class ScreenShakeCommand {
 
 	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance, Collection<? extends ServerPlayer> entities) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
-		ScreenShakePacket packet = new ScreenShakePacket(intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance, 0);
+		ScreenShakePacket packet = new ScreenShakePacket(intensity, duration, durationFalloffStart, vec3, maxDistance, 0);
 		StringBuilder playerString = new StringBuilder();
 		for (ServerPlayer serverPlayer : entities) {
 			ServerPlayNetworking.send(serverPlayer, packet);
@@ -106,7 +105,7 @@ public class ScreenShakeCommand {
 	private static int removeShakesFor(CommandSourceStack source, Collection<? extends ServerPlayer> entities) {
 		StringBuilder playerString = new StringBuilder();
 		boolean onePlayer = entities.size() == 1;
-		FabricPacket packet = new RemoveScreenShakePacket();
+		CustomPacketPayload packet = new RemoveScreenShakePacket();
 		for (ServerPlayer serverPlayer : entities) {
 			ServerPlayNetworking.send(serverPlayer, packet);
 			playerString.append(serverPlayer.getDisplayName().getString()).append(onePlayer ? "" : ", ");
@@ -121,7 +120,7 @@ public class ScreenShakeCommand {
 		List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
 			if (!((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().isEmpty()) {
-				FabricPacket packet = new RemoveEntityScreenShakePacket(entity.getId());
+				CustomPacketPayload packet = new RemoveEntityScreenShakePacket(entity.getId());
 				affectedEntities.add(entity);
 				((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().clear();
 				for (ServerPlayer serverPlayer : PlayerLookup.tracking(source.getLevel(), entity.blockPosition())) {

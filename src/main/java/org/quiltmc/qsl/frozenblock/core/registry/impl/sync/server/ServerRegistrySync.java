@@ -23,6 +23,7 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking.Context;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -58,21 +59,21 @@ public final class ServerRegistrySync {
 				handler.addTask(new QuiltSyncTask(handler, handler.connection));
 			}
 		}));
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE.getId(), ServerRegistrySync::handleHandshake);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE.getId(), ServerRegistrySync::handleModProtocol);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE.getId(), ServerRegistrySync::handleEnd);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE, ServerRegistrySync::handleHandshake);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE, ServerRegistrySync::handleModProtocol);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE, ServerRegistrySync::handleEnd);
 	}
 
-	public static void handleHandshake(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		((QuiltSyncTask) handler.currentTask).handleHandshake(new ClientPackets.Handshake(buf));
+	public static void handleHandshake(ClientPackets.Handshake handshake, Context ctx) {
+		((QuiltSyncTask) ctx.networkHandler().currentTask).handleHandshake(handshake);
 	}
 
-	public static void handleModProtocol(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		((QuiltSyncTask) handler.currentTask).handleModProtocol(new ClientPackets.ModProtocol(buf), sender);
+	public static void handleModProtocol(ClientPackets.ModProtocol modProtocol, Context ctx) {
+		((QuiltSyncTask) ctx.networkHandler().currentTask).handleModProtocol(modProtocol, ctx.responseSender());
 	}
 
-	public static void handleEnd(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		((QuiltSyncTask) handler.currentTask).handleEnd(new ClientPackets.End(buf));
+	public static void handleEnd(ClientPackets.End end, Context ctx) {
+		((QuiltSyncTask) ctx.networkHandler().currentTask).handleEnd(end);
 	}
 
 	public static Component text(String string) {

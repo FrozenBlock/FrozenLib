@@ -36,7 +36,6 @@ import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 public final class FrozenNetworking {
 	private FrozenNetworking() {}
 
-	public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = FrozenSharedConstants.id("starting_moving_restriction_looping_sound_packet");
 	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_restriction_looping_fading_distance_sound_packet");
 	public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("fading_distance_sound_packet");
 	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_fading_distance_sound_packet");
@@ -60,9 +59,9 @@ public final class FrozenNetworking {
 			}
 		});
 
-		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, sender) -> {
-			if (ConfigSyncPacket.hasPermissionsToSendSync(player, true))
-				ConfigSyncPacket.receive(packet, player.server);
+		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, ctx) -> {
+			if (ConfigSyncPacket.hasPermissionsToSendSync(ctx.player(), true))
+				ConfigSyncPacket.receive(packet, ctx.player().server);
 		}));
 	}
 

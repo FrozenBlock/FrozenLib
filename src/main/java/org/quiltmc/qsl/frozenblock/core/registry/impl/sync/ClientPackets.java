@@ -19,10 +19,11 @@
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,22 +41,13 @@ public final class ClientPackets {
 	 * }
 	 * </code></pre>
 	 */
-	public record Handshake(int version) implements FabricPacket {
-		public static final PacketType<Handshake> PACKET_TYPE = PacketType.create(FrozenSharedConstants.id("registry_sync/handshake_client"), Handshake::new);
-
-		public Handshake(@NotNull FriendlyByteBuf buf) {
-			this(
-				buf.readVarInt()
-			);
-		}
+	public record Handshake(int version) implements CustomPacketPayload {
+		public static final Type<Handshake> PACKET_TYPE = CustomPacketPayload.createType(FrozenSharedConstants.string("registry_sync/handshake_client"));
+		public static final StreamCodec<FriendlyByteBuf, Handshake> CODEC = ByteBufCodecs.VAR_INT.map(Handshake::new, Handshake::version).cast();
 
 		@Override
-		public void write(@NotNull FriendlyByteBuf buf) {
-			buf.writeVarInt(this.version);
-		}
-
-		@Override
-		public PacketType<Handshake> getType() {
+		@NotNull
+		public Type<Handshake> type() {
 			return PACKET_TYPE;
 		}
 	}
@@ -74,8 +66,9 @@ public final class ClientPackets {
 	 * }
 	 * </code></pre>
 	 */
-	public record ModProtocol(Object2IntOpenHashMap<String> protocols) implements FabricPacket {
-		public static final PacketType<ModProtocol> PACKET_TYPE = PacketType.create(FrozenSharedConstants.id("registry_sync/mod_protocol"), ModProtocol::new);
+	public record ModProtocol(Object2IntOpenHashMap<String> protocols) implements CustomPacketPayload {
+		public static final Type<ModProtocol> PACKET_TYPE = CustomPacketPayload.createType(FrozenSharedConstants.string("registry_sync/mod_protocol"));
+		public static final StreamCodec<FriendlyByteBuf, ModProtocol> CODEC = StreamCodec.ofMember(ModProtocol::write, ModProtocol::new);
 
 		public ModProtocol(FriendlyByteBuf buf) {
 			this(read(buf));
@@ -93,7 +86,6 @@ public final class ClientPackets {
 			return protocols;
 		}
 
-		@Override
 		public void write(@NotNull FriendlyByteBuf buf) {
 			buf.writeVarInt(this.protocols.size());
 			for (var entry : this.protocols.object2IntEntrySet()) {
@@ -103,7 +95,8 @@ public final class ClientPackets {
 		}
 
 		@Override
-		public PacketType<ModProtocol> getType() {
+		@NotNull
+		public Type<ModProtocol> type() {
 			return PACKET_TYPE;
 		}
 	}
@@ -111,19 +104,20 @@ public final class ClientPackets {
 	/**
 	 * Ends registry sync. No data
 	 */
-	public record End() implements FabricPacket {
-		public static final PacketType<End> PACKET_TYPE = PacketType.create(FrozenSharedConstants.id("registry_sync/end"), End::new);
+	public record End() implements CustomPacketPayload {
+		public static final Type<End> PACKET_TYPE = CustomPacketPayload.createType(FrozenSharedConstants.string("registry_sync/end"));
+		public static final StreamCodec<FriendlyByteBuf, End> CODEC = StreamCodec.ofMember(End::write, End::new);
 
 		public End(FriendlyByteBuf buf) {
 			this();
 		}
 
-		@Override
 		public void write(FriendlyByteBuf buf) {
 		}
 
 		@Override
-		public PacketType<?> getType() {
+		@NotNull
+		public Type<?> type() {
 			return PACKET_TYPE;
 		}
 	}

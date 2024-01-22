@@ -25,6 +25,7 @@ import java.util.ArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.Context;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -65,14 +66,13 @@ public final class ClientRegistrySync {
 	private static boolean mustDisconnect;
 
 	public static void registerHandlers() {
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.Handshake.PACKET_TYPE.getId(), ClientRegistrySync::handleHelloPacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.End.PACKET_TYPE.getId(), ClientRegistrySync::handleEndPacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.PACKET_TYPE.getId(), ClientRegistrySync::handleErrorStylePacket);
-		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.PACKET_TYPE.getId(), ClientRegistrySync::handleModProtocol);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.Handshake.PACKET_TYPE, ClientRegistrySync::handleHelloPacket);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.End.PACKET_TYPE, ClientRegistrySync::handleEndPacket);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.PACKET_TYPE, ClientRegistrySync::handleErrorStylePacket);
+		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.PACKET_TYPE, ClientRegistrySync::handleModProtocol);
 	}
 
-	private static void handleModProtocol(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		var modProtocol = new ServerPackets.ModProtocol(buf);
+	private static void handleModProtocol(ServerPackets.ModProtocol modProtocol, Context ctx) {
 		var prioritizedId = modProtocol.prioritizedId();
 		var protocols = modProtocol.protocols();
 
@@ -106,11 +106,11 @@ public final class ClientRegistrySync {
 				builder.textEntry(Component.literal(entry.displayName()).append(Component.literal(" (" + entry.id() + ")").withStyle(ChatFormatting.DARK_GRAY)).append(" | Server: ").append(stringifyVersions(entry.versions())).append(", Client: ").append(stringifyVersions(ModProtocol.getVersion(entry.id()))));
 			}
 		} else {
-			sendSupportedModProtocol(sender, values);
+			sendSupportedModProtocol(ctx.responseSender(), values);
 		}
 	}
 
-	private static void handleEndPacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
+	private static void handleEndPacket(ServerPackets.End end, Context ctx) {
 		syncVersion = -1;
 
 		if (mustDisconnect) {
@@ -127,11 +127,11 @@ public final class ClientRegistrySync {
 				entry.append(errorStyleFooter);
 			}
 
-			handler.connection.disconnect(entry);
+			ctx.responseSender().disconnect(entry);
 
 			LOGGER.warn(builder.asString());
 		} else {
-			sender.sendPacket(new ClientPackets.End());
+			ctx.responseSender().sendPacket(new ClientPackets.End());
 		}
 	}
 
@@ -159,18 +159,16 @@ public final class ClientRegistrySync {
 		sender.sendPacket(new ClientPackets.ModProtocol(values));
 	}
 
-	private static void handleErrorStylePacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		var errorStyle = new ServerPackets.ErrorStyle(buf);
-
+	private static void handleErrorStylePacket(ServerPackets.ErrorStyle errorStyle, Context ctx) {
 		errorStyleHeader = errorStyle.errorHeader();
 		errorStyleFooter = errorStyle.errorFooter();
 		showErrorDetails = errorStyle.showError();
 	}
 
-	private static void handleHelloPacket(Minecraft client, ClientConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		syncVersion = ProtocolVersions.getHighestSupportedLocal(new ServerPackets.Handshake(buf).supportedVersions());
+	private static void handleHelloPacket(ServerPackets.Handshake handshake, Context ctx) {
+		syncVersion = ProtocolVersions.getHighestSupportedLocal(handshake.supportedVersions());
 
-		sender.sendPacket(new ClientPackets.Handshake(syncVersion));
+		ctx.responseSender().sendPacket(new ClientPackets.Handshake(syncVersion));
 		builder.clear();
 	}
 

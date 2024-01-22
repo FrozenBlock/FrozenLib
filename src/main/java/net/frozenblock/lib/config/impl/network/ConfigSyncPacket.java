@@ -23,8 +23,6 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -39,6 +37,8 @@ import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -52,14 +52,14 @@ public record ConfigSyncPacket<T>(
 	String modId,
 	String className,
 	T configData
-) implements FabricPacket {
+) implements CustomPacketPayload {
 
 	public static final int PERMISSION_LEVEL = 2;
 
-	public static final PacketType<ConfigSyncPacket<?>> PACKET_TYPE = PacketType.create(
-		FrozenSharedConstants.id("config_sync_packet"),
-		ConfigSyncPacket::create
+	public static final Type<ConfigSyncPacket<?>> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("config_sync_packet")
 	);
+	public static final StreamCodec<FriendlyByteBuf, ConfigSyncPacket<?>> CODEC = StreamCodec.ofMember(ConfigSyncPacket::write, ConfigSyncPacket::create);
 
 	@Nullable
 	public static <T> ConfigSyncPacket<T> create(@NotNull FriendlyByteBuf buf) {
@@ -74,7 +74,6 @@ public record ConfigSyncPacket<T>(
 		}
 	}
 
-	@Override
 	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeUtf(modId);
 		buf.writeUtf(className);
@@ -163,7 +162,8 @@ public record ConfigSyncPacket<T>(
 	}
 
 	@Override
-	public PacketType<?> getType() {
+	@NotNull
+	public Type<?> type() {
 		return PACKET_TYPE;
 	}
 }

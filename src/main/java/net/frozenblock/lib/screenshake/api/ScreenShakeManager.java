@@ -70,7 +70,7 @@ public class ScreenShakeManager {
 					Collection<ServerPlayer> playersTrackingChunk = PlayerLookup.tracking(this.level, shake.chunkPos);
 					for (ServerPlayer serverPlayer : playersTrackingChunk) {
 						if (!shake.trackingPlayers.contains(serverPlayer)) {
-							ScreenShakeManager.sendScreenShakePacketTo(serverPlayer, shake.getIntensity(), shake.getDuration(), shake.getDurationFalloffStart(), shake.getPos().x(), shake.getPos().y(), shake.getPos().z(), shake.getMaxDistance(), shake.getTicks());
+							ScreenShakeManager.sendScreenShakePacketTo(serverPlayer, shake.getIntensity(), shake.getDuration(), shake.getDurationFalloffStart(), shake.getPos(), shake.getMaxDistance(), shake.getTicks());
 						}
 					}
 					shake.trackingPlayers.clear();
@@ -193,8 +193,8 @@ public class ScreenShakeManager {
 		}
 	}
 
-	public static void sendScreenShakePacketTo(ServerPlayer player, float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
-		ServerPlayNetworking.send(player, new ScreenShakePacket(intensity, duration, falloffStart, x, y, z, maxDistance, ticks));
+	public static void sendScreenShakePacketTo(ServerPlayer player, float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance, int ticks) {
+		ServerPlayNetworking.send(player, new ScreenShakePacket(intensity, duration, falloffStart, pos, maxDistance, ticks));
 	}
 
 	//With Entity

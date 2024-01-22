@@ -18,31 +18,25 @@
 
 package net.frozenblock.lib.screenshake.impl.network;
 
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import org.jetbrains.annotations.NotNull;
 
 public record RemoveEntityScreenShakePacket(
 	int entityId
-) implements FabricPacket {
+) implements CustomPacketPayload {
 
-	public static final PacketType<RemoveEntityScreenShakePacket> PACKET_TYPE = PacketType.create(
-		FrozenSharedConstants.id("remove_entity_screen_shakes_packet"),
-		RemoveEntityScreenShakePacket::new
+	public static final Type<RemoveEntityScreenShakePacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("remove_entity_screen_shakes_packet")
 	);
-
-	public RemoveEntityScreenShakePacket(FriendlyByteBuf buf) {
-		this(buf.readVarInt());
-	}
+	public static final StreamCodec<FriendlyByteBuf, RemoveEntityScreenShakePacket> CODEC = ByteBufCodecs.VAR_INT.map(RemoveEntityScreenShakePacket::new, RemoveEntityScreenShakePacket::entityId).cast();
 
 	@Override
-	public void write(FriendlyByteBuf buf) {
-		buf.writeVarInt(this.entityId());
-	}
-
-	@Override
-	public PacketType<?> getType() {
+	@NotNull
+	public Type<?> type() {
 		return PACKET_TYPE;
 	}
 }
