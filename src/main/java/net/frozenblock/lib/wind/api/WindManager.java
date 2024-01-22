@@ -153,31 +153,31 @@ public class WindManager {
 	//Reset values in case of potential overflow
 	private boolean runResetsIfNeeded() {
 		boolean needsReset = false;
-		if (this.time == Long.MAX_VALUE || this.time == Long.MIN_VALUE) {
+		if (Math.abs(this.time) == Long.MAX_VALUE) {
 			needsReset = true;
 			this.time = MIN_TIME_VALUE;
 		}
-		if (this.windX == Double.MAX_VALUE || this.windX == Double.MIN_VALUE) {
+		if (Math.abs(this.windX) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.windX = 0;
 		}
-		if (this.windY == Double.MAX_VALUE || this.windY == Double.MIN_VALUE) {
+		if (Math.abs(this.windY) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.windY = 0;
 		}
-		if (this.windZ == Double.MAX_VALUE || this.windZ == Double.MIN_VALUE) {
+		if (Math.abs(this.windZ) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.windZ = 0;
 		}
-		if (this.laggedWindX == Double.MAX_VALUE || this.laggedWindX == Double.MIN_VALUE) {
+		if (Math.abs(this.laggedWindX) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.laggedWindX = 0;
 		}
-		if (this.laggedWindY == Double.MAX_VALUE || this.laggedWindY == Double.MIN_VALUE) {
+		if (Math.abs(this.laggedWindY) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.laggedWindY = 0;
 		}
-		if (this.laggedWindZ == Double.MAX_VALUE || this.laggedWindZ == Double.MIN_VALUE) {
+		if (Math.abs(this.laggedWindZ) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.laggedWindZ = 0;
 		}
