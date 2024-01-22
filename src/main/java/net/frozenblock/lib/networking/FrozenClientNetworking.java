@@ -46,7 +46,7 @@ import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.wind.api.ClientWindManager;
-import net.frozenblock.lib.wind.api.ClientWindManagerExtension;
+import net.frozenblock.lib.wind.impl.WindSyncPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -171,53 +171,44 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveCooldownChangePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, ctx) -> {
 			Item item = packet.item();
 			int additional = packet.additional();
-			if (player != null) {
-				((CooldownInterface) player.getCooldowns()).frozenLib$changeCooldown(item, additional);
-			}
+				((CooldownInterface) ctx.player().getCooldowns()).frozenLib$changeCooldown(item, additional);
 		});
 	}
 
 	private static void receiveForcedCooldownPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, player, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, ctx) -> {
 			Item item = packet.item();
 			int startTime = packet.startTime();
 			int endTime = packet.endTime();
-			if (player != null) {
-				player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
-			}
+			ctx.player().getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
 		});
 	}
 
 	private static void receiveCooldownTickCountPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, player, responseSender) -> {
-			if (player != null) {
-				player.getCooldowns().tickCount = packet.count();
-			}
+		ClientPlayNetworking.registerGlobalReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, ctx) -> {
+			ctx.player().getCooldowns().tickCount = packet.count();
 		});
 	}
 
 	private static void receiveScreenShakePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(ScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(ScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			float intensity = packet.intensity();
 			int duration = packet.duration();
 			int fallOffStart = packet.falloffStart();
-			double x = packet.x();
-			double y = packet.y();
-			double z = packet.z();
+			Vec3 pos = packet.pos();
 			float maxDistance = packet.maxDistance();
 			int ticks = packet.ticks();
 
-			ClientLevel level = player.clientLevel;
-            Vec3 pos = new Vec3(x, y, z);
+			ClientLevel level = ctx.player().clientLevel;
             ScreenShaker.addShake(level, intensity, duration, fallOffStart, pos, maxDistance, ticks);
         });
 	}
 
 	private static void receiveScreenShakeFromEntityPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(EntityScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(EntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 			float intensity = packet.intensity();
 			int duration = packet.duration();
@@ -225,7 +216,7 @@ public final class FrozenClientNetworking {
 			float maxDistance = packet.maxDistance();
 			int ticks = packet.ticks();
 
-			ClientLevel level = player.clientLevel;
+			ClientLevel level = ctx.player().clientLevel;
             Entity entity = level.getEntity(id);
             if (entity != null) {
                 ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
@@ -234,7 +225,7 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveRemoveScreenShakePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(RemoveScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) ->
+		ClientPlayNetworking.registerGlobalReceiver(RemoveScreenShakePacket.PACKET_TYPE, (packet, ctx) ->
 			ScreenShaker.SCREEN_SHAKES.removeIf(
 				clientScreenShake -> !(clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake)
 			)
@@ -242,10 +233,10 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveRemoveScreenShakeFromEntityPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(RemoveEntityScreenShakePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(RemoveEntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 
-			ClientLevel level = player.clientLevel;
+			ClientLevel level = ctx.player().clientLevel;
             Entity entity = level.getEntity(id);
             if (entity != null) {
                 ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
@@ -254,14 +245,14 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveIconPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(SpottingIconPacket.PACKET_TYPE, (packet, player, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(SpottingIconPacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 			ResourceLocation texture = packet.texture();
 			float startFade = packet.startFade();
 			float endFade = packet.endFade();
 			ResourceLocation predicate = packet.restrictionID();
 
-			ClientLevel level = player.clientLevel;
+			ClientLevel level = ctx.player().clientLevel;
             Entity entity = level.getEntity(id);
             if (entity instanceof EntitySpottingIconInterface livingEntity) {
                 livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
@@ -270,10 +261,10 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveIconRemovePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(SpottingIconRemovePacket.PACKET_TYPE, (packet, player, responseSender) -> {
+		ClientPlayNetworking.registerGlobalReceiver(SpottingIconRemovePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 
-			ClientLevel level = player.clientLevel;
+			ClientLevel level = ctx.player().clientLevel;
             Entity entity = level.getEntity(id);
             if (entity instanceof EntitySpottingIconInterface livingEntity) {
                 livingEntity.getSpottingIconManager().icon = null;
@@ -282,25 +273,12 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveWindSyncPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.WIND_SYNC_PACKET, (ctx, handler, byteBuf, responseSender) -> {
-			long windTime = byteBuf.readLong();
-			long seed = byteBuf.readLong();
-			boolean override = byteBuf.readBoolean();
-			double commandX = byteBuf.readDouble();
-			double commandY = byteBuf.readDouble();
-			double commandZ = byteBuf.readDouble();
-			ctx.execute(() -> {
-				if (ctx.level != null) {
-					ClientWindManager.time = windTime;
-					ClientWindManager.setSeed(seed);
-					ClientWindManager.overrideWind = override;
-					ClientWindManager.commandWind = new Vec3(commandX, commandY, commandZ);
-					ClientWindManager.hasInitialized = true;
-				}
-			});
-
-			// EXTENSIONS
-			for (ClientWindManagerExtension extension : ClientWindManager.EXTENSIONS) extension.receiveSyncPacket(byteBuf, ctx);
+		ClientPlayNetworking.registerGlobalReceiver(WindSyncPacket.PACKET_TYPE, (packet, ctx) -> {
+			ClientWindManager.time = packet.windTime();
+			ClientWindManager.setSeed(packet.seed());
+			ClientWindManager.overrideWind = packet.override();
+			ClientWindManager.commandWind = packet.commandWind();
+			ClientWindManager.hasInitialized = true;
 		});
 	}
 
