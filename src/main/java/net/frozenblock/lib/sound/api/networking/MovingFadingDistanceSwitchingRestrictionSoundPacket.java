@@ -18,17 +18,7 @@
 
 package net.frozenblock.lib.sound.api.networking;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
-import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
-import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -38,30 +28,35 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-public record MovingRestrictionSoundPacket(
+public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 	int id,
-	Holder<SoundEvent> sound,
+	Holder<SoundEvent> closeSound,
+	Holder<SoundEvent> farSound,
 	SoundSource category,
 	float volume,
 	float pitch,
+	float fadeDist,
+	float maxDist,
 	ResourceLocation predicateId,
 	boolean stopOnDeath,
 	boolean looping
 ) implements CustomPacketPayload {
 
-	public static final Type<MovingRestrictionSoundPacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("moving_restriction_sound_packet")
+	public static final Type<MovingFadingDistanceSwitchingRestrictionSoundPacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("moving_fading_restriction_sound_packet")
 	);
-	public static final StreamCodec<RegistryFriendlyByteBuf, MovingRestrictionSoundPacket> CODEC = StreamCodec.ofMember(MovingRestrictionSoundPacket::write, MovingRestrictionSoundPacket::new);
+	public static final StreamCodec<RegistryFriendlyByteBuf, MovingFadingDistanceSwitchingRestrictionSoundPacket> CODEC = StreamCodec.ofMember(MovingFadingDistanceSwitchingRestrictionSoundPacket::write, MovingFadingDistanceSwitchingRestrictionSoundPacket::new);
 
-	public MovingRestrictionSoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public MovingFadingDistanceSwitchingRestrictionSoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
+			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
 			buf.readEnum(SoundSource.class),
+			buf.readFloat(),
+			buf.readFloat(),
 			buf.readFloat(),
 			buf.readFloat(),
 			buf.readResourceLocation(),
@@ -71,14 +66,17 @@ public record MovingRestrictionSoundPacket(
 	}
 
 	public void write(@NotNull RegistryFriendlyByteBuf buf) {
-		buf.writeVarInt(this.id);
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.category);
-		buf.writeFloat(this.volume);
-		buf.writeFloat(this.pitch);
-		buf.writeResourceLocation(predicateId);
-		buf.writeBoolean(this.stopOnDeath);
-		buf.writeBoolean(this.looping);
+		buf.writeVarInt(this.id());
+		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.closeSound());
+		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.farSound());
+		buf.writeEnum(this.category());
+		buf.writeFloat(this.volume());
+		buf.writeFloat(this.pitch());
+		buf.writeFloat(this.fadeDist());
+		buf.writeFloat(this.maxDist());
+		buf.writeResourceLocation(predicateId());
+		buf.writeBoolean(this.stopOnDeath());
+		buf.writeBoolean(this.looping());
 	}
 
 	@Override

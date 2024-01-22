@@ -22,9 +22,11 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.sound.api.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
+import net.frozenblock.lib.sound.api.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
@@ -36,6 +38,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -115,78 +118,77 @@ public final class FrozenSoundPackets {
 
     public static void createMovingRestrictionLoopingFadingDistanceSound(@NotNull Level level, Entity entity, Holder<SoundEvent> sound, Holder<SoundEvent> sound2, SoundSource category, float volume, float pitch, ResourceLocation predicate, boolean stopOnDeath, float fadeDist, float maxDist) {
         if (!level.isClientSide) {
-            RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()), level.registryAccess());
-            byteBuf.writeVarInt(entity.getId());
-			var sounds = ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT);
-			sounds.encode(byteBuf, sound);
-			sounds.encode(byteBuf, sound2);
-            byteBuf.writeEnum(category);
-            byteBuf.writeFloat(volume);
-            byteBuf.writeFloat(pitch);
-            byteBuf.writeFloat(fadeDist);
-            byteBuf.writeFloat(maxDist);
-            byteBuf.writeResourceLocation(predicate);
-			byteBuf.writeBoolean(stopOnDeath);
+			CustomPacketPayload packet = new MovingFadingDistanceSwitchingRestrictionSoundPacket(
+				entity.getId(),
+				sound,
+				sound2,
+				category,
+				volume,
+				pitch,
+				fadeDist,
+				maxDist,
+				predicate,
+				stopOnDeath,
+				true
+			);
             for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-                ServerPlayNetworking.send(player, FrozenNetworking.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
+                ServerPlayNetworking.send(player, packet);
             }
 			if (entity instanceof ServerPlayer serverPlayer) {
-				ServerPlayNetworking.send(serverPlayer, FrozenNetworking.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
+				ServerPlayNetworking.send(serverPlayer, packet);
 			}
 			((EntityLoopingFadingDistanceSoundInterface)entity).addFadingDistanceSound(sound.unwrapKey().orElseThrow().location(), sound2.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist);
         }
     }
 
     public static void createMovingRestrictionLoopingFadingDistanceSound(ServerPlayer player, @NotNull Entity entity, Holder<SoundEvent> sound, Holder<SoundEvent> sound2, SoundSource category, float volume, float pitch, ResourceLocation predicate, boolean stopOnDeath, float fadeDist, float maxDist) {
-        RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()), entity.level().registryAccess());
-        byteBuf.writeVarInt(entity.getId());
-		var sounds = ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT);
-		sounds.encode(byteBuf, sound);
-		sounds.encode(byteBuf, sound2);
-        byteBuf.writeEnum(category);
-        byteBuf.writeFloat(volume);
-        byteBuf.writeFloat(pitch);
-        byteBuf.writeFloat(fadeDist);
-        byteBuf.writeFloat(maxDist);
-        byteBuf.writeResourceLocation(predicate);
-		byteBuf.writeBoolean(stopOnDeath);
-        ServerPlayNetworking.send(player, FrozenNetworking.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
+		CustomPacketPayload packet = new MovingFadingDistanceSwitchingRestrictionSoundPacket(
+			entity.getId(),
+			sound,
+			sound2,
+			category,
+			volume,
+			pitch,
+			fadeDist,
+			maxDist,
+			predicate,
+			stopOnDeath,
+			true
+		);
+        ServerPlayNetworking.send(player, packet);
     }
 
     public static void createMovingRestrictionFadingDistanceSound(ServerPlayer player, @NotNull Entity entity, Holder<SoundEvent> sound, Holder<SoundEvent> sound2, SoundSource category, float volume, float pitch, ResourceLocation predicate, boolean stopOnDeath, float fadeDist, float maxDist) {
-        RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()), entity.level().registryAccess());
-        byteBuf.writeVarInt(entity.getId());
-		var sounds = ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT);
-		sounds.encode(byteBuf, sound);
-		sounds.encode(byteBuf, sound2);
-        byteBuf.writeEnum(category);
-        byteBuf.writeFloat(volume);
-        byteBuf.writeFloat(pitch);
-        byteBuf.writeFloat(fadeDist);
-        byteBuf.writeFloat(maxDist);
-        byteBuf.writeResourceLocation(predicate);
-		byteBuf.writeBoolean(stopOnDeath);
-        ServerPlayNetworking.send(player, FrozenNetworking.MOVING_FADING_DISTANCE_SOUND_PACKET, byteBuf);
+        CustomPacketPayload packet = new MovingFadingDistanceSwitchingRestrictionSoundPacket(
+			entity.getId(),
+			sound,
+			sound2,
+			category,
+			volume,
+			pitch,
+			fadeDist,
+			maxDist,
+			predicate,
+			stopOnDeath,
+			false
+		);
+        ServerPlayNetworking.send(player, packet);
     }
 
-    public static void createFadingDistanceSound(@NotNull Level level, Vector3d pos, Holder<SoundEvent> sound, Holder<SoundEvent> sound2, SoundSource category, float volume, float pitch, ResourceLocation predicate, boolean stopOnDeath, float fadeDist, float maxDist) {
+    public static void createFadingDistanceSound(@NotNull Level level, Vec3 pos, Holder<SoundEvent> sound, Holder<SoundEvent> sound2, SoundSource category, float volume, float pitch, float fadeDist, float maxDist) {
         if (!level.isClientSide) {
-            RegistryFriendlyByteBuf byteBuf = new RegistryFriendlyByteBuf(new FriendlyByteBuf(Unpooled.buffer()), level.registryAccess());
-            byteBuf.writeDouble(pos.x);
-            byteBuf.writeDouble(pos.y);
-            byteBuf.writeDouble(pos.z);
-			var sounds = ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT);
-			sounds.encode(byteBuf, sound);
-			sounds.encode(byteBuf, sound2);
-            byteBuf.writeEnum(category);
-            byteBuf.writeFloat(volume);
-            byteBuf.writeFloat(pitch);
-            byteBuf.writeFloat(fadeDist);
-            byteBuf.writeFloat(maxDist);
-            byteBuf.writeResourceLocation(predicate);
-			byteBuf.writeBoolean(stopOnDeath);
-            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, BlockPos.containing(pos.x, pos.y, pos.z))) {
-                ServerPlayNetworking.send(player, FrozenNetworking.FADING_DISTANCE_SOUND_PACKET, byteBuf);
+			CustomPacketPayload packet = new FadingDistanceSwitchingSoundPacket(
+				pos,
+				sound,
+				sound2,
+				category,
+				volume,
+				pitch,
+				fadeDist,
+				maxDist
+			);
+            for (ServerPlayer player : PlayerLookup.tracking((ServerLevel) level, BlockPos.containing(pos))) {
+                ServerPlayNetworking.send(player, packet);
             }
         }
     }
