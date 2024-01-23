@@ -25,16 +25,17 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
 import java.util.Objects;
 import java.util.Optional;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -69,7 +70,7 @@ public class SpottingIconManager {
 	public void setIcon(ResourceLocation texture, float startFade, float endFade, ResourceLocation restrictionID) {
 		this.icon = new SpottingIcon(texture, startFade, endFade, restrictionID);
 		if (!this.entity.level().isClientSide) {
-			CustomPacketPayload packet = new SpottingIconPacket(this.entity.getId(), texture, startFade, endFade, restrictionID);
+			FabricPacket packet = new SpottingIconPacket(this.entity.getId(), texture, startFade, endFade, restrictionID);
 			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
 				ServerPlayNetworking.send(player, packet);
 			}
@@ -83,7 +84,7 @@ public class SpottingIconManager {
 		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onRemoved(this.entity);
 		this.icon = null;
 		if (!this.entity.level().isClientSide) {
-			CustomPacketPayload packet = new SpottingIconRemovePacket(this.entity.getId());
+			FabricPacket packet = new SpottingIconRemovePacket(this.entity.getId());
 			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
 				ServerPlayNetworking.send(player, packet);
 			}

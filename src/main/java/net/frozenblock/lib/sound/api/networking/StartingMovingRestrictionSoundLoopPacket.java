@@ -20,9 +20,9 @@ package net.frozenblock.lib.sound.api.networking;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
@@ -30,38 +30,22 @@ import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-public record StartingMovingRestrictionSoundLoopPacket(
-	int id,
-	Holder<SoundEvent> startingSound,
-	Holder<SoundEvent> sound,
-	SoundSource category,
-	float volume,
-	float pitch,
-	ResourceLocation predicateId,
-	boolean stopOnDeath
-) implements CustomPacketPayload {
-	public static final Type<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = CustomPacketPayload.createType(FrozenSharedConstants.string("starting_moving_restriction_looping_sound_packet"));
-	public static final StreamCodec<RegistryFriendlyByteBuf, StartingMovingRestrictionSoundLoopPacket> CODEC = StreamCodec.ofMember(StartingMovingRestrictionSoundLoopPacket::write, StartingMovingRestrictionSoundLoopPacket::new);
+public record StartingMovingRestrictionSoundLoopPacket(int id, SoundEvent startingSound, SoundEvent sound, SoundSource category, float volume, float pitch, ResourceLocation predicateId, boolean stopOnDeath) implements FabricPacket {
+	public static final PacketType<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = PacketType.create(FrozenNetworking.STARTING_RESTRICTION_LOOPING_SOUND_PACKET, StartingMovingRestrictionSoundLoopPacket::new);
 
-	public StartingMovingRestrictionSoundLoopPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public StartingMovingRestrictionSoundLoopPacket(@NotNull FriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
+			buf.readById(BuiltInRegistries.SOUND_EVENT),
+			buf.readById(BuiltInRegistries.SOUND_EVENT),
 			buf.readEnum(SoundSource.class),
 			buf.readFloat(),
 			buf.readFloat(),
@@ -70,10 +54,11 @@ public record StartingMovingRestrictionSoundLoopPacket(
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	@Override
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.id);
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.startingSound);
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
+		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.startingSound);
+		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.sound);
 		buf.writeEnum(this.category);
 		buf.writeFloat(this.volume);
 		buf.writeFloat(this.pitch);
@@ -82,23 +67,22 @@ public record StartingMovingRestrictionSoundLoopPacket(
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static <T extends Entity> void receive(@NotNull StartingMovingRestrictionSoundLoopPacket packet, ClientPlayNetworking.Context ctx) {
-		ClientLevel level = ctx.player().clientLevel;
+	public static <T extends Entity> void receive(@NotNull StartingMovingRestrictionSoundLoopPacket packet, @NotNull LocalPlayer player, PacketSender responseSender) {
+		ClientLevel level = player.clientLevel;
 		T entity = (T) level.getEntity(packet.id());
 		if (entity != null) {
 			SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
 			Minecraft.getInstance().getSoundManager().play(new RestrictedStartingSound<>(
-				entity, packet.startingSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(),
+				entity, packet.startingSound(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(),
 				new RestrictedMovingSoundLoop<>(
-					entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()
+					entity, packet.sound(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()
 				)
 			));
 		}
 	}
 
 	@Override
-	@NotNull
-	public Type<?> type() {
+	public PacketType<?> getType() {
 		return PACKET_TYPE;
 	}
 }

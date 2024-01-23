@@ -83,7 +83,7 @@ public final class FrozenClientNetworking {
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket::receive);
-		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
+		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, player, responseSender) ->
 			ConfigSyncPacket.receive(packet, null)
 		);
 		ClientConfigurationConnectionEvents.DISCONNECT.register(((handler, client) -> {

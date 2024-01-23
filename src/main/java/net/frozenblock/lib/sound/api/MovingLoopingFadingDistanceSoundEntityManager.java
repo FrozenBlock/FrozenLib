@@ -92,19 +92,7 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 
 	public void syncWithPlayer(ServerPlayer serverPlayer) {
 		for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : this.getSounds()) {
-			FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(
-				serverPlayer,
-				this.entity,
-				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.getSoundEventID()).orElseThrow(),
-				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.getSound2EventID()).orElseThrow(),
-				SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()),
-				nbt.volume,
-				nbt.pitch,
-				nbt.restrictionID,
-				nbt.stopOnDeath,
-				nbt.fadeDist,
-				nbt.maxDist
-			);
+			FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(serverPlayer, this.entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), BuiltInRegistries.SOUND_EVENT.get(nbt.getSound2EventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.stopOnDeath, nbt.fadeDist, nbt.maxDist);
 		}
 	}
 

@@ -18,50 +18,54 @@
 
 package net.frozenblock.lib.screenshake.impl.network;
 
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public record ScreenShakePacket(
 	float intensity,
 	int duration,
 	int falloffStart,
-	Vec3 pos,
+	double x,
+	double y,
+	double z,
 	float maxDistance,
 	int ticks
-) implements CustomPacketPayload {
+) implements FabricPacket {
 
-	public static final Type<ScreenShakePacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("screen_shake_packet")
+	public static final PacketType<ScreenShakePacket> PACKET_TYPE = PacketType.create(
+		FrozenSharedConstants.id("screen_shake_packet"),
+		ScreenShakePacket::new
 	);
-	public static final StreamCodec<FriendlyByteBuf, ScreenShakePacket> CODEC = StreamCodec.ofMember(ScreenShakePacket::write, ScreenShakePacket::new);
 
 	public ScreenShakePacket(FriendlyByteBuf buf) {
 		this(
 			buf.readFloat(),
 			buf.readInt(),
 			buf.readInt(),
-			buf.readVec3(),
+			buf.readDouble(),
+			buf.readDouble(),
+			buf.readDouble(),
 			buf.readFloat(),
 			buf.readInt()
 		);
 	}
 
+	@Override
 	public void write(FriendlyByteBuf buf) {
 		buf.writeFloat(this.intensity());
 		buf.writeInt(this.duration());
 		buf.writeInt(this.falloffStart());
-		buf.writeVec3(this.pos());
+		buf.writeDouble(this.x());
+		buf.writeDouble(this.y());
+		buf.writeDouble(this.z());
 		buf.writeFloat(this.maxDistance());
 		buf.writeInt(this.ticks());
 	}
 
 	@Override
-	@NotNull
-	public Type<?> type() {
+	public PacketType<?> getType() {
 		return PACKET_TYPE;
 	}
 }

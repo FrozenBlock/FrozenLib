@@ -20,20 +20,16 @@ package net.frozenblock.lib.sound.api.networking;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -41,47 +37,47 @@ import org.jetbrains.annotations.NotNull;
 
 public record FlyBySoundPacket(
 	int id,
-	Holder<SoundEvent> sound,
+	SoundEvent sound,
 	SoundSource category,
 	float volume,
 	float pitch
-) implements CustomPacketPayload {
-	public static final Type<FlyBySoundPacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("flyby_sound_packet")
+) implements FabricPacket {
+	public static final PacketType<FlyBySoundPacket> PACKET_TYPE = PacketType.create(
+		FrozenSharedConstants.id("flyby_sound_packet"),
+		FlyBySoundPacket::new
 	);
-	public static final StreamCodec<RegistryFriendlyByteBuf, FlyBySoundPacket> CODEC = StreamCodec.ofMember(FlyBySoundPacket::write, FlyBySoundPacket::new);
 
-	public FlyBySoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public FlyBySoundPacket(@NotNull FriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
-			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
+			buf.readById(BuiltInRegistries.SOUND_EVENT),
 			buf.readEnum(SoundSource.class),
 			buf.readFloat(),
 			buf.readFloat()
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	@Override
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.id);
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
+		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.sound);
 		buf.writeEnum(this.category);
 		buf.writeFloat(this.volume);
 		buf.writeFloat(this.pitch);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void receive(@NotNull FlyBySoundPacket packet, ClientPlayNetworking.Context ctx) {
-		ClientLevel level = ctx.player().clientLevel;
+	public static void receive(@NotNull FlyBySoundPacket packet, @NotNull LocalPlayer player, PacketSender responseSender) {
+		ClientLevel level = player.clientLevel;
 		Entity entity = level.getEntity(packet.id());
 		if (entity != null) {
-			FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(packet.pitch(), packet.volume(), packet.category(), packet.sound().value());
+			FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(packet.pitch(), packet.volume(), packet.category(), packet.sound());
 			FlyBySoundHub.addEntity(entity, flyBySound);
 		}
 	}
 
 	@Override
-	@NotNull
-	public Type<?> type() {
+	public PacketType<?> getType() {
 		return PACKET_TYPE;
 	}
 }

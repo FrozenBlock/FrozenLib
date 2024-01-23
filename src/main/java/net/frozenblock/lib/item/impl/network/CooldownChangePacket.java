@@ -18,39 +18,35 @@
 
 package net.frozenblock.lib.item.impl.network;
 
+import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.item.Item;
-import org.jetbrains.annotations.NotNull;
 
 public record CooldownChangePacket(
 	Item item,
 	int additional
-) implements CustomPacketPayload {
+) implements FabricPacket {
 
-	public static final Type<CooldownChangePacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("cooldown_change_packet")
+	public static final PacketType<CooldownChangePacket> PACKET_TYPE = PacketType.create(
+		FrozenSharedConstants.id("cooldown_change_packet"),
+		CooldownChangePacket::new
 	);
-	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
 
-	public CooldownChangePacket(RegistryFriendlyByteBuf buf) {
-		this(ByteBufCodecs.registry(Registries.ITEM).decode(buf), buf.readVarInt());
+	public CooldownChangePacket(FriendlyByteBuf buf) {
+		this(buf.readById(BuiltInRegistries.ITEM), buf.readVarInt());
 	}
 
-	public void write(RegistryFriendlyByteBuf buf) {
-		ByteBufCodecs.registry(Registries.ITEM).encode(buf, this.item());
+	@Override
+	public void write(FriendlyByteBuf buf) {
+		buf.writeId(BuiltInRegistries.ITEM, this.item());
 		buf.writeVarInt(this.additional());
 	}
 
 	@Override
-	@NotNull
-	public Type<?> type() {
+	public PacketType<?> getType() {
 		return PACKET_TYPE;
 	}
 }
