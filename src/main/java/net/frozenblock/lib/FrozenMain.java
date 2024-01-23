@@ -122,7 +122,7 @@ public final class FrozenMain implements ModInitializer {
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
-			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
+			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
 		}));
 
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand)

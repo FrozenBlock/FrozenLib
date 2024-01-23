@@ -40,10 +40,12 @@ public final class FrozenNetworking {
 	public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("fading_distance_sound_packet");
 	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_fading_distance_sound_packet");
 
+	public static final ResourceLocation WIND_SYNC_PACKET = FrozenSharedConstants.id("wind_sync_packet");
+
 	public static void registerNetworking() {
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
-			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
+			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
 		}));
 
 		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {

@@ -18,10 +18,8 @@
 
 package net.frozenblock.lib.wind.api;
 
-import net.frozenblock.lib.wind.impl.WindSyncPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 public interface WindManagerExtension {
 
@@ -31,7 +29,7 @@ public interface WindManagerExtension {
 
 	boolean runResetsIfNeeded();
 
-	CustomPacketPayload syncPacket(WindSyncPacket packet);
+	void createSyncByteBuf(FriendlyByteBuf original);
 
 	void load(CompoundTag compoundTag);
 

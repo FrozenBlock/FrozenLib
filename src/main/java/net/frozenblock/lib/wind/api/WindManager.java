@@ -29,9 +29,9 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.datafix.api.FrozenDataFixTypes;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
-import net.frozenblock.lib.wind.impl.WindSyncPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
@@ -196,27 +196,32 @@ public class WindManager {
 	}
 
 	@NotNull
-	public WindSyncPacket createSyncPacket() {
-		return new WindSyncPacket(
-			this.time,
-			this.seed,
-			this.overrideWind,
-			this.commandWind
-		);
+	public FriendlyByteBuf createSyncByteBuf() {
+		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+		byteBuf.writeLong(this.time);
+		byteBuf.writeLong(this.seed);
+		byteBuf.writeBoolean(this.overrideWind);
+		byteBuf.writeDouble(this.commandWind.x());
+		byteBuf.writeDouble(this.commandWind.y());
+		byteBuf.writeDouble(this.commandWind.z());
+
+		//EXTENSIONS
+		for (WindManagerExtension extension : this.attachedExtensions) {
+			extension.createSyncByteBuf(byteBuf);
+		}
+
+		return byteBuf;
 	}
 
 	public void sendSync(@NotNull ServerLevel level) {
-		WindSyncPacket packet = this.createSyncPacket();
+		FriendlyByteBuf byteBuf = this.createSyncByteBuf();
 		for (ServerPlayer player : PlayerLookup.world(level)) {
-			this.sendSyncToPlayer(packet, player);
+			this.sendSyncToPlayer(byteBuf, player);
 		}
 	}
 
-	public void sendSyncToPlayer(@NotNull WindSyncPacket packet, @NotNull ServerPlayer player) {
-		ServerPlayNetworking.send(player, packet);
-		for (WindManagerExtension extension : this.attachedExtensions) {
-			ServerPlayNetworking.send(player, extension.syncPacket(packet));
-		}
+	public void sendSyncToPlayer(@NotNull FriendlyByteBuf byteBuf, @NotNull ServerPlayer player) {
+		ServerPlayNetworking.send(player, FrozenNetworking.WIND_SYNC_PACKET, byteBuf);
 	}
 
 	@NotNull
