@@ -25,6 +25,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
+import net.frozenblock.lib.entity.api.EntityUtils;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
@@ -108,9 +109,15 @@ public final class FrozenMain implements ModInitializer {
 			ScreenShakeManager screenShakeManager = ScreenShakeManager.getScreenShakeManager(level);
 			dimensionDataStorage.computeIfAbsent(screenShakeManager.createData(), ScreenShakeStorage.SCREEN_SHAKE_FILE_ID);
 		});
+
+		ServerWorldEvents.UNLOAD.register((server, serverLevel) -> {
+			EntityUtils.clearEntitiesPerLevel(serverLevel);
+		});
+
 		ServerTickEvents.START_WORLD_TICK.register(serverLevel -> {
 			WindManager.getWindManager(serverLevel).tick(serverLevel);
 			ScreenShakeManager.getScreenShakeManager(serverLevel).tick(serverLevel);
+			EntityUtils.populateEntitiesPerLevel(serverLevel);
 		});
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
