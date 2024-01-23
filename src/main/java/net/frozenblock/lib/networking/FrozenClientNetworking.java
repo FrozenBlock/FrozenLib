@@ -34,16 +34,11 @@ import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
-import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
-import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
-import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSound;
 import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
-import net.frozenblock.lib.sound.api.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
-import net.frozenblock.lib.sound.api.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
@@ -57,7 +52,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -72,10 +66,11 @@ public final class FrozenClientNetworking {
 
 	public static void registerClientReceivers() {
 		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket::receive);
+		ClientPlayNetworking.registerGlobalReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket::receive);
 		ClientPlayNetworking.registerGlobalReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket::receive);
-		receiveMovingRestrictionSoundPacket();
-		receiveFadingDistanceSwitchingSoundPacket();
-		receiveMovingFadingDistanceSwitchingSoundPacket();
+		receiveMovingRestrictionLoopingFadingDistanceSoundPacket();
+		receiveMovingFadingDistanceSoundPacket();
+		receiveFadingDistanceSoundPacket();
 		ClientPlayNetworking.registerGlobalReceiver(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket::receive);
 		receiveCooldownChangePacket();
 		receiveForcedCooldownPacket();
@@ -99,42 +94,79 @@ public final class FrozenClientNetworking {
 		}));
 	}
 
-	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = ctx.player().clientLevel;
-			T entity = (T) level.getEntity(packet.id());
-			if (entity != null) {
-				SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
-				if (packet.looping())
-					Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
-				else
-					Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSound<>(entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
-			}
-		});
-	}
-
-	private static void receiveFadingDistanceSwitchingSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FadingDistanceSwitchingSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			ctx.client().getSoundManager().play(new FadingDistanceSwitchingSound(packet.closeSound().value(), packet.category(), packet.volume(), packet.pitch(), packet.fadeDist(), packet.maxDist(), packet.volume(), false, packet.pos()));
-			ctx.client().getSoundManager().play(new FadingDistanceSwitchingSound(packet.farSound().value(), packet.category(), packet.volume(), packet.pitch(), packet.fadeDist(), packet.maxDist(), packet.volume(), true, packet.pos()));
-		});
-	}
-
-	private static <T extends Entity> void receiveMovingFadingDistanceSwitchingSoundPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			SoundManager soundManager = ctx.client().getSoundManager();
-			ClientLevel level = ctx.player().clientLevel;
-			T entity = (T) level.getEntity(packet.id());
-			if (entity != null) {
-				SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
-				if (packet.looping()) {
-					soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.closeSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), false));
-					soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.farSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), true));
-				} else {
-					soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.closeSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), false));
-					soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.farSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), true));
+	@SuppressWarnings("unchecked")
+	private static <T extends Entity> void receiveMovingRestrictionLoopingFadingDistanceSoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+			SoundEvent sound2 = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+			SoundSource category = byteBuf.readEnum(SoundSource.class);
+			float volume = byteBuf.readFloat();
+			float pitch = byteBuf.readFloat();
+			float fadeDist = byteBuf.readFloat();
+			float maxDist = byteBuf.readFloat();
+			ResourceLocation predicateId = byteBuf.readResourceLocation();
+			boolean stopOnDeath = byteBuf.readBoolean();
+			ctx.execute(() -> {
+				ClientLevel level = ctx.level;
+				if (level != null) {
+					T entity = (T) level.getEntity(id);
+					if (entity != null) {
+						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist, volume, false));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist, volume, true));
+					}
 				}
-			}
+			});
+		});
+	}
+
+	@SuppressWarnings("unchecked")
+	private static <T extends Entity> void receiveMovingFadingDistanceSoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.MOVING_FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			int id = byteBuf.readVarInt();
+			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+			SoundEvent sound2 = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+			SoundSource category = byteBuf.readEnum(SoundSource.class);
+			float volume = byteBuf.readFloat();
+			float pitch = byteBuf.readFloat();
+			float fadeDist = byteBuf.readFloat();
+			float maxDist = byteBuf.readFloat();
+			ResourceLocation predicateId = byteBuf.readResourceLocation();
+			boolean stopOnDeath = byteBuf.readBoolean();
+			ctx.execute(() -> {
+				ClientLevel level = ctx.level;
+				if (level != null) {
+					T entity = (T) level.getEntity(id);
+					if (entity != null) {
+						SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(predicateId);
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound, category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist, volume, false));
+						ctx.getSoundManager().play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, sound2, category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist, volume, true));
+					}
+				}
+			});
+		});
+	}
+
+	private static void receiveFadingDistanceSoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FrozenNetworking.FADING_DISTANCE_SOUND_PACKET, (ctx, handler, byteBuf, responseSender) -> {
+			double x = byteBuf.readDouble();
+			double y = byteBuf.readDouble();
+			double z = byteBuf.readDouble();
+			SoundEvent sound = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+			SoundEvent sound2 = byteBuf.readById(BuiltInRegistries.SOUND_EVENT);
+			SoundSource category = byteBuf.readEnum(SoundSource.class);
+			float volume = byteBuf.readFloat();
+			float pitch = byteBuf.readFloat();
+			float fadeDist = byteBuf.readFloat();
+			float maxDist = byteBuf.readFloat();
+			ctx.execute(() -> {
+				ClientLevel level = ctx.level;
+				if (level != null) {
+					ctx.getSoundManager().play(new FadingDistanceSwitchingSound(sound, category, volume, pitch, fadeDist, maxDist, volume, false, x, y, z));
+					ctx.getSoundManager().play(new FadingDistanceSwitchingSound(sound2, category, volume, pitch, fadeDist, maxDist, volume, true, x, y, z));
+				}
+			});
 		});
 	}
 

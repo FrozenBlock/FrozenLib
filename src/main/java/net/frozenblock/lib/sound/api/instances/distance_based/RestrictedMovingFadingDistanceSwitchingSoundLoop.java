@@ -43,9 +43,9 @@ public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> 
         this.volume = volume;
         this.pitch = pitch;
 
-        this.x = entity.getX();
-        this.y = entity.getY();
-        this.z = entity.getZ();
+        this.x = (float) entity.getX();
+        this.y = (float) entity.getY();
+        this.z = (float) entity.getZ();
         this.isFarSound = isFarSound;
         this.maxDist = maxDist;
         this.fadeDist = fadeDist;

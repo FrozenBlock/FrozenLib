@@ -81,9 +81,22 @@ public record MovingRestrictionSoundPacket(
 		buf.writeBoolean(this.looping);
 	}
 
+	@Environment(EnvType.CLIENT)
+	public static <T extends Entity> void receive(@NotNull MovingRestrictionSoundPacket packet, ClientPlayNetworking.Context ctx) {
+		ClientLevel level = ctx.player().clientLevel;
+		T entity = (T) level.getEntity(packet.id());
+		if (entity != null) {
+			SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
+			if (packet.looping())
+				Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
+			else
+				Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSound<>(entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
+		}
+	}
+
 	@Override
 	@NotNull
-	public Type<?> type() {
+	public Type<? extends CustomPacketPayload> type() {
 		return PACKET_TYPE;
 	}
 }

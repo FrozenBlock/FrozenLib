@@ -25,7 +25,6 @@ import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.phys.Vec3;
 
 @Environment(EnvType.CLIENT)
 public class FadingDistanceSwitchingSound extends AbstractTickableSoundInstance {
@@ -35,7 +34,7 @@ public class FadingDistanceSwitchingSound extends AbstractTickableSoundInstance 
     private final double fadeDist;
     private final float maxVol;
 
-    public FadingDistanceSwitchingSound(SoundEvent sound, SoundSource category, float volume, float pitch, double fadeDist, double maxDist, float maxVol, boolean isFarSound, Vec3 pos) {
+    public FadingDistanceSwitchingSound(SoundEvent sound, SoundSource category, float volume, float pitch, double fadeDist, double maxDist, float maxVol, boolean isFarSound, double x, double y, double z) {
         super(sound, category, SoundInstance.createUnseededRandom());
         this.delay = 0;
         this.volume = volume;
@@ -45,9 +44,9 @@ public class FadingDistanceSwitchingSound extends AbstractTickableSoundInstance 
         this.maxDist = maxDist;
         this.fadeDist = fadeDist;
         this.maxVol = maxVol;
-        this.x = pos.x;
-        this.y = pos.y;
-        this.z = pos.z;
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     @Override
