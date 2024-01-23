@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -19,6 +19,7 @@
 package net.frozenblock.lib.networking;
 
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -36,17 +37,10 @@ import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 public final class FrozenNetworking {
 	private FrozenNetworking() {}
 
-	public static final ResourceLocation STARTING_RESTRICTION_LOOPING_SOUND_PACKET = FrozenSharedConstants.id("starting_moving_restriction_looping_sound_packet");
-	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_restriction_looping_fading_distance_sound_packet");
-	public static final ResourceLocation FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("fading_distance_sound_packet");
-	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_fading_distance_sound_packet");
-
-	public static final ResourceLocation WIND_SYNC_PACKET = FrozenSharedConstants.id("wind_sync_packet");
-
 	public static void registerNetworking() {
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
-			windManager.sendSyncToPlayer(windManager.createSyncByteBuf(), player);
+			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
 		}));
 
 		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {
@@ -60,9 +54,11 @@ public final class FrozenNetworking {
 			}
 		});
 
-		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, player, sender) -> {
-			if (ConfigSyncPacket.hasPermissionsToSendSync(player, true))
-				ConfigSyncPacket.receive(packet, player.server);
+		PayloadTypeRegistry.playC2S().register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
+
+		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, ctx) -> {
+			if (ConfigSyncPacket.hasPermissionsToSendSync(ctx.player(), true))
+				ConfigSyncPacket.receive(packet, ctx.player().server);
 		}));
 	}
 

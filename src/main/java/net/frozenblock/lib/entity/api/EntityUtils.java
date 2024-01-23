@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -18,13 +18,35 @@
 
 package net.frozenblock.lib.entity.api;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityUtils {
+	private static final Map<ServerLevel, List<Entity>> ENTITIES_PER_LEVEL = new Object2ObjectOpenHashMap<>();
+
+	public static void populateEntitiesPerLevel(@NotNull ServerLevel level) {
+		clearEntitiesPerLevel(level);
+		Iterable<Entity> entityIterable = level.entityManager.getEntityGetter().getAll();
+		ArrayList<Entity> entityList = new ArrayList<>();
+		entityIterable.forEach(entityList::add);
+		ENTITIES_PER_LEVEL.put(level, List.copyOf(entityList));
+	}
+
+	public static void clearEntitiesPerLevel(ServerLevel level) {
+		ENTITIES_PER_LEVEL.remove(level);
+	}
+
+	public static List<Entity> getEntitiesPerLevel(ServerLevel level) {
+		return ENTITIES_PER_LEVEL.computeIfAbsent(level, serverLevel -> new ArrayList<>());
+	}
 
 	public static Optional<Direction> getMovementDirectionHorizontal(@NotNull Entity entity) {
 		Direction direction = null;
@@ -38,7 +60,7 @@ public class EntityUtils {
 				direction = deltaMovement.z > 0 ? Direction.SOUTH : Direction.NORTH;
 			}
 		}
-		return direction != null ? Optional.of(direction) : Optional.empty();
+		return Optional.ofNullable(direction);
 	}
 
 }

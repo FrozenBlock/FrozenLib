@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.sound.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.sound.api.damagesource.PlayerDamageSourceSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
@@ -29,16 +30,8 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
-	@ModifyVariable(method = "playHurtSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
+	@ModifyReturnValue(method = "getHurtSound", at = @At("RETURN"))
 	private SoundEvent playHurtSound(SoundEvent original, DamageSource source) {
-		if (PlayerDamageSourceSounds.containsSource(source)) {
-			return PlayerDamageSourceSounds.getDamageSound(source);
-		}
-		return original;
-	}
-
-	@ModifyVariable(method = "handleDamageEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
-	private SoundEvent handleDamageEvent(SoundEvent original, DamageSource source) {
 		if (PlayerDamageSourceSounds.containsSource(source)) {
 			return PlayerDamageSourceSounds.getDamageSound(source);
 		}

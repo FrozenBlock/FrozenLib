@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -92,7 +92,16 @@ public class MovingLoopingSoundEntityManager {
 
 	public void syncWithPlayer(ServerPlayer serverPlayer) {
 		for (MovingLoopingSoundEntityManager.SoundLoopData nbt : this.getSounds()) {
-			FrozenSoundPackets.createMovingRestrictionLoopingSound(serverPlayer, this.entity, BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()), SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()), nbt.volume, nbt.pitch, nbt.restrictionID, nbt.stopOnDeath);
+			FrozenSoundPackets.createMovingRestrictionLoopingSound(
+				serverPlayer,
+				this.entity,
+				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.getSoundEventID()).orElseThrow(),
+				SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()),
+				nbt.volume,
+				nbt.pitch,
+				nbt.restrictionID,
+				nbt.stopOnDeath
+			);
 		}
 	}
 

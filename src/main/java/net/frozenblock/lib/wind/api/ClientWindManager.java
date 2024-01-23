@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -74,41 +74,43 @@ public final class ClientWindManager {
 	}
 
 	public static void tick(@NotNull ClientLevel level) {
-		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
-		//WIND
-		prevWindX = windX;
-		prevWindY = windY;
-		prevWindZ = windZ;
-		time += 1;
-		double calcTime = time * 0.0005;
-		double calcTimeY = time * 0.00035;
-		Vec3 vec3 = sampleVec3(perlinXoro, calcTime, calcTimeY, calcTime);
-		windX = vec3.x + (vec3.x * thunderLevel);
-		windY = vec3.y + (vec3.y * thunderLevel);
-		windZ = vec3.z + (vec3.z * thunderLevel);
+		if (level.tickRateManager().runsNormally()) {
+			float thunderLevel = level.getThunderLevel(1F) * 0.03F;
+			//WIND
+			prevWindX = windX;
+			prevWindY = windY;
+			prevWindZ = windZ;
+			time += 1;
+			double calcTime = time * 0.0005;
+			double calcTimeY = time * 0.00035;
+			Vec3 vec3 = sampleVec3(perlinXoro, calcTime, calcTimeY, calcTime);
+			windX = vec3.x + (vec3.x * thunderLevel);
+			windY = vec3.y + (vec3.y * thunderLevel);
+			windZ = vec3.z + (vec3.z * thunderLevel);
 
-		//LAGGED WIND
-		prevLaggedWindX = laggedWindX;
-		prevLaggedWindY = laggedWindY;
-		prevLaggedWindZ = laggedWindZ;
-		double calcLaggedTime = (time - 40D) * 0.0005;
-		double calcLaggedTimeY = (time - 60D) * 0.00035;
-		Vec3 laggedVec = sampleVec3(perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
-		laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
-		laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
-		laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+			//LAGGED WIND
+			prevLaggedWindX = laggedWindX;
+			prevLaggedWindY = laggedWindY;
+			prevLaggedWindZ = laggedWindZ;
+			double calcLaggedTime = (time - 40D) * 0.0005;
+			double calcLaggedTimeY = (time - 60D) * 0.00035;
+			Vec3 laggedVec = sampleVec3(perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
+			laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
+			laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
+			laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 
-		// EXTENSIONS
-		for (ClientWindManagerExtension extension : EXTENSIONS) {
-			extension.baseTick();
-			extension.clientTick();
-		}
+			// EXTENSIONS
+			for (ClientWindManagerExtension extension : EXTENSIONS) {
+				extension.baseTick();
+				extension.clientTick();
+			}
 
-		if (!hasInitialized && time > 80D && FrozenLibConfig.get().useWindOnNonFrozenServers) {
-			RandomSource randomSource = AdvancedMath.random();
-			setSeed(randomSource.nextLong());
-			time = randomSource.nextLong();
-			hasInitialized = true;
+			if (!hasInitialized && time > 80D && FrozenLibConfig.get().useWindOnNonFrozenServers) {
+				RandomSource randomSource = AdvancedMath.random();
+				setSeed(randomSource.nextLong());
+				time = randomSource.nextLong();
+				hasInitialized = true;
+			}
 		}
 	}
 

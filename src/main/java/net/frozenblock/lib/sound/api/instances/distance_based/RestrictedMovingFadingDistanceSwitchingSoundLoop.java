@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -43,9 +43,9 @@ public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> 
         this.volume = volume;
         this.pitch = pitch;
 
-        this.x = (float) entity.getX();
-        this.y = (float) entity.getY();
-        this.z = (float) entity.getZ();
+        this.x = entity.getX();
+        this.y = entity.getY();
+        this.z = entity.getZ();
         this.isFarSound = isFarSound;
         this.maxDist = maxDist;
         this.fadeDist = fadeDist;

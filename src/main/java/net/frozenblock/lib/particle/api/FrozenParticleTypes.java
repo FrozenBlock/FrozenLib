@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -27,6 +27,8 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
 
 public final class FrozenParticleTypes {
@@ -51,11 +53,22 @@ public final class FrozenParticleTypes {
 	}
 
 	@NotNull
-	private static <T extends ParticleOptions> ParticleType<T> register(@NotNull String name, boolean alwaysShow, @NotNull ParticleOptions.Deserializer<T> factory, Function<ParticleType<T>, Codec<T>> codecGetter) {
+	private static <T extends ParticleOptions> ParticleType<T> register(
+		@NotNull String name,
+		boolean alwaysShow,
+		@NotNull ParticleOptions.Deserializer<T> factory,
+		Function<ParticleType<T>, Codec<T>> codecGetter,
+		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodecGetter
+	) {
 		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, FrozenSharedConstants.id(name), new ParticleType<T>(alwaysShow, factory) {
 			@Override
 			public Codec<T> codec() {
 				return codecGetter.apply(this);
+			}
+
+			@Override
+			public StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
+				return streamCodecGetter.apply(this);
 			}
 		});
 	}

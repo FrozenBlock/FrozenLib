@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -26,10 +26,20 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class AxeBehaviors {
 
-	public static final Map<Block, AxeBehavior> AXE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
+	private static final Map<Block, AxeBehavior> AXE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
+
+	public static void register(Block block, AxeBehavior axeBehavior) {
+		AXE_BEHAVIORS.put(block, axeBehavior);
+	}
+
+	@Nullable
+	public static AxeBehavior get(Block block) {
+		return AXE_BEHAVIORS.getOrDefault(block, null);
+	}
 
 	@FunctionalInterface
 	public interface AxeBehavior {

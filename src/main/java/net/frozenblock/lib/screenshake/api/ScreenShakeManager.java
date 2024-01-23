@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -61,19 +61,21 @@ public class ScreenShakeManager {
 		this.level = level;
 	}
 
-	public void tick() {
-		this.getShakes().removeIf(ScreenShake::shouldRemove);
-		for (ScreenShake shake : this.getShakes()) {
-			if (this.level.getChunkSource().hasChunk(shake.chunkPos.x, shake.chunkPos.z)) {
-				shake.ticks += 1;
-				Collection<ServerPlayer> playersTrackingChunk = PlayerLookup.tracking(this.level, shake.chunkPos);
-				for (ServerPlayer serverPlayer : playersTrackingChunk) {
-					if (!shake.trackingPlayers.contains(serverPlayer)) {
-						ScreenShakeManager.sendScreenShakePacketTo(serverPlayer, shake.getIntensity(), shake.getDuration(), shake.getDurationFalloffStart(), shake.getPos().x(), shake.getPos().y(), shake.getPos().z(), shake.getMaxDistance(), shake.getTicks());
+	public void tick(@NotNull ServerLevel level) {
+		if (level.tickRateManager().runsNormally()) {
+			this.getShakes().removeIf(ScreenShake::shouldRemove);
+			for (ScreenShake shake : this.getShakes()) {
+				if (this.level.getChunkSource().hasChunk(shake.chunkPos.x, shake.chunkPos.z)) {
+					shake.ticks += 1;
+					Collection<ServerPlayer> playersTrackingChunk = PlayerLookup.tracking(this.level, shake.chunkPos);
+					for (ServerPlayer serverPlayer : playersTrackingChunk) {
+						if (!shake.trackingPlayers.contains(serverPlayer)) {
+							ScreenShakeManager.sendScreenShakePacketTo(serverPlayer, shake.getIntensity(), shake.getDuration(), shake.getDurationFalloffStart(), shake.getPos(), shake.getMaxDistance(), shake.getTicks());
+						}
 					}
+					shake.trackingPlayers.clear();
+					shake.trackingPlayers.addAll(playersTrackingChunk);
 				}
-				shake.trackingPlayers.clear();
-				shake.trackingPlayers.addAll(playersTrackingChunk);
 			}
 		}
 	}
@@ -191,8 +193,8 @@ public class ScreenShakeManager {
 		}
 	}
 
-	public static void sendScreenShakePacketTo(ServerPlayer player, float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
-		ServerPlayNetworking.send(player, new ScreenShakePacket(intensity, duration, falloffStart, x, y, z, maxDistance, ticks));
+	public static void sendScreenShakePacketTo(ServerPlayer player, float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance, int ticks) {
+		ServerPlayNetworking.send(player, new ScreenShakePacket(intensity, duration, falloffStart, pos, maxDistance, ticks));
 	}
 
 	//With Entity

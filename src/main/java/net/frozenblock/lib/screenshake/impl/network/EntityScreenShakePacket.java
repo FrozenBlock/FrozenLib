@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -18,10 +18,11 @@
 
 package net.frozenblock.lib.screenshake.impl.network;
 
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import org.jetbrains.annotations.NotNull;
 
 public record EntityScreenShakePacket(
 	int entityId,
@@ -30,18 +31,17 @@ public record EntityScreenShakePacket(
 	int falloffStart,
 	float maxDistance,
 	int ticks
-) implements FabricPacket {
+) implements CustomPacketPayload {
 
-	public static final PacketType<EntityScreenShakePacket> PACKET_TYPE = PacketType.create(
-		FrozenSharedConstants.id("screen_shake_entity_packet"),
-		EntityScreenShakePacket::new
+	public static final Type<EntityScreenShakePacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("screen_shake_entity_packet")
 	);
+	public static final StreamCodec<FriendlyByteBuf, EntityScreenShakePacket> CODEC = StreamCodec.ofMember(EntityScreenShakePacket::write, EntityScreenShakePacket::new);
 
 	public EntityScreenShakePacket(FriendlyByteBuf buf) {
 		this(buf.readVarInt(), buf.readFloat(), buf.readInt(), buf.readInt(), buf.readFloat(), buf.readInt());
 	}
 
-	@Override
 	public void write(FriendlyByteBuf buf) {
 		buf.writeVarInt(this.entityId());
 		buf.writeFloat(this.intensity());
@@ -52,7 +52,8 @@ public record EntityScreenShakePacket(
 	}
 
 	@Override
-	public PacketType<?> getType() {
+	@NotNull
+	public Type<?> type() {
 		return PACKET_TYPE;
 	}
 }

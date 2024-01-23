@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -18,29 +18,23 @@
 
 package net.frozenblock.lib.item.impl.network;
 
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import org.jetbrains.annotations.NotNull;
 
-public record CooldownTickCountPacket(int count) implements FabricPacket {
+public record CooldownTickCountPacket(int count) implements CustomPacketPayload {
 
-	public static final PacketType<CooldownTickCountPacket> PACKET_TYPE = PacketType.create(
-		FrozenSharedConstants.id("cooldown_tick_count_packet"),
-		CooldownTickCountPacket::new
+	public static final Type<CooldownTickCountPacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("cooldown_tick_count_packet")
 	);
-
-	public CooldownTickCountPacket(FriendlyByteBuf buf) {
-		this(buf.readInt());
-	}
+	public static final StreamCodec<FriendlyByteBuf, CooldownTickCountPacket> CODEC = ByteBufCodecs.VAR_INT.map(CooldownTickCountPacket::new, CooldownTickCountPacket::count).cast();
 
 	@Override
-	public void write(FriendlyByteBuf buf) {
-		buf.writeInt(this.count());
-	}
-
-	@Override
-	public PacketType<?> getType() {
+	@NotNull
+	public Type<?> type() {
 		return PACKET_TYPE;
 	}
 }

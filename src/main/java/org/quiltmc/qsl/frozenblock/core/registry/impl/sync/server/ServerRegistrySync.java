@@ -1,6 +1,6 @@
 /*
- * Copyright 2023 The Quilt Project
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 The Quilt Project
+ * Copyright 2023-2024 FrozenBlock
  * Modified to work on Fabric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,13 +21,12 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
+import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
-import net.minecraft.network.FriendlyByteBuf;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking.Context;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
@@ -58,21 +57,26 @@ public final class ServerRegistrySync {
 				handler.addTask(new QuiltSyncTask(handler, handler.connection));
 			}
 		}));
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE.getId(), ServerRegistrySync::handleHandshake);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE.getId(), ServerRegistrySync::handleModProtocol);
-		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE.getId(), ServerRegistrySync::handleEnd);
+		var registry = PayloadTypeRegistry.configurationC2S();
+		registry.register(ClientPackets.Handshake.PACKET_TYPE, ClientPackets.Handshake.CODEC);
+		registry.register(ClientPackets.ModProtocol.PACKET_TYPE, ClientPackets.ModProtocol.CODEC);
+		registry.register(ClientPackets.End.PACKET_TYPE, ClientPackets.End.CODEC);
+
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE, ServerRegistrySync::handleHandshake);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE, ServerRegistrySync::handleModProtocol);
+		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE, ServerRegistrySync::handleEnd);
 	}
 
-	public static void handleHandshake(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		((QuiltSyncTask) handler.currentTask).handleHandshake(new ClientPackets.Handshake(buf));
+	public static void handleHandshake(ClientPackets.Handshake handshake, Context ctx) {
+		((QuiltSyncTask) ctx.networkHandler().currentTask).handleHandshake(handshake);
 	}
 
-	public static void handleModProtocol(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		((QuiltSyncTask) handler.currentTask).handleModProtocol(new ClientPackets.ModProtocol(buf), sender);
+	public static void handleModProtocol(ClientPackets.ModProtocol modProtocol, Context ctx) {
+		((QuiltSyncTask) ctx.networkHandler().currentTask).handleModProtocol(modProtocol, ctx.responseSender());
 	}
 
-	public static void handleEnd(MinecraftServer server, ServerConfigurationPacketListenerImpl handler, FriendlyByteBuf buf, PacketSender sender) {
-		((QuiltSyncTask) handler.currentTask).handleEnd(new ClientPackets.End(buf));
+	public static void handleEnd(ClientPackets.End end, Context ctx) {
+		((QuiltSyncTask) ctx.networkHandler().currentTask).handleEnd(end);
 	}
 
 	public static Component text(String string) {

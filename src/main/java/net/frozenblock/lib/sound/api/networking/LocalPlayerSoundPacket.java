@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -20,48 +20,50 @@ package net.frozenblock.lib.sound.api.networking;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.NotNull;
 
-public record LocalPlayerSoundPacket(SoundEvent sound, float volume, float pitch) implements FabricPacket {
-	public static final PacketType<LocalPlayerSoundPacket> PACKET_TYPE = PacketType.create(
-		FrozenSharedConstants.id("local_player_sound_packet"),
-		LocalPlayerSoundPacket::new
+public record LocalPlayerSoundPacket(Holder<SoundEvent> sound, float volume, float pitch) implements CustomPacketPayload {
+	public static final Type<LocalPlayerSoundPacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("local_player_sound_packet")
 	);
+	public static final StreamCodec<RegistryFriendlyByteBuf, LocalPlayerSoundPacket> CODEC = StreamCodec.ofMember(LocalPlayerSoundPacket::write, LocalPlayerSoundPacket::new);
 
-	public LocalPlayerSoundPacket(@NotNull FriendlyByteBuf buf) {
+	public LocalPlayerSoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
 		this(
-			buf.readById(BuiltInRegistries.SOUND_EVENT),
+			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
 			buf.readFloat(),
 			buf.readFloat()
 		);
 	}
 
-	@Override
-	public void write(@NotNull FriendlyByteBuf buf) {
-		buf.writeId(BuiltInRegistries.SOUND_EVENT, this.sound);
+	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
 		buf.writeFloat(this.volume);
 		buf.writeFloat(this.pitch);
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void receive(@NotNull LocalPlayerSoundPacket packet, LocalPlayer player, PacketSender responseSender) {
-		Minecraft.getInstance().getSoundManager().play(new EntityBoundSoundInstance(packet.sound(), SoundSource.PLAYERS, packet.volume(), packet.pitch(), player, player.clientLevel.random.nextLong()));
+	public static void receive(@NotNull LocalPlayerSoundPacket packet, ClientPlayNetworking.Context ctx) {
+		Minecraft.getInstance().getSoundManager().play(new EntityBoundSoundInstance(packet.sound().value(), SoundSource.PLAYERS, packet.volume(), packet.pitch(), ctx.player(), ctx.player().clientLevel.random.nextLong()));
 	}
 
 	@Override
-	public PacketType<?> getType() {
+	@NotNull
+	public Type<?> type() {
 		return PACKET_TYPE;
 	}
 }

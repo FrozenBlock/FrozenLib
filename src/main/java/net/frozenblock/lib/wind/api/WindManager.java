@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -27,15 +27,16 @@ import java.util.Map;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.datafix.api.FrozenDataFixTypes;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
+import net.frozenblock.lib.wind.impl.WindSyncPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
@@ -108,69 +109,75 @@ public class WindManager {
 
 	@NotNull
 	public SavedData.Factory<WindStorage> createData() {
-		return new SavedData.Factory<>(() -> new WindStorage(this), tag -> WindStorage.load(tag, this), DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES);
+		return new SavedData.Factory<>(
+			() -> new WindStorage(this),
+			tag -> WindStorage.load(tag, this),
+			FrozenDataFixTypes.getDataFixType(FrozenSharedConstants.MOD_ID, "saved_data_wind")
+		);
 	}
 
-	public void tick() {
-		this.runResetsIfNeeded();
+	public void tick(@NotNull ServerLevel level) {
+		if (level.tickRateManager().runsNormally()) {
+			this.runResetsIfNeeded();
 
-		this.time += 1;
-		//WIND
-		float thunderLevel = this.level.getThunderLevel(1F) * 0.03F;
-		double calcTime = this.time * 0.0005;
-		double calcTimeY = this.time * 0.00035;
-		Vec3 vec3 = sampleVec3(this.perlinXoro, calcTime, calcTimeY, calcTime);
-		this.windX = vec3.x + (vec3.x * thunderLevel);
-		this.windY = vec3.y + (vec3.y * thunderLevel);
-		this.windZ = vec3.z + (vec3.z * thunderLevel);
-		//LAGGED WIND
-		double calcLaggedTime = (this.time - 40) * 0.0005;
-		double calcLaggedTimeY = (this.time - 60) * 0.00035;
-		Vec3 laggedVec = sampleVec3(this.perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
-		this.laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
-		this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
-		this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+			this.time += 1;
+			//WIND
+			float thunderLevel = this.level.getThunderLevel(1F) * 0.03F;
+			double calcTime = this.time * 0.0005;
+			double calcTimeY = this.time * 0.00035;
+			Vec3 vec3 = sampleVec3(this.perlinXoro, calcTime, calcTimeY, calcTime);
+			this.windX = vec3.x + (vec3.x * thunderLevel);
+			this.windY = vec3.y + (vec3.y * thunderLevel);
+			this.windZ = vec3.z + (vec3.z * thunderLevel);
+			//LAGGED WIND
+			double calcLaggedTime = (this.time - 40) * 0.0005;
+			double calcLaggedTimeY = (this.time - 60) * 0.00035;
+			Vec3 laggedVec = sampleVec3(this.perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
+			this.laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
+			this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
+			this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 
-		//EXTENSIONS
-		for (WindManagerExtension extension : this.attachedExtensions) {
-			extension.baseTick();
-			extension.tick();
-		}
+			//EXTENSIONS
+			for (WindManagerExtension extension : this.attachedExtensions) {
+				extension.baseTick();
+				extension.tick();
+			}
 
-		//SYNC WITH CLIENTS IN CASE OF DESYNC
-		if (this.time % 20 == 0) {
-			this.sendSync(this.level);
+			//SYNC WITH CLIENTS IN CASE OF DESYNC
+			if (this.time % 20 == 0) {
+				this.sendSync(this.level);
+			}
 		}
 	}
 
 	//Reset values in case of potential overflow
 	private boolean runResetsIfNeeded() {
 		boolean needsReset = false;
-		if (this.time == Long.MAX_VALUE || this.time == Long.MIN_VALUE) {
+		if (Math.abs(this.time) == Long.MAX_VALUE) {
 			needsReset = true;
 			this.time = MIN_TIME_VALUE;
 		}
-		if (this.windX == Double.MAX_VALUE || this.windX == Double.MIN_VALUE) {
+		if (Math.abs(this.windX) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.windX = 0;
 		}
-		if (this.windY == Double.MAX_VALUE || this.windY == Double.MIN_VALUE) {
+		if (Math.abs(this.windY) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.windY = 0;
 		}
-		if (this.windZ == Double.MAX_VALUE || this.windZ == Double.MIN_VALUE) {
+		if (Math.abs(this.windZ) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.windZ = 0;
 		}
-		if (this.laggedWindX == Double.MAX_VALUE || this.laggedWindX == Double.MIN_VALUE) {
+		if (Math.abs(this.laggedWindX) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.laggedWindX = 0;
 		}
-		if (this.laggedWindY == Double.MAX_VALUE || this.laggedWindY == Double.MIN_VALUE) {
+		if (Math.abs(this.laggedWindY) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.laggedWindY = 0;
 		}
-		if (this.laggedWindZ == Double.MAX_VALUE || this.laggedWindZ == Double.MIN_VALUE) {
+		if (Math.abs(this.laggedWindZ) == Double.MAX_VALUE) {
 			needsReset = true;
 			this.laggedWindZ = 0;
 		}
@@ -189,32 +196,27 @@ public class WindManager {
 	}
 
 	@NotNull
-	public FriendlyByteBuf createSyncByteBuf() {
-		FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-		byteBuf.writeLong(this.time);
-		byteBuf.writeLong(this.seed);
-		byteBuf.writeBoolean(this.overrideWind);
-		byteBuf.writeDouble(this.commandWind.x());
-		byteBuf.writeDouble(this.commandWind.y());
-		byteBuf.writeDouble(this.commandWind.z());
-
-		//EXTENSIONS
-		for (WindManagerExtension extension : this.attachedExtensions) {
-			extension.createSyncByteBuf(byteBuf);
-		}
-
-		return byteBuf;
+	public WindSyncPacket createSyncPacket() {
+		return new WindSyncPacket(
+			this.time,
+			this.seed,
+			this.overrideWind,
+			this.commandWind
+		);
 	}
 
 	public void sendSync(@NotNull ServerLevel level) {
-		FriendlyByteBuf byteBuf = this.createSyncByteBuf();
+		WindSyncPacket packet = this.createSyncPacket();
 		for (ServerPlayer player : PlayerLookup.world(level)) {
-			this.sendSyncToPlayer(byteBuf, player);
+			this.sendSyncToPlayer(packet, player);
 		}
 	}
 
-	public void sendSyncToPlayer(@NotNull FriendlyByteBuf byteBuf, @NotNull ServerPlayer player) {
-		ServerPlayNetworking.send(player, FrozenNetworking.WIND_SYNC_PACKET, byteBuf);
+	public void sendSyncToPlayer(@NotNull WindSyncPacket packet, @NotNull ServerPlayer player) {
+		ServerPlayNetworking.send(player, packet);
+		for (WindManagerExtension extension : this.attachedExtensions) {
+			ServerPlayNetworking.send(player, extension.syncPacket(packet));
+		}
 	}
 
 	@NotNull

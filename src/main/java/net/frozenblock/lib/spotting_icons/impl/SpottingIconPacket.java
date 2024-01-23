@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -18,11 +18,12 @@
 
 package net.frozenblock.lib.spotting_icons.impl;
 
-import net.fabricmc.fabric.api.networking.v1.FabricPacket;
-import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
 public record SpottingIconPacket(
 	int entityId,
@@ -30,18 +31,17 @@ public record SpottingIconPacket(
 	float startFade,
 	float endFade,
 	ResourceLocation restrictionID
-) implements FabricPacket {
+) implements CustomPacketPayload {
 
-	public static final PacketType<SpottingIconPacket> PACKET_TYPE = PacketType.create(
-		FrozenSharedConstants.id("spotting_icon_packet"),
-		SpottingIconPacket::new
+	public static final Type<SpottingIconPacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("spotting_icon_packet")
 	);
+	public static final StreamCodec<FriendlyByteBuf, SpottingIconPacket> CODEC = StreamCodec.ofMember(SpottingIconPacket::write, SpottingIconPacket::new);
 
 	public SpottingIconPacket(FriendlyByteBuf buf) {
 		this(buf.readVarInt(), buf.readResourceLocation(), buf.readFloat(), buf.readFloat(), buf.readResourceLocation());
 	}
 
-	@Override
 	public void write(FriendlyByteBuf buf) {
 		buf.writeVarInt(this.entityId());
 		buf.writeResourceLocation(this.texture());
@@ -51,7 +51,8 @@ public record SpottingIconPacket(
 	}
 
 	@Override
-	public PacketType<?> getType() {
+	@NotNull
+	public Type<?> type() {
 		return PACKET_TYPE;
 	}
 }

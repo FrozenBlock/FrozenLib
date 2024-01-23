@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -18,18 +18,20 @@
 
 package net.frozenblock.lib.advancement.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
+import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = AdvancementHolder.class, priority = 1500)
 public class AdvancementHolderMixin {
 
-	@ModifyReturnValue(method = "read", at = @At("RETURN"))
-	private static AdvancementHolder modifyAdvancement(AdvancementHolder original) {
-		AdvancementEvents.INIT.invoker().onInit(original);
-		return original;
+	@Inject(method = "<init>", at = @At("TAIL"))
+	private void modifyAdvancement(ResourceLocation id, Advancement data, CallbackInfo ci) {
+		AdvancementEvents.INIT.invoker().onInit(AdvancementHolder.class.cast(this));
 	}
 }

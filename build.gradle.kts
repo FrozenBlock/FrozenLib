@@ -34,7 +34,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("1.9.21")
+    kotlin("jvm") version("1.9.22")
 }
 
 val minecraft_version: String by project
@@ -410,10 +410,6 @@ tasks {
         archives(sourcesJar)
         add("dev", jar)
     }
-}
-
-if (!(release == true || githubActions)) {
-	build.dependsOn(applyLicenses)
 }
 
 val env: MutableMap<String, String> = System.getenv()

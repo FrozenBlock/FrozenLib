@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -20,13 +20,15 @@ package net.frozenblock.lib.worldgen.biome.api.parameters;
 
 import java.util.List;
 import net.minecraft.world.level.biome.Climate;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public final class FrozenBiomeParameters {
 	private FrozenBiomeParameters() {
 		throw new UnsupportedOperationException("FrozenBiomeParameters contains only static declarations.");
 	}
 
-	public static void addWeirdness(BiomeRunnable runnable, List<Climate.Parameter> weirdnesses) {
+	public static void addWeirdness(BiomeRunnable runnable, @NotNull List<Climate.Parameter> weirdnesses) {
 		for (Climate.Parameter weirdness : weirdnesses) {
 			runnable.run(weirdness);
 		}
@@ -38,6 +40,7 @@ public final class FrozenBiomeParameters {
 	 * Is NOT identical to Climate.Parameter;span.
 	 * Instead, this will meet in the middle of both parameters.
 	 */
+	@NotNull
 	public static Climate.Parameter inBetween(Climate.Parameter par1, Climate.Parameter par2, float width) {
 		if (width >= 1F || width <= 0F) {
 			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetween if width >= 1 or width <= 0!");
@@ -54,6 +57,7 @@ public final class FrozenBiomeParameters {
 		return Climate.Parameter.span(middle - offset, middle + offset);
 	}
 
+	@NotNull
 	public static Climate.Parameter inBetweenLowCutoff(Climate.Parameter par1, Climate.Parameter par2, float width) {
 		if (width >= 1F || width <= 0F) {
 			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenLowCutoff if width >= 1 or width <= 0!");
@@ -70,6 +74,7 @@ public final class FrozenBiomeParameters {
 		return Climate.Parameter.span(lowest, middle - offset);
 	}
 
+	@NotNull
 	public static Climate.Parameter inBetweenHighCutoff(Climate.Parameter par1, Climate.Parameter par2, float width) {
 		if (width >= 1F || width <= 0F) {
 			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenHighCutoff if width >= 1 or width <= 0!");
@@ -86,11 +91,13 @@ public final class FrozenBiomeParameters {
 		return Climate.Parameter.span(middle + offset, highest);
 	}
 
-	public static Climate.Parameter squish(Climate.Parameter parameter, float squish) {
+	@NotNull
+	@Contract("_, _ -> new")
+	public static Climate.Parameter squish(@NotNull Climate.Parameter parameter, float squish) {
 		return Climate.Parameter.span(parameter.min() + squish, parameter.max() - squish);
 	}
 
-	public static boolean isWeird(Climate.ParameterPoint point) {
+	public static boolean isWeird(@NotNull Climate.ParameterPoint point) {
 		return point.weirdness().max() < 0L;
 	}
 
