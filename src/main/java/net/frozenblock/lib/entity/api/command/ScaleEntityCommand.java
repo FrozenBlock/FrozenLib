@@ -50,10 +50,11 @@ public class ScaleEntityCommand {
 		int entityAmount = 0;
 		List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
-			if (entity instanceof LivingEntity livingEntity) {
+			if (entity instanceof LivingEntity livingEntity && livingEntity.getAttributes() != null) {
 				AttributeInstance attributeInstance = livingEntity.getAttribute(Attributes.SCALE);
 				if (attributeInstance != null) {
 					attributeInstance.setBaseValue(scale);
+					entityString.append(entity.getDisplayName().getString()).append(", ");
 					entityAmount += 1;
 					affectedEntities.add(livingEntity);
 				}
