@@ -101,9 +101,9 @@ public final class FrozenMain implements ModInitializer {
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			DimensionDataStorage dimensionDataStorage = level.getDataStorage();
 			WindManager windManager = WindManager.getWindManager(level);
-			dimensionDataStorage.computeIfAbsent(windManager.createData(), WindStorage.WIND_FILE_ID);
+			dimensionDataStorage.computeIfAbsent(windManager::createData, windManager::createData, WindStorage.WIND_FILE_ID);
 			ScreenShakeManager screenShakeManager = ScreenShakeManager.getScreenShakeManager(level);
-			dimensionDataStorage.computeIfAbsent(screenShakeManager.createData(), ScreenShakeStorage.SCREEN_SHAKE_FILE_ID);
+			dimensionDataStorage.computeIfAbsent(screenShakeManager::createData, screenShakeManager::createData, ScreenShakeStorage.SCREEN_SHAKE_FILE_ID);
 		});
 		ServerTickEvents.START_WORLD_TICK.register(serverLevel -> {
 			WindManager.getWindManager(serverLevel).tick(serverLevel);
