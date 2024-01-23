@@ -117,36 +117,34 @@ public class WindManager {
 	}
 
 	public void tick(@NotNull ServerLevel level) {
-		if (level.tickRateManager().runsNormally()) {
-			this.runResetsIfNeeded();
+		this.runResetsIfNeeded();
 
-			this.time += 1;
-			//WIND
-			float thunderLevel = this.level.getThunderLevel(1F) * 0.03F;
-			double calcTime = this.time * 0.0005;
-			double calcTimeY = this.time * 0.00035;
-			Vec3 vec3 = sampleVec3(this.perlinXoro, calcTime, calcTimeY, calcTime);
-			this.windX = vec3.x + (vec3.x * thunderLevel);
-			this.windY = vec3.y + (vec3.y * thunderLevel);
-			this.windZ = vec3.z + (vec3.z * thunderLevel);
-			//LAGGED WIND
-			double calcLaggedTime = (this.time - 40) * 0.0005;
-			double calcLaggedTimeY = (this.time - 60) * 0.00035;
-			Vec3 laggedVec = sampleVec3(this.perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
-			this.laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
-			this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
-			this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+		this.time += 1;
+		//WIND
+		float thunderLevel = this.level.getThunderLevel(1F) * 0.03F;
+		double calcTime = this.time * 0.0005;
+		double calcTimeY = this.time * 0.00035;
+		Vec3 vec3 = sampleVec3(this.perlinXoro, calcTime, calcTimeY, calcTime);
+		this.windX = vec3.x + (vec3.x * thunderLevel);
+		this.windY = vec3.y + (vec3.y * thunderLevel);
+		this.windZ = vec3.z + (vec3.z * thunderLevel);
+		//LAGGED WIND
+		double calcLaggedTime = (this.time - 40) * 0.0005;
+		double calcLaggedTimeY = (this.time - 60) * 0.00035;
+		Vec3 laggedVec = sampleVec3(this.perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
+		this.laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
+		this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
+		this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 
-			//EXTENSIONS
-			for (WindManagerExtension extension : this.attachedExtensions) {
-				extension.baseTick();
-				extension.tick();
-			}
+		//EXTENSIONS
+		for (WindManagerExtension extension : this.attachedExtensions) {
+			extension.baseTick();
+			extension.tick();
+		}
 
-			//SYNC WITH CLIENTS IN CASE OF DESYNC
-			if (this.time % 20 == 0) {
-				this.sendSync(this.level);
-			}
+		//SYNC WITH CLIENTS IN CASE OF DESYNC
+		if (this.time % 20 == 0) {
+			this.sendSync(this.level);
 		}
 	}
 

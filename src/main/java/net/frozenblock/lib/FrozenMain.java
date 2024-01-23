@@ -108,7 +108,7 @@ public final class FrozenMain implements ModInitializer {
 		});
 		ServerTickEvents.START_WORLD_TICK.register(serverLevel -> {
 			WindManager.getWindManager(serverLevel).tick(serverLevel);
-			ScreenShakeManager.getScreenShakeManager(serverLevel).tick(serverLevel);
+			ScreenShakeManager.getScreenShakeManager(serverLevel).tick();
 		});
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
