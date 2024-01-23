@@ -1,5 +1,5 @@
 /*
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -44,15 +44,12 @@ public class ScreenShaker {
 	private static float prevZRot;
 	private static float zRot;
 
-	public static void tick(@NotNull Minecraft client) {
+	public static void tick(@NotNull ClientLevel level) {
+		Minecraft client = Minecraft.getInstance();
 		prevYRot = yRot;
 		prevXRot = xRot;
 		prevZRot = zRot;
-		ClientLevel level = client.level;
-		if (level == null) {
-			SCREEN_SHAKES.clear();
-		}
-		if ((!client.isMultiplayerServer() && client.isPaused()) || level == null) {
+		if (!client.isMultiplayerServer() && client.isPaused()) {
 			yRot = 0F;
 			xRot = 0F;
 			zRot = 0F;

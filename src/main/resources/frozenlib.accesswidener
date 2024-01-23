@@ -32,8 +32,8 @@ transitive-mutable field net/minecraft/advancements/critereon/MobEffectsPredicat
 transitive-accessible field net/minecraft/server/network/ServerGamePacketListenerImpl connection Lnet/minecraft/network/Connection;
 
 # Command
-transitive-accessible method net/minecraft/commands/synchronization/ArgumentTypeInfos register (Lnet/minecraft/core/Registry;Ljava/lang/String;Ljava/lang/Class;Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;)Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;
-transitive-accessible method net/minecraft/commands/synchronization/ArgumentTypeInfos fixClassType (Ljava/lang/Class;)Ljava/lang/Class;
+transitive-accessible    method    net/minecraft/commands/synchronization/ArgumentTypeInfos    register    (Lnet/minecraft/core/Registry;Ljava/lang/String;Ljava/lang/Class;Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;)Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;
+transitive-accessible    method    net/minecraft/commands/synchronization/ArgumentTypeInfos    fixClassType    (Ljava/lang/Class;)Ljava/lang/Class;
 
 # Recipe
 transitive-accessible method net/minecraft/world/item/crafting/Ingredient$ItemValue <init> (Lnet/minecraft/world/item/ItemStack;)V
@@ -70,6 +70,13 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/structure/
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    placeBlock    (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    fillColumnDown    (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V
 transitive-accessible    field    net/minecraft/world/level/levelgen/structure/Structure    settings    Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
+
+# Entities
+transitive-accessible    method    net/minecraft/world/entity/Entity    updateInWaterStateAndDoWaterCurrentPushing    ()V
+transitive-accessible    field    net/minecraft/server/level/ServerLevel    entityManager    Lnet/minecraft/world/level/entity/PersistentEntitySectionManager;
+transitive-accessible    class    net/minecraft/world/entity/monster/warden/Warden$VibrationUser
+transitive-accessible    field    net/minecraft/world/entity/ai/navigation/WallClimberNavigation    pathToPosition    Lnet/minecraft/core/BlockPos;
+transitive-accessible    method    net/minecraft/world/entity/LivingEntity    canBreatheUnderwater    ()Z
 
 # Entity Models
 transitive-accessible    field    net/minecraft/world/entity/Entity    DATA_POSE    Lnet/minecraft/network/syncher/EntityDataAccessor;

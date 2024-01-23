@@ -1,6 +1,6 @@
 /*
- * Copyright 2023 The Quilt Project
- * Copyright 2023 FrozenBlock
+ * Copyright 2023-2024 The Quilt Project
+ * Copyright 2023-2024 FrozenBlock
  * Modified to work on Fabric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -33,7 +33,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -62,24 +61,20 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 				});
 	}
 
-	@SuppressWarnings("InvalidInjectorMethodSignature")
+
 	@ModifyVariable(
-			method = "registerMapping(ILnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/core/Holder$Reference;",
-			slice = @Slice(
-					from = @At(
-							value = "INVOKE",
-							target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;",
-							remap = false
-					)
-			),
-			at = @At(
-					value = "STORE",
-					ordinal = 0
-			)
+		method = "registerMapping(ILnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/core/Holder$Reference;",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;",
+			ordinal = 0
+		)
 	)
-	private Holder.Reference<V> quilt$eagerFillReference(Holder.Reference<V> reference, int rawId, ResourceKey<V> key, V entry, Lifecycle lifecycle) {
-		reference.bindValue(entry);
-		return reference;
+	private Object quilt$eagerFillReference(Object object, int id, ResourceKey<V> key, V value, Lifecycle lifecycle) {
+		if (object instanceof Holder.Reference reference) {
+			reference.bindValue(value);
+		}
+		return object;
 	}
 
 	/**
