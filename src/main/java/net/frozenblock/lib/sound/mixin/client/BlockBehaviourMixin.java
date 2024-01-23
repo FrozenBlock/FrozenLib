@@ -24,14 +24,15 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Block.class)
-public final class BlockMixin {
+@Mixin(BlockBehaviour.class)
+public final class BlockBehaviourMixin {
 
     @Inject(method = "getSoundType", at = @At("RETURN"), cancellable = true)
     private void getSoundGroupOverride(BlockState state, CallbackInfoReturnable<SoundType> info) {

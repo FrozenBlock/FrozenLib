@@ -11,6 +11,6 @@
     "LivingEntityMixin"
   ],
   "client": [
-    "client.BlockMixin"
+    "client.BlockBehaviourMixin"
   ]
 }
