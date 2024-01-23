@@ -27,7 +27,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.Context;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientConfigurationPacketListenerImpl;
@@ -67,12 +66,6 @@ public final class ClientRegistrySync {
 	private static boolean mustDisconnect;
 
 	public static void registerHandlers() {
-		var registry = PayloadTypeRegistry.configurationS2C();
-		registry.register(ServerPackets.Handshake.PACKET_TYPE, ServerPackets.Handshake.CODEC);
-		registry.register(ServerPackets.End.PACKET_TYPE, ServerPackets.End.CODEC);
-		registry.register(ServerPackets.ErrorStyle.PACKET_TYPE, ServerPackets.ErrorStyle.CODEC);
-		registry.register(ServerPackets.ModProtocol.PACKET_TYPE, ServerPackets.ModProtocol.CODEC);
-
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.Handshake.PACKET_TYPE, ClientRegistrySync::handleHelloPacket);
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.End.PACKET_TYPE, ClientRegistrySync::handleEndPacket);
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ErrorStyle.PACKET_TYPE, ClientRegistrySync::handleErrorStylePacket);

@@ -21,12 +21,14 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking.Context;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
@@ -57,11 +59,6 @@ public final class ServerRegistrySync {
 				handler.addTask(new QuiltSyncTask(handler, handler.connection));
 			}
 		}));
-		var registry = PayloadTypeRegistry.configurationC2S();
-		registry.register(ClientPackets.Handshake.PACKET_TYPE, ClientPackets.Handshake.CODEC);
-		registry.register(ClientPackets.ModProtocol.PACKET_TYPE, ClientPackets.ModProtocol.CODEC);
-		registry.register(ClientPackets.End.PACKET_TYPE, ClientPackets.End.CODEC);
-
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE, ServerRegistrySync::handleHandshake);
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE, ServerRegistrySync::handleModProtocol);
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE, ServerRegistrySync::handleEnd);

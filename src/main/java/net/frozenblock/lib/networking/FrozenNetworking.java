@@ -19,7 +19,6 @@
 package net.frozenblock.lib.networking;
 
 import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
@@ -37,6 +36,9 @@ import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 public final class FrozenNetworking {
 	private FrozenNetworking() {}
 
+	public static final ResourceLocation MOVING_RESTRICTION_LOOPING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_restriction_looping_fading_distance_sound_packet");
+	public static final ResourceLocation MOVING_FADING_DISTANCE_SOUND_PACKET = FrozenSharedConstants.id("moving_fading_distance_sound_packet");
+
 	public static void registerNetworking() {
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
@@ -53,8 +55,6 @@ public final class FrozenNetworking {
 				ConfigSyncPacket.sendS2C(player);
 			}
 		});
-
-		PayloadTypeRegistry.playC2S().register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, ctx) -> {
 			if (ConfigSyncPacket.hasPermissionsToSendSync(ctx.player(), true))

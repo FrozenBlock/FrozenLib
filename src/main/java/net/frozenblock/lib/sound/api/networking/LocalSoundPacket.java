@@ -69,6 +69,13 @@ public record LocalSoundPacket(
 		buf.writeBoolean(this.distanceDelay);
 	}
 
+	@Environment(EnvType.CLIENT)
+	public static void receive(@NotNull LocalSoundPacket packet, ClientPlayNetworking.Context ctx) {
+		ClientLevel level = ctx.player().clientLevel;
+		Vec3 pos = packet.pos();
+		level.playLocalSound(pos.x, pos.y, pos.z, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), packet.distanceDelay());
+	}
+
 	@Override
 	@NotNull
 	public Type<?> type() {

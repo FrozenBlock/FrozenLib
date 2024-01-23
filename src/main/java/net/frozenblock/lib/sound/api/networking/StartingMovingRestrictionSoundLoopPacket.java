@@ -81,6 +81,21 @@ public record StartingMovingRestrictionSoundLoopPacket(
 		buf.writeBoolean(this.stopOnDeath);
 	}
 
+	@Environment(EnvType.CLIENT)
+	public static <T extends Entity> void receive(@NotNull StartingMovingRestrictionSoundLoopPacket packet, ClientPlayNetworking.Context ctx) {
+		ClientLevel level = ctx.player().clientLevel;
+		T entity = (T) level.getEntity(packet.id());
+		if (entity != null) {
+			SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
+			Minecraft.getInstance().getSoundManager().play(new RestrictedStartingSound<>(
+				entity, packet.startingSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(),
+				new RestrictedMovingSoundLoop<>(
+					entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()
+				)
+			));
+		}
+	}
+
 	@Override
 	@NotNull
 	public Type<?> type() {
