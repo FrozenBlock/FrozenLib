@@ -48,14 +48,10 @@
   "commands.screenshake.player.success": "Sent screen shake to %sat %s, %s, %s, with intensity %s, duration %s, falloff start %s, and distance %s.",
   "commands.screenshake.remove.player.success.multiple": "Players %shave had their screen shakes removed.",
   "commands.screenshake.remove.player.success": "Removed screen shakes for %s.",
-  "commands.screenshake.entity.success": "Created screen shake appended to %s with intensity %s, duration %s, falloff start %s, and distance %s.",
+  "commands.screenshake.entity.success": "Created screen shake appended to %swith intensity %s, duration %s, falloff start %s, and distance %s.",
   "commands.screenshake.remove.entity.success.multiple": "Entities %shave had their screen shakes removed.",
   "commands.screenshake.remove.entity.success": "Removed screen shakes from entity %s.",
   "commands.screenshake.remove.entity.failure": "Could not find entities with screen shakes.",
-
-  "commands.scale.entity.success.multiple": "Scaled %sto size %s.",
-  "commands.scale.entity.success": "Scaled %s to size %s.",
-  "commands.scale.entity.failure": "Entity scaling failed.",
 
   "commands.frozenlib_config.reload.single": "Reloaded 1 config from %s.",
   "commands.frozenlib_config.reload.multiple": "Reloaded %s configs from %s.",
