@@ -59,11 +59,10 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
@@ -78,6 +77,7 @@ public final class FrozenClientNetworking {
 	}
 
 	public static void registerClientReceivers() {
+		receiveLocalPlayerSoundPacket();
 		receiveLocalSoundPacket();
 		receiveStartingMovingRestrictionSoundLoopPacket();
 		receiveMovingRestrictionSoundPacket();
@@ -95,8 +95,6 @@ public final class FrozenClientNetworking {
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
-		registry().register(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
-		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket::receive);
 		registry().register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
 			ConfigSyncPacket.receive(packet, null)
@@ -107,6 +105,14 @@ public final class FrozenClientNetworking {
 				config.setSynced(false);
 			}
 		}));
+	}
+
+	private static void receiveLocalPlayerSoundPacket() {
+		registry().register(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
+		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, (packet, ctx) -> {
+			LocalPlayer player = Minecraft.getInstance().player;
+			Minecraft.getInstance().getSoundManager().play(new EntityBoundSoundInstance(packet.sound().value(), SoundSource.PLAYERS, packet.volume(), packet.pitch(), player, ctx.client().level.random.nextLong()));
+		});
 	}
 
 	private static void receiveLocalSoundPacket() {
@@ -180,27 +186,30 @@ public final class FrozenClientNetworking {
 	private static void receiveCooldownChangePacket() {
 		registry().register(CooldownChangePacket.PACKET_TYPE, CooldownChangePacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, ctx) -> {
+			LocalPlayer player = Minecraft.getInstance().player;
 			Item item = packet.item();
 			int additional = packet.additional();
-				((CooldownInterface) ctx.player().getCooldowns()).frozenLib$changeCooldown(item, additional);
+				((CooldownInterface) player.getCooldowns()).frozenLib$changeCooldown(item, additional);
 		});
 	}
 
 	private static void receiveForcedCooldownPacket() {
 		registry().register(ForcedCooldownPacket.PACKET_TYPE, ForcedCooldownPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, ctx) -> {
+			LocalPlayer player = Minecraft.getInstance().player;
 			Item item = packet.item();
 			int startTime = packet.startTime();
 			int endTime = packet.endTime();
-			ctx.player().getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
+			player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
 		});
 	}
 
 	private static void receiveCooldownTickCountPacket() {
 		registry().register(CooldownTickCountPacket.PACKET_TYPE, CooldownTickCountPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, ctx) -> {
-			if (ctx.player() != null) {
-				ctx.player().getCooldowns().tickCount = packet.count();
+			LocalPlayer player = Minecraft.getInstance().player;
+			if (player != null) {
+				player.getCooldowns().tickCount = packet.count();
 			}
 		});
 	}
@@ -215,7 +224,7 @@ public final class FrozenClientNetworking {
 			float maxDistance = packet.maxDistance();
 			int ticks = packet.ticks();
 
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
             ScreenShaker.addShake(level, intensity, duration, fallOffStart, pos, maxDistance, ticks);
         });
 	}
@@ -230,7 +239,7 @@ public final class FrozenClientNetworking {
 			float maxDistance = packet.maxDistance();
 			int ticks = packet.ticks();
 
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
             Entity entity = level.getEntity(id);
             if (entity != null) {
                 ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
@@ -252,7 +261,7 @@ public final class FrozenClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(RemoveEntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
             Entity entity = level.getEntity(id);
             if (entity != null) {
                 ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
@@ -269,7 +278,7 @@ public final class FrozenClientNetworking {
 			float endFade = packet.endFade();
 			ResourceLocation predicate = packet.restrictionID();
 
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
             Entity entity = level.getEntity(id);
             if (entity instanceof EntitySpottingIconInterface livingEntity) {
                 livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
@@ -282,7 +291,7 @@ public final class FrozenClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(SpottingIconRemovePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
             Entity entity = level.getEntity(id);
             if (entity instanceof EntitySpottingIconInterface livingEntity) {
                 livingEntity.getSpottingIconManager().icon = null;
