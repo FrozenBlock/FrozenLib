@@ -112,7 +112,7 @@ public final class FrozenClientNetworking {
 	private static void receiveLocalSoundPacket() {
 		registry().register(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
 			Vec3 pos = packet.pos();
 			level.playLocalSound(pos.x, pos.y, pos.z, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), packet.distanceDelay());
 		});
@@ -121,7 +121,7 @@ public final class FrozenClientNetworking {
 	private static <T extends Entity> void receiveStartingMovingRestrictionSoundLoopPacket() {
 		registry().register(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
 			T entity = (T) level.getEntity(packet.id());
 			if (entity != null) {
 				SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
@@ -138,7 +138,7 @@ public final class FrozenClientNetworking {
 	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
 		registry().register(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
 			T entity = (T) level.getEntity(packet.id());
 			if (entity != null) {
 				SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
@@ -162,7 +162,7 @@ public final class FrozenClientNetworking {
 		registry().register(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, MovingFadingDistanceSwitchingRestrictionSoundPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			SoundManager soundManager = ctx.client().getSoundManager();
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
 			T entity = (T) level.getEntity(packet.id());
 			if (entity != null) {
 				SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
