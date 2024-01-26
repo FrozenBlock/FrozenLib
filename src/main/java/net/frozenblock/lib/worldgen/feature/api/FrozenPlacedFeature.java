@@ -60,7 +60,7 @@ public class FrozenPlacedFeature {
 	}
 
 	public Holder<PlacedFeature> getHolder() {
-		return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.PLACED_FEATURE).getOrThrow(this.getKey());
+		return FrozenFeatureUtils.BOOTSTRAP_CONTEXT.lookup(Registries.PLACED_FEATURE).getOrThrow(this.getKey());
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
@@ -69,11 +69,11 @@ public class FrozenPlacedFeature {
 
 		FrozenLogUtils.log("Registering placed feature " + this.getKey().location(), true);
 
-		assert FrozenFeatureUtils.BOOTSTAP_CONTEXT != null: "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().location();
+		assert FrozenFeatureUtils.BOOTSTRAP_CONTEXT != null: "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().location();
 		assert configuredHolder != null: "Configured feature holder for FrozenPlacedFeature " + this.getKey().location() + " null";
 		assert modifiers != null: "Placement modifiers for FrozenPlacedFeature " + this.getKey().location() + " null";
 
-		FrozenFeatureUtils.BOOTSTAP_CONTEXT.register((ResourceKey) this.getKey(), new PlacedFeature(configuredHolder, modifiers));
+		FrozenFeatureUtils.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), new PlacedFeature(configuredHolder, modifiers));
 
 		return this;
 	}

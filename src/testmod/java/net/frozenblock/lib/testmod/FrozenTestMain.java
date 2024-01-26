@@ -26,10 +26,9 @@ import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.advancement.api.AdvancementAPI;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
+import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
-import net.frozenblock.lib.gravity.api.GravityAPI;
-import net.frozenblock.lib.gravity.api.functions.InterpolatedGravityFunction;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.frozenblock.lib.tick.api.BlockScheduledTicks;
 import net.minecraft.advancements.Advancement;
@@ -39,9 +38,9 @@ import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.SimpleFixes;
@@ -64,8 +63,8 @@ public final class FrozenTestMain implements ModInitializer {
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
 
-		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(300, 319, true, true, new AbsoluteGravityFunction(0.1)));
-		assert GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300) == 0.1;
+		GravityAPI.register(Level.OVERWORLD, new GravityBelt<>(300, 319, true, true, new AbsoluteGravityFunction(0.1)));
+		assert GravityAPI.calculateGravity(Level.OVERWORLD, 300) == 0.1;
 
 		//GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0, 192, new InterpolatedGravityFunction(0.1)));
 

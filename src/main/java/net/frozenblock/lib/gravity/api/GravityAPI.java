@@ -30,7 +30,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.dimension.DimensionType;
 import org.jetbrains.annotations.NotNull;
 
 public final class GravityAPI {
@@ -42,19 +41,19 @@ public final class GravityAPI {
         }
     });
 
-    private static final Map<ResourceKey<DimensionType>, List<GravityBelt<?>>> GRAVITY_BELTS = new HashMap<>();
+    private static final Map<ResourceKey<Level>, List<GravityBelt<?>>> GRAVITY_BELTS = new HashMap<>();
 
-    public static void register(ResourceKey<DimensionType> dimension, GravityBelt<?> gravityBelt) {
+    public static void register(ResourceKey<Level> dimension, GravityBelt<?> gravityBelt) {
 		getAllBelts(dimension).add(gravityBelt);
     }
 
 	@NotNull
-    public static List<GravityBelt<?>> getAllBelts(ResourceKey<DimensionType> dimension) {
+    public static List<GravityBelt<?>> getAllBelts(ResourceKey<Level> dimension) {
         return GRAVITY_BELTS.computeIfAbsent(dimension, dimension1 -> new ArrayList<>());
     }
 
     public static List<GravityBelt<?>> getAllBelts(Level level) {
-        return getAllBelts(level.dimensionTypeId());
+        return getAllBelts(level.dimension());
     }
 
     static {
@@ -69,18 +68,18 @@ public final class GravityAPI {
         });
     }
 
-    public static double calculateGravity(ResourceKey<DimensionType> dimension, double y) {
+    public static double calculateGravity(ResourceKey<Level> dimension, double y) {
         GravityContext context = new GravityContext(dimension, y, null);
         MODIFICATIONS.invoker().modifyGravity(context);
         return context.gravity;
     }
 
     public static double calculateGravity(Level level, double y) {
-        return calculateGravity(level.dimensionTypeId(), y);
+        return calculateGravity(level.dimension(), y);
     }
 
     public static double calculateGravity(Entity entity) {
-        ResourceKey<DimensionType> dimension = entity.level().dimensionTypeId();
+        ResourceKey<Level> dimension = entity.level().dimension();
         double y = entity.getY();
         GravityContext context = new GravityContext(dimension, y, entity);
         MODIFICATIONS.invoker().modifyGravity(context);

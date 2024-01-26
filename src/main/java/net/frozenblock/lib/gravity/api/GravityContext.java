@@ -20,12 +20,12 @@ package net.frozenblock.lib.gravity.api;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 
 public class GravityContext {
 
-    public final ResourceKey<DimensionType> dimension;
+    public final ResourceKey<Level> dimension;
 
     public final double y;
 
@@ -37,11 +37,11 @@ public class GravityContext {
     @Nullable
     public final Entity entity;
 
-    public GravityContext(ResourceKey<DimensionType> dimension, double y, @Nullable Entity entity) {
+    public GravityContext(ResourceKey<Level> dimension, double y, @Nullable Entity entity) {
         this(dimension, y, 1.0, entity);
     }
 
-    public GravityContext(ResourceKey<DimensionType> dimension, double y, double gravity, @Nullable Entity entity) {
+    public GravityContext(ResourceKey<Level> dimension, double y, double gravity, @Nullable Entity entity) {
         this.dimension = dimension;
         this.y = y;
         this.gravity = gravity;
