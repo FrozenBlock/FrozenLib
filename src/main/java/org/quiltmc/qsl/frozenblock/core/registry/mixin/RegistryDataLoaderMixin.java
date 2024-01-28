@@ -41,9 +41,10 @@ public class RegistryDataLoaderMixin {
 	@Inject(
 			method = "load(Lnet/minecraft/resources/RegistryDataLoader$LoadingFunction;Lnet/minecraft/core/RegistryAccess;Ljava/util/List;)Lnet/minecraft/core/RegistryAccess$Frozen;",
 			at = @At(
-					value = "INVOKE",
-					target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
-					ordinal = 1
+				value = "INVOKE",
+				target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
+				ordinal = 1,
+				shift = At.Shift.BEFORE
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
@@ -64,10 +65,10 @@ public class RegistryDataLoaderMixin {
 	@Inject(
 			method = "load(Lnet/minecraft/resources/RegistryDataLoader$LoadingFunction;Lnet/minecraft/core/RegistryAccess;Ljava/util/List;)Lnet/minecraft/core/RegistryAccess$Frozen;",
 			at = @At(
-					value = "INVOKE",
-					target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
-					ordinal = 1,
-					shift = At.Shift.AFTER
+				value = "INVOKE",
+				target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
+				ordinal = 1,
+				shift = At.Shift.AFTER
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
