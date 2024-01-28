@@ -50,7 +50,7 @@ public class RegistryDataLoaderMixin {
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	private static void onBeforeLoad(
+	private static void onDynamicSetup(
 		RegistryDataLoader.LoadingFunction loadingFunction,
 		RegistryAccess registryManager,
 		List<RegistryDataLoader.RegistryData<?>> decodingData,
