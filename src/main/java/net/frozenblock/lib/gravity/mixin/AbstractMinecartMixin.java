@@ -22,6 +22,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -35,9 +36,9 @@ public abstract class AbstractMinecartMixin implements EntityGravityInterface {
 		AbstractMinecart minecart = AbstractMinecart.class.cast(this);
 
 		Vec3 newVec = new Vec3(args.get(0), args.get(1), args.get(2))
-			.minus(
+			.subtract(
 				new Vec3(gravity, gravity, gravity)
-					.scale(this.frozenLib$getEffectiveGravity())
+					.multiply(this.frozenLib$getEffectiveGravity())
 			);
 		if (minecart.isInWater())
 			newVec = newVec.scale(0.005);

@@ -20,6 +20,7 @@ package net.frozenblock.lib.gravity.mixin;
 
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -30,7 +31,7 @@ public abstract class ShulkerBulletMixin implements EntityGravityInterface {
 
 	@ModifyArgs(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal =  0))
 	private void useGravity(Args args) {
-		Vec3 gravity = -this.frozenLib$getEffectiveGravity();
+		Vec3 gravity = this.frozenLib$getEffectiveGravity().scale(-1);
 
 		args.set(0, gravity.x);
 		args.set(1, gravity.y);

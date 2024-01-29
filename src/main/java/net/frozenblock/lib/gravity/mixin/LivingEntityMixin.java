@@ -31,6 +31,6 @@ public class LivingEntityMixin {
 	@ModifyVariable(method = "travel", at = @At(value = "STORE", ordinal = 0))
 	private double useGravity(double original) {
 		LivingEntity entity = LivingEntity.class.cast(this);
-		return original * GravityAPI.calculateGravity(entity).y;
+		return original * GravityAPI.calculateGravity(entity).length();
 	}
 }

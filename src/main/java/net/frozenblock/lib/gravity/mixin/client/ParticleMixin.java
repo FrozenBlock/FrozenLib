@@ -23,6 +23,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -75,7 +76,7 @@ public class ParticleMixin {
 		@Share("oldY") LocalDoubleRef oldY,
 		@Share("oldZ") LocalDoubleRef oldZ
 	) {
-		Vec3 gravity = (BASE_GRAVITY * GravityAPI.calculateGravity(this.level, this.y).scale(this.gravity);
+		Vec3 gravity = GravityAPI.calculateGravity(this.level, this.y).scale(this.gravity).scale(BASE_GRAVITY);
 		this.xd = oldX.get() - gravity.x;
 		this.yd = oldY.get() - gravity.y;
 		this.zd = oldZ.get() - gravity.z;
