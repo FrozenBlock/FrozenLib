@@ -38,7 +38,9 @@ public class EntityMixin implements EntityGravityInterface {
 
 	@Inject(method = "checkFallDamage", at = @At("TAIL"))
 	private void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo ci) {
-		this.fallDistance *= (float) GravityAPI.calculateGravity(Entity.class.cast(this));
+		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
+		double gravityDistance = Math.sqrt(Math.pow(gravity.x, 2) + Math.pow(gravity.y, 2) + Math.pow(gravity.z, 2));
+		this.fallDistance *= (float) gravityDistance;
 	}
 
 	@Unique

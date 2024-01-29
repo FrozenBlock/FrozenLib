@@ -30,9 +30,9 @@ public abstract class AbstractArrowMixin implements EntityGravityInterface {
 
 	@ModifyArgs(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;setDeltaMovement(DDD)V", ordinal = 0))
 	private void useGravity(Args args) {
-		double x = args.get(0);
+		double x = (double) args.get(0);
 		double y = (double) args.get(1) + 0.05;
-		double z = args.get(2);
+		double z = (double) args.get(2);
 
 		Vec3 newVec = new Vec3(x, y, z).minus(this.frozenLib$getEffectiveGravity());
 		args.set(0, newVec.x);

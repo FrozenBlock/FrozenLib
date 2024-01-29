@@ -33,8 +33,6 @@ public abstract class AbstractMinecartMixin implements EntityGravityInterface {
 	@ModifyArgs(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
 	private void useGravity(Args args, @Local double gravity) {
 		AbstractMinecart minecart = AbstractMinecart.class.cast(this);
-		double y = (double) args.get(1) - gravity;
-		boolean isDown = GravityAPI.isGravityDown(minecart);
 		Vec3 vecGravity = this.frozenLib$getEffectiveGravity();
 
 		Vec3 newVec = new Vec3(args.get(0), args.get(1), args.get(2))
