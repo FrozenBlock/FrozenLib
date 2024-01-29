@@ -68,30 +68,22 @@ public final class GravityAPI {
         });
     }
 
-    public static double calculateGravity(ResourceKey<Level> dimension, double y) {
+    public static Vec3 calculateGravity(ResourceKey<Level> dimension, double y) {
         GravityContext context = new GravityContext(dimension, y, null);
         MODIFICATIONS.invoker().modifyGravity(context);
         return context.gravity;
     }
 
-    public static double calculateGravity(Level level, double y) {
+    public static Vec3 calculateGravity(Level level, double y) {
         return calculateGravity(level.dimension(), y);
     }
 
-    public static double calculateGravity(Entity entity) {
+    public static Vec3 calculateGravity(Entity entity) {
         ResourceKey<Level> dimension = entity.level().dimension();
         double y = entity.getY();
         GravityContext context = new GravityContext(dimension, y, entity);
         MODIFICATIONS.invoker().modifyGravity(context);
         return context.gravity;
-    }
-
-    public static Direction getGravityDirection(Entity entity) {
-        return calculateGravity(entity) >= 0 ? Direction.DOWN : Direction.UP;
-    }
-
-    public static boolean isGravityDown(Entity entity) {
-        return getGravityDirection(entity) == Direction.DOWN;
     }
 
     public static Optional<GravityBelt<?>> getAffectingGravityBelt(List<GravityBelt<?>> belts, double y) {

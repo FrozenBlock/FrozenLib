@@ -30,6 +30,10 @@ public abstract class ShulkerBulletMixin implements EntityGravityInterface {
 
 	@ModifyArgs(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal =  0))
 	private void useGravity(Args args) {
-		args.set(1, -this.frozenLib$getEffectiveGravity());
+		Vec3 gravity = -this.frozenLib$getEffectiveGravity();
+
+		args.set(0, gravity.x);
+		args.set(1, gravity.y);
+		args.set(2, gravity.z);
 	}
 }

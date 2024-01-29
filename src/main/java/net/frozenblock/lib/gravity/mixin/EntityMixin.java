@@ -49,8 +49,8 @@ public class EntityMixin implements EntityGravityInterface {
 
 	@Unique
 	@Override
-	public double frozenLib$getEffectiveGravity() {
+	public Vec3 frozenLib$getEffectiveGravity() {
 		Entity entity = Entity.class.cast(this);
-		return this.frozenLib$getGravity() * GravityAPI.calculateGravity(entity);
+		return GravityAPI.calculateGravity(entity).scale(this.frozenLib$getGravity());
 	}
 }

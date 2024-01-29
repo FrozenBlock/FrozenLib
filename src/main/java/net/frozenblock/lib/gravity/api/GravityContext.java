@@ -32,16 +32,16 @@ public class GravityContext {
     /**
      * A mutable property that will determine the outputting gravity
      */
-    public double gravity;
+    public Vec3 gravity;
 
     @Nullable
     public final Entity entity;
 
     public GravityContext(ResourceKey<Level> dimension, double y, @Nullable Entity entity) {
-        this(dimension, y, 1.0, entity);
+        this(dimension, y, new Vec3(0.0, 1.0, 0.0), entity);
     }
 
-    public GravityContext(ResourceKey<Level> dimension, double y, double gravity, @Nullable Entity entity) {
+    public GravityContext(ResourceKey<Level> dimension, double y, Vec3 gravity, @Nullable Entity entity) {
         this.dimension = dimension;
         this.y = y;
         this.gravity = gravity;

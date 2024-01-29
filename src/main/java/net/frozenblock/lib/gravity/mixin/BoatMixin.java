@@ -30,7 +30,13 @@ public abstract class BoatMixin implements EntityGravityInterface {
 
 	@ModifyArgs(method = "floatBoat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/Boat;setDeltaMovement(DDD)V", ordinal = 0))
 	private void useGravity(Args args) {
+		double x = args.get(0);
 		double y = (double) args.get(1) + this.frozenLib$getGravity();
-		args.set(1, y - this.frozenLib$getEffectiveGravity());
+		double z = args.get(2);
+
+		Vec3 newVec = new Vec3(x, y, z).minus(this.frozenLib$getEffectiveGravity());
+		args.set(0, newVec.x);
+		args.set(1, newVec.y);
+		args.set(2, newVec.z);
 	}
 }

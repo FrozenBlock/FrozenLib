@@ -30,7 +30,13 @@ public abstract class PrimedTntMixin implements EntityGravityInterface {
 
 	@ModifyArgs(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
 	private void useGravity(Args args) {
+		double x = (double) args.get(0);
 		double y = (double) args.get(1) + this.frozenLib$getGravity();
-		args.set(1, y - this.frozenLib$getEffectiveGravity());
+		double z = (double) args.get(2);
+		Vec3 gravity = this.frozenLib$getEffectiveGravity();
+
+		args.set(0, x - gravity.x);
+		args.set(1, y - gravity.y);
+		args.set(2, z - gravity.z);
 	}
 }

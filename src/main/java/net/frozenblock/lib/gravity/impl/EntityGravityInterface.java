@@ -22,5 +22,5 @@ public interface EntityGravityInterface {
 
 	double frozenLib$getGravity();
 
-	double frozenLib$getEffectiveGravity();
+	Vec3 frozenLib$getEffectiveGravity();
 }

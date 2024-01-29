@@ -30,5 +30,5 @@ public interface GravityFunction {
 	 * @param maxY The maximum Y position of the gravity belt
 	 * @return The gravity value
 	 */
-	double get(@Nullable Entity entity, double y, double minY, double maxY);
+	Vec3 get(@Nullable Entity entity, double y, double minY, double maxY);
 }

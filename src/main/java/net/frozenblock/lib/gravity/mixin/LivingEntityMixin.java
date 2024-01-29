@@ -27,9 +27,10 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 
+	// TODO: convert to directional
 	@ModifyVariable(method = "travel", at = @At(value = "STORE", ordinal = 0))
 	private double useGravity(double original) {
 		LivingEntity entity = LivingEntity.class.cast(this);
-		return original * GravityAPI.calculateGravity(entity);
+		return original * GravityAPI.calculateGravity(entity).y;
 	}
 }

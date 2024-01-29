@@ -35,6 +35,18 @@ public abstract class AbstractMinecartMixin implements EntityGravityInterface {
 		AbstractMinecart minecart = AbstractMinecart.class.cast(this);
 		double y = (double) args.get(1) - gravity;
 		boolean isDown = GravityAPI.isGravityDown(minecart);
-		args.set(1, y - (isDown && minecart.isInWater() ? 0.005 : this.frozenLib$getEffectiveGravity()));
+		Vec3 vecGravity = this.frozenLib$getEffectiveGravity();
+
+		Vec3 newVec = new Vec3(args.get(0), args.get(1), args.get(2))
+			.minus(
+				new Vec3(gravity, gravity, gravity)
+					.scale(this.frozenLib$getEffectiveGravity())
+			);
+		if (minecart.isInWater())
+			newVec = newVec.scale(0.005);
+
+		args.set(0, newVec.x);
+		args.set(1, newVec.y);
+		args.set(2, newVec.z);
 	}
 }

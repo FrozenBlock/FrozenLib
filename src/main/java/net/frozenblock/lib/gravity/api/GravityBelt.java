@@ -33,7 +33,7 @@ public record GravityBelt<T extends GravityFunction>(double minY, double maxY, b
 		return y >= minY && y < maxY;
 	}
 
-	double getGravity(@Nullable Entity entity, double y) {
+	Vec3 getGravity(@Nullable Entity entity, double y) {
 		if (this.affectsPosition(y)) {
             return this.function.get(entity, y, this.minY, this.maxY);
 		}
