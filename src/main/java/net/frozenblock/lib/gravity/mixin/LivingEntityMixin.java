@@ -42,9 +42,7 @@ public abstract class LivingEntityMixin implements EntityGravityInterface {
 	@WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V", ordinal = 3))
 	private void newGravity(LivingEntity instance, double x, double y, double z, Operation<Void> original) {
 		Vec3 gravityVec = this.frozenLib$getEffectiveGravity();
-		Vec3 directional = new Vec3(x, 0, z).add(
-			gravityVec.scale(y)
-		);
+		Vec3 directional = new Vec3(x, 0, z).subtract(gravityVec);
 
 		original.call(instance, directional.x, directional.y, directional.z);
 	}
