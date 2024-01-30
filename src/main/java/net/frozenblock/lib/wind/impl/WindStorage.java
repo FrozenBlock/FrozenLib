@@ -53,9 +53,7 @@ public class WindStorage extends SavedData {
 
 		// EXTENSIONS
 		for (WindManagerExtension extension : this.windManager.attachedExtensions) {
-			CompoundTag extensionTag = new CompoundTag();
-			extension.save(extensionTag);
-			compoundTag.put(extension.extensionID().toString(), extensionTag);
+			extension.save(compoundTag);
 		}
 
 		FrozenLogUtils.log("Saving WindManager data.", FrozenSharedConstants.UNSTABLE_LOGGING);
@@ -79,8 +77,7 @@ public class WindStorage extends SavedData {
 
 		// EXTENSIONS
 		for (WindManagerExtension extension : windStorage.windManager.attachedExtensions) {
-			CompoundTag extensionTag = compoundTag.getCompound(extension.extensionID().toString());
-			extension.load(extensionTag);
+			extension.load(compoundTag);
 		}
 
 		FrozenLogUtils.log("Loading WindManager data.", FrozenSharedConstants.UNSTABLE_LOGGING);

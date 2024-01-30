@@ -26,7 +26,6 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entity.api.EntityUtils;
-import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;

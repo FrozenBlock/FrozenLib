@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.Music;
@@ -96,7 +96,7 @@ public abstract class FrozenBiome {
 	@Nullable
 	public abstract Music backgroundMusic();
 
-	public final @NotNull Biome create(@NotNull BootstrapContext<Biome> entries) {
+	public final @NotNull Biome create(@NotNull BootstapContext<Biome> entries) {
 		Biome.BiomeBuilder biomeBuilder = new Biome.BiomeBuilder();
 		biomeBuilder.temperature(this.temperature())
 			.temperatureAdjustment(this.temperatureModifier())

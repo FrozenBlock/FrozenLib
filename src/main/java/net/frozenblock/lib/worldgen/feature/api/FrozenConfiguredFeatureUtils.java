@@ -23,7 +23,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -56,13 +56,13 @@ public final class FrozenConfiguredFeatureUtils {
 	}
 
 	public static void register(
-			BootstrapContext<ConfiguredFeature<?, ?>> BootstrapContext, ResourceKey<ConfiguredFeature<?, ?>> registryKey, Feature<NoneFeatureConfiguration> feature
+			BootstapContext<ConfiguredFeature<?, ?>> BootstapContext, ResourceKey<ConfiguredFeature<?, ?>> registryKey, Feature<NoneFeatureConfiguration> feature
 	) {
-		FeatureUtils.register(BootstrapContext, registryKey, feature, FeatureConfiguration.NONE);
+		FeatureUtils.register(BootstapContext, registryKey, feature, FeatureConfiguration.NONE);
 	}
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
-			BootstrapContext<ConfiguredFeature<?, ?>> entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
+			BootstapContext<ConfiguredFeature<?, ?>> entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
 		return entries.register(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
 	}
