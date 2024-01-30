@@ -10,7 +10,8 @@ Put changelog here:
 - Added the `FrozenBiome` class, meant to make biome creation easier.
   - Contains an `injectToOverworld` method to directly add the biome to Overworld worldgen.
   - Be sure to create a public static final instance of your FrozenBiome in order to properly access and register it.
-- Added the `getEntitiesPerLevel` method to `EntityUtils.`
+- Upgraded Gravity API to use directional gravity using `Vec3`s
+- Added the `getEntitiesPerLevel` method to `EntityUtils`
   - This will return all loaded entities within a given `ServerLevel.`
 - Improved the quality of the `AxeBehaviors` class.
 - Added an `extensionID` method to the `WindManagerExtension` class in order to improve saving with NBT.
