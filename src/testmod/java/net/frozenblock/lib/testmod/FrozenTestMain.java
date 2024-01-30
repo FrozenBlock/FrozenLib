@@ -66,7 +66,7 @@ public final class FrozenTestMain implements ModInitializer {
                         Blocks.BEDROCK.defaultBlockState(), 3));
 
 		GravityAPI.MODIFICATIONS.register((ctx) -> {
-			ctx.gravity = new Vec3(0.01, 0.8, 0.02);
+			ctx.gravity = new Vec3(0.05, 0.8, 0.05);
 		});
 
 		GravityAPI.register(Level.OVERWORLD, new GravityBelt<>(300, 319, true, true, new AbsoluteGravityFunction(new Vec3(0.0, 0.1, 0.0))));
