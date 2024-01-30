@@ -16,10 +16,23 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.datafix.impl;
+package net.frozenblock.lib.block.api.tick;
 
-import com.mojang.datafixers.DSL;
-import net.minecraft.resources.ResourceLocation;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.Map;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 
-public record FrozenDataFixType(ResourceLocation key, DSL.TypeReference type) {
+public class BlockScheduledTicks {
+
+    public static final Map<Block, InjectedScheduledTick> TICKS = new Object2ObjectOpenHashMap<>();
+
+    @FunctionalInterface
+    public interface InjectedScheduledTick {
+        void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random);
+    }
+
 }

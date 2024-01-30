@@ -19,7 +19,6 @@
 package net.frozenblock.lib.advancement.api;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +27,6 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
-import net.minecraft.commands.CacheableFunction;
 import net.minecraft.resources.ResourceLocation;
 
 public final class AdvancementAPI {

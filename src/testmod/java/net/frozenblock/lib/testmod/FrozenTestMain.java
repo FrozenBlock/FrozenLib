@@ -31,7 +31,7 @@ import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
 import net.frozenblock.lib.testmod.config.TestConfig;
-import net.frozenblock.lib.tick.api.BlockScheduledTicks;
+import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.LocationPredicate;
