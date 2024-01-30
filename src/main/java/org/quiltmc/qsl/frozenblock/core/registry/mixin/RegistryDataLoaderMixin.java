@@ -46,7 +46,7 @@ public class RegistryDataLoaderMixin {
 			at = @At(
 					value = "INVOKE",
 					target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
-					ordinal = 1
+					ordinal = 0
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
