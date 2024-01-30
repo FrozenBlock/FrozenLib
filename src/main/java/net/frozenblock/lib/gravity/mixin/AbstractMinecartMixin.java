@@ -22,6 +22,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -33,8 +34,17 @@ public abstract class AbstractMinecartMixin implements EntityGravityInterface {
 	@ModifyArgs(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
 	private void useGravity(Args args, @Local double gravity) {
 		AbstractMinecart minecart = AbstractMinecart.class.cast(this);
-		double y = (double) args.get(1) - gravity;
-		boolean isDown = GravityAPI.isGravityDown(minecart);
-		args.set(1, y - (isDown && minecart.isInWater() ? 0.005 : this.frozenLib$getEffectiveGravity()));
+
+		Vec3 newVec = new Vec3(args.get(0), args.get(1), args.get(2))
+			.subtract(
+				new Vec3(gravity, gravity, gravity)
+					.multiply(this.frozenLib$getEffectiveGravity())
+			);
+		if (minecart.isInWater())
+			newVec = newVec.scale(0.005);
+
+		args.set(0, newVec.x);
+		args.set(1, newVec.y);
+		args.set(2, newVec.z);
 	}
 }

@@ -23,6 +23,7 @@ import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -38,7 +39,9 @@ public class EntityMixin implements EntityGravityInterface {
 
 	@Inject(method = "checkFallDamage", at = @At("TAIL"))
 	private void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo ci) {
-		this.fallDistance *= (float) GravityAPI.calculateGravity(Entity.class.cast(this));
+		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
+		double gravityDistance = gravity.length();
+		this.fallDistance *= (float) gravityDistance;
 	}
 
 	@Unique
@@ -49,8 +52,8 @@ public class EntityMixin implements EntityGravityInterface {
 
 	@Unique
 	@Override
-	public double frozenLib$getEffectiveGravity() {
+	public Vec3 frozenLib$getEffectiveGravity() {
 		Entity entity = Entity.class.cast(this);
-		return this.frozenLib$getGravity() * GravityAPI.calculateGravity(entity);
+		return GravityAPI.calculateGravity(entity).scale(this.frozenLib$getGravity());
 	}
 }
