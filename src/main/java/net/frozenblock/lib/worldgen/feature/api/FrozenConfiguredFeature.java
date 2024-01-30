@@ -51,7 +51,7 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 
 	public Holder<ConfiguredFeature<?, ?>> getHolder(@Nullable LevelReader level) {
 		if (level == null)
-			return FrozenFeatureUtils.BOOTSTAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
+			return FrozenFeatureUtils.BOOTSTRAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 		return level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 	}
 
@@ -67,12 +67,12 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 	public <F extends Feature<FC>> FrozenConfiguredFeature<FC, C> makeAndSetHolder(F feature, FC config) {
 		FrozenLogUtils.log("Registering configured feature: " + this.getKey().location(), true);
 
-		assert FrozenFeatureUtils.BOOTSTAP_CONTEXT != null: "Bootstrap context is null while registering " + this.getKey().location();
+		assert FrozenFeatureUtils.BOOTSTRAP_CONTEXT != null: "Bootstrap context is null while registering " + this.getKey().location();
 
 		assert feature != null: "Feature is null whilst registering " + this.getKey().location();
 		assert config != null: "Feature configuration is null whilst registering " + this.getKey().location();
 
-		FrozenFeatureUtils.BOOTSTAP_CONTEXT.register((ResourceKey) this.getKey(), new ConfiguredFeature<>(feature, config));
+		FrozenFeatureUtils.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), new ConfiguredFeature<>(feature, config));
 		return this;
 	}
 }

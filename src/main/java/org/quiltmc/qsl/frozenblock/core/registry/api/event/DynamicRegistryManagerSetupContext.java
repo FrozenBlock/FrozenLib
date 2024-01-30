@@ -28,7 +28,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -46,12 +45,6 @@ public interface DynamicRegistryManagerSetupContext {
 	 */
 	@Contract(pure = true)
 	@NotNull RegistryAccess registryManager();
-
-	/**
-	 * {@return the resource manager that is used to setup the dynamic registries}
-	 */
-	@Contract(pure = true)
-	@NotNull ResourceManager resourceManager();
 
 	/**
 	 * Attempts to safely register a game object into the given registry.

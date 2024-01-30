@@ -40,17 +40,14 @@
     ],
     "terrablender": [
       "net.frozenblock.lib.worldgen.surface.impl.terrablender.FrozenTerraBlenderCompat"
-    ],
-    "frozenlib:data_fix_types": [
-      "net.frozenblock.lib.datafix.impl.InternalFrozenDataFixTypes"
     ]
   },
   "mixins": [
     "mixin/frozenlib.advancement.mixins.json",
     "mixin/frozenlib.axe.mixins.json",
+    "mixin/frozenlib.block.mixins.json",
     "mixin/frozenlib.clothconfig.mixins.json",
     "mixin/frozenlib.core.mixins.json",
-    "mixin/frozenlib.datafix.mixins.json",
     "mixin/frozenlib.entity.mixins.json",
     "mixin/frozenlib.event.mixins.json",
     "mixin/frozenlib.feature_flag.mixins.json",
@@ -66,7 +63,6 @@
     "mixin/frozenlib.spotting_icons.mixins.json",
     "mixin/frozenlib.storage.mixins.json",
     "mixin/frozenlib.tag.mixins.json",
-    "mixin/frozenlib.tick.mixins.json",
     "mixin/frozenlib.weather.mixins.json",
     "mixin/frozenlib.wind.mixins.json",
     "mixin/frozenlib.worldgen.biome.mixins.json",

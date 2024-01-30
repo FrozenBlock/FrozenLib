@@ -23,10 +23,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.frozenblock.lib.gravity.api.SerializableGravityFunction;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public record InterpolatedGravityFunction(
-	double gravity
+	Vec3 gravity
 	//double minLerpGravity,
 	//double maxLerpGravity,
 	//double minLerpY,
@@ -35,7 +36,7 @@ public record InterpolatedGravityFunction(
 
 	public static final Codec<InterpolatedGravityFunction> CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
-			Codec.DOUBLE.fieldOf("gravity").forGetter(InterpolatedGravityFunction::gravity)
+			Vec3.CODEC.fieldOf("gravity").forGetter(InterpolatedGravityFunction::gravity)
 			//Codec.DOUBLE.fieldOf("minLerpGravity").forGetter(InterpolatedGravityFunction::minLerpGravity),
 			//Codec.DOUBLE.fieldOf("maxLerpGravity").forGetter(InterpolatedGravityFunction::maxLerpY),
 			//Codec.DOUBLE.fieldOf("minLerpY").forGetter(InterpolatedGravityFunction::minLerpY),
@@ -46,11 +47,11 @@ public record InterpolatedGravityFunction(
 	public static final Codec<GravityBelt<InterpolatedGravityFunction>> BELT_CODEC = GravityBelt.codec(CODEC);
 
 	@Override
-	public double get(@Nullable Entity entity, double y, double minY, double maxY) {
+	public Vec3 get(@Nullable Entity entity, double y, double minY, double maxY) {
 		double normalizedY = (y - minY) / (maxY - minY);
 		//double normalizedY = (y - minLerpY) / (maxLerpY - minLerpY);
 
-		return gravity * normalizedY;
+		return gravity.scale(normalizedY);
 		/*if (normalizedY < 0.5) {
 			return Mth.clamp(Mth.lerp(normalizedY, minLerpGravity, gravity), minLerpGravity, gravity);
 		}

@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.wind.api;
 
-import io.netty.buffer.Unpooled;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.Arrays;
@@ -33,10 +32,10 @@ import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
@@ -112,7 +111,7 @@ public class WindManager {
 		return new SavedData.Factory<>(
 			() -> new WindStorage(this),
 			tag -> WindStorage.load(tag, this),
-			FrozenDataFixTypes.getDataFixType(FrozenSharedConstants.MOD_ID, "saved_data_wind")
+			DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES
 		);
 	}
 
@@ -225,17 +224,6 @@ public class WindManager {
 	}
 
 	@NotNull
-	public Vec3 sampleVec3(@NotNull ImprovedNoise sampler, double x, double y, double z) {
-		if (!this.overrideWind) {
-			double windX = sampler.noise(x, 0, 0);
-			double windY = sampler.noise(0, y, 0);
-			double windZ = sampler.noise(0, 0, z);
-			return new Vec3(windX, windY, windZ);
-		}
-		return this.commandWind;
-	}
-
-	@NotNull
 	public Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos) {
 		double brightness = reader.getBrightness(LightLayer.SKY, pos);
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
@@ -305,7 +293,18 @@ public class WindManager {
 	}
 
 	@NotNull
-	public Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
+	private Vec3 sampleVec3(@NotNull ImprovedNoise sampler, double x, double y, double z) {
+		if (!this.overrideWind) {
+			double windX = sampler.noise(x, 0, 0);
+			double windY = sampler.noise(0, y, 0);
+			double windZ = sampler.noise(0, 0, z);
+			return new Vec3(windX, windY, windZ);
+		}
+		return this.commandWind;
+	}
+
+	@NotNull
+	private Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
 		double sampledTime = time * 0.1;
 		double xyz = pos.x() + pos.y() + pos.z();
 		double windX = this.perlinXoro.noise((xyz + sampledTime) * stretch, 0, 0);

@@ -34,7 +34,7 @@ public class CreeperMixin {
 	@Inject(method = "<init>", at = @At(value = "TAIL"))
 	public void initWithIcon(EntityType<? extends Creeper> entityType, Level level, CallbackInfo info) {
 		Creeper creeper = Creeper.class.cast(this);
-		((EntitySpottingIconInterface) creeper).getSpottingIconManager().setIcon(FrozenMain.id("textures/spotting_icons/creeper.png"), 16, 20, FrozenMain.id("default"));
+		((EntitySpottingIconInterface) creeper).getSpottingIconManager().setIcon(FrozenMain.resourceLocation("textures/spotting_icons/creeper.png"), 16, 20, FrozenMain.resourceLocation("default"));
 	}
 
 }

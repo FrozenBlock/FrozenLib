@@ -24,14 +24,14 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.advancement.api.AdvancementAPI;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
+import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
-import net.frozenblock.lib.gravity.api.GravityAPI;
-import net.frozenblock.lib.gravity.api.functions.InterpolatedGravityFunction;
 import net.frozenblock.lib.testmod.config.TestConfig;
-import net.frozenblock.lib.tick.api.BlockScheduledTicks;
+import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -39,9 +39,10 @@ import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.SimpleFixes;
@@ -56,16 +57,20 @@ public final class FrozenTestMain implements ModInitializer {
     @Override
     public void onInitialize() {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
-		LOGGER.info("The test toggle value is " + TestConfig.get().testToggle);
-		LOGGER.info("The test vec3 value is " + TestConfig.get().typedVecList);
+        LOGGER.info("The test toggle value is {}", TestConfig.get().testToggle);
+        LOGGER.info("The test vec3 value is {}", TestConfig.get().typedVecList);
 		SoundEvent sound = TestConfig.get().randomSound;
-		LOGGER.info("The test soundevent value is " + sound + " and its ID is " + sound.getLocation());
+        LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.getLocation());
 
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
 
-		GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(300, 319, true, true, new AbsoluteGravityFunction(0.1)));
-		assert GravityAPI.calculateGravity(BuiltinDimensionTypes.OVERWORLD, 300) == 0.1;
+		GravityAPI.MODIFICATIONS.register((ctx) -> {
+			ctx.gravity = new Vec3(0.05, 0.8, 0.05);
+		});
+
+		GravityAPI.register(Level.OVERWORLD, new GravityBelt<>(300, 319, true, true, new AbsoluteGravityFunction(new Vec3(0.0, 0.1, 0.0))));
+		assert GravityAPI.calculateGravity(Level.OVERWORLD, 300).y == 0.1;
 
 		//GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0, 192, new InterpolatedGravityFunction(0.1)));
 
@@ -103,7 +108,7 @@ public final class FrozenTestMain implements ModInitializer {
 		var builder = new QuiltDataFixerBuilder(DATA_VERSION);
 		builder.addSchema(0, QuiltDataFixes.BASE_SCHEMA);
 		Schema schemaV1 = builder.addSchema(1, NamespacedSchema::new);
-		SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenMain.id("camera"), id("camera"), schemaV1);
+		SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenSharedConstants.id("camera"), id("camera"), schemaV1);
 
 		QuiltDataFixes.buildAndRegisterFixer(mod, builder);
 		LOGGER.info("DataFixes for FrozenLib Testmod have been applied");

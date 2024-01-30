@@ -25,6 +25,7 @@ import net.frozenblock.lib.wind.api.WindManagerExtension;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class WindStorage extends SavedData {
 	public static final String WIND_FILE_ID = "frozenlib_wind";
@@ -36,7 +37,7 @@ public class WindStorage extends SavedData {
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag compoundTag) {
+	public @NotNull CompoundTag save(@NotNull CompoundTag compoundTag) {
 		compoundTag.putLong("time", this.windManager.time);
 		compoundTag.putBoolean("overrideWind", this.windManager.overrideWind);
 		compoundTag.putDouble("commandWindX", this.windManager.commandWind.x());
@@ -51,14 +52,18 @@ public class WindStorage extends SavedData {
 		compoundTag.putLong("seed", this.windManager.seed);
 
 		// EXTENSIONS
-		for (WindManagerExtension extension : this.windManager.attachedExtensions) extension.save(compoundTag);
+		for (WindManagerExtension extension : this.windManager.attachedExtensions) {
+			CompoundTag extensionTag = new CompoundTag();
+			extension.save(extensionTag);
+			compoundTag.put(extension.extensionID().toString(), extensionTag);
+		}
 
 		FrozenLogUtils.log("Saving WindManager data.", FrozenSharedConstants.UNSTABLE_LOGGING);
 
 		return compoundTag;
 	}
 
-	public static WindStorage load(CompoundTag compoundTag, WindManager manager) {
+	public static @NotNull WindStorage load(@NotNull CompoundTag compoundTag, WindManager manager) {
 		WindStorage windStorage = new WindStorage(manager);
 
 		windStorage.windManager.time = compoundTag.getLong("time");
@@ -73,7 +78,10 @@ public class WindStorage extends SavedData {
 		windStorage.windManager.setSeed(compoundTag.getLong("seed"));
 
 		// EXTENSIONS
-		for (WindManagerExtension extension : windStorage.windManager.attachedExtensions) extension.load(compoundTag);
+		for (WindManagerExtension extension : windStorage.windManager.attachedExtensions) {
+			CompoundTag extensionTag = compoundTag.getCompound(extension.extensionID().toString());
+			extension.load(extensionTag);
+		}
 
 		FrozenLogUtils.log("Loading WindManager data.", FrozenSharedConstants.UNSTABLE_LOGGING);
 

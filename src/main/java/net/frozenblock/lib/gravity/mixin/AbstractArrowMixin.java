@@ -20,6 +20,7 @@ package net.frozenblock.lib.gravity.mixin;
 
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
@@ -30,7 +31,13 @@ public abstract class AbstractArrowMixin implements EntityGravityInterface {
 
 	@ModifyArgs(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/projectile/AbstractArrow;setDeltaMovement(DDD)V", ordinal = 0))
 	private void useGravity(Args args) {
+		double x = args.get(0);
 		double y = (double) args.get(1) + 0.05;
-		args.set(1, y - this.frozenLib$getEffectiveGravity());
+		double z = args.get(2);
+
+		Vec3 newVec = new Vec3(x, y, z).subtract(this.frozenLib$getEffectiveGravity());
+		args.set(0, newVec.x);
+		args.set(1, newVec.y);
+		args.set(2, newVec.z);
 	}
 }
