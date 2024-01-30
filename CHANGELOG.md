@@ -12,7 +12,7 @@ Put changelog here:
   - Be sure to create a public static final instance of your FrozenBiome in order to properly access and register it.
 - Added the `getEntitiesPerLevel` method to `EntityUtils.`
   - This will return all loaded entities within a given `ServerLevel.`
-- Added the `frozenlib:data_fix_types` entrypoint, using the class `FrozenMobCategoryEntrypoint.`
-  - This is used for saved data, some Vanilla examples being Raids and Map data.
-  - Custom Data Fix Types can be retrieved using the `getDataFixType` method in `FrozenDataFixTypes.`
 - Improved the quality of the `AxeBehaviors` class.
+- Added an `extensionID` method to the `WindManagerExtension` class in order to improve saving with NBT.
+- Moved `BlockShecuduledTicks` to the `block` package.
+- `PointedDripstoneBlockMixin` is now loaded once again.

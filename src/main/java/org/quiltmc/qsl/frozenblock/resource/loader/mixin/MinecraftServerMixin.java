@@ -18,9 +18,9 @@
 
 package org.quiltmc.qsl.frozenblock.resource.loader.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.util.Collection;
 import java.util.concurrent.CompletableFuture;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;

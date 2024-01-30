@@ -20,10 +20,12 @@ package net.frozenblock.lib.wind.api;
 
 import net.frozenblock.lib.wind.impl.WindSyncPacket;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 
 public interface WindManagerExtension {
+
+	ResourceLocation extensionID();
 
 	void tick();
 

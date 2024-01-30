@@ -18,16 +18,17 @@
 
 package net.frozenblock.lib;
 
-import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entity.api.EntityUtils;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
+import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.ingamedevtools.RegisterInGameDevTools;
@@ -55,14 +56,20 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.commands.WardenSpawnTrackerCommand;
 import net.minecraft.world.level.storage.DimensionDataStorage;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 
-public final class FrozenMain implements ModInitializer {
+public final class FrozenMain extends FrozenModInitializer {
+
+	public FrozenMain() {
+		super(FrozenSharedConstants.MOD_ID);
+	}
 
 	@Override
-	public void onInitialize() {
+	public void onInitialize(String modId, ModContainer container) {
 		FrozenRegistry.initRegistry();
 
 		// QUILT INIT
@@ -136,14 +143,15 @@ public final class FrozenMain implements ModInitializer {
 		});
 	}
 
+	@Contract("_ -> new")
 	@Deprecated(forRemoval = true)
-	public static ResourceLocation id(String path) {
+	public static @NotNull ResourceLocation resourceLocation(String path) {
 		return new ResourceLocation(FrozenSharedConstants.MOD_ID, path);
 	}
 
 	@Deprecated(forRemoval = true)
-	public static String string(String path) {
-		return id(path).toString();
+	public static @NotNull String string(String path) {
+		return resourceLocation(path).toString();
 	}
 
 }

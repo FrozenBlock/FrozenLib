@@ -30,7 +30,7 @@ import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
 import net.frozenblock.lib.testmod.config.TestConfig;
-import net.frozenblock.lib.tick.api.BlockScheduledTicks;
+import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.LocationPredicate;
@@ -102,7 +102,7 @@ public final class FrozenTestMain implements ModInitializer {
 		var builder = new QuiltDataFixerBuilder(DATA_VERSION);
 		builder.addSchema(0, QuiltDataFixes.BASE_SCHEMA);
 		Schema schemaV1 = builder.addSchema(1, NamespacedSchema::new);
-		SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenMain.id("camera"), id("camera"), schemaV1);
+		SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenMain.resourceLocation("camera"), id("camera"), schemaV1);
 
 		QuiltDataFixes.buildAndRegisterFixer(mod, builder);
 		LOGGER.info("DataFixes for FrozenLib Testmod have been applied");
