@@ -18,12 +18,15 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 
+import com.mojang.datafixers.util.Pair;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.packs.resources.ResourceManager;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.DynamicRegistryManagerSetupContextImpl;
 import org.spongepowered.asm.mixin.Mixin;
@@ -71,7 +74,7 @@ public class RegistryDataLoaderMixin {
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	private static void onDynamicLoaded(RegistryDataLoader.LoadingFunction loadingFunction, RegistryAccess registryAccess, List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir, Map<ResourceKey<?>, Exception> map, List<RegistryDataLoader.Loader<?>> list2, RegistryOps.RegistryInfoLookup registryInfoLookup) {
+	private static void onAfterLoad(RegistryDataLoader.LoadingFunction loadingFunction, RegistryAccess registryAccess, List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir, Map<ResourceKey<?>, Exception> map, List<RegistryDataLoader.Loader<?>> list2, RegistryOps.RegistryInfoLookup registryInfoLookup) {
 		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(registryAccess);
 	}
 }
