@@ -24,8 +24,6 @@ import java.util.Map;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.RegistryDataLoader;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.DynamicRegistryManagerSetupContextImpl;
@@ -42,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 public class RegistryDataLoaderMixin {
 
 	@Inject(
-			method = "Lnet/minecraft/resources/RegistryDataLoader;load(Lnet/minecraft/resources/RegistryDataLoader$LoadingFunction;Lnet/minecraft/core/RegistryAccess;Ljava/util/List;)Lnet/minecraft/core/RegistryAccess$Frozen;",
+			method = "load",
 			at = @At(
 					value = "INVOKE",
 					target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
@@ -51,23 +49,27 @@ public class RegistryDataLoaderMixin {
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	private static void onBeforeLoad(RegistryDataLoader.LoadingFunction loadingFunction, RegistryAccess registryAccess, List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir, Map<ResourceKey<?>, Exception> map, List<RegistryDataLoader.Loader<?>> list2, RegistryOps.RegistryInfoLookup registryInfoLookup) {
+	private static void onBeforeLoad(ResourceManager resourceManager, RegistryAccess registryManager, List<RegistryDataLoader.RegistryData<?>> decodingData,
+									 CallbackInfoReturnable<RegistryAccess.Frozen> cir,
+									 Map<?, ?> map,
+									 List<Pair<WritableRegistry<?>, ?>> registries) {
 		RegistryEvents.DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(
-				new DynamicRegistryManagerSetupContextImpl(list2.stream().map(loader -> loader.registry))
+				new DynamicRegistryManagerSetupContextImpl(resourceManager, registries.stream().map(Pair::getFirst))
 		);
 	}
 
 	@Inject(
-			method = "Lnet/minecraft/resources/RegistryDataLoader;load(Lnet/minecraft/resources/RegistryDataLoader$LoadingFunction;Lnet/minecraft/core/RegistryAccess;Ljava/util/List;)Lnet/minecraft/core/RegistryAccess$Frozen;",
+			method = "load",
 			at = @At(
 					value = "INVOKE",
 					target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
-					ordinal = 1,
+					ordinal = 0,
 					shift = At.Shift.AFTER
 			),
 			locals = LocalCapture.CAPTURE_FAILHARD
 	)
-	private static void onAfterLoad(RegistryDataLoader.LoadingFunction loadingFunction, RegistryAccess registryAccess, List<RegistryDataLoader.RegistryData<?>> list, CallbackInfoReturnable<RegistryAccess.Frozen> cir, Map<ResourceKey<?>, Exception> map, List<RegistryDataLoader.Loader<?>> list2, RegistryOps.RegistryInfoLookup registryInfoLookup) {
-		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(registryAccess);
+	private static void onAfterLoad(ResourceManager resourceManager, RegistryAccess registryManager, List<RegistryDataLoader.RegistryData<?>> decodingData,
+									CallbackInfoReturnable<RegistryAccess.Frozen> cir) {
+		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(registryManager);
 	}
 }
