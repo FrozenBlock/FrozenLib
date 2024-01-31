@@ -61,16 +61,17 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 				poseStack.scale(-1, 1, 1);
 				PoseStack.Pose pose = poseStack.last();
 				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveAlwaysRender(((EntitySpottingIconInterface) entity).getSpottingIconManager().icon.texture()));
-				vertex(vertexConsumer, pose, packedLight, 0.0F, 0, 0, 1, alpha);
-				vertex(vertexConsumer, pose, packedLight, 1.0F, 0, 1, 1, alpha);
-				vertex(vertexConsumer, pose, packedLight, 1.0F, 1, 1, 0, alpha);
-				vertex(vertexConsumer, pose, packedLight, 0.0F, 1, 0, 0, alpha);
+				frozenLib$vertex(vertexConsumer, pose, packedLight, 0.0F, 0, 0, 1, alpha);
+				frozenLib$vertex(vertexConsumer, pose, packedLight, 1.0F, 0, 1, 1, alpha);
+				frozenLib$vertex(vertexConsumer, pose, packedLight, 1.0F, 1, 1, 0, alpha);
+				frozenLib$vertex(vertexConsumer, pose, packedLight, 0.0F, 1, 0, 0, alpha);
 				poseStack.popPose();
 			}
 		}
 	}
 
-	private static void vertex(@NotNull VertexConsumer vertexConsumer, PoseStack.Pose pose, int i, float f, int j, int u, int v, int alpha) {
+	@Unique
+	private static void frozenLib$vertex(@NotNull VertexConsumer vertexConsumer, PoseStack.Pose pose, int i, float f, int j, int u, int v, int alpha) {
 		vertexConsumer.vertex(pose, f - 0.5F, (float)j - 0.25F, 0.0F)
 			.color(255, 255, 255, alpha)
 			.uv((float)u, (float)v)
