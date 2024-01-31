@@ -88,9 +88,8 @@ transitive-accessible    field    net/minecraft/world/entity/LivingEntity    dea
 
 # Entity Spawns
 transitive-accessible    class    net/minecraft/world/entity/SpawnPlacements$Data
-accessible    method    net/minecraft/world/entity/SpawnPlacements    register    (Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/entity/SpawnPlacementType;Lnet/minecraft/world/level/levelgen/Heightmap$Types;Lnet/minecraft/world/entity/SpawnPlacements$SpawnPredicate;)V
 accessible    field    net/minecraft/world/entity/SpawnPlacements$Data    predicate    Lnet/minecraft/world/entity/SpawnPlacements$SpawnPredicate;
-accessible    field    net/minecraft/world/entity/SpawnPlacements$Data    placement    Lnet/minecraft/world/entity/SpawnPlacementType;
+accessible    field    net/minecraft/world/entity/SpawnPlacements$Data    placement    Lnet/minecraft/world/entity/SpawnPlacements$Type;
 accessible    field    net/minecraft/world/entity/SpawnPlacements$Data    heightMap    Lnet/minecraft/world/level/levelgen/Heightmap$Types;
 
 # Mobs
@@ -148,7 +147,7 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/feature/st
 transitive-accessible    method    net/minecraft/world/level/biome/OverworldBiomeBuilder    addBiomes    (Ljava/util/function/Consumer;)V
 
 # Noise
-transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/data/worldgen/BootstrapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
+transitive-accessible    method    net/minecraft/data/worldgen/NoiseData    register    (Lnet/minecraft/data/worldgen/BootstapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
 
 # Surface Rules
 transitive-accessible    method    net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource    <init>    (Ljava/util/List;)V
