@@ -168,7 +168,7 @@ public class ScreenShakeManager {
 	}
 
 	public SavedData.Factory<ScreenShakeStorage> createData() {
-		return new SavedData.Factory<>(() -> new ScreenShakeStorage(this), tag -> ScreenShakeStorage.load(tag, this), DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES);
+		return new SavedData.Factory<>(() -> new ScreenShakeStorage(this), (tag, provider) -> ScreenShakeStorage.load(tag, this), DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES);
 	}
 
 	public static void addScreenShake(Level level, float intensity, double x, double y, double z, float maxDistance) {

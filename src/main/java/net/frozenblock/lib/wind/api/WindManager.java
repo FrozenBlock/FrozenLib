@@ -26,7 +26,6 @@ import java.util.Map;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.wind.impl.WindSyncPacket;
@@ -109,7 +108,7 @@ public class WindManager {
 	public SavedData.Factory<WindStorage> createData() {
 		return new SavedData.Factory<>(
 			() -> new WindStorage(this),
-			tag -> WindStorage.load(tag, this),
+			(tag, provider) -> WindStorage.load(tag, this),
 			DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES
 		);
 	}

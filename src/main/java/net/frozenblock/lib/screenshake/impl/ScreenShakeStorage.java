@@ -19,8 +19,10 @@
 package net.frozenblock.lib.screenshake.impl;
 
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
+import org.jetbrains.annotations.NotNull;
 
 public class ScreenShakeStorage extends SavedData {
 	public static final String SCREEN_SHAKE_FILE_ID = "frozenlib_screen_shakes";
@@ -31,12 +33,14 @@ public class ScreenShakeStorage extends SavedData {
 		this.setDirty();
 	}
 
+	@NotNull
 	@Override
-	public CompoundTag save(CompoundTag compoundTag) {
+	public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
 		this.screenShakeManager.save(compoundTag);
 		return compoundTag;
 	}
 
+	@NotNull
 	public static ScreenShakeStorage load(CompoundTag compoundTag, ScreenShakeManager manager) {
 		ScreenShakeStorage storage = new ScreenShakeStorage(manager);
 

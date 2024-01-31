@@ -30,8 +30,7 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import org.joml.Matrix3f;
-import org.joml.Matrix4f;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -46,7 +45,7 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 
 	@Unique
 	@Override
-	public <T extends Entity> void frozenLib$renderIcon(T entity, float entityYaw, float partialTick, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+	public <T extends Entity> void frozenLib$renderIcon(T entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
 		SpottingIconManager iconManager = ((EntitySpottingIconInterface) entity).getSpottingIconManager();
 		SpottingIconManager.SpottingIcon icon = iconManager.icon;
 		if (icon != null) {
@@ -54,51 +53,30 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 			if (dist > icon.startFadeDist() && iconManager.clientHasIconResource) {
 				float endDist = icon.endFadeDist() - icon.startFadeDist();
 				dist -= icon.startFadeDist();
-				float alpha = dist > endDist ? 1F : (float) Math.min(1F, dist / endDist);
+				int alpha = (int) ((dist > endDist ? 1F : (float) Math.min(1F, dist / endDist)) * 255F);
 				float f = entity.getBbHeight() + 1F;
-				matrixStack.pushPose();
-				matrixStack.translate(0.0D, f, 0.0D);
-				matrixStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-				matrixStack.scale(-1, 1, 1);
-				Matrix4f matrix4f = matrixStack.last().pose();
-				Matrix3f matrix3f = matrixStack.last().normal();
-				int overlay = OverlayTexture.pack(OverlayTexture.u(0F), OverlayTexture.v(false));
+				poseStack.pushPose();
+				poseStack.translate(0.0D, f, 0.0D);
+				poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+				poseStack.scale(-1, 1, 1);
+				PoseStack.Pose pose = poseStack.last();
 				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveAlwaysRender(((EntitySpottingIconInterface) entity).getSpottingIconManager().icon.texture()));
-				vertexConsumer
-						.vertex(matrix4f, -0.5F, -0.5F, 0.0F)
-						.color(1, 1, 1, alpha)
-						.uv(0, 1)
-						.overlayCoords(overlay)
-						.uv2(packedLight)
-						.normal(matrix3f, 0.0F, 1.0F, 0.0F)
-						.endVertex();
-				vertexConsumer
-						.vertex(matrix4f, 0.5F, -0.5F, 0.0F)
-						.color(1, 1, 1, alpha)
-						.uv(1, 1)
-						.overlayCoords(overlay)
-						.uv2(packedLight)
-						.normal(matrix3f, 0.0F, 1.0F, 0.0F)
-						.endVertex();
-				vertexConsumer
-						.vertex(matrix4f, 0.5F, 0.5F, 0.0F)
-						.color(1, 1, 1, alpha)
-						.uv(1, 0)
-						.overlayCoords(overlay)
-						.uv2(packedLight)
-						.normal(matrix3f, 0.0F, 1.0F, 0.0F)
-						.endVertex();
-				vertexConsumer
-						.vertex(matrix4f, -0.5F, 0.5F, 0.0F)
-						.color(1, 1, 1, alpha)
-						.uv(0, 0)
-						.overlayCoords(overlay)
-						.uv2(packedLight)
-						.normal(matrix3f, 0.0F, 1.0F, 0.0F)
-						.endVertex();
-
-				matrixStack.popPose();
+				vertex(vertexConsumer, pose, packedLight, 0.0F, 0, 0, 1, alpha);
+				vertex(vertexConsumer, pose, packedLight, 1.0F, 0, 1, 1, alpha);
+				vertex(vertexConsumer, pose, packedLight, 1.0F, 1, 1, 0, alpha);
+				vertex(vertexConsumer, pose, packedLight, 0.0F, 1, 0, 0, alpha);
+				poseStack.popPose();
 			}
 		}
+	}
+
+	private static void vertex(@NotNull VertexConsumer vertexConsumer, PoseStack.Pose pose, int i, float f, int j, int u, int v, int alpha) {
+		vertexConsumer.vertex(pose, f - 0.5F, (float)j - 0.25F, 0.0F)
+			.color(255, 255, 255, alpha)
+			.uv((float)u, (float)v)
+			.overlayCoords(OverlayTexture.NO_OVERLAY)
+			.uv2(i)
+			.normal(pose, 0.0F, 1.0F, 0.0F)
+			.endVertex();
 	}
 }

@@ -22,6 +22,7 @@ import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.WindManagerExtension;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
@@ -37,7 +38,7 @@ public class WindStorage extends SavedData {
 	}
 
 	@Override
-	public @NotNull CompoundTag save(@NotNull CompoundTag compoundTag) {
+	public @NotNull CompoundTag save(@NotNull CompoundTag compoundTag, HolderLookup.Provider provider) {
 		compoundTag.putLong("time", this.windManager.time);
 		compoundTag.putBoolean("overrideWind", this.windManager.overrideWind);
 		compoundTag.putDouble("commandWindX", this.windManager.commandWind.x());
