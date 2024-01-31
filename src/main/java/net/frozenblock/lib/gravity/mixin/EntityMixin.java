@@ -47,7 +47,7 @@ public class EntityMixin implements EntityGravityInterface {
 	@Unique
 	@Override
 	public double frozenLib$getGravity() {
-		return 0.04;
+		return 0.04D;
 	}
 
 	@Unique

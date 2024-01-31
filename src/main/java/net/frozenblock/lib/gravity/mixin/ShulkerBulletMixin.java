@@ -18,23 +18,20 @@
 
 package net.frozenblock.lib.gravity.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(ShulkerBullet.class)
 public abstract class ShulkerBulletMixin implements EntityGravityInterface {
 
-	@ModifyArgs(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal =  0))
-	private void useGravity(Args args) {
+	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
+	private Vec3 useGravity(Vec3 instance, double d, double e, double f, Operation<Vec3> original) {
 		Vec3 gravity = this.frozenLib$getEffectiveGravity().scale(-1);
-
-		args.set(0, gravity.x);
-		args.set(1, gravity.y);
-		args.set(2, gravity.z);
+		return original.call(instance, gravity.z, gravity.y, gravity.z);
 	}
 }
