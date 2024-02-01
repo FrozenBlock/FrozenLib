@@ -21,10 +21,15 @@ package net.frozenblock.lib.recipe.mixin;
 import com.google.gson.JsonObject;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.serialization.JsonOps;
+import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
@@ -32,12 +37,28 @@ import org.spongepowered.asm.mixin.injection.At;
  * @since 1.4.1
  */
 @Mixin(ShapedRecipe.class)
-public class ShapedRecipeMixin {
+public class ShapedRecipeMixin implements ShapedRecipeBuilderExtension {
+
+	@Shadow
+	@Final
+	ItemStack result;
+
+	@Override
+	public ShapedRecipeBuilder frozenLib$tag(@Nullable CompoundTag tag) {
+		this.result.setTag(tag);
+		return null;
+	}
+
+	@Override
+	public @Nullable CompoundTag frozenLib$getTag() {
+		return this.result.getTag();
+	}
 
 	@ModifyReturnValue(method = "itemStackFromJson", at = @At("RETURN"))
 	private static ItemStack itemStackFromJson(ItemStack stack, JsonObject stackObject) {
 		if (stackObject.has("tag"))
-			stack.setTag(CompoundTag.CODEC.decode(JsonOps.INSTANCE, stackObject.get("tag")).getOrThrow(false, error -> {}).getFirst());
+			stack.setTag(CompoundTag.CODEC.decode(JsonOps.INSTANCE, stackObject.get("tag")).getOrThrow(false, error -> {
+			}).getFirst());
 		return stack;
 	}
 }

@@ -16,23 +16,27 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.tick.api;
+package net.frozenblock.lib.block.mixin.tick;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import java.util.Map;
+import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-public class BlockScheduledTicks {
+@Mixin(BlockBehaviour.class)
+public class BlockBehaviourMixin {
 
-    public static final Map<Block, InjectedScheduledTick> TICKS = new Object2ObjectOpenHashMap<>();
-
-    @FunctionalInterface
-    public interface InjectedScheduledTick {
-        void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random);
+    @Inject(method = "tick", at = @At("HEAD"))
+    public void tickScheduled(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo info) {
+        if (BlockScheduledTicks.TICKS.containsKey(state.getBlock())) {
+            BlockScheduledTicks.TICKS.get(state.getBlock()).tick(state, world, pos, random);
+        }
     }
 
 }

@@ -25,6 +25,7 @@ import net.frozenblock.lib.wind.api.WindManagerExtension;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public class WindStorage extends SavedData {
 	public static final String WIND_FILE_ID = "frozenlib_wind";
@@ -36,7 +37,7 @@ public class WindStorage extends SavedData {
 	}
 
 	@Override
-	public CompoundTag save(CompoundTag compoundTag) {
+	public @NotNull CompoundTag save(@NotNull CompoundTag compoundTag) {
 		compoundTag.putLong("time", this.windManager.time);
 		compoundTag.putBoolean("overrideWind", this.windManager.overrideWind);
 		compoundTag.putDouble("commandWindX", this.windManager.commandWind.x());
@@ -51,30 +52,36 @@ public class WindStorage extends SavedData {
 		compoundTag.putLong("seed", this.windManager.seed);
 
 		// EXTENSIONS
-		for (WindManagerExtension extension : this.windManager.attachedExtensions) extension.save(compoundTag);
+		for (WindManagerExtension extension : this.windManager.attachedExtensions) {
+			extension.save(compoundTag);
+		}
 
 		FrozenLogUtils.log("Saving WindManager data.", FrozenSharedConstants.UNSTABLE_LOGGING);
 
 		return compoundTag;
 	}
 
-	public WindStorage load(CompoundTag compoundTag) {
-		this.windManager.time = compoundTag.getLong("time");
-		this.windManager.overrideWind = compoundTag.getBoolean("overrideWind");
-		this.windManager.commandWind = new Vec3(compoundTag.getDouble("commandWindX"), compoundTag.getDouble("commandWindY"), compoundTag.getDouble("commandWindZ"));
-		this.windManager.windX = compoundTag.getDouble("windX");
-		this.windManager.windY = compoundTag.getDouble("windY");
-		this.windManager.windZ = compoundTag.getDouble("windZ");
-		this.windManager.laggedWindX = compoundTag.getDouble("laggedWindX");
-		this.windManager.laggedWindY = compoundTag.getDouble("laggedWindY");
-		this.windManager.laggedWindZ = compoundTag.getDouble("laggedWindZ");
-		this.windManager.setSeed(compoundTag.getLong("seed"));
+	public static @NotNull WindStorage load(@NotNull CompoundTag compoundTag, WindManager manager) {
+		WindStorage windStorage = new WindStorage(manager);
+
+		windStorage.windManager.time = compoundTag.getLong("time");
+		windStorage.windManager.overrideWind = compoundTag.getBoolean("overrideWind");
+		windStorage.windManager.commandWind = new Vec3(compoundTag.getDouble("commandWindX"), compoundTag.getDouble("commandWindY"), compoundTag.getDouble("commandWindZ"));
+		windStorage.windManager.windX = compoundTag.getDouble("windX");
+		windStorage.windManager.windY = compoundTag.getDouble("windY");
+		windStorage.windManager.windZ = compoundTag.getDouble("windZ");
+		windStorage.windManager.laggedWindX = compoundTag.getDouble("laggedWindX");
+		windStorage.windManager.laggedWindY = compoundTag.getDouble("laggedWindY");
+		windStorage.windManager.laggedWindZ = compoundTag.getDouble("laggedWindZ");
+		windStorage.windManager.setSeed(compoundTag.getLong("seed"));
 
 		// EXTENSIONS
-		for (WindManagerExtension extension : this.windManager.attachedExtensions) extension.load(compoundTag);
+		for (WindManagerExtension extension : windStorage.windManager.attachedExtensions) {
+			extension.load(compoundTag);
+		}
 
 		FrozenLogUtils.log("Loading WindManager data.", FrozenSharedConstants.UNSTABLE_LOGGING);
 
-		return this;
+		return windStorage;
 	}
 }

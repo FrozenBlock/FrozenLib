@@ -9,6 +9,7 @@
   "mixins": [
     "ShapedRecipeMixin",
     "ShapedRecipeBuilderMixin",
-    "ShapedRecipeBuilderMixin$ResultMixin"
+    "ShapedRecipeBuilderMixin$ResultMixin",
+    "ShapedRecipeMixin"
   ]
 }

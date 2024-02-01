@@ -18,8 +18,8 @@
 
 package net.frozenblock.lib.worldgen.biome.mixin;
 
-import java.util.function.Function;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import java.util.function.Function;
 import net.frozenblock.lib.worldgen.biome.impl.OverworldBiomeData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;

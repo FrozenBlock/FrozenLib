@@ -25,5 +25,5 @@ public final class FrozenFeatureUtils {
 		throw new UnsupportedOperationException("FrozenFeatureUtils contains only static declarations.");
 	}
 
-	public static BootstapContext<Object> BOOTSTAP_CONTEXT = null;
+	public static BootstapContext<Object> BOOTSTRAP_CONTEXT = null;
 }
