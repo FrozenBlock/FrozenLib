@@ -19,7 +19,6 @@
 package net.frozenblock.lib.gravity.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.phys.Vec3;
