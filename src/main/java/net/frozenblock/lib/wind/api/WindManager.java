@@ -138,8 +138,8 @@ public class WindManager {
 
 		//EXTENSIONS
 		for (WindManagerExtension extension : this.attachedExtensions) {
-			extension.baseTick();
-			extension.tick();
+			extension.baseTick(level);
+			extension.tick(level);
 		}
 
 		//SYNC WITH CLIENTS IN CASE OF DESYNC
