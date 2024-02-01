@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.spotting_icons.mixin.client;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.spotting_icons.impl.EntityRenderDispatcherWithIcon;
 import net.minecraft.client.Camera;
@@ -55,7 +56,7 @@ public class LevelRendererMixin {
 	private ClientLevel level;
 
 	@Inject(method = "renderLevel", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/renderer/RenderBuffers;bufferSource()Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;", shift = At.Shift.AFTER))
-	public void renderLevel(PoseStack poseStack, float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, CallbackInfo info) {
+	public void renderLevel(float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, Matrix4f matrix2, CallbackInfo info, @Local PoseStack poseStack) {
 		if (this.level != null) {
 			MultiBufferSource.BufferSource bufferSource = this.renderBuffers.bufferSource();
 			for (Entity entity : this.level.entitiesForRendering()) {

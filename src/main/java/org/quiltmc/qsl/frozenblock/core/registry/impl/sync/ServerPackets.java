@@ -23,8 +23,10 @@ import java.util.Collection;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.players.PlayerList;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
@@ -100,12 +102,12 @@ public final class ServerPackets {
 		public static final StreamCodec<FriendlyByteBuf, ErrorStyle> CODEC = StreamCodec.ofMember(ErrorStyle::write, ErrorStyle::new);
 
 		public ErrorStyle(@NotNull FriendlyByteBuf buf) {
-			this(buf.readComponent(), buf.readComponent(), buf.readBoolean());
+			this(ComponentSerialization.CONTEXT_FREE_STREAM_CODEC.decode(buf), ComponentSerialization.CONTEXT_FREE_STREAM_CODEC.decode(buf), buf.readBoolean());
 		}
 
 		public void write(@NotNull FriendlyByteBuf buf) {
-			buf.writeComponent(this.errorHeader);
-			buf.writeComponent(this.errorFooter);
+			ComponentSerialization.CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorHeader);
+			ComponentSerialization.CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorFooter);
 			buf.writeBoolean(this.showError);
 		}
 

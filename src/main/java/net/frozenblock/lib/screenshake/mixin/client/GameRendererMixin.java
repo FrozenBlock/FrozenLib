@@ -18,20 +18,20 @@
 
 package net.frozenblock.lib.screenshake.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(GameRenderer.class)
 public class GameRendererMixin {
 
-	@Inject(method = "renderLevel", at = @At("HEAD"))
-	public void frozenLib$shakeLevel(float partialTicks, long finishTimeNano, PoseStack matrixStack, CallbackInfo info) {
+	@ModifyExpressionValue(method = "renderLevel", at = @At(value = "NEW", target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"))
+	public PoseStack frozenLib$shakeLeve(PoseStack matrixStack, float partialTicks, long finishTimeNano) {
 		ScreenShaker.shake(matrixStack, partialTicks);
+		return matrixStack;
 	}
 
 }
