@@ -20,12 +20,16 @@ package net.frozenblock.lib.wind.api;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 
 public interface WindManagerExtension {
 
-	void tick();
+	ResourceLocation extensionID();
 
-	void baseTick();
+	void tick(ServerLevel level);
+
+	void baseTick(ServerLevel level);
 
 	boolean runResetsIfNeeded();
 
