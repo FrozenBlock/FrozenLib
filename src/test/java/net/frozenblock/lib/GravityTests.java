@@ -42,7 +42,7 @@ class GravityTests {
         GravityAPI.register(Level.OVERWORLD, new GravityBelt<>(-64.0, -32.0, new AbsoluteGravityFunction(new Vec3(0.0, 100.0, 0.0))));
         // gravity 0.5 y 0..15
         GravityAPI.register(Level.OVERWORLD, new GravityBelt<>(0.0, 15.0, new AbsoluteGravityFunction(new Vec3(0.0, 0.5, 0.0))));
-
+		
         assertEquals(new Vec3(0.0, 0.1, 0.0), GravityAPI.calculateGravity(Level.OVERWORLD, 300));
         assertEquals(new Vec3(0.0, 100.0, 0.0), GravityAPI.calculateGravity(Level.OVERWORLD, -64));
         assertEquals(new Vec3(0.0, 0.5, 0.0), GravityAPI.calculateGravity(Level.OVERWORLD, 0));
