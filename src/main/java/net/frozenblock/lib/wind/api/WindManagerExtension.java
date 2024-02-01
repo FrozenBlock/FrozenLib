@@ -22,14 +22,15 @@ import net.frozenblock.lib.wind.impl.WindSyncPacket;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 
 public interface WindManagerExtension {
 
 	ResourceLocation extensionID();
 
-	void tick();
+	void tick(ServerLevel level);
 
-	void baseTick();
+	void baseTick(ServerLevel level);
 
 	boolean runResetsIfNeeded();
 
