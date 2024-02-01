@@ -72,7 +72,7 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 
 	@Unique
 	private static void frozenLib$vertex(@NotNull VertexConsumer vertexConsumer, PoseStack.Pose pose, int i, float f, int j, int u, int v, int alpha) {
-		vertexConsumer.vertex(pose, f - 0.5F, (float)j - 0.25F, 0.0F)
+		vertexConsumer.vertex(pose, f - 0.5F, (float)j - 0.5F, 0.0F)
 			.color(255, 255, 255, alpha)
 			.uv((float)u, (float)v)
 			.overlayCoords(OverlayTexture.NO_OVERLAY)
