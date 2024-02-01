@@ -23,6 +23,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalDoubleRef;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -38,7 +39,13 @@ public class ParticleMixin {
 	private static final double BASE_GRAVITY = 0.04;
 
 	@Shadow
+	protected double xd;
+
+	@Shadow
 	protected double yd;
+
+	@Shadow
+	protected double zd;
 
 	@Shadow
 	@Final
@@ -51,12 +58,27 @@ public class ParticleMixin {
 	protected float gravity;
 
 	@Inject(method = "tick", at = @At("HEAD"))
-	private void storeY(CallbackInfo ci, @Share("oldY") LocalDoubleRef oldY) {
+	private void storeY(
+		CallbackInfo ci,
+		@Share("oldX") LocalDoubleRef oldX,
+		@Share("oldY") LocalDoubleRef oldY,
+		@Share("oldZ") LocalDoubleRef oldZ
+	) {
+		oldX.set(this.xd);
 		oldY.set(this.yd);
+		oldZ.set(this.zd);
 	}
 
 	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/Particle;move(DDD)V", ordinal = 0))
-	private void useGravity(CallbackInfo ci, @Share("oldY") LocalDoubleRef oldY) {
-		this.yd = oldY.get() - (BASE_GRAVITY * GravityAPI.calculateGravity(this.level, this.y) * this.gravity);
+	private void useGravity(
+		CallbackInfo ci,
+		@Share("oldX") LocalDoubleRef oldX,
+		@Share("oldY") LocalDoubleRef oldY,
+		@Share("oldZ") LocalDoubleRef oldZ
+	) {
+		Vec3 gravity = GravityAPI.calculateGravity(this.level, this.y).scale(this.gravity).scale(BASE_GRAVITY);
+		this.xd = oldX.get() - gravity.x;
+		this.yd = oldY.get() - gravity.y;
+		this.zd = oldZ.get() - gravity.z;
 	}
 }

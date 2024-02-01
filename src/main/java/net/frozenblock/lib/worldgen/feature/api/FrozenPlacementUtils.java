@@ -41,7 +41,7 @@ public final class FrozenPlacementUtils {
 	}
 
 	public static Holder<PlacedFeature> register(
-			BootstapContext<PlacedFeature> entries,
+		BootstapContext<PlacedFeature> entries,
 			ResourceKey<PlacedFeature> registryKey,
 			Holder<ConfiguredFeature<?, ?>> holder,
 			List<PlacementModifier> list
@@ -50,7 +50,7 @@ public final class FrozenPlacementUtils {
 	}
 
 	public static Holder<PlacedFeature> register(
-			BootstapContext<PlacedFeature> entries,
+		BootstapContext<PlacedFeature> entries,
 			ResourceKey<PlacedFeature> registryKey,
 			Holder<ConfiguredFeature<?, ?>> holder,
 			PlacementModifier... placementModifiers

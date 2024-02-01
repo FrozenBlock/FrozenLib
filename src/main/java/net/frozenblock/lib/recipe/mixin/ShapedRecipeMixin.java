@@ -16,20 +16,33 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.gravity.api;
+package net.frozenblock.lib.recipe.mixin;
 
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
+import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
-@FunctionalInterface
-public interface GravityFunction {
-	/***
-	 * @param entity The optional entity being tracked
-	 * @param y The current y position
-	 * @param minY The minimum Y position of the gravity belt
-	 * @param maxY The maximum Y position of the gravity belt
-	 * @return The gravity value
-	 */
-	Vec3 get(@Nullable Entity entity, double y, double minY, double maxY);
+@Mixin(ShapedRecipe.class)
+public class ShapedRecipeMixin implements ShapedRecipeBuilderExtension {
+
+	@Shadow
+	@Final
+	ItemStack result;
+
+	@Override
+	public ShapedRecipeBuilder frozenLib$tag(@Nullable CompoundTag tag) {
+		this.result.setTag(tag);
+		return null;
+	}
+
+	@Override
+	public @Nullable CompoundTag frozenLib$getTag() {
+		return this.result.getTag();
+	}
 }

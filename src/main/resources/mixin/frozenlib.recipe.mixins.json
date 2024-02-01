@@ -10,6 +10,7 @@
     "CraftingRecipeCodecsMixin",
     "ItemValueMixin",
     "ShapedRecipeBuilderMixin",
-    "ShapedRecipeBuilderMixin$ResultMixin"
+    "ShapedRecipeBuilderMixin$ResultMixin",
+    "ShapedRecipeMixin"
   ]
 }
