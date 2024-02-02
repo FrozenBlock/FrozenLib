@@ -17,3 +17,4 @@ Put changelog here:
 - Added an `extensionID` method to the `WindManagerExtension` class in order to improve saving with NBT.
 - Moved `BlockShecuduledTicks` to the `block` package.
 - `PointedDripstoneBlockMixin` is now loaded once again.
+- Many other improvements
