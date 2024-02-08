@@ -325,11 +325,15 @@ public class WindManager {
 		return new Vec3(windX, windY, windZ);
 	}
 
+	private static final double ENTITY_WIND_SEARCH_RANGE = 5D;
+	private static final double WIND_RANGE_BREEZE = 6D;
+	private static final double WIND_RANGE_WIND_CHARGE = 5D;
+
 	@NotNull
 	public static Pair<Double, Vec3> getEntityCausedWind(@NotNull Level level, @NotNull Vec3 pos) {
 		ArrayList<Pair<Double, Vec3>> winds = new ArrayList<>();
-		Vec3 lowerCorner = pos.add(-5D, -5D, -5D);
-		Vec3 upperCorner = pos.add(5D, 5D, 5D);
+		Vec3 lowerCorner = pos.add(-ENTITY_WIND_SEARCH_RANGE, -ENTITY_WIND_SEARCH_RANGE, -ENTITY_WIND_SEARCH_RANGE);
+		Vec3 upperCorner = pos.add(ENTITY_WIND_SEARCH_RANGE, ENTITY_WIND_SEARCH_RANGE, ENTITY_WIND_SEARCH_RANGE);
 
 		List<? extends AbstractWindCharge> windCharges = level.getEntities(
 			EntityTypeTest.forClass(AbstractWindCharge.class),
@@ -345,28 +349,28 @@ public class WindManager {
 		for (Breeze breeze : breezes) {
 			Vec3 breezePos = breeze.position();
 			double distance = pos.distanceTo(breezePos);
-			if (distance <= 6D) {
+			if (distance <= WIND_RANGE_BREEZE) {
 				Vec3 breezeLookVec = breeze.getForward();
 				Vec3 differenceInPoses = pos.subtract(breezePos);
-				double strengthFromDistance = Mth.clamp((6D - distance) / 5.5D, 0D, 1D);
+				double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE - 2D), 0D, 1D);
 				double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses);
 				double x = Math.cos((angleBetween * Math.PI) / 180D);
 				double z = -Math.sin((angleBetween * Math.PI) / 180D);
 				strength = Math.max(strength, strengthFromDistance);
-				Vec3 windVec = new Vec3(x, strengthFromDistance * 0.3D, z);
-				winds.add(new Pair<>(6D - distance, windVec));
+				Vec3 windVec = new Vec3(x, strengthFromDistance, z);
+				winds.add(new Pair<>(WIND_RANGE_BREEZE - distance, windVec));
 			}
 		}
 
 		for (AbstractWindCharge windCharge : windCharges) {
 			Vec3 chargePos = windCharge.position();
 			double distance = pos.distanceTo(chargePos);
-			if (distance <= 5D) {
+			if (distance <= WIND_RANGE_WIND_CHARGE) {
 				Vec3 chargeMovement = windCharge.getDeltaMovement();
-				double strengthFromDistance = Mth.clamp((6D - distance) / 5.5D, 0D, 1D);
+				double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE - 3D), 0D, 1D);
 				strength = Math.max(strength, strengthFromDistance);
 				Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(2D * strengthFromDistance);
-				winds.add(new Pair<>(6D - distance, windVec));
+				winds.add(new Pair<>(WIND_RANGE_WIND_CHARGE - distance, windVec));
 			}
 		}
 
