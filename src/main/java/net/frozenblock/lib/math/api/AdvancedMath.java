@@ -245,4 +245,10 @@ public final class AdvancedMath {
 		double degrees = angleRad * Mth.RAD_TO_DEG;
 		return (360D + Math.round(degrees)) % 360D;
 	}
+
+
+	public static double getAngleBetweenXZ(@NotNull Vec3 posA, @NotNull Vec3 posB) {
+	    double angle = Math.atan2(posA.x - posB.x, posA.z - posB.z);
+		return (360D + (angle * Mth.RAD_TO_DEG)) % 360D;
+	}
 }
