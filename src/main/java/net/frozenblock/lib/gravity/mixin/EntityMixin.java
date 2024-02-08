@@ -18,6 +18,9 @@
 
 package net.frozenblock.lib.gravity.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.core.BlockPos;
@@ -32,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public class EntityMixin implements EntityGravityInterface {
+public abstract class EntityMixin implements EntityGravityInterface {
 
 	@Shadow
 	public float fallDistance;
@@ -42,6 +45,14 @@ public class EntityMixin implements EntityGravityInterface {
 		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
 		double gravityDistance = gravity.length();
 		this.fallDistance *= (float) gravityDistance;
+	}
+
+	@WrapOperation(method = "applyGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"))
+	public Vec3 frozenLib$applyGravity(Vec3 instance, double x, double y, double z, Operation<Vec3> original, @Local(ordinal = 0) double originalGravity) {
+		Vec3 gravityVec = GravityAPI.calculateGravity(Entity.class.cast(this)).scale(originalGravity);
+		Vec3 directional = new Vec3(x, y + originalGravity, z).subtract(gravityVec);
+
+		return original.call(instance, directional.x, directional.y, directional.z);
 	}
 
 	@Unique

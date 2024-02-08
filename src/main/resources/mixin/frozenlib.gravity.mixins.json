@@ -7,15 +7,9 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AbstractArrowMixin",
-    "AbstractMinecartMixin",
     "BoatMixin",
     "EntityMixin",
-    "FallingBlockEntityMixin",
-    "ItemEntityMixin",
     "LivingEntityMixin",
-    "PrimedTntMixin",
-    "ShulkerBulletMixin",
     "ThrowableProjectileMixin"
   ],
   "client": [

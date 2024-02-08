@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEventStorage;
@@ -64,14 +65,14 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 
 
 	@ModifyExpressionValue(
-		method = "register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/core/Holder$Reference;",
+		method = "Lnet/minecraft/core/MappedRegistry;register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;",
 		at = @At(
 			value = "INVOKE",
 			target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;",
 			ordinal = 0
 		)
 	)
-	private V quilt$eagerFillReference(V object, ResourceKey<V> key, V value, Lifecycle lifecycle) {
+	private V quilt$eagerFillReference(V object, ResourceKey<V> key, V value, RegistrationInfo registrationInfo) {
 		if (object instanceof Holder.Reference reference) {
 			reference.bindValue(value);
 		}
@@ -83,11 +84,11 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 	 */
 	@SuppressWarnings({"ConstantConditions", "unchecked"})
 	@Inject(
-		method = "register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lcom/mojang/serialization/Lifecycle;)Lnet/minecraft/core/Holder$Reference;",
+		method = "Lnet/minecraft/core/MappedRegistry;register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;",
 		at = @At("RETURN"),
 		locals = LocalCapture.CAPTURE_FAILEXCEPTION
 	)
-	private void quilt$invokeEntryAddEvent(ResourceKey<V> key, V entry, Lifecycle lifecycle, CallbackInfoReturnable<Holder<V>> cir, Holder.Reference reference, int i) {
+	private void quilt$invokeEntryAddEvent(ResourceKey<V> key, V entry, RegistrationInfo registrationInfo, CallbackInfoReturnable<Holder<V>> cir, Holder.Reference reference, int i) {
 		this.frozenLib_quilt$entryContext.set(key.location(), entry, i);
 		RegistryEventStorage.as((MappedRegistry<V>) (Object) this).frozenLib_quilt$getEntryAddedEvent().invoker().onAdded(this.frozenLib_quilt$entryContext);
 	}

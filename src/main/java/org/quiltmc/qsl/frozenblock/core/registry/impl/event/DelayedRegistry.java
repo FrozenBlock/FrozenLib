@@ -34,6 +34,7 @@ import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup.RegistryLookup;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet.Named;
+import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
@@ -82,10 +83,10 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 		return this.wrapped.get(id);
 	}
 
-	@Override
 	@NotNull
-	public Lifecycle lifecycle(T entry) {
-		return this.wrapped.lifecycle(entry);
+	@Override
+	public Optional<RegistrationInfo> registrationInfo(ResourceKey<T> key) {
+		return this.wrapped.registrationInfo(key);
 	}
 
 	@Override
@@ -239,10 +240,10 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 		return this.wrapped.size();
 	}
 
-	@Override
 	@NotNull
-	public Reference<T> register(ResourceKey<T> key, T entry, Lifecycle lifecycle) {
-		this.delayedEntries.add(new DelayedEntry<>(key, entry, lifecycle));
+	@Override
+	public Reference<T> register(ResourceKey<T> key, T entry, RegistrationInfo registrationInfo) {
+		this.delayedEntries.add(new DelayedEntry<>(key, entry, registrationInfo));
 		return Holder.Reference.createStandAlone(this.wrapped.holderOwner(), key);
 	}
 
@@ -261,9 +262,9 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 		DelayedEntry<T> entry;
 
 		while ((entry = this.delayedEntries.poll()) != null) {
-			this.wrapped.register(entry.key(), entry.entry(), entry.lifecycle());
+			this.wrapped.register(entry.key(), entry.entry(), entry.registrationInfo);
 		}
 	}
 
-	record DelayedEntry<T>(ResourceKey<T> key, T entry, Lifecycle lifecycle) {}
+	record DelayedEntry<T>(ResourceKey<T> key, T entry, RegistrationInfo registrationInfo) {}
 }

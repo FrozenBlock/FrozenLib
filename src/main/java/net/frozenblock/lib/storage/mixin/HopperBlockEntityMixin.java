@@ -18,46 +18,78 @@
 
 package net.frozenblock.lib.storage.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.frozenblock.lib.storage.api.HopperUntouchableList;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.Hopper;
 import net.minecraft.world.level.block.entity.HopperBlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(HopperBlockEntity.class)
-public class HopperBlockEntityMixin {
+public abstract class HopperBlockEntityMixin {
 
-    @Inject(at = @At("HEAD"), method = "ejectItems", cancellable = true)
-    private static void preventEjection(Level world, BlockPos pos, BlockState state, Container inventory, CallbackInfoReturnable<Boolean> info) {
-        if (HopperUntouchableList.inventoryContainsBlacklisted(getAttachedContainer(world, pos, state))) {
+	@ModifyExpressionValue(
+		method = "ejectItems",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getAttachedContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/HopperBlockEntity;)Lnet/minecraft/world/Container;",
+			ordinal = 0
+		)
+	)
+	private static Container frozenLib$preventEjectionA(Container original, @Share("frozenLib$container") LocalRef<Container> containerRef) {
+		containerRef.set(original);
+		return original;
+	}
+
+	@Inject(
+		method = "ejectItems",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getAttachedContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/entity/HopperBlockEntity;)Lnet/minecraft/world/Container;",
+			ordinal = 0,
+			shift = At.Shift.AFTER
+		),
+		cancellable = true
+	)
+    private static void frozenLib$preventEjectionB(Level level, BlockPos blockPos, HopperBlockEntity hopperBlockEntity, CallbackInfoReturnable<Boolean> info, @Share("frozenLib$container") LocalRef<Container> containerRef) {
+        if (HopperUntouchableList.inventoryContainsBlacklisted(containerRef.get())) {
             info.setReturnValue(false);
         }
     }
 
-    @Inject(at = @At("HEAD"), method = "suckInItems", cancellable = true)
-    private static void preventInsertion(Level world, Hopper hopper, CallbackInfoReturnable<Boolean> info) {
-        if (HopperUntouchableList.inventoryContainsBlacklisted(getSourceContainer(world, hopper))) {
-            info.setReturnValue(false);
-        }
-    }
+    @ModifyExpressionValue(
+		method = "suckInItems",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getSourceContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/Hopper;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/Container;",
+			ordinal = 0
+		)
+	)
+    private static Container frozenLib$preventInsertionA(Container original, @Share("frozenLib$container") LocalRef<Container> containerRef) {
+		containerRef.set(original);
+		return original;
+	}
 
-    @Nullable
-    @Shadow
-    private static Container getAttachedContainer(Level world, BlockPos pos, BlockState state) {
-        throw new AssertionError("Mixin injection failed. - FrozenLib HopperBlockEntityMixin");
-    }
-
-    @Nullable
-    @Shadow
-    private static Container getSourceContainer(Level world, Hopper hopper) {
-        throw new AssertionError("Mixin injection failed. - FrozenLib HopperBlockEntityMixin");
-    }
+	@Inject(
+		method = "suckInItems",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/entity/HopperBlockEntity;getSourceContainer(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/entity/Hopper;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/Container;",
+			ordinal = 0,
+			shift = At.Shift.AFTER
+		),
+		cancellable = true
+	)
+	private static void frozenLib$preventInsertionB(Level level, Hopper hopper, CallbackInfoReturnable<Boolean> info, @Share("frozenLib$container") LocalRef<Container> containerRef) {
+		if (HopperUntouchableList.inventoryContainsBlacklisted(containerRef.get())) {
+			info.setReturnValue(false);
+		}
+	}
 }
