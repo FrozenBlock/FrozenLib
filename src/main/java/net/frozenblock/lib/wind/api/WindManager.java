@@ -352,7 +352,7 @@ public class WindManager {
 			if (distance <= WIND_RANGE_BREEZE) {
 				Vec3 breezeLookVec = breeze.getForward();
 				Vec3 differenceInPoses = pos.subtract(breezePos);
-				double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE - 2D), 0D, 1D);
+				double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE * 0.75D), 0D, 1D);
 				double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses);
 				double x = Math.cos((angleBetween * Math.PI) / 180D);
 				double z = -Math.sin((angleBetween * Math.PI) / 180D);
@@ -367,7 +367,7 @@ public class WindManager {
 			double distance = pos.distanceTo(chargePos);
 			if (distance <= WIND_RANGE_WIND_CHARGE) {
 				Vec3 chargeMovement = windCharge.getDeltaMovement();
-				double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE - 3D), 0D, 1D);
+				double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE * 0.5D), 0D, 1D);
 				strength = Math.max(strength, strengthFromDistance);
 				Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(2D * strengthFromDistance);
 				winds.add(new Pair<>(WIND_RANGE_WIND_CHARGE - distance, windVec));
