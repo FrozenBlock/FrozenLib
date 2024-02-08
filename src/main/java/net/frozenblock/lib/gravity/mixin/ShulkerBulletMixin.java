@@ -18,20 +18,28 @@
 
 package net.frozenblock.lib.gravity.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.world.entity.projectile.ShulkerBullet;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ShulkerBullet.class)
 public abstract class ShulkerBulletMixin implements EntityGravityInterface {
 
-	@WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
-	private Vec3 useGravity(Vec3 instance, double d, double e, double f, Operation<Vec3> original) {
-		Vec3 gravity = this.frozenLib$getEffectiveGravity().scale(-1D);
-		return original.call(instance, gravity.x, gravity.y, gravity.z);
+	@ModifyExpressionValue(
+		method = "tick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/projectile/ShulkerBullet;isNoGravity()Z",
+			ordinal = 0
+		)
+	)
+	private boolean frozenLib$useGravity(boolean original) {
+		if (!original) {
+			ShulkerBullet bullet = ShulkerBullet.class.cast(this);
+			bullet.setDeltaMovement(bullet.getDeltaMovement().subtract(this.frozenLib$getEffectiveGravity()));
+		}
+		return true;
 	}
 }
