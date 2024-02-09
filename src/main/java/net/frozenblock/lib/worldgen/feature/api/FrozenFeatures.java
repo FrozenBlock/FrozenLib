@@ -30,8 +30,10 @@ import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskCarpetFeature
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskTagExceptInBiomeFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskTagFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskTagScheduleTickFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskWithPileTagFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.NoisePathScheduleTickFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathSwapUnderWaterFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathSwapUnderWaterTagFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathTagFeature;
@@ -79,6 +81,8 @@ public class FrozenFeatures {
 	public static final CircularLavaVegetationPatchFeature CIRCULAR_LAVA_VEGETATION_PATCH = new CircularLavaVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularLavaVegetationPatchLessBordersFeature CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS = new CircularLavaVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
 	public static final SimpleBlockScheduleTickFeature SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE = new SimpleBlockScheduleTickFeature(SimpleBlockConfiguration.CODEC);
+	public static final FadingDiskTagScheduleTickFeature NOISE_PATH_SCHEDULE_TICK_FEATURE = new FadingDiskTagScheduleTickFeature(FadingDiskTagFeatureConfig.CODEC);
+	public static final NoisePathScheduleTickFeature FADING_DISK_TAG_SCHEDULE_TICK_FEATURE = new NoisePathScheduleTickFeature(PathFeatureConfig.CODEC);
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_feature"), NOISE_PATH_FEATURE);
@@ -102,6 +106,8 @@ public class FrozenFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("circular_lava_vegetation_patch"), CIRCULAR_LAVA_VEGETATION_PATCH);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("circular_lava_vegetation_patch_less_borders"), CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("simple_block_schedule_tick"), SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_schedule_tick_feature"), NOISE_PATH_SCHEDULE_TICK_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_tag_schedule_tick_feature"), FADING_DISK_TAG_SCHEDULE_TICK_FEATURE);
 	}
 
 }
