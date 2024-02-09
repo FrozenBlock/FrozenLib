@@ -81,8 +81,8 @@ public class FrozenFeatures {
 	public static final CircularLavaVegetationPatchFeature CIRCULAR_LAVA_VEGETATION_PATCH = new CircularLavaVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularLavaVegetationPatchLessBordersFeature CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS = new CircularLavaVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
 	public static final SimpleBlockScheduleTickFeature SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE = new SimpleBlockScheduleTickFeature(SimpleBlockConfiguration.CODEC);
-	public static final FadingDiskTagScheduleTickFeature NOISE_PATH_SCHEDULE_TICK_FEATURE = new FadingDiskTagScheduleTickFeature(FadingDiskTagFeatureConfig.CODEC);
-	public static final NoisePathScheduleTickFeature FADING_DISK_TAG_SCHEDULE_TICK_FEATURE = new NoisePathScheduleTickFeature(PathFeatureConfig.CODEC);
+	public static final FadingDiskTagScheduleTickFeature FADING_DISK_TAG_SCHEDULE_TICK_FEATURE = new FadingDiskTagScheduleTickFeature(FadingDiskTagFeatureConfig.CODEC);
+	public static final NoisePathScheduleTickFeature NOISE_PATH_SCHEDULE_TICK_FEATURE = new NoisePathScheduleTickFeature(PathFeatureConfig.CODEC);
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_feature"), NOISE_PATH_FEATURE);
