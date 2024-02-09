@@ -19,6 +19,8 @@
 package net.frozenblock.lib.worldgen.feature.api;
 
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.worldgen.feature.api.features.CircularLavaVegetationPatchFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.CircularLavaVegetationPatchLessBordersFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.CircularWaterloggedVegetationPatchFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.CircularWaterloggedVegetationPatchLessBordersFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.ColumnWithDiskFeature;
@@ -36,6 +38,7 @@ import net.frozenblock.lib.worldgen.feature.api.features.NoisePathTagFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathTagUnderWaterFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathUnderWaterFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePlantFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.SimpleBlockScheduleTickFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.UpwardsColumnFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnWithDiskFeatureConfig;
@@ -50,6 +53,7 @@ import net.frozenblock.lib.worldgen.feature.api.features.config.PathSwapUnderWat
 import net.frozenblock.lib.worldgen.feature.api.features.config.PathTagFeatureConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 
 public class FrozenFeatures {
@@ -72,6 +76,9 @@ public class FrozenFeatures {
 	public static final FadingDiskCarpetFeature FADING_DISK_CARPET_FEATURE = new FadingDiskCarpetFeature(FadingDiskCarpetFeatureConfig.CODEC);
 	public static final FadingDiskWithPileTagFeature FADING_DISK_WITH_PILE_TAG_FEATURE = new FadingDiskWithPileTagFeature(FadingDiskTagFeatureConfig.CODEC);
 	public static final CurvingTunnelFeature CURVING_TUNNEL_FEATURE = new CurvingTunnelFeature(CurvingTunnelFeatureConfig.CODEC);
+	public static final CircularLavaVegetationPatchFeature CIRCULAR_LAVA_VEGETATION_PATCH = new CircularLavaVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
+	public static final CircularLavaVegetationPatchLessBordersFeature CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS = new CircularLavaVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
+	public static final SimpleBlockScheduleTickFeature SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE = new SimpleBlockScheduleTickFeature(SimpleBlockConfiguration.CODEC);
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_feature"), NOISE_PATH_FEATURE);
@@ -92,6 +99,9 @@ public class FrozenFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_carpet_feature"), FADING_DISK_CARPET_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_with_pile_tag_feature"), FADING_DISK_WITH_PILE_TAG_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("curving_tunnel_feature"), CURVING_TUNNEL_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("circular_lava_vegetation_patch"), CIRCULAR_LAVA_VEGETATION_PATCH);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("circular_lava_vegetation_patch_less_borders"), CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("simple_block_schedule_tick"), SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE);
 	}
 
 }
