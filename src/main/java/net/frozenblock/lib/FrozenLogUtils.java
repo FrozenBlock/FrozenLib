@@ -25,41 +25,33 @@ import org.jetbrains.annotations.Nullable;
 public final class FrozenLogUtils {
 	private FrozenLogUtils() {}
 
-	public static void log(Object string, boolean should) {
+	public static void log(Object string, boolean should, Object... args) {
 		if (should) {
 			FrozenSharedConstants.LOGGER.info(string.toString());
 		}
 	}
 
-	public static void log(Object string) {
-		log(string, true);
+	public static void log(Object string, Object... args) {
+		log(string, true, args);
 	}
 
-	public static void logWarning(Object string, boolean should) {
+	public static void logWarning(Object string, boolean should, Object... args) {
 		if (should) {
 			FrozenSharedConstants.LOGGER.warn(string.toString());
 		}
 	}
 
-	public static void logWarning(Object string) {
-		logWarning(string, true);
+	public static void logWarning(Object string, Object... args) {
+		logWarning(string, true, args);
 	}
 
-	public static void logError(Object string, boolean should, @Nullable Throwable throwable) {
+	public static void logError(Object string, boolean should, Object... args) {
 		if (should) {
-			FrozenSharedConstants.LOGGER.error(string.toString(), throwable);
+			FrozenSharedConstants.LOGGER.error(string.toString(), args);
 		}
 	}
 
-	public static void logError(Object string, boolean should) {
-		logError(string, should, null);
-	}
-
-	public static void logError(Object string, @Nullable Throwable throwable) {
-		logError(string, true, throwable);
-	}
-
-	public static void logError(Object string) {
-		logError(string, true, null);
+	public static void logError(Object string, Object... args) {
+		logError(string, true, args);
 	}
 }

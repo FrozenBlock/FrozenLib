@@ -159,7 +159,7 @@ public abstract class Config<T> {
 
 	public final void save() {
 		String formatted = this.formattedName();
-		FrozenSharedConstants.LOGGER.info("Saving " + formatted);
+        FrozenSharedConstants.LOGGER.info("Saving {}", formatted);
 		try {
 			this.onSave();
 
@@ -176,7 +176,7 @@ public abstract class Config<T> {
 
 	public final boolean load() {
 		String formatted = this.formattedName();
-		FrozenSharedConstants.LOGGER.info("Loading " + formatted);
+        FrozenSharedConstants.LOGGER.info("Loading {}", formatted);
 		try {
 			boolean loadVal = this.onLoad();
 
