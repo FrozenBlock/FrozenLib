@@ -20,6 +20,7 @@ package net.frozenblock.lib.math.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
@@ -236,5 +237,18 @@ public final class AdvancedMath {
 		double x = originX + (distancedX - originX) * Math.cos(calcAngle) - (distancedZ - originZ) * Math.sin(calcAngle);
 		double z = originZ + (distancedX - originX) * Math.sin(calcAngle) + (distancedZ - originZ) * Math.cos(calcAngle);
 		return new Vec3(x, original.y, z);
+	}
+
+	@Contract(pure = true)
+	public static double getAngleFromOriginXZ(@NotNull Vec3 pos) { // https://stackoverflow.com/questions/35271222/getting-the-angle-from-a-direction-vector
+		double angleRad = Math.atan2(pos.x, pos.z);
+		double degrees = angleRad * Mth.RAD_TO_DEG;
+		return (360D + Math.round(degrees)) % 360D;
+	}
+
+
+	public static double getAngleBetweenXZ(@NotNull Vec3 posA, @NotNull Vec3 posB) {
+	    double angle = Math.atan2(posA.x - posB.x, posA.z - posB.z);
+		return (360D + (angle * Mth.RAD_TO_DEG)) % 360D;
 	}
 }
