@@ -23,10 +23,11 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import java.util.List;
 
-public record ComboFeatureConfig(Holder<PlacedFeature> featureA, Holder<PlacedFeature> featureB) implements FeatureConfiguration {
+public record ComboFeatureConfig(List<Holder<PlacedFeature>> features) implements FeatureConfiguration {
+
 	public static final Codec<ComboFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-		PlacedFeature.CODEC.fieldOf("feature").forGetter(vegetationPatchConfiguration -> vegetationPatchConfiguration.featureA),
-		PlacedFeature.CODEC.fieldOf("second_feature").forGetter(vegetationPatchConfiguration -> vegetationPatchConfiguration.featureB)
+		PlacedFeature.CODEC.listOf().fieldOf("features").forGetter(vegetationPatchConfiguration -> vegetationPatchConfiguration.features)
 	).apply(instance, ComboFeatureConfig::new));
 }
