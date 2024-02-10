@@ -35,6 +35,9 @@ data class MutableMusic(
     @JvmField var maxDelay: Int?,
     @JvmField var replaceCurrentMusic: Boolean?
 ) {
+    /**
+     * @since 1.6.1
+     */
     constructor(
         event: Optional<Holder<SoundEvent>>,
         minDelay: Optional<Int>,
