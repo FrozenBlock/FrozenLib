@@ -22,8 +22,8 @@ import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
 import net.minecraft.world.level.Level;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import net.minecraft.world.phys.Vec3;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 

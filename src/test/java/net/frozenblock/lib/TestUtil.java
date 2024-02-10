@@ -20,7 +20,6 @@ package net.frozenblock.lib;
 
 import net.minecraft.SharedConstants;
 import net.minecraft.server.Bootstrap;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TestUtil {
 
