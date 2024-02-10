@@ -60,7 +60,7 @@ data class MutableMusic(
     }
 }
 
-val Music.asMutable: MutableMusic
+inline val Music.asMutable: MutableMusic
     get() = MutableMusic(
         this.event,
         this.minDelay,
@@ -68,7 +68,7 @@ val Music.asMutable: MutableMusic
         this.replaceCurrentMusic()
     )
 
-val MutableMusic?.asImmutable: Music?
+inline val MutableMusic?.asImmutable: Music?
     get() {
         val event = this?.event ?: return null
         val minDelay = this.minDelay ?: return null
