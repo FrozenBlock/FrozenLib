@@ -18,7 +18,6 @@
 
 package net.frozenblock.lib.wind.api;
 
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.List;
 import java.util.function.Supplier;
@@ -171,19 +170,11 @@ public final class ClientWindManager {
 
 	@NotNull
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double multiplier, double clamp) {
-		return getWindMovement(level, pos, multiplier, clamp, 1D);
-	}
-
-	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double multiplier, double clamp, double entityCausedWindMultiplier) {
 		double brightness = level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		Pair<Double, Vec3> entityWind = WindManager.getEntityCausedWind(level, pos);
-		double lerp = entityWind.getFirst();
-		Vec3 entityCausedWind = entityWind.getSecond();
-		double newWindX = Mth.lerp(lerp, windX * windMultiplier, entityCausedWind.x * entityCausedWindMultiplier) * multiplier;
-		double newWindY = Mth.lerp(lerp, windY * windMultiplier, entityCausedWind.y * entityCausedWindMultiplier) * multiplier;
-		double newWindZ = Mth.lerp(lerp, windZ * windMultiplier, entityCausedWind.z * entityCausedWindMultiplier) * multiplier;
+		double newWindX = windX * windMultiplier * multiplier;
+		double newWindY = windY * windMultiplier * multiplier;
+		double newWindZ = windZ * windMultiplier * multiplier;
 		return new Vec3(
 			Mth.clamp(newWindX, -clamp, clamp),
 			Mth.clamp(newWindY, -clamp, clamp),
