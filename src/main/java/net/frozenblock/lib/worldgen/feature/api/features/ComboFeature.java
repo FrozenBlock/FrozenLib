@@ -43,9 +43,12 @@ public class ComboFeature extends Feature<ComboFeatureConfig> {
 		RandomSource randomSource = context.random();
 		BlockPos blockPos = context.origin();
 		ChunkGenerator chunkGenerator = context.chunkGenerator();
-		boolean placedFirst = this.place(worldGenLevel, config.featureA(), chunkGenerator, randomSource, blockPos);
-		boolean placedSecond = this.place(worldGenLevel, config.featureB(), chunkGenerator, randomSource, blockPos);
-		return placedFirst || placedSecond;
+		boolean placedAny = false;
+		for (Holder<PlacedFeature> feature : config.features()) {
+			if (this.place(worldGenLevel, feature, chunkGenerator, randomSource, blockPos))
+				placedAny = true;
+		}
+		return placedAny;
     }
 
 	public boolean place(WorldGenLevel worldGenLevel, @NotNull Holder<PlacedFeature> holder, ChunkGenerator chunkGenerator, RandomSource randomSource, BlockPos blockPos) {
