@@ -19,8 +19,10 @@
 package net.frozenblock.lib.wind.api;
 
 import io.netty.buffer.Unpooled;
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
@@ -28,6 +30,7 @@ import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.minecraft.core.BlockPos;
@@ -37,8 +40,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.datafix.DataFixTypes;
-import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.monster.breeze.Breeze;
+import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
@@ -223,64 +231,75 @@ public class WindManager {
 	}
 
 	@NotNull
-	public Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos) {
-		double brightness = reader.getBrightness(LightLayer.SKY, pos);
-		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		return new Vec3(this.windX * windMultiplier, this.windY * windMultiplier, this.windZ * windMultiplier);
+	public Vec3 getWindMovement(@NotNull BlockPos pos) {
+		return this.getWindMovement(Vec3.atBottomCenterOf(pos));
 	}
 
 	@NotNull
-	public Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier) {
-		double brightness = reader.getBrightness(LightLayer.SKY, pos);
-		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		return new Vec3((this.windX * windMultiplier) * multiplier, (this.windY * windMultiplier) * multiplier, (this.windZ * windMultiplier) * multiplier);
+	public Vec3 getWindMovement(@NotNull BlockPos pos, double multiplier) {
+		return this.getWindMovement(Vec3.atBottomCenterOf(pos), multiplier);
 	}
 
 	@NotNull
-	public Vec3 getWindMovement(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier, double clamp) {
-		double brightness = reader.getBrightness(LightLayer.SKY, pos);
-		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		return new Vec3(Mth.clamp((this.windX * windMultiplier) * multiplier, -clamp, clamp),
-				Mth.clamp((this.windY * windMultiplier) * multiplier, -clamp, clamp),
-				Mth.clamp((this.windZ * windMultiplier) * multiplier, -clamp, clamp));
+	public Vec3 getWindMovement(@NotNull BlockPos pos, double multiplier, double clamp) {
+		return this.getWindMovement(Vec3.atBottomCenterOf(pos), multiplier, clamp);
 	}
 
 	@NotNull
-	public Vec3 getWindMovement3D(@NotNull LevelReader reader, @NotNull BlockPos pos, double stretch) {
-		double brightness = reader.getBrightness(LightLayer.SKY, pos);
-		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
-		return new Vec3(wind.x() * windMultiplier, wind.y() * windMultiplier, wind.z() * windMultiplier);
+	public Vec3 getWindMovement(@NotNull Vec3 pos) {
+		return this.getWindMovement(pos, 1D);
 	}
 
 	@NotNull
-	public Vec3 getWindMovement3D(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier, double stretch) {
-		double brightness = reader.getBrightness(LightLayer.SKY, pos);
-		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
-		return new Vec3((wind.x() * windMultiplier) * multiplier, (wind.y() * windMultiplier) * multiplier, (wind.z() * windMultiplier) * multiplier);
+	public Vec3 getWindMovement(@NotNull Vec3 pos, double multiplier) {
+		return this.getWindMovement(pos, multiplier, Double.MAX_VALUE);
 	}
 
 	@NotNull
-	public Vec3 getWindMovement3D(@NotNull LevelReader reader, @NotNull BlockPos pos, double multiplier, double clamp, double stretch) {
-		double brightness = reader.getBrightness(LightLayer.SKY, pos);
+	public Vec3 getWindMovement(@NotNull Vec3 pos, double multiplier, double clamp) {
+		return this.getWindMovement(pos, multiplier, clamp, 1D);
+	}
+
+	@NotNull
+	public Vec3 getWindMovement(@NotNull Vec3 pos, double multiplier, double clamp, double entityCausedWindMultiplier) {
+		double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
 		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		Vec3 wind = this.sample3D(Vec3.atCenterOf(pos), stretch);
-		return new Vec3(Mth.clamp((wind.x() * windMultiplier) * multiplier, -clamp, clamp),
-				Mth.clamp((wind.y() * windMultiplier) * multiplier, -clamp, clamp),
-				Mth.clamp((wind.z() * windMultiplier) * multiplier, -clamp, clamp));
+		Pair<Double, Vec3> entityWind = getEntityCausedWind(this.level, pos);
+		double lerp = entityWind.getFirst();
+		Vec3 entityCausedWind = entityWind.getSecond();
+		double windX = Mth.lerp(lerp, this.windX * windMultiplier, entityCausedWind.x * entityCausedWindMultiplier) * multiplier;
+		double windY = Mth.lerp(lerp, this.windY * windMultiplier, entityCausedWind.y * entityCausedWindMultiplier) * multiplier;
+		double windZ = Mth.lerp(lerp, this.windZ * windMultiplier, entityCausedWind.z * entityCausedWindMultiplier) * multiplier;
+		return new Vec3(
+			Mth.clamp(windX, -clamp, clamp),
+			Mth.clamp(windY, -clamp, clamp),
+			Mth.clamp(windZ, -clamp, clamp)
+		);
+	}
+
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double stretch) {
+		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), stretch);
+	}
+
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double multiplier, double stretch) {
+		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), multiplier, stretch);
+	}
+
+	@NotNull
+	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double multiplier, double clamp, double stretch) {
+		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), multiplier, clamp, stretch);
 	}
 
 	@NotNull
 	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double stretch) {
-		Vec3 wind = this.sample3D(pos, stretch);
-		return new Vec3(wind.x(), wind.y(), wind.z());
+		return this.getWindMovement3D(pos, 1D, stretch);
 	}
 
 	@NotNull
 	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double multiplier, double stretch) {
-		Vec3 wind = this.sample3D(pos, stretch);
-		return new Vec3((wind.x()) * multiplier, (wind.y()) * multiplier, (wind.z()) * multiplier);
+		return this.getWindMovement3D(pos, multiplier, Double.MAX_VALUE, stretch);
 	}
 
 	@NotNull
@@ -304,11 +323,82 @@ public class WindManager {
 
 	@NotNull
 	private Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
-		double sampledTime = time * 0.1;
+		double sampledTime = this.time * 0.1;
 		double xyz = pos.x() + pos.y() + pos.z();
 		double windX = this.perlinXoro.noise((xyz + sampledTime) * stretch, 0, 0);
 		double windY = this.perlinXoro.noise(0, (xyz + sampledTime) * stretch, 0);
 		double windZ = this.perlinXoro.noise(0, 0, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
+	}
+
+	private static final double ENTITY_WIND_SEARCH_RANGE = 5D;
+	private static final double WIND_RANGE_BREEZE = 6D;
+	private static final double WIND_RANGE_WIND_CHARGE = 5D;
+
+	@NotNull
+	public static Pair<Double, Vec3> getEntityCausedWind(@NotNull Level level, @NotNull Vec3 pos) {
+		ArrayList<Pair<Double, Vec3>> winds = new ArrayList<>();
+		Vec3 lowerCorner = pos.add(-ENTITY_WIND_SEARCH_RANGE, -ENTITY_WIND_SEARCH_RANGE, -ENTITY_WIND_SEARCH_RANGE);
+		Vec3 upperCorner = pos.add(ENTITY_WIND_SEARCH_RANGE, ENTITY_WIND_SEARCH_RANGE, ENTITY_WIND_SEARCH_RANGE);
+
+		List<? extends Entity> entities = level.getEntities(
+			EntityTypeTest.forClass(Entity.class),
+			new AABB(lowerCorner, upperCorner),
+			EntitySelector.ENTITY_STILL_ALIVE.and(EntitySelector.NO_SPECTATORS)
+		);
+		double strength = 0D;
+		for (Entity entity : entities) {
+			Vec3 entityPos = entity.position();
+			double distance = pos.distanceTo(entityPos);
+			if (entity instanceof Breeze) {
+				if (distance <= WIND_RANGE_BREEZE) {
+					Vec3 breezeLookVec = entity.getForward();
+					Vec3 differenceInPoses = pos.subtract(entityPos);
+					double scaledDistance = (WIND_RANGE_BREEZE - distance) / WIND_RANGE_BREEZE;
+					double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE * 0.75D), 0D, 1D);
+					double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses);
+
+					double x = Math.cos((angleBetween * Math.PI) / 180D);
+					double z = -Math.sin((angleBetween * Math.PI) / 180D);
+					x = Mth.lerp(scaledDistance, (x - (differenceInPoses.x * 0.45D)) * 0.5D, x);
+					z = Mth.lerp(scaledDistance, (z - (differenceInPoses.z * 0.45D)) * 0.5D, z);
+
+					strength = Math.max(strength, strengthFromDistance);
+					Vec3 windVec = new Vec3(x, strengthFromDistance, z);
+					winds.add(new Pair<>(WIND_RANGE_BREEZE - distance, windVec));
+				}
+			} else if (entity instanceof AbstractWindCharge) {
+				if (distance <= WIND_RANGE_WIND_CHARGE) {
+					Vec3 chargeMovement = entity.getDeltaMovement();
+					double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE * 0.5D), 0D, 1D);
+					strength = Math.max(strength, strengthFromDistance);
+					Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(2D * strengthFromDistance);
+					winds.add(new Pair<>((WIND_RANGE_WIND_CHARGE - distance) * 2D, windVec));
+				}
+			}
+		}
+
+		double finalX = 0D;
+		double finalY = 0D;
+		double finalZ = 0D;
+		if (!winds.isEmpty()) {
+			double x = 0D;
+			double y = 0D;
+			double z = 0D;
+			double sumOfWeights = 0D;
+			for (Pair<Double, Vec3> pair : winds) {
+				double weight = pair.getFirst();
+				sumOfWeights += weight;
+				Vec3 windVec = pair.getSecond();
+				x += weight * windVec.x;
+				y += weight * windVec.y;
+				z += weight * windVec.z;
+			}
+			finalX = x / sumOfWeights;
+			finalY = y / sumOfWeights;
+			finalZ = z / sumOfWeights;
+		}
+
+		return new Pair<>(strength, new Vec3(finalX, finalY, finalZ));
 	}
 }

@@ -19,19 +19,11 @@
 package net.frozenblock.lib.testmod.config;
 
 import blue.endless.jankson.Comment;
-import com.mojang.serialization.Codec;
 import java.util.List;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.api.entry.TypedEntry;
-import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.instance.json.JsonConfig;
-import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.instance.toml.TomlConfig;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.testmod.FrozenTestMain;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.phys.Vec3;

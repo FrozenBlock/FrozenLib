@@ -6,3 +6,5 @@ Put changelog here:
 
 -----------------
 - Fixed incorrect gravity calculation on Shulker Bullets.
+- Breezes and Wind Charges now interfere with wind.
+- Significantly cleaned up both WindManager classes.
