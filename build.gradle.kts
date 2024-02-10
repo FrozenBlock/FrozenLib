@@ -233,6 +233,8 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraft_version")
 	mappings(loom.layered {
 		// please annoy treetrain if this doesn't work
+        //mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
+        parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
 		officialMojangMappings {
 			nameSyntheticMembers = false
 		}
