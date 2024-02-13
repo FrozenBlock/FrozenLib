@@ -18,29 +18,32 @@
 
 package net.frozenblock.lib.core.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.minecraft.world.level.storage.PrimaryLevelData;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(PrimaryLevelData.class)
+@Mixin(WorldOpenFlows.class)
 public class NoExperimentalMixin {
 
-    @Shadow
-    @Final
-    @Mutable
-    private Lifecycle worldGenSettingsLifecycle;
+    @ModifyExpressionValue(
+		method = "loadLevel",
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/WorldOptions;isOldCustomizedWorld()Z")
+	)
+    private boolean frozenLib$markAsNotCustomized(boolean original) {
+		if (FrozenLibConfig.get().removeExperimentalWarning) return false;
+		return original;
+	}
 
-    @Inject(method = "<init>*", at = @At("TAIL"))
-    private void frozenLib$init(CallbackInfo ci) {
-		if (FrozenLibConfig.get().removeExperimentalWarning)
-			this.worldGenSettingsLifecycle = Lifecycle.stable();
-    }
+	@ModifyExpressionValue(
+		method = "loadLevel",
+		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/WorldData;worldGenSettingsLifecycle()Lcom/mojang/serialization/Lifecycle;")
+	)
+	private Lifecycle frozenLib$markAsStable(Lifecycle original) {
+		if (FrozenLibConfig.get().removeExperimentalWarning) return Lifecycle.stable();
+		return original;
+	}
 
 }

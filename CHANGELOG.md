@@ -6,3 +6,4 @@ Put changelog here:
 
 -----------------
 - Fixed a crash that would occur on certain versions.
+- Fixed the Experimental Settings config to actually disable the menu on 1.20.5.
