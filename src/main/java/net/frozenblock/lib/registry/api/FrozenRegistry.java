@@ -48,10 +48,9 @@ public class FrozenRegistry {
 		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new ModIntegrationSupplier<>(() -> new ModIntegration("dummy") {
 			@Override
 			public void init() {}
-			},
-				"dummy"
-			)
-		)
+		},
+		"dummy"
+		))
 	);
 
 	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE = createSimple(SOUND_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
