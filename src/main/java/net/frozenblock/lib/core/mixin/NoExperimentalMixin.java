@@ -19,30 +19,35 @@
 package net.frozenblock.lib.core.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.minecraft.client.gui.screens.BackupConfirmScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(WorldOpenFlows.class)
 public class NoExperimentalMixin {
 
     @ModifyExpressionValue(
-		method = "loadLevel",
-		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/levelgen/WorldOptions;isOldCustomizedWorld()Z")
+		method = "askForBackup",
+		at = @At(
+			value = "NEW",
+			target = "(Ljava/lang/Runnable;Lnet/minecraft/client/gui/screens/BackupConfirmScreen$Listener;Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;Z)Lnet/minecraft/client/gui/screens/BackupConfirmScreen;"
+		)
 	)
-    private boolean frozenLib$markAsNotCustomized(boolean original) {
-		if (FrozenLibConfig.get().removeExperimentalWarning) return false;
+    private BackupConfirmScreen frozenLib$proceed(BackupConfirmScreen original) {
+		if (FrozenLibConfig.get().removeExperimentalWarning)  {
+			original.onProceed.proceed(false, false);
+		}
 		return original;
 	}
 
-	@ModifyExpressionValue(
-		method = "loadLevel",
-		at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/WorldData;worldGenSettingsLifecycle()Lcom/mojang/serialization/Lifecycle;")
-	)
-	private Lifecycle frozenLib$markAsStable(Lifecycle original) {
-		if (FrozenLibConfig.get().removeExperimentalWarning) return Lifecycle.stable();
+	@ModifyVariable(method = "confirmWorldCreation", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+	private static boolean frozenLib$skipCreationWarning(boolean original) {
+		if (FrozenLibConfig.get().removeExperimentalWarning)  {
+			return true;
+		}
 		return original;
 	}
 

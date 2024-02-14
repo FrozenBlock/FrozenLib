@@ -218,3 +218,6 @@ transitive-mutable    field    net/minecraft/world/flag/FeatureFlags    CODEC   
 
 # DataFixerUpper
 transitive-accessible    method    net/minecraft/util/datafix/DataFixers    createRenamer    (Ljava/util/Map;)Ljava/util/function/UnaryOperator;
+
+# World Loading
+transitive-accessible    field    net/minecraft/client/gui/screens/BackupConfirmScreen    onProceed    Lnet/minecraft/client/gui/screens/BackupConfirmScreen$Listener;
