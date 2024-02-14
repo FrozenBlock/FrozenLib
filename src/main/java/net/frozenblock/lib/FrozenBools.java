@@ -31,7 +31,7 @@ public class FrozenBools {
     public static boolean useNewDripstoneLiquid = false;
 
 	// MOD LOADERS
-	public static final boolean IS_FABRIC = hasMod("fabricloader") && !hasMod("quilt_loader") && !hasMod("connector")
+	public static final boolean IS_FABRIC = hasMod("fabricloader") && !hasMod("quilt_loader") && !hasMod("connector");
 	public static final boolean IS_QUILT = hasMod("quilt_loader");
 	public static final boolean IS_FORGE = hasMod("connector");
 
