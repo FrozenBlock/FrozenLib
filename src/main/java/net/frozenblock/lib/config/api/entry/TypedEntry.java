@@ -18,5 +18,10 @@
 
 package net.frozenblock.lib.config.api.entry;
 
+// java records are meant to be immutable but i dont care
 public record TypedEntry<T>(TypedEntryType<T> type, T value) {
+
+    public void setValue(T value) {
+        this.value = value;
+    }
 }
