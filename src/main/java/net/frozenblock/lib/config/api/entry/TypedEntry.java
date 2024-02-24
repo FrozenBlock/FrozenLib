@@ -20,7 +20,7 @@ package net.frozenblock.lib.config.api.entry;
 
 // java records are meant to be immutable but i dont care
 public class TypedEntry<T>{
-	public final TypedEntryType<T> type;
+	private final TypedEntryType<T> type;
 	private T value;
 
     public TypedEntry(TypedEntryType<T> type, T value) {
