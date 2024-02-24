@@ -18,29 +18,34 @@
 
 package net.frozenblock.lib.core.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.gui.screens.BackupConfirmScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
+import net.minecraft.world.level.storage.LevelStorageSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(WorldOpenFlows.class)
 public class NoExperimentalMixin {
 
-    @ModifyExpressionValue(
+	@Inject(
 		method = "askForBackup",
-		at = @At(
-			value = "NEW",
-			target = "(Ljava/lang/Runnable;Lnet/minecraft/client/gui/screens/BackupConfirmScreen$Listener;Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/Component;Z)Lnet/minecraft/client/gui/screens/BackupConfirmScreen;"
-		)
+		at = @At("HEAD"),
+		cancellable = true
 	)
-    private BackupConfirmScreen frozenLib$proceed(BackupConfirmScreen original) {
+	private void frozenLib$preventBackupScreenAndProceed(
+		LevelStorageSource.LevelStorageAccess levelStorageAccess, boolean bl, Runnable runnable, Runnable runnable2, CallbackInfo info,
+		@Share("wilderWild$backupConfirmScreen") LocalRef<BackupConfirmScreen> backupConfirmScreen
+	) {
 		if (FrozenLibConfig.get().removeExperimentalWarning)  {
-			original.onProceed.proceed(false, false);
+			info.cancel();
+			runnable.run();
 		}
-		return original;
 	}
 
 	@ModifyVariable(method = "confirmWorldCreation", at = @At("HEAD"), argsOnly = true, ordinal = 0)

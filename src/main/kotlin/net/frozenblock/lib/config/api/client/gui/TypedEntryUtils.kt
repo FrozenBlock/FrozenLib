@@ -57,7 +57,7 @@ fun <T> typedEntryList(
         // Name
         title,
         // Value
-        typedEntry.value,
+        typedEntry.value(),
         // Expanded By Default
         expandedByDefault,
         // Tooltip Supplier
