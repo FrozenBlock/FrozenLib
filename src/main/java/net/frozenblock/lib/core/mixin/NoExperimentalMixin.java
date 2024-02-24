@@ -18,10 +18,7 @@
 
 package net.frozenblock.lib.core.mixin;
 
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.minecraft.client.gui.screens.BackupConfirmScreen;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,10 +35,7 @@ public class NoExperimentalMixin {
 		at = @At("HEAD"),
 		cancellable = true
 	)
-	private void frozenLib$preventBackupScreenAndProceed(
-		LevelStorageSource.LevelStorageAccess levelStorageAccess, boolean bl, Runnable runnable, Runnable runnable2, CallbackInfo info,
-		@Share("wilderWild$backupConfirmScreen") LocalRef<BackupConfirmScreen> backupConfirmScreen
-	) {
+	private void frozenLib$preventBackupScreenAndProceed(LevelStorageSource.LevelStorageAccess levelStorageAccess, boolean bl, Runnable runnable, Runnable runnable2, CallbackInfo info) {
 		if (FrozenLibConfig.get().removeExperimentalWarning)  {
 			info.cancel();
 			runnable.run();
