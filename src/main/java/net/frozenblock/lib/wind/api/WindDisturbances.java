@@ -83,7 +83,7 @@ public class WindDisturbances {
 	public static void addInWorldWindModifier(Level level, InWorldWindModifier inWorldWindModifier) {
 		Pair<Level, InWorldWindModifier> pair = Pair.of(level, inWorldWindModifier);
 		getAltListServer().add(pair);
-		if (!FrozenNetworking.connectedToIntegratedServer()) {
+		if (!FrozenNetworking.connectedToIntegratedServer() && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 			getAltListClient().add(pair);
 		}
 	}

@@ -25,11 +25,6 @@ import net.minecraft.world.phys.Vec3;
 
 public class InWorldWindModifier {
 	public static final Pair<Pair<Double, Double>, Vec3> DUMMY_MODIFIER = Pair.of(Pair.of(0D, 0D), Vec3.ZERO);
-	public static final InWorldWindModifier DUMMY_IN_WORLD_WIND_MODIFIER = new InWorldWindModifier(
-		Vec3.ZERO,
-		AABB.ofSize(new Vec3(0D, -999999D, 0D), 1D, 1D, 1D),
-		(level, windOrigin, affectedArea, windTarget) -> DUMMY_MODIFIER
-	);
 
 	private final Vec3 origin;
 	private final AABB affectedArea;

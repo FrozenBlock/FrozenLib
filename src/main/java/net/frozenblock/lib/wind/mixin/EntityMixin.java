@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.wind.mixin;
 
+import net.frozenblock.lib.wind.api.WindDisturbances;
 import net.frozenblock.lib.wind.impl.InWorldWindModifier;
 import net.frozenblock.lib.wind.api.WindDisturbingEntity;
 import net.minecraft.world.entity.Entity;
@@ -32,10 +33,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Entity.class)
 public class EntityMixin implements WindDisturbingEntity {
 
-	@Unique
-	private InWorldWindModifier frozenLib$inWorldWindModifier = InWorldWindModifier.DUMMY_IN_WORLD_WIND_MODIFIER;
-
-
 	@Inject(
 		method = "baseTick",
 		at = @At(
@@ -44,13 +41,10 @@ public class EntityMixin implements WindDisturbingEntity {
 		)
 	)
 	public void frozenLib$baseTick(CallbackInfo info) {
-		this.frozenLib$makeAndSetInWorldWindModifier();
-	}
-
-	@Unique
-	@Override
-	public InWorldWindModifier frozenLib$getInWorldWindModifier() {
-		return this.frozenLib$inWorldWindModifier;
+		InWorldWindModifier inWorldWindModifier = this.frozenLib$makeInWorldWindModifier();
+		if (inWorldWindModifier != null) {
+			WindDisturbances.addInWorldWindModifier(Entity.class.cast(this).level(), inWorldWindModifier);
+		}
 	}
 
 	@Unique
@@ -73,13 +67,14 @@ public class EntityMixin implements WindDisturbingEntity {
 	}
 
 	@Unique
-	private void frozenLib$makeAndSetInWorldWindModifier() {
+	@Nullable
+	private InWorldWindModifier frozenLib$makeInWorldWindModifier() {
 		Entity entity = Entity.class.cast(this);
 		InWorldWindModifier.Modifier modifier = this.frozenLib$makeWindModifier();
 		if (modifier == null) {
-			this.frozenLib$inWorldWindModifier = InWorldWindModifier.DUMMY_IN_WORLD_WIND_MODIFIER;
+			return null;
 		} else {
-			this.frozenLib$inWorldWindModifier = new InWorldWindModifier(
+			return new InWorldWindModifier(
 				entity.position(),
 				AABB.ofSize(entity.position(), this.frozenLib$getWindWidth(), this.frozenLib$getWindHeight(), this.frozenLib$getWindWidth()),
 				this.frozenLib$makeWindModifier()

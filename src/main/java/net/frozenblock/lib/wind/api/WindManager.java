@@ -359,8 +359,8 @@ public class WindManager {
 		for (Pair<Level, InWorldWindModifier> pair : WindDisturbances.getInWorldWindModifiers()) {
 			if (pair.getFirst() == level) {
 				Pair<Pair<Double, Double>, Vec3> windDisturbance = pair.getSecond().calculateWindAndWeight(level, pos);
-				strength = Math.max(strength, windDisturbance.getFirst().getSecond());
-				winds.add(Pair.of(windDisturbance.getFirst().getFirst(), windDisturbance.getSecond()));
+				strength = Math.max(strength, windDisturbance.getFirst().getFirst());
+				winds.add(Pair.of(windDisturbance.getFirst().getSecond(), windDisturbance.getSecond()));
 			}
 		}
 

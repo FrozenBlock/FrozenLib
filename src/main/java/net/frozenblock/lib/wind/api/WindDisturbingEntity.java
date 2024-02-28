@@ -22,8 +22,6 @@ import net.frozenblock.lib.wind.impl.InWorldWindModifier;
 
 public interface WindDisturbingEntity {
 
-	InWorldWindModifier frozenLib$getInWorldWindModifier();
-
 	InWorldWindModifier.Modifier frozenLib$makeWindModifier();
 
 	double frozenLib$getWindWidth();
