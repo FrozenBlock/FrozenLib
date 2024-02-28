@@ -19,9 +19,10 @@
 package net.frozenblock.lib.wind.mixin;
 
 import net.frozenblock.lib.wind.api.WindDisturbances;
-import net.frozenblock.lib.wind.impl.InWorldWindModifier;
 import net.frozenblock.lib.wind.api.WindDisturbingEntity;
+import net.frozenblock.lib.wind.impl.WindDisturbance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -41,16 +42,16 @@ public class EntityMixin implements WindDisturbingEntity {
 		)
 	)
 	public void frozenLib$baseTick(CallbackInfo info) {
-		InWorldWindModifier inWorldWindModifier = this.frozenLib$makeInWorldWindModifier();
+		WindDisturbance inWorldWindModifier = this.frozenLib$makeWindDisturbance();
 		if (inWorldWindModifier != null) {
-			WindDisturbances.addInWorldWindModifier(Entity.class.cast(this).level(), inWorldWindModifier);
+			WindDisturbances.addWindDisturbance(Entity.class.cast(this).level(), inWorldWindModifier);
 		}
 	}
 
 	@Unique
 	@Nullable
 	@Override
-	public InWorldWindModifier.Modifier frozenLib$makeWindModifier() {
+	public WindDisturbance.DisturbanceLogic frozenLib$makeDisturbanceLogic() {
 		return null;
 	}
 
@@ -66,18 +67,33 @@ public class EntityMixin implements WindDisturbingEntity {
 		return 2D;
 	}
 
+	@Override
+	public double frozenLib$getWindAreaYOffset() {
+		return 0D;
+	}
+
 	@Unique
 	@Nullable
-	private InWorldWindModifier frozenLib$makeInWorldWindModifier() {
+	private WindDisturbance frozenLib$makeWindDisturbance() {
 		Entity entity = Entity.class.cast(this);
-		InWorldWindModifier.Modifier modifier = this.frozenLib$makeWindModifier();
-		if (modifier == null) {
+		WindDisturbance.DisturbanceLogic disturbanceLogic = this.frozenLib$makeDisturbanceLogic();
+		if (disturbanceLogic == null) {
 			return null;
 		} else {
-			return new InWorldWindModifier(
+			double scale = entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1D;
+			return new WindDisturbance(
 				entity.position(),
-				AABB.ofSize(entity.position(), this.frozenLib$getWindWidth(), this.frozenLib$getWindHeight(), this.frozenLib$getWindWidth()),
-				this.frozenLib$makeWindModifier()
+				AABB.ofSize(
+					entity.getBoundingBox().getCenter(),
+					this.frozenLib$getWindWidth() * scale,
+					this.frozenLib$getWindHeight() * scale,
+					this.frozenLib$getWindWidth() * scale
+				).move(
+					0D,
+					this.frozenLib$getWindAreaYOffset() * scale,
+					0D
+				),
+				disturbanceLogic
 			);
 		}
 	}

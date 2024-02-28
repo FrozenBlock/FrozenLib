@@ -26,7 +26,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.frozenblock.lib.wind.impl.InWorldWindModifier;
+import net.frozenblock.lib.wind.impl.WindDisturbance;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -46,7 +46,7 @@ public final class ClientWindManager {
 
 	public static final List<ClientWindManagerExtension> EXTENSIONS = new ObjectArrayList<>();
 
-	public static final List<InWorldWindModifier> IN_WORLD_WIND_MODIFIERS = new ObjectArrayList<>();
+	public static final List<WindDisturbance> IN_WORLD_WIND_MODIFIERS = new ObjectArrayList<>();
 
 	public static long time;
 	public static boolean overrideWind;

@@ -28,8 +28,7 @@ import java.util.Map;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.math.api.AdvancedMath;
-import net.frozenblock.lib.wind.impl.InWorldWindModifier;
+import net.frozenblock.lib.wind.impl.WindDisturbance;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.wind.impl.WindSyncPacket;
@@ -40,7 +39,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -351,16 +349,18 @@ public class WindManager {
 					double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE * 0.5D), 0D, 1D);
 					strength = Math.max(strength, strengthFromDistance);
 					Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(2D * strengthFromDistance);
-					winds.add(new Pair<>((WIND_RANGE_WIND_CHARGE - distance) * 2D, windVec));
+					winds.add(Pair.of((WIND_RANGE_WIND_CHARGE - distance) * 2D, windVec));
 				}
 			}
 		}
 
-		for (Pair<Level, InWorldWindModifier> pair : WindDisturbances.getInWorldWindModifiers()) {
+		for (Pair<Level, WindDisturbance> pair : WindDisturbances.getWindDisturbances(level)) {
 			if (pair.getFirst() == level) {
-				Pair<Pair<Double, Double>, Vec3> windDisturbance = pair.getSecond().calculateWindAndWeight(level, pos);
-				strength = Math.max(strength, windDisturbance.getFirst().getFirst());
-				winds.add(Pair.of(windDisturbance.getFirst().getSecond(), windDisturbance.getSecond()));
+				WindDisturbance.DisturbanceResult disturbanceResult = pair.getSecond().calculateDisturbanceResult(level, pos);
+				if (disturbanceResult.strength() != 0D && disturbanceResult.weight() != 0D) {
+					strength = Math.max(strength, disturbanceResult.strength());
+					winds.add(Pair.of(disturbanceResult.weight(), disturbanceResult.wind()));
+				}
 			}
 		}
 
@@ -374,17 +374,19 @@ public class WindManager {
 			double sumOfWeights = 0D;
 			for (Pair<Double, Vec3> pair : winds) {
 				double weight = pair.getFirst();
-				sumOfWeights += weight;
-				Vec3 windVec = pair.getSecond();
-				x += weight * windVec.x;
-				y += weight * windVec.y;
-				z += weight * windVec.z;
+				if (weight != 0) {
+					sumOfWeights += weight;
+					Vec3 windVec = pair.getSecond();
+					x += weight * windVec.x;
+					y += weight * windVec.y;
+					z += weight * windVec.z;
+				}
 			}
 			finalX = x / sumOfWeights;
 			finalY = y / sumOfWeights;
 			finalZ = z / sumOfWeights;
 		}
 
-		return new Pair<>(strength, new Vec3(finalX, finalY, finalZ));
+		return Pair.of(strength, new Vec3(finalX, finalY, finalZ));
 	}
 }

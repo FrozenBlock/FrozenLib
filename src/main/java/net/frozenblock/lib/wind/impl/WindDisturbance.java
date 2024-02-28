@@ -18,33 +18,38 @@
 
 package net.frozenblock.lib.wind.impl;
 
-import com.mojang.datafixers.util.Pair;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class InWorldWindModifier {
-	public static final Pair<Pair<Double, Double>, Vec3> DUMMY_MODIFIER = Pair.of(Pair.of(0D, 0D), Vec3.ZERO);
+public class WindDisturbance {
+	public static final DisturbanceResult DUMMY_RESULT = new DisturbanceResult(0D, 0D, Vec3.ZERO);
 
 	private final Vec3 origin;
 	private final AABB affectedArea;
-	private final Modifier modifier;
+	private final DisturbanceLogic disturbanceLogic;
 
-    public InWorldWindModifier(Vec3 origin, AABB affectedArea, Modifier modifier) {
+    public WindDisturbance(Vec3 origin, AABB affectedArea, DisturbanceLogic disturbanceLogic) {
         this.origin = origin;
         this.affectedArea = affectedArea;
-        this.modifier = modifier;
+        this.disturbanceLogic = disturbanceLogic;
     }
 
-	public Pair<Pair<Double, Double>, Vec3> calculateWindAndWeight(Level level, Vec3 windTarget) {
+	public DisturbanceResult calculateDisturbanceResult(Level level, Vec3 windTarget) {
 		if (this.affectedArea.contains(windTarget)) {
-			return this.modifier.calculateWindAndWeight(level, this.origin, this.affectedArea, windTarget);
+			DisturbanceResult disturbanceResult = this.disturbanceLogic.calculateDisturbanceResult(level, this.origin, this.affectedArea, windTarget);
+			if (disturbanceResult != null) {
+				return disturbanceResult;
+			}
 		}
-		return DUMMY_MODIFIER;
+		return DUMMY_RESULT;
 	}
 
     @FunctionalInterface
-	public interface Modifier {
-		Pair<Pair<Double, Double>, Vec3> calculateWindAndWeight(Level level, Vec3 windOrigin, AABB affectedArea, Vec3 windTarget);
+	public interface DisturbanceLogic {
+		DisturbanceResult calculateDisturbanceResult(Level level, Vec3 windOrigin, AABB affectedArea, Vec3 windTarget);
+	}
+
+	public record DisturbanceResult(double strength, double weight, Vec3 wind) {
 	}
 }

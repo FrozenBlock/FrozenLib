@@ -18,10 +18,9 @@
 
 package net.frozenblock.lib.wind.mixin;
 
-import com.mojang.datafixers.util.Pair;
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.frozenblock.lib.wind.impl.InWorldWindModifier;
 import net.frozenblock.lib.wind.api.WindDisturbingEntity;
+import net.frozenblock.lib.wind.impl.WindDisturbance;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.level.Level;
@@ -40,13 +39,13 @@ public abstract class BreezeMixin implements WindDisturbingEntity {
 	@Unique
 	@Nullable
 	@Override
-	public InWorldWindModifier.Modifier frozenLib$makeWindModifier() {
+	public WindDisturbance.DisturbanceLogic frozenLib$makeDisturbanceLogic() {
 		return this::frozenLib$calculateBreezeWindAndWeight;
 	}
 
 	@Unique
 	@Nullable
-	private Pair<Pair<Double, Double>, Vec3> frozenLib$calculateBreezeWindAndWeight(Level level, @NotNull Vec3 windOrigin, AABB affectedArea, Vec3 windTarget) {
+	private WindDisturbance.DisturbanceResult frozenLib$calculateBreezeWindAndWeight(Level level, @NotNull Vec3 windOrigin, AABB affectedArea, Vec3 windTarget) {
 		double distance = windOrigin.distanceTo(windTarget);
 		if (distance <= FROZENLIB$WIND_RANGE_BREEZE) {
 			Vec3 breezeLookVec = Breeze.class.cast(this).getForward();
@@ -57,15 +56,13 @@ public abstract class BreezeMixin implements WindDisturbingEntity {
 
 			double x = Math.cos((angleBetween * Math.PI) / 180D);
 			double z = -Math.sin((angleBetween * Math.PI) / 180D);
-			x = Mth.lerp(scaledDistance, (x - (differenceInPoses.x * 0.45D)) * 0.5D, x);
-			z = Mth.lerp(scaledDistance, (z - (differenceInPoses.z * 0.45D)) * 0.5D, z);
+			x = -Mth.lerp(scaledDistance, (x - (differenceInPoses.x * 0.45D)) * 0.5D, x);
+			z = -Mth.lerp(scaledDistance, (z - (differenceInPoses.z * 0.45D)) * 0.5D, z);
 
-			Vec3 windVec = new Vec3(x, strengthFromDistance, z);
-			return Pair.of(
-				Pair.of(
-					strengthFromDistance,
-					FROZENLIB$WIND_RANGE_BREEZE - distance
-				),
+			Vec3 windVec = new Vec3(x, strengthFromDistance, z).scale(1D);
+			return new WindDisturbance.DisturbanceResult(
+				strengthFromDistance,
+				FROZENLIB$WIND_RANGE_BREEZE - distance,
 				windVec
 			);
 		}
@@ -81,6 +78,11 @@ public abstract class BreezeMixin implements WindDisturbingEntity {
 	@Unique
 	@Override
 	public double frozenLib$getWindHeight() {
-		return 12D;
+		return 8D;
+	}
+
+	@Override
+	public double frozenLib$getWindAreaYOffset() {
+		return 2D;
 	}
 }

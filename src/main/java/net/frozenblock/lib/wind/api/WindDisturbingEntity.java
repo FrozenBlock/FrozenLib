@@ -18,14 +18,16 @@
 
 package net.frozenblock.lib.wind.api;
 
-import net.frozenblock.lib.wind.impl.InWorldWindModifier;
+import net.frozenblock.lib.wind.impl.WindDisturbance;
 
 public interface WindDisturbingEntity {
 
-	InWorldWindModifier.Modifier frozenLib$makeWindModifier();
+	WindDisturbance.DisturbanceLogic frozenLib$makeDisturbanceLogic();
 
 	double frozenLib$getWindWidth();
 
 	double frozenLib$getWindHeight();
+
+	double frozenLib$getWindAreaYOffset();
 
 }

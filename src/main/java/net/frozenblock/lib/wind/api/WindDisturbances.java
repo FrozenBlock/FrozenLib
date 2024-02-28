@@ -19,34 +19,34 @@
 package net.frozenblock.lib.wind.api;
 
 import com.mojang.datafixers.util.Pair;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.networking.FrozenNetworking;
-import net.frozenblock.lib.wind.impl.InWorldWindModifier;
-import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.List;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.wind.impl.WindDisturbance;
+import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 
 public class WindDisturbances {
-	private static final List<Pair<Level, InWorldWindModifier>> IN_WORLD_WIND_MODIFIERS_SERVER_A = new ArrayList<>();
-	private static final List<Pair<Level, InWorldWindModifier>> IN_WORLD_WIND_MODIFIERS_SERVER_B = new ArrayList<>();
+	private static final List<Pair<Level, WindDisturbance>> WIND_DISTURBANCES_SERVER_A = new ArrayList<>();
+	private static final List<Pair<Level, WindDisturbance>> WIND_DISTURBANCES_SERVER_B = new ArrayList<>();
 	private static boolean isSwitchedServer;
 
-	public static List<Pair<Level, InWorldWindModifier>> getInWorldWindModifiersServer() {
-		return !isSwitchedServer ? IN_WORLD_WIND_MODIFIERS_SERVER_A : IN_WORLD_WIND_MODIFIERS_SERVER_B;
+	public static List<Pair<Level, WindDisturbance>> getWindDisturbancesServer() {
+		return !isSwitchedServer ? WIND_DISTURBANCES_SERVER_A : WIND_DISTURBANCES_SERVER_B;
 	}
 
-	public static List<Pair<Level, InWorldWindModifier>> getAltListServer() {
-		return isSwitchedServer ? IN_WORLD_WIND_MODIFIERS_SERVER_A : IN_WORLD_WIND_MODIFIERS_SERVER_B;
+	public static List<Pair<Level, WindDisturbance>> getAltListServer() {
+		return isSwitchedServer ? WIND_DISTURBANCES_SERVER_A : WIND_DISTURBANCES_SERVER_B;
 	}
 
 	public static void clearServer() {
-		getInWorldWindModifiersServer().clear();
+		getWindDisturbancesServer().clear();
 	}
 
 	public static void clearAllServer() {
-		IN_WORLD_WIND_MODIFIERS_SERVER_A.clear();
-		IN_WORLD_WIND_MODIFIERS_SERVER_B.clear();
+		WIND_DISTURBANCES_SERVER_A.clear();
+		WIND_DISTURBANCES_SERVER_B.clear();
 	}
 
 	public static void clearAndSwitchServer() {
@@ -54,25 +54,25 @@ public class WindDisturbances {
 		isSwitchedServer = !isSwitchedServer;
 	}
 
-	private static final List<Pair<Level, InWorldWindModifier>> IN_WORLD_WIND_MODIFIERS_CLIENT_A = new ArrayList<>();
-	private static final List<Pair<Level, InWorldWindModifier>> IN_WORLD_WIND_MODIFIERS_CLIENT_B = new ArrayList<>();
+	private static final List<Pair<Level, WindDisturbance>> WIND_DISTURBANCES_CLIENT_A = new ArrayList<>();
+	private static final List<Pair<Level, WindDisturbance>> WIND_DISTURBANCES_CLIENT_B = new ArrayList<>();
 	private static boolean isSwitchedClient;
 
-	public static List<Pair<Level, InWorldWindModifier>> getInWorldWindModifiersClient() {
-		return !isSwitchedClient ? IN_WORLD_WIND_MODIFIERS_CLIENT_A : IN_WORLD_WIND_MODIFIERS_CLIENT_B;
+	public static List<Pair<Level, WindDisturbance>> getWindDisurbancesClient() {
+		return !isSwitchedClient ? WIND_DISTURBANCES_CLIENT_A : WIND_DISTURBANCES_CLIENT_B;
 	}
 
-	public static List<Pair<Level, InWorldWindModifier>> getAltListClient() {
-		return isSwitchedClient ? IN_WORLD_WIND_MODIFIERS_CLIENT_A : IN_WORLD_WIND_MODIFIERS_CLIENT_B;
+	public static List<Pair<Level, WindDisturbance>> getAltListClient() {
+		return isSwitchedClient ? WIND_DISTURBANCES_CLIENT_A : WIND_DISTURBANCES_CLIENT_B;
 	}
 
 	public static void clearClient() {
-		getInWorldWindModifiersClient().clear();
+		getWindDisurbancesClient().clear();
 	}
 
 	public static void clearAllClient() {
-		IN_WORLD_WIND_MODIFIERS_CLIENT_A.clear();
-		IN_WORLD_WIND_MODIFIERS_CLIENT_B.clear();
+		WIND_DISTURBANCES_CLIENT_A.clear();
+		WIND_DISTURBANCES_CLIENT_B.clear();
 	}
 
 	public static void clearAndSwitchClient() {
@@ -80,19 +80,18 @@ public class WindDisturbances {
 		isSwitchedClient = !isSwitchedClient;
 	}
 
-	public static void addInWorldWindModifier(Level level, InWorldWindModifier inWorldWindModifier) {
-		Pair<Level, InWorldWindModifier> pair = Pair.of(level, inWorldWindModifier);
-		getAltListServer().add(pair);
-		if (!FrozenNetworking.connectedToIntegratedServer() && FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			getAltListClient().add(pair);
+	public static void addWindDisturbance(Level level, WindDisturbance windDisturbance) {
+		getAltListServer().add(Pair.of(level, windDisturbance));
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			getAltListClient().add(Pair.of(level, windDisturbance));
 		}
 	}
 
-	public static List<Pair<Level, InWorldWindModifier>> getInWorldWindModifiers() {
-		if (FrozenNetworking.connectedToIntegratedServer() || FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-			return getInWorldWindModifiersServer();
+	public static List<Pair<Level, WindDisturbance>> getWindDisturbances(@NotNull Level level) {
+		if (!level.isClientSide) {
+			return getWindDisturbancesServer();
 		} else {
-			return getInWorldWindModifiersClient();
+			return getWindDisurbancesClient();
 		}
 	}
 }
