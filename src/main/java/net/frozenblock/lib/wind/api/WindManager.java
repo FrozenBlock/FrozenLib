@@ -29,6 +29,7 @@ import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.math.api.AdvancedMath;
+import net.frozenblock.lib.wind.impl.InWorldWindModifier;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.wind.impl.WindSyncPacket;
@@ -231,13 +232,13 @@ public class WindManager {
 	}
 
 	@NotNull
-	public Vec3 getWindMovement(@NotNull BlockPos pos, double multiplier) {
-		return this.getWindMovement(Vec3.atBottomCenterOf(pos), multiplier);
+	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale) {
+		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale);
 	}
 
 	@NotNull
-	public Vec3 getWindMovement(@NotNull BlockPos pos, double multiplier, double clamp) {
-		return this.getWindMovement(Vec3.atBottomCenterOf(pos), multiplier, clamp);
+	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale, double clamp) {
+		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale, clamp);
 	}
 
 	@NotNull
@@ -246,25 +247,25 @@ public class WindManager {
 	}
 
 	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, double multiplier) {
-		return this.getWindMovement(pos, multiplier, Double.MAX_VALUE);
+	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale) {
+		return this.getWindMovement(pos, scale, Double.MAX_VALUE);
 	}
 
 	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, double multiplier, double clamp) {
-		return this.getWindMovement(pos, multiplier, clamp, 1D);
+	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp) {
+		return this.getWindMovement(pos, scale, clamp, 1D);
 	}
 
 	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, double multiplier, double clamp, double entityCausedWindMultiplier) {
+	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
 		double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
-		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		Pair<Double, Vec3> entityWind = getEntityCausedWind(this.level, pos);
+		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
+		Pair<Double, Vec3> entityWind = getWindDisturbances(this.level, pos);
 		double lerp = entityWind.getFirst();
-		Vec3 entityCausedWind = entityWind.getSecond();
-		double windX = Mth.lerp(lerp, this.windX * windMultiplier, entityCausedWind.x * entityCausedWindMultiplier) * multiplier;
-		double windY = Mth.lerp(lerp, this.windY * windMultiplier, entityCausedWind.y * entityCausedWindMultiplier) * multiplier;
-		double windZ = Mth.lerp(lerp, this.windZ * windMultiplier, entityCausedWind.z * entityCausedWindMultiplier) * multiplier;
+		Vec3 windDisturbance = entityWind.getSecond();
+		double windX = Mth.lerp(lerp, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
+		double windY = Mth.lerp(lerp, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
+		double windZ = Mth.lerp(lerp, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 		return new Vec3(
 			Mth.clamp(windX, -clamp, clamp),
 			Mth.clamp(windY, -clamp, clamp),
@@ -278,13 +279,13 @@ public class WindManager {
 	}
 
 	@NotNull
-	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double multiplier, double stretch) {
-		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), multiplier, stretch);
+	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double stretch) {
+		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, stretch);
 	}
 
 	@NotNull
-	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double multiplier, double clamp, double stretch) {
-		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), multiplier, clamp, stretch);
+	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double clamp, double stretch) {
+		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, clamp, stretch);
 	}
 
 	@NotNull
@@ -293,24 +294,24 @@ public class WindManager {
 	}
 
 	@NotNull
-	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double multiplier, double stretch) {
-		return this.getWindMovement3D(pos, multiplier, Double.MAX_VALUE, stretch);
+	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double stretch) {
+		return this.getWindMovement3D(pos, scale, Double.MAX_VALUE, stretch);
 	}
 
 	@NotNull
-	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double multiplier, double clamp, double stretch) {
+	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double clamp, double stretch) {
 		Vec3 wind = this.sample3D(pos, stretch);
-		return new Vec3(Mth.clamp((wind.x()) * multiplier, -clamp, clamp),
-				Mth.clamp((wind.y()) * multiplier, -clamp, clamp),
-				Mth.clamp((wind.z()) * multiplier, -clamp, clamp));
+		return new Vec3(Mth.clamp((wind.x()) * scale, -clamp, clamp),
+				Mth.clamp((wind.y()) * scale, -clamp, clamp),
+				Mth.clamp((wind.z()) * scale, -clamp, clamp));
 	}
 
 	@NotNull
 	private Vec3 sampleVec3(@NotNull ImprovedNoise sampler, double x, double y, double z) {
 		if (!this.overrideWind) {
-			double windX = sampler.noise(x, 0, 0);
-			double windY = sampler.noise(0, y, 0);
-			double windZ = sampler.noise(0, 0, z);
+			double windX = sampler.noise(x, 0D, 0D);
+			double windY = sampler.noise(0D, y, 0D);
+			double windZ = sampler.noise(0D, 0D, z);
 			return new Vec3(windX, windY, windZ);
 		}
 		return this.commandWind;
@@ -318,20 +319,19 @@ public class WindManager {
 
 	@NotNull
 	private Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
-		double sampledTime = this.time * 0.1;
+		double sampledTime = this.time * 0.1D;
 		double xyz = pos.x() + pos.y() + pos.z();
-		double windX = this.perlinXoro.noise((xyz + sampledTime) * stretch, 0, 0);
-		double windY = this.perlinXoro.noise(0, (xyz + sampledTime) * stretch, 0);
-		double windZ = this.perlinXoro.noise(0, 0, (xyz + sampledTime) * stretch);
+		double windX = this.perlinXoro.noise((xyz + sampledTime) * stretch, 0D, 0D);
+		double windY = this.perlinXoro.noise(0D, (xyz + sampledTime) * stretch, 0D);
+		double windZ = this.perlinXoro.noise(0D, 0D, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
 	}
 
 	private static final double ENTITY_WIND_SEARCH_RANGE = 5D;
-	private static final double WIND_RANGE_BREEZE = 6D;
 	private static final double WIND_RANGE_WIND_CHARGE = 5D;
 
 	@NotNull
-	public static Pair<Double, Vec3> getEntityCausedWind(@NotNull Level level, @NotNull Vec3 pos) {
+	public static Pair<Double, Vec3> getWindDisturbances(@NotNull Level level, @NotNull Vec3 pos) {
 		ArrayList<Pair<Double, Vec3>> winds = new ArrayList<>();
 		Vec3 lowerCorner = pos.add(-ENTITY_WIND_SEARCH_RANGE, -ENTITY_WIND_SEARCH_RANGE, -ENTITY_WIND_SEARCH_RANGE);
 		Vec3 upperCorner = pos.add(ENTITY_WIND_SEARCH_RANGE, ENTITY_WIND_SEARCH_RANGE, ENTITY_WIND_SEARCH_RANGE);
@@ -345,24 +345,7 @@ public class WindManager {
 		for (Entity entity : entities) {
 			Vec3 entityPos = entity.position();
 			double distance = pos.distanceTo(entityPos);
-			if (entity instanceof Breeze) {
-				if (distance <= WIND_RANGE_BREEZE) {
-					Vec3 breezeLookVec = entity.getForward();
-					Vec3 differenceInPoses = pos.subtract(entityPos);
-					double scaledDistance = (WIND_RANGE_BREEZE - distance) / WIND_RANGE_BREEZE;
-					double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE * 0.75D), 0D, 1D);
-					double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses);
-
-					double x = Math.cos((angleBetween * Math.PI) / 180D);
-					double z = -Math.sin((angleBetween * Math.PI) / 180D);
-					x = Mth.lerp(scaledDistance, (x - (differenceInPoses.x * 0.45D)) * 0.5D, x);
-					z = Mth.lerp(scaledDistance, (z - (differenceInPoses.z * 0.45D)) * 0.5D, z);
-
-					strength = Math.max(strength, strengthFromDistance);
-					Vec3 windVec = new Vec3(x, strengthFromDistance, z);
-					winds.add(new Pair<>(WIND_RANGE_BREEZE - distance, windVec));
-				}
-			} else if (entity instanceof AbstractWindCharge) {
+			if (entity instanceof AbstractWindCharge) {
 				if (distance <= WIND_RANGE_WIND_CHARGE) {
 					Vec3 chargeMovement = entity.getDeltaMovement();
 					double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE * 0.5D), 0D, 1D);
@@ -370,6 +353,14 @@ public class WindManager {
 					Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(2D * strengthFromDistance);
 					winds.add(new Pair<>((WIND_RANGE_WIND_CHARGE - distance) * 2D, windVec));
 				}
+			}
+		}
+
+		for (Pair<Level, InWorldWindModifier> pair : WindDisturbances.getInWorldWindModifiers()) {
+			if (pair.getFirst() == level) {
+				Pair<Pair<Double, Double>, Vec3> windDisturbance = pair.getSecond().calculateWindAndWeight(level, pos);
+				strength = Math.max(strength, windDisturbance.getFirst().getSecond());
+				winds.add(Pair.of(windDisturbance.getFirst().getFirst(), windDisturbance.getSecond()));
 			}
 		}
 
