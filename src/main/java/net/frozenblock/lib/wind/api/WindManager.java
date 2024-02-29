@@ -37,18 +37,13 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.datafix.DataFixTypes;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.level.saveddata.SavedData;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -258,12 +253,12 @@ public class WindManager {
 	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
 		double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
 		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
-		Pair<Double, Vec3> entityWind = getWindDisturbances(this.level, pos);
-		double lerp = entityWind.getFirst();
-		Vec3 windDisturbance = entityWind.getSecond();
-		double windX = Mth.lerp(lerp, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
-		double windY = Mth.lerp(lerp, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
-		double windZ = Mth.lerp(lerp, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
+		Pair<Double, Vec3> levelAndDisturbance = getWindDisturbances(this.level, pos);
+		double disturbanceAmount = levelAndDisturbance.getFirst();
+		Vec3 windDisturbance = levelAndDisturbance.getSecond();
+		double windX = Mth.lerp(disturbanceAmount, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
+		double windY = Mth.lerp(disturbanceAmount, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
+		double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 		return new Vec3(
 			Mth.clamp(windX, -clamp, clamp),
 			Mth.clamp(windY, -clamp, clamp),
@@ -325,35 +320,10 @@ public class WindManager {
 		return new Vec3(windX, windY, windZ);
 	}
 
-	private static final double ENTITY_WIND_SEARCH_RANGE = 5D;
-	private static final double WIND_RANGE_WIND_CHARGE = 5D;
-
 	@NotNull
 	public static Pair<Double, Vec3> getWindDisturbances(@NotNull Level level, @NotNull Vec3 pos) {
 		ArrayList<Pair<Double, Vec3>> winds = new ArrayList<>();
-		Vec3 lowerCorner = pos.add(-ENTITY_WIND_SEARCH_RANGE, -ENTITY_WIND_SEARCH_RANGE, -ENTITY_WIND_SEARCH_RANGE);
-		Vec3 upperCorner = pos.add(ENTITY_WIND_SEARCH_RANGE, ENTITY_WIND_SEARCH_RANGE, ENTITY_WIND_SEARCH_RANGE);
-
-		List<? extends Entity> entities = level.getEntities(
-			EntityTypeTest.forClass(Entity.class),
-			new AABB(lowerCorner, upperCorner),
-			EntitySelector.ENTITY_STILL_ALIVE.and(EntitySelector.NO_SPECTATORS)
-		);
 		double strength = 0D;
-		for (Entity entity : entities) {
-			Vec3 entityPos = entity.position();
-			double distance = pos.distanceTo(entityPos);
-			if (entity instanceof AbstractWindCharge) {
-				if (distance <= WIND_RANGE_WIND_CHARGE) {
-					Vec3 chargeMovement = entity.getDeltaMovement();
-					double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE * 0.5D), 0D, 1D);
-					strength = Math.max(strength, strengthFromDistance);
-					Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(2D * strengthFromDistance);
-					winds.add(Pair.of((WIND_RANGE_WIND_CHARGE - distance) * 2D, windVec));
-				}
-			}
-		}
-
 		for (Pair<Level, WindDisturbance> pair : WindDisturbances.getWindDisturbances(level)) {
 			if (pair.getFirst() == level) {
 				WindDisturbance.DisturbanceResult disturbanceResult = pair.getSecond().calculateDisturbanceResult(level, pos);
@@ -374,13 +344,11 @@ public class WindManager {
 			double sumOfWeights = 0D;
 			for (Pair<Double, Vec3> pair : winds) {
 				double weight = pair.getFirst();
-				if (weight != 0) {
-					sumOfWeights += weight;
-					Vec3 windVec = pair.getSecond();
-					x += weight * windVec.x;
-					y += weight * windVec.y;
-					z += weight * windVec.z;
-				}
+				sumOfWeights += weight;
+				Vec3 windVec = pair.getSecond();
+				x += weight * windVec.x;
+				y += weight * windVec.y;
+				z += weight * windVec.z;
 			}
 			finalX = x / sumOfWeights;
 			finalY = y / sumOfWeights;

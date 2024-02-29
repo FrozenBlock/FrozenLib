@@ -181,12 +181,12 @@ public final class ClientWindManager {
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
 		double brightness = level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
 		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
-		Pair<Double, Vec3> disturbanceWind = WindManager.getWindDisturbances(level, pos);
-		double lerp = disturbanceWind.getFirst();
-		Vec3 windDisturbance = disturbanceWind.getSecond();
-		double newWindX = Mth.lerp(lerp, windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
-		double newWindY = Mth.lerp(lerp, windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
-		double newWindZ = Mth.lerp(lerp, windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
+		Pair<Double, Vec3> levelAndDisturbance = WindManager.getWindDisturbances(level, pos);
+		double disturbanceAmount = levelAndDisturbance.getFirst();
+		Vec3 windDisturbance = levelAndDisturbance.getSecond();
+		double newWindX = Mth.lerp(disturbanceAmount, windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
+		double newWindY = Mth.lerp(disturbanceAmount, windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
+		double newWindZ = Mth.lerp(disturbanceAmount, windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 		return new Vec3(
 			Mth.clamp(newWindX, -clamp, clamp),
 			Mth.clamp(newWindY, -clamp, clamp),
