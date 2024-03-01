@@ -319,7 +319,7 @@ public final class FrozenClientNetworking {
 	private static void receiveWindDisturbancePacket() {
 		registry().register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(WindDisturbancePacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = ctx.player().clientLevel;
+			ClientLevel level = ctx.client().level;
 			long posOrID = packet.posOrID();
 			Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(packet.id());
 			if (disturbanceLogic.isPresent()) {
