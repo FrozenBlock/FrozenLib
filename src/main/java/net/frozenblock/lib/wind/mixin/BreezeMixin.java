@@ -45,11 +45,11 @@ public abstract class BreezeMixin implements WindDisturbingEntity {
 	@Unique
 	@Override
 	public double frozenLib$getWindHeight() {
-		return 8D;
+		return 10D;
 	}
 
 	@Override
 	public double frozenLib$getWindAreaYOffset() {
-		return 2D;
+		return 1D;
 	}
 }
