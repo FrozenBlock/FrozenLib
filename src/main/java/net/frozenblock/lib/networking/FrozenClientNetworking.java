@@ -54,6 +54,7 @@ import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.frozenblock.lib.wind.impl.WindSyncPacket;
+import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -95,6 +96,7 @@ public final class FrozenClientNetworking {
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
+		ClientPlayNetworking.registerGlobalReceiver(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket::receive);
 		registry().register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
 			ConfigSyncPacket.receive(packet, null)
