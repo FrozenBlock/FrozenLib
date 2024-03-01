@@ -43,6 +43,7 @@ import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.tag.api.TagListCommand;
+import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
@@ -82,6 +83,7 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
+		WindDisturbanceLogic.init();
 		FrozenFeatures.init();
 		FrozenPlacementModifiers.init();
 		DataPackReloadMarker.init();
