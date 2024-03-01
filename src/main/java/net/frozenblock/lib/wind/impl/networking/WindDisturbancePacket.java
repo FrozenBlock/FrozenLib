@@ -18,16 +18,8 @@
 
 package net.frozenblock.lib.wind.impl.networking;
 
-import java.util.Optional;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.wind.api.ClientWindManager;
-import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -67,31 +59,6 @@ public record WindDisturbancePacket(
 		buf.writeEnum(this.disturbanceSourceType());
 		buf.writeResourceLocation(this.id());
 		buf.writeLong(this.posOrID());
-	}
-
-	@Environment(EnvType.CLIENT)
-	public static void receive(@NotNull WindDisturbancePacket packet, @NotNull ClientPlayNetworking.Context ctx) {
-		ClientLevel level = ctx.player().clientLevel;
-		long posOrID = packet.posOrID();
-		Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(packet.id());
-		if (disturbanceLogic.isPresent()) {
-			WindDisturbanceLogic.SourceType sourceType = packet.disturbanceSourceType();
-			Optional source = Optional.empty();
-			if (sourceType == WindDisturbanceLogic.SourceType.ENTITY) {
-				source = Optional.ofNullable(level.getEntity((int) posOrID));
-			} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK_ENTITY) {
-				source = Optional.ofNullable(level.getBlockEntity(BlockPos.of(posOrID)));
-			}
-
-			ClientWindManager.addWindDisturbance(
-				new WindDisturbance(
-					source,
-					packet.origin(),
-					packet.affectedArea(),
-					disturbanceLogic.get()
-				)
-			);
-		}
 	}
 
 	@Override

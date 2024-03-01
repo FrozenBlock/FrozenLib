@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.networking;
 
+import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
@@ -53,6 +54,8 @@ import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.wind.api.ClientWindManager;
+import net.frozenblock.lib.wind.api.WindDisturbance;
+import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.impl.WindSyncPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.minecraft.client.Minecraft;
@@ -62,6 +65,7 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
@@ -96,7 +100,7 @@ public final class FrozenClientNetworking {
 		receiveIconPacket();
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
-		ClientPlayNetworking.registerGlobalReceiver(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket::receive);
+		receiveWindDisturbancePacket();
 		registry().register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
 			ConfigSyncPacket.receive(packet, null)
@@ -309,6 +313,33 @@ public final class FrozenClientNetworking {
 			ClientWindManager.overrideWind = packet.override();
 			ClientWindManager.commandWind = packet.commandWind();
 			ClientWindManager.hasInitialized = true;
+		});
+	}
+
+	private static void receiveWindDisturbancePacket() {
+		registry().register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
+		ClientPlayNetworking.registerGlobalReceiver(WindDisturbancePacket.PACKET_TYPE, (packet, ctx) -> {
+			ClientLevel level = ctx.player().clientLevel;
+			long posOrID = packet.posOrID();
+			Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(packet.id());
+			if (disturbanceLogic.isPresent()) {
+				WindDisturbanceLogic.SourceType sourceType = packet.disturbanceSourceType();
+				Optional source = Optional.empty();
+				if (sourceType == WindDisturbanceLogic.SourceType.ENTITY) {
+					source = Optional.ofNullable(level.getEntity((int) posOrID));
+				} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK_ENTITY) {
+					source = Optional.ofNullable(level.getBlockEntity(BlockPos.of(posOrID)));
+				}
+
+				ClientWindManager.addWindDisturbance(
+					new WindDisturbance(
+						source,
+						packet.origin(),
+						packet.affectedArea(),
+						disturbanceLogic.get()
+					)
+				);
+			}
 		});
 	}
 
