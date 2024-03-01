@@ -20,13 +20,13 @@ package net.frozenblock.lib.wind.api;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.frozenblock.lib.wind.impl.WindDisturbance;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -43,10 +43,36 @@ import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public final class ClientWindManager {
-
 	public static final List<ClientWindManagerExtension> EXTENSIONS = new ObjectArrayList<>();
+	private static final List<WindDisturbance> WIND_DISTURBANCES_A = new ArrayList<>();
+	private static final List<WindDisturbance> WIND_DISTURBANCES_B = new ArrayList<>();
+	private static boolean isSwitched;
 
-	public static final List<WindDisturbance> IN_WORLD_WIND_MODIFIERS = new ObjectArrayList<>();
+	public static List<WindDisturbance> getWindDisturbances() {
+		return !isSwitched ? WIND_DISTURBANCES_A : WIND_DISTURBANCES_B;
+	}
+
+	public static List<WindDisturbance> getWindDisturbanceStash() {
+		return isSwitched ? WIND_DISTURBANCES_A : WIND_DISTURBANCES_B;
+	}
+
+	public static void clearWindDisturbances() {
+		getWindDisturbances().clear();
+	}
+
+	public static void clearAllWindDisturbances() {
+		getWindDisturbances().clear();
+		getWindDisturbanceStash().clear();
+	}
+
+	public static void clearAndSwitchWindDisturbances() {
+		clearWindDisturbances();
+		isSwitched = !isSwitched;
+	}
+
+	public static void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
+		getWindDisturbanceStash().add(windDisturbance);
+	}
 
 	public static long time;
 	public static boolean overrideWind;
@@ -181,9 +207,9 @@ public final class ClientWindManager {
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
 		double brightness = level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
 		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
-		Pair<Double, Vec3> levelAndDisturbance = WindManager.getWindDisturbances(level, pos);
-		double disturbanceAmount = levelAndDisturbance.getFirst();
-		Vec3 windDisturbance = levelAndDisturbance.getSecond();
+		Pair<Double, Vec3> disturbance = WindManager.calculateWindDisturbance(getWindDisturbances(), level, pos);
+		double disturbanceAmount = disturbance.getFirst();
+		Vec3 windDisturbance = disturbance.getSecond();
 		double newWindX = Mth.lerp(disturbanceAmount, windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
 		double newWindY = Mth.lerp(disturbanceAmount, windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
 		double newWindZ = Mth.lerp(disturbanceAmount, windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;

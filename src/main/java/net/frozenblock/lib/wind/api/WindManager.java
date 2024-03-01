@@ -25,13 +25,14 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.wind.impl.WindDisturbance;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.wind.impl.WindSyncPacket;
+import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -50,7 +51,9 @@ import org.jetbrains.annotations.NotNull;
 public class WindManager {
 	private static final long MIN_TIME_VALUE = Long.MIN_VALUE + 1;
 	public static final Map<Function<WindManager, WindManagerExtension>, Integer> EXTENSION_PROVIDERS = new Object2ObjectOpenHashMap<>();
-
+	private final List<WindDisturbance> windDisturbancesA = new ArrayList<>();
+	private final List<WindDisturbance> windDisturbancesB = new ArrayList<>();
+	private boolean isSwitchedServer;
 	public final List<WindManagerExtension> attachedExtensions;
 
 	public boolean overrideWind;
@@ -87,6 +90,40 @@ public class WindManager {
 
 	public static void addExtension(Function<WindManager, WindManagerExtension> extension) {
 		addExtension(extension, 1000);
+	}
+
+	public void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
+		Optional<WindDisturbancePacket> optionalPacket = windDisturbance.toPacket();
+		if (optionalPacket.isPresent()) {
+			for (ServerPlayer player : PlayerLookup.world(level)) {
+				if (windDisturbance.isWithinViewDistance(player.getChunkTrackingView())) {
+					ServerPlayNetworking.send(player, optionalPacket.get());
+				}
+			}
+		}
+		this.getWindDisturbanceStash().add(windDisturbance);
+	}
+
+	private List<WindDisturbance> getWindDisturbances() {
+		return !this.isSwitchedServer ? this.windDisturbancesA : this.windDisturbancesB;
+	}
+
+	private List<WindDisturbance> getWindDisturbanceStash() {
+		return this.isSwitchedServer ? this.windDisturbancesA : this.windDisturbancesB;
+	}
+
+	public void clearWindDisturbances() {
+		this.getWindDisturbances().clear();
+	}
+
+	public void clearAllWindDisturbances() {
+		this.getWindDisturbances().clear();
+		this.getWindDisturbanceStash().clear();
+	}
+
+	public void clearAndSwitchWindDisturbances() {
+		this.clearWindDisturbances();
+		this.isSwitchedServer = !this.isSwitchedServer;
 	}
 
 	public ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(this.seed));
@@ -253,9 +290,9 @@ public class WindManager {
 	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
 		double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
 		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
-		Pair<Double, Vec3> levelAndDisturbance = getWindDisturbances(this.level, pos);
-		double disturbanceAmount = levelAndDisturbance.getFirst();
-		Vec3 windDisturbance = levelAndDisturbance.getSecond();
+		Pair<Double, Vec3> disturbance = this.calculateWindDisturbance(level, pos);
+		double disturbanceAmount = disturbance.getFirst();
+		Vec3 windDisturbance = disturbance.getSecond();
 		double windX = Mth.lerp(disturbanceAmount, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
 		double windY = Mth.lerp(disturbanceAmount, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
 		double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
@@ -321,16 +358,19 @@ public class WindManager {
 	}
 
 	@NotNull
-	public static Pair<Double, Vec3> getWindDisturbances(@NotNull Level level, @NotNull Vec3 pos) {
+	private Pair<Double, Vec3> calculateWindDisturbance(@NotNull Level level, @NotNull Vec3 pos) {
+		return calculateWindDisturbance(this.getWindDisturbances(), level, pos);
+	}
+
+	@NotNull
+	public static Pair<Double, Vec3> calculateWindDisturbance(@NotNull List<WindDisturbance> windDisturbances, @NotNull Level level, @NotNull Vec3 pos) {
 		ArrayList<Pair<Double, Vec3>> winds = new ArrayList<>();
 		double strength = 0D;
-		for (Pair<Level, WindDisturbance> pair : WindDisturbances.getWindDisturbances(level)) {
-			if (pair.getFirst() == level) {
-				WindDisturbance.DisturbanceResult disturbanceResult = pair.getSecond().calculateDisturbanceResult(level, pos);
-				if (disturbanceResult.strength() != 0D && disturbanceResult.weight() != 0D) {
-					strength = Math.max(strength, disturbanceResult.strength());
-					winds.add(Pair.of(disturbanceResult.weight(), disturbanceResult.wind()));
-				}
+		for (WindDisturbance windDisturbance : windDisturbances) {
+			WindDisturbance.DisturbanceResult disturbanceResult = windDisturbance.calculateDisturbanceResult(level, pos);
+			if (disturbanceResult.strength() != 0D && disturbanceResult.weight() != 0D) {
+				strength = Math.max(strength, disturbanceResult.strength());
+				winds.add(Pair.of(disturbanceResult.weight(), disturbanceResult.wind()));
 			}
 		}
 

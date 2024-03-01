@@ -10,6 +10,5 @@ Put changelog here:
 - Added the `FrozenSpawnPlacementTypes` class, containing `ON_GROUND_OR_ON_LAVA_SURFACE` currently.
 - Added Wind Disturbances.
   - Consists of an AABB for their effective area, an origin position, and a `DisturbanceLogic` to determine the Strength, Weight, and Vector of the Wind Disturbance.
-  - Can be added to a world using the `addWindDisturbance` method in the `WindDisturbances` class.
   - Are cleared each tick.
-  - Any method that adds a Wind Disturbance must also be called on the Client's side as well to ensure both the Server and Client will have the same Wind Disturbance.
+  - Must have a registered `WindDisturbanceLogic` for use on both client and server.

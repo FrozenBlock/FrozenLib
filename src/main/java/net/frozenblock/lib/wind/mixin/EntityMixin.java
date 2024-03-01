@@ -18,21 +18,27 @@
 
 package net.frozenblock.lib.wind.mixin;
 
-import net.frozenblock.lib.wind.api.WindDisturbances;
+import java.util.Optional;
+import net.frozenblock.lib.wind.api.WindDisturbance;
+import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindDisturbingEntity;
-import net.frozenblock.lib.wind.impl.WindDisturbance;
+import net.frozenblock.lib.wind.api.WindManager;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public class EntityMixin implements WindDisturbingEntity {
+public abstract class EntityMixin implements WindDisturbingEntity {
 
 	@Inject(
 		method = "baseTick",
@@ -42,16 +48,18 @@ public class EntityMixin implements WindDisturbingEntity {
 		)
 	)
 	public void frozenLib$baseTick(CallbackInfo info) {
-		WindDisturbance inWorldWindModifier = this.frozenLib$makeWindDisturbance();
-		if (inWorldWindModifier != null) {
-			WindDisturbances.addWindDisturbance(Entity.class.cast(this).level(), inWorldWindModifier);
+		if (this.level() instanceof ServerLevel serverLevel) {
+			WindDisturbance inWorldWindModifier = this.frozenLib$makeWindDisturbance();
+			if (inWorldWindModifier != null) {
+				WindManager.getWindManager(serverLevel).addWindDisturbance(inWorldWindModifier);
+			}
 		}
 	}
 
 	@Unique
 	@Nullable
 	@Override
-	public WindDisturbance.DisturbanceLogic frozenLib$makeDisturbanceLogic() {
+	public ResourceLocation frozenLib$getWindDisturbanceLogicID() {
 		return null;
 	}
 
@@ -75,27 +83,35 @@ public class EntityMixin implements WindDisturbingEntity {
 	@Unique
 	@Nullable
 	private WindDisturbance frozenLib$makeWindDisturbance() {
-		Entity entity = Entity.class.cast(this);
-		WindDisturbance.DisturbanceLogic disturbanceLogic = this.frozenLib$makeDisturbanceLogic();
-		if (disturbanceLogic == null) {
-			return null;
-		} else {
-			double scale = entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1D;
-			return new WindDisturbance(
-				entity.position(),
-				AABB.ofSize(
-					entity.getBoundingBox().getCenter(),
-					this.frozenLib$getWindWidth() * scale,
-					this.frozenLib$getWindHeight() * scale,
-					this.frozenLib$getWindWidth() * scale
-				).move(
-					0D,
-					this.frozenLib$getWindAreaYOffset() * scale,
-					0D
-				),
-				disturbanceLogic
-			);
+		ResourceLocation disturbanceLogicID = this.frozenLib$getWindDisturbanceLogicID();
+		if (disturbanceLogicID != null) {
+			Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(disturbanceLogicID);
+			if (disturbanceLogic.isPresent()) {
+				Entity entity = Entity.class.cast(this);
+				double scale = entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1D;
+				return new WindDisturbance(
+					Optional.of(entity),
+					entity.position(),
+					AABB.ofSize(
+						entity.getBoundingBox().getCenter(),
+						this.frozenLib$getWindWidth() * scale,
+						this.frozenLib$getWindHeight() * scale,
+						this.frozenLib$getWindWidth() * scale
+					).move(
+						0D,
+						this.frozenLib$getWindAreaYOffset() * scale,
+						0D
+					),
+					disturbanceLogic.get()
+				);
+			}
 		}
+		return null;
+	}
+
+	@Shadow
+	public Level level() {
+		throw new AssertionError("Mixin injection failed - FrozenLib EntityMixin.");
 	}
 
 }

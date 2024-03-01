@@ -26,12 +26,14 @@ import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
+import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.NotNull;
 
 public class FrozenRegistry {
 	private FrozenRegistry() {
@@ -42,7 +44,8 @@ public class FrozenRegistry {
 	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("sound_predicate"));
 	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("sound_predicate_unsynced"));
 	public static final ResourceKey<Registry<SpottingIconPredicate<?>>> SPOTTING_ICON_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("spotting_icon_predicate"));
-
+	public static final ResourceKey<Registry<WindDisturbanceLogic<?>>> WIND_DISTURBANCE_LOGIC_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("wind_disturbance_logic"));
+	public static final ResourceKey<Registry<WindDisturbanceLogic<?>>> WIND_DISTURBANCE_LOGIC_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("wind_disturbance_logic_unsynced"));
 
 	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = createSimple(MOD_INTEGRATION_REGISTRY, Lifecycle.stable(), null,
 		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new ModIntegrationSupplier<>(() -> new ModIntegration("dummy") {
@@ -65,6 +68,15 @@ public class FrozenRegistry {
 		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SpottingIconPredicate<>(entity -> false))
 	);
 
+	public static final MappedRegistry<WindDisturbanceLogic<?>> WIND_DISTURBANCE_LOGIC = createSimple(WIND_DISTURBANCE_LOGIC_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new WindDisturbanceLogic(WindDisturbanceLogic.defaultPredicate()))
+	);
+
+	public static final MappedRegistry<WindDisturbanceLogic<?>> WIND_DISTURBANCE_LOGIC_UNSYNCED = createSimple(WIND_DISTURBANCE_LOGIC_UNSYNCED_REGISTRY, Lifecycle.stable(), null,
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new WindDisturbanceLogic(WindDisturbanceLogic.defaultPredicate()))
+	);
+
+	@NotNull
 	public static HolderLookup.Provider vanillaRegistries() {
 		return VanillaRegistries.createLookup();
 	}

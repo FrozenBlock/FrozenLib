@@ -19,7 +19,6 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.loader.api.ModContainer;
@@ -44,7 +43,6 @@ import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.tag.api.TagListCommand;
-import net.frozenblock.lib.wind.api.WindDisturbances;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
@@ -121,20 +119,14 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		ServerWorldEvents.UNLOAD.register((server, serverLevel) -> {
 			EntityUtils.clearEntitiesPerLevel(serverLevel);
+			WindManager.getWindManager(serverLevel).clearAllWindDisturbances();
 		});
 
 		ServerTickEvents.START_WORLD_TICK.register(serverLevel -> {
+			WindManager.getWindManager(serverLevel).clearAndSwitchWindDisturbances();
 			WindManager.getWindManager(serverLevel).tick(serverLevel);
 			ScreenShakeManager.getScreenShakeManager(serverLevel).tick(serverLevel);
 			EntityUtils.populateEntitiesPerLevel(serverLevel);
-		});
-
-		ServerLifecycleEvents.SERVER_STOPPED.register(listener -> {
-			WindDisturbances.clearAllServer();
-		});
-
-		ServerTickEvents.START_SERVER_TICK.register(listener -> {
-			WindDisturbances.clearAndSwitchServer();
 		});
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {

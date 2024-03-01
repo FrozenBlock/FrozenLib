@@ -18,11 +18,11 @@
 
 package net.frozenblock.lib.wind.api;
 
-import net.frozenblock.lib.wind.impl.WindDisturbance;
+import net.minecraft.resources.ResourceLocation;
 
 public interface WindDisturbingEntity {
 
-	WindDisturbance.DisturbanceLogic frozenLib$makeDisturbanceLogic();
+	ResourceLocation frozenLib$getWindDisturbanceLogicID();
 
 	double frozenLib$getWindWidth();
 
