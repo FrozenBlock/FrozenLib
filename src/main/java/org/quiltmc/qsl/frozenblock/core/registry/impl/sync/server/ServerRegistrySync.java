@@ -25,6 +25,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking.Context;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
@@ -86,7 +87,7 @@ public final class ServerRegistrySync {
 
 		Component text = null;
 		try {
-			text = Component.Serializer.fromJson(string);
+			text = Component.Serializer.fromJson(string, RegistryAccess.EMPTY);
 		} catch (Exception ignored) {}
 
 		return text != null ? text : Component.literal(string);

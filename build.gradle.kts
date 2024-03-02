@@ -48,7 +48,6 @@ val archives_base_name: String by project
 
 val fabric_api_version: String by project
 val fabric_kotlin_version: String by project
-val mixin_extras_version: String by project
 val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
@@ -249,19 +248,16 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // Mod Menu
-    modApi("com.terraformersmc:modmenu:${modmenu_version}")
+    modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
 
 	// TerraBlender
     modCompileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
-
-    // MixinExtras
-    modApi("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")?.let { annotationProcessor(it) }
 
     // Toml
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }

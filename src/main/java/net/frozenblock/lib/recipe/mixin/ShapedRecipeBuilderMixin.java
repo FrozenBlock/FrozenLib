@@ -22,12 +22,14 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -38,19 +40,13 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 
 	@Unique
 	@Nullable
-	private CompoundTag tag;
+	private DataComponentPatch patch;
 
 	@Unique
 	@Override
-	public ShapedRecipeBuilder frozenLib$tag(@Nullable CompoundTag tag) {
-		this.tag = tag;
+	public ShapedRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch patch) {
+		this.patch = patch;
 		return (ShapedRecipeBuilder) (Object) this;
-	}
-
-	@Unique
-	@Override
-	public @Nullable CompoundTag frozenLib$getTag() {
-		return this.tag;
 	}
 
 	@WrapOperation(
@@ -61,7 +57,7 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 		)
 	)
 	private void modifySave(RecipeOutput instance, ResourceLocation recipeId, Recipe<?> recipe, AdvancementHolder holder, Operation<ShapedRecipe> operation) {
-		((ShapedRecipeBuilderExtension) recipe).frozenLib$tag(this.tag);
+		((ShapedRecipeBuilderExtension) recipe).frozenLib$patch(this.patch);
 		operation.call(instance, recipeId, recipe, holder);
 	}
 

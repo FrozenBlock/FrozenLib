@@ -86,6 +86,6 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 
 	private boolean givesAir(@NotNull LevelReader level, @NotNull BlockPos pos) {
 		BlockState blockState = level.getBlockState(pos);
-		return (level.getFluidState(pos).isEmpty() || blockState.is(Blocks.BUBBLE_COLUMN)) && blockState.isPathfindable(level, pos, PathComputationType.LAND);
+		return (level.getFluidState(pos).isEmpty() || blockState.is(Blocks.BUBBLE_COLUMN)) && blockState.isPathfindable(PathComputationType.LAND);
 	}
 }

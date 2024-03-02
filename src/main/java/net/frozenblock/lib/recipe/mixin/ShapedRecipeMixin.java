@@ -19,10 +19,12 @@
 package net.frozenblock.lib.recipe.mixin;
 
 import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -36,13 +38,9 @@ public class ShapedRecipeMixin implements ShapedRecipeBuilderExtension {
 	ItemStack result;
 
 	@Override
-	public ShapedRecipeBuilder frozenLib$tag(@Nullable CompoundTag tag) {
-		this.result.setTag(tag);
+	public ShapedRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch patch) {
+		if (patch != null)
+			this.result.applyComponents(patch);
 		return null;
-	}
-
-	@Override
-	public @Nullable CompoundTag frozenLib$getTag() {
-		return this.result.getTag();
 	}
 }

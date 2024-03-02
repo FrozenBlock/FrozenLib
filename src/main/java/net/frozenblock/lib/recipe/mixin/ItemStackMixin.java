@@ -24,28 +24,29 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import java.util.function.Function;
 import net.frozenblock.lib.recipe.api.FrozenRecipeCodecs;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-/**
- * Adds {@link CompoundTag} data support to crafting recipes.
- * @since 1.4.1
- */
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
 
-	@Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/codecs/RecordCodecBuilder;create(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;", ordinal = 2))
+	@Shadow
+	@Final
+	public static Codec<ItemStack> CODEC;
+
+	/**
+	 * Adds {@link DataComponentPatch} support to crafting recipes.
+	 * @since 1.4.1
+	 */
+	@Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/codecs/RecordCodecBuilder;create(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;", ordinal = 0))
 	private static Codec<ItemStack> newItemStackCodec(Function<RecordCodecBuilder.Instance<ItemStack>, ? extends App<RecordCodecBuilder.Mu<ItemStack>, ItemStack>> builder) {
-		return RecordCodecBuilder.create(instance ->
-			instance.group(
-				FrozenRecipeCodecs.ITEM_NON_AIR_CODEC.fieldOf("item").forGetter(ItemStack::getItemHolder),
-				ExtraCodecs.strictOptionalField(ExtraCodecs.POSITIVE_INT, "count", 1).forGetter(ItemStack::getCount),
-				CompoundTag.CODEC.optionalFieldOf("tag").forGetter(stack -> Optional.ofNullable(stack.getTag()))
-			).apply(instance, ItemStack::new)
-		);
+		return CODEC;
 	}
 }

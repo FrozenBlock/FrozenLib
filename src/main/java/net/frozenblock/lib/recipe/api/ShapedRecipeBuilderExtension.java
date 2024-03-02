@@ -18,14 +18,12 @@
 
 package net.frozenblock.lib.recipe.api;
 
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.nbt.CompoundTag;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface ShapedRecipeBuilderExtension {
 
-	ShapedRecipeBuilder frozenLib$tag(@Nullable CompoundTag tag);
-
-	@Nullable
-	CompoundTag frozenLib$getTag();
+	ShapedRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch tag);
 }

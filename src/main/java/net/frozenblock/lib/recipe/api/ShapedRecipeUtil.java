@@ -18,13 +18,13 @@
 
 package net.frozenblock.lib.recipe.api;
 
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.nbt.CompoundTag;
 
 public final class ShapedRecipeUtil {
 	private ShapedRecipeUtil() {}
 
-	public static ShapedRecipeBuilder withResultTag(ShapedRecipeBuilder builder, CompoundTag tag) {
-		return ((ShapedRecipeBuilderExtension) builder).frozenLib$tag(tag);
+	public static ShapedRecipeBuilder withResultPatch(ShapedRecipeBuilder builder, DataComponentPatch patch) {
+		return ((ShapedRecipeBuilderExtension) builder).frozenLib$patch(patch);
 	}
 }

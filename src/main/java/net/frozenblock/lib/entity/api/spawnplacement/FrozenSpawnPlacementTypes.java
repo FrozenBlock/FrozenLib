@@ -58,7 +58,7 @@ public class FrozenSpawnPlacementTypes {
 		@Override
 		public BlockPos adjustSpawnPosition(@NotNull LevelReader levelReader, @NotNull BlockPos blockPos) {
 			BlockPos belowPos = blockPos.below();
-			return levelReader.getBlockState(belowPos).isPathfindable(levelReader, belowPos, PathComputationType.LAND) ? belowPos : blockPos;
+			return levelReader.getBlockState(belowPos).isPathfindable(PathComputationType.LAND) ? belowPos : blockPos;
 		}
 	};
 

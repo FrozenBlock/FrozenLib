@@ -23,7 +23,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import java.util.function.Function;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,11 +39,13 @@ public class ItemValueMixin {
 	private static Codec<Ingredient.ItemValue> newCodec(Function<RecordCodecBuilder.Instance<Ingredient.ItemValue>, ? extends App<RecordCodecBuilder.Mu<Ingredient.ItemValue>, Ingredient.ItemValue>> builder) {
 		return RecordCodecBuilder.create(instance ->
 			instance.group(
-				ItemStack.SINGLE_ITEM_CODEC.fieldOf("item").forGetter(Ingredient.ItemValue::item),
-				CompoundTag.CODEC.optionalFieldOf("tag").forGetter(itemValue -> Optional.ofNullable(itemValue.item().getTag()))
-			).apply(instance, (item, data) -> {
-                data.ifPresent(item::setTag);
-                return new Ingredient.ItemValue(item); })
+				ItemStack.SIMPLE_ITEM_CODEC.fieldOf("item").forGetter(Ingredient.ItemValue::item),
+				ExtraCodecs.strictOptionalField(DataComponentPatch.CODEC, "components", DataComponentPatch.EMPTY)
+					.forGetter(stack -> stack.item().getComponentsPatch())
+			).apply(instance, (item, patch) -> {
+                item.applyComponents(patch);
+                return new Ingredient.ItemValue(item);
+			})
 		);
 	}
 }

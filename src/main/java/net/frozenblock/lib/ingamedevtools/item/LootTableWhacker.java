@@ -22,6 +22,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
@@ -53,7 +54,7 @@ public class LootTableWhacker extends Item {
 		if (player == null) {
 			return InteractionResult.PASS;
 		}
-        if (stack.hasCustomHoverName()) {
+        if (stack.has(DataComponents.CUSTOM_NAME)) {
             if (stack.getHoverName().getString().contains(":")) {
                 String id = stack.getHoverName().getString();
                 List<String> strings = Arrays.stream(id.split(":")).toList();

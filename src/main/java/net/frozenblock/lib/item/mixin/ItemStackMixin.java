@@ -18,11 +18,16 @@
 
 package net.frozenblock.lib.item.mixin;
 
-import net.frozenblock.lib.item.api.RemovableItemTags;
+import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
+import net.frozenblock.lib.item.api.removable.RemovableItemTags;
 import net.frozenblock.lib.item.impl.ItemStackExtension;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -30,6 +35,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Mixin(ItemStack.class)
 public final class ItemStackMixin implements ItemStackExtension {
@@ -40,11 +47,28 @@ public final class ItemStackMixin implements ItemStackExtension {
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
 	public void frozenLib$removeTags(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
 		ItemStack stack = ItemStack.class.cast(this);
-		for (String key : RemovableItemTags.keys()) {
-			if (RemovableItemTags.canRemoveTag(key, level, entity, slot, selected)) {
-				stack.removeTagKey(key);
+
+		// Removable Item Tags
+
+		CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+
+		data.update(compound -> {
+			for (String key : RemovableItemTags.keys()) {
+				if (RemovableItemTags.canRemoveTag(key, level, entity, slot, selected)) {
+					compound.remove(key);
+				}
+			}
+		});
+
+		// Removable Data Components
+
+		for (Holder<DataComponentType<?>> component : RemovableDataComponents.keys()) {
+			DataComponentType<?> value = component.value();
+			if (RemovableDataComponents.canRemoveComponent(value, level, entity, slot, selected)) {
+				stack.remove(value);
 			}
 		}
+
 	}
 
 	@Inject(method = "isSameItemSameTags", at = @At("HEAD"))
@@ -54,13 +78,11 @@ public final class ItemStackMixin implements ItemStackExtension {
 
 
 		if (extendedLeft.frozenLib$canRemoveTags()) {
-			CompoundTag lTag = left.getTag();
 			frozenLib$fixEmptyTags(left);
 			extendedLeft.frozenLib$setCanRemoveTags(false);
 		}
 
 		if (extendedRight.frozenLib$canRemoveTags()) {
-			CompoundTag rTag = right.tag;
 			frozenLib$fixEmptyTags(right);
 			extendedRight.frozenLib$setCanRemoveTags(false);
 		}
@@ -68,9 +90,19 @@ public final class ItemStackMixin implements ItemStackExtension {
 
 	@Unique
 	private static void frozenLib$fixEmptyTags(ItemStack stack) {
-		for (String key : RemovableItemTags.keys()) {
-			if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) {
-				stack.removeTagKey(key);
+		CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+		data.update(compound -> {
+			for (String key : RemovableItemTags.keys()) {
+				if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) {
+					compound.remove(key);
+				}
+			}
+		});
+
+		for (Holder<DataComponentType<?>> holder : RemovableDataComponents.keys()) {
+			var value = holder.value();
+			if (RemovableDataComponents.shouldRemoveComponentOnStackMerge(value)) {
+				stack.remove(value);
 			}
 		}
 	}

@@ -16,14 +16,18 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api;
+package net.frozenblock.lib.item.api.removable;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
 import net.frozenblock.lib.FrozenLogUtils;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
+/**
+ * Targets {@link DataComponents#CUSTOM_DATA }
+ */
 public class RemovableItemTags {
 
 	private static final LinkedHashMap<String, RemovableItemTag> REMOVABLE_ITEM_TAGS = new LinkedHashMap<>();
@@ -81,10 +85,5 @@ public class RemovableItemTags {
 		public boolean shouldRemoveOnStackMerge() {
 			return this.removeOnStackMerge;
 		}
-	}
-
-	@FunctionalInterface
-	public interface RemovalPredicate {
-		boolean shouldRemove(Level level, Entity entity, int slot, boolean selected);
 	}
 }

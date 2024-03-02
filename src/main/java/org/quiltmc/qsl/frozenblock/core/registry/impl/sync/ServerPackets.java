@@ -101,12 +101,12 @@ public final class ServerPackets {
 		public static final StreamCodec<FriendlyByteBuf, ErrorStyle> CODEC = StreamCodec.ofMember(ErrorStyle::write, ErrorStyle::new);
 
 		public ErrorStyle(@NotNull FriendlyByteBuf buf) {
-			this(ComponentSerialization.CONTEXT_FREE_STREAM_CODEC.decode(buf), ComponentSerialization.CONTEXT_FREE_STREAM_CODEC.decode(buf), buf.readBoolean());
+			this(ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf), ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf), buf.readBoolean());
 		}
 
 		public void write(@NotNull FriendlyByteBuf buf) {
-			ComponentSerialization.CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorHeader);
-			ComponentSerialization.CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorFooter);
+			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorHeader);
+			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorFooter);
 			buf.writeBoolean(this.showError);
 		}
 

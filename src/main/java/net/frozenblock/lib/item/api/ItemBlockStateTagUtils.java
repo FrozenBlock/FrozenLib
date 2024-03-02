@@ -18,8 +18,11 @@
 
 package net.frozenblock.lib.item.api;
 
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.BlockItemStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.NotNull;
@@ -27,36 +30,38 @@ import org.jetbrains.annotations.NotNull;
 public class ItemBlockStateTagUtils {
 
 	public static <T extends Comparable<T>> T getProperty(@NotNull ItemStack stack, Property<T> property, T defaultValue) {
-		if (stack.getTag() != null) {
-			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
+		BlockItemStateProperties blockItemStateProperties = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
+		if (!blockItemStateProperties.isEmpty()) {
+			var properties = blockItemStateProperties.properties();
 			String stringValue = property.getName();
-			if (stateTag.contains(stringValue)) {
-				return property.getValue(stateTag.getString(stringValue)).orElse(defaultValue);
+			if (properties.containsKey(stringValue)) {
+				return property.getValue(properties.get(stringValue)).orElse(defaultValue);
 			}
 		}
 		return defaultValue;
 	}
 
 	public static boolean getBoolProperty(@NotNull ItemStack stack, BooleanProperty property, boolean orElse) {
-		if (stack.getTag() != null) {
-			CompoundTag stateTag = stack.getTag().getCompound("BlockStateTag");
+		BlockItemStateProperties blockItemStateProperties = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
+		if (!blockItemStateProperties.isEmpty()) {
+			var properties = blockItemStateProperties.properties();
 			String stringValue = property.getName();
-			if (stateTag.contains(stringValue)) {
-				return stateTag.getString(stringValue).equals("true");
+			if (properties.containsKey(stringValue)) {
+				return properties.get(stringValue).equals("true");
 			}
 		}
 		return orElse;
 	}
 
 	public static <T extends Comparable<T>> void setProperty(@NotNull ItemStack stack, @NotNull Property<T> property, T value) {
-		CompoundTag stateTag = getOrCreateBlockStateTag(stack.getOrCreateTag());
-		stateTag.putString(property.getName(), property.getName(value));
+		BlockItemStateProperties blockItemStateProperties = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
+		stack.set(DataComponents.BLOCK_STATE, blockItemStateProperties.with(property, value));
 	}
 
 	@NotNull
 	private static CompoundTag getOrCreateBlockStateTag(@NotNull CompoundTag compoundTag) {
 		CompoundTag blockStateTag;
-		if (compoundTag.contains("BlockStateTag", 10)) {
+		if (compoundTag.contains("BlockStateTag", Tag.TAG_COMPOUND)) {
 			blockStateTag = compoundTag.getCompound("BlockStateTag");
 		} else {
 			blockStateTag = new CompoundTag();
