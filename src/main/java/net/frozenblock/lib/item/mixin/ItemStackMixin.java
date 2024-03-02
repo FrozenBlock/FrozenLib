@@ -18,7 +18,7 @@
 
 package net.frozenblock.lib.item.mixin;
 
-import net.frozenblock.lib.item.api.RemoveableItemTags;
+import net.frozenblock.lib.item.api.RemovableItemTags;
 import net.frozenblock.lib.item.impl.ItemStackExtension;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
@@ -40,8 +40,8 @@ public final class ItemStackMixin implements ItemStackExtension {
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
 	public void frozenLib$removeTags(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
 		ItemStack stack = ItemStack.class.cast(this);
-		for (String key : RemoveableItemTags.keys()) {
-			if (RemoveableItemTags.canRemoveTag(key, level, entity, slot, selected)) {
+		for (String key : RemovableItemTags.keys()) {
+			if (RemovableItemTags.canRemoveTag(key, level, entity, slot, selected)) {
 				stack.removeTagKey(key);
 			}
 		}
@@ -68,8 +68,8 @@ public final class ItemStackMixin implements ItemStackExtension {
 
 	@Unique
 	private static void frozenLib$fixEmptyTags(ItemStack stack) {
-		for (String key : RemoveableItemTags.keys()) {
-			if (RemoveableItemTags.shouldRemoveTagOnStackMerge(key)) {
+		for (String key : RemovableItemTags.keys()) {
+			if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) {
 				stack.removeTagKey(key);
 			}
 		}
