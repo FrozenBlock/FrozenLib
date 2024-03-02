@@ -26,14 +26,14 @@ import net.minecraft.world.level.Level;
 
 public class RemoveableItemTags {
 
-	private static final LinkedHashMap<String, RemoveableItemTag> REMOVEABLE_ITEM_TAGS = new LinkedHashMap<>();
+	private static final LinkedHashMap<String, RemoveableItemTag> REMOVABLE_ITEM_TAGS = new LinkedHashMap<>();
 
 	public static void register(String tagKey, RemovalPredicate removalPredicate, boolean removeOnStackMerge) {
-		REMOVEABLE_ITEM_TAGS.put(tagKey, new RemoveableItemTag(tagKey, removalPredicate, removeOnStackMerge));
+		REMOVABLE_ITEM_TAGS.put(tagKey, new RemoveableItemTag(tagKey, removalPredicate, removeOnStackMerge));
 	}
 
 	public static boolean canRemoveTag(String tagKey, Level level, Entity entity, int slot, boolean selected) {
-		RemoveableItemTag removeableItemTag = REMOVEABLE_ITEM_TAGS.get(tagKey);
+		RemoveableItemTag removeableItemTag = REMOVABLE_ITEM_TAGS.get(tagKey);
 		if (removeableItemTag != null) {
 			return removeableItemTag.shouldRemove(level, entity, slot, selected);
 		} else {
@@ -44,7 +44,7 @@ public class RemoveableItemTags {
 	}
 
 	public static boolean shouldRemoveTagOnStackMerge(String tagKey) {
-		RemoveableItemTag removeableItemTag = REMOVEABLE_ITEM_TAGS.get(tagKey);
+		RemoveableItemTag removeableItemTag = REMOVABLE_ITEM_TAGS.get(tagKey);
 		if (removeableItemTag != null) {
 			return removeableItemTag.shouldRemoveOnStackMerge();
 		} else {
@@ -55,7 +55,7 @@ public class RemoveableItemTags {
 	}
 
 	public static Set<String> keys() {
-		return REMOVEABLE_ITEM_TAGS.keySet();
+		return REMOVABLE_ITEM_TAGS.keySet();
 	}
 
 	public static class RemoveableItemTag implements RemovalPredicate {
