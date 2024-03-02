@@ -22,18 +22,19 @@ import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.core.HolderLookup;
 
 public final class AdvancementEvents {
 	private AdvancementEvents() {}
 
-	public static final Event<AdvancementInit> INIT = FrozenEvents.createEnvironmentEvent(AdvancementInit.class, callbacks -> context -> {
+	public static final Event<AdvancementInit> INIT = FrozenEvents.createEnvironmentEvent(AdvancementInit.class, callbacks -> (holder, registries) -> {
 		for (AdvancementInit callback : callbacks) {
-			callback.onInit(context);
+			callback.onInit(holder, registries);
 		}
 	});
 
 	@FunctionalInterface
 	public interface AdvancementInit extends CommonEventEntrypoint {
-		void onInit(AdvancementHolder holder);
+		void onInit(AdvancementHolder holder, HolderLookup.Provider registries);
 	}
 }
