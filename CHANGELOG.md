@@ -12,3 +12,4 @@ Put changelog here:
   - Consists of an AABB for their effective area, an origin position, and a `DisturbanceLogic` to determine the Strength, Weight, and Vector of the Wind Disturbance.
   - Are cleared each tick.
   - Must have a registered `WindDisturbanceLogic` for use on both client and server.
+- Added `FrozenRecipeProvider` for easier recipe data generation.
