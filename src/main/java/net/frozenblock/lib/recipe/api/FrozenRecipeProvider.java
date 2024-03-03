@@ -75,4 +75,10 @@ public final class FrozenRecipeProvider {
 			.unlockedBy("has_planks", RecipeProvider.has(material))
 			.group("wooden_trapdoor").save(recipeOutput);
 	}
+
+	public static void woodenSign(RecipeOutput recipeOutput, ItemLike sign, ItemLike material) {
+		RecipeProvider.signBuilder(sign, Ingredient.of(material))
+			.unlockedBy("has_planks", RecipeProvider.has(material))
+			.group("wooden_sign").save(recipeOutput);
+	}
 }
