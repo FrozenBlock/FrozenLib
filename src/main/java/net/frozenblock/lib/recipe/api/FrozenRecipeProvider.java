@@ -21,8 +21,13 @@ package net.frozenblock.lib.recipe.api;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.NotNull;
+import java.util.List;
 
 public final class FrozenRecipeProvider {
 	private FrozenRecipeProvider() {}
@@ -80,5 +85,18 @@ public final class FrozenRecipeProvider {
 		RecipeProvider.signBuilder(sign, Ingredient.of(material))
 			.unlockedBy("has_planks", RecipeProvider.has(material))
 			.group("wooden_sign").save(recipeOutput);
+	}
+
+	public static void colorWithDyes(RecipeOutput recipeOutput, @NotNull List<Item> dyes, List<Item> dyeableItems, String group, RecipeCategory recipeCategory) {
+		for(int i = 0; i < dyes.size(); ++i) {
+			Item item = dyes.get(i);
+			Item item2 = dyeableItems.get(i);
+			ShapelessRecipeBuilder.shapeless(recipeCategory, item2)
+				.requires(item)
+				.requires(Ingredient.of(dyeableItems.stream().filter(item2x -> !item2x.equals(item2)).map(ItemStack::new)))
+				.group(group)
+				.unlockedBy("has_needed_dye", RecipeProvider.has(item))
+				.save(recipeOutput, "dye_" + RecipeProvider.getItemName(item2));
+		}
 	}
 }
