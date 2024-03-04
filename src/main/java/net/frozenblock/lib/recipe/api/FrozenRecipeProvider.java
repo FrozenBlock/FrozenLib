@@ -22,6 +22,7 @@ import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -87,7 +88,7 @@ public final class FrozenRecipeProvider {
 			.group("wooden_sign").save(recipeOutput);
 	}
 
-	public static void colorWithDyes(RecipeOutput recipeOutput, @NotNull List<Item> dyes, List<Item> dyeableItems, String group, RecipeCategory recipeCategory) {
+	public static void colorWithDyes(RecipeOutput recipeOutput, @NotNull List<Item> dyes, List<Item> dyeableItems, String group, RecipeCategory recipeCategory, String modID) {
 		for(int i = 0; i < dyes.size(); ++i) {
 			Item item = dyes.get(i);
 			Item item2 = dyeableItems.get(i);
@@ -96,7 +97,7 @@ public final class FrozenRecipeProvider {
 				.requires(Ingredient.of(dyeableItems.stream().filter(item2x -> !item2x.equals(item2)).map(ItemStack::new)))
 				.group(group)
 				.unlockedBy("has_needed_dye", RecipeProvider.has(item))
-				.save(recipeOutput, "dye_" + RecipeProvider.getItemName(item2));
+				.save(recipeOutput, new ResourceLocation(modID, "dye_" + RecipeProvider.getItemName(item2)));
 		}
 	}
 }
