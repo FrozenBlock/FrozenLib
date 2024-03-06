@@ -77,11 +77,6 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     }
 
 	@Override
-	public @NotNull CompoundTag addModMinecraftDataVersions(@NotNull CompoundTag compound) {
-		return compound;
-	}
-
-	@Override
     public void freeze() {
         this.frozen = true;
     }

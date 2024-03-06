@@ -81,13 +81,11 @@ public abstract class QuiltDataFixesInternals {
         return instance;
     }
 
-    public abstract void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
-                                       @NotNull DataFixer dataFixer);
+    public abstract void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer);
 
     public abstract @Nullable DataFixerEntry getFixerEntry(@NotNull String modId);
 
-	public abstract void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
-									   @NotNull DataFixer dataFixer);
+	public abstract void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer);
 
 	public abstract @Nullable DataFixerEntry getMinecraftFixerEntry(@NotNull String modId);
 
@@ -97,8 +95,6 @@ public abstract class QuiltDataFixesInternals {
     public abstract @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic);
 
     public abstract @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound);
-
-	public abstract @NotNull CompoundTag addModMinecraftDataVersions(@NotNull CompoundTag compound);
 
     public abstract void freeze();
 

@@ -30,6 +30,6 @@ public class NbtUtilsMixin {
 
 	@ModifyReturnValue(method = "addDataVersion", at = @At("RETURN"))
 	private static CompoundTag addDataVersion(CompoundTag original) {
-		return QuiltDataFixesInternals.get().addModDataVersions(original);
+		return  QuiltDataFixesInternals.get().addModDataVersions(original);
 	}
 }
