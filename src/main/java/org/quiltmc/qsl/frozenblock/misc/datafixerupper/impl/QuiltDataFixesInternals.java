@@ -50,6 +50,12 @@ public abstract class QuiltDataFixesInternals {
         return compound.getInt(modId + "_DataVersion");
     }
 
+	@Contract(pure = true)
+	@Range(from = 0, to = Integer.MAX_VALUE)
+	public static int getModMinecraftDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
+		return compound.getInt(modId + "_DataVersion_Minecraft");
+	}
+
     private static QuiltDataFixesInternals instance;
 
     public static @NotNull QuiltDataFixesInternals get() {
@@ -80,12 +86,19 @@ public abstract class QuiltDataFixesInternals {
 
     public abstract @Nullable DataFixerEntry getFixerEntry(@NotNull String modId);
 
+	public abstract void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
+									   @NotNull DataFixer dataFixer);
+
+	public abstract @Nullable DataFixerEntry getMinecraftFixerEntry(@NotNull String modId);
+
     @Contract(value = "-> new", pure = true)
     public abstract @NotNull Schema createBaseSchema();
 
     public abstract @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic);
 
     public abstract @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound);
+
+	public abstract @NotNull CompoundTag addModMinecraftDataVersions(@NotNull CompoundTag compound);
 
     public abstract void freeze();
 

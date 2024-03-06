@@ -46,15 +46,22 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     }
 
     @Override
-    public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
-                              @NotNull DataFixer dataFixer) {}
+    public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {}
 
     @Override
     public @Nullable DataFixerEntry getFixerEntry(@NotNull String modId) {
         return null;
     }
 
-    @Override
+	@Override
+	public void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {}
+
+	@Override
+	public @Nullable DataFixerEntry getMinecraftFixerEntry(@NotNull String modId) {
+		return null;
+	}
+
+	@Override
     public @NotNull Schema createBaseSchema() {
         return this.schema;
     }
@@ -69,7 +76,12 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
         return compound;
     }
 
-    @Override
+	@Override
+	public @NotNull CompoundTag addModMinecraftDataVersions(@NotNull CompoundTag compound) {
+		return compound;
+	}
+
+	@Override
     public void freeze() {
         this.frozen = true;
     }

@@ -41,18 +41,19 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     private final @NotNull Schema latestVanillaSchema;
 
     private Map<String, DataFixerEntry> modDataFixers;
+	private Map<String, DataFixerEntry> modMinecraftDataFixers;
     private boolean frozen;
 
     public QuiltDataFixesInternalsImpl(@NotNull Schema latestVanillaSchema) {
         this.latestVanillaSchema = latestVanillaSchema;
 
         this.modDataFixers = new Object2ReferenceOpenHashMap<>();
+		this.modMinecraftDataFixers = new Object2ReferenceOpenHashMap<>();
         this.frozen = false;
     }
 
     @Override
-    public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
-                              @NotNull DataFixer dataFixer) {
+    public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {
         if (this.modDataFixers.containsKey(modId)) {
             throw new IllegalArgumentException("Mod '" + modId + "' already has a registered data fixer");
         }
@@ -65,7 +66,21 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
         return modDataFixers.get(modId);
     }
 
-    @Override
+	@Override
+	public void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {
+		if (this.modMinecraftDataFixers.containsKey(modId)) {
+			throw new IllegalArgumentException("Mod '" + modId + "' already has a registered Minecraft data fixer");
+		}
+
+		this.modMinecraftDataFixers.put(modId, new DataFixerEntry(dataFixer, currentVersion));
+	}
+
+	@Override
+	public @Nullable DataFixerEntry getMinecraftFixerEntry(@NotNull String modId) {
+		return modMinecraftDataFixers.get(modId);
+	}
+
+	@Override
     public @NotNull Schema createBaseSchema() {
         return new Schema(0, this.latestVanillaSchema);
     }
@@ -74,8 +89,20 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> current) {
         var compound = (CompoundTag) current.getValue();
 
+		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
+			int modDataVersion = getModDataVersion(compound, entry.getKey());
+			DataFixerEntry dataFixerEntry = entry.getValue();
+
+			current = dataFixerEntry.dataFixer().update(
+				DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
+				current,
+				modDataVersion,
+				dataFixerEntry.currentVersion()
+			);
+		}
+
         for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-            int modDataVersion = getModDataVersion(compound, entry.getKey());
+            int modDataVersion = getModMinecraftDataVersion(compound, entry.getKey());
             DataFixerEntry dataFixerEntry = entry.getValue();
 
 			current = dataFixerEntry.dataFixer().update(
@@ -98,10 +125,20 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
         return compound;
     }
 
-    @Override
+	@Override
+	public @NotNull CompoundTag addModMinecraftDataVersions(@NotNull CompoundTag compound) {
+		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
+			compound.putInt(entry.getKey() + "_DataVersion_Minecraft", entry.getValue().currentVersion());
+		}
+
+		return compound;
+	}
+
+	@Override
     public void freeze() {
         if (!this.frozen) {
-            modDataFixers = Collections.unmodifiableMap(this.modDataFixers);
+            this.modDataFixers = Collections.unmodifiableMap(this.modDataFixers);
+			this.modMinecraftDataFixers = Collections.unmodifiableMap(this.modMinecraftDataFixers);
         }
 
         this.frozen = true;
