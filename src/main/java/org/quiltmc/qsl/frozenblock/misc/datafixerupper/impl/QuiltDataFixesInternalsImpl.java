@@ -90,7 +90,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
         var compound = (CompoundTag) current.getValue();
 
 		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			int modDataVersion = getModDataVersion(compound, entry.getKey());
+			int modDataVersion = getModMinecraftDataVersion(compound, entry.getKey());
 			DataFixerEntry dataFixerEntry = entry.getValue();
 
 			current = dataFixerEntry.dataFixer().update(
@@ -102,7 +102,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 		}
 
         for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-            int modDataVersion = getModMinecraftDataVersion(compound, entry.getKey());
+            int modDataVersion = getModDataVersion(compound, entry.getKey());
             DataFixerEntry dataFixerEntry = entry.getValue();
 
 			current = dataFixerEntry.dataFixer().update(
