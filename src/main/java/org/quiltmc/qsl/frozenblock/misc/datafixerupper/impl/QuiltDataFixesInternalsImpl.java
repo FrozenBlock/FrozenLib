@@ -92,7 +92,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
 			int modDataVersion = getModMinecraftDataVersion(compound, entry.getKey());
 			DataFixerEntry dataFixerEntry = entry.getValue();
-
+			System.out.println("diairrheifu");
 			current = dataFixerEntry.dataFixer().update(
 				DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
 				current,

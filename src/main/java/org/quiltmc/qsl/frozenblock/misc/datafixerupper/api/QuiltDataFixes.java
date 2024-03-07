@@ -222,6 +222,22 @@ public final class QuiltDataFixes {
 		return Optional.of(entry.dataFixer());
 	}
 
+	/**
+	 * Gets a mod's Minecraft version-specific data version from a {@link CompoundTag}.
+	 *
+	 * @param compound the compound
+	 * @param modId    the mod identifier
+	 * @return the mod's data version, or {@code 0} if the compound has no data for that mod
+	 */
+	@Contract(pure = true)
+	@Range(from = 0, to = Integer.MAX_VALUE)
+	public static int getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
+		requireNonNull(compound, "compound cannot be null");
+		requireNonNull(modId, "modId cannot be null");
+
+		return QuiltDataFixesInternals.getModDataVersion(compound, modId);
+	}
+
     /**
      * Gets a mod's Minecraft version-specific data version from a {@link CompoundTag}.
      *
