@@ -19,6 +19,7 @@
 package net.frozenblock.lib.item.api;
 
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -56,7 +57,7 @@ public class ItemBlockStateTagUtils {
 	@NotNull
 	private static CompoundTag getOrCreateBlockStateTag(@NotNull CompoundTag compoundTag) {
 		CompoundTag blockStateTag;
-		if (compoundTag.contains("BlockStateTag", 10)) {
+		if (compoundTag.contains("BlockStateTag", Tag.TAG_COMPOUND)) {
 			blockStateTag = compoundTag.getCompound("BlockStateTag");
 		} else {
 			blockStateTag = new CompoundTag();

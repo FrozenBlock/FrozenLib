@@ -39,7 +39,7 @@ public class GravityContext {
     public final Entity entity;
 
     public GravityContext(ResourceKey<Level> dimension, double y, @Nullable Entity entity) {
-        this(dimension, y, new Vec3(0.0, 1.0, 0.0), entity);
+        this(dimension, y, GravityAPI.DEFAULT_GRAVITY, entity);
     }
 
     public GravityContext(ResourceKey<Level> dimension, double y, Vec3 gravity, @Nullable Entity entity) {

@@ -16,20 +16,18 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.advancement.mixin;
+package net.frozenblock.lib.wind.api;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.frozenblock.lib.advancement.api.AdvancementEvents;
-import net.minecraft.advancements.AdvancementHolder;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
+import net.minecraft.resources.ResourceLocation;
 
-@Mixin(value = AdvancementHolder.class, priority = 1500)
-public class AdvancementHolderMixin {
+public interface WindDisturbingEntity {
 
-	@ModifyReturnValue(method = "read", at = @At("RETURN"))
-	private static AdvancementHolder modifyAdvancement(AdvancementHolder original) {
-		AdvancementEvents.INIT.invoker().onInit(original);
-		return original;
-	}
+	ResourceLocation frozenLib$getWindDisturbanceLogicID();
+
+	double frozenLib$getWindWidth();
+
+	double frozenLib$getWindHeight();
+
+	double frozenLib$getWindAreaYOffset();
+
 }

@@ -27,14 +27,12 @@ import net.frozenblock.lib.recipe.api.FrozenRecipeCodecs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.ItemStack;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-/**
- * Adds {@link CompoundTag} data support to crafting recipes.
- * @since 1.4.1
- */
 @Mixin(ItemStack.class)
 public class ItemStackMixin {
 

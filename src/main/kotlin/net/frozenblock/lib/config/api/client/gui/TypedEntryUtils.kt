@@ -57,7 +57,7 @@ fun <T> typedEntryList(
         // Name
         title,
         // Value
-        typedEntry.value,
+        typedEntry.value(),
         // Expanded By Default
         expandedByDefault,
         // Tooltip Supplier
@@ -66,7 +66,7 @@ fun <T> typedEntryList(
         },
         // Save Consumer
         {
-                newValue -> setterConsumer.accept(TypedEntry(typedEntry.type, newValue))
+                newValue -> setterConsumer.accept(TypedEntry(typedEntry.type(), newValue))
         },
         // Default Value
         defaultValue.get()::value,

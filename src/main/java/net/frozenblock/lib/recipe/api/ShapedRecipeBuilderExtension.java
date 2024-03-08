@@ -25,7 +25,4 @@ import org.jetbrains.annotations.Nullable;
 public interface ShapedRecipeBuilderExtension {
 
 	ShapedRecipeBuilder frozenLib$tag(@Nullable CompoundTag tag);
-
-	@Nullable
-	CompoundTag frozenLib$getTag();
 }
