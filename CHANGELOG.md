@@ -15,3 +15,4 @@ Put changelog here:
 - Added `FrozenRecipeProvider` for easier recipe data generation.
 - Added Minecraft-version specific DataFixing to `QuiltDataFixes.`
   - This allows for a mod to both upgrade safely across versions while containing both Minecraft-version-specific datafixes and mod-version-specific datafixes, allowing for modders to add new content while not risking the loss of properly datafixing content for newer versions.
+- Added `FrozenByteBufCodecs,` containing a codec for Vec3.
