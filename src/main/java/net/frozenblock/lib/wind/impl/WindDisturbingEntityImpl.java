@@ -16,8 +16,12 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.recipe.api;
+package net.frozenblock.lib.wind.impl;
 
-public class FrozenRecipeCodecs {
+import net.frozenblock.lib.wind.api.WindDisturbance;
+
+public interface WindDisturbingEntityImpl {
+
+	WindDisturbance frozenLib$makeWindDisturbance();
 
 }

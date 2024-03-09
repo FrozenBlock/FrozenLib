@@ -31,8 +31,8 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
-import net.frozenblock.lib.wind.impl.WindSyncPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
+import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -92,7 +92,7 @@ public class WindManager {
 		addExtension(extension, 1000);
 	}
 
-	public void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
+	public void addWindDisturbanceAndSync(@NotNull WindDisturbance windDisturbance) {
 		Optional<WindDisturbancePacket> optionalPacket = windDisturbance.toPacket();
 		if (optionalPacket.isPresent()) {
 			for (ServerPlayer player : PlayerLookup.world(level)) {
@@ -101,6 +101,10 @@ public class WindManager {
 				}
 			}
 		}
+		this.addWindDisturbance(windDisturbance);
+	}
+
+	public void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
 		this.getWindDisturbanceStash().add(windDisturbance);
 	}
 

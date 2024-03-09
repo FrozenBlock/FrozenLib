@@ -18,16 +18,15 @@
 
 package net.frozenblock.lib.item.api.removable;
 
+import java.util.LinkedHashMap;
+import java.util.Set;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import java.util.LinkedHashMap;
-import java.util.Set;
 
 public class RemovableDataComponents {
 

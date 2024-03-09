@@ -20,7 +20,6 @@ package net.frozenblock.lib.recipe.api
 
 import net.minecraft.core.component.DataComponentPatch
 import net.minecraft.data.recipes.ShapedRecipeBuilder
-import net.minecraft.nbt.CompoundTag
 
 fun ShapedRecipeBuilder.patch(patch: DataComponentPatch?): ShapedRecipeBuilder
     = (this as ShapedRecipeBuilderExtension).`frozenLib$patch`(patch)

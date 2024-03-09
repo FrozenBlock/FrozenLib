@@ -30,4 +30,6 @@ public interface WindDisturbingEntity {
 
 	double frozenLib$getWindAreaYOffset();
 
+	boolean frozenLib$useSyncPacket();
+
 }

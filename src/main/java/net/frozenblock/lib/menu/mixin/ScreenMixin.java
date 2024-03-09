@@ -20,6 +20,8 @@ package net.frozenblock.lib.menu.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.math.api.AdvancedMath;
@@ -30,8 +32,6 @@ import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(Screen.class)
 public class ScreenMixin {
