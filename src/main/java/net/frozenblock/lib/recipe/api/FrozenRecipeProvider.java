@@ -18,6 +18,7 @@
 
 package net.frozenblock.lib.recipe.api;
 
+import java.util.List;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -28,7 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
-import java.util.List;
 
 public final class FrozenRecipeProvider {
 	private FrozenRecipeProvider() {}

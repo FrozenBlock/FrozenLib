@@ -94,7 +94,7 @@ public class WindManager {
 		addExtension(extension, 1000);
 	}
 
-	public void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
+	public void addWindDisturbanceAndSync(@NotNull WindDisturbance windDisturbance) {
 		Optional<WindDisturbancePacket> optionalPacket = windDisturbance.toPacket();
 		if (optionalPacket.isPresent()) {
 			for (ServerPlayer player : PlayerLookup.world(level)) {
@@ -103,6 +103,10 @@ public class WindManager {
 				}
 			}
 		}
+		this.addWindDisturbance(windDisturbance);
+	}
+
+	public void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
 		this.getWindDisturbanceStash().add(windDisturbance);
 	}
 

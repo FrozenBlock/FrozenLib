@@ -31,8 +31,18 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 @Mixin(AbstractContainerMenu.class)
 public class AbstractContainerMenuMixin {
 
-	@Inject(method = "moveItemStackTo", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameTags(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void triggerSlotListeners(ItemStack stack, int startIndex, int endIndex, boolean reverseDirection, CallbackInfoReturnable<Boolean> cir, boolean bl, int i, Slot slot, ItemStack itemStack) {
+	@Inject(
+		method = "moveItemStackTo",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameTags(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
+		),
+		locals = LocalCapture.CAPTURE_FAILHARD
+	)
+	private void frozenLib$triggerSlotListeners(
+		ItemStack stack, int startIndex, int endIndex, boolean reverseDirection, CallbackInfoReturnable<Boolean> info,
+		boolean bl, int i, Slot slot, ItemStack itemStack
+	) {
 		ItemStackExtension.class.cast(stack).frozenLib$setCanRemoveTags(true);
 		ItemStackExtension.class.cast(itemStack).frozenLib$setCanRemoveTags(true);
 	}

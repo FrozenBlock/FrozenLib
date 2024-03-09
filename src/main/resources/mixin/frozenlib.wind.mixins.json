@@ -9,5 +9,8 @@
   "mixins": [
     "EntityMixin",
     "ServerLevelMixin"
+  ],
+  "client": [
+    "client.EntityMixin"
   ]
 }

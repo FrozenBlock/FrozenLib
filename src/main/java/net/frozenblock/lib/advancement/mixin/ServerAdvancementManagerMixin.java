@@ -19,6 +19,7 @@
 package net.frozenblock.lib.advancement.mixin;
 
 import com.google.gson.JsonElement;
+import java.util.Map;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.HolderLookup;
@@ -32,7 +33,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import java.util.Map;
 
 @Mixin(value = ServerAdvancementManager.class, priority = 1500)
 public class ServerAdvancementManagerMixin {

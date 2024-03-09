@@ -16,20 +16,12 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.wind.api;
+package net.frozenblock.lib.wind.impl;
 
-import net.minecraft.resources.ResourceLocation;
+import net.frozenblock.lib.wind.api.WindDisturbance;
 
-public interface WindDisturbingEntity {
+public interface WindDisturbingEntityImpl {
 
-	ResourceLocation frozenLib$getWindDisturbanceLogicID();
-
-	double frozenLib$getWindWidth();
-
-	double frozenLib$getWindHeight();
-
-	double frozenLib$getWindAreaYOffset();
-
-	boolean frozenLib$useSyncPacket();
+	WindDisturbance frozenLib$makeWindDisturbance();
 
 }
