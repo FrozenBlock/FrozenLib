@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.item.api;
+package net.frozenblock.lib.item.api.removable;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
@@ -24,46 +24,46 @@ import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
-public class RemoveableItemTags {
+public class RemovableItemTags {
 
-	private static final LinkedHashMap<String, RemoveableItemTag> REMOVEABLE_ITEM_TAGS = new LinkedHashMap<>();
+	private static final LinkedHashMap<String, RemovableItemTag> REMOVABLE_ITEM_TAGS = new LinkedHashMap<>();
 
 	public static void register(String tagKey, RemovalPredicate removalPredicate, boolean removeOnStackMerge) {
-		REMOVEABLE_ITEM_TAGS.put(tagKey, new RemoveableItemTag(tagKey, removalPredicate, removeOnStackMerge));
+		REMOVABLE_ITEM_TAGS.put(tagKey, new RemovableItemTag(tagKey, removalPredicate, removeOnStackMerge));
 	}
 
 	public static boolean canRemoveTag(String tagKey, Level level, Entity entity, int slot, boolean selected) {
-		RemoveableItemTag removeableItemTag = REMOVEABLE_ITEM_TAGS.get(tagKey);
-		if (removeableItemTag != null) {
-			return removeableItemTag.shouldRemove(level, entity, slot, selected);
+		RemovableItemTag removableItemTag = REMOVABLE_ITEM_TAGS.get(tagKey);
+		if (removableItemTag != null) {
+			return removableItemTag.shouldRemove(level, entity, slot, selected);
 		} else {
-			FrozenLogUtils.logError("Unable to find RemoveableItemTag data for TagKey " + tagKey + "!", true, null);
-			FrozenLogUtils.logError("Please make sure " + tagKey + " is registered in RemoveableItemTags.class!", true, null);
+			FrozenLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
+			FrozenLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
 			return false;
 		}
 	}
 
 	public static boolean shouldRemoveTagOnStackMerge(String tagKey) {
-		RemoveableItemTag removeableItemTag = REMOVEABLE_ITEM_TAGS.get(tagKey);
-		if (removeableItemTag != null) {
-			return removeableItemTag.shouldRemoveOnStackMerge();
+		RemovableItemTag removableItemTag = REMOVABLE_ITEM_TAGS.get(tagKey);
+		if (removableItemTag != null) {
+			return removableItemTag.shouldRemoveOnStackMerge();
 		} else {
-			FrozenLogUtils.logError("Unable to find RemoveableItemTag data for TagKey " + tagKey + "!", true, null);
-			FrozenLogUtils.logError("Please make sure " + tagKey + " is registered in RemoveableItemTags.class!", true, null);
+			FrozenLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
+			FrozenLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
 			return true;
 		}
 	}
 
 	public static Set<String> keys() {
-		return REMOVEABLE_ITEM_TAGS.keySet();
+		return REMOVABLE_ITEM_TAGS.keySet();
 	}
 
-	public static class RemoveableItemTag implements RemovalPredicate {
+	public static class RemovableItemTag implements RemovalPredicate {
 		private final String tagKey;
 		private final RemovalPredicate predicate;
 		private final boolean removeOnStackMerge;
 
-		public RemoveableItemTag(String tagKey, RemovalPredicate predicate, boolean removeOnStackMerge) {
+		public RemovableItemTag(String tagKey, RemovalPredicate predicate, boolean removeOnStackMerge) {
 			this.tagKey = tagKey;
 			this.predicate = predicate;
 			this.removeOnStackMerge = removeOnStackMerge;
@@ -81,10 +81,5 @@ public class RemoveableItemTags {
 		public boolean shouldRemoveOnStackMerge() {
 			return this.removeOnStackMerge;
 		}
-	}
-
-	@FunctionalInterface
-	public interface RemovalPredicate {
-		boolean shouldRemove(Level level, Entity entity, int slot, boolean selected);
 	}
 }

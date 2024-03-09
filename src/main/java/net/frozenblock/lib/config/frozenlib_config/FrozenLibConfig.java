@@ -53,7 +53,7 @@ public class FrozenLibConfig {
 	public boolean saveItemCooldowns = false;
 
 	@EntrySyncData(value = "removeExperimentalWarning", behavior = SyncBehavior.UNSYNCABLE)
-	public boolean removeExperimentalWarning = false;
+	public boolean removeExperimentalWarning = true;
 
 	@EntrySyncData("wardenSpawnTrackerCommand")
 	public boolean wardenSpawnTrackerCommand = false;

@@ -20,10 +20,10 @@ package net.frozenblock.lib.worldgen.feature.api.features.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import java.util.List;
 
 public record ComboFeatureConfig(List<Holder<PlacedFeature>> features) implements FeatureConfiguration {
 

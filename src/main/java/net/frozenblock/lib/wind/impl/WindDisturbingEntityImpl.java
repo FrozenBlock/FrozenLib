@@ -16,9 +16,12 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.recipe.api
+package net.frozenblock.lib.wind.impl;
 
-import net.minecraft.data.recipes.ShapedRecipeBuilder
-import net.minecraft.nbt.CompoundTag
+import net.frozenblock.lib.wind.api.WindDisturbance;
 
-fun ShapedRecipeBuilder.tag(tag: CompoundTag?): ShapedRecipeBuilder = (this as ShapedRecipeBuilderExtension).`frozenLib$tag`(tag)
+public interface WindDisturbingEntityImpl {
+
+	WindDisturbance frozenLib$makeWindDisturbance();
+
+}

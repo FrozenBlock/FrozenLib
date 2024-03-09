@@ -38,7 +38,7 @@ public record GravityBelt<T extends GravityFunction>(double minY, double maxY, b
 		if (this.affectsPosition(y)) {
             return this.function.get(entity, y, this.minY, this.maxY);
 		}
-		return new Vec3(0.0, 1.0, 0.0);
+		return GravityAPI.DEFAULT_GRAVITY;
 	}
 
 	public static <T extends SerializableGravityFunction<T>> Codec<GravityBelt<T>> codec(Codec<T> gravityFunction) {

@@ -72,7 +72,11 @@ public final class FrozenClient implements ClientModInitializer {
 		ClientTickEvents.START_WORLD_TICK.register(ClientWindManager::tick);
 		ClientTickEvents.START_WORLD_TICK.register(ScreenShaker::tick);
 		ClientTickEvents.START_WORLD_TICK.register(level -> FlyBySoundHub.update(Minecraft.getInstance(), Minecraft.getInstance().getCameraEntity(), true));
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> ScreenShaker.clear());
+		ClientTickEvents.START_CLIENT_TICK.register(client -> ClientWindManager.clearAndSwitchWindDisturbances());
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
+			ScreenShaker.clear();
+			ClientWindManager.clearAllWindDisturbances();
+		});
 	}
 
 }

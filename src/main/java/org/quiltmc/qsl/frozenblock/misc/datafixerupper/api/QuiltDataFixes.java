@@ -118,6 +118,63 @@ public final class QuiltDataFixes {
     }
 
 	/**
+	 * Registers a new data fixer for use with Minecraft version-specific datafixing.
+	 *
+	 * @param modId          the mod identifier
+	 * @param currentVersion the current version of the mod's data
+	 * @param dataFixer      the data fixer
+	 */
+	public static void registerMinecraftFixer(
+		@NotNull String modId,
+		@Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
+		@NotNull DataFixer dataFixer
+	) {
+		requireNonNull(modId, "modId cannot be null");
+		//noinspection ConstantConditions
+		checkArgument(currentVersion >= 0, "currentVersion must be positive");
+		requireNonNull(dataFixer, "dataFixer cannot be null");
+
+		if (isFrozen()) {
+			throw new IllegalStateException("Can't register data fixer after registry is frozen");
+		}
+
+		QuiltDataFixesInternals.get().registerMinecraftFixer(modId, currentVersion, dataFixer);
+	}
+
+	/**
+	 * Registers a new data fixer for use with Minecraft version-specific datafixing.
+	 *
+	 * @param mod            the mod container
+	 * @param currentVersion the current version of the mod's data
+	 * @param dataFixer      the data fixer
+	 */
+	public static void registerMinecraftFixer(
+		@NotNull ModContainer mod,
+		@Range(from = 0, to = Integer.MAX_VALUE) int currentVersion,
+		@NotNull DataFixer dataFixer
+	) {
+		requireNonNull(mod, "mod cannot be null");
+
+		registerMinecraftFixer(mod.getMetadata().getId(), currentVersion, dataFixer);
+	}
+
+	/**
+	 * Builds and registers a new data fixer for use with Minecraft version-specific datafixing.
+	 *
+	 * @param mod              the mod container
+	 * @param dataFixerBuilder the data fixer builder
+	 */
+	public static void buildAndRegisterMinecraftFixer(
+		@NotNull ModContainer mod,
+		@NotNull QuiltDataFixerBuilder dataFixerBuilder
+	) {
+		requireNonNull(mod, "mod cannot be null");
+		requireNonNull(dataFixerBuilder, "data fixer builder cannot be null");
+
+		registerMinecraftFixer(mod.getMetadata().getId(), dataFixerBuilder.getDataVersion(), buildFixer(dataFixerBuilder));
+	}
+
+	/**
 	 * Builds a new data fixer.
 	 *
 	 * @param dataFixerBuilder the data fixer builder
@@ -134,7 +191,7 @@ public final class QuiltDataFixes {
 	}
 
     /**
-     * Gets a mod's data fixer.
+     * Gets a mod's Minecraft version-specificdata fixer.
      *
      * @param modId the mod identifier
      * @return the mod's data fixer, or empty if the mod hasn't registered one
@@ -149,8 +206,40 @@ public final class QuiltDataFixes {
         return Optional.of(entry.dataFixer());
     }
 
+	/**
+	 * Gets a mod's Minecraft version-specific data fixer.
+	 *
+	 * @param modId the mod identifier
+	 * @return the mod's data fixer, or empty if the mod hasn't registered one
+	 */
+	public static @NotNull Optional<DataFixer> getMinecraftFixer(@NotNull String modId) {
+		requireNonNull(modId, "modId cannot be null");
+
+		QuiltDataFixesInternals.DataFixerEntry entry = QuiltDataFixesInternals.get().getMinecraftFixerEntry(modId);
+		if (entry == null) {
+			return Optional.empty();
+		}
+		return Optional.of(entry.dataFixer());
+	}
+
+	/**
+	 * Gets a mod's Minecraft version-specific data version from a {@link CompoundTag}.
+	 *
+	 * @param compound the compound
+	 * @param modId    the mod identifier
+	 * @return the mod's data version, or {@code 0} if the compound has no data for that mod
+	 */
+	@Contract(pure = true)
+	@Range(from = 0, to = Integer.MAX_VALUE)
+	public static int getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
+		requireNonNull(compound, "compound cannot be null");
+		requireNonNull(modId, "modId cannot be null");
+
+		return QuiltDataFixesInternals.getModDataVersion(compound, modId);
+	}
+
     /**
-     * Gets a mod's data version from a {@link CompoundTag}.
+     * Gets a mod's Minecraft version-specific data version from a {@link CompoundTag}.
      *
      * @param compound the compound
      * @param modId    the mod identifier
@@ -158,11 +247,11 @@ public final class QuiltDataFixes {
      */
     @Contract(pure = true)
     @Range(from = 0, to = Integer.MAX_VALUE)
-    public static int getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
+    public static int getModMinecraftDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
         requireNonNull(compound, "compound cannot be null");
         requireNonNull(modId, "modId cannot be null");
 
-        return QuiltDataFixesInternals.getModDataVersion(compound, modId);
+        return QuiltDataFixesInternals.getModMinecraftDataVersion(compound, modId);
     }
 
     /**

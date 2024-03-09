@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 FrozenBlock
+ * Copyright 2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -16,9 +16,12 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.recipe.api
+package net.frozenblock.lib.item.api.removable;
 
-import net.minecraft.data.recipes.ShapedRecipeBuilder
-import net.minecraft.nbt.CompoundTag
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 
-fun ShapedRecipeBuilder.tag(tag: CompoundTag?): ShapedRecipeBuilder = (this as ShapedRecipeBuilderExtension).`frozenLib$tag`(tag)
+@FunctionalInterface
+public interface RemovalPredicate {
+	boolean shouldRemove(Level level, Entity entity, int slot, boolean selected);
+}

@@ -18,7 +18,9 @@
 
 package net.frozenblock.lib.wind.api;
 
+import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
@@ -41,8 +43,36 @@ import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public final class ClientWindManager {
-
 	public static final List<ClientWindManagerExtension> EXTENSIONS = new ObjectArrayList<>();
+	private static final List<WindDisturbance> WIND_DISTURBANCES_A = new ArrayList<>();
+	private static final List<WindDisturbance> WIND_DISTURBANCES_B = new ArrayList<>();
+	private static boolean isSwitched;
+
+	public static List<WindDisturbance> getWindDisturbances() {
+		return !isSwitched ? WIND_DISTURBANCES_A : WIND_DISTURBANCES_B;
+	}
+
+	public static List<WindDisturbance> getWindDisturbanceStash() {
+		return isSwitched ? WIND_DISTURBANCES_A : WIND_DISTURBANCES_B;
+	}
+
+	public static void clearWindDisturbances() {
+		getWindDisturbances().clear();
+	}
+
+	public static void clearAllWindDisturbances() {
+		getWindDisturbances().clear();
+		getWindDisturbanceStash().clear();
+	}
+
+	public static void clearAndSwitchWindDisturbances() {
+		clearWindDisturbances();
+		isSwitched = !isSwitched;
+	}
+
+	public static void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
+		getWindDisturbanceStash().add(windDisturbance);
+	}
 
 	public static long time;
 	public static boolean overrideWind;
@@ -62,7 +92,7 @@ public final class ClientWindManager {
 	public static double laggedWindY;
 	public static double laggedWindZ;
 
-	public static long seed = 0;
+	public static long seed = 0L;
 	public static boolean hasInitialized;
 
 	public static void addExtension(@Nullable Supplier<ClientWindManagerExtension> extension) {
@@ -109,8 +139,8 @@ public final class ClientWindManager {
 		prevWindY = windY;
 		prevWindZ = windZ;
 		time += 1;
-		double calcTime = time * 0.0005;
-		double calcTimeY = time * 0.00035;
+		double calcTime = time * 0.0005D;
+		double calcTimeY = time * 0.00035D;
 		Vec3 vec3 = sampleVec3(perlinXoro, calcTime, calcTimeY, calcTime);
 		windX = vec3.x + (vec3.x * thunderLevel);
 		windY = vec3.y + (vec3.y * thunderLevel);
@@ -120,8 +150,8 @@ public final class ClientWindManager {
 		prevLaggedWindX = laggedWindX;
 		prevLaggedWindY = laggedWindY;
 		prevLaggedWindZ = laggedWindZ;
-		double calcLaggedTime = (time - 40D) * 0.0005;
-		double calcLaggedTimeY = (time - 60D) * 0.00035;
+		double calcLaggedTime = (time - 40D) * 0.0005D;
+		double calcLaggedTimeY = (time - 60D) * 0.00035D;
 		Vec3 laggedVec = sampleVec3(perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
 		laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
 		laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
@@ -147,13 +177,13 @@ public final class ClientWindManager {
 	}
 
 	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos, double multiplier) {
-		return getWindMovement(level, Vec3.atBottomCenterOf(pos), multiplier);
+	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos, double scale) {
+		return getWindMovement(level, Vec3.atBottomCenterOf(pos), scale);
 	}
 
 	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos, double multiplier, double clamp) {
-		return getWindMovement(level, Vec3.atBottomCenterOf(pos), multiplier, clamp);
+	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos, double scale, double clamp) {
+		return getWindMovement(level, Vec3.atBottomCenterOf(pos), scale, clamp);
 	}
 
 	@NotNull
@@ -162,17 +192,25 @@ public final class ClientWindManager {
 	}
 
 	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double multiplier) {
-		return getWindMovement(level, pos, multiplier, Double.MAX_VALUE);
+	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale) {
+		return getWindMovement(level, pos, scale, Double.MAX_VALUE);
 	}
 
 	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double multiplier, double clamp) {
+	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale, double clamp) {
+		return getWindMovement(level, pos, scale, clamp, 1D);
+	}
+
+	@NotNull
+	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
 		double brightness = level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
-		double windMultiplier = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667);
-		double newWindX = windX * windMultiplier * multiplier;
-		double newWindY = windY * windMultiplier * multiplier;
-		double newWindZ = windZ * windMultiplier * multiplier;
+		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
+		Pair<Double, Vec3> disturbance = WindManager.calculateWindDisturbance(getWindDisturbances(), level, pos);
+		double disturbanceAmount = disturbance.getFirst();
+		Vec3 windDisturbance = disturbance.getSecond();
+		double newWindX = Mth.lerp(disturbanceAmount, windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
+		double newWindY = Mth.lerp(disturbanceAmount, windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
+		double newWindZ = Mth.lerp(disturbanceAmount, windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 		return new Vec3(
 			Mth.clamp(newWindX, -clamp, clamp),
 			Mth.clamp(newWindY, -clamp, clamp),
@@ -186,13 +224,13 @@ public final class ClientWindManager {
 	}
 
 	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double multiplier, double stretch) {
-		return getWindMovement3D(Vec3.atBottomCenterOf(pos), multiplier, stretch);
+	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double stretch) {
+		return getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, stretch);
 	}
 
 	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double multiplier, double clamp, double stretch) {
-		return getWindMovement3D(Vec3.atBottomCenterOf(pos), multiplier, clamp, stretch);
+	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double clamp, double stretch) {
+		return getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, clamp, stretch);
 	}
 
 	@NotNull
@@ -201,16 +239,16 @@ public final class ClientWindManager {
 	}
 
 	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double multiplier, double stretch) {
-		return getWindMovement3D(pos, multiplier, Double.MAX_VALUE, stretch);
+	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double stretch) {
+		return getWindMovement3D(pos, scale, Double.MAX_VALUE, stretch);
 	}
 
 	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double multiplier, double clamp, double stretch) {
+	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double clamp, double stretch) {
 		Vec3 wind = sample3D(pos, stretch);
-		return new Vec3(Mth.clamp((wind.x()) * multiplier, -clamp, clamp),
-			Mth.clamp((wind.y()) * multiplier, -clamp, clamp),
-			Mth.clamp((wind.z()) * multiplier, -clamp, clamp));
+		return new Vec3(Mth.clamp((wind.x()) * scale, -clamp, clamp),
+			Mth.clamp((wind.y()) * scale, -clamp, clamp),
+			Mth.clamp((wind.z()) * scale, -clamp, clamp));
 	}
 
 	@NotNull
@@ -230,11 +268,18 @@ public final class ClientWindManager {
 
 	@NotNull
 	public static Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
-		double sampledTime = time * 0.1;
+		double sampledTime = time * 0.1D;
 		double xyz = pos.x() + pos.y() + pos.z();
 		double windX = perlinXoro.noise((xyz + sampledTime) * stretch, 0D, 0D);
 		double windY = perlinXoro.noise(0D, (xyz + sampledTime) * stretch, 0D);
 		double windZ = perlinXoro.noise(0D, 0D, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
+	}
+
+	/**
+	 * Adds a new wind disturbance to the Wind Manager.
+	 */
+	public static void addWindDisturbance() {
+
 	}
 }

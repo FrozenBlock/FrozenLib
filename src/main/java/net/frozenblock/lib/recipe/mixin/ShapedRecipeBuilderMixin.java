@@ -50,12 +50,6 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 		return (ShapedRecipeBuilder) (Object) this;
 	}
 
-	@Unique
-	@Override
-	public @Nullable CompoundTag frozenLib$getTag() {
-		return this.tag;
-	}
-
 	@WrapOperation(
 		method = "save",
 		at = @At(
@@ -79,11 +73,6 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 		public ShapedRecipeBuilder frozenLib$tag(CompoundTag tag) {
 			this.tag = tag;
 			return null;
-		}
-
-		@Override
-		public @Nullable CompoundTag frozenLib$getTag() {
-			return this.tag;
 		}
 
 		@Inject(method = "serializeRecipeData", at = @At(value = "INVOKE", target = "Lcom/google/gson/JsonObject;add(Ljava/lang/String;Lcom/google/gson/JsonElement;)V", ordinal = 3), locals = LocalCapture.CAPTURE_FAILHARD)

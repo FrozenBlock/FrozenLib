@@ -17,7 +17,7 @@ buildscript {
 	dependencies {
 		classpath("org.kohsuke:github-api:+")
         // remove these 2 to get normal fabric loom versions
-        classpath(files("libs/fabric-loom-1.6.local.jar"))
+        classpath(files("libs/fabric-loom-1.5.local.jar"))
         classpath("net.fabricmc:mapping-io:+")
 	}
 }
@@ -48,7 +48,6 @@ val archives_base_name: String by project
 
 val fabric_api_version: String by project
 val fabric_kotlin_version: String by project
-val mixin_extras_version: String by project
 val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
@@ -233,7 +232,7 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraft_version")
 	mappings(loom.layered {
 		// please annoy treetrain if this doesn't work
-        //mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
+        mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
         parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
 		officialMojangMappings {
 			nameSyntheticMembers = false
@@ -249,19 +248,16 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // Mod Menu
-    modApi("com.terraformersmc:modmenu:${modmenu_version}")
+    modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
 
 	// TerraBlender
     modCompileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
-
-    // MixinExtras
-    modApi("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")?.let { annotationProcessor(it) }
 
     // Toml
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
@@ -537,7 +533,7 @@ modrinth {
     changelog = changelog_text
     uploadFile = remapJar
     gameVersions = listOf(minecraft_version)
-    loaders = listOf("fabric", "quilt")
+    loaders = listOf("fabric")
     additionalFiles = listOf(
         tasks.remapSourcesJar.get(),
         javadocJar

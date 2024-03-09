@@ -49,11 +49,6 @@ public class ShapedRecipeMixin implements ShapedRecipeBuilderExtension {
 		return null;
 	}
 
-	@Override
-	public @Nullable CompoundTag frozenLib$getTag() {
-		return this.result.getTag();
-	}
-
 	@ModifyReturnValue(method = "itemStackFromJson", at = @At("RETURN"))
 	private static ItemStack itemStackFromJson(ItemStack stack, JsonObject stackObject) {
 		if (stackObject.has("tag"))
