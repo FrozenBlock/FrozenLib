@@ -24,7 +24,6 @@ import net.frozenblock.lib.item.impl.ItemStackExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
@@ -35,8 +34,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import java.util.HashSet;
-import java.util.Set;
 
 @Mixin(ItemStack.class)
 public final class ItemStackMixin implements ItemStackExtension {
@@ -71,7 +68,7 @@ public final class ItemStackMixin implements ItemStackExtension {
 
 	}
 
-	@Inject(method = "isSameItemSameTags", at = @At("HEAD"))
+	@Inject(method = "isSameItemSameComponents", at = @At("HEAD"))
 	private static void frozenLib$removeTagsAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
 		var extendedLeft = ItemStackExtension.class.cast(left);
 		var extendedRight = ItemStackExtension.class.cast(right);
