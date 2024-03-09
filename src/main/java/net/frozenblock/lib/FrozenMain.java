@@ -42,6 +42,7 @@ import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.tag.api.TagListCommand;
+import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
@@ -81,6 +82,7 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
+		WindDisturbanceLogic.init();
 		FrozenFeatures.init();
 		FrozenPlacementModifiers.init();
 		DataPackReloadMarker.init();
@@ -117,9 +119,11 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		ServerWorldEvents.UNLOAD.register((server, serverLevel) -> {
 			EntityUtils.clearEntitiesPerLevel(serverLevel);
+			WindManager.getWindManager(serverLevel).clearAllWindDisturbances();
 		});
 
 		ServerTickEvents.START_WORLD_TICK.register(serverLevel -> {
+			WindManager.getWindManager(serverLevel).clearAndSwitchWindDisturbances();
 			WindManager.getWindManager(serverLevel).tick(serverLevel);
 			ScreenShakeManager.getScreenShakeManager(serverLevel).tick();
 			EntityUtils.populateEntitiesPerLevel(serverLevel);

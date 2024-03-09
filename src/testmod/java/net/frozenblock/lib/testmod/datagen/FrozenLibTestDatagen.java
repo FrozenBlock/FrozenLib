@@ -32,6 +32,9 @@ import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -62,22 +65,22 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 
 	private static class TestRecipeProvider extends FabricRecipeProvider {
 
-		public TestRecipeProvider(FabricDataOutput output) {
-			super(output);
+		public TestRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+			super(output, registriesFuture);
 		}
 
 		@Override
 		public void buildRecipes(RecipeOutput exporter) {
-			ShapedRecipeUtil.withResultTag(
+			ShapedRecipeUtil.withResultPatch(
 				ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, Items.GOAT_HORN)
 					.define('E', Items.DRAGON_EGG)
 					.pattern("EEE")
 					.pattern("EEE")
 					.pattern("EEE")
 					.unlockedBy("has_dragon_egg", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DRAGON_EGG)),
-				new CompoundTag() {{
-					put("instrument", StringTag.valueOf(Instruments.DREAM_GOAT_HORN.location().toString()));
-				}}
+				DataComponentPatch.builder()
+					.set(DataComponents.INSTRUMENT, BuiltInRegistries.INSTRUMENT.getHolderOrThrow(Instruments.DREAM_GOAT_HORN))
+					.build()
 			).save(exporter, FrozenTestMain.id("dream_goat_horn").toString());
 		}
 	}
@@ -117,12 +120,12 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 	}
 
 	private static class TestAdvancementLootTableProvider extends SimpleFabricLootTableProvider {
-		public TestAdvancementLootTableProvider(FabricDataOutput output) {
-			super(output, LootContextParamSets.ADVANCEMENT_REWARD);
+		public TestAdvancementLootTableProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+			super(output, registriesFuture, LootContextParamSets.ADVANCEMENT_REWARD);
 		}
 
 		@Override
-		public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
+		public void generate(HolderLookup.Provider provider, BiConsumer<ResourceLocation, LootTable.Builder> output) {
 			output.accept(
 				FrozenTestMain.id("test_loottable"),
 				LootTable.lootTable()

@@ -16,28 +16,36 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.recipe.mixin;
+package net.frozenblock.lib.wind.mixin;
 
-import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
+import net.frozenblock.lib.wind.api.WindDisturbingEntity;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.projectile.WindCharge;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(ShapedRecipe.class)
-public class ShapedRecipeMixin implements ShapedRecipeBuilderExtension {
+@Mixin(WindCharge.class)
+public abstract class AbstractWindChargeMixin implements WindDisturbingEntity {
 
-	@Shadow
-	@Final
-	ItemStack result;
-
+	@Unique
+	@Nullable
 	@Override
-	public ShapedRecipeBuilder frozenLib$tag(@Nullable CompoundTag tag) {
-		this.result.setTag(tag);
-		return null;
+	public ResourceLocation frozenLib$getWindDisturbanceLogicID() {
+		return WindDisturbanceLogic.WIND_CHARGE;
 	}
+
+	@Unique
+	@Override
+	public double frozenLib$getWindWidth() {
+		return 10D;
+	}
+
+	@Unique
+	@Override
+	public double frozenLib$getWindHeight() {
+		return 10D;
+	}
+
 }

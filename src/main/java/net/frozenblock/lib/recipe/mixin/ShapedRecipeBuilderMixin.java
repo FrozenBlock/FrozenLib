@@ -54,12 +54,6 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 		return (ShapedRecipeBuilder) (Object) this;
 	}
 
-	@Unique
-	@Override
-	public @Nullable CompoundTag frozenLib$getTag() {
-		return this.tag;
-	}
-
 	@WrapOperation(
 		method = "save",
 		at = @At(

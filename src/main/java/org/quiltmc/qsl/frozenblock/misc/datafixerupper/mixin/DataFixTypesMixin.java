@@ -46,8 +46,7 @@ public class DataFixTypesMixin {
             method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
             at = @At("RETURN")
     )
-    private Dynamic updateDataWithFixers(Dynamic original, DataFixer fixer, Dynamic dynamic,
-											  int oldVersion, int targetVersion) {
+    private Dynamic updateDataWithFixers(Dynamic original, DataFixer fixer, Dynamic dynamic, int oldVersion, int targetVersion) {
 		var type = DataFixTypes.class.cast(this);
 		var value = original.getValue();
 
