@@ -16,27 +16,12 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.recipe.mixin;
+package net.frozenblock.lib.wind.impl;
 
-import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import net.frozenblock.lib.wind.api.WindDisturbance;
 
-@Mixin(ShapedRecipe.class)
-public class ShapedRecipeMixin implements ShapedRecipeBuilderExtension {
+public interface WindDisturbingEntityImpl {
 
-	@Shadow
-	@Final
-	ItemStack result;
+	WindDisturbance frozenLib$makeWindDisturbance();
 
-	@Override
-	public ShapedRecipeBuilder frozenLib$tag(@Nullable CompoundTag tag) {
-		this.result.setTag(tag);
-		return null;
-	}
 }

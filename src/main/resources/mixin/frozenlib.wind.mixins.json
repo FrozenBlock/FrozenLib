@@ -11,5 +11,8 @@
     "BreezeMixin",
     "EntityMixin",
     "ServerLevelMixin"
+  ],
+  "client": [
+    "client.EntityMixin"
   ]
 }

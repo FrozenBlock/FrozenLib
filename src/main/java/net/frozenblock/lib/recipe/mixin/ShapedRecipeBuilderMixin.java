@@ -24,7 +24,6 @@ import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;

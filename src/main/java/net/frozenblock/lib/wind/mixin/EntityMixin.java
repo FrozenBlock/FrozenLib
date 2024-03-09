@@ -23,6 +23,7 @@ import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindDisturbingEntity;
 import net.frozenblock.lib.wind.api.WindManager;
+import net.frozenblock.lib.wind.impl.WindDisturbingEntityImpl;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -38,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements WindDisturbingEntity {
+public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbingEntityImpl {
 
 	@Inject(
 		method = "baseTick",
@@ -47,11 +48,16 @@ public abstract class EntityMixin implements WindDisturbingEntity {
 			target = "Lnet/minecraft/world/entity/Entity;checkBelowWorld()V"
 		)
 	)
-	public void frozenLib$baseTick(CallbackInfo info) {
+	public void frozenLib$addWindDisturbanceServer(CallbackInfo info) {
 		if (this.level() instanceof ServerLevel serverLevel) {
-			WindDisturbance<?> inWorldWindModifier = this.frozenLib$makeWindDisturbance();
-			if (inWorldWindModifier != null) {
-				WindManager.getWindManager(serverLevel).addWindDisturbance(inWorldWindModifier);
+			WindDisturbance windDisturbance = this.frozenLib$makeWindDisturbance();
+			if (windDisturbance != null) {
+				WindManager windManager = WindManager.getWindManager(serverLevel);
+				if (this.frozenLib$useSyncPacket()) {
+					windManager.addWindDisturbanceAndSync(windDisturbance);
+				} else {
+					windManager.addWindDisturbance(windDisturbance);
+				}
 			}
 		}
 	}
@@ -80,13 +86,13 @@ public abstract class EntityMixin implements WindDisturbingEntity {
 		return 0D;
 	}
 
-	@SuppressWarnings({"unchecked", "rawtypes"})
 	@Unique
 	@Nullable
-	private WindDisturbance<?> frozenLib$makeWindDisturbance() {
+	@Override
+	public WindDisturbance frozenLib$makeWindDisturbance() {
 		ResourceLocation disturbanceLogicID = this.frozenLib$getWindDisturbanceLogicID();
 		if (disturbanceLogicID != null) {
-			Optional<WindDisturbanceLogic<?>> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(disturbanceLogicID);
+			Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(disturbanceLogicID);
 			if (disturbanceLogic.isPresent()) {
 				Entity entity = Entity.class.cast(this);
 				double scale = entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1D;
@@ -108,6 +114,12 @@ public abstract class EntityMixin implements WindDisturbingEntity {
 			}
 		}
 		return null;
+	}
+
+	@Unique
+	@Override
+	public boolean frozenLib$useSyncPacket() {
+		return false;
 	}
 
 	@Shadow

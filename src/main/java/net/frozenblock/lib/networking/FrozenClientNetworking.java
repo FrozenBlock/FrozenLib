@@ -51,6 +51,7 @@ import net.frozenblock.lib.wind.api.ClientWindManagerExtension;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
+import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;

@@ -19,6 +19,5 @@
 package net.frozenblock.lib.recipe.api
 
 import net.minecraft.data.recipes.ShapedRecipeBuilder
-import net.minecraft.nbt.CompoundTag
 
 fun ShapedRecipeBuilder.tag(tag: CompoundTag?): ShapedRecipeBuilder = (this as ShapedRecipeBuilderExtension).`frozenLib$tag`(tag)
