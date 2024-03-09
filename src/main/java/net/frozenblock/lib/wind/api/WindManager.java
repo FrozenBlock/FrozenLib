@@ -34,7 +34,6 @@ import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
-import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerLevel;

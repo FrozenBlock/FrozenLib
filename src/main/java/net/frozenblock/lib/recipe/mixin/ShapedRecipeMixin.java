@@ -20,6 +20,7 @@ package net.frozenblock.lib.recipe.mixin;
 
 import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.jetbrains.annotations.Nullable;

@@ -35,7 +35,7 @@ public class AbstractContainerMenuMixin {
 		method = "moveItemStackTo",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameComponents(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
+			target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameTags(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
 		),
 		locals = LocalCapture.CAPTURE_FAILHARD
 	)

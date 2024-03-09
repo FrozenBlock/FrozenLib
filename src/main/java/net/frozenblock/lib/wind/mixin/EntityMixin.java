@@ -92,7 +92,7 @@ public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbin
 	public WindDisturbance frozenLib$makeWindDisturbance() {
 		ResourceLocation disturbanceLogicID = this.frozenLib$getWindDisturbanceLogicID();
 		if (disturbanceLogicID != null) {
-			Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(disturbanceLogicID);
+			Optional<WindDisturbanceLogic<?>> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(disturbanceLogicID);
 			if (disturbanceLogic.isPresent()) {
 				Entity entity = Entity.class.cast(this);
 				double scale = entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1D;
