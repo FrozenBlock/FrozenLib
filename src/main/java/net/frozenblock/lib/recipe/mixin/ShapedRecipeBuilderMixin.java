@@ -79,11 +79,6 @@ public class ShapedRecipeBuilderMixin implements ShapedRecipeBuilderExtension {
 			return null;
 		}
 
-		@Override
-		public @Nullable CompoundTag frozenLib$getTag() {
-			return this.tag;
-		}
-
 		@Inject(method = "serializeRecipeData", at = @At(value = "INVOKE", target = "Lcom/google/gson/JsonObject;add(Ljava/lang/String;Lcom/google/gson/JsonElement;)V", ordinal = 3), locals = LocalCapture.CAPTURE_FAILHARD)
 		private void addTagData(JsonObject json, CallbackInfo ci, JsonArray jsonArray, JsonObject jsonObject, JsonObject jsonObject2) {
 			if (this.tag != null) {
