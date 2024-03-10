@@ -249,7 +249,8 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // MixinExtras
-    modApi("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")?.let { annotationProcessor(it) }
+    // keep until Fabric applies the annotation processor by default
+    annotationProcessor("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")
 
     // Mod Menu
     modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
