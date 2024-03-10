@@ -275,11 +275,4 @@ public final class ClientWindManager {
 		double windZ = perlinXoro.noise(0D, 0D, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
 	}
-
-	/**
-	 * Adds a new wind disturbance to the Wind Manager.
-	 */
-	public static void addWindDisturbance() {
-
-	}
 }
