@@ -30,6 +30,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -96,11 +97,12 @@ public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbin
 			if (disturbanceLogic.isPresent()) {
 				Entity entity = Entity.class.cast(this);
 				double scale = entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1D;
+				Vec3 position = entity.getBoundingBox().getCenter();
 				return new WindDisturbance(
 					Optional.of(entity),
-					entity.position(),
+					position,
 					AABB.ofSize(
-						entity.getBoundingBox().getCenter(),
+						position,
 						this.frozenLib$getWindWidth() * scale,
 						this.frozenLib$getWindHeight() * scale,
 						this.frozenLib$getWindWidth() * scale
