@@ -19,6 +19,7 @@
 package net.frozenblock.lib.entity.api;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -29,7 +30,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.animal.WolfVariant;
 import net.minecraft.world.level.biome.Biome;
-import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,7 +39,7 @@ public class WolfVariantBiomeRegistry {
 	public static void register(@NotNull ResourceKey<Biome> biome, @NotNull ResourceKey<WolfVariant> wolfVariant) {
 		List<ResourceKey<WolfVariant>> variantList = WOLF_VARIANT_FROM_BIOME.getOrDefault(biome, null);
 		if (variantList == null) {
-			variantList = Lists.newArrayList();
+			variantList = new ArrayList<>();
 			WOLF_VARIANT_FROM_BIOME.put(biome, variantList);
 		}
 
