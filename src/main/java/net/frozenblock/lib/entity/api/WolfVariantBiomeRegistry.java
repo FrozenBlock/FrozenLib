@@ -19,6 +19,7 @@
 package net.frozenblock.lib.entity.api;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.core.Registry;
@@ -27,14 +28,21 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.animal.WolfVariant;
 import net.minecraft.world.level.biome.Biome;
+import org.apache.commons.compress.utils.Lists;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class WolfVariantBiomeRegistry {
-	private static final Map<ResourceKey<Biome>, ResourceKey<WolfVariant>> WOLF_VARIANT_FROM_BIOME = new Object2ObjectOpenHashMap<>();
+	private static final Map<ResourceKey<Biome>, List<ResourceKey<WolfVariant>>> WOLF_VARIANT_FROM_BIOME = new Object2ObjectOpenHashMap<>();
 
 	public static void register(@NotNull ResourceKey<Biome> biome, @NotNull ResourceKey<WolfVariant> wolfVariant) {
-		WOLF_VARIANT_FROM_BIOME.put(biome, wolfVariant);
+		List<ResourceKey<WolfVariant>> variantList = WOLF_VARIANT_FROM_BIOME.getOrDefault(biome, null);
+		if (variantList == null) {
+			variantList = Lists.newArrayList();
+			WOLF_VARIANT_FROM_BIOME.put(biome, variantList);
+		}
+
+		variantList.add(wolfVariant);
 	}
 
 	@NotNull
@@ -50,7 +58,12 @@ public class WolfVariantBiomeRegistry {
 
 	@Nullable
 	private static ResourceKey<WolfVariant> getVariantOrNull(ResourceKey<Biome> biome) {
-		return WOLF_VARIANT_FROM_BIOME.getOrDefault(biome, null);
+		List<ResourceKey<WolfVariant>> variantList = WOLF_VARIANT_FROM_BIOME.getOrDefault(biome, null);
+		if (variantList != null && !variantList.isEmpty()) {
+			double size = variantList.size() - 1D;
+			return variantList.get((int) (Math.random() * size));
+		}
+		return null;
 	}
 
 }
