@@ -22,6 +22,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
@@ -60,8 +61,8 @@ public class WolfVariantBiomeRegistry {
 	private static ResourceKey<WolfVariant> getVariantOrNull(ResourceKey<Biome> biome) {
 		List<ResourceKey<WolfVariant>> variantList = WOLF_VARIANT_FROM_BIOME.getOrDefault(biome, null);
 		if (variantList != null && !variantList.isEmpty()) {
-			double size = variantList.size() - 1D;
-			return variantList.get((int) (Math.random() * size));
+			int size = variantList.size();
+			return variantList.get(AdvancedMath.random().nextInt(size));
 		}
 		return null;
 	}
