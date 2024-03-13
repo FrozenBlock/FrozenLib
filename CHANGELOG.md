@@ -6,3 +6,4 @@ Put changelog here:
 
 -----------------
 - Fixed the origin position of Entity-caused Wind Disturbances.
+- Added `FrozenHeightmaps,` currently containing `MOTION_BLOCKING_NO_LEAVES_SYNCED,` a variant of Vanilla's `MOTION_BLOCKING_NO_LEAVES` that syncs with the client.
