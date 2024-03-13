@@ -10,7 +10,9 @@
     "BlockEntityTypeMixin",
     "BootstrapMixin",
     "DecoderExceptionMixin",
-    "NoExperimentalMixin",
     "WardenSpawnTrackerCommandMixin"
+  ],
+  "client": [
+    "client.NoExperimentalMixin"
   ]
 }
