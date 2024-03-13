@@ -9,7 +9,9 @@
   "mixins": [
     "AbstractFishMixin",
     "EntityMixin",
+    "NaturalSpawnerMixin",
     "ServerEntityMixin",
+    "SpawnPlacementsTypeMixin",
     "behavior.BehaviorMixin"
   ],
   "client": [
