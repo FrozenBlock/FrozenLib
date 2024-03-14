@@ -20,11 +20,13 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking.Context;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -58,14 +60,20 @@ public final class ServerRegistrySync {
 				handler.addTask(new QuiltSyncTask(handler, handler.connection));
 			}
 		}));
-		var registry = PayloadTypeRegistry.configurationC2S();
-		registry.register(ClientPackets.Handshake.PACKET_TYPE, ClientPackets.Handshake.CODEC);
-		registry.register(ClientPackets.ModProtocol.PACKET_TYPE, ClientPackets.ModProtocol.CODEC);
-		registry.register(ClientPackets.End.PACKET_TYPE, ClientPackets.End.CODEC);
+		var registryClient = PayloadTypeRegistry.configurationC2S();
+		registryClient.register(ClientPackets.Handshake.PACKET_TYPE, ClientPackets.Handshake.CODEC);
+		registryClient.register(ClientPackets.ModProtocol.PACKET_TYPE, ClientPackets.ModProtocol.CODEC);
+		registryClient.register(ClientPackets.End.PACKET_TYPE, ClientPackets.End.CODEC);
 
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.Handshake.PACKET_TYPE, ServerRegistrySync::handleHandshake);
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE, ServerRegistrySync::handleModProtocol);
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE, ServerRegistrySync::handleEnd);
+
+		var registry = PayloadTypeRegistry.configurationS2C();
+		registry.register(ServerPackets.Handshake.PACKET_TYPE, ServerPackets.Handshake.CODEC);
+		registry.register(ServerPackets.ModProtocol.PACKET_TYPE, ServerPackets.ModProtocol.CODEC);
+		registry.register(ServerPackets.End.PACKET_TYPE, ServerPackets.End.CODEC);
+		registry.register(ServerPackets.ErrorStyle.PACKET_TYPE, ServerPackets.ErrorStyle.CODEC);
 	}
 
 	public static void handleHandshake(ClientPackets.Handshake handshake, Context ctx) {
