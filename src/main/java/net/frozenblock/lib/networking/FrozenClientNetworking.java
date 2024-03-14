@@ -101,7 +101,6 @@ public final class FrozenClientNetworking {
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		receiveWindDisturbancePacket();
-		registry().register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
 			ConfigSyncPacket.receive(packet, null)
 		);
@@ -114,7 +113,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveLocalPlayerSoundPacket() {
-		registry().register(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = Minecraft.getInstance().player;
 			Minecraft.getInstance().getSoundManager().play(new EntityBoundSoundInstance(packet.sound().value(), SoundSource.PLAYERS, packet.volume(), packet.pitch(), player, ctx.client().level.random.nextLong()));
@@ -122,7 +120,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveLocalSoundPacket() {
-		registry().register(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientLevel level = ctx.client().level;
 			Vec3 pos = packet.pos();
@@ -131,7 +128,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static <T extends Entity> void receiveStartingMovingRestrictionSoundLoopPacket() {
-		registry().register(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientLevel level = ctx.client().level;
 			T entity = (T) level.getEntity(packet.id());
@@ -148,7 +144,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
-		registry().register(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientLevel level = ctx.client().level;
 			T entity = (T) level.getEntity(packet.id());
@@ -163,7 +158,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveFadingDistanceSwitchingSoundPacket() {
-		registry().register(FadingDistanceSwitchingSoundPacket.PACKET_TYPE, FadingDistanceSwitchingSoundPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(FadingDistanceSwitchingSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			ctx.client().getSoundManager().play(new FadingDistanceSwitchingSound(packet.closeSound().value(), packet.category(), packet.volume(), packet.pitch(), packet.fadeDist(), packet.maxDist(), packet.volume(), false, packet.pos()));
 			ctx.client().getSoundManager().play(new FadingDistanceSwitchingSound(packet.farSound().value(), packet.category(), packet.volume(), packet.pitch(), packet.fadeDist(), packet.maxDist(), packet.volume(), true, packet.pos()));
@@ -171,7 +165,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static <T extends Entity> void receiveMovingFadingDistanceSwitchingSoundPacket() {
-		registry().register(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, MovingFadingDistanceSwitchingRestrictionSoundPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			SoundManager soundManager = ctx.client().getSoundManager();
 			ClientLevel level = ctx.client().level;
@@ -190,7 +183,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveCooldownChangePacket() {
-		registry().register(CooldownChangePacket.PACKET_TYPE, CooldownChangePacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = Minecraft.getInstance().player;
 			Item item = packet.item();
@@ -200,7 +192,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveForcedCooldownPacket() {
-		registry().register(ForcedCooldownPacket.PACKET_TYPE, ForcedCooldownPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = Minecraft.getInstance().player;
 			Item item = packet.item();
@@ -211,7 +202,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveCooldownTickCountPacket() {
-		registry().register(CooldownTickCountPacket.PACKET_TYPE, CooldownTickCountPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = Minecraft.getInstance().player;
 			if (player != null) {
@@ -221,7 +211,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveScreenShakePacket() {
-		registry().register(ScreenShakePacket.PACKET_TYPE, ScreenShakePacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(ScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			float intensity = packet.intensity();
 			int duration = packet.duration();
@@ -236,7 +225,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveScreenShakeFromEntityPacket() {
-		registry().register(EntityScreenShakePacket.PACKET_TYPE, EntityScreenShakePacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(EntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 			float intensity = packet.intensity();
@@ -254,7 +242,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveRemoveScreenShakePacket() {
-		registry().register(RemoveScreenShakePacket.PACKET_TYPE, RemoveScreenShakePacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(RemoveScreenShakePacket.PACKET_TYPE, (packet, ctx) ->
 			ScreenShaker.SCREEN_SHAKES.removeIf(
 				clientScreenShake -> !(clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake)
@@ -263,7 +250,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveRemoveScreenShakeFromEntityPacket() {
-		registry().register(RemoveEntityScreenShakePacket.PACKET_TYPE, RemoveEntityScreenShakePacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(RemoveEntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 
@@ -276,7 +262,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveIconPacket() {
-		registry().register(SpottingIconPacket.PACKET_TYPE, SpottingIconPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(SpottingIconPacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 			ResourceLocation texture = packet.texture();
@@ -293,7 +278,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveIconRemovePacket() {
-		registry().register(SpottingIconRemovePacket.PACKET_TYPE, SpottingIconRemovePacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(SpottingIconRemovePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
 
@@ -306,7 +290,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveWindSyncPacket() {
-		registry().register(WindSyncPacket.PACKET_TYPE, WindSyncPacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(WindSyncPacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientWindManager.time = packet.windTime();
 			ClientWindManager.setSeed(packet.seed());
@@ -317,7 +300,6 @@ public final class FrozenClientNetworking {
 	}
 
 	private static void receiveWindDisturbancePacket() {
-		registry().register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
 		ClientPlayNetworking.registerGlobalReceiver(WindDisturbancePacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientLevel level = ctx.client().level;
 			long posOrID = packet.posOrID();
