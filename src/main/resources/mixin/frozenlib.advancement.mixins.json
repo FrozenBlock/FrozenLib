@@ -7,10 +7,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AdvancementTreeMixin",
     "ServerAdvancementManagerMixin"
-  ],
-  "client": [
-    "ClientAdvancementsMixin"
   ]
 }
