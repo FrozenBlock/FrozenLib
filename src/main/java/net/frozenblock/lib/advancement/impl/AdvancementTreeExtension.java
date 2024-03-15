@@ -1,5 +1,5 @@
 /*
- * Copyright 2023-2024 FrozenBlock
+ * Copyright 2024 FrozenBlock
  * This file is part of FrozenLib.
  *
  * This program is free software; you can redistribute it and/or
@@ -16,8 +16,9 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.recipe.api;
+package net.frozenblock.lib.advancement.impl;
 
-public class FrozenRecipeCodecs {
+public interface AdvancementTreeExtension {
 
+	void frozenLib$setClient();
 }
