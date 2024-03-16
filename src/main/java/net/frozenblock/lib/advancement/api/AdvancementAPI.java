@@ -66,11 +66,22 @@ public final class AdvancementAPI {
 		advancement.criteria().putIfAbsent(key, criterion);
 	}
 
-	public static void addRequirements(Advancement advancement, AdvancementRequirements requirements) {
+	public static void addRequirementsAsNewList(Advancement advancement, AdvancementRequirements requirements) {
 		if (requirements == null || requirements.isEmpty()) return;
 		setupRequirements(advancement);
 		List<List<String>> list = new ArrayList<>(advancement.requirements().requirements);
 		list.addAll(requirements.requirements);
+		advancement.requirements().requirements = Collections.unmodifiableList(list);
+	}
+
+	public static void addRequirementsToList(Advancement advancement, List<String> requirements) {
+		if (requirements == null || requirements.isEmpty()) return;
+		setupRequirements(advancement);
+		List<List<String>> list = new ArrayList<>(advancement.requirements().requirements);
+		if (list.isEmpty()) {
+			list.add(new ArrayList<>());
+		}
+		list.get(0).addAll(requirements);
 		advancement.requirements().requirements = Collections.unmodifiableList(list);
 	}
 

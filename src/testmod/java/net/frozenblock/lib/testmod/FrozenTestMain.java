@@ -90,7 +90,7 @@ public final class FrozenTestMain implements ModInitializer {
 							LocationPredicate.Builder.inBiome(registries.lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS))
 						)
 					);
-					AdvancementAPI.addRequirements(advancement, AdvancementRequirements.anyOf(List.of("minecraft:plains")));
+					AdvancementAPI.addRequirementsAsNewList(advancement, AdvancementRequirements.anyOf(List.of("minecraft:plains")));
 					advancement.rewards.experience = 1000;
 				}
 				default -> {}
