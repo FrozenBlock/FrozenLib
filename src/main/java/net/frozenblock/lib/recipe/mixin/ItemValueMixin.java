@@ -23,6 +23,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import java.util.function.Function;
+import net.frozenblock.lib.recipe.api.FrozenRecipeCodecs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -41,7 +42,8 @@ public class ItemValueMixin {
 				CompoundTag.CODEC.optionalFieldOf("tag").forGetter(itemValue -> Optional.ofNullable(itemValue.item().getTag()))
 			).apply(instance, (item, data) -> {
                 data.ifPresent(item::setTag);
-                return new Ingredient.ItemValue(item); })
+                return new Ingredient.ItemValue(item);
+			})
 		);
 	}
 }
