@@ -45,20 +45,17 @@ public class NaturalSpawnerMixin {
 		method = "getTopNonCollidingPos",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/core/BlockPos$MutableBlockPos;immutable()Lnet/minecraft/core/BlockPos;",
-			shift = At.Shift.BEFORE
+			target = "Lnet/minecraft/core/BlockPos$MutableBlockPos;immutable()Lnet/minecraft/core/BlockPos;"
 		),
 		locals = LocalCapture.CAPTURE_FAILHARD,
 		cancellable = true
 	)
 	private static void frozenLib$getTopNonCollidingPos(
-		LevelReader level, EntityType<?> entityType, int x, int z, CallbackInfoReturnable<BlockPos> info,
-		int i, BlockPos.MutableBlockPos mutableBlockPos, BlockPos blockPos
-	) {
+		LevelReader level, EntityType<?> entityType, int x, int z, CallbackInfoReturnable<BlockPos> cir, int i, BlockPos.MutableBlockPos mutableBlockPos) {
 		if (SpawnPlacements.getPlacementType(entityType) == FrozenSpawnPlacementTypes.ON_GROUND_OR_ON_LAVA_SURFACE) {
 			BlockPos belowPos = mutableBlockPos.below();
 			if (level.getBlockState(belowPos).isPathfindable(level, belowPos, PathComputationType.LAND)) {
-				info.setReturnValue(belowPos);
+				cir.setReturnValue(belowPos);
 			}
 		}
 	}
