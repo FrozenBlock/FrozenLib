@@ -12,6 +12,7 @@
     "NaturalSpawnerMixin",
     "ServerEntityMixin",
     "SpawnPlacementsTypeMixin",
+    "WolfVariantsMixin",
     "behavior.BehaviorMixin"
   ],
   "client": [

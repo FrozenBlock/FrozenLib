@@ -65,6 +65,7 @@
     "mixin/frozenlib.weather.mixins.json",
     "mixin/frozenlib.wind.mixins.json",
     "mixin/frozenlib.worldgen.biome.mixins.json",
+    "mixin/frozenlib.worldgen.heightmap.mixins.json",
     "mixin/frozenlib.worldgen.structure.mixins.json",
     "mixin/frozenlib.worldgen.surface.mixins.json",
     "mixin/frozenlib.worldgen.vein.mixins.json",

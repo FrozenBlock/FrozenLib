@@ -16,7 +16,7 @@
  * along with this program; if not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.core.mixin;
+package net.frozenblock.lib.core.mixin.client;
 
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
@@ -33,7 +33,8 @@ public class NoExperimentalMixin {
 	@Inject(
 		method = "askForBackup",
 		at = @At("HEAD"),
-		cancellable = true
+		cancellable = true,
+		require = 0
 	)
 	private void frozenLib$preventBackupScreenAndProceed(LevelStorageSource.LevelStorageAccess levelStorageAccess, boolean bl, Runnable runnable, Runnable runnable2, CallbackInfo info) {
 		if (FrozenLibConfig.get().removeExperimentalWarning)  {
@@ -42,7 +43,7 @@ public class NoExperimentalMixin {
 		}
 	}
 
-	@ModifyVariable(method = "confirmWorldCreation", at = @At("HEAD"), argsOnly = true, ordinal = 0)
+	@ModifyVariable(method = "confirmWorldCreation", at = @At("HEAD"), argsOnly = true, ordinal = 0, require = 0)
 	private static boolean frozenLib$skipCreationWarning(boolean original) {
 		if (FrozenLibConfig.get().removeExperimentalWarning)  {
 			return true;

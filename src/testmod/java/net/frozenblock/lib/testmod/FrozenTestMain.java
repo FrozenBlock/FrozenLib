@@ -35,6 +35,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
@@ -73,7 +74,7 @@ public final class FrozenTestMain implements ModInitializer {
 
 		//GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0, 192, new InterpolatedGravityFunction(0.1)));
 
-		AdvancementEvents.INIT.register(holder -> {
+		AdvancementEvents.INIT.register((holder, registries) -> {
 			Advancement advancement = holder.value();
 			switch (holder.id().toString()) {
 				case "minecraft:story/mine_stone" -> {
@@ -86,10 +87,10 @@ public final class FrozenTestMain implements ModInitializer {
 						advancement,
 						"minecraft:plains",
 						PlayerTrigger.TriggerInstance.located(
-							LocationPredicate.Builder.inBiome(Biomes.PLAINS)
+							LocationPredicate.Builder.inBiome(registries.lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS))
 						)
 					);
-					AdvancementAPI.addRequirements(advancement, AdvancementRequirements.anyOf(List.of("minecraft:plains")));
+					AdvancementAPI.addRequirementsAsNewList(advancement, AdvancementRequirements.anyOf(List.of("minecraft:plains")));
 					advancement.rewards.experience = 1000;
 				}
 				default -> {}
