@@ -12,10 +12,10 @@
     "EEE"
   ],
   "result": {
-    "item": "minecraft:goat_horn",
-    "tag": {
-      "instrument": "minecraft:dream_goat_horn"
-    }
-  },
-  "show_notification": true
+    "components": {
+      "minecraft:instrument": "minecraft:dream_goat_horn"
+    },
+    "count": 1,
+    "id": "minecraft:goat_horn"
+  }
 }
