@@ -20,6 +20,7 @@ package net.frozenblock.lib.advancement.api;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import net.minecraft.advancements.Advancement;
@@ -59,12 +60,28 @@ public final class AdvancementAPI {
 		addCriteria(advancement, key, new Criterion(criterion));
 	}
 
-	public static void addRequirements(Advancement advancement, String[][] requirements) {
+	public static void addRequirementsAsNewList(Advancement advancement, String[][] requirements) {
 		if (requirements == null || requirements.length == 0) return;
 		List<String[]> list = new ArrayList<>();
 		list.addAll(Arrays.stream(advancement.requirements).toList());
 		list.addAll(Arrays.stream(requirements).toList());
 		advancement.requirements = list.toArray(new String[0][]);
+	}
+
+	public static void addRequirementsToList(Advancement advancement, String[] requirements) {
+		if (requirements == null || requirements.length == 0) return;
+		setupRequirements(advancement);
+		List<String[]> list = new ArrayList<>(Arrays.stream(advancement.requirements().requirements).toList());
+		if (list.isEmpty()) {
+			list.add(requirements);
+		} else {
+			List<String> existingList = List.of(list.get(0));
+			List<String> finalList = new ArrayList<>();
+			finalList.addAll(existingList);
+			finalList.addAll(List.of(requirements));
+			list.add(Collections.unmodifiableList(finalList).toArray(new String[0]));
+		}
+		advancement.requirements().requirements = Collections.unmodifiableList(list).toArray(new String[0][]);
 	}
 
 	public static void addLootTables(Advancement advancement, List<ResourceLocation> lootTables) {

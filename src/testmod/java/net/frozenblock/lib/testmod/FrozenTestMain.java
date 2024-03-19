@@ -34,6 +34,7 @@ import net.frozenblock.lib.testmod.config.TestConfig;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
@@ -88,7 +89,7 @@ public final class FrozenTestMain implements ModInitializer {
 							LocationPredicate.inBiome(Biomes.PLAINS)
 						)
 					);
-					AdvancementAPI.addRequirements(advancement, new String[][]{{"minecraft:plains"}});
+					AdvancementAPI.addRequirementsAsNewList(advancement, new String[][]{{"minecraft:plains"}});
 					advancement.rewards.experience = 1000;
 				}
 				default -> {}

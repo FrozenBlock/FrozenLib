@@ -5,9 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "minecraft:dragon_egg"
-            ]
+            "items": "minecraft:dragon_egg"
           }
         ]
       },
@@ -30,6 +28,5 @@
     "recipes": [
       "frozenlib_testmod:dream_goat_horn"
     ]
-  },
-  "sends_telemetry_event": false
+  }
 }
