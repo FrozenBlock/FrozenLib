@@ -23,7 +23,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import java.util.function.Function;
-import net.frozenblock.lib.recipe.api.FrozenRecipeCodecs;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.crafting.CraftingRecipeCodecs;
 import net.minecraft.world.item.crafting.Ingredient;
