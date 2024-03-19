@@ -70,8 +70,7 @@ public final class AdvancementAPI {
 
 	public static void addRequirementsToList(Advancement advancement, String[] requirements) {
 		if (requirements == null || requirements.length == 0) return;
-		setupRequirements(advancement);
-		List<String[]> list = new ArrayList<>(Arrays.stream(advancement.requirements().requirements).toList());
+		List<String[]> list = new ArrayList<>(Arrays.stream(advancement.requirements).toList());
 		if (list.isEmpty()) {
 			list.add(requirements);
 		} else {
@@ -81,7 +80,7 @@ public final class AdvancementAPI {
 			finalList.addAll(List.of(requirements));
 			list.add(Collections.unmodifiableList(finalList).toArray(new String[0]));
 		}
-		advancement.requirements().requirements = Collections.unmodifiableList(list).toArray(new String[0][]);
+		advancement.requirements = Collections.unmodifiableList(list).toArray(new String[0][]);
 	}
 
 	public static void addLootTables(Advancement advancement, List<ResourceLocation> lootTables) {
