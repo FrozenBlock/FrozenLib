@@ -36,13 +36,12 @@ public class FrozenSpawnPlacementTypes {
 		@Override
 		public boolean isSpawnPositionOk(LevelReader levelReader, BlockPos blockPos, @Nullable EntityType<?> entityType) {
 			if (entityType != null && levelReader.getWorldBorder().isWithinBounds(blockPos)) {
-				BlockPos abovePos = blockPos.above();
 				BlockPos belowPos = blockPos.below();
 				BlockState belowState = levelReader.getBlockState(belowPos);
-				if (!belowState.isValidSpawn(levelReader, belowPos, entityType) && !belowState.getFluidState().is(FluidTags.LAVA)) {
+				if (!belowState.isValidSpawn(levelReader, belowPos, entityType) && !belowState.getFluidState().is(FluidTags.LAVA) && !belowState.is(Blocks.MAGMA_BLOCK)) {
 					return false;
 				} else {
-					return this.isValidEmptySpawnBlock(levelReader, blockPos, entityType) && this.isValidEmptySpawnBlock(levelReader, abovePos, entityType);
+					return this.isValidEmptySpawnBlock(levelReader, blockPos, entityType);
 				}
 			}
 			return false;
@@ -50,7 +49,7 @@ public class FrozenSpawnPlacementTypes {
 
 		private boolean isValidEmptySpawnBlock(@NotNull LevelReader levelReader, BlockPos blockPos, EntityType<?> entityType) {
 			BlockState blockState = levelReader.getBlockState(blockPos);
-			boolean isSafeBurning = blockState.is(BlockTags.FIRE) || blockState.is(Blocks.LAVA);
+			boolean isSafeBurning = blockState.is(BlockTags.FIRE);
 			return isSafeBurning || NaturalSpawner.isValidEmptySpawnBlock(levelReader, blockPos, blockState, blockState.getFluidState(), entityType);
 		}
 
