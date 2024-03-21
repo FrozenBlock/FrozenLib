@@ -45,17 +45,20 @@ public class NaturalSpawnerMixin {
 		method = "getTopNonCollidingPos",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/core/BlockPos$MutableBlockPos;immutable()Lnet/minecraft/core/BlockPos;"
+			target = "Lnet/minecraft/core/BlockPos$MutableBlockPos;immutable()Lnet/minecraft/core/BlockPos;",
+			shift = At.Shift.BEFORE
 		),
 		locals = LocalCapture.CAPTURE_FAILHARD,
 		cancellable = true
 	)
 	private static void frozenLib$getTopNonCollidingPos(
-		LevelReader level, EntityType<?> entityType, int x, int z, CallbackInfoReturnable<BlockPos> cir, int i, BlockPos.MutableBlockPos mutableBlockPos) {
+		LevelReader level, EntityType<?> entityType, int x, int z, CallbackInfoReturnable<BlockPos> info,
+		int i, BlockPos.MutableBlockPos mutableBlockPos
+	) {
 		if (SpawnPlacements.getPlacementType(entityType) == FrozenSpawnPlacementTypes.ON_GROUND_OR_ON_LAVA_SURFACE) {
 			BlockPos belowPos = mutableBlockPos.below();
 			if (level.getBlockState(belowPos).isPathfindable(level, belowPos, PathComputationType.LAND)) {
-				cir.setReturnValue(belowPos);
+				info.setReturnValue(belowPos);
 			}
 		}
 	}
@@ -80,7 +83,8 @@ public class NaturalSpawnerMixin {
 			if (!belowState.isValidSpawn(level, blockPos2, entityType) && !belowState.getFluidState().is(FluidTags.LAVA)) {
 				info.setReturnValue(false);
 			} else {
-				info.setReturnValue(frozenLib$isValidEmptySpawnBlock(level, blockPos, entityType) && frozenLib$isValidEmptySpawnBlock(level, blockPos, entityType));
+				info.setReturnValue(frozenLib$isValidEmptySpawnBlock(level, blockPos, entityType) && frozenLib$isValidEmptySpawnBlock(level, blockPos.above(), entityType));
+				return;
 			}
 			info.setReturnValue(false);
 		}
