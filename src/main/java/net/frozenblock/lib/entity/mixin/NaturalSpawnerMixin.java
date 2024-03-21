@@ -80,10 +80,10 @@ public class NaturalSpawnerMixin {
 		BlockPos blockPos2 = pos.below();
 		if (SpawnPlacements.getPlacementType(entityType) == FrozenSpawnPlacementTypes.ON_GROUND_OR_ON_LAVA_SURFACE) {
 			BlockState belowState = level.getBlockState(blockPos2);
-			if (!belowState.isValidSpawn(level, blockPos2, entityType) && !belowState.getFluidState().is(FluidTags.LAVA)) {
+			if (!belowState.isValidSpawn(level, blockPos2, entityType) && !belowState.getFluidState().is(FluidTags.LAVA) && !belowState.is(Blocks.MAGMA_BLOCK)) {
 				info.setReturnValue(false);
 			} else {
-				info.setReturnValue(frozenLib$isValidEmptySpawnBlock(level, blockPos, entityType) && frozenLib$isValidEmptySpawnBlock(level, blockPos.above(), entityType));
+				info.setReturnValue(frozenLib$isValidEmptySpawnBlock(level, blockPos, entityType));
 				return;
 			}
 			info.setReturnValue(false);
