@@ -83,7 +83,7 @@ public class NaturalSpawnerMixin {
 			if (!belowState.isValidSpawn(level, blockPos2, entityType) && !belowState.getFluidState().is(FluidTags.LAVA)) {
 				info.setReturnValue(false);
 			} else {
-				info.setReturnValue(frozenLib$isValidEmptySpawnBlock(level, blockPos, entityType) && frozenLib$isValidEmptySpawnBlock(level, blockPos, entityType));
+				info.setReturnValue(frozenLib$isValidEmptySpawnBlock(level, blockPos, entityType) && frozenLib$isValidEmptySpawnBlock(level, blockPos.above(), entityType));
 				return;
 			}
 			info.setReturnValue(false);
