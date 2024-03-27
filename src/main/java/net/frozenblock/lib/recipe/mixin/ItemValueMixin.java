@@ -38,7 +38,7 @@ public class ItemValueMixin {
 		return RecordCodecBuilder.create(instance ->
 			instance.group(
 				ItemStack.SIMPLE_ITEM_CODEC.fieldOf("item").forGetter(Ingredient.ItemValue::item),
-				ExtraCodecs.strictOptionalField(DataComponentPatch.CODEC, "components", DataComponentPatch.EMPTY)
+				DataComponentPatch.CODEC.optionalFieldOf("components", DataComponentPatch.EMPTY)
 					.forGetter(stack -> stack.item().getComponentsPatch())
 			).apply(instance, (item, patch) -> {
                 item.applyComponents(patch);

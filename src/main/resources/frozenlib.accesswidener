@@ -47,13 +47,13 @@ transitive-accessible    field    net/minecraft/world/item/ItemStack    ITEM_NON
 transitive-accessible    class    net/minecraft/world/level/block/SculkVeinBlock$SculkVeinSpreaderConfig
 
 # Tree Features
-transitive-accessible    method    net/minecraft/world/level/levelgen/feature/treedecorators/TreeDecoratorType    <init>    (Lcom/mojang/serialization/Codec;)V
-transitive-accessible    method    net/minecraft/world/level/levelgen/feature/trunkplacers/TrunkPlacerType    <init>    (Lcom/mojang/serialization/Codec;)V
-transitive-accessible    method    net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacerType    <init>    (Lcom/mojang/serialization/Codec;)V
+transitive-accessible    method    net/minecraft/world/level/levelgen/feature/treedecorators/TreeDecoratorType    <init>    (Lcom/mojang/serialization/MapCodec;)V
+transitive-accessible    method    net/minecraft/world/level/levelgen/feature/trunkplacers/TrunkPlacerType    <init>    (Lcom/mojang/serialization/MapCodec;)V
+transitive-accessible    method    net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacerType    <init>    (Lcom/mojang/serialization/MapCodec;)V
 
 # Items
 transitive-extendable    method    net/minecraft/world/item/InstrumentItem    getInstrument    (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
-transitive-extendable    method    net/minecraft/world/level/block/state/BlockBehaviour    getLootTable    ()Lnet/minecraft/resources/ResourceLocation;
+transitive-extendable    method    net/minecraft/world/level/block/state/BlockBehaviour    getLootTable    ()Lnet/minecraft/resources/ResourceKey;
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    cooldowns    Ljava/util/Map;
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    tickCount    I
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns$CooldownInstance    startTime    I
@@ -114,7 +114,7 @@ transitive-accessible    field    net/minecraft/world/level/block/MultifaceSprea
 transitive-accessible    method    net/minecraft/data/BlockFamilies   familyBuilder    (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
 
 # Block Entities
-transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
+transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceKey;
 
 # Render Types
 transitive-accessible    class    net/minecraft/client/renderer/RenderType$CompositeState

@@ -27,7 +27,9 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 public final class AdvancementAPI {
 	private AdvancementAPI() {}
@@ -90,11 +92,11 @@ public final class AdvancementAPI {
 		advancement.requirements().requirements = Collections.unmodifiableList(list);
 	}
 
-	public static void addLootTables(Advancement advancement, List<ResourceLocation> lootTables) {
+	public static void addLootTables(Advancement advancement, List<ResourceKey<LootTable>> lootTables) {
 		if (lootTables.isEmpty()) return;
 		setupRewards(advancement);
 		AdvancementRewards rewards = advancement.rewards();
-		List<ResourceLocation> newLoot = new ArrayList<>(rewards.loot);
+		List<ResourceKey<LootTable>> newLoot = new ArrayList<>(rewards.loot);
 		newLoot.addAll(lootTables);
 		rewards.loot = Collections.unmodifiableList(newLoot);
 	}

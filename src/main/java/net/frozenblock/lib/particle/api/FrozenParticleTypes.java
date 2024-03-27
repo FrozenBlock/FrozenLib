@@ -20,6 +20,7 @@ package net.frozenblock.lib.particle.api;
 
 import com.mojang.serialization.Codec;
 import java.util.function.Function;
+import com.mojang.serialization.MapCodec;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.Registry;
@@ -57,12 +58,12 @@ public final class FrozenParticleTypes {
 		@NotNull String name,
 		boolean alwaysShow,
 		@NotNull ParticleOptions.Deserializer<T> factory,
-		Function<ParticleType<T>, Codec<T>> codecGetter,
+		Function<ParticleType<T>, MapCodec<T>> codecGetter,
 		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodecGetter
 	) {
 		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, FrozenSharedConstants.id(name), new ParticleType<T>(alwaysShow, factory) {
 			@Override
-			public Codec<T> codec() {
+			public MapCodec<T> codec() {
 				return codecGetter.apply(this);
 			}
 
