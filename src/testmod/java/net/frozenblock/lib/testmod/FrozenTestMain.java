@@ -36,6 +36,7 @@ import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
@@ -78,11 +79,11 @@ public final class FrozenTestMain implements ModInitializer {
 			Advancement advancement = holder.value();
 			switch (holder.id().toString()) {
 				case "minecraft:story/mine_stone" -> {
-					AdvancementAPI.addLootTables(advancement, List.of(new ResourceLocation("archaeology/ocean_ruin_warm")));
+					AdvancementAPI.addLootTables(advancement, List.of(ResourceKey.create(Registries.LOOT_TABLE, new ResourceLocation("archaeology/ocean_ruin_warm"))));
 					advancement.rewards.experience = 100;
 				}
 				case "minecraft:story/upgrade_tools" -> {
-					AdvancementAPI.addLootTables(advancement, List.of(id("test_loottable")));
+					AdvancementAPI.addLootTables(advancement, List.of(ResourceKey.create(Registries.LOOT_TABLE, id("test_loottable"))));
 					AdvancementAPI.addCriteria(
 						advancement,
 						"minecraft:plains",

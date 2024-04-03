@@ -42,18 +42,18 @@ public abstract class Config<T> {
 	private final DataFixer dataFixer;
 	@Nullable
 	private final Integer version;
-	private final Class<T> config;
+	private final Class<T> configClass;
 	private T configInstance;
 	private final T defaultInstance;
 	private boolean synced = false;
 
-	protected Config(String modId, Class<T> config, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+	protected Config(String modId, Class<T> configClass, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this.modId = modId;
 		this.path = path;
 		this.supportsModification = supportsModification;
-		this.config = config;
+		this.configClass = configClass;
 		try {
-			this.defaultInstance = this.configInstance = config.getConstructor().newInstance();
+			this.defaultInstance = this.configInstance = configClass.getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new IllegalStateException("No default constructor for default config instance.", e);
 		}
@@ -135,7 +135,7 @@ public abstract class Config<T> {
 	}
 
 	public Class<T> configClass() {
-		return this.config;
+		return this.configClass;
 	}
 
 	public void setSynced(boolean synced) {

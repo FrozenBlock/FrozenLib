@@ -21,6 +21,7 @@ package net.frozenblock.lib.testmod.mixin;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
@@ -42,7 +43,7 @@ public abstract class WardenMixin extends Monster {
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initWithIcon(EntityType<? extends Warden> entityType, Level level, CallbackInfo ci) {
 		Warden warden = Warden.class.cast(this);
-		((EntitySpottingIconInterface) warden).getSpottingIconManager().setIcon(FrozenMain.resourceLocation("textures/spotting_icons/warden.png"), 8, 12, FrozenMain.resourceLocation("default"));
+		((EntitySpottingIconInterface) warden).getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/warden.png"), 8, 12, FrozenMain.resourceLocation("default"));
 	}
 
 	@Inject(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))

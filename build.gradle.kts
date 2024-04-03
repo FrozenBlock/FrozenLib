@@ -49,6 +49,9 @@ val mixin_extras_version: String by project
 val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
+val xjs_core_version: String by project
+val xjs_compat_version: String by project
+val fresult_version: String by project
 
 val modmenu_version: String by project
 val cloth_config_version: String by project
@@ -250,10 +253,10 @@ dependencies {
     annotationProcessor("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")
 
     // Mod Menu
-    modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
+    modApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
@@ -269,6 +272,12 @@ dependencies {
 
     // Jankson
     relocModApi("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
+
+    // ExJson
+    relocModApi("org.exjson:xjs-core:$xjs_core_version")
+    relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
+    relocModApi("com.personthecat:fresult:$fresult_version")
+    compileOnly("org.projectlombok:lombok:1.18.22")?.let { annotationProcessor(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 }
