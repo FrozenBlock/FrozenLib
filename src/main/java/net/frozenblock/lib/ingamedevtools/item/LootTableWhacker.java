@@ -18,12 +18,8 @@
 
 package net.frozenblock.lib.ingamedevtools.item;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -36,6 +32,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BrushableBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +44,6 @@ public class LootTableWhacker extends Item {
     }
 
 	private static final MutableComponent FAIL_NO_NAME = Component.translatable("frozenlib.loot_table_whacker.fail.no_name");
-	private static final MutableComponent FAIL_NO_COLON = Component.translatable("frozenlib.loot_table_whacker.fail.no_colon");
 
 	@Override
     public InteractionResult useOn(@NotNull UseOnContext context) {
@@ -59,30 +55,24 @@ public class LootTableWhacker extends Item {
 			return InteractionResult.PASS;
 		}
         if (stack.has(DataComponents.CUSTOM_NAME)) {
-            if (stack.getHoverName().getString().contains(":")) {
-                String id = stack.getHoverName().getString();
-                List<String> strings = Arrays.stream(id.split(":")).toList();
-                ResourceLocation location = new ResourceLocation(strings.get(0), strings.get(1));
-				ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, location);
-				if (!level.isClientSide) {
-					Optional<Holder.Reference<LootTable>> lootTable = level.holderLookup(Registries.LOOT_TABLE).get(key);
-					if (lootTable.isPresent() && lootTable.get().value() != LootTable.EMPTY) {
-						if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {
-							loot.lootTable = key;
-							player.displayClientMessage(Component.translatable("frozenlib.loot_table_whacker.success", location.toString()), true);
-							FrozenLogUtils.log(location.toString(), true);
-						}
-					} else {
-						player.displayClientMessage(Component.translatable("frozenlib.loot_table_whacker.fail.no_loot_table", location.toString()), true);
-					}
+			String id = stack.getHoverName().getString();
+			ResourceLocation location = new ResourceLocation(id);
+			ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, location);
+			if (!level.isClientSide) {
+				if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {
+					loot.lootTable = key;
+					player.displayClientMessage(Component.translatable("frozenlib.loot_table_whacker.success", location.toString()), true);
+					FrozenLogUtils.log(location.toString(), true);
+				} else if (level.getBlockEntity(blockPos) instanceof BrushableBlockEntity loot) {
+					loot.lootTable = key;
+					player.displayClientMessage(Component.translatable("frozenlib.loot_table_whacker.success", location.toString()), true);
+					FrozenLogUtils.log(location.toString(), true);
 				}
-            } else {
-				player.displayClientMessage(FAIL_NO_COLON, true);
 			}
+			return InteractionResult.SUCCESS;
         } else {
 			player.displayClientMessage(FAIL_NO_NAME, true);
 		}
-        return InteractionResult.SUCCESS;
     }
 
 }

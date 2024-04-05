@@ -116,6 +116,7 @@ transitive-accessible    method    net/minecraft/data/BlockFamilies   familyBuil
 
 # Block Entities
 transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceKey;
+transitive-accessible    field    net/minecraft/world/level/block/entity/BrushableBlockEntity    lootTable    Lnet/minecraft/resources/ResourceKey;
 
 # Render Types
 transitive-accessible    class    net/minecraft/client/renderer/RenderType$CompositeState
