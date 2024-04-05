@@ -73,6 +73,7 @@ public class LootTableWhacker extends Item {
         } else {
 			player.displayClientMessage(FAIL_NO_NAME, true);
 		}
+		return InteractionResult.FAIL;
     }
 
 }
