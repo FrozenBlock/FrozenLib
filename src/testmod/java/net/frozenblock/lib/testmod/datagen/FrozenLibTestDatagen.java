@@ -35,9 +35,11 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.Instruments;
@@ -123,9 +125,9 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		@Override
-		public void generate(HolderLookup.Provider provider, BiConsumer<ResourceLocation, LootTable.Builder> output) {
+		public void generate(HolderLookup.Provider provider, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
 			output.accept(
-				FrozenTestMain.id("test_loottable"),
+				ResourceKey.create(Registries.LOOT_TABLE, FrozenTestMain.id("test_loottable")),
 				LootTable.lootTable()
 					.withPool(
 						LootPool.lootPool()

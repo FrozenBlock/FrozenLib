@@ -19,6 +19,7 @@
 package net.frozenblock.lib.worldgen.feature.api.placementmodifier;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.stream.Stream;
 import net.minecraft.core.BlockPos;
@@ -29,7 +30,7 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 public class LowerHeightmapPlacement extends PlacementModifier {
-	public static final Codec<LowerHeightmapPlacement> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+	public static final MapCodec<LowerHeightmapPlacement> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 			(Heightmap.Types.CODEC.fieldOf("heightmap")).forGetter(modifier -> modifier.heightmap)
 	).apply(instance, LowerHeightmapPlacement::new));
 

@@ -19,6 +19,7 @@
 package net.frozenblock.lib.worldgen.feature.api.placementmodifier;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -31,7 +32,7 @@ public class FrozenPlacementModifiers {
 	public static final PlacementModifierType<NoisePlacementFilter> NOISE_FILTER = register("noise_filter", NoisePlacementFilter.CODEC);
 
 	@NotNull
-	private static <P extends PlacementModifier> PlacementModifierType<P> register(String name, Codec<P> codec) {
+	private static <P extends PlacementModifier> PlacementModifierType<P> register(String name, MapCodec<P> codec) {
 		return Registry.register(BuiltInRegistries.PLACEMENT_MODIFIER_TYPE, FrozenSharedConstants.id(name), () -> codec);
 	}
 

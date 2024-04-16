@@ -16,16 +16,13 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.kohsuke:github-api:+")
-        // remove these 2 to get normal fabric loom versions
-        classpath(files("libs/fabric-loom-1.5.local.jar"))
-        classpath("net.fabricmc:mapping-io:+")
 	}
 }
 
 plugins {
 	id("fabric-loom") version("+")
 	id("org.ajoberstar.grgit") version("+")
-	id("org.quiltmc.gradle.licenser") version("+")
+	id("dev.yumi.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
     id("com.github.johnrengelman.shadow") version("+")
     `maven-publish`
@@ -282,7 +279,7 @@ tasks {
         properties["version"] = project.version
         properties["minecraft_version"] = minecraft_version
 
-        properties["fabric_loader_version"] = ">=0.15.1"
+        properties["fabric_loader_version"] = ">=0.15.7"
         properties["fabric_api_version"] = ">=$fabric_api_version"
         properties["fabric_kotlin_version"] = fabric_kotlin_version
 
@@ -339,13 +336,13 @@ tasks {
 
     withType(JavaCompile::class) {
         options.encoding = "UTF-8"
-        options.release = 17
+        options.release = 21
         options.isFork = true
         options.isIncremental = true
     }
 
     withType(KotlinCompile::class) {
-        compilerOptions.jvmTarget = JvmTarget.JVM_17
+        compilerOptions.jvmTarget = JvmTarget.JVM_21
     }
 
     withType(Test::class) {
@@ -363,8 +360,8 @@ val sourcesJar: Task by tasks
 val javadocJar: Task by tasks
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.

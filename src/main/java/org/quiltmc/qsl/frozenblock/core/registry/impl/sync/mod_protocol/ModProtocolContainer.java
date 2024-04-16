@@ -40,13 +40,10 @@ public interface ModProtocolContainer {
 			@Override
 			public <T> DataResult<Pair<E, T>> decode(DynamicOps<T> ops, T input) {
 				var value = codec.decode(ops, input);
-				if (value.get().right().isPresent()) {
-					return value;
-				}
 
-				ops.get(input, modProtocol).get().ifLeft((x) -> {
+				ops.get(input, modProtocol).ifSuccess((x) -> {
 					var versionData = MAP_CODEC.decode(ops, x);
-					versionData.get().ifLeft(y ->
+					versionData.ifSuccess(y ->
 						((ModProtocolContainer) value.result().orElseThrow().getFirst()).frozenLib$setModProtocol(y.getFirst())
 					);
 				});
@@ -59,10 +56,10 @@ public interface ModProtocolContainer {
 				var value = codec.encode(input, ops, prefix);
 				var modProto = ModProtocolContainer.of(input).frozenLib$getModProtocol();
 
-				if (value.get().left().isPresent() && modProto != null) {
+				if (value.isSuccess() && modProto != null) {
 					var x = MAP_CODEC.encodeStart(ops, modProto);
 
-					if (x.get().left().isPresent()) {
+					if (x.isSuccess()) {
 						return DataResult.success(ops.set(value.result().orElseThrow(), modProtocol, x.result().orElseThrow()));
 					}
 				}
