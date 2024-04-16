@@ -76,7 +76,7 @@ public final class FrozenTestMain implements ModInitializer {
 
 		//GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0, 192, new InterpolatedGravityFunction(0.1)));
 
-		AdvancementEvents.INIT.register((holder, registries) -> {
+		AdvancementEvents.INIT.register(holder -> {
 			Advancement advancement = holder.value();
 			switch (holder.id().toString()) {
 				case "minecraft:story/mine_stone" -> {
@@ -84,12 +84,12 @@ public final class FrozenTestMain implements ModInitializer {
 					advancement.rewards.experience = 100;
 				}
 				case "minecraft:story/upgrade_tools" -> {
-					AdvancementAPI.addLootTables(advancement, List.of(ResourceKey.create(Registries.LOOT_TABLE, id("test_loottable"))));
+					AdvancementAPI.addLootTables(advancement, List.of(id("test_loottable")));
 					AdvancementAPI.addCriteria(
 						advancement,
 						"minecraft:plains",
 						PlayerTrigger.TriggerInstance.located(
-							LocationPredicate.Builder.inBiome(registries.lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS))
+							LocationPredicate.Builder.inBiome(Biomes.PLAINS)
 						)
 					);
 					AdvancementAPI.addRequirementsAsNewList(advancement, AdvancementRequirements.anyOf(List.of("minecraft:plains")));

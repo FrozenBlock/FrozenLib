@@ -92,11 +92,11 @@ public final class AdvancementAPI {
 		advancement.requirements().requirements = Collections.unmodifiableList(list);
 	}
 
-	public static void addLootTables(Advancement advancement, List<ResourceKey<LootTable>> lootTables) {
+	public static void addLootTables(Advancement advancement, List<ResourceLocation> lootTables) {
 		if (lootTables.isEmpty()) return;
 		setupRewards(advancement);
 		AdvancementRewards rewards = advancement.rewards();
-		List<ResourceKey<LootTable>> newLoot = new ArrayList<>(rewards.loot);
+		List<ResourceLocation> newLoot = new ArrayList<>(rewards.loot);
 		newLoot.addAll(lootTables);
 		rewards.loot = Collections.unmodifiableList(newLoot);
 	}

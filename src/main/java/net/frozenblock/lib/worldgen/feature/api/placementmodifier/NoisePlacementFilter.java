@@ -32,7 +32,7 @@ import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import org.jetbrains.annotations.NotNull;
 
 public class NoisePlacementFilter extends PlacementFilter {
-	public static final MapCodec<NoisePlacementFilter> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+	public static final Codec<NoisePlacementFilter> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		Codec.intRange(1, 4).fieldOf("noise").orElse(4).forGetter((config) -> config.noise),
 		Codec.doubleRange(0.0001, 128).fieldOf("noise_scale").orElse(0.05).forGetter((config) -> config.noiseScale),
 		Codec.doubleRange(-1, 1).fieldOf("min_threshold").orElse(0.2).forGetter((config) -> config.minThreshold),

@@ -52,7 +52,7 @@ public class RandomMixin {
 		SimpleWeightedRandomList.Builder<ResourceKey<StructureTemplatePool>> builder = SimpleWeightedRandomList.builder();
 
 		for (WeightedEntry.Wrapper<ResourceKey<StructureTemplatePool>> wrapper : this.targets.unwrap()) {
-			builder.add(wrapper.data(), wrapper.weight().asInt());
+			builder.add(wrapper.getData(), wrapper.getWeight().asInt());
 		}
 
 		for (Pair<ResourceLocation, Integer> additionalTargets : additions) {
