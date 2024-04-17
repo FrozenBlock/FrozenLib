@@ -3,7 +3,7 @@
   "minVersion": "0.8",
   "package": "net.frozenblock.lib.config.clothconfig.mixin",
   "plugin": "net.frozenblock.lib.config.clothconfig.mixin.plugin.FrozenLibClothConfigMixinPlugin",
-  "compatibilityLevel": "JAVA_18",
+  "compatibilityLevel": "JAVA_21",
   "injectors": {
     "defaultRequire": 1
   },
