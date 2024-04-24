@@ -21,6 +21,7 @@ package net.frozenblock.lib.config.api.instance.xjs;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import java.util.Collection;
+import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
@@ -53,7 +54,7 @@ public final class XjsTypedEntrySerializer {
     }
 
     public static TypedEntry<?> fromJsonValue(final String modId, final JsonValue value) throws NonSerializableObjectException {
-        TypedEntry<?> modEntry = getFromRegistry(value, ConfigRegistry.getTypedEntryTypesForMod(modId));
+        TypedEntry<?> modEntry = getFromRegistry(modId, value, ConfigRegistry.getTypedEntryTypesForMod(modId));
         if (modEntry != null) {
             return modEntry;
         }

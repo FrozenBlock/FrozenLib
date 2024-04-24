@@ -28,7 +28,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JanksonOps;
 import xjs.core.JsonFormat;
 import xjs.core.JsonValue;
-import xjs.serialization.writer.ElementWriter;
+import xjs.serialization.writer.ValueWriter;
 
 /**
  * Serializes and deserializes config data with GSON and Jankson.

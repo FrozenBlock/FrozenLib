@@ -182,7 +182,7 @@ public class XjsObjectMapper {
 		} else if (type.isAssignableFrom(List.class)) {
 			return toList(modId, value, def);
 		} else if (type.isAssignableFrom(Set.class)) {
-			return new HashSet<>(toList(value, def));
+			return new HashSet<>(toList(modId, value, def));
 		} else if (type.equals(Collection.class)) {
 			return toList(modId, value, def);
 		} else if (type.isAssignableFrom(Map.class)) {
