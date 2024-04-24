@@ -43,6 +43,7 @@ import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
@@ -79,7 +80,7 @@ public final class FrozenTestMain implements ModInitializer {
 			Advancement advancement = holder.value();
 			switch (holder.id().toString()) {
 				case "minecraft:story/mine_stone" -> {
-					AdvancementAPI.addLootTables(advancement, List.of(ResourceKey.create(Registries.LOOT_TABLE, new ResourceLocation("archaeology/ocean_ruin_warm"))));
+          AdvancementAPI.addLootTables(advancement, List.of(BuiltInLootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY));
 					advancement.rewards.experience = 100;
 				}
 				case "minecraft:story/upgrade_tools" -> {

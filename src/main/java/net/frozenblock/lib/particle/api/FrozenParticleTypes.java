@@ -57,11 +57,10 @@ public final class FrozenParticleTypes {
 	private static <T extends ParticleOptions> ParticleType<T> register(
 		@NotNull String name,
 		boolean alwaysShow,
-		@NotNull ParticleOptions.Deserializer<T> factory,
 		Function<ParticleType<T>, MapCodec<T>> codecGetter,
 		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodecGetter
 	) {
-		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, FrozenSharedConstants.id(name), new ParticleType<T>(alwaysShow, factory) {
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, FrozenSharedConstants.id(name), new ParticleType<T>(alwaysShow) {
 			@Override
 			public MapCodec<T> codec() {
 				return codecGetter.apply(this);
