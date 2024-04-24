@@ -79,16 +79,7 @@ data class TestConfig(
         @JvmField
         @Comment("Crazy sub option ngl")
         var subOption: Boolean = true
-    ) {
-        companion object {
-            @JvmField
-            val CODEC: Codec<SubMenu> = RecordCodecBuilder.create { instance ->
-                instance.group(
-                    Codec.BOOL.fieldOf("subOption").forGetter { it.subOption }
-                ).apply(instance, ::SubMenu)
-            }
-        }
-    }
+    )
 
     companion object {
         @JvmField
@@ -96,21 +87,7 @@ data class TestConfig(
             XjsConfig(
                 FrozenTestMain.MOD_ID,
                 TestConfig::class.java,
-                XjsFormat.XJS_FORMATTED,
-                RecordCodecBuilder.create { instance ->
-                    instance.group(
-                        Codec.BOOL.fieldOf("testToggle").forGetter { it.testToggle },
-                        Codec.INT.fieldOf("testInt").forGetter { it.testInt },
-                        Codec.LONG.fieldOf("testLong").forGetter {it.testLong },
-                        Codec.FLOAT.fieldOf("testFloat").forGetter { it.testFloat },
-                        Codec.DOUBLE.fieldOf("testDouble").forGetter { it.testDouble },
-                        Codec.INT.listOf().fieldOf("testIntList").forGetter { it.testIntList },
-                        SoundEvent.DIRECT_CODEC.fieldOf("randomSound").forGetter { it.randomSound },
-                        Vec3.CODEC.listOf().fieldOf("typedVecList").forGetter { it.typedVecList },
-                        Codec.DOUBLE.listOf().fieldOf("doubleList").forGetter { it.doubleList },
-                        SubMenu.CODEC.fieldOf("subMenu").forGetter { it.subMenu },
-                    ).apply(instance, ::TestConfig)
-                }
+                XjsFormat.XJS_FORMATTED
             )
         )
 

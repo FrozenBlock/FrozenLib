@@ -19,6 +19,7 @@
 package net.frozenblock.lib.config.api.instance.xjs;
 
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import java.util.Collection;
 import net.frozenblock.lib.FrozenLogUtils;
