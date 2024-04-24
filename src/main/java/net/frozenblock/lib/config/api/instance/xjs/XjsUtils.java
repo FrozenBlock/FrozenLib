@@ -283,7 +283,7 @@ public class XjsUtils {
 	 * Gets a single value in a JSON object based on a full, dotted path.
 	 *
 	 * @param json The JSON object containing this path.
-	 * @param path The output of a {@link PathArgument}.
+	 * @param path The JSON path.
 	 * @return The value at this location, or else {@link Optional#empty}.
 	 */
 	public static Optional<JsonValue> getValueFromPath(final JsonObject json, final JsonPath path) {
@@ -310,7 +310,7 @@ public class XjsUtils {
 	 *   location and returned by the method.
 	 * </p>
 	 * @param json The JSON object containing this path.
-	 * @param path The output of a {@link PathArgument}.
+	 * @param path The JSON path.
 	 * @return The value at this location, the original <code>json</code>, or else a new container.
 	 */
 	public static JsonContainer getLastContainer(final JsonObject json, final JsonPath path) {
@@ -560,7 +560,7 @@ public class XjsUtils {
 	 *   <li>a[0].c</li>
 	 * </ul>
 	 * @param json The JSON data containing these paths.
-	 * @param path The current output of a {@link PathArgument}.
+	 * @param path The JSON path.
 	 * @return A list of all adjacent paths.
 	 */
 	public static List<String> getPaths(final JsonObject json, final JsonPath path) {
