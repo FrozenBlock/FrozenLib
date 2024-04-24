@@ -33,12 +33,12 @@ import xjs.core.JsonValue;
 public final class XjsTypedEntrySerializer {
     private XjsTypedEntrySerializer() {}
 
-    @SuppressWarnings("unchecked")
-    public static JsonValue toJsonValue(final TypedEntry<?> src) throws NonSerializableObjectException {
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    public static JsonValue toJsonValue(final TypedEntry src) throws NonSerializableObjectException {
         if (src != null) {
-            var type = src.type();
+            TypedEntryType type = src.type();
             if (type != null) {
-                var codec = type.codec();
+                Codec codec = type.codec();
                 if (codec != null) {
                     var encoded = codec.encodeStart(XjsOps.INSTANCE, src.value());
                     if (encoded != null && encoded.error().isEmpty()) {
@@ -63,7 +63,7 @@ public final class XjsTypedEntrySerializer {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    private <T> TypedEntry<T> getFromRegistry(final String modId, final JsonValue value, final @NotNull Collection<TypedEntryType<?>> registry) throws ClassCastException {
+    private static <T> TypedEntry<T> getFromRegistry(final String modId, final JsonValue value, final @NotNull Collection<TypedEntryType<?>> registry) throws ClassCastException {
         for (TypedEntryType<?> entryType : registry) {
             TypedEntryType<T> newType = (TypedEntryType<T>) entryType;
             TypedEntry<T> entry = getFromType(modId, value, newType);
@@ -75,7 +75,7 @@ public final class XjsTypedEntrySerializer {
     }
 
     @Nullable
-    private <T> TypedEntry<T> getFromType(String modId, JsonValue value, @NotNull TypedEntryType<T> entryType) throws ClassCastException {
+    private static <T> TypedEntry<T> getFromType(String modId, JsonValue value, @NotNull TypedEntryType<T> entryType) throws ClassCastException {
         if (!entryType.modId().equals(modId))
             return null;
 
