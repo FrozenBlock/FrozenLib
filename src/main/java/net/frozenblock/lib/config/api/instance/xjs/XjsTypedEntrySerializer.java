@@ -18,9 +18,13 @@
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.DataResult;
 import java.util.Collection;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xjs.core.JsonValue;
@@ -49,7 +53,7 @@ public final class XjsTypedEntrySerializer {
     }
 
     public static TypedEntry<?> fromJsonValue(final String modId, final JsonValue value) throws NonSerializableObjectException {
-        TypedEntry<?> modEntry = getFromRegistry(json, ConfigRegistry.getTypedEntryTypesForMod(modId));
+        TypedEntry<?> modEntry = getFromRegistry(value, ConfigRegistry.getTypedEntryTypesForMod(modId));
         if (modEntry != null) {
             return modEntry;
         }
@@ -58,10 +62,10 @@ public final class XjsTypedEntrySerializer {
 
     @Nullable
     @SuppressWarnings("unchecked")
-    private <T> TypedEntry<T> getFromRegistry(final String modId, final JsonValue json, final @NotNull Collection<TypedEntryType<?>> registry) throws ClassCastException {
+    private <T> TypedEntry<T> getFromRegistry(final String modId, final JsonValue value, final @NotNull Collection<TypedEntryType<?>> registry) throws ClassCastException {
         for (TypedEntryType<?> entryType : registry) {
             TypedEntryType<T> newType = (TypedEntryType<T>) entryType;
-            TypedEntry<T> entry = getFromType(value, newType);
+            TypedEntry<T> entry = getFromType(modId, value, newType);
             if (entry != null) {
                 return entry;
             }
@@ -70,7 +74,7 @@ public final class XjsTypedEntrySerializer {
     }
 
     @Nullable
-    private <T> TypedEntry<T> getFromType(JsonValue value, @NotNull TypedEntryType<T> entryType) throws ClassCastException {
+    private <T> TypedEntry<T> getFromType(String modId, JsonValue value, @NotNull TypedEntryType<T> entryType) throws ClassCastException {
         if (!entryType.modId().equals(modId))
             return null;
 

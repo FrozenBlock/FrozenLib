@@ -35,7 +35,6 @@ import xjs.serialization.writer.ElementWriter;
  */
 public class XjsConfig<T> extends Config<T> {
 
-	private final Codec<T> codec;
 	private final XjsFormat format;
 
 	public XjsConfig(String modId, Class<T> config) {
@@ -73,9 +72,9 @@ public class XjsConfig<T> extends Config<T> {
 		Files.createDirectories(this.path().getParent());
 		JsonValue value = XjsObjectMapper.toJsonObject(this.instance());
 		try (
-			ElementWriter elementWriter = this.format.createWriter(this.path().toFile())
+			ValueWriter writer = this.format.createWriter(this.path().toFile())
 		) {
-			elementWriter.write(value);
+			writer.write(value);
 		}
 	}
 

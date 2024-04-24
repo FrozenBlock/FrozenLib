@@ -20,6 +20,7 @@ package net.frozenblock.lib.config.api.instance.xjs;
 
 import blue.endless.jankson.Comment;
 import me.shedaniel.autoconfig.util.Utils;
+import net.frozenblock.lib.config.api.entry.TypedEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xjs.core.Json;

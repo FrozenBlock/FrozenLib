@@ -20,11 +20,12 @@ package net.frozenblock.lib.config.api.instance.xjs;
 
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
-import xjs.serialization.writer.ElementWriter;
+import xjs.serialization.util.UBTyping;
 import xjs.serialization.writer.HjsonWriter;
 import xjs.serialization.writer.JsonWriter;
 import xjs.serialization.writer.TxtWriter;
 import xjs.serialization.writer.UbjsonWriter;
+import xjs.serialization.writer.ValueWriter;
 import xjs.serialization.writer.XjsWriter;
 import java.io.File;
 import java.io.IOException;
@@ -125,9 +126,9 @@ public enum XjsFormat implements StringRepresentable {
 	private final String name;
 
 	@NotNull
-	private final Function<File, ElementWriter> writer;
+	private final Function<File, ValueWriter> writer;
 
-	XjsFormat(@NotNull String name, @NotNull Function<File, ElementWriter> writer) {
+	XjsFormat(@NotNull String name, @NotNull Function<File, ValueWriter> writer) {
 		this.name = name;
 		this.writer = writer;
 	}
@@ -139,7 +140,7 @@ public enum XjsFormat implements StringRepresentable {
 	}
 
 	@NotNull
-	public ElementWriter createWriter(File writer) {
+	public ValueWriter createWriter(File writer) {
 		return this.writer.apply(writer);
 	}
 }

@@ -23,7 +23,7 @@ package net.frozenblock.lib.config.api.instance.xjs;
  License: GNU GPL-3.0
  */
 public class NonSerializableObjectException extends Exception {
-	private NonSerializableObjectException(final String msg) {
+	public NonSerializableObjectException(final String msg) {
 		super(msg);
 	}
 
