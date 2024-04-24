@@ -61,7 +61,7 @@ Methods marked with `@Unique` do not need prefixes.
 
 ## Licensing & DCO
 
-FrozenLib is licensed under [LGPL 3.0][LICENSE], and it has a [Developer Certificate of Origin (DCO)][DCO], which you are required to agree with to contribute.
+FrozenLib is licensed under [GPL 3.0][LICENSE], and it has a [Developer Certificate of Origin (DCO)][DCO], which you are required to agree with to contribute.
 Specifying the commit author may be sufficient, but a [sign-off can be also added](https://git-scm.com/docs/git-commit#Documentation/git-commit.txt--s).
 Legal names are not required.
 

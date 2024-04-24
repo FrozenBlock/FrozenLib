@@ -21,7 +21,7 @@
     "sources": "https://github.com/FrozenBlock/FrozenLib",
     "issues": "https://github.com/FrozenBlock/FrozenLib/issues"
   },
-  "license": "LGPL-3.0",
+  "license": "GPL-3.0",
   "icon": "assets/frozenlib/icon.png",
   "environment": "*",
   "entrypoints": {
