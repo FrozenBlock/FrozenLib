@@ -37,6 +37,7 @@ val minecraft_version: String by project
 val quilt_mappings: String by project
 val parchment_mappings: String by project
 val loader_version: String by project
+val min_loader_version: String by project
 
 val mod_version: String by project
 val mod_loader: String by project
@@ -277,9 +278,9 @@ tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = "~1.20.5-"
+        properties["minecraft_version"] = minecraft_version
 
-        properties["fabric_loader_version"] = ">=0.15.10"
+        properties["fabric_loader_version"] = ">=$min_loader_version"
         properties["fabric_api_version"] = ">=$fabric_api_version"
         properties["fabric_kotlin_version"] = fabric_kotlin_version
 
