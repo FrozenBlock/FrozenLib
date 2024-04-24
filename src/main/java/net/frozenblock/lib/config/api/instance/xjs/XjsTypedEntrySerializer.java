@@ -18,6 +18,13 @@
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
+import java.util.Collection;
+import net.frozenblock.lib.config.api.entry.TypedEntry;
+import net.frozenblock.lib.config.api.entry.TypedEntryType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import xjs.core.JsonValue;
+
 public final class XjsTypedEntrySerializer {
     private XjsTypedEntrySerializer() {}
 
