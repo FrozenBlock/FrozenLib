@@ -23,6 +23,8 @@ import org.jetbrains.annotations.NotNull;
 import xjs.serialization.writer.ElementWriter;
 import xjs.serialization.writer.HjsonWriter;
 import xjs.serialization.writer.JsonWriter;
+import xjs.serialization.writer.TxtWriter;
+import xjs.serialization.writer.UbjsonWriter;
 import xjs.serialization.writer.XjsWriter;
 import java.io.File;
 import java.io.IOException;
@@ -92,6 +94,28 @@ public enum XjsFormat implements StringRepresentable {
 	XJS_FORMATTED(XJS.getSerializedName(), writer -> {
 		try {
 			return new XjsWriter(writer, true);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}),
+
+	/**
+	 * Prints into a txt file.
+	 */
+	TXT("txt", writer -> {
+		try {
+			return new TxtWriter(writer);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}),
+
+	/**
+	 * Prints Universal Binary JSON.
+	 */
+	UBJSON("ubjson", writer -> {
+		try {
+			return new UbjsonWriter(writer, UBTyping.BALANCED);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
