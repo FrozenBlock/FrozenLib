@@ -38,30 +38,29 @@ public class XjsConfig<T> extends Config<T> {
 	private final Codec<T> codec;
 	private final XjsFormat format;
 
-	public XjsConfig(String modId, Class<T> config, Codec<T> codec) {
-		this(modId, config, true, codec);
+	public XjsConfig(String modId, Class<T> config) {
+		this(modId, config, true);
 	}
 
-	public XjsConfig(String modId, Class<T> config, XjsFormat type, Codec<T> codec) {
-		this(modId, config, type, true, codec);
+	public XjsConfig(String modId, Class<T> config, XjsFormat type) {
+		this(modId, config, type, true);
 	}
 
-	public XjsConfig(String modId, Class<T> config, Path path, XjsFormat type, Codec<T> codec) {
-		this(modId, config, path, type, true, codec);
+	public XjsConfig(String modId, Class<T> config, Path path, XjsFormat type) {
+		this(modId, config, path, type, true);
 	}
 
-	public XjsConfig(String modId, Class<T> config, boolean supportsModification, Codec<T> codec) {
-		this(modId, config, XjsFormat.XJS_FORMATTED, supportsModification, codec);
+	public XjsConfig(String modId, Class<T> config, boolean supportsModification) {
+		this(modId, config, XjsFormat.XJS_FORMATTED, supportsModification);
 	}
 
-	public XjsConfig(String modId, Class<T> config, XjsFormat type, boolean supportsModification, Codec<T> codec) {
-		this(modId, config, makePath(modId, type.getSerializedName()), type, supportsModification, codec);
+	public XjsConfig(String modId, Class<T> config, XjsFormat type, boolean supportsModification) {
+		this(modId, config, makePath(modId, type.getSerializedName()), type, supportsModification);
 	}
 
-	public XjsConfig(String modId, Class<T> config, Path path, XjsFormat type, boolean supportsModification, Codec<T> codec) {
+	public XjsConfig(String modId, Class<T> config, Path path, XjsFormat type, boolean supportsModification) {
 		super(modId, config, path, supportsModification, null, null);
 
-		this.codec = codec;
 		this.format = type;
 
 		if (this.load()) {
@@ -72,7 +71,7 @@ public class XjsConfig<T> extends Config<T> {
 	@Override
 	public void onSave() throws Exception {
 		Files.createDirectories(this.path().getParent());
-		JsonValue value = this.codec.encodeStart(XjsOps.INSTANCE, this.instance()).getOrThrow();
+		JsonValue value = XjsObjectMapper.toJsonObject(this.instance());
 		try (
 			ElementWriter elementWriter = this.format.createWriter(this.path().toFile())
 		) {
@@ -83,7 +82,7 @@ public class XjsConfig<T> extends Config<T> {
 	@Override
 	public boolean onLoad() throws Exception {
 		if (Files.exists(this.path())) {
-			this.setConfig(this.codec.decode(XjsOps.INSTANCE, XjsUtils.readJson(this.path().toFile()).orElseThrow()).getOrThrow().getFirst());
+			this.setConfig(XjsObjectMapper.deserializeObject(this.modId(), this.path(), this.configClass()));
 		}
 		return true;
 	}
