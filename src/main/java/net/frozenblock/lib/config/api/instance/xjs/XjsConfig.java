@@ -72,11 +72,11 @@ public class XjsConfig<T> extends Config<T> {
 	@Override
 	public void onSave() throws Exception {
 		Files.createDirectories(this.path().getParent());
-		JsonElement value = this.codec.encodeStart(JanksonOps.INSTANCE, this.instance()).getOrThrow();
+		JsonValue value = this.codec.encodeStart(XjsOps.INSTANCE, this.instance()).getOrThrow();
 		try (
 			ElementWriter elementWriter = this.format.createWriter(this.path().toFile())
 		) {
-			//elementWriter.write(value);
+			elementWriter.write(value);
 		}
 	}
 
