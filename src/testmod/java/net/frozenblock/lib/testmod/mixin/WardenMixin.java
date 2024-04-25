@@ -1,19 +1,31 @@
 /*
- * Copyright 2023-2024 FrozenBlock
- * This file is part of FrozenLib.
+ * Copyright 2023 The Quilt Project
+ * Copyright 2023 FrozenBlock
+ * Modified to work on Fabric
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 QuiltMC
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 QuiltMC
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 QuiltMC
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 QuiltMC
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 QuiltMC
+ * ;;match_from: \/\/\/ Q[Uu][Ii][Ll][Tt]
  */
 
 package net.frozenblock.lib.testmod.mixin;
@@ -21,6 +33,7 @@ package net.frozenblock.lib.testmod.mixin;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
@@ -42,7 +55,7 @@ public abstract class WardenMixin extends Monster {
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initWithIcon(EntityType<? extends Warden> entityType, Level level, CallbackInfo ci) {
 		Warden warden = Warden.class.cast(this);
-		((EntitySpottingIconInterface) warden).getSpottingIconManager().setIcon(FrozenMain.resourceLocation("textures/spotting_icons/warden.png"), 8, 12, FrozenMain.resourceLocation("default"));
+		((EntitySpottingIconInterface) warden).getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/warden.png"), 8, 12, FrozenMain.resourceLocation("default"));
 	}
 
 	@Inject(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))

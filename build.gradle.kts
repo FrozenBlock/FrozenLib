@@ -37,6 +37,7 @@ val minecraft_version: String by project
 val quilt_mappings: String by project
 val parchment_mappings: String by project
 val loader_version: String by project
+val min_loader_version: String by project
 
 val mod_version: String by project
 val mod_loader: String by project
@@ -49,6 +50,9 @@ val mixin_extras_version: String by project
 val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
+val xjs_core_version: String by project
+val xjs_compat_version: String by project
+val fresult_version: String by project
 
 val modmenu_version: String by project
 val cloth_config_version: String by project
@@ -250,10 +254,10 @@ dependencies {
     annotationProcessor("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")
 
     // Mod Menu
-    modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
+    modApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
@@ -270,6 +274,12 @@ dependencies {
     // Jankson
     relocModApi("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
 
+    // ExJson
+    relocModApi("org.exjson:xjs-core:$xjs_core_version")
+    relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
+    relocModApi("com.personthecat:fresult:$fresult_version")
+    compileOnly("org.projectlombok:lombok:1.18.30")?.let { annotationProcessor(it) }
+
     "testmodImplementation"(sourceSets.main.get().output)
 }
 
@@ -279,7 +289,7 @@ tasks {
         properties["version"] = project.version
         properties["minecraft_version"] = minecraft_version
 
-        properties["fabric_loader_version"] = ">=0.15.10"
+        properties["fabric_loader_version"] = ">=$min_loader_version"
         properties["fabric_api_version"] = ">=$fabric_api_version"
         properties["fabric_kotlin_version"] = fabric_kotlin_version
 
