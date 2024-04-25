@@ -346,13 +346,13 @@ tasks {
 
     withType(JavaCompile::class) {
         options.encoding = "UTF-8"
-        options.release = 21
+        options.release = 17
         options.isFork = true
         options.isIncremental = true
     }
 
     withType(KotlinCompile::class) {
-        compilerOptions.jvmTarget = JvmTarget.JVM_21
+        compilerOptions.jvmTarget = JvmTarget.JVM_17
     }
 
     withType(Test::class) {
@@ -370,8 +370,8 @@ val sourcesJar: Task by tasks
 val javadocJar: Task by tasks
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
