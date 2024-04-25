@@ -1,19 +1,31 @@
 /*
- * Copyright 2023-2024 FrozenBlock
- * This file is part of FrozenLib.
+ * Copyright 2023 The Quilt Project
+ * Copyright 2023 FrozenBlock
+ * Modified to work on Fabric
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
  *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, see <https://www.gnu.org/licenses/>.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ *
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 The Quilt Project
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 QuiltMC
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 QuiltMC
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 QuiltMC
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 QuiltMC
+ * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 QuiltMC
+ * ;;match_from: \/\/\/ Q[Uu][Ii][Ll][Tt]
  */
 
 package net.frozenblock.lib.config.api.instance;
@@ -42,18 +54,18 @@ public abstract class Config<T> {
 	private final DataFixer dataFixer;
 	@Nullable
 	private final Integer version;
-	private final Class<T> config;
+	private final Class<T> configClass;
 	private T configInstance;
 	private final T defaultInstance;
 	private boolean synced = false;
 
-	protected Config(String modId, Class<T> config, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+	protected Config(String modId, Class<T> configClass, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this.modId = modId;
 		this.path = path;
 		this.supportsModification = supportsModification;
-		this.config = config;
+		this.configClass = configClass;
 		try {
-			this.defaultInstance = this.configInstance = config.getConstructor().newInstance();
+			this.defaultInstance = this.configInstance = configClass.getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new IllegalStateException("No default constructor for default config instance.", e);
 		}
@@ -135,7 +147,7 @@ public abstract class Config<T> {
 	}
 
 	public Class<T> configClass() {
-		return this.config;
+		return this.configClass;
 	}
 
 	public void setSynced(boolean synced) {
