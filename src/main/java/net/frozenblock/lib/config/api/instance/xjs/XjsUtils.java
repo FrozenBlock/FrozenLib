@@ -154,7 +154,7 @@ public class XjsUtils {
 	 * @return The deserialized object.
 	 */
 	public static <T> T readThrowing(final Codec<T> codec, final JsonValue value) {
-		return codec.parse(XjsOps.INSTANCE, value).getOrThrow(partial -> {
+		return codec.parse(XjsOps.INSTANCE, value).getOrThrow(false, partial -> {
 			throw new JsonFormatException(partial);
 		});
 	}
