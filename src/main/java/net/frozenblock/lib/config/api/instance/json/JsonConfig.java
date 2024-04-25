@@ -49,54 +49,24 @@ public class JsonConfig<T> extends Config<T> {
 
 	private final JsonType type;
 
-	@Deprecated(forRemoval = true)
-	public JsonConfig(String modId, Class<T> config) {
-		this(modId, config, (@Nullable DataFixer) null, null);
-	}
-
 	public JsonConfig(String modId, Class<T> config, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this(modId, config, true, dataFixer, version);
-	}
-
-	@Deprecated(forRemoval = true)
-	public JsonConfig(String modId, Class<T> config, JsonType type) {
-		this(modId, config, type, null, null);
 	}
 
 	public JsonConfig(String modId, Class<T> config, JsonType type, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this(modId, config, type, true, dataFixer, version);
 	}
 
-	@Deprecated(forRemoval = true)
-	public JsonConfig(String modId, Class<T> config, Path path, JsonType type) {
-		this(modId, config, path, type, null, null);
-	}
-
 	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this(modId, config, path, type, true, dataFixer, version);
-	}
-
-	@Deprecated(forRemoval = true)
-	public JsonConfig(String modId, Class<T> config, boolean supportsModification) {
-		this(modId, config, supportsModification, null, null);
 	}
 
 	public JsonConfig(String modId, Class<T> config, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this(modId, config, JsonType.JSON, supportsModification, dataFixer, version);
 	}
 
-	@Deprecated(forRemoval = true)
-	public JsonConfig(String modId, Class<T> config, JsonType type, boolean supportsModification) {
-		this(modId, config, type, supportsModification, null, null);
-	}
-
 	public JsonConfig(String modId, Class<T> config, JsonType type, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this(modId, config, makePath(modId, type.getSerializedName()), type, supportsModification, dataFixer, version);
-	}
-
-	@Deprecated(forRemoval = true)
-	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, boolean supportsModification) {
-		this(modId, config, path, type, supportsModification, null, null);
 	}
 
 	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {

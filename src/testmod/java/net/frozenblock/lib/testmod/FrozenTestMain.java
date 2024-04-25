@@ -47,6 +47,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -73,8 +74,8 @@ public final class FrozenTestMain implements ModInitializer {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
         LOGGER.info("The test toggle value is {}", TestConfig.get().testToggle);
         LOGGER.info("The test vec3 value is {}", TestConfig.get().typedVecList);
-		SoundEvent sound = TestConfig.get().randomSound;
-        LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.getLocation());
+		Holder<SoundEvent> sound = TestConfig.get().randomSound.value();
+        LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.unwrapKey().orElseThrow().location());
 
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));

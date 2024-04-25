@@ -31,6 +31,7 @@
 package net.frozenblock.lib.config.api.instance.xjs;
 
 import blue.endless.jankson.Comment;
+import blue.endless.jankson.annotation.SaveToggle;
 import me.shedaniel.autoconfig.util.Utils;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import org.jetbrains.annotations.NotNull;
@@ -104,13 +105,15 @@ public class XjsObjectMapper {
 
 		final Class<?> c = o.getClass();
 		for (final Field f : c.getDeclaredFields()) {
-			if (!Modifier.isFinal(f.getModifiers())) {
+			if (!Modifier.isStatic(f.getModifiers()) && !Modifier.isTransient(f.getModifiers())) {
 				final JsonValue value = toJsonValue(Utils.getUnsafely(f, o));
 
 				final String comment = getComment(f);
 				if (comment != null) value.setComment(comment);
 
-				json.add(f.getName(), value);
+				if (getSaveToggle(f)) {
+					json.add(f.getName(), value);
+				}
 			}
 		}
 		return json;
@@ -121,6 +124,12 @@ public class XjsObjectMapper {
 		final Comment[] comments = f.getAnnotationsByType(Comment.class);
 		if (comments.length == 0) return null;
 		return comments[0].value();
+	}
+
+	public static boolean getSaveToggle(final Field f) {
+		final SaveToggle[] toggles = f.getAnnotationsByType(SaveToggle.class);
+		if (toggles.length == 0) return true;
+		return toggles[0].value();
 	}
 
 	public static JsonObject toJsonObject(final Map<?, ?> map) throws NonSerializableObjectException {
@@ -155,7 +164,7 @@ public class XjsObjectMapper {
 		final Class<?> clazz = o.getClass();
 		for (final JsonObject.Member member : json) {
 			final Field f = getField(clazz, member.getKey());
-			if (f == null) continue;
+			if (f == null || !getSaveToggle(f)) continue;
 
 			final Object def = Utils.getUnsafely(f, o);
 			Utils.setUnsafely(f, o, getValueByType(modId, f.getType(), def, member.getValue()));
