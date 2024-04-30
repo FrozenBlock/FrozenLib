@@ -30,6 +30,7 @@
 
 package net.frozenblock.lib.entity.mixin;
 
+import java.util.Optional;
 import net.frozenblock.lib.entity.api.WolfVariantBiomeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -43,7 +44,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
-import java.util.Optional;
 
 @Mixin(WolfVariants.class)
 public class WolfVariantsMixin {

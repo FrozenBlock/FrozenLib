@@ -30,15 +30,9 @@
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
-import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import blue.endless.jankson.JsonElement;
-import com.mojang.serialization.Codec;
 import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.instance.json.JanksonOps;
-import xjs.core.JsonFormat;
 import xjs.core.JsonValue;
 import xjs.serialization.writer.ValueWriter;
 

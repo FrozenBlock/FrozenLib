@@ -30,8 +30,8 @@
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
-import org.jetbrains.annotations.NotNull;
 import java.util.Arrays;
+import org.jetbrains.annotations.NotNull;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib

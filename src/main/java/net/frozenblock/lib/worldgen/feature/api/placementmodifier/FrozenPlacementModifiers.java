@@ -30,7 +30,6 @@
 
 package net.frozenblock.lib.worldgen.feature.api.placementmodifier;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.Registry;

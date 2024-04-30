@@ -30,6 +30,9 @@
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.function.Function;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 import xjs.serialization.util.UBTyping;
@@ -39,11 +42,6 @@ import xjs.serialization.writer.TxtWriter;
 import xjs.serialization.writer.UbjsonWriter;
 import xjs.serialization.writer.ValueWriter;
 import xjs.serialization.writer.XjsWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.Writer;
-import java.nio.file.Path;
-import java.util.function.Function;
 
 public enum XjsFormat implements StringRepresentable {
 	/**

@@ -30,9 +30,8 @@
 
 package net.frozenblock.lib.particle.api;
 
-import com.mojang.serialization.Codec;
-import java.util.function.Function;
 import com.mojang.serialization.MapCodec;
+import java.util.function.Function;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.Registry;

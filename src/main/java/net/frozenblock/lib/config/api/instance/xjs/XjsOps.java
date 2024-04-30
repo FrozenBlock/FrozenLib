@@ -34,14 +34,17 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapLike;
-import org.jetbrains.annotations.Nullable;
-import xjs.core.*;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import org.jetbrains.annotations.Nullable;
+import xjs.core.Json;
+import xjs.core.JsonArray;
+import xjs.core.JsonLiteral;
+import xjs.core.JsonObject;
+import xjs.core.JsonValue;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib

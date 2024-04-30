@@ -36,6 +36,13 @@ import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.datafixers.util.Either;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import personthecat.fresult.Result;
@@ -43,9 +50,6 @@ import xjs.core.JsonContainer;
 import xjs.core.JsonObject;
 import xjs.core.JsonValue;
 import xjs.core.PathFilter;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib

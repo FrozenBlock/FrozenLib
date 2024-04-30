@@ -11,5 +11,3 @@ Put changelog here:
   - If a biome has multiple variants registered, it will pick a random entry from the list of registered variants.
 - Added the `RandomPoolAliasApi` to allow for modders to add new targets to structure aliases.
   - For example, adding new spawner types to Trial Chambers.
-- Added the `ColumnWithDiskScheduledTickFeature` feature.
-  - Will only call scheduled ticks for blocks placed as part of the column.

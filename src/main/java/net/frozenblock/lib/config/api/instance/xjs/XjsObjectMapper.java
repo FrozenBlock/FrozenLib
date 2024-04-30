@@ -32,6 +32,20 @@ package net.frozenblock.lib.config.api.instance.xjs;
 
 import blue.endless.jankson.Comment;
 import blue.endless.jankson.annotation.SaveToggle;
+import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 import me.shedaniel.autoconfig.util.Utils;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import org.jetbrains.annotations.NotNull;
@@ -40,13 +54,6 @@ import xjs.core.Json;
 import xjs.core.JsonArray;
 import xjs.core.JsonObject;
 import xjs.core.JsonValue;
-
-import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
-import java.nio.file.Path;
-import java.util.*;
-import java.util.function.Predicate;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib

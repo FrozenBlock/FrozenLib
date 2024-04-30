@@ -82,7 +82,6 @@ public class FrozenFeatures {
 	public static final NoisePathUnderWaterFeature NOISE_PATH_UNDER_WATER_FEATURE = new NoisePathUnderWaterFeature(PathFeatureConfig.CODEC);
 	public static final NoisePathTagUnderWaterFeature NOISE_PATH_TAG_UNDER_WATER_FEATURE = new NoisePathTagUnderWaterFeature(PathTagFeatureConfig.CODEC);
 	public static final ColumnWithDiskFeature COLUMN_WITH_DISK_FEATURE = new ColumnWithDiskFeature(ColumnWithDiskFeatureConfig.CODEC);
-	public static final ColumnWithDiskFeature COLUMN_WITH_DISK_SCHEDULED_TICK_FEATURE = new ColumnWithDiskFeature(ColumnWithDiskFeatureConfig.CODEC);
 	public static final UpwardsColumnFeature UPWARDS_COLUMN_FEATURE = new UpwardsColumnFeature(ColumnFeatureConfig.CODEC);
 	public static final DownwardsColumnFeature DOWNWARDS_COLUMN_FEATURE = new DownwardsColumnFeature(ColumnFeatureConfig.CODEC);
 	public static final CircularWaterloggedVegetationPatchFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH = new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
@@ -109,7 +108,6 @@ public class FrozenFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_under_water_feature"), NOISE_PATH_UNDER_WATER_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_tag_under_water_feature"), NOISE_PATH_TAG_UNDER_WATER_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("column_with_disk_feature"), COLUMN_WITH_DISK_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("column_with_disk_scheduled_tick_feature"), COLUMN_WITH_DISK_SCHEDULED_TICK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("upwards_column"), UPWARDS_COLUMN_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("downwards_column"), DOWNWARDS_COLUMN_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);

@@ -32,8 +32,20 @@ package net.frozenblock.lib.config.api.instance.xjs;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import static java.util.Optional.empty;
+import java.util.function.Consumer;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import static net.frozenblock.lib.config.api.instance.xjs.InvalidEnumConstantException.f;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.NotNull;
@@ -41,17 +53,16 @@ import org.jetbrains.annotations.Nullable;
 import personthecat.fresult.Result;
 import personthecat.fresult.Void;
 import xjs.comments.CommentType;
-import xjs.core.*;
+import xjs.core.Json;
+import xjs.core.JsonArray;
+import xjs.core.JsonContainer;
+import xjs.core.JsonLiteral;
+import xjs.core.JsonObject;
+import xjs.core.JsonReference;
+import xjs.core.JsonValue;
 import xjs.exception.SyntaxException;
 import xjs.serialization.JsonContext;
 import xjs.serialization.writer.JsonWriterOptions;
-
-import java.io.*;
-import java.util.*;
-import java.util.function.Consumer;
-
-import static java.util.Optional.empty;
-import static net.frozenblock.lib.config.api.instance.xjs.InvalidEnumConstantException.f;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib
