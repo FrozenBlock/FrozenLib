@@ -37,7 +37,6 @@ import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
 import xjs.compat.serialization.util.UBTyping;
 import xjs.compat.serialization.writer.HjsonWriter;
-import xjs.compat.serialization.writer.JsonWriter;
 import xjs.compat.serialization.writer.TxtWriter;
 import xjs.compat.serialization.writer.UbjsonWriter;
 import xjs.data.serialization.writer.DjsWriter;
