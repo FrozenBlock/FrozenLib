@@ -40,8 +40,9 @@ import xjs.compat.serialization.writer.HjsonWriter;
 import xjs.compat.serialization.writer.JsonWriter;
 import xjs.compat.serialization.writer.TxtWriter;
 import xjs.compat.serialization.writer.UbjsonWriter;
-import xjs.data.serialization.writer.ValueWriter;
 import xjs.data.serialization.writer.DjsWriter;
+import xjs.data.serialization.writer.JsonWriter;
+import xjs.data.serialization.writer.ValueWriter;
 
 public enum XjsFormat implements StringRepresentable {
 	/**
