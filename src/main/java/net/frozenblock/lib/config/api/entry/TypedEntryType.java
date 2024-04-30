@@ -24,6 +24,11 @@ import org.jetbrains.annotations.NotNull;
 
 public record TypedEntryType<T>(String modId, Codec<T> codec) {
 
+	@NotNull
+	public TypedEntryType<T> register() {
+		return register(this);
+	}
+
 	@Contract("_ -> param1")
 	public static <T> @NotNull TypedEntryType<T> register(TypedEntryType<T> type) {
 		return ConfigRegistry.register(type);
