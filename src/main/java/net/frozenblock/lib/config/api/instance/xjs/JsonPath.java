@@ -46,10 +46,10 @@ import java.util.stream.Collectors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import personthecat.fresult.Result;
-import xjs.core.JsonContainer;
-import xjs.core.JsonObject;
-import xjs.core.JsonValue;
-import xjs.core.PathFilter;
+import xjs.data.JsonContainer;
+import xjs.data.JsonObject;
+import xjs.data.JsonValue;
+import xjs.data.PathFilter;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib

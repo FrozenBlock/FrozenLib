@@ -52,17 +52,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import personthecat.fresult.Result;
 import personthecat.fresult.Void;
-import xjs.comments.CommentType;
-import xjs.core.Json;
-import xjs.core.JsonArray;
-import xjs.core.JsonContainer;
-import xjs.core.JsonLiteral;
-import xjs.core.JsonObject;
-import xjs.core.JsonReference;
-import xjs.core.JsonValue;
-import xjs.exception.SyntaxException;
-import xjs.serialization.JsonContext;
-import xjs.serialization.writer.JsonWriterOptions;
+import xjs.data.comments.CommentType;
+import xjs.data.Json;
+import xjs.data.JsonArray;
+import xjs.data.JsonContainer;
+import xjs.data.JsonLiteral;
+import xjs.data.JsonObject;
+import xjs.data.JsonReference;
+import xjs.data.JsonValue;
+import xjs.data.exception.SyntaxException;
+import xjs.data.serialization.JsonContext;
+import xjs.data.serialization.writer.JsonWriterOptions;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib

@@ -50,10 +50,10 @@ import me.shedaniel.autoconfig.util.Utils;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xjs.core.Json;
-import xjs.core.JsonArray;
-import xjs.core.JsonObject;
-import xjs.core.JsonValue;
+import xjs.data.Json;
+import xjs.data.JsonArray;
+import xjs.data.JsonObject;
+import xjs.data.JsonValue;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib

@@ -35,13 +35,13 @@ import java.io.IOException;
 import java.util.function.Function;
 import net.minecraft.util.StringRepresentable;
 import org.jetbrains.annotations.NotNull;
-import xjs.serialization.util.UBTyping;
-import xjs.serialization.writer.HjsonWriter;
-import xjs.serialization.writer.JsonWriter;
-import xjs.serialization.writer.TxtWriter;
-import xjs.serialization.writer.UbjsonWriter;
-import xjs.serialization.writer.ValueWriter;
-import xjs.serialization.writer.XjsWriter;
+import xjs.compat.serialization.util.UBTyping;
+import xjs.compat.serialization.writer.HjsonWriter;
+import xjs.compat.serialization.writer.JsonWriter;
+import xjs.compat.serialization.writer.TxtWriter;
+import xjs.compat.serialization.writer.UbjsonWriter;
+import xjs.data.serialization.writer.ValueWriter;
+import xjs.data.serialization.writer.DjsWriter;
 
 public enum XjsFormat implements StringRepresentable {
 	/**
@@ -89,22 +89,22 @@ public enum XjsFormat implements StringRepresentable {
 	}),
 
 	/**
-	 * Prints unformatted XJS with no whitespace.
+	 * Prints unformatted DJS with no whitespace.
 	 */
-	XJS("xjs", writer -> {
+	DJS("djs", writer -> {
 		try {
-			return new XjsWriter(writer, false);
+			return new DjsWriter(writer, false);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}),
 
 	/**
-	 * Pretty prints XJS with whitespace.
+	 * Pretty prints DJS with whitespace.
 	 */
-	XJS_FORMATTED(XJS.getSerializedName(), writer -> {
+	DJS_FORMATTED(DJS.getSerializedName(), writer -> {
 		try {
-			return new XjsWriter(writer, true);
+			return new DjsWriter(writer, true);
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

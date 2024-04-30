@@ -40,11 +40,11 @@ import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
 import org.jetbrains.annotations.Nullable;
-import xjs.core.Json;
-import xjs.core.JsonArray;
-import xjs.core.JsonLiteral;
-import xjs.core.JsonObject;
-import xjs.core.JsonValue;
+import xjs.data.Json;
+import xjs.data.JsonArray;
+import xjs.data.JsonLiteral;
+import xjs.data.JsonObject;
+import xjs.data.JsonValue;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib

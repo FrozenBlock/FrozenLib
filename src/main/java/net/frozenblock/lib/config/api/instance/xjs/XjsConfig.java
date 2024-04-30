@@ -33,8 +33,8 @@ package net.frozenblock.lib.config.api.instance.xjs;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import net.frozenblock.lib.config.api.instance.Config;
-import xjs.core.JsonValue;
-import xjs.serialization.writer.ValueWriter;
+import xjs.data.JsonValue;
+import xjs.data.serialization.writer.ValueWriter;
 
 /**
  * Serializes and deserializes config data with GSON and Jankson.

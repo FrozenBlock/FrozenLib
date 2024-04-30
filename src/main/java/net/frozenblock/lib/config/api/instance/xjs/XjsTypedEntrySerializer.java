@@ -41,7 +41,7 @@ import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import xjs.core.JsonValue;
+import xjs.data.JsonValue;
 
 public final class XjsTypedEntrySerializer {
     private XjsTypedEntrySerializer() {}
