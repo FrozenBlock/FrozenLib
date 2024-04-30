@@ -31,7 +31,6 @@
 package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
-import java.util.Optional;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnWithDiskFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -46,10 +45,11 @@ import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
-public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> {
+public class ColumnWithDiskScheduledTickFeature extends Feature<ColumnWithDiskFeatureConfig> {
 
-    public ColumnWithDiskFeature(Codec<ColumnWithDiskFeatureConfig> codec) {
+    public ColumnWithDiskScheduledTickFeature(Codec<ColumnWithDiskFeatureConfig> codec) {
         super(codec);
     }
 
@@ -101,6 +101,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
             }
             if (state.getBlock() instanceof GrowingPlantBodyBlock || state.getBlock() instanceof BushBlock || state.isAir()) {
                 level.setBlock(pos, column, 3);
+				level.scheduleTick(pos, column.getBlock(), 1);
                 generated = true;
             }
         }
