@@ -17,25 +17,15 @@
 
 package net.frozenblock.lib.config.api.entry;
 
-// java records are meant to be immutable but i dont care
-public class TypedEntry<T>{
-	private final TypedEntryType<T> type;
-	private T value;
+public interface TypedEntry<T> {
 
-    public TypedEntry(TypedEntryType<T> type, T value) {
-        this.type = type;
-        this.value = value;
-    }
+	TypedEntryType<T> type();
 
-	public T value() {
-		return this.value;
-	}
+	T value();
 
-	public void setValue(T value) {
-		this.value = value;
-	}
+	void setValue(T value);
 
-	public TypedEntryType<T> type() {
-		return this.type;
+	static <T> TypedEntry<T> create(TypedEntryType<T> type, T value) {
+		return new TypedEntryImpl<>(type, value);
 	}
 }

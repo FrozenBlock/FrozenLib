@@ -89,7 +89,7 @@ public final class XjsTypedEntrySerializer {
 
         Pair<T, JsonValue> pair = optional.get();
         T first = pair.getFirst();
-        TypedEntry<T> entry = new TypedEntry<>(entryType, first);
+        TypedEntry<T> entry = TypedEntry.create(entryType, first);
         FrozenLogUtils.log("Built typed entry " + entry, FrozenSharedConstants.UNSTABLE_LOGGING);
         return entry;
     }
