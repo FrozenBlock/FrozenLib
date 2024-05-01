@@ -16,5 +16,6 @@ Put changelog here:
   - For example, adding new spawner types to Trial Chambers.
 - Changed Typed Entry creation to `TypedEntry.create()`
   - `TypedEntry` is now an interface
+- Changed default config value for `removeExperimentalWarning` to false
 - Fixed LGPL license being used in some places instead of GPL
 - (1.20.5+) Updated minimum Java version to 21
