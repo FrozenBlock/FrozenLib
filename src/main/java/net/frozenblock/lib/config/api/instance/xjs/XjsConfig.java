@@ -24,7 +24,8 @@ import xjs.data.JsonValue;
 import xjs.data.serialization.writer.ValueWriter;
 
 /**
- * Serializes and deserializes config data with GSON and Jankson.
+ * Serializes and deserializes config data with XJS.
+ * @since 1.7
  */
 public class XjsConfig<T> extends Config<T> {
 
