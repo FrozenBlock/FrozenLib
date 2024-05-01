@@ -1,19 +1,18 @@
 /*
- * Copyright 2023-2024 FrozenBlock
- * This file is part of FrozenLib.
+ * Copyright (C) 2024 FrozenBlock
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.testmod.mixin;
@@ -21,6 +20,7 @@ package net.frozenblock.lib.testmod.mixin;
 import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
@@ -42,7 +42,7 @@ public abstract class WardenMixin extends Monster {
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initWithIcon(EntityType<? extends Warden> entityType, Level level, CallbackInfo ci) {
 		Warden warden = Warden.class.cast(this);
-		((EntitySpottingIconInterface) warden).getSpottingIconManager().setIcon(FrozenMain.resourceLocation("textures/spotting_icons/warden.png"), 8, 12, FrozenMain.resourceLocation("default"));
+		((EntitySpottingIconInterface) warden).getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/warden.png"), 8, 12, FrozenMain.resourceLocation("default"));
 	}
 
 	@Inject(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))

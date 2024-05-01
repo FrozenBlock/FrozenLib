@@ -1,19 +1,18 @@
 /*
- * Copyright 2023-2024 FrozenBlock
- * This file is part of FrozenLib.
+ * Copyright (C) 2024 FrozenBlock
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.config.api.instance;
@@ -42,18 +41,18 @@ public abstract class Config<T> {
 	private final DataFixer dataFixer;
 	@Nullable
 	private final Integer version;
-	private final Class<T> config;
+	private final Class<T> configClass;
 	private T configInstance;
 	private final T defaultInstance;
 	private boolean synced = false;
 
-	protected Config(String modId, Class<T> config, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
+	protected Config(String modId, Class<T> configClass, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
 		this.modId = modId;
 		this.path = path;
 		this.supportsModification = supportsModification;
-		this.config = config;
+		this.configClass = configClass;
 		try {
-			this.defaultInstance = this.configInstance = config.getConstructor().newInstance();
+			this.defaultInstance = this.configInstance = configClass.getConstructor().newInstance();
 		} catch (Exception e) {
 			throw new IllegalStateException("No default constructor for default config instance.", e);
 		}
@@ -135,7 +134,7 @@ public abstract class Config<T> {
 	}
 
 	public Class<T> configClass() {
-		return this.config;
+		return this.configClass;
 	}
 
 	public void setSynced(boolean synced) {

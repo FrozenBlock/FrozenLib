@@ -75,6 +75,7 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/structure/
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    placeBlock    (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    fillColumnDown    (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V
 transitive-accessible    field    net/minecraft/world/level/levelgen/structure/Structure    settings    Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
+transitive-accessible    class    net/minecraft/world/level/levelgen/structure/pools/alias/Random
 
 # Entities
 transitive-accessible    method    net/minecraft/world/entity/Entity    updateInWaterStateAndDoWaterCurrentPushing    ()V
@@ -116,6 +117,7 @@ transitive-accessible    method    net/minecraft/data/BlockFamilies   familyBuil
 
 # Block Entities
 transitive-accessible    field    net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
+transitive-accessible    field    net/minecraft/world/level/block/entity/BrushableBlockEntity    lootTable    Lnet/minecraft/resources/ResourceLocation;
 
 # Render Types
 transitive-accessible    class    net/minecraft/client/renderer/RenderType$CompositeState

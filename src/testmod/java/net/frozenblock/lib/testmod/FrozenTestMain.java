@@ -1,19 +1,18 @@
 /*
- * Copyright 2023-2024 FrozenBlock
- * This file is part of FrozenLib.
+ * Copyright (C) 2024 FrozenBlock
  *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation; either
- * version 3 of the License, or (at your option) any later version.
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
  * This program is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * You should have received a copy of the GNU Lesser General Public License
- * along with this program; if not, see <https://www.gnu.org/licenses/>.
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.testmod;
@@ -35,13 +34,16 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.phys.Vec3;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
@@ -59,8 +61,8 @@ public final class FrozenTestMain implements ModInitializer {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
         LOGGER.info("The test toggle value is {}", TestConfig.get().testToggle);
         LOGGER.info("The test vec3 value is {}", TestConfig.get().typedVecList);
-		SoundEvent sound = TestConfig.get().randomSound;
-        LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.getLocation());
+		Holder<SoundEvent> sound = TestConfig.get().randomSound.value();
+        LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.unwrapKey().orElseThrow().location());
 
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
@@ -74,11 +76,11 @@ public final class FrozenTestMain implements ModInitializer {
 
 		//GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0, 192, new InterpolatedGravityFunction(0.1)));
 
-		AdvancementEvents.INIT.register((holder, registries) -> {
+		AdvancementEvents.INIT.register(holder -> {
 			Advancement advancement = holder.value();
 			switch (holder.id().toString()) {
 				case "minecraft:story/mine_stone" -> {
-					AdvancementAPI.addLootTables(advancement, List.of(new ResourceLocation("archaeology/ocean_ruin_warm")));
+          AdvancementAPI.addLootTables(advancement, List.of(BuiltInLootTables.OCEAN_RUIN_WARM_ARCHAEOLOGY));
 					advancement.rewards.experience = 100;
 				}
 				case "minecraft:story/upgrade_tools" -> {
@@ -87,7 +89,7 @@ public final class FrozenTestMain implements ModInitializer {
 						advancement,
 						"minecraft:plains",
 						PlayerTrigger.TriggerInstance.located(
-							LocationPredicate.Builder.inBiome(registries.lookupOrThrow(Registries.BIOME).getOrThrow(Biomes.PLAINS))
+							LocationPredicate.Builder.inBiome(Biomes.PLAINS)
 						)
 					);
 					AdvancementAPI.addRequirementsAsNewList(advancement, AdvancementRequirements.anyOf(List.of("minecraft:plains")));
