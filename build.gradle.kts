@@ -16,9 +16,6 @@ buildscript {
 	}
 	dependencies {
 		classpath("org.kohsuke:github-api:+")
-        // remove these 2 to get normal fabric loom versions
-        classpath(files("libs/fabric-loom-1.5.local.jar"))
-        classpath("net.fabricmc:mapping-io:+")
 	}
 }
 
@@ -40,6 +37,7 @@ val minecraft_version: String by project
 val quilt_mappings: String by project
 val parchment_mappings: String by project
 val loader_version: String by project
+val min_loader_version: String by project
 
 val mod_version: String by project
 val mod_loader: String by project
@@ -48,10 +46,12 @@ val archives_base_name: String by project
 
 val fabric_api_version: String by project
 val fabric_kotlin_version: String by project
-val mixin_extras_version: String by project
 val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
+val xjs_data_version: String by project
+val xjs_compat_version: String by project
+val fresult_version: String by project
 
 val modmenu_version: String by project
 val cloth_config_version: String by project
@@ -248,15 +248,11 @@ dependencies {
     // Fabric Language Kotlin. Required to use the Kotlin language.
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
-    // MixinExtras
-    // keep until Fabric applies the annotation processor by default
-    annotationProcessor("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")
-
     // Mod Menu
-    modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
+    modApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
@@ -264,14 +260,17 @@ dependencies {
 	// TerraBlender
     modCompileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
 
-    // MixinExtras
-    modApi("io.github.llamalad7:mixinextras-fabric:$mixin_extras_version")?.let { annotationProcessor(it) }
-
     // Toml
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
     relocModApi("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
+
+    // ExJson
+    relocModApi("org.exjson:xjs-data:$xjs_data_version")
+    relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
+    relocModApi("com.personthecat:fresult:$fresult_version")
+    compileOnly("org.projectlombok:lombok:1.18.30")?.let { annotationProcessor(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 }
@@ -282,7 +281,7 @@ tasks {
         properties["version"] = project.version
         properties["minecraft_version"] = minecraft_version
 
-        properties["fabric_loader_version"] = ">=0.15.1"
+        properties["fabric_loader_version"] = ">=$min_loader_version"
         properties["fabric_api_version"] = ">=$fabric_api_version"
         properties["fabric_kotlin_version"] = fabric_kotlin_version
 
