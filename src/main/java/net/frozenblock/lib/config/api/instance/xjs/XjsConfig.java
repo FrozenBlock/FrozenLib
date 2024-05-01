@@ -43,7 +43,7 @@ public class XjsConfig<T> extends Config<T> {
 	}
 
 	public XjsConfig(String modId, Class<T> config, boolean supportsModification) {
-		this(modId, config, XjsFormat.XJS_FORMATTED, supportsModification);
+		this(modId, config, XjsFormat.DJS_FORMATTED, supportsModification);
 	}
 
 	public XjsConfig(String modId, Class<T> config, XjsFormat type, boolean supportsModification) {
