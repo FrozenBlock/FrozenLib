@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.worldgen.feature.api.placementmodifier;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.stream.Stream;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
+import org.jetbrains.annotations.NotNull;
 
 public class LowerHeightmapPlacement extends PlacementModifier {
 	public static final Codec<LowerHeightmapPlacement> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -43,7 +45,8 @@ public class LowerHeightmapPlacement extends PlacementModifier {
 	}
 
 	@Override
-	public Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos pos) {
+	@NotNull
+	public Stream<BlockPos> getPositions(PlacementContext context, @NotNull RandomSource random, BlockPos pos) {
 		int x = pos.getX();
 		int z = pos.getZ();
 		int y = context.getHeight(this.heightmap, x, z) - 1;
@@ -54,6 +57,7 @@ public class LowerHeightmapPlacement extends PlacementModifier {
 	}
 
 	@Override
+	@NotNull
 	public PlacementModifierType<?> type() {
 		return FrozenPlacementModifiers.ACCURATE_HEIGHTMAP;
 	}

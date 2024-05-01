@@ -18,10 +18,10 @@
 package net.frozenblock.lib.block.api;
 
 import java.util.Objects;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.StandingSignBlock;
 import net.minecraft.world.level.block.state.properties.WoodType;
-import net.minecraft.world.level.storage.loot.LootTable;
+import org.jetbrains.annotations.NotNull;
 
 public class FrozenSignBlock extends StandingSignBlock {
     public final ResourceLocation lootTable;
@@ -32,6 +32,7 @@ public class FrozenSignBlock extends StandingSignBlock {
     }
 
     @Override
+	@NotNull
 	public ResourceLocation getLootTable() {
         if (!Objects.equals(this.drops, this.lootTable)) {
             this.drops = this.lootTable;
