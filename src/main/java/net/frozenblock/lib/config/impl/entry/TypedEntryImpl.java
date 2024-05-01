@@ -15,20 +15,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.wind.api;
+package net.frozenblock.lib.config.impl.entry;
 
-import net.minecraft.resources.ResourceLocation;
+import net.frozenblock.lib.config.api.entry.TypedEntry;
+import net.frozenblock.lib.config.api.entry.TypedEntryType;
 
-public interface WindDisturbingEntity {
+/**
+ * @since 1.7
+ */
+public class TypedEntryImpl<T> implements TypedEntry<T> {
 
-	ResourceLocation frozenLib$getWindDisturbanceLogicID();
+    private final TypedEntryType<T> type;
+    private T value;
 
-	double frozenLib$getWindWidth();
+    public TypedEntryImpl(TypedEntryType<T> type, T value) {
+        this.type = type;
+        this.value = value;
+    }
 
-	double frozenLib$getWindHeight();
+    @Override
+    public TypedEntryType<T> type() {
+        return this.type;
+    }
 
-	double frozenLib$getWindAreaYOffset();
+    @Override
+    public T value() {
+        return this.value;
+    }
 
-	boolean frozenLib$useSyncPacket();
-
+    @Override
+    public void setValue(T value) {
+        this.value = value;
+    }
 }

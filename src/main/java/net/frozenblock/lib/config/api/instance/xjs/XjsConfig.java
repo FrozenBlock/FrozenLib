@@ -1,49 +1,31 @@
 /*
- * Copyright 2023 The Quilt Project
- * Copyright 2023 FrozenBlock
- * Modified to work on Fabric
+ * Copyright (C) 2024 FrozenBlock
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 QuiltMC
- * ;;match_from: \/\/\/ Q[Uu][Ii][Ll][Tt]
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
-import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import blue.endless.jankson.JsonElement;
-import com.mojang.serialization.Codec;
 import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.instance.json.JanksonOps;
-import xjs.core.JsonFormat;
-import xjs.core.JsonValue;
-import xjs.serialization.writer.ValueWriter;
+import xjs.data.JsonValue;
+import xjs.data.serialization.writer.ValueWriter;
 
 /**
- * Serializes and deserializes config data with GSON and Jankson.
+ * Serializes and deserializes config data with XJS.
+ * @since 1.7
  */
 public class XjsConfig<T> extends Config<T> {
 
@@ -62,7 +44,7 @@ public class XjsConfig<T> extends Config<T> {
 	}
 
 	public XjsConfig(String modId, Class<T> config, boolean supportsModification) {
-		this(modId, config, XjsFormat.XJS_FORMATTED, supportsModification);
+		this(modId, config, XjsFormat.DJS_FORMATTED, supportsModification);
 	}
 
 	public XjsConfig(String modId, Class<T> config, XjsFormat type, boolean supportsModification) {

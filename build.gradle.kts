@@ -22,7 +22,7 @@ buildscript {
 plugins {
 	id("fabric-loom") version("+")
 	id("org.ajoberstar.grgit") version("+")
-	id("dev.yumi.gradle.licenser") version("+")
+	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
     id("com.github.johnrengelman.shadow") version("+")
     `maven-publish`
@@ -49,7 +49,7 @@ val fabric_kotlin_version: String by project
 val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
-val xjs_core_version: String by project
+val xjs_data_version: String by project
 val xjs_compat_version: String by project
 val fresult_version: String by project
 
@@ -267,7 +267,7 @@ dependencies {
     relocModApi("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
 
     // ExJson
-    relocModApi("org.exjson:xjs-core:$xjs_core_version")
+    relocModApi("org.exjson:xjs-data:$xjs_data_version")
     relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
     relocModApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.30")?.let { annotationProcessor(it) }

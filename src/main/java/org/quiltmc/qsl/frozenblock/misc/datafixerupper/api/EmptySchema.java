@@ -1,6 +1,6 @@
 /*
- * Copyright 2023 The Quilt Project
- * Copyright 2023 FrozenBlock
+ * Copyright 2024 The Quilt Project
+ * Copyright 2024 FrozenBlock
  * Modified to work on Fabric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
@@ -14,18 +14,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 QuiltMC
- * ;;match_from: \/\/\/ Q[Uu][Ii][Ll][Tt]
  */
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;

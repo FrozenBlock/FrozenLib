@@ -1,52 +1,46 @@
 /*
- * Copyright 2024 The Quilt Project
- * Copyright 2024 FrozenBlock
- * Modified to work on Fabric
+ * Copyright (C) 2024 FrozenBlock
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 QuiltMC
- * ;;match_from: \/\/\/ Q[Uu][Ii][Ll][Tt]
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
 import blue.endless.jankson.Comment;
 import blue.endless.jankson.annotation.SaveToggle;
-import me.shedaniel.autoconfig.util.Utils;
-import net.frozenblock.lib.config.api.entry.TypedEntry;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import xjs.core.Json;
-import xjs.core.JsonArray;
-import xjs.core.JsonObject;
-import xjs.core.JsonValue;
-
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
 import java.nio.file.Path;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
 import java.util.function.Predicate;
+import me.shedaniel.autoconfig.util.Utils;
+import net.frozenblock.lib.config.api.entry.TypedEntry;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import xjs.data.Json;
+import xjs.data.JsonArray;
+import xjs.data.JsonObject;
+import xjs.data.JsonValue;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib

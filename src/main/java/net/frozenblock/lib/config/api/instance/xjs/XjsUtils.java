@@ -1,57 +1,55 @@
 /*
- * Copyright 2024 The Quilt Project
- * Copyright 2024 FrozenBlock
- * Modified to work on Fabric
+ * Copyright (C) 2024 FrozenBlock
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
  *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- *
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 The Quilt Project
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2022 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2023 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2021-2023 QuiltMC
- * ;;match_from: \/\*\r?\n \* Copyright (\(c\) )?2022-2023 QuiltMC
- * ;;match_from: \/\/\/ Q[Uu][Ii][Ll][Tt]
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import static java.util.Optional.empty;
+import java.util.function.Consumer;
 import lombok.experimental.UtilityClass;
 import lombok.extern.slf4j.Slf4j;
+import static net.frozenblock.lib.config.api.instance.xjs.InvalidEnumConstantException.f;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.CheckReturnValue;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import personthecat.fresult.Result;
 import personthecat.fresult.Void;
-import xjs.comments.CommentType;
-import xjs.core.*;
-import xjs.exception.SyntaxException;
-import xjs.serialization.JsonContext;
-import xjs.serialization.writer.JsonWriterOptions;
-
-import java.io.*;
-import java.util.*;
-import java.util.function.Consumer;
-
-import static java.util.Optional.empty;
-import static net.frozenblock.lib.config.api.instance.xjs.InvalidEnumConstantException.f;
+import xjs.data.comments.CommentType;
+import xjs.data.Json;
+import xjs.data.JsonArray;
+import xjs.data.JsonContainer;
+import xjs.data.JsonLiteral;
+import xjs.data.JsonObject;
+import xjs.data.JsonReference;
+import xjs.data.JsonValue;
+import xjs.data.exception.SyntaxException;
+import xjs.data.serialization.JsonContext;
+import xjs.data.serialization.writer.JsonWriterOptions;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib
