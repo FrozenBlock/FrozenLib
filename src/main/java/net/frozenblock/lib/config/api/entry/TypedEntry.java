@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.config.api.entry;
 
+import net.frozenblock.lib.config.impl.entry.TypedEntryImpl;
+
 public interface TypedEntry<T> {
 
 	TypedEntryType<T> type();

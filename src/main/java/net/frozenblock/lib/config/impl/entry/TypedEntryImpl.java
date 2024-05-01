@@ -1,5 +1,8 @@
 package net.frozenblock.lib.config.impl.entry;
 
+import net.frozenblock.lib.config.api.entry.TypedEntry;
+import net.frozenblock.lib.config.api.entry.TypedEntryType;
+
 /**
  * @since 1.7
  */

@@ -66,7 +66,7 @@ fun <T> typedEntryList(
         },
         // Save Consumer
         {
-                newValue -> setterConsumer.accept(TypedEntry(typedEntry.type(), newValue))
+                newValue -> setterConsumer.accept(TypedEntry.create(typedEntry.type(), newValue))
         },
         // Default Value
         defaultValue.get()::value,
