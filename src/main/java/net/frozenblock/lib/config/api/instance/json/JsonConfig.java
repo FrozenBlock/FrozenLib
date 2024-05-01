@@ -28,7 +28,7 @@ import net.frozenblock.lib.config.api.instance.ConfigSerialization;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Serializes and deserializes config data with GSON and Jankson.
+ * Serializes and deserializes config data with Jankson.
  */
 public class JsonConfig<T> extends Config<T> {
 
