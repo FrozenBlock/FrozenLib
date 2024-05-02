@@ -12,7 +12,7 @@ Put changelog here:
 - Added `FrozenHeightmaps,` currently containing `MOTION_BLOCKING_NO_LEAVES_SYNCED,` a variant of Vanilla's `MOTION_BLOCKING_NO_LEAVES` that syncs with the client.
 - Added `WolfVariantBiomeRegistry` to allow for modders to easily assign Wolf variants to new biomes.
   - If a biome has multiple variants registered, it will pick a random entry from the list of registered variants.
-- Added the `RandomPoolAliasApi` to allow for modders to add new targets to structure aliases.
+- (1.20.4+) Added the `RandomPoolAliasApi` to allow for modders to add new targets to structure aliases.
   - For example, adding new spawner types to Trial Chambers.
 - Changed Typed Entry creation to `TypedEntry.create()`
   - `TypedEntry` is now an interface
