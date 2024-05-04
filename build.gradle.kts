@@ -267,7 +267,8 @@ dependencies {
     relocModApi("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
 
     // ExJson
-    relocModApi("org.exjson:xjs-data:$xjs_data_version")
+    //relocModApi("org.exjson:xjs-data:$xjs_data_version")
+    relocModApi(files("libs/xjs-data-0.5.jar"))
     relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
     relocModApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.30")?.let { annotationProcessor(it) }
