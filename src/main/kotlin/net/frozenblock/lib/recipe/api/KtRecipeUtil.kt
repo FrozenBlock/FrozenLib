@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 The Quilt Project
+ * Copyright 2024 FrozenBlock
  * Copyright 2024 FrozenBlock
  * Modified to work on Fabric
  *
