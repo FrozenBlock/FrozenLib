@@ -145,6 +145,8 @@ public abstract class Config<T> {
 		return this.synced;
 	}
 
+	public void onSync(T syncInstance) {}
+
 	/**
 	 * @since 1.5
 	 */
