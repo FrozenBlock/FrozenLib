@@ -177,7 +177,7 @@ public abstract class Config<T> {
 
 	public final boolean load() {
 		String formatted = this.formattedName();
-		FrozenSharedConstants.LOGGER.info("Loading " + formatted);
+		FrozenSharedConstants.LOGGER.info("Loading {}", formatted);
 		try {
 			boolean loadVal = this.onLoad();
 
