@@ -108,6 +108,7 @@ public record ConfigSyncPacket<T>(
 					);
 				}
 			}
+			config.onSync(packet.configData());
 			break;
         }
     }
