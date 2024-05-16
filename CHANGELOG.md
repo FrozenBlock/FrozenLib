@@ -5,4 +5,6 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- (XJS Configs) Added support for positive and negative infinity for DJS formats
+- Added `Config.onSync()`
+  - Allows configs to have special post-sync behavior
+- Fixed licenses in Kotlin files
