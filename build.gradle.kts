@@ -20,7 +20,7 @@ buildscript {
 }
 
 plugins {
-	id("fabric-loom") version("+")
+	id("fabric-loom") version("1.6-SNAPSHOT")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -443,8 +443,6 @@ publishing {
                 } catch (ignored: FileNotFoundException) {
                     // No existing version was published, so we can publish
                 }
-            } else {
-                publish = false
             }
         } catch (e: Exception) {
             publish = false
