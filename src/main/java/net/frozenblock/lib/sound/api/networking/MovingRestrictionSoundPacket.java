@@ -40,8 +40,8 @@ public record MovingRestrictionSoundPacket(
 	boolean looping
 ) implements CustomPacketPayload {
 
-	public static final Type<MovingRestrictionSoundPacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("moving_restriction_sound_packet")
+	public static final Type<MovingRestrictionSoundPacket> PACKET_TYPE = new Type<>(
+		FrozenSharedConstants.id("moving_restriction_sound_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, MovingRestrictionSoundPacket> CODEC = StreamCodec.ofMember(MovingRestrictionSoundPacket::write, MovingRestrictionSoundPacket::new);
 

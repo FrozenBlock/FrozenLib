@@ -97,6 +97,12 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 
 	@Override
 	@NotNull
+	public Optional<Reference<T>> getAny() {
+		return this.wrapped.getAny();
+	}
+
+	@Override
+	@NotNull
 	public Set<ResourceLocation> keySet() {
 		return this.wrapped.keySet();
 	}

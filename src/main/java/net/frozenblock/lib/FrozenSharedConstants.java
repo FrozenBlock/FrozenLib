@@ -43,7 +43,7 @@ public final class FrozenSharedConstants {
 	@Contract("_ -> new")
 	@NotNull
 	public static ResourceLocation id(String path) {
-		return new ResourceLocation(FrozenSharedConstants.MOD_ID, path);
+		return ResourceLocation.fromNamespaceAndPath(FrozenSharedConstants.MOD_ID, path);
 	}
 
 	@NotNull

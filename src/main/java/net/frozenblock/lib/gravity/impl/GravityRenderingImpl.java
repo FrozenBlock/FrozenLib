@@ -39,13 +39,12 @@ import org.joml.Matrix4f;
 public final class GravityRenderingImpl {
 	private GravityRenderingImpl() {}
 
-	private static final ResourceLocation FORCEFIELD_LOCATION = new ResourceLocation("textures/misc/forcefield.png");
+	private static final ResourceLocation FORCEFIELD_LOCATION = ResourceLocation.withDefaultNamespace("textures/misc/forcefield.png");
 
 	public static void renderGravityBelts(ClientLevel level, Camera camera, PoseStack poseStack) {
 		// not working properly
 		if (true) return;
 		RenderSystem.defaultBlendFunc();
-		BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
 		double y = camera.getPosition().y();
 		for (GravityBelt<?> gravityBelt : GravityAPI.getAllBelts(level)) {
 			poseStack.pushPose();
@@ -63,19 +62,19 @@ public final class GravityRenderingImpl {
 					float k = 130;
 					RenderSystem.setShader(GameRenderer::getPositionTexShader);
 					RenderSystem.setShaderTexture(0, FORCEFIELD_LOCATION);
-					bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-					bufferBuilder.vertex(matrix4f3, -k, 0F, -k).uv(0.0f, 0.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, k, 0F, -k).uv(1.0f, 0.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, k, 0F, k).uv(1.0f, 1.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, -k, 0F, k).uv(0.0f, 1.0f).endVertex();
-					BufferUploader.drawWithShader(bufferBuilder.end());
+					var firstBuffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+					firstBuffer.addVertex(matrix4f3, -k, 0F, -k).setUv(0.0f, 0.0f);
+					firstBuffer.addVertex(matrix4f3, k, 0F, -k).setUv(1.0f, 0.0f);
+					firstBuffer.addVertex(matrix4f3, k, 0F, k).setUv(1.0f, 1.0f);
+					firstBuffer.addVertex(matrix4f3, -k, 0F, k).setUv(0.0f, 1.0f);
+					BufferUploader.drawWithShader(firstBuffer.build());
 
-					bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-					bufferBuilder.vertex(matrix4f3, -k, 0F, k).uv(0.0f, 0.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, k, 0F, k).uv(1.0f, 0.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, k, 0F, -k).uv(1.0f, 1.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, -k, 0F, -k).uv(0.0f, 1.0f).endVertex();
-					BufferUploader.drawWithShader(bufferBuilder.end());
+					var secondBuffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+					secondBuffer.addVertex(matrix4f3, -k, 0F, k).setUv(0.0f, 0.0f);
+					secondBuffer.addVertex(matrix4f3, k, 0F, k).setUv(1.0f, 0.0f);
+					secondBuffer.addVertex(matrix4f3, k, 0F, -k).setUv(1.0f, 1.0f);
+					secondBuffer.addVertex(matrix4f3, -k, 0F, -k).setUv(0.0f, 1.0f);
+					BufferUploader.drawWithShader(secondBuffer.build());
 					poseStack.popPose();
 				}
 			}
@@ -93,19 +92,19 @@ public final class GravityRenderingImpl {
 					float k = 130;
 					RenderSystem.setShader(GameRenderer::getPositionTexShader);
 					RenderSystem.setShaderTexture(0, FORCEFIELD_LOCATION);
-					bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-					bufferBuilder.vertex(matrix4f3, -k, 0F, -k).uv(0.0f, 0.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, k, 0F, -k).uv(1.0f, 0.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, k, 0F, k).uv(1.0f, 1.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, -k, 0F, k).uv(0.0f, 1.0f).endVertex();
-					BufferUploader.drawWithShader(bufferBuilder.end());
+					var firstBuffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+					firstBuffer.addVertex(matrix4f3, -k, 0F, -k).setUv(0.0f, 0.0f);
+					firstBuffer.addVertex(matrix4f3, k, 0F, -k).setUv(1.0f, 0.0f);
+					firstBuffer.addVertex(matrix4f3, k, 0F, k).setUv(1.0f, 1.0f);
+					firstBuffer.addVertex(matrix4f3, -k, 0F, k).setUv(0.0f, 1.0f);
+					BufferUploader.drawWithShader(firstBuffer.build());
 
-					bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-					bufferBuilder.vertex(matrix4f3, -k, 0F, k).uv(0.0f, 0.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, k, 0F, k).uv(1.0f, 0.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, k, 0F, -k).uv(1.0f, 1.0f).endVertex();
-					bufferBuilder.vertex(matrix4f3, -k, 0F, -k).uv(0.0f, 1.0f).endVertex();
-					BufferUploader.drawWithShader(bufferBuilder.end());
+					var secondBuffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+					secondBuffer.addVertex(matrix4f3, -k, 0F, k).setUv(0.0f, 0.0f);
+					secondBuffer.addVertex(matrix4f3, k, 0F, k).setUv(1.0f, 0.0f);
+					secondBuffer.addVertex(matrix4f3, k, 0F, -k).setUv(1.0f, 1.0f);
+					secondBuffer.addVertex(matrix4f3, -k, 0F, -k).setUv(0.0f, 1.0f);
+					BufferUploader.drawWithShader(secondBuffer.build());
 					poseStack.popPose();
 				}
 			}

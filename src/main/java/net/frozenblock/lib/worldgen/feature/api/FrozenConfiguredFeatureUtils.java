@@ -39,7 +39,7 @@ public final class FrozenConfiguredFeatureUtils {
 	}
 
 	public static ResourceKey<ConfiguredFeature<?, ?>> createKey(String namespace, String path) {
-		return ResourceKey.create(Registries.CONFIGURED_FEATURE, new ResourceLocation(namespace, path));
+		return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(namespace, path));
 	}
 
 	public static Holder<? extends ConfiguredFeature<NoneFeatureConfiguration, ?>> register(DynamicRegistryManagerSetupContext context, DynamicRegistryManagerSetupContext.RegistryMap registries, String namespace, String id, Feature<NoneFeatureConfiguration> feature) {
@@ -49,7 +49,7 @@ public final class FrozenConfiguredFeatureUtils {
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>, C extends ConfiguredFeature<FC, ?>> Holder.Reference<C> register(DynamicRegistryManagerSetupContext context, DynamicRegistryManagerSetupContext.RegistryMap registries, @NotNull String namespace, @NotNull String id, F feature, @NotNull FC config) {
 		var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
 		final ConfiguredFeature<FC, ?> configuredFeature = new ConfiguredFeature<>(feature, config);
-		Registry.register(configuredRegistry, new ResourceLocation(namespace, id), configuredFeature);
+		Registry.register(configuredRegistry, ResourceLocation.fromNamespaceAndPath(namespace, id), configuredFeature);
 		var featureEntry = getExact(registries, configuredFeature);
 		return (Holder.Reference<C>) featureEntry;
 	}

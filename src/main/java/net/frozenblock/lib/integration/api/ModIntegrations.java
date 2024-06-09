@@ -40,7 +40,7 @@ public final class ModIntegrations {
      * @return A {@link ModIntegrationSupplier}.
      */
     public static ModIntegrationSupplier<? extends ModIntegration> register(Supplier<? extends ModIntegration> integration, String srcModID, String modID) {
-        return Registry.register(FrozenRegistry.MOD_INTEGRATION, new ResourceLocation(srcModID, modID), new ModIntegrationSupplier<>(integration, modID));
+        return Registry.register(FrozenRegistry.MOD_INTEGRATION, ResourceLocation.fromNamespaceAndPath(srcModID, modID), new ModIntegrationSupplier<>(integration, modID));
     }
 
 	/**
@@ -53,7 +53,7 @@ public final class ModIntegrations {
 	 * @return A {@link ModIntegrationSupplier}.
 	 */
 	public static <T extends ModIntegration> ModIntegrationSupplier<T> register(Supplier<T> integration, Supplier<T> unloadedIntegration, String srcModID, String modID) {
-		return Registry.register(FrozenRegistry.MOD_INTEGRATION, new ResourceLocation(srcModID, modID), new ModIntegrationSupplier<>(integration, unloadedIntegration, modID));
+		return Registry.register(FrozenRegistry.MOD_INTEGRATION, ResourceLocation.fromNamespaceAndPath(srcModID, modID), new ModIntegrationSupplier<>(integration, unloadedIntegration, modID));
 	}
 
     public static List<ModIntegrationSupplier<?>> getIntegrationSuppliers() {

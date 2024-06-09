@@ -39,7 +39,7 @@ public record StartingMovingRestrictionSoundLoopPacket(
 	ResourceLocation predicateId,
 	boolean stopOnDeath
 ) implements CustomPacketPayload {
-	public static final Type<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = CustomPacketPayload.createType(FrozenSharedConstants.string("starting_moving_restriction_looping_sound_packet"));
+	public static final Type<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = new Type<>(FrozenSharedConstants.id("starting_moving_restriction_looping_sound_packet"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, StartingMovingRestrictionSoundLoopPacket> CODEC = StreamCodec.ofMember(StartingMovingRestrictionSoundLoopPacket::write, StartingMovingRestrictionSoundLoopPacket::new);
 
 	public StartingMovingRestrictionSoundLoopPacket(@NotNull RegistryFriendlyByteBuf buf) {

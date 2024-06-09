@@ -93,9 +93,9 @@ public class LiquidRenderUtils {
 			southEastHeight = calculateAverageHeight(level, fluid, n, t, u, pos.relative(Direction.SOUTH).relative(Direction.EAST));
 			southWestHeight = calculateAverageHeight(level, fluid, n, t, v, pos.relative(Direction.SOUTH).relative(Direction.WEST));
 		}
-		double d = pos.getX() & 0xF;
-		double e = pos.getY() & 0xF;
-		double w = pos.getZ() & 0xF;
+		float d = pos.getX() & 0xF;
+		float e = pos.getY() & 0xF;
+		float w = pos.getZ() & 0xF;
 		y = shouldRenderDown ? 0.001f : 0.0f;
 		if (shouldRenderUp && !isFaceOccludedByNeighbor(level, pos, Direction.UP, Math.min(Math.min(northWestHeight, southWestHeight), Math.min(southEastHeight, northEastHeight)), upBlockState, blockState)) {
 			float ak;
@@ -132,15 +132,15 @@ public class LiquidRenderUtils {
 			float an = k * f;
 			ao = k * g;
 			ap = k * h;
-			vertex(vertexConsumer, d + 0.0, e + northWestHeight, w + 0.0, an, ao, ap, z, aa, am);
-			vertex(vertexConsumer, d + 0.0, e + southWestHeight, w + 1.0, an, ao, ap, ab, ac, am);
-			vertex(vertexConsumer, d + 1.0, e + southEastHeight, w + 1.0, an, ao, ap, ad, ae, am);
-			vertex(vertexConsumer, d + 1.0, e + northEastHeight, w + 0.0, an, ao, ap, af, ag, am);
+			vertex(vertexConsumer, d + 0.0f, e + northWestHeight, w + 0.0f, an, ao, ap, z, aa, am);
+			vertex(vertexConsumer, d + 0.0f, e + southWestHeight, w + 1.0f, an, ao, ap, ab, ac, am);
+			vertex(vertexConsumer, d + 1.0f, e + southEastHeight, w + 1.0f, an, ao, ap, ad, ae, am);
+			vertex(vertexConsumer, d + 1.0f, e + northEastHeight, w + 0.0f, an, ao, ap, af, ag, am);
 			if (fluidState.shouldRenderBackwardUpFace(level, pos.above()) || !blockState.equals(downBlockState)) {
-				vertex(vertexConsumer, d + 0.0, e + northWestHeight, w + 0.0, an, ao, ap, z, aa, am);
-				vertex(vertexConsumer, d + 1.0, e + northEastHeight, w + 0.0, an, ao, ap, af, ag, am);
-				vertex(vertexConsumer, d + 1.0, e + southEastHeight, w + 1.0, an, ao, ap, ad, ae, am);
-				vertex(vertexConsumer, d + 0.0, e + southWestHeight, w + 1.0, an, ao, ap, ab, ac, am);
+				vertex(vertexConsumer, d + 0.0f, e + northWestHeight, w + 0.0f, an, ao, ap, z, aa, am);
+				vertex(vertexConsumer, d + 1.0f, e + northEastHeight, w + 0.0f, an, ao, ap, af, ag, am);
+				vertex(vertexConsumer, d + 1.0f, e + southEastHeight, w + 1.0f, an, ao, ap, ad, ae, am);
+				vertex(vertexConsumer, d + 0.0f, e + southWestHeight, w + 1.0f, an, ao, ap, ab, ac, am);
 			}
 		}
 		if (shouldRenderDown) {
@@ -152,30 +152,30 @@ public class LiquidRenderUtils {
 			ac = j * f;
 			ae = j * g;
 			ag = j * h;
-			vertex(vertexConsumer, d, e + y, w + 1.0, ac, ae, ag, z, af, aq);
+			vertex(vertexConsumer, d, e + y, w + 1.0f, ac, ae, ag, z, af, aq);
 			vertex(vertexConsumer, d, e + y, w, ac, ae, ag, z, ad, aq);
-			vertex(vertexConsumer, d + 1.0, e + y, w, ac, ae, ag, ab, ad, aq);
-			vertex(vertexConsumer, d + 1.0, e + y, w + 1.0, ac, ae, ag, ab, af, aq);
+			vertex(vertexConsumer, d + 1.0f, e + y, w, ac, ae, ag, ab, ad, aq);
+			vertex(vertexConsumer, d + 1.0f, e + y, w + 1.0f, ac, ae, ag, ab, af, aq);
 			if (!downFluidState.equals(fluidState) && downBlockState.getBlock() != blockState.getBlock() && !downBlockState.canOcclude()) {
-				vertex(vertexConsumer, d, e + y, w + 1.0, ac, ae, ag, z, af, aq);
-				vertex(vertexConsumer, d + 1.0, e + y, w + 1.0, ac, ae, ag, z, ad, aq);
-				vertex(vertexConsumer, d + 1.0, e + y, w, ac, ae, ag, ab, ad, aq);
+				vertex(vertexConsumer, d, e + y, w + 1.0f, ac, ae, ag, z, af, aq);
+				vertex(vertexConsumer, d + 1.0f, e + y, w + 1.0f, ac, ae, ag, z, ad, aq);
+				vertex(vertexConsumer, d + 1.0f, e + y, w, ac, ae, ag, ab, ad, aq);
 				vertex(vertexConsumer, d, e + y, w, ac, ae, ag, ab, af, aq);
 			}
 		}
 		int ar = getLightColor(level, pos);
 		for (Direction direction : Direction.Plane.HORIZONTAL) {
-			double av;
-			double au;
-			double at;
-			double as;
+			float av;
+			float au;
+			float at;
+			float as;
 			float aa;
 			if (!(switch (direction) {
 				case NORTH -> {
 					af = northWestHeight;
 					aa = northEastHeight;
 					as = d;
-					at = d + 1.0;
+					at = d + 1.0f;
 					au = w + 0.001f;
 					av = w + 0.001f;
 					yield shouldRenderNorth;
@@ -183,10 +183,10 @@ public class LiquidRenderUtils {
 				case SOUTH -> {
 					af = southEastHeight;
 					aa = southWestHeight;
-					as = d + 1.0;
+					as = d + 1.0f;
 					at = d;
-					au = w + 1.0 - 0.001f;
-					av = w + 1.0 - 0.001f;
+					au = w + 1.0f - 0.001f;
+					av = w + 1.0f - 0.001f;
 					yield bl5;
 				}
 				case WEST -> {
@@ -194,17 +194,17 @@ public class LiquidRenderUtils {
 					aa = northWestHeight;
 					as = d + 0.001f;
 					at = d + 0.001f;
-					au = w + 1.0;
+					au = w + 1.0f;
 					av = w;
 					yield bl6;
 				}
 				default -> {
 					af = northEastHeight;
 					aa = southEastHeight;
-					as = d + 1.0 - 0.001f;
-					at = d + 1.0 - 0.001f;
+					as = d + 1.0f - 0.001f;
+					at = d + 1.0f - 0.001f;
 					au = w;
-					av = w + 1.0;
+					av = w + 1.0f;
 					yield bl7;
 				}
 			}) || isFaceOccludedByNeighbor(level, pos, direction, Math.max(af, aa), level.getBlockState(pos.relative(direction)), level.getBlockState(pos.relative(direction)))) continue;
@@ -276,8 +276,8 @@ public class LiquidRenderUtils {
 	}
 
 	//vertex
-	public static void vertex(VertexConsumer consumer, double x, double y, double z, float red, float green, float blue, float u, float v, int packedLight) {
-		consumer.vertex(x, y, z).color(red, green, blue, 1.0f).uv(u, v).uv2(packedLight).normal(0.0f, 1.0f, 0.0f).endVertex();
+	public static void vertex(VertexConsumer consumer, float x, float y, float z, float red, float green, float blue, float u, float v, int packedLight) {
+		consumer.addVertex(x, y, z).setColor(red, green, blue, 1.0f).setUv(u, v).setLight(packedLight).setNormal(0.0f, 1.0f, 0.0f);
 	}
 
 	public static int getLightColor(BlockAndTintGetter level, BlockPos pos) {

@@ -40,8 +40,8 @@ public record FadingDistanceSwitchingSoundPacket(
 	float maxDist
 ) implements CustomPacketPayload {
 
-	public static final Type<FadingDistanceSwitchingSoundPacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("fading_distance_sound_packet")
+	public static final Type<FadingDistanceSwitchingSoundPacket> PACKET_TYPE = new Type<>(
+		FrozenSharedConstants.id("fading_distance_sound_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, FadingDistanceSwitchingSoundPacket> CODEC = StreamCodec.ofMember(FadingDistanceSwitchingSoundPacket::write, FadingDistanceSwitchingSoundPacket::new);
 

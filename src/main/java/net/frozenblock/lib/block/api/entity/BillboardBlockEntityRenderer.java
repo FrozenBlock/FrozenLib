@@ -63,7 +63,7 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 		poseStack.translate(0.5, 0, 0.5);
 		poseStack.pushPose();
 		poseStack.mulPose(this.rotation);
-		this.base.render(poseStack, vertexConsumers.getBuffer(RenderType.entityCutout(this.getTexture(entity))), light, overlay, 1.0F, 1.0F, 1.0F, 1.0F);
+		this.base.render(poseStack, vertexConsumers.getBuffer(RenderType.entityCutout(this.getTexture(entity))), light, overlay);
 		poseStack.popPose();
 	}
 

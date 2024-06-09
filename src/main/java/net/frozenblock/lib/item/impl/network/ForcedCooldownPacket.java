@@ -32,8 +32,8 @@ public record ForcedCooldownPacket(
 	int endTime
 ) implements CustomPacketPayload {
 
-	public static final Type<ForcedCooldownPacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("forced_cooldown_packet")
+	public static final Type<ForcedCooldownPacket> PACKET_TYPE = new Type<>(
+		FrozenSharedConstants.id("forced_cooldown_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, ForcedCooldownPacket> CODEC = StreamCodec.ofMember(ForcedCooldownPacket::write, ForcedCooldownPacket::new);
 

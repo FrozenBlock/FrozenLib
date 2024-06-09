@@ -25,8 +25,8 @@ import org.jetbrains.annotations.NotNull;
 
 public record RemoveScreenShakePacket() implements CustomPacketPayload {
 
-	public static final Type<RemoveScreenShakePacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("remove_screen_shakes_packet")
+	public static final Type<RemoveScreenShakePacket> PACKET_TYPE = new Type<>(
+		FrozenSharedConstants.id("remove_screen_shakes_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, RemoveScreenShakePacket> CODEC = StreamCodec.ofMember(RemoveScreenShakePacket::write, RemoveScreenShakePacket::new);
 

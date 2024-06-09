@@ -33,8 +33,8 @@ public record ScreenShakePacket(
 	int ticks
 ) implements CustomPacketPayload {
 
-	public static final Type<ScreenShakePacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("screen_shake_packet")
+	public static final Type<ScreenShakePacket> PACKET_TYPE = new Type<>(
+		FrozenSharedConstants.id("screen_shake_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, ScreenShakePacket> CODEC = StreamCodec.ofMember(ScreenShakePacket::write, ScreenShakePacket::new);
 

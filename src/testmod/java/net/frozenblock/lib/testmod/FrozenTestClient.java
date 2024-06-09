@@ -35,8 +35,8 @@ public final class FrozenTestClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
-		SplashTextAPI.addSplashLocation(new ResourceLocation(FrozenSharedConstants.MOD_ID, "texts/splashes.txt"));
-		Panoramas.addPanorama(new ResourceLocation(FrozenSharedConstants.MOD_ID, "textures/gui/title/background/panorama"));
-		Panoramas.addPanorama(new ResourceLocation("this_will_throw_an_error", "textures/gui/title/background/panorama"));
+		SplashTextAPI.addSplashLocation(ResourceLocation.fromNamespaceAndPath(FrozenSharedConstants.MOD_ID, "texts/splashes.txt"));
+		Panoramas.addPanorama(ResourceLocation.fromNamespaceAndPath(FrozenSharedConstants.MOD_ID, "textures/gui/title/background/panorama"));
+		Panoramas.addPanorama(ResourceLocation.fromNamespaceAndPath("this_will_throw_an_error", "textures/gui/title/background/panorama"));
     }
 }

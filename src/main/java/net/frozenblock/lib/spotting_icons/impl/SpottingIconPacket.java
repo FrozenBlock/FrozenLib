@@ -32,8 +32,8 @@ public record SpottingIconPacket(
 	ResourceLocation restrictionID
 ) implements CustomPacketPayload {
 
-	public static final Type<SpottingIconPacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("spotting_icon_packet")
+	public static final Type<SpottingIconPacket> PACKET_TYPE = new Type<>(
+		FrozenSharedConstants.id("spotting_icon_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, SpottingIconPacket> CODEC = StreamCodec.ofMember(SpottingIconPacket::write, SpottingIconPacket::new);
 

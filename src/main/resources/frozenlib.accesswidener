@@ -67,7 +67,7 @@ transitive-accessible    method    net/minecraft/client/renderer/item/ItemProper
 
 # Structures
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    getWorldPos    (III)Lnet/minecraft/core/BlockPos$MutableBlockPos;
-transitive-accessible    method    net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement    <init>    (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V
+transitive-accessible    method    net/minecraft/world/level/levelgen/structure/pools/LegacySinglePoolElement    <init>    (Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;Ljava/util/Optional;)V
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/ScatteredFeaturePiece    updateAverageGroundHeight    (Lnet/minecraft/world/level/LevelAccessor;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;I)Z
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    generateBox    (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;IIIIIILnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Z)V
 transitive-accessible    method    net/minecraft/world/level/levelgen/structure/StructurePiece    placeBlock    (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/block/state/BlockState;IIILnet/minecraft/world/level/levelgen/structure/BoundingBox;)V
@@ -144,7 +144,6 @@ transitive-accessible    method    net/minecraft/client/renderer/RenderType    c
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    POSITION_COLOR_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 
 # Biomes
-transitive-accessible    class    net/minecraft/world/level/chunk/status/ChunkStatus$GenerationTask
 transitive-accessible    method    net/minecraft/data/worldgen/biome/OverworldBiomes    calculateSkyColor    (F)I
 transitive-accessible    method    net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider    <init>    (Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible    method    net/minecraft/world/level/biome/OverworldBiomeBuilder    addBiomes    (Ljava/util/function/Consumer;)V

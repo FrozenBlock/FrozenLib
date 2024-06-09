@@ -89,7 +89,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	 * This will only work with vanilla blocks.
 	 */
 	public void addBlock(String id, SoundType sounds, BooleanSupplier condition) {
-		var key = new ResourceLocation(id);
+		var key = ResourceLocation.parse(id);
 		addBlock(key, sounds, condition);
 	}
 
@@ -97,7 +97,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	 * Adds a block with the specified namespace and id.
 	 */
 	public void addBlock(String namespace, String id, SoundType sounds, BooleanSupplier condition) {
-		var key = new ResourceLocation(namespace, id);
+		var key = ResourceLocation.fromNamespaceAndPath(namespace, id);
 		addBlock(key, sounds, condition);
 	}
 
@@ -127,7 +127,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	}
 
 	public static ResourceLocation getPath(ResourceLocation blockId) {
-		return new ResourceLocation(blockId.getNamespace(), DIRECTORY + "/" + blockId.getPath() + ".json");
+		return ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), DIRECTORY + "/" + blockId.getPath() + ".json");
 	}
 
 	@Override
@@ -187,7 +187,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 				return;
 			}
 
-			ResourceLocation overwriteId = new ResourceLocation(id.getNamespace(), id.getPath().substring((DIRECTORY + "/").length()));
+			ResourceLocation overwriteId = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath().substring((DIRECTORY + "/").length()));
 			overwrites.put(overwriteId, result.result().orElseThrow().getFirst());
 		}
 

@@ -22,9 +22,9 @@ import java.net.URI
 
 fun String.uri(): URI = URI.create(this)
 
-fun vanillaId(path: String): ResourceLocation = ResourceLocation(path)
+fun vanillaId(path: String): ResourceLocation = ResourceLocation.withDefaultNamespace(path)
 
 val String.asResourceLocation: ResourceLocation
     get() {
-        return ResourceLocation(this)
+        return ResourceLocation.parse(this)
     }

@@ -43,7 +43,7 @@ public class ScreenMixin {
 			String path = panLocation.getPath();
 			for(int i = 0; i < 6; ++i) {
 				//Panorama isn't valid if one of the six images isn't found; move on to the next ResourceLocation in the list.
-				if (Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(namespace, path + "_" + i + ".png")).isEmpty()) {
+				if (Minecraft.getInstance().getResourceManager().getResource(ResourceLocation.fromNamespaceAndPath(namespace, path + "_" + i + ".png")).isEmpty()) {
 					FrozenLogUtils.logWarning("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", FrozenSharedConstants.UNSTABLE_LOGGING);
 					break;
 				}

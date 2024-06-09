@@ -55,7 +55,7 @@ public class LootTableWhacker extends Item {
 		}
         if (stack.has(DataComponents.CUSTOM_NAME)) {
 			String id = stack.getHoverName().getString();
-			ResourceLocation location = new ResourceLocation(id);
+			ResourceLocation location = ResourceLocation.parse(id);
 			ResourceKey<LootTable> key = ResourceKey.create(Registries.LOOT_TABLE, location);
 			if (!level.isClientSide) {
 				if (level.getBlockEntity(blockPos) instanceof RandomizableContainerBlockEntity loot) {

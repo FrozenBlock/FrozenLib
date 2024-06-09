@@ -18,8 +18,10 @@
 package net.frozenblock.lib.screenshake.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
+import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.renderer.GameRenderer;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -28,8 +30,8 @@ import org.spongepowered.asm.mixin.injection.At;
 public class GameRendererMixin {
 
 	@ModifyExpressionValue(method = "renderLevel", at = @At(value = "NEW", target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"))
-	public PoseStack frozenLib$shakeLeve(PoseStack matrixStack, float partialTicks, long finishTimeNano) {
-		ScreenShaker.shake(matrixStack, partialTicks);
+	public PoseStack frozenLib$shakeLevel(PoseStack matrixStack, DeltaTracker tracker, @Local(ordinal = 0) float deltaTime) {
+		ScreenShaker.shake(matrixStack, deltaTime);
 		return matrixStack;
 	}
 

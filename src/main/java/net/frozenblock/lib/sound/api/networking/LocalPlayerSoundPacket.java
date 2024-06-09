@@ -28,8 +28,8 @@ import net.minecraft.sounds.SoundEvent;
 import org.jetbrains.annotations.NotNull;
 
 public record LocalPlayerSoundPacket(Holder<SoundEvent> sound, float volume, float pitch) implements CustomPacketPayload {
-	public static final Type<LocalPlayerSoundPacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("local_player_sound_packet")
+	public static final Type<LocalPlayerSoundPacket> PACKET_TYPE = new Type<>(
+		FrozenSharedConstants.id("local_player_sound_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, LocalPlayerSoundPacket> CODEC = StreamCodec.ofMember(LocalPlayerSoundPacket::write, LocalPlayerSoundPacket::new);
 

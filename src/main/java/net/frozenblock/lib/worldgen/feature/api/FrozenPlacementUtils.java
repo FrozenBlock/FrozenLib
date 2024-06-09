@@ -36,7 +36,7 @@ public final class FrozenPlacementUtils {
 	}
 
 	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
-		return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(namespace, path));
+		return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(namespace, path));
 	}
 
 	public static Holder<PlacedFeature> register(

@@ -23,6 +23,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.spongepowered.asm.mixin.Final;
@@ -32,6 +33,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import java.util.Optional;
 
 @Mixin(SinglePoolElement.class)
 public class SinglePoolElementMixin {
@@ -41,8 +43,9 @@ public class SinglePoolElementMixin {
 	@Mutable
     protected Either<ResourceLocation, StructureTemplate> template;
 
-    @Inject(method = "<init>(Lcom/mojang/datafixers/util/Either;Lnet/minecraft/core/Holder;Lnet/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool$Projection;)V", at = @At("TAIL"))
-    public void replaceStructure(Either<ResourceLocation, StructureTemplate> template, Holder<StructureProcessorList> processors, StructureTemplatePool.Projection projection, CallbackInfo info) {
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+	@Inject(method = "<init>", at = @At("TAIL"))
+    public void replaceStructure(Either<ResourceLocation, StructureTemplate> template, Holder<StructureProcessorList> processors, StructureTemplatePool.Projection projection, Optional<LiquidSettings> overrideLiquidSettings, CallbackInfo info) {
         if (template.left().isPresent()) {
             ResourceLocation id = template.left().get();
             if (StructurePoolElementIdReplacements.RESOURCE_LOCATION_REPLACEMENTS.containsKey(id)) {

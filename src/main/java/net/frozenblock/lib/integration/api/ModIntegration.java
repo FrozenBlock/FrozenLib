@@ -53,7 +53,7 @@ public abstract class ModIntegration {
     }
 
     public ResourceLocation id(String path) {
-        return new ResourceLocation(this.modRegistryID, path);
+        return ResourceLocation.fromNamespaceAndPath(this.modRegistryID, path);
     }
 
     public Block getBlock(String path) {

@@ -40,7 +40,7 @@ public class TestConfigGui {
 		var config = TestConfig.get(true);
 		var defaultConfig = TestConfig.INSTANCE.defaultInstance();
 		var subMenu = config.subMenu;
-		category.setBackground(new ResourceLocation("textures/block/packed_mud.png"));
+		category.setBackground(ResourceLocation.withDefaultNamespace("textures/block/packed_mud.png"));
 
 		var test = category.addEntry(entryBuilder.startBooleanToggle(text("test_toggle"), config.testToggle)
 				.setDefaultValue(defaultConfig.testToggle)

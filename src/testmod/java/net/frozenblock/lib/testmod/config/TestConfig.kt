@@ -73,14 +73,14 @@ data class TestConfig(
 
     @JvmField
     @Comment("This is a sound event typed entry.")
-    var randomSound: TypedEntry<Holder<SoundEvent>> = TypedEntry(
+    var randomSound: TypedEntry<Holder<SoundEvent>> = TypedEntry.create(
         SOUND_HOLDER_TYPE,
         SoundEvents.BREEZE_WIND_CHARGE_BURST
     ),
 
     @JvmField
     @Comment("This is a Vec3 list typed entry.")
-    var typedVecList: TypedEntry<List<Vec3>> = TypedEntry(
+    var typedVecList: TypedEntry<List<Vec3>> = TypedEntry.create(
         VEC_LIST_TYPE,
         listOf(
             Vec3(0.0, 0.0, 0.0),
@@ -114,7 +114,7 @@ data class TestConfig(
             XjsConfig(
                 FrozenTestMain.MOD_ID,
                 TestConfig::class.java,
-                XjsFormat.XJS_FORMATTED
+                XjsFormat.DJS_FORMATTED
             )
         )
 

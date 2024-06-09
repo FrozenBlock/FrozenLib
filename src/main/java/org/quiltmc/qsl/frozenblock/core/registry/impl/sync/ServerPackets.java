@@ -26,6 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
@@ -45,7 +46,7 @@ public final class ServerPackets {
 	 * </code></pre>
 	 */
 	public record Handshake(IntList supportedVersions) implements CustomPacketPayload {
-		public static final Type<Handshake> PACKET_TYPE = CustomPacketPayload.createType(ServerPackets.id("registry_sync/handshake"));
+		public static final Type<Handshake> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/handshake"));
 		public static final StreamCodec<FriendlyByteBuf, Handshake> CODEC = StreamCodec.ofMember(Handshake::write, Handshake::new);
 
 		public Handshake(@NotNull FriendlyByteBuf buf) {
@@ -66,7 +67,7 @@ public final class ServerPackets {
 	 * Ends registry sync. No data
 	 */
 	public record End() implements CustomPacketPayload {
-		public static final Type<End> PACKET_TYPE = CustomPacketPayload.createType(ServerPackets.id("registry_sync/end"));
+		public static final Type<End> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/end"));
 		public static final StreamCodec<FriendlyByteBuf, End> CODEC = StreamCodec.ofMember(End::write, End::new);
 
 		public End(FriendlyByteBuf buf) {
@@ -97,7 +98,7 @@ public final class ServerPackets {
 	 * </code></pre>
 	 */
 	public record ErrorStyle(Component errorHeader, Component errorFooter, boolean showError) implements CustomPacketPayload {
-		public static final Type<ErrorStyle> PACKET_TYPE = CustomPacketPayload.createType(ServerPackets.id("registry_sync/error_style"));
+		public static final Type<ErrorStyle> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/error_style"));
 		public static final StreamCodec<FriendlyByteBuf, ErrorStyle> CODEC = StreamCodec.ofMember(ErrorStyle::write, ErrorStyle::new);
 
 		public ErrorStyle(@NotNull FriendlyByteBuf buf) {
@@ -134,7 +135,7 @@ public final class ServerPackets {
 	 * </code></pre>
 	 */
 	public record ModProtocol(String prioritizedId, Collection<ModProtocolDef> protocols) implements CustomPacketPayload {
-		public static final Type<ModProtocol> PACKET_TYPE = CustomPacketPayload.createType(ServerPackets.id("registry_sync/mod_protocol"));
+		public static final Type<ModProtocol> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/mod_protocol"));
 		public static final StreamCodec<FriendlyByteBuf, ModProtocol> CODEC = StreamCodec.ofMember(ModProtocol::write, ModProtocol::new);
 
 		public ModProtocol(@NotNull FriendlyByteBuf buf) {
@@ -153,7 +154,7 @@ public final class ServerPackets {
 		}
 	}
 
-	private static String id(String path) {
-		return FrozenSharedConstants.string(path);
+	private static ResourceLocation id(String path) {
+		return FrozenSharedConstants.id(path);
 	}
 }

@@ -37,8 +37,8 @@ public record LocalSoundPacket(
 	float pitch,
 	boolean distanceDelay
 ) implements CustomPacketPayload {
-	public static final Type<LocalSoundPacket> PACKET_TYPE = CustomPacketPayload.createType(
-		FrozenSharedConstants.string("local_sound_packet")
+	public static final Type<LocalSoundPacket> PACKET_TYPE = new Type<>(
+		FrozenSharedConstants.id("local_sound_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, LocalSoundPacket> CODEC = StreamCodec.ofMember(LocalSoundPacket::write, LocalSoundPacket::new);
 

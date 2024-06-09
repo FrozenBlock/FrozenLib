@@ -18,6 +18,7 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.FrozenMain;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.entity.EntityType;
@@ -34,7 +35,7 @@ public class CreeperMixin {
 	@Inject(method = "<init>", at = @At(value = "TAIL"))
 	public void initWithIcon(EntityType<? extends Creeper> entityType, Level level, CallbackInfo info) {
 		Creeper creeper = Creeper.class.cast(this);
-		((EntitySpottingIconInterface) creeper).getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/creeper.png"), 16, 20, FrozenMain.resourceLocation("default"));
+		((EntitySpottingIconInterface) creeper).getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/creeper.png"), 16, 20, FrozenSharedConstants.id("default"));
 	}
 
 }

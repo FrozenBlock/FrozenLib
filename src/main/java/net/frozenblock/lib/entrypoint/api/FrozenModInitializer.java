@@ -49,7 +49,7 @@ public abstract class FrozenModInitializer implements ModInitializer {
 	}
 
 	public ResourceLocation id(String path) {
-		return new ResourceLocation(this.modId, path);
+		return ResourceLocation.fromNamespaceAndPath(this.modId, path);
 	}
 
 	public <T> T register(Registry<T> registry, String path, T value) {
