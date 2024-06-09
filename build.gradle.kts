@@ -349,6 +349,7 @@ tasks {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_21
             languageVersion.set(KotlinVersion.KOTLIN_1_9)
+            apiVersion.set(KotlinVersion.KOTLIN_1_9)
         }
     }
 
