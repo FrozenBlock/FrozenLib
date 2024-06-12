@@ -21,6 +21,8 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.loader.api.ModContainer;
+import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
@@ -143,6 +145,12 @@ public final class FrozenMain extends FrozenModInitializer {
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (!allRegistries) return;
 			ModIntegrations.initialize();
+		});
+
+		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {
+			for (Config<?> config : ConfigRegistry.getAllConfigs()) {
+				config.save();
+			}
 		});
 	}
 
