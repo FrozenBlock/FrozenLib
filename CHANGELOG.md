@@ -5,6 +5,4 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Added `Config.onSync()`
-  - Allows configs to have special post-sync behavior
-- Fixed licenses in Kotlin files
+- Configs now save after the game loads to ensure they're loaded properly.
