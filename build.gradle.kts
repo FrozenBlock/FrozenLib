@@ -1,6 +1,7 @@
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
@@ -20,7 +21,7 @@ buildscript {
 }
 
 plugins {
-	id("fabric-loom") version("+")
+	id("fabric-loom") version("1.6.+")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -30,7 +31,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("1.9.23")
+    kotlin("jvm") version("2.0.0")
 }
 
 val minecraft_version: String by project
@@ -345,7 +346,11 @@ tasks {
     }
 
     withType(KotlinCompile::class) {
-        compilerOptions.jvmTarget = JvmTarget.JVM_17
+        compilerOptions {
+            jvmTarget = JvmTarget.JVM_17
+            languageVersion.set(KotlinVersion.KOTLIN_1_9)
+            apiVersion.set(KotlinVersion.KOTLIN_1_9)
+        }
     }
 
     withType(Test::class) {
