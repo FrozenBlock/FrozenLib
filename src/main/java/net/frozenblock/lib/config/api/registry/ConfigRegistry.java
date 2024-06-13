@@ -35,7 +35,6 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 public class ConfigRegistry {
-
 	private static final List<Config<?>> CONFIG_REGISTRY = new ObjectArrayList<>();
 	private static final Map<String, List<Config<?>>> MOD_CONFIG_REGISTRY = new Object2ObjectOpenHashMap<>();
 
