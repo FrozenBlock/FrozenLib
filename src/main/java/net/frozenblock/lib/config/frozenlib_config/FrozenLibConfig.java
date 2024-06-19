@@ -40,8 +40,22 @@ public class FrozenLibConfig {
 			true,
 			QuiltDataFixes.buildFixer(new QuiltDataFixerBuilder(0)),
 			0
-		)
+		) {
+			@Override
+			public void onSave() throws Exception {
+				super.onSave();
+				this.onSync(null);
+			}
+
+			@Override
+			public void onSync(FrozenLibConfig syncInstance) {
+				var config = this.config();
+				USE_WIND_ON_NON_FROZEN_SERVERS = config.useWindOnNonFrozenServers;
+			}
+		}
 	);
+
+	public static volatile boolean USE_WIND_ON_NON_FROZEN_SERVERS = true;
 
 	@Comment("Mods may override any of these options, but the config file will not change.")
 
