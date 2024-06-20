@@ -21,11 +21,11 @@ buildscript {
 }
 
 plugins {
-	id("fabric-loom") version("1.6.+")
+	id("fabric-loom") version("+")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
-    id("com.github.johnrengelman.shadow") version("+")
+    //id("com.github.johnrengelman.shadow") version("+")
     `maven-publish`
     eclipse
     idea
@@ -235,7 +235,7 @@ dependencies {
 	mappings(loom.layered {
 		// please annoy treetrain if this doesn't work
         mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
-        parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
+        //parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
 		officialMojangMappings {
 			nameSyntheticMembers = false
 		}
@@ -308,6 +308,7 @@ tasks {
         useJUnitPlatform()
     }
 
+    /*
     shadowJar {
         configurations = listOf(relocModApi)
         isEnableRelocation = true
@@ -320,6 +321,7 @@ tasks {
 
         //relocate("blue.endless.jankson", "net.frozenblock.lib.config.api.jankson")
     }
+     */
 
     register("javadocJar", Jar::class) {
         dependsOn(javadoc)
@@ -334,8 +336,8 @@ tasks {
     }
 
     remapJar {
-        dependsOn(shadowJar)
-        input = shadowJar.get().archiveFile
+        //dependsOn(shadowJar)
+        //input = shadowJar.get().archiveFile
     }
 
     withType(JavaCompile::class) {
