@@ -55,7 +55,7 @@ public class BlockEntityWithoutLevelRendererMixin {
 		BlockState instance, Block block, Operation<Boolean> original,
 		@Share("frozenLib$blockEntity") LocalRef<Optional<BlockEntity>> customBlockEntity
 	) {
-		customBlockEntity.set(BlockEntityWithoutLevelRendererRegistry.getBlockEntity(block));
+		customBlockEntity.set(BlockEntityWithoutLevelRendererRegistry.getBlockEntity(instance.getBlock()));
 		return original.call(instance, block) || customBlockEntity.get().isPresent();
 	}
 
