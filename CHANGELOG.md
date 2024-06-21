@@ -6,3 +6,4 @@ Put changelog here:
 
 -----------------
 - Optimized getting of `useWindOnNonFrozenServers`
+- Added the `BlockEntityWithoutLevelRendererRegistry` to make rendering of items using Block Entities easier.
