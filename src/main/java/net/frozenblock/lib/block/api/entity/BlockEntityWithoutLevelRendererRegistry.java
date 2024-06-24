@@ -36,4 +36,8 @@ public class BlockEntityWithoutLevelRendererRegistry {
 		return Optional.ofNullable(BLOCK_TO_BLOCK_ENTITY_MAP.get(block));
 	}
 
+	public static boolean hasBlock(Block block) {
+		return BLOCK_TO_BLOCK_ENTITY_MAP.containsKey(block);
+	}
+
 }

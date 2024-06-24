@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
-import java.util.Optional;
 
 @Mixin(BlockEntityWithoutLevelRenderer.class)
 public class BlockEntityWithoutLevelRendererMixin {
@@ -51,12 +50,13 @@ public class BlockEntityWithoutLevelRendererMixin {
 			)
 		)
 	)
-	public boolean trailierTales$selectCoffin(
+	public boolean frozenLib$selectBlockEntity(
 		BlockState instance, Block block, Operation<Boolean> original,
-		@Share("frozenLib$blockEntity") LocalRef<Optional<BlockEntity>> customBlockEntity
+		@Share("frozenLib$block") LocalRef<Block> customBlock
 	) {
-		customBlockEntity.set(BlockEntityWithoutLevelRendererRegistry.getBlockEntity(instance.getBlock()));
-		return original.call(instance, block) || customBlockEntity.get().isPresent();
+		Block usedBlock = instance.getBlock();
+		customBlock.set(usedBlock);
+		return original.call(instance, block) || BlockEntityWithoutLevelRendererRegistry.hasBlock(usedBlock);
 	}
 
 	@WrapOperation(
@@ -67,11 +67,11 @@ public class BlockEntityWithoutLevelRendererMixin {
 			ordinal = 0
 		)
 	)
-	public boolean trailierTales$replaceWithCoffin(
+	public boolean frozenLib$replaceWithNewBlockEntity(
 		BlockEntityRenderDispatcher instance, BlockEntity blockEntity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Operation<Boolean> original,
-		@Share("frozenLib$blockEntity") LocalRef<Optional<BlockEntity>> customBlockEntity
+		@Share("frozenLib$block") LocalRef<Block> customBlock
 	) {
-		blockEntity = customBlockEntity.get().orElse(blockEntity);
+		blockEntity = BlockEntityWithoutLevelRendererRegistry.getBlockEntity(customBlock.get()).orElse(blockEntity);
 		return original.call(instance, blockEntity, poseStack, bufferSource, packedLight, packedOverlay);
 	}
 
