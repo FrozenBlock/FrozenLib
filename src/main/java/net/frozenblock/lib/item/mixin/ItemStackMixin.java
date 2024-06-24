@@ -46,9 +46,7 @@ public final class ItemStackMixin implements ItemStackExtension {
 
 		// Removable Item Tags
 
-		CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
-
-		data.update(compound -> {
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, compound -> {
 			for (String key : RemovableItemTags.keys()) {
 				if (RemovableItemTags.canRemoveTag(key, level, entity, slot, selected)) {
 					compound.remove(key);
@@ -86,8 +84,7 @@ public final class ItemStackMixin implements ItemStackExtension {
 
 	@Unique
 	private static void frozenLib$fixEmptyTags(ItemStack stack) {
-		CustomData data = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
-		data.update(compound -> {
+		CustomData.update(DataComponents.CUSTOM_DATA, stack, compound -> {
 			for (String key : RemovableItemTags.keys()) {
 				if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) {
 					compound.remove(key);
