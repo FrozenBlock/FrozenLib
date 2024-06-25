@@ -5,4 +5,6 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Configs now save after the game loads to ensure they're loaded properly.
+- Optimized getting of `useWindOnNonFrozenServers`
+- Added the `BlockEntityWithoutLevelRendererRegistry` to make rendering of items using Block Entities easier.
+- Fixed removable tags causing ItemStacks to remain unstackable after said tags have been removed.

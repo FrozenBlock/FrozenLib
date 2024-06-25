@@ -128,7 +128,7 @@ public final class ClientWindManager {
 	}
 
 	public static boolean shouldUseWind() {
-		return hasInitialized || FrozenLibConfig.get().useWindOnNonFrozenServers;
+		return hasInitialized || FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS;
 	}
 
 	public static void tick(@NotNull ClientLevel level) {
@@ -162,7 +162,7 @@ public final class ClientWindManager {
 			extension.clientTick();
 		}
 
-		if (!hasInitialized && time > 80D && FrozenLibConfig.get().useWindOnNonFrozenServers) {
+		if (!hasInitialized && time > 80D && FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS) {
 			RandomSource randomSource = AdvancedMath.random();
 			setSeed(randomSource.nextLong());
 			time = randomSource.nextLong();
