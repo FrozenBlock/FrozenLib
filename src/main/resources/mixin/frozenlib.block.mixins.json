@@ -4,10 +4,13 @@
   "package": "net.frozenblock.lib.block.mixin",
   "compatibilityLevel": "JAVA_17",
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   },
   "mixins": [
     "dripstone.PointedDripstoneBlockMixin",
     "tick.BlockBehaviourMixin"
+  ],
+  "client": [
+    "entity.client.BlockEntityWithoutLevelRendererMixin"
   ]
 }
