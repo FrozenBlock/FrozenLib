@@ -41,8 +41,8 @@ public record FlyBySoundPacket(
 	float volume,
 	float pitch
 ) implements CustomPacketPayload {
-	public static final Type<FlyBySoundPacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("flyby_sound_packet")
+	public static final Type<FlyBySoundPacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("flyby_sound_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, FlyBySoundPacket> CODEC = StreamCodec.ofMember(FlyBySoundPacket::write, FlyBySoundPacket::new);
 

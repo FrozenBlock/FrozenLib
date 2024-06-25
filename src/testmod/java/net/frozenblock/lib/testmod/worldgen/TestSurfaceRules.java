@@ -83,7 +83,7 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
     @Override
     public void addGenericSurfaceRules(List<FrozenDimensionBoundRuleSource> context) {
 		context.add(new FrozenDimensionBoundRuleSource(
-			ResourceLocation.withDefaultNamespace("overworld"),
+			new ResourceLocation("overworld"),
 			SurfaceRules.sequence(
 				SurfaceRules.ifTrue(
 					SurfaceRules.isBiome(Biomes.BIRCH_FOREST),
@@ -92,7 +92,7 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 			)
 		));
 		context.add(new FrozenDimensionBoundRuleSource(
-			ResourceLocation.withDefaultNamespace("the_nether"),
+			new ResourceLocation("the_nether"),
 			SurfaceRules.sequence(
 				SurfaceRules.ifTrue(
 					SurfaceRules.isBiome(Biomes.WARPED_FOREST),

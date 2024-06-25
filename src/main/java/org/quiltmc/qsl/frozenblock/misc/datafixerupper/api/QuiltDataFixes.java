@@ -32,7 +32,6 @@ import java.util.function.Supplier;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.datafix.DataFixTypes;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
@@ -188,7 +187,7 @@ public final class QuiltDataFixes {
 			new ThreadFactoryBuilder().setNameFormat("FrozenLib Quilt Datafixer Bootstrap").setDaemon(true).setPriority(1).build()
 		);
 
-		return dataFixerBuilder.build(DataFixTypes.TYPES_FOR_LEVEL_LIST, executor);
+		return dataFixerBuilder.build(SharedConstants.DATA_FIX_TYPES_TO_OPTIMIZE, executor);
 	}
 
     /**

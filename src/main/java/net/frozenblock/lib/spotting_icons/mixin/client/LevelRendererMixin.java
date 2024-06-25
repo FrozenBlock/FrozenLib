@@ -21,7 +21,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.spotting_icons.impl.EntityRenderDispatcherWithIcon;
 import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -56,7 +55,7 @@ public class LevelRendererMixin {
 	private ClientLevel level;
 
 	@Inject(method = "renderLevel", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/renderer/RenderBuffers;bufferSource()Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;", shift = At.Shift.AFTER))
-	public void renderLevel(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f projectionMatrix, Matrix4f matrix4f, CallbackInfo ci, @Local(ordinal = 0) float deltaTime, @Local PoseStack poseStack) {
+	public void renderLevel(float partialTick, long finishNanoTime, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f projectionMatrix, Matrix4f matrix2, CallbackInfo info, @Local PoseStack poseStack) {
 		if (this.level != null) {
 			MultiBufferSource.BufferSource bufferSource = this.renderBuffers.bufferSource();
 			for (Entity entity : this.level.entitiesForRendering()) {
@@ -69,7 +68,7 @@ public class LevelRendererMixin {
 					entity.yOld = entity.getY();
 					entity.zOld = entity.getZ();
 				}
-				this.renderEntityIcon(entity, d, e, f, deltaTime, poseStack, bufferSource);
+				this.renderEntityIcon(entity, d, e, f, partialTick, poseStack, bufferSource);
 			}
 		}
 	}

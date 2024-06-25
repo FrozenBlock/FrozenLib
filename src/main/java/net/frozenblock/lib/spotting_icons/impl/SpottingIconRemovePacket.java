@@ -28,8 +28,8 @@ public record SpottingIconRemovePacket(
 	int entityId
 ) implements CustomPacketPayload {
 
-	public static final Type<SpottingIconRemovePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("spotting_icon_remove_packet")
+	public static final Type<SpottingIconRemovePacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("spotting_icon_remove_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, SpottingIconRemovePacket> CODEC = ByteBufCodecs.VAR_INT
 		.map(SpottingIconRemovePacket::new, SpottingIconRemovePacket::entityId)

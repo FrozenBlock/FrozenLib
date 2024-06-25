@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class FrozenBiome {
 	private static final List<FrozenBiome> BIOMES = new ArrayList<>();
-	private final ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(this.modID(), this.biomeID()));
+	private final ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, new ResourceLocation(this.modID(), this.biomeID()));
 
 	protected FrozenBiome() {
 		BIOMES.add(this);

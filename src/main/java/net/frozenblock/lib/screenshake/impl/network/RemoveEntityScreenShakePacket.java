@@ -28,8 +28,8 @@ public record RemoveEntityScreenShakePacket(
 	int entityId
 ) implements CustomPacketPayload {
 
-	public static final Type<RemoveEntityScreenShakePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("remove_entity_screen_shakes_packet")
+	public static final Type<RemoveEntityScreenShakePacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("remove_entity_screen_shakes_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, RemoveEntityScreenShakePacket> CODEC = ByteBufCodecs.VAR_INT.map(RemoveEntityScreenShakePacket::new, RemoveEntityScreenShakePacket::entityId).cast();
 

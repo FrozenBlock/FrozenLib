@@ -31,8 +31,8 @@ public record CooldownChangePacket(
 	int additional
 ) implements CustomPacketPayload {
 
-	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("cooldown_change_packet")
+	public static final Type<CooldownChangePacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("cooldown_change_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
 

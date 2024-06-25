@@ -35,8 +35,8 @@ public record WindDisturbancePacket(
 	long posOrID
 
 ) implements CustomPacketPayload {
-	public static final Type<WindDisturbancePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("wind_disturbance_packet")
+	public static final Type<WindDisturbancePacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("wind_disturbance_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, WindDisturbancePacket> CODEC = StreamCodec.ofMember(WindDisturbancePacket::write, WindDisturbancePacket::new);
 

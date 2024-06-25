@@ -25,7 +25,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.portal.DimensionTransition;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -67,14 +66,14 @@ public class ServerPlayerMixin {
 	}
 
 	@Inject(method = "changeDimension", at = @At(value = "HEAD"))
-	public void frozenLib$changeDimensionSaveCooldowns(DimensionTransition dimensionTransition, CallbackInfoReturnable<Entity> cir) {
+	public void frozenLib$changeDimensionSaveCooldowns(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
 		CompoundTag tempTag = new CompoundTag();
 		SaveableItemCooldowns.saveCooldowns(tempTag, ServerPlayer.class.cast(this));
 		this.frozenLib$savedCooldownTag = tempTag;
 	}
 
 	@Inject(method = "changeDimension", at = @At(value = "RETURN"))
-	public void frozenLib$changeDimensionLoadCooldowns(DimensionTransition dimensionTransition, CallbackInfoReturnable<Entity> cir) {
+	public void frozenLib$changeDimensionLoadCooldowns(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
 		if (this.frozenLib$savedCooldownTag != null) {
 			this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(this.frozenLib$savedCooldownTag));
 		}

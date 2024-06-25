@@ -96,7 +96,7 @@ public final class FrozenRecipeProvider {
 				.requires(Ingredient.of(dyeableItems.stream().filter(item2x -> !item2x.equals(item2)).map(ItemStack::new)))
 				.group(group)
 				.unlockedBy("has_needed_dye", RecipeProvider.has(item))
-				.save(recipeOutput, ResourceLocation.fromNamespaceAndPath(modID, "dye_" + RecipeProvider.getItemName(item2)));
+				.save(recipeOutput, new ResourceLocation(modID, "dye_" + RecipeProvider.getItemName(item2)));
 		}
 	}
 }

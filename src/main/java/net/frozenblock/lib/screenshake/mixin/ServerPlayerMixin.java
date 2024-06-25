@@ -24,7 +24,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.portal.DimensionTransition;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -57,7 +56,7 @@ public class ServerPlayerMixin {
 	}
 
 	@Inject(method = "changeDimension", at = @At(value = "HEAD"))
-	public void frozenLib$changeDimensionSaveScreenShakes(DimensionTransition dimensionTransition, CallbackInfoReturnable<Entity> cir) {
+	public void frozenLib$changeDimensionSaveScreenShakes(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
 		CompoundTag tempTag = new CompoundTag();
 		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).getScreenShakeManager();
 		entityScreenShakeManager.save(tempTag);
@@ -65,7 +64,7 @@ public class ServerPlayerMixin {
 	}
 
 	@Inject(method = "changeDimension", at = @At(value = "RETURN"))
-	public void frozenLib$changeDimensionLoadScreenShakes(DimensionTransition dimensionTransition, CallbackInfoReturnable<Entity> cir) {
+	public void frozenLib$changeDimensionLoadScreenShakes(ServerLevel destination, CallbackInfoReturnable<Entity> info) {
 		if (this.frozenLib$savedScreenShakesTag != null) {
 			EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).getScreenShakeManager();
 			entityScreenShakeManager.load(this.frozenLib$savedScreenShakesTag);

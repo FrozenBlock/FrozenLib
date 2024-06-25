@@ -59,7 +59,7 @@ public final class FrozenClient implements ClientModInitializer {
 
 		particleRegistry.register(FrozenParticleTypes.DEBUG_POS, DebugPosParticle.Provider::new);
 
-		Panoramas.addPanorama(ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama"));
+		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
 
 		var resourceLoader = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
 		resourceLoader.registerReloadListener(BlockSoundGroupManager.INSTANCE);

@@ -48,9 +48,9 @@ public class StencilRenderer {
 		for (RenderType renderType : DYNAMIC_LIGHT) {
 			VertexConsumer vertexConsumer = multiBufferSource.getBuffer(renderType);
 			for (Triangle triangle : triangles) {
-				vertexConsumer.addVertex(matrix4f, triangle.p0.x, triangle.p0.y, triangle.p0.z).setColor(j, k, l, m);
-				vertexConsumer.addVertex(matrix4f, triangle.p2.x, triangle.p2.y, triangle.p2.z).setColor(j, k, l, m);
-				vertexConsumer.addVertex(matrix4f, triangle.p1.x, triangle.p1.y, triangle.p1.z).setColor(j, k, l, m);
+				vertexConsumer.vertex(matrix4f, triangle.p0.x, triangle.p0.y, triangle.p0.z).color(j, k, l, m).endVertex();
+				vertexConsumer.vertex(matrix4f, triangle.p2.x, triangle.p2.y, triangle.p2.z).color(j, k, l, m).endVertex();
+				vertexConsumer.vertex(matrix4f, triangle.p1.x, triangle.p1.y, triangle.p1.z).color(j, k, l, m).endVertex();
 			}
 		}
 	}

@@ -26,7 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 public class ClientSpottingIconMethods {
 
 	public static boolean hasTexture(ResourceLocation resourceLocation) {
-		return Minecraft.getInstance().getResourceManager().getResource(ResourceLocation.fromNamespaceAndPath(resourceLocation.getNamespace(),  resourceLocation.getPath())).isPresent();
+		return Minecraft.getInstance().getResourceManager().getResource(new ResourceLocation(resourceLocation.getNamespace(),  resourceLocation.getPath())).isPresent();
 	}
 
 }

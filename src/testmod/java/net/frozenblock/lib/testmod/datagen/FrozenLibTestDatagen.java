@@ -125,7 +125,7 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		@Override
-		public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
+		public void generate(@NotNull HolderLookup.Provider provider, BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
 			output.accept(
 				ResourceKey.create(Registries.LOOT_TABLE, FrozenTestMain.id("test_loottable")),
 				LootTable.lootTable()

@@ -153,4 +153,16 @@ public final class FrozenMain extends FrozenModInitializer {
 			}
 		});
 	}
+
+	@Contract("_ -> new")
+	@Deprecated(forRemoval = true)
+	public static @NotNull ResourceLocation resourceLocation(String path) {
+		return new ResourceLocation(FrozenSharedConstants.MOD_ID, path);
+	}
+
+	@Deprecated(forRemoval = true)
+	public static @NotNull String string(String path) {
+		return resourceLocation(path).toString();
+	}
+
 }

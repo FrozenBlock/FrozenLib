@@ -32,8 +32,8 @@ public record EntityScreenShakePacket(
 	int ticks
 ) implements CustomPacketPayload {
 
-	public static final Type<EntityScreenShakePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("screen_shake_entity_packet")
+	public static final Type<EntityScreenShakePacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("screen_shake_entity_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, EntityScreenShakePacket> CODEC = StreamCodec.ofMember(EntityScreenShakePacket::write, EntityScreenShakePacket::new);
 

@@ -55,8 +55,8 @@ public record ConfigSyncPacket<T>(
 
 	public static final int PERMISSION_LEVEL = 2;
 
-	public static final Type<ConfigSyncPacket<?>> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("config_sync_packet")
+	public static final Type<ConfigSyncPacket<?>> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("config_sync_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, ConfigSyncPacket<?>> CODEC = StreamCodec.ofMember(ConfigSyncPacket::write, ConfigSyncPacket::create);
 

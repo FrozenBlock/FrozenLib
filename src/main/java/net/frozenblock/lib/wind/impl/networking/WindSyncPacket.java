@@ -31,8 +31,8 @@ public record WindSyncPacket(
 	Vec3 commandWind
 ) implements CustomPacketPayload {
 
-	public static final Type<WindSyncPacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("wind_sync_packet")
+	public static final Type<WindSyncPacket> PACKET_TYPE = CustomPacketPayload.createType(
+		FrozenSharedConstants.string("wind_sync_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, WindSyncPacket> CODEC = StreamCodec.ofMember(WindSyncPacket::write, WindSyncPacket::create);
 
