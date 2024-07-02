@@ -77,12 +77,11 @@ public class StructureProcessorApi {
 		if (location == null) {
 			return EMPTY;
 		}
-		List<StructureProcessor> processorList = new ArrayList<>();
 		String namespace = location.getNamespace();
 		String path = location.getPath();
 
 		List<StructureProcessor> locationToProcessors = LOCATION_TO_PROCESSORS.getOrDefault(location, EMPTY);
-		processorList.addAll(locationToProcessors);
+		List<StructureProcessor> processorList = new ArrayList<>(locationToProcessors);
 
 		List<StructureProcessor> nameSpaceToProcessors = NAMESPACE_TO_PROCESSORS.getOrDefault(namespace, EMPTY);
 		processorList.addAll(nameSpaceToProcessors);
