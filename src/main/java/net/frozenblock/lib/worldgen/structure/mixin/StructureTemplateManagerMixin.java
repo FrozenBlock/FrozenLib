@@ -18,6 +18,7 @@
 package net.frozenblock.lib.worldgen.structure.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.worldgen.structure.impl.StructureTemplateInterface;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -29,7 +30,7 @@ import java.util.Optional;
 @Mixin(StructureTemplateManager.class)
 public class StructureTemplateManagerMixin {
 
-	@ModifyExpressionValue(method = "getOrCreate", at = @At("RETURN"))
+	@ModifyReturnValue(method = "getOrCreate", at = @At("RETURN"))
 	public StructureTemplate frozenLib$appendIdToTemplate(StructureTemplate template, ResourceLocation id) {
 		if (template instanceof StructureTemplateInterface structureTemplateInterface) {
 			structureTemplateInterface.frozenLib$setId(id);
@@ -38,7 +39,7 @@ public class StructureTemplateManagerMixin {
 		return template;
 	}
 
-	@ModifyExpressionValue(method = "get", at = @At("RETURN"))
+	@ModifyReturnValue(method = "get",at = @At("RETURN"))
 	public Optional<StructureTemplate> frozenLib$appendIdToTemplate(Optional<StructureTemplate> template, ResourceLocation id) {
 		if (template.isPresent() && template.get() instanceof StructureTemplateInterface structureTemplateInterface) {
 			structureTemplateInterface.frozenLib$setId(id);
