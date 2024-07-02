@@ -8,6 +8,8 @@
   },
   "mixins": [
     "RandomMixin",
-    "SinglePoolElementMixin"
+    "SinglePoolElementMixin",
+    "StructureTemplateManagerMixin",
+    "StructureTemplateMixin"
   ]
 }
