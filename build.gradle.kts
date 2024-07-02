@@ -391,7 +391,7 @@ artifacts {
 }
 
 fun getVersion(): String {
-    var version = "$mod_version-$mod_loader+$minecraft_version"
+    var version = "$mod_version+$minecraft_version"
 
     if (release != null && !release) {
         version += "-unstable"
