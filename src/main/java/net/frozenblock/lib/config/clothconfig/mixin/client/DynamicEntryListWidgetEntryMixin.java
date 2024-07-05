@@ -49,7 +49,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 	@Unique
 	@Override
     public void frozenLib$addSyncData(@NotNull Class<?> clazz, @NotNull String identifier, Config<?> configInstance) {
-		if (identifier.equals("")) {
+		if (identifier.isEmpty()) {
 			new Exception("Cannot process sync value with empty identifier!").printStackTrace();
 			return;
 		}
