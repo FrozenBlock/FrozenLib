@@ -19,6 +19,8 @@ package net.frozenblock.lib.config.api.instance;
 
 import com.mojang.datafixers.DataFixer;
 import java.nio.file.Path;
+import lombok.Getter;
+import lombok.Setter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenBools;
@@ -44,6 +46,8 @@ public abstract class Config<T> {
 	private final Class<T> configClass;
 	private T configInstance;
 	private final T defaultInstance;
+	@Getter
+	@Setter
 	private boolean synced = false;
 
 	protected Config(String modId, Class<T> configClass, Path path, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
@@ -135,14 +139,6 @@ public abstract class Config<T> {
 
 	public Class<T> configClass() {
 		return this.configClass;
-	}
-
-	public void setSynced(boolean synced) {
-		this.synced = synced;
-	}
-
-	public boolean isSynced() {
-		return this.synced;
 	}
 
 	public void onSync(T syncInstance) {}

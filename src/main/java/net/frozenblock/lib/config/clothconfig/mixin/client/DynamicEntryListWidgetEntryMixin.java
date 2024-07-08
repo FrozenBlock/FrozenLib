@@ -56,7 +56,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 		Field field = null;
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
 			EntrySyncData entrySyncData = fieldToCheck.getAnnotation(EntrySyncData.class);
-			if (entrySyncData != null && !entrySyncData.value().equals("") && entrySyncData.value().equals(identifier)) {
+			if (entrySyncData != null && !entrySyncData.value().isEmpty() && entrySyncData.value().equals(identifier)) {
 				if (field != null) FrozenLogUtils.logError("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
 				field = fieldToCheck;
 			}
