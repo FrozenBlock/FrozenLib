@@ -131,7 +131,7 @@ public final class FrozenRenderType {
 			RenderType.CompositeState.builder()
 				.setShaderState(RenderType.RENDERTYPE_EYES_SHADER)
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
-				.setTransparencyState(RenderType.CRUMBLING_TRANSPARENCY)
+				.setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
 				.setWriteMaskState(RenderType.COLOR_WRITE)
 				.createCompositeState(false)
 		))
