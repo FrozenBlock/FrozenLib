@@ -133,6 +133,24 @@ public final class FrozenRenderType {
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
 				.setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
 				.setWriteMaskState(RenderType.COLOR_WRITE)
+				.setCullState(RenderStateShard.NO_CULL)
+				.createCompositeState(false)
+		))
+	);
+
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER_CULL = Util.memoize(
+		((texture, affectsOutline) -> create(
+			FrozenSharedConstants.string("apparition_outer_cull"),
+			DefaultVertexFormat.NEW_ENTITY,
+			VertexFormat.Mode.QUADS,
+			1536,
+			false,
+			true,
+			RenderType.CompositeState.builder()
+				.setShaderState(RenderType.RENDERTYPE_EYES_SHADER)
+				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+				.setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
+				.setWriteMaskState(RenderType.COLOR_WRITE)
 				.createCompositeState(false)
 		))
 	);
@@ -182,6 +200,10 @@ public final class FrozenRenderType {
 
 	public static RenderType apparitionOuter(ResourceLocation resourceLocation) {
 		return APPARITION_OUTER.apply(resourceLocation, false);
+	}
+
+	public static RenderType apparitionOuterCull(ResourceLocation resourceLocation) {
+		return APPARITION_OUTER_CULL.apply(resourceLocation, false);
 	}
 
 	public static RenderType entityTranslucentEmissiveCull(ResourceLocation resourceLocation) {
