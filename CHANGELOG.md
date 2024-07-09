@@ -9,3 +9,4 @@ Put changelog here:
   - Injects structure processors into structure templates
 - Fixed config saving log spam
 - Minor optimizations
+- Added inverting ModelParts, which can be used with `ModelPartInvertInterface.`

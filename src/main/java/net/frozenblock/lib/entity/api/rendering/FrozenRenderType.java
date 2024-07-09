@@ -56,6 +56,28 @@ public final class FrozenRenderType {
             })
     );
 
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL = Util.memoize(
+		((identifier, affectsOutline) -> {
+			RenderType.CompositeState multiPhaseParameters = RenderType.CompositeState.builder()
+				.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+				.setTextureState(new RenderStateShard.TextureStateShard(identifier, false, false))
+				.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+				.setCullState(RenderStateShard.CULL)
+				.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+				.setOverlayState(RenderStateShard.OVERLAY)
+				.createCompositeState(affectsOutline);
+			return create(
+				FrozenSharedConstants.string("entity_translucent_emissive_fixed_cull"),
+				DefaultVertexFormat.NEW_ENTITY,
+				VertexFormat.Mode.QUADS,
+				256,
+				true,
+				true,
+				multiPhaseParameters
+			);
+		})
+	);
+
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize(
 			((texture, affectsOutline) -> create(
 				FrozenSharedConstants.string("entity_translucent_emissive_always_render"),
@@ -80,6 +102,10 @@ public final class FrozenRenderType {
     public static RenderType entityTranslucentEmissiveFixed(ResourceLocation resourceLocation) {
         return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, true);
     }
+
+	public static RenderType entityTranslucentEmissiveFixedCull(ResourceLocation resourceLocation) {
+		return ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL.apply(resourceLocation, true);
+	}
 
 	public static RenderType entityTranslucentEmissiveFixedNoOutline(ResourceLocation resourceLocation) {
 		return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, false);
