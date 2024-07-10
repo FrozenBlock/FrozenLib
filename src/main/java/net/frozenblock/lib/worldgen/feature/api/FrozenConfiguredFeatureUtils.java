@@ -18,6 +18,7 @@
 package net.frozenblock.lib.worldgen.feature.api;
 
 import java.util.Set;
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
@@ -33,10 +34,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
-public final class FrozenConfiguredFeatureUtils {
-	private FrozenConfiguredFeatureUtils() {
-		throw new UnsupportedOperationException("FrozenConfiguredFeatureUtils contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenConfiguredFeatureUtils {
 
 	public static ResourceKey<ConfiguredFeature<?, ?>> createKey(String namespace, String path) {
 		return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(namespace, path));

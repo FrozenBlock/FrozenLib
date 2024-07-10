@@ -17,17 +17,15 @@
 
 package net.frozenblock.lib.tag.api;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
-public final class FrozenItemTags {
-
-	private FrozenItemTags() {
-		throw new UnsupportedOperationException("FrozenItemTags contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenItemTags {
 
 	public static final TagKey<Item> NO_USE_GAME_EVENTS = bind("dont_emit_use_game_events");
 	public static final TagKey<Item> HEAVY_ITEMS = bind("heavy_items");

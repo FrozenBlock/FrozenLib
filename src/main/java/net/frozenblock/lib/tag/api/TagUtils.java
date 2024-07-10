@@ -20,6 +20,7 @@ package net.frozenblock.lib.tag.api;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.tag.convention.v1.TagUtil;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.core.Holder;
@@ -33,12 +34,8 @@ import org.jetbrains.annotations.Nullable;
 /**
  * Contains methods related to {@link TagKey}s.
  */
-public final class TagUtils {
-
-	private TagUtils() {
-		throw new UnsupportedOperationException("TagUtils contains only static declarations.");
-	}
-
+@UtilityClass
+public class TagUtils {
 
     @Nullable
     public static <T> T getRandomEntry(TagKey<T> tag) {

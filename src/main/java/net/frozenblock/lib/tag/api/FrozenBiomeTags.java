@@ -17,17 +17,15 @@
 
 package net.frozenblock.lib.tag.api;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 
-public final class FrozenBiomeTags {
-
-	private FrozenBiomeTags() {
-		throw new UnsupportedOperationException("FrozenBiomeTags contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenBiomeTags {
 
 	public static final TagKey<Biome> CAN_LIGHTNING_OVERRIDE = of("can_lightning_override");
 	public static final TagKey<Biome> CANNOT_LIGHTNING_OVERRIDE = of("cannot_lightning_override");

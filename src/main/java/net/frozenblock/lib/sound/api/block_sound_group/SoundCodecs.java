@@ -19,11 +19,13 @@ package net.frozenblock.lib.sound.api.block_sound_group;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SoundType;
 
-public final class SoundCodecs {
+@UtilityClass
+public class SoundCodecs {
 
 	public static final Codec<SoundType> SOUND_TYPE = RecordCodecBuilder.create(instance ->
 			instance.group(
@@ -43,8 +45,4 @@ public final class SoundCodecs {
 					SOUND_TYPE.fieldOf("sound_type").forGetter(BlockSoundGroupOverwrite::soundOverwrite)
 			).apply(instance, (id, soundType) -> new BlockSoundGroupOverwrite(id, soundType, () -> true))
 	);
-
-	private SoundCodecs() {
-		throw new UnsupportedOperationException("SoundCodecs contains only static declarations.");
-	}
 }

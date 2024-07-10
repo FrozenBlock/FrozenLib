@@ -18,14 +18,13 @@
 package net.frozenblock.lib.worldgen.biome.api.parameters;
 
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.level.biome.Climate;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public final class FrozenBiomeParameters {
-	private FrozenBiomeParameters() {
-		throw new UnsupportedOperationException("FrozenBiomeParameters contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenBiomeParameters {
 
 	public static void addWeirdness(BiomeRunnable runnable, @NotNull List<Climate.Parameter> weirdnesses) {
 		for (Climate.Parameter weirdness : weirdnesses) {

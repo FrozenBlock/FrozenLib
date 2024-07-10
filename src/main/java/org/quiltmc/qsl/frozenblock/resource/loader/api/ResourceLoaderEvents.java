@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.resource.loader.api;
 
+import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
@@ -30,10 +31,8 @@ import org.jetbrains.annotations.Nullable;
  * <p>
  * Modified to work on Fabric
  */
-public final class ResourceLoaderEvents {
-    private ResourceLoaderEvents() {
-        throw new UnsupportedOperationException("ResourceLoaderEvents contains only static definitions.");
-    }
+@UtilityClass
+public class ResourceLoaderEvents {
 
     /**
      * An event indicating the start of the reloading of data packs on a Minecraft server.

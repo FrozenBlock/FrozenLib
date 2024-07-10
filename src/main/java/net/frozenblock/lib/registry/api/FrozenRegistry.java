@@ -18,6 +18,7 @@
 package net.frozenblock.lib.registry.api;
 
 import com.mojang.serialization.Lifecycle;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenSharedConstants;
@@ -34,10 +35,8 @@ import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
+@UtilityClass
 public class FrozenRegistry {
-	private FrozenRegistry() {
-		throw new UnsupportedOperationException("FrozenRegistry contains only static declarations.");
-	}
 
 	public static final ResourceKey<Registry<ModIntegrationSupplier<?>>> MOD_INTEGRATION_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("mod_integration"));
 	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("sound_predicate"));
