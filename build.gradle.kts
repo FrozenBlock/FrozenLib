@@ -81,7 +81,7 @@ base {
     archivesName.set(archives_base_name)
 }
 
-version = getVersion()
+version = getModVersion()
 group = maven_group
 
 val release = findProperty("releaseType")?.equals("stable")
@@ -390,8 +390,8 @@ artifacts {
     archives(javadocJar)
 }
 
-fun getVersion(): String {
-    var version = "$mod_version+$minecraft_version"
+fun getModVersion(): String {
+    var version = "$mod_version-mc$minecraft_version"
 
     if (release != null && !release) {
         version += "-unstable"
