@@ -68,7 +68,7 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
     public @NotNull DataFixer build(Set<DSL.TypeReference> types, @NotNull Supplier<Executor> executorGetter) {
 		return types.isEmpty() ? this.build().fixer() : Util.make(() -> {
 			var result = this.build();
-			result.optimize(types, executorGetter.get());
+			result.optimize(types, executorGetter.get()).join();
 			return result.fixer();
 		});
     }
