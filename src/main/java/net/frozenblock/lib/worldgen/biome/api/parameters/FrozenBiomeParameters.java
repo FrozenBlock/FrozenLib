@@ -42,13 +42,13 @@ public final class FrozenBiomeParameters {
 	@NotNull
 	public static Climate.Parameter inBetween(Climate.Parameter par1, Climate.Parameter par2, float width) {
 		if (width >= 1F || width <= 0F) {
-			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetween if width >= 1 or width <= 0!");
+			throw new IllegalArgumentException("FrozenLib: Cannot run inBetween if width >= 1 or width <= 0!");
 		}
 		width *= 0.5F;
 		float lowest = par1.min();
 		float highest = par2.max();
 		if (lowest > highest) {
-			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetween when lower parameter is higher than the first!");
+			throw new IllegalArgumentException("FrozenLib: Cannot run inBetween when lower parameter is higher than the first!");
 		}
 		float difference = (highest - lowest);
 		float middle = lowest + (difference * 0.5F);
@@ -59,13 +59,13 @@ public final class FrozenBiomeParameters {
 	@NotNull
 	public static Climate.Parameter inBetweenLowCutoff(Climate.Parameter par1, Climate.Parameter par2, float width) {
 		if (width >= 1F || width <= 0F) {
-			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenLowCutoff if width >= 1 or width <= 0!");
+			throw new IllegalArgumentException("FrozenLib: Cannot run inBetweenLowCutoff if width >= 1 or width <= 0!");
 		}
 		width *= 0.5F;
 		float lowest = par1.min();
 		float highest = par2.max();
 		if (lowest > highest) {
-			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenLowCutoff when lower parameter is higher than the first!");
+			throw new IllegalArgumentException("FrozenLib: Cannot run inBetweenLowCutoff when lower parameter is higher than the first!");
 		}
 		float difference = (highest - lowest);
 		float middle = lowest + (difference * 0.5F);
@@ -76,13 +76,13 @@ public final class FrozenBiomeParameters {
 	@NotNull
 	public static Climate.Parameter inBetweenHighCutoff(Climate.Parameter par1, Climate.Parameter par2, float width) {
 		if (width >= 1F || width <= 0F) {
-			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenHighCutoff if width >= 1 or width <= 0!");
+			throw new IllegalArgumentException("FrozenLib: Cannot run inBetweenHighCutoff if width >= 1 or width <= 0!");
 		}
 		width *= 0.5F;
 		float lowest = par1.min();
 		float highest = par2.max();
 		if (lowest > highest) {
-			throw new UnsupportedOperationException("FrozenLib: Cannot run inBetweenHighCutoff when lower parameter is higher than the first!");
+			throw new IllegalArgumentException("FrozenLib: Cannot run inBetweenHighCutoff when lower parameter is higher than the first!");
 		}
 		float difference = (highest - lowest);
 		float middle = lowest + (difference * 0.5F);
