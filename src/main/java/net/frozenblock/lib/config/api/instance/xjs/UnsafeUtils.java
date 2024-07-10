@@ -17,10 +17,12 @@
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
+import lombok.experimental.UtilityClass;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 
 // Source: Cloth Config
+@UtilityClass
 public class UnsafeUtils {
 
 	public static <V> V constructUnsafely(Class<V> cls) {
