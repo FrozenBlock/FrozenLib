@@ -31,7 +31,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.0.0")
+    kotlin("jvm") version("2.0.10-RC")
 }
 
 val minecraft_version: String by project
@@ -348,8 +348,6 @@ tasks {
     withType(KotlinCompile::class) {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_21
-            languageVersion.set(KotlinVersion.KOTLIN_1_9)
-            apiVersion.set(KotlinVersion.KOTLIN_1_9)
         }
     }
 
