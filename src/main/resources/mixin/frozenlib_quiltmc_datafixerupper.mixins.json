@@ -4,6 +4,7 @@
   "package": "org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "ChunkStorageMixin",
     "DataFixTypesAccessor",
     "DataFixTypesMixin",
     "NbtUtilsMixin"

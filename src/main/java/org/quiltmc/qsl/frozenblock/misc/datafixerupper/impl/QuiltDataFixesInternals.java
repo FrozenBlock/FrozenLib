@@ -83,6 +83,8 @@ public abstract class QuiltDataFixesInternals {
 
     public abstract void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer);
 
+	public abstract boolean isEmpty();
+
     public abstract @Nullable DataFixerEntry getFixerEntry(@NotNull String modId);
 
 	public abstract void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer);
