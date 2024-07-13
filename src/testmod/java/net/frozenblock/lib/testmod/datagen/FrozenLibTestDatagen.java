@@ -124,12 +124,12 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		@Override
 		public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
 			output.accept(
-				ResourceKey.create(Registries.LOOT_TABLE, FrozenTestMain.id("test_loottable")),
+				FrozenTestMain.id("test_loottable"),
 				LootTable.lootTable()
 					.withPool(
 						LootPool.lootPool()
 							.setRolls(ConstantValue.exactly(1.0F))
-							.add(LootItem.lootTableItem(Items.DRAGON_EGG))
+							ResourceKey.create(Registries.LOOT_TABLE, .add(LootItem.lootTableItem(Items.DRAGON_EGG))
 				)
 			);
 		}
