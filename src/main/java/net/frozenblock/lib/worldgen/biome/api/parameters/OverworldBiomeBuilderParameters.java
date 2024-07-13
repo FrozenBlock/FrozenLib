@@ -24,16 +24,15 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import lombok.experimental.UtilityClass;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 
-public final class OverworldBiomeBuilderParameters {
-	private OverworldBiomeBuilderParameters() {
-		throw new UnsupportedOperationException("OverworldBiomeBuilderParameters contains only static declarations.");
-	}
+@UtilityClass
+public class OverworldBiomeBuilderParameters {
 
 	public static final float VALLEY_SIZE = 0.05F;
 	public static final float LOW_START = 0.26666668F;

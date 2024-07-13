@@ -18,6 +18,7 @@
 package net.frozenblock.lib.math.api;
 
 import java.awt.geom.Point2D;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
@@ -31,10 +32,8 @@ import org.jetbrains.annotations.ApiStatus;
  * @since 4.0
  */
 @ApiStatus.Obsolete(since = "Minecraft 1.19")
-public final class AnimationAPI {
-	private AnimationAPI() {
-		throw new UnsupportedOperationException("AnimationAPI contains only static declarations.");
-	}
+@UtilityClass
+public class AnimationAPI {
 
 	public static double relativeX(Point2D a, Point2D b, double x) {
 		return (x - a.getX()) / (b.getX() - a.getX());

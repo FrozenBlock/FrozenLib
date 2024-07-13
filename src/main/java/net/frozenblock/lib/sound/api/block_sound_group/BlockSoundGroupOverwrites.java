@@ -19,6 +19,7 @@ package net.frozenblock.lib.sound.api.block_sound_group;
 
 import java.util.List;
 import java.util.function.BooleanSupplier;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -32,11 +33,8 @@ import org.jetbrains.annotations.Nullable;
  * Or you could just be normal and add the block itself instead of the ID.
  * You can also add a LIST of blocks (IDs not allowed) by using new Block[]{block1, block2}.
  */
-public final class BlockSoundGroupOverwrites {
-
-	private BlockSoundGroupOverwrites() {
-		throw new UnsupportedOperationException("BlockSoundGroupOverwrites contains only static declarations.");
-	}
+@UtilityClass
+public class BlockSoundGroupOverwrites {
 
 	private static final BlockSoundGroupManager MANAGER = BlockSoundGroupManager.INSTANCE;
 

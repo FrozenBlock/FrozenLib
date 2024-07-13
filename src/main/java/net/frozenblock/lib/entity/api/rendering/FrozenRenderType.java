@@ -56,6 +56,28 @@ public final class FrozenRenderType {
             })
     );
 
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL = Util.memoize(
+		((identifier, affectsOutline) -> {
+			RenderType.CompositeState multiPhaseParameters = RenderType.CompositeState.builder()
+				.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+				.setTextureState(new RenderStateShard.TextureStateShard(identifier, false, false))
+				.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+				.setCullState(RenderStateShard.CULL)
+				.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+				.setOverlayState(RenderStateShard.OVERLAY)
+				.createCompositeState(affectsOutline);
+			return create(
+				FrozenSharedConstants.string("entity_translucent_emissive_fixed_cull"),
+				DefaultVertexFormat.NEW_ENTITY,
+				VertexFormat.Mode.QUADS,
+				256,
+				true,
+				true,
+				multiPhaseParameters
+			);
+		})
+	);
+
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize(
 			((texture, affectsOutline) -> create(
 				FrozenSharedConstants.string("entity_translucent_emissive_always_render"),
@@ -77,9 +99,92 @@ public final class FrozenRenderType {
 			))
 	);
 
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL = Util.memoize(
+		((texture, affectsOutline) -> create(
+			FrozenSharedConstants.string("entity_translucent_emissive_always_render_cull"),
+			DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
+			VertexFormat.Mode.QUADS,
+			256,
+			false,
+			true,
+			RenderType.CompositeState.builder()
+				.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+				.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+				.setCullState(RenderStateShard.CULL)
+				.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
+				.setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
+				//.setLayeringState(RenderStateShard.POLYGON_OFFSET_LAYERING)
+				//.setOutputState(RenderStateShard.TRANSLUCENT_TARGET)
+				.createCompositeState(affectsOutline)
+		))
+	);
+
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER = Util.memoize(
+		((texture, affectsOutline) -> create(
+			FrozenSharedConstants.string("apparition_outer"),
+			DefaultVertexFormat.NEW_ENTITY,
+			VertexFormat.Mode.QUADS,
+			1536,
+			false,
+			true,
+			RenderType.CompositeState.builder()
+				.setShaderState(RenderType.RENDERTYPE_EYES_SHADER)
+				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+				.setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
+				.setWriteMaskState(RenderType.COLOR_WRITE)
+				.setCullState(RenderStateShard.NO_CULL)
+				.createCompositeState(false)
+		))
+	);
+
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER_CULL = Util.memoize(
+		((texture, affectsOutline) -> create(
+			FrozenSharedConstants.string("apparition_outer_cull"),
+			DefaultVertexFormat.NEW_ENTITY,
+			VertexFormat.Mode.QUADS,
+			1536,
+			false,
+			true,
+			RenderType.CompositeState.builder()
+				.setShaderState(RenderType.RENDERTYPE_EYES_SHADER)
+				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+				.setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
+				.setWriteMaskState(RenderType.COLOR_WRITE)
+				.createCompositeState(false)
+		))
+	);
+
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_CULL = Util.memoize(
+		((identifier, affectsOutline) -> {
+			RenderType.CompositeState multiPhaseParameters = RenderType.CompositeState.builder()
+				.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
+				.setTextureState(new RenderStateShard.TextureStateShard(identifier, false, false))
+				.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+				.setCullState(RenderStateShard.CULL)
+				.setWriteMaskState(RenderStateShard.COLOR_WRITE)
+				.setOverlayState(RenderStateShard.OVERLAY)
+				.setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
+				.createCompositeState(affectsOutline);
+			return create(
+				FrozenSharedConstants.string("entity_translucent_emissive_cull"),
+				DefaultVertexFormat.NEW_ENTITY,
+				VertexFormat.Mode.QUADS,
+				1536,
+				true,
+				true,
+				multiPhaseParameters
+			);
+		})
+	);
+
     public static RenderType entityTranslucentEmissiveFixed(ResourceLocation resourceLocation) {
         return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, true);
     }
+
+	public static RenderType entityTranslucentEmissiveFixedCull(ResourceLocation resourceLocation) {
+		return ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL.apply(resourceLocation, true);
+	}
 
 	public static RenderType entityTranslucentEmissiveFixedNoOutline(ResourceLocation resourceLocation) {
 		return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, false);
@@ -87,6 +192,22 @@ public final class FrozenRenderType {
 
 	public static RenderType entityTranslucentEmissiveAlwaysRender(ResourceLocation resourceLocation) {
 		return ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER.apply(resourceLocation, false);
+	}
+
+	public static RenderType entityTranslucentEmissiveAlwaysRenderCull(ResourceLocation resourceLocation) {
+		return ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL.apply(resourceLocation, false);
+	}
+
+	public static RenderType apparitionOuter(ResourceLocation resourceLocation) {
+		return APPARITION_OUTER.apply(resourceLocation, false);
+	}
+
+	public static RenderType apparitionOuterCull(ResourceLocation resourceLocation) {
+		return APPARITION_OUTER_CULL.apply(resourceLocation, false);
+	}
+
+	public static RenderType entityTranslucentEmissiveCull(ResourceLocation resourceLocation) {
+		return ENTITY_TRANSLUCENT_EMISSIVE_CULL.apply(resourceLocation, true);
 	}
 
     /*@Nullable

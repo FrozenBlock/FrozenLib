@@ -17,17 +17,15 @@
 
 package net.frozenblock.lib.tag.api;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
 import org.jetbrains.annotations.NotNull;
 
-public final class FrozenEntityTags {
-
-	private FrozenEntityTags() {
-		throw new UnsupportedOperationException("FrozenEntityTags contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenEntityTags {
 
     public static final TagKey<EntityType<?>> CREEPER_IGNORES = bind("creeper_ignores");
 
