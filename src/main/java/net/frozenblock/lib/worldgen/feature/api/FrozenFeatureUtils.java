@@ -18,7 +18,7 @@
 package net.frozenblock.lib.worldgen.feature.api;
 
 import lombok.experimental.UtilityClass;
-import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.data.worldgen.BootstapContext;
 
 @UtilityClass
 public class FrozenFeatureUtils {
