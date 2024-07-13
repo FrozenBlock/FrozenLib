@@ -33,7 +33,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
-import me.shedaniel.autoconfig.util.Utils;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +56,7 @@ public class XjsObjectMapper {
 	}
 
 	public static <T> T deserializeObject(final @Nullable String modId, final Path p, final Class<T> clazz) throws NonSerializableObjectException {
-		final T t = Utils.constructUnsafely(clazz);
+		final T t = UnsafeUtils.constructUnsafely(clazz);
 
 		final Optional<JsonObject> read = XjsUtils.readJson(p.toFile());
 		if (read.isEmpty()) return t;
@@ -100,7 +99,7 @@ public class XjsObjectMapper {
 		final Class<?> c = o.getClass();
 		for (final Field f : c.getDeclaredFields()) {
 			if (!Modifier.isStatic(f.getModifiers()) && !Modifier.isTransient(f.getModifiers())) {
-				final JsonValue value = toJsonValue(Utils.getUnsafely(f, o));
+				final JsonValue value = toJsonValue(UnsafeUtils.getUnsafely(f, o));
 
 				final String comment = getComment(f);
 				if (comment != null) value.setComment(comment);
@@ -160,8 +159,8 @@ public class XjsObjectMapper {
 			final Field f = getField(clazz, member.getKey());
 			if (f == null || !getSaveToggle(f)) continue;
 
-			final Object def = Utils.getUnsafely(f, o);
-			Utils.setUnsafely(f, o, getValueByType(modId, f.getType(), def, member.getValue()));
+			final Object def = UnsafeUtils.getUnsafely(f, o);
+			UnsafeUtils.setUnsafely(f, o, getValueByType(modId, f.getType(), def, member.getValue()));
 		}
 	}
 
@@ -203,7 +202,7 @@ public class XjsObjectMapper {
 		} else if (type.isAssignableFrom(Map.class)) {
 			return toMap(modId, value, def);
 		}
-		final Object o = Utils.constructUnsafely(type);
+		final Object o = UnsafeUtils.constructUnsafely(type);
 		writeObjectInto(modId, o, value.asObject());
 		return o;
 	}

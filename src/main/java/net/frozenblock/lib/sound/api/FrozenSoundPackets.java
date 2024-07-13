@@ -18,6 +18,7 @@
 package net.frozenblock.lib.sound.api;
 
 import io.netty.buffer.Unpooled;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
@@ -41,10 +42,8 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3d;
 
-public final class FrozenSoundPackets {
-	private FrozenSoundPackets() {
-		throw new UnsupportedOperationException("FrozenSoundPackets contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenSoundPackets {
 
 	public static void createLocalSound(@NotNull Level level, BlockPos pos, SoundEvent sound, SoundSource source, float volume, float pitch, boolean distanceDelay) {
 		if (!level.isClientSide) {

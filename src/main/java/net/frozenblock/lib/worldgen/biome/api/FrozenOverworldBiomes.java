@@ -18,6 +18,7 @@
 package net.frozenblock.lib.worldgen.biome.api;
 
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.worldgen.biome.api.parameters.FrozenBiomeParameters;
 import net.frozenblock.lib.worldgen.biome.impl.OverworldBiomeData;
 import net.minecraft.resources.ResourceKey;
@@ -28,10 +29,8 @@ import org.jetbrains.annotations.NotNull;
 /**
  * API that exposes the internals of Minecraft's overworld biome code.
  */
-public final class FrozenOverworldBiomes {
-    private FrozenOverworldBiomes() {
-		throw new UnsupportedOperationException("FrozenOverworldBiomes contains only static declarations.");
-    }
+@UtilityClass
+public class FrozenOverworldBiomes {
 
 	/**
 	 * Adds a biome to the Overworld generator.

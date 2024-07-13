@@ -1,25 +1,15 @@
 pluginManagement {
     repositories {
-        maven {
+        maven("https://maven.quiltmc.org/repository/release") {
             name = "Quilt"
-            setUrl("https://maven.quiltmc.org/repository/release/")
         }
-		maven {
-			name = "Quilt Snapshot"
-			setUrl("https://maven.quiltmc.org/repository/snapshot/")
-		}
-        maven {
+        maven("https://maven.fabricmc.net") {
             name = "Fabric"
-            setUrl("https://maven.fabricmc.net/")
         }
-        maven {
-            name = "Forge"
-            setUrl("https://files.minecraftforge.net/maven/")
-        }
-        maven {
+        maven("https://jitpack.io") {
             name = "Jitpack"
-            setUrl("https://jitpack.io/")
         }
+        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
         mavenCentral()
         gradlePluginPortal()
     }

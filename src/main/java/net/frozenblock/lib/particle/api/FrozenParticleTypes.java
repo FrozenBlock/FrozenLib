@@ -20,6 +20,7 @@ package net.frozenblock.lib.particle.api;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import java.util.function.Function;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.Registry;
@@ -29,12 +30,9 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.NotNull;
 
-public final class FrozenParticleTypes {
+@UtilityClass
+public class FrozenParticleTypes {
 	public static final SimpleParticleType DEBUG_POS = register("debug_pos");
-
-	private FrozenParticleTypes() {
-		throw new UnsupportedOperationException("RegisterParticles contains only static declarations.");
-	}
 
 	public static void registerParticles() {
 		FrozenSharedConstants.LOGGER.info("Registering Particles for " + FrozenSharedConstants.MOD_ID);

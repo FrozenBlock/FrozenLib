@@ -61,7 +61,12 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
         this.modDataFixers.put(modId, new DataFixerEntry(dataFixer, currentVersion));
     }
 
-    @Override
+	@Override
+	public boolean isEmpty() {
+		return this.modDataFixers.isEmpty() && this.modMinecraftDataFixers.isEmpty();
+	}
+
+	@Override
     public @Nullable DataFixerEntry getFixerEntry(@NotNull String modId) {
         return modDataFixers.get(modId);
     }

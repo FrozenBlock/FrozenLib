@@ -19,16 +19,15 @@ package net.frozenblock.lib.sound.api.damagesource;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageSource;
 
-public final class PlayerDamageSourceSounds {
-	private PlayerDamageSourceSounds() {
-		throw new UnsupportedOperationException("PlayerDamageSourceSounds contains only static declarations.");
-	}
+@UtilityClass
+public class PlayerDamageSourceSounds {
 
     private static final Map<DamageSource, ResourceLocation> DAMAGE_SOURCE_RESOURCE_LOCATION_MAP = new Object2ObjectOpenHashMap<>();
 	private static final Map<ResourceLocation, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new Object2ObjectOpenHashMap<>();
