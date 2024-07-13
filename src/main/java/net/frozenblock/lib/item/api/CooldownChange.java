@@ -17,17 +17,15 @@
 
 package net.frozenblock.lib.item.api;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import org.jetbrains.annotations.NotNull;
 
-public final class CooldownChange {
-
-	private CooldownChange() {
-		throw new UnsupportedOperationException("CooldownChange contains only static declarations.");
-	}
+@UtilityClass
+public class CooldownChange {
 
 	public static void changeCooldown(@NotNull Player player, Item item, int additionalCooldown, int min) {
 		ItemCooldowns manager = player.getCooldowns();

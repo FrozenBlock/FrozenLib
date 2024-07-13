@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.math.api;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -33,11 +34,8 @@ import org.jetbrains.annotations.Nullable;
  * @author FrozenBlock (2022)
  * @since 4.0
  */
-public final class AdvancedMath {
-
-	private AdvancedMath() {
-		throw new UnsupportedOperationException("AdvancedMath contains only static declarations.");
-	}
+@UtilityClass
+public class AdvancedMath {
 
 	@Contract(" -> new")
 	@NotNull

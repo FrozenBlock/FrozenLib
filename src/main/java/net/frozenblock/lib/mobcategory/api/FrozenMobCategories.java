@@ -19,12 +19,11 @@ package net.frozenblock.lib.mobcategory.api;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.entity.MobCategory;
 
-public final class FrozenMobCategories {
-	private FrozenMobCategories() {
-		throw new UnsupportedOperationException("FrozenMobCategories contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenMobCategories {
 
 	private static final Map<String, MobCategory> NEW_MOB_CATEROGIES = new LinkedHashMap<>();
 

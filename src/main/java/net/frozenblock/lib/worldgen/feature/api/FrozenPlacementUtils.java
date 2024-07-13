@@ -19,6 +19,7 @@ package net.frozenblock.lib.worldgen.feature.api;
 
 import java.util.List;
 import java.util.Set;
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
@@ -30,10 +31,8 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
-public final class FrozenPlacementUtils {
-	private FrozenPlacementUtils() {
-		throw new UnsupportedOperationException("FrozenPlacementUtils contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenPlacementUtils {
 
 	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
 		return ResourceKey.create(Registries.PLACED_FEATURE, new ResourceLocation(namespace, path));

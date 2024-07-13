@@ -21,7 +21,7 @@ buildscript {
 }
 
 plugins {
-	id("fabric-loom") version("1.6.+")
+	id("fabric-loom") version("+")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -31,7 +31,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.0.0")
+    kotlin("jvm") version("2.0.10-RC")
 }
 
 val minecraft_version: String by project
@@ -81,7 +81,7 @@ base {
     archivesName.set(archives_base_name)
 }
 
-version = getVersion()
+version = getModVersion()
 group = maven_group
 
 val release = findProperty("releaseType")?.equals("stable")
@@ -235,7 +235,7 @@ dependencies {
 	mappings(loom.layered {
 		// please annoy treetrain if this doesn't work
         mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
-        parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
+        // parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
 		officialMojangMappings {
 			nameSyntheticMembers = false
 		}
@@ -348,8 +348,6 @@ tasks {
     withType(KotlinCompile::class) {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_21
-            languageVersion.set(KotlinVersion.KOTLIN_1_9)
-            apiVersion.set(KotlinVersion.KOTLIN_1_9)
         }
     }
 
@@ -390,8 +388,8 @@ artifacts {
     archives(javadocJar)
 }
 
-fun getVersion(): String {
-    var version = "$mod_version-$mod_loader+$minecraft_version"
+fun getModVersion(): String {
+    var version = "$mod_version-mc$minecraft_version"
 
     if (release != null && !release) {
         version += "-unstable"

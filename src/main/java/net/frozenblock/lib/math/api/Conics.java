@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.math.api;
 
+import lombok.experimental.UtilityClass;
 import java.awt.geom.Point2D;
 
 /**
@@ -27,11 +28,8 @@ import java.awt.geom.Point2D;
  * @author LiukRast (2021-2022)
  * @since 4.0
  */
-public final class Conics {
-
-	private Conics() {
-		throw new UnsupportedOperationException("Conics contains only static declarations.");
-	}
+@UtilityClass
+public class Conics {
 
 	public static boolean isCircle(Point2D center, double radius, Point2D actual) {
 		double curvex = Math.pow(actual.getX() - center.getX(), 2);

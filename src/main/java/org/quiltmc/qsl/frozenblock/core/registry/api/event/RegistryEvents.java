@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
+import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
@@ -37,10 +38,8 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * Modified to work on Fabric
  */
-public final class RegistryEvents {
-	private RegistryEvents() {
-		throw new UnsupportedOperationException("RegistryEvents contains only static declarations.");
-	}
+@UtilityClass
+public class RegistryEvents {
 
 	/**
 	 * Gets the entry added event for a specific Minecraft registry.

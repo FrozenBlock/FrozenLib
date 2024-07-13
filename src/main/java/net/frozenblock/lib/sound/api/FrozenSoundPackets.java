@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.sound.api;
 
+import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.sound.api.networking.FadingDistanceSwitchingSoundPacket;
@@ -41,10 +42,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public final class FrozenSoundPackets {
-	private FrozenSoundPackets() {
-		throw new UnsupportedOperationException("FrozenSoundPackets contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenSoundPackets {
 
 	public static void createLocalSound(@NotNull Level level, BlockPos pos, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch, boolean distanceDelay) {
 		if (!level.isClientSide) {
