@@ -29,6 +29,7 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 import java.util.function.BiFunction;
 import java.util.function.Supplier;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
@@ -42,10 +43,8 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesIntern
  * <p>
  * Modified to work on Fabric
  */
-public final class QuiltDataFixes {
-    private QuiltDataFixes() {
-        throw new UnsupportedOperationException("QuiltDataFixes contains only static declarations.");
-    }
+@UtilityClass
+public class QuiltDataFixes {
 
     /**
      * A "base" version {@code 0} schema, for use by all mods.

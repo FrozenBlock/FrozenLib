@@ -142,10 +142,13 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (!allRegistries) return;
+
 			ModIntegrations.initialize();
 		});
 
 		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {
+			if (!allRegistries) return;
+
 			for (Config<?> config : ConfigRegistry.getAllConfigs()) {
 				config.save();
 			}

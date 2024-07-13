@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.math.api;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -32,11 +33,8 @@ import net.minecraft.world.phys.Vec3;
  *
  * @author Lunade (2021-2022)
  */
-public final class EasyNoiseSampler {
-
-	private EasyNoiseSampler() {
-		throw new UnsupportedOperationException("EasyNoiseSampler contains only static declarations.");
-	}
+@UtilityClass
+public class EasyNoiseSampler {
 
     public static long seed = 0;
     public static RandomSource checkedRandom = new LegacyRandomSource(seed);

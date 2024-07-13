@@ -17,14 +17,13 @@
 
 package net.frozenblock.lib.entity.behavior.api;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.BehaviorControl;
 import net.minecraft.world.entity.ai.behavior.OneShot;
 
-public final class FrozenBehaviorUtils {
-	private FrozenBehaviorUtils() {
-		throw new UnsupportedOperationException("FrozenBehaviorUtils contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenBehaviorUtils {
 
 	public static <E extends LivingEntity> OneShot<E> getOneShot(BehaviorControl<E> control) {
 		if (!(control instanceof OneShot<E> oneShot)) {

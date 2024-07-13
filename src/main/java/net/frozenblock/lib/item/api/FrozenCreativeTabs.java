@@ -19,6 +19,7 @@ package net.frozenblock.lib.item.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.Holder;
@@ -38,10 +39,8 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * ITEMS MUST BE REGISTERED BEFORE THEY ARE ADDED HERE.
  */
-public final class FrozenCreativeTabs {
-	private FrozenCreativeTabs() {
-		throw new UnsupportedOperationException("FrozenCreativeTabs only contains static declarations.");
-	}
+@UtilityClass
+public class FrozenCreativeTabs {
 
 	public static void add(ItemLike item, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
 		if (item == null || item.asItem() == null) return;

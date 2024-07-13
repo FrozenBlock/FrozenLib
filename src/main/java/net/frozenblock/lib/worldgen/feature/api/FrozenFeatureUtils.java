@@ -17,12 +17,11 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
-import net.minecraft.data.worldgen.BootstapContext;
+import lombok.experimental.UtilityClass;
+import net.minecraft.data.worldgen.BootstrapContext;
 
-public final class FrozenFeatureUtils {
-	private FrozenFeatureUtils() {
-		throw new UnsupportedOperationException("FrozenFeatureUtils contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenFeatureUtils {
 
 	public static BootstapContext<Object> BOOTSTRAP_CONTEXT = null;
 }

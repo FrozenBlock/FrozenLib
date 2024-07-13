@@ -19,17 +19,15 @@ package net.frozenblock.lib.integration.api;
 
 import java.util.List;
 import java.util.function.Supplier;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
-public final class ModIntegrations {
-
-    private ModIntegrations() {
-        throw new UnsupportedOperationException("ModIntegrations contains only static declarations.");
-    }
+@UtilityClass
+public class ModIntegrations {
 
     /**
      * Registers a mod integration class

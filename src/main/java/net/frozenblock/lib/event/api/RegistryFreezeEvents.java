@@ -17,17 +17,15 @@
 
 package net.frozenblock.lib.event.api;
 
+import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.jetbrains.annotations.Nullable;
 
-public final class RegistryFreezeEvents {
-
-	private RegistryFreezeEvents() {
-		throw new UnsupportedOperationException("RegistryFreezeEvents contains only static declarations.");
-	}
+@UtilityClass
+public class RegistryFreezeEvents {
 
 	/**
 	 * An event indicating the start of a {@link Registry}'s freeze.

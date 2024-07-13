@@ -17,17 +17,15 @@
 
 package net.frozenblock.lib.tag.api;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
-public final class FrozenBlockTags {
-
-	private FrozenBlockTags() {
-		throw new UnsupportedOperationException("FrozenBlockTags contains only static declarations.");
-	}
+@UtilityClass
+public class FrozenBlockTags {
 
     public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
 
