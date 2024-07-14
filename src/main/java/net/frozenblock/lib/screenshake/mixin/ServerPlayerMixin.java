@@ -20,7 +20,6 @@ package net.frozenblock.lib.screenshake.mixin;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeManager;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;

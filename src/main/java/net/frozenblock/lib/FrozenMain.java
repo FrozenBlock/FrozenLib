@@ -50,16 +50,15 @@ import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
+import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
+import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.commands.WardenSpawnTrackerCommand;
 import net.minecraft.world.level.storage.DimensionDataStorage;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
@@ -82,6 +81,8 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		// CONTINUE FROZENLIB INIT
 
+		FrozenRuleBlockEntityModifiers.init();
+		FrozenStructureProcessorTypes.init();
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		WindDisturbanceLogic.init();

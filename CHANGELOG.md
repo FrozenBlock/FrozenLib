@@ -5,11 +5,7 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Added a Structure Processor API
-  - Injects structure processors into structure templates
-- Added inverting ModelParts, which can be used with `ModelPartInvertInterface.`
-- Fixed config saving log spam
-- Fixed DataFixerUpper API not working in chunk serialization
-- Fixed a crash when an XJS config is used and cloth config is not installed
-- Minor optimizations
-- Changed version scheme to "(mod version)-mc(minecraft version)"
+- Added `BlockStateRespectingRuleProcessor,` which will append the current BlockState's properties to the outputed B;pcl instead of needing to define BlockStates manually.
+  - This, of course, can save a ton of time and space while making structure processors.
+- Added the `BlockStateRespectingProcessorRule,` which is used alongside the `BlockStateRespectingRuleProcessor.`
+- Added the `AppendSherds` BlockEntity processor, which will append specified Sherds to a Decorated Pot.

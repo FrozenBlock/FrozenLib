@@ -20,13 +20,12 @@ package net.frozenblock.lib.worldgen.structure.api;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import org.jetbrains.annotations.NotNull;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import org.jetbrains.annotations.NotNull;
 
 public class StructureProcessorApi {
 	private static final List<StructureProcessor> EMPTY = ImmutableList.of();
