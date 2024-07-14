@@ -62,30 +62,22 @@ public class AppendSherds implements RuleBlockEntityModifier {
 	@Override
 	public CompoundTag apply(@NotNull RandomSource random, @Nullable CompoundTag nbt) {
 		CompoundTag compoundTag = nbt == null ? new CompoundTag() : nbt.copy();
-		Item[] chosenSherds = new Item[]{
-			Items.BRICK,
-			Items.BRICK,
-			Items.BRICK,
-			Items.BRICK
-		};
+		Item[] chosenSherds = new Item[4];
 		List<Item> orderedDecorations = PotDecorations.load(nbt).ordered();
-		orderedDecorations.forEach(existingSherd -> {
-			int index = orderedDecorations.indexOf(existingSherd);
+		for (int i = 0; i < chosenSherds.length; i++) {
 			if (random.nextFloat() <= this.chancePerSlot) {
-				chosenSherds[index] = this.getRandomSherd(random);
+				chosenSherds[i] = this.getRandomSherd(random);
 			} else {
-				chosenSherds[index] = this.defaultToBrick ? Items.BRICK : existingSherd;
+				chosenSherds[i] = this.defaultToBrick ? Items.BRICK : orderedDecorations.get(i);
 			}
-		});
-
+		}
 		PotDecorations processedDecorations = new PotDecorations(
 			chosenSherds[0],
 			chosenSherds[1],
 			chosenSherds[2],
 			chosenSherds[3]
 		);
-		processedDecorations.save(compoundTag);
-		return compoundTag;
+		return processedDecorations.save(compoundTag);
 	}
 
 	public Item getRandomSherd(@NotNull RandomSource random) {
