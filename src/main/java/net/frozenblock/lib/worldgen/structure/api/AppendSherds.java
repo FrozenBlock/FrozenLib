@@ -45,7 +45,12 @@ public class AppendSherds implements RuleBlockEntityModifier {
 	@Override
 	public CompoundTag apply(@NotNull RandomSource random, @Nullable CompoundTag nbt) {
 		CompoundTag compoundTag = nbt == null ? new CompoundTag() : nbt.copy();
-		Item[] chosenSherds = new Item[4];
+		Item[] chosenSherds = new Item[]{
+			Items.BRICK,
+			Items.BRICK,
+			Items.BRICK,
+			Items.BRICK
+		};
 		List<Item> orderedDecorations = PotDecorations.load(nbt).ordered();
 		orderedDecorations.forEach(existingSherd -> {
 			int index = orderedDecorations.indexOf(existingSherd);
@@ -71,7 +76,7 @@ public class AppendSherds implements RuleBlockEntityModifier {
 	}
 
 	@Override
-	public RuleBlockEntityModifierType<?> getType() {
+	public @NotNull RuleBlockEntityModifierType<?> getType() {
 		return FrozenRuleBlockEntityModifiers.APPEND_SHERDS;
 	}
 }
