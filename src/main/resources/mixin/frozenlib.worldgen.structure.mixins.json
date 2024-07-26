@@ -11,7 +11,6 @@
     "RandomMixin",
     "SinglePoolElementMixin",
     "StructureMixin",
-    "StructurePieceMixin",
     "ListPoolElementMixin",
     "StructureStartMixin",
     "StructureTemplateMixin"

@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
 import net.frozenblock.lib.worldgen.structure.api.StructureProcessorApi;
-import net.frozenblock.lib.worldgen.structure.impl.StructurePieceInterface;
+import net.frozenblock.lib.worldgen.structure.impl.PoolElementStructurePieceInterface;
 import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
@@ -72,10 +72,12 @@ public class StructureStartMixin implements StructureStartInterface {
 	@Override
 	public void frozenLib$addProcessorsFromId(ResourceLocation id) {
 		List<StructureProcessor> processorList = StructureProcessorApi.getAdditionalProcessors(id);
-		this.pieceContainer.pieces().forEach(structurePiece -> {
-			if (structurePiece instanceof StructurePieceInterface structurePieceInterface) {
-				structurePieceInterface.frozenLib$addProcessors(processorList);
-			}
-		});
+		if (!processorList.isEmpty()) {
+			this.pieceContainer.pieces().forEach(structurePiece -> {
+				if (structurePiece instanceof PoolElementStructurePieceInterface structurePieceInterface) {
+					structurePieceInterface.frozenLib$addProcessors(processorList);
+				}
+			});
+		}
 	}
 }
