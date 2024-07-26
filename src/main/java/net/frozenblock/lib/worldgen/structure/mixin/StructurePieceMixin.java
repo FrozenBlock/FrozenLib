@@ -17,23 +17,22 @@
 
 package net.frozenblock.lib.worldgen.structure.mixin;
 
+import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.worldgen.structure.impl.StructureTemplateInterface;
-import net.frozenblock.lib.worldgen.structure.impl.TemplateStructurePieceInterface;
-import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.frozenblock.lib.worldgen.structure.impl.StructurePieceInterface;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(TemplateStructurePiece.class)
-public class TemplateStructurePieceMixin implements TemplateStructurePieceInterface {
+@Mixin(StructurePiece.class)
+public class StructurePieceMixin implements StructurePieceInterface {
 
-	@Shadow
-	protected StructureTemplate template;
+	@Unique
+	private final ArrayList<StructureProcessor> frozenLib$additionalProcessors = new ArrayList<>();
 
 	@Override
-	public void frozenLib$addProcessorsToTemplate(List<StructureProcessor> processors) {
-		((StructureTemplateInterface) this.template).frozenLib$addProcessors(processors);
+	public void frozenLib$addProcessors(List<StructureProcessor> processors) {
+		this.frozenLib$additionalProcessors.addAll(processors);
 	}
 }

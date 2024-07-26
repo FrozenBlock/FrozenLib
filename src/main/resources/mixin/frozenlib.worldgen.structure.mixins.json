@@ -7,11 +7,13 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "PoolElementStructurePieceMixin",
     "RandomMixin",
     "SinglePoolElementMixin",
     "StructureMixin",
+    "StructurePieceMixin",
+    "ListPoolElementMixin",
     "StructureStartMixin",
-    "StructureTemplateMixin",
-    "TemplateStructurePieceMixin"
+    "StructureTemplateMixin"
   ]
 }

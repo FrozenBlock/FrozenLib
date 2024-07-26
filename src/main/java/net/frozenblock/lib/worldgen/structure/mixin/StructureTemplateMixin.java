@@ -50,7 +50,6 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 		ServerLevelAccessor serverLevel, BlockPos offset, BlockPos pos, StructurePlaceSettings settings, RandomSource random, int flags,
 		CallbackInfoReturnable<Boolean> info
 	) {
-		this.frozenLib$additionalProcessors.forEach(System.out::println);
 		this.frozenLib$additionalProcessors.forEach(settings::addProcessor);
 	}
 

@@ -20,19 +20,18 @@ package net.frozenblock.lib.worldgen.structure.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import java.util.List;
 import net.frozenblock.lib.worldgen.structure.api.StructureProcessorApi;
+import net.frozenblock.lib.worldgen.structure.impl.StructurePieceInterface;
 import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
-import net.frozenblock.lib.worldgen.structure.impl.TemplateStructurePieceInterface;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
-import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import java.util.List;
 
 @Mixin(StructureStart.class)
 public class StructureStartMixin implements StructureStartInterface {
@@ -74,8 +73,8 @@ public class StructureStartMixin implements StructureStartInterface {
 	public void frozenLib$addProcessorsFromId(ResourceLocation id) {
 		List<StructureProcessor> processorList = StructureProcessorApi.getAdditionalProcessors(id);
 		this.pieceContainer.pieces().forEach(structurePiece -> {
-			if (structurePiece instanceof TemplateStructurePiece templateStructurePiece) {
-				((TemplateStructurePieceInterface) templateStructurePiece).frozenLib$addProcessorsToTemplate(processorList);
+			if (structurePiece instanceof StructurePieceInterface structurePieceInterface) {
+				structurePieceInterface.frozenLib$addProcessors(processorList);
 			}
 		});
 	}

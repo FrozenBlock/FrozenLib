@@ -15,15 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.structure.api;
+package net.frozenblock.lib.worldgen.structure.impl;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import java.util.Map;
-import net.minecraft.resources.ResourceLocation;
+import java.util.List;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
-public class StructurePoolElementIdReplacements {
+public interface StructurePieceInterface {
 
-	@Deprecated
-    public static final Map<ResourceLocation, ResourceLocation> RESOURCE_LOCATION_REPLACEMENTS = new Object2ObjectOpenHashMap<>();
-
+	void frozenLib$addProcessors(List<StructureProcessor> processors);
 }

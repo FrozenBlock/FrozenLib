@@ -17,41 +17,41 @@
 
 package net.frozenblock.lib.worldgen.structure.mixin;
 
-import com.mojang.datafixers.util.Either;
-import java.util.Optional;
-import net.frozenblock.lib.worldgen.structure.api.StructurePoolElementIdReplacements;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import java.util.ArrayList;
+import java.util.List;
+import net.frozenblock.lib.worldgen.structure.impl.StructurePoolElementInterface;
+import net.frozenblock.lib.worldgen.structure.impl.StructureTemplateInterface;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SinglePoolElement.class)
-public class SinglePoolElementMixin {
+public class SinglePoolElementMixin implements StructurePoolElementInterface {
 
-    @Shadow
-	@Final
-	@Mutable
-    protected Either<ResourceLocation, StructureTemplate> template;
+	@Unique
+	private final List<StructureProcessor> frozenLib$additionalProcessors = new ArrayList<>();
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-	@Inject(method = "<init>", at = @At("TAIL"))
-    public void replaceStructure(Either<ResourceLocation, StructureTemplate> template, Holder<StructureProcessorList> processors, StructureTemplatePool.Projection projection, Optional<LiquidSettings> overrideLiquidSettings, CallbackInfo info) {
-        if (template.left().isPresent()) {
-            ResourceLocation id = template.left().get();
-            if (StructurePoolElementIdReplacements.RESOURCE_LOCATION_REPLACEMENTS.containsKey(id)) {
-                this.template = Either.left(StructurePoolElementIdReplacements.RESOURCE_LOCATION_REPLACEMENTS.get(id));
-            }
-        }
-    }
+	@Override
+	public void frozenLib$addProcessors(List<StructureProcessor> processors) {
+		this.frozenLib$additionalProcessors.addAll(processors);
+	}
+
+	@ModifyExpressionValue(
+		method = "place",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/levelgen/structure/pools/SinglePoolElement;getTemplate(Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplateManager;)Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate;"
+		)
+	)
+	public StructureTemplate frozenLib$place(StructureTemplate original) {
+		if (original instanceof StructureTemplateInterface structureTemplateInterface) {
+			structureTemplateInterface.frozenLib$addProcessors(this.frozenLib$additionalProcessors);
+		}
+		return original;
+	}
 
 }
