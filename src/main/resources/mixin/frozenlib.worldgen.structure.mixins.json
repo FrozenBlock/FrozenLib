@@ -9,7 +9,8 @@
   "mixins": [
     "RandomMixin",
     "SinglePoolElementMixin",
-    "StructureTemplateManagerMixin",
+    "StructureMixin",
+    "StructureStartMixin",
     "StructureTemplateMixin"
   ]
 }
