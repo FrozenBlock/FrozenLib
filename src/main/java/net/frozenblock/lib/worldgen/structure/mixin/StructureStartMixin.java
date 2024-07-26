@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.worldgen.structure.api.StructureProcessorApi;
 import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
-import net.frozenblock.lib.worldgen.structure.impl.StructureTemplateInterface;
+import net.frozenblock.lib.worldgen.structure.impl.TemplateStructurePieceInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -95,8 +95,8 @@ public class StructureStartMixin implements StructureStartInterface {
 		BlockPos blockPos,
 		Operation<Void> operation
 	) {
-		if (piece instanceof StructureTemplateInterface structureTemplateInterface) {
-			structureTemplateInterface.frozenLib$addProcessors(this.frozenLib$additionalProcessors);
+		if (piece instanceof TemplateStructurePieceInterface templateStructurePieceInterface) {
+			templateStructurePieceInterface.frozenLib$addProcessorsToTemplate(this.frozenLib$additionalProcessors);
 		}
 		operation.call(piece, worldGenLevel, structureManager, chunkGenerator, randomSource, boundingBox, chunkPos, blockPos);
 	}

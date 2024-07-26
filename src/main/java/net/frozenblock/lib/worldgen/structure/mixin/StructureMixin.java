@@ -40,8 +40,7 @@ public class StructureMixin {
 		StructureStart original,
 		RegistryAccess registryManager
 	) {
-		Structure structure = Structure.class.cast(this);
-		registryManager.registry(Registries.STRUCTURE).ifPresent(registry -> StructureStartInterface.class.cast(original).frozenLib$addProcessorsFromId(registry.getKey(structure)));
+		StructureStartInterface.class.cast(original).frozenLib$addProcessorsFromId(registryManager.registryOrThrow(Registries.STRUCTURE).getKey(Structure.class.cast(this)));
 		return original;
 	}
 

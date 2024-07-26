@@ -11,6 +11,7 @@
     "SinglePoolElementMixin",
     "StructureMixin",
     "StructureStartMixin",
-    "StructureTemplateMixin"
+    "StructureTemplateMixin",
+    "TemplateStructurePieceMixin"
   ]
 }
