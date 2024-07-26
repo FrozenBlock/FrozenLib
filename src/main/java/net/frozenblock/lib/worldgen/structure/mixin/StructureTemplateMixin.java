@@ -42,13 +42,15 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 		method = "placeInWorld",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;getRandomPalette(Ljava/util/List;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate$Palette;"
+			target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;getBoundingBox()Lnet/minecraft/world/level/levelgen/structure/BoundingBox;",
+			shift = At.Shift.AFTER
 		)
 	)
 	public void frozenLib$placeInWorld(
 		ServerLevelAccessor serverLevel, BlockPos offset, BlockPos pos, StructurePlaceSettings settings, RandomSource random, int flags,
 		CallbackInfoReturnable<Boolean> info
 	) {
+		this.frozenLib$additionalProcessors.forEach(System.out::println);
 		this.frozenLib$additionalProcessors.forEach(settings::addProcessor);
 	}
 

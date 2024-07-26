@@ -18,35 +18,28 @@
 package net.frozenblock.lib.worldgen.structure.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import java.util.ArrayList;
-import java.util.List;
 import net.frozenblock.lib.worldgen.structure.api.StructureProcessorApi;
 import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
 import net.frozenblock.lib.worldgen.structure.impl.TemplateStructurePieceInterface;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
+import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import java.util.List;
 
 @Mixin(StructureStart.class)
 public class StructureStartMixin implements StructureStartInterface {
 
-	@Unique
-	private final List<StructureProcessor> frozenLib$additionalProcessors = new ArrayList<>();
+	@Shadow
+	@Final
+	private PiecesContainer pieceContainer;
 
 	@ModifyExpressionValue(
 		method = "loadStaticStart",
@@ -77,32 +70,13 @@ public class StructureStartMixin implements StructureStartInterface {
 		return structureStart;
 	}
 
-	@WrapOperation(
-		method = "placeInChunk",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/levelgen/structure/StructurePiece;postProcess(Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/StructureManager;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Lnet/minecraft/world/level/levelgen/structure/BoundingBox;Lnet/minecraft/world/level/ChunkPos;Lnet/minecraft/core/BlockPos;)V"
-		)
-	)
-	public void frozenLib$placeInChunk(
-		StructurePiece piece,
-		WorldGenLevel worldGenLevel,
-		StructureManager structureManager,
-		ChunkGenerator chunkGenerator,
-		RandomSource randomSource,
-		BoundingBox boundingBox,
-		ChunkPos chunkPos,
-		BlockPos blockPos,
-		Operation<Void> operation
-	) {
-		if (piece instanceof TemplateStructurePieceInterface templateStructurePieceInterface) {
-			templateStructurePieceInterface.frozenLib$addProcessorsToTemplate(this.frozenLib$additionalProcessors);
-		}
-		operation.call(piece, worldGenLevel, structureManager, chunkGenerator, randomSource, boundingBox, chunkPos, blockPos);
-	}
-
 	@Override
 	public void frozenLib$addProcessorsFromId(ResourceLocation id) {
-		this.frozenLib$additionalProcessors.addAll(StructureProcessorApi.getAdditionalProcessors(id));
+		List<StructureProcessor> processorList = StructureProcessorApi.getAdditionalProcessors(id);
+		this.pieceContainer.pieces().forEach(structurePiece -> {
+			if (structurePiece instanceof TemplateStructurePiece templateStructurePiece) {
+				((TemplateStructurePieceInterface) templateStructurePiece).frozenLib$addProcessorsToTemplate(processorList);
+			}
+		});
 	}
 }

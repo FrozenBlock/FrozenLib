@@ -34,8 +34,6 @@ public class TemplateStructurePieceMixin implements TemplateStructurePieceInterf
 
 	@Override
 	public void frozenLib$addProcessorsToTemplate(List<StructureProcessor> processors) {
-		if (this.template instanceof StructureTemplateInterface structureTemplateInterface) {
-			structureTemplateInterface.frozenLib$addProcessors(processors);
-		}
+		((StructureTemplateInterface) this.template).frozenLib$addProcessors(processors);
 	}
 }

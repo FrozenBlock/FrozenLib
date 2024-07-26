@@ -32,17 +32,13 @@ public class StructureProcessorApi {
 	private static final Map<ResourceLocation, List<StructureProcessor>> STRUCTURE_TO_PROCESSORS = new Object2ObjectOpenHashMap<>();
 
 	public static void addProcessor(ResourceLocation structureId, StructureProcessor processor) {
-		List<StructureProcessor> processorList = STRUCTURE_TO_PROCESSORS.getOrDefault(structureId, null);
-		if (processorList == null) {
-			processorList = new ArrayList<>();
-		}
+		List<StructureProcessor> processorList = STRUCTURE_TO_PROCESSORS.getOrDefault(structureId, new ArrayList<>());
 		processorList.add(processor);
 		STRUCTURE_TO_PROCESSORS.put(structureId, processorList);
 	}
 
-	public static @NotNull List<StructureProcessor> getAdditionalProcessors(ResourceLocation location) {
-		if (location == null) return EMPTY;
-		List<StructureProcessor> locationToProcessors = STRUCTURE_TO_PROCESSORS.getOrDefault(location, EMPTY);
+	public static @NotNull List<StructureProcessor> getAdditionalProcessors(ResourceLocation structureId) {
+		List<StructureProcessor> locationToProcessors = STRUCTURE_TO_PROCESSORS.getOrDefault(structureId, EMPTY);
 		return new ArrayList<>(locationToProcessors);
 	}
 
