@@ -51,6 +51,7 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 		CallbackInfoReturnable<Boolean> info
 	) {
 		this.frozenLib$additionalProcessors.forEach(settings::addProcessor);
+		this.frozenLib$additionalProcessors.clear();
 	}
 
 	@Override

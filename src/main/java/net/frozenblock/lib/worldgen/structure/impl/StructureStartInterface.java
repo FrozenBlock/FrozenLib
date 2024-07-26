@@ -21,5 +21,5 @@ import net.minecraft.resources.ResourceLocation;
 
 public interface StructureStartInterface {
 
-	void frozenLib$addProcessorsFromId(ResourceLocation id);
+	void frozenLib$setId(ResourceLocation id);
 }
