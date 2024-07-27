@@ -24,7 +24,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
 import net.frozenblock.lib.worldgen.structure.api.StructureProcessorApi;
-import net.frozenblock.lib.worldgen.structure.impl.PoolElementStructurePieceInterface;
+import net.frozenblock.lib.worldgen.structure.impl.InitialPieceProcessorInjectionInterface;
 import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -115,8 +115,8 @@ public class StructureStartMixin implements StructureStartInterface {
 		Operation<Void> original,
 		@Share("frozenLib$additionalProcessors") LocalRef<List<StructureProcessor>> additionalProcessors
 	) {
-		if (instance instanceof PoolElementStructurePieceInterface poolElementStructurePieceInterface) {
-			poolElementStructurePieceInterface.frozenLib$addProcessors(additionalProcessors.get());
+		if (instance instanceof InitialPieceProcessorInjectionInterface initialPieceProcessorInjectionInterface) {
+			initialPieceProcessorInjectionInterface.frozenLib$addProcessors(additionalProcessors.get());
 		}
 		original.call(instance, worldGenLevel, structureManager, chunkGenerator, randomSource, boundingBox, chunkPos, blockPos);
 	}

@@ -20,7 +20,7 @@ package net.frozenblock.lib.worldgen.structure.impl;
 import java.util.List;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
-public interface PoolElementStructurePieceInterface {
+public interface InitialPieceProcessorInjectionInterface {
 
 	void frozenLib$addProcessors(List<StructureProcessor> processors);
 }
