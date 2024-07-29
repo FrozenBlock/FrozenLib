@@ -20,6 +20,7 @@ package net.frozenblock.lib.worldgen.structure.impl;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.worldgen.structure.api.BlockStateRespectingRuleProcessor;
+import net.frozenblock.lib.worldgen.structure.api.WeightedRuleProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
@@ -29,6 +30,10 @@ public class FrozenStructureProcessorTypes {
 	public static final StructureProcessorType<BlockStateRespectingRuleProcessor> BLOCK_STATE_RESPECTING_RULE_PROCESSOR = register(
 		"block_state_respecting_rule",
 		BlockStateRespectingRuleProcessor.CODEC
+	);
+	public static final StructureProcessorType<WeightedRuleProcessor> WEIGHTED_RULE_PROCESSOR = register(
+		"weighted_rule",
+		WeightedRuleProcessor.CODEC
 	);
 
 	public static void init() {
