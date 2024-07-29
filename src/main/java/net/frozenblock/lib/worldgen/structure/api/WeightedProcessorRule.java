@@ -15,7 +15,6 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-
 package net.frozenblock.lib.worldgen.structure.api;
 
 import com.mojang.serialization.Codec;
