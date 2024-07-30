@@ -49,7 +49,6 @@ public class WindStorage extends SavedData {
 		compoundTag.putDouble("laggedWindX", this.windManager.laggedWindX);
 		compoundTag.putDouble("laggedWindY", this.windManager.laggedWindY);
 		compoundTag.putDouble("laggedWindZ", this.windManager.laggedWindZ);
-		compoundTag.putLong("seed", this.windManager.seed);
 
 		// EXTENSIONS
 		for (WindManagerExtension extension : this.windManager.attachedExtensions) {
@@ -75,7 +74,6 @@ public class WindStorage extends SavedData {
 		windStorage.windManager.laggedWindX = compoundTag.getDouble("laggedWindX");
 		windStorage.windManager.laggedWindY = compoundTag.getDouble("laggedWindY");
 		windStorage.windManager.laggedWindZ = compoundTag.getDouble("laggedWindZ");
-		windStorage.windManager.setSeed(compoundTag.getLong("seed"));
 
 		// EXTENSIONS
 		for (WindManagerExtension extension : windStorage.windManager.attachedExtensions) {
