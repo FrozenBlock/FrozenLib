@@ -5,7 +5,7 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Added `BlockStateRespectingRuleProcessor,` which will append the current BlockState's properties to the outputed B;pcl instead of needing to define BlockStates manually.
+- Added `BlockStateRespectingRuleProcessor,` which will append the current BlockState's properties to the outputed Block instead of needing to define BlockStates manually.
   - This, of course, can save a ton of time and space while making structure processors.
 - Added the `BlockStateRespectingProcessorRule,` which is used alongside the `BlockStateRespectingRuleProcessor.`
 - Added `WeightedRuleProcessor` and `WeightedProcessorRule.`
