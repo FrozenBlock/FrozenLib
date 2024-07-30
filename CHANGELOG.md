@@ -12,3 +12,4 @@ Put changelog here:
 - Added the `AppendSherds` BlockEntity processor, which will append specified Sherds to a Decorated Pot.
 - Revamped the Structure Processor API to apply to an entire structure, and to be much faster.
 - Removed the Structure Element Replacement API as it simply didn't provide much of a use, especially alongside the new Structure Processor API.
+- Hopefully prevented crashing upon boot caused by the Panorama API.
