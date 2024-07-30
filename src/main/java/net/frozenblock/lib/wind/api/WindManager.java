@@ -62,15 +62,15 @@ public class WindManager {
 	public double laggedWindX;
 	public double laggedWindY;
 	public double laggedWindZ;
+	public long seed;
+	private boolean seedSet = false;
 
 	private final ServerLevel level;
-	private final long seed;
-	public final ImprovedNoise noise;
+	public ImprovedNoise noise;
 
 	@SuppressWarnings("unchecked")
 	public WindManager(@NotNull ServerLevel level) {
 		this.level = level;
-		this.seed = level.getSeed();
 		this.noise = EasyNoiseSampler.createXoroNoise(this.seed);
 		List<WindManagerExtension> extensions = new ObjectArrayList<>();
 		Map.Entry<Function<WindManager, WindManagerExtension>, Integer>[] extensionProviders = EXTENSION_PROVIDERS.entrySet().toArray(new Map.Entry[0]);
@@ -144,6 +144,11 @@ public class WindManager {
 	}
 
 	public void tick(@NotNull ServerLevel level) {
+		if (!this.seedSet) {
+			this.seedSet = true;
+			this.seed = level.getSeed();
+			this.noise = EasyNoiseSampler.createXoroNoise(this.seed);
+		}
 		if (level.tickRateManager().runsNormally()) {
 			this.runResetsIfNeeded();
 
