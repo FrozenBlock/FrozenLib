@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.FrozenMain;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;

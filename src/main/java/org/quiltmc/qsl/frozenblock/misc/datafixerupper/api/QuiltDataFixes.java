@@ -31,7 +31,6 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.SharedConstants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.jetbrains.annotations.Contract;

@@ -19,6 +19,7 @@ package net.frozenblock.lib.worldgen.structure.api;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
+import java.util.List;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -31,8 +32,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProc
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
 
 public class WeightedRuleProcessor extends StructureProcessor {
 	public static final MapCodec<WeightedRuleProcessor> CODEC = WeightedProcessorRule.CODEC.listOf()

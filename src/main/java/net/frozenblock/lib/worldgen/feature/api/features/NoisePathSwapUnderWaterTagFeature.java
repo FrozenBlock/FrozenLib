@@ -47,7 +47,12 @@ public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWate
         WorldGenLevel level = context.level();
         int radiusSquared = config.radius() * config.radius();
         RandomSource random = level.getRandom();
-        ImprovedNoise sampler = config.noise() == 1 ? EasyNoiseSampler.perlinLocal : config.noise() == 2 ? EasyNoiseSampler.perlinChecked : config.noise() == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
+		long noiseSeed = level.getSeed();
+		ImprovedNoise sampler =
+			config.noise() == 1 ? EasyNoiseSampler.createLocalNoise(noiseSeed) :
+				config.noise() == 2 ? EasyNoiseSampler.createCheckedNoise(noiseSeed) :
+					config.noise() == 3 ? EasyNoiseSampler.createLegacyThreadSafeNoise(noiseSeed) :
+						EasyNoiseSampler.createXoroNoise(noiseSeed);
         float chance = config.placementChance();
 		int bx = blockPos.getX();
 		int by = blockPos.getY();
@@ -61,7 +66,7 @@ public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWate
 					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
 					if (distance < radiusSquared) {
 						mutable.set(x, level.getHeight(Types.OCEAN_FLOOR, x, z) - 1, z);
-						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
+						double sample = EasyNoiseSampler.sample(sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
 						if (sample > config.minThreshold() && sample < config.maxThreshold() && level.getBlockState(mutable).is(config.replaceableBlocks()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 							generated = true;
 							BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.underWaterState().getState(random, mutable) : config.state().getState(random, mutable);
@@ -73,7 +78,7 @@ public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWate
 						double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)) + ((by - y) * (by - y)));
 						if (distance < radiusSquared) {
 							mutable.set(x, y, z);
-							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
+							double sample = EasyNoiseSampler.sample(sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
 							if (sample > config.minThreshold() && sample < config.maxThreshold() && level.getBlockState(mutable).is(config.replaceableBlocks()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 								generated = true;
 								BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.underWaterState().getState(random, mutable) : config.state().getState(random, mutable);

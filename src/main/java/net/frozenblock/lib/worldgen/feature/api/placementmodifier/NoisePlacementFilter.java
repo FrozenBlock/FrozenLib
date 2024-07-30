@@ -76,8 +76,13 @@ public class NoisePlacementFilter extends PlacementFilter {
 	protected boolean shouldPlace(@NotNull PlacementContext context, RandomSource random, BlockPos pos) {
 		WorldGenLevel level = context.level;
 		boolean isInside = false;
-		ImprovedNoise sampler = this.noise == 1 ? EasyNoiseSampler.perlinLocal : this.noise == 2 ? EasyNoiseSampler.perlinChecked : this.noise == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-		double sample = EasyNoiseSampler.sample(level, sampler, pos, this.noiseScale, this.scaleY, this.useY);
+		long noiseSeed = level.getSeed();
+		ImprovedNoise sampler =
+			this.noise == 1 ? EasyNoiseSampler.createLocalNoise(noiseSeed) :
+				this.noise == 2 ? EasyNoiseSampler.createCheckedNoise(noiseSeed) :
+					this.noise == 3 ? EasyNoiseSampler.createLegacyThreadSafeNoise(noiseSeed) :
+						EasyNoiseSampler.createXoroNoise(noiseSeed);
+		double sample = EasyNoiseSampler.sample(sampler, pos, this.noiseScale, this.scaleY, this.useY);
 		if (sample > this.minThreshold && sample < this.maxThreshold) {
 			isInside = true;
 		}
