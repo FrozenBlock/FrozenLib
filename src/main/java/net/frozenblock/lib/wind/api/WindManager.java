@@ -103,7 +103,7 @@ public class WindManager {
 		this.addWindDisturbance(windDisturbance);
 	}
 
-	public void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
+	public synchronized void addWindDisturbance(@NotNull WindDisturbance<?> windDisturbance) {
 		this.getWindDisturbanceStash().add(windDisturbance);
 	}
 

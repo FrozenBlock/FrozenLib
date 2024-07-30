@@ -69,7 +69,7 @@ public final class ClientWindManager {
 		isSwitched = !isSwitched;
 	}
 
-	public static void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
+	public synchronized static void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
 		getWindDisturbanceStash().add(windDisturbance);
 	}
 
