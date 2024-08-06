@@ -55,11 +55,11 @@ public class FrozenRegistry {
 	);
 
 	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE = createSimple(SOUND_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
-		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(entity -> false))
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(() -> entity -> false))
 	);
 
 	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE_UNSYNCED = createSimple(SOUND_PREDICATE_UNSYNCED_REGISTRY, Lifecycle.stable(), null,
-		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(entity -> false))
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(() -> entity -> false))
 	);
 
 	public static final MappedRegistry<SpottingIconPredicate<?>> SPOTTING_ICON_PREDICATE = createSimple(SPOTTING_ICON_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
