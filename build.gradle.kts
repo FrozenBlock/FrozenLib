@@ -296,6 +296,7 @@ tasks {
 
     license {
         if (licenseChecks) {
+            rule(file("codeformat/FABRIC_QUILT_MODIFIED_HEADER"))
             rule(file("codeformat/QUILT_MODIFIED_HEADER"))
             rule(file("codeformat/HEADER"))
 

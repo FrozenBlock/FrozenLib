@@ -20,6 +20,8 @@ package net.frozenblock.lib.config.frozenlib_config;
 import blue.endless.jankson.Comment;
 import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
+import net.fabricmc.frozenblock.datafixer.api.FabricDataFixerBuilder;
+import net.fabricmc.frozenblock.datafixer.api.FabricDataFixes;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
@@ -27,8 +29,6 @@ import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.api.sync.SyncBehavior;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 
 public class FrozenLibConfig {
 
@@ -38,7 +38,7 @@ public class FrozenLibConfig {
 			FrozenLibConfig.class,
 			JsonType.JSON5_UNQUOTED_KEYS,
 			true,
-			QuiltDataFixes.buildFixer(new QuiltDataFixerBuilder(0)),
+			FabricDataFixes.buildFixer(new FabricDataFixerBuilder(0)),
 			0
 		) {
 			@Override
