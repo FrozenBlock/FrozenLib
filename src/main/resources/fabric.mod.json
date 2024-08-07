@@ -33,7 +33,8 @@
 	    "net.frozenblock.lib.FrozenClient"
 	  ],
     "server": [
-      "net.frozenblock.lib.FrozenServer"
+      "net.frozenblock.lib.FrozenServer",
+      "net.fabricmc.frozenblock.datafixer.impl.server.ServerFreezer"
     ],
     "modmenu": [
       "net.frozenblock.lib.config.frozenlib_config.gui.ModMenuIntegration"
@@ -71,6 +72,8 @@
     "mixin/frozenlib.worldgen.structure.mixins.json",
     "mixin/frozenlib.worldgen.surface.mixins.json",
     "mixin/frozenlib.worldgen.vein.mixins.json",
+
+    "mixin/frozenlib_fabric_data_fixer.mixins.json",
 
     "mixin/frozenlib_quiltmc_registry.mixins.json",
     "mixin/frozenlib_quiltmc_resource_loader.mixins.json"
