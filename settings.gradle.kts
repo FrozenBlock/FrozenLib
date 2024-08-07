@@ -9,7 +9,6 @@ pluginManagement {
         maven("https://jitpack.io") {
             name = "Jitpack"
         }
-        maven("https://maven.pkg.jetbrains.space/kotlin/p/kotlin/bootstrap")
         mavenCentral()
         gradlePluginPortal()
     }
