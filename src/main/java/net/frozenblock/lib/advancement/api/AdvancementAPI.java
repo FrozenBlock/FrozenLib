@@ -82,11 +82,11 @@ public final class AdvancementAPI {
 		if (list.isEmpty()) {
 			list.add(requirements);
 		} else {
-			List<String> existingList = list.get(0);
-			List<String> finalList = new ArrayList<>();
-			finalList.addAll(existingList);
+			List<String> existingList = list.getFirst();
+			List<String> finalList = new ArrayList<>(existingList);
 			finalList.addAll(requirements);
 			list.add(Collections.unmodifiableList(finalList));
+			list.remove(existingList);
 		}
 		advancement.requirements().requirements = Collections.unmodifiableList(list);
 	}
