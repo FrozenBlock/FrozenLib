@@ -15,24 +15,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.shovel.api;
+package net.frozenblock.lib.item.api.axe;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
-public class ShovelBehaviors {
+public class AxeBehaviors {
+	private static final Map<Block, AxeBehavior> AXE_BEHAVIORS = new Object2ObjectOpenHashMap<>();
 
-	public static final Map<Block, ShovelBehavior> SHOVEL_BEHAVIORS = new Object2ObjectOpenHashMap<>();
+	public static void register(Block block, AxeBehavior axeBehavior) {
+		AXE_BEHAVIORS.put(block, axeBehavior);
+	}
 
-	@FunctionalInterface
-	public interface ShovelBehavior {
-		boolean shovel(UseOnContext context, Level world, BlockPos pos, BlockState state, Direction face, Direction horizontal);
+	@Nullable
+	public static AxeBehavior get(Block block) {
+		return AXE_BEHAVIORS.getOrDefault(block, null);
+	}
+
+	public interface AxeBehavior {
+		boolean meetsRequirements(LevelReader level, BlockPos pos, Direction direction, BlockState state);
+
+		BlockState getOutputBlockState(BlockState state);
+
+		void onSuccess(Level level, BlockPos pos, Direction direction, BlockState state, BlockState oldState);
 	}
 
 }

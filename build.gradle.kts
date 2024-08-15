@@ -1,7 +1,6 @@
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
