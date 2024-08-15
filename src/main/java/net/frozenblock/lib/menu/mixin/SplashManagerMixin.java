@@ -21,6 +21,8 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.menu.api.SplashTextAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SplashManager;
@@ -34,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Environment(EnvType.CLIENT)
 @Mixin(SplashManager.class)
 public class SplashManagerMixin {
 
