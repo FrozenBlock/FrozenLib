@@ -20,14 +20,18 @@ package net.frozenblock.lib.item.mixin.bonemeal;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.item.api.bonemeal.BonemealBehaviors;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.ParticleUtils;
 import net.minecraft.world.item.BoneMealItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BoneMealItem.class)
@@ -58,5 +62,23 @@ public class BoneMealItemMixin {
 			info.setReturnValue(true);
         }
     }
+
+	@Inject(
+		method = "addGrowthParticles",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;"
+		),
+		cancellable = true
+	)
+	private static void frozenLib$addGrowthParticles(
+		LevelAccessor world, BlockPos pos, int count, CallbackInfo info, @Local(ordinal = 0) BlockState blockState
+	) {
+		BonemealBehaviors.BonemealBehavior bonemealBehavior = BonemealBehaviors.get(blockState.getBlock());
+		if (bonemealBehavior != null) {
+			ParticleUtils.spawnParticleInBlock(world, pos, count, ParticleTypes.HAPPY_VILLAGER);
+			info.cancel();
+		}
+	}
 
 }
