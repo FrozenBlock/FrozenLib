@@ -81,8 +81,6 @@ public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals
 	public Dynamic<Tag> updateWithAllFixers(DataFixTypes dataFixTypes, Dynamic<Tag> current) {
 		CompoundTag compound = (CompoundTag) current.getValue();
 
-		Map<DataFixerEntry, Integer> fixers = new HashMap<>();
-
 		for (Map.Entry<String, List<DataFixerEntry>> entry : this.modDataFixers.entrySet()) {
 			List<DataFixerEntry> dataFixerEntries = entry.getValue();
 
