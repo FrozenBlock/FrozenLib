@@ -9,6 +9,7 @@
   "mixins": [
     "DataFixerUpperMixin",
     "DataFixTypesMixin",
+    "NbtHelperMixin",
     "SchemasMixin",
     "VersionedChunkStorageMixin"
   ]
