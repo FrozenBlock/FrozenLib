@@ -81,6 +81,16 @@ public abstract class FabricDataFixesInternals {
 	@Contract(pure = true)
 	@Range(from = 0, to = Integer.MAX_VALUE)
 	public static int getModDataVersion(CompoundTag nbt, String modId, @Nullable String key) {
+		// LEGACY
+		String legacyKey = modId + "_DataVersion";
+		if (key != null) {
+			legacyKey += ('_' + key);
+		}
+		if (nbt.contains(legacyKey)) {
+			return nbt.getInt(legacyKey);
+		}
+
+		// FABRIC
 		String nbtKey = modId;
 
 		if (key != null) {
