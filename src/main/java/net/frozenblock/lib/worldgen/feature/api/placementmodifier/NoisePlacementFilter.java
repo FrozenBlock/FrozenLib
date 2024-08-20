@@ -40,7 +40,7 @@ public class NoisePlacementFilter extends PlacementFilter {
 		Codec.BOOL.fieldOf("use_y").orElse(false).forGetter((config) -> config.useY),
 		Codec.BOOL.fieldOf("scale_y").orElse(false).forGetter((config) -> config.scaleY),
 		Codec.BOOL.fieldOf("must_be_inside").orElse(false).forGetter((config) -> config.mustBeInside)
-		).apply(instance, NoisePlacementFilter::new));
+	).apply(instance, NoisePlacementFilter::new));
 
 	private final int noise;
 	private final double noiseScale;

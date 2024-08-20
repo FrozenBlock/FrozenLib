@@ -37,52 +37,43 @@ import org.jetbrains.annotations.NotNull;
 
 public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 
-    public FadingDiskFeature(Codec<FadingDiskFeatureConfig> codec) {
-        super(codec);
-    }
+	public FadingDiskFeature(Codec<FadingDiskFeatureConfig> codec) {
+		super(codec);
+	}
 
 	@Override
-    public boolean place(@NotNull FeaturePlaceContext<FadingDiskFeatureConfig> context) {
+	public boolean place(@NotNull FeaturePlaceContext<FadingDiskFeatureConfig> context) {
 		AtomicBoolean success = new AtomicBoolean();
-        BlockPos blockPos = context.origin();
-        WorldGenLevel level = context.level();
+		BlockPos blockPos = context.origin();
+		WorldGenLevel level = context.level();
 		FadingDiskFeatureConfig config = context.config();
 		boolean useHeightMapAndNotCircular = config.useHeightmapInsteadOfCircularPlacement();
 		Heightmap.Types heightmap = config.heightmap();
-        BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
-        RandomSource random = level.getRandom();
-        int radius = config.radius().sample(random);
-        //DISK
-        BlockPos.MutableBlockPos mutableDisk = s.mutable();
-        int bx = s.getX();
+		BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
+		RandomSource random = level.getRandom();
+		int radius = config.radius().sample(random);
+		//DISK
+		BlockPos.MutableBlockPos mutableDisk = s.mutable();
+		int bx = s.getX();
 		int by = s.getY();
-        int bz = s.getZ();
-		Consumer<LevelAccessor> consumer = levelAccessor -> {
-			for (int x = bx - radius; x <= bx + radius; x++) {
-				for (int z = bz - radius; z <= bz + radius; z++) {
-					if (useHeightMapAndNotCircular) {
-						double distance = Math.pow((double) bx - x, 2) + Math.pow((double) bz - z, 2);
-						success.set(placeAtPos(level, config, s, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z) - 1, z, distance, true));
-					} else {
-						int maxY = by + radius;
-						for (int y = by - radius; y <= maxY; y++) {
-							double distance = Math.pow((double) bx - x, 2) + Math.pow((double) by - y, 2) + Math.pow((double) bz - z, 2);
-							success.set(placeAtPos(level, config, s, random, radius, mutableDisk, x, y, z, distance, false));
-						}
+		int bz = s.getZ();
+		for (int x = bx - radius; x <= bx + radius; x++) {
+			for (int z = bz - radius; z <= bz + radius; z++) {
+				if (useHeightMapAndNotCircular) {
+					double distance = Math.pow((double) bx - x, 2) + Math.pow((double) bz - z, 2);
+					success.set(placeAtPos(level, config, s, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z) - 1, z, distance, true));
+				} else {
+					int maxY = by + radius;
+					for (int y = by - radius; y <= maxY; y++) {
+						double distance = Math.pow((double) bx - x, 2) + Math.pow((double) by - y, 2) + Math.pow((double) bz - z, 2);
+						success.set(placeAtPos(level, config, s, random, radius, mutableDisk, x, y, z, distance, false));
 					}
 				}
 			}
-		};
-
-		if (radius < 15) {
-			consumer.accept(level);
-		} else {
-			ServerLevel serverLevel = level.getLevel();
-			serverLevel.getServer().executeBlocking(() -> consumer.accept(serverLevel));
 		}
 
-        return success.get();
-    }
+		return success.get();
+	}
 
 	private static boolean placeAtPos(WorldGenLevel level, FadingDiskFeatureConfig config, BlockPos s, RandomSource random, int radius, BlockPos.MutableBlockPos mutableDisk, int x, int y, int z, double distance, boolean useHeightMapAndNotCircular) {
 		if (distance < Math.pow(radius, 2)) {

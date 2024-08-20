@@ -35,18 +35,18 @@ import org.jetbrains.annotations.NotNull;
 
 public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFeatureConfig> {
 
-    public NoisePathSwapUnderWaterFeature(Codec<PathSwapUnderWaterFeatureConfig> codec) {
-        super(codec);
-    }
+	public NoisePathSwapUnderWaterFeature(Codec<PathSwapUnderWaterFeatureConfig> codec) {
+		super(codec);
+	}
 
 	@Override
-    public boolean place(@NotNull FeaturePlaceContext<PathSwapUnderWaterFeatureConfig> context) {
-        boolean generated = false;
+	public boolean place(@NotNull FeaturePlaceContext<PathSwapUnderWaterFeatureConfig> context) {
+		boolean generated = false;
 		PathSwapUnderWaterFeatureConfig config = context.config();
-        BlockPos blockPos = context.origin();
-        WorldGenLevel level = context.level();
-        int radiusSquared = config.radius() * config.radius();
-        RandomSource random = level.getRandom();
+		BlockPos blockPos = context.origin();
+		WorldGenLevel level = context.level();
+		int radiusSquared = config.radius() * config.radius();
+		RandomSource random = level.getRandom();
 		long noiseSeed = level.getSeed();
 		ImprovedNoise sampler =
 			config.noise() == 1 ? EasyNoiseSampler.createLocalNoise(noiseSeed) :
@@ -56,8 +56,8 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 		float chance = config.placement_chance();
 		int bx = blockPos.getX();
 		int by = blockPos.getY();
-        int bz = blockPos.getZ();
-        BlockPos.MutableBlockPos mutable = blockPos.mutable();
+		int bz = blockPos.getZ();
+		BlockPos.MutableBlockPos mutable = blockPos.mutable();
 		BlockPredicate predicate = config.onlyPlaceWhenExposed() ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
 
 		for (int x = bx - config.radius(); x <= bx + config.radius(); x++) {
@@ -89,8 +89,8 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 				}
 			}
 		}
-        return generated;
-    }
+		return generated;
+	}
 
 	private static boolean checkSurroundingBlocks(WorldGenLevel level, BlockPos pos, BlockPredicate predicate) {
 		for (Direction direction : Direction.values()) {

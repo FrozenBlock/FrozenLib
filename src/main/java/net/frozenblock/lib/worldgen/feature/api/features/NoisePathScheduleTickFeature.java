@@ -34,33 +34,33 @@ import org.jetbrains.annotations.NotNull;
 
 public class NoisePathScheduleTickFeature extends Feature<PathFeatureConfig> {
 
-    public NoisePathScheduleTickFeature(Codec<PathFeatureConfig> codec) {
-        super(codec);
-    }
+	public NoisePathScheduleTickFeature(Codec<PathFeatureConfig> codec) {
+		super(codec);
+	}
 
 	@Override
-    public boolean place(@NotNull FeaturePlaceContext<PathFeatureConfig> context) {
-        boolean generated = false;
-        PathFeatureConfig config = context.config();
-        BlockPos blockPos = context.origin();
-        WorldGenLevel level = context.level();
-        int radiusSquared = config.radius() * config.radius();
-        RandomSource random = level.getRandom();
+	public boolean place(@NotNull FeaturePlaceContext<PathFeatureConfig> context) {
+		boolean generated = false;
+		PathFeatureConfig config = context.config();
+		BlockPos blockPos = context.origin();
+		WorldGenLevel level = context.level();
+		int radiusSquared = config.radius() * config.radius();
+		RandomSource random = level.getRandom();
 		long noiseSeed = level.getSeed();
 		ImprovedNoise sampler =
 			config.noise() == 1 ? EasyNoiseSampler.createLocalNoise(noiseSeed) :
 				config.noise() == 2 ? EasyNoiseSampler.createCheckedNoise(noiseSeed) :
 					config.noise() == 3 ? EasyNoiseSampler.createLegacyThreadSafeNoise(noiseSeed) :
 						EasyNoiseSampler.createXoroNoise(noiseSeed);
-        float chance = config.placementChance();
+		float chance = config.placementChance();
 		int bx = blockPos.getX();
 		int by = blockPos.getY();
-        int bz = blockPos.getZ();
-        BlockPos.MutableBlockPos mutable = blockPos.mutable();
+		int bz = blockPos.getZ();
+		BlockPos.MutableBlockPos mutable = blockPos.mutable();
 		BlockPredicate predicate = config.onlyPlaceWhenExposed() ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
 
-        for (int x = bx - config.radius(); x <= bx + config.radius(); x++) {
-            for (int z = bz - config.radius(); z <= bz + config.radius(); z++) {
+		for (int x = bx - config.radius(); x <= bx + config.radius(); x++) {
+			for (int z = bz - config.radius(); z <= bz + config.radius(); z++) {
 				if (!config.is3D()) {
 					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
 					if (distance < radiusSquared) {
@@ -88,10 +88,10 @@ public class NoisePathScheduleTickFeature extends Feature<PathFeatureConfig> {
 						}
 					}
 				}
-            }
-        }
-        return generated;
-    }
+			}
+		}
+		return generated;
+	}
 
 	private static boolean checkSurroundingBlocks(WorldGenLevel level, BlockPos pos, BlockPredicate predicate) {
 		for (Direction direction : Direction.values()) {

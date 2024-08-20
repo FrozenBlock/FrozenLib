@@ -35,16 +35,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class NoisePathTagUnderWaterFeature extends Feature<PathTagFeatureConfig> {
 
-    public NoisePathTagUnderWaterFeature(Codec<PathTagFeatureConfig> codec) {
-        super(codec);
-    }
+	public NoisePathTagUnderWaterFeature(Codec<PathTagFeatureConfig> codec) {
+		super(codec);
+	}
 
 	@Override
-    public boolean place(@NotNull FeaturePlaceContext<PathTagFeatureConfig> context) {
-        boolean generated = false;
+	public boolean place(@NotNull FeaturePlaceContext<PathTagFeatureConfig> context) {
+		boolean generated = false;
 		PathTagFeatureConfig config = context.config();
-        BlockPos blockPos = context.origin();
-        WorldGenLevel level = context.level();
+		BlockPos blockPos = context.origin();
+		WorldGenLevel level = context.level();
 		long noiseSeed = level.getSeed();
 		ImprovedNoise sampler =
 			config.noise() == 1 ? EasyNoiseSampler.createLocalNoise(noiseSeed) :
@@ -53,11 +53,11 @@ public class NoisePathTagUnderWaterFeature extends Feature<PathTagFeatureConfig>
 						EasyNoiseSampler.createXoroNoise(noiseSeed);
 		float chance = config.placementChance();
 		BlockPos.MutableBlockPos mutable = blockPos.mutable();
-        int bx = mutable.getX();
+		int bx = mutable.getX();
 		int by = mutable.getY();
-        int bz = mutable.getZ();
-        int radiusSquared = config.radius() * config.radius();
-        RandomSource random = level.getRandom();
+		int bz = mutable.getZ();
+		int radiusSquared = config.radius() * config.radius();
+		RandomSource random = level.getRandom();
 		BlockPredicate predicate = config.onlyPlaceWhenExposed() ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
 
 		for (int x = bx - config.radius(); x <= bx + config.radius(); x++) {
@@ -87,8 +87,8 @@ public class NoisePathTagUnderWaterFeature extends Feature<PathTagFeatureConfig>
 				}
 			}
 		}
-        return generated;
-    }
+		return generated;
+	}
 
 	private static boolean checkSurroundingBlocks(WorldGenLevel level, BlockPos pos, BlockPredicate predicate) {
 		for (Direction direction : Direction.values()) {
@@ -99,16 +99,16 @@ public class NoisePathTagUnderWaterFeature extends Feature<PathTagFeatureConfig>
 		return false;
 	}
 
-    public static boolean isWaterNearby(WorldGenLevel level, @NotNull BlockPos blockPos, int x) {
-        Iterator<BlockPos> var2 = BlockPos.betweenClosed(blockPos.offset(-x, -x, -x), blockPos.offset(x, x, x)).iterator();
-        BlockPos blockPos2;
-        do {
-            if (!var2.hasNext()) {
-                return false;
-            }
-            blockPos2 = var2.next();
-        } while (!level.getBlockState(blockPos2).is(Blocks.WATER));
-        return true;
-    }
+	public static boolean isWaterNearby(WorldGenLevel level, @NotNull BlockPos blockPos, int x) {
+		Iterator<BlockPos> var2 = BlockPos.betweenClosed(blockPos.offset(-x, -x, -x), blockPos.offset(x, x, x)).iterator();
+		BlockPos blockPos2;
+		do {
+			if (!var2.hasNext()) {
+				return false;
+			}
+			blockPos2 = var2.next();
+		} while (!level.getBlockState(blockPos2).is(Blocks.WATER));
+		return true;
+	}
 
 }
