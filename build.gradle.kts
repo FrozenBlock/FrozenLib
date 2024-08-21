@@ -544,10 +544,12 @@ modrinth {
     uploadFile = remapJar
     gameVersions = listOf(minecraft_version)
     loaders = listOf("fabric")
+    /*
     additionalFiles = listOf(
         tasks.remapSourcesJar.get(),
         javadocJar
     )
+     */
 
     dependencies {
         required.project("fabric-api")
