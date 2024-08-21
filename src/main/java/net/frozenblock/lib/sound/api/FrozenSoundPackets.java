@@ -96,7 +96,7 @@ public class FrozenSoundPackets {
 			if (entity instanceof ServerPlayer serverPlayer) {
 				ServerPlayNetworking.send(serverPlayer, packet);
 			}
-			((EntityLoopingSoundInterface)entity).addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
+			((EntityLoopingSoundInterface)entity).frozenLib$addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
         }
     }
 
@@ -126,7 +126,7 @@ public class FrozenSoundPackets {
 			if (entity instanceof ServerPlayer serverPlayer) {
 				ServerPlayNetworking.send(serverPlayer, packet);
 			}
-			((EntityLoopingFadingDistanceSoundInterface)entity).addFadingDistanceSound(sound.unwrapKey().orElseThrow().location(), sound2.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist);
+			((EntityLoopingFadingDistanceSoundInterface)entity).frozenLib$addFadingDistanceSound(sound.unwrapKey().orElseThrow().location(), sound2.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath, fadeDist, maxDist);
         }
     }
 
@@ -191,7 +191,7 @@ public class FrozenSoundPackets {
 			if (entity instanceof ServerPlayer serverPlayer) {
 				ServerPlayNetworking.send(serverPlayer, packet);
 			}
-			((EntityLoopingSoundInterface)entity).addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
+			((EntityLoopingSoundInterface)entity).frozenLib$addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
         }
     }
 

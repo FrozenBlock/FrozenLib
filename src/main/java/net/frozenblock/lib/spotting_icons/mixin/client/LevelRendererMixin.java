@@ -55,8 +55,26 @@ public class LevelRendererMixin {
 	@Nullable
 	private ClientLevel level;
 
-	@Inject(method = "renderLevel", at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/client/renderer/RenderBuffers;bufferSource()Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;", shift = At.Shift.AFTER))
-	public void renderLevel(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightmapTextureManager, Matrix4f projectionMatrix, Matrix4f matrix4f, CallbackInfo ci, @Local(ordinal = 0) float deltaTime, @Local PoseStack poseStack) {
+	@Inject(
+		method = "renderLevel",
+		at = @At(
+			value = "INVOKE_ASSIGN",
+			target = "Lnet/minecraft/client/renderer/RenderBuffers;bufferSource()Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;",
+			shift = At.Shift.AFTER
+		)
+	)
+	public void frozenLib$renderLevel(
+		DeltaTracker deltaTracker,
+		boolean renderBlockOutline,
+		Camera camera,
+		GameRenderer gameRenderer,
+		LightTexture lightmapTextureManager,
+		Matrix4f projectionMatrix,
+		Matrix4f matrix4f,
+		CallbackInfo info,
+		@Local(ordinal = 0) float deltaTime,
+		@Local PoseStack poseStack
+	) {
 		if (this.level != null) {
 			MultiBufferSource.BufferSource bufferSource = this.renderBuffers.bufferSource();
 			for (Entity entity : this.level.entitiesForRendering()) {
@@ -69,13 +87,13 @@ public class LevelRendererMixin {
 					entity.yOld = entity.getY();
 					entity.zOld = entity.getZ();
 				}
-				this.renderEntityIcon(entity, d, e, f, deltaTime, poseStack, bufferSource);
+				this.frozenLib$renderEntityIcon(entity, d, e, f, deltaTime, poseStack, bufferSource);
 			}
 		}
 	}
 
 	@Unique
-	private void renderEntityIcon(@NotNull Entity entity, double camX, double camY, double camZ, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource) {
+	private void frozenLib$renderEntityIcon(@NotNull Entity entity, double camX, double camY, double camZ, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource) {
 		double d = Mth.lerp(partialTick, entity.xOld, entity.getX());
 		double e = Mth.lerp(partialTick, entity.yOld, entity.getY());
 		double f = Mth.lerp(partialTick, entity.zOld, entity.getZ());

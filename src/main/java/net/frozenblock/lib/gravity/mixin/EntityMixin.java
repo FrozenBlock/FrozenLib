@@ -40,13 +40,19 @@ public abstract class EntityMixin implements EntityGravityInterface {
 	public float fallDistance;
 
 	@Inject(method = "checkFallDamage", at = @At("TAIL"))
-	private void checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo ci) {
+	private void frozenLib$checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo info) {
 		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
 		double gravityDistance = gravity.length();
 		this.fallDistance *= (float) gravityDistance;
 	}
 
-	@WrapOperation(method = "applyGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"))
+	@WrapOperation(
+		method = "applyGravity",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"
+		)
+	)
 	public Vec3 frozenLib$applyGravity(Vec3 instance, double x, double y, double z, Operation<Vec3> original, @Local(ordinal = 0) double originalGravity) {
 		Vec3 gravityVec = GravityAPI.calculateGravity(Entity.class.cast(this)).scale(originalGravity);
 		Vec3 directional = new Vec3(x, y + originalGravity, z).subtract(gravityVec);

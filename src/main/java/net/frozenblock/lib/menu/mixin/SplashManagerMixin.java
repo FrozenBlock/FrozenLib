@@ -44,7 +44,10 @@ public class SplashManagerMixin {
 	@Final
 	private List<String> splashes;
 
-	@Inject(method = "apply(Ljava/util/List;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("RETURN"))
+	@Inject(
+		method = "apply(Ljava/util/List;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+		at = @At("RETURN")
+	)
 	private void apply(List<String> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
 		this.splashes.addAll(SplashTextAPI.getAdditions());
 
@@ -53,7 +56,10 @@ public class SplashManagerMixin {
 		}
 	}
 
-	@ModifyReturnValue(method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;", at = @At("RETURN"))
+	@ModifyReturnValue(
+		method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;",
+		at = @At("RETURN")
+	)
 	public List<String> addSplashFiles(List<String> original, ResourceManager resourceManager, ProfilerFiller profiler) {
 		for (ResourceLocation splashLocation : SplashTextAPI.getSplashFiles()) {
 			try {

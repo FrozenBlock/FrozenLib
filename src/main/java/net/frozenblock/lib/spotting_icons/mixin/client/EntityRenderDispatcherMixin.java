@@ -40,7 +40,9 @@ public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIc
 	private Level level;
 
 	@Unique
-	public <E extends Entity> void frozenLib$renderIcon(E entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight) {
+	public <E extends Entity> void frozenLib$renderIcon(
+		E entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight
+	) {
 		EntityRenderer<? super E> entityRenderer = this.getRenderer(entity);
 		try {
 			Vec3 vec3 = entityRenderer.getRenderOffset(entity, partialTicks);

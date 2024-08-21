@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.item.mixin;
 
-import com.llamalad7.mixinextras.injector.WrapWithCondition;
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,12 +28,23 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
-	@WrapWithCondition(method = "startUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/core/Holder;)V"))
+	@WrapWithCondition(method = "startUsingItem",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/core/Holder;)V"
+		)
+	)
 	private boolean preventStartingGameEvent(LivingEntity entity, Holder<GameEvent> event) {
 		return !entity.getUseItem().is(FrozenItemTags.NO_USE_GAME_EVENTS);
 	}
 
-	@WrapWithCondition(method = "stopUsingItem", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/core/Holder;)V"))
+	@WrapWithCondition(
+		method = "stopUsingItem",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/core/Holder;)V"
+		)
+	)
 	private boolean preventStoppingGameEvent(LivingEntity entity, Holder<GameEvent> event) {
 		return !entity.getUseItem().is(FrozenItemTags.NO_USE_GAME_EVENTS);
 	}

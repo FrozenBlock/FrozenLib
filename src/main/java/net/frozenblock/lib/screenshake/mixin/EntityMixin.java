@@ -42,14 +42,28 @@ public class EntityMixin implements EntityScreenShakeInterface {
         this.frozenLib$entityScreenShakeManager = new EntityScreenShakeManager(entity);
     }
 
-    @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
+    @Inject(
+		method = "saveWithoutId",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V",
+			shift = At.Shift.AFTER
+		)
+	)
     public void frozenLib$saveScreenShakeData(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> info) {
         if (this.frozenLib$entityScreenShakeManager != null) {
             this.frozenLib$entityScreenShakeManager.save(compoundTag);
         }
     }
 
-	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
+	@Inject(
+		method = "load",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V",
+			shift = At.Shift.AFTER
+		)
+	)
     public void frozenLib$loadScreenShakeData(CompoundTag compoundTag, CallbackInfo info) {
         this.frozenLib$entityScreenShakeManager.load(compoundTag);
     }
@@ -64,13 +78,13 @@ public class EntityMixin implements EntityScreenShakeInterface {
 
 	@Unique
 	@Override
-	public EntityScreenShakeManager getScreenShakeManager() {
+	public EntityScreenShakeManager frozenLib$getScreenShakeManager() {
 		return this.frozenLib$entityScreenShakeManager;
 	}
 
 	@Unique
 	@Override
-	public void addScreenShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
-		this.getScreenShakeManager().addShake(intensity, duration, durationFalloffStart, maxDistance, ticks);
+	public void frozenLib$addScreenShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
+		this.frozenLib$getScreenShakeManager().addShake(intensity, duration, durationFalloffStart, maxDistance, ticks);
 	}
 }

@@ -9,7 +9,6 @@
   "mixins": [
     "AbstractContainerMenuMixin",
     "ItemCooldownsMixin",
-    "ItemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "ServerItemCooldownsMixin",

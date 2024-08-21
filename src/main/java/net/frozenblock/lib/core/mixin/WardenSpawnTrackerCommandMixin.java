@@ -50,8 +50,15 @@ public abstract class WardenSpawnTrackerCommandMixin {
 		return 0;
 	}
 
-	@WrapOperation(method = "register", at = @At(value = "INVOKE", target = "Lcom/mojang/brigadier/CommandDispatcher;register(Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;)Lcom/mojang/brigadier/tree/LiteralCommandNode;", remap = false))
-	private static LiteralCommandNode<CommandSourceStack> register(CommandDispatcher<CommandSourceStack> dispatcher, LiteralArgumentBuilder<CommandSourceStack> builder, Operation<LiteralCommandNode<CommandSourceStack>> operation) {
+	@WrapOperation(
+		method = "register",
+		at = @At(
+			value = "INVOKE",
+			target = "Lcom/mojang/brigadier/CommandDispatcher;register(Lcom/mojang/brigadier/builder/LiteralArgumentBuilder;)Lcom/mojang/brigadier/tree/LiteralCommandNode;",
+			remap = false
+		)
+	)
+	private static LiteralCommandNode<CommandSourceStack> frozenLib$register(CommandDispatcher<CommandSourceStack> dispatcher, LiteralArgumentBuilder<CommandSourceStack> builder, Operation<LiteralCommandNode<CommandSourceStack>> operation) {
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
 			return dispatcher.register(
 				Commands.literal("warden_spawn_tracker")
@@ -81,8 +88,15 @@ public abstract class WardenSpawnTrackerCommandMixin {
 		} else return operation.call(dispatcher, builder);
 	}
 
-	@WrapOperation(method = "setWarningLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/commands/CommandSourceStack;sendSuccess(Ljava/util/function/Supplier;Z)V", ordinal = 0))
-	private static void modifySetWarningLevel(CommandSourceStack source, Supplier<Component> supplier, boolean broadcastToOps, Operation<Void> operation, CommandSourceStack source1, Collection<? extends Player> targets, int warningLevel) {
+	@WrapOperation(
+		method = "setWarningLevel",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/commands/CommandSourceStack;sendSuccess(Ljava/util/function/Supplier;Z)V",
+			ordinal = 0
+		)
+	)
+	private static void frozenLib$modifySetWarningLevel(CommandSourceStack source, Supplier<Component> supplier, boolean broadcastToOps, Operation<Void> operation, CommandSourceStack source1, Collection<? extends Player> targets, int warningLevel) {
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
 			source.sendSuccess(
 				() -> Component.translatable("commands.warden_spawn_tracker.set.success.single", warningLevel, targets.iterator().next().getDisplayName()), true
@@ -90,8 +104,15 @@ public abstract class WardenSpawnTrackerCommandMixin {
 		} else operation.call(source, supplier, broadcastToOps);
 	}
 
-	@WrapOperation(method = "setWarningLevel", at = @At(value = "INVOKE", target = "Lnet/minecraft/commands/CommandSourceStack;sendSuccess(Ljava/util/function/Supplier;Z)V", ordinal = 1))
-	private static void modifySetWarningLevelMultiple(CommandSourceStack source, Supplier<Component> supplier, boolean broadcastToOps, Operation<Void> operation, CommandSourceStack source1, Collection<? extends Player> targets, int warningLevel) {
+	@WrapOperation(
+		method = "setWarningLevel",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/commands/CommandSourceStack;sendSuccess(Ljava/util/function/Supplier;Z)V",
+			ordinal = 1
+		)
+	)
+	private static void frozenLib$modifySetWarningLevelMultiple(CommandSourceStack source, Supplier<Component> supplier, boolean broadcastToOps, Operation<Void> operation, CommandSourceStack source1, Collection<? extends Player> targets, int warningLevel) {
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
 			source.sendSuccess(
 				() -> Component.translatable("commands.warden_spawn_tracker.set.success.multiple", warningLevel, targets.size()), true

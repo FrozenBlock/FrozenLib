@@ -32,14 +32,27 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class LivingEntityMixin implements EntityGravityInterface {
 
 	// TODO: convert to directional
-	@ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getGravity()D"))
-	private double useGravity(double original) {
+	@ModifyExpressionValue(
+		method = "travel",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/LivingEntity;getGravity()D"
+		)
+	)
+	private double frozenLib$useGravity(double original) {
 		LivingEntity entity = LivingEntity.class.cast(this);
 		return original * GravityAPI.calculateGravity(entity).length();
 	}
 
-	@WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V", ordinal = 3))
-	private void newGravity(LivingEntity instance, double x, double y, double z, Operation<Void> original, @Local(ordinal = 0) double originalGravity) {
+	@WrapOperation(
+		method = "travel",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V",
+			ordinal = 3
+		)
+	)
+	private void frozenLib$newGravity(LivingEntity instance, double x, double y, double z, Operation<Void> original, @Local(ordinal = 0) double originalGravity) {
 		LivingEntity entity = LivingEntity.class.cast(this);
 		Vec3 gravityVec = GravityAPI.calculateGravity(entity).scale(originalGravity);
 		Vec3 directional = new Vec3(x, y + originalGravity, z).subtract(gravityVec);

@@ -31,8 +31,16 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(Ingredient.ItemValue.class)
 public class ItemValueMixin {
 
-	@Redirect(method = "<clinit>", at = @At(value = "INVOKE", target = "Lcom/mojang/serialization/codecs/RecordCodecBuilder;create(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;", ordinal = 0))
-	private static Codec<Ingredient.ItemValue> newCodec(Function<RecordCodecBuilder.Instance<Ingredient.ItemValue>, ? extends App<RecordCodecBuilder.Mu<Ingredient.ItemValue>, Ingredient.ItemValue>> builder) {
+	@Redirect(method = "<clinit>",
+		at = @At(
+			value = "INVOKE",
+			target = "Lcom/mojang/serialization/codecs/RecordCodecBuilder;create(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;",
+			ordinal = 0
+		)
+	)
+	private static Codec<Ingredient.ItemValue> frozenLib$newCodec(
+		Function<RecordCodecBuilder.Instance<Ingredient.ItemValue>, ? extends App<RecordCodecBuilder.Mu<Ingredient.ItemValue>, Ingredient.ItemValue>> builder
+	) {
 		return RecordCodecBuilder.create(instance ->
 			instance.group(
 				ItemStack.SIMPLE_ITEM_CODEC.fieldOf("item").forGetter(Ingredient.ItemValue::item),

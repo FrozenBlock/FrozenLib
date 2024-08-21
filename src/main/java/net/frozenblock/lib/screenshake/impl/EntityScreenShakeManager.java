@@ -54,10 +54,12 @@ public class EntityScreenShakeManager {
     }
 
     public void save(CompoundTag nbt) {
-        DataResult<Tag> var10000 = EntityScreenShake.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.shakes);
-        Logger var10001 = FrozenSharedConstants.LOGGER4;
-        Objects.requireNonNull(var10001);
-        var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("ScreenShakes", cursorsNbt));
+		if (!this.shakes.isEmpty()) {
+			DataResult<Tag> var10000 = EntityScreenShake.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.shakes);
+			Logger var10001 = FrozenSharedConstants.LOGGER4;
+			Objects.requireNonNull(var10001);
+			var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("ScreenShakes", cursorsNbt));
+		}
     }
 
     public void addShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {

@@ -43,8 +43,14 @@ public class ServerAdvancementManagerMixin {
 	@Final
 	private HolderLookup.Provider registries;
 
-	@Inject(method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At(value = "INVOKE", target = "Ljava/util/Map;values()Ljava/util/Collection;"))
-	private void modifyAdvancement(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
+	@Inject(
+		method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/Map;values()Ljava/util/Collection;"
+		)
+	)
+	private void modifyAdvancement(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
 		for (AdvancementHolder holder : advancements.values()) {
 			AdvancementEvents.INIT.invoker().onInit(holder, this.registries);
 		}
