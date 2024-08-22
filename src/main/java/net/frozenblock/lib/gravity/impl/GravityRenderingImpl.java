@@ -39,8 +39,11 @@ public final class GravityRenderingImpl {
 	private GravityRenderingImpl() {}
 
 	private static final ResourceLocation FORCEFIELD_LOCATION = ResourceLocation.withDefaultNamespace("textures/misc/forcefield.png");
+	//TODO: TREETRAIN1 PORT
+	// Please see WorldBorderRenderer
 
 	public static void renderGravityBelts(ClientLevel level, Camera camera, PoseStack poseStack) {
+		/*
 		// not working properly
 		if (true) return;
 		RenderSystem.defaultBlendFunc();
@@ -59,6 +62,7 @@ public final class GravityRenderingImpl {
 					Matrix4f matrix4f3 = poseStack.last().pose();
 
 					float k = 130;
+					RenderSystem.setShader(GameRenderer::getPositionTexShader);
 					RenderSystem.setShader(GameRenderer::getPositionTexShader);
 					RenderSystem.setShaderTexture(0, FORCEFIELD_LOCATION);
 					var firstBuffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
@@ -110,5 +114,6 @@ public final class GravityRenderingImpl {
 			poseStack.popPose();
 		}
 		RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+		 */
 	}
 }
