@@ -24,10 +24,11 @@ import java.util.Date;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
@@ -43,7 +44,8 @@ public class Camera extends Item {
     @Override
     public void inventoryTick(ItemStack itemStack, Level world, Entity entity, int i, boolean bl) {
         if (entity instanceof Player player) {
-            if (player.getCooldowns().isOnCooldown(this) && player.getCooldowns().getCooldownPercent(this, 0) == 0.9F) {
+			ItemCooldowns cooldowns = player.getCooldowns();
+            if (cooldowns.isOnCooldown(itemStack) && cooldowns.getCooldownPercent(itemStack, 0) == 0.9F) {
                 if (world.isClientSide && canGo) {
                     FrozenSharedConstants.LOGGER.warn("PLAYER HAS ACCESS TO DEV CAMERA AND HAS JUST USED IT");
                     Minecraft client = Minecraft.getInstance();
@@ -60,7 +62,7 @@ public class Camera extends Item {
 
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
 
-    private static File getPanoramaFolderName(File directory) {
+    private static @NotNull File getPanoramaFolderName(File directory) {
         String string = DATE_FORMAT.format(new Date());
         int i = 1;
         while (true) {
@@ -73,16 +75,17 @@ public class Camera extends Item {
     }
 
 	@Override
-    public InteractionResultHolder<ItemStack> use(Level world, @NotNull Player user, InteractionHand hand) {
-        ItemStack itemStack = user.getItemInHand(hand);
-        if (!user.getCooldowns().isOnCooldown(this)) {
-            user.getCooldowns().addCooldown(this, 10);
+    public @NotNull InteractionResult use(Level world, @NotNull Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+		ItemCooldowns cooldowns = player.getCooldowns();
+        if (!cooldowns.isOnCooldown(itemStack)) {
+			cooldowns.addCooldown(itemStack, 10);
             if (world.isClientSide) {
                 canGo = true;
             }
-            return InteractionResultHolder.success(itemStack);
+            return InteractionResult.SUCCESS;
         }
-        return InteractionResultHolder.fail(itemStack);
+        return InteractionResult.PASS;
     }
 
 }
