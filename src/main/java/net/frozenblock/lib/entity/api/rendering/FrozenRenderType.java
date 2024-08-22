@@ -27,6 +27,7 @@ import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.TriState;
 import org.lwjgl.opengl.GL11C;
 import org.lwjgl.opengl.GL20C;
 
@@ -38,7 +39,7 @@ public final class FrozenRenderType {
             ((identifier, affectsOutline) -> {
                 RenderType.CompositeState multiPhaseParameters = RenderType.CompositeState.builder()
                         .setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
-                        .setTextureState(new RenderStateShard.TextureStateShard(identifier, false, false))
+                        .setTextureState(new RenderStateShard.TextureStateShard(identifier, TriState.FALSE, false))
                         .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
                         .setCullState(RenderStateShard.NO_CULL)
                         .setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
@@ -60,7 +61,7 @@ public final class FrozenRenderType {
 		((identifier, affectsOutline) -> {
 			RenderType.CompositeState multiPhaseParameters = RenderType.CompositeState.builder()
 				.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
-				.setTextureState(new RenderStateShard.TextureStateShard(identifier, false, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(identifier, TriState.FALSE, false))
 				.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
 				.setCullState(RenderStateShard.CULL)
 				.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
@@ -88,7 +89,7 @@ public final class FrozenRenderType {
 					true,
 					RenderType.CompositeState.builder()
 							.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
-							.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+							.setTextureState(new RenderStateShard.TextureStateShard(texture, TriState.FALSE, false))
 							.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
 							.setCullState(RenderStateShard.NO_CULL)
 							.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
@@ -109,7 +110,7 @@ public final class FrozenRenderType {
 			true,
 			RenderType.CompositeState.builder()
 				.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
-				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(texture, TriState.FALSE, false))
 				.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
 				.setCullState(RenderStateShard.CULL)
 				.setWriteMaskState(RenderStateShard.COLOR_DEPTH_WRITE)
@@ -130,7 +131,7 @@ public final class FrozenRenderType {
 			true,
 			RenderType.CompositeState.builder()
 				.setShaderState(RenderType.RENDERTYPE_EYES_SHADER)
-				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(texture, TriState.FALSE, false))
 				.setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
 				.setWriteMaskState(RenderType.COLOR_WRITE)
 				.setCullState(RenderStateShard.NO_CULL)
@@ -148,7 +149,7 @@ public final class FrozenRenderType {
 			true,
 			RenderType.CompositeState.builder()
 				.setShaderState(RenderType.RENDERTYPE_EYES_SHADER)
-				.setTextureState(new RenderStateShard.TextureStateShard(texture, false, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(texture, TriState.FALSE, false))
 				.setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
 				.setWriteMaskState(RenderType.COLOR_WRITE)
 				.createCompositeState(false)
@@ -159,7 +160,7 @@ public final class FrozenRenderType {
 		((identifier, affectsOutline) -> {
 			RenderType.CompositeState multiPhaseParameters = RenderType.CompositeState.builder()
 				.setShaderState(RenderStateShard.RENDERTYPE_ENTITY_TRANSLUCENT_EMISSIVE_SHADER)
-				.setTextureState(new RenderStateShard.TextureStateShard(identifier, false, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(identifier, TriState.FALSE, false))
 				.setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
 				.setCullState(RenderStateShard.CULL)
 				.setWriteMaskState(RenderStateShard.COLOR_WRITE)
