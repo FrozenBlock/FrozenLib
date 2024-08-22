@@ -19,10 +19,13 @@ package net.frozenblock.lib.spotting_icons.impl;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
 
 public interface EntityRenderDispatcherWithIcon {
 
-    <E extends Entity> void frozenLib$renderIcon(E entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight);
+	<T extends Entity>  void frozenLib$renderIcon(
+		T entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight
+	);
 
 }

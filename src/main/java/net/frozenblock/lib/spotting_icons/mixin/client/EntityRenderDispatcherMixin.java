@@ -26,6 +26,7 @@ import net.minecraft.ReportedException;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -40,12 +41,12 @@ public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIc
 	private Level level;
 
 	@Unique
-	public <E extends Entity> void frozenLib$renderIcon(
-		E entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight
+	public <T extends Entity> void frozenLib$renderIcon(
+		T entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight
 	) {
-		EntityRenderer<? super E> entityRenderer = this.getRenderer(entity);
+		EntityRenderer<Entity, EntityRenderState> entityRenderer = (EntityRenderer<Entity, EntityRenderState>) this.getRenderer(entity);
 		try {
-			Vec3 vec3 = entityRenderer.getRenderOffset(entity, partialTicks);
+			Vec3 vec3 = entityRenderer.getRenderOffset(entityRenderer.createRenderState(entity, partialTicks));
 			double d = x + vec3.x();
 			double e = y + vec3.y();
 			double f = z + vec3.z();
@@ -67,7 +68,7 @@ public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIc
 	}
 
 	@Shadow
-	public <T extends Entity> EntityRenderer<? super T> getRenderer(T entity) {
+	public <T extends Entity> EntityRenderer<? super T, ?> getRenderer(T entity) {
 		throw new AssertionError("Mixin injection failed - FrozenLib EntityRenderDispatcherMixin");
 	}
 
