@@ -17,95 +17,50 @@
 
 package net.frozenblock.lib.entity.mixin.client.rendering;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.entity.api.rendering.EntityTextureOverride;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
 import net.minecraft.client.model.EntityModel;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LivingEntityRenderer.class)
-public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extends EntityModel<T>> extends EntityRenderer<T> {
-
-    @Shadow
-	protected M model;
+public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extends LivingEntityRenderState, M extends EntityModel<? super S>> extends EntityRenderer<T, S> {
 
 	protected LivingEntityRendererMixin(EntityRendererProvider.Context context) {
 		super(context);
 	}
 
-	@Inject(
+	@WrapOperation(
 		method = "getRenderType",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"
-		),
-		cancellable = true
+			target = "Lnet/minecraft/client/renderer/entity/LivingEntityRenderer;getTextureLocation(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;)Lnet/minecraft/resources/ResourceLocation;"
+		)
 	)
-    private void frozenLib$getEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
-        FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
-            if (override.type() == livingEntity.getType()) {
-                var texture = override.texture();
-                if (texture != null) {
-                    if (override.condition().condition(livingEntity)) {
-                        cir.setReturnValue(this.model.renderType(texture));
-                    }
-                }
-            }
-        });
-    }
-
-    @Inject(
-		method = "getRenderType",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/RenderType;itemEntityTranslucentCull(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"
-		),
-		cancellable = true
-	)
-    private void frozenLib$getItemEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
-		FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
-            if (override.type() == livingEntity.getType()) {
-                var texture = override.texture();
-                if (texture != null) {
-                    if (override.condition().condition(livingEntity)) {
-                        cir.setReturnValue(RenderType.itemEntityTranslucentCull(texture));
-                    }
-                }
-            }
-        });
-    }
-
-    @Inject(
-		method = "getRenderType",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/RenderType;outline(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;",
-			shift = At.Shift.BEFORE
-		),
-		cancellable = true)
-    private void frozenLib$getOutlineEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
-        if (glowing) {
-			FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
-                if (override.type() == livingEntity.getType()) {
-                    var texture = override.texture();
-                    if (texture != null) {
-                        if (override.condition().condition(livingEntity)) {
-                            cir.setReturnValue(RenderType.outline(texture));
-                        }
-                    }
-                }
-            });
-        }
-    }
+    private ResourceLocation frozenLib$getEasterEgg(
+		LivingEntityRenderer<?, ?, ?> instance, EntityRenderState entityRenderState, Operation<ResourceLocation> original,
+		S renderState
+	) {
+		for (EntityTextureOverride<?> override : FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE) {
+			if (override.clazz() == LivingEntityRenderer.class.cast(this).getClass()) {
+				if (override.condition().canOverride(renderState)) {
+					return override.texture();
+				}
+			}
+		}
+		return original.call(instance, entityRenderState);
+	}
 
 }

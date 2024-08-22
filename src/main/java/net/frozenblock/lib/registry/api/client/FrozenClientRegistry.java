@@ -27,8 +27,11 @@ import net.minecraft.core.MappedRegistry;
 @Environment(EnvType.CLIENT)
 public class FrozenClientRegistry {
 
-	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenSharedConstants.id("entity_texture_override"))
-			.buildAndRegister();
+	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder
+		.createSimple(
+			EntityTextureOverride.class,
+			FrozenSharedConstants.id("entity_texture_override")
+		).buildAndRegister();
 
 	public static void initRegistry() {
 		// NO-OP

@@ -23,10 +23,12 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Used to override an entity's texture if a condition is met.
@@ -34,21 +36,32 @@ import net.minecraft.world.entity.LivingEntity;
  * @param <T> The entity class the override is for.
  */
 @Environment(EnvType.CLIENT)
-public record EntityTextureOverride<T extends LivingEntity>(EntityType<T> type, ResourceLocation texture, Condition<T> condition) {
+public record EntityTextureOverride<T extends LivingEntity>(
+	Class<? extends LivingEntityRenderer<?, ?, ?>> clazz,
+	ResourceLocation texture,
+	Condition condition
+) {
 
-	public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, String... names) {
-		return register(key, type, texture, false, names);
+	public static <T extends LivingEntity> @NotNull EntityTextureOverride<T> register(
+		ResourceLocation key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, ResourceLocation texture, String... names
+	) {
+		return register(key, clazz, texture, false, names);
 	}
 
-	public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, boolean caseSensitive, String... names) {
-		return register(key, type, texture, entity -> {
-			String entityName = ChatFormatting.stripFormatting(entity.getName().getString());
-			AtomicBoolean isNameCorrect = new AtomicBoolean(false);
-			if (names.length == 0) {
-				return true;
-			} else {
-				Arrays.stream(names).toList().forEach(name -> {
-					if (entityName != null) {
+	public static <T extends LivingEntity> @NotNull EntityTextureOverride<T> register(
+		ResourceLocation key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, ResourceLocation texture, boolean caseSensitive, String... names
+	) {
+		if (texture == null) {
+			throw new IllegalArgumentException("Texture cannot be null!");
+		}
+		return register(key, clazz, texture, renderState -> {
+			if (renderState.customName != null) {
+				String entityName = ChatFormatting.stripFormatting(renderState.customName.getString());
+				AtomicBoolean isNameCorrect = new AtomicBoolean(false);
+				if (names.length == 0) {
+					return true;
+				} else {
+					Arrays.stream(names).toList().forEach(name -> {
 						if (caseSensitive) {
 							if (entityName.equalsIgnoreCase(name)) {
 								isNameCorrect.set(true);
@@ -58,20 +71,23 @@ public record EntityTextureOverride<T extends LivingEntity>(EntityType<T> type, 
 								isNameCorrect.set(true);
 							}
 						}
-					}
-				});
+					});
+				}
+				return isNameCorrect.get();
 			}
-			return isNameCorrect.get();
+			return false;
 		});
 	}
 
-	public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, Condition<T> condition) {
-		return Registry.register(FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(type, texture, condition));
+	public static <T extends LivingEntity> @NotNull EntityTextureOverride<T> register(
+		ResourceLocation key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, ResourceLocation texture, Condition condition
+	) {
+		return Registry.register(FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(clazz, texture, condition));
 	}
 
 	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
-	public interface Condition<T extends LivingEntity> {
-		boolean condition(T entity);
+	public interface Condition {
+		boolean canOverride(LivingEntityRenderState entityRenderState);
 	}
 }
