@@ -28,9 +28,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Redirect;
 
-@Mixin(Ingredient.ItemValue.class)
+//TODO: TREETRAIN1 PORT
+
+// @Mixin(Ingredient.ItemValue.class)
 public class ItemValueMixin {
 
+	/*
 	@Redirect(method = "<clinit>",
 		at = @At(
 			value = "INVOKE",
@@ -52,4 +55,5 @@ public class ItemValueMixin {
 			})
 		);
 	}
+	 */
 }

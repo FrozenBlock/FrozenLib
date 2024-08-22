@@ -40,7 +40,6 @@ transitive-accessible    method    net/minecraft/commands/synchronization/Argume
 transitive-accessible    method    net/minecraft/commands/synchronization/ArgumentTypeInfos    fixClassType    (Ljava/lang/Class;)Ljava/lang/Class;
 
 # Recipe
-transitive-accessible    method    net/minecraft/world/item/crafting/Ingredient$ItemValue    <init>    (Lnet/minecraft/world/item/ItemStack;)V
 transitive-accessible    field    net/minecraft/world/item/ItemStack    ITEM_NON_AIR_CODEC    Lcom/mojang/serialization/Codec;
 
 # Sculk Spreading
