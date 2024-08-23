@@ -59,7 +59,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
     private final ImmutableMap<BlockState, VoxelShape> shapesCache;
 
 
-    public MultifaceClusterBlock(int height, int xzOffset, Properties properties) {
+    public MultifaceClusterBlock(int height, int xzOffset, @NotNull Properties properties) {
         super(properties.pushReaction(PushReaction.DESTROY));
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
         this.upAabb = Block.box(xzOffset, 0.0, xzOffset, 16 - xzOffset, height, (16 - xzOffset));
@@ -99,7 +99,14 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
 
     @Override
 	@NotNull
-    public BlockState updateShape(BlockState state, @NotNull Direction direction, @NotNull BlockState neighborState, @NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull BlockPos neighborPos) {
+    public BlockState updateShape(
+		@NotNull BlockState state,
+		@NotNull Direction direction,
+		@NotNull BlockState neighborState,
+		@NotNull LevelAccessor world,
+		@NotNull BlockPos pos,
+		@NotNull BlockPos neighborPos
+	) {
         if (state.getValue(WATERLOGGED)) {
             world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
         }
@@ -109,7 +116,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
 
     @Override
 	@NotNull
-    public FluidState getFluidState(BlockState state) {
+    public FluidState getFluidState(@NotNull BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
@@ -119,8 +126,8 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
         builder.add(WATERLOGGED);
     }
 
-    @Override
-    public boolean propagatesSkylightDown(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos) {
-        return blockState.getFluidState().isEmpty();
-    }
+	@Override
+	protected boolean propagatesSkylightDown(@NotNull BlockState blockState) {
+		return blockState.getFluidState().isEmpty();
+	}
 }
