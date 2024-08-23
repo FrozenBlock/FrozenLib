@@ -20,8 +20,8 @@ package net.frozenblock.lib.item.mixin;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ServerItemCooldowns;
 import org.spongepowered.asm.mixin.Final;
@@ -37,17 +37,17 @@ public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownI
 
 	@Unique
 	@Override
-    public void frozenLib$changeCooldown(Item item, int additional) {
-		this.cooldowns.computeIfPresent(item, (item1, cooldown) -> {
-            this.frozenLib$onCooldownChanged(item, additional);
+    public void frozenLib$changeCooldown(ResourceLocation cooldownGroup, int additional) {
+		this.cooldowns.computeIfPresent(cooldownGroup, (foundCooldownGroup, cooldown) -> {
+            this.frozenLib$onCooldownChanged(foundCooldownGroup, additional);
 			return new CooldownInstance(cooldown.startTime, cooldown.endTime + additional);
         });
     }
 
 	@Unique
 	@Override
-    public void frozenLib$onCooldownChanged(Item item, int additional) {
-		ServerPlayNetworking.send(this.player, new CooldownChangePacket(item, additional));
+    public void frozenLib$onCooldownChanged(ResourceLocation cooldownGroup, int additional) {
+		ServerPlayNetworking.send(this.player, new CooldownChangePacket(cooldownGroup, additional));
     }
 
 }

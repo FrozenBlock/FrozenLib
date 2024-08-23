@@ -69,7 +69,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
 
@@ -113,7 +112,7 @@ public final class FrozenClientNetworking {
 
 	private static void receiveLocalPlayerSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			LocalPlayer player = Minecraft.getInstance().player;
+			LocalPlayer player = ctx.player();
 			Minecraft.getInstance().getSoundManager().play(new EntityBoundSoundInstance(packet.sound().value(), SoundSource.PLAYERS, packet.volume(), packet.pitch(), player, ctx.client().level.random.nextLong()));
 		});
 	}
@@ -183,26 +182,26 @@ public final class FrozenClientNetworking {
 
 	private static void receiveCooldownChangePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, ctx) -> {
-			LocalPlayer player = Minecraft.getInstance().player;
-			Item item = packet.item();
+			LocalPlayer player = ctx.player();
+			ResourceLocation cooldownGroup = packet.cooldownGroup();
 			int additional = packet.additional();
-				((CooldownInterface) player.getCooldowns()).frozenLib$changeCooldown(item, additional);
+			((CooldownInterface) player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additional);
 		});
 	}
 
 	private static void receiveForcedCooldownPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, ctx) -> {
-			LocalPlayer player = Minecraft.getInstance().player;
-			Item item = packet.item();
+			LocalPlayer player = ctx.player();
+			ResourceLocation cooldownGroup = packet.cooldownGroup();
 			int startTime = packet.startTime();
 			int endTime = packet.endTime();
-			player.getCooldowns().cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
+			player.getCooldowns().cooldowns.put(cooldownGroup, new ItemCooldowns.CooldownInstance(startTime, endTime));
 		});
 	}
 
 	private static void receiveCooldownTickCountPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, ctx) -> {
-			LocalPlayer player = Minecraft.getInstance().player;
+			LocalPlayer player = ctx.player();
 			if (player != null) {
 				player.getCooldowns().tickCount = packet.count();
 			}

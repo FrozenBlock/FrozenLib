@@ -18,30 +18,28 @@
 package net.frozenblock.lib.item.impl.network;
 
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public record CooldownChangePacket(
-	Item item,
+	ResourceLocation cooldownGroup,
 	int additional
 ) implements CustomPacketPayload {
 
 	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("cooldown_change_packet")
+		FrozenSharedConstants.id("cooldown_chang")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
 
-	public CooldownChangePacket(RegistryFriendlyByteBuf buf) {
-		this(ByteBufCodecs.registry(Registries.ITEM).decode(buf), buf.readVarInt());
+	public CooldownChangePacket(@NotNull RegistryFriendlyByteBuf buf) {
+		this(buf.readResourceLocation(), buf.readVarInt());
 	}
 
-	public void write(RegistryFriendlyByteBuf buf) {
-		ByteBufCodecs.registry(Registries.ITEM).encode(buf, this.item());
+	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+		buf.writeResourceLocation(this.cooldownGroup);
 		buf.writeVarInt(this.additional());
 	}
 

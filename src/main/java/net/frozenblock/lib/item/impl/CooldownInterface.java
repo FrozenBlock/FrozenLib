@@ -17,12 +17,12 @@
 
 package net.frozenblock.lib.item.impl;
 
-import net.minecraft.world.item.Item;
+import net.minecraft.resources.ResourceLocation;
 
 public interface CooldownInterface {
 
-    void frozenLib$changeCooldown(Item item, int additional);
+    void frozenLib$changeCooldown(ResourceLocation cooldownGroup, int additional);
 
-    void frozenLib$onCooldownChanged(Item item, int additional);
+    void frozenLib$onCooldownChanged(ResourceLocation cooldownGroup, int additional);
 
 }

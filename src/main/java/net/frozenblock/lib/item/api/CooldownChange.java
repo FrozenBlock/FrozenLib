@@ -19,21 +19,23 @@ package net.frozenblock.lib.item.api;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.item.impl.CooldownInterface;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class CooldownChange {
 
-	public static void changeCooldown(@NotNull Player player, Item item, int additionalCooldown, int min) {
+	public static void changeCooldown(@NotNull Player player, ItemStack item, int additionalCooldown, int min) {
 		ItemCooldowns manager = player.getCooldowns();
-		ItemCooldowns.CooldownInstance entry = manager.cooldowns.get(item);
+		ResourceLocation cooldownGroup = manager.getCooldownGroup(item);
+		ItemCooldowns.CooldownInstance entry = manager.cooldowns.get(cooldownGroup);
 		if (entry != null) {
 			int between = entry.endTime - entry.startTime;
 			if ((between + additionalCooldown) > min) {
-				((CooldownInterface)player.getCooldowns()).frozenLib$changeCooldown(item, additionalCooldown);
+				((CooldownInterface)player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additionalCooldown);
 			}
 		}
 	}
