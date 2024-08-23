@@ -46,9 +46,11 @@ public class SaveableItemCooldowns {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		int tickCount = player.getCooldowns().tickCount;
 		player.getCooldowns().cooldowns.forEach(
-				((item, cooldownInstance) -> {
-					if (item.builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS) || FrozenLibConfig.get().saveItemCooldowns) {
-						saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(item, cooldownInstance, tickCount));
+				((cooldownGroup, cooldownInstance) -> {
+					Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(cooldownGroup);
+					boolean alwaysSave = optionalItem.isPresent() && optionalItem.get().builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS);
+					if (alwaysSave || FrozenLibConfig.get().saveItemCooldowns) {
+						saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(cooldownGroup, cooldownInstance, tickCount));
 					}
 				})
 		);
@@ -86,31 +88,29 @@ public class SaveableItemCooldowns {
 				int cooldownLeft = saveableCooldownInstance.cooldownLeft();
 				int startTime = tickCount - (saveableCooldownInstance.totalCooldownTime() - cooldownLeft);
 				int endTime = tickCount + cooldownLeft;
-				Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(saveableCooldownInstance.itemResourceLocation());
-				if (optionalItem.isPresent()) {
-					Item item = optionalItem.get();
-					itemCooldowns.cooldowns.put(item, new ItemCooldowns.CooldownInstance(startTime, endTime));
-					ServerPlayNetworking.send(player, new ForcedCooldownPacket(item, startTime, endTime));
-				}
+				ResourceLocation cooldownGroup = saveableCooldownInstance.cooldownGroup();
+				itemCooldowns.cooldowns.put(cooldownGroup, new ItemCooldowns.CooldownInstance(startTime, endTime));
+				ServerPlayNetworking.send(player, new ForcedCooldownPacket(cooldownGroup, startTime, endTime));
 			}
 		}
 	}
 
-	public record SaveableCooldownInstance(ResourceLocation itemResourceLocation, int cooldownLeft, int totalCooldownTime) {
+	public record SaveableCooldownInstance(ResourceLocation cooldownGroup, int cooldownLeft, int totalCooldownTime) {
 
 		public static final Codec<SaveableCooldownInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ResourceLocation.CODEC.fieldOf("ItemResourceLocation").forGetter(SaveableCooldownInstance::itemResourceLocation),
+			ResourceLocation.CODEC.fieldOf("CooldownGroup").forGetter(SaveableCooldownInstance::cooldownGroup),
 			Codec.INT.fieldOf("CooldownLeft").orElse(0).forGetter(SaveableCooldownInstance::cooldownLeft),
 			Codec.INT.fieldOf("TotalCooldownTime").orElse(0).forGetter(SaveableCooldownInstance::totalCooldownTime)
 		).apply(instance, SaveableCooldownInstance::new));
 
 
 		@NotNull
-		public static SaveableCooldownInstance makeFromCooldownInstance(@NotNull Item item, @NotNull ItemCooldowns.CooldownInstance cooldownInstance, int tickCount) {
-			ResourceLocation resourceLocation = BuiltInRegistries.ITEM.getKey(item);
+		public static SaveableCooldownInstance makeFromCooldownInstance(
+			@NotNull ResourceLocation cooldownGroup, @NotNull ItemCooldowns.CooldownInstance cooldownInstance, int tickCount
+		) {
 			int cooldownLeft = cooldownInstance.endTime - tickCount;
 			int totalCooldownTime = cooldownInstance.endTime - cooldownInstance.startTime;
-			return new SaveableCooldownInstance(resourceLocation, cooldownLeft, totalCooldownTime);
+			return new SaveableCooldownInstance(cooldownGroup, cooldownLeft, totalCooldownTime);
 		}
 	}
 }
