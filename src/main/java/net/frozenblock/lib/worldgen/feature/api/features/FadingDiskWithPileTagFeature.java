@@ -127,7 +127,7 @@ public class FadingDiskWithPileTagFeature extends Feature<FadingDiskTagFeatureCo
 		WorldGenLevel worldGenLevel = context.level();
 		RandomSource randomSource = context.random();
 		FadingDiskTagFeatureConfig config = context.config();
-		if (blockPos.getY() < worldGenLevel.getMinBuildHeight() + 5) {
+		if (blockPos.getY() < worldGenLevel.getMinY() + 5) {
 			return false;
 		} else {
 			int i = 2 + randomSource.nextInt(2);
