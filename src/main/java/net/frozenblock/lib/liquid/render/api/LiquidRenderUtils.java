@@ -297,7 +297,7 @@ public class LiquidRenderUtils {
 	private static boolean isFaceOccludedByState(BlockGetter level, Direction face, float height, BlockPos pos, BlockState state, BlockState neighborState) {
 		if (neighborState.getBlock() == state.getBlock() && state.canOcclude()) {
 			VoxelShape voxelShape = Shapes.box(0.0, 0.0, 0.0, 1.0, height, 1.0);
-			VoxelShape voxelShape2 = state.getOcclusionShape(level, pos);
+			VoxelShape voxelShape2 = state.getOcclusionShape();
 			return Shapes.blockOccudes(voxelShape, voxelShape2, face);
 		}
 		return false;
