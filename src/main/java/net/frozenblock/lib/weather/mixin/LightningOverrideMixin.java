@@ -23,6 +23,7 @@ import net.frozenblock.lib.tag.api.FrozenBiomeTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.Heightmap;
 import org.spongepowered.asm.mixin.Mixin;
@@ -35,15 +36,16 @@ public final class LightningOverrideMixin {
 	@WrapOperation(
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/server/level/ServerLevel;isRainingAt(Lnet/minecraft/core/BlockPos;)Z"),
+			target = "Lnet/minecraft/server/level/ServerLevel;isRainingAt(Lnet/minecraft/core/BlockPos;)Z")
+		,
 		method = "tickChunk"
 	)
 	public boolean frozenLib$getLightningTarget(ServerLevel serverLevel, BlockPos pos, Operation<Boolean> operation) {
-		return this.frozenLib$newLightningCheck(pos);
+		return this.frozenLib$newLightningCheck(pos, serverLevel);
 	}
 
 	@Unique
-	public boolean frozenLib$newLightningCheck(BlockPos position) {
+	public boolean frozenLib$newLightningCheck(BlockPos position, LevelReader levelReader) {
 		ServerLevel level = ServerLevel.class.cast(this);
 		if (!level.isRaining() || !level.canSeeSky(position)) {
 			return false;
@@ -53,7 +55,7 @@ public final class LightningOverrideMixin {
 		}
 		Holder<Biome> biome = level.getBiome(position);
 		return (
-			(biome.value().hasPrecipitation() && biome.value().warmEnoughToRain(position))
+			(biome.value().hasPrecipitation() && biome.value().warmEnoughToRain(position, levelReader.getSeaLevel()))
 			|| biome.is(FrozenBiomeTags.CAN_LIGHTNING_OVERRIDE)
 		) && !biome.is(FrozenBiomeTags.CANNOT_LIGHTNING_OVERRIDE);
 	}
