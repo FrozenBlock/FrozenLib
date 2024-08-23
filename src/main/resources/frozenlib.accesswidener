@@ -51,7 +51,7 @@ transitive-accessible    method    net/minecraft/world/level/levelgen/feature/tr
 transitive-accessible    method    net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacerType    <init>    (Lcom/mojang/serialization/MapCodec;)V
 
 # Items
-transitive-extendable    method    net/minecraft/world/item/InstrumentItem    getInstrument    (Lnet/minecraft/world/item/ItemStack;)Ljava/util/Optional;
+transitive-accessible method net/minecraft/world/item/InstrumentItem getInstrument (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/HolderLookup$Provider;)Ljava/util/Optional;
 transitive-extendable    method    net/minecraft/world/level/block/state/BlockBehaviour    getLootTable    ()Lnet/minecraft/resources/ResourceKey;
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    cooldowns    Ljava/util/Map;
 transitive-accessible    field    net/minecraft/world/item/ItemCooldowns    tickCount    I
@@ -83,7 +83,10 @@ transitive-accessible    method    net/minecraft/world/entity/LivingEntity    ca
 
 # Entity Models
 transitive-accessible    field    net/minecraft/world/entity/Entity    DATA_POSE    Lnet/minecraft/network/syncher/EntityDataAccessor;
-transitive-accessible    method    net/minecraft/client/model/HierarchicalModel    animate    (Lnet/minecraft/world/entity/AnimationState;Lnet/minecraft/client/animation/AnimationDefinition;F)V
+transitive-accessible method net/minecraft/client/model/Model animate (Lnet/minecraft/world/entity/AnimationState;Lnet/minecraft/client/animation/AnimationDefinition;F)V
+transitive-accessible method net/minecraft/client/model/Model animateWalk (Lnet/minecraft/client/animation/AnimationDefinition;FFFF)V
+transitive-accessible method net/minecraft/client/model/Model animate (Lnet/minecraft/world/entity/AnimationState;Lnet/minecraft/client/animation/AnimationDefinition;FF)V
+transitive-accessible method net/minecraft/client/model/Model applyStatic (Lnet/minecraft/client/animation/AnimationDefinition;)V
 transitive-accessible    field    net/minecraft/world/entity/LivingEntity    dead    Z
 
 # Entity Spawns
@@ -130,10 +133,8 @@ transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    VIEW_OFFSET_Z_LAYERING    Lnet/minecraft/client/renderer/RenderStateShard$LayeringStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    OVERLAY    Lnet/minecraft/client/renderer/RenderStateShard$OverlayStateShard;
 transitive-accessible    method    net/minecraft/client/renderer/RenderType$CompositeRenderType    <init>    (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)V
-transitive-accessible    method    net/minecraft/client/renderer/RenderStateShard$TextureStateShard    <init>    (Lnet/minecraft/resources/ResourceLocation;ZZ)V
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    TRANSLUCENT_TRANSPARENCY    Lnet/minecraft/client/renderer/RenderStateShard$TransparencyStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    RENDERTYPE_TRANSLUCENT_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
-transitive-accessible    method    net/minecraft/client/renderer/RenderStateShard$ShaderStateShard    <init>    (Ljava/util/function/Supplier;)V
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    RENDERTYPE_TEXT_INTENSITY_SEE_THROUGH_SHADER    Lnet/minecraft/client/renderer/RenderStateShard$ShaderStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    LIGHTMAP    Lnet/minecraft/client/renderer/RenderStateShard$LightmapStateShard;
 transitive-accessible    field    net/minecraft/client/renderer/RenderStateShard    NO_DEPTH_TEST    Lnet/minecraft/client/renderer/RenderStateShard$DepthTestStateShard;

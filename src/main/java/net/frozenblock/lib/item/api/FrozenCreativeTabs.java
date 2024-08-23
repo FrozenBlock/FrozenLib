@@ -43,7 +43,7 @@ import org.jetbrains.annotations.NotNull;
 public class FrozenCreativeTabs {
 
 	public static void add(ItemLike item, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
-		if (item == null || item.asItem() == null) return;
+		if (item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				var stack = new ItemStack(item);
@@ -65,8 +65,13 @@ public class FrozenCreativeTabs {
 	 * @param comparedItem	The item that the added item is compared to
 	 * @param item	The item that is going to be added
 	 */
-	public static void addBefore(ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
-		if (comparedItem == null || comparedItem.asItem() == null || item == null || item.asItem() == null) return;
+	public static void addBefore(
+		ItemLike comparedItem,
+		ItemLike item,
+		CreativeModeTab.TabVisibility tabVisibility,
+		ResourceKey<CreativeModeTab> @NotNull ... tabs
+	) {
+		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			var stack = new ItemStack(item);
 			stack.setCount(1);
@@ -79,8 +84,14 @@ public class FrozenCreativeTabs {
 	 * @param comparedItem	The item that the added item is compared to
 	 * @param item	The item that is going to be added
 	 */
-	public static void addBefore(ItemLike comparedItem, ItemLike item, String path, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
-		if (comparedItem == null || comparedItem.asItem() == null || item == null || item.asItem() == null) return;
+	public static void addBefore(
+		ItemLike comparedItem,
+		ItemLike item,
+		String path,
+		CreativeModeTab.TabVisibility tabVisibility,
+		ResourceKey<CreativeModeTab> @NotNull ... tabs
+	) {
+		if (comparedItem == null || item == null ) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			var stack = new ItemStack(item);
 			stack.setCount(1);
@@ -96,7 +107,11 @@ public class FrozenCreativeTabs {
 	 * @param comparedItem	The item that the added item is compared to
 	 * @param item	The item that is going to be added
 	 */
-	public static void addAfter(ItemLike comparedItem, ItemLike item, ResourceKey<CreativeModeTab>... tabs) {
+	public static void addAfter(
+		ItemLike comparedItem,
+		ItemLike item,
+		ResourceKey<CreativeModeTab>... tabs
+	) {
 		addAfter(comparedItem, item, CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS, tabs);
 	}
 
@@ -104,8 +119,17 @@ public class FrozenCreativeTabs {
 	 * @param comparedItem	The item that the added item is compared to
 	 * @param item	The item that is going to be added
 	 */
-	public static void addAfter(ItemLike comparedItem, ItemLike item, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
-		if (comparedItem == null || comparedItem.asItem() == null || item == null || item.asItem() == null) return;
+	public static void addAfter(
+		ItemLike comparedItem,
+		ItemLike item,
+		CreativeModeTab.TabVisibility tabVisibility,
+		ResourceKey<CreativeModeTab> @NotNull ... tabs
+	) {
+		if (comparedItem == null || item == null) {
+			return;
+		} else {
+			item.asItem();
+		}
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			var stack = new ItemStack(item);
 			stack.setCount(1);
@@ -118,8 +142,18 @@ public class FrozenCreativeTabs {
 	 * @param comparedItem	The item that the added item is compared to
 	 * @param item	The item that is going to be added
 	 */
-	public static void addAfter(ItemLike comparedItem, ItemLike item, String path, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
-		if (comparedItem == null || comparedItem.asItem() == null || item == null || item.asItem() == null) return;
+	public static void addAfter(
+		ItemLike comparedItem,
+		ItemLike item,
+		String path,
+		CreativeModeTab.TabVisibility tabVisibility,
+		ResourceKey<CreativeModeTab> @NotNull ... tabs
+	) {
+		if (comparedItem == null || item == null) {
+			return;
+		} else {
+			item.asItem();
+		}
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			var stack = new ItemStack(item);
 			stack.setCount(1);
@@ -131,7 +165,12 @@ public class FrozenCreativeTabs {
 		}
 	}
 
-	public static void addInstrument(Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+	public static void addInstrument(
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility,
+		ResourceKey<CreativeModeTab> @NotNull ... tabs
+	) {
 		if (instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
@@ -148,8 +187,14 @@ public class FrozenCreativeTabs {
 	 * @param comparedItem	The item that the added item is compared to
 	 * @param instrument	The instrument that is going to be added
 	 */
-	public static void addInstrumentBefore(ItemLike comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
-		if (comparedItem == null || comparedItem.asItem() == null || instrument == null) return;
+	public static void addInstrumentBefore(
+		ItemLike comparedItem,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility,
+		ResourceKey<CreativeModeTab> @NotNull ... tabs
+	) {
+		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				List<ItemStack> list = new ArrayList<>();
@@ -167,8 +212,14 @@ public class FrozenCreativeTabs {
 	 * @param comparedItem	The item that the added item is compared to
 	 * @param instrument	The instrument that is going to be added
 	 */
-	public static void addInstrumentAfter(Item comparedItem, Item instrument, TagKey<Instrument> tagKey, CreativeModeTab.TabVisibility tabVisibility, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
-		if (comparedItem == null || comparedItem.asItem() == null || instrument == null) return;
+	public static void addInstrumentAfter(
+		Item comparedItem,
+		Item instrument,
+		TagKey<Instrument> tagKey,
+		CreativeModeTab.TabVisibility tabVisibility,
+		ResourceKey<CreativeModeTab> @NotNull ... tabs
+	) {
+		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				List<ItemStack> list = new ArrayList<>();
