@@ -21,6 +21,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -87,7 +88,7 @@ public abstract class ModIntegration {
     }
 
     public <T> TagKey<T> getTag(Registry<T> registry, ResourceLocation key) {
-        return registry.getTagNames()
+        return registry.getTags().map(HolderSet.Named::key)
                 .filter(tag -> tag.location().equals(key))
                 .findAny()
                 .orElse(TagKey.create(registry.key(), key));
