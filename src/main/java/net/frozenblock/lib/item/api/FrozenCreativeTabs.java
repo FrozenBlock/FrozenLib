@@ -22,8 +22,7 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.frozenblock.lib.FrozenLogUtils;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
@@ -166,6 +165,7 @@ public class FrozenCreativeTabs {
 	}
 
 	public static void addInstrument(
+		HolderLookup<Instrument> holderLookup,
 		Item instrument,
 		TagKey<Instrument> tagKey,
 		CreativeModeTab.TabVisibility tabVisibility,
@@ -174,11 +174,12 @@ public class FrozenCreativeTabs {
 		if (instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
-					var stack = InstrumentItem.create(instrument, holder);
-					stack.setCount(1);
-					entries.accept(stack, tabVisibility);
-				}
+				holderLookup.get(tagKey)
+					.ifPresent(
+						named -> named.stream()
+							.map(holder -> InstrumentItem.create(instrument, holder))
+							.forEach(itemStack -> entries.accept(itemStack, tabVisibility))
+					);
 			});
 		}
 	}
@@ -188,6 +189,7 @@ public class FrozenCreativeTabs {
 	 * @param instrument	The instrument that is going to be added
 	 */
 	public static void addInstrumentBefore(
+		HolderLookup<Instrument> holderLookup,
 		ItemLike comparedItem,
 		Item instrument,
 		TagKey<Instrument> tagKey,
@@ -198,11 +200,12 @@ public class FrozenCreativeTabs {
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				List<ItemStack> list = new ArrayList<>();
-				for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
-					var stack = InstrumentItem.create(instrument, holder);
-					stack.setCount(1);
-					list.add(stack);
-				}
+				holderLookup.get(tagKey)
+					.ifPresent(
+						named -> named.stream()
+							.map(holder -> InstrumentItem.create(instrument, holder))
+							.forEach(list::add)
+					);
 				entries.addBefore(comparedItem, list, tabVisibility);
 			});
 		}
@@ -213,6 +216,7 @@ public class FrozenCreativeTabs {
 	 * @param instrument	The instrument that is going to be added
 	 */
 	public static void addInstrumentAfter(
+		HolderLookup<Instrument> holderLookup,
 		Item comparedItem,
 		Item instrument,
 		TagKey<Instrument> tagKey,
@@ -223,11 +227,12 @@ public class FrozenCreativeTabs {
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				List<ItemStack> list = new ArrayList<>();
-				for (Holder<Instrument> holder : BuiltInRegistries.INSTRUMENT.getTagOrEmpty(tagKey)) {
-					var stack = InstrumentItem.create(instrument, holder);
-					stack.setCount(1);
-					list.add(stack);
-				}
+				holderLookup.get(tagKey)
+					.ifPresent(
+						named -> named.stream()
+							.map(holder -> InstrumentItem.create(instrument, holder))
+							.forEach(list::add)
+					);
 				entries.addAfter(comparedItem, list, tabVisibility);
 			});
 		}
