@@ -24,17 +24,18 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PrickOnUseBlockItem extends BlockItem {
+public class DamageOnUseBlockItem extends BlockItem {
     public final float damage;
     public final SoundEvent hurtSound;
     public final ResourceKey<DamageType> damageType;
 
-    public PrickOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, ResourceKey<DamageType> damageType) {
+    public DamageOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, ResourceKey<DamageType> damageType) {
         super(block, properties);
         this.damage = damage;
         this.hurtSound = sound;
@@ -43,15 +44,16 @@ public class PrickOnUseBlockItem extends BlockItem {
 
     @Override
 	@NotNull
-    public ItemStack finishUsingItem(ItemStack stack, Level world, LivingEntity user) {
-		if (this.components().has(DataComponents.FOOD)) {
-            user.hurt(world.damageSources().source(this.damageType),this.damage);
-            if (this.hurtSound != null && !user.isSilent()) {
-                user.playSound(this.hurtSound, 0.5F, 0.9F + (world.random.nextFloat() * 0.2F));
+    public ItemStack finishUsingItem(@NotNull ItemStack itemStack, Level level, LivingEntity livingEntity) {
+		Consumable consumable = itemStack.get(DataComponents.CONSUMABLE);
+		if (consumable != null) {
+			livingEntity.hurt(livingEntity.damageSources().source(this.damageType),this.damage);
+            if (this.hurtSound != null && !livingEntity.isSilent()) {
+				livingEntity.playSound(this.hurtSound, 0.5F, 0.9F + (level.random.nextFloat() * 0.2F));
             }
-            return user.eat(world, stack);
+			return consumable.onConsume(level, livingEntity, itemStack);
         }
-        return stack;
+        return itemStack;
     }
 
 }
