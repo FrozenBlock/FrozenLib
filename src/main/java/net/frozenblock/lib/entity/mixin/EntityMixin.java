@@ -55,14 +55,14 @@ public abstract class EntityMixin implements FrozenStartTrackingEntityInterface,
 	}
 
 	@Inject(
-		method = "move",
+		method = "applyEffectsFromBlocks",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V",
 			shift = At.Shift.AFTER
 		)
 	)
-	public void frozenLib$runSteppedOn(MoverType type, Vec3 pos, CallbackInfo ci, @Local BlockPos blockPos, @Local BlockState blockState) {
+	public void frozenLib$runSteppedOn(CallbackInfo ci, @Local BlockPos blockPos, @Local BlockState blockState) {
 		this.frozenLib$onSteppedOnBlock(this.level(), blockPos, blockState);
 	}
 

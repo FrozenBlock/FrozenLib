@@ -22,10 +22,12 @@ import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import org.jetbrains.annotations.NotNull;
+import java.util.List;
 
 /**
  * Events for listening to the manipulation of Minecraft's content registries.

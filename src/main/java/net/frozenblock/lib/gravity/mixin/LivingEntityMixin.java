@@ -31,25 +31,12 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements EntityGravityInterface {
 
-	// TODO: convert to directional
-	@ModifyExpressionValue(
-		method = "travel",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/LivingEntity;getGravity()D"
-		)
-	)
-	private double frozenLib$useGravity(double original) {
-		LivingEntity entity = LivingEntity.class.cast(this);
-		return original * GravityAPI.calculateGravity(entity).length();
-	}
-
 	@WrapOperation(
-		method = "travel",
+		method = "travelInAir",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V",
-			ordinal = 3
+			ordinal = 1
 		)
 	)
 	private void frozenLib$newGravity(LivingEntity instance, double x, double y, double z, Operation<Void> original, @Local(ordinal = 0) double originalGravity) {

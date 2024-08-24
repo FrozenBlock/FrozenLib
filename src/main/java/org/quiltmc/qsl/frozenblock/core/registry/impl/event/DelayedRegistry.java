@@ -40,6 +40,7 @@ import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
+import net.minecraft.tags.TagLoader;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -186,30 +187,8 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 
 	@Override
 	@NotNull
-	public Named<T> getOrCreateTag(TagKey<T> key) {
-		return this.wrapped.getOrCreateTag(key);
-	}
-
-	@Override
-	@NotNull
-	public Stream<Pair<TagKey<T>, Named<T>>> getTags() {
+	public Stream<Named<T>> getTags() {
 		return this.wrapped.getTags();
-	}
-
-	@Override
-	@NotNull
-	public Stream<TagKey<T>> getTagNames() {
-		return this.wrapped.getTagNames();
-	}
-
-	@Override
-	public void resetTags() {
-		throw new UnsupportedOperationException("DelayedRegistry does not support resetTags.");
-	}
-
-	@Override
-	public void bindTags(Map<TagKey<T>, List<Holder<T>>> tags) {
-		throw new UnsupportedOperationException("DelayedRegistry does not support bindTags.");
 	}
 
 	@Override
@@ -222,6 +201,12 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	@NotNull
 	public RegistryLookup<T> asLookup() {
 		return this.wrapped.asLookup();
+	}
+
+	@Override
+	@NotNull
+	public PendingTags<T> prepareTagReload(TagLoader.LoadResult<T> loadResult) {
+		return this.wrapped.prepareTagReload(loadResult);
 	}
 
 	@Override
@@ -251,6 +236,11 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	public Reference<T> register(ResourceKey<T> key, T entry, RegistrationInfo registrationInfo) {
 		this.delayedEntries.add(new DelayedEntry<>(key, entry, registrationInfo));
 		return Holder.Reference.createStandAlone(this.wrapped.holderOwner(), key);
+	}
+
+	@Override
+	public void bindTag(TagKey<T> tagKey, List<Holder<T>> list) {
+		this.wrapped.bindTag(tagKey, list);
 	}
 
 	@Override
