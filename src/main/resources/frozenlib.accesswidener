@@ -81,6 +81,11 @@ transitive-accessible    field    net/minecraft/server/level/ServerLevel    enti
 transitive-accessible    class    net/minecraft/world/entity/monster/warden/Warden$VibrationUser
 transitive-accessible    field    net/minecraft/world/entity/ai/navigation/WallClimberNavigation    pathToPosition    Lnet/minecraft/core/BlockPos;
 transitive-accessible    method    net/minecraft/world/entity/LivingEntity    canBreatheUnderwater    ()Z
+transitive-accessible    field    net/minecraft/client/renderer/debug/GoalSelectorDebugRenderer    goalSelectors    Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
+transitive-accessible    field    net/minecraft/client/renderer/debug/GameEventListenerRenderer    trackedListeners    Ljava/util/List;
+transitive-accessible    field    net/minecraft/world/level/gameevent/EntityPositionSource    yOffset    F
+transitive-accessible    field    net/minecraft/world/level/gameevent/EntityPositionSource    entityOrUuidOrId    Lcom/mojang/datafixers/util/Either;
+transitive-accessible    method    net/minecraft/world/level/gameevent/EntityPositionSource    resolveEntity    (Lnet/minecraft/world/level/Level;)V
 
 # Entity Models
 transitive-accessible    field    net/minecraft/world/entity/Entity    DATA_POSE    Lnet/minecraft/network/syncher/EntityDataAccessor;
@@ -193,7 +198,7 @@ transitive-mutable    field    net/minecraft/client/resources/sounds/AbstractSou
 transitive-extendable    method    net/minecraft/client/resources/sounds/AbstractTickableSoundInstance    stop    ()V
 transitive-accessible    method    net/minecraft/sounds/SoundEvent    <init>    (Lnet/minecraft/resources/ResourceLocation;FZ)V
 
-#Camera
+# Camera
 transitive-accessible    method    net/minecraft/client/Camera    setRotation    (FF)V
 transitive-accessible    field    net/minecraft/client/Camera    xRot    F
 transitive-accessible    field    net/minecraft/client/Camera    yRot    F
@@ -205,7 +210,7 @@ transitive-accessible    class    net/minecraft/data/DataGenerator$PackGenerator
 transitive-extendable    method    net/minecraft/data/DataGenerator$PackGenerator    <init>    (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
 transitive-accessible    method    net/minecraft/data/DataGenerator$PackGenerator    <init>    (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
 
-#Particle
+# Particle
 transitive-accessible    field    net/minecraft/client/particle/Particle    x    D
 transitive-accessible    field    net/minecraft/client/particle/Particle    y    D
 transitive-accessible    field    net/minecraft/client/particle/Particle    z    D

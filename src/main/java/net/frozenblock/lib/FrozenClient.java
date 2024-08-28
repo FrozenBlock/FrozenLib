@@ -22,6 +22,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.menu.api.Panoramas;
@@ -53,10 +54,10 @@ public final class FrozenClient implements ClientModInitializer {
 		// CONTINUE FROZENLIB INIT
 		registerClientEvents();
 		FrozenClientNetworking.registerClientReceivers();
+		DebugRenderManager.init();
 
 		// PARTICLES
 		ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
-
 		particleRegistry.register(FrozenParticleTypes.DEBUG_POS, DebugPosParticle.Provider::new);
 
 		Panoramas.addPanorama(ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama"));
@@ -76,6 +77,11 @@ public final class FrozenClient implements ClientModInitializer {
 			ScreenShaker.clear();
 			ClientWindManager.clearAllWindDisturbances();
 		});
+	}
+
+	public static float PARTIAL_TICK;
+	public static void updatePartialTick() {
+		PARTIAL_TICK = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
 	}
 
 }

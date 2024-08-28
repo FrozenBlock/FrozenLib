@@ -209,6 +209,21 @@ public final class ClientWindManager {
 	}
 
 	@NotNull
+	public static Vec3 getRawDisturbanceMovement(@NotNull Level level, @NotNull Vec3 pos) {
+		Pair<Double, Vec3> disturbance = WindManager.calculateWindDisturbance(getWindDisturbances(), level, pos);
+		double disturbanceAmount = disturbance.getFirst();
+		Vec3 windDisturbance = disturbance.getSecond();
+		double newWindX = Mth.lerp(disturbanceAmount, 0D, windDisturbance.x);
+		double newWindY = Mth.lerp(disturbanceAmount, 0D, windDisturbance.y);
+		double newWindZ = Mth.lerp(disturbanceAmount, 0D, windDisturbance.z);
+		return new Vec3(
+			newWindX,
+			newWindY,
+			newWindZ
+		);
+	}
+
+	@NotNull
 	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double stretch) {
 		return getWindMovement3D(Vec3.atBottomCenterOf(pos), stretch);
 	}

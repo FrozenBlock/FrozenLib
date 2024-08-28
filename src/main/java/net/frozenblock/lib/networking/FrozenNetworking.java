@@ -23,6 +23,10 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
+import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
+import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayload;
+import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
@@ -45,8 +49,13 @@ import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
 public final class FrozenNetworking {
@@ -98,6 +107,20 @@ public final class FrozenNetworking {
 		registry.register(SpottingIconRemovePacket.PACKET_TYPE, SpottingIconRemovePacket.CODEC);
 		registry.register(WindSyncPacket.PACKET_TYPE, WindSyncPacket.CODEC);
 		registry.register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
+
+		// DEBUG
+		registry.register(ImprovedGoalDebugPayload.PACKET_TYPE, ImprovedGoalDebugPayload.STREAM_CODEC);
+		registry.register(GoalDebugRemovePayload.PACKET_TYPE, GoalDebugRemovePayload.STREAM_CODEC);
+		registry.register(ImprovedGameEventListenerDebugPayload.PACKET_TYPE, ImprovedGameEventListenerDebugPayload.STREAM_CODEC);
+		registry.register(ImprovedGameEventDebugPayload.PACKET_TYPE, ImprovedGameEventDebugPayload.STREAM_CODEC);
+	}
+
+	public static void sendPacketToAllPlayers(@NotNull ServerLevel world, CustomPacketPayload payload) {
+		Packet<?> packet = new ClientboundCustomPayloadPacket(payload);
+
+		for (ServerPlayer serverPlayer : world.players()) {
+			serverPlayer.connection.send(packet);
+		}
 	}
 
 	public static boolean isLocalPlayer(Player player) {

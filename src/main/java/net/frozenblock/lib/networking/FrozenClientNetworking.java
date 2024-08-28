@@ -26,6 +26,11 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
+import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
+import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
+import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayload;
+import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
@@ -109,6 +114,43 @@ public final class FrozenClientNetworking {
 				config.setSynced(false);
 			}
 		}));
+
+		// DEBUG
+		ClientPlayNetworking.registerGlobalReceiver(ImprovedGoalDebugPayload.PACKET_TYPE, (packet, ctx) -> {
+			if (DebugRenderManager.improvedGoalSelectorRenderer != null) {
+				Entity entity = ctx.client().level.getEntity(packet.entityId());
+				if (entity != null) {
+					DebugRenderManager.improvedGoalSelectorRenderer.addGoalSelector(
+						entity,
+						packet.goals()
+					);
+				}
+			}
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(GoalDebugRemovePayload.PACKET_TYPE, (packet, ctx) -> {
+			if (DebugRenderManager.improvedGoalSelectorRenderer != null) {
+				DebugRenderManager.improvedGoalSelectorRenderer.removeGoalSelector(packet.entityId());
+			}
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(ImprovedGameEventListenerDebugPayload.PACKET_TYPE, (packet, ctx) -> {
+			if (DebugRenderManager.improvedGameEventListenerRenderer != null) {
+				DebugRenderManager.improvedGameEventListenerRenderer.trackListener(
+					packet.listenerPos(),
+					packet.listenerRange()
+				);
+			}
+		});
+
+		ClientPlayNetworking.registerGlobalReceiver(ImprovedGameEventDebugPayload.PACKET_TYPE, (packet, ctx) -> {
+			if (DebugRenderManager.improvedGameEventListenerRenderer != null) {
+				DebugRenderManager.improvedGameEventListenerRenderer.trackGameEvent(
+					packet.gameEventType(),
+					packet.pos()
+				);
+			}
+		});
 	}
 
 	private static void receiveLocalPlayerSoundPacket() {

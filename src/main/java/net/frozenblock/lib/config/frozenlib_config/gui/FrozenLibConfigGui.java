@@ -22,12 +22,14 @@ import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
@@ -40,6 +42,21 @@ public final class FrozenLibConfigGui {
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
 		category.setBackground(FrozenSharedConstants.id("config.png"));
+
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+			var isDebug = category.addEntry(
+				FrozenClothConfig.syncedEntry(
+					entryBuilder.startBooleanToggle(text("is_debug"), modifiedConfig.isDebug)
+						.setDefaultValue(defaultConfig.isDebug)
+						.setSaveConsumer(newValue -> config.isDebug = newValue)
+						.setTooltip(tooltip("is_debug"))
+						.build(),
+					config.getClass(),
+					"isDebug",
+					configInstance
+				)
+			);
+		}
 
 		var useWindOnNonFrozenServers = category.addEntry(
 			FrozenClothConfig.syncedEntry(
@@ -121,11 +138,13 @@ public final class FrozenLibConfigGui {
 		return configBuilder.build();
 	}
 
-	public static Component text(String key) {
+	@Contract(value = "_ -> new", pure = true)
+	public static @NotNull Component text(String key) {
 		return Component.translatable("option." + FrozenSharedConstants.MOD_ID + "." + key);
 	}
 
-	public static Component tooltip(String key) {
+	@Contract(value = "_ -> new", pure = true)
+	public static @NotNull Component tooltip(String key) {
 		return Component.translatable("tooltip." + FrozenSharedConstants.MOD_ID + "." + key);
 	}
 }

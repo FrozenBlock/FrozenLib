@@ -15,6 +15,10 @@
 
   "option.frozenlib.config": "FrozenLib Config",
 
+  "option.frozenlib.is_debug": "Debug Mode",
+  "tooltip.frozenlib.is_debug": "Whether debug mode is enabled.\nThis only shows up in development environments.",
+  "menu.frozenlib.debug": "Debug Options",
+
   "option.frozenlib.datafixer": "DataFixer",
   "tooltip.frozenlib.datafixer": "Contains options for DataFixers",
 
