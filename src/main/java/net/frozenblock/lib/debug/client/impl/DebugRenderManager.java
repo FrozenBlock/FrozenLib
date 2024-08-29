@@ -114,8 +114,8 @@ public class DebugRenderManager {
 
 			ClientTickEvents.START_WORLD_TICK.register(clientLevel -> {
 				if (FrozenLibConfig.IS_DEBUG) {
-					ClientWindManager.clearAccessedPositions();
 					windDebugRenderer.tick();
+					ClientWindManager.clearAccessedPositions();
 				}
 			});
 
