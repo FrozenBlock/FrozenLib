@@ -82,6 +82,7 @@
   "debug.solid_face": "Solid Block Faces",
   "debug.chunk_status": "Chunk Status",
   "debug.brain": "Brain",
+  "debug.goal": "Goal",
   "debug.village_sections": "Village Sections",
   "debug.bee": "Bee",
   "debug.raid": "Raid",
