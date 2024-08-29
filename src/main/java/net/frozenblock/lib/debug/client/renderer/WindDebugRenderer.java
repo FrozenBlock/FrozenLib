@@ -20,6 +20,7 @@ package net.frozenblock.lib.debug.client.renderer;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
@@ -39,15 +40,16 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
-	private static final int ENTITY_LINE_COLOR = FastColor.ARGB32.color(255, 100, 255, 255);
 	private final Minecraft minecraft;
 	private List<WindDisturbance<?>> windDisturbances = Collections.emptyList();
 	private List<Entity> entitiesToRender = Collections.emptyList();
+	private List<List<Pair<Vec3, Integer>>> windNodes = Collections.emptyList();
 
 	public WindDebugRenderer(Minecraft client) {
 		this.minecraft = client;
@@ -60,12 +62,16 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		this.entitiesToRender = ImmutableList.copyOf(
 			this.minecraft.level.entitiesForRendering()
 		);
+		this.windNodes = ImmutableList.copyOf(
+			this.createAllWindNodes()
+		);
 	}
 
 	@Override
 	public void clear() {
 		this.windDisturbances = Collections.emptyList();
 		this.entitiesToRender = Collections.emptyList();
+		this.windNodes = Collections.emptyList();
 	}
 
 	@Override
@@ -91,56 +97,124 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 					AABB.ofSize(windDisturbance.origin, 0.2D, 0.2D, 0.2D),
 					cameraX, cameraY, cameraZ
 				);
+			}
+		);
+
+		renderWindNodesFromList(matrices, vertexConsumers, cameraX, cameraY, cameraZ, this.windNodes);
+
+		this.entitiesToRender.forEach(
+			entity -> {
+				Vec3 entityStartPos = entity.getEyePosition(DebugRenderManager.PARTIAL_TICK);
+				renderWindNodes(
+					matrices, vertexConsumers, cameraX, cameraY, cameraZ,
+					createWindNodes(entityStartPos, 1.5D, false)
+				);
+			}
+		);
+	}
+
+	private @NotNull List<List<Pair<Vec3, Integer>>> createAllWindNodes() {
+		List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
+		this.windDisturbances.forEach(
+			windDisturbance -> {
 				BlockPos.betweenClosed(
 					BlockPos.containing(windDisturbance.affectedArea.getMinPosition()),
 					BlockPos.containing(windDisturbance.affectedArea.getMaxPosition())
 				).forEach(
 					blockPos -> {
 						Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
-						Vec3 wind = ClientWindManager.getRawDisturbanceMovement(this.minecraft.level, blockPosCenter);
-						double windlength = wind.length();
-						if (windlength != 0D) {
-							windlength = Math.min(1D, windlength);
-							drawLine(
-								matrices,
-								vertexConsumers,
-								cameraX, cameraY, cameraZ,
-								blockPosCenter,
-								blockPosCenter.add(wind),
-								FastColor.ARGB32.color(
-									255,
-									(int) Mth.lerp(windlength, 255, 0),
-									(int) Mth.lerp(windlength, 90, 255),
-									0
-								)
-							);
-							renderTransparentBox(
-								matrices,
-								vertexConsumers,
-								AABB.ofSize(blockPosCenter, 0.5D, 0.5D, 0.5D),
-								cameraX, cameraY, cameraZ,
-								windlength
-							);
-						}
+						windNodes.add(createWindNodes(blockPosCenter, 1D, true));
 					}
 				);
 			}
 		);
 
-		this.entitiesToRender.forEach(
-			entity -> {
-				Vec3 entityStartPos = entity.getEyePosition(DebugRenderManager.PARTIAL_TICK);
-				Vec3 entityWind = ClientWindManager.getWindMovement(entity.level(), entityStartPos);
+		return windNodes;
+	}
+
+	private @NotNull List<Pair<Vec3, Integer>> createWindNodes(Vec3 origin, double stretch, boolean disturbanceOnly) {
+		List<Pair<Vec3, Integer>> windNodes = new ArrayList<>();
+		Vec3 wind = disturbanceOnly ?
+			ClientWindManager.getRawDisturbanceMovement(this.minecraft.level, origin)
+			: ClientWindManager.getWindMovement(this.minecraft.level, origin);
+		double windlength = wind.length();
+		if (windlength != 0D) {
+			windlength = Math.min(1D, windlength);
+			int increments = (int) (10D * ((windlength * 1.25D) / 3D));
+			Vec3 lineStart = origin;
+			double windLineScale = (1D / increments) * stretch;
+			windNodes.add(
+				Pair.of(
+					lineStart,
+					calculateNodeColor(Math.min(1D, wind.length()), disturbanceOnly)
+				)
+			);
+
+			for (int i = 0; i < increments; ++i) {
+				Vec3 lineEnd = lineStart.add(wind.scale(windLineScale));
+				windNodes.add(
+					Pair.of(
+						lineEnd,
+						calculateNodeColor(Math.min(1D, wind.length()), disturbanceOnly)
+					)
+				);
+				lineStart = lineEnd;
+				if (i + 1 <= increments) {
+					wind = disturbanceOnly ?
+						ClientWindManager.getRawDisturbanceMovement(this.minecraft.level, lineStart)
+						: ClientWindManager.getWindMovement(this.minecraft.level, lineStart);
+				}
+			}
+		}
+
+		return windNodes;
+	}
+
+	private int calculateNodeColor(double strength, boolean disturbanceOnly) {
+		return FastColor.ARGB32.color(
+			255,
+			(int) Mth.lerp(strength, 255, 0),
+			(int) Mth.lerp(strength, 90, 255),
+			disturbanceOnly ? 0 : 255
+		);
+	}
+
+	private static void renderWindNodesFromList(
+		PoseStack matrices,
+		MultiBufferSource vertexConsumers,
+		double cameraX,
+		double cameraY,
+		double cameraZ,
+		@NotNull List<List<Pair<Vec3, Integer>>> windNodes
+	) {
+		windNodes.forEach(nodes -> renderWindNodes(matrices, vertexConsumers, cameraX, cameraY, cameraZ, nodes));
+	}
+
+	private static void renderWindNodes(
+		PoseStack matrices,
+		MultiBufferSource vertexConsumers,
+		double cameraX,
+		double cameraY,
+		double cameraZ,
+		@NotNull List<Pair<Vec3, Integer>> windNodes
+	) {
+		int size = windNodes.size();
+		if (size > 1) {
+			for (int i = 1; i < windNodes.size(); i++) {
+				Pair<Vec3, Integer> startNode = windNodes.get(i - 1);
+				Pair<Vec3, Integer> endNode = windNodes.get(i);
 				drawLine(
 					matrices,
 					vertexConsumers,
-					cameraX, cameraY, cameraZ,
-					entityStartPos,
-					entityStartPos.add(entityWind.scale(3D)),
-					ENTITY_LINE_COLOR
+					cameraX,
+					cameraY,
+					cameraZ,
+					startNode.getFirst(),
+					endNode.getFirst(),
+					startNode.getSecond()
 				);
 			}
-		);
+		}
 	}
 
 	private static void renderFilledBox(
@@ -151,25 +225,6 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 	) {
 		Vec3 vec3 = new Vec3(-cameraX, -cameraY, -cameraZ);
 		DebugRenderer.renderFilledBox(matrices, vertexConsumers, box.move(vec3), 1F, 1F, 1F, 1F);
-	}
-
-	private static void renderTransparentBox(
-		PoseStack matrices,
-		MultiBufferSource vertexConsumers,
-		@NotNull AABB box,
-		double cameraX, double cameraY, double cameraZ,
-		double strength
-	) {
-		Vec3 vec3 = new Vec3(-cameraX, -cameraY, -cameraZ);
-		DebugRenderer.renderFilledBox(
-			matrices,
-			vertexConsumers,
-			box.move(vec3),
-			(float) (1F - strength),
-			(float) strength,
-			0F,
-			(float) (Math.max(0.1F, strength) * 0.4F)
-		);
 	}
 
 	private static void drawLine(
