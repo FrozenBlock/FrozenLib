@@ -23,8 +23,10 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.core.client.api.FrustumUtil;
 import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.minecraft.Util;
 import net.minecraft.client.Camera;
@@ -82,22 +84,35 @@ public class ImprovedGameEventListenerRenderer implements DebugRenderer.SimpleDe
 			this.trackedGameEvents.removeIf(TrackedGameEvent::isExpired);
 			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.lines());
 
-			for (TrackedListener trackedListener : listenersToRender) {
-				trackedListener.getRenderPosition(level, DebugRenderManager.PARTIAL_TICK)
-					.ifPresent(
-						pos -> {
-							double gx = pos.x() - (double) trackedListener.getListenerRadius();
-							double hx = pos.y() - (double) trackedListener.getListenerRadius();
-							double ix = pos.z() - (double) trackedListener.getListenerRadius();
-							double jx = pos.x() + (double) trackedListener.getListenerRadius();
-							double k = pos.y() + (double) trackedListener.getListenerRadius();
-							double l = pos.z() + (double) trackedListener.getListenerRadius();
-							LevelRenderer.renderVoxelShape(
-								matrices, vertexConsumer, Shapes.create(new AABB(gx, hx, ix, jx, k, l)), -cameraX, -cameraY, -cameraZ, 1.0F, 1.0F, 0.0F, 0.35F, true
-							);
-						}
-					);
-			}
+			listenersToRender.removeIf(
+				listener -> {
+					AtomicBoolean willRemove = new AtomicBoolean(true);
+					listener.getRenderPosition(level, DebugRenderManager.PARTIAL_TICK)
+						.ifPresent(
+							pos -> {
+								double gx = pos.x() - (double) listener.getListenerRadius();
+								double hx = pos.y() - (double) listener.getListenerRadius();
+								double ix = pos.z() - (double) listener.getListenerRadius();
+								double jx = pos.x() + (double) listener.getListenerRadius();
+								double k = pos.y() + (double) listener.getListenerRadius();
+								double l = pos.z() + (double) listener.getListenerRadius();
+								AABB aabb = new AABB(gx, hx, ix, jx, k, l);
+								if (FrustumUtil.isVisible(aabb)) {
+									LevelRenderer.renderVoxelShape(
+										matrices,
+										vertexConsumer,
+										Shapes.create(aabb),
+										-cameraX, -cameraY, -cameraZ,
+										1F, 1F, 0F, 0.35F,
+										true
+									);
+									willRemove.set(false);
+								}
+							}
+						);
+					return willRemove.get();
+				}
+			);
 
 			VertexConsumer vertexConsumer2 = vertexConsumers.getBuffer(RenderType.debugFilledBox());
 
@@ -136,10 +151,13 @@ public class ImprovedGameEventListenerRenderer implements DebugRenderer.SimpleDe
 				double h = vec32.x + 0.2F;
 				double i = vec32.y + 0.2F + 0.5;
 				double j = vec32.z + 0.2F;
-				renderFilledBox(matrices, vertexConsumers, new AABB(e, f, g, h, i, j), 1.0F, 1.0F, 1.0F, 0.2F);
-				DebugRenderer.renderFloatingText(
-					matrices, vertexConsumers, trackedGameEvent.gameEvent.location().toString(), vec32.x, vec32.y + 0.85F, vec32.z, -7564911, 0.0075F
-				);
+				AABB renderBox = new AABB(e, f, g, h, i, j);
+				if (FrustumUtil.isVisible(renderBox)) {
+					renderFilledBox(matrices, vertexConsumers, renderBox, 1.0F, 1.0F, 1.0F, 0.2F);
+					DebugRenderer.renderFloatingText(
+						matrices, vertexConsumers, trackedGameEvent.gameEvent.location().toString(), vec32.x, vec32.y + 0.85F, vec32.z, -7564911, 0.0075F
+					);
+				}
 			}
 		}
 	}

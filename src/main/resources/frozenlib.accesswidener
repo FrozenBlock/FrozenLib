@@ -230,3 +230,6 @@ transitive-accessible    field    net/minecraft/client/gui/screens/BackupConfirm
 
 # Screens
 transitive-accessible    field    net/minecraft/client/gui/screens/Screen    PANORAMA    Lnet/minecraft/client/renderer/PanoramaRenderer;
+
+# Rendering
+transitive-accessible    field    net/minecraft/client/renderer/LevelRenderer    cullingFrustum    Lnet/minecraft/client/renderer/culling/Frustum;

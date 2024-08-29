@@ -9,3 +9,4 @@ Put changelog here:
   - Requires that "isDebug" in FrozenLib's config is set to true.
   - Will add a new button on the pause menu to toggle different debug renderers.
 - Added an API and event to easily register new debug renderers.
+- Added the FrustumUtil class, which quickly lets you see if something is within the client's frustum.

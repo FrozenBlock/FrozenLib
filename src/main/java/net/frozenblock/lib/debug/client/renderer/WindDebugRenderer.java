@@ -26,12 +26,14 @@ import java.util.Collections;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.core.client.api.FrustumUtil;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.FastColor;
@@ -102,21 +104,25 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
 		this.windDisturbances.forEach(
 			windDisturbance -> {
-				BlockPos.betweenClosed(
-					BlockPos.containing(windDisturbance.affectedArea.getMinPosition()),
-					BlockPos.containing(windDisturbance.affectedArea.getMaxPosition())
-				).forEach(
-					blockPos -> {
-						Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
-						windNodes.add(createWindNodes(blockPosCenter, 1D, true));
-					}
-				);
+				if (FrustumUtil.isVisible(windDisturbance.affectedArea)) {
+					BlockPos.betweenClosed(
+						BlockPos.containing(windDisturbance.affectedArea.getMinPosition()),
+						BlockPos.containing(windDisturbance.affectedArea.getMaxPosition())
+					).forEach(
+						blockPos -> {
+							Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
+							windNodes.add(createWindNodes(blockPosCenter, 1D, true));
+						}
+					);
+				}
 			}
 		);
 
 		this.accessedWindPositions.forEach(
 			vec3 -> {
-				windNodes.add(createWindNodes(vec3, 1.5D, false));
+				if (FrustumUtil.isVisible(vec3, 0.5D)) {
+					windNodes.add(createWindNodes(vec3, 1.5D, false));
+				}
 			}
 		);
 
