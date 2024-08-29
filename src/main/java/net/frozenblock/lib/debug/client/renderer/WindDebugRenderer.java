@@ -136,7 +136,7 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 			: ClientWindManager.getWindMovement(this.minecraft.level, origin);
 		double windlength = wind.length();
 		if (windlength != 0D) {
-			int increments = 4;
+			int increments = 3;
 			Vec3 lineStart = origin;
 			double windLineScale = (1D / increments) * stretch;
 			windNodes.add(
