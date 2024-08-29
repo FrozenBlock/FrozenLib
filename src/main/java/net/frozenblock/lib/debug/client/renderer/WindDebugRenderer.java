@@ -148,10 +148,10 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 			matrices,
 			vertexConsumers,
 			box.move(vec3),
-			(float) (1F * strength),
-			(float) ((1F - strength) * 1F),
+			(float) (1F - strength),
+			(float) strength,
 			0F,
-			(float) (Math.max(0.1F, strength) * 1F)
+			(float) (Math.max(0.1F, strength) * 0.4F)
 		);
 	}
 
