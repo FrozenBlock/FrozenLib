@@ -97,15 +97,6 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		);
 
 		renderWindNodesFromList(matrices, vertexConsumers, cameraX, cameraY, cameraZ, this.windNodes);
-
-		this.accessedWindPositions.forEach(
-			vec3 -> {
-				renderWindNodes(
-					matrices, vertexConsumers, cameraX, cameraY, cameraZ,
-					createWindNodes(vec3, 1.5D, false)
-				);
-			}
-		);
 	}
 
 	private @NotNull List<List<Pair<Vec3, Integer>>> createAllWindNodes() {
@@ -121,6 +112,12 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 						windNodes.add(createWindNodes(blockPosCenter, 1D, true));
 					}
 				);
+			}
+		);
+
+		this.accessedWindPositions.forEach(
+			vec3 -> {
+				windNodes.add(createWindNodes(vec3, 1.5D, false));
 			}
 		);
 
