@@ -23,7 +23,6 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.minecraft.client.Minecraft;
@@ -34,7 +33,6 @@ import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -48,7 +46,7 @@ import java.util.List;
 public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 	private final Minecraft minecraft;
 	private List<WindDisturbance<?>> windDisturbances = Collections.emptyList();
-	private List<Entity> entitiesToRender = Collections.emptyList();
+	private List<Vec3> accessedWindPositions = Collections.emptyList();
 	private List<List<Pair<Vec3, Integer>>> windNodes = Collections.emptyList();
 
 	public WindDebugRenderer(Minecraft client) {
@@ -59,9 +57,7 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		this.windDisturbances = ImmutableList.copyOf(
 			ClientWindManager.getWindDisturbances()
 		);
-		this.entitiesToRender = ImmutableList.copyOf(
-			this.minecraft.level.entitiesForRendering()
-		);
+		this.accessedWindPositions = ClientWindManager.getAccessedPositions();
 		this.windNodes = ImmutableList.copyOf(
 			this.createAllWindNodes()
 		);
@@ -70,7 +66,7 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 	@Override
 	public void clear() {
 		this.windDisturbances = Collections.emptyList();
-		this.entitiesToRender = Collections.emptyList();
+		this.accessedWindPositions = Collections.emptyList();
 		this.windNodes = Collections.emptyList();
 	}
 
@@ -102,12 +98,11 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 
 		renderWindNodesFromList(matrices, vertexConsumers, cameraX, cameraY, cameraZ, this.windNodes);
 
-		this.entitiesToRender.forEach(
-			entity -> {
-				Vec3 entityStartPos = entity.getEyePosition(DebugRenderManager.PARTIAL_TICK);
+		this.accessedWindPositions.forEach(
+			vec3 -> {
 				renderWindNodes(
 					matrices, vertexConsumers, cameraX, cameraY, cameraZ,
-					createWindNodes(entityStartPos, 1.5D, false)
+					createWindNodes(vec3, 1.5D, false)
 				);
 			}
 		);

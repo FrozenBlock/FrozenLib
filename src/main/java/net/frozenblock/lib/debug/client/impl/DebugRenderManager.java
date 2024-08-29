@@ -37,6 +37,8 @@ import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayload;
 import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
+import net.frozenblock.lib.wind.api.ClientWindManager;
+import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -112,8 +114,13 @@ public class DebugRenderManager {
 
 			ClientTickEvents.START_WORLD_TICK.register(clientLevel -> {
 				if (FrozenLibConfig.IS_DEBUG) {
+					ClientWindManager.clearAccessedPositions();
 					windDebugRenderer.tick();
 				}
+			});
+
+			ClientPlayNetworking.registerGlobalReceiver(WindAccessPacket.PACKET_TYPE, (packet, ctx) -> {
+				ClientWindManager.addAccessedPosition(packet.accessPos());
 			});
 
 			addClearRunnable(windDebugRenderer::clear);

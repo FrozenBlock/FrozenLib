@@ -44,6 +44,7 @@ import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLo
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.wind.api.WindManager;
+import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.client.Minecraft;
@@ -113,6 +114,7 @@ public final class FrozenNetworking {
 		registry.register(GoalDebugRemovePayload.PACKET_TYPE, GoalDebugRemovePayload.STREAM_CODEC);
 		registry.register(ImprovedGameEventListenerDebugPayload.PACKET_TYPE, ImprovedGameEventListenerDebugPayload.STREAM_CODEC);
 		registry.register(ImprovedGameEventDebugPayload.PACKET_TYPE, ImprovedGameEventDebugPayload.STREAM_CODEC);
+		registry.register(WindAccessPacket.PACKET_TYPE, WindAccessPacket.CODEC);
 	}
 
 	public static void sendPacketToAllPlayers(@NotNull ServerLevel world, CustomPacketPayload payload) {
