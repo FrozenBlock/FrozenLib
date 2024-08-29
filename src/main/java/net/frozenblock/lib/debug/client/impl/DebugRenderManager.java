@@ -28,6 +28,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.debug.client.api.DebugRendererEvents;
 import net.frozenblock.lib.debug.client.renderer.ImprovedGameEventListenerRenderer;
 import net.frozenblock.lib.debug.client.renderer.ImprovedGoalSelectorDebugRenderer;
@@ -98,7 +99,9 @@ public class DebugRenderManager {
 			});
 
 			ClientTickEvents.START_WORLD_TICK.register(clientLevel -> {
-				improvedGameEventRenderer.tick();
+				if (FrozenLibConfig.IS_DEBUG) {
+					improvedGameEventRenderer.tick();
+				}
 			});
 
 			registerRenderer(FrozenSharedConstants.id("game_event"), improvedGameEventRenderer::render);
@@ -108,7 +111,9 @@ public class DebugRenderManager {
 			WindDebugRenderer windDebugRenderer = new WindDebugRenderer(client);
 
 			ClientTickEvents.START_WORLD_TICK.register(clientLevel -> {
-				windDebugRenderer.tick();
+				if (FrozenLibConfig.IS_DEBUG) {
+					windDebugRenderer.tick();
+				}
 			});
 
 			addClearRunnable(windDebugRenderer::clear);
