@@ -41,7 +41,6 @@ public final class FrozenLibConfigGui {
 		Config<?> configInstance = FrozenLibConfig.INSTANCE;
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
-		category.setBackground(FrozenSharedConstants.id("config.png"));
 
 		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 			var isDebug = category.addEntry(
