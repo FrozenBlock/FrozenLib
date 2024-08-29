@@ -131,8 +131,7 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 			: ClientWindManager.getWindMovement(this.minecraft.level, origin);
 		double windlength = wind.length();
 		if (windlength != 0D) {
-			windlength = Math.min(1D, windlength);
-			int increments = (int) (10D * ((windlength * 1.25D) / 3D));
+			int increments = 4;
 			Vec3 lineStart = origin;
 			double windLineScale = (1D / increments) * stretch;
 			windNodes.add(
@@ -151,11 +150,9 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 					)
 				);
 				lineStart = lineEnd;
-				if (i + 1 <= increments) {
-					wind = disturbanceOnly ?
-						ClientWindManager.getRawDisturbanceMovement(this.minecraft.level, lineStart)
-						: ClientWindManager.getWindMovement(this.minecraft.level, lineStart);
-				}
+				wind = disturbanceOnly ?
+					ClientWindManager.getRawDisturbanceMovement(this.minecraft.level, lineStart)
+					: ClientWindManager.getWindMovement(this.minecraft.level, lineStart);
 			}
 		}
 
