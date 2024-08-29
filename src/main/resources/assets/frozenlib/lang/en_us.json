@@ -88,6 +88,8 @@
   "debug.light": "Light",
   "debug.breeze": "Breeze",
   "debug.wind": "Wind",
+  "debug.neighbor_update": "Neighbor Updates",
+  "debug.game_event": "Game Events",
 
   "frozenlib.loot_table_whacker.fail.no_name": "Loot Table Whacker has not been named!",
   "frozenlib.loot_table_whacker.fail.no_colon": "Invalid ResourceLocation: No : present!",
