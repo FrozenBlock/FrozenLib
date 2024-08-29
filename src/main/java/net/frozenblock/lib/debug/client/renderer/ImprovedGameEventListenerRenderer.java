@@ -15,14 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.debug.client;
+package net.frozenblock.lib.debug.client.renderer;
 
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenClient;
+import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.minecraft.Util;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
@@ -37,14 +40,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.gameevent.*;
+import net.minecraft.world.level.gameevent.BlockPositionSource;
+import net.minecraft.world.level.gameevent.EntityPositionSource;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.gameevent.GameEventListener;
+import net.minecraft.world.level.gameevent.PositionSource;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 
 public class ImprovedGameEventListenerRenderer implements DebugRenderer.SimpleDebugRenderer {
 	private final Minecraft minecraft;
@@ -79,15 +83,15 @@ public class ImprovedGameEventListenerRenderer implements DebugRenderer.SimpleDe
 			VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.lines());
 
 			for (TrackedListener trackedListener : listenersToRender) {
-				trackedListener.getRenderPosition(level, FrozenClient.PARTIAL_TICK)
+				trackedListener.getRenderPosition(level, DebugRenderManager.PARTIAL_TICK)
 					.ifPresent(
 						pos -> {
-							double gx = pos.x() - (double)trackedListener.getListenerRadius();
-							double hx = pos.y() - (double)trackedListener.getListenerRadius();
-							double ix = pos.z() - (double)trackedListener.getListenerRadius();
-							double jx = pos.x() + (double)trackedListener.getListenerRadius();
-							double k = pos.y() + (double)trackedListener.getListenerRadius();
-							double l = pos.z() + (double)trackedListener.getListenerRadius();
+							double gx = pos.x() - (double) trackedListener.getListenerRadius();
+							double hx = pos.y() - (double) trackedListener.getListenerRadius();
+							double ix = pos.z() - (double) trackedListener.getListenerRadius();
+							double jx = pos.x() + (double) trackedListener.getListenerRadius();
+							double k = pos.y() + (double) trackedListener.getListenerRadius();
+							double l = pos.z() + (double) trackedListener.getListenerRadius();
 							LevelRenderer.renderVoxelShape(
 								matrices, vertexConsumer, Shapes.create(new AABB(gx, hx, ix, jx, k, l)), -cameraX, -cameraY, -cameraZ, 1.0F, 1.0F, 0.0F, 0.35F, true
 							);
@@ -98,7 +102,7 @@ public class ImprovedGameEventListenerRenderer implements DebugRenderer.SimpleDe
 			VertexConsumer vertexConsumer2 = vertexConsumers.getBuffer(RenderType.debugFilledBox());
 
 			for (TrackedListener trackedListener2 : listenersToRender) {
-				trackedListener2.getRenderPosition(level, FrozenClient.PARTIAL_TICK)
+				trackedListener2.getRenderPosition(level, DebugRenderManager.PARTIAL_TICK)
 					.ifPresent(
 						pos -> LevelRenderer.addChainedFilledBoxVertices(
 							matrices,
@@ -118,7 +122,7 @@ public class ImprovedGameEventListenerRenderer implements DebugRenderer.SimpleDe
 			}
 
 			for (TrackedListener trackedListener2 : listenersToRender) {
-				trackedListener2.getRenderPosition(level, FrozenClient.PARTIAL_TICK).ifPresent(pos -> {
+				trackedListener2.getRenderPosition(level, DebugRenderManager.PARTIAL_TICK).ifPresent(pos -> {
 					DebugRenderer.renderFloatingText(matrices, vertexConsumers, "Listener Origin", pos.x(), pos.y() + 1.8F, pos.z(), -1, 0.025F);
 					DebugRenderer.renderFloatingText(matrices, vertexConsumers, BlockPos.containing(pos).toString(), pos.x(), pos.y() + 1.5, pos.z(), -6959665, 0.025F);
 				});

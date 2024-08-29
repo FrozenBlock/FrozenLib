@@ -23,7 +23,7 @@ import net.minecraft.network.chat.Component;
 
 public class DebugRendererHolder {
 	private static final Component ENABLED = Component.translatable("option.frozenlib.true");
-	private static final Component DISABLED = Component.literal("option.frozenlib.false");
+	private static final Component DISABLED = Component.translatable("option.frozenlib.false");
 
 	public final RenderInterface renderer;
 	public boolean enabled = false;

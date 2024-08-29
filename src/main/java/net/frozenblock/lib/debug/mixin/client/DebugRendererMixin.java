@@ -20,18 +20,24 @@ package net.frozenblock.lib.debug.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenClient;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.debug.client.ImprovedGameEventListenerRenderer;
-import net.frozenblock.lib.debug.client.ImprovedGoalSelectorDebugRenderer;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.debug.client.api.DebugRendererEvents;
 import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.debug.*;
+import net.minecraft.client.renderer.debug.BeeDebugRenderer;
+import net.minecraft.client.renderer.debug.BrainDebugRenderer;
+import net.minecraft.client.renderer.debug.BreezeDebugRenderer;
+import net.minecraft.client.renderer.debug.DebugRenderer;
+import net.minecraft.client.renderer.debug.LightSectionDebugRenderer;
+import net.minecraft.client.renderer.debug.PathfindingRenderer;
+import net.minecraft.client.renderer.debug.RaidDebugRenderer;
+import net.minecraft.client.renderer.debug.StructureRenderer;
+import net.minecraft.client.renderer.debug.VillageSectionsDebugRenderer;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -76,23 +82,14 @@ public class DebugRendererMixin {
 	private void frozenLib$render(
 		PoseStack matrices, MultiBufferSource.BufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo info
 	) {
-		FrozenClient.updatePartialTick();
-		DebugRenderManager.DEBUG_RENDERER_HOLDERS.keySet().forEach((rendererEntry) -> rendererEntry.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ));
+		if (FrozenLibConfig.IS_DEBUG) {
+			DebugRenderManager.updatePartialTick();
+			DebugRenderManager.DEBUG_RENDERER_HOLDERS.keySet().forEach((rendererEntry) -> rendererEntry.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ));
+		}
 	}
-
-	@Unique
-	private ImprovedGoalSelectorDebugRenderer improvedGoalSelectorDebugRenderer;
-	@Unique
-	private ImprovedGameEventListenerRenderer improvedGameEventListenerRenderer;
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void devtools$init(Minecraft client, CallbackInfo info) {
-		this.improvedGoalSelectorDebugRenderer = new ImprovedGoalSelectorDebugRenderer(client);
-		DebugRenderManager.improvedGoalSelectorRenderer = this.improvedGoalSelectorDebugRenderer;
-
-		this.improvedGameEventListenerRenderer = new ImprovedGameEventListenerRenderer(client);
-		DebugRenderManager.improvedGameEventListenerRenderer = this.improvedGameEventListenerRenderer;
-
 		DebugRenderManager.registerRenderer(
 			FrozenSharedConstants.id("pathfinding"),
 			this.pathfindingRenderer::render);
@@ -158,18 +155,8 @@ public class DebugRendererMixin {
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("goal"),
-			this.improvedGoalSelectorDebugRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
 			FrozenSharedConstants.id("raid"),
 			this.raidDebugRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("game_event"),
-			this.improvedGameEventListenerRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
@@ -181,13 +168,12 @@ public class DebugRendererMixin {
 			FrozenSharedConstants.id("breeze"),
 			this.breezeDebugRenderer::render
 		);
+
+		DebugRendererEvents.DEBUG_RENDERERS_CREATED.invoker().onDebugRenderersCreated(client);
 	}
 
-	@Inject(
-		method = "clear",
-		at = @At("TAIL")
-	)
+	@Inject(method = "clear", at = @At("TAIL"))
 	private void devtools$clear(CallbackInfo info) {
-		this.improvedGoalSelectorDebugRenderer.clear();
+		DebugRenderManager.clearAdditionalRenderers();
 	}
 }

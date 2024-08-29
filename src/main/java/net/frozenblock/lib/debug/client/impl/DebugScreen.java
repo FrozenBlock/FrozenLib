@@ -18,6 +18,7 @@
 package net.frozenblock.lib.debug.client.impl;
 
 import com.google.common.collect.ImmutableList;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -32,12 +33,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.List;
 
 @Environment(EnvType.CLIENT)
 public class DebugScreen extends Screen {
 	public static final Component DEBUG = Component.translatable("menu.frozenlib.debug");
-
 	protected @Nullable DebugRendererListWidget listWidget;
 
 	public DebugScreen() {
@@ -89,7 +88,7 @@ public class DebugScreen extends Screen {
 					(button) -> {
 						rendererHolder.toggle();
 						button.setMessage(rendererHolder.getButtonComponent());
-					}).width(40).pos(screen.width / 2 + 70, 0).build();
+					}).width(80).pos((screen.width / 2 + 30), 0).build();
 			}
 
 			@Override
@@ -108,7 +107,7 @@ public class DebugScreen extends Screen {
 			) {
 				this.button.setY(y);
 				this.button.render(context, mouseX, mouseY, tickDelta);
-				context.drawString(this.font, this.rendererName, x + 50, y + 6, -1, true);
+				context.drawString(this.font, this.rendererName, x, y + 6, -1, true);
 			}
 		}
 	}

@@ -25,7 +25,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.level.gameevent.PositionSource;
 import org.jetbrains.annotations.NotNull;
 
-public record ImprovedGameEventListenerDebugPayload(PositionSource listenerPos, int listenerRange) implements CustomPacketPayload {
+public record ImprovedGameEventListenerDebugPayload(PositionSource listenerPos,
+													int listenerRange) implements CustomPacketPayload {
 	public static final Type<ImprovedGameEventListenerDebugPayload> PACKET_TYPE = new Type<>(
 		FrozenSharedConstants.id("debug_game_event_listener")
 	);

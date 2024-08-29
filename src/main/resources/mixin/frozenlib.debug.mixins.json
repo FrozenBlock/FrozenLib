@@ -13,6 +13,7 @@
   ],
   "client": [
     "client.AddDebugMenuButtonMixin",
-    "client.DebugRendererMixin"
+    "client.DebugRendererMixin",
+    "client.HeightMapRendererMixin"
   ]
 }

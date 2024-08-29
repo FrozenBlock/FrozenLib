@@ -79,9 +79,4 @@ public final class FrozenClient implements ClientModInitializer {
 		});
 	}
 
-	public static float PARTIAL_TICK;
-	public static void updatePartialTick() {
-		PARTIAL_TICK = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
-	}
-
 }

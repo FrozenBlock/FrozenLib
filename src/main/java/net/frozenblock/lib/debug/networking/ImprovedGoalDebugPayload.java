@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.debug.networking;
 
+import java.util.List;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -24,9 +25,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.common.custom.GoalDebugPayload;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
-public record ImprovedGoalDebugPayload(int entityId, List<GoalDebugPayload.DebugGoal> goals) implements CustomPacketPayload {
+public record ImprovedGoalDebugPayload(int entityId,
+									   List<GoalDebugPayload.DebugGoal> goals) implements CustomPacketPayload {
 	public static final Type<ImprovedGoalDebugPayload> PACKET_TYPE = new Type<>(
 		FrozenSharedConstants.id("debug_goals")
 	);

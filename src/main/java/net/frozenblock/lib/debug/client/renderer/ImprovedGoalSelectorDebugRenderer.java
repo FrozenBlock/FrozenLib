@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.debug.client;
+package net.frozenblock.lib.debug.client.renderer;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import it.unimi.dsi.fastutil.ints.Int2ObjectLinkedOpenHashMap;
@@ -23,7 +23,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenClient;
+import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.debug.DebugRenderer;
@@ -64,12 +64,12 @@ public class ImprovedGoalSelectorDebugRenderer implements DebugRenderer.SimpleDe
 		Vec3 cameraPos = new Vec3(cameraX, cameraY, cameraZ);
 
 		for (EntityGoalInfo entityGoalInfo : this.goalSelectors.values()) {
-			Vec3 entityPos = entityGoalInfo.entity.getPosition(FrozenClient.PARTIAL_TICK).add(0D, entityGoalInfo.entity.getEyeHeight() + 0.5D, 0D);
+			Vec3 entityPos = entityGoalInfo.entity.getPosition(DebugRenderManager.PARTIAL_TICK).add(0D, entityGoalInfo.entity.getEyeHeight() + 0.5D, 0D);
 			if (cameraPos.closerThan(entityPos, 160D, 256D)) {
 				for (int i = 0; i < entityGoalInfo.goals.size(); i++) {
 					GoalDebugPayload.DebugGoal debugGoal = entityGoalInfo.goals.get(i);
 					double x = entityPos.x;
-					double y = entityPos.y + (double)i * 0.25D;
+					double y = entityPos.y + (double) i * 0.25D;
 					double z = entityPos.z;
 					int textColor = debugGoal.isRunning() ? -16711936 : -3355444;
 					DebugRenderer.renderFloatingText(matrices, vertexConsumers, debugGoal.name(), x, y, z, textColor);

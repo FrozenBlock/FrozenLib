@@ -17,12 +17,36 @@
 
 package net.frozenblock.lib.debug.mixin;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayload;
 import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
-import net.minecraft.core.*;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.protocol.common.custom.*;
+import net.minecraft.network.protocol.common.custom.BeeDebugPayload;
+import net.minecraft.network.protocol.common.custom.BrainDebugPayload;
+import net.minecraft.network.protocol.common.custom.BreezeDebugPayload;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.network.protocol.common.custom.GoalDebugPayload;
+import net.minecraft.network.protocol.common.custom.NeighborUpdatesDebugPayload;
+import net.minecraft.network.protocol.common.custom.PathfindingDebugPayload;
+import net.minecraft.network.protocol.common.custom.PoiAddedDebugPayload;
+import net.minecraft.network.protocol.common.custom.PoiRemovedDebugPayload;
+import net.minecraft.network.protocol.common.custom.PoiTicketCountDebugPayload;
+import net.minecraft.network.protocol.common.custom.RaidsDebugPayload;
+import net.minecraft.network.protocol.common.custom.StructuresDebugPayload;
+import net.minecraft.network.protocol.common.custom.VillageSectionsDebugPayload;
 import net.minecraft.network.protocol.game.DebugEntityNameGenerator;
 import net.minecraft.network.protocol.game.DebugPackets;
 import net.minecraft.server.level.ServerLevel;
@@ -56,97 +80,109 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import java.util.*;
-import java.util.stream.Collectors;
 
 @Mixin(DebugPackets.class)
 public class DebugInfoSenderMixin {
 
 	@Inject(method = "sendPoiAddedPacket", at = @At("HEAD"))
 	private static void frozenLib$sendPoiAddition(ServerLevel world, BlockPos pos, CallbackInfo info) {
-		world.getPoiManager().getType(pos).ifPresent((registryEntry) -> {
-			sendPacketToAllPlayers(
-				world,
-				new PoiAddedDebugPayload(
-					pos,
-					registryEntry.getRegisteredName(),
-					world.getPoiManager().getFreeTickets(pos)
-				)
-			);
-		});
+		if (FrozenLibConfig.IS_DEBUG) {
+			world.getPoiManager().getType(pos).ifPresent((registryEntry) -> {
+				sendPacketToAllPlayers(
+					world,
+					new PoiAddedDebugPayload(
+						pos,
+						registryEntry.getRegisteredName(),
+						world.getPoiManager().getFreeTickets(pos)
+					)
+				);
+			});
+		}
 	}
 
 	@Inject(method = "sendPoiRemovedPacket", at = @At("HEAD"))
 	private static void frozenLib$sendPoiRemoval(ServerLevel serverLevel, BlockPos pos, CallbackInfo info) {
-		sendPacketToAllPlayers(serverLevel, new PoiRemovedDebugPayload(pos));
+		if (FrozenLibConfig.IS_DEBUG) {
+			sendPacketToAllPlayers(serverLevel, new PoiRemovedDebugPayload(pos));
+		}
 	}
 
 	@Inject(method = "sendPoiTicketCountPacket", at = @At("HEAD"))
 	private static void frozenLib$sendPointOfInterest(ServerLevel serverLevel, BlockPos pos, CallbackInfo info) {
-		sendPacketToAllPlayers(serverLevel, new PoiTicketCountDebugPayload(pos, serverLevel.getPoiManager().getFreeTickets(pos)));
+		if (FrozenLibConfig.IS_DEBUG) {
+			sendPacketToAllPlayers(serverLevel, new PoiTicketCountDebugPayload(pos, serverLevel.getPoiManager().getFreeTickets(pos)));
+		}
 	}
 
 	@Inject(method = "sendVillageSectionsPacket", at = @At("HEAD"))
 	private static void frozenLib$sendPoi(ServerLevel serverLevel, BlockPos pos, CallbackInfo info) {
-		Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE);
-		SectionPos chunkSectionPos = SectionPos.of(pos);
-		Iterator<Holder<Structure>> villageIterator = registry.getTagOrEmpty(StructureTags.VILLAGE).iterator();
+		if (FrozenLibConfig.IS_DEBUG) {
+			Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE);
+			SectionPos chunkSectionPos = SectionPos.of(pos);
+			Iterator<Holder<Structure>> villageIterator = registry.getTagOrEmpty(StructureTags.VILLAGE).iterator();
 
-		Holder<Structure> structureHolder;
-		do {
-			if (!villageIterator.hasNext()) {
-				sendPacketToAllPlayers(serverLevel, new VillageSectionsDebugPayload(Set.of(), Set.of(chunkSectionPos)));
-				return;
-			}
+			Holder<Structure> structureHolder;
+			do {
+				if (!villageIterator.hasNext()) {
+					sendPacketToAllPlayers(serverLevel, new VillageSectionsDebugPayload(Set.of(), Set.of(chunkSectionPos)));
+					return;
+				}
 
-			structureHolder = villageIterator.next();
-		} while(serverLevel.structureManager().startsForStructure(chunkSectionPos, structureHolder.value()).isEmpty());
+				structureHolder = villageIterator.next();
+			} while (serverLevel.structureManager().startsForStructure(chunkSectionPos, structureHolder.value()).isEmpty());
 
-		sendPacketToAllPlayers(serverLevel, new VillageSectionsDebugPayload(Set.of(chunkSectionPos), Set.of()));
+			sendPacketToAllPlayers(serverLevel, new VillageSectionsDebugPayload(Set.of(chunkSectionPos), Set.of()));
+		}
 	}
 
 	@Inject(method = "sendPathFindingPacket", at = @At("HEAD"))
 	private static void frozenLib$sendPathfindingData(Level level, Mob mob, @Nullable Path path, float nodeReachProximity, CallbackInfo info) {
-		if (path != null && level instanceof ServerLevel serverLevel) {
+		if (FrozenLibConfig.IS_DEBUG && path != null && level instanceof ServerLevel serverLevel) {
 			sendPacketToAllPlayers(serverLevel, new PathfindingDebugPayload(mob.getId(), path, nodeReachProximity));
 		}
 	}
 
 	@Inject(method = "sendNeighborsUpdatePacket", at = @At("HEAD"))
 	private static void frozenLib$sendNeighborUpdate(Level level, BlockPos pos, CallbackInfo info) {
-		if (level instanceof ServerLevel serverLevel) {
+		if (FrozenLibConfig.IS_DEBUG && level instanceof ServerLevel serverLevel) {
 			sendPacketToAllPlayers(serverLevel, new NeighborUpdatesDebugPayload(serverLevel.getGameTime(), pos));
 		}
 	}
 
 	@Inject(method = "sendStructurePacket", at = @At("HEAD"))
 	private static void frozenLib$sendStructureStart(WorldGenLevel level, StructureStart structureStart, CallbackInfo info) {
-		List<StructuresDebugPayload.PieceInfo> pieces = new ArrayList<>();
+		if (FrozenLibConfig.IS_DEBUG) {
+			List<StructuresDebugPayload.PieceInfo> pieces = new ArrayList<>();
 
-		for(int i = 0; i < structureStart.getPieces().size(); ++i) {
-			pieces.add(new StructuresDebugPayload.PieceInfo(structureStart.getPieces().get(i).getBoundingBox(), i == 0));
+			for (int i = 0; i < structureStart.getPieces().size(); ++i) {
+				pieces.add(new StructuresDebugPayload.PieceInfo(structureStart.getPieces().get(i).getBoundingBox(), i == 0));
+			}
+
+			ServerLevel serverLevel = level.getLevel();
+			sendPacketToAllPlayers(serverLevel, new StructuresDebugPayload(serverLevel.dimension(), structureStart.getBoundingBox(), pieces));
 		}
-
-		ServerLevel serverLevel = level.getLevel();
-		sendPacketToAllPlayers(serverLevel, new StructuresDebugPayload(serverLevel.dimension(), structureStart.getBoundingBox(), pieces));
 	}
 
 	@Inject(method = "sendGoalSelector", at = @At("HEAD"))
 	private static void frozenLib$sendGoalSelector(Level world, Mob mob, GoalSelector goalSelector, CallbackInfo info) {
-		List<GoalDebugPayload.DebugGoal> goals = mob.goalSelector.getAvailableGoals().stream().map(
-			(goal) -> new GoalDebugPayload.DebugGoal(goal.getPriority(), goal.isRunning(), goal.getGoal().toString())
-		).toList();
-		sendPacketToAllPlayers((ServerLevel)world, new ImprovedGoalDebugPayload(mob.getId(), goals));
+		if (FrozenLibConfig.IS_DEBUG) {
+			List<GoalDebugPayload.DebugGoal> goals = mob.goalSelector.getAvailableGoals().stream().map(
+				(goal) -> new GoalDebugPayload.DebugGoal(goal.getPriority(), goal.isRunning(), goal.getGoal().toString())
+			).toList();
+			sendPacketToAllPlayers((ServerLevel) world, new ImprovedGoalDebugPayload(mob.getId(), goals));
+		}
 	}
 
 	@Inject(method = "sendRaids", at = @At("HEAD"))
-	private static void frozenLib$sendRaids(ServerLevel world, Collection<Raid> raids, CallbackInfo ci) {
-		sendPacketToAllPlayers(world, new RaidsDebugPayload(raids.stream().map(Raid::getCenter).toList()));
+	private static void frozenLib$sendRaids(ServerLevel world, Collection<Raid> raids, CallbackInfo info) {
+		if (FrozenLibConfig.IS_DEBUG) {
+			sendPacketToAllPlayers(world, new RaidsDebugPayload(raids.stream().map(Raid::getCenter).toList()));
+		}
 	}
 
 	@Inject(method = "sendEntityBrain", at = @At("HEAD"))
 	private static void frozenLib$sendBrainDebugData(LivingEntity livingEntity, CallbackInfo info) {
-		if (livingEntity instanceof Mob mob && mob.level() instanceof ServerLevel serverLevel) {
+		if (FrozenLibConfig.IS_DEBUG && livingEntity instanceof Mob mob && mob.level() instanceof ServerLevel serverLevel) {
 			int angerLevel = -1;
 			if (mob instanceof Warden wardenEntity) {
 				angerLevel = wardenEntity.getClientAngerLevel();
@@ -219,7 +255,7 @@ public class DebugInfoSenderMixin {
 
 	@Inject(method = "sendBeeInfo", at = @At("HEAD"))
 	private static void frozenLib$sendBeeDebugData(Bee bee, CallbackInfo info) {
-		if (bee.level() instanceof ServerLevel serverLevel) {
+		if (FrozenLibConfig.IS_DEBUG && bee.level() instanceof ServerLevel serverLevel) {
 			sendPacketToAllPlayers(
 				serverLevel,
 				new BeeDebugPayload(
@@ -241,7 +277,7 @@ public class DebugInfoSenderMixin {
 
 	@Inject(method = "sendBreezeInfo", at = @At("HEAD"))
 	private static void frozenLib$sendBreezeDebugData(Breeze breeze, CallbackInfo info) {
-		if (breeze.level() instanceof ServerLevel serverLevel) {
+		if (FrozenLibConfig.IS_DEBUG && breeze.level() instanceof ServerLevel serverLevel) {
 			sendPacketToAllPlayers(
 				serverLevel,
 				new BreezeDebugPayload(
@@ -258,14 +294,14 @@ public class DebugInfoSenderMixin {
 
 	@Inject(method = "sendGameEventInfo", at = @At("HEAD"))
 	private static void frozenLib$sendGameEvent(Level world, Holder<GameEvent> event, Vec3 pos, CallbackInfo info) {
-		if (world instanceof ServerLevel serverLevel) {
+		if (FrozenLibConfig.IS_DEBUG && world instanceof ServerLevel serverLevel) {
 			event.unwrapKey().ifPresent((key) -> sendPacketToAllPlayers(serverLevel, new ImprovedGameEventDebugPayload(key, pos)));
 		}
 	}
 
 	@Inject(method = "sendGameEventListenerInfo", at = @At("HEAD"))
 	private static void frozenLib$sendGameEventListener(Level world, GameEventListener eventListener, CallbackInfo info) {
-		if (world instanceof ServerLevel serverLevel) {
+		if (FrozenLibConfig.IS_DEBUG && world instanceof ServerLevel serverLevel) {
 			sendPacketToAllPlayers(
 				serverLevel,
 				new ImprovedGameEventListenerDebugPayload(
