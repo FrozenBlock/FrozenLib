@@ -89,6 +89,7 @@
   "debug.light": "Light",
   "debug.breeze": "Breeze",
   "debug.wind": "Wind",
+  "debug.wind_disturbance": "Wind Disturbance",
   "debug.neighbor_update": "Neighbor Updates",
   "debug.game_event": "Game Events",
 

@@ -33,6 +33,7 @@ import net.frozenblock.lib.debug.client.api.DebugRendererEvents;
 import net.frozenblock.lib.debug.client.renderer.ImprovedGameEventListenerRenderer;
 import net.frozenblock.lib.debug.client.renderer.ImprovedGoalSelectorDebugRenderer;
 import net.frozenblock.lib.debug.client.renderer.WindDebugRenderer;
+import net.frozenblock.lib.debug.client.renderer.WindDisturbanceDebugRenderer;
 import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayload;
@@ -126,6 +127,20 @@ public class DebugRenderManager {
 			addClearRunnable(windDebugRenderer::clear);
 
 			registerRenderer(FrozenSharedConstants.id("wind"), windDebugRenderer::render);
+		});
+
+		DebugRendererEvents.DEBUG_RENDERERS_CREATED.register(client -> {
+			WindDisturbanceDebugRenderer windDisturbanceDebugRenderer = new WindDisturbanceDebugRenderer(client);
+
+			ClientTickEvents.START_WORLD_TICK.register(clientLevel -> {
+				if (FrozenLibConfig.IS_DEBUG) {
+					windDisturbanceDebugRenderer.tick();
+				}
+			});
+
+			addClearRunnable(windDisturbanceDebugRenderer::clear);
+
+			registerRenderer(FrozenSharedConstants.id("wind_disturbance"), windDisturbanceDebugRenderer::render);
 		});
 	}
 

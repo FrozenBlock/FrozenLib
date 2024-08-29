@@ -28,24 +28,19 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.core.client.api.FrustumUtil;
 import net.frozenblock.lib.wind.api.ClientWindManager;
-import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.debug.DebugRenderer;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 	private final Minecraft minecraft;
-	private List<WindDisturbance<?>> windDisturbances = Collections.emptyList();
 	private List<Vec3> accessedWindPositions = Collections.emptyList();
 	private List<List<Pair<Vec3, Integer>>> windNodes = Collections.emptyList();
 
@@ -54,9 +49,6 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 	}
 
 	public void tick() {
-		this.windDisturbances = ImmutableList.copyOf(
-			ClientWindManager.getWindDisturbances()
-		);
 		this.accessedWindPositions = ClientWindManager.getAccessedPositions();
 		this.windNodes = ImmutableList.copyOf(
 			this.createAllWindNodes()
@@ -65,62 +57,21 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 
 	@Override
 	public void clear() {
-		this.windDisturbances = Collections.emptyList();
 		this.accessedWindPositions = Collections.emptyList();
 		this.windNodes = Collections.emptyList();
 	}
 
 	@Override
 	public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ) {
-		this.windDisturbances.forEach(
-			windDisturbance -> {
-				LevelRenderer.renderVoxelShape(
-					matrices,
-					vertexConsumers.getBuffer(RenderType.lines()),
-					Shapes.create(windDisturbance.affectedArea),
-					-cameraX,
-					-cameraY,
-					-cameraZ,
-					0.5F,
-					1F,
-					0.5F,
-					0.35F,
-					true
-				);
-				renderFilledBox(
-					matrices,
-					vertexConsumers,
-					AABB.ofSize(windDisturbance.origin, 0.2D, 0.2D, 0.2D),
-					cameraX, cameraY, cameraZ
-				);
-			}
-		);
-
 		renderWindNodesFromList(matrices, vertexConsumers, cameraX, cameraY, cameraZ, this.windNodes);
 	}
 
 	private @NotNull List<List<Pair<Vec3, Integer>>> createAllWindNodes() {
 		List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
-		this.windDisturbances.forEach(
-			windDisturbance -> {
-				if (FrustumUtil.isVisible(windDisturbance.affectedArea)) {
-					BlockPos.betweenClosed(
-						BlockPos.containing(windDisturbance.affectedArea.getMinPosition()),
-						BlockPos.containing(windDisturbance.affectedArea.getMaxPosition())
-					).forEach(
-						blockPos -> {
-							Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
-							windNodes.add(createWindNodes(blockPosCenter, 1D, true));
-						}
-					);
-				}
-			}
-		);
-
 		this.accessedWindPositions.forEach(
 			vec3 -> {
 				if (FrustumUtil.isVisible(vec3, 0.5D)) {
-					windNodes.add(createWindNodes(vec3, 1.5D, false));
+					windNodes.add(createWindNodes(this.minecraft.level, vec3, 1.5D, false));
 				}
 			}
 		);
@@ -128,11 +79,11 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		return windNodes;
 	}
 
-	private @NotNull List<Pair<Vec3, Integer>> createWindNodes(Vec3 origin, double stretch, boolean disturbanceOnly) {
+	protected static @NotNull List<Pair<Vec3, Integer>> createWindNodes(Level level, Vec3 origin, double stretch, boolean disturbanceOnly) {
 		List<Pair<Vec3, Integer>> windNodes = new ArrayList<>();
 		Vec3 wind = disturbanceOnly ?
-			ClientWindManager.getRawDisturbanceMovement(this.minecraft.level, origin)
-			: ClientWindManager.getWindMovement(this.minecraft.level, origin);
+			ClientWindManager.getRawDisturbanceMovement(level, origin)
+			: ClientWindManager.getWindMovement(level, origin);
 		double windlength = wind.length();
 		if (windlength != 0D) {
 			int increments = 3;
@@ -155,15 +106,15 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 				);
 				lineStart = lineEnd;
 				wind = disturbanceOnly ?
-					ClientWindManager.getRawDisturbanceMovement(this.minecraft.level, lineStart)
-					: ClientWindManager.getWindMovement(this.minecraft.level, lineStart);
+					ClientWindManager.getRawDisturbanceMovement(level, lineStart)
+					: ClientWindManager.getWindMovement(level, lineStart);
 			}
 		}
 
 		return windNodes;
 	}
 
-	private int calculateNodeColor(double strength, boolean disturbanceOnly) {
+	protected static int calculateNodeColor(double strength, boolean disturbanceOnly) {
 		return FastColor.ARGB32.color(
 			255,
 			(int) Mth.lerp(strength, 255, 0),
@@ -172,7 +123,7 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		);
 	}
 
-	private static void renderWindNodesFromList(
+	protected static void renderWindNodesFromList(
 		PoseStack matrices,
 		MultiBufferSource vertexConsumers,
 		double cameraX,
@@ -183,7 +134,7 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		windNodes.forEach(nodes -> renderWindNodes(matrices, vertexConsumers, cameraX, cameraY, cameraZ, nodes));
 	}
 
-	private static void renderWindNodes(
+	protected static void renderWindNodes(
 		PoseStack matrices,
 		MultiBufferSource vertexConsumers,
 		double cameraX,
@@ -208,16 +159,6 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 				);
 			}
 		}
-	}
-
-	private static void renderFilledBox(
-		PoseStack matrices,
-		MultiBufferSource vertexConsumers,
-		@NotNull AABB box,
-		double cameraX, double cameraY, double cameraZ
-	) {
-		Vec3 vec3 = new Vec3(-cameraX, -cameraY, -cameraZ);
-		DebugRenderer.renderFilledBox(matrices, vertexConsumers, box.move(vec3), 1F, 1F, 1F, 1F);
 	}
 
 	private static void drawLine(
