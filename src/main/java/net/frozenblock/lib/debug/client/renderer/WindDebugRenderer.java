@@ -32,7 +32,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.debug.DebugRenderer;
-import net.minecraft.util.FastColor;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
@@ -115,7 +115,7 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 	}
 
 	protected static int calculateNodeColor(double strength, boolean disturbanceOnly) {
-		return FastColor.ARGB32.color(
+		return ARGB.color(
 			255,
 			(int) Mth.lerp(strength, 255, 0),
 			(int) Mth.lerp(strength, 90, 255),

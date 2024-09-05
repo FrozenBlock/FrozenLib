@@ -35,8 +35,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.FastColor;
-import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -71,7 +69,7 @@ public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRe
 	public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ) {
 		this.windDisturbances.forEach(
 			windDisturbance -> {
-				LevelRenderer.renderVoxelShape(
+				DebugRenderer.renderVoxelShape(
 					matrices,
 					vertexConsumers.getBuffer(RenderType.lines()),
 					Shapes.create(windDisturbance.affectedArea),

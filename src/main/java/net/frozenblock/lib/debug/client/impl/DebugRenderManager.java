@@ -155,6 +155,6 @@ public class DebugRenderManager {
 	public static float PARTIAL_TICK;
 
 	public static void updatePartialTick() {
-		PARTIAL_TICK = Minecraft.getInstance().getTimer().getGameTimeDeltaPartialTick(true);
+		PARTIAL_TICK = Minecraft.getInstance().getDeltaTracker().getGameTimeDeltaPartialTick(true);
 	}
 }

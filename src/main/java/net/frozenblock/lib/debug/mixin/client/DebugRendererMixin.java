@@ -26,11 +26,13 @@ import net.frozenblock.lib.debug.client.api.DebugRendererEvents;
 import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.BeeDebugRenderer;
 import net.minecraft.client.renderer.debug.BrainDebugRenderer;
 import net.minecraft.client.renderer.debug.BreezeDebugRenderer;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.client.renderer.debug.LightSectionDebugRenderer;
+import net.minecraft.client.renderer.debug.NeighborsUpdateRenderer;
 import net.minecraft.client.renderer.debug.PathfindingRenderer;
 import net.minecraft.client.renderer.debug.RaidDebugRenderer;
 import net.minecraft.client.renderer.debug.StructureRenderer;
@@ -56,7 +58,7 @@ public class DebugRendererMixin {
 	@Shadow @Final
 	public DebugRenderer.SimpleDebugRenderer supportBlockRenderer;
 	@Shadow @Final
-	public DebugRenderer.SimpleDebugRenderer neighborsUpdateRenderer;
+	public NeighborsUpdateRenderer neighborsUpdateRenderer;
 	@Shadow @Final
 	public StructureRenderer structureRenderer;
 	@Shadow @Final
@@ -80,7 +82,7 @@ public class DebugRendererMixin {
 
 	@Inject(method = "render", at = @At("TAIL"))
 	private void frozenLib$render(
-		PoseStack matrices, MultiBufferSource.BufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo info
+		PoseStack matrices, Frustum frustum, MultiBufferSource.BufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci
 	) {
 		if (FrozenLibConfig.IS_DEBUG) {
 			DebugRenderManager.updatePartialTick();

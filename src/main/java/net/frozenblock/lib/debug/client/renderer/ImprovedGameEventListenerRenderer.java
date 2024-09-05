@@ -34,6 +34,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShapeRenderer;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -98,7 +99,7 @@ public class ImprovedGameEventListenerRenderer implements DebugRenderer.SimpleDe
 								double l = pos.z() + (double) listener.getListenerRadius();
 								AABB aabb = new AABB(gx, hx, ix, jx, k, l);
 								if (FrustumUtil.isVisible(aabb)) {
-									LevelRenderer.renderVoxelShape(
+									DebugRenderer.renderVoxelShape(
 										matrices,
 										vertexConsumer,
 										Shapes.create(aabb),
@@ -119,7 +120,7 @@ public class ImprovedGameEventListenerRenderer implements DebugRenderer.SimpleDe
 			for (TrackedListener trackedListener2 : listenersToRender) {
 				trackedListener2.getRenderPosition(level, DebugRenderManager.PARTIAL_TICK)
 					.ifPresent(
-						pos -> LevelRenderer.addChainedFilledBoxVertices(
+						pos -> ShapeRenderer.addChainedFilledBoxVertices(
 							matrices,
 							vertexConsumer2,
 							pos.x() - 0.25 - cameraX,
