@@ -6,3 +6,4 @@ Put changelog here:
 
 -----------------
 - Added a `disable` method to the `FrozenBiome` that prevents it from automatically being injected into worldgen.
+- The `windoverride` command has been revamped and renamed to `wind.`

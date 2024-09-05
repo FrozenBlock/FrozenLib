@@ -47,7 +47,7 @@ import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.tag.api.TagListCommand;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindManager;
-import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
+import net.frozenblock.lib.wind.api.command.WindCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
@@ -108,7 +108,7 @@ public final class FrozenMain extends FrozenModInitializer {
 		);
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			WindOverrideCommand.register(dispatcher);
+			WindCommand.register(dispatcher);
 			ScreenShakeCommand.register(dispatcher);
 			ConfigCommand.register(dispatcher);
 			TagListCommand.register(dispatcher);

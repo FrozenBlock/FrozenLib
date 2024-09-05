@@ -45,8 +45,11 @@
   "option.frozenlib.warden_spawn_tracker_command.true": "§aON",
   "tooltip.frozenlib.warden_spawn_tracker_command": "Enables or disables the Warden Spawn Tracker command.",
 
+  "commands.wind.display.global.success": "The global wind is currently: %s, %s, %s.",
+  "commands.wind.display.pos.success": "The wind at %s, %s, %s currently: %s, %s, %s.",
   "commands.wind.success": "Set wind to %s, %s, %s.",
-  "commands.wind.toggle.success": "Toggled wind override to: %s.",
+  "commands.wind.toggle.success": "%s wind override.",
+  "commands.wind.toggle.failure": "Wind override is already %s.",
 
   "commands.screenshake.success": "Created screen shake at %s, %s, %s, with intensity %s, duration %s, falloff start %s, and distance %s.",
   "commands.screenshake.player.success": "Sent screen shake to %sat %s, %s, %s, with intensity %s, duration %s, falloff start %s, and distance %s.",
