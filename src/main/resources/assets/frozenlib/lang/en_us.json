@@ -15,6 +15,10 @@
 
   "option.frozenlib.config": "FrozenLib Config",
 
+  "option.frozenlib.is_debug": "Debug Mode",
+  "tooltip.frozenlib.is_debug": "Whether debug mode is enabled.\nThis only shows up in development environments.",
+  "menu.frozenlib.debug": "Debug Options",
+
   "option.frozenlib.datafixer": "DataFixer",
   "tooltip.frozenlib.datafixer": "Contains options for DataFixers",
 
@@ -67,6 +71,27 @@
   "commands.warden_spawn_tracker.clear.success.single": "Cleared warden spawn warnings from %s",
   "commands.warden_spawn_tracker.set.success.multiple": "Set warden spawn warning %s to %s players",
   "commands.warden_spawn_tracker.set.success.single": "Set warden spawn warning %s to %s",
+
+  "debug.pathfinding": "Pathfinding",
+  "debug.water_level": "Water Level",
+  "debug.heightmap": "Heightmaps",
+  "debug.collision": "Block Collision",
+  "debug.support_block": "Supporting Blocks",
+  "debug.structure": "Structures",
+  "debug.sky_light": "Sky Light",
+  "debug.solid_face": "Solid Block Faces",
+  "debug.chunk_status": "Chunk Status",
+  "debug.brain": "Brain",
+  "debug.goal": "Goal",
+  "debug.village_sections": "Village Sections",
+  "debug.bee": "Bee",
+  "debug.raid": "Raid",
+  "debug.light": "Light",
+  "debug.breeze": "Breeze",
+  "debug.wind": "Wind",
+  "debug.wind_disturbance": "Wind Disturbance",
+  "debug.neighbor_update": "Neighbor Updates",
+  "debug.game_event": "Game Events",
 
   "frozenlib.loot_table_whacker.fail.no_name": "Loot Table Whacker has not been named!",
   "frozenlib.loot_table_whacker.fail.no_colon": "Invalid ResourceLocation: No : present!",
