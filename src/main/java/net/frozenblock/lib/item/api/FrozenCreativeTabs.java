@@ -22,7 +22,7 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
 import net.frozenblock.lib.FrozenLogUtils;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
@@ -165,7 +165,6 @@ public class FrozenCreativeTabs {
 	}
 
 	public static void addInstrument(
-		HolderLookup<Instrument> holderLookup,
 		Item instrument,
 		TagKey<Instrument> tagKey,
 		CreativeModeTab.TabVisibility tabVisibility,
@@ -174,7 +173,7 @@ public class FrozenCreativeTabs {
 		if (instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				holderLookup.get(tagKey)
+				entries.getContext().holders().lookupOrThrow(Registries.INSTRUMENT).get(tagKey)
 					.ifPresent(
 						named -> named.stream()
 							.map(holder -> InstrumentItem.create(instrument, holder))
@@ -189,7 +188,6 @@ public class FrozenCreativeTabs {
 	 * @param instrument	The instrument that is going to be added
 	 */
 	public static void addInstrumentBefore(
-		HolderLookup<Instrument> holderLookup,
 		ItemLike comparedItem,
 		Item instrument,
 		TagKey<Instrument> tagKey,
@@ -200,7 +198,7 @@ public class FrozenCreativeTabs {
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				List<ItemStack> list = new ArrayList<>();
-				holderLookup.get(tagKey)
+				entries.getContext().holders().lookupOrThrow(Registries.INSTRUMENT).get(tagKey)
 					.ifPresent(
 						named -> named.stream()
 							.map(holder -> InstrumentItem.create(instrument, holder))
@@ -216,7 +214,6 @@ public class FrozenCreativeTabs {
 	 * @param instrument	The instrument that is going to be added
 	 */
 	public static void addInstrumentAfter(
-		HolderLookup<Instrument> holderLookup,
 		Item comparedItem,
 		Item instrument,
 		TagKey<Instrument> tagKey,
@@ -227,7 +224,7 @@ public class FrozenCreativeTabs {
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				List<ItemStack> list = new ArrayList<>();
-				holderLookup.get(tagKey)
+				entries.getContext().holders().lookupOrThrow(Registries.INSTRUMENT).get(tagKey)
 					.ifPresent(
 						named -> named.stream()
 							.map(holder -> InstrumentItem.create(instrument, holder))
