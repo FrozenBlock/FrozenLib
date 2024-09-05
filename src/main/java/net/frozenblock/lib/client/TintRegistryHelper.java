@@ -73,7 +73,7 @@ public class TintRegistryHelper {
 
 	public static void registerMangroveFoliageColorForItem(ItemLike itemLike) {
 		ColorProviderRegistry.ITEM.register(
-			(stack, tintIndex) -> FoliageColor.getEvergreenColor(),
+			(stack, tintIndex) -> FoliageColor.getMangroveColor(),
 			itemLike
 		);
 	}
