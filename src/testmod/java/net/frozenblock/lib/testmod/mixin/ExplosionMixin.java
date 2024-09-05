@@ -21,6 +21,8 @@ import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ServerExplosion;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,24 +30,12 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Explosion.class)
+@Mixin(ServerExplosion.class)
 public class ExplosionMixin {
 
 	@Shadow
 	@Final
-	private RandomSource random;
-	@Shadow
-	@Final
 	private Level level;
-	@Shadow
-	@Final
-	private double x;
-	@Shadow
-	@Final
-	private double y;
-	@Shadow
-	@Final
-	private double z;
 	@Shadow
 	@Final
 	private Explosion.BlockInteraction blockInteraction;
@@ -53,9 +43,17 @@ public class ExplosionMixin {
 	@Final
 	private float radius;
 
-	@Inject(method = "finalizeExplosion", at = @At(value = "TAIL"))
-	public void finalizeExplosion(boolean spawnParticles, CallbackInfo info) {
-		ScreenShakeManager.addScreenShake(this.level, (float) ((0.5F + (blockInteraction != Explosion.BlockInteraction.KEEP ? 0.2F : 0) + radius * 0.1) / 5F), (int) ((radius * 5) + 3), 1, this.x, this.y, this.z, radius * 2);
+	@Shadow
+	@Final
+	private Vec3 center;
+
+	@Inject(method = "explode", at = @At(value = "TAIL"))
+	public void finalizeExplosion(CallbackInfo ci) {
+		double x = this.center.x;
+		double y = this.center.y;
+		double z = this.center.z;
+
+		ScreenShakeManager.addScreenShake(this.level, (float) ((0.5F + (blockInteraction != Explosion.BlockInteraction.KEEP ? 0.2F : 0) + radius * 0.1) / 5F), (int) ((radius * 5) + 3), 1, x, y, z, radius * 2);
 	}
 
 }

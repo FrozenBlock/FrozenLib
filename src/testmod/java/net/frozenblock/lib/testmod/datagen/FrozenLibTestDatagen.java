@@ -37,6 +37,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
@@ -49,6 +50,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import org.jetbrains.annotations.NotNull;
 
 public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 
@@ -68,18 +70,32 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		@Override
-		public void buildRecipes(RecipeOutput exporter) {
-			ShapedRecipeUtil.withResultPatch(
-				ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, Items.GOAT_HORN)
-					.define('E', Items.DRAGON_EGG)
-					.pattern("EEE")
-					.pattern("EEE")
-					.pattern("EEE")
-					.unlockedBy("has_dragon_egg", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DRAGON_EGG)),
-				DataComponentPatch.builder()
-					.set(DataComponents.INSTRUMENT, BuiltInRegistries.INSTRUMENT.getHolderOrThrow(Instruments.DREAM_GOAT_HORN))
-					.build()
-			).save(exporter, FrozenTestMain.id("dream_goat_horn").toString());
+		protected RecipeProvider createRecipeProvider(HolderLookup.Provider provider, RecipeOutput recipeOutput) {
+			return new RecipeProvider(provider, recipeOutput) {
+				@Override
+				public void buildRecipes() {
+					this.shapeless(RecipeCategory.MISC, Items.DIAMOND_BLOCK)
+						.requires(Items.IRON_INGOT, 2)
+						.save(recipeOutput);
+					ShapedRecipeUtil.withResultPatch(
+						this.shaped(RecipeCategory.TOOLS, Items.GOAT_HORN)
+							.define('E', Items.DRAGON_EGG)
+							.pattern("EEE")
+							.pattern("EEE")
+							.pattern("EEE")
+							.unlockedBy("has_dragon_egg", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DRAGON_EGG)),
+						DataComponentPatch.builder()
+							.set(DataComponents.INSTRUMENT, this.registries.lookupOrThrow(Registries.INSTRUMENT).getOrThrow(Instruments.DREAM_GOAT_HORN))
+							.build()
+					).save(recipeOutput, FrozenTestMain.id("dream_goat_horn").toString());
+				}
+			};
+		}
+
+		@Override
+		@NotNull
+		public String getName() {
+			return "Test Recipes";
 		}
 	}
 

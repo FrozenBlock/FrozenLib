@@ -12,6 +12,7 @@
     "DragonRespawnAnimationMixin$SpawningDragonMixin",
     "EmergingMixin",
     "PhantomMixin",
+    "PlayerMixin",
     "RavagerMixin",
     "RoarMixin",
     "SonicBoomMixin",
