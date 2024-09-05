@@ -80,7 +80,7 @@ public class TintRegistryHelper {
 
 	public static void registerMangroveFoliageColorForBlock(Block block) {
 		ColorProviderRegistry.BLOCK.register(
-			(state, level, pos, tintIndex) -> FoliageColor.getEvergreenColor(),
+			(state, level, pos, tintIndex) -> FoliageColor.getMangroveColor(),
 			block
 		);
 	}
