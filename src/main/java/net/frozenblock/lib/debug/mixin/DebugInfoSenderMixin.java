@@ -45,7 +45,6 @@ import net.minecraft.network.protocol.common.custom.PoiAddedDebugPayload;
 import net.minecraft.network.protocol.common.custom.PoiRemovedDebugPayload;
 import net.minecraft.network.protocol.common.custom.PoiTicketCountDebugPayload;
 import net.minecraft.network.protocol.common.custom.RaidsDebugPayload;
-import net.minecraft.network.protocol.common.custom.StructuresDebugPayload;
 import net.minecraft.network.protocol.common.custom.VillageSectionsDebugPayload;
 import net.minecraft.network.protocol.game.DebugEntityNameGenerator;
 import net.minecraft.network.protocol.game.DebugPackets;
@@ -66,11 +65,9 @@ import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.raid.Raid;
 import net.minecraft.world.entity.schedule.Activity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.gameevent.GameEventListener;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -146,20 +143,6 @@ public class DebugInfoSenderMixin {
 	private static void frozenLib$sendNeighborUpdate(Level level, BlockPos pos, CallbackInfo info) {
 		if (FrozenLibConfig.IS_DEBUG && level instanceof ServerLevel serverLevel) {
 			sendPacketToAllPlayers(serverLevel, new NeighborUpdatesDebugPayload(serverLevel.getGameTime(), pos));
-		}
-	}
-
-	@Inject(method = "sendStructurePacket", at = @At("HEAD"))
-	private static void frozenLib$sendStructureStart(WorldGenLevel level, StructureStart structureStart, CallbackInfo info) {
-		if (FrozenLibConfig.IS_DEBUG) {
-			List<StructuresDebugPayload.PieceInfo> pieces = new ArrayList<>();
-
-			for (int i = 0; i < structureStart.getPieces().size(); ++i) {
-				pieces.add(new StructuresDebugPayload.PieceInfo(structureStart.getPieces().get(i).getBoundingBox(), i == 0));
-			}
-
-			ServerLevel serverLevel = level.getLevel();
-			sendPacketToAllPlayers(serverLevel, new StructuresDebugPayload(serverLevel.dimension(), structureStart.getBoundingBox(), pieces));
 		}
 	}
 
