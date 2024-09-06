@@ -44,6 +44,8 @@ public abstract class FrozenBiome {
 	private static final List<FrozenBiome> BIOMES = new ArrayList<>();
 	private final ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(this.modID(), this.biomeID()));
 
+	private boolean enabled = true;
+
 	protected FrozenBiome() {
 		BIOMES.add(this);
 	}
@@ -137,6 +139,14 @@ public abstract class FrozenBiome {
 	public abstract void addSpawns(MobSpawnSettings.Builder spawns);
 
 	public abstract void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer);
+
+	public void disable() {
+		this.enabled = false;
+	}
+
+	public boolean isEnabled() {
+		return enabled;
+	}
 
 	public ResourceKey<Biome> getKey() {
 		return this.key;

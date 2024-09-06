@@ -30,7 +30,7 @@ public record WindAccessPacket(Vec3 accessPos) implements CustomPacketPayload {
 	public static final Type<WindAccessPacket> PACKET_TYPE = new Type<>(
 		FrozenSharedConstants.id("wind_access")
 	);
-	public static final StreamCodec<FriendlyByteBuf, WindAccessPacket> CODEC = StreamCodec.ofMember(WindAccessPacket::write, WindAccessPacket::create);
+	public static final StreamCodec<FriendlyByteBuf, WindAccessPacket> STREAM_CODEC = StreamCodec.ofMember(WindAccessPacket::write, WindAccessPacket::create);
 
 	@Contract("_ -> new")
 	public static @NotNull WindAccessPacket create(@NotNull FriendlyByteBuf buf) {

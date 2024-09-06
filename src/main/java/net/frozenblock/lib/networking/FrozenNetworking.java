@@ -27,6 +27,7 @@ import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayload;
 import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
+import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
@@ -64,6 +65,7 @@ public final class FrozenNetworking {
 
 	public static void registerNetworking() {
 		PayloadTypeRegistry<RegistryFriendlyByteBuf> registry = PayloadTypeRegistry.playS2C();
+		PayloadTypeRegistry<RegistryFriendlyByteBuf> c2sRegistry = PayloadTypeRegistry.playC2S();
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
@@ -81,7 +83,7 @@ public final class FrozenNetworking {
 			}
 		});
 
-		PayloadTypeRegistry.playC2S().register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
+		c2sRegistry.register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
 		registry.register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, ctx) -> {
@@ -114,7 +116,12 @@ public final class FrozenNetworking {
 		registry.register(GoalDebugRemovePayload.PACKET_TYPE, GoalDebugRemovePayload.STREAM_CODEC);
 		registry.register(ImprovedGameEventListenerDebugPayload.PACKET_TYPE, ImprovedGameEventListenerDebugPayload.STREAM_CODEC);
 		registry.register(ImprovedGameEventDebugPayload.PACKET_TYPE, ImprovedGameEventDebugPayload.STREAM_CODEC);
-		registry.register(WindAccessPacket.PACKET_TYPE, WindAccessPacket.CODEC);
+		registry.register(WindAccessPacket.PACKET_TYPE, WindAccessPacket.STREAM_CODEC);
+
+		c2sRegistry.register(StructureDebugRequestPayload.PACKET_TYPE, StructureDebugRequestPayload.STREAM_CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(StructureDebugRequestPayload.PACKET_TYPE,
+			(packet, ctx) -> StructureDebugRequestPayload.sendBack(ctx.player(), ctx.player().serverLevel(), packet.chunkPos())
+		);
 	}
 
 	public static void sendPacketToAllPlayers(@NotNull ServerLevel world, CustomPacketPayload payload) {

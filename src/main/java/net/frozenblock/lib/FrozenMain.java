@@ -26,7 +26,6 @@ import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
-import net.frozenblock.lib.debug.impl.StructureDebugFix;
 import net.frozenblock.lib.entity.api.EntityUtils;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
@@ -47,7 +46,7 @@ import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.tag.api.TagListCommand;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindManager;
-import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
+import net.frozenblock.lib.wind.api.command.WindCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
@@ -95,7 +94,6 @@ public final class FrozenMain extends FrozenModInitializer {
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC.codec());
 
 		RegisterInGameDevTools.register();
-		StructureDebugFix.init();
 		FrozenParticleTypes.registerParticles();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
@@ -108,7 +106,7 @@ public final class FrozenMain extends FrozenModInitializer {
 		);
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			WindOverrideCommand.register(dispatcher);
+			WindCommand.register(dispatcher);
 			ScreenShakeCommand.register(dispatcher);
 			ConfigCommand.register(dispatcher);
 			TagListCommand.register(dispatcher);

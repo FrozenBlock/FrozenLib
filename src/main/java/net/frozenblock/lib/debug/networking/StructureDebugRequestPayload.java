@@ -15,43 +15,53 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.debug.impl;
+package net.frozenblock.lib.debug.networking;
 
-import java.util.ArrayList;
-import java.util.List;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.networking.FrozenNetworking;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.network.protocol.common.custom.StructuresDebugPayload;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import java.util.ArrayList;
+import java.util.List;
 
-public class StructureDebugFix {
+public record StructureDebugRequestPayload(ChunkPos chunkPos) implements CustomPacketPayload {
+	public static final Type<StructureDebugRequestPayload> PACKET_TYPE = new Type<>(
+		FrozenSharedConstants.id("debug_structure_request")
+	);
 
-	public static void init() {
-		ServerTickEvents.START_WORLD_TICK.register(serverLevel -> {
-			if (FrozenLibConfig.IS_DEBUG) {
-				serverLevel.players().forEach(
-					player -> {
-						player.getChunkTrackingView().forEach(
-							chunkPos -> {
-								if (serverLevel.hasChunk(chunkPos.x, chunkPos.z)) {
-									LevelChunk chunk = serverLevel.getChunk(chunkPos.x, chunkPos.z);
-									chunk.getAllStarts().values().forEach(
-										structureStart -> {
-											FrozenNetworking.sendPacketToAllPlayers(serverLevel, createStructurePayload(serverLevel, structureStart));
-										}
-									);
-								}
-							}
-						);
-					}
+	public static final StreamCodec<FriendlyByteBuf, StructureDebugRequestPayload> STREAM_CODEC = StreamCodec.ofMember(
+		StructureDebugRequestPayload::write, StructureDebugRequestPayload::new
+	);
+
+	public StructureDebugRequestPayload(@NotNull FriendlyByteBuf buf) {
+		this(buf.readChunkPos());
+	}
+
+	public void write(@NotNull FriendlyByteBuf buf) {
+		buf.writeChunkPos(this.chunkPos);
+	}
+
+	public static void sendBack(ServerPlayer sender, ServerLevel serverLevel, ChunkPos chunkPos) {
+		if (FrozenLibConfig.IS_DEBUG) {
+			if (serverLevel.hasChunk(chunkPos.x, chunkPos.z)) {
+				LevelChunk chunk = serverLevel.getChunk(chunkPos.x, chunkPos.z);
+				chunk.getAllStarts().values().forEach(
+					structureStart -> sender.connection.send(new ClientboundCustomPayloadPacket(createStructurePayload(serverLevel, structureStart)))
 				);
 			}
-		});
+		}
 	}
 
 	@Contract("_, _ -> new")
@@ -65,4 +75,8 @@ public class StructureDebugFix {
 		return new StructuresDebugPayload(serverLevel.dimension(), structureStart.getBoundingBox(), pieces);
 	}
 
+	@Override
+	public @NotNull Type<?> type() {
+		return PACKET_TYPE;
+	}
 }
