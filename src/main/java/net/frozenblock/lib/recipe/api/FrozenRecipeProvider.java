@@ -85,7 +85,7 @@ public final class FrozenRecipeProvider {
 			.group("wooden_sign").save(recipeOutput);
 	}
 
-	public void colorWithDyes(RecipeProvider recipeProvider, RecipeOutput recipeOutput, List<Item> list, List<Item> list2, @Nullable Item item, String string, RecipeCategory recipeCategory) {
+	public static void colorWithDyes(RecipeProvider recipeProvider, RecipeOutput recipeOutput, List<Item> list, List<Item> list2, @Nullable Item item, String group, RecipeCategory recipeCategory) {
 		for(int i = 0; i < list.size(); ++i) {
 			Item item2 = list.get(i);
 			Item item3 = list2.get(i);
@@ -97,7 +97,7 @@ public final class FrozenRecipeProvider {
 			recipeProvider.shapeless(recipeCategory, item3)
 				.requires(item2)
 				.requires(Ingredient.of(stream))
-				.group(string).unlockedBy(
+				.group(group).unlockedBy(
 					"has_needed_dye",
 					recipeProvider.has(item2))
 				.save(recipeOutput, "dye_" + RecipeProvider.getItemName(item3));
