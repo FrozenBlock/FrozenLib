@@ -22,12 +22,11 @@ import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
-import java.util.List;
 
 /**
  * Events for listening to the manipulation of Minecraft's content registries.
@@ -66,7 +65,7 @@ public class RegistryEvents {
 	 * <strong>Important Note</strong>: The passed dynamic registry manager might not
 	 * contain the registry, as this event is invoked for each layer of
 	 * the combined registry manager, and each layer holds different registries.
-	 * Use {@link RegistryAccess#registry} to prevent crashes.
+	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 	 */
 	public static final Event<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = FrozenEvents.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
 			callbacks -> context -> {
@@ -85,7 +84,7 @@ public class RegistryEvents {
 	 * <strong>Important Note</strong>: The passed dynamic registry manager might not
 	 * contain the registry, as this event is invoked for each layer of
 	 * the combined registry manager, and each layer holds different registries.
-	 * Use {@link RegistryAccess#registry} to prevent crashes.
+	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 	 */
 	public static final Event<DynamicRegistryLoadedCallback> DYNAMIC_REGISTRY_LOADED = FrozenEvents.createEnvironmentEvent(DynamicRegistryLoadedCallback.class,
 			callbacks -> registryManager -> {
@@ -121,7 +120,7 @@ public class RegistryEvents {
 		 * <strong>Important Note</strong>: The passed dynamic registry manager might not
 		 * contain the registry, as this event is invoked for each layer of
 		 * the combined registry manager, and each layer holds different registries.
-		 * Use {@link RegistryAccess#registry} to prevent crashes.
+		 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 		 *
 		 * @param context the dynamic registry manager setup context
 		 */
@@ -137,7 +136,7 @@ public class RegistryEvents {
 		 * <strong>Important Note</strong>: The passed dynamic registry manager might not
 		 * contain the registry, as this event is invoked for each layer of
 		 * the combined registry manager, and each layer holds different registries.
-		 * Use {@link RegistryAccess#registry} to prevent crashes.
+		 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 		 *
 		 * @param registryManager the registry manager
 		 */
