@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.debug.networking;
 
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
@@ -33,8 +33,6 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 public record StructureDebugRequestPayload(ChunkPos chunkPos) implements CustomPacketPayload {
 	public static final Type<StructureDebugRequestPayload> PACKET_TYPE = new Type<>(

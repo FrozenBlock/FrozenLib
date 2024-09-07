@@ -10,3 +10,4 @@ Put changelog here:
 - Added the `EntityLootHelper` class, currently containing the `shouldSmeltLoot` method.
 - Added the `TintRegistryHelper` class, making simple registry of block and item tints quicker.
 - Significantly optimized how structure info is sent to the client in debug mode.
+- Added the new `BeaconEffectRegistry` class, which can be used to add a Mob Effect to any Beacon tier.

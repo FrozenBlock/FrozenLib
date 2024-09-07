@@ -19,7 +19,6 @@ package net.frozenblock.lib.debug.client.renderer;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
