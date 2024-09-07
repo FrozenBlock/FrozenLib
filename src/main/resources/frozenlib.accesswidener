@@ -93,6 +93,7 @@ transitive-accessible method net/minecraft/client/model/Model animateWalk (Lnet/
 transitive-accessible method net/minecraft/client/model/Model animate (Lnet/minecraft/world/entity/AnimationState;Lnet/minecraft/client/animation/AnimationDefinition;FF)V
 transitive-accessible method net/minecraft/client/model/Model applyStatic (Lnet/minecraft/client/animation/AnimationDefinition;)V
 transitive-accessible field net/minecraft/world/entity/LivingEntity dead Z
+transitive-extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
 
 # Entity Spawns
 transitive-accessible class net/minecraft/world/entity/SpawnPlacements$Data
