@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.client;
 
+import java.util.Objects;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -24,7 +25,6 @@ import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import java.util.Objects;
 
 @Environment(EnvType.CLIENT)
 public class TintRegistryHelper {

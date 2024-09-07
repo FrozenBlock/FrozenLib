@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.datagen.api;
 
+import java.util.List;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
@@ -33,7 +34,6 @@ import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
 import org.jetbrains.annotations.NotNull;
-import java.util.List;
 
 public class EntityLootHelper {
 	public static AnyOfCondition.@NotNull Builder shouldSmeltLoot(HolderLookup.@NotNull Provider registries) {
