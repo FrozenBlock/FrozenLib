@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(BeaconBlockEntity.class)
+@Mixin(value = BeaconBlockEntity.class, priority = 10000)
 public class BeaconBlockEntityMixin {
 
 	@ModifyExpressionValue(
