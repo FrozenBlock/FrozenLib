@@ -44,7 +44,7 @@ public abstract class MinecraftServerMixin {
 	private void frozenLib$addSurfaceRules(ChunkProgressListener worldGenerationProgressListener, CallbackInfo ci) {
 		var server = MinecraftServer.class.cast(this);
 		var registryAccess = server.registryAccess();
-		var levelStems = registryAccess.registryOrThrow(Registries.LEVEL_STEM);
+		var levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
 
 		OptimizedBiomeTagConditionSource.INSTANCES.clear();
 		for (var entry : levelStems.entrySet()) {
@@ -59,7 +59,7 @@ public abstract class MinecraftServerMixin {
 			}
 		}
 
-		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().registryOrThrow(Registries.BIOME));
+		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().lookupOrThrow(Registries.BIOME));
 		FrozenLogUtils.log("Optimized tag source count: " + OptimizedBiomeTagConditionSource.INSTANCES.size(), FrozenSharedConstants.UNSTABLE_LOGGING);
 	}
 

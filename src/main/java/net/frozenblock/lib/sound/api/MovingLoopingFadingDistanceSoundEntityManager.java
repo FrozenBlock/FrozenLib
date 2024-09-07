@@ -96,8 +96,8 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 			FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(
 				serverPlayer,
 				this.entity,
-				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.getSoundEventID()).orElseThrow(),
-				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.getSound2EventID()).orElseThrow(),
+				BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()).orElseThrow(),
+				BuiltInRegistries.SOUND_EVENT.get(nbt.getSound2EventID()).orElseThrow(),
 				SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()),
 				nbt.volume,
 				nbt.pitch,

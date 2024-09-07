@@ -39,8 +39,7 @@ public class WolfVariantsMixin {
 		method = "getSpawnVariant",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/core/Registry;holders()Ljava/util/stream/Stream;",
-			shift = At.Shift.BEFORE
+			target = "Lnet/minecraft/core/Registry;listElements()Ljava/util/stream/Stream;"
 		),
 		cancellable = true
 	)
@@ -52,7 +51,7 @@ public class WolfVariantsMixin {
 		if (optionalBiome.isPresent()) {
 			ResourceKey<Biome> biomeKey = optionalBiome.get();
 			Optional<ResourceKey<WolfVariant>> optionalVariant = WolfVariantBiomeRegistry.get(biomeKey);
-            optionalVariant.ifPresent(wolfVariantResourceKey -> info.setReturnValue(registry.getHolderOrThrow(wolfVariantResourceKey)));
+            optionalVariant.ifPresent(wolfVariantResourceKey -> info.setReturnValue(registry.getOrThrow(wolfVariantResourceKey)));
 		}
 	}
 

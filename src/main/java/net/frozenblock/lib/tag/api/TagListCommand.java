@@ -135,9 +135,9 @@ public class TagListCommand {
 	}
 
 	private static <T> int list(CommandSourceStack source, ResourceKey<Registry<T>> registryKey, TagKeyArgument.Result<T> tag) throws CommandSyntaxException {
-		Registry<T> registry = source.getLevel().registryAccess().registryOrThrow(registryKey);
+		Registry<T> registry = source.getLevel().registryAccess().lookupOrThrow(registryKey);
 		String printable = tag.asPrintable();
-		HolderSet.Named<T> holderSet = registry.getTag(tag.key()).orElseThrow(
+		HolderSet.Named<T> holderSet = registry.get(tag.key()).orElseThrow(
 			() -> ERROR_TAG_INVALID.create(printable)
 		);
 		int size = holderSet.size();

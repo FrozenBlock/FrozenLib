@@ -42,7 +42,7 @@ public final class SpottingIconPredicate<T extends Entity> {
     public static <T extends Entity> IconPredicate<T> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
             if (FrozenRegistry.SPOTTING_ICON_PREDICATE.containsKey(id)) {
-				SpottingIconPredicate<T> predicate = (SpottingIconPredicate<T>) FrozenRegistry.SPOTTING_ICON_PREDICATE.get(id);
+				SpottingIconPredicate<T> predicate = (SpottingIconPredicate<T>) FrozenRegistry.SPOTTING_ICON_PREDICATE.getValue(id);
 				if (predicate != null) {
 					return predicate.predicate;
 				}

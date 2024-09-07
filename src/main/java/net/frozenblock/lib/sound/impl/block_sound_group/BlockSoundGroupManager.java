@@ -115,7 +115,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 
 	public void addBlockTag(TagKey<Block> tag, SoundType sounds, BooleanSupplier condition) {
 
-		var tagIterable = BuiltInRegistries.BLOCK.getTag(tag);
+		var tagIterable = BuiltInRegistries.BLOCK.get(tag);
 		if (tagIterable.isEmpty()) {
 			FrozenLogUtils.log("Error whilst adding a tag to BlockSoundGroupOverwrites: Tag is invalid", true);
 		} else {

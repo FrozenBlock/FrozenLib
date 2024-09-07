@@ -33,14 +33,14 @@ public class RemovableDataComponents {
 
 	public static void register(DataComponentType<?> component, RemovalPredicate removalPredicate, boolean removeOnStackMerge) {
 		ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
-		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getHolderOrThrow(key);
+		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
 
 		REMOVABLE_DATA_COMPONENTS.put(holder, new RemovableDataComponent(holder, removalPredicate, removeOnStackMerge));
 	}
 
 	public static boolean canRemoveComponent(DataComponentType<?> component, Level level, Entity entity, int slot, boolean selected) {
 		ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
-		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getHolderOrThrow(key);
+		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
 		RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
 		if (removableDataComponent != null) {
 			return removableDataComponent.shouldRemove(level, entity, slot, selected);
@@ -53,7 +53,7 @@ public class RemovableDataComponents {
 
 	public static boolean shouldRemoveComponentOnStackMerge(DataComponentType<?> component) {
 		ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
-		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getHolderOrThrow(key);
+		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
 		RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
 		if (removableDataComponent != null) {
 			return removableDataComponent.shouldRemoveOnStackMerge();

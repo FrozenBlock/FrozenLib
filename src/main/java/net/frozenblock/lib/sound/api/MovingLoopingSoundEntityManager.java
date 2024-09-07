@@ -96,7 +96,7 @@ public class MovingLoopingSoundEntityManager {
 			FrozenSoundPackets.createMovingRestrictionLoopingSound(
 				serverPlayer,
 				this.entity,
-				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.getSoundEventID()).orElseThrow(),
+				BuiltInRegistries.SOUND_EVENT.get(nbt.getSoundEventID()).orElseThrow(),
 				SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()),
 				nbt.volume,
 				nbt.pitch,

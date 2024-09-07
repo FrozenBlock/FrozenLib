@@ -58,11 +58,11 @@ public abstract class ModIntegration {
     }
 
     public Block getBlock(String path) {
-        return BuiltInRegistries.BLOCK.get(id(path));
+        return BuiltInRegistries.BLOCK.getValue(id(path));
     }
 
     public Item getItem(String path) {
-        return BuiltInRegistries.ITEM.get(id(path));
+        return BuiltInRegistries.ITEM.getValue(id(path));
     }
 
     public ResourceKey<Biome> getBiomeKey(String path) {

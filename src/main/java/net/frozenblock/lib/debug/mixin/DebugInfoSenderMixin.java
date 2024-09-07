@@ -114,7 +114,7 @@ public class DebugInfoSenderMixin {
 	@Inject(method = "sendVillageSectionsPacket", at = @At("HEAD"))
 	private static void frozenLib$sendPoi(ServerLevel serverLevel, BlockPos pos, CallbackInfo info) {
 		if (FrozenLibConfig.IS_DEBUG) {
-			Registry<Structure> registry = serverLevel.registryAccess().registryOrThrow(Registries.STRUCTURE);
+			Registry<Structure> registry = serverLevel.registryAccess().lookupOrThrow(Registries.STRUCTURE);
 			SectionPos chunkSectionPos = SectionPos.of(pos);
 			Iterator<Holder<Structure>> villageIterator = registry.getTagOrEmpty(StructureTags.VILLAGE).iterator();
 

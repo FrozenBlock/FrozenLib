@@ -55,17 +55,17 @@ public final class WindDisturbanceLogic<T> {
 	public static Optional<WindDisturbanceLogic> getWindDisturbanceLogic(ResourceLocation id) {
         if (id != null) {
             if (FrozenRegistry.WIND_DISTURBANCE_LOGIC.containsKey(id)) {
-				WindDisturbanceLogic<?> disturbanceLogic = FrozenRegistry.WIND_DISTURBANCE_LOGIC.get(id);
+				WindDisturbanceLogic<?> disturbanceLogic = FrozenRegistry.WIND_DISTURBANCE_LOGIC.getValue(id);
 				if (disturbanceLogic != null) {
 					return Optional.of(disturbanceLogic);
 				}
 			} else if (FrozenRegistry.WIND_DISTURBANCE_LOGIC_UNSYNCED.containsKey(id)) {
-				WindDisturbanceLogic<?> disturbanceLogic = FrozenRegistry.WIND_DISTURBANCE_LOGIC_UNSYNCED.get(id);
+				WindDisturbanceLogic<?> disturbanceLogic = FrozenRegistry.WIND_DISTURBANCE_LOGIC_UNSYNCED.getValue(id);
 				if (disturbanceLogic != null) {
 					return Optional.of(disturbanceLogic);
 				}
 			}
-			FrozenSharedConstants.LOGGER.error("Unable to find wind disturbance logic " + id + "!");
+			FrozenSharedConstants.LOGGER.error("Unable to find wind disturbance logic {}!", id);
         }
         return Optional.empty();
     }

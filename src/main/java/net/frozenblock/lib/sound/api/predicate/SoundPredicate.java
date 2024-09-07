@@ -49,12 +49,12 @@ public final class SoundPredicate<T extends Entity> {
     public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
             if (FrozenRegistry.SOUND_PREDICATE.containsKey(id)) {
-				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenRegistry.SOUND_PREDICATE.get(id);
+				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenRegistry.SOUND_PREDICATE.getValue(id);
 				if (predicate != null) {
 					return predicate.predicateSupplier.get();
 				}
 			} else if (FrozenRegistry.SOUND_PREDICATE_UNSYNCED.containsKey(id)) {
-				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenRegistry.SOUND_PREDICATE_UNSYNCED.get(id);
+				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenRegistry.SOUND_PREDICATE_UNSYNCED.getValue(id);
 				if (predicate != null) {
 					return predicate.predicateSupplier.get();
 				}

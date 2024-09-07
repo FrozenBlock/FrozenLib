@@ -52,7 +52,6 @@ transitive-accessible method net/minecraft/world/level/levelgen/feature/foliagep
 
 # Items
 transitive-accessible method net/minecraft/world/item/InstrumentItem getInstrument (Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/core/HolderLookup$Provider;)Ljava/util/Optional;
-transitive-extendable method net/minecraft/world/level/block/state/BlockBehaviour getLootTable ()Lnet/minecraft/resources/ResourceKey;
 transitive-accessible field net/minecraft/world/item/ItemCooldowns cooldowns Ljava/util/Map;
 transitive-accessible field net/minecraft/world/item/ItemCooldowns tickCount I
 transitive-accessible field net/minecraft/world/item/ItemCooldowns$CooldownInstance startTime I

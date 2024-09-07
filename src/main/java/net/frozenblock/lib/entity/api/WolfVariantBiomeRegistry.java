@@ -52,7 +52,7 @@ public class WolfVariantBiomeRegistry {
 
 	@NotNull
 	public static Optional<WolfVariant> get(@NotNull RegistryAccess registryManager, ResourceKey<Biome> biome) {
-		Registry<WolfVariant> registry = registryManager.registryOrThrow(Registries.WOLF_VARIANT);
+		Registry<WolfVariant> registry = registryManager.lookupOrThrow(Registries.WOLF_VARIANT);
 		return registry.getOptional(getVariantOrNull(biome));
 	}
 

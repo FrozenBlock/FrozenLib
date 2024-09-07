@@ -62,7 +62,7 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 		this.biomeNameTest = null;
 		ArrayList<ResourceKey<Biome>> biomeList = new ArrayList<>();
 
-		biomeRegistry.getTag(this.biomeTagKey).ifPresent((biomes -> {
+		biomeRegistry.get(this.biomeTagKey).ifPresent((biomes -> {
 			for (Holder<Biome> biomeHolder : biomes) {
 				biomeHolder.unwrapKey().ifPresent(biomeList::add);
 			}

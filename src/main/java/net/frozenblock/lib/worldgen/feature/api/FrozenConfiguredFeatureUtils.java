@@ -75,7 +75,7 @@ public class FrozenConfiguredFeatureUtils {
 
 	public static <FC extends FeatureConfiguration, V extends T, T extends ConfiguredFeature<FC, ?>> Holder.Reference<ConfiguredFeature<FeatureConfiguration, ?>> getExact(DynamicRegistryManagerSetupContext.RegistryMap registries, V value) {
 		var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
-		var holder = configuredRegistry.getHolderOrThrow(configuredRegistry.getResourceKey(value).orElseThrow());
+		var holder = configuredRegistry.getOrThrow(configuredRegistry.getResourceKey(value).orElseThrow());
 		var exactHolder = getExactReference(holder);
 		return exactHolder;
 	}
