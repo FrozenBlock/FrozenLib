@@ -249,7 +249,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // Mod Menu
-    modApi("com.terraformersmc:modmenu:${modmenu_version}")
+    modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
     modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
