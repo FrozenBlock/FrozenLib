@@ -22,11 +22,21 @@ import net.frozenblock.lib.ingamedevtools.item.Camera;
 import net.frozenblock.lib.ingamedevtools.item.LootTableWhacker;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 
 public class RegisterInGameDevTools {
-	public static final Item CAMERA = Registry.register(BuiltInRegistries.ITEM, FrozenSharedConstants.id("camera"), new Camera(new Item.Properties().stacksTo(1)));
-	public static final Item LOOT_TABLE_WHACKER = Registry.register(BuiltInRegistries.ITEM, FrozenSharedConstants.string("loot_table_whacker"), new LootTableWhacker(new Item.Properties().stacksTo(1)));
+	public static final Item CAMERA = Registry.register(
+		BuiltInRegistries.ITEM,
+		FrozenSharedConstants.id("camera"),
+		new Camera(new Item.Properties().stacksTo(1).setId(ResourceKey.create(Registries.ITEM, FrozenSharedConstants.id("camera"))))
+	);
+	public static final Item LOOT_TABLE_WHACKER = Registry.register(
+		BuiltInRegistries.ITEM,
+		FrozenSharedConstants.id("loot_table_whacker"),
+		new LootTableWhacker(new Item.Properties().stacksTo(1).setId(ResourceKey.create(Registries.ITEM, FrozenSharedConstants.id("loot_table_whacker"))))
+	);
 
 	public static void init() {
 	}
