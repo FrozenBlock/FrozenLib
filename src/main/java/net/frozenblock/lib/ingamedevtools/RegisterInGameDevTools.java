@@ -25,11 +25,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 
 public class RegisterInGameDevTools {
-	public static final Item CAMERA = new Camera(new Item.Properties().stacksTo(1));
-	public static final Item LOOT_TABLE_WHACKER = new LootTableWhacker(new Item.Properties().stacksTo(1));
+	public static final Item CAMERA = Registry.register(BuiltInRegistries.ITEM, FrozenSharedConstants.id("camera"), new Camera(new Item.Properties().stacksTo(1)));
+	public static final Item LOOT_TABLE_WHACKER = Registry.register(BuiltInRegistries.ITEM, FrozenSharedConstants.string("loot_table_whacker"), new LootTableWhacker(new Item.Properties().stacksTo(1)));
 
-	public static void register() {
-		Registry.register(BuiltInRegistries.ITEM, FrozenSharedConstants.id("camera"), CAMERA);
-		Registry.register(BuiltInRegistries.ITEM, FrozenSharedConstants.string("loot_table_whacker"), LOOT_TABLE_WHACKER);
+	public static void init() {
 	}
 }

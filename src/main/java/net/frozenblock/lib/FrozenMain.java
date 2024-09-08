@@ -93,7 +93,7 @@ public final class FrozenMain extends FrozenModInitializer {
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC.codec());
 
-		RegisterInGameDevTools.register();
+		RegisterInGameDevTools.init();
 		FrozenParticleTypes.registerParticles();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
