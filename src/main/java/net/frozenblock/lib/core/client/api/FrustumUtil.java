@@ -15,22 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mobcategory.api.entrypoint;
+package net.frozenblock.lib.core.client.api;
 
-import java.util.ArrayList;
-import net.frozenblock.lib.mobcategory.impl.FrozenMobCategory;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.culling.Frustum;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
-public interface FrozenMobCategoryEntrypoint {
+@Environment(EnvType.CLIENT)
+public class FrustumUtil {
 
-	void newCategories(ArrayList<FrozenMobCategory> context);
+	public static boolean isVisible(AABB aabb) {
+		Frustum frustum = Minecraft.getInstance().levelRenderer.cullingFrustum;
+		if (frustum != null) {
+			return frustum.isVisible(aabb);
+		}
+		return true;
+	}
 
-	@Contract("_, _, _, _, _ -> new")
-	static @NotNull FrozenMobCategory createCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
-		return new FrozenMobCategory(key, max, isFriendly, isPersistent, despawnDistance);
+	public static boolean isVisible(Vec3 pos, double area) {
+		return isVisible(AABB.ofSize(pos, area, area, area));
 	}
 
 }
-
