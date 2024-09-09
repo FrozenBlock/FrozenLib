@@ -11,3 +11,6 @@ Put changelog here:
 - Added the `TintRegistryHelper` class, making simple registry of block and item tints quicker.
 - Significantly optimized how structure info is sent to the client in debug mode.
 - Added the new `BeaconEffectRegistry` class, which can be used to add a Mob Effect to any Beacon tier.
+- Added the new `SherdRegsistry` class, which can be used to easily implement new Pottery Sherds.
+- Added the new `DecoratedPotPatternRegsitryEntrypoint` interface, which can be used to register new Decorated Pot Patterns.
+  - The entrypoint's identitier is `frozenlib:decorated_pot_patterns`
