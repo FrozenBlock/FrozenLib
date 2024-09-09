@@ -84,6 +84,7 @@ transitive-accessible field net/minecraft/client/renderer/debug/GameEventListene
 transitive-accessible field net/minecraft/world/level/gameevent/EntityPositionSource yOffset F
 transitive-accessible field net/minecraft/world/level/gameevent/EntityPositionSource entityOrUuidOrId Lcom/mojang/datafixers/util/Either;
 transitive-accessible method net/minecraft/world/level/gameevent/EntityPositionSource resolveEntity (Lnet/minecraft/world/level/Level;)V
+transitive-extendable method net/minecraft/world/entity/Mob getLootTable ()Ljava/util/Optional;
 
 # Entity Models
 transitive-accessible field net/minecraft/world/entity/Entity DATA_POSE Lnet/minecraft/network/syncher/EntityDataAccessor;
