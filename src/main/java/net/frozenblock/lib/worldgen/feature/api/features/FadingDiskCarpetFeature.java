@@ -21,9 +21,9 @@ import com.mojang.serialization.Codec;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskCarpetFeatureConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -67,23 +67,17 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 							if (fade) {
 								if (random.nextFloat() > 0.5F) {
 									BlockState placedState = config.outerState().getState(random, mutableDisk);
-									if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
-										mutableDisk.move(Direction.UP);
-										level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
+									if (placedState.canSurvive(level, mutableDisk)) {
+										level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), Block.UPDATE_ALL);
 										bl.set(true);
-									} else {
-										mutableDisk.move(Direction.UP);
 									}
 								}
 							} else {
 								choseInner = (inner && random.nextFloat() < config.innerChance());
 								BlockState placedState = choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk);
-								if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
-									mutableDisk.move(Direction.UP);
-									level.setBlock(mutableDisk, placedState, 3);
+								if (placedState.canSurvive(level, mutableDisk)) {
+									level.setBlock(mutableDisk, placedState, Block.UPDATE_ALL);
 									bl.set(true);
-								} else {
-									mutableDisk.move(Direction.UP);
 								}
 							}
 						}
@@ -101,23 +95,17 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 								if (fade) {
 									if (random.nextFloat() > 0.5F) {
 										BlockState placedState = config.outerState().getState(random, mutableDisk);
-										if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
-											mutableDisk.move(Direction.UP);
+										if (placedState.canSurvive(level, mutableDisk)) {
 											level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
 											bl.set(true);
-										} else {
-											mutableDisk.move(Direction.UP);
 										}
 									}
 								} else {
 									choseInner = (inner && random.nextFloat() < config.innerChance());
 									BlockState placedState = choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk);
-									if (placedState.canSurvive(level, mutableDisk.move(Direction.DOWN))) {
-										mutableDisk.move(Direction.UP);
-										level.setBlock(mutableDisk, placedState, 3);
+									if (placedState.canSurvive(level, mutableDisk)) {
+										level.setBlock(mutableDisk, placedState, Block.UPDATE_ALL);
 										bl.set(true);
-									} else {
-										mutableDisk.move(Direction.UP);
 									}
 								}
 							}
@@ -128,18 +116,6 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 		}
 
 		return bl.get();
-	}
-
-	public static boolean isBlockExposedToAir(WorldGenLevel level, @NotNull BlockPos blockPos) {
-		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
-		for (Direction direction : Direction.values()) {
-			mutableBlockPos.move(direction);
-			if (level.getBlockState(mutableBlockPos).isAir()) {
-				return true;
-			}
-			mutableBlockPos.move(direction, -1);
-		}
-		return false;
 	}
 
 }

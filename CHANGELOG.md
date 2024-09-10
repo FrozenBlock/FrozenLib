@@ -14,3 +14,4 @@ Put changelog here:
 - Added the new `SherdRegsistry` class, which can be used to easily implement new Pottery Sherds.
 - Added the new `DecoratedPotPatternRegsitryEntrypoint` interface, which can be used to register new Decorated Pot Patterns.
   - The entrypoint's identitier is `frozenlib:decorated_pot_patterns`
+- Fixed `FadingDiskCarpetFeature` using an incorrect position to determine if a block can survive.
