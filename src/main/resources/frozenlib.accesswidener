@@ -127,6 +127,8 @@ transitive-accessible field net/minecraft/world/level/block/entity/RandomizableC
 transitive-accessible field net/minecraft/world/level/block/entity/BrushableBlockEntity lootTable Lnet/minecraft/resources/ResourceKey;
 transitive-accessible field net/minecraft/world/level/block/entity/BeaconBlockEntity VALID_EFFECTS Ljava/util/Set;
 transitive-mutable field net/minecraft/world/level/block/entity/BeaconBlockEntity VALID_EFFECTS Ljava/util/Set;
+transitive-accessible field net/minecraft/world/level/block/entity/DecoratedPotPatterns ITEM_TO_POT_TEXTURE Ljava/util/Map;
+transitive-mutable field net/minecraft/world/level/block/entity/DecoratedPotPatterns ITEM_TO_POT_TEXTURE Ljava/util/Map;
 
 # Render Types
 transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeState

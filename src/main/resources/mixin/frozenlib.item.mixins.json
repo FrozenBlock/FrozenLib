@@ -16,6 +16,7 @@
     "ServerPlayerMixin",
     "axe.AxeItemMixin",
     "bonemeal.BoneMealItemMixin",
+    "sherd.DecoratedPotPatternsMixin",
     "shovel.ShovelItemMixin"
   ]
 }
