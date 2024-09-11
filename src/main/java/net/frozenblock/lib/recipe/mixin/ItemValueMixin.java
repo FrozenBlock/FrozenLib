@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.recipe.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,12 +28,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Ingredient.ItemValue.class)
 public class ItemValueMixin {
 
-	@Redirect(method = "<clinit>",
+	@WrapOperation(method = "<clinit>",
 		at = @At(
 			value = "INVOKE",
 			target = "Lcom/mojang/serialization/codecs/RecordCodecBuilder;create(Ljava/util/function/Function;)Lcom/mojang/serialization/Codec;",
@@ -39,7 +40,7 @@ public class ItemValueMixin {
 		)
 	)
 	private static Codec<Ingredient.ItemValue> frozenLib$newCodec(
-		Function<RecordCodecBuilder.Instance<Ingredient.ItemValue>, ? extends App<RecordCodecBuilder.Mu<Ingredient.ItemValue>, Ingredient.ItemValue>> builder
+		Function<RecordCodecBuilder.Instance<Ingredient.ItemValue>, ? extends App<RecordCodecBuilder.Mu<Ingredient.ItemValue>, Ingredient.ItemValue>> builder, Operation<Codec<Ingredient.ItemValue>> original
 	) {
 		return RecordCodecBuilder.create(instance ->
 			instance.group(

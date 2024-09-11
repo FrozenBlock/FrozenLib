@@ -44,7 +44,8 @@ public class LevelRendererMixin {
 			value = "INVOKE",
 			target = "Lcom/mojang/blaze3d/systems/RenderSystem;depthMask(Z)V",
 			ordinal = 1,
-			shift = At.Shift.AFTER
+			shift = At.Shift.AFTER,
+			remap = false
 		),
 		require = 0
 	)
