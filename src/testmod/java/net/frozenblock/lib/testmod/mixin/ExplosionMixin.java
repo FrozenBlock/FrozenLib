@@ -19,9 +19,7 @@ package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Explosion;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerExplosion;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
