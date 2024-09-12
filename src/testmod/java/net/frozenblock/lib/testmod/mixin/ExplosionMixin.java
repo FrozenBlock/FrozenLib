@@ -18,6 +18,7 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.Level;
@@ -35,7 +36,7 @@ public class ExplosionMixin {
 
 	@Shadow
 	@Final
-	private Level level;
+	private ServerLevel level;
 	@Shadow
 	@Final
 	private Explosion.BlockInteraction blockInteraction;
