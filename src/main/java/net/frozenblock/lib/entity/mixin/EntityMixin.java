@@ -55,7 +55,7 @@ public abstract class EntityMixin implements FrozenStartTrackingEntityInterface,
 	}
 
 	@Inject(
-		method = "applyEffectsFromBlocks",
+		method = "applyEffectsFromBlocks(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;)V",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V",

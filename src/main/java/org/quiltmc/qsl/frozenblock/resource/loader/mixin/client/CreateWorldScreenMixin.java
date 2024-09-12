@@ -19,17 +19,24 @@
 package org.quiltmc.qsl.frozenblock.resource.loader.mixin.client;
 
 import java.util.function.Consumer;
+import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
+import net.minecraft.client.gui.screens.worldselection.DataPackReloadCookie;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
+import net.minecraft.client.gui.screens.worldselection.WorldCreationContextMapper;
 import net.minecraft.core.LayeredRegistryAccess;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.ReloadableServerResources;
+import net.minecraft.server.WorldLoader;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.resources.CloseableResourceManager;
 import net.minecraft.world.level.WorldDataConfiguration;
+import net.minecraft.world.level.levelgen.WorldGenSettings;
+import net.minecraft.world.level.levelgen.presets.WorldPreset;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,12 +55,22 @@ public abstract class CreateWorldScreenMixin {
 
 	@Dynamic
 	@Inject(
-			method = {"m_qcsfhvrb", "method_41851", "lambda$openFresh$2"},
+			method = {"method_45681", "method_64245"},
 			at = @At("HEAD"),
 			require = 1
 	)
 	private static void onEndDataPackLoadOnOpen(CloseableResourceManager resourceManager, ReloadableServerResources resources,
 			LayeredRegistryAccess<?> layeredRegistryAccess, @Coerce Object object, CallbackInfoReturnable<WorldCreationContext> cir) {
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
+	}
+
+	@Inject(
+		method = "method_64245",
+		at = @At("HEAD")
+	)
+	private static void onEndDataPackLoadOnOpen(WorldCreationContextMapper worldCreationContextMapper, CloseableResourceManager resourceManager,
+			ReloadableServerResources reloadableServerResources, LayeredRegistryAccess<?> layeredRegistryAccess, DataPackReloadCookie dataPackReloadCookie,
+			CallbackInfoReturnable<WorldCreationContext> cir) {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
 	}
 
@@ -69,13 +86,13 @@ public abstract class CreateWorldScreenMixin {
     }
 
     @Inject(
-            method = "openFresh",
+            method = "openCreateWorldScreen",
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/server/WorldLoader;load(Lnet/minecraft/server/WorldLoader$InitConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;Lnet/minecraft/server/WorldLoader$ResultFactory;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
             )
     )
-    private static void onDataPackLoadStart(Minecraft client, Screen parent, CallbackInfo ci) {
+    private static void onDataPackLoadStart(Minecraft minecraft, Screen screen, Function<WorldLoader.DataLoadContext, WorldGenSettings> function, WorldCreationContextMapper worldCreationContextMapper, ResourceKey<WorldPreset> resourceKey, CallbackInfo ci) {
         ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
     }
 

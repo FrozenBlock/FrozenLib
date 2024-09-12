@@ -58,7 +58,7 @@ public abstract class IntegratedServerLoaderMixin {
     }
 
     @ModifyArg(
-            method = {"createFreshLevel", "loadLevel"},
+            method = {"createFreshLevel", "openWorldLoadLevelStem"},
             at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V", remap = false),
             index = 1
     )

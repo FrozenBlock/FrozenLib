@@ -30,6 +30,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
+import lombok.Getter;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.frozenblock.lib.FrozenLogUtils;
 import net.frozenblock.lib.FrozenSharedConstants;
@@ -42,6 +43,7 @@ import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.profiling.Profiler;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -131,12 +133,12 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	}
 
 	@Override
-	public CompletableFuture<SoundGroupLoader> load(ResourceManager manager, ProfilerFiller profiler, Executor executor) {
-		return CompletableFuture.supplyAsync(() -> new SoundGroupLoader(manager, profiler), executor);
+	public CompletableFuture<SoundGroupLoader> load(ResourceManager manager, Executor executor) {
+		return CompletableFuture.supplyAsync(() -> new SoundGroupLoader(manager), executor);
 	}
 
 	@Override
-	public CompletableFuture<Void> apply(SoundGroupLoader prepared, ResourceManager manager, ProfilerFiller profiler, Executor executor) {
+	public CompletableFuture<Void> apply(SoundGroupLoader prepared, ResourceManager manager, Executor executor) {
 		this.overwrites = prepared.getOverwrites();
 		this.overwrites.putAll(this.queuedOverwrites);
 		return CompletableFuture.runAsync(() -> {
@@ -151,16 +153,16 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 
 	public static class SoundGroupLoader {
 		private final ResourceManager manager;
-		private final ProfilerFiller profiler;
+		@Getter
 		private final Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites = new Object2ObjectOpenHashMap<>();
 
-		public SoundGroupLoader(ResourceManager manager, ProfilerFiller profiler) {
+		public SoundGroupLoader(ResourceManager manager) {
 			this.manager = manager;
-			this.profiler = profiler;
 			this.loadSoundOverwrites();
 		}
 
 		private void loadSoundOverwrites() {
+			ProfilerFiller profiler = Profiler.get();
 			profiler.push("Load Sound Overwrites");
 			Map<ResourceLocation, Resource> resources = manager.listResources(DIRECTORY, id -> id.getPath().endsWith(".json"));
 			var entrySet = resources.entrySet();
@@ -183,7 +185,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 			DataResult<Pair<BlockSoundGroupOverwrite, JsonElement>> result = SoundCodecs.SOUND_GROUP_OVERWRITE.decode(JsonOps.INSTANCE, json);
 
 			if (result.error().isPresent()) {
-				LOGGER.error(String.format("Unable to parse sound overwrite file %s. \nReason: %s", id, result.error().get().message()));
+				LOGGER.error("Unable to parse sound overwrite file {}. \nReason: {}", id, result.error().get().message());
 				return;
 			}
 
@@ -191,8 +193,5 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 			overwrites.put(overwriteId, result.result().orElseThrow().getFirst());
 		}
 
-		public Map<ResourceLocation, BlockSoundGroupOverwrite> getOverwrites() {
-			return this.overwrites;
-		}
 	}
 }
