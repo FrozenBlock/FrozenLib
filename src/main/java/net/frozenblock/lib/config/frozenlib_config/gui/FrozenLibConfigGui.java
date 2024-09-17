@@ -19,9 +19,7 @@ package net.frozenblock.lib.config.frozenlib_config.gui;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
-import com.google.common.collect.ImmutableList;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -149,7 +147,7 @@ public final class FrozenLibConfigGui {
 			FrozenClothConfig.syncedEntry(
 				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
 					.setDefaultValue(defaultConfig.cape)
-					.setTooltipSupplier(o -> {
+					.setNameProvider(o -> {
 						ResourceLocation capeName = ((Cape) o).location();
 						Component component;
 						if (capeName == null) {
@@ -157,7 +155,7 @@ public final class FrozenLibConfigGui {
 						} else {
 							component = Component.translatable("cape." + capeName.getNamespace() + "." + capeName.getPath());
 						}
-						return Optional.of((Component[]) ImmutableList.of(component).toArray());
+						return component;
 					})
 					.setSaveConsumer(newValue -> {
 						if (newValue instanceof Cape cape) {
