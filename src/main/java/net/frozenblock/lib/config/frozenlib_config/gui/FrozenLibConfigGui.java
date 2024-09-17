@@ -157,7 +157,7 @@ public final class FrozenLibConfigGui {
 						} else {
 							component = Component.translatable("cape." + capeName.getNamespace() + "." + capeName.getPath());
 						}
-						return Optional.of(ImmutableList.of(component).toArray(new Component[0]));
+						return Optional.of((Component[]) ImmutableList.of(component).toArray());
 					})
 					.setSaveConsumer(newValue -> {
 						if (newValue instanceof Cape cape) {
