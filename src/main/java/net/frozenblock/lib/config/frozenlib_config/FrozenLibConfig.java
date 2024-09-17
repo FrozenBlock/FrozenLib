@@ -22,14 +22,13 @@ import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.cape.api.CapeRegistry;
-import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.api.sync.SyncBehavior;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
+import net.minecraft.resources.ResourceLocation;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 
@@ -80,7 +79,7 @@ public class FrozenLibConfig {
 	public boolean wardenSpawnTrackerCommand = false;
 
 	@EntrySyncData(value = "cape", behavior = SyncBehavior.UNSYNCABLE)
-	public Cape cape = CapeRegistry.DUMMY_CAPE;
+	public ResourceLocation cape = FrozenSharedConstants.id("dummy");
 
 	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();

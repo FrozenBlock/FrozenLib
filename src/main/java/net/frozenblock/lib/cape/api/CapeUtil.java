@@ -18,40 +18,40 @@
 package net.frozenblock.lib.cape.api;
 
 import com.google.common.collect.ImmutableList;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import net.frozenblock.lib.cape.impl.Cape;
+import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
-public class CapeRegistry {
-	public static final Cape DUMMY_CAPE = new Cape(null, null);
-	private static final Map<ResourceLocation, List<UUID>> CAPE_RESTRICTIONS = new HashMap<>();
-	private static final ArrayList<Cape> CAPES = new ArrayList<>(Collections.singleton(DUMMY_CAPE));
-
+public class CapeUtil {
 	public static @NotNull @Unmodifiable List<Cape> getCapes() {
-		return ImmutableList.copyOf(CAPES);
+		return ImmutableList.copyOf(FrozenRegistry.CAPE);
 	}
 
-	public static boolean canPlayerUserCape(UUID uuid, ResourceLocation texture) {
-		List<UUID> allowedUUIDs = CAPE_RESTRICTIONS.get(texture);
-		if (allowedUUIDs == null) return true;
-		return allowedUUIDs.contains(uuid);
+	public static @NotNull @Unmodifiable List<Cape> getUsableCapes(UUID uuid) {
+		return ImmutableList.copyOf(getCapes().stream().filter(cape -> canPlayerUserCape(uuid, cape)).toList());
 	}
 
-	public static void registerCape(ResourceLocation cape) {
-		CAPES.add(new Cape(cape, buildCapeTextureLocation(cape)));
+	public static boolean canPlayerUserCape(UUID uuid, ResourceLocation capeID) {
+		Optional<Cape> optionalCape = FrozenRegistry.CAPE.getOptional(capeID);
+		return optionalCape.map(cape -> canPlayerUserCape(uuid, cape)).orElse(false);
 	}
 
-	public static void registerRestrictedCape(ResourceLocation cape, List<UUID> allowedPlayers) {
-		ResourceLocation textureLocation = buildCapeTextureLocation(cape);
-		CAPES.add(new Cape(cape, textureLocation));
-		CAPE_RESTRICTIONS.put(textureLocation, allowedPlayers);
+	public static boolean canPlayerUserCape(UUID uuid, @NotNull Cape cape) {
+		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
+	}
+
+	public static @NotNull Cape registerCape(ResourceLocation id) {
+		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.empty()));
+	}
+
+	public static @NotNull Cape registerCapeWithWhitelist(ResourceLocation id, List<UUID> allowedPlayers) {
+		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.of(allowedPlayers)));
 	}
 
 	private static ResourceLocation buildCapeTextureLocation(@NotNull ResourceLocation cape) {

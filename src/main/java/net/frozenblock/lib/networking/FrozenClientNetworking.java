@@ -332,7 +332,7 @@ public final class FrozenClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE, (packet, ctx) -> {
 			UUID uuid = packet.getPlayerUUID();
 			if (packet.isEnabled()) {
-				FrozenClientCapeData.setCapeForUUID(uuid, packet.getCapeTexture());
+				FrozenClientCapeData.setCapeForUUID(uuid, packet.getCapeId());
 			} else {
 				FrozenClientCapeData.removeCapeForUUID(uuid);
 			}

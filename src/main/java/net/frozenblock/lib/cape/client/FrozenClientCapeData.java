@@ -28,35 +28,42 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.frozenblock.lib.cape.client.impl.AbstractClientPlayerCapeInterface;
+import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class FrozenClientCapeData {
-	private static final Map<UUID, ResourceLocation> CAPES_IN_SERVER = new HashMap<>();
+	private static final Map<UUID, Cape> CAPES_IN_SERVER = new HashMap<>();
 
 	public static Optional<ResourceLocation> getCapeTexture(UUID uuid) {
-		return Optional.ofNullable(CAPES_IN_SERVER.get(uuid));
+		return Optional.ofNullable(CAPES_IN_SERVER.get(uuid)).map(Cape::texture);
 	}
 
-	public static void setCapeForUUID(UUID uuid, ResourceLocation texture) {
-		CAPES_IN_SERVER.put(uuid, texture);
-		setPlayerCapeTexture(uuid, texture);
+	public static void setCapeForUUID(UUID uuid, ResourceLocation capeId) {
+		Cape cape = FrozenRegistry.CAPE.get(capeId);
+		if (cape == null) {
+			removeCapeForUUID(uuid);
+		} else {
+			CAPES_IN_SERVER.put(uuid, cape);
+			setPlayerCapeTexture(uuid, Optional.of(cape));
+		}
 	}
 
 	public static void removeCapeForUUID(UUID uuid) {
 		CAPES_IN_SERVER.remove(uuid);
-		setPlayerCapeTexture(uuid, null);
+		setPlayerCapeTexture(uuid, Optional.empty());
 	}
 
-	private static void setPlayerCapeTexture(UUID uuid, @Nullable ResourceLocation texture) {
+	private static void setPlayerCapeTexture(UUID uuid, @NotNull Optional<Cape> cape) {
 		ClientLevel level = Minecraft.getInstance().level;
 		if (level != null && level.getPlayerByUUID(uuid) instanceof AbstractClientPlayerCapeInterface capeInterface) {
-			capeInterface.frozenLib$setCape(texture);
+			capeInterface.frozenLib$setCape(cape.map(Cape::texture).orElse(null));
 		}
 	}
 
@@ -64,7 +71,7 @@ public class FrozenClientCapeData {
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> CAPES_IN_SERVER.clear());
 		ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> CAPES_IN_SERVER.clear());
 		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) -> {
-			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), FrozenLibConfig.get().cape.texture()));
+			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), FrozenLibConfig.get().cape));
 		});
 		ClientEntityEvents.ENTITY_LOAD.register((entity, clientLevel) -> {
 			if (entity instanceof AbstractClientPlayerCapeInterface capeInterface) {

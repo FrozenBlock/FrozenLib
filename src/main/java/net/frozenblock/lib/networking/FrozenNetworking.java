@@ -23,7 +23,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.cape.api.CapeRegistry;
+import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
@@ -120,8 +120,8 @@ public final class FrozenNetworking {
 		ServerPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE,
 			(packet, ctx) -> {
 				UUID uuid = ctx.player().getUUID();
-				ResourceLocation capeTexture = packet.getCapeTexture();
-				if (capeTexture == null || CapeRegistry.canPlayerUserCape(uuid, capeTexture)) {
+				ResourceLocation capeTexture = packet.getCapeId();
+				if (capeTexture == null || CapeUtil.canPlayerUserCape(uuid, capeTexture)) {
 					CapeCustomizePacket.sendCapeToAll(ctx.server(), uuid, capeTexture);
 				}
 			}
