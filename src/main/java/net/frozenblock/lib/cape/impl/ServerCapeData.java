@@ -28,16 +28,15 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.cape.api.CapeRegistry;
-import net.frozenblock.lib.cape.networking.CapeCustomizePacket;
-import net.minecraft.resources.ResourceLocation;
+import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.minecraft.server.level.ServerPlayer;
 
 public class ServerCapeData {
-	private static final Map<UUID, ResourceLocation> CAPES_IN_SERVER = new HashMap<>();
+	private static final Map<UUID, Cape> CAPES_IN_SERVER = new HashMap<>();
 
 	public static void sendAllCapesToPlayer(ServerPlayer recipent) {
-		CAPES_IN_SERVER.forEach((uuid, resourceLocation) -> ServerPlayNetworking.send(recipent, CapeCustomizePacket.createPacket(uuid, resourceLocation)));
+		CAPES_IN_SERVER.forEach((uuid, cape) -> ServerPlayNetworking.send(recipent, CapeCustomizePacket.createPacket(uuid, cape)));
 	}
 
 	public static void init() {
@@ -77,6 +76,6 @@ public class ServerCapeData {
 		allArray.addAll(builders);
 		allArray.addAll(composers);
 
-		CapeRegistry.registerRestrictedCape(FrozenSharedConstants.id("frozenblock"), allArray);
+		CapeUtil.registerCapeWithWhitelist(FrozenSharedConstants.id("frozenblock"), allArray);
 	}
 }

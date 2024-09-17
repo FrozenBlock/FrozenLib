@@ -15,26 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.cape.networking;
+package net.frozenblock.lib.cape.impl.networking;
 
 import java.util.UUID;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.cape.impl.Cape;
+import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class CapeCustomizePacket implements CustomPacketPayload {
+	private static final ResourceLocation DUMMY = FrozenSharedConstants.id("dummy");
 	public static final Type<CapeCustomizePacket> PACKET_TYPE = new Type<>(FrozenSharedConstants.id("cape_packet"));
 	public static final StreamCodec<FriendlyByteBuf, CapeCustomizePacket> CODEC = StreamCodec.ofMember(CapeCustomizePacket::write, CapeCustomizePacket::new);
 
 	private final UUID playerUUID;
 	private final boolean enabled;
-	private ResourceLocation capeTexture = null;
+	private ResourceLocation capeId = null;
 
 	private CapeCustomizePacket(UUID uuid, boolean enabled) {
 		this.playerUUID = uuid;
@@ -42,14 +47,14 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 	}
 
 	private CapeCustomizePacket(UUID uuid, boolean enabled, ResourceLocation capeId) {
-		this(uuid, enabled && capeId != null);
-		this.capeTexture = capeId;
+		this(uuid, enabled);
+		this.capeId = capeId;
 	}
 
 	public CapeCustomizePacket(@NotNull FriendlyByteBuf buf) {
 		this(buf.readUUID(), buf.readBoolean());
 		if (this.enabled) {
-			this.capeTexture = buf.readResourceLocation();
+			this.capeId = buf.readResourceLocation();
 		}
 	}
 
@@ -57,7 +62,7 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 		buf.writeUUID(this.playerUUID);
 		buf.writeBoolean(this.enabled);
 		if (this.enabled) {
-			buf.writeResourceLocation(this.capeTexture);
+			buf.writeResourceLocation(this.capeId);
 		}
 	}
 
@@ -65,13 +70,26 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 		return new CapeCustomizePacket(uuid, false);
 	}
 
-	public static @NotNull CapeCustomizePacket createPacket(UUID uuid, ResourceLocation capeId) {
-		return new CapeCustomizePacket(uuid, true, capeId);
+	public static @NotNull CapeCustomizePacket createPacket(UUID uuid,  @Nullable ResourceLocation capeId) {
+		return new CapeCustomizePacket(uuid, !shouldDisable(FrozenRegistry.CAPE.getValue(capeId)), capeId);
 	}
 
-	public static void sendCapeToAll(MinecraftServer server, UUID uuid, ResourceLocation capeId) {
-		CapeCustomizePacket frozenCapePacket = capeId == null ? CapeCustomizePacket.createDisablePacket(uuid) : CapeCustomizePacket.createPacket(uuid, capeId);
+	@Contract("_, _ -> new")
+	public static @NotNull CapeCustomizePacket createPacket(UUID uuid, @NotNull Cape cape) {
+		return new CapeCustomizePacket(uuid, !shouldDisable(cape), cape.registryId());
+	}
+
+	public static void sendCapeToAll(MinecraftServer server, UUID uuid, @Nullable ResourceLocation capeId) {
+		CapeCustomizePacket frozenCapePacket = CapeCustomizePacket.createPacket(uuid, capeId);
 		PlayerLookup.all(server).forEach(player -> ServerPlayNetworking.send(player, frozenCapePacket));
+	}
+
+	public static boolean shouldDisable(Cape cape) {
+		return cape == null || shouldDisable(cape.registryId()) || cape.texture() == null;
+	}
+
+	public static boolean shouldDisable(ResourceLocation capeId) {
+		return capeId == null || capeId.equals(DUMMY);
 	}
 
 	public UUID getPlayerUUID() {
@@ -82,8 +100,8 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 		return this.enabled;
 	}
 
-	public ResourceLocation getCapeTexture() {
-		return this.capeTexture;
+	public ResourceLocation getCapeId() {
+		return this.capeId;
 	}
 
 	@Override

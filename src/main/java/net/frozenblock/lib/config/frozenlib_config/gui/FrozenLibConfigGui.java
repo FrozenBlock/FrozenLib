@@ -28,9 +28,8 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.cape.api.CapeRegistry;
-import net.frozenblock.lib.cape.impl.Cape;
-import net.frozenblock.lib.cape.networking.CapeCustomizePacket;
+import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -137,11 +136,9 @@ public final class FrozenLibConfigGui {
 		);
 
 		UUID playerUUID = Minecraft.getInstance().getUser().getProfileId();
-		List<Cape> usableCapes = new ArrayList<>();
-		CapeRegistry.getCapes().forEach(cape -> {
-			if (CapeRegistry.canPlayerUserCape(playerUUID, cape.texture())) {
-				usableCapes.add(cape);
-			}
+		List<ResourceLocation> usableCapes = new ArrayList<>();
+		CapeUtil.getUsableCapes(playerUUID).forEach(cape -> {
+			usableCapes.add(cape.registryId());
 		});
 		if (!usableCapes.isEmpty()) {
 			var capeEntry = category.addEntry(
@@ -149,21 +146,17 @@ public final class FrozenLibConfigGui {
 					entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
 						.setDefaultValue(defaultConfig.cape)
 						.setNameProvider(o -> {
-							ResourceLocation capeName = ((Cape) o).location();
-							Component component;
-							if (capeName == null) {
-								component = Component.translatable("cape.frozenlib.none");
-							} else {
-								component = Component.translatable("cape." + capeName.getNamespace() + "." + capeName.getPath());
+							ResourceLocation capeId = (ResourceLocation) o;
+							if (o != null) {
+								return Component.translatable("cape." + capeId.getNamespace() + "." + capeId.getPath());
 							}
-							return component;
+							return Component.translatable("cape.frozenlib.none");
 						})
 						.setSaveConsumer(newValue -> {
-							if (newValue instanceof Cape cape) {
-								config.cape = cape;
-								if (Minecraft.getInstance().getConnection() != null) {
-									ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, cape.texture()));
-								}
+							ResourceLocation capeId = (ResourceLocation) newValue;
+							config.cape = capeId;
+							if (Minecraft.getInstance().getConnection() != null) {
+								ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, capeId));
 							}
 						})
 						.setTooltip(tooltip("cape"))

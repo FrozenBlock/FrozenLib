@@ -48,7 +48,8 @@
   "option.frozenlib.cape": "Cape",
   "tooltip.frozenlib.cape": "Custom FrozenBlock capes that can be used.",
 
-  "cape.frozenlib.none": "§cNone",
+  "cape.frozenlib.none": "§cMissing value!",
+  "cape.frozenlib.dummy": "§cNone",
   "cape.frozenlib.frozenblock": "FrozenBlock",
 
   "commands.wind.display.global.success": "The global wind is currently: %s, %s, %s.",

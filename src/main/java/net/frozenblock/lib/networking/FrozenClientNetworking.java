@@ -25,7 +25,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectio
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.frozenblock.lib.cape.client.FrozenClientCapeData;
-import net.frozenblock.lib.cape.networking.CapeCustomizePacket;
+import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
@@ -331,7 +331,7 @@ public final class FrozenClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE, (packet, ctx) -> {
 			UUID uuid = packet.getPlayerUUID();
 			if (packet.isEnabled()) {
-				FrozenClientCapeData.setCapeForUUID(uuid, packet.getCapeTexture());
+				FrozenClientCapeData.setCapeForUUID(uuid, packet.getCapeId());
 			} else {
 				FrozenClientCapeData.removeCapeForUUID(uuid);
 			}
