@@ -19,6 +19,7 @@ package net.frozenblock.lib.cape.api;
 
 import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,7 +32,7 @@ import org.jetbrains.annotations.Unmodifiable;
 public class CapeRegistry {
 	public static final Cape DUMMY_CAPE = new Cape(null, null);
 	private static final Map<ResourceLocation, List<UUID>> CAPE_RESTRICTIONS = new HashMap<>();
-	private static final ArrayList<Cape> CAPES = new ArrayList<>();
+	private static final ArrayList<Cape> CAPES = new ArrayList<>(Collections.singleton(DUMMY_CAPE));
 
 	public static @NotNull @Unmodifiable List<Cape> getCapes() {
 		return ImmutableList.copyOf(CAPES);
