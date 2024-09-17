@@ -161,7 +161,9 @@ public final class FrozenLibConfigGui {
 						.setSaveConsumer(newValue -> {
 							if (newValue instanceof Cape cape) {
 								config.cape = cape;
-								ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, cape.texture()));
+								if (Minecraft.getInstance().getConnection() != null) {
+									ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, cape.texture()));
+								}
 							}
 						})
 						.setTooltip(tooltip("cape"))
