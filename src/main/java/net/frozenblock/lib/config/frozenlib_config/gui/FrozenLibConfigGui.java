@@ -143,33 +143,35 @@ public final class FrozenLibConfigGui {
 				usableCapes.add(cape);
 			}
 		});
-		var capeEntry = category.addEntry(
-			FrozenClothConfig.syncedEntry(
-				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
-					.setDefaultValue(defaultConfig.cape)
-					.setNameProvider(o -> {
-						ResourceLocation capeName = ((Cape) o).location();
-						Component component;
-						if (capeName == null) {
-							component = Component.translatable("cape.frozenlib.none");
-						} else {
-							component = Component.translatable("cape." + capeName.getNamespace() + "." + capeName.getPath());
-						}
-						return component;
-					})
-					.setSaveConsumer(newValue -> {
-						if (newValue instanceof Cape cape) {
-							config.cape = cape;
-							ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, cape.texture()));
-						}
-					})
-					.setTooltip(tooltip("cape"))
-					.build(),
-				config.getClass(),
-				"cape",
-				configInstance
-			)
-		);
+		if (!usableCapes.isEmpty()) {
+			var capeEntry = category.addEntry(
+				FrozenClothConfig.syncedEntry(
+					entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
+						.setDefaultValue(defaultConfig.cape)
+						.setNameProvider(o -> {
+							ResourceLocation capeName = ((Cape) o).location();
+							Component component;
+							if (capeName == null) {
+								component = Component.translatable("cape.frozenlib.none");
+							} else {
+								component = Component.translatable("cape." + capeName.getNamespace() + "." + capeName.getPath());
+							}
+							return component;
+						})
+						.setSaveConsumer(newValue -> {
+							if (newValue instanceof Cape cape) {
+								config.cape = cape;
+								ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, cape.texture()));
+							}
+						})
+						.setTooltip(tooltip("cape"))
+						.build(),
+					config.getClass(),
+					"cape",
+					configInstance
+				)
+			);
+		}
 	}
 
 	public static Screen buildScreen(Screen parent) {
