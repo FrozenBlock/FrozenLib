@@ -136,9 +136,9 @@ public final class FrozenLibConfigGui {
 		);
 
 		UUID playerUUID = Minecraft.getInstance().getUser().getProfileId();
-		List<ResourceLocation> usableCapes = new ArrayList<>();
+		List<String> usableCapes = new ArrayList<>();
 		CapeUtil.getUsableCapes(playerUUID).forEach(cape -> {
-			usableCapes.add(cape.registryId());
+			usableCapes.add(cape.registryId().toString());
 		});
 		if (!usableCapes.isEmpty()) {
 			var capeEntry = category.addEntry(
@@ -146,15 +146,12 @@ public final class FrozenLibConfigGui {
 					entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
 						.setDefaultValue(defaultConfig.cape)
 						.setNameProvider(o -> {
-							ResourceLocation capeId = (ResourceLocation) o;
-							if (o != null) {
-								return Component.translatable("cape." + capeId.getNamespace() + "." + capeId.getPath());
-							}
-							return Component.translatable("cape.frozenlib.none");
+							ResourceLocation capeId = ResourceLocation.parse(((String) o));
+							return Component.translatable("cape." + capeId.getNamespace() + "." + capeId.getPath());
 						})
 						.setSaveConsumer(newValue -> {
-							ResourceLocation capeId = (ResourceLocation) newValue;
-							config.cape = capeId;
+							ResourceLocation capeId = ResourceLocation.parse((String) newValue);
+							config.cape = (String) newValue;
 							if (Minecraft.getInstance().getConnection() != null) {
 								ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, capeId));
 							}

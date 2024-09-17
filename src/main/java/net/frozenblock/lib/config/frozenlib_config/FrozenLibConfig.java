@@ -79,7 +79,7 @@ public class FrozenLibConfig {
 	public boolean wardenSpawnTrackerCommand = false;
 
 	@EntrySyncData(value = "cape", behavior = SyncBehavior.UNSYNCABLE)
-	public ResourceLocation cape = FrozenSharedConstants.id("dummy");
+	public String cape = FrozenSharedConstants.string("dummy");
 
 	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();
