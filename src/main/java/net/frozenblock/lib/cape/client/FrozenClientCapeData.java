@@ -71,7 +71,7 @@ public class FrozenClientCapeData {
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> CAPES_IN_SERVER.clear());
 		ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> CAPES_IN_SERVER.clear());
 		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) -> {
-			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), FrozenLibConfig.get().cape));
+			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), ResourceLocation.parse(FrozenLibConfig.get().cape)));
 		});
 		ClientEntityEvents.ENTITY_LOAD.register((entity, clientLevel) -> {
 			if (entity instanceof PlayerCapeInterface capeInterface) {
