@@ -17,18 +17,29 @@
 
 package net.frozenblock.lib.config.frozenlib_config.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import com.google.common.collect.ImmutableList;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.cape.api.CapeRegistry;
+import net.frozenblock.lib.cape.impl.Cape;
+import net.frozenblock.lib.cape.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -125,6 +136,41 @@ public final class FrozenLibConfigGui {
 			false,
 			tooltip("datafixer"),
 			disabledDataFixTypes
+		);
+
+		UUID playerUUID = Minecraft.getInstance().getUser().getProfileId();
+		List<Cape> usableCapes = new ArrayList<>();
+		CapeRegistry.getCapes().forEach(cape -> {
+			if (CapeRegistry.canPlayerUserCape(playerUUID, cape.texture())) {
+				usableCapes.add(cape);
+			}
+		});
+		var capeEntry = category.addEntry(
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
+					.setDefaultValue(defaultConfig.cape)
+					.setTooltipSupplier(o -> {
+						ResourceLocation capeName = ((Cape) o).location();
+						Component component;
+						if (capeName == null) {
+							component = Component.translatable("cape.frozenlib.none");
+						} else {
+							component = Component.translatable("cape." + capeName.getNamespace() + "." + capeName.getPath());
+						}
+						return Optional.of(ImmutableList.of(component).toArray(new Component[0]));
+					})
+					.setSaveConsumer(newValue -> {
+						if (newValue instanceof Cape cape) {
+							config.cape = cape;
+							ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, cape.texture()));
+						}
+					})
+					.setTooltip(tooltip("cape"))
+					.build(),
+				config.getClass(),
+				"cape",
+				configInstance
+			)
 		);
 	}
 

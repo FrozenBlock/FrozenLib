@@ -17,11 +17,15 @@
 
 package net.frozenblock.lib.networking;
 
+import java.util.UUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.cape.api.CapeRegistry;
+import net.frozenblock.lib.cape.impl.ServerCapeData;
+import net.frozenblock.lib.cape.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
@@ -54,6 +58,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -70,6 +75,7 @@ public final class FrozenNetworking {
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getWindManager(serverLevel);
 			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
+			ServerCapeData.sendAllCapesToPlayer(player);
 		}));
 
 		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {
@@ -91,7 +97,6 @@ public final class FrozenNetworking {
 				ConfigSyncPacket.receive(packet, ctx.player().server);
 		}));
 
-
 		registry.register(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
 		registry.register(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);
 		registry.register(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket.CODEC);
@@ -110,6 +115,17 @@ public final class FrozenNetworking {
 		registry.register(SpottingIconRemovePacket.PACKET_TYPE, SpottingIconRemovePacket.CODEC);
 		registry.register(WindSyncPacket.PACKET_TYPE, WindSyncPacket.CODEC);
 		registry.register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
+		registry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
+		c2sRegistry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE,
+			(packet, ctx) -> {
+				UUID uuid = ctx.player().getUUID();
+				ResourceLocation capeTexture = packet.getCapeTexture();
+				if (capeTexture == null || CapeRegistry.canPlayerUserCape(uuid, capeTexture)) {
+					CapeCustomizePacket.sendCapeToAll(ctx.server(), uuid, capeTexture);
+				}
+			}
+		);
 
 		// DEBUG
 		registry.register(ImprovedGoalDebugPayload.PACKET_TYPE, ImprovedGoalDebugPayload.STREAM_CODEC);

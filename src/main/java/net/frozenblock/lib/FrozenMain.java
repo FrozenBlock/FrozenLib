@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.loader.api.ModContainer;
+import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -95,6 +96,7 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		RegisterInGameDevTools.register();
 		FrozenParticleTypes.registerParticles();
+		ServerCapeData.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
 

@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.frozenblock.lib.cape.client.FrozenClientCapeData;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
@@ -65,6 +66,7 @@ public final class FrozenClient implements ClientModInitializer {
 		particleRegistry.register(FrozenParticleTypes.DEBUG_POS, DebugPosParticle.Provider::new);
 
 		Panoramas.addPanorama(ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama"));
+		FrozenClientCapeData.init();
 
 		var resourceLoader = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
 		resourceLoader.registerReloadListener(BlockSoundGroupManager.INSTANCE);
