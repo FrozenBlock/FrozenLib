@@ -77,5 +77,6 @@ public class ServerCapeData {
 		allArray.addAll(composers);
 
 		CapeUtil.registerCapeWithWhitelist(FrozenSharedConstants.id("frozenblock"), allArray);
+		CapeUtil.registerCapeWithWhitelist(FrozenSharedConstants.id("very_blue_cape"), UUID.fromString("ccaa0664-8fd4-4176-96b4-eab6f8c75083")); // Alex
 	}
 }

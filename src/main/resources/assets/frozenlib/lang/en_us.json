@@ -51,6 +51,7 @@
   "cape.frozenlib.none": "§cMissing value!",
   "cape.frozenlib.dummy": "§cNone",
   "cape.frozenlib.frozenblock": "FrozenBlock",
+  "cape.frozenlib.very_blue_cape": "Very Blue Cape",
 
   "commands.wind.display.global.success": "The global wind is currently: %s, %s, %s.",
   "commands.wind.display.pos.success": "The wind at %s, %s, %s currently: %s, %s, %s.",
