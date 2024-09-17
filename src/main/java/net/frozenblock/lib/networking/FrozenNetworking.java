@@ -25,7 +25,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.cape.api.CapeRegistry;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
-import net.frozenblock.lib.cape.networking.CapeCustomizePacket;
+import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;

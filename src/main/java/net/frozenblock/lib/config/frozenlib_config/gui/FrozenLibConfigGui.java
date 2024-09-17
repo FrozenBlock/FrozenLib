@@ -30,7 +30,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.cape.api.CapeRegistry;
 import net.frozenblock.lib.cape.impl.Cape;
-import net.frozenblock.lib.cape.networking.CapeCustomizePacket;
+import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.cape.networking;
+package net.frozenblock.lib.cape.impl.networking;
 
 import java.util.UUID;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
