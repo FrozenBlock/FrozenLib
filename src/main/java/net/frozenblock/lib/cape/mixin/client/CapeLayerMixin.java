@@ -23,7 +23,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.cape.client.impl.AbstractClientPlayerCapeInterface;
+import net.frozenblock.lib.cape.client.impl.PlayerCapeInterface;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
@@ -48,7 +48,7 @@ public class CapeLayerMixin {
 		PoseStack matrices, MultiBufferSource vertexConsumers, int i, AbstractClientPlayer abstractClientPlayer,
 		@Share("frozenLib$newCapeTexture") LocalRef<ResourceLocation> newCapeTexture
 	) {
-		if (abstractClientPlayer instanceof AbstractClientPlayerCapeInterface capeInterface) {
+		if (abstractClientPlayer instanceof PlayerCapeInterface capeInterface) {
 			ResourceLocation capeTexture = capeInterface.frozenLib$getCape();
 			if (capeTexture != null) {
 				newCapeTexture.set(capeTexture);

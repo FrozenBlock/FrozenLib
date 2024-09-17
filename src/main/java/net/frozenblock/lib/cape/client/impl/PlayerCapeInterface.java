@@ -19,7 +19,7 @@ package net.frozenblock.lib.cape.client.impl;
 
 import net.minecraft.resources.ResourceLocation;
 
-public interface AbstractClientPlayerCapeInterface {
+public interface PlayerCapeInterface {
 	void frozenLib$setCape(ResourceLocation cape);
 	ResourceLocation frozenLib$getCape();
 }

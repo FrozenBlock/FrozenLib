@@ -27,7 +27,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.frozenblock.lib.cape.client.impl.AbstractClientPlayerCapeInterface;
+import net.frozenblock.lib.cape.client.impl.PlayerCapeInterface;
 import net.frozenblock.lib.cape.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.Minecraft;
@@ -55,7 +55,7 @@ public class FrozenClientCapeData {
 
 	private static void setPlayerCapeTexture(UUID uuid, @Nullable ResourceLocation texture) {
 		ClientLevel level = Minecraft.getInstance().level;
-		if (level != null && level.getPlayerByUUID(uuid) instanceof AbstractClientPlayerCapeInterface capeInterface) {
+		if (level != null && level.getPlayerByUUID(uuid) instanceof PlayerCapeInterface capeInterface) {
 			capeInterface.frozenLib$setCape(texture);
 		}
 	}
@@ -67,7 +67,7 @@ public class FrozenClientCapeData {
 			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), FrozenLibConfig.get().cape.texture()));
 		});
 		ClientEntityEvents.ENTITY_LOAD.register((entity, clientLevel) -> {
-			if (entity instanceof AbstractClientPlayerCapeInterface capeInterface) {
+			if (entity instanceof PlayerCapeInterface capeInterface) {
 				getCapeTexture(entity.getUUID()).ifPresent(capeInterface::frozenLib$setCape);
 			}
 		});
