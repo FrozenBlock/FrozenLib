@@ -6,10 +6,9 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "mixins": [
-  ],
   "client": [
     "client.AbstractClientPlayerMixin",
-    "client.CapeLayerMixin"
+    "client.CapeLayerMixin",
+    "client.ElytraLayerMixin"
   ]
 }
