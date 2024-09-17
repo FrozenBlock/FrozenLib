@@ -54,6 +54,10 @@ public class CapeUtil {
 		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.of(allowedPlayers)));
 	}
 
+	public static @NotNull Cape registerCapeWithWhitelist(ResourceLocation id, UUID... uuids) {
+		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.of(ImmutableList.copyOf(uuids))));
+	}
+
 	private static ResourceLocation buildCapeTextureLocation(@NotNull ResourceLocation cape) {
 		return ResourceLocation.tryBuild(cape.getNamespace(), "textures/cape/" + cape.getPath() + ".png");
 	}
