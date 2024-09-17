@@ -45,6 +45,12 @@
   "option.frozenlib.warden_spawn_tracker_command.true": "§aON",
   "tooltip.frozenlib.warden_spawn_tracker_command": "Enables or disables the Warden Spawn Tracker command.",
 
+  "option.frozenlib.cape": "Cape",
+  "tooltip.frozenlib.cape": "Custom FrozenBlock capes that can be used.",
+
+  "cape.frozenlib.none": "§cNone",
+  "cape.frozenlib.frozenblock": "FrozenBlock",
+
   "commands.wind.display.global.success": "The global wind is currently: %s, %s, %s.",
   "commands.wind.display.pos.success": "The wind at %s, %s, %s currently: %s, %s, %s.",
   "commands.wind.success": "Set wind to %s, %s, %s.",

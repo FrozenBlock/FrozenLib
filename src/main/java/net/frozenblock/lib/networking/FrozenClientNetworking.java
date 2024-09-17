@@ -18,11 +18,14 @@
 package net.frozenblock.lib.networking;
 
 import java.util.Optional;
+import java.util.UUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.frozenblock.lib.cape.client.FrozenClientCapeData;
+import net.frozenblock.lib.cape.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
@@ -99,6 +102,7 @@ public final class FrozenClientNetworking {
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		receiveWindDisturbancePacket();
+		receiveCapePacket();
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
 			ConfigSyncPacket.receive(packet, null)
 		);
@@ -319,6 +323,17 @@ public final class FrozenClientNetworking {
 						disturbanceLogic.get()
 					)
 				);
+			}
+		});
+	}
+
+	private static void receiveCapePacket() {
+		ClientPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE, (packet, ctx) -> {
+			UUID uuid = packet.getPlayerUUID();
+			if (packet.isEnabled()) {
+				FrozenClientCapeData.setCapeForUUID(uuid, packet.getCapeTexture());
+			} else {
+				FrozenClientCapeData.removeCapeForUUID(uuid);
 			}
 		});
 	}

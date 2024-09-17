@@ -18,13 +18,13 @@
 package net.frozenblock.lib.item.api.sherd;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import java.util.Map;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.DecoratedPotPattern;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
-import java.util.Map;
 
 public class SherdRegistry {
 	public static void register(Item sherd, ResourceLocation patternKey) {

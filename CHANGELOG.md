@@ -15,3 +15,6 @@ Put changelog here:
 - Added the new `DecoratedPotPatternRegsitryEntrypoint` interface, which can be used to register new Decorated Pot Patterns.
   - The entrypoint's identitier is `frozenlib:decorated_pot_patterns`
 - Fixed `FadingDiskCarpetFeature` using an incorrect position to determine if a block can survive.
+- Added the `CapeRegistry` class which can be used to register custom capes.
+  - Currently, these capes can only be accessed through FrozenLib's config.
+  - An optional list of allowed UUIDs can be defined for capes.

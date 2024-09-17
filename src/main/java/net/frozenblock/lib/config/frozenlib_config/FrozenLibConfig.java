@@ -22,6 +22,8 @@ import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.cape.api.CapeRegistry;
+import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
@@ -76,6 +78,9 @@ public class FrozenLibConfig {
 
 	@EntrySyncData("wardenSpawnTrackerCommand")
 	public boolean wardenSpawnTrackerCommand = false;
+
+	@EntrySyncData(value = "cape", behavior = SyncBehavior.UNSYNCABLE)
+	public Cape cape = CapeRegistry.DUMMY_CAPE;
 
 	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();
