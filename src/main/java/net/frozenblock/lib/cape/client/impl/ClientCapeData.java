@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.cape.client;
+package net.frozenblock.lib.cape.client.impl;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +27,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.frozenblock.lib.cape.client.impl.PlayerCapeInterface;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -38,7 +37,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
-public class FrozenClientCapeData {
+public class ClientCapeData {
 	private static final Map<UUID, Cape> CAPES_IN_SERVER = new HashMap<>();
 
 	public static Optional<ResourceLocation> getCapeTexture(UUID uuid) {
@@ -68,7 +67,9 @@ public class FrozenClientCapeData {
 	}
 
 	public static void init() {
-		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> CAPES_IN_SERVER.clear());
+		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+			CAPES_IN_SERVER.clear();
+		});
 		ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> CAPES_IN_SERVER.clear());
 		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) -> {
 			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), ResourceLocation.parse(FrozenLibConfig.get().cape)));

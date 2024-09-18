@@ -18,9 +18,24 @@
 package net.frozenblock.lib.cape.api;
 
 import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
@@ -58,7 +73,56 @@ public class CapeUtil {
 		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.of(ImmutableList.copyOf(uuids))));
 	}
 
-	private static ResourceLocation buildCapeTextureLocation(@NotNull ResourceLocation cape) {
+	public static void registerCapesFromURL(String urlString) {
+		try {
+			URL url = URI.create(urlString).toURL();
+			URLConnection request = url.openConnection();
+			request.connect();
+
+			JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent()));
+			JsonObject capeDir = parsedJson.getAsJsonObject();
+			JsonArray capeArray = capeDir.get("capes").getAsJsonArray();
+
+			capeArray.forEach(jsonElement -> {
+				registerCapeFromURL(jsonElement.getAsString());
+			});
+		} catch (IOException ignored) {}
+	}
+
+	private static void registerCapeFromURL(String urlString) {
+		try {
+			URL url = URI.create(urlString).toURL();
+			URLConnection request = url.openConnection();
+			request.connect();
+
+			JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
+			JsonObject capeJson = parsedJson.getAsJsonObject();
+			String capeId = capeJson.get("id").getAsString();
+			String capeTexture = capeJson.get("texture").getAsString();
+			JsonArray allowedUUIDs = capeJson.get("allowed_uuids").getAsJsonArray();
+
+			ResourceLocation capeLocation = ResourceLocation.tryParse(capeId);
+			if (capeLocation != null) {
+				ResourceLocation capeTextureLocation = CapeUtil.buildCapeTextureLocation(capeLocation);
+				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+					ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
+				}
+
+				List<JsonElement> allowedUUIDList = allowedUUIDs.asList();
+				if (allowedUUIDList.isEmpty()) {
+					registerCape(capeLocation);
+				} else {
+					List<UUID> uuidList = new ArrayList<>();
+					allowedUUIDList.forEach(jsonElement -> uuidList.add(UUID.fromString(jsonElement.getAsString())));
+					registerCapeWithWhitelist(capeLocation, ImmutableList.copyOf(uuidList));
+				}
+			}
+		} catch (IOException ignored) {
+			FrozenSharedConstants.LOGGER.error("Failed to parse Cape from URL: {}", urlString);
+		}
+	}
+
+	public static ResourceLocation buildCapeTextureLocation(@NotNull ResourceLocation cape) {
 		return ResourceLocation.tryBuild(cape.getNamespace(), "textures/cape/" + cape.getPath() + ".png");
 	}
 }
