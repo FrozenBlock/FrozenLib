@@ -18,7 +18,6 @@
 package net.frozenblock.lib.cape.impl;
 
 import com.google.common.collect.ImmutableList;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +26,6 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.minecraft.server.level.ServerPlayer;
@@ -90,13 +88,6 @@ public class ServerCapeData {
 			UUID.fromString("3f89b045-9f47-49ac-b9a0-be2c225bd7fa") // Stella
 		);
 
-		ArrayList<UUID> allArray = new ArrayList<>(devs);
-		allArray.addAll(artists);
-		allArray.addAll(builders);
-		allArray.addAll(composers);
-		allArray.addAll(soundDesigners);
-
-		CapeUtil.registerCapeWithWhitelist(FrozenSharedConstants.id("frozenblock"), allArray);
-		CapeUtil.registerCapeWithWhitelist(FrozenSharedConstants.id("very_blue_cape"), UUID.fromString("ccaa0664-8fd4-4176-96b4-eab6f8c75083")); // Alex
+		CapeUtil.registerCapesFromURL("https://raw.githubusercontent.com/FrozenBlock/CapeRepo/refs/heads/master/cape_directory.json");
 	}
 }
