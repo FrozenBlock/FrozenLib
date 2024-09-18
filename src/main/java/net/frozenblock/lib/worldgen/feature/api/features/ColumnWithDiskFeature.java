@@ -24,9 +24,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -82,9 +82,11 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 		generated = placeAtPos(level, blockPos, mutablePos, columnState, pillarHeight) || generated;
 
 		int maxSurroundingPillarHeight = pillarHeight - 1;
-		for (Direction direction : Direction.Plane.HORIZONTAL) {
-			if (random.nextFloat() < config.surroundingPillarChance()) {
-				generated = placeAtPos(level, blockPos.relative(direction), mutablePos, columnState, (int) (maxSurroundingPillarHeight * random.nextDouble())) || generated;
+		if (maxSurroundingPillarHeight > 0) {
+			for (Direction direction : Direction.Plane.HORIZONTAL) {
+				if (random.nextFloat() < config.surroundingPillarChance()) {
+					generated = placeAtPos(level, blockPos.relative(direction), mutablePos, columnState, UniformInt.of(1, maxSurroundingPillarHeight).sample(random)) || generated;
+				}
 			}
 		}
 		return generated;
