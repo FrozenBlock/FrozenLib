@@ -18,3 +18,4 @@ Put changelog here:
 - Added the `CapeRegistry` class which can be used to register custom capes.
   - Currently, these capes can only be accessed through FrozenLib's config.
   - An optional list of allowed UUIDs can be defined for capes.
+- Fixed the `ColumnWithDiskFeature` not generating as intended.
