@@ -45,22 +45,22 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 		ColumnWithDiskFeatureConfig config = context.config();
 		BlockPos blockPos = context.origin();
 		WorldGenLevel level = context.level();
-		BlockPos s = blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, blockPos.getX(), blockPos.getZ()) - 1);
+		BlockPos surfacePos = blockPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, blockPos.getX(), blockPos.getZ()) - 1);
 		RandomSource random = level.getRandom();
 		int radius = config.radius().sample(random);
 		Optional<Holder<Block>> diskOptional = config.diskBlocks().getRandomElement(random);
 		// DISK
 		if (diskOptional.isPresent()) {
-			BlockPos.MutableBlockPos mutableDisk = s.mutable();
+			BlockPos.MutableBlockPos mutableDisk = surfacePos.mutable();
 			BlockState disk = diskOptional.get().value().defaultBlockState();
-			int bx = s.getX();
-			int bz = s.getZ();
+			int bx = surfacePos.getX();
+			int bz = surfacePos.getZ();
 			for (int x = bx - radius; x <= bx + radius; x++) {
 				for (int z = bz - radius; z <= bz + radius; z++) {
 					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
 					if (distance < radius * radius) {
 						mutableDisk.set(x, level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1, z);
-						boolean fade = !mutableDisk.closerThan(s, radius * 0.8D);
+						boolean fade = !mutableDisk.closerThan(surfacePos, radius * 0.8D);
 						if (level.getBlockState(mutableDisk).is(config.replaceableBlocks())) {
 							generated = true;
 							if (fade) {
@@ -78,10 +78,13 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 		// COLUMN
 		BlockState columnState = config.state();
 		BlockPos.MutableBlockPos mutablePos = blockPos.mutable();
-		generated = generated || placeAtPos(level, blockPos, mutablePos, columnState, config.height().sample(random));
+		int pillarHeight = config.height().sample(random);
+		generated = placeAtPos(level, blockPos, mutablePos, columnState, pillarHeight) || generated;
+
+		int maxSurroundingPillarHeight = pillarHeight - 1;
 		for (Direction direction : Direction.Plane.HORIZONTAL) {
-			if (random.nextBoolean()) {
-				generated = generated || placeAtPos(level, blockPos.relative(direction), mutablePos, columnState, config.surroundingPillarHeight().sample(random));
+			if (random.nextFloat() < config.surroundingPillarChance()) {
+				generated = placeAtPos(level, blockPos.relative(direction), mutablePos, columnState, (int) (maxSurroundingPillarHeight * random.nextDouble())) || generated;
 			}
 		}
 		return generated;
@@ -95,16 +98,14 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 		int height
 	) {
 		boolean generated = false;
-		mutablePos.set(startPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, startPos.getX(), startPos.getZ()) - 1).mutable());
-		for (int i = 0; i < height; i++) {
-			mutablePos.move(Direction.UP);
-			BlockState state = level.getBlockState(mutablePos);
-			if (level.getBlockState(mutablePos.below()).is(Blocks.WATER)) {
-				break;
-			}
-			if (state.canBeReplaced()) {
-				level.setBlock(mutablePos, columnState, Block.UPDATE_ALL);
-				generated = true;
+		mutablePos.set(startPos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, startPos.getX(), startPos.getZ()) - 1));
+		if (level.getBlockState(mutablePos).getFluidState().isEmpty()) {
+			for (int i = 0; i < height; i++) {
+				BlockState state = level.getBlockState(mutablePos.move(Direction.UP));
+				if (state.canBeReplaced()) {
+					level.setBlock(mutablePos, columnState, Block.UPDATE_ALL);
+					generated = true;
+				}
 			}
 		}
 		return generated;
