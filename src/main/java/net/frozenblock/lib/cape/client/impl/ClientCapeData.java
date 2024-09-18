@@ -38,10 +38,10 @@ import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class ClientCapeData {
-	private static final Map<UUID, Cape> CAPES_IN_SERVER = new HashMap<>();
+	private static final Map<UUID, Cape> CAPES_IN_WORLD = new HashMap<>();
 
 	public static Optional<ResourceLocation> getCapeTexture(UUID uuid) {
-		return Optional.ofNullable(CAPES_IN_SERVER.get(uuid)).map(Cape::texture);
+		return Optional.ofNullable(CAPES_IN_WORLD.get(uuid)).map(Cape::texture);
 	}
 
 	public static void setCapeForUUID(UUID uuid, ResourceLocation capeId) {
@@ -49,13 +49,13 @@ public class ClientCapeData {
 		if (cape == null) {
 			removeCapeForUUID(uuid);
 		} else {
-			CAPES_IN_SERVER.put(uuid, cape);
+			CAPES_IN_WORLD.put(uuid, cape);
 			setPlayerCapeTexture(uuid, Optional.of(cape));
 		}
 	}
 
 	public static void removeCapeForUUID(UUID uuid) {
-		CAPES_IN_SERVER.remove(uuid);
+		CAPES_IN_WORLD.remove(uuid);
 		setPlayerCapeTexture(uuid, Optional.empty());
 	}
 
@@ -67,13 +67,10 @@ public class ClientCapeData {
 	}
 
 	public static void init() {
-		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
-			CAPES_IN_SERVER.clear();
-		});
-		ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> CAPES_IN_SERVER.clear());
-		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) -> {
-			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), ResourceLocation.parse(FrozenLibConfig.get().cape)));
-		});
+		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> CAPES_IN_WORLD.clear());
+		ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> CAPES_IN_WORLD.clear());
+		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) ->
+			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), ResourceLocation.parse(FrozenLibConfig.get().cape))));
 		ClientEntityEvents.ENTITY_LOAD.register((entity, clientLevel) -> {
 			if (entity instanceof AbstractClientPlayerCapeInterface capeInterface) {
 				getCapeTexture(entity.getUUID()).ifPresent(capeInterface::frozenLib$setCape);

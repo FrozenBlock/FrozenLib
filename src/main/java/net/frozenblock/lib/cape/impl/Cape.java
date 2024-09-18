@@ -20,7 +20,8 @@ package net.frozenblock.lib.cape.impl;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-public record Cape(ResourceLocation registryId, ResourceLocation texture, Optional<List<UUID>> allowedPlayers) {
+public record Cape(ResourceLocation registryId, Component capeName, ResourceLocation texture, Optional<List<UUID>> allowedPlayers) {
 }

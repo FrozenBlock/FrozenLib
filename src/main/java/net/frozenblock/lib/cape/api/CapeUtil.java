@@ -39,6 +39,7 @@ import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
@@ -61,16 +62,16 @@ public class CapeUtil {
 		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
 	}
 
-	public static @NotNull Cape registerCape(ResourceLocation id) {
-		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.empty()));
+	public static @NotNull Cape registerCape(ResourceLocation id, Component capeName) {
+		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.empty()));
 	}
 
-	public static @NotNull Cape registerCapeWithWhitelist(ResourceLocation id, List<UUID> allowedPlayers) {
-		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.of(allowedPlayers)));
+	public static @NotNull Cape registerCapeWithWhitelist(ResourceLocation id, Component capeName, List<UUID> allowedPlayers) {
+		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.of(allowedPlayers)));
 	}
 
-	public static @NotNull Cape registerCapeWithWhitelist(ResourceLocation id, UUID... uuids) {
-		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.of(ImmutableList.copyOf(uuids))));
+	public static @NotNull Cape registerCapeWithWhitelist(ResourceLocation id, Component capeName, UUID... uuids) {
+		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.of(ImmutableList.copyOf(uuids))));
 	}
 
 	public static void registerCapesFromURL(String urlString) {
@@ -98,6 +99,7 @@ public class CapeUtil {
 			JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
 			JsonObject capeJson = parsedJson.getAsJsonObject();
 			String capeId = capeJson.get("id").getAsString();
+			Component capeName = Component.literal(capeJson.get("name").getAsString());
 			String capeTexture = capeJson.get("texture").getAsString();
 			JsonArray allowedUUIDs = capeJson.get("allowed_uuids").getAsJsonArray();
 
@@ -110,11 +112,11 @@ public class CapeUtil {
 
 				List<JsonElement> allowedUUIDList = allowedUUIDs.asList();
 				if (allowedUUIDList.isEmpty()) {
-					registerCape(capeLocation);
+					registerCape(capeLocation, capeName);
 				} else {
 					List<UUID> uuidList = new ArrayList<>();
 					allowedUUIDList.forEach(jsonElement -> uuidList.add(UUID.fromString(jsonElement.getAsString())));
-					registerCapeWithWhitelist(capeLocation, ImmutableList.copyOf(uuidList));
+					registerCapeWithWhitelist(capeLocation, capeName, ImmutableList.copyOf(uuidList));
 				}
 			}
 		} catch (IOException ignored) {

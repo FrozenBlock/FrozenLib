@@ -34,6 +34,7 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.registries.VanillaRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
@@ -77,7 +78,7 @@ public class FrozenRegistry {
 	);
 
 	public static final MappedRegistry<Cape> CAPE = createSimple(CAPE_REGISTRY, Lifecycle.stable(), null,
-		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new Cape(FrozenSharedConstants.id("dummy"), null, Optional.empty()))
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new Cape(FrozenSharedConstants.id("dummy"), Component.translatable("cape.frozenlib.dummy"), null, Optional.empty()))
 	);
 
 
