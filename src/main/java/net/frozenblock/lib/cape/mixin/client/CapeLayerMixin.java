@@ -24,9 +24,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.cape.client.impl.PlayerCapeInterface;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
+import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -45,10 +45,10 @@ public class CapeLayerMixin {
 	)
 	public ResourceLocation frozenLib$captureAndChangeCapeLocation(
 		ResourceLocation resourceLocation,
-		PoseStack matrices, MultiBufferSource vertexConsumers, int i, AbstractClientPlayer abstractClientPlayer,
+		PoseStack poseStack, MultiBufferSource multiBufferSource, int i, PlayerRenderState playerRenderState,
 		@Share("frozenLib$newCapeTexture") LocalRef<ResourceLocation> newCapeTexture
 	) {
-		if (abstractClientPlayer instanceof PlayerCapeInterface capeInterface) {
+		if (playerRenderState instanceof PlayerCapeInterface capeInterface) {
 			ResourceLocation capeTexture = capeInterface.frozenLib$getCape();
 			if (capeTexture != null) {
 				newCapeTexture.set(capeTexture);
