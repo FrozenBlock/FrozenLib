@@ -27,15 +27,15 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public record ColumnWithDiskFeatureConfig(BlockState state, IntProvider radius, IntProvider height,
-										  IntProvider additionalHeight, HolderSet<Block> replaceableBlocks,
-										  HolderSet<Block> diskBlocks) implements FeatureConfiguration {
+public record ColumnWithDiskFeatureConfig(
+	BlockState state, IntProvider radius, IntProvider height, IntProvider surroundingPillarHeight, HolderSet<Block> replaceableBlocks, HolderSet<Block> diskBlocks
+) implements FeatureConfiguration {
 	public static final Codec<ColumnWithDiskFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
 		instance.group(
 			BlockState.CODEC.fieldOf("state").forGetter((config) -> config.state),
 			IntProvider.NON_NEGATIVE_CODEC.fieldOf("radius").forGetter((config) -> config.radius),
 			IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter((config) -> config.height),
-			IntProvider.NON_NEGATIVE_CODEC.fieldOf("additional_height").forGetter((config) -> config.additionalHeight),
+			IntProvider.NON_NEGATIVE_CODEC.fieldOf("surrounding_pillar_height").forGetter((config) -> config.surroundingPillarHeight),
 			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter((config) -> config.replaceableBlocks),
 			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("disk_blocks").forGetter((config) -> config.diskBlocks)
 		).apply(instance, ColumnWithDiskFeatureConfig::new));
