@@ -122,9 +122,9 @@ public final class FrozenNetworking {
 		ServerPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE,
 			(packet, ctx) -> {
 				UUID uuid = ctx.player().getUUID();
-				ResourceLocation capeTexture = packet.getCapeId();
-				if (capeTexture == null || CapeUtil.canPlayerUserCape(uuid, capeTexture)) {
-					CapeCustomizePacket.sendCapeToAll(ctx.server(), uuid, capeTexture);
+				ResourceLocation capeId = packet.getCapeId();
+				if (capeId == null || CapeUtil.canPlayerUserCape(uuid, capeId)) {
+					CapeCustomizePacket.sendCapeToAll(ctx.server(), uuid, capeId);
 				}
 			}
 		);

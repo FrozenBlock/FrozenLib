@@ -19,6 +19,8 @@ package net.frozenblock.lib.cape.client.api;
 
 import com.google.gson.JsonIOException;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,28 +37,32 @@ import org.jetbrains.annotations.NotNull;
 @Environment(EnvType.CLIENT)
 public class ClientCapeUtil {
 	public static final Path CAPE_CACHE_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("frozenlib_cape_cache");
+	private static final List<ResourceLocation> REGISTERED_CAPE_LISTENERS = new ArrayList<>();
 
 	public static void registerCapeTextureFromURL(
 		@NotNull ResourceLocation capeLocation, ResourceLocation capeTextureLocation, String textureURL
 	) throws JsonIOException {
-		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-			@Override
-			public ResourceLocation getFabricId() {
-				return capeLocation;
-			}
+		if (!REGISTERED_CAPE_LISTENERS.contains(capeLocation)) {
+			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+				@Override
+				public ResourceLocation getFabricId() {
+					return capeLocation;
+				}
 
-			@Override
-			public void onResourceManagerReload(@NotNull ResourceManager resourceManager) {
-				CompletableFuture<ResourceLocation> completableFuture = new CompletableFuture<>();
-				HttpTexture httpTexture = new HttpTexture(
-					CAPE_CACHE_PATH.resolve(capeLocation.getNamespace()).resolve(capeLocation.getPath() + ".png").toFile(),
-					textureURL,
-					DefaultPlayerSkin.getDefaultTexture(),
-					false,
-					() -> completableFuture.complete(capeTextureLocation)
-				);
-				Minecraft.getInstance().getTextureManager().register(capeTextureLocation, httpTexture);
-			}
-		});
+				@Override
+				public void onResourceManagerReload(@NotNull ResourceManager resourceManager) {
+					CompletableFuture<ResourceLocation> completableFuture = new CompletableFuture<>();
+					HttpTexture httpTexture = new HttpTexture(
+						CAPE_CACHE_PATH.resolve(capeLocation.getNamespace()).resolve(capeLocation.getPath() + ".png").toFile(),
+						textureURL,
+						DefaultPlayerSkin.getDefaultTexture(),
+						false,
+						() -> completableFuture.complete(capeTextureLocation)
+					);
+					Minecraft.getInstance().getTextureManager().register(capeTextureLocation, httpTexture);
+				}
+			});
+			REGISTERED_CAPE_LISTENERS.add(capeLocation);
+		}
 	}
 }

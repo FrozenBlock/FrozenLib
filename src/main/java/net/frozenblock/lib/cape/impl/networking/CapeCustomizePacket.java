@@ -70,7 +70,8 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 		return new CapeCustomizePacket(uuid, false);
 	}
 
-	public static @NotNull CapeCustomizePacket createPacket(UUID uuid,  @Nullable ResourceLocation capeId) {
+	public static @NotNull CapeCustomizePacket createPacket(UUID uuid, @Nullable ResourceLocation capeId) {
+		FrozenSharedConstants.LOGGER.info("SENDING CAPE {}", capeId);
 		return new CapeCustomizePacket(uuid, !shouldDisable(CapeUtil.getCape(capeId).orElse(null)), capeId);
 	}
 

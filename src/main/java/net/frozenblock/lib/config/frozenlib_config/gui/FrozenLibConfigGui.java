@@ -141,26 +141,21 @@ public final class FrozenLibConfigGui {
 		CapeUtil.getUsableCapes(playerUUID).forEach(cape -> usableCapes.add(cape.registryId().toString()));
 		if (usableCapes.size() > 1) {
 			var capeEntry = category.addEntry(
-				FrozenClothConfig.syncedEntry(
-					entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
-						.setDefaultValue(defaultConfig.cape)
-						.setNameProvider(o -> {
-							ResourceLocation capeId = ResourceLocation.parse(((String) o));
-							return CapeUtil.getCape(capeId).map(Cape::capeName).orElse(Component.translatable("cape.frozenlib.invalid"));
-						})
-						.setSaveConsumer(newValue -> {
-							ResourceLocation capeId = ResourceLocation.parse((String) newValue);
-							config.cape = (String) newValue;
-							if (Minecraft.getInstance().getConnection() != null) {
-								ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, capeId));
-							}
-						})
-						.setTooltip(tooltip("cape"))
-						.build(),
-					config.getClass(),
-					"cape",
-					configInstance
-				)
+				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
+					.setDefaultValue(defaultConfig.cape)
+					.setNameProvider(o -> {
+						ResourceLocation capeId = ResourceLocation.parse(((String) o));
+						return CapeUtil.getCape(capeId).map(Cape::capeName).orElse(Component.translatable("cape.frozenlib.invalid"));
+					})
+					.setSaveConsumer(newValue -> {
+						ResourceLocation capeId = ResourceLocation.parse((String) newValue);
+						config.cape = (String) newValue;
+						if (Minecraft.getInstance().getConnection() != null) {
+							ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, capeId));
+						}
+					})
+					.setTooltip(tooltip("cape"))
+					.build()
 			);
 		}
 	}
