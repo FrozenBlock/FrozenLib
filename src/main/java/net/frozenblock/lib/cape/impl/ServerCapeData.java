@@ -26,9 +26,11 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 public class ServerCapeData {
@@ -49,6 +51,8 @@ public class ServerCapeData {
 				}
 			}
 		});
+
+		CapeUtil.registerCape(FrozenSharedConstants.id("dummy"), null, Component.translatable("cape.frozenlib.dummy"));
 
 		// FrozenBlock
 		List<UUID> devs = ImmutableList.of(

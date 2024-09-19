@@ -74,6 +74,10 @@ public class CapeUtil {
 		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
 	}
 
+	public static void registerCape(ResourceLocation id, ResourceLocation textureId, Component capeName) {
+		CAPES.put(id, new Cape(id, capeName, textureId, Optional.empty()));
+	}
+
 	public static void registerCape(ResourceLocation id, Component capeName) {
 		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.empty()));
 	}
