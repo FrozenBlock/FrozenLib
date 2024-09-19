@@ -26,6 +26,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
+import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
@@ -116,6 +117,7 @@ public final class FrozenNetworking {
 		registry.register(WindSyncPacket.PACKET_TYPE, WindSyncPacket.CODEC);
 		registry.register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
 		registry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
+		registry.register(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.STREAM_CODEC);
 		c2sRegistry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE,
 			(packet, ctx) -> {

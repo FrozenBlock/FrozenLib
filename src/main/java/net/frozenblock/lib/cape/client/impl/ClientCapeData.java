@@ -27,10 +27,10 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.resources.ResourceLocation;
@@ -45,13 +45,7 @@ public class ClientCapeData {
 	}
 
 	public static void setCapeForUUID(UUID uuid, ResourceLocation capeId) {
-		Cape cape = FrozenRegistry.CAPE.get(capeId);
-		if (cape == null) {
-			removeCapeForUUID(uuid);
-		} else {
-			CAPES_IN_WORLD.put(uuid, cape);
-			setPlayerCapeTexture(uuid, Optional.of(cape));
-		}
+		CapeUtil.getCape(capeId).ifPresentOrElse(cape -> CAPES_IN_WORLD.put(uuid, cape), () -> removeCapeForUUID(uuid));
 	}
 
 	public static void removeCapeForUUID(UUID uuid) {

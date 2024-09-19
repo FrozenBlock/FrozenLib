@@ -28,6 +28,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
+import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.minecraft.server.level.ServerPlayer;
 
 public class ServerCapeData {
@@ -35,6 +36,7 @@ public class ServerCapeData {
 
 	public static void sendAllCapesToPlayer(ServerPlayer recipent) {
 		CAPES_IN_SERVER.forEach((uuid, cape) -> ServerPlayNetworking.send(recipent, CapeCustomizePacket.createPacket(uuid, cape)));
+		CapeUtil.getCapeRepos().forEach(repoURL -> ServerPlayNetworking.send(recipent, new LoadCapeRepoPacket(repoURL)));
 	}
 
 	public static void init() {
