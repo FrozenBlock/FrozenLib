@@ -67,7 +67,7 @@ public class CapeUtil {
 
 	public static boolean canPlayerUserCape(UUID uuid, ResourceLocation capeID) {
 		Optional<Cape> optionalCape = CapeUtil.getCape(capeID);
-		return optionalCape.map(cape -> canPlayerUserCape(uuid, cape)).orElse(false);
+		return optionalCape.map(cape -> canPlayerUserCape(uuid, cape)).orElse(true);
 	}
 
 	public static boolean canPlayerUserCape(UUID uuid, @NotNull Cape cape) {

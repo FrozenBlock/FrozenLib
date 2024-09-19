@@ -45,15 +45,15 @@ public class ClientCapeData {
 	}
 
 	public static void setCapeForUUID(UUID uuid, ResourceLocation capeId) {
-		CapeUtil.getCape(capeId).ifPresentOrElse(cape -> CAPES_IN_WORLD.put(uuid, cape), () -> removeCapeForUUID(uuid));
+		CapeUtil.getCape(capeId).ifPresentOrElse(cape -> setPlayerCape(uuid, Optional.of(cape)), () -> removeCapeForUUID(uuid));
 	}
 
 	public static void removeCapeForUUID(UUID uuid) {
-		CAPES_IN_WORLD.remove(uuid);
-		setPlayerCapeTexture(uuid, Optional.empty());
+		setPlayerCape(uuid, Optional.empty());
 	}
 
-	private static void setPlayerCapeTexture(UUID uuid, @NotNull Optional<Cape> cape) {
+	private static void setPlayerCape(UUID uuid, @NotNull Optional<Cape> cape) {
+		cape.ifPresentOrElse(cape1 -> CAPES_IN_WORLD.put(uuid, cape1), () -> CAPES_IN_WORLD.remove(uuid));
 		ClientLevel level = Minecraft.getInstance().level;
 		if (level != null && level.getPlayerByUUID(uuid) instanceof AbstractClientPlayerCapeInterface capeInterface) {
 			capeInterface.frozenLib$setCape(cape.map(Cape::texture).orElse(null));
