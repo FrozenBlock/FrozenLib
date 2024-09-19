@@ -116,7 +116,8 @@ public class CapeUtil {
 			String capeId = capeJson.get("id").getAsString();
 			Component capeName = Component.literal(capeJson.get("name").getAsString());
 			String capeTexture = capeJson.get("texture").getAsString();
-			JsonArray allowedUUIDs = capeJson.get("allowed_uuids").getAsJsonArray();
+			JsonElement allowedUUIDElement = capeJson.get("allowed_uuids");
+			boolean whitelisted = allowedUUIDElement != null;
 
 			ResourceLocation capeLocation = ResourceLocation.tryParse(capeId);
 			if (capeLocation != null) {
@@ -125,12 +126,11 @@ public class CapeUtil {
 					ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
 				}
 
-				List<JsonElement> allowedUUIDList = allowedUUIDs.asList();
-				if (allowedUUIDList.isEmpty()) {
+				if (!whitelisted) {
 					registerCape(capeLocation, capeName);
 				} else {
 					List<UUID> uuidList = new ArrayList<>();
-					allowedUUIDList.forEach(jsonElement -> uuidList.add(UUID.fromString(jsonElement.getAsString())));
+					allowedUUIDElement.getAsJsonArray().asList().forEach(jsonElement -> uuidList.add(UUID.fromString(jsonElement.getAsString())));
 					registerCapeWithWhitelist(capeLocation, capeName, ImmutableList.copyOf(uuidList));
 				}
 			}
