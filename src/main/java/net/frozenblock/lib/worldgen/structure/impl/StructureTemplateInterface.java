@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.worldgen.structure.impl;
 
-import net.minecraft.resources.ResourceLocation;
+import java.util.List;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
 public interface StructureTemplateInterface {
 
-	void frozenLib$setId(ResourceLocation id);
-
+	void frozenLib$addProcessors(List<StructureProcessor> processors);
 }

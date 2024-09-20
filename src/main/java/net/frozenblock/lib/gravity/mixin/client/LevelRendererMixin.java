@@ -38,8 +38,21 @@ public class LevelRendererMixin {
 	@Nullable
 	private ClientLevel level;
 
-	@Inject(method = "renderSky", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;depthMask(Z)V", ordinal = 1, shift = At.Shift.AFTER), require = 0)
-	private void renderSky(Matrix4f matrix4f, Matrix4f matrix4f2, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo ci, @Local(ordinal = 0) PoseStack poseStack) {
+	@Inject(
+		method = "renderSky",
+		at = @At(
+			value = "INVOKE",
+			target = "Lcom/mojang/blaze3d/systems/RenderSystem;depthMask(Z)V",
+			ordinal = 1,
+			shift = At.Shift.AFTER,
+			remap = false
+		),
+		require = 0
+	)
+	private void frozenLib$renderSky(
+		Matrix4f matrix4f, Matrix4f matrix4f2, float f, Camera camera, boolean bl, Runnable runnable, CallbackInfo info,
+		@Local(ordinal = 0) PoseStack poseStack
+	) {
 		GravityRenderingImpl.renderGravityBelts(level, camera, poseStack);
 	}
 }

@@ -9,11 +9,12 @@
   "mixins": [
     "AbstractContainerMenuMixin",
     "ItemCooldownsMixin",
-    "ItemEntityMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "ServerItemCooldownsMixin",
     "ServerPlayerMixin",
-    "bonemeal.BoneMealItemMixin"
+    "axe.AxeItemMixin",
+    "bonemeal.BoneMealItemMixin",
+    "shovel.ShovelItemMixin"
   ]
 }

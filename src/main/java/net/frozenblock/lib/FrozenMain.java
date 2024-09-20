@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.loader.api.ModContainer;
+import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -46,10 +47,12 @@ import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.tag.api.TagListCommand;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindManager;
-import net.frozenblock.lib.wind.api.command.WindOverrideCommand;
+import net.frozenblock.lib.wind.api.command.WindCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
+import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
+import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -82,6 +85,8 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		// CONTINUE FROZENLIB INIT
 
+		FrozenRuleBlockEntityModifiers.init();
+		FrozenStructureProcessorTypes.init();
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		WindDisturbanceLogic.init();
@@ -94,6 +99,7 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		RegisterInGameDevTools.register();
 		FrozenParticleTypes.registerParticles();
+		ServerCapeData.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
 
@@ -105,7 +111,7 @@ public final class FrozenMain extends FrozenModInitializer {
 		);
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			WindOverrideCommand.register(dispatcher);
+			WindCommand.register(dispatcher);
 			ScreenShakeCommand.register(dispatcher);
 			ConfigCommand.register(dispatcher);
 			TagListCommand.register(dispatcher);

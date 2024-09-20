@@ -27,7 +27,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Bootstrap.class)
 public class BootstrapMixin {
 
-	@Inject(method = "bootStrap", at = @At(value = "INVOKE", target = "Ljava/util/concurrent/atomic/AtomicLong;set(J)V"))
+	@Inject(
+		method = "bootStrap",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/concurrent/atomic/AtomicLong;set(J)V"
+		)
+	)
 	private static void frozenLib$finishBootStrap(CallbackInfo info) {
 		FrozenBools.isInitialized = true;
 	}

@@ -28,12 +28,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class BuiltInRegistriesMixin {
 
 	@Inject(method = "freeze", at = @At("HEAD"))
-	private static void freezeBuiltinsStart(CallbackInfo ci) {
+	private static void frozenLib$freezeBuiltinsStart(CallbackInfo ci) {
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.invoker().onStartRegistryFreeze(null, true);
 	}
 
 	@Inject(method = "freeze", at = @At("TAIL"))
-	private static void freezeBuiltinsEnd(CallbackInfo ci) {
+	private static void frozenLib$freezeBuiltinsEnd(CallbackInfo ci) {
 		RegistryFreezeEvents.END_REGISTRY_FREEZE.invoker().onEndRegistryFreeze(null, true);
 	}
 }

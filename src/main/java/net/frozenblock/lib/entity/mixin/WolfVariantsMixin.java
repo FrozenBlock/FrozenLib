@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.entity.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import java.util.Optional;
 import net.frozenblock.lib.entity.api.WolfVariantBiomeRegistry;
 import net.minecraft.core.Holder;
@@ -30,7 +31,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(WolfVariants.class)
 public class WolfVariantsMixin {
@@ -42,10 +42,12 @@ public class WolfVariantsMixin {
 			target = "Lnet/minecraft/core/Registry;holders()Ljava/util/stream/Stream;",
 			shift = At.Shift.BEFORE
 		),
-		locals = LocalCapture.CAPTURE_FAILEXCEPTION,
 		cancellable = true
 	)
-	private static void frozenLib$checkForNewBiomes(RegistryAccess registryManager, Holder<Biome> holder, CallbackInfoReturnable<Holder<WolfVariant>> info, Registry<WolfVariant> registry) {
+	private static void frozenLib$checkForNewBiomes(
+		RegistryAccess registryManager, Holder<Biome> holder, CallbackInfoReturnable<Holder<WolfVariant>> info,
+		@Local Registry<WolfVariant> registry
+	) {
 		Optional<ResourceKey<Biome>> optionalBiome = holder.unwrapKey();
 		if (optionalBiome.isPresent()) {
 			ResourceKey<Biome> biomeKey = optionalBiome.get();

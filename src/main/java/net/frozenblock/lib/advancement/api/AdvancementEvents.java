@@ -26,6 +26,10 @@ import net.minecraft.core.HolderLookup;
 public final class AdvancementEvents {
 	private AdvancementEvents() {}
 
+	/**
+	 * Invoked for each AdvancementHolder registered on the server.
+	 * Allows modifications to them
+	 * */
 	public static final Event<AdvancementInit> INIT = FrozenEvents.createEnvironmentEvent(AdvancementInit.class, callbacks -> (holder, registries) -> {
 		for (AdvancementInit callback : callbacks) {
 			callback.onInit(holder, registries);

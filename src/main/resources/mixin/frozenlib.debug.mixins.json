@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.debug.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "DebugInfoSenderMixin",
+    "EntityMixin",
+    "PathMixin"
+  ],
+  "client": [
+    "client.AddDebugMenuButtonMixin",
+    "client.DebugRendererMixin",
+    "client.HeightMapRendererMixin"
+  ]
+}

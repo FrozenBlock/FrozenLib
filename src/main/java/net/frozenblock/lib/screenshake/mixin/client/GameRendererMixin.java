@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class GameRendererMixin {
 
 	@ModifyExpressionValue(method = "renderLevel", at = @At(value = "NEW", target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"))
-	public PoseStack frozenLib$shakeLeve(PoseStack matrixStack, float partialTicks, long finishTimeNano) {
+	public PoseStack frozenLib$shakeLevel(PoseStack matrixStack, float partialTicks, long finishTimeNano) {
 		ScreenShaker.shake(matrixStack, partialTicks);
 		return matrixStack;
 	}

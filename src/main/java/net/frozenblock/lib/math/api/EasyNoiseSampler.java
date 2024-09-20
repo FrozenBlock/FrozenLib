@@ -19,32 +19,39 @@ package net.frozenblock.lib.math.api;
 
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.Vec3i;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.ThreadSafeLegacyRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Adds easy-to-use noise sampling and random number generators
- *
- * @author Lunade (2021-2022)
  */
 @UtilityClass
 public class EasyNoiseSampler {
+	@Contract("_ -> new")
+	public static @NotNull ImprovedNoise createCheckedNoise(long seed) {
+		return new ImprovedNoise(new LegacyRandomSource(seed));
+	}
 
-    public static long seed = 0;
-    public static RandomSource checkedRandom = new LegacyRandomSource(seed);
-    public static RandomSource threadSafeRandom = new ThreadSafeLegacyRandomSource(seed);
-    public static RandomSource localRandom = new SingleThreadedRandomSource(seed);
-    public static XoroshiroRandomSource xoroRandom = new XoroshiroRandomSource(seed);
-    public static ImprovedNoise perlinChecked = new ImprovedNoise(checkedRandom);
-    public static ImprovedNoise perlinThreadSafe = new ImprovedNoise(threadSafeRandom);
-    public static ImprovedNoise perlinLocal = new ImprovedNoise(localRandom);
-    public static ImprovedNoise perlinXoro = new ImprovedNoise(xoroRandom);
+	@Contract("_ -> new")
+	public static @NotNull ImprovedNoise createLegacyThreadSafeNoise(long seed) {
+		return new ImprovedNoise(new ThreadSafeLegacyRandomSource(seed));
+	}
+
+	@Contract("_ -> new")
+	public static @NotNull ImprovedNoise createLocalNoise(long seed) {
+		return new ImprovedNoise(new SingleThreadedRandomSource(seed));
+	}
+
+	@Contract("_ -> new")
+	public static @NotNull ImprovedNoise createXoroNoise(long seed) {
+		return new ImprovedNoise(new XoroshiroRandomSource(seed));
+	}
 
     public static double sample(ImprovedNoise sampler, Vec3i pos, double multiplier, boolean multiplyY, boolean useY) {
         if (useY) {
@@ -60,16 +67,6 @@ public class EasyNoiseSampler {
         return Math.abs(sample(sampler, pos, multiplier, multiplyY, useY));
     }
 
-	public static double sample(WorldGenLevel level, ImprovedNoise sampler, Vec3i pos, double multiplier, boolean multiplyY, boolean useY) {
-		setSeed(level);
-		return sample(sampler, pos, multiplier, multiplyY, useY);
-	}
-
-	public static double sampleAbs(WorldGenLevel level, ImprovedNoise sampler, Vec3i pos, double multiplier, boolean multiplyY, boolean useY) {
-		setSeed(level);
-		return sampleAbs(sampler, pos, multiplier, multiplyY, useY);
-	}
-
 	public static double sample(ImprovedNoise sampler, Vec3 pos, double multiplier, boolean multiplyY, boolean useY) {
 		if (useY) {
 			if (multiplyY) {
@@ -79,48 +76,4 @@ public class EasyNoiseSampler {
 		}
 		return sampler.noise(pos.x() * multiplier, 64, pos.z() * multiplier);
 	}
-
-	public static double sampleAbs(ImprovedNoise sampler, Vec3 pos, double multiplier, boolean multiplyY, boolean useY) {
-		return Math.abs(sample(sampler, pos, multiplier, multiplyY, useY));
-	}
-
-	public static double sample(WorldGenLevel level, ImprovedNoise sampler, Vec3 pos, double multiplier, boolean multiplyY, boolean useY) {
-		setSeed(level);
-		return sample(sampler, pos, multiplier, multiplyY, useY);
-	}
-
-	public static double sampleAbs(WorldGenLevel level, ImprovedNoise sampler, Vec3 pos, double multiplier, boolean multiplyY, boolean useY) {
-		setSeed(level);
-		return sampleAbs(sampler, pos, multiplier, multiplyY, useY);
-	}
-
-	public static void setSeed(long newSeed) {
-		if (newSeed != seed) {
-			seed = newSeed;
-			checkedRandom = new LegacyRandomSource(seed);
-			threadSafeRandom = new ThreadSafeLegacyRandomSource(seed);
-			localRandom = new SingleThreadedRandomSource(seed);
-			xoroRandom = new XoroshiroRandomSource(seed);
-			perlinChecked = new ImprovedNoise(checkedRandom);
-			perlinThreadSafe = new ImprovedNoise(threadSafeRandom);
-			perlinLocal = new ImprovedNoise(localRandom);
-			perlinXoro = new ImprovedNoise(xoroRandom);
-		}
-	}
-
-	public static void setSeed(WorldGenLevel level) {
-		long newSeed = level.getSeed();
-		if (newSeed != seed) {
-			seed = newSeed;
-			checkedRandom = new LegacyRandomSource(seed);
-			threadSafeRandom = new ThreadSafeLegacyRandomSource(seed);
-			localRandom = new SingleThreadedRandomSource(seed);
-			xoroRandom = new XoroshiroRandomSource(seed);
-			perlinChecked = new ImprovedNoise(checkedRandom);
-			perlinThreadSafe = new ImprovedNoise(threadSafeRandom);
-			perlinLocal = new ImprovedNoise(localRandom);
-			perlinXoro = new ImprovedNoise(xoroRandom);
-		}
-	}
-
 }

@@ -26,9 +26,7 @@ import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenItemTags {
-
 	public static final TagKey<Item> NO_USE_GAME_EVENTS = bind("dont_emit_use_game_events");
-	public static final TagKey<Item> HEAVY_ITEMS = bind("heavy_items");
 	public static final TagKey<Item> ALWAYS_SAVE_COOLDOWNS = bind("always_save_cooldowns");
 
 	@NotNull

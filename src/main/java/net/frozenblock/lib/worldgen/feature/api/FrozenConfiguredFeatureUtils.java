@@ -54,19 +54,19 @@ public class FrozenConfiguredFeatureUtils {
 	}
 
 	public static void register(
-			BootstrapContext<ConfiguredFeature<?, ?>> BootstrapContext, ResourceKey<ConfiguredFeature<?, ?>> registryKey, Feature<NoneFeatureConfiguration> feature
+		BootstrapContext<ConfiguredFeature<?, ?>> BootstrapContext, ResourceKey<ConfiguredFeature<?, ?>> registryKey, Feature<NoneFeatureConfiguration> feature
 	) {
 		FeatureUtils.register(BootstrapContext, registryKey, feature, FeatureConfiguration.NONE);
 	}
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
-			BootstrapContext<ConfiguredFeature<?, ?>> entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
+		BootstrapContext<ConfiguredFeature<?, ?>> entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
 		return entries.register(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
 	}
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
-			DynamicRegistryManagerSetupContext entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
+		DynamicRegistryManagerSetupContext entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
 		var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE));
 		var value = registry.register(Registries.CONFIGURED_FEATURE, registryKey.location(), new ConfiguredFeature<>(feature, featureConfiguration));

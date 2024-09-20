@@ -60,10 +60,12 @@ public class MovingLoopingSoundEntityManager {
     }
 
     public void save(CompoundTag nbt) {
-        DataResult<Tag> var10000 = SoundLoopData.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
-        Logger var10001 = FrozenSharedConstants.LOGGER4;
-        Objects.requireNonNull(var10001);
-        var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenSounds", cursorsNbt));
+		if (!this.sounds.isEmpty()) {
+			DataResult<Tag> var10000 = SoundLoopData.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
+			Logger var10001 = FrozenSharedConstants.LOGGER4;
+			Objects.requireNonNull(var10001);
+			var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenSounds", cursorsNbt));
+		}
     }
 
     public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {

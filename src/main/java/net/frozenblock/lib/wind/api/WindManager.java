@@ -28,8 +28,12 @@ import java.util.Optional;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.math.api.EasyNoiseSampler;
+import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.frozenblock.lib.wind.impl.WindStorage;
+import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.core.BlockPos;
@@ -39,9 +43,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.levelgen.LegacyRandomSource;
-import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
-import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
@@ -50,8 +51,8 @@ import org.jetbrains.annotations.NotNull;
 public class WindManager {
 	private static final long MIN_TIME_VALUE = Long.MIN_VALUE + 1;
 	public static final Map<Function<WindManager, WindManagerExtension>, Integer> EXTENSION_PROVIDERS = new Object2ObjectOpenHashMap<>();
-	private final List<WindDisturbance> windDisturbancesA = new ArrayList<>();
-	private final List<WindDisturbance> windDisturbancesB = new ArrayList<>();
+	private final List<WindDisturbance<?>> windDisturbancesA = new ArrayList<>();
+	private final List<WindDisturbance<?>> windDisturbancesB = new ArrayList<>();
 	private boolean isSwitchedServer;
 	public final List<WindManagerExtension> attachedExtensions;
 
@@ -64,14 +65,16 @@ public class WindManager {
 	public double laggedWindX;
 	public double laggedWindY;
 	public double laggedWindZ;
-	public long seed = 0;
+	public long seed;
+	private boolean seedSet = false;
 
 	private final ServerLevel level;
+	public ImprovedNoise noise;
 
 	@SuppressWarnings("unchecked")
 	public WindManager(@NotNull ServerLevel level) {
 		this.level = level;
-		this.setSeed(level.getRandom().nextLong());
+		this.noise = EasyNoiseSampler.createXoroNoise(this.seed);
 		List<WindManagerExtension> extensions = new ObjectArrayList<>();
 		Map.Entry<Function<WindManager, WindManagerExtension>, Integer>[] extensionProviders = EXTENSION_PROVIDERS.entrySet().toArray(new Map.Entry[0]);
 		Arrays.sort(extensionProviders, Map.Entry.comparingByValue());
@@ -91,7 +94,7 @@ public class WindManager {
 		addExtension(extension, 1000);
 	}
 
-	public void addWindDisturbanceAndSync(@NotNull WindDisturbance windDisturbance) {
+	public void addWindDisturbanceAndSync(@NotNull WindDisturbance<?> windDisturbance) {
 		Optional<WindDisturbancePacket> optionalPacket = windDisturbance.toPacket();
 		if (optionalPacket.isPresent()) {
 			for (ServerPlayer player : PlayerLookup.world(level)) {
@@ -103,15 +106,15 @@ public class WindManager {
 		this.addWindDisturbance(windDisturbance);
 	}
 
-	public void addWindDisturbance(@NotNull WindDisturbance windDisturbance) {
+	public void addWindDisturbance(@NotNull WindDisturbance<?> windDisturbance) {
 		this.getWindDisturbanceStash().add(windDisturbance);
 	}
 
-	private List<WindDisturbance> getWindDisturbances() {
+	private List<WindDisturbance<?>> getWindDisturbances() {
 		return !this.isSwitchedServer ? this.windDisturbancesA : this.windDisturbancesB;
 	}
 
-	private List<WindDisturbance> getWindDisturbanceStash() {
+	private List<WindDisturbance<?>> getWindDisturbanceStash() {
 		return this.isSwitchedServer ? this.windDisturbancesA : this.windDisturbancesB;
 	}
 
@@ -129,19 +132,6 @@ public class WindManager {
 		this.isSwitchedServer = !this.isSwitchedServer;
 	}
 
-	public ImprovedNoise perlinChecked = new ImprovedNoise(new LegacyRandomSource(this.seed));
-	public ImprovedNoise perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(this.seed));
-	public ImprovedNoise perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(this.seed));
-
-	public void setSeed(long newSeed) {
-		if (newSeed != this.seed) {
-			this.seed = newSeed;
-			this.perlinChecked = new ImprovedNoise(new LegacyRandomSource(this.seed));
-			this.perlinLocal = new ImprovedNoise(new SingleThreadedRandomSource(this.seed));
-			this.perlinXoro = new ImprovedNoise(new XoroshiroRandomSource(this.seed));
-		}
-	}
-
 	@NotNull
 	public static WindManager getWindManager(@NotNull ServerLevel level) {
 		return ((WindManagerInterface)level).frozenLib$getWindManager();
@@ -157,6 +147,11 @@ public class WindManager {
 	}
 
 	public void tick(@NotNull ServerLevel level) {
+		if (!this.seedSet) {
+			this.seedSet = true;
+			this.seed = level.getSeed();
+			this.noise = EasyNoiseSampler.createXoroNoise(this.seed);
+		}
 		if (level.tickRateManager().runsNormally()) {
 			this.runResetsIfNeeded();
 
@@ -165,14 +160,14 @@ public class WindManager {
 			float thunderLevel = this.level.getThunderLevel(1F) * 0.03F;
 			double calcTime = this.time * 0.0005;
 			double calcTimeY = this.time * 0.00035;
-			Vec3 vec3 = sampleVec3(this.perlinXoro, calcTime, calcTimeY, calcTime);
+			Vec3 vec3 = sampleVec3(calcTime, calcTimeY, calcTime);
 			this.windX = vec3.x + (vec3.x * thunderLevel);
 			this.windY = vec3.y + (vec3.y * thunderLevel);
 			this.windZ = vec3.z + (vec3.z * thunderLevel);
 			//LAGGED WIND
 			double calcLaggedTime = (this.time - 40) * 0.0005;
 			double calcLaggedTimeY = (this.time - 60) * 0.00035;
-			Vec3 laggedVec = sampleVec3(this.perlinXoro, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
+			Vec3 laggedVec = sampleVec3(calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
 			this.laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
 			this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
 			this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
@@ -299,6 +294,14 @@ public class WindManager {
 		double windX = Mth.lerp(disturbanceAmount, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
 		double windY = Mth.lerp(disturbanceAmount, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
 		double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
+
+		if (FrozenLibConfig.IS_DEBUG) {
+			FrozenNetworking.sendPacketToAllPlayers(
+				this.level,
+				new WindAccessPacket(pos)
+			);
+		}
+
 		return new Vec3(
 			Mth.clamp(windX, -clamp, clamp),
 			Mth.clamp(windY, -clamp, clamp),
@@ -340,11 +343,11 @@ public class WindManager {
 	}
 
 	@NotNull
-	private Vec3 sampleVec3(@NotNull ImprovedNoise sampler, double x, double y, double z) {
+	private Vec3 sampleVec3(double x, double y, double z) {
 		if (!this.overrideWind) {
-			double windX = sampler.noise(x, 0D, 0D);
-			double windY = sampler.noise(0D, y, 0D);
-			double windZ = sampler.noise(0D, 0D, z);
+			double windX = this.noise.noise(x, 0D, 0D);
+			double windY = this.noise.noise(0D, y, 0D);
+			double windZ = this.noise.noise(0D, 0D, z);
 			return new Vec3(windX, windY, windZ);
 		}
 		return this.commandWind;
@@ -354,9 +357,9 @@ public class WindManager {
 	private Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
 		double sampledTime = this.time * 0.1D;
 		double xyz = pos.x() + pos.y() + pos.z();
-		double windX = this.perlinXoro.noise((xyz + sampledTime) * stretch, 0D, 0D);
-		double windY = this.perlinXoro.noise(0D, (xyz + sampledTime) * stretch, 0D);
-		double windZ = this.perlinXoro.noise(0D, 0D, (xyz + sampledTime) * stretch);
+		double windX = this.noise.noise((xyz + sampledTime) * stretch, 0D, 0D);
+		double windY = this.noise.noise(0D, (xyz + sampledTime) * stretch, 0D);
+		double windZ = this.noise.noise(0D, 0D, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
 	}
 
@@ -366,10 +369,10 @@ public class WindManager {
 	}
 
 	@NotNull
-	public static Pair<Double, Vec3> calculateWindDisturbance(@NotNull List<WindDisturbance> windDisturbances, @NotNull Level level, @NotNull Vec3 pos) {
+	public static Pair<Double, Vec3> calculateWindDisturbance(@NotNull List<WindDisturbance<?>> windDisturbances, @NotNull Level level, @NotNull Vec3 pos) {
 		ArrayList<Pair<Double, Vec3>> winds = new ArrayList<>();
 		double strength = 0D;
-		for (WindDisturbance windDisturbance : windDisturbances) {
+		for (WindDisturbance<?> windDisturbance : windDisturbances) {
 			WindDisturbance.DisturbanceResult disturbanceResult = windDisturbance.calculateDisturbanceResult(level, pos);
 			if (disturbanceResult.strength() != 0D && disturbanceResult.weight() != 0D) {
 				strength = Math.max(strength, disturbanceResult.strength());

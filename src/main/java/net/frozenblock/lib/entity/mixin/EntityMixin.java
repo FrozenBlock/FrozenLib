@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.entity.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.entity.impl.EntityStepOnBlockInterface;
 import net.frozenblock.lib.entity.impl.FrozenStartTrackingEntityInterface;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
@@ -28,7 +29,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -37,7 +37,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements FrozenStartTrackingEntityInterface, EntityStepOnBlockInterface {
@@ -49,14 +48,21 @@ public abstract class EntityMixin implements FrozenStartTrackingEntityInterface,
 	@Override
 	public void frozenLib$playerStartsTracking(ServerPlayer serverPlayer) {
 		Entity entity = Entity.class.cast(this);
-		((EntityLoopingSoundInterface)entity).getSoundManager().syncWithPlayer(serverPlayer);
-		((EntityLoopingFadingDistanceSoundInterface)entity).getFadingSoundManager().syncWithPlayer(serverPlayer);
+		((EntityLoopingSoundInterface)entity).frozenLib$getSoundManager().syncWithPlayer(serverPlayer);
+		((EntityLoopingFadingDistanceSoundInterface)entity).frozenLib$getFadingSoundManager().syncWithPlayer(serverPlayer);
 		((EntitySpottingIconInterface)entity).getSpottingIconManager().sendIconPacket(serverPlayer);
-		((EntityScreenShakeInterface)entity).getScreenShakeManager().syncWithPlayer(serverPlayer);
+		((EntityScreenShakeInterface)entity).frozenLib$getScreenShakeManager().syncWithPlayer(serverPlayer);
 	}
 
-	@Inject(method = "move", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V", shift = At.Shift.AFTER), locals = LocalCapture.CAPTURE_FAILHARD)
-	public void frozenLib$runSteppedOn(MoverType type, Vec3 pos, CallbackInfo ci, Vec3 vec3, double d, boolean bl, boolean bl2, BlockPos blockPos, BlockState blockState, Block block) {
+	@Inject(
+		method = "move",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/Block;stepOn(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/Entity;)V",
+			shift = At.Shift.AFTER
+		)
+	)
+	public void frozenLib$runSteppedOn(MoverType type, Vec3 pos, CallbackInfo ci, @Local BlockPos blockPos, @Local BlockState blockState) {
 		this.frozenLib$onSteppedOnBlock(this.level(), blockPos, blockState);
 	}
 

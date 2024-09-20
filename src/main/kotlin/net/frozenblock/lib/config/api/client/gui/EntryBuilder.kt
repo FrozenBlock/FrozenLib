@@ -30,6 +30,7 @@ import java.util.function.Consumer
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
+@Suppress("UnstableApiUsage")
 @Environment(EnvType.CLIENT)
 data class EntryBuilder<T>(
     @JvmField val title: Component,
@@ -160,7 +161,7 @@ data class EntryBuilder<T>(
                         val consumer = saveConsumer as? Consumer<Slider<Long>> ?: consumerError()
                         return entryBuilder.startLongSlider(title, usedValue.value.toLong(), usedValue.min.toLong(), usedValue.max.toLong())
                             .setDefaultValue((defaultValue as Slider<Long>).value.toLong())
-                            .setSaveConsumer { newValue -> consumer.accept(Slider<Long>(newValue, usedValue.min.toLong(), usedValue.max.toLong(), SliderType.LONG)) }
+                            .setSaveConsumer { newValue -> consumer.accept(Slider(newValue, usedValue.min.toLong(), usedValue.max.toLong(), SliderType.LONG)) }
                             .apply {
                                 tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }

@@ -20,12 +20,15 @@ package net.frozenblock.lib.mobcategory.api.entrypoint;
 import java.util.ArrayList;
 import net.frozenblock.lib.mobcategory.impl.FrozenMobCategory;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 public interface FrozenMobCategoryEntrypoint {
 
 	void newCategories(ArrayList<FrozenMobCategory> context);
 
-	static FrozenMobCategory createCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
+	@Contract("_, _, _, _, _ -> new")
+	static @NotNull FrozenMobCategory createCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
 		return new FrozenMobCategory(key, max, isFriendly, isPersistent, despawnDistance);
 	}
 

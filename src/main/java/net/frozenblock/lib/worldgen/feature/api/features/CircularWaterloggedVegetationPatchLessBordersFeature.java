@@ -63,8 +63,8 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 		Direction direction2 = direction.getOpposite();
 		Set<BlockPos> set = new HashSet<>();
 
-		for(int i = -xRadius; i <= xRadius; ++i) {
-			for(int j = -zRadius; j <= zRadius; ++j) {
+		for (int i = -xRadius; i <= xRadius; ++i) {
+			for (int j = -zRadius; j <= zRadius; ++j) {
 				mutableBlockPos.setWithOffset(pos, i, 0, j);
 
 				if (Math.sqrt(mutableBlockPos.distSqr(pos)) <= xRadius) {
@@ -102,7 +102,7 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 		Iterator<BlockPos> var11 = set.iterator();
 
 		BlockPos blockPos;
-		while(var11.hasNext()) {
+		while (var11.hasNext()) {
 			blockPos = var11.next();
 			if (!isExposed(level, blockPos, mutableBlockPos)) {
 				set2.add(blockPos);
@@ -111,7 +111,7 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 
 		var11 = set2.iterator();
 
-		while(var11.hasNext()) {
+		while (var11.hasNext()) {
 			blockPos = var11.next();
 			level.setBlock(blockPos, Blocks.WATER.defaultBlockState(), 2);
 		}
@@ -137,7 +137,7 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, @NotNull BlockPos pos) {
 		if (super.placeVegetation(level, config, chunkGenerator, random, pos.below())) {
 			BlockState blockState = level.getBlockState(pos);
-			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && !(Boolean)blockState.getValue(BlockStateProperties.WATERLOGGED)) {
+			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && !(Boolean) blockState.getValue(BlockStateProperties.WATERLOGGED)) {
 				level.setBlock(pos, blockState.setValue(BlockStateProperties.WATERLOGGED, true), 2);
 			}
 
