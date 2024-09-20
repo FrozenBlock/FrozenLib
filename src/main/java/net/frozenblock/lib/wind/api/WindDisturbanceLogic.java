@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 public final class WindDisturbanceLogic<T> {
 	public static final ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default");
+
 	private final DisturbanceLogic<T> disturbanceLogic;
 
 	public WindDisturbanceLogic(DisturbanceLogic<T> disturbanceLogic) {

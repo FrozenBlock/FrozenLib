@@ -18,12 +18,12 @@
 package net.frozenblock.lib.block.api.entity;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jetbrains.annotations.NotNull;
-import java.util.Optional;
 
 public class BlockEntityWithoutLevelRendererRegistry {
 	private static final Object2ObjectLinkedOpenHashMap<Block, BlockEntity> BLOCK_TO_BLOCK_ENTITY_MAP = new Object2ObjectLinkedOpenHashMap<>();

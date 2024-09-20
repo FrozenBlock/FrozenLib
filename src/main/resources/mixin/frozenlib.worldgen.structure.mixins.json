@@ -7,8 +7,12 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "ListPoolElementMixin",
+    "PoolElementStructurePieceMixin",
     "SinglePoolElementMixin",
-    "StructureTemplateManagerMixin",
-    "StructureTemplateMixin"
+    "StructureMixin",
+    "StructureStartMixin",
+    "StructureTemplateMixin",
+    "TemplateStructurePieceMixin"
   ]
 }

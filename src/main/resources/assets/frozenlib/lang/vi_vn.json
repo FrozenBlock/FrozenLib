@@ -1,0 +1,109 @@
+{
+  "tooltip.frozenlib.locked_due_to_server": "Không thể sửa đổi mục này khi kết nối với máy chủ này.\nYêu cầu quyền điều hành để sửa đổi.\nBạn có thể rời khỏi máy chủ để sửa đổi mục này, và tham gia lại sau.",
+  "tooltip.frozenlib.locked_due_to_sync": "Mục này đã bị máy chủ ghi đè.\nYêu cầu quyền điều hành để sửa đổi.",
+  "tooltip.frozenlib.locked_due_to_server_lan": "Không thể sửa đổi mục này khi kết nối với thế giới này.\nCần phải là chủ hoặc có quyền điều hành để sửa đổi.\nBạn có thể rời khỏi thế giới để sửa đổi mục này, và tham gia lại sau.",
+  "tooltip.frozenlib.locked_due_to_sync_lan": "Mục này đã bị thế giới này ghi đè.\nCần phải là chủ hoặc có quyền điều hành để sửa đổi.",
+  "tooltip.frozenlib.locked_due_to_unknown_reason": "Không thể sửa đổi mục này vì lý do không xác định.\nVui lòng gửi báo cáo lỗi cho mod này.",
+  "tooltip.frozenlib.entry_sync_notice": "Mục này sẽ đồng bộ với tất cả các máy khách.",
+
+  "frozenlib.config.discard": "Hủy thay đổi",
+  "frozenlib.config.save": "Lưu thay đổi",
+
+  "option.frozenlib.component.title": "Tùy chọn FrozenLib",
+  "option.frozenlib.false": "§cTắt",
+  "option.frozenlib.true": "§aBật",
+
+  "option.frozenlib.config": "Cấu hình FrozenLib",
+
+  "option.frozenlib.is_debug": "Chế độ gỡ lỗi",
+  "tooltip.frozenlib.is_debug": "Có bật chế độ gỡ lỗi hay không.\nTùy chọn này chỉ xuất hiện trong môi trường phát triển.",
+  "menu.frozenlib.debug": "Tùy chọn gỡ lỗi",
+
+  "option.frozenlib.datafixer": "DataFixer",
+  "tooltip.frozenlib.datafixer": "Chứa các tùy chọn cho DataFixer",
+
+  "option.frozenlib.disabled_datafix_types": "Các loại DataFix bị vô hiệu hóa",
+  "tooltip.frozenlib.disabled_datafix_types": "Danh sách các loại DataFix bị loại trừ khỏi việc\nchạy thông qua API DataFixerUpper được sửa đổi bởi The Quilt Project.\n\nCài đặt worldgen bị vô hiệu hóa mặc định để\ntránh xung đột với Lithium + BCLib.\n\nCác loại DataFix gốc bao gồm...\n'level', 'player', 'chunk', 'hotbar', 'options', 'structure', 'stats',\n'saved_data', 'advancements', 'poi_chunk', 'entity_chunk',\nvà 'world_gen_settings'",
+
+  "option.frozenlib.use_wind_on_non_frozenlib_servers": "Wind trên máy chủ không có FrozenLib",
+  "option.frozenlib.use_wind_on_non_frozenlib_servers.false": "§cTắt",
+  "option.frozenlib.use_wind_on_non_frozenlib_servers.true": "§aBật",
+  "tooltip.frozenlib.use_wind_on_non_frozenlib_servers": "Khi tắt, máy khách sẽ không sử dụng wind trên các máy chủ\nkhông cài đặt FrozenLib.\nKhi bật, máy khách sẽ tạo ngẫu nhiên một seed để sử dụng\nwind trên các máy chủ không có FrozenLib.",
+
+  "option.frozenlib.save_item_cooldowns": "Lưu thời gian hồi vật phẩm",
+  "option.frozenlib.save_item_cooldowns.false": "§cTắt",
+  "option.frozenlib.save_item_cooldowns.true": "§aBật",
+  "tooltip.frozenlib.save_item_cooldowns": "Có lưu thời gian hồi của vật phẩm thay vì\nbị xóa khi chuyển đổi giữa các chiều hoặc tham gia lại thế giới hay không.",
+
+  "option.frozenlib.remove_experimental_warning": "Loại bỏ cảnh báo tính năng thử nghiệm",
+  "option.frozenlib.remove_experimental_warning.false": "§cTắt",
+  "option.frozenlib.remove_experimental_warning.true": "§aBật",
+  "tooltip.frozenlib.remove_experimental_warning": "Có cho phép hiển thị cảnh báo Tính năng Thử nghiệm khi tạo thế giới hay không.",
+
+  "option.frozenlib.warden_spawn_tracker_command": "Lệnh Theo dõi xuất hiện Warden",
+  "option.frozenlib.warden_spawn_tracker_command.false": "§cTắt",
+  "option.frozenlib.warden_spawn_tracker_command.true": "§aBật",
+  "tooltip.frozenlib.warden_spawn_tracker_command": "Bật hoặc tắt lệnh Theo dõi xuất hiện Warden.",
+
+  "commands.wind.display.global.success": "Gió toàn cầu hiện tại: %s, %s, %s.",
+  "commands.wind.display.pos.success": "Gió tại %s, %s, %s hiện tại: %s, %s, %s.",
+  "commands.wind.success": "Đã đặt gió tới %s, %s, %s.",
+  "commands.wind.toggle.success": "Đã %s ghi đè gió.",
+  "commands.wind.toggle.failure": "Ghi đè gió đã ở trạng thái %s.",
+
+  "commands.screenshake.success": "Đã tạo rung màn hình tại %s, %s, %s, với cường độ %s, thời gian %s, điểm bắt đầu giảm dần %s, và khoảng cách %s.",
+  "commands.screenshake.player.success": "Đã gửi rung màn hình tới %s tại %s, %s, %s, với cường độ %s, thời gian %s, điểm bắt đầu giảm dần %s, và khoảng cách %s.",
+  "commands.screenshake.remove.player.success.multiple": "Người chơi %s đã được xóa rung màn hình.",
+  "commands.screenshake.remove.player.success": "Đã xóa rung màn hình cho %s.",
+  "commands.screenshake.entity.success": "Đã tạo rung màn hình thêm vào %s với cường độ %s, thời gian %s, điểm bắt đầu giảm dần %s, và khoảng cách %s.",
+  "commands.screenshake.remove.entity.success.multiple": "Thực thể %s đã được xóa rung màn hình.",
+  "commands.screenshake.remove.entity.success": "Đã xóa rung màn hình khỏi thực thể %s.",
+  "commands.screenshake.remove.entity.failure": "Không thể tìm thấy thực thể có rung màn hình.",
+
+  "commands.scale.entity.success.multiple": "Đã thay đổi kích thước %s thành %s.",
+  "commands.scale.entity.success": "Đã thay đổi kích thước %s thành %s.",
+  "commands.scale.entity.failure": "Thay đổi kích thước thực thể thất bại.",
+
+  "commands.frozenlib_config.reload.single": "Đã tải lại 1 cấu hình từ %s.",
+  "commands.frozenlib_config.reload.multiple": "Đã tải lại %s cấu hình từ %s.",
+
+  "commands.frozenlib.taglist.footer": "Đã liệt kê %s thẻ trong %s.",
+  "commands.frozenlib.taglist.tag.invalid": "Thẻ không hợp lệ: %s",
+
+  "commands.warden_spawn_tracker.clear.success.multiple": "Đã xóa cảnh báo xuất hiện warden khỏi %s người chơi",
+  "commands.warden_spawn_tracker.clear.success.single": "Đã xóa cảnh báo xuất hiện warden khỏi %s",
+  "commands.warden_spawn_tracker.set.success.multiple": "Đã đặt cảnh báo xuất hiện warden %s cho %s người chơi",
+  "commands.warden_spawn_tracker.set.success.single": "Đã đặt cảnh báo xuất hiện warden %s cho %s",
+
+  "debug.pathfinding": "Tìm đường",
+  "debug.water_level": "Mực nước",
+  "debug.heightmap": "Bản đồ chiều cao",
+  "debug.collision": "Va chạm khối",
+  "debug.support_block": "Khối hỗ trợ",
+  "debug.structure": "Cấu trúc",
+  "debug.sky_light": "Ánh sáng bầu trời",
+  "debug.solid_face": "Mặt khối rắn",
+  "debug.chunk_status": "Trạng thái chunk",
+  "debug.brain": "Não",
+  "debug.goal": "Mục tiêu",
+  "debug.village_sections": "Khu vực làng",
+  "debug.bee": "Ong",
+  "debug.raid": "Cuộc đột kích",
+  "debug.light": "Ánh sáng",
+  "debug.breeze": "Gió nhẹ",
+  "debug.wind": "Gió",
+  "debug.wind_disturbance": "Nhiễu loạn gió",
+  "debug.neighbor_update": "Cập nhật lân cận",
+  "debug.game_event": "Sự kiện trò chơi",
+
+  "frozenlib.loot_table_whacker.fail.no_name": "Loot Table Whacker chưa được đặt tên!",
+  "frozenlib.loot_table_whacker.fail.no_colon": "ResourceLocation không hợp lệ: Không có dấu :!",
+  "frozenlib.loot_table_whacker.fail.no_loot_table": "Loot table không tồn tại: %s",
+  "frozenlib.loot_table_whacker.success": "Đã đặt loot table thành: %s",
+
+  "frozenlib.core.registry_sync.more": "còn %s...",
+  "frozenlib.core.registry_sync.and": " và ",
+  "frozenlib.core.registry_sync.unsupported_mod_protocol": "Phiên bản giao thức mod không được hỗ trợ cho:\n%s",
+  "frozenlib.core.registry_sync.require_main_mod_protocol": "Máy chủ này yêu cầu %s với phiên bản giao thức là %s.",
+  "frozenlib.core.registry_sync.main_mod_protocol": "Bạn đang sử dụng %s với phiên bản giao thức là %s."
+}

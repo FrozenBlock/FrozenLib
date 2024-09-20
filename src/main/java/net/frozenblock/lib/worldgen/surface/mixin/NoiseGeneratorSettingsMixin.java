@@ -45,7 +45,7 @@ public class NoiseGeneratorSettingsMixin implements NoiseGeneratorInterface {
 
 	@Unique
 	@Override
-	public void writeSurfaceRules(SurfaceRules.RuleSource surfaceRule) {
+	public void frozenLib$writeSurfaceRules(SurfaceRules.RuleSource surfaceRule) {
 		if (surfaceRule == null || surfaceRule == this.frozenLib$frozenSurfaceRules) return;
 
 		this.frozenLib$frozenSurfaceRules = surfaceRule;

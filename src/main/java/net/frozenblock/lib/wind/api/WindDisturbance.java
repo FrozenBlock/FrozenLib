@@ -32,7 +32,7 @@ public class WindDisturbance<T> {
 
 	private final Optional<T> source;
 	public final Vec3 origin;
-	private final AABB affectedArea;
+	public final AABB affectedArea;
 	private final WindDisturbanceLogic<T> disturbanceLogic;
 
     public WindDisturbance(Optional<T> source, Vec3 origin, AABB affectedArea, WindDisturbanceLogic<T> disturbanceLogic) {

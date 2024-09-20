@@ -28,8 +28,14 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin(Boat.class)
 public abstract class BoatMixin implements EntityGravityInterface {
 
-	@ModifyArgs(method = "floatBoat", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/vehicle/Boat;setDeltaMovement(DDD)V", ordinal = 0))
-	private void useGravity(Args args) {
+	@ModifyArgs(method = "floatBoat",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/vehicle/Boat;setDeltaMovement(DDD)V",
+			ordinal = 0
+		)
+	)
+	private void frozenLib$useGravity(Args args) {
 		double x = args.get(0);
 		double y = (double) args.get(1) + this.frozenLib$getGravity();
 		double z = args.get(2);

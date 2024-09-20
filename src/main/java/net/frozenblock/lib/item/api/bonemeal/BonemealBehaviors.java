@@ -20,19 +20,33 @@ package net.frozenblock.lib.item.api.bonemeal;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.context.UseOnContext;
-import net.minecraft.world.level.Level;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.Nullable;
 
 public class BonemealBehaviors {
+	private static final Map<Block, BonemealBehavior> BONEMEAL_BEHAVIORS = new Object2ObjectOpenHashMap<>();
 
-    public static final Map<Block, BonemealBehavior> BONEMEAL_BEHAVIORS = new Object2ObjectOpenHashMap<>();
+	public static void register(Block block, BonemealBehavior bonemealBehavior) {
+		BONEMEAL_BEHAVIORS.put(block, bonemealBehavior);
+	}
 
-    @FunctionalInterface
-    public interface BonemealBehavior {
-        boolean bonemeal(UseOnContext context, Level world, BlockPos pos, BlockState state, Direction face, Direction horizontal);
-    }
+	@Nullable
+	public static BonemealBehavior get(Block block) {
+		return BONEMEAL_BEHAVIORS.getOrDefault(block, null);
+	}
+
+	public interface BonemealBehavior {
+		boolean meetsRequirements(LevelReader level, BlockPos pos, BlockState state);
+
+		default boolean isBonemealSuccess(LevelReader level, RandomSource random, BlockPos pos, BlockState state) {
+			return true;
+		}
+
+		void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state);
+	}
 
 }

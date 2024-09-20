@@ -21,6 +21,8 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.frozenblock.lib.menu.api.SplashTextAPI;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SplashManager;
@@ -34,6 +36,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Environment(EnvType.CLIENT)
 @Mixin(SplashManager.class)
 public class SplashManagerMixin {
 
@@ -41,8 +44,11 @@ public class SplashManagerMixin {
 	@Final
 	private List<String> splashes;
 
-	@Inject(method = "apply(Ljava/util/List;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V", at = @At("RETURN"))
-	private void apply(List<String> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
+	@Inject(
+		method = "apply(Ljava/util/List;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+		at = @At("RETURN")
+	)
+	private void frozenLib$apply(List<String> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
 		this.splashes.addAll(SplashTextAPI.getAdditions());
 
 		for (String removal : SplashTextAPI.getRemovals()) {
@@ -50,8 +56,11 @@ public class SplashManagerMixin {
 		}
 	}
 
-	@ModifyReturnValue(method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;", at = @At("RETURN"))
-	public List<String> addSplashFiles(List<String> original, ResourceManager resourceManager, ProfilerFiller profiler) {
+	@ModifyReturnValue(
+		method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;",
+		at = @At("RETURN")
+	)
+	public List<String> frozenLib$addSplashFiles(List<String> original, ResourceManager resourceManager, ProfilerFiller profiler) {
 		for (ResourceLocation splashLocation : SplashTextAPI.getSplashFiles()) {
 			try {
 				BufferedReader bufferedReader = Minecraft.getInstance().getResourceManager().openAsReader(splashLocation);

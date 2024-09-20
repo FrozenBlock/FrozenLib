@@ -20,7 +20,6 @@ package net.frozenblock.lib.core.mixin.client;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.WorldOpenFlows;
-import net.minecraft.world.level.storage.LevelStorageSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;

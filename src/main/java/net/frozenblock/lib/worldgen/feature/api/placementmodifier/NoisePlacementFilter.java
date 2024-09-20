@@ -18,7 +18,6 @@
 package net.frozenblock.lib.worldgen.feature.api.placementmodifier;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.minecraft.core.BlockPos;
@@ -40,7 +39,7 @@ public class NoisePlacementFilter extends PlacementFilter {
 		Codec.BOOL.fieldOf("use_y").orElse(false).forGetter((config) -> config.useY),
 		Codec.BOOL.fieldOf("scale_y").orElse(false).forGetter((config) -> config.scaleY),
 		Codec.BOOL.fieldOf("must_be_inside").orElse(false).forGetter((config) -> config.mustBeInside)
-		).apply(instance, NoisePlacementFilter::new));
+	).apply(instance, NoisePlacementFilter::new));
 
 	private final int noise;
 	private final double noiseScale;
@@ -76,8 +75,13 @@ public class NoisePlacementFilter extends PlacementFilter {
 	protected boolean shouldPlace(@NotNull PlacementContext context, RandomSource random, BlockPos pos) {
 		WorldGenLevel level = context.level;
 		boolean isInside = false;
-		ImprovedNoise sampler = this.noise == 1 ? EasyNoiseSampler.perlinLocal : this.noise == 2 ? EasyNoiseSampler.perlinChecked : this.noise == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-		double sample = EasyNoiseSampler.sample(level, sampler, pos, this.noiseScale, this.scaleY, this.useY);
+		long noiseSeed = level.getSeed();
+		ImprovedNoise sampler =
+			this.noise == 1 ? EasyNoiseSampler.createLocalNoise(noiseSeed) :
+				this.noise == 2 ? EasyNoiseSampler.createCheckedNoise(noiseSeed) :
+					this.noise == 3 ? EasyNoiseSampler.createLegacyThreadSafeNoise(noiseSeed) :
+						EasyNoiseSampler.createXoroNoise(noiseSeed);
+		double sample = EasyNoiseSampler.sample(sampler, pos, this.noiseScale, this.scaleY, this.useY);
 		if (sample > this.minThreshold && sample < this.maxThreshold) {
 			isInside = true;
 		}

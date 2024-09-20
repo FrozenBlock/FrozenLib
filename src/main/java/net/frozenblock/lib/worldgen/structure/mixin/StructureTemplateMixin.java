@@ -17,15 +17,15 @@
 
 package net.frozenblock.lib.worldgen.structure.mixin;
 
-import net.frozenblock.lib.worldgen.structure.api.StructureProcessorApi;
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.worldgen.structure.impl.StructureTemplateInterface;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,25 +36,26 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class StructureTemplateMixin implements StructureTemplateInterface {
 
 	@Unique
-	@Nullable
-	private ResourceLocation id;
+	private final List<StructureProcessor> frozenLib$additionalProcessors = new ArrayList<>();
 
 	@Inject(
 		method = "placeInWorld",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;getRandomPalette(Ljava/util/List;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate$Palette;"
+			target = "Lnet/minecraft/world/level/levelgen/structure/templatesystem/StructurePlaceSettings;getBoundingBox()Lnet/minecraft/world/level/levelgen/structure/BoundingBox;",
+			shift = At.Shift.AFTER
 		)
 	)
 	public void frozenLib$placeInWorld(
 		ServerLevelAccessor serverLevel, BlockPos offset, BlockPos pos, StructurePlaceSettings settings, RandomSource random, int flags,
 		CallbackInfoReturnable<Boolean> info
 	) {
-		StructureProcessorApi.getAdditionalProcessors(this.id).forEach(settings::addProcessor);
+		this.frozenLib$additionalProcessors.forEach(settings::addProcessor);
+		this.frozenLib$additionalProcessors.clear();
 	}
 
 	@Override
-	public void frozenLib$setId(ResourceLocation id) {
-		this.id = id;
+	public void frozenLib$addProcessors(List<StructureProcessor> processors) {
+		this.frozenLib$additionalProcessors.addAll(processors);
 	}
 }

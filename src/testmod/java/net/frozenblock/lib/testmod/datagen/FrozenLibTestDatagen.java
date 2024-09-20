@@ -43,11 +43,8 @@ import net.minecraft.world.item.Instruments;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 
@@ -123,15 +120,6 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 
 		@Override
 		public void generate(BiConsumer<ResourceLocation, LootTable.Builder> output) {
-			output.accept(
-				FrozenTestMain.id("test_loottable"),
-				LootTable.lootTable()
-					.withPool(
-						LootPool.lootPool()
-							.setRolls(ConstantValue.exactly(1.0F))
-							ResourceKey.create(Registries.LOOT_TABLE, .add(LootItem.lootTableItem(Items.DRAGON_EGG))
-				)
-			);
 		}
 	}
 }

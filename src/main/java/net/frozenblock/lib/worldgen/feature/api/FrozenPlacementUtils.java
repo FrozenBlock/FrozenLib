@@ -40,27 +40,27 @@ public class FrozenPlacementUtils {
 
 	public static Holder<PlacedFeature> register(
 		BootstapContext<PlacedFeature> entries,
-			ResourceKey<PlacedFeature> registryKey,
-			Holder<ConfiguredFeature<?, ?>> holder,
-			List<PlacementModifier> list
+		ResourceKey<PlacedFeature> registryKey,
+		Holder<ConfiguredFeature<?, ?>> holder,
+		List<PlacementModifier> list
 	) {
 		return entries.register(registryKey, new PlacedFeature(holder, List.copyOf(list)));
 	}
 
 	public static Holder<PlacedFeature> register(
 		BootstapContext<PlacedFeature> entries,
-			ResourceKey<PlacedFeature> registryKey,
-			Holder<ConfiguredFeature<?, ?>> holder,
-			PlacementModifier... placementModifiers
+		ResourceKey<PlacedFeature> registryKey,
+		Holder<ConfiguredFeature<?, ?>> holder,
+		PlacementModifier... placementModifiers
 	) {
 		return register(entries, registryKey, holder, List.of(placementModifiers));
 	}
 
 	public static Holder<PlacedFeature> register(
-			DynamicRegistryManagerSetupContext entries,
-			ResourceKey<PlacedFeature> registryKey,
-			ResourceKey<ConfiguredFeature<?, ?>> configuredKey,
-			List<PlacementModifier> list
+		DynamicRegistryManagerSetupContext entries,
+		ResourceKey<PlacedFeature> registryKey,
+		ResourceKey<ConfiguredFeature<?, ?>> configuredKey,
+		List<PlacementModifier> list
 	) {
 		var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE, Registries.PLACED_FEATURE));
 		var configured = entries.registryManager().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(configuredKey);
@@ -69,10 +69,10 @@ public class FrozenPlacementUtils {
 	}
 
 	public static Holder<PlacedFeature> register(
-			DynamicRegistryManagerSetupContext entries,
-			ResourceKey<PlacedFeature> registryKey,
-			ResourceKey<ConfiguredFeature<?, ?>> resourceKey,
-			PlacementModifier... placementModifiers
+		DynamicRegistryManagerSetupContext entries,
+		ResourceKey<PlacedFeature> registryKey,
+		ResourceKey<ConfiguredFeature<?, ?>> resourceKey,
+		PlacementModifier... placementModifiers
 	) {
 		return register(entries, registryKey, resourceKey, List.of(placementModifiers));
 	}

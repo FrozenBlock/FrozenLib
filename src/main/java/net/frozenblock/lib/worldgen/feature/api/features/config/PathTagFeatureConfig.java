@@ -25,7 +25,10 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record PathTagFeatureConfig(BlockStateProvider state, int radius, int noise, double noiseScale, double minThreshold, double maxThreshold, boolean useY, boolean scaleY, boolean is3D, boolean onlyPlaceWhenExposed, TagKey<Block> replaceableBlocks, float placementChance) implements FeatureConfiguration {
+public record PathTagFeatureConfig(BlockStateProvider state, int radius, int noise, double noiseScale,
+								   double minThreshold, double maxThreshold, boolean useY, boolean scaleY, boolean is3D,
+								   boolean onlyPlaceWhenExposed, TagKey<Block> replaceableBlocks,
+								   float placementChance) implements FeatureConfiguration {
 	public static final Codec<PathTagFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("state").forGetter((config) -> config.state),
 		Codec.intRange(1, 64).fieldOf("radius").orElse(10).forGetter((config) -> config.radius),

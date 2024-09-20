@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.block.mixin.dripstone;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 import java.util.function.Predicate;
@@ -32,38 +33,40 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.AbstractCauldronBlock;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(PointedDripstoneBlock.class)
 public class PointedDripstoneBlockMixin {
 
-    @Final @Shadow
-    private static VoxelShape REQUIRED_SPACE_TO_DRIP_THROUGH_NON_SOLID_BLOCK;
-
     @SuppressWarnings("UnresolvedMixinReference")
-    @Inject(method = {"m_ulptarvl","method_33279","lambda$getFluidAboveStalactite$11"}, at = @At(value = "INVOKE_ASSIGN", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true, require = 1)
-    private static void getFluidAboveStalactite(Level level, BlockPos pos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> cir, BlockPos blockPos, BlockState blockState) {
+    @Inject(
+		method = {"m_ulptarvl", "method_33279", "lambda$getFluidAboveStalactite$11"},
+		at = @At(
+			value = "INVOKE_ASSIGN",
+			target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z",
+			shift = At.Shift.BEFORE
+		),
+		cancellable = true,
+		require = 1
+	)
+    private static void frozenLib$getFluidAboveStalactite(
+		Level level, BlockPos pos, CallbackInfoReturnable<PointedDripstoneBlock.FluidInfo> info,
+		@Local(ordinal = 1) BlockPos blockPos, @Local BlockState blockState
+	) {
         if (!FrozenBools.useNewDripstoneLiquid && blockPos != null) {
             if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
-                cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState));
+                info.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState));
             } else if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(blockState.getBlock())) {
-                cir.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState));
+                info.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState));
             }
         }
     }
@@ -97,24 +100,35 @@ public class PointedDripstoneBlockMixin {
         }
     }
 
-    @Inject(method = "maybeTransferFluid", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILEXCEPTION, cancellable = true)
-    private static void maybeTransferFluid(BlockState state, ServerLevel level, BlockPos pos, float randChance, CallbackInfo ci, Optional<PointedDripstoneBlock.FluidInfo> optional, Fluid fluid, float f, BlockPos blockPos) {
+    @Inject(
+		method = "maybeTransferFluid",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z",
+			shift = At.Shift.BEFORE
+		),
+		cancellable = true
+	)
+    private static void frozenLib$maybeTransferFluid(
+		BlockState state, ServerLevel level, BlockPos pos, float randChance, CallbackInfo info,
+		@Local Optional<PointedDripstoneBlock.FluidInfo> optional, @Local Fluid fluid, @Local(ordinal = 1) BlockPos blockPos
+	) {
         if (optional.isPresent()) {
             PointedDripstoneBlock.FluidInfo fluidInfo = optional.get();
             Block block = optional.get().sourceState().getBlock();
             if (DripstoneDripWaterFrom.ON_DRIP_BLOCK.containsKey(block) && fluid == Fluids.WATER) {
                 DripstoneDripWaterFrom.ON_DRIP_BLOCK.get(block).drip(level, fluidInfo, blockPos);
-                ci.cancel();
+				info.cancel();
             }
             if (DripstoneDripLavaFrom.ON_DRIP_BLOCK.containsKey(block) && fluid == Fluids.LAVA) {
                 DripstoneDripLavaFrom.ON_DRIP_BLOCK.get(block).drip(level, fluidInfo, blockPos);
-                ci.cancel();
+				info.cancel();
             }
         }
     }
 
     @Inject(at = @At("HEAD"), method = "findFillableCauldronBelowStalactiteTip", cancellable = true)
-    private static void findFillableCauldronBelowStalactiteTip(Level world, BlockPos pos2, Fluid fluid, CallbackInfoReturnable<BlockPos> info) {
+    private static void frozenLib$findFillableCauldronBelowStalactiteTip(Level world, BlockPos pos2, Fluid fluid, CallbackInfoReturnable<BlockPos> info) {
         Predicate<BlockState> tagPredicate = state -> state.is(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON);
         if (tagPredicate.test(world.getBlockState(pos2.mutable().move(Direction.get(Direction.DOWN.getAxisDirection(), Direction.Axis.Y))))) {
             Predicate<BlockState> predicate = tagPredicate.or(state -> (state.getBlock() instanceof AbstractCauldronBlock && ((AbstractCauldronBlock) state.getBlock()).canReceiveStalactiteDrip(fluid)));
@@ -126,53 +140,22 @@ public class PointedDripstoneBlockMixin {
 
     @Shadow
     private static boolean canDripThrough(BlockGetter world, BlockPos pos, BlockState state) {
-        if (state.isAir()) {
-            return true;
-        }
-        if (state.isSolidRender(world, pos)) {
-            return false;
-        }
-        if (!state.getFluidState().isEmpty()) {
-            return false;
-        }
-        VoxelShape voxelShape = state.getCollisionShape(world, pos);
-        return !Shapes.joinIsNotEmpty(REQUIRED_SPACE_TO_DRIP_THROUGH_NON_SOLID_BLOCK, voxelShape, BooleanOp.AND);
+        throw new AssertionError("Mixin injection failed - FrozenLib PointedDripstoneBlockMixin.");
     }
 
     @Shadow
     private static Optional<BlockPos> findBlockVertical(LevelAccessor world, BlockPos pos, Direction.AxisDirection direction, BiPredicate<BlockPos, BlockState> continuePredicate, Predicate<BlockState> stopPredicate, int range) {
-        Direction direction2 = Direction.get(direction, Direction.Axis.Y);
-        BlockPos.MutableBlockPos mutable = pos.mutable();
-        for (int i = 1; i < range; ++i) {
-            mutable.move(direction2);
-            BlockState blockState = world.getBlockState(mutable);
-            if (stopPredicate.test(blockState)) {
-                return Optional.of(mutable.immutable());
-            }
-            if (!world.isOutsideBuildHeight(mutable.getY()) && continuePredicate.test(mutable, blockState)) continue;
-            return Optional.empty();
-        }
-        return Optional.empty();
+		throw new AssertionError("Mixin injection failed - FrozenLib PointedDripstoneBlockMixin.");
     }
 
     @Shadow
     private static boolean isStalactite(BlockState state) {
-        return isPointedDripstoneWithDirection(state, Direction.DOWN);
-    }
-
-    @Shadow
-    private static boolean isStalagmite(BlockState state) {
-        return isPointedDripstoneWithDirection(state, Direction.UP);
-    }
-
-    @Shadow
-    private static boolean isPointedDripstoneWithDirection(BlockState state, Direction dir) {
-        return state.is(Blocks.POINTED_DRIPSTONE) && state.getValue(BlockStateProperties.VERTICAL_DIRECTION) == dir;
+		throw new AssertionError("Mixin injection failed - FrozenLib PointedDripstoneBlockMixin.");
     }
 
     @Shadow
     private static Optional<BlockPos> findRootBlock(Level level, BlockPos pos, BlockState state, int maxIterations) {
-        return Optional.empty();
+		throw new AssertionError("Mixin injection failed - FrozenLib PointedDripstoneBlockMixin.");
     }
 
 }

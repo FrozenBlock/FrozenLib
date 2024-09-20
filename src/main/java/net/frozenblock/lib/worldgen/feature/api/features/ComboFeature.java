@@ -31,12 +31,12 @@ import org.jetbrains.annotations.NotNull;
 
 public class ComboFeature extends Feature<ComboFeatureConfig> {
 
-    public ComboFeature(Codec<ComboFeatureConfig> codec) {
-        super(codec);
-    }
+	public ComboFeature(Codec<ComboFeatureConfig> codec) {
+		super(codec);
+	}
 
 	@Override
-    public boolean place(@NotNull FeaturePlaceContext<ComboFeatureConfig> context) {
+	public boolean place(@NotNull FeaturePlaceContext<ComboFeatureConfig> context) {
 		WorldGenLevel worldGenLevel = context.level();
 		ComboFeatureConfig config = context.config();
 		RandomSource randomSource = context.random();
@@ -48,7 +48,7 @@ public class ComboFeature extends Feature<ComboFeatureConfig> {
 				placedAny = true;
 		}
 		return placedAny;
-    }
+	}
 
 	public boolean place(WorldGenLevel worldGenLevel, @NotNull Holder<PlacedFeature> holder, ChunkGenerator chunkGenerator, RandomSource randomSource, BlockPos blockPos) {
 		return holder.value().place(worldGenLevel, chunkGenerator, randomSource, blockPos);

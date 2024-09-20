@@ -1,7 +1,6 @@
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
@@ -31,7 +30,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.0.10-RC")
+    kotlin("jvm") version("2.0.10")
 }
 
 val minecraft_version: String by project
@@ -545,10 +544,12 @@ modrinth {
     uploadFile = remapJar
     gameVersions = listOf(minecraft_version)
     loaders = listOf("fabric")
+    /*
     additionalFiles = listOf(
         tasks.remapSourcesJar.get(),
         javadocJar
     )
+     */
 
     dependencies {
         required.project("fabric-api")

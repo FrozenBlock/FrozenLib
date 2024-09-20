@@ -23,7 +23,6 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;

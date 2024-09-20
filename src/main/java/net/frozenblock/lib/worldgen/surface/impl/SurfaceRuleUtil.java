@@ -30,7 +30,7 @@ public class SurfaceRuleUtil {
 		NoiseGeneratorInterface inter = NoiseGeneratorInterface.class.cast(settings);
 		SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(dimension);
         if (newRules != null) {
-            inter.writeSurfaceRules(newRules);
+            inter.frozenLib$writeSurfaceRules(newRules);
         }
     }
 }

@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.entity.mixin.behavior;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.entity.impl.behavior.FrozenBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,7 +27,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(Behavior.class)
 public class BehaviorMixin<E extends LivingEntity> implements FrozenBehavior {
@@ -34,8 +34,14 @@ public class BehaviorMixin<E extends LivingEntity> implements FrozenBehavior {
 	@Unique
 	private int frozenLib$duration;
 
-	@Inject(method = "tryStart", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/behavior/Behavior;start(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)V", shift = At.Shift.BEFORE), locals = LocalCapture.CAPTURE_FAILHARD)
-	private void tryStart(ServerLevel level, E owner, long gameTime, CallbackInfoReturnable<Boolean> cir, int i) {
+	@Inject(method = "tryStart",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/ai/behavior/Behavior;start(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)V",
+			shift = At.Shift.BEFORE
+		)
+	)
+	private void frozenLib$tryStart(ServerLevel level, E owner, long gameTime, CallbackInfoReturnable<Boolean> info, @Local int i) {
 		this.frozenLib$duration = i;
 	}
 

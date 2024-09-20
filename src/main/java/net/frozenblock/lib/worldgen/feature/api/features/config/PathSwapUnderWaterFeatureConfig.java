@@ -26,7 +26,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record PathSwapUnderWaterFeatureConfig(BlockStateProvider state, BlockStateProvider underWaterState, int radius, int noise, double noiseScale, double minThreshold, double maxThreshold, boolean useY, boolean scaleY, boolean is3D, boolean onlyPlaceWhenExposed, HolderSet<Block> replaceableBlocks, float placement_chance) implements FeatureConfiguration {
+public record PathSwapUnderWaterFeatureConfig(BlockStateProvider state, BlockStateProvider underWaterState, int radius,
+											  int noise, double noiseScale, double minThreshold, double maxThreshold,
+											  boolean useY, boolean scaleY, boolean is3D, boolean onlyPlaceWhenExposed,
+											  HolderSet<Block> replaceableBlocks,
+											  float placement_chance) implements FeatureConfiguration {
 	public static final Codec<PathSwapUnderWaterFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("state").forGetter((config) -> config.state),
 		BlockStateProvider.CODEC.fieldOf("under_water_state").forGetter((config) -> config.underWaterState),

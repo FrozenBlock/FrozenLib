@@ -28,7 +28,6 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.minecraft.nbt.CompoundTag;

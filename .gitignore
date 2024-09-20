@@ -49,3 +49,7 @@ replay_*.log
 *.hprof
 *.jfr
 /logs/
+
+# kotlin
+
+.kotlin/
