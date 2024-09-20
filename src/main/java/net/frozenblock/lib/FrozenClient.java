@@ -18,10 +18,16 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.frozenblock.lib.cape.client.impl.ClientCapeData;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
+import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.menu.api.Panoramas;
@@ -53,13 +59,14 @@ public final class FrozenClient implements ClientModInitializer {
 		// CONTINUE FROZENLIB INIT
 		registerClientEvents();
 		FrozenClientNetworking.registerClientReceivers();
+		DebugRenderManager.init();
 
 		// PARTICLES
 		ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
-
 		particleRegistry.register(FrozenParticleTypes.DEBUG_POS, DebugPosParticle.Provider::new);
 
 		Panoramas.addPanorama(new ResourceLocation("textures/gui/title/background/panorama"));
+		ClientCapeData.init();
 
 		var resourceLoader = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
 		resourceLoader.registerReloadListener(BlockSoundGroupManager.INSTANCE);
@@ -68,14 +75,23 @@ public final class FrozenClient implements ClientModInitializer {
 	}
 
 	private static void registerClientEvents() {
-		ClientTickEvents.START_WORLD_TICK.register(ClientWindManager::tick);
-		ClientTickEvents.START_WORLD_TICK.register(ScreenShaker::tick);
-		ClientTickEvents.START_WORLD_TICK.register(level -> FlyBySoundHub.update(Minecraft.getInstance(), Minecraft.getInstance().getCameraEntity(), true));
+		ClientTickEvents.START_WORLD_TICK.register(
+			world -> {
+				ClientWindManager.tick(world);
+				ScreenShaker.tick(world);
+				FlyBySoundHub.update(Minecraft.getInstance(), Minecraft.getInstance().getCameraEntity(), true);
+			}
+		);
 		ClientTickEvents.START_CLIENT_TICK.register(client -> ClientWindManager.clearAndSwitchWindDisturbances());
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> {
 			ScreenShaker.clear();
 			ClientWindManager.clearAllWindDisturbances();
 		});
+		ClientChunkEvents.CHUNK_LOAD.register(
+			(world, chunk) -> {
+				if (FrozenLibConfig.IS_DEBUG) ClientPlayNetworking.send(new StructureDebugRequestPayload(chunk.getPos()));
+			}
+		);
 	}
 
 }

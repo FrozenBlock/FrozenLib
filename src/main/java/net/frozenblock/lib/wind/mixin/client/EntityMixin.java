@@ -31,10 +31,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Environment(EnvType.CLIENT)
 @Mixin(Entity.class)
 public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbingEntityImpl {
 
-	@Environment(EnvType.CLIENT)
 	@Inject(
 		method = "baseTick",
 		at = @At(

@@ -23,7 +23,6 @@ import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PacketType;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
 import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;

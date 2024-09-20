@@ -21,14 +21,12 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import io.netty.buffer.Unpooled;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import net.fabricmc.fabric.api.networking.v1.FabricPacket;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
@@ -38,7 +36,6 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -119,10 +116,10 @@ public class ScreenShakeCommand {
 		int entityAmount = 0;
 		List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
-			if (!((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().isEmpty()) {
+			if (!((EntityScreenShakeInterface)entity).frozenLib$getScreenShakeManager().getShakes().isEmpty()) {
 				FabricPacket packet = new RemoveEntityScreenShakePacket(entity.getId());
 				affectedEntities.add(entity);
-				((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().clear();
+				((EntityScreenShakeInterface)entity).frozenLib$getScreenShakeManager().getShakes().clear();
 				for (ServerPlayer serverPlayer : PlayerLookup.tracking(source.getLevel(), entity.blockPosition())) {
 					ServerPlayNetworking.send(serverPlayer, packet);
 				}

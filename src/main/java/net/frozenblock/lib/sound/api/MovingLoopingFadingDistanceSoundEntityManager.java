@@ -60,10 +60,12 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
     }
 
     public void save(CompoundTag nbt) {
-        DataResult<Tag> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
-        Logger var10001 = FrozenSharedConstants.LOGGER4;
-        Objects.requireNonNull(var10001);
-        var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenDistanceSounds", cursorsNbt));
+		if (!this.sounds.isEmpty()) {
+			DataResult<Tag> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
+			Logger var10001 = FrozenSharedConstants.LOGGER4;
+			Objects.requireNonNull(var10001);
+			var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenDistanceSounds", cursorsNbt));
+		}
     }
 
     public void addSound(ResourceLocation soundID, ResourceLocation soundID2, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {

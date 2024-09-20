@@ -66,10 +66,10 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 	public <F extends Feature<FC>> FrozenConfiguredFeature<FC, C> makeAndSetHolder(F feature, FC config) {
 		FrozenLogUtils.log("Registering configured feature: " + this.getKey().location(), true);
 
-		assert FrozenFeatureUtils.BOOTSTRAP_CONTEXT != null: "Bootstrap context is null while registering " + this.getKey().location();
+		assert FrozenFeatureUtils.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().location();
 
-		assert feature != null: "Feature is null whilst registering " + this.getKey().location();
-		assert config != null: "Feature configuration is null whilst registering " + this.getKey().location();
+		assert feature != null : "Feature is null whilst registering " + this.getKey().location();
+		assert config != null : "Feature configuration is null whilst registering " + this.getKey().location();
 
 		FrozenFeatureUtils.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), new ConfiguredFeature<>(feature, config));
 		return this;

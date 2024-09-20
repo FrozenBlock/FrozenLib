@@ -17,12 +17,12 @@
 
 package net.frozenblock.lib.item.mixin.bonemeal;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.item.api.bonemeal.BonemealBehaviors;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.InteractionResult;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.BoneMealItem;
-import net.minecraft.world.item.context.UseOnContext;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,20 +33,29 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BoneMealItem.class)
 public class BoneMealItemMixin {
 
-    @Inject(method = "useOn", at = @At("HEAD"), cancellable = true)
-    public void useBonemeal(UseOnContext context, CallbackInfoReturnable<InteractionResult> info) {
-        Level level = context.getLevel();
-        BlockPos blockPos = context.getClickedPos();
-        BlockState state = level.getBlockState(blockPos);
-        Direction direction = context.getClickedFace();
-        Direction horizontal = context.getHorizontalDirection();
-        if (BonemealBehaviors.BONEMEAL_BEHAVIORS.containsKey(state.getBlock())) {
-            if (BonemealBehaviors.BONEMEAL_BEHAVIORS.get(state.getBlock()).bonemeal(context, level, blockPos, state, direction, horizontal) && !level.isClientSide) {
-                context.getItemInHand().shrink(1);
-                info.setReturnValue(InteractionResult.SUCCESS);
-            } else {
-                info.setReturnValue(InteractionResult.sidedSuccess(level.isClientSide));
-            }
+    @Inject(
+		method = "growCrop",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;"
+		),
+		cancellable = true
+	)
+    private static void frozenLib$runBonemeal(
+		ItemStack stack, Level world, BlockPos pos, CallbackInfoReturnable<Boolean> info,
+		@Local(ordinal = 0) BlockState blockState
+	) {
+		BonemealBehaviors.BonemealBehavior bonemealBehavior = BonemealBehaviors.get(blockState.getBlock());
+        if (bonemealBehavior != null && bonemealBehavior.meetsRequirements(world, pos, blockState)) {
+			if (world instanceof ServerLevel serverLevel) {
+				if (bonemealBehavior.isBonemealSuccess(world, world.random, pos, blockState)) {
+					bonemealBehavior.performBonemeal(serverLevel, world.random, pos, blockState);
+				}
+
+				stack.shrink(1);
+			}
+
+			info.setReturnValue(true);
         }
     }
 

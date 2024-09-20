@@ -17,17 +17,28 @@
 
 package net.frozenblock.lib.config.frozenlib_config.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.cape.impl.Cape;
+import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
@@ -39,7 +50,21 @@ public final class FrozenLibConfigGui {
 		Config<?> configInstance = FrozenLibConfig.INSTANCE;
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
-		category.setBackground(FrozenSharedConstants.id("config.png"));
+
+		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+			var isDebug = category.addEntry(
+				FrozenClothConfig.syncedEntry(
+					entryBuilder.startBooleanToggle(text("is_debug"), modifiedConfig.isDebug)
+						.setDefaultValue(defaultConfig.isDebug)
+						.setSaveConsumer(newValue -> config.isDebug = newValue)
+						.setTooltip(tooltip("is_debug"))
+						.build(),
+					config.getClass(),
+					"isDebug",
+					configInstance
+				)
+			);
+		}
 
 		var useWindOnNonFrozenServers = category.addEntry(
 			FrozenClothConfig.syncedEntry(
@@ -110,6 +135,29 @@ public final class FrozenLibConfigGui {
 			tooltip("datafixer"),
 			disabledDataFixTypes
 		);
+
+		UUID playerUUID = Minecraft.getInstance().getUser().getProfileId();
+		List<String> usableCapes = new ArrayList<>();
+		CapeUtil.getUsableCapes(playerUUID).forEach(cape -> usableCapes.add(cape.registryId().toString()));
+		if (usableCapes.size() > 1) {
+			var capeEntry = category.addEntry(
+				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
+					.setDefaultValue(defaultConfig.cape)
+					.setNameProvider(o -> {
+						ResourceLocation capeId = ResourceLocation.tryParse(((String) o));
+						return CapeUtil.getCape(capeId).map(Cape::capeName).orElse(Component.translatable("cape.frozenlib.invalid"));
+					})
+					.setSaveConsumer(newValue -> {
+						ResourceLocation capeId = ResourceLocation.tryParse((String) newValue);
+						config.cape = (String) newValue;
+						if (Minecraft.getInstance().getConnection() != null) {
+							ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, capeId));
+						}
+					})
+					.setTooltip(tooltip("cape"))
+					.build()
+			);
+		}
 	}
 
 	public static Screen buildScreen(Screen parent) {
@@ -121,11 +169,13 @@ public final class FrozenLibConfigGui {
 		return configBuilder.build();
 	}
 
-	public static Component text(String key) {
+	@Contract(value = "_ -> new", pure = true)
+	public static @NotNull Component text(String key) {
 		return Component.translatable("option." + FrozenSharedConstants.MOD_ID + "." + key);
 	}
 
-	public static Component tooltip(String key) {
+	@Contract(value = "_ -> new", pure = true)
+	public static @NotNull Component tooltip(String key) {
 		return Component.translatable("tooltip." + FrozenSharedConstants.MOD_ID + "." + key);
 	}
 }

@@ -35,24 +35,29 @@ import org.jetbrains.annotations.NotNull;
 
 public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWaterTagFeatureConfig> {
 
-    public NoisePathSwapUnderWaterTagFeature(Codec<PathSwapUnderWaterTagFeatureConfig> codec) {
-        super(codec);
-    }
+	public NoisePathSwapUnderWaterTagFeature(Codec<PathSwapUnderWaterTagFeatureConfig> codec) {
+		super(codec);
+	}
 
 	@Override
-    public boolean place(@NotNull FeaturePlaceContext<PathSwapUnderWaterTagFeatureConfig> context) {
-        boolean generated = false;
+	public boolean place(@NotNull FeaturePlaceContext<PathSwapUnderWaterTagFeatureConfig> context) {
+		boolean generated = false;
 		PathSwapUnderWaterTagFeatureConfig config = context.config();
-        BlockPos blockPos = context.origin();
-        WorldGenLevel level = context.level();
-        int radiusSquared = config.radius() * config.radius();
-        RandomSource random = level.getRandom();
-        ImprovedNoise sampler = config.noise() == 1 ? EasyNoiseSampler.perlinLocal : config.noise() == 2 ? EasyNoiseSampler.perlinChecked : config.noise() == 3 ? EasyNoiseSampler.perlinThreadSafe : EasyNoiseSampler.perlinXoro;
-        float chance = config.placementChance();
+		BlockPos blockPos = context.origin();
+		WorldGenLevel level = context.level();
+		int radiusSquared = config.radius() * config.radius();
+		RandomSource random = level.getRandom();
+		long noiseSeed = level.getSeed();
+		ImprovedNoise sampler =
+			config.noise() == 1 ? EasyNoiseSampler.createLocalNoise(noiseSeed) :
+				config.noise() == 2 ? EasyNoiseSampler.createCheckedNoise(noiseSeed) :
+					config.noise() == 3 ? EasyNoiseSampler.createLegacyThreadSafeNoise(noiseSeed) :
+						EasyNoiseSampler.createXoroNoise(noiseSeed);
+		float chance = config.placementChance();
 		int bx = blockPos.getX();
 		int by = blockPos.getY();
-        int bz = blockPos.getZ();
-        BlockPos.MutableBlockPos mutable = blockPos.mutable();
+		int bz = blockPos.getZ();
+		BlockPos.MutableBlockPos mutable = blockPos.mutable();
 		BlockPredicate predicate = config.onlyPlaceWhenExposed() ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
 
 		for (int x = bx - config.radius(); x <= bx + config.radius(); x++) {
@@ -61,7 +66,7 @@ public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWate
 					double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)));
 					if (distance < radiusSquared) {
 						mutable.set(x, level.getHeight(Types.OCEAN_FLOOR, x, z) - 1, z);
-						double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
+						double sample = EasyNoiseSampler.sample(sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
 						if (sample > config.minThreshold() && sample < config.maxThreshold() && level.getBlockState(mutable).is(config.replaceableBlocks()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 							generated = true;
 							BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.underWaterState().getState(random, mutable) : config.state().getState(random, mutable);
@@ -73,7 +78,7 @@ public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWate
 						double distance = ((bx - x) * (bx - x) + ((bz - z) * (bz - z)) + ((by - y) * (by - y)));
 						if (distance < radiusSquared) {
 							mutable.set(x, y, z);
-							double sample = EasyNoiseSampler.sample(level, sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
+							double sample = EasyNoiseSampler.sample(sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
 							if (sample > config.minThreshold() && sample < config.maxThreshold() && level.getBlockState(mutable).is(config.replaceableBlocks()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
 								generated = true;
 								BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.underWaterState().getState(random, mutable) : config.state().getState(random, mutable);
@@ -84,8 +89,8 @@ public class NoisePathSwapUnderWaterTagFeature extends Feature<PathSwapUnderWate
 				}
 			}
 		}
-        return generated;
-    }
+		return generated;
+	}
 
 	private static boolean checkSurroundingBlocks(WorldGenLevel level, BlockPos pos, BlockPredicate predicate) {
 		for (Direction direction : Direction.values()) {

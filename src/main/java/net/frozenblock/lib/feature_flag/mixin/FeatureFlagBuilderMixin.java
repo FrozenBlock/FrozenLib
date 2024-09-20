@@ -34,7 +34,7 @@ public class FeatureFlagBuilderMixin {
 			}
 		)
 	)
-	private int increaseMax(int constant) {
+	private int frozenLib$increaseMax(int constant) {
 		return Math.max(constant, 512);
 	}
 }

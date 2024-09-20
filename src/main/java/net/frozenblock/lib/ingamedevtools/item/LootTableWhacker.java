@@ -30,7 +30,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BrushableBlockEntity;
 import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
-import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.NotNull;
 
 public class LootTableWhacker extends Item {

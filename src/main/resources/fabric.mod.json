@@ -14,7 +14,8 @@
   "contributors": [
     "Liukrast",
     "Xfrtrex",
-    "Soro"
+    "Soro",
+    "zhntm"
   ],
   "contact": {
     "homepage": "https://www.modrinth.com/mod/FrozenLib",
@@ -43,10 +44,11 @@
   },
   "mixins": [
     "mixin/frozenlib.advancement.mixins.json",
-    "mixin/frozenlib.axe.mixins.json",
     "mixin/frozenlib.block.mixins.json",
+    "mixin/frozenlib.cape.mixins.json",
     "mixin/frozenlib.clothconfig.mixins.json",
     "mixin/frozenlib.core.mixins.json",
+    "mixin/frozenlib.debug.mixins.json",
     "mixin/frozenlib.entity.mixins.json",
     "mixin/frozenlib.event.mixins.json",
     "mixin/frozenlib.feature_flag.mixins.json",
@@ -57,7 +59,6 @@
     "mixin/frozenlib.modmenu.mixins.json",
     "mixin/frozenlib.recipe.mixins.json",
     "mixin/frozenlib.screenshake.mixins.json",
-    "mixin/frozenlib.shovel.mixins.json",
     "mixin/frozenlib.sound.mixins.json",
     "mixin/frozenlib.spotting_icons.mixins.json",
     "mixin/frozenlib.storage.mixins.json",

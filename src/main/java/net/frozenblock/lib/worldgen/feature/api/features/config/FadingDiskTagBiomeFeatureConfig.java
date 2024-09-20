@@ -28,7 +28,13 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record FadingDiskTagBiomeFeatureConfig(boolean useHeightmapInsteadOfCircularPlacement, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placementChance, float innerChance, float innerPercent, float fadeStartDistancePercent, TagKey<Block> innerReplaceableBlocks, TagKey<Block> outerReplaceableBlocks, Heightmap.Types heightmap, TagKey<Biome> excludedBiomes) implements FeatureConfiguration {
+public record FadingDiskTagBiomeFeatureConfig(boolean useHeightmapInsteadOfCircularPlacement,
+											  BlockStateProvider innerState, BlockStateProvider outerState,
+											  IntProvider radius, float placementChance, float innerChance,
+											  float innerPercent, float fadeStartDistancePercent,
+											  TagKey<Block> innerReplaceableBlocks,
+											  TagKey<Block> outerReplaceableBlocks, Heightmap.Types heightmap,
+											  TagKey<Biome> excludedBiomes) implements FeatureConfiguration {
 	public static final Codec<FadingDiskTagBiomeFeatureConfig> CODEC = RecordCodecBuilder.create(
 		(instance) -> instance.group(
 			Codec.BOOL.fieldOf("use_heightmap_instead_of_circular_placement").forGetter(config -> config.useHeightmapInsteadOfCircularPlacement),

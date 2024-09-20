@@ -210,7 +210,7 @@ public class ScreenShakeManager {
 			for (ServerPlayer player : PlayerLookup.world((ServerLevel) entity.level())) {
 				ServerPlayNetworking.send(player, packet);
 			}
-			((EntityScreenShakeInterface)entity).addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
+			((EntityScreenShakeInterface)entity).frozenLib$addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
 		}
 	}
 

@@ -18,7 +18,6 @@
 package net.frozenblock.lib.particle.api;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import java.util.function.Function;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;

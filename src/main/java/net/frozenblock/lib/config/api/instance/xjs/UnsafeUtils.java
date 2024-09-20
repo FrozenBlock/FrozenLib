@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.config.api.instance.xjs;
 
-import lombok.experimental.UtilityClass;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import lombok.experimental.UtilityClass;
 
 // Source: Cloth Config
 @UtilityClass

@@ -49,7 +49,14 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
         this.frozenLib$loopingFadingDistanceSoundManager = new MovingLoopingFadingDistanceSoundEntityManager(entity);
     }
 
-    @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
+    @Inject(
+		method = "saveWithoutId",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V",
+			shift = At.Shift.AFTER
+		)
+	)
     public void frozenLib$saveLoopingSoundData(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> info) {
         if (this.frozenLib$loopingSoundManager != null) {
             this.frozenLib$loopingSoundManager.save(compoundTag);
@@ -59,7 +66,14 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
         }
     }
 
-	@Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
+	@Inject(
+		method = "load",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V",
+			shift = At.Shift.AFTER
+		)
+	)
     public void frozenLib$loadLoopingSoundData(CompoundTag compoundTag, CallbackInfo info) {
         this.frozenLib$loopingSoundManager.load(compoundTag);
         this.frozenLib$loopingFadingDistanceSoundManager.load(compoundTag);
@@ -76,25 +90,25 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 
 	@Unique
     @Override
-    public MovingLoopingSoundEntityManager getSoundManager() {
+    public MovingLoopingSoundEntityManager frozenLib$getSoundManager() {
         return this.frozenLib$loopingSoundManager;
     }
 
 	@Unique
     @Override
-    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
+    public void frozenLib$addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
         this.frozenLib$loopingSoundManager.addSound(soundID, category, volume, pitch, restrictionId, stopOnDeath);
     }
 
 	@Unique
     @Override
-    public MovingLoopingFadingDistanceSoundEntityManager getFadingSoundManager() {
+    public MovingLoopingFadingDistanceSoundEntityManager frozenLib$getFadingSoundManager() {
         return this.frozenLib$loopingFadingDistanceSoundManager;
     }
 
 	@Unique
     @Override
-    public void addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {
+    public void frozenLib$addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {
         this.frozenLib$loopingFadingDistanceSoundManager.addSound(soundID, sound2ID, category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist);
     }
 

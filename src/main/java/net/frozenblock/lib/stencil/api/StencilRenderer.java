@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.stencil.api;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -28,7 +29,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
-import org.apache.commons.compress.utils.Lists;
 import org.joml.Matrix4f;
 import org.joml.Vector3f;
 

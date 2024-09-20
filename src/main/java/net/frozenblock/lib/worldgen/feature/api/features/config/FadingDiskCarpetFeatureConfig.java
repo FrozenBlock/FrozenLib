@@ -24,7 +24,11 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record FadingDiskCarpetFeatureConfig(boolean useHeightmapInsteadOfCircularPlacement, BlockStateProvider innerState, BlockStateProvider outerState, IntProvider radius, float placementChance, float innerPercent, float innerChance, float fadeStartDistancePercent, Heightmap.Types heightmap) implements FeatureConfiguration {
+public record FadingDiskCarpetFeatureConfig(boolean useHeightmapInsteadOfCircularPlacement,
+											BlockStateProvider innerState, BlockStateProvider outerState,
+											IntProvider radius, float placementChance, float innerPercent,
+											float innerChance, float fadeStartDistancePercent,
+											Heightmap.Types heightmap) implements FeatureConfiguration {
 	public static final Codec<FadingDiskCarpetFeatureConfig> CODEC = RecordCodecBuilder.create(
 		(instance) -> instance.group(
 			Codec.BOOL.fieldOf("use_heightmap_instead_of_circular_placement").forGetter(config -> config.useHeightmapInsteadOfCircularPlacement),

@@ -8,6 +8,7 @@
   },
   "client": [
     "SplashManagerMixin",
-    "TitleScreenMixin"
+    "CubeMapMixin",
+    "SplashManagerMixin"
   ]
 }

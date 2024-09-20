@@ -57,7 +57,7 @@ public class ParticleMixin {
 	protected float gravity;
 
 	@Inject(method = "tick", at = @At("HEAD"))
-	private void storeY(
+	private void frozenLib$storeY(
 		CallbackInfo ci,
 		@Share("oldX") LocalDoubleRef oldX,
 		@Share("oldY") LocalDoubleRef oldY,
@@ -68,8 +68,15 @@ public class ParticleMixin {
 		oldZ.set(this.zd);
 	}
 
-	@Inject(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/particle/Particle;move(DDD)V", ordinal = 0))
-	private void useGravity(
+	@Inject(
+		method = "tick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/particle/Particle;move(DDD)V",
+			ordinal = 0
+		)
+	)
+	private void frozenLib$useGravity(
 		CallbackInfo ci,
 		@Share("oldX") LocalDoubleRef oldX,
 		@Share("oldY") LocalDoubleRef oldY,

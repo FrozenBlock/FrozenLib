@@ -21,11 +21,14 @@ import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.core.HolderLookup;
 
 public final class AdvancementEvents {
 	private AdvancementEvents() {}
 
+	/**
+	 * Invoked for each AdvancementHolder registered on the server.
+	 * Allows modifications to them
+	 * */
 	public static final Event<AdvancementInit> INIT = FrozenEvents.createEnvironmentEvent(AdvancementInit.class, callbacks -> holder -> {
 		for (AdvancementInit callback : callbacks) {
 			callback.onInit(holder);
