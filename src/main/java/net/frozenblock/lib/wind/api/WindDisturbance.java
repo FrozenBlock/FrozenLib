@@ -36,8 +36,8 @@ public class WindDisturbance<T> {
 	public static final DisturbanceResult DUMMY_RESULT = new DisturbanceResult(0D, 0D, Vec3.ZERO);
 
 	private final Optional<T> source;
-	private final Vec3 origin;
-	private final AABB affectedArea;
+	public final Vec3 origin;
+	public final AABB affectedArea;
 	private final WindDisturbanceLogic<T> disturbanceLogic;
 
     public WindDisturbance(Optional<T> source, Vec3 origin, AABB affectedArea, WindDisturbanceLogic<T> disturbanceLogic) {

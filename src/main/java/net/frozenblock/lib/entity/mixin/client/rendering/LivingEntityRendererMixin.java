@@ -43,8 +43,15 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		super(context);
 	}
 
-	@Inject(method = "getRenderType", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"), cancellable = true)
-    private void getEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
+	@Inject(
+		method = "getRenderType",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/model/EntityModel;renderType(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"
+		),
+		cancellable = true
+	)
+    private void frozenLib$getEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
         FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
             if (override.type() == livingEntity.getType()) {
                 var texture = override.texture();
@@ -57,8 +64,15 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
         });
     }
 
-    @Inject(method = "getRenderType", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;itemEntityTranslucentCull(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"), cancellable = true)
-    private void getItemEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
+    @Inject(
+		method = "getRenderType",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/RenderType;itemEntityTranslucentCull(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;"
+		),
+		cancellable = true
+	)
+    private void frozenLib$getItemEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
 		FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
             if (override.type() == livingEntity.getType()) {
                 var texture = override.texture();
@@ -71,8 +85,15 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
         });
     }
 
-    @Inject(method = "getRenderType", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/RenderType;outline(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;", shift = At.Shift.BEFORE), cancellable = true)
-    private void getOutlineEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
+    @Inject(
+		method = "getRenderType",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/RenderType;outline(Lnet/minecraft/resources/ResourceLocation;)Lnet/minecraft/client/renderer/RenderType;",
+			shift = At.Shift.BEFORE
+		),
+		cancellable = true)
+    private void frozenLib$getOutlineEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
         if (glowing) {
 			FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
                 if (override.type() == livingEntity.getType()) {

@@ -37,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenRegistry {
-
 	public static final ResourceKey<Registry<ModIntegrationSupplier<?>>> MOD_INTEGRATION_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("mod_integration"));
 	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("sound_predicate"));
 	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("sound_predicate_unsynced"));
@@ -55,11 +54,11 @@ public class FrozenRegistry {
 	);
 
 	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE = createSimple(SOUND_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
-		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(entity -> false))
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(() -> entity -> false))
 	);
 
 	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE_UNSYNCED = createSimple(SOUND_PREDICATE_UNSYNCED_REGISTRY, Lifecycle.stable(), null,
-		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(entity -> false))
+		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new SoundPredicate<>(() -> entity -> false))
 	);
 
 	public static final MappedRegistry<SpottingIconPredicate<?>> SPOTTING_ICON_PREDICATE = createSimple(SPOTTING_ICON_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,

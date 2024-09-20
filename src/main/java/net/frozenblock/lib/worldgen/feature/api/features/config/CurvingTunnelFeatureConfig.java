@@ -25,7 +25,8 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record CurvingTunnelFeatureConfig(BlockStateProvider state, int radius, double minCurvature, double maxCurvature, TagKey<Block> replaceableBlocks) implements FeatureConfiguration {
+public record CurvingTunnelFeatureConfig(BlockStateProvider state, int radius, double minCurvature, double maxCurvature,
+										 TagKey<Block> replaceableBlocks) implements FeatureConfiguration {
 	public static final Codec<CurvingTunnelFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("state").forGetter((config) -> config.state),
 		Codec.intRange(1, 64).fieldOf("radius").orElse(3).forGetter((config) -> config.radius),

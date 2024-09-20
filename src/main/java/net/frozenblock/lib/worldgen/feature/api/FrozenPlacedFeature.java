@@ -44,12 +44,13 @@ public class FrozenPlacedFeature {
 		this.key = ResourceKey.create(Registries.PLACED_FEATURE, key);
 		FEATURES.add(this);
 	}
+
 	public ResourceKey<PlacedFeature> getKey() {
 		return key;
 	}
 
 	public Holder<ConfiguredFeature<?, ?>> getConfiguredHolder() {
-		assert this.configuredHolder.value() != null: "Trying get null holder from placed feature " + this.getKey().location();
+		assert this.configuredHolder.value() != null : "Trying get null holder from placed feature " + this.getKey().location();
 		return this.configuredHolder;
 	}
 
@@ -68,9 +69,9 @@ public class FrozenPlacedFeature {
 
 		FrozenLogUtils.log("Registering placed feature " + this.getKey().location(), true);
 
-		assert FrozenFeatureUtils.BOOTSTRAP_CONTEXT != null: "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().location();
-		assert configuredHolder != null: "Configured feature holder for FrozenPlacedFeature " + this.getKey().location() + " null";
-		assert modifiers != null: "Placement modifiers for FrozenPlacedFeature " + this.getKey().location() + " null";
+		assert FrozenFeatureUtils.BOOTSTRAP_CONTEXT != null : "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().location();
+		assert configuredHolder != null : "Configured feature holder for FrozenPlacedFeature " + this.getKey().location() + " null";
+		assert modifiers != null : "Placement modifiers for FrozenPlacedFeature " + this.getKey().location() + " null";
 
 		FrozenFeatureUtils.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), new PlacedFeature(configuredHolder, modifiers));
 

@@ -20,7 +20,6 @@ package net.frozenblock.lib.worldgen.biome.api.parameters;
 import net.minecraft.world.level.biome.Climate;
 
 public final class Weirdness {
-
     public static final Climate.Parameter[] weirdnesses = new Climate.Parameter[]{
             Climate.Parameter.span(-1.0F, -0.93333334F), // 0
             Climate.Parameter.span(-0.93333334F, -0.7666667F), // 1

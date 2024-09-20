@@ -23,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class StructurePoolElementIdReplacements {
 
+	@Deprecated
     public static final Map<ResourceLocation, ResourceLocation> RESOURCE_LOCATION_REPLACEMENTS = new Object2ObjectOpenHashMap<>();
 
 }

@@ -18,13 +18,13 @@
 package net.frozenblock.lib.entity.mixin.client.rendering;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.entity.impl.client.rendering.CubeInvertInterface;
 import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(ModelPart.Cube.class)
 public class ModelPartCubeMixin implements CubeInvertInterface {

@@ -43,13 +43,14 @@ public class BadgeMixin {
 	}
 
 	@SuppressWarnings("ShadowTarget")
-	@Shadow
+	@Shadow(remap = false)
 	@Final
 	@Mutable
 	private static Mod.Badge[] $VALUES;
 
 	@Inject(
 			method = "<clinit>",
+			remap = false,
 			at = @At(
 					value = "FIELD",
 					opcode = Opcodes.PUTSTATIC,

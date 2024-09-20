@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.math.api;
 
-import lombok.experimental.UtilityClass;
 import java.awt.geom.Point2D;
+import lombok.experimental.UtilityClass;
 
 /**
  * Allows defining conics via equations.

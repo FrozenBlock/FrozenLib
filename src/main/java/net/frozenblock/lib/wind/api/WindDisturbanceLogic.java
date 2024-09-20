@@ -36,6 +36,7 @@ public final class WindDisturbanceLogic<T> {
 	public static final ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default");
 	public static final ResourceLocation BREEZE = FrozenSharedConstants.id("breeze");
 	public static final ResourceLocation WIND_CHARGE = FrozenSharedConstants.id("wind_charge");
+	public static final WindDisturbanceLogic DUMMY_LOGIC = new WindDisturbanceLogic((source, level, windOrigin, affectedArea, windTarget) -> WindDisturbance.DUMMY_RESULT);
 	private final DisturbanceLogic<T> disturbanceLogic;
 
 	public WindDisturbanceLogic(DisturbanceLogic<T> disturbanceLogic) {

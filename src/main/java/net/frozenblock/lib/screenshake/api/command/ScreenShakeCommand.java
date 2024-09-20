@@ -119,10 +119,10 @@ public class ScreenShakeCommand {
 		int entityAmount = 0;
 		List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
-			if (!((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().isEmpty()) {
+			if (!((EntityScreenShakeInterface)entity).frozenLib$getScreenShakeManager().getShakes().isEmpty()) {
 				FabricPacket packet = new RemoveEntityScreenShakePacket(entity.getId());
 				affectedEntities.add(entity);
-				((EntityScreenShakeInterface)entity).getScreenShakeManager().getShakes().clear();
+				((EntityScreenShakeInterface)entity).frozenLib$getScreenShakeManager().getShakes().clear();
 				for (ServerPlayer serverPlayer : PlayerLookup.tracking(source.getLevel(), entity.blockPosition())) {
 					ServerPlayNetworking.send(serverPlayer, packet);
 				}

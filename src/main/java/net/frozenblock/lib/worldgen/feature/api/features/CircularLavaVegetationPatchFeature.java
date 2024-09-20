@@ -62,10 +62,10 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 		Direction direction2 = direction.getOpposite();
 		Set<BlockPos> set = new HashSet<>();
 
-		for(int i = -xRadius; i <= xRadius; ++i) {
+		for (int i = -xRadius; i <= xRadius; ++i) {
 			boolean bl = i == -xRadius || i == xRadius;
 
-			for(int j = -zRadius; j <= zRadius; ++j) {
+			for (int j = -zRadius; j <= zRadius; ++j) {
 				boolean bl2 = j == -zRadius || j == zRadius;
 				boolean bl3 = bl || bl2;
 				boolean bl4 = bl && bl2;
@@ -109,7 +109,7 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 		Iterator<BlockPos> var11 = set.iterator();
 
 		BlockPos blockPos;
-		while(var11.hasNext()) {
+		while (var11.hasNext()) {
 			blockPos = var11.next();
 			if (!isExposed(level, blockPos, mutableBlockPos)) {
 				set2.add(blockPos);
@@ -118,7 +118,7 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 
 		var11 = set2.iterator();
 
-		while(var11.hasNext()) {
+		while (var11.hasNext()) {
 			blockPos = var11.next();
 			level.setBlock(blockPos, Blocks.LAVA.defaultBlockState(), 2);
 		}
@@ -137,6 +137,6 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 
 	@Override
 	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, @NotNull BlockPos pos) {
-        return super.placeVegetation(level, config, chunkGenerator, random, pos.below());
+		return super.placeVegetation(level, config, chunkGenerator, random, pos.below());
 	}
 }

@@ -25,8 +25,8 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public interface EntityLoopingSoundInterface {
 
-    MovingLoopingSoundEntityManager getSoundManager();
+    MovingLoopingSoundEntityManager frozenLib$getSoundManager();
 
-    void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath);
+    void frozenLib$addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath);
 
 }

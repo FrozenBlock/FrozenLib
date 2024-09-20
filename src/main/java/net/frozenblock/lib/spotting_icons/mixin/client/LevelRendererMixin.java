@@ -67,13 +67,13 @@ public class LevelRendererMixin {
 					entity.yOld = entity.getY();
 					entity.zOld = entity.getZ();
 				}
-				this.renderEntityIcon(entity, d, e, f, partialTick, poseStack, bufferSource);
+				this.frozenLib$renderEntityIcon(entity, d, e, f, partialTick, poseStack, bufferSource);
 			}
 		}
 	}
 
 	@Unique
-	private void renderEntityIcon(@NotNull Entity entity, double camX, double camY, double camZ, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource) {
+	private void frozenLib$renderEntityIcon(@NotNull Entity entity, double camX, double camY, double camZ, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource) {
 		double d = Mth.lerp(partialTick, entity.xOld, entity.getX());
 		double e = Mth.lerp(partialTick, entity.yOld, entity.getY());
 		double f = Mth.lerp(partialTick, entity.zOld, entity.getZ());
