@@ -38,9 +38,9 @@ public class BlockEntityTypeMixin {
 		var type = BlockEntityType.class.cast(this);
 
 		if ((type == BlockEntityType.SIGN &&
-				(state.getBlock() instanceof StandingSignBlock || state.getBlock() instanceof WallSignBlock))
-				|| (type == BlockEntityType.HANGING_SIGN
-				&& (state.getBlock() instanceof CeilingHangingSignBlock || state.getBlock() instanceof WallHangingSignBlock))) {
+			(state.getBlock() instanceof StandingSignBlock || state.getBlock() instanceof WallSignBlock))
+			|| (type == BlockEntityType.HANGING_SIGN
+			&& (state.getBlock() instanceof CeilingHangingSignBlock || state.getBlock() instanceof WallHangingSignBlock))) {
 			return true;
 		}
 		return original;
