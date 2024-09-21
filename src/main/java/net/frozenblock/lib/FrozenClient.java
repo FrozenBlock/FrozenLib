@@ -18,16 +18,11 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
-import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
-import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.menu.api.Panoramas;
@@ -59,7 +54,6 @@ public final class FrozenClient implements ClientModInitializer {
 		// CONTINUE FROZENLIB INIT
 		registerClientEvents();
 		FrozenClientNetworking.registerClientReceivers();
-		DebugRenderManager.init();
 
 		// PARTICLES
 		ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
@@ -87,11 +81,6 @@ public final class FrozenClient implements ClientModInitializer {
 			ScreenShaker.clear();
 			ClientWindManager.clearAllWindDisturbances();
 		});
-		ClientChunkEvents.CHUNK_LOAD.register(
-			(world, chunk) -> {
-				if (FrozenLibConfig.IS_DEBUG) ClientPlayNetworking.send(new StructureDebugRequestPayload(chunk.getPos()));
-			}
-		);
 	}
 
 }
