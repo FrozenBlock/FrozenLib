@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.block.api.beacon;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.stream.Collectors;
 import net.minecraft.world.effect.MobEffect;
@@ -28,7 +29,10 @@ public class BeaconEffectRegistry {
 			throw new IllegalArgumentException("Attempted to register Beacon effect " + effect.getDisplayName().getString() + " at tier " + tier + ". Tier must be between 1 and 4.");
 		}
 
-		BeaconBlockEntity.BEACON_EFFECTS[tier - 1][BeaconBlockEntity.BEACON_EFFECTS[tier -1].length] = effect;
+		ArrayList<MobEffect> mobEffects = new ArrayList<>(Arrays.stream(BeaconBlockEntity.BEACON_EFFECTS[tier - 1]).toList());
+		mobEffects.add(effect);
+
+		BeaconBlockEntity.BEACON_EFFECTS[tier - 1] = mobEffects.toArray(new MobEffect[0]);
 		BeaconBlockEntity.VALID_EFFECTS = Arrays.stream(BeaconBlockEntity.BEACON_EFFECTS).flatMap(Arrays::stream).collect(Collectors.toSet());
 	}
 }
