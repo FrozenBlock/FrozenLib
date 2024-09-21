@@ -230,3 +230,6 @@ transitive-accessible field net/minecraft/client/renderer/LevelRenderer cullingF
 
 # Client Level
 transitive-accessible class net/minecraft/client/multiplayer/ClientLevel$EntityCallbacks
+
+# Bruh
+accessible field net/minecraft/server/network/ServerGamePacketListenerImpl connection Lnet/minecraft/network/Connection;

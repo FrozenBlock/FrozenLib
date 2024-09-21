@@ -55,7 +55,7 @@ public class ClientCapeUtil {
 					HttpTexture httpTexture = new HttpTexture(
 						CAPE_CACHE_PATH.resolve(capeLocation.getNamespace()).resolve(capeLocation.getPath() + ".png").toFile(),
 						textureURL,
-						DefaultPlayerSkin.getDefaultTexture(),
+						DefaultPlayerSkin.getDefaultSkin(),
 						false,
 						() -> completableFuture.complete(capeTextureLocation)
 					);

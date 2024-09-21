@@ -58,8 +58,6 @@ public final class FrozenTestMain implements ModInitializer {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
         LOGGER.info("The test toggle value is {}", TestConfig.get().testToggle);
         LOGGER.info("The test vec3 value is {}", TestConfig.get().typedVecList);
-		Holder<SoundEvent> sound = TestConfig.get().randomSound.value();
-        LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.unwrapKey().orElseThrow().location());
 
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));

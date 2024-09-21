@@ -39,7 +39,7 @@ public class CapeLayerMixin {
 		method = "render*",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/resources/PlayerSkin;capeTexture()Lnet/minecraft/resources/ResourceLocation;",
+			target = "Lnet/minecraft/client/player/AbstractClientPlayer;getCloakTextureLocation()Lnet/minecraft/resources/ResourceLocation;",
 			ordinal = 0
 		)
 	)
@@ -62,7 +62,7 @@ public class CapeLayerMixin {
 		method = "render*",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/resources/PlayerSkin;capeTexture()Lnet/minecraft/resources/ResourceLocation;",
+			target = "Lnet/minecraft/client/player/AbstractClientPlayer;getCloakTextureLocation()Lnet/minecraft/resources/ResourceLocation;",
 			ordinal = 1
 		)
 	)
