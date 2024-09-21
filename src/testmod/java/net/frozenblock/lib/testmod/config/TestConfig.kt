@@ -29,7 +29,6 @@ import net.frozenblock.lib.testmod.FrozenTestMain
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.sounds.SoundEvent
-import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.phys.Vec3
 
 private val VEC_LIST_TYPE: TypedEntryType<List<Vec3>> = ConfigRegistry.register(
@@ -72,15 +71,8 @@ data class TestConfig(
     var testIntList: List<Int> = listOf(45),
 
     @JvmField
-    @Comment("This is a sound event typed entry.")
-    var randomSound: TypedEntry<Holder<SoundEvent>> = TypedEntry(
-        SOUND_HOLDER_TYPE,
-        SoundEvents.BREEZE_WIND_CHARGE_BURST
-    ),
-
-    @JvmField
     @Comment("This is a Vec3 list typed entry.")
-    var typedVecList: TypedEntry<List<Vec3>> = TypedEntry(
+    var typedVecList: TypedEntry<List<Vec3>> = TypedEntry.create(
         VEC_LIST_TYPE,
         listOf(
             Vec3(0.0, 0.0, 0.0),
@@ -114,7 +106,7 @@ data class TestConfig(
             XjsConfig(
                 FrozenTestMain.MOD_ID,
                 TestConfig::class.java,
-                XjsFormat.XJS_FORMATTED
+                XjsFormat.JSON_FORMATTED
             )
         )
 

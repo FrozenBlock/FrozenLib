@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.wind.api;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.ArrayList;
@@ -32,14 +31,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.VisibleForDebug;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.jetbrains.annotations.Unmodifiable;
 
 @Environment(EnvType.CLIENT)
 public final class ClientWindManager {
@@ -202,10 +199,6 @@ public final class ClientWindManager {
 		double newWindY = Mth.lerp(disturbanceAmount, windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
 		double newWindZ = Mth.lerp(disturbanceAmount, windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 
-		if (FrozenLibConfig.IS_DEBUG) {
-			addAccessedPosition(pos);
-		}
-
 		return new Vec3(
 			Mth.clamp(newWindX, -clamp, clamp),
 			Mth.clamp(newWindY, -clamp, clamp),
@@ -284,22 +277,5 @@ public final class ClientWindManager {
 		double windY = noise.noise(0D, (xyz + sampledTime) * stretch, 0D);
 		double windZ = noise.noise(0D, 0D, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
-	}
-
-	private static final List<Vec3> ACCESSED_POSITIONS = new ArrayList<>();
-
-	@VisibleForDebug
-	public static void addAccessedPosition(Vec3 vec3) {
-		ACCESSED_POSITIONS.add(vec3);
-	}
-
-	@VisibleForDebug
-	public static @NotNull @Unmodifiable List<Vec3> getAccessedPositions() {
-		return ImmutableList.copyOf(ACCESSED_POSITIONS);
-	}
-
-	@VisibleForDebug
-	public static void clearAccessedPositions() {
-		ACCESSED_POSITIONS.clear();
 	}
 }

@@ -28,7 +28,6 @@ import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
-import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.client.Minecraft;
@@ -80,11 +79,6 @@ public final class FrozenNetworking {
 					CapeCustomizePacket.sendCapeToAll(ctx.server, uuid, capeId);
 				}
 			}
-		);
-
-		// DEBUG
-		ServerPlayNetworking.registerGlobalReceiver(StructureDebugRequestPayload.PACKET_TYPE,
-			(packet, ctx, sender) -> StructureDebugRequestPayload.sendBack(ctx, ctx.serverLevel(), packet.chunkPos())
 		);
 	}
 
