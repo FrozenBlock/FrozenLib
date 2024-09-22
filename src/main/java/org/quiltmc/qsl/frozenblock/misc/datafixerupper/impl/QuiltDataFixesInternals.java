@@ -40,15 +40,14 @@ import org.slf4j.Logger;
  */
 @ApiStatus.Internal
 public abstract class QuiltDataFixesInternals {
-    private static final Logger LOGGER = LogUtils.getLogger();
+	private static final Logger LOGGER = LogUtils.getLogger();
+	private static QuiltDataFixesInternals instance;
 
-    public record DataFixerEntry(DataFixer dataFixer, int currentVersion) {}
-
-    @Contract(pure = true)
-    @Range(from = 0, to = Integer.MAX_VALUE)
-    public static int getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
-        return compound.getInt(modId + "_DataVersion");
-    }
+	@Contract(pure = true)
+	@Range(from = 0, to = Integer.MAX_VALUE)
+	public static int getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
+		return compound.getInt(modId + "_DataVersion");
+	}
 
 	@Contract(pure = true)
 	@Range(from = 0, to = Integer.MAX_VALUE)
@@ -56,50 +55,51 @@ public abstract class QuiltDataFixesInternals {
 		return compound.getInt(modId + "_DataVersion_Minecraft");
 	}
 
-    private static QuiltDataFixesInternals instance;
+	public static @NotNull QuiltDataFixesInternals get() {
+		if (instance == null) {
+			Schema latestVanillaSchema;
+			try {
+				latestVanillaSchema = DataFixers.getDataFixer()
+					.getSchema(DataFixUtils.makeKey(SharedConstants.getCurrentVersion().getDataVersion().getVersion()));
+			} catch (Exception e) {
+				latestVanillaSchema = null;
+			}
 
-    public static @NotNull QuiltDataFixesInternals get() {
-        if (instance == null) {
-            Schema latestVanillaSchema;
-            try {
-                latestVanillaSchema = DataFixers.getDataFixer()
-                        .getSchema(DataFixUtils.makeKey(SharedConstants.getCurrentVersion().getDataVersion().getVersion()));
-            } catch (Exception e) {
-                latestVanillaSchema = null;
-            }
+			if (latestVanillaSchema == null) {
+				LOGGER.warn("[Quilt DFU API] Failed to initialize! Either someone stopped DFU from initializing,");
+				LOGGER.warn("[Quilt DFU API]  or this Minecraft build is hosed.");
+				LOGGER.warn("[Quilt DFU API] Using no-op implementation.");
+				instance = new NoOpQuiltDataFixesInternals();
+			} else {
+				instance = new QuiltDataFixesInternalsImpl(latestVanillaSchema);
+			}
+		}
 
-            if (latestVanillaSchema == null) {
-                LOGGER.warn("[Quilt DFU API] Failed to initialize! Either someone stopped DFU from initializing,");
-                LOGGER.warn("[Quilt DFU API]  or this Minecraft build is hosed.");
-                LOGGER.warn("[Quilt DFU API] Using no-op implementation.");
-                instance = new NoOpQuiltDataFixesInternals();
-            } else {
-                instance = new QuiltDataFixesInternalsImpl(latestVanillaSchema);
-            }
-        }
+		return instance;
+	}
 
-        return instance;
-    }
-
-    public abstract void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer);
+	public abstract void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer);
 
 	public abstract boolean isEmpty();
 
-    public abstract @Nullable DataFixerEntry getFixerEntry(@NotNull String modId);
+	public abstract @Nullable DataFixerEntry getFixerEntry(@NotNull String modId);
 
 	public abstract void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer);
 
 	public abstract @Nullable DataFixerEntry getMinecraftFixerEntry(@NotNull String modId);
 
-    @Contract(value = "-> new", pure = true)
-    public abstract @NotNull Schema createBaseSchema();
+	@Contract(value = "-> new", pure = true)
+	public abstract @NotNull Schema createBaseSchema();
 
-    public abstract @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic);
+	public abstract @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic);
 
-    public abstract @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound);
+	public abstract @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound);
 
-    public abstract void freeze();
+	public abstract void freeze();
 
-    @Contract(pure = true)
-    public abstract boolean isFrozen();
+	@Contract(pure = true)
+	public abstract boolean isFrozen();
+
+	public record DataFixerEntry(DataFixer dataFixer, int currentVersion) {
+	}
 }

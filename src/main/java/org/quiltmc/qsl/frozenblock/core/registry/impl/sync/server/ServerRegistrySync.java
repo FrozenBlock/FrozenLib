@@ -51,9 +51,9 @@ public final class ServerRegistrySync {
 			// You must check to see if the client can handle your config task
 			if (
 				ServerConfigurationNetworking.canSend(handler, ServerPackets.Handshake.PACKET_TYPE)
-				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ErrorStyle.PACKET_TYPE)
-				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ModProtocol.PACKET_TYPE)
-				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.End.PACKET_TYPE)
+					&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ErrorStyle.PACKET_TYPE)
+					&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ModProtocol.PACKET_TYPE)
+					&& ServerConfigurationNetworking.canSend(handler, ServerPackets.End.PACKET_TYPE)
 			) {
 				handler.addTask(new QuiltSyncTask(handler, handler.connection));
 			}
@@ -94,7 +94,8 @@ public final class ServerRegistrySync {
 		Component text = null;
 		try {
 			text = Component.Serializer.fromJson(string, RegistryAccess.EMPTY);
-		} catch (Exception ignored) {}
+		} catch (Exception ignored) {
+		}
 
 		return text != null ? text : Component.literal(string);
 	}
@@ -108,19 +109,15 @@ public final class ServerRegistrySync {
 			return false;
 		}
 
-        return ModProtocol.enabled;
-    }
+		return ModProtocol.enabled;
+	}
 
 	public static boolean requiresSync() {
 		if (forceDisable) {
 			return false;
 		}
 
-		if (!ModProtocol.REQUIRED.isEmpty()) {
-			return true;
-		}
-
-		return false;
+		return !ModProtocol.REQUIRED.isEmpty();
 	}
 
 	public static void sendSyncPackets(PacketSender sender, int syncVersion) {

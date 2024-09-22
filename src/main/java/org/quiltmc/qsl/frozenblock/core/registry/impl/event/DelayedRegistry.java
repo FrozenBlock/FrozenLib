@@ -30,7 +30,6 @@ import java.util.stream.Stream;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Holder.Reference;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet.Named;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
@@ -253,5 +252,6 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 		}
 	}
 
-	record DelayedEntry<T>(ResourceKey<T> key, T entry, RegistrationInfo registrationInfo) {}
+	record DelayedEntry<T>(ResourceKey<T> key, T entry, RegistrationInfo registrationInfo) {
+	}
 }

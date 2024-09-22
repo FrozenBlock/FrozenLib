@@ -35,8 +35,8 @@ public class BuiltInRegistriesMixin {
 	private static void onFreezeBuiltins(CallbackInfo ci) {
 		//region Fix MC-197259
 		final List<BlockState> states = BuiltInRegistries.BLOCK.stream()
-				.flatMap(block -> block.getStateDefinition().getPossibleStates().stream())
-				.toList();
+			.flatMap(block -> block.getStateDefinition().getPossibleStates().stream())
+			.toList();
 
 		final int xLength = Mth.ceil(Mth.sqrt(states.size()));
 		final int zLength = Mth.ceil(states.size() / (float) xLength);

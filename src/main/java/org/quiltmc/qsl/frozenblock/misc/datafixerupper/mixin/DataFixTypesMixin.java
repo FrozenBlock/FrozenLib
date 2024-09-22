@@ -43,10 +43,10 @@ public class DataFixTypesMixin {
 	private DSL.TypeReference type;
 
 	@ModifyReturnValue(
-            method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
-            at = @At("RETURN")
-    )
-    private <T> Dynamic<T> updateDataWithFixers(Dynamic<T> original, DataFixer fixer, Dynamic<T> dynamic, int oldVersion, int targetVersion) {
+		method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
+		at = @At("RETURN")
+	)
+	private <T> Dynamic<T> updateDataWithFixers(Dynamic<T> original, DataFixer fixer, Dynamic<T> dynamic, int oldVersion, int targetVersion) {
 		var type = DataFixTypes.class.cast(this);
 		var value = original.getValue();
 

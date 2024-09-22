@@ -26,15 +26,15 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public interface RegistryEventStorage<V> {
 	/**
-	 * {@return the entry added event}
-	 */
-	Event<RegistryEvents.EntryAdded<V>> frozenLib_quilt$getEntryAddedEvent();
-
-	/**
 	 * Casts a {@link Registry} to the duck interface.
 	 */
 	@SuppressWarnings("unchecked")
 	static <W> RegistryEventStorage<W> as(MappedRegistry<W> registry) {
 		return (RegistryEventStorage<W>) registry;
 	}
+
+	/**
+	 * {@return the entry added event}
+	 */
+	Event<RegistryEvents.EntryAdded<V>> frozenLib_quilt$getEntryAddedEvent();
 }

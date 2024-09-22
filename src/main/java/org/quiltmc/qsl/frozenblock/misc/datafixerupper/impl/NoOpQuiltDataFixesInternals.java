@@ -35,18 +35,19 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.EmptySchema;
  */
 @ApiStatus.Internal
 public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
-    private final Schema schema;
+	private final Schema schema;
 
-    private boolean frozen;
+	private boolean frozen;
 
-    public NoOpQuiltDataFixesInternals() {
-        this.schema = new EmptySchema(0);
+	public NoOpQuiltDataFixesInternals() {
+		this.schema = new EmptySchema(0);
 
-        this.frozen = false;
-    }
+		this.frozen = false;
+	}
 
-    @Override
-    public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {}
+	@Override
+	public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {
+	}
 
 	@Override
 	public boolean isEmpty() {
@@ -54,12 +55,13 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
 	}
 
 	@Override
-    public @Nullable DataFixerEntry getFixerEntry(@NotNull String modId) {
-        return null;
-    }
+	public @Nullable DataFixerEntry getFixerEntry(@NotNull String modId) {
+		return null;
+	}
 
 	@Override
-	public void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {}
+	public void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {
+	}
 
 	@Override
 	public @Nullable DataFixerEntry getMinecraftFixerEntry(@NotNull String modId) {
@@ -67,27 +69,27 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
 	}
 
 	@Override
-    public @NotNull Schema createBaseSchema() {
-        return this.schema;
-    }
-
-    @Override
-    public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic) {
-        return new Dynamic<>(dynamic.getOps(), dynamic.getValue().copy());
-    }
-
-    @Override
-    public @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound) {
-        return compound;
-    }
+	public @NotNull Schema createBaseSchema() {
+		return this.schema;
+	}
 
 	@Override
-    public void freeze() {
-        this.frozen = true;
-    }
+	public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic) {
+		return new Dynamic<>(dynamic.getOps(), dynamic.getValue().copy());
+	}
 
-    @Override
-    public boolean isFrozen() {
-        return this.frozen;
-    }
+	@Override
+	public @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound) {
+		return compound;
+	}
+
+	@Override
+	public void freeze() {
+		this.frozen = true;
+	}
+
+	@Override
+	public boolean isFrozen() {
+		return this.frozen;
+	}
 }

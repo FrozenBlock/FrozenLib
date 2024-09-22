@@ -24,6 +24,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.worldselection.CreateWorldCallback;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.DataPackReloadCookie;
 import net.minecraft.client.gui.screens.worldselection.WorldCreationContext;
@@ -55,12 +56,17 @@ public abstract class CreateWorldScreenMixin {
 
 	@Dynamic
 	@Inject(
-			method = {"method_45681", "method_64245"},
-			at = @At("HEAD"),
-			require = 1
+		method = {"method_45681", "method_64245"},
+		at = @At("HEAD"),
+		require = 1
 	)
-	private static void onEndDataPackLoadOnOpen(CloseableResourceManager resourceManager, ReloadableServerResources resources,
-			LayeredRegistryAccess<?> layeredRegistryAccess, @Coerce Object object, CallbackInfoReturnable<WorldCreationContext> cir) {
+	private static void onEndDataPackLoadOnOpen(
+		CloseableResourceManager resourceManager,
+		ReloadableServerResources resources,
+		LayeredRegistryAccess<?> layeredRegistryAccess,
+		@Coerce Object object,
+		CallbackInfoReturnable<WorldCreationContext> info
+	) {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
 	}
 
@@ -68,53 +74,66 @@ public abstract class CreateWorldScreenMixin {
 		method = "method_64245",
 		at = @At("HEAD")
 	)
-	private static void onEndDataPackLoadOnOpen(WorldCreationContextMapper worldCreationContextMapper, CloseableResourceManager resourceManager,
-			ReloadableServerResources reloadableServerResources, LayeredRegistryAccess<?> layeredRegistryAccess, DataPackReloadCookie dataPackReloadCookie,
-			CallbackInfoReturnable<WorldCreationContext> cir) {
+	private static void onEndDataPackLoadOnOpen(
+		WorldCreationContextMapper worldCreationContextMapper,
+		CloseableResourceManager resourceManager,
+		ReloadableServerResources reloadableServerResources,
+		LayeredRegistryAccess<?> layeredRegistryAccess,
+		DataPackReloadCookie dataPackReloadCookie,
+		CallbackInfoReturnable<WorldCreationContext> info
+	) {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
 	}
 
-    @Inject(
-            method = "applyNewPackConfig",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/WorldLoader;load(Lnet/minecraft/server/WorldLoader$InitConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;Lnet/minecraft/server/WorldLoader$ResultFactory;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
-            )
-    )
-    private void onDataPackLoadStart(PackRepository packRepository, WorldDataConfiguration worldDataConfiguration, Consumer<WorldDataConfiguration> consumer, CallbackInfo ci) {
-        ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
-    }
-
-    @Inject(
-            method = "openCreateWorldScreen",
-            at = @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/server/WorldLoader;load(Lnet/minecraft/server/WorldLoader$InitConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;Lnet/minecraft/server/WorldLoader$ResultFactory;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
-            )
-    )
-    private static void onDataPackLoadStart(Minecraft minecraft, Screen screen, Function<WorldLoader.DataLoadContext, WorldGenSettings> function, WorldCreationContextMapper worldCreationContextMapper, ResourceKey<WorldPreset> resourceKey, CallbackInfo ci) {
-        ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
-    }
+	@Inject(
+		method = "openCreateWorldScreen",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/server/WorldLoader;load(Lnet/minecraft/server/WorldLoader$InitConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;Lnet/minecraft/server/WorldLoader$ResultFactory;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+		)
+	)
+	private static void onDataPackLoadStart(
+		Minecraft minecraft,
+		Screen screen,
+		Function<WorldLoader.DataLoadContext, WorldGenSettings> function,
+		WorldCreationContextMapper worldCreationContextMapper,
+		ResourceKey<WorldPreset> resourceKey,
+		CreateWorldCallback createWorldCallback,
+		CallbackInfo info
+	) {
+		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
+	}
 
 	@Dynamic
 	@Inject(
-			method = {"m_spzhhpkv", "method_45681", "lambda$applyNewPackConfig$13"},
-			at = @At("HEAD"),
-			require = 1
+		method = {"m_spzhhpkv", "method_45681", "lambda$applyNewPackConfig$13"},
+		at = @At("HEAD"),
+		require = 1
 	)
 	private static void onCreateDataPackLoadEnd(CloseableResourceManager resourceManager, ReloadableServerResources resources,
-			LayeredRegistryAccess<?> layeredRegistryAccess, @Coerce Object object, CallbackInfoReturnable<WorldCreationContext> cir) {
+												LayeredRegistryAccess<?> layeredRegistryAccess, @Coerce Object object, CallbackInfoReturnable<WorldCreationContext> cir) {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
 	}
 
 	@Inject(
-			method = "method_49629(Ljava/util/function/Consumer;Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;",
-			at = @At(
-					value = "INVOKE",
-					target = 	"Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
-					shift = At.Shift.AFTER,
-					remap = false
-			)
+		method = "applyNewPackConfig",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/server/WorldLoader;load(Lnet/minecraft/server/WorldLoader$InitConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;Lnet/minecraft/server/WorldLoader$ResultFactory;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
+		)
+	)
+	private void onDataPackLoadStart(PackRepository packRepository, WorldDataConfiguration worldDataConfiguration, Consumer<WorldDataConfiguration> consumer, CallbackInfo ci) {
+		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
+	}
+
+	@Inject(
+		method = "method_49629(Ljava/util/function/Consumer;Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;",
+		at = @At(
+			value = "INVOKE",
+			target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
+			shift = At.Shift.AFTER,
+			remap = false
+		)
 	)
 	private void onFailDataPackLoading(Consumer<WorldDataConfiguration> consumer, Void unused, Throwable throwable, CallbackInfoReturnable<Object> cir) {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, throwable);

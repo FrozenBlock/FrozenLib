@@ -28,11 +28,11 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public final class ServerFreezer {
 
-    public static void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            FrozenLogUtils.log("[Quilt DFU API] Serverside DataFixer Registry is about to freeze", true);
-            QuiltDataFixesInternals.get().freeze();
-            FrozenLogUtils.log("[Quilt DFU API] Serverside DataFixer Registry was frozen", true);
-        });
-    }
+	public static void onInitialize() {
+		ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+			FrozenLogUtils.log("[Quilt DFU API] Serverside DataFixer Registry is about to freeze", true);
+			QuiltDataFixesInternals.get().freeze();
+			FrozenLogUtils.log("[Quilt DFU API] Serverside DataFixer Registry was frozen", true);
+		});
+	}
 }

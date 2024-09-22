@@ -18,21 +18,17 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 
-import java.util.List;
-import java.util.Map;
 import com.llamalad7.mixinextras.sugar.Local;
+import java.util.List;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryDataLoader;
-import net.minecraft.resources.RegistryOps;
-import net.minecraft.resources.ResourceKey;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.DynamicRegistryManagerSetupContextImpl;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
  * Modified to work on Fabric
@@ -56,7 +52,7 @@ public class RegistryDataLoaderMixin {
 		@Local(ordinal = 2) List<RegistryDataLoader.Loader<?>> registries
 	) {
 		RegistryEvents.DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(
-				new DynamicRegistryManagerSetupContextImpl(registries.stream().map(RegistryDataLoader.Loader::registry))
+			new DynamicRegistryManagerSetupContextImpl(registries.stream().map(RegistryDataLoader.Loader::registry))
 		);
 	}
 

@@ -56,11 +56,11 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 	private void hackBecauseMixinHatesMe(ResourceKey<? extends Registry<V>> key, Lifecycle lifecycle, boolean useIntrusiveHolders, CallbackInfo ci) {
 		this.frozenLib_quilt$entryContext = new MutableRegistryEntryContextImpl<>(this);
 		this.frozenLib_quilt$entryAddedEvent = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class,
-				callbacks -> context -> {
-					for (var callback : callbacks) {
-						callback.onAdded(context);
-					}
-				});
+			callbacks -> context -> {
+				for (var callback : callbacks) {
+					callback.onAdded(context);
+				}
+			});
 	}
 
 

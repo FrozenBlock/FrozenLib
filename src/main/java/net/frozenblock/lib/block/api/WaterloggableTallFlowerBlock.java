@@ -19,9 +19,12 @@ package net.frozenblock.lib.block.api;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.TallFlowerBlock;
@@ -42,12 +45,21 @@ public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements Sim
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
     }
 
-    @Override
-    public BlockState updateShape(@NotNull BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+	@Override
+	protected @NotNull BlockState updateShape(
+		@NotNull BlockState blockState,
+		LevelReader levelReader,
+		ScheduledTickAccess scheduledTickAccess,
+		BlockPos blockPos,
+		Direction direction,
+		BlockPos neighborPos,
+		BlockState neighborState,
+		RandomSource randomSource
+	) {
+        if (blockState.getValue(WATERLOGGED)) {
+            scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
-        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+        return super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, neighborPos, neighborState, randomSource);
     }
 
     @Nullable

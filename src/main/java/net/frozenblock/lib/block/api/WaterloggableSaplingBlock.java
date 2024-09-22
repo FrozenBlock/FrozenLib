@@ -20,9 +20,12 @@ package net.frozenblock.lib.block.api;
 import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SaplingBlock;
@@ -34,6 +37,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class WaterloggableSaplingBlock extends SaplingBlock implements SimpleWaterloggedBlock {
@@ -63,12 +67,22 @@ public class WaterloggableSaplingBlock extends SaplingBlock implements SimpleWat
     }
 
 	@Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-        if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+	protected @NotNull BlockState updateShape(
+		@NotNull BlockState blockState,
+		LevelReader levelReader,
+		ScheduledTickAccess scheduledTickAccess,
+		BlockPos blockPos,
+		Direction direction,
+		BlockPos neighborPos,
+		BlockState neighborState,
+		RandomSource randomSource
+	) {
+        if (blockState.getValue(WATERLOGGED)) {
+            scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         }
 
-        return direction == Direction.UP && !state.canSurvive(world, pos) ? Blocks.AIR.defaultBlockState() : super.updateShape(state, direction, neighborState, world, pos, neighborPos);
+        return direction == Direction.UP && !blockState.canSurvive(levelReader, blockPos) ? Blocks.AIR.defaultBlockState()
+			: super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, neighborPos, neighborState, randomSource);
     }
 
 	@Override

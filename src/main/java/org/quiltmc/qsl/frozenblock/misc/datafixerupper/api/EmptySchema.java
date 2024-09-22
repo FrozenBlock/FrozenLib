@@ -33,23 +33,23 @@ import org.jetbrains.annotations.Range;
  * Modified to work on Fabric
  */
 public final class EmptySchema extends FirstSchema {
-    /**
-     * Constructs an empty schema.
-     *
-     * @param versionKey the data version key
-     */
-    public EmptySchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
-        super(versionKey);
-    }
+	/**
+	 * Constructs an empty schema.
+	 *
+	 * @param versionKey the data version key
+	 */
+	public EmptySchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
+		super(versionKey);
+	}
 
-    // Ensure the schema stays empty.
-    @Override
-    public void registerType(boolean recursive, DSL.TypeReference type, Supplier<TypeTemplate> template) {
-        throw new UnsupportedOperationException();
-    }
+	// Ensure the schema stays empty.
+	@Override
+	public void registerType(boolean recursive, DSL.TypeReference type, Supplier<TypeTemplate> template) {
+		throw new UnsupportedOperationException();
+	}
 
-    @Override
-    protected Map<String, Type<?>> buildTypes() {
-        return Object2ObjectMaps.emptyMap();
-    }
+	@Override
+	protected Map<String, Type<?>> buildTypes() {
+		return Object2ObjectMaps.emptyMap();
+	}
 }

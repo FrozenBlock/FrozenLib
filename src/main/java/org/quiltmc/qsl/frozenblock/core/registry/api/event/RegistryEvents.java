@@ -43,20 +43,6 @@ import org.jetbrains.annotations.NotNull;
 public class RegistryEvents {
 
 	/**
-	 * Gets the entry added event for a specific Minecraft registry.
-	 * <p>
-	 * The event is invoked upon the addition or assignment of an entry in the specified registry.
-	 *
-	 * @param registry the {@link Registry} for this event to listen for. Must be an instance of {@link MappedRegistry}.
-	 * @param <V>      the entry type of the {@link Registry} to listen for
-	 * @return the entry added event for the specified registry, which can have callbacks registered to it
-	 * @throws ClassCastException if the registry is not a {@link MappedRegistry}
-	 */
-	public static <V> Event<EntryAdded<V>> getEntryAddEvent(Registry<V> registry) {
-		return RegistryEventStorage.as((MappedRegistry<V>) registry).frozenLib_quilt$getEntryAddedEvent();
-	}
-
-	/**
 	 * This event gets triggered when a new {@link RegistryAccess} gets created,
 	 * but before it gets filled.
 	 * <p>
@@ -68,13 +54,12 @@ public class RegistryEvents {
 	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 	 */
 	public static final Event<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = FrozenEvents.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
-			callbacks -> context -> {
-				for (var callback : callbacks) {
-					callback.onDynamicRegistrySetup(context);
-				}
+		callbacks -> context -> {
+			for (var callback : callbacks) {
+				callback.onDynamicRegistrySetup(context);
 			}
+		}
 	);
-
 	/**
 	 * This event gets triggered when a new {@link RegistryAccess} gets created,
 	 * after it has been filled with the registry entries specified by data packs.
@@ -87,12 +72,26 @@ public class RegistryEvents {
 	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 	 */
 	public static final Event<DynamicRegistryLoadedCallback> DYNAMIC_REGISTRY_LOADED = FrozenEvents.createEnvironmentEvent(DynamicRegistryLoadedCallback.class,
-			callbacks -> registryManager -> {
-				for (var callback : callbacks) {
-					callback.onDynamicRegistryLoaded(registryManager);
-				}
+		callbacks -> registryManager -> {
+			for (var callback : callbacks) {
+				callback.onDynamicRegistryLoaded(registryManager);
 			}
+		}
 	);
+
+	/**
+	 * Gets the entry added event for a specific Minecraft registry.
+	 * <p>
+	 * The event is invoked upon the addition or assignment of an entry in the specified registry.
+	 *
+	 * @param registry the {@link Registry} for this event to listen for. Must be an instance of {@link MappedRegistry}.
+	 * @param <V>      the entry type of the {@link Registry} to listen for
+	 * @return the entry added event for the specified registry, which can have callbacks registered to it
+	 * @throws ClassCastException if the registry is not a {@link MappedRegistry}
+	 */
+	public static <V> Event<EntryAdded<V>> getEntryAddEvent(Registry<V> registry) {
+		return RegistryEventStorage.as((MappedRegistry<V>) registry).frozenLib_quilt$getEntryAddedEvent();
+	}
 
 	/**
 	 * Functional interface to be implemented on callbacks for {@link #getEntryAddEvent(Registry)}.

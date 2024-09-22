@@ -24,8 +24,11 @@ import java.util.Objects;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
@@ -97,22 +100,22 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
         return voxelShape.isEmpty() ? Shapes.block() : voxelShape;
     }
 
-    @Override
-	@NotNull
-    public BlockState updateShape(
-		@NotNull BlockState state,
-		@NotNull Direction direction,
-		@NotNull BlockState neighborState,
-		@NotNull LevelAccessor world,
-		@NotNull BlockPos pos,
-		@NotNull BlockPos neighborPos
+	@Override
+	protected @NotNull BlockState updateShape(
+		@NotNull BlockState blockState,
+		LevelReader levelReader,
+		ScheduledTickAccess scheduledTickAccess,
+		BlockPos blockPos,
+		Direction direction,
+		BlockPos neighborPos,
+		BlockState neighborState,
+		RandomSource randomSource
 	) {
-        if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-        }
-
-        return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
-    }
+		if (blockState.getValue(WATERLOGGED)) {
+			scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
+		}
+		return super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, neighborPos, neighborState, randomSource);
+	}
 
     @Override
 	@NotNull
