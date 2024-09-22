@@ -18,13 +18,10 @@
 package net.frozenblock.lib.item.impl.network;
 
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import org.jetbrains.annotations.NotNull;
 
 public record ForcedCooldownPacket(

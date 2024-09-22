@@ -17,22 +17,11 @@
 
 package net.frozenblock.lib.gravity.impl;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
-import com.mojang.math.Axis;
-import net.frozenblock.lib.gravity.api.GravityAPI;
-import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.ApiStatus;
-import org.joml.Matrix4f;
 
 @ApiStatus.Internal
 public final class GravityRenderingImpl {

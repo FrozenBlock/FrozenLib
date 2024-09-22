@@ -29,7 +29,6 @@ import net.frozenblock.lib.core.client.api.FrustumUtil;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.debug.DebugRenderer;

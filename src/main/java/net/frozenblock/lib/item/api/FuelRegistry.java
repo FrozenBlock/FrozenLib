@@ -17,12 +17,12 @@
 
 package net.frozenblock.lib.item.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
-import java.util.ArrayList;
-import java.util.List;
 
 @UtilityClass
 public class FuelRegistry {

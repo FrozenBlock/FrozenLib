@@ -19,7 +19,6 @@ package net.frozenblock.lib.spotting_icons.impl;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.world.entity.Entity;
 
 public interface EntityRenderDispatcherWithIcon {
