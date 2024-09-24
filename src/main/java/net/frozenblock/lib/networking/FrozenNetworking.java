@@ -41,6 +41,7 @@ import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
+import net.frozenblock.lib.image_transfer.FileTransferPacket;
 import net.frozenblock.lib.sound.api.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
@@ -116,6 +117,8 @@ public final class FrozenNetworking {
 		registry.register(SpottingIconRemovePacket.PACKET_TYPE, SpottingIconRemovePacket.CODEC);
 		registry.register(WindSyncPacket.PACKET_TYPE, WindSyncPacket.CODEC);
 		registry.register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
+		registry.register(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC);
+		c2sRegistry.register(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC);
 		registry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
 		registry.register(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.STREAM_CODEC);
 		c2sRegistry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
