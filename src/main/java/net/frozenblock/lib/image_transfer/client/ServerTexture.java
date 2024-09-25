@@ -35,6 +35,7 @@ import net.frozenblock.lib.image_transfer.FileTransferPacket;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.SimpleTexture;
+import net.minecraft.client.renderer.texture.Tickable;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
@@ -42,7 +43,7 @@ import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 @Environment(EnvType.CLIENT)
-public class ServerTexture extends SimpleTexture {
+public class ServerTexture extends SimpleTexture implements Tickable {
     public static final Map<String, ServerTexture> WAITING_TEXTURES = new HashMap<>();
     private static final Logger LOGGER = LogUtils.getLogger();
     private final File file;
@@ -53,6 +54,7 @@ public class ServerTexture extends SimpleTexture {
     @Nullable
     private CompletableFuture<?> future;
     private boolean uploaded;
+	private long timeSinceLastReference;
 
     public ServerTexture(String destPath, String fileName, ResourceLocation fallback, @Nullable Runnable callback) {
         super(fallback);
@@ -60,6 +62,7 @@ public class ServerTexture extends SimpleTexture {
         this.destPath = destPath;
         this.fileName = fileName;
         this.onDownloaded = callback;
+		this.timeSinceLastReference = System.currentTimeMillis();
         WAITING_TEXTURES.put(this.destPath + "/" + this.fileName, this);
     }
 
@@ -144,4 +147,15 @@ public class ServerTexture extends SimpleTexture {
 
         return nativeImage;
     }
+
+	public void updateReferenceTime() {
+		this.timeSinceLastReference = System.currentTimeMillis();
+	}
+
+	@Override
+	public void tick() {
+		if (System.currentTimeMillis() - this.timeSinceLastReference > 5000) {
+			this.releaseId();
+		}
+	}
 }
