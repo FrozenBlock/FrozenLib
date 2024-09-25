@@ -161,8 +161,9 @@ public class ServerTexture extends SimpleTexture implements Tickable {
 
 	@Override
 	public void tick() {
-		if (System.currentTimeMillis() - this.timeSinceLastReference > 5000) {
+		if (!this.isClosed && System.currentTimeMillis() - this.timeSinceLastReference > 5000) {
 			this.getTextureImage(Minecraft.getInstance().getResourceManager()).close();
+			this.isClosed = true;
 		}
 	}
 }
