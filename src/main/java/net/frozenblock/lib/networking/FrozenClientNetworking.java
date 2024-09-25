@@ -36,7 +36,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.image_transfer.FileTransferPacket;
-import net.frozenblock.lib.image_transfer.ServerTexture;
+import net.frozenblock.lib.image_transfer.client.ServerTexture;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
@@ -124,6 +124,27 @@ public final class FrozenClientNetworking {
 				config.setSynced(false);
 			}
 		}));
+
+		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
+			if (packet.request()) {
+				Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+				try {
+					FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
+					ClientPlayNetworking.send(fileTransferPacket);
+				} catch (IOException ignored) {
+				}
+			} else {
+				try {
+					Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
+					ServerTexture serverTexture = ServerTexture.WAITING_TEXTURES.get(packet.transferPath() + "/" + packet.fileName());
+					if (serverTexture != null) {
+						serverTexture.runFutureForTexture();
+					}
+				} catch (IOException ignored) {
+				}
+			}
+		});
 	}
 
 	private static void receiveLocalPlayerSoundPacket() {
