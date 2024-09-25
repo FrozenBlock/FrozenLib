@@ -55,6 +55,7 @@ public class ServerTexture extends SimpleTexture implements Tickable {
     private CompletableFuture<?> future;
     private boolean uploaded;
 	private long timeSinceLastReference;
+	private boolean isClosed;
 
     public ServerTexture(String destPath, String fileName, ResourceLocation fallback, @Nullable Runnable callback) {
         super(fallback);
@@ -150,12 +151,18 @@ public class ServerTexture extends SimpleTexture implements Tickable {
 
 	public void updateReferenceTime() {
 		this.timeSinceLastReference = System.currentTimeMillis();
+		if (this.isClosed) {
+			this.isClosed = false;
+			try {
+				this.load(Minecraft.getInstance().getResourceManager());
+			} catch (Exception ignored) {}
+		}
 	}
 
 	@Override
 	public void tick() {
 		if (System.currentTimeMillis() - this.timeSinceLastReference > 5000) {
-			this.releaseId();
+			this.getTextureImage(Minecraft.getInstance().getResourceManager()).close();
 		}
 	}
 }
