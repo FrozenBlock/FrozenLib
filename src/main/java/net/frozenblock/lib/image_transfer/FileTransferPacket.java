@@ -18,10 +18,10 @@
 package net.frozenblock.lib.image_transfer;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -31,10 +31,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-public record FileTransferPacket(String transferPath, String fileName, boolean request,
-                                 byte[] bytes) implements CustomPacketPayload {
+public record FileTransferPacket(String transferPath, String fileName, boolean request, byte[] bytes) implements CustomPacketPayload {
     public static final Type<FileTransferPacket> PACKET_TYPE = new Type<>(
-            ResourceLocation.tryBuild("camera_port", "file_transfer")
+		FrozenSharedConstants.id("file_transfer")
     );
     public static final StreamCodec<FriendlyByteBuf, FileTransferPacket> STREAM_CODEC = StreamCodec.ofMember(FileTransferPacket::write, FileTransferPacket::create);
 
