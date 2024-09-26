@@ -25,6 +25,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -46,6 +47,7 @@ import org.slf4j.Logger;
 public class ServerTexture extends SimpleTexture implements Tickable {
     public static final Map<String, ServerTexture> WAITING_TEXTURES = new HashMap<>();
     private static final Logger LOGGER = LogUtils.getLogger();
+	public static final String LOCAL_TEXTURE_SOURCE = ".local";
     private final File file;
     private final String destPath;
     private final String fileName;
@@ -56,15 +58,21 @@ public class ServerTexture extends SimpleTexture implements Tickable {
     private boolean uploaded;
 	private long timeSinceLastReference;
 	private boolean isClosed;
+	boolean hasLocalSource;
 
     public ServerTexture(String destPath, String fileName, ResourceLocation fallback, @Nullable Runnable callback) {
         super(fallback);
-        this.file = Minecraft.getInstance().gameDirectory.toPath().resolve(destPath).resolve(fileName).toFile();
+		Path path = Minecraft.getInstance().gameDirectory.toPath().resolve(destPath);
+		File possibleLocalFile = path.resolve(LOCAL_TEXTURE_SOURCE).resolve(fileName).toFile();
+		this.hasLocalSource = possibleLocalFile.exists();
+        this.file = this.hasLocalSource ? possibleLocalFile : path.resolve(fileName).toFile();
         this.destPath = destPath;
         this.fileName = fileName;
         this.onDownloaded = callback;
 		this.timeSinceLastReference = System.currentTimeMillis();
-        WAITING_TEXTURES.put(this.destPath + "/" + this.fileName, this);
+		if (!this.hasLocalSource) {
+			WAITING_TEXTURES.put(this.destPath + "/" + this.fileName, this);
+		}
     }
 
     private void loadCallback(NativeImage image) {
