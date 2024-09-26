@@ -29,7 +29,10 @@ import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import net.fabricmc.api.EnvType;
@@ -37,40 +40,54 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
-import net.minecraft.core.Registry;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 public class CapeUtil {
-	public static @NotNull @Unmodifiable List<Cape> getCapes() {
-		return ImmutableList.copyOf(FrozenRegistry.CAPE);
+	private static final Map<ResourceLocation, Cape> CAPES = new HashMap<>();
+	private static final List<String> CAPE_REPOS = new ArrayList<>();
+
+	public static @NotNull @Unmodifiable List<String> getCapeRepos() {
+		return ImmutableList.copyOf(CAPE_REPOS);
+	}
+
+	public static @NotNull @Unmodifiable Collection<Cape> getCapes() {
+		return CAPES.values();
 	}
 
 	public static @NotNull @Unmodifiable List<Cape> getUsableCapes(UUID uuid) {
 		return ImmutableList.copyOf(getCapes().stream().filter(cape -> canPlayerUserCape(uuid, cape)).toList());
 	}
 
+	public static Optional<Cape> getCape(ResourceLocation location) {
+		return Optional.ofNullable(CAPES.get(location));
+	}
+
 	public static boolean canPlayerUserCape(UUID uuid, ResourceLocation capeID) {
-		Optional<Cape> optionalCape = FrozenRegistry.CAPE.getOptional(capeID);
-		return optionalCape.map(cape -> canPlayerUserCape(uuid, cape)).orElse(false);
+		Optional<Cape> optionalCape = CapeUtil.getCape(capeID);
+		return optionalCape.map(cape -> canPlayerUserCape(uuid, cape)).orElse(true);
 	}
 
 	public static boolean canPlayerUserCape(UUID uuid, @NotNull Cape cape) {
 		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
 	}
 
-	public static @NotNull Cape registerCape(ResourceLocation id) {
-		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.empty()));
+	public static void registerCape(ResourceLocation id, ResourceLocation textureId, Component capeName) {
+		CAPES.put(id, new Cape(id, capeName, textureId, Optional.empty()));
 	}
 
-	public static @NotNull Cape registerCapeWithWhitelist(ResourceLocation id, List<UUID> allowedPlayers) {
-		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.of(allowedPlayers)));
+	public static void registerCape(ResourceLocation id, Component capeName) {
+		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.empty()));
 	}
 
-	public static @NotNull Cape registerCapeWithWhitelist(ResourceLocation id, UUID... uuids) {
-		return Registry.register(FrozenRegistry.CAPE, id, new Cape(id, buildCapeTextureLocation(id), Optional.of(ImmutableList.copyOf(uuids))));
+	public static void registerCapeWithWhitelist(ResourceLocation id, Component capeName, List<UUID> allowedPlayers) {
+		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.of(allowedPlayers)));
+	}
+
+	public static void registerCapeWithWhitelist(ResourceLocation id, Component capeName, UUID... uuids) {
+		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.of(ImmutableList.copyOf(uuids))));
 	}
 
 	public static void registerCapesFromURL(String urlString) {
@@ -83,9 +100,8 @@ public class CapeUtil {
 			JsonObject capeDir = parsedJson.getAsJsonObject();
 			JsonArray capeArray = capeDir.get("capes").getAsJsonArray();
 
-			capeArray.forEach(jsonElement -> {
-				registerCapeFromURL(jsonElement.getAsString());
-			});
+			capeArray.forEach(jsonElement -> registerCapeFromURL(jsonElement.getAsString()));
+			CAPE_REPOS.add(urlString);
 		} catch (IOException ignored) {}
 	}
 
@@ -98,8 +114,10 @@ public class CapeUtil {
 			JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
 			JsonObject capeJson = parsedJson.getAsJsonObject();
 			String capeId = capeJson.get("id").getAsString();
+			Component capeName = Component.literal(capeJson.get("name").getAsString());
 			String capeTexture = capeJson.get("texture").getAsString();
-			JsonArray allowedUUIDs = capeJson.get("allowed_uuids").getAsJsonArray();
+			JsonElement allowedUUIDElement = capeJson.get("allowed_uuids");
+			boolean whitelisted = allowedUUIDElement != null;
 
 			ResourceLocation capeLocation = ResourceLocation.tryParse(capeId);
 			if (capeLocation != null) {
@@ -108,13 +126,12 @@ public class CapeUtil {
 					ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
 				}
 
-				List<JsonElement> allowedUUIDList = allowedUUIDs.asList();
-				if (allowedUUIDList.isEmpty()) {
-					registerCape(capeLocation);
+				if (!whitelisted) {
+					registerCape(capeLocation, capeName);
 				} else {
 					List<UUID> uuidList = new ArrayList<>();
-					allowedUUIDList.forEach(jsonElement -> uuidList.add(UUID.fromString(jsonElement.getAsString())));
-					registerCapeWithWhitelist(capeLocation, ImmutableList.copyOf(uuidList));
+					allowedUUIDElement.getAsJsonArray().asList().forEach(jsonElement -> uuidList.add(UUID.fromString(jsonElement.getAsString())));
+					registerCapeWithWhitelist(capeLocation, capeName, ImmutableList.copyOf(uuidList));
 				}
 			}
 		} catch (IOException ignored) {

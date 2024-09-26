@@ -17,6 +17,9 @@
 
 package net.frozenblock.lib.networking;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 import net.fabricmc.api.EnvType;
@@ -24,11 +27,16 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
+import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.image_transfer.FileTransferPacket;
+import net.frozenblock.lib.image_transfer.client.ServerTexture;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
@@ -74,6 +82,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.io.FileUtils;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenClientNetworking {
@@ -102,7 +111,9 @@ public final class FrozenClientNetworking {
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		receiveWindDisturbancePacket();
+		receiveTransferImagePacket();
 		receiveCapePacket();
+		receiveCapeRepoPacket();
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
 			ConfigSyncPacket.receive(packet, null)
 		);
@@ -112,6 +123,27 @@ public final class FrozenClientNetworking {
 				config.setSynced(false);
 			}
 		}));
+
+		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
+			if (packet.request()) {
+				Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+				try {
+					FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
+					ClientPlayNetworking.send(fileTransferPacket);
+				} catch (IOException ignored) {
+				}
+			} else {
+				try {
+					Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
+					ServerTexture serverTexture = ServerTexture.WAITING_TEXTURES.get(packet.transferPath() + "/" + packet.fileName());
+					if (serverTexture != null) {
+						serverTexture.runFutureForTexture();
+					}
+				} catch (IOException ignored) {
+				}
+			}
+		});
 	}
 
 	private static void receiveLocalPlayerSoundPacket() {
@@ -327,6 +359,31 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	private static void receiveTransferImagePacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
+			if (packet.request()) {
+				Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+				try {
+					FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
+					ClientPlayNetworking.send(fileTransferPacket);
+				} catch (IOException ignored) {
+					FrozenSharedConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
+				}
+			} else {
+				try {
+					Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
+					ServerTexture serverTexture = ServerTexture.WAITING_TEXTURES.get(packet.transferPath() + "/" + packet.fileName());
+					if (serverTexture != null) {
+						serverTexture.runFutureForTexture();
+					}
+				} catch (IOException ignored) {
+					FrozenSharedConstants.LOGGER.error("Unable save transferred file {}!", packet.fileName());
+				}
+			}
+		});
+	}
+
 	private static void receiveCapePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE, (packet, ctx) -> {
 			UUID uuid = packet.getPlayerUUID();
@@ -335,6 +392,12 @@ public final class FrozenClientNetworking {
 			} else {
 				ClientCapeData.removeCapeForUUID(uuid);
 			}
+		});
+	}
+
+	private static void receiveCapeRepoPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(LoadCapeRepoPacket.PACKET_TYPE, (packet, ctx) -> {
+			CapeUtil.registerCapesFromURL(packet.capeRepo());
 		});
 	}
 

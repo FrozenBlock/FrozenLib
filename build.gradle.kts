@@ -30,7 +30,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.0.10")
+    kotlin("jvm") version("2.0.20")
 }
 
 val minecraft_version: String by project
@@ -271,7 +271,7 @@ dependencies {
     relocModApi(files("libs/xjs-data-0.5.jar"))
     relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
     relocModApi("com.personthecat:fresult:$fresult_version")
-    compileOnly("org.projectlombok:lombok:1.18.30")?.let { annotationProcessor(it) }
+    compileOnly("org.projectlombok:lombok:1.18.34")?.let { annotationProcessor(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 }

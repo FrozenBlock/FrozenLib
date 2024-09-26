@@ -29,6 +29,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
@@ -137,31 +138,24 @@ public final class FrozenLibConfigGui {
 
 		UUID playerUUID = Minecraft.getInstance().getUser().getProfileId();
 		List<String> usableCapes = new ArrayList<>();
-		CapeUtil.getUsableCapes(playerUUID).forEach(cape -> {
-			usableCapes.add(cape.registryId().toString());
-		});
-		if (!usableCapes.isEmpty()) {
+		CapeUtil.getUsableCapes(playerUUID).forEach(cape -> usableCapes.add(cape.registryId().toString()));
+		if (usableCapes.size() > 1) {
 			var capeEntry = category.addEntry(
-				FrozenClothConfig.syncedEntry(
-					entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
-						.setDefaultValue(defaultConfig.cape)
-						.setNameProvider(o -> {
-							ResourceLocation capeId = ResourceLocation.parse(((String) o));
-							return Component.translatable("cape." + capeId.getNamespace() + "." + capeId.getPath());
-						})
-						.setSaveConsumer(newValue -> {
-							ResourceLocation capeId = ResourceLocation.parse((String) newValue);
-							config.cape = (String) newValue;
-							if (Minecraft.getInstance().getConnection() != null) {
-								ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, capeId));
-							}
-						})
-						.setTooltip(tooltip("cape"))
-						.build(),
-					config.getClass(),
-					"cape",
-					configInstance
-				)
+				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
+					.setDefaultValue(defaultConfig.cape)
+					.setNameProvider(o -> {
+						ResourceLocation capeId = ResourceLocation.parse(((String) o));
+						return CapeUtil.getCape(capeId).map(Cape::capeName).orElse(Component.translatable("cape.frozenlib.invalid"));
+					})
+					.setSaveConsumer(newValue -> {
+						ResourceLocation capeId = ResourceLocation.parse((String) newValue);
+						config.cape = (String) newValue;
+						if (Minecraft.getInstance().getConnection() != null) {
+							ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, capeId));
+						}
+					})
+					.setTooltip(tooltip("cape"))
+					.build()
 			);
 		}
 	}

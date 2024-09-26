@@ -18,12 +18,10 @@
 package net.frozenblock.lib.registry.api;
 
 import com.mojang.serialization.Lifecycle;
-import java.util.Optional;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
@@ -45,7 +43,6 @@ public class FrozenRegistry {
 	public static final ResourceKey<Registry<SpottingIconPredicate<?>>> SPOTTING_ICON_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("spotting_icon_predicate"));
 	public static final ResourceKey<Registry<WindDisturbanceLogic<?>>> WIND_DISTURBANCE_LOGIC_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("wind_disturbance_logic"));
 	public static final ResourceKey<Registry<WindDisturbanceLogic<?>>> WIND_DISTURBANCE_LOGIC_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("wind_disturbance_logic_unsynced"));
-	public static final ResourceKey<Registry<Cape>> CAPE_REGISTRY = ResourceKey.createRegistryKey(FrozenSharedConstants.id("cape"));
 
 	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = createSimple(MOD_INTEGRATION_REGISTRY, Lifecycle.stable(), null,
 		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new ModIntegrationSupplier<>(() -> new ModIntegration("dummy") {
@@ -75,11 +72,6 @@ public class FrozenRegistry {
 	public static final MappedRegistry<WindDisturbanceLogic<?>> WIND_DISTURBANCE_LOGIC_UNSYNCED = createSimple(WIND_DISTURBANCE_LOGIC_UNSYNCED_REGISTRY, Lifecycle.stable(), null,
 		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new WindDisturbanceLogic(WindDisturbanceLogic.defaultPredicate()))
 	);
-
-	public static final MappedRegistry<Cape> CAPE = createSimple(CAPE_REGISTRY, Lifecycle.stable(), null,
-		registry -> Registry.register(registry, FrozenSharedConstants.id("dummy"), new Cape(FrozenSharedConstants.id("dummy"), null, Optional.empty()))
-	);
-
 
 	@NotNull
 	public static HolderLookup.Provider vanillaRegistries() {

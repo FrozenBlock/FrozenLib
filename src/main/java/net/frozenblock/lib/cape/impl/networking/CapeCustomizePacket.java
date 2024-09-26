@@ -21,8 +21,8 @@ import java.util.UUID;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -70,8 +70,8 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 		return new CapeCustomizePacket(uuid, false);
 	}
 
-	public static @NotNull CapeCustomizePacket createPacket(UUID uuid,  @Nullable ResourceLocation capeId) {
-		return new CapeCustomizePacket(uuid, !shouldDisable(FrozenRegistry.CAPE.getValue(capeId)), capeId);
+	public static @NotNull CapeCustomizePacket createPacket(UUID uuid, @Nullable ResourceLocation capeId) {
+		return new CapeCustomizePacket(uuid, !shouldDisable(CapeUtil.getCape(capeId).orElse(null)), capeId);
 	}
 
 	@Contract("_, _ -> new")
