@@ -103,13 +103,12 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 
 			// Check implemented by FrozenBlock for performance.
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
-			int currentVersion = dataFixerEntry.currentVersion();
-			if (modDataVersion.isPresent() || currentVersion == 1) {
+			if (modDataVersion.isPresent()) {
 				current = dataFixerEntry.dataFixer().update(
 					DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
 					current,
 					modDataVersion.getAsInt(),
-					currentVersion
+					dataFixerEntry.currentVersion()
 				);
 			}
 		}
@@ -121,13 +120,12 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 
 			// Check implemented by FrozenBlock for performance.
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
-			int currentVersion = dataFixerEntry.currentVersion();
-			if (modDataVersion.isPresent() || currentVersion == 1) {
+			if (modDataVersion.isPresent()) {
 				current = dataFixerEntry.dataFixer().update(
 					DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
 					current,
 					modDataVersion.getAsInt(),
-					currentVersion
+					dataFixerEntry.currentVersion()
 				);
 			}
         }
