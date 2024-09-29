@@ -19,7 +19,7 @@ Put changelog here:
   - Currently, these capes can only be accessed through FrozenLib's config.
   - An optional list of allowed UUIDs can be defined for capes.
 - Fixed the `ColumnWithDiskFeature` not generating as intended.
-- Added an API to send and receive images from client and server.
+- Added an API to send and receive files between the client and server.
   - This is useful in cases where, for example, you want to send a screenshot from Minecraft to the server to be used as a texture.
   - This can be disabled both client-side and server-side separately in FrozenLib's config.
 - Significantly optimized DataFixing.
