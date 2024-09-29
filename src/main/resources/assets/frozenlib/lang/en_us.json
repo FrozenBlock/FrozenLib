@@ -45,6 +45,11 @@
   "option.frozenlib.warden_spawn_tracker_command.true": "§aON",
   "tooltip.frozenlib.warden_spawn_tracker_command": "Enables or disables the Warden Spawn Tracker command.",
 
+  "option.frozenlib.file_transfer_server": "Server Receives Files",
+  "tooltip.frozenlib.file_transfer_server": "Whether the server can receive files from clients.",
+  "option.frozenlib.file_transfer_client": "Client File Transfer",
+  "tooltip.frozenlib.file_transfer_client": "Whether the client can send/receive files to/from the server.\nThis is intended to be used for features such as sharing screenshots.\nThis config is implemented for the sake of security.",
+
   "option.frozenlib.cape": "Cape",
   "tooltip.frozenlib.cape": "A list of capes added through FrozenLib.\nClick to select the next cape.",
 

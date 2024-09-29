@@ -34,6 +34,7 @@ import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.image_transfer.FileTransferPacket;
 import net.frozenblock.lib.image_transfer.client.ServerTexture;
@@ -126,6 +127,7 @@ public final class FrozenClientNetworking {
 		}));
 
 		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
+			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT) return;
 			if (packet.request()) {
 				Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
 				try {

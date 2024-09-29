@@ -21,6 +21,7 @@ Put changelog here:
 - Fixed the `ColumnWithDiskFeature` not generating as intended.
 - Added an API to send and receive images from client and server.
   - This is useful in cases where, for example, you want to send a screenshot from Minecraft to the server to be used as a texture.
+  - This can be disabled both client-side and server-side separately in FrozenLib's config.
 - Significantly optimized DataFixing.
   - In cases where something like a structure with a pre-defined set of DataVersions is loaded and a separate mod with a DataFixer is loaded, the new DataFixer would run for every structure piece.
   - This would cause tremendous amounts of lag while not fixing any data, as no fixable data was present to begin with.

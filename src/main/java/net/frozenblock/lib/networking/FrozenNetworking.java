@@ -30,6 +30,7 @@ import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
@@ -149,6 +150,7 @@ public final class FrozenNetworking {
 					} catch (IOException ignored) {
 					}
 				} else {
+					if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
 					try {
 						Path path = ctx.server().getServerDirectory().resolve(packet.transferPath()).resolve(packet.fileName());
 						FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());

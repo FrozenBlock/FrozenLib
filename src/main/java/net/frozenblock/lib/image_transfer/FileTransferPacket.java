@@ -19,6 +19,7 @@ package net.frozenblock.lib.image_transfer;
 
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -62,6 +63,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
     }
 
     public static void sendToPlayer(File file, String transferPath, ServerPlayer player) throws IOException {
+		if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
         ServerPlayNetworking.send(player, create(transferPath, file));
     }
 
