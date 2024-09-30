@@ -19,6 +19,7 @@ package net.frozenblock.lib;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.Bootstrap;
+import java.util.Arrays;
 
 public class FrozenBools {
 
@@ -28,6 +29,18 @@ public class FrozenBools {
 	public static boolean isInitialized;
 
     public static boolean useNewDripstoneLiquid = false;
+
+	// DATAGEN
+	/**
+	 * Whether the current instance is running in datagen mode.
+	 */
+	public static final boolean IS_DATAGEN = isDatagen();
+
+	private static boolean isDatagen() {
+		return Arrays.stream(
+			FabricLoader.getInstance().getLaunchArguments(true)
+		).toList().stream().anyMatch(string -> string.contains("datagen"));
+	}
 
 	// MOD LOADERS
 	public static final boolean IS_FABRIC = hasMod("fabricloader") && !hasMod("quilt_loader") && !hasMod("connector");
