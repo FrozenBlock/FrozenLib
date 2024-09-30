@@ -56,9 +56,9 @@
   "cape.frozenlib.invalid": "§cINVALID",
   "cape.frozenlib.dummy": "§cNone",
 
-  "commands.wind.display.global.success": "The global wind is currently: %s, %s, %s.",
-  "commands.wind.display.pos.success": "The wind at %s, %s, %s currently: %s, %s, %s.",
-  "commands.wind.success": "Set wind to %s, %s, %s.",
+  "commands.wind.display.global.success": "The global wind is currently: %.6f, %.6f, %.6f.",
+  "commands.wind.display.pos.success": "The wind at %.6f, %.6f, %.6f currently: %.6f, %.6f, %.6f.",
+  "commands.wind.success": "Set wind to %.6f, %.6f, %.6f.",
   "commands.wind.toggle.success": "%s wind override.",
   "commands.wind.toggle.failure": "Wind override is already %s.",
 
@@ -71,8 +71,8 @@
   "commands.screenshake.remove.entity.success": "Removed screen shakes from entity %s.",
   "commands.screenshake.remove.entity.failure": "Could not find entities with screen shakes.",
 
-  "commands.scale.entity.success.multiple": "Scaled %sto size %s.",
-  "commands.scale.entity.success": "Scaled %s to size %s.",
+  "commands.scale.entity.success.multiple": "Scaled %s entities to size %s.",
+  "commands.scale.entity.success": "Scaled %s entity to size %s.",
   "commands.scale.entity.failure": "Entity scaling failed.",
 
   "commands.frozenlib_config.reload.single": "Reloaded 1 config from %s.",

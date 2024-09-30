@@ -22,6 +22,9 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 
+/**
+ * Used to integrate config syncing with Cloth Config.
+ */
 @Environment(EnvType.CLIENT)
 public interface DisableableWidgetInterface {
 

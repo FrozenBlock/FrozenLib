@@ -48,6 +48,11 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Handles wind on the server side.
+ *
+ * <p> One instance is created per {@link ServerLevel}.
+ */
 public class WindManager {
 	private static final long MIN_TIME_VALUE = Long.MIN_VALUE + 1;
 	public static final Map<Function<WindManager, WindManagerExtension>, Integer> EXTENSION_PROVIDERS = new Object2ObjectOpenHashMap<>();
@@ -86,14 +91,30 @@ public class WindManager {
 		this.attachedExtensions = extensions;
 	}
 
+	/**
+	 * Adds a {@link WindManagerExtension}.
+	 *
+	 * @param extension The {@link WindManagerExtension} to add.
+	 * @param priority The priority of the added {@link WindManagerExtension}. The lower the value, the earlier it will run.
+	 */
 	public static void addExtension(Function<WindManager, WindManagerExtension> extension, int priority) {
 		if (extension != null) EXTENSION_PROVIDERS.put(extension, priority);
 	}
 
+	/**
+	 * Adds a {@link WindManagerExtension} with a priority of 1000.
+	 *
+	 * @param extension The {@link WindManagerExtension} to add.
+	 */
 	public static void addExtension(Function<WindManager, WindManagerExtension> extension) {
 		addExtension(extension, 1000);
 	}
 
+	/**
+	 * Adds a {@link WindDisturbance} to the world and syncs if with the client if possible.
+	 *
+	 * @param windDisturbance The {@link WindDisturbance} to add to the world and send to the client.
+	 */
 	public void addWindDisturbanceAndSync(@NotNull WindDisturbance<?> windDisturbance) {
 		Optional<WindDisturbancePacket> optionalPacket = windDisturbance.toPacket();
 		if (optionalPacket.isPresent()) {
@@ -106,6 +127,11 @@ public class WindManager {
 		this.addWindDisturbance(windDisturbance);
 	}
 
+	/**
+	 * Adds a {@link WindDisturbance} to the world.
+	 *
+	 * @param windDisturbance The {@link WindDisturbance} to add.
+	 */
 	public void addWindDisturbance(@NotNull WindDisturbance<?> windDisturbance) {
 		this.getWindDisturbanceStash().add(windDisturbance);
 	}
@@ -118,20 +144,35 @@ public class WindManager {
 		return this.isSwitchedServer ? this.windDisturbancesA : this.windDisturbancesB;
 	}
 
+	/**
+	 * Clears all wind disturbances running on the current tick.
+	 */
 	public void clearWindDisturbances() {
 		this.getWindDisturbances().clear();
 	}
 
+	/**
+	 * Clears all wind disturbances running on the current tick, and the stash of wind disturbances to run the next tick.
+	 */
 	public void clearAllWindDisturbances() {
 		this.getWindDisturbances().clear();
 		this.getWindDisturbanceStash().clear();
 	}
 
+	/**
+	 * Clears all wind disturbances running on the current tick, and replaces them with the stash of wind disturbances to run on the next tick.
+	 */
 	public void clearAndSwitchWindDisturbances() {
 		this.clearWindDisturbances();
 		this.isSwitchedServer = !this.isSwitchedServer;
 	}
 
+	/**
+	 * Returns the {@link WindManager} used for a given {@link ServerLevel}.
+	 *
+	 * @param level The {@link ServerLevel} to obtain the {@link WindManager} for.
+	 * @return the {@link WindManager} used for the given {@link ServerLevel}.
+	 */
 	@NotNull
 	public static WindManager getWindManager(@NotNull ServerLevel level) {
 		return ((WindManagerInterface)level).frozenLib$getWindManager();
@@ -185,7 +226,11 @@ public class WindManager {
 		}
 	}
 
-	//Reset values in case of potential overflow
+	/**
+	 * Resets the values in the rare case of an overflow.
+	 *
+	 * @return whether the values were reset this tick.
+	 */
 	private boolean runResetsIfNeeded() {
 		boolean needsReset = false;
 		if (Math.abs(this.time) == Long.MAX_VALUE) {
@@ -254,36 +299,87 @@ public class WindManager {
 		}
 	}
 
+	/**
+	 * Returns the wind movement at the bottom center of a specified {@link BlockPos}.
+	 *
+	 * @param pos The {@link BlockPos} to check.
+	 * @return the wind movement at the center of the specified {@link BlockPos}.
+	 */
 	@NotNull
 	public Vec3 getWindMovement(@NotNull BlockPos pos) {
 		return this.getWindMovement(Vec3.atBottomCenterOf(pos));
 	}
 
+	/**
+	 * Returns the wind movement at the bottom center of a specified {@link BlockPos}, multiplied.
+	 *
+	 * @param pos The {@link BlockPos} to check.
+	 * @param scale Multiplies the returned value.
+	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied.
+	 */
 	@NotNull
 	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale) {
 		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale);
 	}
 
+	/**
+	 * Returns the wind movement at the bottom center of a specified {@link BlockPos}, multiplied and clamped.
+	 *
+	 * @param pos The {@link BlockPos} to check.
+	 * @param scale Multiplies the returned value.
+	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
+	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied and clamped.
+	 */
 	@NotNull
 	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale, double clamp) {
 		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale, clamp);
 	}
 
+	/**
+	 * Returns the wind movement at the center of a specified {@link Vec3}.
+	 *
+	 * @param pos The {@link Vec3} to check.
+	 * @return the wind movement at the specified {@link Vec3}.
+	 */
 	@NotNull
 	public Vec3 getWindMovement(@NotNull Vec3 pos) {
 		return this.getWindMovement(pos, 1D);
 	}
 
+	/**
+	 * Returns the wind movement at a specified {@link Vec3}, multiplied.
+	 *
+	 * @param pos The {@link Vec3} to check.
+	 * @param scale Multiplies the returned value.
+	 * @return the wind movement at the specified {@link Vec3}, multiplied.
+	 */
 	@NotNull
 	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale) {
 		return this.getWindMovement(pos, scale, Double.MAX_VALUE);
 	}
 
+	/**
+	 * Returns the wind movement at a specified {@link Vec3}, multiplied and clamped.
+	 *
+	 * @param pos The {@link BlockPos} to check.
+	 * @param scale Multiplies the returned value.
+	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
+	 * @return the wind movement at the specified {@link Vec3}, multiplied and clamped.
+	 */
 	@NotNull
 	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp) {
 		return this.getWindMovement(pos, scale, clamp, 1D);
 	}
 
+	/**
+	 * Returns the wind movement at a specified {@link Vec3}, multiplied, clamped, and with a separately multiplied wind disturbance value.
+	 *
+	 * @param pos The {@link BlockPos} to check.
+	 * @param scale Multiplies the returned value.
+	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
+	 * @param windDisturbanceScale Multiplies the wind disturbance value.
+	 * @return the wind movement at the specified {@link Vec3}, multiplied, clamped, and with a separately multiplied wind disturbance value.
+	 */
 	@NotNull
 	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
 		double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
@@ -309,31 +405,37 @@ public class WindManager {
 		);
 	}
 
+	@Deprecated
 	@NotNull
 	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double stretch) {
 		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double stretch) {
 		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double clamp, double stretch) {
 		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, clamp, stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double stretch) {
 		return this.getWindMovement3D(pos, 1D, stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double stretch) {
 		return this.getWindMovement3D(pos, scale, Double.MAX_VALUE, stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double clamp, double stretch) {
 		Vec3 wind = this.sample3D(pos, stretch);
@@ -353,6 +455,7 @@ public class WindManager {
 		return this.commandWind;
 	}
 
+	@Deprecated
 	@NotNull
 	private Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
 		double sampledTime = this.time * 0.1D;
@@ -363,11 +466,26 @@ public class WindManager {
 		return new Vec3(windX, windY, windZ);
 	}
 
+	/**
+	 * Calculates the strength and movement of the current {@link WindDisturbance}s at a given position.
+	 *
+	 * @param level The provided {@link Level}.
+	 * @param pos The {@link Vec3} being checked.
+	 * @return the strength and movement of the current {@link WindDisturbance}s at a given position.
+	 */
 	@NotNull
 	private Pair<Double, Vec3> calculateWindDisturbance(@NotNull Level level, @NotNull Vec3 pos) {
 		return calculateWindDisturbance(this.getWindDisturbances(), level, pos);
 	}
 
+	/**
+	 * Calculates the strength and movement out of a provided list of {@link WindDisturbance}s at a given position.
+	 *
+	 * @param windDisturbances The list of {@link WindDisturbance}s to calculate from.
+	 * @param level The provided {@link Level}.
+	 * @param pos The {@link Vec3} being checked.
+	 * @return the strength and movement out of a provided list of {@link WindDisturbance}s at a given position.
+	 */
 	@NotNull
 	public static Pair<Double, Vec3> calculateWindDisturbance(@NotNull List<WindDisturbance<?>> windDisturbances, @NotNull Level level, @NotNull Vec3 pos) {
 		ArrayList<Pair<Double, Vec3>> winds = new ArrayList<>();

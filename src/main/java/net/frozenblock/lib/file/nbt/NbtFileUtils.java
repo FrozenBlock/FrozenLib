@@ -23,6 +23,7 @@ import java.io.IOException;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -62,7 +63,7 @@ public class NbtFileUtils {
 	}
 
 	@Nullable
-	public static CompoundTag readFromFile(File file) {
+	public static CompoundTag readFromFile(@NotNull File file) {
 		CompoundTag compoundTag = null;
 		try {
 			compoundTag = NbtIo.read(file.toPath());
@@ -72,7 +73,8 @@ public class NbtFileUtils {
 		return compoundTag;
 	}
 
-	public static String withNBTExtension(String string) {
+	@Contract(pure = true)
+	public static @NotNull String withNBTExtension(String string) {
 		return string + ".nbt";
 	}
 

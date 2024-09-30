@@ -44,6 +44,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+/**
+ * A texture that will use a .png file sent from the server.
+ *
+ * <p> Sends a file transfer request to the server if the needed texture file is not present on the client, unless the file transfer config is disabled.
+ */
 @Environment(EnvType.CLIENT)
 public class ServerTexture extends SimpleTexture implements Tickable {
     public static final Map<String, ServerTexture> WAITING_TEXTURES = new HashMap<>();

@@ -22,6 +22,9 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 
+/**
+ * Used to add custom logic to the {@link ClientWindManager}.
+ */
 @Environment(EnvType.CLIENT)
 public interface ClientWindManagerExtension {
 
