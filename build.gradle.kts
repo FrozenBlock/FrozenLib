@@ -31,6 +31,7 @@ plugins {
     `java-library`
     java
     kotlin("jvm") version("2.0.20")
+    id("io.github.p03w.machete") version("1.+")
 }
 
 val minecraft_version: String by project
