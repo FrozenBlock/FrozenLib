@@ -28,6 +28,7 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 public final class AdvancementAPI {
@@ -100,9 +101,9 @@ public final class AdvancementAPI {
 		rewards.loot = Collections.unmodifiableList(newLoot);
 	}
 
-	public static void addRecipes(Advancement advancement, List<ResourceLocation> recipes) {
+	public static void addRecipes(Advancement advancement, List<ResourceKey<Recipe<?>>> recipes) {
 		AdvancementRewards rewards = advancement.rewards();
-		List<ResourceLocation> newLoot = new ArrayList<>(rewards.recipes);
+		List<ResourceKey<Recipe<?>>> newLoot = new ArrayList<>(rewards.recipes);
 		newLoot.addAll(recipes);
 		rewards.recipes = Collections.unmodifiableList(newLoot);
 	}

@@ -23,7 +23,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.portal.DimensionTransition;
+import net.minecraft.world.level.portal.TeleportTransition;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -55,16 +55,16 @@ public class ServerPlayerMixin {
 		}
 	}
 
-	@Inject(method = "changeDimension", at = @At(value = "HEAD"))
-	public void frozenLib$changeDimensionSaveScreenShakes(DimensionTransition dimensionTransition, CallbackInfoReturnable<Entity> cir) {
+	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At(value = "HEAD"))
+	public void frozenLib$changeDimensionSaveScreenShakes(TeleportTransition transition, CallbackInfoReturnable<Entity> cir) {
 		CompoundTag tempTag = new CompoundTag();
 		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
 		entityScreenShakeManager.save(tempTag);
 		this.frozenLib$savedScreenShakesTag = tempTag;
 	}
 
-	@Inject(method = "changeDimension", at = @At(value = "RETURN"))
-	public void frozenLib$changeDimensionLoadScreenShakes(DimensionTransition dimensionTransition, CallbackInfoReturnable<Entity> cir) {
+	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At(value = "RETURN"))
+	public void frozenLib$changeDimensionLoadScreenShakes(TeleportTransition transition, CallbackInfoReturnable<Entity> cir) {
 		if (this.frozenLib$savedScreenShakesTag != null) {
 			EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
 			entityScreenShakeManager.load(this.frozenLib$savedScreenShakesTag);
