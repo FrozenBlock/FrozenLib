@@ -20,6 +20,9 @@ package net.frozenblock.lib.worldgen.heightmap.api;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 public class FrozenHeightmaps {
+	/**
+	 * A copy of MOTION_BLOCKING_NO_LEAVES that syncs to the client.
+	 */
 	public static Heightmap.Types MOTION_BLOCKING_NO_LEAVES_SYNCED;
 
 	static {

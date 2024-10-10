@@ -28,6 +28,9 @@ import java.util.function.Function;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
 
+/**
+ * A {@link DataFix} specialized for fixing the name of an entity.
+ */
 public abstract class FrozenEntityRenameFix extends DataFix {
 
     private final String name;

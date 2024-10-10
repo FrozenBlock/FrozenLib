@@ -27,6 +27,9 @@ import net.minecraft.client.Minecraft;
 @Environment(EnvType.CLIENT)
 public class DebugRendererEvents {
 
+	/**
+	 * An event that triggers upon Minecraft's debug renderers being created.
+	 */
 	public static final Event<DebugRenderersCreated> DEBUG_RENDERERS_CREATED = FrozenEvents.createEnvironmentEvent(
 		DebugRenderersCreated.class,
 		callbacks -> (client) -> {

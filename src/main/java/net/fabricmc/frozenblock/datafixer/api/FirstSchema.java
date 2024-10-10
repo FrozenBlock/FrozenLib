@@ -1,7 +1,7 @@
 /*
- * Copyright 2024 The Quilt Project
- * Copyright 2024 FrozenBlock
- * Modified to work on Fabric
+ * Copyright (c) 2024 FabricMC
+ * Copyright (c) 2024 FrozenBlock
+ * Modified to use Mojang's Official Mappings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file is a modified version of Quilt Standard Libraries,
+ * authored by QuiltMC.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
+package net.fabricmc.frozenblock.datafixer.api;
 
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.datafixers.types.templates.TypeTemplate;
@@ -26,10 +29,10 @@ import org.jetbrains.annotations.Range;
 
 /**
  * Represents a {@link Schema} that has no parent.
- * <p>
- * Modified to work on Fabric
  */
 public class FirstSchema extends Schema {
+	// From QSL.
+
 	/**
 	 * Creates a schema.
 	 *
@@ -42,7 +45,7 @@ public class FirstSchema extends Schema {
 	// all of these methods refer to this.parent without checking if its null
 	@Override
 	public void registerTypes(Schema schema, Map<String, Supplier<TypeTemplate>> entityTypes,
-							  Map<String, Supplier<TypeTemplate>> blockEntityTypes) {
+			Map<String, Supplier<TypeTemplate>> blockEntityTypes) {
 	}
 
 	@Override

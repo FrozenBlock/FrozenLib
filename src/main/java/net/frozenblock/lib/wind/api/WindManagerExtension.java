@@ -23,19 +23,51 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 
+/**
+ * Used to add custom logic to the {@link WindManager}.
+ */
 public interface WindManagerExtension {
 
 	ResourceLocation extensionID();
 
+	/**
+	 * Runs after the baseTick method.
+	 */
 	void tick(ServerLevel level);
 
+	/**
+	 * Runs before the regular tick method.
+	 */
 	void baseTick(ServerLevel level);
 
+	/**
+	 * Used to reset defined values in the rare case of an overflow.
+	 *
+	 * <p> Please both check and trigger the resets in this method.
+	 *
+	 * @return whether a reset was needed and run.
+	 */
 	boolean runResetsIfNeeded();
 
+	/**
+	 * Appends custom data to the {@link WindSyncPacket}.
+	 *
+	 * @param packet The provided {@link WindSyncPacket} to be sent to the client.
+	 * @return the updated {@link CustomPacketPayload} with this extension's data.
+	 */
 	CustomPacketPayload syncPacket(WindSyncPacket packet);
 
+	/**
+	 * Loads custom data.
+	 *
+	 * @param compoundTag The {@link CompoundTag} to read from.
+	 */
 	void load(CompoundTag compoundTag);
 
+	/**
+	 * Saves custom data.
+	 *
+	 * @param compoundTag The {@link CompoundTag} to write to.
+	 */
 	void save(CompoundTag compoundTag);
 }

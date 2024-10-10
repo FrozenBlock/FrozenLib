@@ -32,6 +32,7 @@ import java.util.concurrent.CompletableFuture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.image_transfer.FileTransferPacket;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -43,6 +44,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
+/**
+ * A texture that will use a .png file sent from the server.
+ *
+ * <p> Sends a file transfer request to the server if the needed texture file is not present on the client, unless the file transfer config is disabled.
+ */
 @Environment(EnvType.CLIENT)
 public class ServerTexture extends SimpleTexture implements Tickable {
     public static final Map<String, ServerTexture> WAITING_TEXTURES = new HashMap<>();
@@ -135,7 +141,9 @@ public class ServerTexture extends SimpleTexture implements Tickable {
             nativeImage = this.load(fileInputStream);
             fileInputStream.close();
         } else {
-			ClientPlayNetworking.send(FileTransferPacket.createRequest(this.destPath, this.fileName));
+			if (FrozenLibConfig.FILE_TRANSFER_CLIENT) {
+				ClientPlayNetworking.send(FileTransferPacket.createRequest(this.destPath, this.fileName));
+			}
             nativeImage = null;
         }
 

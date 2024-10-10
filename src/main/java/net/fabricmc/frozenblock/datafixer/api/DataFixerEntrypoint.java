@@ -1,7 +1,7 @@
 /*
- * Copyright 2024 The Quilt Project
- * Copyright 2024 FrozenBlock
- * Modified to work on Fabric
+ * Copyright (c) 2024 FabricMC
+ * Copyright (c) 2024 FrozenBlock
+ * Modified to use Mojang's Official Mappings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,17 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file is a modified version of Quilt Standard Libraries,
+ * authored by QuiltMC.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
+package net.fabricmc.frozenblock.datafixer.api;
 
-import com.mojang.datafixers.DSL;
-import net.minecraft.util.datafix.DataFixTypes;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import com.mojang.datafixers.schemas.Schema;
 
-@Mixin(DataFixTypes.class)
-public interface DataFixTypesAccessor {
+public interface DataFixerEntrypoint {
+	void onRegisterBlockEntities(SchemaRegistry registry, Schema schema);
 
-	@Accessor
-	DSL.TypeReference getType();
+	void onRegisterEntities(SchemaRegistry registry, Schema schema);
 }

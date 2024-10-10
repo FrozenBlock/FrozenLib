@@ -31,19 +31,28 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FrozenSpawnPlacementTypes {
+	/**
+	 * A {@link SpawnPlacementType} that spawns entities either on the ground or on the surface of Lava.
+	 */
 	public static final SpawnPlacementType ON_GROUND_OR_ON_LAVA_SURFACE = new SpawnPlacementType() {
 		@Override
 		public boolean isSpawnPositionOk(LevelReader levelReader, BlockPos blockPos, @Nullable EntityType<?> entityType) {
 			if (entityType != null && levelReader.getWorldBorder().isWithinBounds(blockPos)) {
 				BlockPos belowPos = blockPos.below();
 				BlockState belowState = levelReader.getBlockState(belowPos);
-				if (!belowState.isValidSpawn(levelReader, belowPos, entityType) && !belowState.getFluidState().is(FluidTags.LAVA) && !belowState.is(Blocks.MAGMA_BLOCK)) {
+				if (!belowState.isValidSpawn(levelReader, belowPos, entityType) && !this.isSurfaceLavaOrMagma(levelReader, blockPos, belowState)) {
 					return false;
 				} else {
 					return this.isValidEmptySpawnBlock(levelReader, blockPos, entityType);
 				}
 			}
 			return false;
+		}
+
+		private boolean isSurfaceLavaOrMagma(LevelReader levelReader, BlockPos blockPos, BlockState belowState) {
+			BlockState blockState = levelReader.getBlockState(blockPos);
+			return (belowState.getFluidState().is(FluidTags.LAVA) || belowState.is(Blocks.MAGMA_BLOCK))
+				&& !(blockState.getFluidState().is(FluidTags.LAVA) || blockState.is(Blocks.MAGMA_BLOCK));
 		}
 
 		private boolean isValidEmptySpawnBlock(@NotNull LevelReader levelReader, BlockPos blockPos, EntityType<?> entityType) {

@@ -21,6 +21,8 @@ import blue.endless.jankson.Comment;
 import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.frozenblock.datafixer.api.FabricDataFixerBuilder;
+import net.fabricmc.frozenblock.datafixer.api.FabricDataFixes;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
@@ -28,8 +30,6 @@ import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.api.sync.SyncBehavior;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixerBuilder;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.QuiltDataFixes;
 
 public class FrozenLibConfig {
 
@@ -39,7 +39,7 @@ public class FrozenLibConfig {
 			FrozenLibConfig.class,
 			JsonType.JSON5_UNQUOTED_KEYS,
 			true,
-			QuiltDataFixes.buildFixer(new QuiltDataFixerBuilder(0)),
+			FabricDataFixes.buildFixer(new FabricDataFixerBuilder(0)),
 			0
 		) {
 			@Override
@@ -52,12 +52,16 @@ public class FrozenLibConfig {
 			public void onSync(FrozenLibConfig syncInstance) {
 				var config = this.config();
 				USE_WIND_ON_NON_FROZEN_SERVERS = config.useWindOnNonFrozenServers;
+				FILE_TRANSFER_SERVER = config.fileTransferServer;
+				FILE_TRANSFER_CLIENT = config.fileTransferClient;
 				IS_DEBUG = config.isDebug && FabricLoader.getInstance().isDevelopmentEnvironment();
 			}
 		}
 	);
 
 	public static volatile boolean USE_WIND_ON_NON_FROZEN_SERVERS = true;
+	public static volatile boolean FILE_TRANSFER_SERVER = true;
+	public static volatile boolean FILE_TRANSFER_CLIENT = true;
 	public static volatile boolean IS_DEBUG = false;
 
 	@Comment("Mods may override any of these options, but the config file will not change.")
@@ -76,6 +80,12 @@ public class FrozenLibConfig {
 
 	@EntrySyncData("wardenSpawnTrackerCommand")
 	public boolean wardenSpawnTrackerCommand = false;
+
+	@EntrySyncData("fileTransferServer")
+	public boolean fileTransferServer = true;
+
+	@EntrySyncData(value = "fileTransferClient", behavior = SyncBehavior.UNSYNCABLE)
+	public boolean fileTransferClient = true;
 
 	@EntrySyncData(value = "cape", behavior = SyncBehavior.UNSYNCABLE)
 	public String cape = FrozenSharedConstants.string("dummy");

@@ -1,7 +1,7 @@
 /*
- * Copyright 2024 The Quilt Project
- * Copyright 2024 FrozenBlock
- * Modified to work on Fabric
+ * Copyright (c) 2024 FabricMC
+ * Copyright (c) 2024 FrozenBlock
+ * Modified to use Mojang's Official Mappings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,20 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file is a modified version of Quilt Standard Libraries,
+ * authored by QuiltMC.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
+package net.fabricmc.frozenblock.datafixer.api;
 
 import com.google.common.collect.ImmutableMap;
+import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFix;
 import com.mojang.datafixers.DataFixerBuilder;
+import com.mojang.datafixers.TypeRewriteRule;
 import com.mojang.datafixers.schemas.Schema;
-import java.util.Map;
-import java.util.Objects;
-import static java.util.Objects.requireNonNull;
-import net.frozenblock.lib.datafix.api.BlockStateRenameFix;
+import com.mojang.serialization.Dynamic;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
@@ -34,14 +36,18 @@ import net.minecraft.util.datafix.fixes.NamespacedTypeRenameFix;
 import net.minecraft.util.datafix.fixes.References;
 import net.minecraft.util.datafix.fixes.SimplestEntityRenameFix;
 import net.minecraft.util.datafix.schemas.NamespacedSchema;
-import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+
+import static java.util.Objects.requireNonNull;
 
 /**
  * Provides methods to add common {@link DataFix}es to {@link DataFixerBuilder}s.
- * <p>
- * Modified to work on Fabric
  */
 public final class SimpleFixes {
+	// From QSL.
 	private SimpleFixes() {
 		throw new RuntimeException("SimpleFixes contains only static declarations.");
 	}
@@ -56,18 +62,18 @@ public final class SimpleFixes {
 	 * @param schema  the schema this fixer should be a part of
 	 * @see BlockRenameFix
 	 */
-	public static void addBlockRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-										 @NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
-										 @NotNull Schema schema) {
-		requireNonNull(builder, "DataFixerBuilder cannot be null");
-		requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(oldId, "Old identifier cannot be null");
-		requireNonNull(newId, "New identifier cannot be null");
-		requireNonNull(schema, "Schema cannot be null");
+	public static void addBlockRenameFix(DataFixerBuilder builder, String name,
+			ResourceLocation oldId, ResourceLocation newId,
+			Schema schema) {
+		Objects.requireNonNull(builder, "DataFixerBuilder cannot be null");
+		Objects.requireNonNull(name, "Fix name cannot be null");
+		Objects.requireNonNull(oldId, "Old identifier cannot be null");
+		Objects.requireNonNull(newId, "New identifier cannot be null");
+		Objects.requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
 		builder.addFixer(BlockRenameFix.create(schema, name, (inputName) ->
-			Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
+				Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
 	}
 
 	/**
@@ -80,9 +86,9 @@ public final class SimpleFixes {
 	 * @param schema  the schema this fix should be a part of
 	 * @see SimplestEntityRenameFix
 	 */
-	public static void addEntityRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-										  @NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
-										  @NotNull Schema schema) {
+	public static void addEntityRenameFix(DataFixerBuilder builder, String name,
+			ResourceLocation oldId, ResourceLocation newId,
+			Schema schema) {
 		requireNonNull(builder, "DataFixerBuilder cannot be null");
 		requireNonNull(name, "Fix name cannot be null");
 		requireNonNull(oldId, "Old identifier cannot be null");
@@ -108,36 +114,35 @@ public final class SimpleFixes {
 	 * @param schema  the schema this fix should be a part of
 	 * @see ItemRenameFix
 	 */
-	public static void addItemRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-										@NotNull ResourceLocation oldId, @NotNull ResourceLocation newId,
-										@NotNull Schema schema) {
-		requireNonNull(builder, "DataFixerBuilder cannot be null");
-		requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(oldId, "Old identifier cannot be null");
-		requireNonNull(newId, "New identifier cannot be null");
-		requireNonNull(schema, "Schema cannot be null");
+	public static void addItemRenameFix(DataFixerBuilder builder, String name,
+			ResourceLocation oldId, ResourceLocation newId,
+			Schema schema) {
+		Objects.requireNonNull(builder, "DataFixerBuilder cannot be null");
+		Objects.requireNonNull(name, "Fix name cannot be null");
+		Objects.requireNonNull(oldId, "Old identifier cannot be null");
+		Objects.requireNonNull(newId, "New identifier cannot be null");
+		Objects.requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
 		builder.addFixer(ItemRenameFix.create(schema, name, (inputName) ->
-			Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
+				Objects.equals(NamespacedSchema.ensureNamespaced(inputName), oldIdStr) ? newIdStr : inputName));
 	}
 
 	/**
 	 * Adds a blockstate rename fix to the builder, in case a blockstate's name is changed.
 	 *
-	 * @param builder      the builder
-	 * @param name         the fix's name
-	 * @param blockId      the block's identifier
-	 * @param oldState     the blockstate's old name
-	 * @param defaultValue the blockstate's default value
-	 * @param newState     the blockstates's new name
-	 * @param schema       the schema this fixer should be a part of
+	 * @param builder       the builder
+	 * @param name          the fix's name
+	 * @param blockId       the block's identifier
+	 * @param oldState      the blockstate's old name
+	 * @param defaultValue  the blockstate's default value
+	 * @param newState      the blockstates's new name
+	 * @param schema        the schema this fixer should be a part of
 	 * @see BlockStateRenameFix
 	 */
-	public static void addBlockStateRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-											  @NotNull ResourceLocation blockId, @NotNull String oldState,
-											  @NotNull String defaultValue, @NotNull String newState,
-											  @NotNull Schema schema) {
+	public static void addBlockStateRenameFix(DataFixerBuilder builder, String name, ResourceLocation blockId, String oldState,
+			String defaultValue, String newState,
+			Schema schema) {
 		requireNonNull(builder, "DataFixerBuilder cannot be null");
 		requireNonNull(name, "Fix name cannot be null");
 		requireNonNull(blockId, "Block Id cannot be null");
@@ -159,18 +164,52 @@ public final class SimpleFixes {
 	 * @param schema  the schema this fixer should be a part of
 	 * @see NamespacedTypeRenameFix
 	 */
-	public static void addBiomeRenameFix(@NotNull DataFixerBuilder builder, @NotNull String name,
-										 @NotNull Map<ResourceLocation, ResourceLocation> changes,
-										 @NotNull Schema schema) {
-		requireNonNull(builder, "DataFixerBuilder cannot be null");
-		requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(changes, "Changes cannot be null");
-		requireNonNull(schema, "Schema cannot be null");
+	public static void addBiomeRenameFix(DataFixerBuilder builder, String name,
+			Map<ResourceLocation, ResourceLocation> changes,
+			Schema schema) {
+		Objects.requireNonNull(builder, "DataFixerBuilder cannot be null");
+		Objects.requireNonNull(name, "Fix name cannot be null");
+		Objects.requireNonNull(changes, "Changes cannot be null");
+		Objects.requireNonNull(schema, "Schema cannot be null");
 
-		var mapBuilder = ImmutableMap.<String, String>builder();
-		for (var entry : changes.entrySet()) {
+		ImmutableMap.Builder<String, String> mapBuilder = ImmutableMap.builder();
+
+		for (Map.Entry<ResourceLocation, ResourceLocation> entry : changes.entrySet()) {
 			mapBuilder.put(entry.getKey().toString(), entry.getValue().toString());
 		}
+
 		builder.addFixer(new NamespacedTypeRenameFix(schema, name, References.BIOME, DataFixers.createRenamer(mapBuilder.build())));
+	}
+
+	public static class BlockStateRenameFix extends DataFix {
+		private final String name;
+		private final String blockId;
+		private final String oldState;
+		private final String defaultState;
+		private final String newState;
+
+		public BlockStateRenameFix(Schema outputSchema, String name, String blockId, String oldState, String defaultState, String newState) {
+			super(outputSchema, false);
+			this.name = name;
+			this.blockId = blockId;
+			this.oldState = oldState;
+			this.defaultState = defaultState;
+			this.newState = newState;
+		}
+
+		private Dynamic<?> fix(Dynamic<?> dynamic) {
+			Optional<String> optional = dynamic.get("Name").asString().result();
+			return optional.equals(Optional.of(this.blockId)) ? dynamic.update("Properties", dynamic1 -> {
+				String string = dynamic1.get(this.oldState).asString(this.defaultState);
+				return dynamic1.remove(this.oldState).set(this.newState, dynamic1.createString(string));
+			}) : dynamic;
+		}
+
+		@Override
+		protected TypeRewriteRule makeRule() {
+			return this.fixTypeEverywhereTyped(this.name, this.getInputSchema().getType(References.BLOCK_STATE),
+					typed -> typed.update(DSL.remainderFinder(), this::fix)
+			);
+		}
 	}
 }
