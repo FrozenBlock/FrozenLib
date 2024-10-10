@@ -44,7 +44,7 @@ public class SchemasMixin {
 			slice = @Slice(
 					from = @At(
 							value = "CONSTANT",
-							args = "intValue=1904"
+							args = "intValue=1803"
 					)
 			)
 	)
