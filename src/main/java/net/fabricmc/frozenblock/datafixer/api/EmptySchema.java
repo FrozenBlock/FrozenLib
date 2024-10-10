@@ -1,7 +1,7 @@
 /*
- * Copyright 2024 The Quilt Project
- * Copyright 2024 FrozenBlock
- * Modified to work on Fabric
+ * Copyright (c) 2024 FabricMC
+ * Copyright (c) 2024 FrozenBlock
+ * Modified to use Mojang's Official Mappings
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,9 +14,12 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * This file is a modified version of Quilt Standard Libraries,
+ * authored by QuiltMC.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.api;
+package net.fabricmc.frozenblock.datafixer.api;
 
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.schemas.Schema;
@@ -29,27 +32,27 @@ import org.jetbrains.annotations.Range;
 
 /**
  * Represents an empty {@link Schema}, having no parent and containing no type definitions.
- * <p>
- * Modified to work on Fabric
  */
 public final class EmptySchema extends FirstSchema {
-    /**
-     * Constructs an empty schema.
-     *
-     * @param versionKey the data version key
-     */
-    public EmptySchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
-        super(versionKey);
-    }
+	// From QSL.
 
-    // Ensure the schema stays empty.
-    @Override
-    public void registerType(boolean recursive, DSL.TypeReference type, Supplier<TypeTemplate> template) {
-        throw new UnsupportedOperationException();
-    }
+	/**
+	 * Constructs an empty schema.
+	 *
+	 * @param versionKey the data version key
+	 */
+	public EmptySchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
+		super(versionKey);
+	}
 
-    @Override
-    protected Map<String, Type<?>> buildTypes() {
-        return Object2ObjectMaps.emptyMap();
-    }
+	// Ensure the schema stays empty.
+	@Override
+	public void registerType(boolean recursive, DSL.TypeReference type, Supplier<TypeTemplate> template) {
+		throw new UnsupportedOperationException();
+	}
+
+	@Override
+	protected Map<String, Type<?>> buildTypes() {
+		return Object2ObjectMaps.emptyMap();
+	}
 }
