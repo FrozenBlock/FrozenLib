@@ -227,7 +227,6 @@ transitive-mutable field net/minecraft/world/flag/FeatureFlags REGISTRY Lnet/min
 transitive-mutable field net/minecraft/world/flag/FeatureFlags CODEC Lcom/mojang/serialization/Codec;
 
 # DataFixerUpper
-transitive-accessible field net/minecraft/util/datafix/DataFixTypes type Lcom/mojang/datafixers/DSL$TypeReference;
 transitive-accessible method net/minecraft/util/datafix/DataFixers createRenamer (Ljava/util/Map;)Ljava/util/function/UnaryOperator;
 
 # World Loading
