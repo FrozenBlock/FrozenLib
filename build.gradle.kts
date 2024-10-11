@@ -268,7 +268,7 @@ dependencies {
 
     // ExJson
     //relocModApi("org.exjson:xjs-data:$xjs_data_version")
-    relocModApi(files("libs/xjs-data-0.5.jar"))
+    relocModApi("com.github.Treetrain1:xjs-data:infinity-compat-SNAPSHOT")
     relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
     relocModApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.34")?.let { annotationProcessor(it) }
@@ -295,7 +295,6 @@ tasks {
 
     license {
         if (licenseChecks) {
-            rule(file("codeformat/FABRIC_QUILT_MODIFIED_HEADER"))
             rule(file("codeformat/QUILT_MODIFIED_HEADER"))
             rule(file("codeformat/HEADER"))
 
