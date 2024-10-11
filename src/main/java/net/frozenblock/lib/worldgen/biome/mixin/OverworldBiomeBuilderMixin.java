@@ -24,7 +24,9 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -32,6 +34,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(value = OverworldBiomeBuilder.class, priority = 69420)
 public class OverworldBiomeBuilderMixin {
+
+	@Shadow
+	@Final
+	private OverworldBiomeBuilder.Modifier modifier;
 
 	@Inject(
 		method = "addBiomes",
@@ -44,7 +50,7 @@ public class OverworldBiomeBuilderMixin {
 	public void frozenLib$injectFrozenBiomesToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, CallbackInfo info) {
 		for (FrozenBiome frozenBiome : FrozenBiome.getFrozenBiomes()) {
 			if (frozenBiome.isEnabled()) {
-				frozenBiome.injectToOverworld(consumer);
+				frozenBiome.injectToOverworld(consumer, this.modifier);
 			}
 		}
 	}
