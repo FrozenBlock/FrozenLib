@@ -27,6 +27,7 @@ import com.mojang.datafixers.schemas.Schema;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import java.util.List;
+import java.util.OptionalInt;
 import net.fabricmc.frozenblock.datafixer.api.DataFixerEntrypoint;
 import net.fabricmc.frozenblock.datafixer.api.SchemaRegistry;
 import net.fabricmc.loader.api.FabricLoader;
@@ -82,14 +83,14 @@ public abstract class FabricDataFixesInternals {
 
 	@Contract(pure = true)
 	@Range(from = 0, to = Integer.MAX_VALUE)
-	public static int getModDataVersion(CompoundTag nbt, String modId, @Nullable String key) {
+	public static OptionalInt getModDataVersion(CompoundTag nbt, String modId, @Nullable String key) {
 		// LEGACY
 		String legacyKey = modId + "_DataVersion";
 		if (key != null) {
 			legacyKey += ('_' + key);
 		}
 		if (nbt.contains(legacyKey)) {
-			return nbt.getInt(legacyKey);
+			return OptionalInt.of(nbt.getInt(legacyKey));
 		}
 
 		// FABRIC
@@ -99,8 +100,14 @@ public abstract class FabricDataFixesInternals {
 			nbtKey += ('_' + key);
 		}
 
+		if (!nbt.contains(DATA_VERSIONS_KEY)) {
+			return OptionalInt.empty();
+		}
 		CompoundTag dataVersions = nbt.getCompound(DATA_VERSIONS_KEY);
-		return dataVersions.getInt(nbtKey);
+		if (!dataVersions.contains(nbtKey)) {
+			return OptionalInt.empty();
+		}
+		return OptionalInt.of(dataVersions.getInt(nbtKey));
 	}
 
 	private static List<DataFixerEntrypoint> getEntrypoints() {

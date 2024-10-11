@@ -250,7 +250,7 @@ public final class FabricDataFixes {
 		Objects.requireNonNull(nbt, "compound cannot be null");
 		Objects.requireNonNull(modId, "modId cannot be null");
 
-		return FabricDataFixesInternals.getModDataVersion(nbt, modId, key);
+		return FabricDataFixesInternals.getModDataVersion(nbt, modId, key).orElse(0);
 	}
 
 	/**

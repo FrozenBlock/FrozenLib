@@ -36,6 +36,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.OptionalInt;
 
 public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals {
 	// From QSL.
@@ -87,12 +88,20 @@ public final class FabricDataFixesInternalsImpl extends FabricDataFixesInternals
 			List<DataFixerEntry> dataFixerEntries = entry.getValue();
 
 			for (DataFixerEntry dataFixerEntry : dataFixerEntries) {
-				int modDataVersion = FabricDataFixesInternals.getModDataVersion(compound, entry.getKey(), dataFixerEntry.key());
+				// Changed to OptionalInt by FrozenBlock
+				OptionalInt modDataVersion = FabricDataFixesInternals.getModDataVersion(compound, entry.getKey(), dataFixerEntry.key());
 
-				current = dataFixerEntry.dataFixer()
-						.update(dataFixTypes.type,
-								current,
-								modDataVersion, dataFixerEntry.currentVersion());
+				// Check implemented by FrozenBlock for performance
+				// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
+				if (modDataVersion.isPresent()) {
+					current = dataFixerEntry.dataFixer()
+						.update(
+							dataFixTypes.type,
+							current,
+							modDataVersion.getAsInt(),
+							dataFixerEntry.currentVersion()
+						);
+				}
 			}
 		}
 
