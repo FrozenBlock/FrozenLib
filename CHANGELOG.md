@@ -29,3 +29,4 @@ Put changelog here:
   - Due to this optimization, we recommend that any mods using FrozenLib implement a DataFixer, even an empty one, so it will have a 100% success rate of DataFixing.
 - Added `IS_DATAGEN` to the `FrozenBools` class.
   - This is useful in cases you want to remove a BlockState Property during datagen so it doesn't create unnecessary data.
+- `PlayerDamageSourceSounds` has been renamed to `PlayerDamageTypeSounds,` and now takes DamageType as a parameter instead of DamageSource.
