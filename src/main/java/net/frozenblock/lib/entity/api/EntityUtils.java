@@ -43,23 +43,14 @@ public class EntityUtils {
 		ENTITIES_PER_LEVEL.remove(level);
 	}
 
+	/**
+	 * Returns a {@link List} of entities in the {@link ServerLevel}.
+	 *
+	 * @param level The {@link ServerLevel} to check for entities in.
+	 * @return a {@link List} of entities in the {@link ServerLevel}.
+	 */
 	public static List<Entity> getEntitiesPerLevel(ServerLevel level) {
 		return ENTITIES_PER_LEVEL.computeIfAbsent(level, serverLevel -> new ArrayList<>());
-	}
-
-	public static Optional<Direction> getMovementDirectionHorizontal(@NotNull Entity entity) {
-		Direction direction = null;
-		Vec3 deltaMovement = entity.getDeltaMovement();
-		if (deltaMovement.horizontalDistance() > 0) {
-			double nonNegX = Math.abs(deltaMovement.x);
-			double nonNegZ = Math.abs(deltaMovement.z);
-			if (nonNegX > nonNegZ) {
-				direction = deltaMovement.x > 0 ? Direction.EAST : Direction.WEST;
-			} else if (nonNegZ > 0) {
-				direction = deltaMovement.z > 0 ? Direction.SOUTH : Direction.NORTH;
-			}
-		}
-		return Optional.ofNullable(direction);
 	}
 
 }

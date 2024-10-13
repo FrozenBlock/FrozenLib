@@ -24,6 +24,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.Behavior;
+import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,6 +32,9 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * {@link net.minecraft.world.entity.ai.goal.BreathAirGoal} as a behavior.
+ */
 public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 	public BreatheAir() {
 		super(ImmutableMap.of());

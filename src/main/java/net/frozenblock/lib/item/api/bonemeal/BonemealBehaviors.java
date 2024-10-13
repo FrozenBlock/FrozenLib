@@ -47,6 +47,14 @@ public class BonemealBehaviors {
 		}
 
 		void performBonemeal(ServerLevel level, RandomSource random, BlockPos pos, BlockState state);
+
+		default BlockPos getParticlePos(BlockState state, BlockPos pos) {
+			return pos;
+		}
+
+		default boolean isNeighborSpreader() {
+			return false;
+		}
 	}
 
 }

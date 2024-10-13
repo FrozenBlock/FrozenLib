@@ -45,7 +45,6 @@ public class ScaleEntityCommand {
 	}
 
 	private static int scale(CommandSourceStack source, @NotNull Collection<? extends Entity> entities, double scale) {
-		StringBuilder entityString = new StringBuilder();
 		int entityAmount = 0;
 		List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
@@ -59,13 +58,11 @@ public class ScaleEntityCommand {
 			}
 		}
 
-		boolean oneEntity = affectedEntities.size() == 1;
-		for (Entity entity : affectedEntities) {
-			entityString.append(entity.getDisplayName().getString()).append(oneEntity ? "" : ", ");
-		}
+		int entityCount = affectedEntities.size();
+		boolean oneEntity = entityCount == 1;
 
 		if (entityAmount > 0) {
-			source.sendSuccess(() -> Component.translatable(oneEntity ? "commands.scale.entity.success" : "commands.scale.entity.success.multiple", entityString.toString(), scale), true);
+			source.sendSuccess(() -> Component.translatable(oneEntity ? "commands.scale.entity.success" : "commands.scale.entity.success.multiple", entityCount, scale), true);
 			return 1;
 		} else {
 			source.sendFailure(Component.translatable("commands.scale.entity.failure"));

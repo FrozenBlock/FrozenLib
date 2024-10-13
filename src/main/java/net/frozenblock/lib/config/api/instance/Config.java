@@ -92,7 +92,7 @@ public abstract class Config<T> {
 	}
 
 	/**
-	 * @return The current config instance with modifications if applicable
+	 * @return The current config instance with modifications if applicable.
 	 */
 	public T config() {
 		if (this.supportsModification()) return ConfigModification.modifyConfig(this, this.instance(), false);
@@ -100,7 +100,7 @@ public abstract class Config<T> {
 	}
 
 	/**
-	 * @return The current config instance with config sync modifications
+	 * @return The current config instance with config sync modifications.
 	 * @since 1.5
 	 */
 	public T configWithSync() {
@@ -122,7 +122,7 @@ public abstract class Config<T> {
 	}
 
 	/**
-	 * @return The unmodified current config instance
+	 * @return The unmodified current config instance.
 	 */
 	public T instance() {
 		return this.configInstance;

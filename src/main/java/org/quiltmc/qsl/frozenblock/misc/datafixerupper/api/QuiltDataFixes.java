@@ -234,7 +234,7 @@ public class QuiltDataFixes {
 		requireNonNull(compound, "compound cannot be null");
 		requireNonNull(modId, "modId cannot be null");
 
-		return QuiltDataFixesInternals.getModDataVersion(compound, modId);
+		return QuiltDataFixesInternals.getModDataVersion(compound, modId).orElse(0);
 	}
 
     /**
@@ -250,7 +250,7 @@ public class QuiltDataFixes {
         requireNonNull(compound, "compound cannot be null");
         requireNonNull(modId, "modId cannot be null");
 
-        return QuiltDataFixesInternals.getModMinecraftDataVersion(compound, modId);
+        return QuiltDataFixesInternals.getModMinecraftDataVersion(compound, modId).orElse(0);
     }
 
     /**

@@ -17,6 +17,9 @@
 
 package net.frozenblock.lib.networking;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.UUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -27,6 +30,7 @@ import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
@@ -41,6 +45,7 @@ import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
+import net.frozenblock.lib.image_transfer.FileTransferPacket;
 import net.frozenblock.lib.sound.api.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
@@ -63,6 +68,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
@@ -116,6 +122,8 @@ public final class FrozenNetworking {
 		registry.register(SpottingIconRemovePacket.PACKET_TYPE, SpottingIconRemovePacket.CODEC);
 		registry.register(WindSyncPacket.PACKET_TYPE, WindSyncPacket.CODEC);
 		registry.register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
+
+		// CAPE
 		registry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
 		registry.register(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.STREAM_CODEC);
 		c2sRegistry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
@@ -125,6 +133,29 @@ public final class FrozenNetworking {
 				ResourceLocation capeId = packet.getCapeId();
 				if (capeId == null || CapeUtil.canPlayerUserCape(uuid, capeId)) {
 					CapeCustomizePacket.sendCapeToAll(ctx.server(), uuid, capeId);
+				}
+			}
+		);
+
+		// FILE TRANSFER
+		registry.register(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC);
+		c2sRegistry.register(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE,
+			(packet, ctx) -> {
+				if (packet.request()) {
+					Path path = ctx.server().getServerDirectory().toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+					try {
+						FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
+						ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
+					} catch (IOException ignored) {
+					}
+				} else {
+					if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
+					try {
+						Path path = ctx.server().getServerDirectory().toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+						FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
+					} catch (IOException ignored) {
+					}
 				}
 			}
 		);

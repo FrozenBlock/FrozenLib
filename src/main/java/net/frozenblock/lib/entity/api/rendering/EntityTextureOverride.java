@@ -27,6 +27,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Used to override an entity's texture if a condition is met.
@@ -36,11 +37,32 @@ import net.minecraft.world.entity.LivingEntity;
 @Environment(EnvType.CLIENT)
 public record EntityTextureOverride<T extends LivingEntity>(EntityType<T> type, ResourceLocation texture, Condition<T> condition) {
 
+	/**
+	 * Creates and registers an {@link EntityTextureOverride} based on an entity's name, not-case-sensitive.
+	 *
+	 * @param key The {@link ResourceLocation} to register the {@link EntityTextureOverride} to.
+	 * @param type The {@link EntityType} to register the {@link EntityTextureOverride} for.
+	 * @param texture The texture to use while enabled.
+	 * @param names Names that will cause the {@link EntityTextureOverride} to trigger.
+	 * @return The created {@link EntityTextureOverride}.
+	 */
 	public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, String... names) {
 		return register(key, type, texture, false, names);
 	}
 
-	public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, boolean caseSensitive, String... names) {
+	/**
+	 * Creates and registers an {@link EntityTextureOverride} based on an entity's name.
+	 *
+	 * @param key The {@link ResourceLocation} to register the {@link EntityTextureOverride} to.
+	 * @param type The {@link EntityType} to register the {@link EntityTextureOverride} for.
+	 * @param texture The texture to use while enabled.
+	 * @param caseSensitive Whether the texture override checks for the same case in the entity's name.
+	 * @param names Names that will cause the {@link EntityTextureOverride} to trigger.
+	 * @return The created {@link EntityTextureOverride}.
+	 */
+	public static <T extends LivingEntity> EntityTextureOverride<T> register(
+		ResourceLocation key, EntityType<T> type, ResourceLocation texture, boolean caseSensitive, String... names
+	) {
 		return register(key, type, texture, entity -> {
 			String entityName = ChatFormatting.stripFormatting(entity.getName().getString());
 			AtomicBoolean isNameCorrect = new AtomicBoolean(false);
@@ -65,7 +87,18 @@ public record EntityTextureOverride<T extends LivingEntity>(EntityType<T> type, 
 		});
 	}
 
-	public static <T extends LivingEntity> EntityTextureOverride<T> register(ResourceLocation key, EntityType<T> type, ResourceLocation texture, Condition<T> condition) {
+	/**
+	 * Creates and registers an {@link EntityTextureOverride}.
+	 *
+	 * @param key The {@link ResourceLocation} to register the {@link EntityTextureOverride} to.
+	 * @param type The {@link EntityType} to register the {@link EntityTextureOverride} for.
+	 * @param texture The texture to use while enabled.
+	 * @param condition The conditions to be met in order to override the entity's texture.
+	 * @return The created {@link EntityTextureOverride}.
+	 */
+	public static <T extends LivingEntity> @NotNull EntityTextureOverride<T> register(
+		ResourceLocation key, EntityType<T> type, ResourceLocation texture, Condition<T> condition
+	) {
 		return Registry.register(FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(type, texture, condition));
 	}
 

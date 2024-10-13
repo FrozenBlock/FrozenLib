@@ -52,12 +52,16 @@ public class FrozenLibConfig {
 			public void onSync(FrozenLibConfig syncInstance) {
 				var config = this.config();
 				USE_WIND_ON_NON_FROZEN_SERVERS = config.useWindOnNonFrozenServers;
+				FILE_TRANSFER_SERVER = config.fileTransferServer;
+				FILE_TRANSFER_CLIENT = config.fileTransferClient;
 				IS_DEBUG = config.isDebug && FabricLoader.getInstance().isDevelopmentEnvironment();
 			}
 		}
 	);
 
 	public static volatile boolean USE_WIND_ON_NON_FROZEN_SERVERS = true;
+	public static volatile boolean FILE_TRANSFER_SERVER = true;
+	public static volatile boolean FILE_TRANSFER_CLIENT = true;
 	public static volatile boolean IS_DEBUG = false;
 
 	@Comment("Mods may override any of these options, but the config file will not change.")
@@ -76,6 +80,12 @@ public class FrozenLibConfig {
 
 	@EntrySyncData("wardenSpawnTrackerCommand")
 	public boolean wardenSpawnTrackerCommand = false;
+
+	@EntrySyncData("fileTransferServer")
+	public boolean fileTransferServer = true;
+
+	@EntrySyncData(value = "fileTransferClient", behavior = SyncBehavior.UNSYNCABLE)
+	public boolean fileTransferClient = true;
 
 	@EntrySyncData(value = "cape", behavior = SyncBehavior.UNSYNCABLE)
 	public String cape = FrozenSharedConstants.string("dummy");

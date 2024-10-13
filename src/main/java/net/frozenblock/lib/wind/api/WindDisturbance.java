@@ -32,6 +32,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Used to create areas with custom, differing wind patterns.
+ *
+ * <p> Once added to a {@link WindManager} or {@link ClientWindManager}, will be used for one tick and cleared the next.
+ * <p> Define the origin and affected area of a disturbance here, and define the logic used with a {@link WindDisturbanceLogic} instance.
+ */
 public class WindDisturbance<T> {
 	public static final DisturbanceResult DUMMY_RESULT = new DisturbanceResult(0D, 0D, Vec3.ZERO);
 
