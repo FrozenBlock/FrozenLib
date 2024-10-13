@@ -80,7 +80,7 @@ public class NaturalSpawnerMixin {
 		BlockPos blockPos2 = pos.below();
 		if (SpawnPlacements.getPlacementType(entityType) == FrozenSpawnPlacementTypes.ON_GROUND_OR_ON_LAVA_SURFACE) {
 			BlockState belowState = level.getBlockState(blockPos2);
-			if (!belowState.isValidSpawn(level, blockPos2, entityType) && !belowState.getFluidState().is(FluidTags.LAVA) && !belowState.is(Blocks.MAGMA_BLOCK)) {
+			if (!belowState.isValidSpawn(level, blockPos2, entityType) && !frozenLib$isSurfaceLavaOrMagma(level, blockPos, belowState)) {
 				info.setReturnValue(false);
 			} else {
 				info.setReturnValue(frozenLib$isValidEmptySpawnBlock(level, blockPos, entityType));
@@ -88,6 +88,13 @@ public class NaturalSpawnerMixin {
 			}
 			info.setReturnValue(false);
 		}
+	}
+
+	@Unique
+	private static boolean frozenLib$isSurfaceLavaOrMagma(LevelReader levelReader, BlockPos blockPos, BlockState belowState) {
+		BlockState blockState = levelReader.getBlockState(blockPos);
+		return (belowState.getFluidState().is(FluidTags.LAVA) || belowState.is(Blocks.MAGMA_BLOCK))
+			&& !(blockState.getFluidState().is(FluidTags.LAVA) || blockState.is(Blocks.MAGMA_BLOCK));
 	}
 
 	@Unique

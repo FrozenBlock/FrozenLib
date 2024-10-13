@@ -31,9 +31,9 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Wrapper class for modifying configs
- * @param modification The consumer for applying modifications
- * @param <T> The type of the config class
+ * Wrapper class for modifying configs.
+ * @param modification The consumer for applying modifications.
+ * @param <T> The type of the config class.
  */
 public record ConfigModification<T>(Consumer<T> modification) {
 

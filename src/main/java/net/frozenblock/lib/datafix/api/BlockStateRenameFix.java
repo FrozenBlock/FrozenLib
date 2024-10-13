@@ -25,6 +25,9 @@ import com.mojang.serialization.Dynamic;
 import java.util.Optional;
 import net.minecraft.util.datafix.fixes.References;
 
+/**
+ * A {@link DataFix} specialized for fixing the name of a BlockState Property.
+ */
 public class BlockStateRenameFix extends DataFix {
 
     private final String name;

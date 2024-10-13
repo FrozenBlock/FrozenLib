@@ -24,6 +24,7 @@ import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import java.util.Collections;
 import java.util.Map;
+import java.util.OptionalInt;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
@@ -94,27 +95,39 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> current) {
         var compound = (CompoundTag) current.getValue();
 
+		// Minecraft fixer added by FrozenBlock
 		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			int modDataVersion = getModMinecraftDataVersion(compound, entry.getKey());
+			// Changed to OptionalInt by FrozenBlock
+			OptionalInt modDataVersion = getModMinecraftDataVersion(compound, entry.getKey());
 			DataFixerEntry dataFixerEntry = entry.getValue();
-			current = dataFixerEntry.dataFixer().update(
-				DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
-				current,
-				modDataVersion,
-				dataFixerEntry.currentVersion()
-			);
+
+			// Check implemented by FrozenBlock for performance.
+			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
+			if (modDataVersion.isPresent()) {
+				current = dataFixerEntry.dataFixer().update(
+					DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
+					current,
+					modDataVersion.getAsInt(),
+					dataFixerEntry.currentVersion()
+				);
+			}
 		}
 
         for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-            int modDataVersion = getModDataVersion(compound, entry.getKey());
+			// Changed to OptionalInt by FrozenBlock
+            OptionalInt modDataVersion = getModDataVersion(compound, entry.getKey());
             DataFixerEntry dataFixerEntry = entry.getValue();
 
-			current = dataFixerEntry.dataFixer().update(
-				DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
-				current,
-				modDataVersion,
-				dataFixerEntry.currentVersion()
-			);
+			// Check implemented by FrozenBlock for performance.
+			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
+			if (modDataVersion.isPresent()) {
+				current = dataFixerEntry.dataFixer().update(
+					DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
+					current,
+					modDataVersion.getAsInt(),
+					dataFixerEntry.currentVersion()
+				);
+			}
         }
 
         return current;

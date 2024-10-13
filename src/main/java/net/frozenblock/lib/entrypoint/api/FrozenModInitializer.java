@@ -23,6 +23,9 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
+/**
+ * An edited version of {@link ModInitializer} that contains extra tools for ease of use.
+ */
 public abstract class FrozenModInitializer implements ModInitializer {
 
 	private final String modId;
@@ -40,18 +43,32 @@ public abstract class FrozenModInitializer implements ModInitializer {
 
 	public abstract void onInitialize(String modId, ModContainer container);
 
+	/**
+	 * @return this mod's id.
+	 */
 	public String modId() {
 		return this.modId;
 	}
 
+	/**
+	 * @return the {@link ModContainer} of the mod being initialized.
+	 */
 	public ModContainer container() {
 		return this.container;
 	}
 
+	/**
+	 * @return a {@link ResourceLocation} with this mod's id as the namespace.
+	 */
 	public ResourceLocation id(String path) {
 		return new ResourceLocation(this.modId, path);
 	}
 
+	/**
+	 * Registers an object using this mod's id as the namespace.
+	 *
+	 * @return the registered value.
+	 */
 	public <T> T register(Registry<T> registry, String path, T value) {
 		return Registry.register(registry, this.id(path), value);
 	}

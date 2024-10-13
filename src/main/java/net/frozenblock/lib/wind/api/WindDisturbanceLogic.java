@@ -28,6 +28,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * The logic to be used while calculating the strength and movement of a {@link WindDisturbance}.
+ *
+ * <p> For the sake of syncing with the client and working properly overall, it is highly recommended you use the register method here.
+ */
 public final class WindDisturbanceLogic<T> {
 	public static final ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default");
 

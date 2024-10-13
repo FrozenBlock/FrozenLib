@@ -17,29 +17,21 @@
 
 package net.frozenblock.lib.sound.mixin;
 
-import net.frozenblock.lib.sound.api.damagesource.PlayerDamageSourceSounds;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.frozenblock.lib.sound.api.damagesource.PlayerDamageTypeSounds;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
-@Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin {
+@Mixin(Player.class)
+public class PlayerMixin {
 
-	@ModifyVariable(method = "playHurtSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
+	@ModifyReturnValue(method = "getHurtSound", at = @At("RETURN"))
 	private SoundEvent playHurtSound(SoundEvent original, DamageSource source) {
-		if (PlayerDamageSourceSounds.containsSource(source)) {
-			return PlayerDamageSourceSounds.getDamageSound(source);
-		}
-		return original;
-	}
-
-	@ModifyVariable(method = "handleDamageEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
-	private SoundEvent handleDamageEvent(SoundEvent original, DamageSource source) {
-		if (PlayerDamageSourceSounds.containsSource(source)) {
-			return PlayerDamageSourceSounds.getDamageSound(source);
+		if (PlayerDamageTypeSounds.containsSource(source.type())) {
+			return PlayerDamageTypeSounds.getDamageSound(source.type());
 		}
 		return original;
 	}
