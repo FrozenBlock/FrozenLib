@@ -101,7 +101,6 @@ public final class FrozenClientNetworking {
 		receiveWindSyncPacket();
 		receiveWindDisturbancePacket();
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket::receive);
-		receiveTransferImagePacket();
 		receiveCapePacket();
 		receiveCapeRepoPacket();
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx, sender) ->
@@ -370,31 +369,6 @@ public final class FrozenClientNetworking {
 						disturbanceLogic.get()
 					)
 				);
-			}
-		});
-	}
-
-	private static void receiveTransferImagePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
-			if (packet.request()) {
-				Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
-				try {
-					FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
-					ClientPlayNetworking.send(fileTransferPacket);
-				} catch (IOException ignored) {
-					FrozenSharedConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
-				}
-			} else {
-				try {
-					Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
-					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
-					ServerTexture serverTexture = ServerTexture.WAITING_TEXTURES.get(packet.transferPath() + "/" + packet.fileName());
-					if (serverTexture != null) {
-						serverTexture.runFutureForTexture();
-					}
-				} catch (IOException ignored) {
-					FrozenSharedConstants.LOGGER.error("Unable save transferred file {}!", packet.fileName());
-				}
 			}
 		});
 	}
