@@ -23,7 +23,7 @@ import net.minecraft.world.entity.animal.AbstractFish;
 import net.minecraft.world.level.Level;
 
 /**
- * This is the same as {@link AbstractFish} but the entity will not flop when on land.
+ * This is the same as {@link AbstractFish} but the entity will not flop while on land.
  */
 public abstract class NoFlopAbstractFish extends AbstractFish {
 
@@ -39,6 +39,7 @@ public abstract class NoFlopAbstractFish extends AbstractFish {
 	/**
 	 * Acts as a form of access widener.
 	 */
+	@Override
 	public boolean canRandomSwim() {
 		return super.canRandomSwim();
 	}

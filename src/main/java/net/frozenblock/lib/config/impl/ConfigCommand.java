@@ -28,11 +28,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public final class ConfigCommand {
 	private ConfigCommand() {}
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("frozenlib_config")
 			.then(Commands.literal("reload")
 				.then(Commands.argument("modId", StringArgumentType.string())

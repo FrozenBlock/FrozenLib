@@ -23,7 +23,16 @@ import java.util.stream.Collectors;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 
+/**
+ * A helper class for adding new {@link MobEffect}s to the Beacon.
+ */
 public class BeaconEffectRegistry {
+	/**
+	 * Adds a {@link MobEffect} to the Beacon.
+	 *
+	 * @param effect The {@link MobEffect} to add.
+	 * @param tier The tier to add the {@link MobEffect} to. Tier 4 contains Regeneration and can be used simultaneously with tier 1-3 effects.
+	 */
 	public static void register(MobEffect effect, int tier) {
 		if (tier <= 0 || tier >= 4) {
 			throw new IllegalArgumentException("Attempted to register Beacon effect " + effect.getDisplayName().getString() + " at tier " + tier + ". Tier must be between 1 and 4.");
