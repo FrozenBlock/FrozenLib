@@ -27,6 +27,12 @@ import net.minecraft.world.phys.Vec3;
 @Environment(EnvType.CLIENT)
 public class FrustumUtil {
 
+	/**
+	 * Returns if an area is visible in the client's frustum.
+	 *
+	 * @param aabb The area to check.
+	 * @return if an area is visible in the client's frustum.
+	 */
 	public static boolean isVisible(AABB aabb) {
 		Frustum frustum = Minecraft.getInstance().levelRenderer.cullingFrustum;
 		if (frustum != null) {
@@ -35,6 +41,13 @@ public class FrustumUtil {
 		return true;
 	}
 
+	/**
+	 * Returns if a position is visible in the client's frustum.
+	 *
+	 * @param pos The position to check.
+	 * @param area The area around the position to check.
+	 * @return if a position is visible in the client's frustum.
+	 */
 	public static boolean isVisible(Vec3 pos, double area) {
 		return isVisible(AABB.ofSize(pos, area, area, area));
 	}

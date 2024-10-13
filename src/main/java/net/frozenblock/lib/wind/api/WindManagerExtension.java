@@ -22,19 +22,50 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 
+/**
+ * Used to add custom logic to the {@link WindManager}.
+ */
 public interface WindManagerExtension {
 
 	ResourceLocation extensionID();
 
+	/**
+	 * Runs after the baseTick method.
+	 */
 	void tick(ServerLevel level);
 
+	/**
+	 * Runs before the regular tick method.
+	 */
 	void baseTick(ServerLevel level);
 
+	/**
+	 * Used to reset defined values in the rare case of an overflow.
+	 *
+	 * <p> Please both check and trigger the resets in this method.
+	 *
+	 * @return whether a reset was needed and run.
+	 */
 	boolean runResetsIfNeeded();
 
-	void createSyncByteBuf(FriendlyByteBuf original);
+	/**
+	 * Appends custom data to be synced to the player alongside other wind data.
+	 *
+	 * @param byteBuf The provided {@link FriendlyByteBuf} to be sent to the client.
+	 */
+	void createSyncByteBuf(FriendlyByteBuf byteBuf);
 
+	/**
+	 * Loads custom data.
+	 *
+	 * @param compoundTag The {@link CompoundTag} to read from.
+	 */
 	void load(CompoundTag compoundTag);
 
+	/**
+	 * Saves custom data.
+	 *
+	 * @param compoundTag The {@link CompoundTag} to write to.
+	 */
 	void save(CompoundTag compoundTag);
 }

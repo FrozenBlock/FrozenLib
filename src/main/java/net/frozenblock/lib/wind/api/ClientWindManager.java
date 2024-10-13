@@ -38,6 +38,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Handles wind on the client side.
+ */
 @Environment(EnvType.CLIENT)
 public final class ClientWindManager {
 	public static final List<ClientWindManagerExtension> EXTENSIONS = new ObjectArrayList<>();
@@ -90,10 +93,20 @@ public final class ClientWindManager {
 	public static double laggedWindZ;
 	public static boolean hasInitialized;
 
+	/**
+	 * Adds a {@link ClientWindManagerExtension}.
+	 *
+	 * @param extension the {@link ClientWindManagerExtension} to add.
+	 */
 	public static void addExtension(@Nullable Supplier<ClientWindManagerExtension> extension) {
 		if (extension != null) addExtension(extension.get());
 	}
 
+	/**
+	 * Adds a {@link ClientWindManagerExtension}.
+	 *
+	 * @param extension the {@link ClientWindManagerExtension} to add.
+	 */
 	public static void addExtension(@Nullable ClientWindManagerExtension extension) {
 		if (extension != null) EXTENSIONS.add(extension);
 	}
@@ -104,18 +117,30 @@ public final class ClientWindManager {
 		noise = EasyNoiseSampler.createXoroNoise(seed);
 	}
 
+	/**
+	 * @return the current global wind's lerped X value.
+	 */
 	public static double getWindX(float partialTick) {
 		return Mth.lerp(partialTick, prevWindX, windX);
 	}
 
+	/**
+	 * @return the current global wind's lerped Y value.
+	 */
 	public static double getWindY(float partialTick) {
 		return Mth.lerp(partialTick, prevWindY, windY);
 	}
 
+	/**
+	 * @return the current global wind's lerped Z value.
+	 */
 	public static double getWindZ(float partialTick) {
 		return Mth.lerp(partialTick, prevWindZ, windZ);
 	}
 
+	/**
+	 * @return whether wind is currently enabled.
+	 */
 	public static boolean shouldUseWind() {
 		return hasInitialized || FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS;
 	}
@@ -158,36 +183,94 @@ public final class ClientWindManager {
 		}
 	}
 
+	/**
+	 * Returns the wind movement at the bottom center of a specified {@link BlockPos}.
+	 *
+	 * @param level The {@link Level} to read from.
+	 * @param pos The {@link BlockPos} to check.
+	 * @return the wind movement at the bottom center of the specified {@link BlockPos}.
+	 */
 	@NotNull
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos) {
 		return getWindMovement(level, Vec3.atBottomCenterOf(pos));
 	}
 
+	/**
+	 * Returns the wind movement at the bottom center of a specified {@link BlockPos}, multiplied.
+	 *
+	 * @param level The {@link Level} to read from.
+	 * @param pos The {@link BlockPos} to check.
+	 * @param scale Multiplies the returned value.
+	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied.
+	 */
 	@NotNull
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos, double scale) {
 		return getWindMovement(level, Vec3.atBottomCenterOf(pos), scale);
 	}
 
+	/**
+	 * Returns the wind movement at the bottom center of a specified {@link BlockPos}, multiplied and clamped.
+	 *
+	 * @param level The {@link Level} to read from.
+	 * @param pos The {@link BlockPos} to check.
+	 * @param scale Multiplies the returned value.
+	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
+	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied and clamped.
+	 */
 	@NotNull
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos, double scale, double clamp) {
 		return getWindMovement(level, Vec3.atBottomCenterOf(pos), scale, clamp);
 	}
 
+	/**
+	 * Returns the wind movement at the center of a specified {@link Vec3}.
+	 *
+	 * @param level The {@link Level} to read from.
+	 * @param pos The {@link Vec3} to check.
+	 * @return the wind movement at the specified {@link Vec3}.
+	 */
 	@NotNull
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos) {
 		return getWindMovement(level, pos, 1D);
 	}
 
+	/**
+	 * Returns the wind movement at a specified {@link Vec3}, multiplied.
+	 *
+	 * @param level The {@link Level} to read from.
+	 * @param pos The {@link Vec3} to check.
+	 * @param scale Multiplies the returned value.
+	 * @return the wind movement at the specified {@link Vec3}, multiplied.
+	 */
 	@NotNull
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale) {
 		return getWindMovement(level, pos, scale, Double.MAX_VALUE);
 	}
 
+	/**
+	 * Returns the wind movement at a specified {@link Vec3}, multiplied and clamped.
+	 *
+	 * @param level The {@link Level} to read from.
+	 * @param pos The {@link BlockPos} to check.
+	 * @param scale Multiplies the returned value.
+	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
+	 * @return the wind movement at the specified {@link Vec3}, multiplied and clamped.
+	 */
 	@NotNull
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale, double clamp) {
 		return getWindMovement(level, pos, scale, clamp, 1D);
 	}
 
+	/**
+	 * Returns the wind movement at a specified {@link Vec3}, multiplied, clamped, and with a separately multiplied wind disturbance value.
+	 *
+	 * @param level The {@link Level} to read from.
+	 * @param pos The {@link BlockPos} to check.
+	 * @param scale Multiplies the returned value.
+	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
+	 * @param windDisturbanceScale Multiplies the wind disturbance value.
+	 * @return the wind movement at the specified {@link Vec3}, multiplied, clamped, and with a separately multiplied wind disturbance value.
+	 */
 	@NotNull
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
 		double brightness = level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
@@ -206,6 +289,13 @@ public final class ClientWindManager {
 		);
 	}
 
+	/**
+	 * Returns only the wind disturbance at the specified {@link Vec3}.
+	 *
+	 * @param level The {@link Level} to read from.
+	 * @param pos The {@link BlockPos} to check.
+	 * @return the wind disturbance at the specified {@link Vec3}.
+	 */
 	@NotNull
 	public static Vec3 getRawDisturbanceMovement(@NotNull Level level, @NotNull Vec3 pos) {
 		Pair<Double, Vec3> disturbance = WindManager.calculateWindDisturbance(getWindDisturbances(), level, pos);
@@ -221,31 +311,37 @@ public final class ClientWindManager {
 		);
 	}
 
+	@Deprecated
 	@NotNull
 	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double stretch) {
 		return getWindMovement3D(Vec3.atBottomCenterOf(pos), stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double stretch) {
 		return getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double clamp, double stretch) {
 		return getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, clamp, stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double stretch) {
 		return getWindMovement3D(pos, 1D, stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double stretch) {
 		return getWindMovement3D(pos, scale, Double.MAX_VALUE, stretch);
 	}
 
+	@Deprecated
 	@NotNull
 	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double clamp, double stretch) {
 		Vec3 wind = sample3D(pos, stretch);
@@ -269,6 +365,7 @@ public final class ClientWindManager {
 		}
 	}
 
+	@Deprecated
 	@NotNull
 	public static Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
 		double sampledTime = time * 0.1D;

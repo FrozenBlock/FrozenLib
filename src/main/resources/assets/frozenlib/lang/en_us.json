@@ -45,15 +45,20 @@
   "option.frozenlib.warden_spawn_tracker_command.true": "§aON",
   "tooltip.frozenlib.warden_spawn_tracker_command": "Enables or disables the Warden Spawn Tracker command.",
 
+  "option.frozenlib.file_transfer_server": "Server Receives Files",
+  "tooltip.frozenlib.file_transfer_server": "Whether the server can receive files from clients.",
+  "option.frozenlib.file_transfer_client": "Client File Transfer",
+  "tooltip.frozenlib.file_transfer_client": "Whether the client can send/receive files to/from the server.\nThis is intended to be used for features such as sharing screenshots.\nThis config is implemented for the sake of security.",
+
   "option.frozenlib.cape": "Cape",
   "tooltip.frozenlib.cape": "A list of capes added through FrozenLib.\nClick to select the next cape.",
 
   "cape.frozenlib.invalid": "§cINVALID",
   "cape.frozenlib.dummy": "§cNone",
 
-  "commands.wind.display.global.success": "The global wind is currently: %s, %s, %s.",
-  "commands.wind.display.pos.success": "The wind at %s, %s, %s currently: %s, %s, %s.",
-  "commands.wind.success": "Set wind to %s, %s, %s.",
+  "commands.wind.display.global.success": "The global wind is currently: %.6f, %.6f, %.6f.",
+  "commands.wind.display.pos.success": "The wind at %.6f, %.6f, %.6f currently: %.6f, %.6f, %.6f.",
+  "commands.wind.success": "Set wind to %.6f, %.6f, %.6f.",
   "commands.wind.toggle.success": "%s wind override.",
   "commands.wind.toggle.failure": "Wind override is already %s.",
 

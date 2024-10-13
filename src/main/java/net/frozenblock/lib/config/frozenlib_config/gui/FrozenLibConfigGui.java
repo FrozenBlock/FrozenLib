@@ -118,6 +118,32 @@ public final class FrozenLibConfigGui {
 				)
 		);
 
+		var fileTransferServer = category.addEntry(
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startBooleanToggle(text("file_transfer_server"), modifiedConfig.fileTransferServer)
+					.setDefaultValue(defaultConfig.fileTransferServer)
+					.setSaveConsumer(newValue -> config.fileTransferServer = newValue)
+					.setTooltip(tooltip("file_transfer_server"))
+					.build(),
+				config.getClass(),
+				"fileTransferServer",
+				configInstance
+			)
+		);
+
+		var fileTransferClient = category.addEntry(
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startBooleanToggle(text("file_transfer_client"), modifiedConfig.fileTransferClient)
+					.setDefaultValue(defaultConfig.fileTransferClient)
+					.setSaveConsumer(newValue -> config.fileTransferClient = newValue)
+					.setTooltip(tooltip("file_transfer_client"))
+					.build(),
+				config.getClass(),
+				"fileTransferClient",
+				configInstance
+			)
+		);
+
 		var disabledDataFixTypes = FrozenClothConfig.syncedEntry(
 			entryBuilder.startStrList(text("disabled_datafix_types"), modifiedConfig.dataFixer.disabledDataFixTypes)
 				.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
