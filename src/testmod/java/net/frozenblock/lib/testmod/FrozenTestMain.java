@@ -20,9 +20,9 @@ package net.frozenblock.lib.testmod;
 import com.mojang.datafixers.schemas.Schema;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.frozenblock.datafixer.api.FabricDataFixerBuilder;
-import net.fabricmc.frozenblock.datafixer.api.FabricDataFixes;
-import net.fabricmc.frozenblock.datafixer.api.SimpleFixes;
+//import net.fabricmc.frozenblock.datafixer.api.FabricDataFixerBuilder;
+//import net.fabricmc.frozenblock.datafixer.api.FabricDataFixes;
+//import net.fabricmc.frozenblock.datafixer.api.SimpleFixes;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenSharedConstants;
@@ -107,12 +107,13 @@ public final class FrozenTestMain implements ModInitializer {
 
 	private static void applyDataFixes(ModContainer mod) {
 		LOGGER.info("Applying DataFixes for FrozenLib Testmod");
-		var builder = new FabricDataFixerBuilder(DATA_VERSION);
-		builder.addSchema(0, FabricDataFixes.getBaseSchema());
-		Schema schemaV1 = builder.addSchema(1, NamespacedSchema::new);
-		SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenSharedConstants.id("camera"), id("camera"), schemaV1);
+		// TODO: add back datafixers
+		//var builder = new FabricDataFixerBuilder(DATA_VERSION);
+		//builder.addSchema(0, FabricDataFixes.getBaseSchema());
+		//Schema schemaV1 = builder.addSchema(1, NamespacedSchema::new);
+		//SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenSharedConstants.id("camera"), id("camera"), schemaV1);
 
-		FabricDataFixes.buildAndRegisterFixer(mod, builder);
+		//FabricDataFixes.buildAndRegisterFixer(mod, builder);
 		LOGGER.info("DataFixes for FrozenLib Testmod have been applied");
 	}
 
