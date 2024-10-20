@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.UUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
@@ -106,7 +106,7 @@ public final class FrozenClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx, sender) ->
 			ConfigSyncPacket.receive(packet, null)
 		);
-		ClientConfigurationConnectionEvents.DISCONNECT.register(((handler, client) -> {
+		ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
 			for (Config<?> config : ConfigRegistry.getAllConfigs()) {
 				ConfigRegistry.setSyncData(config, null);
 				config.setSynced(false);

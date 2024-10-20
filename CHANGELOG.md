@@ -30,3 +30,4 @@ Put changelog here:
 - Added `IS_DATAGEN` to the `FrozenBools` class.
   - This is useful in cases you want to remove a BlockState Property during datagen so it doesn't create unnecessary data.
 - `PlayerDamageSourceSounds` has been renamed to `PlayerDamageTypeSounds,` and now takes DamageType as a parameter instead of DamageSource.
+- Added missing particle-related features to `BonemealBehaviors` in 1.21+.
