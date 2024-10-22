@@ -264,7 +264,7 @@ dependencies {
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    relocModApi("com.github.Treetrain1:Jankson:mod-SNAPSHOT")
+    relocModApi("com.github.AViewFromTheTop:Jankson:mod-SNAPSHOT")
 
     // ExJson
     //relocModApi("org.exjson:xjs-data:$xjs_data_version")
