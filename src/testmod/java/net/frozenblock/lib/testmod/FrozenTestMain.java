@@ -20,9 +20,11 @@ package net.frozenblock.lib.testmod;
 import com.mojang.datafixers.schemas.Schema;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
+/*
 import net.fabricmc.frozenblock.datafixer.api.FabricDataFixerBuilder;
 import net.fabricmc.frozenblock.datafixer.api.FabricDataFixes;
 import net.fabricmc.frozenblock.datafixer.api.SimpleFixes;
+ */
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenSharedConstants;
@@ -101,6 +103,7 @@ public final class FrozenTestMain implements ModInitializer {
 	private static final int DATA_VERSION = 1;
 
 	private static void applyDataFixes(ModContainer mod) {
+		/*
 		LOGGER.info("Applying DataFixes for FrozenLib Testmod");
 		var builder = new FabricDataFixerBuilder(DATA_VERSION);
 		builder.addSchema(0, FabricDataFixes.getBaseSchema());
@@ -109,6 +112,7 @@ public final class FrozenTestMain implements ModInitializer {
 
 		FabricDataFixes.buildAndRegisterFixer(mod, builder);
 		LOGGER.info("DataFixes for FrozenLib Testmod have been applied");
+		 */
 	}
 
 	public static ResourceLocation id(String path) {
