@@ -6,3 +6,5 @@ Put changelog here:
 
 -----------------
 - Updated to Kotlin 2.0.21
+- Block sound overwrites now work on servers.
+- FrozenLib's `fabric.mod.json` no longer requires a specific Fabric API.
