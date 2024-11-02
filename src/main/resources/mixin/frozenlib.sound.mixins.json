@@ -8,9 +8,7 @@
   },
   "mixins": [
     "EntityMixin",
-    "PlayerMixin"
-  ],
-  "client": [
-    "client.BlockBehaviourMixin"
+    "PlayerMixin",
+    "BlockBehaviourMixin"
   ]
 }
