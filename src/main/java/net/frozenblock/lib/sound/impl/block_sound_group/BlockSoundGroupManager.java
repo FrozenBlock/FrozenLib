@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
@@ -48,6 +49,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -63,12 +65,11 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 	private Map<ResourceLocation, BlockSoundGroupOverwrite> overwrites;
 	private final Map<ResourceLocation, BlockSoundGroupOverwrite> queuedOverwrites = new Object2ObjectOpenHashMap<>();
 
-	@Nullable
 	public List<BlockSoundGroupOverwrite> getOverwrites() {
 		if (this.overwrites != null) {
 			return this.overwrites.values().stream().toList();
 		}
-		return null;
+		return List.of();
 	}
 
 	@Nullable
@@ -76,15 +77,15 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 		return this.overwrites.get(id);
 	}
 
+	public Optional<BlockSoundGroupOverwrite> getOptionalOverwrite(ResourceLocation id) {
+		return Optional.ofNullable(this.overwrites.get(id));
+	}
+
 	/**
 	 * Adds a block with the specified {@link ResourceLocation}.
 	 */
 	public void addBlock(ResourceLocation key, SoundType sounds, BooleanSupplier condition) {
-		if (!BuiltInRegistries.BLOCK.containsKey(key)) {
-			FrozenLogUtils.log("Error whilst adding a block to BlockSoundGroupOverwrites: The specified block id has not been added to the Registry", true);
-		} else {
-			this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
-		}
+		this.queuedOverwrites.put(getPath(key), new BlockSoundGroupOverwrite(key, sounds, condition));
 	}
 
 	/**
@@ -108,7 +109,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 		addBlock(key, sounds, condition);
 	}
 
-	public void addBlocks(Block[] blocks, SoundType sounds, BooleanSupplier condition) {
+	public void addBlocks(Block @NotNull [] blocks, SoundType sounds, BooleanSupplier condition) {
 		for (Block block : blocks) {
 			var key = BuiltInRegistries.BLOCK.getKey(block);
 			addBlock(key, sounds, condition);
@@ -128,7 +129,8 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 		}
 	}
 
-	public static ResourceLocation getPath(ResourceLocation blockId) {
+	@Contract("_ -> new")
+	public static @NotNull ResourceLocation getPath(@NotNull ResourceLocation blockId) {
 		return ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), DIRECTORY + "/" + blockId.getPath() + ".json");
 	}
 
@@ -172,7 +174,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 			profiler.pop();
 		}
 
-		private void addOverwrite(ResourceLocation id, Resource resource) {
+		private void addOverwrite(ResourceLocation id, @NotNull Resource resource) {
 			BufferedReader reader;
 			try {
 				reader = resource.openAsReader();
@@ -190,7 +192,7 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 			}
 
 			ResourceLocation overwriteId = ResourceLocation.fromNamespaceAndPath(id.getNamespace(), id.getPath().substring((DIRECTORY + "/").length()));
-			overwrites.put(overwriteId, result.result().orElseThrow().getFirst());
+			this.overwrites.put(overwriteId, result.result().orElseThrow().getFirst());
 		}
 
 	}
