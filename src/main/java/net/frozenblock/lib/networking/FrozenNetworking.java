@@ -100,7 +100,8 @@ public final class FrozenNetworking {
 				} else {
 					if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
 					try {
-						Path path = player.server.getServerDirectory().toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+
+						Path path = player.server.getServerDirectory().toPath().resolve(packet.transferPath().replace(".local/", "")).resolve(packet.fileName());
 						FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
 					} catch (IOException ignored) {
 					}
