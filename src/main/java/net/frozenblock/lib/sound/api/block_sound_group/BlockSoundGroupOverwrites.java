@@ -18,13 +18,16 @@
 package net.frozenblock.lib.sound.api.block_sound_group;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -38,7 +41,6 @@ public class BlockSoundGroupOverwrites {
 
 	private static final BlockSoundGroupManager MANAGER = BlockSoundGroupManager.INSTANCE;
 
-	@Nullable
 	public static List<BlockSoundGroupOverwrite> getOverwrites() {
 		return MANAGER.getOverwrites();
 	}
@@ -46,6 +48,16 @@ public class BlockSoundGroupOverwrites {
 	@Nullable
 	public static BlockSoundGroupOverwrite getOverwrite(ResourceLocation id) {
 		return MANAGER.getOverwrite(id);
+	}
+
+	public static @NotNull Optional<BlockSoundGroupOverwrite> getOverwrite(Block block) {
+		ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
+		return MANAGER.getOverwrites().stream().filter(overwrite -> overwrite.blockId().equals(id)).findFirst();
+	}
+
+	public static Optional<BlockSoundGroupOverwrite> getOverwriteIfConditionIsMet(Block block) {
+		ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
+		return MANAGER.getOverwrites().stream().filter(overwrite -> overwrite.blockId().equals(id) && overwrite.condition().getAsBoolean()).findFirst();
 	}
 
 	/**
