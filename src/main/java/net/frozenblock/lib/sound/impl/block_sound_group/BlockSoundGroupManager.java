@@ -139,9 +139,9 @@ public class BlockSoundGroupManager implements SimpleResourceReloadListener<Bloc
 
 	@Override
 	public CompletableFuture<Void> apply(@NotNull SoundGroupLoader prepared, ResourceManager manager, ProfilerFiller profiler, Executor executor) {
+		this.overwrites = prepared.getOverwrites();
+		this.overwrites.putAll(this.queuedOverwrites);
 		return CompletableFuture.runAsync(() -> {
-			this.overwrites = prepared.getOverwrites();
-			this.overwrites.putAll(this.queuedOverwrites);
 		});
 	}
 
