@@ -15,13 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.mixin.client;
+package net.frozenblock.lib.sound.mixin;
 
-import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrite;
 import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrites;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,18 +29,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockBehaviour.class)
 public final class BlockBehaviourMixin {
 
-    @Inject(method = "getSoundType", at = @At("RETURN"), cancellable = true)
-    private void getSoundGroupOverride(BlockState state, CallbackInfoReturnable<SoundType> info) {
-        Block block = state.getBlock();
-        ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
-		var overwrites = BlockSoundGroupOverwrites.getOverwrites();
-		if (overwrites != null) {
-			for (BlockSoundGroupOverwrite overwrite : overwrites) {
-				if (overwrite.blockId().equals(id) && overwrite.condition().getAsBoolean()) {
-					info.setReturnValue(overwrite.soundOverwrite());
-				}
-			}
-		}
+    @Inject(method = "getSoundType", at = @At("HEAD"), cancellable = true)
+    private void frozenLib$getSoundGroupOverride(BlockState state, CallbackInfoReturnable<SoundType> info) {
+		BlockSoundGroupOverwrites.getOverwriteIfConditionIsMet(state.getBlock())
+			.ifPresent(blockSoundGroupOverwrite -> info.setReturnValue(blockSoundGroupOverwrite.soundOverwrite()));
     }
 
 }
