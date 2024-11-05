@@ -21,6 +21,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -55,6 +56,7 @@ import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
+import net.frozenblock.lib.worldgen.structure.impl.StructureUpgradeCommand;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -119,6 +121,9 @@ public final class FrozenMain extends FrozenModInitializer {
 			ConfigCommand.register(dispatcher);
 			TagListCommand.register(dispatcher);
 			ScaleEntityCommand.register(dispatcher);
+			if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+				StructureUpgradeCommand.register(dispatcher);
+			}
 		});
 
 		ServerWorldEvents.LOAD.register((server, level) -> {
