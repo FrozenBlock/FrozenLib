@@ -64,6 +64,7 @@ public final class FrozenNetworking {
 
 		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {
 			ConfigSyncPacket.sendS2C(player);
+			ServerCapeData.sendCapeReposToPlayer(player);
 		});
 
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {

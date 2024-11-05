@@ -77,6 +77,9 @@
   "commands.frozenlib.taglist.footer": "Listed %s tags in %s.",
   "commands.frozenlib.taglist.tag.invalid": "Invalid tag: %s",
 
+  "commands.structure_upgrade.success": "Upgraded and saved %s structure pieces for %s.",
+  "commands.structure_upgrade.failure": "No structure pieces found for %s.",
+
   "commands.warden_spawn_tracker.clear.success.multiple": "Cleared warden spawn warnings from %s players",
   "commands.warden_spawn_tracker.clear.success.single": "Cleared warden spawn warnings from %s",
   "commands.warden_spawn_tracker.set.success.multiple": "Set warden spawn warning %s to %s players",
