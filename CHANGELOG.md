@@ -5,7 +5,11 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Fixed FrozenLib's capes causing severe performance issues when switching dimensions or respawning.
-- Fixed `NbtFileUtils` creating a directory instead of a file.
-- Added the `structure_upgrade` command, only accessible in development environments.
-  - This takes a string for the `namespace` parameter, and will grab all structure pieces under the given namespace then save them to `run/upgraded_structure,` upgraded to the latest DataVersion.
+- Revamped the Structure NBT upgrading system.
+  - First, you must place the original structure NBT into the `structure/nbt_input` folder in the root of your project.
+    - This file path should be: `structure` -> `nbt_input` -> MOD ID -> STRUCTURE NAME
+  - Next, run `/structure snbt export {MOD ID}`.
+    - This will export all inputted NBT files under the mod id to SNBT.
+  - Finally, run `/structure snbt upgrade {MOD ID}`.
+    - This will place the fixed contents into the `nbt_output` folder.
+    - Copy the contents and paste them back into your structure data folder.
