@@ -18,8 +18,10 @@
 package net.frozenblock.lib.file.nbt;
 
 import com.mojang.logging.LogUtils;
+import java.io.DataInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
@@ -38,7 +40,7 @@ public class NbtFileUtils {
 	}
 
 	public static void saveToFile(CompoundTag compoundTag, @NotNull File file, String fileName) {
-		file.mkdirs();
+		file.getParentFile().mkdirs();
 		File destFile = new File(file, withNBTExtension(fileName));
 		saveToFile(compoundTag, destFile);
 	}
