@@ -36,9 +36,12 @@ import net.minecraft.server.level.ServerPlayer;
 public class ServerCapeData {
 	private static final Map<UUID, Cape> CAPES_IN_SERVER = new HashMap<>();
 
-	public static void sendAllCapesToPlayer(ServerPlayer recipent) {
-		CAPES_IN_SERVER.forEach((uuid, cape) -> ServerPlayNetworking.send(recipent, CapeCustomizePacket.createPacket(uuid, cape)));
-		CapeUtil.getCapeRepos().forEach(repoURL -> ServerPlayNetworking.send(recipent, new LoadCapeRepoPacket(repoURL)));
+	public static void sendAllCapesToPlayer(ServerPlayer recipient) {
+		CAPES_IN_SERVER.forEach((uuid, cape) -> ServerPlayNetworking.send(recipient, CapeCustomizePacket.createPacket(uuid, cape)));
+	}
+
+	public static void sendCapeReposToPlayer(ServerPlayer recipient) {
+		CapeUtil.getCapeRepos().forEach(repoURL -> ServerPlayNetworking.send(recipient, new LoadCapeRepoPacket(repoURL)));
 	}
 
 	public static void init() {

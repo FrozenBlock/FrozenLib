@@ -91,6 +91,9 @@ public class CapeUtil {
 	}
 
 	public static void registerCapesFromURL(String urlString) {
+		if (CAPE_REPOS.contains(urlString))
+			return;
+
 		try {
 			URL url = URI.create(urlString).toURL();
 			URLConnection request = url.openConnection();
