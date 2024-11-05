@@ -105,14 +105,13 @@ public final class FrozenTestMain implements ModInitializer {
 	private static void applyDataFixes(ModContainer mod) {
 		/*
 		LOGGER.info("Applying DataFixes for FrozenLib Testmod");
-		var builder = new FabricDataFixerBuilder(DATA_VERSION);
+		/*var builder = new FabricDataFixerBuilder(DATA_VERSION);
 		builder.addSchema(0, FabricDataFixes.getBaseSchema());
 		Schema schemaV1 = builder.addSchema(1, NamespacedSchema::new);
 		SimpleFixes.addItemRenameFix(builder, "Rename camera namespace to frozenlib_testmod", FrozenSharedConstants.id("camera"), id("camera"), schemaV1);
 
-		FabricDataFixes.buildAndRegisterFixer(mod, builder);
+		FabricDataFixes.buildAndRegisterFixer(mod, builder);*/
 		LOGGER.info("DataFixes for FrozenLib Testmod have been applied");
-		 */
 	}
 
 	public static ResourceLocation id(String path) {
