@@ -81,14 +81,8 @@
   "commands.frozenlib.taglist.footer": "Listed %s tags in %s.",
   "commands.frozenlib.taglist.tag.invalid": "Invalid tag: %s",
 
-  "commands.frozenlib.structure_snbt.success": "Exported %s of %s structure pieces to SNBT for %s.",
-  "commands.frozenlib.structure_snbt.failure": "No structure pieces found to export for %s.\nPlease copy structure NBT to structure/nbt_input in the root of your project.",
-
-  "commands.frozenlib.structure_upgrade.success": "Upgraded and saved %s of %s structure pieces for %s.",
-  "commands.frozenlib.structure_upgrade.failure": "No structure pieces found for %s.\nPlease run /structure snbt export first.",
-
-  "commands.frozenlib.structure_piece_count.success": "Found %s structure pieces for %s.",
-  "commands.frozenlib.structure_piece_count.failure": "No structure pieces found for %s.",
+  "commands.structure_upgrade.success": "Upgraded and saved %s structure pieces for %s.",
+  "commands.structure_upgrade.failure": "No structure pieces found for %s.",
 
   "commands.warden_spawn_tracker.clear.success.multiple": "Cleared warden spawn warnings from %s players",
   "commands.warden_spawn_tracker.clear.success.single": "Cleared warden spawn warnings from %s",
