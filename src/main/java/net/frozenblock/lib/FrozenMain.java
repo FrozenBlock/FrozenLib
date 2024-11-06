@@ -56,7 +56,7 @@ import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
-import net.frozenblock.lib.worldgen.structure.impl.upgrade.StructureUpgradeCommand;
+import net.frozenblock.lib.worldgen.structure.impl.command.StructureUpgradeCommand;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
