@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.structure.impl.command;
+package net.frozenblock.lib.worldgen.structure.impl.upgrade;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
@@ -27,7 +27,6 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.structures.NbtToSnbt;
 import net.minecraft.data.structures.SnbtToNbt;
-import net.minecraft.data.structures.StructureUpdater;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -129,7 +128,7 @@ public class StructureUpgradeCommand {
 			outputPath.toFile().mkdirs();
 
 			PackOutput packOutput = new PackOutput(outputPath);
-			SnbtToNbt snbtToNbt = new SnbtToNbt(packOutput, Set.of(inputPath)).addFilter(new StructureUpdater());
+			SnbtToNbt snbtToNbt = new SnbtToNbt(packOutput, Set.of(inputPath)).addFilter(new CommandStructureUpdater());
 			CompletableFuture completableFuture = snbtToNbt.run(CachedOutput.NO_CACHE);
 
 			while (!completableFuture.isDone()) {
