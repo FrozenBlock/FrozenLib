@@ -26,11 +26,17 @@ import net.minecraft.SharedConstants;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtAccounter;
+import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.FastBufferedInputStream;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import org.jetbrains.annotations.NotNull;
+import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
@@ -65,7 +71,19 @@ public class StructureUpgradeCommand {
 		Map<ResourceLocation, CompoundTag> savedTemplates = new Object2ObjectLinkedOpenHashMap<>();
 
 		foundPieces.forEach((resourceLocation) -> {
-			savedTemplates.put(resourceLocation, structureTemplateManager.getOrCreate(resourceLocation).save(new CompoundTag()));
+			try {
+				InputStream inputStream = resourceManager.getResourceOrThrow(resourceLocation).open();
+				InputStream inputStream2 = new FastBufferedInputStream(inputStream);
+				CompoundTag compoundTag = NbtIo.readCompressed(inputStream2, NbtAccounter.unlimitedHeap());
+				StructureTemplate structureTemplate = structureTemplateManager.readStructure(compoundTag);
+
+				inputStream2.close();
+				inputStream.close();
+
+				savedTemplates.put(resourceLocation, structureTemplate.save(new CompoundTag()));
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
 		});
 
 		Path outputPath = source.getServer().getServerDirectory()
