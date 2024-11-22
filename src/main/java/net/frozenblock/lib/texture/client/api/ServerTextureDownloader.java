@@ -23,7 +23,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.image_transfer.FileTransferPacket;
+import net.frozenblock.lib.networking.packet.FileTransferPacket;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
