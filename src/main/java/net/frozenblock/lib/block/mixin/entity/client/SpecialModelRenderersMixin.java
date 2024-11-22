@@ -25,9 +25,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.block.client.entity.SpecialModelRenderersEntrypoint;
-import net.frozenblock.lib.block.client.entity.SpecialModelRenderersEvents;
-import net.frozenblock.lib.item.impl.sherd.DecoratedPotPatternRegistryEntrypoint;
-import net.frozenblock.lib.mobcategory.api.entrypoint.FrozenMobCategoryEntrypoint;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.resources.ResourceLocation;
@@ -56,7 +53,13 @@ public class SpecialModelRenderersMixin {
 		)
 	)
 	private static ImmutableMap.Builder frozenLib$put(ImmutableMap.Builder instance, Object key, Object value, Operation<ImmutableMap.Builder> original) {
-		SpecialModelRenderersEvents.MAP_INIT.invoker().onMapInit(instance);
+		FabricLoader.getInstance().getEntrypointContainers("frozenlib:special_model_renderers", SpecialModelRenderersEntrypoint.class).forEach(entrypoint -> {
+			try {
+				SpecialModelRenderersEntrypoint specialModelRenderersEntrypoint = entrypoint.getEntrypoint();
+				specialModelRenderersEntrypoint.onMapInit(instance);
+			} catch (Throwable ignored) {
+			}
+		});
 		return original.call(instance, key, value);
 	}
 

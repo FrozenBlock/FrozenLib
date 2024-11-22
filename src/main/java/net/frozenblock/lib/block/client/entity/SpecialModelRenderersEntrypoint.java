@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.block.client.entity;
 
+import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.MapCodec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,4 +36,9 @@ public interface SpecialModelRenderersEntrypoint {
 	 * Runs when {@link SpecialModelRenderers#bootstrap()} is called.
 	 */
 	void registerSpecialModelRenderers(ExtraCodecs.LateBoundIdMapper<ResourceLocation, MapCodec<? extends SpecialModelRenderer.Unbaked>> mapper);
+
+	/**
+	 * Runs when {@link net.minecraft.client.renderer.special.SpecialModelRenderers#STATIC_BLOCK_MAPPING} is initialized and first calls `put.`
+	 */
+	void onMapInit(ImmutableMap.Builder map);
 }
