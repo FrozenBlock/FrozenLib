@@ -43,7 +43,7 @@ public class CubeMapMixin {
 
 	@Shadow
 	@Final
-	private ResourceLocation[] images = new ResourceLocation[6];
+	private ResourceLocation[] sides = new ResourceLocation[6];
 
 	@Unique
 	private boolean frozenLib$canReplacePanorama;
@@ -85,7 +85,7 @@ public class CubeMapMixin {
 	@Unique
 	private void frozenLib$replacePanoramaWith(ResourceLocation faces) {
 		for (int i = 0; i < 6; i++) {
-			this.images[i] = faces.withPath(faces.getPath() + "_" + i + ".png");
+			this.sides[i] = faces.withPath(faces.getPath() + "_" + i + ".png");
 		}
 	}
 }

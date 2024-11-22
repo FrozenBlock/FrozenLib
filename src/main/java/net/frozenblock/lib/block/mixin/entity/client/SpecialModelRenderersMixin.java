@@ -45,7 +45,7 @@ public class SpecialModelRenderersMixin {
 
 	@Shadow
 	@Final
-	private static ExtraCodecs.LateBoundIdMapper<ResourceLocation, MapCodec<? extends SpecialModelRenderer.Unbaked>> ID_MAPPER;
+	public static ExtraCodecs.LateBoundIdMapper<ResourceLocation, MapCodec<? extends SpecialModelRenderer.Unbaked>> ID_MAPPER;
 
 	@WrapOperation(
 		method = "<clinit>",
