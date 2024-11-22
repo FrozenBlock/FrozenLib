@@ -19,8 +19,11 @@ package net.frozenblock.lib.worldgen.structure.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
+import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,9 +41,11 @@ public class StructureMixin {
 	)
 	public StructureStart frozenLib$generate(
 		StructureStart original,
-		RegistryAccess registryManager
+		Holder<Structure> holder,
+		ResourceKey<Level> resourceKey,
+		RegistryAccess registryAccess
 	) {
-		StructureStartInterface.class.cast(original).frozenLib$setId(registryManager.lookupOrThrow(Registries.STRUCTURE).getKey(Structure.class.cast(this)));
+		StructureStartInterface.class.cast(original).frozenLib$setId(registryAccess.lookupOrThrow(Registries.STRUCTURE).getKey(Structure.class.cast(this)));
 		return original;
 	}
 

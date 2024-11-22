@@ -19,6 +19,7 @@ package net.frozenblock.lib.menu.mixin;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLogUtils;
@@ -31,6 +32,7 @@ import net.minecraft.client.renderer.CubeMap;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,7 +45,8 @@ public class CubeMapMixin {
 
 	@Shadow
 	@Final
-	private ResourceLocation[] sides = new ResourceLocation[6];
+	@Mutable
+	private List<ResourceLocation> sides;
 
 	@Unique
 	private boolean frozenLib$canReplacePanorama;
@@ -77,15 +80,13 @@ public class CubeMapMixin {
 			}
 			if (!validPanoramas.isEmpty()) {
 				// Set panorama from a valid list.
-				this.frozenLib$replacePanoramaWith(Util.getRandom(validPanoramas, AdvancedMath.random()));
+				this.frozenLib$replacePanorama(Util.getRandom(validPanoramas, AdvancedMath.random()));
 			}
 		}
 	}
 
 	@Unique
-	private void frozenLib$replacePanoramaWith(ResourceLocation faces) {
-		for (int i = 0; i < 6; i++) {
-			this.sides[i] = faces.withPath(faces.getPath() + "_" + i + ".png");
-		}
+	private void frozenLib$replacePanorama(ResourceLocation resourceLocation) {
+		this.sides = IntStream.range(0, 6).mapToObj(i -> resourceLocation.withPath(resourceLocation.getPath() + "_" + i + ".png")).toList();
 	}
 }
