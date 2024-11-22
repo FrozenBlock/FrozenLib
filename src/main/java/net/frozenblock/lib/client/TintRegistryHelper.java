@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.Block;
 public class TintRegistryHelper {
 
 	// TODO: how tf do items work now?
-	/*
 	public static void registerDefaultFoliageColorForItem(ItemLike itemLike) {
 		ColorProviderRegistry.ITEM.register(
 			(stack, tintIndex) -> FoliageColor.FOLIAGE_DEFAULT,
@@ -100,5 +99,4 @@ public class TintRegistryHelper {
 			block
 		);
 	}
-	 */
 }
