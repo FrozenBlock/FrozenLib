@@ -12,6 +12,6 @@
     "tick.BlockBehaviourMixin"
   ],
   "client": [
-    "entity.client.BlockEntityWithoutLevelRendererMixin"
+    "entity.client.SpecialModelRenderersMixin"
   ]
 }

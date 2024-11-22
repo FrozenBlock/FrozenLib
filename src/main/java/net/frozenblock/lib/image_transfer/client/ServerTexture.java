@@ -66,6 +66,8 @@ public class ServerTexture extends SimpleTexture implements Tickable {
 	private boolean isClosed;
 	boolean hasLocalSource;
 
+	// TODO: Well... make this work with 1.21.4. Take a look at SkinTextureDownloader which replaced the old HttpTexture. We must do it that way now.
+
     public ServerTexture(String destPath, String fileName, ResourceLocation fallback, @Nullable Runnable callback) {
         super(fallback);
 		Path path = Minecraft.getInstance().gameDirectory.toPath().resolve(destPath);

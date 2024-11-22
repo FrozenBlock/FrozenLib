@@ -21,14 +21,12 @@ import com.google.gson.JsonIOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.HttpTexture;
-import net.minecraft.client.resources.DefaultPlayerSkin;
+import net.minecraft.client.renderer.texture.SkinTextureDownloader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -51,15 +49,12 @@ public class ClientCapeUtil {
 
 				@Override
 				public void onResourceManagerReload(@NotNull ResourceManager resourceManager) {
-					CompletableFuture<ResourceLocation> completableFuture = new CompletableFuture<>();
-					HttpTexture httpTexture = new HttpTexture(
-						CAPE_CACHE_PATH.resolve(capeLocation.getNamespace()).resolve(capeLocation.getPath() + ".png").toFile(),
+					SkinTextureDownloader.downloadAndRegisterSkin(
+						capeTextureLocation,
+						CAPE_CACHE_PATH.resolve(capeLocation.getNamespace()).resolve(capeLocation.getPath() + ".png"),
 						textureURL,
-						DefaultPlayerSkin.getDefaultTexture(),
-						false,
-						() -> completableFuture.complete(capeTextureLocation)
+						false
 					);
-					Minecraft.getInstance().getTextureManager().register(capeTextureLocation, httpTexture);
 				}
 			});
 			REGISTERED_CAPE_LISTENERS.add(capeLocation);

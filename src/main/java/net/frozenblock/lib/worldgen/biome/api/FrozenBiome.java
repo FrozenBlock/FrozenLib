@@ -214,9 +214,8 @@ public abstract class FrozenBiome {
 	 * This will be called automatically by FrozenLib unless the `disable` method is called.
 	 *
 	 * @param consumer The consumers used by {@link net.minecraft.world.level.biome.OverworldBiomeBuilder} to add biomes to worldgen.
-	 * @param modifier The {@link net.minecraft.world.level.biome.OverworldBiomeBuilder.Modifier} used for the current world.
 	 */
-	public abstract void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, OverworldBiomeBuilder.Modifier modifier);
+	public abstract void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer);
 
 	/**
 	 * Disables this biome from being automatically injected into worldgen.

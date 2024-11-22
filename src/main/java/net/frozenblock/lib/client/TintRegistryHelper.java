@@ -29,9 +29,10 @@ import net.minecraft.world.level.block.Block;
 @Environment(EnvType.CLIENT)
 public class TintRegistryHelper {
 
+	// TODO: how tf do items work now?
 	public static void registerDefaultFoliageColorForItem(ItemLike itemLike) {
 		ColorProviderRegistry.ITEM.register(
-			(stack, tintIndex) -> FoliageColor.getDefaultColor(),
+			(stack, tintIndex) -> FoliageColor.FOLIAGE_DEFAULT,
 			itemLike
 		);
 	}
@@ -45,42 +46,42 @@ public class TintRegistryHelper {
 
 	public static void registerBirchFoliageColorForItem(ItemLike itemLike) {
 		ColorProviderRegistry.ITEM.register(
-			(stack, tintIndex) -> FoliageColor.getBirchColor(),
+			(provider, item) -> FoliageColor.FOLIAGE_BIRCH,
 			itemLike
 		);
 	}
 
 	public static void registerBirchFoliageColorForBlock(Block block) {
 		ColorProviderRegistry.BLOCK.register(
-			(state, level, pos, tintIndex) -> FoliageColor.getBirchColor(),
+			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_BIRCH,
 			block
 		);
 	}
 
 	public static void registerEvergreenFoliageColorForItem(ItemLike itemLike) {
 		ColorProviderRegistry.ITEM.register(
-			(stack, tintIndex) -> FoliageColor.getEvergreenColor(),
+			(stack, tintIndex) -> FoliageColor.FOLIAGE_EVERGREEN,
 			itemLike
 		);
 	}
 
 	public static void registerEvergreenFoliageColorForBlock(Block block) {
 		ColorProviderRegistry.BLOCK.register(
-			(state, level, pos, tintIndex) -> FoliageColor.getEvergreenColor(),
+			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_EVERGREEN,
 			block
 		);
 	}
 
 	public static void registerMangroveFoliageColorForItem(ItemLike itemLike) {
 		ColorProviderRegistry.ITEM.register(
-			(stack, tintIndex) -> FoliageColor.getMangroveColor(),
+			(stack, tintIndex) -> FoliageColor.FOLIAGE_MANGROVE,
 			itemLike
 		);
 	}
 
 	public static void registerMangroveFoliageColorForBlock(Block block) {
 		ColorProviderRegistry.BLOCK.register(
-			(state, level, pos, tintIndex) -> FoliageColor.getMangroveColor(),
+			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_MANGROVE,
 			block
 		);
 	}
