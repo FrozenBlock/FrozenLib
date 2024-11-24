@@ -29,25 +29,10 @@ import net.minecraft.world.level.block.Block;
 @Environment(EnvType.CLIENT)
 public class TintRegistryHelper {
 
-	// TODO: how tf do items work now?
-	public static void registerDefaultFoliageColorForItem(ItemLike itemLike) {
-		ColorProviderRegistry.ITEM.register(
-			(stack, tintIndex) -> FoliageColor.FOLIAGE_DEFAULT,
-			itemLike
-		);
-	}
-
 	public static void registerAverageFoliageColorForBlock(Block block) {
 		ColorProviderRegistry.BLOCK.register(
 			(state, level, pos, tintIndex) -> BiomeColors.getAverageFoliageColor(Objects.requireNonNull(level), Objects.requireNonNull(pos)),
 			block
-		);
-	}
-
-	public static void registerBirchFoliageColorForItem(ItemLike itemLike) {
-		ColorProviderRegistry.ITEM.register(
-			(provider, item) -> FoliageColor.FOLIAGE_BIRCH,
-			itemLike
 		);
 	}
 
@@ -58,13 +43,6 @@ public class TintRegistryHelper {
 		);
 	}
 
-	public static void registerEvergreenFoliageColorForItem(ItemLike itemLike) {
-		ColorProviderRegistry.ITEM.register(
-			(stack, tintIndex) -> FoliageColor.FOLIAGE_EVERGREEN,
-			itemLike
-		);
-	}
-
 	public static void registerEvergreenFoliageColorForBlock(Block block) {
 		ColorProviderRegistry.BLOCK.register(
 			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_EVERGREEN,
@@ -72,24 +50,10 @@ public class TintRegistryHelper {
 		);
 	}
 
-	public static void registerMangroveFoliageColorForItem(ItemLike itemLike) {
-		ColorProviderRegistry.ITEM.register(
-			(stack, tintIndex) -> FoliageColor.FOLIAGE_MANGROVE,
-			itemLike
-		);
-	}
-
 	public static void registerMangroveFoliageColorForBlock(Block block) {
 		ColorProviderRegistry.BLOCK.register(
 			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_MANGROVE,
 			block
-		);
-	}
-
-	public static void registerColorForItem(ItemLike itemLike, int color) {
-		ColorProviderRegistry.ITEM.register(
-			(stack, tintIndex) -> color,
-			itemLike
 		);
 	}
 

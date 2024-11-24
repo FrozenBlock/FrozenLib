@@ -29,6 +29,7 @@ import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.ExtraCodecs;
+import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -52,7 +53,7 @@ public class SpecialModelRenderersMixin {
 			ordinal = 0
 		)
 	)
-	private static ImmutableMap.Builder frozenLib$put(ImmutableMap.Builder instance, Object key, Object value, Operation<ImmutableMap.Builder> original) {
+	private static ImmutableMap.Builder<Block, SpecialModelRenderer.Unbaked> put(ImmutableMap.Builder instance, Object key, Object value, Operation<ImmutableMap.Builder<Block, SpecialModelRenderer.Unbaked>> original) {
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:special_model_renderers", SpecialModelRenderersEntrypoint.class).forEach(entrypoint -> {
 			try {
 				SpecialModelRenderersEntrypoint specialModelRenderersEntrypoint = entrypoint.getEntrypoint();
