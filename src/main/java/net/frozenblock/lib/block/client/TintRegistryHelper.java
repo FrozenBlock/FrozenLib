@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.client;
+package net.frozenblock.lib.block.client;
 
 import java.util.Objects;
 import net.fabricmc.api.EnvType;
@@ -23,7 +23,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.world.level.FoliageColor;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
 
 @Environment(EnvType.CLIENT)
