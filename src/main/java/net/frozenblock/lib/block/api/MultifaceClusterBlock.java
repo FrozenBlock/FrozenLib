@@ -122,12 +122,6 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(WATERLOGGED);
-    }
-
 	@Override
 	protected boolean propagatesSkylightDown(@NotNull BlockState blockState) {
 		return blockState.getFluidState().isEmpty();
