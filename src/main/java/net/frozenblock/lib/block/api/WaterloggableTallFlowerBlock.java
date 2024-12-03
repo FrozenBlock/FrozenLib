@@ -66,7 +66,7 @@ public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements Sim
         BlockPos blockPos = ctx.getClickedPos();
         Level world = ctx.getLevel();
         FluidState fluidState = world.getFluidState(blockPos);
-        return world.isOutsideBuildHeight(blockPos.getY() + 1) && world.getBlockState(blockPos.above()).canBeReplaced(ctx) ?
+        return !world.isOutsideBuildHeight(blockPos.getY() + 1) && world.getBlockState(blockPos.above()).canBeReplaced(ctx) ?
                 this.defaultBlockState().setValue(WATERLOGGED, fluidState.getType() == Fluids.WATER) : null;
     }
 
