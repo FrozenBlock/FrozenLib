@@ -31,6 +31,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements SimpleWaterloggedBlock {
@@ -50,7 +51,7 @@ public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements Sim
     }
 
     @Nullable
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+    public BlockState getStateForPlacement(@NotNull BlockPlaceContext ctx) {
         BlockPos blockPos = ctx.getClickedPos();
         Level world = ctx.getLevel();
         FluidState fluidState = world.getFluidState(blockPos);
@@ -59,7 +60,7 @@ public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements Sim
     }
 
     @Override
-    public FluidState getFluidState(BlockState state) {
+    public FluidState getFluidState(@NotNull BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 

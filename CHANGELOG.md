@@ -6,3 +6,4 @@ Put changelog here:
 
 -----------------
 - Fixed structure upgrading not saving anything.
+- Fixed the `WaterloggableTallFlowerBlock` not allowing for placement on 1.21.2+.
