@@ -29,9 +29,10 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.MultifaceSpreadeableBlock;
+import net.minecraft.world.level.block.MultifaceBlock;
 import net.minecraft.world.level.block.SimpleWaterloggedBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.FluidState;
@@ -45,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * A block that combines an amethyst cluster-type block with a multiface block.
  */
-public abstract class MultifaceClusterBlock extends MultifaceSpreadeableBlock implements SimpleWaterloggedBlock {
+public abstract class MultifaceClusterBlock extends MultifaceBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty UP = BlockStateProperties.UP;
 
