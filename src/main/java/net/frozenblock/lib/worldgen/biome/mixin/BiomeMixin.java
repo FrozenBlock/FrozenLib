@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.worldgen.biome.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import java.util.Optional;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.worldgen.biome.api.FrozenGrassColorModifiers;
 import net.frozenblock.lib.worldgen.biome.impl.BiomeInterface;
 import net.frozenblock.lib.worldgen.biome.impl.FrozenGrassColorModifier;
@@ -33,11 +33,10 @@ public class BiomeMixin implements BiomeInterface {
 	@Unique
 	private ResourceLocation frozenLib$biomeID;
 
-	@ModifyExpressionValue(
+	@ModifyReturnValue(
 		method = "getGrassColor",
 		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/biome/BiomeSpecialEffects$GrassColorModifier;modifyColor(DDI)I"
+			value = "RETURN"
 		)
 	)
 	public int frozenLib$modifyGrassColor(int original, double x, double y) {
