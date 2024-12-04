@@ -38,6 +38,7 @@ import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayloa
 import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
 import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
+import net.frozenblock.lib.image_transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
@@ -45,7 +46,6 @@ import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
-import net.frozenblock.lib.image_transfer.FileTransferPacket;
 import net.frozenblock.lib.sound.api.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;

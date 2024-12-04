@@ -21,7 +21,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.control.MoveControl;
-import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 
 /**
  * A smoother version of {@link net.minecraft.world.entity.ai.control.SmoothSwimmingMoveControl}.

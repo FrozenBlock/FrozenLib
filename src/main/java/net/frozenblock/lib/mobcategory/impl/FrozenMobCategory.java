@@ -19,6 +19,5 @@ package net.frozenblock.lib.mobcategory.impl;
 
 import net.minecraft.resources.ResourceLocation;
 
-public record FrozenMobCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent,
-								int despawnDistance) {
+public record FrozenMobCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
 }
