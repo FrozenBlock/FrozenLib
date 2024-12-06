@@ -38,7 +38,6 @@ import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayloa
 import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
 import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
-import net.frozenblock.lib.image_transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
