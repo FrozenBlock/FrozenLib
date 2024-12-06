@@ -15,9 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mobcategory.impl;
+package net.frozenblock.lib.worldgen.biome.impl;
 
 import net.minecraft.resources.ResourceLocation;
 
-public record FrozenMobCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
+public interface BiomeInterface {
+
+	void frozenLib$setBiomeID(ResourceLocation biomeID);
+
+	ResourceLocation frozenLib$getBiomeID();
+
 }

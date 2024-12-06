@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib;
 
+import java.util.Arrays;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.Bootstrap;
-import java.util.Arrays;
 
 public class FrozenBools {
 

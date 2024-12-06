@@ -15,9 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mobcategory.impl;
+package net.frozenblock.lib.worldgen.biome.impl;
 
-import net.minecraft.resources.ResourceLocation;
-
-public record FrozenMobCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
+@FunctionalInterface
+public interface FrozenGrassColorModifier {
+	int modifyGrassColor(double x, double z, int originalGrassColor);
 }

@@ -58,9 +58,9 @@ public class MobCategoryMixin {
 					shift = At.Shift.AFTER
 			)
 	)
-	private static void addCustomCategories(CallbackInfo ci) {
+	private static void frozenLib$addCustomCategories(CallbackInfo info) {
 		var categories = new ArrayList<>(Arrays.asList($VALUES));
-		var last = categories.get(categories.size() - 1);
+		var last = categories.getLast();
 		int currentOrdinal = last.ordinal();
 
 		ArrayList<String> internalIds = new ArrayList<>();
