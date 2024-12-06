@@ -7,3 +7,5 @@ Put changelog here:
 -----------------
 - Added `FrozenGrassColorModifiers,` a simple way to add Grass Color Modifiers to biomes.
   - Do note that due to technical limitations, this is not data-driven.
+- Revamped the individual biome parameter classes.
+- Added methods for creating border parameters between sets of parameter points in `FrozenBiomeParameters.`
