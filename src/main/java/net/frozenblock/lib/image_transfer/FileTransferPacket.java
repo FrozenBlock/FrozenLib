@@ -17,6 +17,10 @@
 
 package net.frozenblock.lib.image_transfer;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -26,11 +30,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
 
 public record FileTransferPacket(String transferPath, String fileName, boolean request, byte[] bytes) implements CustomPacketPayload {
     public static final Type<FileTransferPacket> PACKET_TYPE = new Type<>(

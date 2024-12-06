@@ -24,7 +24,6 @@ import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 
 @UtilityClass
