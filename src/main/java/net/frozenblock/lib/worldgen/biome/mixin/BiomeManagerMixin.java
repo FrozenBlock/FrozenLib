@@ -31,7 +31,7 @@ public class BiomeManagerMixin {
 	@ModifyReturnValue(method = "getBiome", at = @At("RETURN"))
 	public Holder<Biome> frozenLib$appendBiomeID(Holder<Biome> original) {
 		if ((Object) original.value() instanceof BiomeInterface biomeInterface) {
-			original.unwrap().left().ifPresent(biomeResourceKey -> biomeInterface.frozenLib$setBiomeID(biomeResourceKey.location()));
+			original.unwrapKey().ifPresent(biomeResourceKey -> biomeInterface.frozenLib$setBiomeID(biomeResourceKey.location()));
 		}
 		return original;
 	}

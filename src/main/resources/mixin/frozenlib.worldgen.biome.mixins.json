@@ -11,6 +11,7 @@
     "BiomeMixin",
     "MultiNoiseBiomeSourceMixin",
     "OverworldBiomeBuilderMixin",
-    "OverworldBiomePresetMixin"
+    "OverworldBiomePresetMixin",
+    "RegistryDataLoaderMixin"
   ]
 }
