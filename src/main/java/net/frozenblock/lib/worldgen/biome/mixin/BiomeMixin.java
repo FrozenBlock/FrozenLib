@@ -17,12 +17,9 @@
 
 package net.frozenblock.lib.worldgen.biome.mixin;
 
-import java.util.Optional;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.frozenblock.lib.worldgen.biome.api.FrozenGrassColorModifiers;
 import net.frozenblock.lib.worldgen.biome.impl.BiomeInterface;
 import net.frozenblock.lib.worldgen.biome.impl.FrozenGrassColorModifier;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -31,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Biome.class)
 public class BiomeMixin implements BiomeInterface {
 	@Unique
-	private ResourceLocation frozenLib$biomeID;
+	private FrozenGrassColorModifier frozenLib$frozenGrassColorModifier;
 
 	@ModifyReturnValue(
 		method = "getGrassColor",
@@ -40,22 +37,19 @@ public class BiomeMixin implements BiomeInterface {
 		)
 	)
 	public int frozenLib$modifyGrassColor(int original, double x, double y) {
-		if (this.frozenLib$biomeID != null) {
-			Optional<FrozenGrassColorModifier> optionalFrozenGrassColorModifier = FrozenGrassColorModifiers.getGrassColorModifier(this.frozenLib$biomeID);
-			if (optionalFrozenGrassColorModifier.isPresent()) {
-				return optionalFrozenGrassColorModifier.get().modifyGrassColor(x, y, original);
-			}
+		if (this.frozenLib$frozenGrassColorModifier != null) {
+			return this.frozenLib$frozenGrassColorModifier.modifyGrassColor(x, y, original);
 		}
 		return original;
 	}
 
 	@Override
-	public void frozenLib$setBiomeID(ResourceLocation biomeID) {
-		this.frozenLib$biomeID = biomeID;
+	public void frozenLib$setFrozenGrassColorModifier(FrozenGrassColorModifier frozenGrassColorModifier) {
+		this.frozenLib$frozenGrassColorModifier = frozenGrassColorModifier;
 	}
 
 	@Override
-	public ResourceLocation frozenLib$getBiomeID() {
-		return this.frozenLib$biomeID;
+	public FrozenGrassColorModifier frozenLib$getFrozenGrassColorModifier() {
+		return this.frozenLib$frozenGrassColorModifier;
 	}
 }
