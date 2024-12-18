@@ -17,48 +17,34 @@
 
 package net.frozenblock.lib.worldgen.biome.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.worldgen.biome.impl.BiomeInterface;
+import net.minecraft.core.Holder;
+import net.minecraft.core.RegistrationInfo;
+import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.ResourceKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(RegistryDataLoader.class)
+@Mixin(value = RegistryDataLoader.class, priority = 50)
 public class RegistryDataLoaderMixin {
 
-	@ModifyReturnValue(
-		method = "loadContentsFromNetwork",
+	@WrapOperation(
+		method = {"loadContentsFromNetwork", "loadElementFromResource"},
 		at = @At(
 			value = "INVOKE",
-			target = "Lcom/mojang/serialization/DataResult;getOrThrow()Ljava/lang/Object;"
-		)
+			target = "Lnet/minecraft/core/WritableRegistry;register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;"
+		),
+		require = 2
 	)
-	private static Object frozenLib$appendBiomeIDFromNetwork(
-		Object original,
-		@Local ResourceKey resourceKey
+	private static Holder.Reference frozenLib$appendBiomeIDFromNetwork(
+		WritableRegistry instance, ResourceKey resourceKey, Object object, RegistrationInfo registrationInfo, Operation<Holder.Reference> original
 	) {
-		if (original instanceof BiomeInterface biomeInterface) {
+		if (object instanceof BiomeInterface biomeInterface) {
 			biomeInterface.frozenLib$setBiomeID(resourceKey.location());
 		}
-		return original;
-	}
-
-	@ModifyReturnValue(
-		method = "loadElementFromResource",
-		at = @At(
-			value = "INVOKE",
-			target = "Lcom/mojang/serialization/DataResult;getOrThrow()Ljava/lang/Object;"
-		)
-	)
-	private static Object frozenLib$appendBiomeIDFromResource(
-		Object original,
-		ResourceKey resourceKey
-	) {
-		if (original instanceof BiomeInterface biomeInterface) {
-			biomeInterface.frozenLib$setBiomeID(resourceKey.location());
-		}
-		return original;
+		return original.call(instance, resourceKey, object, registrationInfo);
 	}
 }
