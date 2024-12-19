@@ -1,0 +1,16 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "net.fabricmc.frozenblock.datafixer.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "DataFixerUpperMixin",
+    "DataFixTypesMixin",
+    "NbtHelperMixin",
+    "SchemasMixin",
+    "VersionedChunkStorageMixin"
+  ]
+}
