@@ -5,4 +5,4 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Fixed a crash with VMP.
+- Updated to Kotlin 2.1

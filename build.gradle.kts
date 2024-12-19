@@ -24,13 +24,13 @@ plugins {
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
-    id("com.github.johnrengelman.shadow") version("+")
+    id("com.gradleup.shadow") version("+")
     `maven-publish`
     eclipse
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.0.21")
+    kotlin("jvm") version("2.1.0")
 }
 
 val minecraft_version: String by project
@@ -190,42 +190,30 @@ repositories {
     // Add repositories to retrieve artifacts from in here.
     // You should only use this when depending on other mods because
     // Loom adds the essential maven repositories to download Minecraft and libraries from automatically.
-    maven {
-        url = uri("https://jitpack.io")
-    }
-    maven {
+    maven("https://api.modrinth.com/maven") {
         name = "Modrinth"
-        url = uri("https://api.modrinth.com/maven")
 
         content {
             includeGroup("maven.modrinth")
         }
     }
-    maven {
-        url = uri("https://maven.terraformersmc.com")
-
+    maven("https://maven.terraformersmc.com") {
         content {
             includeGroup("com.terraformersmc")
         }
     }
-    maven {
-        setUrl("https://maven.shedaniel.me/")
-    }
-    maven {
-        setUrl("https://maven.minecraftforge.net")
-    }
-    maven {
-        setUrl("https://maven.parchmentmc.org")
-    }
-    maven {
+    maven("https://maven.shedaniel.me/")
+    maven("https://maven.minecraftforge.net")
+    maven("https://maven.parchmentmc.org")
+    maven("https://maven.quiltmc.org/repository/release") {
         name = "Quilt"
-        setUrl("https://maven.quiltmc.org/repository/release")
     }
 
     flatDir {
         dirs("libs")
     }
     mavenCentral()
+    maven("https://jitpack.io")
 }
 
 dependencies {
@@ -309,7 +297,7 @@ tasks {
 
     shadowJar {
         configurations = listOf(relocModApi)
-        isEnableRelocation = true
+        enableRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         dependencies {
             exclude {
