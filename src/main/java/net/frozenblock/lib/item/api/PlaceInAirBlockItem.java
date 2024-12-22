@@ -36,7 +36,7 @@ public class PlaceInAirBlockItem extends BlockItem {
 
 		if (level.isInWorldBounds(pos) && level.getWorldBorder().isWithinBounds(pos) && level.getBlockState(pos).canBeReplaced()) {
 			Direction reflectedFacingDirection = Direction.getNearest(lookAngle);
-			BlockPlaceContext context = new BlockPlaceContext(level, player, hand, itemStack, new BlockHitResult(pos.getCenter(), reflectedFacingDirection, pos, false));
+			BlockPlaceContext context = new BlockPlaceContext(player, hand, itemStack, new BlockHitResult(pos.getCenter(), reflectedFacingDirection, pos, false));
 			InteractionResult result = this.useOn(context);
 			if (result.consumesAction()) {
 				return InteractionResultHolder.sidedSuccess(itemStack, !level.isClientSide());
