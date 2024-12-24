@@ -19,7 +19,6 @@ package net.frozenblock.lib.recipe.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
 import net.frozenblock.lib.recipe.api.ShapelessRecipeBuilderExtension;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.component.DataComponentPatch;
@@ -55,7 +54,7 @@ public class ShapelessRecipeBuilderMixin implements ShapelessRecipeBuilderExtens
 		)
 	)
 	private void modifySave(RecipeOutput instance, ResourceLocation recipeId, Recipe<?> recipe, AdvancementHolder holder, Operation<ShapedRecipe> operation) {
-		((ShapedRecipeBuilderExtension) recipe).frozenLib$patch(this.patch);
+		((ShapelessRecipeBuilderExtension) recipe).frozenLib$patch(this.patch);
 		operation.call(instance, recipeId, recipe, holder);
 	}
 }
