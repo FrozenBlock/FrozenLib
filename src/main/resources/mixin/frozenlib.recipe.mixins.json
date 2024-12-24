@@ -9,6 +9,8 @@
   "mixins": [
     "ItemValueMixin",
     "ShapedRecipeBuilderMixin",
-    "ShapedRecipeMixin"
+    "ShapedRecipeMixin",
+    "ShapelessRecipeBuilderMixin",
+    "ShapelessRecipeMixin"
   ]
 }

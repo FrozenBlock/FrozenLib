@@ -19,8 +19,9 @@ package net.frozenblock.lib.recipe.api;
 
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import org.jetbrains.annotations.Nullable;
 
-public interface ShapedRecipeBuilderExtension {
-	ShapedRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch tag);
+public interface ShapelessRecipeBuilderExtension {
+	ShapelessRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch tag);
 }
