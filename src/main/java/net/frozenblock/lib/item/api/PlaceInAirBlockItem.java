@@ -22,7 +22,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.BlockItem;
@@ -45,7 +44,7 @@ public class PlaceInAirBlockItem extends BlockItem {
 
 	@Override
 	@NotNull
-	public InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, InteractionHand hand) {
+	public InteractionResult use(@NotNull Level level, @NotNull Player player, InteractionHand hand) {
 		ItemStack itemStack = player.getItemInHand(hand);
 
 		double blockInteractionRange = player.blockInteractionRange();
@@ -70,11 +69,11 @@ public class PlaceInAirBlockItem extends BlockItem {
 			BlockPos pos = BlockPos.containing(placementPos);
 
 			if (level.isInWorldBounds(pos) && level.getWorldBorder().isWithinBounds(pos) && level.getBlockState(pos).canBeReplaced()) {
-				Direction reflectedFacingDirection = Direction.getNearest(lookAngle);
+				Direction reflectedFacingDirection = Direction.getApproximateNearest(lookAngle);
 				BlockPlaceContext context = new BlockPlaceContext(player, hand, itemStack, new BlockHitResult(pos.getCenter(), reflectedFacingDirection, pos, false));
 				InteractionResult result = this.useOn(context);
 				if (result.consumesAction()) {
-					return InteractionResultHolder.sidedSuccess(itemStack, !level.isClientSide());
+					return InteractionResult.SUCCESS;
 				}
 			}
 		}

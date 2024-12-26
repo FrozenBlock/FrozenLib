@@ -48,10 +48,10 @@ public abstract class LevelRendererMixin {
 	private Minecraft minecraft;
 
 	@ModifyExpressionValue(
-		method = "renderLevel",
+		method = "renderBlockOutline",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/phys/HitResult;getType()Lnet/minecraft/world/phys/HitResult$Type;"
+			target = "Lnet/minecraft/world/phys/BlockHitResult;getType()Lnet/minecraft/world/phys/HitResult$Type;"
 		)
 	)
 	public HitResult.Type frozenLib$useBlockTypeIfPlaceableInAir(
@@ -70,7 +70,7 @@ public abstract class LevelRendererMixin {
 	}
 
 	@ModifyExpressionValue(
-		method = "renderLevel",
+		method = "renderBlockOutline",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z"
@@ -87,16 +87,16 @@ public abstract class LevelRendererMixin {
 		method = "renderHitOutline",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/LevelRenderer;renderShape(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/phys/shapes/VoxelShape;DDDFFFF)V"
+			target = "Lnet/minecraft/client/renderer/ShapeRenderer;renderShape(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/phys/shapes/VoxelShape;DDDI)V"
 		)
 	)
 	private void frozenLib$renderOutlineForAir(
-		PoseStack poseStack, VertexConsumer vertexConsumer, VoxelShape voxelShape, double d, double e, double f, float g, float h, float i, float j, Operation<Void> original,
-		@Local(argsOnly = true) BlockState blockState
+		PoseStack poseStack, VertexConsumer vertexConsumer, VoxelShape voxelShape, double d, double e, double f, int i,
+		Operation<Void> original, @Local(argsOnly = true) BlockState blockState
 	) {
 		if (blockState.isAir()) voxelShape = Shapes.block();
 
-		original.call(poseStack, vertexConsumer, voxelShape, d, e, f, g, h, i, j);
+		original.call(poseStack, vertexConsumer, voxelShape, d, e, f, i);
 	}
 
 }
