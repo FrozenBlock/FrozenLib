@@ -15,12 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.biome.impl;
+package net.frozenblock.lib.recipe.api;
 
-public interface BiomeInterface {
+import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import org.jetbrains.annotations.Nullable;
 
-	void frozenLib$setFrozenGrassColorModifier(FrozenGrassColorModifier frozenGrassColorModifier);
-
-	FrozenGrassColorModifier frozenLib$getFrozenGrassColorModifier();
-
+public interface ShapelessRecipeBuilderExtension {
+	ShapelessRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch tag);
 }

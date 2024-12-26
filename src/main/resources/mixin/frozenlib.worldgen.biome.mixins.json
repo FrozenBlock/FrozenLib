@@ -7,10 +7,10 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "BiomeManagerMixin",
     "BiomeMixin",
     "MultiNoiseBiomeSourceMixin",
     "OverworldBiomeBuilderMixin",
-    "OverworldBiomePresetMixin"
+    "OverworldBiomePresetMixin",
+    "RegistryDataLoaderMixin"
   ]
 }

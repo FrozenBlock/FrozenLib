@@ -5,4 +5,7 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Fixed a crash with VMP.
+- Fixed custom Grass Color Modifiers to work 100% of the time.
+- Added `PlaceInAirBlockItem,` thanks to Qzimyion!
+- Updated to Kotlin 2.1
+- Added `ShapelessRecipeBuilderExtension`

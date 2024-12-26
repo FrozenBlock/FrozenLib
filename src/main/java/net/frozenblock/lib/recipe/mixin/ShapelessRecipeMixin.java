@@ -15,12 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.recipe.api;
+package net.frozenblock.lib.recipe.mixin;
 
+import net.frozenblock.lib.recipe.api.ShapelessRecipeBuilderExtension;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.ShapelessRecipe;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
-public interface ShapedRecipeBuilderExtension {
-	ShapedRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch tag);
+@Mixin(ShapelessRecipe.class)
+public class ShapelessRecipeMixin implements ShapelessRecipeBuilderExtension {
+
+	@Shadow
+	@Final
+	ItemStack result;
+
+	@Override
+	public ShapelessRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch patch) {
+		if (patch != null) this.result.applyComponents(patch);
+		return null;
+	}
 }
