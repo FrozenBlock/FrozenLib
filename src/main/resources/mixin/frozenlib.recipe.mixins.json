@@ -8,6 +8,8 @@
   },
   "mixins": [
     "ShapedRecipeBuilderMixin",
-    "ShapedRecipeMixin"
+    "ShapedRecipeMixin",
+    "ShapelessRecipeBuilderMixin",
+    "ShapelessRecipeMixin"
   ]
 }

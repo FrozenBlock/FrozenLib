@@ -18,5 +18,8 @@
     "bonemeal.BoneMealItemMixin",
     "sherd.DecoratedPotPatternsMixin",
     "shovel.ShovelItemMixin"
+  ],
+  "client": [
+    "client.LevelRendererMixin"
   ]
 }
