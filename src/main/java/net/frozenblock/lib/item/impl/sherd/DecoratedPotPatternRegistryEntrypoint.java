@@ -20,15 +20,11 @@ package net.frozenblock.lib.item.impl.sherd;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.DecoratedPotPattern;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import java.util.Map;
 
 public interface DecoratedPotPatternRegistryEntrypoint {
-	void registerForItems(Map<Item, ResourceKey<DecoratedPotPattern>> map);
-
 	void bootstrap(Registry<DecoratedPotPattern> registry);
 
 	@Contract("_, _, _ -> new")
