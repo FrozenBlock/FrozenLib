@@ -24,9 +24,8 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -50,10 +49,10 @@ public class ShapelessRecipeBuilderMixin implements ShapelessRecipeBuilderExtens
 		method = "save",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/data/recipes/RecipeOutput;accept(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/world/item/crafting/Recipe;Lnet/minecraft/advancements/AdvancementHolder;)V"
+			target = "Lnet/minecraft/data/recipes/RecipeOutput;accept(Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/world/item/crafting/Recipe;Lnet/minecraft/advancements/AdvancementHolder;)V"
 		)
 	)
-	private void modifySave(RecipeOutput instance, ResourceLocation recipeId, Recipe<?> recipe, AdvancementHolder holder, Operation<ShapedRecipe> operation) {
+	private void modifySave(RecipeOutput instance, ResourceKey<Recipe<?>> recipeId, Recipe<?> recipe, AdvancementHolder holder, Operation<Void> operation) {
 		((ShapelessRecipeBuilderExtension) recipe).frozenLib$patch(this.patch);
 		operation.call(instance, recipeId, recipe, holder);
 	}
