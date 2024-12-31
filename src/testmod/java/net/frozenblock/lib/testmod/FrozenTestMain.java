@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.testmod;
 
-import com.mojang.datafixers.schemas.Schema;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
 //import net.fabricmc.frozenblock.datafixer.api.FabricDataFixerBuilder;
@@ -25,13 +24,9 @@ import net.fabricmc.api.ModInitializer;
 //import net.fabricmc.frozenblock.datafixer.api.SimpleFixes;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.advancement.api.AdvancementAPI;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
 import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
-import net.frozenblock.lib.gravity.api.GravityAPI;
-import net.frozenblock.lib.gravity.api.GravityBelt;
-import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -42,12 +37,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.datafix.schemas.NamespacedSchema;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;
-import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -66,13 +58,6 @@ public final class FrozenTestMain implements ModInitializer {
 
         BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
-
-		GravityAPI.MODIFICATIONS.register((ctx) -> {
-			ctx.gravity = new Vec3(0.05, 0.8, 0.05);
-		});
-
-		GravityAPI.register(Level.OVERWORLD, new GravityBelt<>(300, 319, true, true, new AbsoluteGravityFunction(new Vec3(0.0, 0.1, 0.0))));
-		assert GravityAPI.calculateGravity(Level.OVERWORLD, 300).y == 0.1;
 
 		//GravityAPI.register(BuiltinDimensionTypes.OVERWORLD, new GravityBelt<>(0, 192, new InterpolatedGravityFunction(0.1)));
 

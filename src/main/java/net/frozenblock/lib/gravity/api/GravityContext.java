@@ -20,31 +20,29 @@ package net.frozenblock.lib.gravity.api;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 public class GravityContext {
-
     public final ResourceKey<Level> dimension;
-
     public final double y;
-
     /**
      * A mutable property that will determine the outputting gravity
      */
-    public Vec3 gravity;
-
+    public double gravity;
     @Nullable
     public final Entity entity;
+	public final BlockState state;
 
-    public GravityContext(ResourceKey<Level> dimension, double y, @Nullable Entity entity) {
-        this(dimension, y, GravityAPI.DEFAULT_GRAVITY, entity);
+    public GravityContext(ResourceKey<Level> dimension, double y, @Nullable Entity entity, BlockState state) {
+        this(dimension, y, GravityAPI.DEFAULT_GRAVITY, entity, state);
     }
 
-    public GravityContext(ResourceKey<Level> dimension, double y, Vec3 gravity, @Nullable Entity entity) {
+    public GravityContext(ResourceKey<Level> dimension, double y, double gravity, @Nullable Entity entity, BlockState state) {
         this.dimension = dimension;
         this.y = y;
         this.gravity = gravity;
         this.entity = entity;
+		this.state = state;
     }
 }
