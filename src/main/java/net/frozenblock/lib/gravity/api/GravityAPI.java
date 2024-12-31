@@ -31,7 +31,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 public final class GravityAPI {
-    public static final double DEFAULT_GRAVITY = 0.45D;
+    public static final double DEFAULT_GRAVITY = 1D;
 	public static final Event<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(GravityModification.class, callbacks -> context -> {
 		for (GravityModification callback : callbacks) {
 			callback.modifyGravity(context);
