@@ -28,20 +28,15 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public final class GravityAPI {
-    private GravityAPI() {}
-
-    public static final Vec3 DEFAULT_GRAVITY = new Vec3(0.0, 1.0, 0.0);
-
-    public static final Event<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(GravityModification.class, callbacks -> context -> {
-        for (GravityModification callback : callbacks) {
-            callback.modifyGravity(context);
-        }
-    });
-
+    public static final double DEFAULT_GRAVITY = 0.45D;
+	public static final Event<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(GravityModification.class, callbacks -> context -> {
+		for (GravityModification callback : callbacks) {
+			callback.modifyGravity(context);
+		}
+	});
     private static final Map<ResourceKey<Level>, List<GravityBelt<?>>> GRAVITY_BELTS = new HashMap<>();
 
     public static void register(ResourceKey<Level> dimension, GravityBelt<?> gravityBelt) {
@@ -53,7 +48,7 @@ public final class GravityAPI {
         return GRAVITY_BELTS.computeIfAbsent(dimension, dimension1 -> new ArrayList<>());
     }
 
-    public static List<GravityBelt<?>> getAllBelts(Level level) {
+    public static @NotNull List<GravityBelt<?>> getAllBelts(@NotNull Level level) {
         return getAllBelts(level.dimension());
     }
 
@@ -69,25 +64,15 @@ public final class GravityAPI {
         });
     }
 
-    public static Vec3 calculateGravity(ResourceKey<Level> dimension, double y) {
-        GravityContext context = new GravityContext(dimension, y, null);
-        MODIFICATIONS.invoker().modifyGravity(context);
-        return context.gravity;
-    }
-
-    public static Vec3 calculateGravity(Level level, double y) {
-        return calculateGravity(level.dimension(), y);
-    }
-
-    public static Vec3 calculateGravity(Entity entity) {
+    public static double calculateGravity(@NotNull Entity entity) {
         ResourceKey<Level> dimension = entity.level().dimension();
         double y = entity.getY();
-        GravityContext context = new GravityContext(dimension, y, entity);
+        GravityContext context = new GravityContext(dimension, y, entity, entity.getInBlockState());
         MODIFICATIONS.invoker().modifyGravity(context);
         return context.gravity;
     }
 
-    public static Optional<GravityBelt<?>> getAffectingGravityBelt(List<GravityBelt<?>> belts, double y) {
+    public static Optional<GravityBelt<?>> getAffectingGravityBelt(@NotNull List<GravityBelt<?>> belts, double y) {
         Optional<GravityBelt<?>> optionalGravityBelt = Optional.empty();
         for (GravityBelt<?> belt : belts) {
             if (belt.affectsPosition(y)) {

@@ -20,20 +20,16 @@ package net.frozenblock.lib.gravity.api;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record GravityBelt<T extends GravityFunction>(double minY, double maxY, boolean renderBottom, boolean renderTop,
-													 T function) {
-	public GravityBelt(double minY, double maxY, T function) {
-		this(minY, maxY, false, false, function);
-	}
+public record GravityBelt<T extends GravityFunction>(double minY, double maxY, T function) {
 
 	public boolean affectsPosition(double y) {
 		return y >= minY && y < maxY;
 	}
 
-	public Vec3 getGravity(@Nullable Entity entity, double y) {
+	public double getGravity(@Nullable Entity entity, double y) {
 		if (this.affectsPosition(y)) {
             return this.function.get(entity, y, this.minY, this.maxY);
 		}
@@ -51,7 +47,7 @@ public record GravityBelt<T extends GravityFunction>(double minY, double maxY, b
 	}
 
 	@Nullable
-	public static <T extends SerializableGravityFunction<T>> Codec<GravityBelt<T>> codec(T gravityFunction) {
+	public static <T extends SerializableGravityFunction<T>> Codec<GravityBelt<T>> codec(@NotNull T gravityFunction) {
 		Codec<T> codec = gravityFunction.codec();
 		if (codec == null) return null;
 		return codec(codec);

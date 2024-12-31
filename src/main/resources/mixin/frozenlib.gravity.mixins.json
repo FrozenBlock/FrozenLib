@@ -7,13 +7,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "AbstractBoatMixin",
-    "EntityMixin",
-    "LivingEntityMixin",
-    "ThrowableProjectileMixin"
-  ],
-  "client": [
-    "client.LevelRendererMixin",
-    "client.ParticleMixin"
+    "EntityMixin"
   ]
 }
