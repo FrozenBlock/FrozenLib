@@ -17,59 +17,30 @@
 
 package net.frozenblock.lib.gravity.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.gravity.api.GravityAPI;
-import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityGravityInterface {
+public abstract class EntityMixin {
 
 	@Shadow
 	public float fallDistance;
 
 	@Inject(method = "checkFallDamage", at = @At("TAIL"))
 	private void frozenLib$checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo info) {
-		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
-		double gravityDistance = gravity.length();
-		this.fallDistance *= (float) gravityDistance;
+		this.fallDistance *= (float) GravityAPI.calculateGravity(Entity.class.cast(this));
 	}
 
-	@WrapOperation(
-		method = "applyGravity",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/phys/Vec3;add(DDD)Lnet/minecraft/world/phys/Vec3;"
-		)
-	)
-	public Vec3 frozenLib$applyGravity(Vec3 instance, double x, double y, double z, Operation<Vec3> original, @Local(ordinal = 0) double originalGravity) {
-		Vec3 gravityVec = GravityAPI.calculateGravity(Entity.class.cast(this)).scale(originalGravity);
-		Vec3 directional = new Vec3(x, y + originalGravity, z).subtract(gravityVec);
-
-		return original.call(instance, directional.x, directional.y, directional.z);
-	}
-
-	@Unique
-	@Override
-	public double frozenLib$getGravity() {
-		return 0.04D;
-	}
-
-	@Unique
-	@Override
-	public Vec3 frozenLib$getEffectiveGravity() {
-		Entity entity = Entity.class.cast(this);
-		return GravityAPI.calculateGravity(entity).scale(this.frozenLib$getGravity());
+	@ModifyReturnValue(method = "getGravity", at = @At("RETURN"))
+	public double frozenLib$modifyGravity(double original) {
+		return original * GravityAPI.calculateGravity(Entity.class.cast(this));
 	}
 }

@@ -25,16 +25,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public record AbsoluteGravityFunction(Vec3 gravity) implements SerializableGravityFunction<AbsoluteGravityFunction> {
+public record AbsoluteGravityFunction(double gravity) implements SerializableGravityFunction<AbsoluteGravityFunction> {
 	public static final Codec<AbsoluteGravityFunction> CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
-			Vec3.CODEC.fieldOf("gravity").forGetter(AbsoluteGravityFunction::gravity)
+			Codec.DOUBLE.fieldOf("gravity").forGetter(AbsoluteGravityFunction::gravity)
 		).apply(instance, AbsoluteGravityFunction::new)
 	);
+
 	public static final Codec<GravityBelt<AbsoluteGravityFunction>> BELT_CODEC = GravityBelt.codec(CODEC);
 
 	@Override
-	public Vec3 get(@Nullable Entity entity, double y, double minY, double maxY) {
+	public double get(@Nullable Entity entity, double y, double minY, double maxY) {
 		return gravity();
 	}
 
