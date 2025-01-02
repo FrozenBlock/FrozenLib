@@ -19,17 +19,14 @@ package net.frozenblock.lib.ingamedevtools;
 
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.ingamedevtools.item.Camera;
-import net.frozenblock.lib.ingamedevtools.item.LootTableWhacker;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 
 public class RegisterInGameDevTools {
 	public static final Item CAMERA = new Camera(new Item.Properties().stacksTo(1));
-	public static final Item LOOT_TABLE_WHACKER = new LootTableWhacker(new Item.Properties().stacksTo(1));
 
 	public static void register() {
 		Registry.register(BuiltInRegistries.ITEM, FrozenSharedConstants.id("camera"), CAMERA);
-		Registry.register(BuiltInRegistries.ITEM, FrozenSharedConstants.string("loot_table_whacker"), LOOT_TABLE_WHACKER);
 	}
 }

@@ -5,7 +5,4 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Fixed custom Grass Color Modifiers to work 100% of the time.
-- Added `PlaceInAirBlockItem,` thanks to Qzimyion!
-- Added `ShapelessRecipeBuilderExtension`
-- Updated to Kotlin 2.1
+- Removed the `loot table whacker.`
