@@ -19,25 +19,24 @@ package net.frozenblock.lib.ingamedevtools;
 
 import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.ingamedevtools.item.Camera;
-import net.frozenblock.lib.ingamedevtools.item.LootTableWhacker;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import org.jetbrains.annotations.NotNull;
+import java.util.function.Function;
 
 public class RegisterInGameDevTools {
-	public static final Item CAMERA = Registry.register(
-		BuiltInRegistries.ITEM,
-		FrozenSharedConstants.id("camera"),
-		new Camera(new Item.Properties().stacksTo(1).setId(ResourceKey.create(Registries.ITEM, FrozenSharedConstants.id("camera"))))
-	);
-	public static final Item LOOT_TABLE_WHACKER = Registry.register(
-		BuiltInRegistries.ITEM,
-		FrozenSharedConstants.id("loot_table_whacker"),
-		new LootTableWhacker(new Item.Properties().stacksTo(1).setId(ResourceKey.create(Registries.ITEM, FrozenSharedConstants.id("loot_table_whacker"))))
+	public static final Item CAMERA = register(
+		"camera",
+		Camera::new,
+		new Item.Properties().stacksTo(1)
 	);
 
 	public static void init() {
+	}
+
+	private static @NotNull <T extends Item> T register(String name, @NotNull Function<Item.Properties, Item> function, Item.@NotNull Properties properties) {
+		return (T) Items.registerItem(ResourceKey.create(Registries.ITEM, FrozenSharedConstants.id(name)), function, properties);
 	}
 }
