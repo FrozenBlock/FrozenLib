@@ -256,7 +256,7 @@ dependencies {
 
     // ExJson
     //relocModApi("org.exjson:xjs-data:$xjs_data_version")
-    relocModApi("com.github.Treetrain1:xjs-data:infinity-compat-SNAPSHOT")
+    relocModApi("com.github.Treetrain1:xjs-data:f39681b4bb")
     relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
     relocModApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.34")?.let { annotationProcessor(it) }
