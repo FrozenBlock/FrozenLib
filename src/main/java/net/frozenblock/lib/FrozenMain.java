@@ -70,13 +70,16 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistry
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 
 public final class FrozenMain extends FrozenModInitializer {
+	public static boolean INITIALIZED = false;
 
 	public FrozenMain() {
 		super(FrozenSharedConstants.MOD_ID);
 	}
 
-	@Override
-	public void onInitialize(String modId, ModContainer container) {
+	public static void init() {
+		if (INITIALIZED) return;
+		INITIALIZED = true;
+
 		FrozenRegistry.initRegistry();
 
 		// QUILT INIT
@@ -104,6 +107,11 @@ public final class FrozenMain extends FrozenModInitializer {
 		ServerCapeData.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
+	}
+
+	@Override
+	public void onInitialize(String modId, ModContainer container) {
+		init();
 
 		ArgumentTypeInfos.register(
 			BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
