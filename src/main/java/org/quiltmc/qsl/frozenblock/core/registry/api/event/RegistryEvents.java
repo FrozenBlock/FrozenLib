@@ -1,6 +1,6 @@
 /*
- * Copyright 2024 The Quilt Project
- * Copyright 2024 FrozenBlock
+ * Copyright 2024-2025 The Quilt Project
+ * Copyright 2024-2025 FrozenBlock
  * Modified to work on Fabric
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
