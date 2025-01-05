@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 FrozenBlock
+ * Copyright (C) 2024-2025 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,6 +49,8 @@ public final class FrozenClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		FrozenMain.init();
+
 		FrozenClientRegistry.initRegistry();
 		ModIntegrations.initializePreFreeze(); // Mod integrations must run after normal mod initialization
 
