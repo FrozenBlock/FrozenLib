@@ -110,11 +110,6 @@
   "debug.neighbor_update": "Neighbor Updates",
   "debug.game_event": "Game Events",
 
-  "frozenlib.loot_table_whacker.fail.no_name": "Loot Table Whacker has not been named!",
-  "frozenlib.loot_table_whacker.fail.no_colon": "Invalid ResourceLocation: No : present!",
-  "frozenlib.loot_table_whacker.fail.no_loot_table": "Loot table does not exist: %s",
-  "frozenlib.loot_table_whacker.success": "Set loot table to: %s",
-
   "frozenlib.core.registry_sync.more": "%s more...",
   "frozenlib.core.registry_sync.and": " and ",
   "frozenlib.core.registry_sync.unsupported_mod_protocol": "Unsupported mod protocol versions for:\n%s",
