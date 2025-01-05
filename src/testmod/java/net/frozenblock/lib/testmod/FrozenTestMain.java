@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.testmod;
 
-import com.mojang.datafixers.schemas.Schema;
 import java.util.List;
 import net.fabricmc.api.ModInitializer;
 /*
@@ -27,7 +26,6 @@ import net.fabricmc.frozenblock.datafixer.api.SimpleFixes;
  */
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.advancement.api.AdvancementAPI;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
 import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
@@ -44,7 +42,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.util.datafix.schemas.NamespacedSchema;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
@@ -70,7 +68,9 @@ public final class FrozenTestMain implements ModInitializer {
                         Blocks.BEDROCK.defaultBlockState(), 3));
 
 		GravityAPI.MODIFICATIONS.register((ctx) -> {
-			ctx.gravity = new Vec3(0.05, 0.8, 0.05);
+			if (ctx.y < 300 && ctx.entity instanceof Player) {
+				ctx.gravity = new Vec3(0.05, 0.8, 0.05);
+			}
 		});
 
 		GravityAPI.register(Level.OVERWORLD, new GravityBelt<>(300, 319, true, true, new AbsoluteGravityFunction(new Vec3(0.0, 0.1, 0.0))));
