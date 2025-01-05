@@ -21,6 +21,7 @@ import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.testmod.FrozenTestMain;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Monster;
@@ -46,7 +47,7 @@ public abstract class WardenMixin extends Monster {
 	}
 
 	@Inject(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
-	private void startShaking(Entity target, CallbackInfoReturnable<Boolean> cir) {
-		ScreenShakeManager.addScreenShake(this.level(), 0.6F, 8, this.getX(), this.getY(), this.getZ(), 15);
+	private void startShaking(ServerLevel level, Entity target, CallbackInfoReturnable<Boolean> cir) {
+		ScreenShakeManager.addScreenShake(level, 0.6F, 8, this.getX(), this.getY(), this.getZ(), 15);
 	}
 }
