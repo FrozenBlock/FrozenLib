@@ -40,10 +40,10 @@ public abstract class EntityMixin implements EntityGravityInterface {
 	public float fallDistance;
 
 	// TODO: convert to directional
-	@WrapOperation(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
+	/*@WrapOperation(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
 	private double getGravity(Entity instance, Operation<Double> original) {
 		return original.call(instance) * GravityAPI.calculateGravity(instance).length();
-	}
+	}*/
 
 	@Inject(method = "checkFallDamage", at = @At("TAIL"))
 	private void frozenLib$checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo info) {
