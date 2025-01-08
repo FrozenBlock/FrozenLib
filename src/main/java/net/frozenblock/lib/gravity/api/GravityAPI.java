@@ -70,7 +70,7 @@ public final class GravityAPI {
     }
 
     public static Vec3 calculateGravity(ResourceKey<Level> dimension, double y) {
-        GravityContext context = new GravityContext(dimension, y, null);
+        GravityContext context = new GravityContext(dimension, y, null, null);
         MODIFICATIONS.invoker().modifyGravity(context);
         return context.gravity;
     }
@@ -82,7 +82,7 @@ public final class GravityAPI {
     public static Vec3 calculateGravity(Entity entity) {
         ResourceKey<Level> dimension = entity.level().dimension();
         double y = entity.getY();
-        GravityContext context = new GravityContext(dimension, y, entity);
+        GravityContext context = new GravityContext(dimension, y, entity, entity.getInBlockState());
         MODIFICATIONS.invoker().modifyGravity(context);
         return context.gravity;
     }
