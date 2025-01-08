@@ -5,4 +5,4 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Removed the `loot table whacker.`
+- Restored the directional Gravity API
