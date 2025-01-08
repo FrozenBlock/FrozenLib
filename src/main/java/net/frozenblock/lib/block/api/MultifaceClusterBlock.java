@@ -21,6 +21,7 @@ import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -58,7 +59,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
     protected final VoxelShape downAabb;
 
     private final Map<Direction, VoxelShape> shapeByDirection;
-    private final ImmutableMap<BlockState, VoxelShape> shapesCache;
+    private final Function<BlockState, VoxelShape> shapesCache;
 
 
     public MultifaceClusterBlock(int height, int xzOffset, @NotNull Properties properties) {
@@ -84,7 +85,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
     @Override
 	@NotNull
     public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return Objects.requireNonNull(this.shapesCache.get(state));
+        return Objects.requireNonNull(this.shapesCache.apply(state));
     }
 
     public VoxelShape calculateMultifaceShape(BlockState state) {

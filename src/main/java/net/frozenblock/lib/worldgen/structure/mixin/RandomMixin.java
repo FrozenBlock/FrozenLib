@@ -23,8 +23,8 @@ import net.frozenblock.lib.worldgen.structure.api.RandomPoolAliasApi;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.random.SimpleWeightedRandomList;
-import net.minecraft.util.random.WeightedEntry;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.pools.alias.Random;
 import org.spongepowered.asm.mixin.Final;
@@ -41,17 +41,17 @@ public class RandomMixin {
     @Shadow
 	@Final
 	@Mutable
-	private SimpleWeightedRandomList<ResourceKey<StructureTemplatePool>> targets;
+	private WeightedList<ResourceKey<StructureTemplatePool>> targets;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void frozenLib$addRandomPoolAliasTargets(ResourceKey<StructureTemplatePool> alias, SimpleWeightedRandomList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info) {
+    public void frozenLib$addRandomPoolAliasTargets(ResourceKey<StructureTemplatePool> alias, WeightedList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info) {
         ResourceLocation aliasLocation = alias.location();
 		List<Pair<ResourceLocation, Integer>> additions = RandomPoolAliasApi.getAdditionalTargets(aliasLocation);
 
-		SimpleWeightedRandomList.Builder<ResourceKey<StructureTemplatePool>> builder = SimpleWeightedRandomList.builder();
+		WeightedList.Builder<ResourceKey<StructureTemplatePool>> builder = WeightedList.builder();
 
-		for (WeightedEntry.Wrapper<ResourceKey<StructureTemplatePool>> wrapper : this.targets.unwrap()) {
-			builder.add(wrapper.data(), wrapper.weight().asInt());
+		for (Weighted<ResourceKey<StructureTemplatePool>> wrapper : this.targets.unwrap()) {
+			builder.add(wrapper.value(), wrapper.weight());
 		}
 
 		for (Pair<ResourceLocation, Integer> additionalTargets : additions) {

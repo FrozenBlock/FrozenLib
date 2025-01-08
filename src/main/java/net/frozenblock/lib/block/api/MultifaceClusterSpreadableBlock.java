@@ -41,6 +41,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
 
 /**
  * A block that combines an amethyst cluster-type block with a multiface spreadable block.
@@ -57,7 +58,7 @@ public abstract class MultifaceClusterSpreadableBlock extends MultifaceSpreadeab
     protected final VoxelShape downAabb;
 
     private final Map<Direction, VoxelShape> shapeByDirection;
-    private final ImmutableMap<BlockState, VoxelShape> shapesCache;
+    private final Function<BlockState, VoxelShape> shapesCache;
 
     public MultifaceClusterSpreadableBlock(int height, int xzOffset, @NotNull Properties properties) {
         super(properties.pushReaction(PushReaction.DESTROY));
@@ -82,7 +83,7 @@ public abstract class MultifaceClusterSpreadableBlock extends MultifaceSpreadeab
     @Override
 	@NotNull
     public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return Objects.requireNonNull(this.shapesCache.get(state));
+        return Objects.requireNonNull(this.shapesCache.apply(state));
     }
 
     public VoxelShape calculateMultifaceShape(BlockState state) {

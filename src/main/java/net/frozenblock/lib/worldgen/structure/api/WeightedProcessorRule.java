@@ -21,8 +21,8 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
-import net.minecraft.util.random.WeightedEntry;
-import net.minecraft.util.random.WeightedRandomList;
+import net.minecraft.util.random.Weighted;
+import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.PosAlwaysTrueTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.PosRuleTest;
@@ -34,21 +34,21 @@ public class WeightedProcessorRule {
 				RuleTest.CODEC.fieldOf("input_predicate").forGetter(rule -> rule.inputPredicate),
 				RuleTest.CODEC.fieldOf("location_predicate").forGetter(rule -> rule.locPredicate),
 				PosRuleTest.CODEC.lenientOptionalFieldOf("position_predicate", PosAlwaysTrueTest.INSTANCE).forGetter(rule -> rule.posPredicate),
-				WeightedRandomList.codec(WeightedEntry.Wrapper.codec(BlockState.CODEC)).fieldOf("output_states").forGetter(rule -> rule.outputStates)
+				WeightedList.codec(Weighted.codec(BlockState.CODEC)).fieldOf("output_states").forGetter(rule -> rule.outputStates)
 			)
 			.apply(instance, WeightedProcessorRule::new)
 	);
 	private final RuleTest inputPredicate;
 	private final RuleTest locPredicate;
 	private final PosRuleTest posPredicate;
-	private final WeightedRandomList<WeightedEntry.Wrapper<BlockState>> outputStates;
+	private final WeightedList<Weighted<BlockState>> outputStates;
 
-	public WeightedProcessorRule(RuleTest inputPredicate, RuleTest locationPredicate, WeightedRandomList<WeightedEntry.Wrapper<BlockState>> states) {
+	public WeightedProcessorRule(RuleTest inputPredicate, RuleTest locationPredicate, WeightedList<Weighted<BlockState>> states) {
 		this(inputPredicate, locationPredicate, PosAlwaysTrueTest.INSTANCE, states);
 	}
 
 	public WeightedProcessorRule(
-		RuleTest inputPredicate, RuleTest locationPredicate, PosRuleTest positionPredicate, WeightedRandomList<WeightedEntry.Wrapper<BlockState>> states
+		RuleTest inputPredicate, RuleTest locationPredicate, PosRuleTest positionPredicate, WeightedList<Weighted<BlockState>> states
 	) {
 		this.inputPredicate = inputPredicate;
 		this.locPredicate = locationPredicate;
@@ -61,6 +61,6 @@ public class WeightedProcessorRule {
 	}
 
 	public BlockState getOutputState(RandomSource random) {
-		return this.outputStates.getRandom(random).orElseThrow().data();
+		return this.outputStates.getRandom(random).orElseThrow().value();
 	}
 }
