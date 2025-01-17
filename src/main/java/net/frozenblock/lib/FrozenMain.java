@@ -21,7 +21,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -35,7 +34,6 @@ import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
-import net.frozenblock.lib.ingamedevtools.RegisterInGameDevTools;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.api.FrozenParticleTypes;
@@ -70,16 +68,13 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistry
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 
 public final class FrozenMain extends FrozenModInitializer {
-	public static boolean INITIALIZED = false;
 
 	public FrozenMain() {
 		super(FrozenSharedConstants.MOD_ID);
 	}
 
-	public static void init() {
-		if (INITIALIZED) return;
-		INITIALIZED = true;
-
+	@Override
+	public void onInitialize(String modId, ModContainer container) {
 		FrozenRegistry.initRegistry();
 
 		// QUILT INIT
@@ -102,16 +97,10 @@ public final class FrozenMain extends FrozenModInitializer {
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC.codec());
 
-		RegisterInGameDevTools.init();
 		FrozenParticleTypes.registerParticles();
 		ServerCapeData.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
-	}
-
-	@Override
-	public void onInitialize(String modId, ModContainer container) {
-		init();
 
 		ArgumentTypeInfos.register(
 			BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
@@ -126,9 +115,7 @@ public final class FrozenMain extends FrozenModInitializer {
 			ConfigCommand.register(dispatcher);
 			TagListCommand.register(dispatcher);
 			ScaleEntityCommand.register(dispatcher);
-			if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-				StructureUpgradeCommand.register(dispatcher);
-			}
+			StructureUpgradeCommand.register(dispatcher);
 		});
 
 		ServerWorldEvents.LOAD.register((server, level) -> {
