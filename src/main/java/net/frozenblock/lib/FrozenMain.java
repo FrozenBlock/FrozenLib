@@ -76,8 +76,6 @@ public final class FrozenMain extends FrozenModInitializer {
 
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
-		if (!FabricLoader.getInstance().isModLoaded("trailiertales")) throw new AssertionError();
-
 		FrozenRegistry.initRegistry();
 
 		// QUILT INIT
