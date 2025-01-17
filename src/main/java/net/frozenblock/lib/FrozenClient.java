@@ -49,8 +49,6 @@ public final class FrozenClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		FrozenMain.init();
-
 		FrozenClientRegistry.initRegistry();
 		ModIntegrations.initializePreFreeze(); // Mod integrations must run after normal mod initialization
 
