@@ -21,7 +21,6 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -116,9 +115,7 @@ public final class FrozenMain extends FrozenModInitializer {
 			ConfigCommand.register(dispatcher);
 			TagListCommand.register(dispatcher);
 			ScaleEntityCommand.register(dispatcher);
-			if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-				StructureUpgradeCommand.register(dispatcher);
-			}
+			StructureUpgradeCommand.register(dispatcher);
 		});
 
 		ServerWorldEvents.LOAD.register((server, level) -> {
