@@ -35,7 +35,6 @@ import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
-import net.frozenblock.lib.ingamedevtools.RegisterInGameDevTools;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.api.FrozenParticleTypes;
@@ -101,7 +100,6 @@ public final class FrozenMain extends FrozenModInitializer {
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC.codec());
 
-		RegisterInGameDevTools.init();
 		FrozenParticleTypes.registerParticles();
 		ServerCapeData.init();
 
