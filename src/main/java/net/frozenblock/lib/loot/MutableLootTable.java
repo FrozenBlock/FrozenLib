@@ -3,6 +3,7 @@ package net.frozenblock.lib.loot;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
@@ -42,9 +43,7 @@ public class MutableLootTable {
 		LootTable.Builder builder = LootTable.lootTable();
 		builder.setParamSet(paramSet);
 		builder.setRandomSequence(randomSequence);
-//		pools.forEach(mPool -> ((LootTableBuilderInterface) builder).wilderWild$withPool(mPool.build()));
 		pools.forEach(mPool -> builder.pools.add(mPool.build()));
-//		functions.forEach(function -> ((LootTableBuilderInterface) builder).wilderWild$apply(function));
 		functions.forEach(builder.functions::add);
 		return builder.build();
 	}
@@ -84,5 +83,35 @@ public class MutableLootTable {
 		ArrayList<MutableLootPool> lootPools = new ArrayList<>();
 		lootPoolList.forEach(pool -> lootPools.add(new MutableLootPool(pool)));
 		return lootPools;
+	}
+
+	/**
+	 * Returns if a pool has the given item
+	 *
+	 * @param item item to check for
+	 * @return predicate that checks if the pool has the given item
+	 */
+	public static Predicate<MutableLootPool> has(Item item) {
+		return lootPool -> lootPool.hasItem(item);
+	}
+
+	/**
+	 * Returns if a pool has any of the given items
+	 *
+	 * @param items items to check for
+	 * @return predicate that checks if the pool has any of the given items
+	 */
+	public static Predicate<MutableLootPool> hasAny(Item... items) {
+		return lootPool -> lootPool.hasAnyItems(items);
+	}
+
+	/**
+	 * Returns if a pool has all the given items
+	 *
+	 * @param items items to check for
+	 * @return predicate that checks if the pool has all the given items
+	 */
+	public static Predicate<MutableLootPool> hasAll(Item... items) {
+		return lootPool -> lootPool.hasAllItems(items);
 	}
 }

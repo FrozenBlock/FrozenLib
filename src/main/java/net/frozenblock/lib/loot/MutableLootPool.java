@@ -1,5 +1,6 @@
 package net.frozenblock.lib.loot;
 
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -10,6 +11,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import java.util.ArrayList;
+import java.util.function.Predicate;
 
 public class MutableLootPool {
 	public ArrayList<LootPoolEntryContainer> entries = new ArrayList<>();
@@ -28,11 +30,8 @@ public class MutableLootPool {
 
 	public LootPool build() {
 		LootPool.Builder builder = LootPool.lootPool();
-//		entries.forEach(entry -> ((LootPoolBuilderInterface) builder).wilderWild$add(entry));
 		entries.forEach(builder.entries::add);
-//		conditions.forEach(condition -> ((LootPoolBuilderInterface) builder).wilderWild$when(condition));
 		conditions.forEach(builder.conditions::add);
-//		functions.forEach(function -> ((LootPoolBuilderInterface) builder).wilderWild$apply(function));
 		functions.forEach(builder.functions::add);
 		builder.setRolls(rolls);
 		builder.setBonusRolls(bonusRolls);
@@ -65,5 +64,74 @@ public class MutableLootPool {
 			}
 		}
 		return false;
+	}
+
+	/**
+	 * Returns if the loot pool contains an item that matches the predicate
+	 *
+	 * @param predicate condition to check for
+	 * @return if item was found
+	 */
+	public boolean hasItem(Predicate<Item> predicate) {
+		for (LootPoolEntryContainer entryContainer : entries) {
+			if (entryContainer instanceof LootItem lootItem) {
+				if (predicate.test(lootItem.item.value())) return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns if the loot pool contains an item with the given tag
+	 *
+	 * @param itemTagKey item tag to check for
+	 * @return if item was found
+	 */
+	public boolean hasItem(TagKey<Item> itemTagKey) {
+		for (LootPoolEntryContainer entryContainer : entries) {
+			if (entryContainer instanceof LootItem lootItem) {
+				if (lootItem.item.value().builtInRegistryHolder().is(itemTagKey)) return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns if the loot pool contains any of the given items
+	 *
+	 * @param items items to check for
+	 * @return if any of the items were found
+	 */
+	public boolean hasAnyItems(Item... items) {
+		for (LootPoolEntryContainer entryContainer : entries) {
+			if (entryContainer instanceof LootItem lootItem) {
+				for (Item item : items) {
+					if (item.equals(lootItem.item.value())) return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * Returns if the loot table contains all the given items
+	 *
+	 * @param items items to check for
+	 * @return if all of the items were found
+	 */
+	public boolean hasAllItems(Item... items) {
+		for (Item item : items) {
+			boolean found = false;
+			for (LootPoolEntryContainer entryContainer : entries) {
+				if (entryContainer instanceof LootItem lootItem) {
+					if (item.equals(lootItem.item.value())) {
+						found = true;
+						break;
+					}
+				}
+			}
+			if (!found) return false;
+		}
+		return true;
 	}
 }
