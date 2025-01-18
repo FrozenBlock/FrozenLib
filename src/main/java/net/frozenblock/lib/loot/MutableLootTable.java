@@ -15,10 +15,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class MutableLootTable {
-	private ArrayList<MutableLootPool> pools = new ArrayList<>();
-	private ArrayList<LootItemFunction> functions = new ArrayList<>();
-	private LootContextParamSet paramSet = LootTable.DEFAULT_PARAM_SET;
-	private ResourceLocation randomSequence;
+	private final ArrayList<MutableLootPool> pools;
+	private final ArrayList<LootItemFunction> functions = new ArrayList<>();
+	private final LootContextParamSet paramSet;
+	private final ResourceLocation randomSequence;
 
 	public MutableLootTable(LootTable table) {
 		pools = createLootPools(table.pools);

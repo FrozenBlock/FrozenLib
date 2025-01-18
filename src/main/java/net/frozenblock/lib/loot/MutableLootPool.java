@@ -1,5 +1,7 @@
 package net.frozenblock.lib.loot;
 
+import java.util.ArrayList;
+import java.util.function.Predicate;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -8,17 +10,14 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import java.util.ArrayList;
-import java.util.function.Predicate;
 
 public class MutableLootPool {
 	public ArrayList<LootPoolEntryContainer> entries = new ArrayList<>();
 	public ArrayList<LootItemCondition> conditions = new ArrayList<>();
 	public ArrayList<LootItemFunction> functions = new ArrayList<>();
-	public NumberProvider rolls = ConstantValue.exactly(1.0F);
-	public NumberProvider bonusRolls = ConstantValue.exactly(0.0F);
+	public NumberProvider rolls;
+	public NumberProvider bonusRolls;
 
 	public MutableLootPool(LootPool lootPool) {
 		entries.addAll(lootPool.entries);
@@ -48,6 +47,81 @@ public class MutableLootPool {
 	 */
 	public MutableLootPool add(ItemLike item, int weight, LootItemFunction.Builder builder) {
 		entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(builder).build());
+		return this;
+	}
+
+	/**
+	 * Adds one or more items to the loot pool with the same weight
+	 *
+	 * @param items   items to add
+	 * @param weight  how likely the items are to get drawn from the pool
+	 * @param builder idk lol
+	 * @return this
+	 */
+	public MutableLootPool addAll(int weight, LootItemFunction.Builder builder, ItemLike... items) {
+		for (ItemLike item : items) {
+			entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(builder).build());
+		}
+		return this;
+	}
+
+	public MutableLootPool remove(ItemLike item) {
+		for (LootPoolEntryContainer entryContainer : entries) {
+			if (entryContainer instanceof LootItem lootItem) {
+				if (item.equals(lootItem.item.value())) {
+					entries.remove(entryContainer);
+					return this;
+				}
+			}
+		}
+		// Failed to remove item from the loot pool.
+		return this;
+	}
+
+	public MutableLootPool remove(ItemLike... items) {
+		ArrayList<LootPoolEntryContainer> toRemove = new ArrayList<>();
+		for (LootPoolEntryContainer entryContainer : entries) {
+			if (entryContainer instanceof LootItem lootItem) {
+				for (ItemLike item : items) {
+					if (item.equals(lootItem.item.value())) {
+						toRemove.add(entryContainer);
+					}
+				}
+			}
+		}
+		for (LootPoolEntryContainer entryContainer : toRemove) {
+			entries.remove(entryContainer);
+		}
+		return this;
+	}
+
+	public MutableLootPool remove(TagKey<Item> tag) {
+		ArrayList<LootPoolEntryContainer> toRemove = new ArrayList<>();
+		for (LootPoolEntryContainer entryContainer : entries) {
+			if (entryContainer instanceof LootItem lootItem) {
+				if (lootItem.item.value().builtInRegistryHolder().is(tag)) {
+					toRemove.add(entryContainer);
+				}
+			}
+		}
+		for (LootPoolEntryContainer entryContainer : toRemove) {
+			entries.remove(entryContainer);
+		}
+		return this;
+	}
+
+	public MutableLootPool remove(Predicate<Item> predicate) {
+		ArrayList<LootPoolEntryContainer> toRemove = new ArrayList<>();
+		for (LootPoolEntryContainer entryContainer : entries) {
+			if (entryContainer instanceof LootItem lootItem) {
+				if (predicate.test(lootItem.item.value())) {
+					toRemove.add(entryContainer);
+				}
+			}
+		}
+		for (LootPoolEntryContainer entryContainer : toRemove) {
+			entries.remove(entryContainer);
+		}
 		return this;
 	}
 
