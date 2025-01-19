@@ -23,5 +23,15 @@ public final class FTLootTables {
 				(lootPool) -> lootPool.add(Items.DIAMOND_BLOCK, 3, SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 3.0F)))
 			)
 		);
+
+		//Cold Ocean Ruin Archaeology
+		LootTableModifier.editTable(
+			BuiltInLootTables.OCEAN_RUIN_COLD_ARCHAEOLOGY, false,
+			(id, mutableLootTable) -> mutableLootTable.modifyPools(
+				MutableLootTable.has(Items.MOURNER_POTTERY_SHERD),
+				(lootPool) -> lootPool.replace(Items.MOURNER_POTTERY_SHERD, Items.FLOW_POTTERY_SHERD)
+			)
+		);
+
 	}
 }

@@ -183,15 +183,26 @@ accessible field net/minecraft/world/level/storage/loot/LootTable$Builder paramS
 accessible field net/minecraft/world/level/storage/loot/LootTable$Builder randomSequence Lcom/google/common/collect/ImmutableList$Builder;
 
 #Loot Pool
-
 accessible field net/minecraft/world/level/storage/loot/LootPool$Builder entries Lcom/google/common/collect/ImmutableList$Builder;
 accessible field net/minecraft/world/level/storage/loot/LootPool$Builder conditions Lcom/google/common/collect/ImmutableList$Builder;
 accessible field net/minecraft/world/level/storage/loot/LootPool$Builder functions Lcom/google/common/collect/ImmutableList$Builder;
 accessible field net/minecraft/world/level/storage/loot/LootPool$Builder rolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
 accessible field net/minecraft/world/level/storage/loot/LootPool$Builder bonusRolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
 
+#Loot Pool Entry Container
+accessible method net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer <init> (Ljava/util/List;)V
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer conditions Ljava/util/List;
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer compositeCondition Ljava/util/function/Predicate;
+
 #Loot Item
 accessible field net/minecraft/world/level/storage/loot/entries/LootItem item Lnet/minecraft/core/Holder;
+accessible method net/minecraft/world/level/storage/loot/entries/LootItem <init> (Lnet/minecraft/core/Holder;IILjava/util/List;Ljava/util/List;)V
+
+#Loot Pool Singleton Container
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer weight I
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer quality I
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer functions Ljava/util/List;
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer compositeFunction Ljava/util/function/BiFunction;
 
 # QuiltMC Resource Reloaders
 transitive-accessible class net/minecraft/client/gui/screens/worldselection/CreateWorldScreen$DataPackReloadCookie

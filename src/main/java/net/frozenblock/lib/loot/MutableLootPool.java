@@ -125,6 +125,21 @@ public class MutableLootPool {
 		return this;
 	}
 
+	public MutableLootPool replace(ItemLike original, ItemLike replacement) {
+//		for (LootPoolEntryContainer entryContainer : entries) {
+		for (int i = 0; i < entries.size(); i++) {
+			LootPoolEntryContainer entryContainer = entries.get(i);
+			if (entryContainer instanceof LootItem lootItem) {
+				if (original.equals(lootItem.item.value())) {
+					MutableLootItem mutableLootItem = new MutableLootItem(lootItem);
+					mutableLootItem.setItem(replacement);
+					entries.set(i, mutableLootItem.build());
+				}
+			}
+		}
+		return this;
+	}
+
 	/**
 	 * Returns if the loot pool contains the given item
 	 *
