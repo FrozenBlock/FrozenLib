@@ -8,6 +8,8 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,20 +22,20 @@ public class MutableLootTable {
 	private final LootContextParamSet paramSet;
 	private final ResourceLocation randomSequence;
 
-	public MutableLootTable(LootTable table) {
+	public MutableLootTable(@NotNull LootTable table) {
 		pools = createLootPools(table.pools);
 		functions.addAll(table.functions);
 		paramSet = table.getParamSet();
 		randomSequence = table.randomSequence.orElse(null);
 	}
 
-	public static @Nullable MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable) {
+	public static @Nullable MutableLootTable getMutable(@NotNull ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable) {
 		if (lootTableKey.equals(id)) {
 			return new MutableLootTable(lootTable);
 		} else return null;
 	}
 
-	public static @Nullable MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable, LootTableSource source) {
+	public static @Nullable MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable, @NotNull LootTableSource source) {
 		if (source.isBuiltin()) {
 			return getMutable(lootTableKey, id, lootTable);
 		} else return null;
@@ -50,9 +52,9 @@ public class MutableLootTable {
 
 
 	/**
-	 * Runs the consumer on each pool
+	 * Runs the consumer on each pool.
 	 *
-	 * @return this
+	 * @return This.
 	 */
 	public MutableLootTable modifyPools(Consumer<MutableLootPool> consumer) {
 		pools.forEach(consumer);
@@ -60,9 +62,9 @@ public class MutableLootTable {
 	}
 
 	/**
-	 * Runs the consumer on each pool that matches the condition
+	 * Runs the consumer on each pool that matches the condition.
 	 *
-	 * @return this
+	 * @return This.
 	 */
 	public MutableLootTable modifyPools(Predicate<MutableLootPool> condition, Consumer<MutableLootPool> consumer) {
 		pools.forEach(pool -> {
@@ -76,42 +78,45 @@ public class MutableLootTable {
 	/**
 	 * Converts a list of loot pools to an array list of mutable loot pools
 	 *
-	 * @param lootPoolList loot pools to copy
-	 * @return array list of converted loot pools from input
+	 * @param lootPoolList A list of {@link LootPool}s to copy.
+	 * @return An array list of converted loot pools from input.
 	 */
-	private static ArrayList<MutableLootPool> createLootPools(List<LootPool> lootPoolList) {
+	private static @NotNull ArrayList<MutableLootPool> createLootPools(@NotNull List<LootPool> lootPoolList) {
 		ArrayList<MutableLootPool> lootPools = new ArrayList<>();
 		lootPoolList.forEach(pool -> lootPools.add(new MutableLootPool(pool)));
 		return lootPools;
 	}
 
 	/**
-	 * Returns if a pool has the given item
+	 * Returns if a pool has the given item.
 	 *
-	 * @param item item to check for
-	 * @return predicate that checks if the pool has the given item
+	 * @param item The {@link Item}s to check for.
+	 * @return A predicate that checks if the pool has the given item.
 	 */
-	public static Predicate<MutableLootPool> has(Item item) {
+	@Contract(pure = true)
+	public static @NotNull Predicate<MutableLootPool> has(Item item) {
 		return lootPool -> lootPool.hasItem(item);
 	}
 
 	/**
-	 * Returns if a pool has any of the given items
+	 * Returns if a pool has any of the given items.
 	 *
-	 * @param items items to check for
-	 * @return predicate that checks if the pool has any of the given items
+	 * @param items The {@link Item}s to check for.
+	 * @return A predicate that checks if the pool has any of the given items.
 	 */
-	public static Predicate<MutableLootPool> hasAny(Item... items) {
+	@Contract(pure = true)
+	public static @NotNull Predicate<MutableLootPool> hasAny(Item... items) {
 		return lootPool -> lootPool.hasAnyItems(items);
 	}
 
 	/**
-	 * Returns if a pool has all the given items
+	 * Returns if a pool has all the given items.
 	 *
-	 * @param items items to check for
-	 * @return predicate that checks if the pool has all the given items
+	 * @param items The {@link Item}s to check for.
+	 * @return A predicate that checks if the pool has all the given items.
 	 */
-	public static Predicate<MutableLootPool> hasAll(Item... items) {
+	@Contract(pure = true)
+	public static @NotNull Predicate<MutableLootPool> hasAll(Item... items) {
 		return lootPool -> lootPool.hasAllItems(items);
 	}
 }

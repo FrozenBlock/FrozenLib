@@ -11,6 +11,7 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import org.jetbrains.annotations.NotNull;
 
 public class MutableLootPool {
 	public ArrayList<LootPoolEntryContainer> entries = new ArrayList<>();
@@ -19,7 +20,7 @@ public class MutableLootPool {
 	public NumberProvider rolls;
 	public NumberProvider bonusRolls;
 
-	public MutableLootPool(LootPool lootPool) {
+	public MutableLootPool(@NotNull LootPool lootPool) {
 		entries.addAll(lootPool.entries);
 		conditions.addAll(lootPool.conditions);
 		functions.addAll(lootPool.functions);
@@ -58,7 +59,7 @@ public class MutableLootPool {
 	 * @param builder idk lol
 	 * @return this
 	 */
-	public MutableLootPool addAll(int weight, LootItemFunction.Builder builder, ItemLike... items) {
+	public MutableLootPool addAll(int weight, LootItemFunction.Builder builder, ItemLike @NotNull ... items) {
 		for (ItemLike item : items) {
 			entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(builder).build());
 		}
@@ -126,7 +127,6 @@ public class MutableLootPool {
 	}
 
 	public MutableLootPool replace(ItemLike original, ItemLike replacement) {
-//		for (LootPoolEntryContainer entryContainer : entries) {
 		for (int i = 0; i < entries.size(); i++) {
 			LootPoolEntryContainer entryContainer = entries.get(i);
 			if (entryContainer instanceof LootItem lootItem) {
@@ -208,7 +208,7 @@ public class MutableLootPool {
 	 * @param items items to check for
 	 * @return if all of the items were found
 	 */
-	public boolean hasAllItems(Item... items) {
+	public boolean hasAllItems(Item @NotNull ... items) {
 		for (Item item : items) {
 			boolean found = false;
 			for (LootPoolEntryContainer entryContainer : entries) {
