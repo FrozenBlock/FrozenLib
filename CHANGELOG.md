@@ -6,4 +6,5 @@ Put changelog here:
 
 -----------------
 - Exposed the `structure_upgrade` command to players outside development environments.
-- Removed the Camera item in favor of the `panorama` command.
+- Removed the Camera item in favor of the new `panorama` client command.
+- Added the new loot pool modification api, by Kluski42!
