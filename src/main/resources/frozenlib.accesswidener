@@ -171,6 +171,39 @@ transitive-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Laz
 # Placement Modifiers
 transitive-accessible field net/minecraft/world/level/levelgen/placement/PlacementContext level Lnet/minecraft/world/level/WorldGenLevel;
 
+# Loot Table
+accessible field net/minecraft/world/level/storage/loot/LootTable pools Ljava/util/List;
+accessible field net/minecraft/world/level/storage/loot/LootTable functions Ljava/util/List;
+accessible field net/minecraft/world/level/storage/loot/LootTable randomSequence Ljava/util/Optional;
+
+# Loot Table Builder
+accessible field net/minecraft/world/level/storage/loot/LootTable$Builder pools Lcom/google/common/collect/ImmutableList$Builder;
+accessible field net/minecraft/world/level/storage/loot/LootTable$Builder functions Lcom/google/common/collect/ImmutableList$Builder;
+accessible field net/minecraft/world/level/storage/loot/LootTable$Builder paramSet Lcom/google/common/collect/ImmutableList$Builder;
+accessible field net/minecraft/world/level/storage/loot/LootTable$Builder randomSequence Lcom/google/common/collect/ImmutableList$Builder;
+
+#Loot Pool
+accessible field net/minecraft/world/level/storage/loot/LootPool$Builder entries Lcom/google/common/collect/ImmutableList$Builder;
+accessible field net/minecraft/world/level/storage/loot/LootPool$Builder conditions Lcom/google/common/collect/ImmutableList$Builder;
+accessible field net/minecraft/world/level/storage/loot/LootPool$Builder functions Lcom/google/common/collect/ImmutableList$Builder;
+accessible field net/minecraft/world/level/storage/loot/LootPool$Builder rolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
+accessible field net/minecraft/world/level/storage/loot/LootPool$Builder bonusRolls Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;
+
+#Loot Pool Entry Container
+accessible method net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer <init> (Ljava/util/List;)V
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer conditions Ljava/util/List;
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolEntryContainer compositeCondition Ljava/util/function/Predicate;
+
+#Loot Item
+accessible field net/minecraft/world/level/storage/loot/entries/LootItem item Lnet/minecraft/core/Holder;
+accessible method net/minecraft/world/level/storage/loot/entries/LootItem <init> (Lnet/minecraft/core/Holder;IILjava/util/List;Ljava/util/List;)V
+
+#Loot Pool Singleton Container
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer weight I
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer quality I
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer functions Ljava/util/List;
+accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer compositeFunction Ljava/util/function/BiFunction;
+
 # QuiltMC Resource Reloaders
 transitive-accessible class net/minecraft/resources/RegistryDataLoader$LoadingFunction
 transitive-accessible field net/minecraft/resources/RegistryDataLoader$Loader registry Lnet/minecraft/core/WritableRegistry;

@@ -38,7 +38,6 @@ public class PanoramaCommand {
 			ClientCommandManager.literal("panorama")
 				.executes(
 					context -> {
-						FrozenSharedConstants.LOGGER.warn("PLAYER HAS ACCESS TO DEV CAMERA AND HAS JUST USED IT");
 						Minecraft client = Minecraft.getInstance();
 						File directory = getPanoramaFolderName(new File(client.gameDirectory, "panoramas"));
 						File directory1 = new File(directory, "screenshots");
