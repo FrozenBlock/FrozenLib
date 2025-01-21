@@ -4,7 +4,6 @@
   "package": "org.quiltmc.qsl.frozenblock.core.registry.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "BuiltInRegistriesMixin",
     "ConnectionMixin",
     "MappedRegistryMixin",
     "RegistryDataLoaderMixin",
