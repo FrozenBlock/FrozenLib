@@ -3,11 +3,11 @@ package net.frozenblock.lib.loot;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
-import net.minecraft.world.level.storage.loot.parameters.LootContextParamSet;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,7 +19,7 @@ import java.util.function.Predicate;
 public class MutableLootTable {
 	private final ArrayList<MutableLootPool> pools;
 	private final ArrayList<LootItemFunction> functions = new ArrayList<>();
-	private final LootContextParamSet paramSet;
+	private final ContextKeySet paramSet;
 	private final ResourceLocation randomSequence;
 
 	public MutableLootTable(@NotNull LootTable table) {
