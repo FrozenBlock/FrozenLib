@@ -179,8 +179,8 @@ accessible field net/minecraft/world/level/storage/loot/LootTable randomSequence
 # Loot Table Builder
 accessible field net/minecraft/world/level/storage/loot/LootTable$Builder pools Lcom/google/common/collect/ImmutableList$Builder;
 accessible field net/minecraft/world/level/storage/loot/LootTable$Builder functions Lcom/google/common/collect/ImmutableList$Builder;
-accessible field net/minecraft/world/level/storage/loot/LootTable$Builder paramSet Lcom/google/common/collect/ImmutableList$Builder;
-accessible field net/minecraft/world/level/storage/loot/LootTable$Builder randomSequence Lcom/google/common/collect/ImmutableList$Builder;
+accessible field net/minecraft/world/level/storage/loot/LootTable$Builder paramSet Lnet/minecraft/world/level/storage/loot/parameters/LootContextParamSet;
+accessible field net/minecraft/world/level/storage/loot/LootTable$Builder randomSequence Ljava/util/Optional;
 
 #Loot Pool
 accessible field net/minecraft/world/level/storage/loot/LootPool$Builder entries Lcom/google/common/collect/ImmutableList$Builder;

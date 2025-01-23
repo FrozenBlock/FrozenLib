@@ -52,11 +52,11 @@ public class ClientCapeData {
 		setPlayerCape(uuid, Optional.empty());
 	}
 
-	private static void setPlayerCape(UUID uuid, @NotNull Optional<Cape> cape) {
-		cape.ifPresentOrElse(cape1 -> CAPES_IN_WORLD.put(uuid, cape1), () -> CAPES_IN_WORLD.remove(uuid));
+	private static void setPlayerCape(UUID uuid, @NotNull Optional<Cape> optionalCape) {
+		optionalCape.ifPresentOrElse(cape -> CAPES_IN_WORLD.put(uuid, cape), () -> CAPES_IN_WORLD.remove(uuid));
 		ClientLevel level = Minecraft.getInstance().level;
 		if (level != null && level.getPlayerByUUID(uuid) instanceof AbstractClientPlayerCapeInterface capeInterface) {
-			capeInterface.frozenLib$setCape(cape.map(Cape::texture).orElse(null));
+			capeInterface.frozenLib$setCape(optionalCape.map(Cape::texture).orElse(null));
 		}
 	}
 
