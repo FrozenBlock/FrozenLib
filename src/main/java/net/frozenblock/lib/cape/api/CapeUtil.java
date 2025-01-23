@@ -35,6 +35,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenSharedConstants;
@@ -91,21 +94,28 @@ public class CapeUtil {
 	}
 
 	public static void registerCapesFromURL(String urlString) {
-		if (CAPE_REPOS.contains(urlString))
-			return;
+		if (CAPE_REPOS.contains(urlString)) return;
 
-		try {
-			URL url = URI.create(urlString).toURL();
-			URLConnection request = url.openConnection();
-			request.connect();
+		CompletableFuture.supplyAsync(
+			() -> {
+				try {
+					URL url = URI.create(urlString).toURL();
+					URLConnection request = url.openConnection();
+					request.connect();
 
-			JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent()));
-			JsonObject capeDir = parsedJson.getAsJsonObject();
-			JsonArray capeArray = capeDir.get("capes").getAsJsonArray();
+					JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent()));
+					JsonObject capeDir = parsedJson.getAsJsonObject();
+					JsonArray capeArray = capeDir.get("capes").getAsJsonArray();
 
-			capeArray.forEach(jsonElement -> registerCapeFromURL(jsonElement.getAsString()));
-			CAPE_REPOS.add(urlString);
-		} catch (IOException ignored) {}
+					capeArray.forEach(jsonElement -> registerCapeFromURL(jsonElement.getAsString()));
+					return Optional.of(urlString);
+				} catch (IOException ignored) {}
+				return Optional.empty();
+			},
+			Executors.newCachedThreadPool()
+		).whenComplete((value, throwable) -> {
+			value.ifPresent(string -> CAPE_REPOS.add((String) string));
+		});
 	}
 
 	private static void registerCapeFromURL(String urlString) {
