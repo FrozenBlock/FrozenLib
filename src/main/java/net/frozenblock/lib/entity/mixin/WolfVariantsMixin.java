@@ -23,9 +23,12 @@ import net.frozenblock.lib.entity.api.WolfVariantBiomeRegistry;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.animal.WolfVariant;
 import net.minecraft.world.entity.animal.WolfVariants;
+import net.minecraft.world.entity.variant.SpawnContext;
 import net.minecraft.world.level.biome.Biome;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -36,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class WolfVariantsMixin {
 
 	@Inject(
-		method = "getSpawnVariant",
+		method = "selectVariantToSpawn",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/core/Registry;listElements()Ljava/util/stream/Stream;"
@@ -44,10 +47,10 @@ public class WolfVariantsMixin {
 		cancellable = true
 	)
 	private static void frozenLib$checkForNewBiomes(
-		RegistryAccess registryManager, Holder<Biome> holder, CallbackInfoReturnable<Holder<WolfVariant>> info,
-		@Local Registry<WolfVariant> registry
+		RandomSource random, RegistryAccess registryAccess, SpawnContext context, CallbackInfoReturnable<Holder<WolfVariant>> info
 	) {
-		Optional<ResourceKey<Biome>> optionalBiome = holder.unwrapKey();
+		Registry<WolfVariant> registry = registryAccess.lookupOrThrow(Registries.WOLF_VARIANT);
+		Optional<ResourceKey<Biome>> optionalBiome = context.biome().unwrapKey();
 		if (optionalBiome.isPresent()) {
 			ResourceKey<Biome> biomeKey = optionalBiome.get();
 			Optional<ResourceKey<WolfVariant>> optionalVariant = WolfVariantBiomeRegistry.get(biomeKey);
