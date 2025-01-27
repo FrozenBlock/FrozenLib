@@ -18,7 +18,6 @@
 package net.frozenblock.lib.worldgen.feature.api;
 
 import java.util.List;
-import java.util.Set;
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
@@ -29,7 +28,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
 @UtilityClass
 public class FrozenPlacementUtils {
@@ -54,27 +52,6 @@ public class FrozenPlacementUtils {
 		PlacementModifier... placementModifiers
 	) {
 		return register(entries, registryKey, holder, List.of(placementModifiers));
-	}
-
-	public static Holder<PlacedFeature> register(
-		DynamicRegistryManagerSetupContext entries,
-		ResourceKey<PlacedFeature> registryKey,
-		ResourceKey<ConfiguredFeature<?, ?>> configuredKey,
-		List<PlacementModifier> list
-	) {
-		var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE, Registries.PLACED_FEATURE));
-		var configured = entries.registryManager().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(configuredKey);
-		var value = registry.register(Registries.PLACED_FEATURE, registryKey.location(), new PlacedFeature(configured, List.copyOf(list)));
-		return Holder.direct(value);
-	}
-
-	public static Holder<PlacedFeature> register(
-		DynamicRegistryManagerSetupContext entries,
-		ResourceKey<PlacedFeature> registryKey,
-		ResourceKey<ConfiguredFeature<?, ?>> resourceKey,
-		PlacementModifier... placementModifiers
-	) {
-		return register(entries, registryKey, resourceKey, List.of(placementModifiers));
 	}
 
 	public static Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {
