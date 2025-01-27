@@ -179,7 +179,7 @@ public class DebugInfoSenderMixin {
 			String inventory = "";
 			boolean wantsGolem = false;
 			if (mob instanceof Villager villager) {
-				profession = villager.getVillagerData().getProfession().toString();
+				profession = villager.getVillagerData().profession().toString();
 				xp = villager.getVillagerXp();
 				inventory = villager.getInventory().toString();
 				wantsGolem = villager.wantsToSpawnGolem(serverLevel.getGameTime());

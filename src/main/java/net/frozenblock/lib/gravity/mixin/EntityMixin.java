@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class EntityMixin implements EntityGravityInterface {
 
 	@Shadow
-	public float fallDistance;
+	public double fallDistance;
 
 	// TODO: convert to directional
 	/*@WrapOperation(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
@@ -49,7 +49,7 @@ public abstract class EntityMixin implements EntityGravityInterface {
 	private void frozenLib$checkFallDamage(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo info) {
 		Vec3 gravity = GravityAPI.calculateGravity(Entity.class.cast(this));
 		double gravityDistance = gravity.length();
-		this.fallDistance *= (float) gravityDistance;
+		this.fallDistance *= gravityDistance;
 	}
 
 	@WrapOperation(

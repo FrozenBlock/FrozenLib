@@ -113,7 +113,7 @@ transitive-accessible method net/minecraft/world/damagesource/DamageSources sour
 
 # Blocks
 transitive-accessible method net/minecraft/world/level/block/Block registerDefaultState (Lnet/minecraft/world/level/block/state/BlockState;)V
-transitive-accessible method net/minecraft/client/renderer/Sheets chestMaterial (Ljava/lang/String;)Lnet/minecraft/client/resources/model/Material;
+#transitive-accessible method net/minecraft/client/renderer/Sheets chestMaterial (Ljava/lang/String;)Lnet/minecraft/client/resources/model/Material;
 transitive-accessible field net/minecraft/world/CompoundContainer container1 Lnet/minecraft/world/Container;
 transitive-accessible field net/minecraft/world/CompoundContainer container2 Lnet/minecraft/world/Container;
 transitive-accessible method net/minecraft/world/level/block/AbstractCauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
