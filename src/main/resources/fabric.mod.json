@@ -72,9 +72,7 @@
     "mixin/frozenlib.worldgen.surface.mixins.json",
     "mixin/frozenlib.worldgen.vein.mixins.json",
 
-    "mixin/frozenlib_quiltmc_datafixerupper.mixins.json",
-    "mixin/frozenlib_quiltmc_registry.mixins.json",
-    "mixin/frozenlib_quiltmc_resource_loader.mixins.json"
+    "mixin/frozenlib_quiltmc_datafixerupper.mixins.json"
   ],
   "accessWidener": "frozenlib.accesswidener",
   "depends": {

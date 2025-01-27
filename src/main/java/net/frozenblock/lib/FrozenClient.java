@@ -44,7 +44,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
 public final class FrozenClient implements ClientModInitializer {
@@ -56,7 +55,6 @@ public final class FrozenClient implements ClientModInitializer {
 
 		// QUILT INIT
 		ClientFreezer.onInitializeClient();
-		ClientRegistrySync.registerHandlers();
 
 		// CONTINUE FROZENLIB INIT
 		registerClientEvents();
