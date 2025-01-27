@@ -43,6 +43,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.Instruments;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.InstrumentComponent;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -85,7 +86,7 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 							.pattern("EEE")
 							.unlockedBy("has_dragon_egg", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DRAGON_EGG)),
 						DataComponentPatch.builder()
-							.set(DataComponents.INSTRUMENT, this.registries.lookupOrThrow(Registries.INSTRUMENT).getOrThrow(Instruments.DREAM_GOAT_HORN))
+							.set(DataComponents.INSTRUMENT, new InstrumentComponent(this.registries.lookupOrThrow(Registries.INSTRUMENT).getOrThrow(Instruments.DREAM_GOAT_HORN)))
 							.build()
 					).save(recipeOutput, FrozenTestMain.id("dream_goat_horn").toString());
 				}
