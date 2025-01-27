@@ -5,5 +5,5 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- Fixed broken access widener entries in the loot pool modification api.
-- FrozenLib's capes are now downloaded asynchronously to prevent slow boot times with poor connection.
+- Removed many features from Quilt that were unneeded.
+  - As such, mod protocols have been removed.

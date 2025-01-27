@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -70,7 +71,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
-import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
 public final class FrozenNetworking {
 	private FrozenNetworking() {}
@@ -90,8 +90,8 @@ public final class FrozenNetworking {
 			ServerCapeData.sendCapeReposToPlayer(player);
 		});
 
-		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
-			if (error != null || server == null) return;
+		ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
+			if (server == null) return;
 			for (ServerPlayer player : PlayerLookup.all(server)) {
 				ConfigSyncPacket.sendS2C(player);
 			}
