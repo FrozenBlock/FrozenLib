@@ -56,7 +56,7 @@ import org.jetbrains.annotations.NotNull;
  * <p> One instance is created per {@link ServerLevel}.
  */
 public class WindManager extends SavedData {
-	public static final String WIND_FILE_PATH = "frozenlib_wind/";
+	public static final String WIND_FILE_PATH = "frozenlib_wind_";
 	public static final String WIND_MANAGER_FILE_ID = WIND_FILE_PATH + "main";
 	public static final Codec<WindManager> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
