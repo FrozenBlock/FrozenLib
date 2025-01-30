@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.entity.mixin;
 
-import com.llamalad7.mixinextras.sugar.Local;
 import java.util.Optional;
 import net.frozenblock.lib.entity.api.WolfVariantBiomeRegistry;
 import net.minecraft.core.Holder;
@@ -47,14 +46,14 @@ public class WolfVariantsMixin {
 		cancellable = true
 	)
 	private static void frozenLib$checkForNewBiomes(
-		RandomSource random, RegistryAccess registryAccess, SpawnContext context, CallbackInfoReturnable<Holder<WolfVariant>> info
+		RandomSource random, RegistryAccess registryAccess, SpawnContext context, CallbackInfoReturnable<Optional<? extends Holder<WolfVariant>>> info
 	) {
 		Registry<WolfVariant> registry = registryAccess.lookupOrThrow(Registries.WOLF_VARIANT);
 		Optional<ResourceKey<Biome>> optionalBiome = context.biome().unwrapKey();
 		if (optionalBiome.isPresent()) {
 			ResourceKey<Biome> biomeKey = optionalBiome.get();
 			Optional<ResourceKey<WolfVariant>> optionalVariant = WolfVariantBiomeRegistry.get(biomeKey);
-            optionalVariant.ifPresent(wolfVariantResourceKey -> info.setReturnValue(registry.getOrThrow(wolfVariantResourceKey)));
+            optionalVariant.ifPresent(wolfVariantResourceKey -> info.setReturnValue(registry.get(wolfVariantResourceKey)));
 		}
 	}
 
