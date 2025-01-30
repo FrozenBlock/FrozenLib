@@ -40,7 +40,6 @@ import net.frozenblock.lib.particle.api.FrozenParticleTypes;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
-import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
@@ -49,7 +48,6 @@ import net.frozenblock.lib.tag.api.TagListCommand;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindCommand;
-import net.frozenblock.lib.wind.impl.WindStorage;
 import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
@@ -62,7 +60,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.commands.WardenSpawnTrackerCommand;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
@@ -118,28 +115,20 @@ public final class FrozenMain extends FrozenModInitializer {
 			StructureUpgradeCommand.register(dispatcher);
 		});
 
-		ServerWorldEvents.LOAD.register((server, level) -> {
-			DimensionDataStorage dimensionDataStorage = level.getDataStorage();
-			WindManager windManager = WindManager.getWindManager(level);
-			dimensionDataStorage.computeIfAbsent(windManager.createData(), WindStorage.WIND_FILE_ID);
-			ScreenShakeManager screenShakeManager = ScreenShakeManager.getScreenShakeManager(level);
-			dimensionDataStorage.computeIfAbsent(screenShakeManager.createData(), ScreenShakeStorage.SCREEN_SHAKE_FILE_ID);
-		});
-
 		ServerWorldEvents.UNLOAD.register((server, serverLevel) -> {
 			EntityUtils.clearEntitiesPerLevel(serverLevel);
-			WindManager.getWindManager(serverLevel).clearAllWindDisturbances();
+			WindManager.getOrCreateWindManager(serverLevel).clearAllWindDisturbances();
 		});
 
 		ServerTickEvents.START_WORLD_TICK.register(serverLevel -> {
-			WindManager.getWindManager(serverLevel).clearAndSwitchWindDisturbances();
-			WindManager.getWindManager(serverLevel).tick(serverLevel);
-			ScreenShakeManager.getScreenShakeManager(serverLevel).tick(serverLevel);
+			WindManager.getOrCreateWindManager(serverLevel).clearAndSwitchWindDisturbances();
+			WindManager.getOrCreateWindManager(serverLevel).tick(serverLevel);
+			ScreenShakeManager.getOrCreateScreenShakeManager(serverLevel).tick(serverLevel);
 			EntityUtils.populateEntitiesPerLevel(serverLevel);
 		});
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
-			WindManager windManager = WindManager.getWindManager(serverLevel);
+			WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
 			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
 		}));
 

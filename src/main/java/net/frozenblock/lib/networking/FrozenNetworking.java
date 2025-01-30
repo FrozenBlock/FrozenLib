@@ -80,7 +80,7 @@ public final class FrozenNetworking {
 		PayloadTypeRegistry<RegistryFriendlyByteBuf> c2sRegistry = PayloadTypeRegistry.playC2S();
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
-			WindManager windManager = WindManager.getWindManager(serverLevel);
+			WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
 			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
 			ServerCapeData.sendAllCapesToPlayer(player);
 		}));

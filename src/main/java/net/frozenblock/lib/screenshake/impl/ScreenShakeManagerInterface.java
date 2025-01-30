@@ -21,6 +21,6 @@ import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 
 public interface ScreenShakeManagerInterface {
 
-	public ScreenShakeManager frozenLib$getScreenShakeManager();
+	public ScreenShakeManager frozenLib$getOrCreateScreenShakeManager();
 
 }

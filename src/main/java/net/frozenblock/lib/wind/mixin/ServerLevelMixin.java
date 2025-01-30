@@ -20,18 +20,27 @@ package net.frozenblock.lib.wind.mixin;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerLevel.class)
-public class ServerLevelMixin implements WindManagerInterface {
+public abstract class ServerLevelMixin implements WindManagerInterface {
+
+	@Shadow
+	public abstract DimensionDataStorage getDataStorage();
 
 	@Unique
-	private final WindManager frozenLib$windManager = new WindManager(ServerLevel.class.cast(this));
+	private WindManager frozenLib$windManager;
 
 	@Unique
 	@Override
-	public WindManager frozenLib$getWindManager() {
+	public WindManager frozenLib$getOrCreateWindManager() {
+		if (this.frozenLib$windManager == null) {
+			this.frozenLib$windManager = this.getDataStorage().computeIfAbsent(WindManager.TYPE);
+		}
+
 		return this.frozenLib$windManager;
 	}
 

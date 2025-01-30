@@ -81,7 +81,7 @@ public class WindCommand {
 
 	private static int toggleWindOverride(@NotNull CommandSourceStack source, boolean bl) {
 		ServerLevel level = source.getLevel();
-		WindManager windManager = WindManager.getWindManager(level);
+		WindManager windManager = WindManager.getOrCreateWindManager(level);
 		if (windManager.overrideWind == bl) {
 			source.sendSuccess(() -> Component.translatable("commands.wind.toggle.failure", bl ? "enabled" : "disabled"), true);
 			return 0;
@@ -94,7 +94,7 @@ public class WindCommand {
 
 	private static int setAndEnableWindOverride(@NotNull CommandSourceStack source, double x, double y, double z) {
 		ServerLevel level = source.getLevel();
-		WindManager windManager = WindManager.getWindManager(level);
+		WindManager windManager = WindManager.getOrCreateWindManager(level);
 		windManager.overrideWind = true;
 		windManager.windX = x;
 		windManager.windY = y;
@@ -107,7 +107,7 @@ public class WindCommand {
 
 	private static int displayWindValue(@NotNull CommandSourceStack source, boolean atPos) {
 		ServerLevel level = source.getLevel();
-		WindManager windManager = WindManager.getWindManager(level);
+		WindManager windManager = WindManager.getOrCreateWindManager(level);
 		if (!atPos) {
 			source.sendSuccess(
 				() -> Component.translatable(

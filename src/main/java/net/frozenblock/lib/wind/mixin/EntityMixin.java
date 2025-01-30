@@ -52,9 +52,9 @@ public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbin
 		if (this.level() instanceof ServerLevel serverLevel) {
 			WindDisturbance windDisturbance = this.frozenLib$makeWindDisturbance();
 			if (windDisturbance != null) {
-				WindManager windManager = WindManager.getWindManager(serverLevel);
+				WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
 				if (this.frozenLib$useSyncPacket()) {
-					windManager.addWindDisturbanceAndSync(windDisturbance);
+					windManager.addWindDisturbanceAndSync(windDisturbance, serverLevel);
 				} else {
 					windManager.addWindDisturbance(windDisturbance);
 				}

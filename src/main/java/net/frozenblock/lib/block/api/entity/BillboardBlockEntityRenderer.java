@@ -35,6 +35,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Con
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
@@ -65,13 +66,21 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 	private final Quaternionf rotation = new Quaternionf(0F, 0F, 0F, 1F);
 
 	@Override
-	public void render(@NotNull T entity, float tickDelta, @NotNull PoseStack poseStack, @NotNull MultiBufferSource vertexConsumers, int light, int overlay) {
+	public void render(
+		T blockEntity,
+		float tickDelta,
+		@NotNull PoseStack poseStack,
+		@NotNull MultiBufferSource multiBufferSource,
+		int light,
+		int overlay,
+		Vec3 cameraPos
+	) {
 		this.rotation.set(0F, 0F, 0F, 1F);
 		this.rotation.mul(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().yRot));
 		poseStack.translate(0.5F, 0F, 0.5F);
 		poseStack.pushPose();
 		poseStack.mulPose(this.rotation);
-		this.base.render(poseStack, vertexConsumers.getBuffer(RenderType.entityCutout(this.getTexture(entity))), light, overlay);
+		this.base.render(poseStack, multiBufferSource.getBuffer(RenderType.entityCutout(this.getTexture(blockEntity))), light, overlay);
 		poseStack.popPose();
 	}
 

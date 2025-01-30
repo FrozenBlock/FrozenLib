@@ -18,27 +18,46 @@
 package net.frozenblock.lib.wind.api;
 
 import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Used to add custom logic to the {@link WindManager}.
  */
-public interface WindManagerExtension {
+public abstract class WindManagerExtension extends SavedData {
+	@Nullable
+	private WindManager windManager;
 
-	ResourceLocation extensionID();
+	public void setWindManager(@NotNull WindManager windManager) {
+		this.windManager = windManager;
+	}
+
+	public @Nullable WindManager getWindManager() {
+		return this.windManager;
+	}
+
+	@Override
+	public boolean isDirty() {
+		return true;
+	}
+
+	public static @NotNull String createSaveId(@NotNull ResourceLocation id) {
+		return WindManager.WIND_FILE_PATH + "_" + id.getNamespace() + "_" + id.getPath();
+	}
 
 	/**
 	 * Runs after the baseTick method.
 	 */
-	void tick(ServerLevel level);
+	abstract void tick(ServerLevel level);
 
 	/**
 	 * Runs before the regular tick method.
 	 */
-	void baseTick(ServerLevel level);
+	abstract void baseTick(ServerLevel level);
 
 	/**
 	 * Used to reset defined values in the rare case of an overflow.
@@ -47,7 +66,7 @@ public interface WindManagerExtension {
 	 *
 	 * @return whether a reset was needed and run.
 	 */
-	boolean runResetsIfNeeded();
+	abstract boolean runResetsIfNeeded();
 
 	/**
 	 * Appends custom data to the {@link WindSyncPacket}.
@@ -55,19 +74,5 @@ public interface WindManagerExtension {
 	 * @param packet The provided {@link WindSyncPacket} to be sent to the client.
 	 * @return the updated {@link CustomPacketPayload} with this extension's data.
 	 */
-	CustomPacketPayload syncPacket(WindSyncPacket packet);
-
-	/**
-	 * Loads custom data.
-	 *
-	 * @param compoundTag The {@link CompoundTag} to read from.
-	 */
-	void load(CompoundTag compoundTag);
-
-	/**
-	 * Saves custom data.
-	 *
-	 * @param compoundTag The {@link CompoundTag} to write to.
-	 */
-	void save(CompoundTag compoundTag);
+	abstract CustomPacketPayload syncPacket(WindSyncPacket packet);
 }

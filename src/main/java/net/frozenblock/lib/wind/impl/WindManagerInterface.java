@@ -21,6 +21,6 @@ import net.frozenblock.lib.wind.api.WindManager;
 
 public interface WindManagerInterface {
 
-	public WindManager frozenLib$getWindManager();
+	public WindManager frozenLib$getOrCreateWindManager();
 
 }
