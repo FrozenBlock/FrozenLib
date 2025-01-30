@@ -52,12 +52,12 @@ public abstract class WindManagerExtension extends SavedData {
 	/**
 	 * Runs after the baseTick method.
 	 */
-	abstract void tick(ServerLevel level);
+	public abstract void tick(ServerLevel level);
 
 	/**
 	 * Runs before the regular tick method.
 	 */
-	abstract void baseTick(ServerLevel level);
+	public abstract void baseTick(ServerLevel level);
 
 	/**
 	 * Used to reset defined values in the rare case of an overflow.
@@ -66,7 +66,7 @@ public abstract class WindManagerExtension extends SavedData {
 	 *
 	 * @return whether a reset was needed and run.
 	 */
-	abstract boolean runResetsIfNeeded();
+	public abstract boolean runResetsIfNeeded();
 
 	/**
 	 * Appends custom data to the {@link WindSyncPacket}.
@@ -74,5 +74,5 @@ public abstract class WindManagerExtension extends SavedData {
 	 * @param packet The provided {@link WindSyncPacket} to be sent to the client.
 	 * @return the updated {@link CustomPacketPayload} with this extension's data.
 	 */
-	abstract CustomPacketPayload syncPacket(WindSyncPacket packet);
+	public abstract CustomPacketPayload syncPacket(WindSyncPacket packet);
 }
