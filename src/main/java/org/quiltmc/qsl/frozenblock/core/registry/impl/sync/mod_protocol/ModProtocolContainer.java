@@ -69,11 +69,10 @@ public interface ModProtocolContainer {
 		};
 	}
 
+	void frozenLib$setModProtocol(Map<String, IntList> map);
+	Map<String, IntList> frozenLib$getModProtocol();
+
 	static ModProtocolContainer of(Object object) {
 		return (ModProtocolContainer) object;
 	}
-
-	void frozenLib$setModProtocol(Map<String, IntList> map);
-
-	Map<String, IntList> frozenLib$getModProtocol();
 }

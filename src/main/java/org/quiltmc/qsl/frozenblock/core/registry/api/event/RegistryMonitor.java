@@ -35,17 +35,6 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.event.RegistryMonitorImpl;
 @ApiStatus.NonExtendable
 public interface RegistryMonitor<V> {
 	/**
-	 * Creates a new {@link RegistryMonitor} to monitor the specified {@link Registry}.
-	 *
-	 * @param registry the {@link Registry} to monitor
-	 * @param <V>      the entry type of the {@link Registry} being monitored
-	 * @return a new {@link RegistryMonitor} monitoring the specified {@link Registry}
-	 */
-	static <V> RegistryMonitor<V> create(Registry<V> registry) {
-		return new RegistryMonitorImpl<>(registry);
-	}
-
-	/**
 	 * A builder-like method to append a filter to the current registry monitor, for determining what entries to invoke
 	 * registered callbacks for.
 	 *
@@ -75,4 +64,15 @@ public interface RegistryMonitor<V> {
 	 * @param callback the callback to be invoked on entries
 	 */
 	void forUpcoming(RegistryEvents.EntryAdded<V> callback);
+
+	/**
+	 * Creates a new {@link RegistryMonitor} to monitor the specified {@link Registry}.
+	 *
+	 * @param registry the {@link Registry} to monitor
+	 * @param <V>      the entry type of the {@link Registry} being monitored
+	 * @return a new {@link RegistryMonitor} monitoring the specified {@link Registry}
+	 */
+	static <V> RegistryMonitor<V> create(Registry<V> registry) {
+		return new RegistryMonitorImpl<>(registry);
+	}
 }

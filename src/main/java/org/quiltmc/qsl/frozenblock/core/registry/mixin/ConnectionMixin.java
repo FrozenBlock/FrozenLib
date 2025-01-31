@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Connection.class)
 public class ConnectionMixin implements ExtendedConnection {
 	@Unique
-	private final Object2IntMap<String> frozenLib$modProtocol = new Object2IntOpenHashMap<>();
+	private Object2IntMap<String> frozenLib$modProtocol = new Object2IntOpenHashMap<>();
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void setDefault(PacketFlow receiving, CallbackInfo ci) {

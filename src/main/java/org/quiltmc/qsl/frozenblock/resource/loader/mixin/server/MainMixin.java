@@ -36,40 +36,40 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(Main.class)
 public class MainMixin {
-	@Shadow
-	@Final
-	private static Logger LOGGER;
+    @Shadow
+    @Final
+    private static Logger LOGGER;
 
-	@Inject(
-		method = "main",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/Util;blockUntilDone(Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;",
-			remap = true
-		),
-		remap = false
-	)
-	private static void onStartReloadResources(String[] strings, CallbackInfo ci) {
-		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null); // First reload
-	}
+    @Inject(
+            method = "main",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/Util;blockUntilDone(Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;",
+                    remap = true
+            ),
+            remap = false
+    )
+    private static void onStartReloadResources(String[] strings, CallbackInfo ci) {
+        ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null); // First reload
+    }
 
-	@ModifyVariable(method = "main", at = @At(value = "STORE"), remap = false)
-	private static WorldStem onSuccessfulReloadResources(WorldStem resources) {
-		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resources.resourceManager(), null);
-		return resources; // noop
-	}
+    @ModifyVariable(method = "main", at = @At(value = "STORE"), remap = false)
+    private static WorldStem onSuccessfulReloadResources(WorldStem resources) {
+        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resources.resourceManager(), null);
+        return resources; // noop
+    }
 
-	@ModifyArg(
-		method = "main",
-		at = @At(
-			value = "INVOKE",
-			target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V"
-		),
-		index = 1,
-		remap = false
-	)
-	private static Throwable onFailedReloadResources(Throwable exception) {
-		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, exception);
-		return exception; // noop
-	}
+    @ModifyArg(
+            method = "main",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V"
+            ),
+            index = 1,
+            remap = false
+    )
+    private static Throwable onFailedReloadResources(Throwable exception) {
+        ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, exception);
+        return exception; // noop
+    }
 }

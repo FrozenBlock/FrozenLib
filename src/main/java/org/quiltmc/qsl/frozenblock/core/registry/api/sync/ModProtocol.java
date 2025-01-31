@@ -34,20 +34,22 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 import org.slf4j.Logger;
 
 public class ModProtocol {
+	public static boolean enabled = false;
+	public static boolean disableQuery = false;
+	public static String prioritizedId = "";
+	public static ModProtocolDef prioritizedEntry;
+	private static final Logger LOGGER = LogUtils.getLogger();
+
 	public static final Event<LoadModProtocol> LOAD_MOD_PROTOCOL = FrozenEvents.createEnvironmentEvent(LoadModProtocol.class,
 		callbacks -> () -> {
 			for (var callback : callbacks) {
 				callback.load();
 			}
 		});
+
+	private static final Map<String, ModProtocolDef> PROTOCOL_VERSIONS = new HashMap<>();
 	public static final List<ModProtocolDef> REQUIRED = new ArrayList<>();
 	public static final List<ModProtocolDef> ALL = new ArrayList<>();
-	private static final Logger LOGGER = LogUtils.getLogger();
-	private static final Map<String, ModProtocolDef> PROTOCOL_VERSIONS = new HashMap<>();
-	public static boolean enabled = false;
-	public static boolean disableQuery = false;
-	public static String prioritizedId = "";
-	public static ModProtocolDef prioritizedEntry;
 
 	@SuppressWarnings("ConstantConditions")
 	public static void loadVersions() {

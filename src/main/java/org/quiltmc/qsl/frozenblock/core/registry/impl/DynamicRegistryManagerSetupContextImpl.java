@@ -56,7 +56,7 @@ public class DynamicRegistryManagerSetupContextImpl implements DynamicRegistryMa
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
 	@NotNull
-	public <E> Optional<Registry<E>> lookup(ResourceKey<? extends Registry<? extends E>> key) {
+	public <E> Optional<Registry<E>> registry(ResourceKey<? extends Registry<? extends E>> key) {
 		return Optional.ofNullable((Registry) this.registries.get(key)).map(registry -> registry);
 	}
 

@@ -35,41 +35,6 @@ public class LogBuilder {
 	private Component currentText = null;
 	private int duplicateCount = 0;
 
-	private static Component duplicatedText(Component currentText, int duplicateCount) {
-		if (duplicateCount < 2) {
-			return currentText;
-		} else {
-			return Component.empty().append(currentText).append(Component.literal(" (" + duplicateCount + ")").withStyle(ChatFormatting.BLUE));
-		}
-	}
-
-	public static String stringify(List<Section> sections) {
-		var builder = new StringBuilder();
-		var iter = sections.iterator();
-
-		while (iter.hasNext()) {
-			var entry = iter.next();
-			builder.append("## " + entry.title().getString());
-
-			if (entry.entries.size() > 0) {
-				builder.append("\n");
-				var eIter = entry.entries.iterator();
-				while (eIter.hasNext()) {
-					builder.append("   " + eIter.next().getString());
-					if (eIter.hasNext()) {
-						builder.append("\n");
-					}
-				}
-			}
-
-			if (iter.hasNext()) {
-				builder.append("\n");
-			}
-		}
-
-		return builder.toString();
-	}
-
 	public void pushT(String id, String lang, Object... args) {
 		this.push(Component.translatableWithFallback("frozenlib.core.registry_sync.log." + id, lang, args));
 	}
@@ -113,6 +78,14 @@ public class LogBuilder {
 		return x;
 	}
 
+	private static Component duplicatedText(Component currentText, int duplicateCount) {
+		if (duplicateCount < 2) {
+			return currentText;
+		} else {
+			return Component.empty().append(currentText).append(Component.literal(" (" + duplicateCount + ")").withStyle(ChatFormatting.BLUE));
+		}
+	}
+
 	public void clear() {
 		this.sections = new ArrayList<>();
 		this.title = null;
@@ -128,6 +101,32 @@ public class LogBuilder {
 		return stringify(sections);
 	}
 
-	public record Section(Component title, List<Component> entries) {
+	public record Section(Component title, List<Component> entries) {};
+
+	public static String stringify(List<Section> sections) {
+		var builder = new StringBuilder();
+		var iter = sections.iterator();
+
+		while (iter.hasNext()) {
+			var entry = iter.next();
+			builder.append("## " + entry.title().getString());
+
+			if (entry.entries.size() > 0) {
+				builder.append("\n");
+				var eIter = entry.entries.iterator();
+				while (eIter.hasNext()) {
+					builder.append("   " + eIter.next().getString());
+					if (eIter.hasNext()) {
+						builder.append("\n");
+					}
+				}
+			}
+
+			if (iter.hasNext()) {
+				builder.append("\n");
+			}
+		}
+
+		return builder.toString();
 	}
 }

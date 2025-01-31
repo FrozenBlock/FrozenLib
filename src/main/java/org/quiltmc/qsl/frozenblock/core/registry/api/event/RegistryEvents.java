@@ -25,7 +25,6 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -43,43 +42,6 @@ import org.jetbrains.annotations.NotNull;
 public class RegistryEvents {
 
 	/**
-	 * This event gets triggered when a new {@link RegistryAccess} gets created,
-	 * but before it gets filled.
-	 * <p>
-	 * This event can be used to register callbacks to dynamic registries, or to pre-fill some values.
-	 * <p>
-	 * <strong>Important Note</strong>: The passed dynamic registry manager might not
-	 * contain the registry, as this event is invoked for each layer of
-	 * the combined registry manager, and each layer holds different registries.
-	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
-	 */
-	public static final Event<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = FrozenEvents.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
-		callbacks -> context -> {
-			for (var callback : callbacks) {
-				callback.onDynamicRegistrySetup(context);
-			}
-		}
-	);
-	/**
-	 * This event gets triggered when a new {@link RegistryAccess} gets created,
-	 * after it has been filled with the registry entries specified by data packs.
-	 * <p>
-	 * This event can be used to register callbacks to dynamic registries, or to inspect values.
-	 * <p>
-	 * <strong>Important Note</strong>: The passed dynamic registry manager might not
-	 * contain the registry, as this event is invoked for each layer of
-	 * the combined registry manager, and each layer holds different registries.
-	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
-	 */
-	public static final Event<DynamicRegistryLoadedCallback> DYNAMIC_REGISTRY_LOADED = FrozenEvents.createEnvironmentEvent(DynamicRegistryLoadedCallback.class,
-		callbacks -> registryManager -> {
-			for (var callback : callbacks) {
-				callback.onDynamicRegistryLoaded(registryManager);
-			}
-		}
-	);
-
-	/**
 	 * Gets the entry added event for a specific Minecraft registry.
 	 * <p>
 	 * The event is invoked upon the addition or assignment of an entry in the specified registry.
@@ -92,6 +54,44 @@ public class RegistryEvents {
 	public static <V> Event<EntryAdded<V>> getEntryAddEvent(Registry<V> registry) {
 		return RegistryEventStorage.as((MappedRegistry<V>) registry).frozenLib_quilt$getEntryAddedEvent();
 	}
+
+	/**
+	 * This event gets triggered when a new {@link RegistryAccess} gets created,
+	 * but before it gets filled.
+	 * <p>
+	 * This event can be used to register callbacks to dynamic registries, or to pre-fill some values.
+	 * <p>
+	 * <strong>Important Note</strong>: The passed dynamic registry manager might not
+	 * contain the registry, as this event is invoked for each layer of
+	 * the combined registry manager, and each layer holds different registries.
+	 * Use {@link RegistryAccess#registry} to prevent crashes.
+	 */
+	public static final Event<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = FrozenEvents.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
+			callbacks -> context -> {
+				for (var callback : callbacks) {
+					callback.onDynamicRegistrySetup(context);
+				}
+			}
+	);
+
+	/**
+	 * This event gets triggered when a new {@link RegistryAccess} gets created,
+	 * after it has been filled with the registry entries specified by data packs.
+	 * <p>
+	 * This event can be used to register callbacks to dynamic registries, or to inspect values.
+	 * <p>
+	 * <strong>Important Note</strong>: The passed dynamic registry manager might not
+	 * contain the registry, as this event is invoked for each layer of
+	 * the combined registry manager, and each layer holds different registries.
+	 * Use {@link RegistryAccess#registry} to prevent crashes.
+	 */
+	public static final Event<DynamicRegistryLoadedCallback> DYNAMIC_REGISTRY_LOADED = FrozenEvents.createEnvironmentEvent(DynamicRegistryLoadedCallback.class,
+			callbacks -> registryManager -> {
+				for (var callback : callbacks) {
+					callback.onDynamicRegistryLoaded(registryManager);
+				}
+			}
+	);
 
 	/**
 	 * Functional interface to be implemented on callbacks for {@link #getEntryAddEvent(Registry)}.
@@ -119,7 +119,7 @@ public class RegistryEvents {
 		 * <strong>Important Note</strong>: The passed dynamic registry manager might not
 		 * contain the registry, as this event is invoked for each layer of
 		 * the combined registry manager, and each layer holds different registries.
-		 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
+		 * Use {@link RegistryAccess#registry} to prevent crashes.
 		 *
 		 * @param context the dynamic registry manager setup context
 		 */
@@ -135,7 +135,7 @@ public class RegistryEvents {
 		 * <strong>Important Note</strong>: The passed dynamic registry manager might not
 		 * contain the registry, as this event is invoked for each layer of
 		 * the combined registry manager, and each layer holds different registries.
-		 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
+		 * Use {@link RegistryAccess#registry} to prevent crashes.
 		 *
 		 * @param registryManager the registry manager
 		 */

@@ -36,10 +36,6 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
  */
 @ApiStatus.Internal
 public final class ServerPackets {
-	private static ResourceLocation id(String path) {
-		return FrozenSharedConstants.id(path);
-	}
-
 	/**
 	 * Starts registry sync.
 	 *
@@ -101,8 +97,7 @@ public final class ServerPackets {
 	 * }
 	 * </code></pre>
 	 */
-	public record ErrorStyle(Component errorHeader, Component errorFooter,
-							 boolean showError) implements CustomPacketPayload {
+	public record ErrorStyle(Component errorHeader, Component errorFooter, boolean showError) implements CustomPacketPayload {
 		public static final Type<ErrorStyle> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/error_style"));
 		public static final StreamCodec<FriendlyByteBuf, ErrorStyle> CODEC = StreamCodec.ofMember(ErrorStyle::write, ErrorStyle::new);
 
@@ -139,8 +134,7 @@ public final class ServerPackets {
 	 * }
 	 * </code></pre>
 	 */
-	public record ModProtocol(String prioritizedId,
-							  Collection<ModProtocolDef> protocols) implements CustomPacketPayload {
+	public record ModProtocol(String prioritizedId, Collection<ModProtocolDef> protocols) implements CustomPacketPayload {
 		public static final Type<ModProtocol> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/mod_protocol"));
 		public static final StreamCodec<FriendlyByteBuf, ModProtocol> CODEC = StreamCodec.ofMember(ModProtocol::write, ModProtocol::new);
 
@@ -158,5 +152,9 @@ public final class ServerPackets {
 		public Type<?> type() {
 			return PACKET_TYPE;
 		}
+	}
+
+	private static ResourceLocation id(String path) {
+		return FrozenSharedConstants.id(path);
 	}
 }
