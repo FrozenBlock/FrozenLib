@@ -48,7 +48,7 @@ jobs:
         run: ref="${GITHUB_REF#refs/heads/}" && echo "::set-output name=branch::${ref////-}"
         id: ref
       - name: Capture Build Artifacts
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: FrozenLib-Artifacts-${{ steps.ref.outputs.branch }}
           path: build/libs/
