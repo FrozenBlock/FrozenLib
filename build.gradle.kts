@@ -208,6 +208,9 @@ repositories {
     maven("https://maven.quiltmc.org/repository/release") {
         name = "Quilt"
     }
+    maven("https://maven.frozenblock.net/release") {
+        name = "FrozenBlock"
+    }
 
     flatDir {
         dirs("libs")
@@ -252,11 +255,11 @@ dependencies {
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    relocModApi("com.github.Treetrain1:Jankson:510cecf79c")
+    relocModApi("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
 
     // ExJson
     //relocModApi("org.exjson:xjs-data:$xjs_data_version")
-    relocModApi("com.github.Treetrain1:xjs-data:f39681b4bb")
+    relocModApi("org.exjson:xjs-data:0.6-infinity-compat-SNAPSHOT")
     relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
     relocModApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.34")?.let { annotationProcessor(it) }
