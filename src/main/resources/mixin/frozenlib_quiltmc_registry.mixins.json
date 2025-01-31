@@ -1,0 +1,19 @@
+{
+  "required": true,
+  "minVersion": "0.8.5",
+  "package": "org.quiltmc.qsl.frozenblock.core.registry.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+    "ConnectionMixin",
+    "MappedRegistryMixin",
+    "RegistryDataLoaderMixin",
+    "ServerStatusVersionMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "client.MinecraftMixin",
+    "client.ServerDataMixin"
+  ]
+}

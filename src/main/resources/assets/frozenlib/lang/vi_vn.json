@@ -99,5 +99,11 @@
   "frozenlib.loot_table_whacker.fail.no_name": "Loot Table Whacker chưa được đặt tên!",
   "frozenlib.loot_table_whacker.fail.no_colon": "ResourceLocation không hợp lệ: Không có dấu :!",
   "frozenlib.loot_table_whacker.fail.no_loot_table": "Loot table không tồn tại: %s",
-  "frozenlib.loot_table_whacker.success": "Đã đặt loot table thành: %s"
+  "frozenlib.loot_table_whacker.success": "Đã đặt loot table thành: %s",
+
+  "frozenlib.core.registry_sync.more": "còn %s...",
+  "frozenlib.core.registry_sync.and": " và ",
+  "frozenlib.core.registry_sync.unsupported_mod_protocol": "Phiên bản giao thức mod không được hỗ trợ cho:\n%s",
+  "frozenlib.core.registry_sync.require_main_mod_protocol": "Máy chủ này yêu cầu %s với phiên bản giao thức là %s.",
+  "frozenlib.core.registry_sync.main_mod_protocol": "Bạn đang sử dụng %s với phiên bản giao thức là %s."
 }
