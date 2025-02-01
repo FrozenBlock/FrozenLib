@@ -9,6 +9,7 @@
   "mixins": [
     "beacon.BeaconBlockEntityMixin",
     "dripstone.PointedDripstoneBlockMixin",
+    "sound.BlockBehaviourMixin",
     "tick.BlockBehaviourMixin"
   ],
   "client": [

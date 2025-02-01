@@ -60,7 +60,7 @@ public final class ClientRegistrySync {
 
 	private static Component disconnectMainReason = null;
 
-	private static LogBuilder builder = new LogBuilder();
+	private static final LogBuilder builder = new LogBuilder();
 	private static boolean mustDisconnect;
 
 	public static void registerHandlers() {

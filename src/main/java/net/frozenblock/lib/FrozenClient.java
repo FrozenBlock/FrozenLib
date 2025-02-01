@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
@@ -38,7 +39,6 @@ import net.frozenblock.lib.particle.impl.DebugPosParticle;
 import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
-import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.wind.api.ClientWindManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
@@ -75,7 +75,7 @@ public final class FrozenClient implements ClientModInitializer {
 		});
 
 		var resourceLoader = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
-		resourceLoader.registerReloadListener(BlockSoundGroupManager.INSTANCE);
+		resourceLoader.registerReloadListener(BlockSoundTypeManager.INSTANCE);
 
 		FrozenClientEntrypoint.EVENT.invoker().init(); // also includes dev init
 	}
