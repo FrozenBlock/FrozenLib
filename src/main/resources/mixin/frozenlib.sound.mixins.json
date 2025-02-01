@@ -8,7 +8,6 @@
   },
   "mixins": [
     "EntityMixin",
-    "PlayerMixin",
-    "BlockBehaviourMixin"
+    "PlayerMixin"
   ]
 }

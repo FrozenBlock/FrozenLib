@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,20 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.api.block_sound_group;
+package net.frozenblock.lib.block.sound.api;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
-import net.minecraft.core.registries.BuiltInRegistries;
+import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Allows you to add any block by either adding its registry (Blocks.STONE) or its ID ("stone").
@@ -37,59 +35,53 @@ import org.jetbrains.annotations.Nullable;
  * You can also add a LIST of blocks (IDs not allowed) by using new Block[]{block1, block2}.
  */
 @UtilityClass
-public class BlockSoundGroupOverwrites {
+public class BlockSoundTypeOverwrites {
+	private static final BlockSoundTypeManager MANAGER = BlockSoundTypeManager.INSTANCE;
 
-	private static final BlockSoundGroupManager MANAGER = BlockSoundGroupManager.INSTANCE;
-
-	public static List<BlockSoundGroupOverwrite> getOverwrites() {
-		return MANAGER.getOverwrites();
+	public static Optional<SoundType> getSoundType(Block block) {
+		return MANAGER.getSoundType(block);
 	}
 
-	@Nullable
-	public static BlockSoundGroupOverwrite getOverwrite(ResourceLocation id) {
-		return MANAGER.getOverwrite(id);
+	public static Optional<SoundType> getSoundType(BlockState blockState) {
+		return MANAGER.getSoundType(blockState);
 	}
 
-	public static @NotNull Optional<BlockSoundGroupOverwrite> getOverwrite(Block block) {
-		ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
-		return MANAGER.getOverwrites().stream().filter(overwrite -> overwrite.blockId().equals(id)).findFirst();
-	}
-
-	public static Optional<BlockSoundGroupOverwrite> getOverwriteIfConditionIsMet(Block block) {
-		ResourceLocation id = BuiltInRegistries.BLOCK.getKey(block);
-		return MANAGER.getOverwrites().stream().filter(overwrite -> overwrite.blockId().equals(id) && overwrite.condition().getAsBoolean()).findFirst();
+	public static Optional<SoundType> getSoundType(ResourceLocation id) {
+		return MANAGER.getSoundType(id);
 	}
 
 	/**
 	 * This will only work with vanilla blocks.
 	 */
 	public static void addBlock(String id, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.addBlock(id, sounds, condition);
+		MANAGER.queueOverwrite(ResourceLocation.withDefaultNamespace(id), sounds, condition);
 	}
 
 	/**
 	 * Adds a block with the specified namespace and id.
 	 */
-	public static void addBlock(String namespace, String id, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.addBlock(namespace, id, sounds, condition);
+	public static void addBlock(String namespace, String path, SoundType sounds, BooleanSupplier condition) {
+		MANAGER.queueOverwrite(ResourceLocation.fromNamespaceAndPath(namespace, path), sounds, condition);
 	}
 
 	/**
 	 * Adds a block with the specified {@link ResourceLocation}.
 	 */
-	public static void addBlock(ResourceLocation key, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.addBlock(key, sounds, condition);
+	public static void addBlock(ResourceLocation location, SoundType sounds, BooleanSupplier condition) {
+		MANAGER.queueOverwrite(location, sounds, condition);
 	}
 
 	public static void addBlock(Block block, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.addBlock(block, sounds, condition);
+		MANAGER.queueOverwrite(block, sounds, condition);
 	}
 
-	public static void addBlocks(Block[] blocks, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.addBlocks(blocks, sounds, condition);
+	public static void addBlocks(Block @NotNull [] blocks, SoundType sounds, BooleanSupplier condition) {
+		for (Block block : blocks) {
+			MANAGER.queueOverwrite(block, sounds, condition);
+		}
 	}
 
 	public static void addBlockTag(TagKey<Block> tag, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.addBlockTag(tag, sounds, condition);
+		MANAGER.queueOverwrite(tag, sounds, condition);
 	}
 }

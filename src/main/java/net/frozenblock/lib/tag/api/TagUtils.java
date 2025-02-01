@@ -18,6 +18,7 @@
 package net.frozenblock.lib.tag.api;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.experimental.UtilityClass;
@@ -29,6 +30,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -36,6 +38,29 @@ import org.jetbrains.annotations.Nullable;
  */
 @UtilityClass
 public class TagUtils {
+
+	public static <T> @NotNull List<T> getAllEntries(@NotNull TagKey<T> tag) {
+		Optional<? extends Registry<?>> maybeRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().location());
+
+		if (maybeRegistry.isPresent()) {
+			Registry<T> registry = (Registry<T>) maybeRegistry.get();
+			if (tag.isFor(registry.key())) {
+				ArrayList<T> entries = new ArrayList<>();
+				for (Holder<T> entry : registry.getTagOrEmpty(tag)) {
+					var optionalKey = entry.unwrapKey();
+					if (optionalKey.isPresent()) {
+						var key = optionalKey.get();
+						registry.getOptional(key).ifPresent(entries::add);
+					}
+				}
+				if (!entries.isEmpty()) {
+					return entries;
+				}
+			}
+		}
+
+		return List.of();
+	}
 
     @Nullable
     public static <T> T getRandomEntry(TagKey<T> tag) {
