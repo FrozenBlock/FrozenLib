@@ -22,6 +22,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.ModContainer;
+import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
@@ -42,7 +43,6 @@ import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.frozenblock.lib.sound.impl.block_sound_group.BlockSoundGroupManager;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.tag.api.TagListCommand;
@@ -163,6 +163,6 @@ public final class FrozenMain extends FrozenModInitializer {
 		});
 
 		var resourceLoader = ResourceManagerHelper.get(PackType.SERVER_DATA);
-		resourceLoader.registerReloadListener(BlockSoundGroupManager.INSTANCE);
+		resourceLoader.registerReloadListener(BlockSoundTypeManager.INSTANCE);
 	}
 }

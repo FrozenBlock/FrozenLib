@@ -66,7 +66,7 @@ public class RegistrySyncText {
 		}
 
 		if (!namespacesList.isEmpty()) {
-			namespaceText.append(Component.translatableWithFallback("frozenlib.core.registry_sync.more",  "%s more...", namespacesList.size()));
+			namespaceText.append(Component.translatableWithFallback("frozenlib.core.registry_sync.more", "%s more...", namespacesList.size()));
 		}
 
 		return namespaceText;

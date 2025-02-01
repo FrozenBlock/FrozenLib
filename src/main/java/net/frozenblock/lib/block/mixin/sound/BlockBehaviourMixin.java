@@ -15,9 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.mixin;
+package net.frozenblock.lib.block.mixin.sound;
 
-import net.frozenblock.lib.sound.api.block_sound_group.BlockSoundGroupOverwrites;
+import net.frozenblock.lib.block.sound.api.BlockSoundTypeOverwrites;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,10 +29,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockBehaviour.class)
 public final class BlockBehaviourMixin {
 
-    @Inject(method = "getSoundType", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "getSoundType", at = @At("RETURN"), cancellable = true)
     private void frozenLib$getSoundGroupOverride(BlockState state, CallbackInfoReturnable<SoundType> info) {
-		BlockSoundGroupOverwrites.getOverwriteIfConditionIsMet(state.getBlock())
-			.ifPresent(blockSoundGroupOverwrite -> info.setReturnValue(blockSoundGroupOverwrite.soundOverwrite()));
+        BlockSoundTypeOverwrites.getSoundType(state).ifPresent(info::setReturnValue);
     }
 
 }

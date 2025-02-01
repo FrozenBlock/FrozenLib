@@ -60,8 +60,8 @@ public interface DynamicRegistryManagerSetupContext {
 	 */
 	default <V> @NotNull Optional<V> register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull ResourceLocation id,
 											  @NotNull Supplier<V> gameObjectSupplier) {
-		return this.registryManager().registry(registryKey)
-				.map(registry -> registry.containsKey(id) ? registry.get(id) : Registry.register(registry, id, gameObjectSupplier.get()));
+		return this.registryManager().lookup(registryKey)
+			.map(registry -> registry.containsKey(id) ? registry.getValue(id) : Registry.register(registry, id, gameObjectSupplier.get()));
 	}
 
 	/**
@@ -74,12 +74,13 @@ public interface DynamicRegistryManagerSetupContext {
 	 */
 	@Contract(pure = true)
 	default @Nullable RegistryMap getRegistries(@NotNull Set<ResourceKey<? extends Registry<?>>> registryKeys) {
-		if (registryKeys.isEmpty()) throw new IllegalArgumentException("Please provide at least one registry to gather.");
+		if (registryKeys.isEmpty())
+			throw new IllegalArgumentException("Please provide at least one registry to gather.");
 
 		Map<ResourceKey<? extends Registry<?>>, Registry<?>> foundRegistries = null;
 
 		for (var key : registryKeys) {
-			var maybe = this.registryManager().registry(key);
+			var maybe = this.registryManager().lookup(key);
 
 			if (maybe.isPresent()) {
 				if (foundRegistries == null) {
@@ -119,7 +120,7 @@ public interface DynamicRegistryManagerSetupContext {
 	 * @param <V>         the type of values held in the registry
 	 */
 	default <V> void monitor(ResourceKey<? extends Registry<V>> registryKey, Consumer<RegistryMonitor<V>> action) {
-		this.registryManager().registry(registryKey).ifPresent(registry -> {
+		this.registryManager().lookup(registryKey).ifPresent(registry -> {
 			action.accept(RegistryMonitor.create(registry));
 		});
 	}

@@ -110,9 +110,7 @@ public class FadingDiskTagFeature extends Feature<FadingDiskTagFeatureConfig> {
 		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
 		for (Direction direction : Direction.values()) {
 			mutableBlockPos.move(direction);
-			if (level.getBlockState(mutableBlockPos).isAir()) {
-				return true;
-			}
+			if (level.getBlockState(mutableBlockPos).canBeReplaced()) return true;
 			mutableBlockPos.move(direction, -1);
 		}
 		return false;

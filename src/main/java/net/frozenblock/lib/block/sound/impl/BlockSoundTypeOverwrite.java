@@ -15,12 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.api.block_sound_group;
+package net.frozenblock.lib.block.sound.impl;
 
-import java.util.function.BooleanSupplier;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.SoundType;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-public record BlockSoundGroupOverwrite(@NotNull ResourceLocation blockId, @NotNull SoundType soundOverwrite, BooleanSupplier condition) {
+import java.util.function.BooleanSupplier;
+
+@ApiStatus.Internal
+public record BlockSoundTypeOverwrite(@NotNull ResourceLocation blockId, @NotNull SoundType soundOverwrite, BooleanSupplier condition) {
 }
