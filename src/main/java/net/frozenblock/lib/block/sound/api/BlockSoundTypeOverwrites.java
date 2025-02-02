@@ -26,7 +26,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Allows you to add any block by either adding its registry (Blocks.STONE) or its ID ("stone").
@@ -46,42 +45,38 @@ public class BlockSoundTypeOverwrites {
 		return MANAGER.getSoundType(blockState);
 	}
 
-	public static Optional<SoundType> getSoundType(ResourceLocation id) {
-		return MANAGER.getSoundType(id);
-	}
-
 	/**
 	 * This will only work with vanilla blocks.
 	 */
 	public static void addBlock(String id, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.queueOverwrite(ResourceLocation.withDefaultNamespace(id), sounds, condition);
+		MANAGER.addBuiltInOverwrite(ResourceLocation.withDefaultNamespace(id), sounds, condition);
 	}
 
 	/**
 	 * Adds a block with the specified namespace and id.
 	 */
 	public static void addBlock(String namespace, String path, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.queueOverwrite(ResourceLocation.fromNamespaceAndPath(namespace, path), sounds, condition);
+		MANAGER.addBuiltInOverwrite(ResourceLocation.fromNamespaceAndPath(namespace, path), sounds, condition);
 	}
 
 	/**
 	 * Adds a block with the specified {@link ResourceLocation}.
 	 */
 	public static void addBlock(ResourceLocation location, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.queueOverwrite(location, sounds, condition);
+		MANAGER.addBuiltInOverwrite(location, sounds, condition);
 	}
 
 	public static void addBlock(Block block, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.queueOverwrite(block, sounds, condition);
+		MANAGER.addBuiltInOverwrite(block, sounds, condition);
 	}
 
-	public static void addBlocks(Block @NotNull [] blocks, SoundType sounds, BooleanSupplier condition) {
+	public static void addBlocks(Block[] blocks, SoundType sounds, BooleanSupplier condition) {
 		for (Block block : blocks) {
-			MANAGER.queueOverwrite(block, sounds, condition);
+			MANAGER.addBuiltInOverwrite(block, sounds, condition);
 		}
 	}
 
 	public static void addBlockTag(TagKey<Block> tag, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.queueOverwrite(tag, sounds, condition);
+		MANAGER.addBuiltInOverwrite(tag, sounds, condition);
 	}
 }
