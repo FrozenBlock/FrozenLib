@@ -46,16 +46,18 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 			shift = At.Shift.AFTER
 		)
 	)
-	public void frozenLib$placeInWorld(
+	public synchronized void frozenLib$placeInWorld(
 		ServerLevelAccessor serverLevel, BlockPos offset, BlockPos pos, StructurePlaceSettings settings, RandomSource random, int flags,
 		CallbackInfoReturnable<Boolean> info
 	) {
+		if (this.frozenLib$additionalProcessors.isEmpty()) return;
 		this.frozenLib$additionalProcessors.forEach(settings::addProcessor);
 		this.frozenLib$additionalProcessors.clear();
 	}
 
 	@Override
-	public void frozenLib$addProcessors(List<StructureProcessor> processors) {
+	public synchronized void frozenLib$addProcessors(List<StructureProcessor> processors) {
+		if (this.frozenLib$additionalProcessors.isEmpty()) return;
 		this.frozenLib$additionalProcessors.addAll(processors);
 	}
 }
