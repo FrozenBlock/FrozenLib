@@ -58,10 +58,8 @@ public class DownwardsChainFeature extends Feature<ChainFeatureConfig> {
 					Blocks.CHAIN.defaultBlockState().setValue(ChainBlock.WATERLOGGED, blockState.getFluidState().is(FluidTags.WATER)),
 					Block.UPDATE_ALL
 				);
-				mutable.set(bx, by + y, bz);
-			} else {
-				return bl;
 			}
+			mutable.set(bx, by + y, bz);
 		}
 		return bl;
 	}
