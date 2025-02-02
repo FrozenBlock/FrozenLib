@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.sound.impl.queued;
+package net.frozenblock.lib.block.sound.impl.overwrite;
 
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;

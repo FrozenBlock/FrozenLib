@@ -15,28 +15,36 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.sound.impl.queued;
+package net.frozenblock.lib.block.sound.impl.overwrite;
 
-import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import java.util.function.BooleanSupplier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.function.BooleanSupplier;
 
 @ApiStatus.Internal
-public class ResourceLocationListBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<List<ResourceLocation>> {
+public abstract class AbstractBlockSoundTypeOverwrite<T> {
+	private final T value;
+	private final SoundType soundType;
+	private final BooleanSupplier soundCondition;
 
-	public ResourceLocationListBlockSoundTypeOverwrite(List<ResourceLocation> value, SoundType soundType, BooleanSupplier soundCondition) {
-		super(value, soundType, soundCondition);
+	public AbstractBlockSoundTypeOverwrite(T value, SoundType soundType, BooleanSupplier soundCondition) {
+		this.value = value;
+		this.soundType = soundType;
+		this.soundCondition = soundCondition;
 	}
 
-	@Override
-	public boolean matches(@NotNull Block block) {
-		Holder.Reference<Block> blockReference = block.builtInRegistryHolder();
-		return this.getValue().stream().anyMatch(blockReference::is);
+	public T getValue() {
+		return this.value;
 	}
+
+	public SoundType getSoundType() {
+		return this.soundType;
+	}
+
+	public BooleanSupplier getSoundCondition() {
+		return this.soundCondition;
+	}
+
+	public abstract boolean matches(Block block);
 }

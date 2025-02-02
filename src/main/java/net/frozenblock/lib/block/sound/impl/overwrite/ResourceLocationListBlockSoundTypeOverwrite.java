@@ -15,24 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.sound.impl.queued;
+package net.frozenblock.lib.block.sound.impl.overwrite;
 
-import java.util.function.BooleanSupplier;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-@ApiStatus.Internal
-public class ResourceLocationBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<ResourceLocation> {
+import java.util.List;
+import java.util.function.BooleanSupplier;
 
-	public ResourceLocationBlockSoundTypeOverwrite(ResourceLocation value, SoundType soundType, BooleanSupplier soundCondition) {
+@ApiStatus.Internal
+public class ResourceLocationListBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<List<ResourceLocation>> {
+
+	public ResourceLocationListBlockSoundTypeOverwrite(List<ResourceLocation> value, SoundType soundType, BooleanSupplier soundCondition) {
 		super(value, soundType, soundCondition);
 	}
 
 	@Override
 	public boolean matches(@NotNull Block block) {
-		return block.builtInRegistryHolder().is(this.getValue());
+		Holder.Reference<Block> blockReference = block.builtInRegistryHolder();
+		return this.getValue().stream().anyMatch(blockReference::is);
 	}
 }
