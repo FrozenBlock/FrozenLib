@@ -6,4 +6,15 @@ Put changelog here:
 
 -----------------
 - Revamped the Block Sound Type API entirely, fixing a few glaring issues.
+  - Code-defined overwrites can now define:
+    - Individual Blocks.
+    - Arrays of Blocks.
+    - Lists of ResourceLocations.
+    - Block Tags.
+  - Data-drive overwrites can now define:
+    - Lists of ResourceLocations.
+    - Block Tags.
+  - Overwrites that list multiple blocks no longer create one instance per-block, saving space in RAM.
+  - Block Tags now actually work in overwrites.
 - All Fading Disk features check if surrounding blocks are replaceable, instead of strictly Air.
+- Potentially fixed an issue with C2ME during structure generation.
