@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2025 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,15 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.sound.impl;
+package net.frozenblock.lib.block.sound.impl.overwrite;
 
+import java.util.function.BooleanSupplier;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.function.BooleanSupplier;
-
 @ApiStatus.Internal
-public record BlockSoundTypeOverwrite(@NotNull ResourceLocation blockId, @NotNull SoundType soundOverwrite, BooleanSupplier condition) {
+public class ResourceLocationBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<ResourceLocation> {
+
+	public ResourceLocationBlockSoundTypeOverwrite(ResourceLocation value, SoundType soundType, BooleanSupplier soundCondition) {
+		super(value, soundType, soundCondition);
+	}
+
+	@Override
+	public boolean matches(@NotNull Block block) {
+		return block.builtInRegistryHolder().is(this.getValue());
+	}
 }

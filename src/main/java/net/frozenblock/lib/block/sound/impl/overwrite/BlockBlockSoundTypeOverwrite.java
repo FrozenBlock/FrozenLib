@@ -15,28 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.sound.impl.queued;
+package net.frozenblock.lib.block.sound.impl.overwrite;
 
-import java.util.function.BiConsumer;
-import java.util.function.BooleanSupplier;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.BooleanSupplier;
 
 @ApiStatus.Internal
-public class QueuedBlockSoundTypeOverwrite extends AbstractQueuedBlockSoundTypeOverwrite<Block> {
+public class BlockBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<Block> {
 
-	public QueuedBlockSoundTypeOverwrite(Block value, SoundType soundType, BooleanSupplier soundCondition) {
+	public BlockBlockSoundTypeOverwrite(Block value, SoundType soundType, BooleanSupplier soundCondition) {
 		super(value, soundType, soundCondition);
 	}
 
 	@Override
-	public void accept(BiConsumer<ResourceLocation, AbstractQueuedBlockSoundTypeOverwrite<Block>> consumer) {
-		ResourceLocation location = BuiltInRegistries.BLOCK.getKey(this.getValue());
-		if (!location.equals(BuiltInRegistries.BLOCK.getDefaultKey())) {
-			consumer.accept(location, this);
-		}
+	public boolean matches(@NotNull Block block) {
+		return block == this.getValue();
 	}
 }

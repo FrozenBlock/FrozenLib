@@ -17,13 +17,20 @@
 
 package net.frozenblock.lib.block.sound.api;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.block.sound.impl.BlockSoundTypeOverwrite;
+import net.frozenblock.lib.block.sound.impl.overwrite.AbstractBlockSoundTypeOverwrite;
+import net.frozenblock.lib.block.sound.impl.overwrite.ResourceLocationBlockSoundTypeOverwrite;
+import net.frozenblock.lib.block.sound.impl.overwrite.ResourceLocationListBlockSoundTypeOverwrite;
+import net.frozenblock.lib.block.sound.impl.overwrite.TagBlockSoundTypeOverwrite;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.SoundType;
+import java.util.List;
 
 @UtilityClass
 public class SoundTypeCodecs {
@@ -39,10 +46,34 @@ public class SoundTypeCodecs {
 		).apply(instance, SoundType::new)
 	);
 
-	public static final Codec<BlockSoundTypeOverwrite> SOUND_TYPE_OVERWRITE = RecordCodecBuilder.create(instance ->
+	public static final Codec<ResourceLocationBlockSoundTypeOverwrite> RESOURCE_LOCATION_BLOCK_SOUND_TYPE_OVERWRITE_CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
-			ResourceLocation.CODEC.fieldOf("id").forGetter(BlockSoundTypeOverwrite::blockId),
-			SOUND_TYPE.fieldOf("sound_type").forGetter(BlockSoundTypeOverwrite::soundOverwrite)
-		).apply(instance, (id, soundType) -> new BlockSoundTypeOverwrite(id, soundType, () -> true))
+			ResourceLocation.CODEC.fieldOf("id").forGetter(ResourceLocationBlockSoundTypeOverwrite::getValue),
+			SOUND_TYPE.fieldOf("sound_type").forGetter(ResourceLocationBlockSoundTypeOverwrite::getSoundType)
+		).apply(instance, (id, soundType) -> new ResourceLocationBlockSoundTypeOverwrite(id, soundType, () -> true))
 	);
+
+	public static final Codec<ResourceLocationListBlockSoundTypeOverwrite> RESOURCE_LOCATION_LIST_BLOCK_SOUND_TYPE_OVERWRITE_CODEC = RecordCodecBuilder.create(instance ->
+		instance.group(
+			ResourceLocation.CODEC.listOf().fieldOf("ids").forGetter(ResourceLocationListBlockSoundTypeOverwrite::getValue),
+			SOUND_TYPE.fieldOf("sound_type").forGetter(ResourceLocationListBlockSoundTypeOverwrite::getSoundType)
+		).apply(instance, (ids, soundType) -> new ResourceLocationListBlockSoundTypeOverwrite(ids, soundType, () -> true))
+	);
+
+	public static final Codec<TagBlockSoundTypeOverwrite> TAG_BLOCK_SOUND_TYPE_OVERWRITE_CODEC = RecordCodecBuilder.create(instance ->
+		instance.group(
+			TagKey.codec(Registries.BLOCK).fieldOf("tag").forGetter(TagBlockSoundTypeOverwrite::getValue),
+			SOUND_TYPE.fieldOf("sound_type").forGetter(TagBlockSoundTypeOverwrite::getSoundType)
+		).apply(instance, (tag, soundType) -> new TagBlockSoundTypeOverwrite(tag, soundType, () -> true))
+	);
+
+	private static final List<Codec<? extends AbstractBlockSoundTypeOverwrite<?>>> CODECS = ImmutableList.of(
+		RESOURCE_LOCATION_LIST_BLOCK_SOUND_TYPE_OVERWRITE_CODEC,
+		RESOURCE_LOCATION_BLOCK_SOUND_TYPE_OVERWRITE_CODEC,
+		TAG_BLOCK_SOUND_TYPE_OVERWRITE_CODEC
+	);
+
+	public List<Codec<? extends AbstractBlockSoundTypeOverwrite<?>>> possibleCodecs() {
+		return CODECS;
+	}
 }
