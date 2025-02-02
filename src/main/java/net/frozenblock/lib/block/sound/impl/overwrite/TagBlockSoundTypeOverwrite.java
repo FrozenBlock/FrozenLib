@@ -15,36 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.sound.impl.queued;
+package net.frozenblock.lib.block.sound.impl.overwrite;
 
 import java.util.function.BooleanSupplier;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public abstract class AbstractBlockSoundTypeOverwrite<T> {
-	private final T value;
-	private final SoundType soundType;
-	private final BooleanSupplier soundCondition;
+public class TagBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<TagKey<Block>> {
 
-	public AbstractBlockSoundTypeOverwrite(T value, SoundType soundType, BooleanSupplier soundCondition) {
-		this.value = value;
-		this.soundType = soundType;
-		this.soundCondition = soundCondition;
+	public TagBlockSoundTypeOverwrite(TagKey<Block> value, SoundType soundType, BooleanSupplier soundCondition) {
+		super(value, soundType, soundCondition);
 	}
 
-	public T getValue() {
-		return this.value;
+	@Override
+	public boolean matches(@NotNull Block block) {
+		return block.builtInRegistryHolder().is(this.getValue());
 	}
-
-	public SoundType getSoundType() {
-		return this.soundType;
-	}
-
-	public BooleanSupplier getSoundCondition() {
-		return this.soundCondition;
-	}
-
-	public abstract boolean matches(Block block);
 }
