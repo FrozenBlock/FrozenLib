@@ -71,9 +71,7 @@ public class BlockSoundTypeOverwrites {
 	}
 
 	public static void addBlocks(Block[] blocks, SoundType sounds, BooleanSupplier condition) {
-		for (Block block : blocks) {
-			MANAGER.addBuiltInOverwrite(block, sounds, condition);
-		}
+		MANAGER.addBuiltInOverwrite(blocks, sounds, condition);
 	}
 
 	public static void addBlockTag(TagKey<Block> tag, SoundType sounds, BooleanSupplier condition) {
