@@ -20,3 +20,4 @@ Put changelog here:
 - Potentially fixed an issue with C2ME during structure generation.
 - Added the `downwards_chain_feature` worldgen feature.
   - This generates Chain blocks downwards, and waterlogs them if they replace water.
+- `BlockStateRespectingProcessorRule` now maintains water if a waterlogged block is replaced with air.
