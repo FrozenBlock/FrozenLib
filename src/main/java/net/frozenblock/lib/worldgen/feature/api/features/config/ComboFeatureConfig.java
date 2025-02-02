@@ -25,7 +25,6 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public record ComboFeatureConfig(List<Holder<PlacedFeature>> features) implements FeatureConfiguration {
-
 	public static final Codec<ComboFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		PlacedFeature.CODEC.listOf().fieldOf("features").forGetter(vegetationPatchConfiguration -> vegetationPatchConfiguration.features)
 	).apply(instance, ComboFeatureConfig::new));

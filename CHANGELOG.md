@@ -18,3 +18,5 @@ Put changelog here:
   - Block Tags now actually work in overwrites.
 - All Fading Disk features check if surrounding blocks are replaceable, instead of strictly Air.
 - Potentially fixed an issue with C2ME during structure generation.
+- Added the `downwards_chain_feature` worldgen feature.
+  - This generates Chain blocks downwards, and waterlogs them if they replace water.

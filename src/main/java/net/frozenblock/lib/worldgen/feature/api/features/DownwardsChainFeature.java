@@ -18,24 +18,27 @@
 package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.features.config.ChainFeatureConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.ChainBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
-public class UpwardsColumnFeature extends Feature<ColumnFeatureConfig> {
+public class DownwardsChainFeature extends Feature<ChainFeatureConfig> {
 
-	public UpwardsColumnFeature(Codec<ColumnFeatureConfig> codec) {
+	public DownwardsChainFeature(Codec<ChainFeatureConfig> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<ColumnFeatureConfig> context) {
+	public boolean place(@NotNull FeaturePlaceContext<ChainFeatureConfig> context) {
 		boolean bl = false;
 		BlockPos blockPos = context.origin();
 		WorldGenLevel level = context.level();
@@ -44,19 +47,20 @@ public class UpwardsColumnFeature extends Feature<ColumnFeatureConfig> {
 		int bx = blockPos.getX();
 		int bz = blockPos.getZ();
 		int by = blockPos.getY();
-		int height = context.config().height().sample(random);
+		int height = -context.config().height().sample(random);
 
-		for (int y = 0; y < height; y++) {
+		for (int y = 0; y > height; y--) {
 			BlockState blockState = level.getBlockState(mutable);
-			if (context.config().replaceableBlocks().contains(blockState.getBlockHolder())
-				|| blockState.isAir()
-				| blockState.getFluidState() != Fluids.EMPTY.defaultFluidState()
-			) {
+			if (context.config().replaceableBlocks().contains(blockState.getBlockHolder()) || blockState.isAir() || blockState.is(Blocks.WATER)) {
 				bl = true;
-				level.setBlock(mutable, context.config().state(), 3);
+				level.setBlock(
+					mutable,
+					Blocks.CHAIN.defaultBlockState().setValue(ChainBlock.WATERLOGGED, blockState.getFluidState().is(FluidTags.WATER)),
+					Block.UPDATE_ALL
+				);
 				mutable.set(bx, by + y, bz);
 			} else {
-				mutable.set(bx, by + y, bz);
+				return bl;
 			}
 		}
 		return bl;

@@ -22,6 +22,7 @@ import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnFeatureCon
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.material.Fluids;
@@ -45,7 +46,11 @@ public class DownwardsColumnFeature extends Feature<ColumnFeatureConfig> {
 		int by = blockPos.getY();
 		int height = -context.config().height().sample(random);
 		for (int y = 0; y > height; y--) {
-			if (context.config().replaceableBlocks().contains(level.getBlockState(mutable).getBlockHolder()) || level.getBlockState(mutable).isAir() || level.getBlockState(mutable).getFluidState() != Fluids.EMPTY.defaultFluidState()) {
+			BlockState blockState = level.getBlockState(mutable);
+			if (context.config().replaceableBlocks().contains(blockState.getBlockHolder())
+				|| blockState.isAir()
+				| blockState.getFluidState() != Fluids.EMPTY.defaultFluidState()
+			) {
 				bl = true;
 				level.setBlock(mutable, context.config().state(), 3);
 				mutable.set(bx, by + y, bz);

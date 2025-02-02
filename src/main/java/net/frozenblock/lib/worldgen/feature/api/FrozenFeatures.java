@@ -25,6 +25,7 @@ import net.frozenblock.lib.worldgen.feature.api.features.CircularWaterloggedVege
 import net.frozenblock.lib.worldgen.feature.api.features.ColumnWithDiskFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.ComboFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.CurvingTunnelFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.DownwardsChainFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.DownwardsColumnFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskCarpetFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskFeature;
@@ -42,6 +43,7 @@ import net.frozenblock.lib.worldgen.feature.api.features.NoisePathUnderWaterFeat
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePlantFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.SimpleBlockScheduleTickFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.UpwardsColumnFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.config.ChainFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnWithDiskFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ComboFeatureConfig;
@@ -85,6 +87,7 @@ public class FrozenFeatures {
 	public static final FadingDiskTagScheduleTickFeature FADING_DISK_TAG_SCHEDULE_TICK_FEATURE = new FadingDiskTagScheduleTickFeature(FadingDiskTagFeatureConfig.CODEC);
 	public static final NoisePathScheduleTickFeature NOISE_PATH_SCHEDULE_TICK_FEATURE = new NoisePathScheduleTickFeature(PathFeatureConfig.CODEC);
 	public static final ComboFeature COMBO_FEATURE = new ComboFeature(ComboFeatureConfig.CODEC);
+	public static final DownwardsChainFeature DOWNWARDS_CHAIN_FEATURE = new DownwardsChainFeature(ChainFeatureConfig.CODEC);
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_feature"), NOISE_PATH_FEATURE);
@@ -111,6 +114,7 @@ public class FrozenFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_schedule_tick_feature"), NOISE_PATH_SCHEDULE_TICK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_tag_schedule_tick_feature"), FADING_DISK_TAG_SCHEDULE_TICK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("combo_feature"), COMBO_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("downwards_chain_feature"), DOWNWARDS_CHAIN_FEATURE);
 	}
 
 }
