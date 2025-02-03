@@ -18,7 +18,7 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import com.mojang.authlib.GameProfile;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.core.BlockPos;
@@ -35,6 +35,6 @@ public class PlayerMixin {
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initWithIcon(Level level, BlockPos pos, float yRot, GameProfile gameProfile, CallbackInfo ci) {
 		Player player = Player.class.cast(this);
-		((EntitySpottingIconInterface) player).getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/player.png"), 0, 1, FrozenSharedConstants.id("default"));
+		((EntitySpottingIconInterface) player).getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/player.png"), 0, 1, FrozenLibConstants.id("default"));
 	}
 }

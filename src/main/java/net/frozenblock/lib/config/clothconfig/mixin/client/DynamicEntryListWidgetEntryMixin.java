@@ -23,7 +23,7 @@ import me.shedaniel.clothconfig2.api.Requirement;
 import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
@@ -57,7 +57,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
 			EntrySyncData entrySyncData = fieldToCheck.getAnnotation(EntrySyncData.class);
 			if (entrySyncData != null && !entrySyncData.value().isEmpty() && entrySyncData.value().equals(identifier)) {
-				if (field != null) FrozenLogUtils.logError("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
+				if (field != null) FrozenLibLogUtils.logError("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
 				field = fieldToCheck;
 			}
 		}

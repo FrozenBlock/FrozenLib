@@ -18,8 +18,8 @@
 package net.frozenblock.lib.worldgen.surface.mixin.terrablender;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.SurfaceRules;
@@ -41,7 +41,7 @@ public class SurfaceRuleManagerMixin {
 		);
 
 		if (newRules != null) {
-			FrozenLogUtils.log("Applying FrozenLib's surface rules to TerraBlender", FrozenSharedConstants.UNSTABLE_LOGGING);
+			FrozenLibLogUtils.log("Applying FrozenLib's surface rules to TerraBlender", FrozenLibConstants.UNSTABLE_LOGGING);
 			return SurfaceRules.sequence(newRules, original, newRules);
 		}
 		return original;

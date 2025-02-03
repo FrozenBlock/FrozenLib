@@ -19,7 +19,7 @@
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync;
 
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -42,7 +42,7 @@ public final class ClientPackets {
 	 * </code></pre>
 	 */
 	public record Handshake(int version) implements CustomPacketPayload {
-		public static final Type<Handshake> PACKET_TYPE = new Type<>(FrozenSharedConstants.id("registry_sync/handshake_client"));
+		public static final Type<Handshake> PACKET_TYPE = new Type<>(FrozenLibConstants.id("registry_sync/handshake_client"));
 		public static final StreamCodec<FriendlyByteBuf, Handshake> CODEC = ByteBufCodecs.VAR_INT.map(Handshake::new, Handshake::version).cast();
 
 		@Override
@@ -67,7 +67,7 @@ public final class ClientPackets {
 	 * </code></pre>
 	 */
 	public record ModProtocol(Object2IntOpenHashMap<String> protocols) implements CustomPacketPayload {
-		public static final Type<ModProtocol> PACKET_TYPE = new Type<>(FrozenSharedConstants.id("registry_sync/mod_protocol"));
+		public static final Type<ModProtocol> PACKET_TYPE = new Type<>(FrozenLibConstants.id("registry_sync/mod_protocol"));
 		public static final StreamCodec<FriendlyByteBuf, ModProtocol> CODEC = StreamCodec.ofMember(ModProtocol::write, ModProtocol::new);
 
 		public ModProtocol(FriendlyByteBuf buf) {
@@ -105,7 +105,7 @@ public final class ClientPackets {
 	 * Ends registry sync. No data
 	 */
 	public record End() implements CustomPacketPayload {
-		public static final Type<End> PACKET_TYPE = new Type<>(FrozenSharedConstants.id("registry_sync/end"));
+		public static final Type<End> PACKET_TYPE = new Type<>(FrozenLibConstants.id("registry_sync/end"));
 		public static final StreamCodec<FriendlyByteBuf, End> CODEC = StreamCodec.ofMember(End::write, End::new);
 
 		public End(FriendlyByteBuf buf) {

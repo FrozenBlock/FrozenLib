@@ -7,7 +7,7 @@
     "defaultRequire": 1
   },
   "client": [
-    "CubeMapMixin",
-    "SplashManagerMixin"
+    "client.CubeMapMixin",
+    "client.SplashManagerMixin"
   ]
 }

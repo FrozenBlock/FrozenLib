@@ -38,14 +38,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Random.class)
 public class RandomMixin {
 
-    @Shadow
+	@Shadow
 	@Final
 	@Mutable
 	private SimpleWeightedRandomList<ResourceKey<StructureTemplatePool>> targets;
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    public void frozenLib$addRandomPoolAliasTargets(ResourceKey<StructureTemplatePool> alias, SimpleWeightedRandomList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info) {
-        ResourceLocation aliasLocation = alias.location();
+	@Inject(method = "<init>", at = @At("TAIL"))
+	public void frozenLib$addRandomPoolAliasTargets(
+		ResourceKey<StructureTemplatePool> alias, SimpleWeightedRandomList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info
+	) {
+		ResourceLocation aliasLocation = alias.location();
 		List<Pair<ResourceLocation, Integer>> additions = RandomPoolAliasApi.getAdditionalTargets(aliasLocation);
 
 		SimpleWeightedRandomList.Builder<ResourceKey<StructureTemplatePool>> builder = SimpleWeightedRandomList.builder();
@@ -59,6 +61,6 @@ public class RandomMixin {
 		}
 
 		this.targets = builder.build();
-    }
+	}
 
 }

@@ -24,19 +24,19 @@ import net.minecraft.world.level.biome.Climate;
  */
 public final class Weirdness {
 	public static final Climate.Parameter MID_SLICE_NORMAL_ASCENDING = Climate.Parameter.span(-1F, -0.93333334F);
-    public static final Climate.Parameter HIGH_SLICE_NORMAL_ASCENDING = Climate.Parameter.span(-0.93333334F, -0.7666667F);
-    public static final Climate.Parameter PEAK_NORMAL = Climate.Parameter.span(-0.7666667F, -0.56666666F);
-    public static final Climate.Parameter HIGH_SLICE_NORMAL_DESCENDING = Climate.Parameter.span(-0.56666666F, -0.4F);
-    public static final Climate.Parameter MID_SLICE_NORMAL_DESCENDING = Climate.Parameter.span(-0.4F, -0.26666668F);
-    public static final Climate.Parameter LOW_SLICE_NORMAL_DESCENDING = Climate.Parameter.span(-0.26666668F, -0.05F);
-    public static final Climate.Parameter VALLEY = Climate.Parameter.span(-0.05F, 0.05F);
-    public static final Climate.Parameter LOW_SLICE_VARIANT_ASCENDING = Climate.Parameter.span(0.05F, 0.26666668F);
-    public static final Climate.Parameter MID_SLICE_VARIANT_ASCENDING = Climate.Parameter.span(0.26666668F, 0.4F);
-    public static final Climate.Parameter HIGH_SLICE_VARIANT_ASCENDING = Climate.Parameter.span(0.4F, 0.56666666F);
-    public static final Climate.Parameter PEAK_VARIANT = Climate.Parameter.span(0.56666666F, 0.7666667F);
-    public static final Climate.Parameter HIGH_SLICE_VARIANT_DESCENDING = Climate.Parameter.span(0.7666667F, 0.93333334F);
-    public static final Climate.Parameter MID_SLICE_VARIANT_DESCENDING = Climate.Parameter.span(0.93333334F, 1F);
-    public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
+	public static final Climate.Parameter HIGH_SLICE_NORMAL_ASCENDING = Climate.Parameter.span(-0.93333334F, -0.7666667F);
+	public static final Climate.Parameter PEAK_NORMAL = Climate.Parameter.span(-0.7666667F, -0.56666666F);
+	public static final Climate.Parameter HIGH_SLICE_NORMAL_DESCENDING = Climate.Parameter.span(-0.56666666F, -0.4F);
+	public static final Climate.Parameter MID_SLICE_NORMAL_DESCENDING = Climate.Parameter.span(-0.4F, -0.26666668F);
+	public static final Climate.Parameter LOW_SLICE_NORMAL_DESCENDING = Climate.Parameter.span(-0.26666668F, -0.05F);
+	public static final Climate.Parameter VALLEY = Climate.Parameter.span(-0.05F, 0.05F);
+	public static final Climate.Parameter LOW_SLICE_VARIANT_ASCENDING = Climate.Parameter.span(0.05F, 0.26666668F);
+	public static final Climate.Parameter MID_SLICE_VARIANT_ASCENDING = Climate.Parameter.span(0.26666668F, 0.4F);
+	public static final Climate.Parameter HIGH_SLICE_VARIANT_ASCENDING = Climate.Parameter.span(0.4F, 0.56666666F);
+	public static final Climate.Parameter PEAK_VARIANT = Climate.Parameter.span(0.56666666F, 0.7666667F);
+	public static final Climate.Parameter HIGH_SLICE_VARIANT_DESCENDING = Climate.Parameter.span(0.7666667F, 0.93333334F);
+	public static final Climate.Parameter MID_SLICE_VARIANT_DESCENDING = Climate.Parameter.span(0.93333334F, 1F);
+	public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 
 	public static final Climate.Parameter[] WEIRDNESSES = new Climate.Parameter[]{
 		MID_SLICE_NORMAL_ASCENDING,

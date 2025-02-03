@@ -18,27 +18,28 @@
 package net.frozenblock.lib.spotting_icons.api;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.Unpooled;
-import java.util.Objects;
-import java.util.Optional;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import org.slf4j.Logger;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
+@ApiStatus.Internal
 public class SpottingIconManager {
 	public Entity entity;
 	public int ticksToCheck;
@@ -56,7 +57,7 @@ public class SpottingIconManager {
 			this.ticksToCheck = 20;
 			if (this.icon != null) {
 				if (this.entity.level().isClientSide) {
-					this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.texture());
+					this.clientHasIconResource = hasTexture(this.icon.texture());
 				}
 				if (!SpottingIconPredicate.getPredicate(this.icon.restrictionID).test(this.entity)) {
 					this.removeIcon();
@@ -73,7 +74,7 @@ public class SpottingIconManager {
 				ServerPlayNetworking.send(player, packet);
 			}
 		} else {
-			this.clientHasIconResource = ClientSpottingIconMethods.hasTexture(this.icon.texture());
+			this.clientHasIconResource = hasTexture(this.icon.texture());
 		}
 		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onAdded(this.entity);
 	}
@@ -110,27 +111,29 @@ public class SpottingIconManager {
 		}
 	}
 
-	public void load(CompoundTag nbt) {
-		this.ticksToCheck = nbt.getInt("frozenSpottingIconTicksToCheck");
-		if (nbt.contains("frozenSpottingIcons")) {
+	@Environment(EnvType.CLIENT)
+	private static boolean hasTexture(ResourceLocation resourceLocation) {
+		return Minecraft.getInstance().getResourceManager().getResource(resourceLocation).isPresent();
+	}
+
+	public void load(@NotNull CompoundTag nbt) {
+		this.ticksToCheck = nbt.getInt("frozenlib_spotting_icon_predicate_cooldown");
+		if (nbt.contains("frozenlib_spotting_icons")) {
 			this.icon = null;
-			DataResult<SpottingIcon> var10000 = SpottingIcon.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getCompound("frozenSpottingIcons")));
-			Logger var10001 = FrozenSharedConstants.LOGGER4;
-			Objects.requireNonNull(var10001);
-			Optional<SpottingIcon> icon = var10000.resultOrPartial(var10001::error);
-			icon.ifPresent(spottingIcon -> this.icon = spottingIcon);
+			SpottingIcon.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getCompound("frozenlib_spotting_icons")))
+				.resultOrPartial(FrozenLibConstants.LOGGER::error)
+				.ifPresent(spottingIcon -> this.icon = spottingIcon);
 		}
 	}
 
-	public void save(CompoundTag nbt) {
-		nbt.putInt("frozenSpottingIconTicksToCheck", this.ticksToCheck);
+	public void save(@NotNull CompoundTag nbt) {
+		nbt.putInt("frozenlib_spotting_icon_predicate_cooldown", this.ticksToCheck);
 		if (this.icon != null) {
-			DataResult<Tag> var10000 = SpottingIcon.CODEC.encodeStart(NbtOps.INSTANCE, this.icon);
-			Logger var10001 = FrozenSharedConstants.LOGGER4;
-			Objects.requireNonNull(var10001);
-			var10000.resultOrPartial(var10001::error).ifPresent((iconNBT) -> nbt.put("frozenSpottingIcons", iconNBT));
-		} else if (nbt.contains("frozenSpottingIcons")) {
-			nbt.remove("frozenSpottingIcons");
+			SpottingIcon.CODEC.encodeStart(NbtOps.INSTANCE, this.icon)
+				.resultOrPartial(FrozenLibConstants.LOGGER::error)
+				.ifPresent(spottingIcon -> nbt.put("frozenlib_spotting_icons", spottingIcon));
+		} else if (nbt.contains("frozenlib_spotting_icons")) {
+			nbt.remove("frozenlib_spotting_icons");
 		}
 	}
 

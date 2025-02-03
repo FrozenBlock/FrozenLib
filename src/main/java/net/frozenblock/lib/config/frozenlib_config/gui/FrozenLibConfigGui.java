@@ -27,7 +27,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
@@ -197,11 +197,11 @@ public final class FrozenLibConfigGui {
 
 	@Contract(value = "_ -> new", pure = true)
 	public static @NotNull Component text(String key) {
-		return Component.translatable("option." + FrozenSharedConstants.MOD_ID + "." + key);
+		return Component.translatable("option." + FrozenLibConstants.MOD_ID + "." + key);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
 	public static @NotNull Component tooltip(String key) {
-		return Component.translatable("tooltip." + FrozenSharedConstants.MOD_ID + "." + key);
+		return Component.translatable("tooltip." + FrozenLibConstants.MOD_ID + "." + key);
 	}
 }

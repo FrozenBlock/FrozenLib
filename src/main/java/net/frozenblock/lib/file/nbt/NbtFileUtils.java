@@ -17,65 +17,109 @@
 
 package net.frozenblock.lib.file.nbt;
 
-import com.mojang.logging.LogUtils;
 import java.io.File;
 import java.io.IOException;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
+/**
+ * A class used to save and read NBT to/from files.
+ */
 public class NbtFileUtils {
-	private static final Logger LOGGER = LogUtils.getLogger();
 	public static final File CONFIG_PATH = FabricLoader.getInstance().getConfigDir().toFile();
 
+	/**
+	 * Saves an NBT file to the config directory.
+	 *
+	 * @param compoundTag The {@link CompoundTag} to save.
+	 * @param fileName The name to use for the file, excluding the file extension.
+	 */
 	public static void saveToConfigFile(CompoundTag compoundTag, String fileName) {
 		CONFIG_PATH.mkdirs();
 		saveToFile(compoundTag, new File(CONFIG_PATH, withNBTExtension(fileName)));
 	}
 
+	/**
+	 * Saves an NBT file within a directory.
+	 *
+	 * @param compoundTag The {@link CompoundTag} to save.
+	 * @param file The directory to save to.
+	 * @param fileName The file name to save to, excluding the file extension.
+	 */
 	public static void saveToFile(CompoundTag compoundTag, @NotNull File file, String fileName) {
 		file.mkdirs();
 		File destFile = new File(file, withNBTExtension(fileName));
 		saveToFile(compoundTag, destFile);
 	}
 
+	/**
+	 * Saves an NBT file.
+	 *
+	 * @param compoundTag The {@link CompoundTag} to save.
+	 * @param file The file to save to.
+	 */
 	public static void saveToFile(CompoundTag compoundTag, @NotNull File file) {
 		file.getParentFile().mkdirs();
 		try {
 			NbtIo.writeCompressed(compoundTag, file.toPath());
 		} catch (IOException iOException) {
-			LOGGER.error("Could not save data {}", file, iOException);
+			FrozenLibConstants.LOGGER.error("Could not save data {}", file, iOException);
 		}
 	}
 
+	/**
+	 * Reads an NBT file from the config directory.
+	 *
+	 * @param fileName The name of the file to read, excluding the file extension.
+	 * @return a {@link CompoundTag} containing the NBT file's data.
+	 */
 	@Nullable
 	public static CompoundTag readFromConfigFile(String fileName) {
 		return readFromFile(new File(CONFIG_PATH, withNBTExtension(fileName)));
 	}
 
+	/**
+	 * Reads an NBT file.
+	 *
+	 * @param file The path the NBT file is located in.
+	 * @param fileName The name of the file to read, excluding the file extension.
+	 * @return a {@link CompoundTag} containing the NBT file's data.
+	 */
 	@Nullable
 	public static CompoundTag readFromFile(File file, String fileName) {
 		return readFromFile(new File(file, withNBTExtension(fileName)));
 	}
 
+	/**
+	 * Reads an NBT file.
+	 *
+	 * @param file The NBT file.
+	 * @return a {@link CompoundTag} containing the NBT file's data.
+	 */
 	@Nullable
 	public static CompoundTag readFromFile(@NotNull File file) {
 		CompoundTag compoundTag = null;
 		try {
 			compoundTag = NbtIo.read(file.toPath());
 		} catch (IOException iOException) {
-			LOGGER.error("Could not read data {}", file, iOException);
+			FrozenLibConstants.LOGGER.error("Could not read data {}", file, iOException);
 		}
 		return compoundTag;
 	}
 
+	/**
+	 * Appends ".nbt" to the end of a {@link String}.
+	 *
+	 * @param string The file's name, excluding the file extension.
+	 * @return The provided {@link String}, with ".nbt" appended at the end.
+	 */
 	@Contract(pure = true)
 	public static @NotNull String withNBTExtension(String string) {
 		return string + ".nbt";
 	}
-
 }

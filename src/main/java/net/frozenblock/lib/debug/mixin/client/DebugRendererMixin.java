@@ -20,7 +20,7 @@ package net.frozenblock.lib.debug.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.debug.client.api.DebugRendererEvents;
 import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
@@ -93,81 +93,81 @@ public class DebugRendererMixin {
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void devtools$init(Minecraft client, CallbackInfo info) {
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("pathfinding"),
+			FrozenLibConstants.id("pathfinding"),
 			this.pathfindingRenderer::render);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("water_level"),
+			FrozenLibConstants.id("water_level"),
 			this.waterDebugRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("heightmap"),
+			FrozenLibConstants.id("heightmap"),
 			this.heightMapRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("collision"),
+			FrozenLibConstants.id("collision"),
 			this.collisionBoxRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("support_block"),
+			FrozenLibConstants.id("support_block"),
 			this.supportBlockRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("neighbor_update"),
+			FrozenLibConstants.id("neighbor_update"),
 			this.neighborsUpdateRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("structure"),
+			FrozenLibConstants.id("structure"),
 			this.structureRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("sky_light"),
+			FrozenLibConstants.id("sky_light"),
 			this.skyLightSectionDebugRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("solid_face"),
+			FrozenLibConstants.id("solid_face"),
 			this.solidFaceRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("chunk_status"),
+			FrozenLibConstants.id("chunk_status"),
 			this.chunkRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("brain"),
+			FrozenLibConstants.id("brain"),
 			this.brainDebugRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("village_sections"),
+			FrozenLibConstants.id("village_sections"),
 			this.villageSectionsDebugRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("bee"),
+			FrozenLibConstants.id("bee"),
 			this.beeDebugRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("raid"),
+			FrozenLibConstants.id("raid"),
 			this.raidDebugRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("light"),
+			FrozenLibConstants.id("light"),
 			this.lightDebugRenderer::render
 		);
 
 		DebugRenderManager.registerRenderer(
-			FrozenSharedConstants.id("breeze"),
+			FrozenLibConstants.id("breeze"),
 			this.breezeDebugRenderer::render
 		);
 

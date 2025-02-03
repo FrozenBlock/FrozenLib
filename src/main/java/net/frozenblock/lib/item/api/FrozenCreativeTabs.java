@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.frozenblock.lib.FrozenLogUtils;
 import net.minecraft.core.registries.Registries;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.CreativeModeTab;
@@ -96,7 +96,7 @@ public class FrozenCreativeTabs {
 			stack.setCount(1);
 			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				FrozenLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
+				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.addBefore(comparedItem, list, tabVisibility);
 			});
 		}
@@ -158,7 +158,7 @@ public class FrozenCreativeTabs {
 			stack.setCount(1);
 			List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				FrozenLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
+				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.addAfter(comparedItem, list, tabVisibility);
 			});
 		}

@@ -26,11 +26,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class SurfaceRuleUtil {
 
-    public static void injectSurfaceRules(@NotNull NoiseGeneratorSettings settings, ResourceKey<DimensionType> dimension) {
+	public static void injectSurfaceRules(@NotNull NoiseGeneratorSettings settings, ResourceKey<DimensionType> dimension) {
 		NoiseGeneratorInterface inter = NoiseGeneratorInterface.class.cast(settings);
 		SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(dimension);
-        if (newRules != null) {
-            inter.frozenLib$writeSurfaceRules(newRules);
-        }
-    }
+		if (newRules != null) {
+			inter.frozenLib$writeSurfaceRules(newRules);
+		}
+	}
 }

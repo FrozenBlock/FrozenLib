@@ -21,7 +21,7 @@ package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
-import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 
@@ -34,9 +34,9 @@ public final class ClientFreezer {
 
     public static void onInitializeClient() {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            FrozenLogUtils.log("[Quilt DFU API] Clientside DataFixer Registry is about to freeze", true);
+            FrozenLibLogUtils.log("[Quilt DFU API] Clientside DataFixer Registry is about to freeze", true);
             QuiltDataFixesInternals.get().freeze();
-            FrozenLogUtils.log("[Quilt DFU API] Clientside DataFixer Registry was frozen", true);
+            FrozenLibLogUtils.log("[Quilt DFU API] Clientside DataFixer Registry was frozen", true);
         });
     }
 }

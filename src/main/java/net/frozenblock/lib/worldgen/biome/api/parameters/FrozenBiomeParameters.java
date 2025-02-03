@@ -94,8 +94,9 @@ public class FrozenBiomeParameters {
 	 * Returns parameters for a border between two consecutive {@link Climate.Parameter}s, with the amount of space taken up per-parameter dictated by its span.
 	 * <p>
 	 * The first parameter's max point must be equal to the second parameter's min point.
-	 * @param firstParameter The first {@link Climate.Parameter}.
-	 * @param secondParameter The second {@link Climate.Parameter}.
+	 *
+	 * @param firstParameter    The first {@link Climate.Parameter}.
+	 * @param secondParameter   The second {@link Climate.Parameter}.
 	 * @param percentagePerSlot The percentage of space taken up per-parameter based on its span.
 	 * @return a border between two consecutive {@link Climate.Parameter}s, with the amount of space taken up per-parameter dictated by its span.
 	 */
@@ -115,8 +116,9 @@ public class FrozenBiomeParameters {
 
 	/**
 	 * Finds borders between two {@link net.minecraft.world.level.biome.Climate.ParameterPoint}s, ignoring {@link Depth} and {@link Weirdness}.
-	 * @param point1 The first {@link net.minecraft.world.level.biome.Climate.ParameterPoint} to find borders between.
-	 * @param point2 The second {@link net.minecraft.world.level.biome.Climate.ParameterPoint} to find borders between.
+	 *
+	 * @param point1            The first {@link net.minecraft.world.level.biome.Climate.ParameterPoint} to find borders between.
+	 * @param point2            The second {@link net.minecraft.world.level.biome.Climate.ParameterPoint} to find borders between.
 	 * @param percentagePerSlot The percentage per "slot" of worldgen noise the border should take up.
 	 * @return A {@link List} of found borders, ignoring {@link Depth} and {@link Weirdness}.
 	 */
@@ -166,8 +168,9 @@ public class FrozenBiomeParameters {
 	 * Finds borders between two {@link List}s of {@link net.minecraft.world.level.biome.Climate.ParameterPoint}s, ignoring {@link Depth} and {@link Weirdness}.
 	 * <p>
 	 * This is best used alongside {@link OverworldBiomeBuilderParameters#getParameters(net.minecraft.resources.ResourceKey)}
-	 * @param pointList1 The first {@link List} of {@link net.minecraft.world.level.biome.Climate.ParameterPoint}s to find borders between.
-	 * @param pointList2 The second {@link List} of {@link net.minecraft.world.level.biome.Climate.ParameterPoint}s to find borders between.
+	 *
+	 * @param pointList1        The first {@link List} of {@link net.minecraft.world.level.biome.Climate.ParameterPoint}s to find borders between.
+	 * @param pointList2        The second {@link List} of {@link net.minecraft.world.level.biome.Climate.ParameterPoint}s to find borders between.
 	 * @param percentagePerSlot The percentage per "slot" of worldgen noise the border should take up.
 	 * @return A {@link List} of found borders, ignoring {@link Depth} and {@link Weirdness}.
 	 */
@@ -185,8 +188,9 @@ public class FrozenBiomeParameters {
 	 * Finds borders between two {@link net.minecraft.world.level.biome.Climate.Parameter}s.
 	 * <p>
 	 * Do note that this keeps intersections between {@link net.minecraft.world.level.biome.Climate.Parameter}s intact.
-	 * @param firstParameter The first {@link net.minecraft.world.level.biome.Climate.Parameter} to find a border between.
-	 * @param secondParameter The second {@link net.minecraft.world.level.biome.Climate.Parameter} to find a border between.
+	 *
+	 * @param firstParameter    The first {@link net.minecraft.world.level.biome.Climate.Parameter} to find a border between.
+	 * @param secondParameter   The second {@link net.minecraft.world.level.biome.Climate.Parameter} to find a border between.
 	 * @param percentagePerSlot The percentage per "slot" of worldgen noise the border should take up.
 	 * @return A {@link List} of found borders and intersections.
 	 */
@@ -207,22 +211,26 @@ public class FrozenBiomeParameters {
 					try {
 						Climate.Parameter borderParameter = makeParameterBorder(parameter1, parameter2, percentagePerSlot);
 						if (!borders.contains(borderParameter)) borders.add(borderParameter);
-					} catch (IllegalArgumentException ignored) {}
+					} catch (IllegalArgumentException ignored) {
+					}
 					try {
 						Climate.Parameter borderParameter = makeParameterBorder(parameter2, parameter1, percentagePerSlot);
 						if (!borders.contains(borderParameter)) borders.add(borderParameter);
-					} catch (IllegalArgumentException ignored) {}
+					} catch (IllegalArgumentException ignored) {
+					}
 				}
 			})
 		);
 
 		return borders;
 	}
+
 	/**
 	 * Splits a {@link net.minecraft.world.level.biome.Climate.Parameter} into multiple {@link net.minecraft.world.level.biome.Climate.Parameter}s, according to a reference.
 	 * <p>
 	 * Do note that this keeps intersections between {@link net.minecraft.world.level.biome.Climate.Parameter}s intact.
-	 * @param parameter The first {@link net.minecraft.world.level.biome.Climate.Parameter}.
+	 *
+	 * @param parameter          The first {@link net.minecraft.world.level.biome.Climate.Parameter}.
 	 * @param referenceParameter The {@link net.minecraft.world.level.biome.Climate.Parameter} to reference and create borders with.
 	 * @return A {@link List} of split-up {@link net.minecraft.world.level.biome.Climate.Parameter}s based on the given reference {@link net.minecraft.world.level.biome.Climate.Parameter}.
 	 */

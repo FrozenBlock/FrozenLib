@@ -23,12 +23,12 @@ import net.minecraft.world.level.biome.Climate;
  * Contains a list of all tmeperature parameters used in vanilla worldgen, named for ease of use.
  */
 public final class Temperature {
-    public static final Climate.Parameter ICY = Climate.Parameter.span(-1F, -0.45F);
-    public static final Climate.Parameter COOL = Climate.Parameter.span(-0.45F, -0.15F);
-    public static final Climate.Parameter NEUTRAL = Climate.Parameter.span(-0.15F, 0.2F);
-    public static final Climate.Parameter WARM = Climate.Parameter.span(0.2F, 0.55F);
-    public static final Climate.Parameter HOT = Climate.Parameter.span(0.55F, 1F);
-    public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
+	public static final Climate.Parameter ICY = Climate.Parameter.span(-1F, -0.45F);
+	public static final Climate.Parameter COOL = Climate.Parameter.span(-0.45F, -0.15F);
+	public static final Climate.Parameter NEUTRAL = Climate.Parameter.span(-0.15F, 0.2F);
+	public static final Climate.Parameter WARM = Climate.Parameter.span(0.2F, 0.55F);
+	public static final Climate.Parameter HOT = Climate.Parameter.span(0.55F, 1F);
+	public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 
 	public static final Climate.Parameter FROZEN_RANGE = ICY;
 	public static final Climate.Parameter UNFROZEN_RANGE = Climate.Parameter.span(COOL, HOT);

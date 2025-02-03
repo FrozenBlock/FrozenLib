@@ -27,7 +27,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
@@ -47,20 +47,21 @@ import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
-import net.frozenblock.lib.sound.api.instances.RestrictedMovingSound;
-import net.frozenblock.lib.sound.api.instances.RestrictedMovingSoundLoop;
-import net.frozenblock.lib.sound.api.instances.RestrictedStartingSound;
-import net.frozenblock.lib.sound.api.instances.distance_based.FadingDistanceSwitchingSound;
-import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSound;
-import net.frozenblock.lib.sound.api.instances.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
-import net.frozenblock.lib.sound.api.networking.FadingDistanceSwitchingSoundPacket;
-import net.frozenblock.lib.sound.api.networking.FlyBySoundPacket;
-import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
-import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
-import net.frozenblock.lib.sound.api.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
-import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
-import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.client.api.sounds.RestrictedMovingSound;
+import net.frozenblock.lib.sound.client.api.sounds.RestrictedMovingSoundLoop;
+import net.frozenblock.lib.sound.client.api.sounds.RestrictedStartingSound;
+import net.frozenblock.lib.sound.client.api.sounds.distance_based.FadingDistanceSwitchingSound;
+import net.frozenblock.lib.sound.client.api.sounds.distance_based.RestrictedMovingFadingDistanceSwitchingSound;
+import net.frozenblock.lib.sound.client.api.sounds.distance_based.RestrictedMovingFadingDistanceSwitchingSoundLoop;
+import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
+import net.frozenblock.lib.sound.impl.networking.FadingDistanceSwitchingSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.FlyBySoundPacket;
+import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.LocalSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
@@ -84,6 +85,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.ApiStatus;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenClientNetworking {
@@ -99,8 +101,7 @@ public final class FrozenClientNetworking {
 		receiveMovingRestrictionSoundPacket();
 		receiveFadingDistanceSwitchingSoundPacket();
 		receiveMovingFadingDistanceSwitchingSoundPacket();
-		registry().register(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket.CODEC);
-		ClientPlayNetworking.registerGlobalReceiver(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket::receive);
+		onReceiveFlyBySoundPacket();
 		receiveCooldownChangePacket();
 		receiveForcedCooldownPacket();
 		receiveCooldownTickCountPacket();
@@ -126,13 +127,24 @@ public final class FrozenClientNetworking {
 		}));
 	}
 
+	@ApiStatus.Internal
 	private static void receiveLocalPlayerSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = ctx.player();
-			Minecraft.getInstance().getSoundManager().play(new EntityBoundSoundInstance(packet.sound().value(), SoundSource.PLAYERS, packet.volume(), packet.pitch(), player, ctx.client().level.random.nextLong()));
+			Minecraft.getInstance().getSoundManager().play(
+				new EntityBoundSoundInstance(
+					packet.sound().value(),
+					SoundSource.PLAYERS,
+					packet.volume(),
+					packet.pitch(),
+					player,
+					ctx.client().level.random.nextLong()
+				)
+			);
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveLocalSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientLevel level = ctx.client().level;
@@ -141,6 +153,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static <T extends Entity> void receiveStartingMovingRestrictionSoundLoopPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientLevel level = ctx.client().level;
@@ -157,6 +170,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientLevel level = ctx.client().level;
@@ -178,6 +192,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static <T extends Entity> void receiveMovingFadingDistanceSwitchingSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
 			SoundManager soundManager = ctx.client().getSoundManager();
@@ -196,6 +211,19 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
+	public static void onReceiveFlyBySoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(FlyBySoundPacket.PACKET_TYPE, (packet, ctx) -> {
+			ClientLevel level = (ClientLevel) ctx.player().level();
+			Entity entity = level.getEntity(packet.id());
+			if (entity != null) {
+				FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(packet.pitch(), packet.volume(), packet.category(), packet.sound().value());
+				FlyBySoundHub.addEntity(entity, flyBySound);
+			}
+		});
+	}
+
+	@ApiStatus.Internal
 	private static void receiveCooldownChangePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = ctx.player();
@@ -205,6 +233,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveForcedCooldownPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = ctx.player();
@@ -215,6 +244,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveCooldownTickCountPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = ctx.player();
@@ -224,6 +254,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveScreenShakePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(ScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			float intensity = packet.intensity();
@@ -238,6 +269,7 @@ public final class FrozenClientNetworking {
         });
 	}
 
+	@ApiStatus.Internal
 	private static void receiveScreenShakeFromEntityPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(EntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
@@ -255,6 +287,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveRemoveScreenShakePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(RemoveScreenShakePacket.PACKET_TYPE, (packet, ctx) ->
 			ScreenShaker.SCREEN_SHAKES.removeIf(
@@ -263,6 +296,7 @@ public final class FrozenClientNetworking {
 		);
 	}
 
+	@ApiStatus.Internal
 	private static void receiveRemoveScreenShakeFromEntityPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(RemoveEntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
@@ -275,6 +309,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveIconPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(SpottingIconPacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
@@ -291,6 +326,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveIconRemovePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(SpottingIconRemovePacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
@@ -303,6 +339,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveWindSyncPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(WindSyncPacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientWindManager.time = packet.windTime();
@@ -313,6 +350,7 @@ public final class FrozenClientNetworking {
 		});
 	}
 
+	@ApiStatus.Internal
 	private static void receiveWindDisturbancePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(WindDisturbancePacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientLevel level = ctx.client().level;
@@ -348,7 +386,7 @@ public final class FrozenClientNetworking {
 					FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
 					ClientPlayNetworking.send(fileTransferPacket);
 				} catch (IOException ignored) {
-					FrozenSharedConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
+					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
 				}
 			} else {
 				try {
@@ -361,7 +399,7 @@ public final class FrozenClientNetworking {
 						ServerTextureDownloader.downloadAndRegisterServerTexture(resourceLocation, packet.transferPath(), packet.fileName());
 					}
 				} catch (IOException ignored) {
-					FrozenSharedConstants.LOGGER.error("Unable save transferred file {}!", packet.fileName());
+					FrozenLibConstants.LOGGER.error("Unable save transferred file {}!", packet.fileName());
 				}
 			}
 		});

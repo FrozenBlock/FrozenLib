@@ -15,9 +15,15 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+<<<<<<<< HEAD:src/main/java/net/frozenblock/lib/texture/mixin/client/TextureManagerMixin.java
 package net.frozenblock.lib.texture.mixin.client;
 
 import net.frozenblock.lib.texture.client.api.ServerTexture;
+========
+package net.frozenblock.lib.file.mixin.transfer.client;
+
+import net.frozenblock.lib.file.transfer.client.ServerTexture;
+>>>>>>>> 1.21.2:src/main/java/net/frozenblock/lib/file/mixin/transfer/client/TextureManagerMixin.java
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.spongepowered.asm.mixin.Mixin;

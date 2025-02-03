@@ -26,11 +26,21 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record PathSwapUnderWaterFeatureConfig(BlockStateProvider state, BlockStateProvider underWaterState, int radius,
-											  int noise, double noiseScale, double minThreshold, double maxThreshold,
-											  boolean useY, boolean scaleY, boolean is3D, boolean onlyPlaceWhenExposed,
-											  HolderSet<Block> replaceableBlocks,
-											  float placement_chance) implements FeatureConfiguration {
+public record PathSwapUnderWaterFeatureConfig(
+	BlockStateProvider state,
+	BlockStateProvider underWaterState,
+	int radius,
+	int noise,
+	double noiseScale,
+	double minThreshold,
+	double maxThreshold,
+	boolean useY,
+	boolean scaleY,
+	boolean is3D,
+	boolean onlyPlaceWhenExposed,
+	HolderSet<Block> replaceableBlocks,
+	float placementChance
+) implements FeatureConfiguration {
 	public static final Codec<PathSwapUnderWaterFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("state").forGetter((config) -> config.state),
 		BlockStateProvider.CODEC.fieldOf("under_water_state").forGetter((config) -> config.underWaterState),
@@ -44,6 +54,6 @@ public record PathSwapUnderWaterFeatureConfig(BlockStateProvider state, BlockSta
 		Codec.BOOL.fieldOf("is_3d").orElse(false).forGetter((config) -> config.is3D),
 		Codec.BOOL.fieldOf("only_place_when_exposed").orElse(false).forGetter((config) -> config.onlyPlaceWhenExposed),
 		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter((config) -> config.replaceableBlocks),
-		Codec.floatRange(0, 1).fieldOf("placement_chance").orElse(1F).forGetter((config) -> config.placement_chance)
+		Codec.floatRange(0, 1).fieldOf("placement_chance").orElse(1F).forGetter((config) -> config.placementChance)
 	).apply(instance, PathSwapUnderWaterFeatureConfig::new));
 }

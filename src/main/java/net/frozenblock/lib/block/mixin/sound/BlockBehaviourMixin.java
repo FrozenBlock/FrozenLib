@@ -29,9 +29,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BlockBehaviour.class)
 public final class BlockBehaviourMixin {
 
-    @Inject(method = "getSoundType", at = @At("RETURN"), cancellable = true)
-    private void frozenLib$getSoundGroupOverride(BlockState state, CallbackInfoReturnable<SoundType> info) {
-        BlockSoundTypeOverwrites.getSoundType(state).ifPresent(info::setReturnValue);
-    }
+	@Inject(method = "getSoundType", at = @At("RETURN"), cancellable = true)
+	private void frozenLib$getSoundGroupOverride(BlockState state, CallbackInfoReturnable<SoundType> info) {
+		BlockSoundTypeOverwrites.getSoundType(state).ifPresent(info::setReturnValue);
+	}
 
 }
