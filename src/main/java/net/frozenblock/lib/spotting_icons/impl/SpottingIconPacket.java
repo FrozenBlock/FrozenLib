@@ -22,8 +22,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+@ApiStatus.Internal
 public record SpottingIconPacket(
 	int entityId,
 	ResourceLocation texture,
@@ -37,11 +39,11 @@ public record SpottingIconPacket(
 	);
 	public static final StreamCodec<FriendlyByteBuf, SpottingIconPacket> CODEC = StreamCodec.ofMember(SpottingIconPacket::write, SpottingIconPacket::new);
 
-	public SpottingIconPacket(FriendlyByteBuf buf) {
+	public SpottingIconPacket(@NotNull FriendlyByteBuf buf) {
 		this(buf.readVarInt(), buf.readResourceLocation(), buf.readFloat(), buf.readFloat(), buf.readResourceLocation());
 	}
 
-	public void write(FriendlyByteBuf buf) {
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.entityId());
 		buf.writeResourceLocation(this.texture());
 		buf.writeFloat(this.startFade());

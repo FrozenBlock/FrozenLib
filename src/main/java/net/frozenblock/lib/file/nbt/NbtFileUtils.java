@@ -20,6 +20,7 @@ package net.frozenblock.lib.file.nbt;
 import java.io.File;
 import java.io.IOException;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import org.jetbrains.annotations.Contract;
@@ -67,7 +68,7 @@ public class NbtFileUtils {
 		try {
 			NbtIo.writeCompressed(compoundTag, file.toPath());
 		} catch (IOException iOException) {
-			FrozenLibLogUtils.LOGGER.error("Could not save data {}", file, iOException);
+			FrozenLibConstants.LOGGER.error("Could not save data {}", file, iOException);
 		}
 	}
 
@@ -106,7 +107,7 @@ public class NbtFileUtils {
 		try {
 			compoundTag = NbtIo.read(file.toPath());
 		} catch (IOException iOException) {
-			FrozenLibLogUtils.LOGGER.error("Could not read data {}", file, iOException);
+			FrozenLibConstants.LOGGER.error("Could not read data {}", file, iOException);
 		}
 		return compoundTag;
 	}

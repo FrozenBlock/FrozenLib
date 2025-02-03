@@ -21,7 +21,7 @@ import lombok.experimental.UtilityClass;
 import net.minecraft.data.worldgen.BootstrapContext;
 
 @UtilityClass
-public class FrozenFeatureUtils {
+public class FrozenLibFeatureUtils {
 
 	public static BootstrapContext<Object> BOOTSTRAP_CONTEXT = null;
 }

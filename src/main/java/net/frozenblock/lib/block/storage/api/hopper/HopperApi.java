@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,39 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.storage.api;
+package net.frozenblock.lib.block.storage.api.hopper;
 
-import java.util.ArrayList;
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
-public class HopperUntouchableList {
+import java.util.ArrayList;
 
-    public static final ArrayList<BlockEntityType<?>> BLACKLISTED_TYPES = new ArrayList<>();
+@UtilityClass
+public class HopperApi {
+    private static final ArrayList<BlockEntityType<?>> BLACKLISTED_TYPES = new ArrayList<>();
 
-    public static boolean inventoryContainsBlacklisted(Container inventory) {
-        if (inventory instanceof BlockEntity block) {
+	/**
+	 * Adds a new {@link BlockEntityType} to blacklist from having interactions with Hoppers.
+	 *
+	 * @param type The {@link BlockEntityType} to blacklist.
+	 */
+	public static void addBlacklistedType(BlockEntityType<?> type) {
+		if (!BLACKLISTED_TYPES.contains(type)) BLACKLISTED_TYPES.add(type);
+	}
+
+	/**
+	 * Returns whether a {@link Container} is blacklisted from interacting with Hoppers.
+	 *
+	 * @param container The {@link Container} to check.
+	 * @return whether the {@link Container} is blacklisted from interacting with Hoppers.
+	 */
+    public static boolean isContainerBlacklisted(Container container) {
+        if (container instanceof BlockEntity block) {
 			return BLACKLISTED_TYPES.contains(block.getType());
-        } else if (inventory instanceof CompoundContainer doubleInventory) {
+        } else if (container instanceof CompoundContainer doubleInventory) {
             if (doubleInventory.container1 instanceof BlockEntity block) {
                 if (BLACKLISTED_TYPES.contains(block.getType())) {
                     return true;

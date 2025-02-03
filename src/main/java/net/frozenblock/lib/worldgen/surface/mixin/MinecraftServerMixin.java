@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
-import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
 import net.minecraft.core.RegistryAccess;

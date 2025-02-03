@@ -22,7 +22,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
-
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.core.Holder;
@@ -40,10 +39,10 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 	public static final KeyDispatchDataCodec<OptimizedBiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.mapCodec((instance) ->
 			instance.group(
 					TagKey.codec(Registries.BIOME)
-							.fieldOf("biome_tag")
-							.forGetter(OptimizedBiomeTagConditionSource::getBiomeTagKey))
-					.apply(instance, OptimizedBiomeTagConditionSource::new)
-			)
+						.fieldOf("biome_tag")
+						.forGetter(OptimizedBiomeTagConditionSource::getBiomeTagKey))
+				.apply(instance, OptimizedBiomeTagConditionSource::new)
+		)
 	);
 
 	public final TagKey<Biome> biomeTagKey;
@@ -129,6 +128,6 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 	}
 
 	private static TagKey<Biome> getBiomeTagKey(@NotNull Object o) {
-		return ((OptimizedBiomeTagConditionSource)o).biomeTagKey;
+		return ((OptimizedBiomeTagConditionSource) o).biomeTagKey;
 	}
 }

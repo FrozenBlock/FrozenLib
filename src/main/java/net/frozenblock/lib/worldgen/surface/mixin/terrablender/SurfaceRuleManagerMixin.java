@@ -18,8 +18,8 @@
 package net.frozenblock.lib.worldgen.surface.mixin.terrablender;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.SurfaceRules;

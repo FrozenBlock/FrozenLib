@@ -23,10 +23,10 @@ import net.minecraft.world.level.biome.Climate;
  * Contains a list of all depth parameters used in vanilla worldgen, named for ease of use.
  */
 public final class Depth {
-    public static final Climate.Parameter SURFACE = Climate.Parameter.point(0F);
-    public static final Climate.Parameter UNDERGROUND = Climate.Parameter.span(0.2F, 0.9F);
-    public static final Climate.Parameter FLOOR = Climate.Parameter.point(1F);
-    public static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1F, 1F);
+	public static final Climate.Parameter SURFACE = Climate.Parameter.point(0F);
+	public static final Climate.Parameter UNDERGROUND = Climate.Parameter.span(0.2F, 0.9F);
+	public static final Climate.Parameter FLOOR = Climate.Parameter.point(1F);
+	public static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1F, 1F);
 
 	public static final Climate.Parameter[] DEPTHS = new Climate.Parameter[]{
 		SURFACE,

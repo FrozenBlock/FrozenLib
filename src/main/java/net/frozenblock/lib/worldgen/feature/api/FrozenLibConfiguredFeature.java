@@ -30,16 +30,16 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import org.jetbrains.annotations.Nullable;
 
-public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends ConfiguredFeature<FC, ?>> {
+public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration, C extends ConfiguredFeature<FC, ?>> {
 
 	/**
-	 * Can be used for setting all bootstrap contexts on 1.19.3
+	 * Can be used for setting all bootstrap contexts on 1.19.3+.
 	 */
-	public static final List<FrozenConfiguredFeature<?, ?>> FEATURES = new ArrayList<>();
+	public static final List<FrozenLibConfiguredFeature<?, ?>> FEATURES = new ArrayList<>();
 
 	private final ResourceKey<ConfiguredFeature<?, ?>> key;
 
-	public FrozenConfiguredFeature(ResourceLocation key) {
+	public FrozenLibConfiguredFeature(ResourceLocation key) {
 		this.key = ResourceKey.create(Registries.CONFIGURED_FEATURE, key);
 		FEATURES.add(this);
 	}
@@ -50,7 +50,7 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 
 	public Holder<ConfiguredFeature<?, ?>> getHolder(@Nullable LevelReader level) {
 		if (level == null)
-			return FrozenFeatureUtils.BOOTSTRAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
+			return FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 		return level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 	}
 
@@ -63,15 +63,15 @@ public class FrozenConfiguredFeature<FC extends FeatureConfiguration, C extends 
 	}
 
 	@SuppressWarnings("unchecked")
-	public <F extends Feature<FC>> FrozenConfiguredFeature<FC, C> makeAndSetHolder(F feature, FC config) {
+	public <F extends Feature<FC>> FrozenLibConfiguredFeature<FC, C> makeAndSetHolder(F feature, FC config) {
 		FrozenLibLogUtils.log("Registering configured feature: " + this.getKey().location(), true);
 
-		assert FrozenFeatureUtils.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().location();
+		assert FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().location();
 
 		assert feature != null : "Feature is null whilst registering " + this.getKey().location();
 		assert config != null : "Feature configuration is null whilst registering " + this.getKey().location();
 
-		FrozenFeatureUtils.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), new ConfiguredFeature<>(feature, config));
+		FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), new ConfiguredFeature<>(feature, config));
 		return this;
 	}
 }

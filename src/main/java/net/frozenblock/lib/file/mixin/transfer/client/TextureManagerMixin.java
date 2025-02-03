@@ -15,9 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.image_transfer.mixin.client;
+package net.frozenblock.lib.file.mixin.transfer.client;
 
-import net.frozenblock.lib.image_transfer.client.ServerTexture;
+import net.frozenblock.lib.file.transfer.client.ServerTexture;
 import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureManager;
 import org.spongepowered.asm.mixin.Mixin;

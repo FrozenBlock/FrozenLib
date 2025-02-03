@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.storage.mixin;
+package net.frozenblock.lib.block.mixin.storage.hopper;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.frozenblock.lib.storage.api.HopperUntouchableList;
+import net.frozenblock.lib.block.storage.api.hopper.HopperApi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.Level;
@@ -42,7 +42,10 @@ public abstract class HopperBlockEntityMixin {
 			ordinal = 0
 		)
 	)
-	private static Container frozenLib$preventEjectionA(Container original, @Share("frozenLib$container") LocalRef<Container> containerRef) {
+	private static Container frozenLib$preventEjectionA(
+		Container original,
+		@Share("frozenLib$container") LocalRef<Container> containerRef
+	) {
 		containerRef.set(original);
 		return original;
 	}
@@ -57,8 +60,11 @@ public abstract class HopperBlockEntityMixin {
 		),
 		cancellable = true
 	)
-    private static void frozenLib$preventEjectionB(Level level, BlockPos blockPos, HopperBlockEntity hopperBlockEntity, CallbackInfoReturnable<Boolean> info, @Share("frozenLib$container") LocalRef<Container> containerRef) {
-        if (HopperUntouchableList.inventoryContainsBlacklisted(containerRef.get())) {
+    private static void frozenLib$preventEjectionB(
+		Level level, BlockPos blockPos, HopperBlockEntity hopperBlockEntity, CallbackInfoReturnable<Boolean> info,
+		@Share("frozenLib$container") LocalRef<Container> containerRef
+	) {
+        if (HopperApi.isContainerBlacklisted(containerRef.get())) {
             info.setReturnValue(false);
         }
     }
@@ -71,7 +77,10 @@ public abstract class HopperBlockEntityMixin {
 			ordinal = 0
 		)
 	)
-    private static Container frozenLib$preventInsertionA(Container original, @Share("frozenLib$container") LocalRef<Container> containerRef) {
+    private static Container frozenLib$preventInsertionA(
+		Container original,
+		@Share("frozenLib$container") LocalRef<Container> containerRef
+	) {
 		containerRef.set(original);
 		return original;
 	}
@@ -86,8 +95,11 @@ public abstract class HopperBlockEntityMixin {
 		),
 		cancellable = true
 	)
-	private static void frozenLib$preventInsertionB(Level level, Hopper hopper, CallbackInfoReturnable<Boolean> info, @Share("frozenLib$container") LocalRef<Container> containerRef) {
-		if (HopperUntouchableList.inventoryContainsBlacklisted(containerRef.get())) {
+	private static void frozenLib$preventInsertionB(
+		Level level, Hopper hopper, CallbackInfoReturnable<Boolean> info,
+		@Share("frozenLib$container") LocalRef<Container> containerRef
+	) {
+		if (HopperApi.isContainerBlacklisted(containerRef.get())) {
 			info.setReturnValue(false);
 		}
 	}

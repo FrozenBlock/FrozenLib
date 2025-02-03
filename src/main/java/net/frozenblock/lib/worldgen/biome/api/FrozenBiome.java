@@ -53,7 +53,7 @@ public abstract class FrozenBiome {
 	/**
 	 * @return the namespace to use for this biome.
 	 */
-    public abstract String modID();
+	public abstract String modID();
 
 	/**
 	 * @return this biome's name, not including the namespace.
@@ -181,12 +181,15 @@ public abstract class FrozenBiome {
 			.waterFogColor(this.waterFogColor())
 			.grassColorModifier(this.grassColorModifier());
 
-		if (this.foliageColorOverride() != null) specialEffectsBuilder.foliageColorOverride(this.foliageColorOverride());
+		if (this.foliageColorOverride() != null)
+			specialEffectsBuilder.foliageColorOverride(this.foliageColorOverride());
 		if (this.grassColorOverride() != null) specialEffectsBuilder.grassColorOverride(this.grassColorOverride());
-		if (this.ambientParticleSettings() != null) specialEffectsBuilder.ambientParticle(this.ambientParticleSettings());
+		if (this.ambientParticleSettings() != null)
+			specialEffectsBuilder.ambientParticle(this.ambientParticleSettings());
 		if (this.ambientLoopSound() != null) specialEffectsBuilder.ambientLoopSound(this.ambientLoopSound());
 		if (this.ambientMoodSettings() != null) specialEffectsBuilder.ambientMoodSound(this.ambientMoodSettings());
-		if (this.ambientAdditionsSound() != null) specialEffectsBuilder.ambientAdditionsSound(this.ambientAdditionsSound());
+		if (this.ambientAdditionsSound() != null)
+			specialEffectsBuilder.ambientAdditionsSound(this.ambientAdditionsSound());
 		if (this.backgroundMusic() != null) specialEffectsBuilder.backgroundMusic(this.backgroundMusic());
 
 		biomeBuilder.specialEffects(specialEffectsBuilder.build());

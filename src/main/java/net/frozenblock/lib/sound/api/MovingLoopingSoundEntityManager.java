@@ -20,6 +20,7 @@ package net.frozenblock.lib.sound.api;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.networking.FrozenLibSoundPackets;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -46,7 +47,7 @@ public class MovingLoopingSoundEntityManager {
             this.sounds.clear();
 			SoundLoopData.CODEC.listOf()
 				.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenlib_looping_sounds", 10)))
-				.resultOrPartial(FrozenLibLogUtils.LOGGER::error)
+				.resultOrPartial(FrozenLibConstants.LOGGER::error)
 				.ifPresent(this.sounds::addAll);
         }
     }
@@ -55,7 +56,7 @@ public class MovingLoopingSoundEntityManager {
 		if (!this.sounds.isEmpty()) {
 			SoundLoopData.CODEC.listOf()
 				.encodeStart(NbtOps.INSTANCE, this.sounds)
-				.resultOrPartial(FrozenLibLogUtils.LOGGER::error)
+				.resultOrPartial(FrozenLibConstants.LOGGER::error)
 				.ifPresent((sounds) -> nbt.put("frozenlib_looping_sounds", sounds));
 		}
     }

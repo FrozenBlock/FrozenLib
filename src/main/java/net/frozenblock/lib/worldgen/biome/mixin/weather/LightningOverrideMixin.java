@@ -55,7 +55,7 @@ public final class LightningOverrideMixin {
 		Holder<Biome> biome = level.getBiome(position);
 		return (
 			(biome.value().hasPrecipitation() && biome.value().warmEnoughToRain(position))
-			|| biome.is(FrozenBiomeTags.CAN_LIGHTNING_OVERRIDE)
+				|| biome.is(FrozenBiomeTags.CAN_LIGHTNING_OVERRIDE)
 		) && !biome.is(FrozenBiomeTags.CANNOT_LIGHTNING_OVERRIDE);
 	}
 

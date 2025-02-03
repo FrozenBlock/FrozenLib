@@ -29,17 +29,18 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
+import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
 @UtilityClass
-public class FrozenPlacementUtils {
+public class FrozenLibPlacementUtils {
 
-	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
+	public static @NotNull ResourceKey<PlacedFeature> createKey(String namespace, String path) {
 		return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(namespace, path));
 	}
 
-	public static Holder<PlacedFeature> register(
-		BootstrapContext<PlacedFeature> entries,
+	public static @NotNull Holder<PlacedFeature> register(
+		@NotNull BootstrapContext<PlacedFeature> entries,
 		ResourceKey<PlacedFeature> registryKey,
 		Holder<ConfiguredFeature<?, ?>> holder,
 		List<PlacementModifier> list
@@ -47,7 +48,7 @@ public class FrozenPlacementUtils {
 		return entries.register(registryKey, new PlacedFeature(holder, List.copyOf(list)));
 	}
 
-	public static Holder<PlacedFeature> register(
+	public static @NotNull Holder<PlacedFeature> register(
 		BootstrapContext<PlacedFeature> entries,
 		ResourceKey<PlacedFeature> registryKey,
 		Holder<ConfiguredFeature<?, ?>> holder,
@@ -56,9 +57,9 @@ public class FrozenPlacementUtils {
 		return register(entries, registryKey, holder, List.of(placementModifiers));
 	}
 
-	public static Holder<PlacedFeature> register(
-		DynamicRegistryManagerSetupContext entries,
-		ResourceKey<PlacedFeature> registryKey,
+	public static @NotNull Holder<PlacedFeature> register(
+		@NotNull DynamicRegistryManagerSetupContext entries,
+		@NotNull ResourceKey<PlacedFeature> registryKey,
 		ResourceKey<ConfiguredFeature<?, ?>> configuredKey,
 		List<PlacementModifier> list
 	) {
@@ -68,7 +69,7 @@ public class FrozenPlacementUtils {
 		return Holder.direct(value);
 	}
 
-	public static Holder<PlacedFeature> register(
+	public static @NotNull Holder<PlacedFeature> register(
 		DynamicRegistryManagerSetupContext entries,
 		ResourceKey<PlacedFeature> registryKey,
 		ResourceKey<ConfiguredFeature<?, ?>> resourceKey,
@@ -77,7 +78,7 @@ public class FrozenPlacementUtils {
 		return register(entries, registryKey, resourceKey, List.of(placementModifiers));
 	}
 
-	public static Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {
+	public static @NotNull Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {
 		return VanillaRegistries.createLookup().lookupOrThrow(Registries.PLACED_FEATURE).getOrThrow(resourceKey);
 	}
 }

@@ -18,8 +18,6 @@ Put changelog here:
   - Block Tags now actually work in overwrites.
 - All Fading Disk features check if surrounding blocks are replaceable, instead of strictly Air.
 - Potentially fixed an issue with C2ME during structure generation.
-- Added the `downwards_chain_feature` worldgen feature.
-  - This generates Chain blocks downwards, and waterlogs them if they replace water.
 - `BlockStateRespectingProcessorRule` now maintains water if a waterlogged block is replaced with air.
 - Added tinted flower bed models.
 - Cleaned up the Screen Shake system and made it much smoother.
@@ -29,3 +27,5 @@ Put changelog here:
 - Reworked, renamed, and cleaned up the Axe, Bone Meal, and Shovel item use APIs.
 - Cleaned up classes in the `sound` package and condensed some of its contents.
 - Flyby sounds can now be properly sent to the client.
+- Combined the `storage` and `block` packages.
+- Removed a few unnecessary APIs.

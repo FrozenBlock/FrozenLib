@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Structure.class)
 public class StructureMixin {
 
-    @ModifyExpressionValue(
+	@ModifyExpressionValue(
 		method = "generate",
 		at = @At(
 			value = "NEW",

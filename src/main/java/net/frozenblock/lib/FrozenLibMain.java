@@ -49,7 +49,7 @@ import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindCommand;
 import net.frozenblock.lib.wind.impl.WindStorage;
-import net.frozenblock.lib.worldgen.feature.api.FrozenFeatures;
+import net.frozenblock.lib.worldgen.feature.api.FrozenLibFeatures;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
@@ -89,7 +89,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		WindDisturbanceLogic.init();
-		FrozenFeatures.init();
+		FrozenLibFeatures.init();
 		FrozenPlacementModifiers.init();
 		DataPackReloadMarker.init();
 

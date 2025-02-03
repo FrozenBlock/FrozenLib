@@ -22,8 +22,10 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+@ApiStatus.Internal
 public record SpottingIconRemovePacket(
 	int entityId
 ) implements CustomPacketPayload {
@@ -35,7 +37,7 @@ public record SpottingIconRemovePacket(
 		.map(SpottingIconRemovePacket::new, SpottingIconRemovePacket::entityId)
 		.cast();
 
-	public void write(FriendlyByteBuf buf) {
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.entityId());
 	}
 

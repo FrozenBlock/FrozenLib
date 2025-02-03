@@ -59,7 +59,7 @@ public final class SoundPredicate<T extends Entity> {
 					return predicate.predicateSupplier.get();
 				}
 			}
-			FrozenLibLogUtils.LOGGER.error("Unable to find sound predicate {}! Using default sound predicate instead!", id);
+			FrozenLibConstants.LOGGER.error("Unable to find sound predicate {}! Using default sound predicate instead!", id);
         }
         return defaultPredicate();
     }

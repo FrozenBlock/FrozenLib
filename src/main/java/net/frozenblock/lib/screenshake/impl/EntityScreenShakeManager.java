@@ -22,6 +22,7 @@ import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
 
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -42,7 +43,7 @@ public class EntityScreenShakeManager {
 			this.shakes.clear();
 			EntityScreenShake.CODEC.listOf()
 				.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenlib_screen_shakes", 10)))
-				.resultOrPartial(FrozenLibLogUtils.LOGGER::error)
+				.resultOrPartial(FrozenLibConstants.LOGGER::error)
 				.ifPresent(this.shakes::addAll);
 		}
 	}
@@ -51,7 +52,7 @@ public class EntityScreenShakeManager {
 		if (!this.shakes.isEmpty()) {
 			EntityScreenShake.CODEC.listOf()
 				.encodeStart(NbtOps.INSTANCE, this.shakes)
-				.resultOrPartial(FrozenLibLogUtils.LOGGER::error)
+				.resultOrPartial(FrozenLibConstants.LOGGER::error)
 				.ifPresent(screenShakes -> nbt.put("frozenlib_screen_shakes", screenShakes));
 		}
 	}

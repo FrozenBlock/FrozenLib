@@ -15,29 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.storage.api;
+package net.frozenblock.lib.block.storage.api;
 
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 
 /**
- * @param <T> The type of resource being moved.
  * @since 1.3.8
  */
-@FunctionalInterface
-public interface StorageInteraction<T> {
-	long moveResources(Storage<T> storage, T resource, long maxAmount, TransactionContext transaction);
+public enum MoveDirection {
+	IN(Storage::insert),
+	OUT(Storage::extract);
 
-	default long moveResources(Storage<T> storage, T resource, long maxAmount, TransactionContext transaction, boolean simulate) {
-		if (simulate) {
-			// closes this automatically
-			// check functionality of AutoCloseable class
-			try (Transaction simulateTransaction = Transaction.openNested(transaction)) {
-				return moveResources(storage, resource, maxAmount, simulateTransaction);
-			}
-		}
+	private final StorageInteraction<Object> interaction;
 
-		return moveResources(storage, resource, maxAmount, transaction);
-    }
+	MoveDirection(StorageInteraction<Object> interaction) {
+		this.interaction = interaction;
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> long moveResources(Storage<T> inventory, T resource, long maxAmount, TransactionContext transaction) {
+		return this.interaction.moveResources((Storage<Object>) inventory, resource, maxAmount, transaction);
+	}
+
+	@SuppressWarnings("unchecked")
+	public <T> long simulateMoveResources(Storage<T> inventory, T resource, long maxAmount, TransactionContext transaction) {
+		return this.interaction.moveResources((Storage<Object>) inventory, resource, maxAmount, transaction, true);
+	}
 }

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.storage.api;
+package net.frozenblock.lib.block.storage.api;
 
 import java.util.Iterator;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;

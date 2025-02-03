@@ -28,7 +28,7 @@ import net.minecraft.resources.ResourceLocation;
 public class RandomPoolAliasApi {
 	private static final Map<ResourceLocation, List<Pair<ResourceLocation, Integer>>> ALIAS_TO_TARGETS = new Object2ObjectOpenHashMap<>();
 
-    public static void addTarget(ResourceLocation alias, ResourceLocation target, int weight) {
+	public static void addTarget(ResourceLocation alias, ResourceLocation target, int weight) {
 		List<Pair<ResourceLocation, Integer>> list = ALIAS_TO_TARGETS.getOrDefault(alias, null);
 		if (list == null) {
 			list = new ArrayList<>();

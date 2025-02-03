@@ -19,6 +19,7 @@ package net.frozenblock.lib.worldgen.biome.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import java.util.Optional;
 import net.frozenblock.lib.worldgen.biome.api.FrozenGrassColorModifiers;
 import net.frozenblock.lib.worldgen.biome.impl.BiomeInterface;
 import net.frozenblock.lib.worldgen.biome.impl.FrozenGrassColorModifier;
@@ -29,7 +30,6 @@ import net.minecraft.resources.RegistryDataLoader;
 import net.minecraft.resources.ResourceKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import java.util.Optional;
 
 @Mixin(value = RegistryDataLoader.class, priority = 50)
 public class RegistryDataLoaderMixin {
