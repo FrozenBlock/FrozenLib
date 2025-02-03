@@ -24,6 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import lombok.Getter;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeManagerInterface;
 import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
@@ -40,6 +41,7 @@ import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+@Getter
 public class ScreenShakeManager extends SavedData {
 	public static final String SCREENSHAKE_MANAGER_FILE_ID = "frozenlib_screen_shakes";
 	public static final Codec<ScreenShakeManager> CODEC = RecordCodecBuilder.create(
@@ -88,71 +90,6 @@ public class ScreenShakeManager extends SavedData {
 		this.getShakes().add(new ScreenShake(intensity, duration, falloffStart, pos, maxDistance, ticks));
 	}
 
-	public ArrayList<ScreenShake> getShakes() {
-		return this.shakes;
-	}
-
-	public static class ScreenShake {
-		private final float intensity;
-		public final int duration;
-		private final int durationFalloffStart;
-		protected Vec3 pos;
-		public final float maxDistance;
-		public int ticks;
-
-		public List<ServerPlayer> trackingPlayers = new ArrayList<>();
-		public final ChunkPos chunkPos;
-
-		public static final Codec<ScreenShake> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-				Codec.FLOAT.fieldOf("Intensity").forGetter(ScreenShake::getIntensity),
-				Codec.INT.fieldOf("Duration").forGetter(ScreenShake::getDuration),
-				Codec.INT.fieldOf("FalloffStart").forGetter(ScreenShake::getDurationFalloffStart),
-				Vec3.CODEC.fieldOf("Position").forGetter(ScreenShake::getPos),
-				Codec.FLOAT.fieldOf("MaxDistance").forGetter(ScreenShake::getMaxDistance),
-				Codec.INT.fieldOf("Ticks").forGetter(ScreenShake::getTicks)
-		).apply(instance, ScreenShake::new));
-		public static final Codec<List<ScreenShake>> LIST_CODEC = CODEC.listOf();
-
-		public ScreenShake(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance, int ticks) {
-			this.intensity = intensity;
-			this.duration = duration;
-			this.durationFalloffStart = durationFalloffStart;
-			this.pos = pos;
-			this.maxDistance = maxDistance;
-			this.ticks = ticks;
-			this.chunkPos = new ChunkPos(BlockPos.containing(pos));
-		}
-
-		public boolean shouldRemove() {
-			return this.ticks > this.duration;
-		}
-
-		public float getIntensity() {
-			return this.intensity;
-		}
-
-		public int getDuration() {
-			return this.duration;
-		}
-
-		public int getDurationFalloffStart() {
-			return this.durationFalloffStart;
-		}
-
-		public Vec3 getPos() {
-			return this.pos;
-		}
-
-		public float getMaxDistance() {
-			return this.maxDistance;
-		}
-
-		public int getTicks() {
-			return this.ticks;
-		}
-
-	}
-
 	public static ScreenShakeManager getOrCreateScreenShakeManager(ServerLevel level) {
 		return ((ScreenShakeManagerInterface)level).frozenLib$getOrCreateScreenShakeManager();
 	}
@@ -198,11 +135,52 @@ public class ScreenShakeManager extends SavedData {
 			for (ServerPlayer player : PlayerLookup.world(serverLevel)) {
 				ServerPlayNetworking.send(player, packet);
 			}
-			((EntityScreenShakeInterface)entity).frozenLib$addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
+			((EntityScreenShakeInterface) entity).frozenLib$addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
 		}
 	}
 
-	public static void sendEntityScreenShakeTo(ServerPlayer player, Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
+	public static void sendEntityScreenShakeTo(ServerPlayer player, @NotNull Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
 		ServerPlayNetworking.send(player, new EntityScreenShakePacket(entity.getId(), intensity, duration, falloffStart, maxDistance, ticks));
+	}
+
+	public static class ScreenShake {
+		public static final Codec<ScreenShake> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+			Codec.FLOAT.fieldOf("Intensity").forGetter(ScreenShake::getIntensity),
+			Codec.INT.fieldOf("Duration").forGetter(ScreenShake::getDuration),
+			Codec.INT.fieldOf("FalloffStart").forGetter(ScreenShake::getDurationFalloffStart),
+			Vec3.CODEC.fieldOf("Position").forGetter(ScreenShake::getPos),
+			Codec.FLOAT.fieldOf("MaxDistance").forGetter(ScreenShake::getMaxDistance),
+			Codec.INT.fieldOf("Ticks").forGetter(ScreenShake::getTicks)
+		).apply(instance, ScreenShake::new));
+		public static final Codec<List<ScreenShake>> LIST_CODEC = CODEC.listOf();
+		@Getter
+		public final int duration;
+		@Getter
+		public final float maxDistance;
+		public final ChunkPos chunkPos;
+		@Getter
+		private final float intensity;
+		@Getter
+		private final int durationFalloffStart;
+		@Getter
+		public int ticks;
+		public List<ServerPlayer> trackingPlayers = new ArrayList<>();
+		@Getter
+		protected Vec3 pos;
+
+		public ScreenShake(float intensity, int duration, int durationFalloffStart, Vec3 pos, float maxDistance, int ticks) {
+			this.intensity = intensity;
+			this.duration = duration;
+			this.durationFalloffStart = durationFalloffStart;
+			this.pos = pos;
+			this.maxDistance = maxDistance;
+			this.ticks = ticks;
+			this.chunkPos = new ChunkPos(BlockPos.containing(pos));
+		}
+
+		public boolean shouldRemove() {
+			return this.ticks > this.duration;
+		}
+
 	}
 }

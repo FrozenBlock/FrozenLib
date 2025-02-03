@@ -53,7 +53,9 @@ public class SpecialModelRenderersMixin {
 			ordinal = 0
 		)
 	)
-	private static ImmutableMap.Builder<Block, SpecialModelRenderer.Unbaked> put(ImmutableMap.Builder instance, Object key, Object value, Operation<ImmutableMap.Builder<Block, SpecialModelRenderer.Unbaked>> original) {
+	private static ImmutableMap.Builder<Block, SpecialModelRenderer.Unbaked> put(
+		ImmutableMap.Builder instance, Object key, Object value, Operation<ImmutableMap.Builder<Block, SpecialModelRenderer.Unbaked>> original
+	) {
 		FabricLoader.getInstance().getEntrypointContainers("frozenlib:special_model_renderers", SpecialModelRenderersEntrypoint.class).forEach(entrypoint -> {
 			try {
 				SpecialModelRenderersEntrypoint specialModelRenderersEntrypoint = entrypoint.getEntrypoint();

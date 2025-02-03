@@ -21,8 +21,9 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import java.util.Collection;
-import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.FrozenSharedConstants;
+
+import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.entry.TypedEntryType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
@@ -90,7 +91,7 @@ public final class XjsTypedEntrySerializer {
         Pair<T, JsonValue> pair = optional.get();
         T first = pair.getFirst();
         TypedEntry<T> entry = TypedEntry.create(entryType, first);
-        FrozenLogUtils.log("Built typed entry " + entry, FrozenSharedConstants.UNSTABLE_LOGGING);
+        FrozenLibLogUtils.log("Built typed entry " + entry, FrozenLibConstants.UNSTABLE_LOGGING);
         return entry;
     }
 }

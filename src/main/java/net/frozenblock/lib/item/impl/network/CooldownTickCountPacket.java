@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.item.impl.network;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -25,9 +25,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 
 public record CooldownTickCountPacket(int count) implements CustomPacketPayload {
-
 	public static final Type<CooldownTickCountPacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("cooldown_tick_count_packet")
+		FrozenLibConstants.id("cooldown_tick_count_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, CooldownTickCountPacket> CODEC = ByteBufCodecs.VAR_INT.map(CooldownTickCountPacket::new, CooldownTickCountPacket::count).cast();
 

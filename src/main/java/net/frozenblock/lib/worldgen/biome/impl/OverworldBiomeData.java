@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
@@ -40,7 +40,7 @@ public final class OverworldBiomeData {
 
 	private static final Map<ResourceKey<Biome>, Climate.ParameterPoint> OVERWORLD_BIOME_NOISE_POINTS = new Object2ObjectOpenHashMap<>();
 
-	private static final Logger LOGGER = FrozenSharedConstants.LOGGER;
+	private static final Logger LOGGER = FrozenLibConstants.LOGGER;
 
 	private OverworldBiomeData() {
 	}
@@ -56,8 +56,8 @@ public final class OverworldBiomeData {
 		return OVERWORLD_BIOME_NOISE_POINTS;
 	}
 
-    public static boolean canGenerateInOverworld(ResourceKey<Biome> biome) {
-            return MultiNoiseBiomeSourceParameterList.Preset.OVERWORLD.usedBiomes().anyMatch(input -> input.equals(biome));
+	public static boolean canGenerateInOverworld(ResourceKey<Biome> biome) {
+		return MultiNoiseBiomeSourceParameterList.Preset.OVERWORLD.usedBiomes().anyMatch(input -> input.equals(biome));
 	}
 
 	private static void clearBiomeSourceCache() {
@@ -71,9 +71,9 @@ public final class OverworldBiomeData {
 
 		ArrayList<Pair<Climate.ParameterPoint, T>> entryList = new ArrayList<>(entries.values());
 
-        for (Map.Entry<ResourceKey<Biome>, Climate.ParameterPoint> entry : OVERWORLD_BIOME_NOISE_POINTS.entrySet()) {
+		for (Map.Entry<ResourceKey<Biome>, Climate.ParameterPoint> entry : OVERWORLD_BIOME_NOISE_POINTS.entrySet()) {
 			entryList.add(Pair.of(entry.getValue(), biomes.apply(entry.getKey())));
-        }
+		}
 
 		return new Climate.ParameterList<>(entryList);
 	}

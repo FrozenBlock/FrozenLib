@@ -22,7 +22,7 @@ import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 
@@ -38,7 +38,7 @@ public class ModIntegrations {
      * @return A {@link ModIntegrationSupplier}.
      */
     public static ModIntegrationSupplier<? extends ModIntegration> register(Supplier<? extends ModIntegration> integration, String srcModID, String modID) {
-        return Registry.register(FrozenRegistry.MOD_INTEGRATION, ResourceLocation.fromNamespaceAndPath(srcModID, modID), new ModIntegrationSupplier<>(integration, modID));
+        return Registry.register(FrozenLibRegistries.MOD_INTEGRATION, ResourceLocation.fromNamespaceAndPath(srcModID, modID), new ModIntegrationSupplier<>(integration, modID));
     }
 
 	/**
@@ -51,18 +51,18 @@ public class ModIntegrations {
 	 * @return A {@link ModIntegrationSupplier}.
 	 */
 	public static <T extends ModIntegration> ModIntegrationSupplier<T> register(Supplier<T> integration, Supplier<T> unloadedIntegration, String srcModID, String modID) {
-		return Registry.register(FrozenRegistry.MOD_INTEGRATION, ResourceLocation.fromNamespaceAndPath(srcModID, modID), new ModIntegrationSupplier<>(integration, unloadedIntegration, modID));
+		return Registry.register(FrozenLibRegistries.MOD_INTEGRATION, ResourceLocation.fromNamespaceAndPath(srcModID, modID), new ModIntegrationSupplier<>(integration, unloadedIntegration, modID));
 	}
 
     public static List<ModIntegrationSupplier<?>> getIntegrationSuppliers() {
-        return FrozenRegistry.MOD_INTEGRATION.stream().toList();
+        return FrozenLibRegistries.MOD_INTEGRATION.stream().toList();
     }
 
 	/**
 	 * Runs prior to registries freezing in order to allow for the registering of things.
 	 */
 	public static void initializePreFreeze() {
-		for (var integration : FrozenRegistry.MOD_INTEGRATION) {
+		for (var integration : FrozenLibRegistries.MOD_INTEGRATION) {
 			integration.getIntegration().initPreFreeze();
 			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 				integration.getIntegration().clientInitPreFreeze();
@@ -74,7 +74,7 @@ public class ModIntegrations {
      * Initialize all mod integrations.
      */
     public static void initialize() {
-        for (var integration : FrozenRegistry.MOD_INTEGRATION) {
+        for (var integration : FrozenLibRegistries.MOD_INTEGRATION) {
             integration.getIntegration().init();
 			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 				integration.getIntegration().clientInit();

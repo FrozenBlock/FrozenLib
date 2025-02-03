@@ -33,7 +33,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.function.BooleanSupplier;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.sound.api.SoundTypeCodecs;
 import net.frozenblock.lib.block.sound.impl.overwrite.AbstractBlockSoundTypeOverwrite;
 import net.frozenblock.lib.block.sound.impl.overwrite.BlockArrayBlockSoundTypeOverwrite;
@@ -112,12 +112,13 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		prepared.getOverwrites().forEach(this::addFinalizedOverwrite);
 		// Load our queued overwrites.
 		this.builtInOverwrites.forEach(this::addFinalizedOverwrite);
-		return CompletableFuture.runAsync(() -> {});
+		return CompletableFuture.runAsync(() -> {
+		});
 	}
 
 	@NotNull
 	public ResourceLocation getFabricId() {
-		return FrozenSharedConstants.id("block_sound_type_reloader");
+		return FrozenLibConstants.id("block_sound_type_reloader");
 	}
 
 	public static class SoundTypeLoader {

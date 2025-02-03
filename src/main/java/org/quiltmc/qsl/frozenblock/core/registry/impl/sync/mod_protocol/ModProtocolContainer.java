@@ -26,7 +26,7 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.ArrayList;
 import java.util.Map;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import org.jetbrains.annotations.NotNull;
 
 public interface ModProtocolContainer {
@@ -34,7 +34,7 @@ public interface ModProtocolContainer {
 
 	@NotNull
 	static <E> Codec<E> createCodec(Codec<E> codec) {
-		final String modProtocol = FrozenSharedConstants.string("mod_protocol");
+		final String modProtocol = FrozenLibConstants.string("mod_protocol");
 
 		return new Codec<>() {
 			@Override

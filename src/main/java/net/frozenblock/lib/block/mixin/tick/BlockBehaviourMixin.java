@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2025 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -31,11 +31,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(BlockBehaviour.class)
 public class BlockBehaviourMixin {
 
-    @Inject(method = "tick", at = @At("HEAD"))
-    public void tickScheduled(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo info) {
-        if (BlockScheduledTicks.TICKS.containsKey(state.getBlock())) {
-            BlockScheduledTicks.TICKS.get(state.getBlock()).tick(state, world, pos, random);
-        }
-    }
+	@Inject(method = "tick", at = @At("HEAD"))
+	public void frozenLib$runCustomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random, CallbackInfo info) {
+		BlockScheduledTicks.runTickIfPresent(state, world, pos, random);
+	}
 
 }

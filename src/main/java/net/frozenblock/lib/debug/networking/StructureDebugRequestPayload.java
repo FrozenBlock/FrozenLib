@@ -19,7 +19,7 @@ package net.frozenblock.lib.debug.networking;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record StructureDebugRequestPayload(ChunkPos chunkPos) implements CustomPacketPayload {
 	public static final Type<StructureDebugRequestPayload> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("debug_structure_request")
+		FrozenLibConstants.id("debug_structure_request")
 	);
 
 	public static final StreamCodec<FriendlyByteBuf, StructureDebugRequestPayload> STREAM_CODEC = StreamCodec.ofMember(

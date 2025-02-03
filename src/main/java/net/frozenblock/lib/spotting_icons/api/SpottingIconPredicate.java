@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.spotting_icons.api;
 
-import net.frozenblock.lib.FrozenSharedConstants;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 public final class SpottingIconPredicate<T extends Entity> {
 
     public static <T extends Entity> void register(ResourceLocation id, IconPredicate<T> predicate) {
-		Registry.register(FrozenRegistry.SPOTTING_ICON_PREDICATE, id, new SpottingIconPredicate<>(predicate));
+		Registry.register(FrozenLibRegistries.SPOTTING_ICON_PREDICATE, id, new SpottingIconPredicate<>(predicate));
     }
 
 	private final IconPredicate<T> predicate;
@@ -41,13 +41,13 @@ public final class SpottingIconPredicate<T extends Entity> {
 	@SuppressWarnings("unchecked")
     public static <T extends Entity> IconPredicate<T> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
-            if (FrozenRegistry.SPOTTING_ICON_PREDICATE.containsKey(id)) {
-				SpottingIconPredicate<T> predicate = (SpottingIconPredicate<T>) FrozenRegistry.SPOTTING_ICON_PREDICATE.getValue(id);
+            if (FrozenLibRegistries.SPOTTING_ICON_PREDICATE.containsKey(id)) {
+				SpottingIconPredicate<T> predicate = (SpottingIconPredicate<T>) FrozenLibRegistries.SPOTTING_ICON_PREDICATE.getValue(id);
 				if (predicate != null) {
 					return predicate.predicate;
 				}
 			}
-			FrozenSharedConstants.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
+			FrozenLibConstants.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
         }
         return defaultPredicate();
     }
@@ -70,7 +70,7 @@ public final class SpottingIconPredicate<T extends Entity> {
 		return Entity::isAlive;
 	}
 
-    public static ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default");
+    public static ResourceLocation DEFAULT_ID = FrozenLibConstants.id("default");
 
     public static void init() {
         register(DEFAULT_ID, defaultPredicate());

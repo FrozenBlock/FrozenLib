@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.debug.networking;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -32,7 +32,7 @@ public record ImprovedGameEventDebugPayload(ResourceKey<GameEvent> gameEventType
 		ImprovedGameEventDebugPayload::write, ImprovedGameEventDebugPayload::new
 	);
 	public static final Type<ImprovedGameEventDebugPayload> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("debug_game_event")
+		FrozenLibConstants.id("debug_game_event")
 	);
 
 	private ImprovedGameEventDebugPayload(@NotNull FriendlyByteBuf buf) {

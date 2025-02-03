@@ -18,7 +18,7 @@
 package net.frozenblock.lib.worldgen.structure.impl;
 
 import com.mojang.serialization.MapCodec;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.worldgen.structure.api.BlockStateRespectingRuleProcessor;
 import net.frozenblock.lib.worldgen.structure.api.WeightedRuleProcessor;
 import net.minecraft.core.Registry;
@@ -40,6 +40,6 @@ public class FrozenStructureProcessorTypes {
 	}
 
 	private static <P extends StructureProcessor> StructureProcessorType<P> register(String id, MapCodec<P> codec) {
-		return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, FrozenSharedConstants.id(id), () -> codec);
+		return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, FrozenLibConstants.id(id), () -> codec);
 	}
 }

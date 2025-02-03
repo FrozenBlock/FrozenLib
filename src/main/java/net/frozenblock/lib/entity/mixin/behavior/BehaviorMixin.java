@@ -18,7 +18,7 @@
 package net.frozenblock.lib.entity.mixin.behavior;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.frozenblock.lib.entity.impl.behavior.FrozenBehavior;
+import net.frozenblock.lib.entity.impl.behavior.FrozenLibBehavior;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.behavior.Behavior;
@@ -29,7 +29,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Behavior.class)
-public class BehaviorMixin<E extends LivingEntity> implements FrozenBehavior {
+public class BehaviorMixin<E extends LivingEntity> implements FrozenLibBehavior {
 
 	@Unique
 	private int frozenLib$duration;
@@ -47,7 +47,7 @@ public class BehaviorMixin<E extends LivingEntity> implements FrozenBehavior {
 
 	@Unique
 	@Override
-	public int getDuration() {
+	public int frozenLib$getDuration() {
 		return this.frozenLib$duration;
 	}
 }

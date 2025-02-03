@@ -11,6 +11,7 @@
     "MultiNoiseBiomeSourceMixin",
     "OverworldBiomeBuilderMixin",
     "OverworldBiomePresetMixin",
-    "RegistryDataLoaderMixin"
+    "RegistryDataLoaderMixin",
+    "weather.LightningOverrideMixin"
   ]
 }

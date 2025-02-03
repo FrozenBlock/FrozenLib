@@ -37,10 +37,9 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.minecraft.network.chat.Component;
@@ -148,7 +147,7 @@ public class CapeUtil {
 				}
 			}
 		} catch (IOException ignored) {
-			FrozenSharedConstants.LOGGER.error("Failed to parse Cape from URL: {}", urlString);
+			FrozenLibConstants.LOGGER.error("Failed to parse Cape from URL: {}", urlString);
 		}
 	}
 

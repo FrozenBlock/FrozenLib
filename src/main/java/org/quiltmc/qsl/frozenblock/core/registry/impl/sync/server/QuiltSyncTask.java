@@ -21,7 +21,7 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 import java.util.function.Consumer;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.network.ConfigurationTask;
@@ -31,7 +31,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ProtocolVersions;
 
 public class QuiltSyncTask implements ConfigurationTask {
-	public static final Type TYPE = new Type(FrozenSharedConstants.string("registry_sync"));
+	public static final Type TYPE = new Type(FrozenLibConstants.string("registry_sync"));
 	private final ServerConfigurationPacketListenerImpl packetHandler;
 	private final ExtendedConnection extendedConnection;
 	private Consumer<Packet<?>> sender;

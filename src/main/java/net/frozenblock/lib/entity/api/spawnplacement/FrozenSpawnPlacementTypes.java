@@ -49,7 +49,7 @@ public class FrozenSpawnPlacementTypes {
 			return false;
 		}
 
-		private boolean isSurfaceLavaOrMagma(LevelReader levelReader, BlockPos blockPos, BlockState belowState) {
+		private boolean isSurfaceLavaOrMagma(@NotNull LevelReader levelReader, BlockPos blockPos, @NotNull BlockState belowState) {
 			BlockState blockState = levelReader.getBlockState(blockPos);
 			return (belowState.getFluidState().is(FluidTags.LAVA) || belowState.is(Blocks.MAGMA_BLOCK))
 				&& !(blockState.getFluidState().is(FluidTags.LAVA) || blockState.is(Blocks.MAGMA_BLOCK));

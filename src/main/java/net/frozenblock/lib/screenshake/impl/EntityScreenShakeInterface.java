@@ -22,8 +22,8 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public interface EntityScreenShakeInterface {
 
-    EntityScreenShakeManager frozenLib$getScreenShakeManager();
+	EntityScreenShakeManager frozenLib$getScreenShakeManager();
 
-    void frozenLib$addScreenShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks);
+	void frozenLib$addScreenShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks);
 
 }

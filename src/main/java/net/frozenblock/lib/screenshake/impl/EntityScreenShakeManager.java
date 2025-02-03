@@ -18,60 +18,55 @@
 package net.frozenblock.lib.screenshake.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import net.frozenblock.lib.FrozenSharedConstants;
+
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import org.slf4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 public class EntityScreenShakeManager {
-    private final ArrayList<EntityScreenShake> shakes = new ArrayList<>();
-    public Entity entity;
+	private final ArrayList<EntityScreenShake> shakes = new ArrayList<>();
+	public Entity entity;
 
-    public EntityScreenShakeManager(Entity entity) {
-        this.entity = entity;
-    }
+	public EntityScreenShakeManager(Entity entity) {
+		this.entity = entity;
+	}
 
-    public void load(CompoundTag nbt) {
-        if (nbt.contains("ScreenShakes", 9)) {
-            this.shakes.clear();
-            DataResult<List<EntityScreenShake>> var10000 = EntityScreenShake.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("ScreenShakes", 10)));
-            Logger var10001 = FrozenSharedConstants.LOGGER4;
-            Objects.requireNonNull(var10001);
-            Optional<List<EntityScreenShake>> list = var10000.resultOrPartial(var10001::error);
-			list.ifPresent(this.shakes::addAll);
-        }
-    }
+	public void load(@NotNull CompoundTag nbt) {
+		if (nbt.contains("frozenlib_screen_shakes", 9)) {
+			this.shakes.clear();
+			EntityScreenShake.CODEC.listOf()
+				.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenlib_screen_shakes", 10)))
+				.resultOrPartial(FrozenLibConstants.LOGGER::error)
+				.ifPresent(this.shakes::addAll);
+		}
+	}
 
-    public void save(CompoundTag nbt) {
+	public void save(CompoundTag nbt) {
 		if (!this.shakes.isEmpty()) {
-			DataResult<Tag> var10000 = EntityScreenShake.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.shakes);
-			Logger var10001 = FrozenSharedConstants.LOGGER4;
-			Objects.requireNonNull(var10001);
-			var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("ScreenShakes", cursorsNbt));
+			EntityScreenShake.CODEC.listOf()
+				.encodeStart(NbtOps.INSTANCE, this.shakes)
+				.resultOrPartial(FrozenLibConstants.LOGGER::error)
+				.ifPresent(screenShakes -> nbt.put("frozenlib_screen_shakes", screenShakes));
 		}
-    }
+	}
 
-    public void addShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
-        this.shakes.add(new EntityScreenShake(intensity, duration, durationFalloffStart, maxDistance, ticks));
-    }
+	public void addShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
+		this.shakes.add(new EntityScreenShake(intensity, duration, durationFalloffStart, maxDistance, ticks));
+	}
 
-    public void tick() {
-		this.shakes.removeIf(EntityScreenShake::shouldRemove);
+	public void tick() {
+		this.shakes.removeIf(EntityScreenShake::hasDurationExpired);
 		for (EntityScreenShake entityScreenShake : this.shakes) {
-			entityScreenShake.ticks += 1;
+			entityScreenShake.tick();
 		}
-    }
+	}
 
 	public void syncWithPlayer(ServerPlayer serverPlayer) {
 		for (EntityScreenShake nbt : this.getShakes()) {
@@ -84,19 +79,19 @@ public class EntityScreenShakeManager {
 	}
 
 	public static class EntityScreenShake {
-		public final float intensity;
-		public final int duration;
-		public final int durationFalloffStart;
-		public final float maxDistance;
-		public int ticks;
-
 		public static final Codec<EntityScreenShake> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-				Codec.FLOAT.fieldOf("Intensity").forGetter(EntityScreenShake::getIntensity),
-				Codec.INT.fieldOf("Duration").forGetter(EntityScreenShake::getDuration),
-				Codec.INT.fieldOf("FalloffStart").forGetter(EntityScreenShake::getDurationFalloffStart),
-				Codec.FLOAT.fieldOf("MaxDistance").forGetter(EntityScreenShake::getMaxDistance),
-				Codec.INT.fieldOf("Ticks").forGetter(EntityScreenShake::getTicks)
+			Codec.FLOAT.fieldOf("Intensity").forGetter(EntityScreenShake::intensity),
+			Codec.INT.fieldOf("Duration").forGetter(EntityScreenShake::duration),
+			Codec.INT.fieldOf("FalloffStart").forGetter(EntityScreenShake::durationFalloffStart),
+			Codec.FLOAT.fieldOf("MaxDistance").forGetter(EntityScreenShake::maxDistance),
+			Codec.INT.fieldOf("Ticks").forGetter(EntityScreenShake::ticks)
 		).apply(instance, EntityScreenShake::new));
+
+		final float intensity;
+		final int duration;
+		final int durationFalloffStart;
+		final float maxDistance;
+		public int ticks;
 
 		public EntityScreenShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
 			this.intensity = intensity;
@@ -106,29 +101,32 @@ public class EntityScreenShakeManager {
 			this.ticks = ticks;
 		}
 
-		public boolean shouldRemove() {
-			return this.ticks > this.duration;
+		public void tick() {
+			this.ticks += 1;
 		}
 
-		public float getIntensity() {
+		public float intensity() {
 			return this.intensity;
 		}
 
-		public int getDuration() {
+		public int duration() {
 			return this.duration;
 		}
 
-		public int getDurationFalloffStart() {
+		public int durationFalloffStart() {
 			return this.durationFalloffStart;
 		}
 
-		public float getMaxDistance() {
+		public float maxDistance() {
 			return this.maxDistance;
 		}
 
-		public int getTicks() {
+		public int ticks() {
 			return this.ticks;
 		}
 
+		public boolean hasDurationExpired() {
+			return this.ticks > this.duration;
+		}
 	}
 }

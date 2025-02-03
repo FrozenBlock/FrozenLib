@@ -10,6 +10,7 @@
     "beacon.BeaconBlockEntityMixin",
     "dripstone.PointedDripstoneBlockMixin",
     "sound.BlockBehaviourMixin",
+    "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockBehaviourMixin"
   ],
   "client": [

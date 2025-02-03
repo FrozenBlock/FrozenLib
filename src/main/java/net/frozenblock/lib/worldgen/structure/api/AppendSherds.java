@@ -40,7 +40,7 @@ public class AppendSherds implements RuleBlockEntityModifier {
 			BuiltInRegistries.ITEM.byNameCodec().listOf().fieldOf("sherds").forGetter(modifier -> modifier.sherds),
 			Codec.FLOAT.fieldOf("chance_per_slot").orElse(0.75F).forGetter(modifier -> modifier.chancePerSlot),
 			Codec.BOOL.fieldOf("default_to_brick").orElse(true).forGetter(modifier -> modifier.defaultToBrick)
-			).apply(instance, AppendSherds::new)
+		).apply(instance, AppendSherds::new)
 	);
 	private final List<Item> sherds;
 	private final float chancePerSlot;
