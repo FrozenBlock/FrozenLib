@@ -22,7 +22,6 @@ import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallba
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
@@ -32,11 +31,9 @@ import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
-import net.frozenblock.lib.menu.api.Panoramas;
+import net.frozenblock.lib.menu.api.PanoramaAPI;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
-import net.frozenblock.lib.particle.api.FrozenParticleTypes;
-import net.frozenblock.lib.particle.impl.DebugPosParticle;
-import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
+import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.frozenblock.lib.wind.api.ClientWindManager;
@@ -51,7 +48,7 @@ public final class FrozenClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
-		FrozenClientRegistry.initRegistry();
+		FrozenLibClientRegistries.initRegistry();
 		ModIntegrations.initializePreFreeze(); // Mod integrations must run after normal mod initialization
 
 		// QUILT INIT
@@ -63,11 +60,7 @@ public final class FrozenClient implements ClientModInitializer {
 		FrozenClientNetworking.registerClientReceivers();
 		DebugRenderManager.init();
 
-		// PARTICLES
-		ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
-		particleRegistry.register(FrozenParticleTypes.DEBUG_POS, DebugPosParticle.Provider::new);
-
-		Panoramas.addPanorama(ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama"));
+		PanoramaAPI.addPanorama(ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama"));
 		ClientCapeData.init();
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {

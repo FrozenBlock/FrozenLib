@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.registry.api.client;
+package net.frozenblock.lib.registry.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -25,7 +25,7 @@ import net.frozenblock.lib.entity.api.rendering.EntityTextureOverride;
 import net.minecraft.core.MappedRegistry;
 
 @Environment(EnvType.CLIENT)
-public class FrozenClientRegistry {
+public class FrozenLibClientRegistries {
 
 	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder.createSimple(EntityTextureOverride.class, FrozenLibConstants.id("entity_texture_override"))
 			.buildAndRegister();

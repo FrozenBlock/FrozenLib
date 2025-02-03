@@ -19,7 +19,7 @@ package net.frozenblock.lib.entity.mixin.client.rendering;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
+import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -52,7 +52,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		cancellable = true
 	)
     private void frozenLib$getEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
-        FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
+        FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
             if (override.type() == livingEntity.getType()) {
                 var texture = override.texture();
                 if (texture != null) {
@@ -73,7 +73,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		cancellable = true
 	)
     private void frozenLib$getItemEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
-		FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
+		FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
             if (override.type() == livingEntity.getType()) {
                 var texture = override.texture();
                 if (texture != null) {
@@ -95,7 +95,7 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, M extend
 		cancellable = true)
     private void frozenLib$getOutlineEasterEgg(T livingEntity, boolean bodyVisible, boolean translucent, boolean glowing, CallbackInfoReturnable<RenderType> cir) {
         if (glowing) {
-			FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
+			FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE.forEach(override -> {
                 if (override.type() == livingEntity.getType()) {
                     var texture = override.texture();
                     if (texture != null) {

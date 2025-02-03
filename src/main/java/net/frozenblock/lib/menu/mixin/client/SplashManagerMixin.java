@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.menu.mixin;
+package net.frozenblock.lib.menu.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.io.BufferedReader;

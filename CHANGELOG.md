@@ -25,3 +25,5 @@ Put changelog here:
 - Cleaned up the Screen Shake system and made it much smoother.
 - Cleaned up classes in the `block` package and condensed some of its contents.
 - Cleaned up classes in the `entity` package and condensed the `modcategory` package into it.
+- Renamed `FrozenFeatureFlags` to `FeatureFlagAPI.`
+- Reworked, renamed, and cleaned up the Axe, Bone Meal, and Shovel item use APIs.

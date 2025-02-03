@@ -21,7 +21,7 @@ import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.registry.api.client.FrozenClientRegistry;
+import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -99,7 +99,7 @@ public record EntityTextureOverride<T extends LivingEntity>(EntityType<T> type, 
 	public static <T extends LivingEntity> @NotNull EntityTextureOverride<T> register(
 		ResourceLocation key, EntityType<T> type, ResourceLocation texture, Condition<T> condition
 	) {
-		return Registry.register(FrozenClientRegistry.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(type, texture, condition));
+		return Registry.register(FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(type, texture, condition));
 	}
 
 	@Environment(EnvType.CLIENT)

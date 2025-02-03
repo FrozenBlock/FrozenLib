@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.registry.api;
+package net.frozenblock.lib.registry;
 
 import com.mojang.serialization.Lifecycle;
 import lombok.experimental.UtilityClass;
@@ -36,7 +36,7 @@ import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
-public class FrozenRegistry {
+public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<ModIntegrationSupplier<?>>> MOD_INTEGRATION_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("mod_integration"));
 	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_predicate"));
 	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_predicate_unsynced"));

@@ -37,8 +37,7 @@ import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenNetworking;
-import net.frozenblock.lib.particle.api.FrozenParticleTypes;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeStorage;
@@ -75,7 +74,7 @@ public final class FrozenMain extends FrozenModInitializer {
 
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
-		FrozenRegistry.initRegistry();
+		FrozenLibRegistries.initRegistry();
 
 		// QUILT INIT
 
@@ -97,7 +96,6 @@ public final class FrozenMain extends FrozenModInitializer {
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC.codec());
 
-		FrozenParticleTypes.registerParticles();
 		ServerCapeData.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init

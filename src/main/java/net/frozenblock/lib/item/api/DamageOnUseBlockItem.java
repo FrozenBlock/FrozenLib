@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,12 +29,12 @@ import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class PrickOnUseBlockItem extends BlockItem {
+public class DamageOnUseBlockItem extends BlockItem {
     public final float damage;
     public final SoundEvent hurtSound;
     public final ResourceKey<DamageType> damageType;
 
-    public PrickOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, ResourceKey<DamageType> damageType) {
+    public DamageOnUseBlockItem(Block block, Properties properties, float damage, @Nullable SoundEvent sound, ResourceKey<DamageType> damageType) {
         super(block, properties);
         this.damage = damage;
         this.hurtSound = sound;

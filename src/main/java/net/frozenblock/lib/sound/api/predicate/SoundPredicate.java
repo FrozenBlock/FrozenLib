@@ -19,7 +19,7 @@ package net.frozenblock.lib.sound.api.predicate;
 
 import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
@@ -34,11 +34,11 @@ public final class SoundPredicate<T extends Entity> {
 	private final Supplier<LoopPredicate<T>> predicateSupplier;
 
     public static <T extends Entity> void register(ResourceLocation id, Supplier<LoopPredicate<T>> predicateSupplier) {
-		Registry.register(FrozenRegistry.SOUND_PREDICATE, id, new SoundPredicate<>(predicateSupplier));
+		Registry.register(FrozenLibRegistries.SOUND_PREDICATE, id, new SoundPredicate<>(predicateSupplier));
     }
 
 	public static <T extends Entity> void registerUnsynced(ResourceLocation id, Supplier<LoopPredicate<T>> predicateSupplier) {
-		Registry.register(FrozenRegistry.SOUND_PREDICATE_UNSYNCED, id, new SoundPredicate<>(predicateSupplier));
+		Registry.register(FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED, id, new SoundPredicate<>(predicateSupplier));
 	}
 
 	public SoundPredicate(Supplier<LoopPredicate<T>> predicateSupplier) {
@@ -48,13 +48,13 @@ public final class SoundPredicate<T extends Entity> {
 	@SuppressWarnings("unchecked")
     public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable ResourceLocation id) {
         if (id != null) {
-            if (FrozenRegistry.SOUND_PREDICATE.containsKey(id)) {
-				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenRegistry.SOUND_PREDICATE.get(id);
+            if (FrozenLibRegistries.SOUND_PREDICATE.containsKey(id)) {
+				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibRegistries.SOUND_PREDICATE.get(id);
 				if (predicate != null) {
 					return predicate.predicateSupplier.get();
 				}
-			} else if (FrozenRegistry.SOUND_PREDICATE_UNSYNCED.containsKey(id)) {
-				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenRegistry.SOUND_PREDICATE_UNSYNCED.get(id);
+			} else if (FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED.containsKey(id)) {
+				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED.get(id);
 				if (predicate != null) {
 					return predicate.predicateSupplier.get();
 				}

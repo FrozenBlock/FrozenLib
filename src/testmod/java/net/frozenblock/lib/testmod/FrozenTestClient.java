@@ -21,8 +21,6 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.menu.api.Panoramas;
-import net.frozenblock.lib.menu.api.SplashTextAPI;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;

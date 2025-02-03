@@ -20,7 +20,7 @@ package net.frozenblock.lib.wind.api;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -59,13 +59,13 @@ public final class WindDisturbanceLogic<T> {
 
 	public static Optional<WindDisturbanceLogic> getWindDisturbanceLogic(ResourceLocation id) {
         if (id != null) {
-            if (FrozenRegistry.WIND_DISTURBANCE_LOGIC.containsKey(id)) {
-				WindDisturbanceLogic<?> disturbanceLogic = FrozenRegistry.WIND_DISTURBANCE_LOGIC.get(id);
+            if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.containsKey(id)) {
+				WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.get(id);
 				if (disturbanceLogic != null) {
 					return Optional.of(disturbanceLogic);
 				}
-			} else if (FrozenRegistry.WIND_DISTURBANCE_LOGIC_UNSYNCED.containsKey(id)) {
-				WindDisturbanceLogic<?> disturbanceLogic = FrozenRegistry.WIND_DISTURBANCE_LOGIC_UNSYNCED.get(id);
+			} else if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.containsKey(id)) {
+				WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.get(id);
 				if (disturbanceLogic != null) {
 					return Optional.of(disturbanceLogic);
 				}
@@ -89,11 +89,11 @@ public final class WindDisturbanceLogic<T> {
 
 
 	public static <T> void register(ResourceLocation id, DisturbanceLogic<T> predicate) {
-		Registry.register(FrozenRegistry.WIND_DISTURBANCE_LOGIC, id, new WindDisturbanceLogic<>(predicate));
+		Registry.register(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC, id, new WindDisturbanceLogic<>(predicate));
 	}
 
 	public static <T> void registerUnsynced(ResourceLocation id, DisturbanceLogic<T> predicate) {
-		Registry.register(FrozenRegistry.WIND_DISTURBANCE_LOGIC_UNSYNCED, id, new WindDisturbanceLogic<>(predicate));
+		Registry.register(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED, id, new WindDisturbanceLogic<>(predicate));
 	}
 
     public enum SourceType {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,8 +19,7 @@ package net.frozenblock.lib.item.mixin.axe;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import java.util.Optional;
-import net.frozenblock.lib.item.api.axe.AxeBehaviors;
+import net.frozenblock.lib.item.api.axe.AxeApi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.player.Player;
@@ -30,6 +29,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+
+import java.util.Optional;
 
 @Mixin(AxeItem.class)
 public class AxeItemMixin {
@@ -53,7 +54,7 @@ public class AxeItemMixin {
 	) {
 		BlockState blockState = world.getBlockState(pos);
 		Direction direction = context.getClickedFace();
-		AxeBehaviors.AxeBehavior axeBehavior = AxeBehaviors.get(blockState.getBlock());
+		AxeApi.AxeBehavior axeBehavior = AxeApi.get(blockState.getBlock());
 		if (axeBehavior != null && axeBehavior.meetsRequirements(world, pos, direction, state)) {
 			BlockState outputState = axeBehavior.getOutputBlockState(state);
 			if (outputState != null) {

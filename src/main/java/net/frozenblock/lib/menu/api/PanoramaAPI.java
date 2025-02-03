@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,8 +24,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
-public class Panoramas {
-
+public class PanoramaAPI {
 	private static final List<ResourceLocation> PANORAMAS = new ArrayList<>();
 
 	public static void addPanorama(ResourceLocation location) {
@@ -35,5 +34,4 @@ public class Panoramas {
 	public static List<ResourceLocation> getPanoramas() {
 		return PANORAMAS;
 	}
-
 }

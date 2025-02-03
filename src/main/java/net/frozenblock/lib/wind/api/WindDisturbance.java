@@ -19,7 +19,7 @@ package net.frozenblock.lib.wind.api;
 
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
-import net.frozenblock.lib.registry.api.FrozenRegistry;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
@@ -82,8 +82,8 @@ public class WindDisturbance<T> {
 	}
 
 	public Optional<WindDisturbancePacket> toPacket() {
-		ResourceLocation resourceLocation = Optional.ofNullable(FrozenRegistry.WIND_DISTURBANCE_LOGIC.getKey(this.disturbanceLogic))
-			.orElseGet(() -> FrozenRegistry.WIND_DISTURBANCE_LOGIC_UNSYNCED.getKey(this.disturbanceLogic));
+		ResourceLocation resourceLocation = Optional.ofNullable(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getKey(this.disturbanceLogic))
+			.orElseGet(() -> FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.getKey(this.disturbanceLogic));
 
 		if (resourceLocation != null) {
 			return Optional.of(

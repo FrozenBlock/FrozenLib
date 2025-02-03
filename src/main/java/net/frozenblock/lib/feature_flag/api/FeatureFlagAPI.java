@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,10 +21,14 @@ import com.google.common.base.Preconditions;
 import lombok.experimental.UtilityClass;
 import net.minecraft.world.flag.FeatureFlagRegistry;
 import net.minecraft.world.flag.FeatureFlags;
+import org.jetbrains.annotations.ApiStatus;
 
+/**
+ * Used to help with custom {@link net.minecraft.world.flag.FeatureFlag}s.
+ */
 @UtilityClass
-public class FrozenFeatureFlags {
-
+public class FeatureFlagAPI {
+	@ApiStatus.Internal
 	public static FeatureFlagRegistry.Builder builder;
 
 	public static void rebuild() {
