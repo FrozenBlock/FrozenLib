@@ -62,7 +62,7 @@ public final class FrozenTestMain implements ModInitializer {
 		Holder<SoundEvent> sound = TestConfig.get().randomSound.value();
         LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.unwrapKey().orElseThrow().location());
 
-        BlockScheduledTicks.TICKS.put(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
+        BlockScheduledTicks.addToBlock(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
 
 		GravityAPI.MODIFICATIONS.register((ctx) -> {
