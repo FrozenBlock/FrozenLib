@@ -36,7 +36,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
-import net.frozenblock.lib.networking.packet.FileTransferPacket;
+import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
