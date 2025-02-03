@@ -33,6 +33,6 @@ public abstract class TemplateStructurePieceMixin implements InitialPieceProcess
 
 	@Override
 	public void frozenLib$addProcessors(List<StructureProcessor> processors) {
-		processors.forEach(structureProcessor ->  this.placeSettings.addProcessor(structureProcessor));
+		processors.forEach(structureProcessor -> this.placeSettings.addProcessor(structureProcessor));
 	}
 }

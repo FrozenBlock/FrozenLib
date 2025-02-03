@@ -21,10 +21,12 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
+@UtilityClass
 public class EntityUtils {
 	private static final Map<ServerLevel, List<Entity>> ENTITIES_PER_LEVEL = new Object2ObjectOpenHashMap<>();
 

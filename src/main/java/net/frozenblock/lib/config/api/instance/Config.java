@@ -24,8 +24,8 @@ import lombok.Setter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenBools;
-import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigLoadEvent;
 import net.frozenblock.lib.config.api.registry.ConfigSaveEvent;
 import net.frozenblock.lib.config.api.sync.annotation.UnsyncableConfig;
@@ -107,7 +107,7 @@ public abstract class Config<T> {
 		if (!this.supportsSync()) {
 			//TODO: Possibly remove before release? This causes log spam. Up to you, Tree. Might be best with JavaDoc instead.
 			String formatted = String.format("Config %s from %s", this.configClass().getSimpleName(), this.modId());
-			FrozenLogUtils.logWarning(formatted + " does not support modification, returning unmodified instance.");
+			FrozenLibLogUtils.logWarning(formatted + " does not support modification, returning unmodified instance.");
 			return this.instance();
 		}
 		return ConfigModification.modifyConfig(this, this.instance(), true);
@@ -155,7 +155,7 @@ public abstract class Config<T> {
 
 	public final void save() {
 		String formatted = this.formattedName();
-        FrozenSharedConstants.LOGGER.info("Saving {}", formatted);
+        FrozenLibConstants.LOGGER.info("Saving {}", formatted);
 		try {
 			this.onSave();
 
@@ -166,13 +166,13 @@ public abstract class Config<T> {
 				invokeSaveEvents();
 			}
 		} catch (Exception e) {
-			FrozenLogUtils.logError("Error while saving " + formatted, e);
+			FrozenLibLogUtils.logError("Error while saving " + formatted, e);
 		}
 	}
 
 	public final boolean load() {
 		String formatted = this.formattedName();
-		FrozenSharedConstants.LOGGER.info("Loading {}", formatted);
+		FrozenLibConstants.LOGGER.info("Loading {}", formatted);
 		try {
 			boolean loadVal = this.onLoad();
 
@@ -181,7 +181,7 @@ public abstract class Config<T> {
 			}
 			return loadVal;
 		} catch (Exception e) {
-			FrozenLogUtils.logError("Error while loading " + formatted, e);
+			FrozenLibLogUtils.logError("Error while loading " + formatted, e);
 			return false;
 		}
 	}
@@ -195,7 +195,7 @@ public abstract class Config<T> {
 				ConfigSaveEvent.Client.EVENT.invoker().onSave(this);
 			}
 		} catch (Exception e) {
-			FrozenLogUtils.logError("Error in config save events for " + formatted, e);
+			FrozenLibLogUtils.logError("Error in config save events for " + formatted, e);
 		}
 	}
 
@@ -208,7 +208,7 @@ public abstract class Config<T> {
 				ConfigLoadEvent.Client.EVENT.invoker().onLoad(this);
 			}
 		} catch (Exception e) {
-			FrozenLogUtils.logError("Error in config load events for " + formatted, e);
+			FrozenLibLogUtils.logError("Error in config load events for " + formatted, e);
 		}
 	}
 }

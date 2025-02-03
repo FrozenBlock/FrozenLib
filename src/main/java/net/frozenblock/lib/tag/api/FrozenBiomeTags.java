@@ -18,7 +18,7 @@
 package net.frozenblock.lib.tag.api;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -32,6 +32,6 @@ public class FrozenBiomeTags {
 
 	@NotNull
 	private static TagKey<Biome> of(String path) {
-		return TagKey.create(Registries.BIOME, FrozenSharedConstants.id(path));
+		return TagKey.create(Registries.BIOME, FrozenLibConstants.id(path));
 	}
 }

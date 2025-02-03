@@ -33,7 +33,7 @@ public final class Continentalness {
 	public static final Climate.Parameter NEAR_INLAND = Climate.Parameter.span(-0.11F, 0.03F);
 	public static final Climate.Parameter MID_INLAND = Climate.Parameter.span(0.03F, 0.3F);
 	public static final Climate.Parameter FAR_INLAND = Climate.Parameter.span(0.3F, 1F);
-    public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
+	public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 
 	public static final Climate.Parameter[] CONTINENTALNESSES = new Climate.Parameter[]{
 		MUSHROOM_FIELDS,

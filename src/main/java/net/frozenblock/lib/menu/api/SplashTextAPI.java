@@ -22,12 +22,11 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.Unmodifiable;
 
 @Environment(EnvType.CLIENT)
 public final class SplashTextAPI {
-	private SplashTextAPI() {
-	}
-
 	private static final List<ResourceLocation> SPLASH_FILES = new ArrayList<>();
 	private static final List<String> ADDITIONS = new ArrayList<>();
 	private static final List<String> REMOVALS = new ArrayList<>();
@@ -44,15 +43,18 @@ public final class SplashTextAPI {
 		REMOVALS.add(text);
 	}
 
-	public static List<ResourceLocation> getSplashFiles() {
+	@Contract(pure = true)
+	public static @Unmodifiable List<ResourceLocation> getSplashFiles() {
 		return List.copyOf(SPLASH_FILES);
 	}
 
-	public static List<String> getAdditions() {
+	@Contract(pure = true)
+	public static @Unmodifiable List<String> getAdditions() {
 		return List.copyOf(ADDITIONS);
 	}
 
-	public static List<String> getRemovals() {
+	@Contract(pure = true)
+	public static @Unmodifiable List<String> getRemovals() {
 		return List.copyOf(REMOVALS);
 	}
 }

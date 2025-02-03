@@ -23,12 +23,12 @@ import net.minecraft.world.level.biome.Climate;
  * Contains a list of all humidity parameters used in vanilla worldgen, named for ease of use.
  */
 public final class Humidity {
-    public static final Climate.Parameter ARID = Climate.Parameter.span(-1F, -0.35F);
-    public static final Climate.Parameter DRY = Climate.Parameter.span(-0.35F, -0.1F);
-    public static final Climate.Parameter NEUTRAL = Climate.Parameter.span(-0.1F, 0.1F);
-    public static final Climate.Parameter WET = Climate.Parameter.span(0.1F, 0.3F);
-    public static final Climate.Parameter HUMID = Climate.Parameter.span(0.3F, 1F);
-    public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
+	public static final Climate.Parameter ARID = Climate.Parameter.span(-1F, -0.35F);
+	public static final Climate.Parameter DRY = Climate.Parameter.span(-0.35F, -0.1F);
+	public static final Climate.Parameter NEUTRAL = Climate.Parameter.span(-0.1F, 0.1F);
+	public static final Climate.Parameter WET = Climate.Parameter.span(0.1F, 0.3F);
+	public static final Climate.Parameter HUMID = Climate.Parameter.span(0.3F, 1F);
+	public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 
 	public static final Climate.Parameter[] HUMIDITIES = new Climate.Parameter[]{
 		ARID,

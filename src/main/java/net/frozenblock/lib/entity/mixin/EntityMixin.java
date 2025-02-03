@@ -19,7 +19,7 @@ package net.frozenblock.lib.entity.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.entity.impl.EntityStepOnBlockInterface;
-import net.frozenblock.lib.entity.impl.FrozenStartTrackingEntityInterface;
+import net.frozenblock.lib.entity.impl.StartTrackingEntityInterface;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements FrozenStartTrackingEntityInterface, EntityStepOnBlockInterface {
+public abstract class EntityMixin implements StartTrackingEntityInterface, EntityStepOnBlockInterface {
 
 	@Shadow
 	public abstract Level level();
@@ -66,6 +66,5 @@ public abstract class EntityMixin implements FrozenStartTrackingEntityInterface,
 
 	@Override
 	public void frozenLib$onSteppedOnBlock(Level level, BlockPos blockPos, BlockState blockState) {
-
 	}
 }

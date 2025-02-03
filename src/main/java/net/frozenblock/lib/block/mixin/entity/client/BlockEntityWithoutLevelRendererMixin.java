@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2025 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -68,7 +68,13 @@ public class BlockEntityWithoutLevelRendererMixin {
 		)
 	)
 	public boolean frozenLib$replaceWithNewBlockEntity(
-		BlockEntityRenderDispatcher instance, BlockEntity blockEntity, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay, Operation<Boolean> original,
+		BlockEntityRenderDispatcher instance,
+		BlockEntity blockEntity,
+		PoseStack poseStack,
+		MultiBufferSource bufferSource,
+		int packedLight,
+		int packedOverlay,
+		Operation<Boolean> original,
 		@Share("frozenLib$block") LocalRef<Block> customBlock
 	) {
 		blockEntity = BlockEntityWithoutLevelRendererRegistry.getBlockEntity(customBlock.get()).orElse(blockEntity);

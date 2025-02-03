@@ -23,14 +23,14 @@ import net.minecraft.world.level.biome.Climate;
  * Contains a list of all erosion parameters used in vanilla worldgen, for ease of use.
  */
 public final class Erosion {
-    public static final Climate.Parameter EROSION_0 = Climate.Parameter.span(-1F, -0.78F);
-    public static final Climate.Parameter EROSION_1 = Climate.Parameter.span(-0.78F, -0.375F);
-    public static final Climate.Parameter EROSION_2 = Climate.Parameter.span(-0.375F, -0.2225F);
-    public static final Climate.Parameter EROSION_3 = Climate.Parameter.span(-0.2225F, 0.05F);
-    public static final Climate.Parameter EROSION_4 = Climate.Parameter.span(0.05F, 0.45F);
-    public static final Climate.Parameter EROSION_5 = Climate.Parameter.span(0.45F, 0.55F);
-    public static final Climate.Parameter EROSION_6 = Climate.Parameter.span(0.55F, 1F);
-    public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
+	public static final Climate.Parameter EROSION_0 = Climate.Parameter.span(-1F, -0.78F);
+	public static final Climate.Parameter EROSION_1 = Climate.Parameter.span(-0.78F, -0.375F);
+	public static final Climate.Parameter EROSION_2 = Climate.Parameter.span(-0.375F, -0.2225F);
+	public static final Climate.Parameter EROSION_3 = Climate.Parameter.span(-0.2225F, 0.05F);
+	public static final Climate.Parameter EROSION_4 = Climate.Parameter.span(0.05F, 0.45F);
+	public static final Climate.Parameter EROSION_5 = Climate.Parameter.span(0.45F, 0.55F);
+	public static final Climate.Parameter EROSION_6 = Climate.Parameter.span(0.55F, 1F);
+	public static final Climate.Parameter FULL_RANGE = OverworldBiomeBuilderParameters.FULL_RANGE;
 
 	public static final Climate.Parameter[] EROSIONS = new Climate.Parameter[]{
 		EROSION_0,

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.wind.impl.networking;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -36,7 +36,7 @@ public record WindDisturbancePacket(
 
 ) implements CustomPacketPayload {
 	public static final Type<WindDisturbancePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("wind_disturbance_packet")
+		FrozenLibConstants.id("wind_disturbance_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, WindDisturbancePacket> CODEC = StreamCodec.ofMember(WindDisturbancePacket::write, WindDisturbancePacket::new);
 

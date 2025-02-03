@@ -25,18 +25,18 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(MultiNoiseBiomeSource.class)
 public class MultiNoiseBiomeSourceMixin implements FrozenBiomeSourceAccess {
 
-    @Unique
-    private boolean frozenLib$modifyBiomeEntries = true;
+	@Unique
+	private boolean frozenLib$modifyBiomeEntries = true;
 
 	@Unique
-    @Override
-    public void frozenLib_setModifyBiomeEntries(boolean modifyBiomeEntries) {
-        this.frozenLib$modifyBiomeEntries = modifyBiomeEntries;
-    }
+	@Override
+	public void frozenLib_setModifyBiomeEntries(boolean modifyBiomeEntries) {
+		this.frozenLib$modifyBiomeEntries = modifyBiomeEntries;
+	}
 
 	@Unique
-    @Override
-    public boolean frozenLib_shouldModifyBiomeEntries() {
-        return this.frozenLib$modifyBiomeEntries;
-    }
+	@Override
+	public boolean frozenLib_shouldModifyBiomeEntries() {
+		return this.frozenLib$modifyBiomeEntries;
+	}
 }

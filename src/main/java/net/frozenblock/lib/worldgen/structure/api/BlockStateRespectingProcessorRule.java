@@ -24,12 +24,14 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.PosAlwaysTrueTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.PosRuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.Passthrough;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.Nullable;
 
 public class BlockStateRespectingProcessorRule {
@@ -73,7 +75,8 @@ public class BlockStateRespectingProcessorRule {
 	}
 
 	public BlockState getOutputState(BlockState inputState) {
-		return this.outputBlock.withPropertiesOf(inputState);
+		BlockState outputState = this.outputBlock.withPropertiesOf(inputState);
+		return outputState.isAir() && inputState.getFluidState().is(Fluids.WATER) ? Blocks.WATER.defaultBlockState() : outputState;
 	}
 
 	@Nullable

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.screenshake.impl.network;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -27,9 +27,8 @@ import org.jetbrains.annotations.NotNull;
 public record RemoveEntityScreenShakePacket(
 	int entityId
 ) implements CustomPacketPayload {
-
 	public static final Type<RemoveEntityScreenShakePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("remove_entity_screen_shakes_packet")
+		FrozenLibConstants.id("remove_entity_screen_shakes")
 	);
 	public static final StreamCodec<FriendlyByteBuf, RemoveEntityScreenShakePacket> CODEC = ByteBufCodecs.VAR_INT.map(RemoveEntityScreenShakePacket::new, RemoveEntityScreenShakePacket::entityId).cast();
 

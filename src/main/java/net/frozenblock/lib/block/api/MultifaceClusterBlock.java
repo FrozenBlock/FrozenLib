@@ -47,18 +47,18 @@ import org.jetbrains.annotations.NotNull;
  * A block that combines an amethyst cluster-type block with a multiface block.
  */
 public abstract class MultifaceClusterBlock extends MultifaceBlock implements SimpleWaterloggedBlock {
-    public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
-    public static final BooleanProperty UP = BlockStateProperties.UP;
+	public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+	public static final BooleanProperty UP = BlockStateProperties.UP;
 
-    protected final VoxelShape northAabb;
-    protected final VoxelShape southAabb;
-    protected final VoxelShape eastAabb;
-    protected final VoxelShape westAabb;
-    protected final VoxelShape upAabb;
-    protected final VoxelShape downAabb;
+	protected final VoxelShape northAabb;
+	protected final VoxelShape southAabb;
+	protected final VoxelShape eastAabb;
+	protected final VoxelShape westAabb;
+	protected final VoxelShape upAabb;
+	protected final VoxelShape downAabb;
 
-    private final Map<Direction, VoxelShape> shapeByDirection;
-    private final ImmutableMap<BlockState, VoxelShape> shapesCache;
+	private final Map<Direction, VoxelShape> shapeByDirection;
+	private final ImmutableMap<BlockState, VoxelShape> shapesCache;
 
 
     public MultifaceClusterBlock(int height, int xzOffset, @NotNull Properties properties) {
@@ -81,23 +81,23 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
         this.shapesCache = this.getShapeForEachState(this::calculateMultifaceShape);
     }
 
-    @Override
+	@Override
 	@NotNull
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
-        return Objects.requireNonNull(this.shapesCache.get(state));
-    }
+	public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+		return Objects.requireNonNull(this.shapesCache.get(state));
+	}
 
-    public VoxelShape calculateMultifaceShape(BlockState state) {
-        VoxelShape voxelShape = Shapes.empty();
+	public VoxelShape calculateMultifaceShape(BlockState state) {
+		VoxelShape voxelShape = Shapes.empty();
 
-        for(Direction direction : DIRECTIONS) {
-            if (hasFace(state, direction)) {
-                voxelShape = Shapes.or(voxelShape, this.shapeByDirection.get(direction));
-            }
-        }
+		for (Direction direction : DIRECTIONS) {
+			if (hasFace(state, direction)) {
+				voxelShape = Shapes.or(voxelShape, this.shapeByDirection.get(direction));
+			}
+		}
 
-        return voxelShape.isEmpty() ? Shapes.block() : voxelShape;
-    }
+		return voxelShape.isEmpty() ? Shapes.block() : voxelShape;
+	}
 
 	@Override
 	protected @NotNull BlockState updateShape(
@@ -116,17 +116,17 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
 		return super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, neighborPos, neighborState, randomSource);
 	}
 
-    @Override
+	@Override
 	@NotNull
     public FluidState getFluidState(@NotNull BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
-        super.createBlockStateDefinition(builder);
-        builder.add(WATERLOGGED);
-    }
+	@Override
+	protected void createBlockStateDefinition(StateDefinition.@NotNull Builder<Block, BlockState> builder) {
+		super.createBlockStateDefinition(builder);
+		builder.add(WATERLOGGED);
+	}
 
 	@Override
 	protected boolean propagatesSkylightDown(@NotNull BlockState blockState) {

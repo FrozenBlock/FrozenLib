@@ -34,15 +34,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class EntityMixin implements EntityScreenShakeInterface {
 
 	@Unique
-    public EntityScreenShakeManager frozenLib$entityScreenShakeManager;
+	public EntityScreenShakeManager frozenLib$entityScreenShakeManager;
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void frozenLib$setScreenShakeManager(EntityType<? extends Entity> entityType, Level level, CallbackInfo info) {
-        Entity entity = Entity.class.cast(this);
-        this.frozenLib$entityScreenShakeManager = new EntityScreenShakeManager(entity);
-    }
+	@Inject(method = "<init>", at = @At("TAIL"))
+	private void frozenLib$setScreenShakeManager(EntityType<? extends Entity> entityType, Level level, CallbackInfo info) {
+		Entity entity = Entity.class.cast(this);
+		this.frozenLib$entityScreenShakeManager = new EntityScreenShakeManager(entity);
+	}
 
-    @Inject(
+	@Inject(
 		method = "saveWithoutId",
 		at = @At(
 			value = "INVOKE",
@@ -50,11 +50,11 @@ public class EntityMixin implements EntityScreenShakeInterface {
 			shift = At.Shift.AFTER
 		)
 	)
-    public void frozenLib$saveScreenShakeData(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> info) {
-        if (this.frozenLib$entityScreenShakeManager != null) {
-            this.frozenLib$entityScreenShakeManager.save(compoundTag);
-        }
-    }
+	public void frozenLib$saveScreenShakeData(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> info) {
+		if (this.frozenLib$entityScreenShakeManager != null) {
+			this.frozenLib$entityScreenShakeManager.save(compoundTag);
+		}
+	}
 
 	@Inject(
 		method = "load",
@@ -64,17 +64,17 @@ public class EntityMixin implements EntityScreenShakeInterface {
 			shift = At.Shift.AFTER
 		)
 	)
-    public void frozenLib$loadScreenShakeData(CompoundTag compoundTag, CallbackInfo info) {
-        this.frozenLib$entityScreenShakeManager.load(compoundTag);
-    }
+	public void frozenLib$loadScreenShakeData(CompoundTag compoundTag, CallbackInfo info) {
+		this.frozenLib$entityScreenShakeManager.load(compoundTag);
+	}
 
-    @Inject(method = "tick", at = @At("TAIL"))
-    public void frozenLib$tickScreenShake(CallbackInfo info) {
+	@Inject(method = "tick", at = @At("TAIL"))
+	public void frozenLib$tickScreenShake(CallbackInfo info) {
 		Entity entity = Entity.class.cast(this);
-        if (!entity.level().isClientSide) {
-            this.frozenLib$entityScreenShakeManager.tick();
-        }
-    }
+		if (!entity.level().isClientSide) {
+			this.frozenLib$entityScreenShakeManager.tick();
+		}
+	}
 
 	@Unique
 	@Override

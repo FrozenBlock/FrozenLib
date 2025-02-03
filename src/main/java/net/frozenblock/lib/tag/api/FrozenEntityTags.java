@@ -18,7 +18,7 @@
 package net.frozenblock.lib.tag.api;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
@@ -31,6 +31,6 @@ public class FrozenEntityTags {
 
 	@NotNull
     private static TagKey<EntityType<?>> bind(String path) {
-        return TagKey.create(Registries.ENTITY_TYPE, FrozenSharedConstants.id(path));
+        return TagKey.create(Registries.ENTITY_TYPE, FrozenLibConstants.id(path));
     }
 }

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.wind.impl.networking;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public record WindAccessPacket(Vec3 accessPos) implements CustomPacketPayload {
 
 	public static final Type<WindAccessPacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("wind_access")
+		FrozenLibConstants.id("wind_access")
 	);
 	public static final StreamCodec<FriendlyByteBuf, WindAccessPacket> STREAM_CODEC = StreamCodec.ofMember(WindAccessPacket::write, WindAccessPacket::create);
 

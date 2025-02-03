@@ -19,7 +19,7 @@ package net.frozenblock.lib.spotting_icons.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.frozenblock.lib.entity.api.rendering.FrozenRenderType;
+import net.frozenblock.lib.entity.api.rendering.FrozenLibRenderTypes;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntityRendererWithIcon;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
@@ -59,7 +59,7 @@ public abstract class EntityRendererMixin<T extends Entity> implements EntityRen
 				poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
 				poseStack.scale(-1, 1, 1);
 				PoseStack.Pose pose = poseStack.last();
-				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenRenderType.entityTranslucentEmissiveAlwaysRender(((EntitySpottingIconInterface) entity).getSpottingIconManager().icon.texture()));
+				VertexConsumer vertexConsumer = buffer.getBuffer(FrozenLibRenderTypes.entityTranslucentEmissiveAlwaysRender(((EntitySpottingIconInterface) entity).getSpottingIconManager().icon.texture()));
 				frozenLib$vertex(vertexConsumer, pose, packedLight, 0.0F, 0, 0, 1, alpha);
 				frozenLib$vertex(vertexConsumer, pose, packedLight, 1.0F, 0, 1, 1, alpha);
 				frozenLib$vertex(vertexConsumer, pose, packedLight, 1.0F, 1, 1, 0, alpha);

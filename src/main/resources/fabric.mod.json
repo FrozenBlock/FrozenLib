@@ -27,13 +27,13 @@
   "environment": "*",
   "entrypoints": {
 	  "main": [
-	    "net.frozenblock.lib.FrozenMain"
+      "net.frozenblock.lib.FrozenLibMain"
 	  ],
 	  "client": [
-	    "net.frozenblock.lib.FrozenClient"
+      "net.frozenblock.lib.FrozenLibClient"
 	  ],
     "server": [
-      "net.frozenblock.lib.FrozenServer"
+      "net.frozenblock.lib.FrozenLibServer"
     ],
     "modmenu": [
       "net.frozenblock.lib.config.frozenlib_config.gui.ModMenuIntegration"
@@ -52,25 +52,21 @@
     "mixin/frozenlib.entity.mixins.json",
     "mixin/frozenlib.event.mixins.json",
     "mixin/frozenlib.feature_flag.mixins.json",
+    "mixin/frozenlib.file.mixins.json",
     "mixin/frozenlib.gravity.mixins.json",
-    "mixin/frozenlib.image_transfer.mixins.json",
     "mixin/frozenlib.item.mixins.json",
     "mixin/frozenlib.menu.mixins.json",
-    "mixin/frozenlib.mobcategory.mixins.json",
     "mixin/frozenlib.modmenu.mixins.json",
     "mixin/frozenlib.recipe.mixins.json",
     "mixin/frozenlib.screenshake.mixins.json",
     "mixin/frozenlib.sound.mixins.json",
     "mixin/frozenlib.spotting_icons.mixins.json",
-    "mixin/frozenlib.storage.mixins.json",
     "mixin/frozenlib.tag.mixins.json",
-    "mixin/frozenlib.weather.mixins.json",
     "mixin/frozenlib.wind.mixins.json",
     "mixin/frozenlib.worldgen.biome.mixins.json",
     "mixin/frozenlib.worldgen.heightmap.mixins.json",
     "mixin/frozenlib.worldgen.structure.mixins.json",
     "mixin/frozenlib.worldgen.surface.mixins.json",
-    "mixin/frozenlib.worldgen.vein.mixins.json",
 
     "mixin/frozenlib_quiltmc_datafixerupper.mixins.json",
     "mixin/frozenlib_quiltmc_registry.mixins.json",

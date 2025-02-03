@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.screenshake.impl.network;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -31,17 +31,16 @@ public record EntityScreenShakePacket(
 	float maxDistance,
 	int ticks
 ) implements CustomPacketPayload {
-
 	public static final Type<EntityScreenShakePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("screen_shake_entity_packet")
+		FrozenLibConstants.id("screen_shake_entity")
 	);
 	public static final StreamCodec<FriendlyByteBuf, EntityScreenShakePacket> CODEC = StreamCodec.ofMember(EntityScreenShakePacket::write, EntityScreenShakePacket::new);
 
-	public EntityScreenShakePacket(FriendlyByteBuf buf) {
+	public EntityScreenShakePacket(@NotNull FriendlyByteBuf buf) {
 		this(buf.readVarInt(), buf.readFloat(), buf.readInt(), buf.readInt(), buf.readFloat(), buf.readInt());
 	}
 
-	public void write(FriendlyByteBuf buf) {
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.entityId());
 		buf.writeFloat(this.intensity());
 		buf.writeInt(this.duration());

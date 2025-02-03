@@ -42,7 +42,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 import org.jetbrains.annotations.NotNull;
 
 public class StructureUpgradeCommand {
-	private StructureUpgradeCommand() {}
+	private StructureUpgradeCommand() {
+	}
 
 	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("structure_upgrade")

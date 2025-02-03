@@ -53,7 +53,7 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 				config.noise() == 2 ? EasyNoiseSampler.createCheckedNoise(noiseSeed) :
 					config.noise() == 3 ? EasyNoiseSampler.createLegacyThreadSafeNoise(noiseSeed) :
 						EasyNoiseSampler.createXoroNoise(noiseSeed);
-		float chance = config.placement_chance();
+		float chance = config.placementChance();
 		int bx = blockPos.getX();
 		int by = blockPos.getY();
 		int bz = blockPos.getZ();

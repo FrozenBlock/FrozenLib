@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import net.frozenblock.lib.item.api.shovel.ShovelBehaviors;
+import net.frozenblock.lib.item.api.shovel.ShovelApi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
@@ -54,10 +54,10 @@ public class ShovelItemMixin {
 		@Local Level level, @Local BlockPos pos, @Local BlockState blockState,
 		@Share("frozenLib$isCustomBehavior") LocalBooleanRef isCustomBehavior,
 		@Share("frozenLib$direction") LocalRef<Direction> direction,
-		@Share("frozenLib$shovelBehavior") LocalRef<ShovelBehaviors.ShovelBehavior> shovelBehavior
+		@Share("frozenLib$shovelBehavior") LocalRef<ShovelApi.ShovelBehavior> shovelBehavior
 	) {
 		direction.set(original);
-		ShovelBehaviors.ShovelBehavior possibleBehavior = ShovelBehaviors.get(blockState.getBlock());
+		ShovelApi.ShovelBehavior possibleBehavior = ShovelApi.get(blockState.getBlock());
 		if (possibleBehavior != null && possibleBehavior.meetsRequirements(level, pos, original, blockState)) {
 			isCustomBehavior.set(true);
 			shovelBehavior.set(possibleBehavior);
@@ -115,9 +115,9 @@ public class ShovelItemMixin {
 		@Local(ordinal = 0) BlockState blockState,
 		@Local(ordinal = 2) LocalRef<BlockState> blockState3,
 		@Share("frozenLib$direction") LocalRef<Direction> direction,
-		@Share("frozenLib$shovelBehavior") LocalRef<ShovelBehaviors.ShovelBehavior> shovelBehavior
+		@Share("frozenLib$shovelBehavior") LocalRef<ShovelApi.ShovelBehavior> shovelBehavior
 	) {
-		ShovelBehaviors.ShovelBehavior runBehavior = shovelBehavior.get();
+		ShovelApi.ShovelBehavior runBehavior = shovelBehavior.get();
 		if (runBehavior != null) {
 			BlockState outputState = runBehavior.getOutputBlockState(blockState);
 			runBehavior.onSuccess(level, pos, direction.get(), outputState, blockState);

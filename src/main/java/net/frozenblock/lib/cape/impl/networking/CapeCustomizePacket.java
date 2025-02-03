@@ -20,7 +20,7 @@ package net.frozenblock.lib.cape.impl.networking;
 import java.util.UUID;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.minecraft.network.FriendlyByteBuf;
@@ -33,8 +33,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class CapeCustomizePacket implements CustomPacketPayload {
-	private static final ResourceLocation DUMMY = FrozenSharedConstants.id("dummy");
-	public static final Type<CapeCustomizePacket> PACKET_TYPE = new Type<>(FrozenSharedConstants.id("cape_packet"));
+	private static final ResourceLocation DUMMY = FrozenLibConstants.id("dummy");
+	public static final Type<CapeCustomizePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cape_packet"));
 	public static final StreamCodec<FriendlyByteBuf, CapeCustomizePacket> CODEC = StreamCodec.ofMember(CapeCustomizePacket::write, CapeCustomizePacket::new);
 
 	private final UUID playerUUID;

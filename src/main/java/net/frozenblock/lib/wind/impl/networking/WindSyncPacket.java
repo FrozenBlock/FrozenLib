@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.wind.impl.networking;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -32,7 +32,7 @@ public record WindSyncPacket(
 ) implements CustomPacketPayload {
 
 	public static final Type<WindSyncPacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("wind_sync_packet")
+		FrozenLibConstants.id("wind_sync_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, WindSyncPacket> CODEC = StreamCodec.ofMember(WindSyncPacket::write, WindSyncPacket::create);
 

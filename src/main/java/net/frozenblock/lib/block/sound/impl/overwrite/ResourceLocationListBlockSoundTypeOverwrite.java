@@ -17,15 +17,14 @@
 
 package net.frozenblock.lib.block.sound.impl.overwrite;
 
+import java.util.List;
+import java.util.function.BooleanSupplier;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
-import java.util.function.BooleanSupplier;
 
 @ApiStatus.Internal
 public class ResourceLocationListBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<List<ResourceLocation>> {

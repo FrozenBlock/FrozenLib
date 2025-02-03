@@ -18,7 +18,7 @@
 package net.frozenblock.lib.item.mixin.bonemeal;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.frozenblock.lib.item.api.bonemeal.BonemealBehaviors;
+import net.frozenblock.lib.item.api.bone_meal.BoneMealApi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(BoneMealItem.class)
 public class BoneMealItemMixin {
 
-    @Inject(
+	@Inject(
 		method = "growCrop",
 		at = @At(
 			value = "INVOKE",
@@ -45,23 +45,21 @@ public class BoneMealItemMixin {
 		),
 		cancellable = true
 	)
-    private static void frozenLib$runBonemeal(
+	private static void frozenLib$runBonemeal(
 		ItemStack stack, Level world, BlockPos pos, CallbackInfoReturnable<Boolean> info,
 		@Local(ordinal = 0) BlockState blockState
 	) {
-		BonemealBehaviors.BonemealBehavior bonemealBehavior = BonemealBehaviors.get(blockState.getBlock());
-        if (bonemealBehavior != null && bonemealBehavior.meetsRequirements(world, pos, blockState)) {
+		BoneMealApi.BoneMealBehavior bonemealBehavior = BoneMealApi.get(blockState.getBlock());
+		if (bonemealBehavior != null && bonemealBehavior.meetsRequirements(world, pos, blockState)) {
 			if (world instanceof ServerLevel serverLevel) {
-				if (bonemealBehavior.isBonemealSuccess(world, world.random, pos, blockState)) {
-					bonemealBehavior.performBonemeal(serverLevel, world.random, pos, blockState);
+				if (bonemealBehavior.isBoneMealSuccess(world, world.random, pos, blockState)) {
+					bonemealBehavior.performBoneMeal(serverLevel, world.random, pos, blockState);
 				}
-
 				stack.shrink(1);
 			}
-
 			info.setReturnValue(true);
-        }
-    }
+		}
+	}
 
 	@Inject(
 		method = "addGrowthParticles",
@@ -74,7 +72,7 @@ public class BoneMealItemMixin {
 	private static void frozenLib$addGrowthParticles(
 		LevelAccessor world, BlockPos pos, int count, CallbackInfo info, @Local(ordinal = 0) BlockState blockState
 	) {
-		BonemealBehaviors.BonemealBehavior bonemealBehavior = BonemealBehaviors.get(blockState.getBlock());
+		BoneMealApi.BoneMealBehavior bonemealBehavior = BoneMealApi.get(blockState.getBlock());
 		if (bonemealBehavior != null) {
 			BlockPos particlePos = bonemealBehavior.getParticlePos(blockState, pos);
 			if (bonemealBehavior.isNeighborSpreader()) {
