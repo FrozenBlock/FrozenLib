@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.spotting_icons.api;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -47,7 +47,7 @@ public final class SpottingIconPredicate<T extends Entity> {
 					return predicate.predicate;
 				}
 			}
-			FrozenSharedConstants.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
+			FrozenLibConstants.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
         }
         return defaultPredicate();
     }
@@ -70,7 +70,7 @@ public final class SpottingIconPredicate<T extends Entity> {
 		return Entity::isAlive;
 	}
 
-    public static ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default");
+    public static ResourceLocation DEFAULT_ID = FrozenLibConstants.id("default");
 
     public static void init() {
         register(DEFAULT_ID, defaultPredicate());

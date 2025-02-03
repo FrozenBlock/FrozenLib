@@ -21,8 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.menu.api.Panoramas;
 import net.minecraft.Util;
@@ -66,7 +66,7 @@ public class CubeMapMixin {
 				for (int i = 0; i < 6; ++i) {
 					// Panorama isn't valid if one of the six images isn't found; move on to the next ResourceLocation in the list.
 					if (Minecraft.getInstance().getResourceManager().getResource(ResourceLocation.fromNamespaceAndPath(namespace, path + "_" + i + ".png")).isEmpty()) {
-						FrozenLogUtils.logWarning("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", FrozenSharedConstants.UNSTABLE_LOGGING);
+						FrozenLogUtils.logWarning("Unable to use panorama at " + namespace + ":" + path + ", proper resource pack may not be loaded!", FrozenLibConstants.UNSTABLE_LOGGING);
 						break;
 					}
 					// Panorama is valid if all six images are found, add to valid panorama list.

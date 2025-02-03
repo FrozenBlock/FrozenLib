@@ -27,7 +27,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
@@ -370,7 +370,7 @@ public final class FrozenClientNetworking {
 					FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
 					ClientPlayNetworking.send(fileTransferPacket);
 				} catch (IOException ignored) {
-					FrozenSharedConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
+					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
 				}
 			} else {
 				try {
@@ -381,7 +381,7 @@ public final class FrozenClientNetworking {
 						serverTexture.runFutureForTexture();
 					}
 				} catch (IOException ignored) {
-					FrozenSharedConstants.LOGGER.error("Unable save transferred file {}!", packet.fileName());
+					FrozenLibConstants.LOGGER.error("Unable save transferred file {}!", packet.fileName());
 				}
 			}
 		});

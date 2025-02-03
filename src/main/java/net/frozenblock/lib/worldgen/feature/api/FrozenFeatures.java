@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.worldgen.feature.api.features.CircularLavaVegetationPatchFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.CircularLavaVegetationPatchLessBordersFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.CircularWaterloggedVegetationPatchFeature;
@@ -90,31 +90,31 @@ public class FrozenFeatures {
 	public static final DownwardsChainFeature DOWNWARDS_CHAIN_FEATURE = new DownwardsChainFeature(ChainFeatureConfig.CODEC);
 
 	public static void init() {
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_feature"), NOISE_PATH_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_tag_feature"), NOISE_PATH_TAG_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_plant_feature"), NOISE_PLANT_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_swap_under_water_feature"), NOISE_PATH_SWAP_UNDER_WATER_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_swap_under_water_tag_feature"), NOISE_PATH_SWAP_UNDER_WATER_TAG_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_under_water_feature"), NOISE_PATH_UNDER_WATER_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_tag_under_water_feature"), NOISE_PATH_TAG_UNDER_WATER_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("column_with_disk_feature"), COLUMN_WITH_DISK_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("upwards_column"), UPWARDS_COLUMN_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("downwards_column"), DOWNWARDS_COLUMN_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("circular_waterlogged_vegetation_patch_less_borders"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_tag_feature"), FADING_DISK_TAG_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_tag_except_in_biome_feature"), FADING_DISK_TAG_EXCEPT_IN_BIOME_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_feature"), FADING_DISK_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_carpet_feature"), FADING_DISK_CARPET_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_with_pile_tag_feature"), FADING_DISK_WITH_PILE_TAG_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("curving_tunnel_feature"), CURVING_TUNNEL_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("circular_lava_vegetation_patch"), CIRCULAR_LAVA_VEGETATION_PATCH);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("circular_lava_vegetation_patch_less_borders"), CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("simple_block_schedule_tick"), SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("noise_path_schedule_tick_feature"), NOISE_PATH_SCHEDULE_TICK_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("fading_disk_tag_schedule_tick_feature"), FADING_DISK_TAG_SCHEDULE_TICK_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("combo_feature"), COMBO_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenSharedConstants.id("downwards_chain_feature"), DOWNWARDS_CHAIN_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_feature"), NOISE_PATH_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_tag_feature"), NOISE_PATH_TAG_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_plant_feature"), NOISE_PLANT_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_swap_under_water_feature"), NOISE_PATH_SWAP_UNDER_WATER_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_swap_under_water_tag_feature"), NOISE_PATH_SWAP_UNDER_WATER_TAG_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_under_water_feature"), NOISE_PATH_UNDER_WATER_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_tag_under_water_feature"), NOISE_PATH_TAG_UNDER_WATER_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column_with_disk_feature"), COLUMN_WITH_DISK_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("upwards_column"), UPWARDS_COLUMN_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("downwards_column"), DOWNWARDS_COLUMN_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_waterlogged_vegetation_patch_less_borders"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_tag_feature"), FADING_DISK_TAG_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_tag_except_in_biome_feature"), FADING_DISK_TAG_EXCEPT_IN_BIOME_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_feature"), FADING_DISK_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_carpet_feature"), FADING_DISK_CARPET_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_with_pile_tag_feature"), FADING_DISK_WITH_PILE_TAG_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("curving_tunnel_feature"), CURVING_TUNNEL_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch"), CIRCULAR_LAVA_VEGETATION_PATCH);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch_less_borders"), CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("simple_block_schedule_tick"), SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_schedule_tick_feature"), NOISE_PATH_SCHEDULE_TICK_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_tag_schedule_tick_feature"), FADING_DISK_TAG_SCHEDULE_TICK_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("combo_feature"), COMBO_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("downwards_chain_feature"), DOWNWARDS_CHAIN_FEATURE);
 	}
 
 }

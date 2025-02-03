@@ -21,7 +21,7 @@ import blue.endless.jankson.Comment;
 import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
@@ -35,7 +35,7 @@ public class FrozenLibConfig {
 
 	public static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
 		new JsonConfig<>(
-			FrozenSharedConstants.MOD_ID,
+			FrozenLibConstants.MOD_ID,
 			FrozenLibConfig.class,
 			JsonType.JSON5_UNQUOTED_KEYS,
 			true,
@@ -88,7 +88,7 @@ public class FrozenLibConfig {
 	public boolean fileTransferClient = true;
 
 	@EntrySyncData(value = "cape", behavior = SyncBehavior.UNSYNCABLE)
-	public String cape = FrozenSharedConstants.string("dummy");
+	public String cape = FrozenLibConstants.string("dummy");
 
 	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();

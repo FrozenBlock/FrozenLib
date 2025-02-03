@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,16 +17,15 @@
 
 package net.frozenblock.lib.screenshake.impl.network;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 
 public record RemoveScreenShakePacket() implements CustomPacketPayload {
-
 	public static final Type<RemoveScreenShakePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("remove_screen_shakes_packet")
+		FrozenLibConstants.id("remove_screen_shakes")
 	);
 	public static final StreamCodec<FriendlyByteBuf, RemoveScreenShakePacket> CODEC = StreamCodec.ofMember(RemoveScreenShakePacket::write, RemoveScreenShakePacket::new);
 

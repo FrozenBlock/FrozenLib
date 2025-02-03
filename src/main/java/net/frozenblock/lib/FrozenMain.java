@@ -70,7 +70,7 @@ import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 public final class FrozenMain extends FrozenModInitializer {
 
 	public FrozenMain() {
-		super(FrozenSharedConstants.MOD_ID);
+		super(FrozenLibConstants.MOD_ID);
 	}
 
 	@Override
@@ -94,8 +94,8 @@ public final class FrozenMain extends FrozenModInitializer {
 		FrozenPlacementModifiers.init();
 		DataPackReloadMarker.init();
 
-		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
-		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenSharedConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC.codec());
+		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
+		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC.codec());
 
 		FrozenParticleTypes.registerParticles();
 		ServerCapeData.init();
@@ -104,7 +104,7 @@ public final class FrozenMain extends FrozenModInitializer {
 
 		ArgumentTypeInfos.register(
 			BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
-			FrozenSharedConstants.string("tag_key"),
+			FrozenLibConstants.string("tag_key"),
 			ArgumentTypeInfos.fixClassType(TagKeyArgument.class),
 			new TagKeyArgument.Info<>()
 		);

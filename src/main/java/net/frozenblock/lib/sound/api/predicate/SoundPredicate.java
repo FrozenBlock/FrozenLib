@@ -18,7 +18,7 @@
 package net.frozenblock.lib.sound.api.predicate;
 
 import java.util.function.Supplier;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
@@ -28,8 +28,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class SoundPredicate<T extends Entity> {
-	public static final ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default");
-	public static final ResourceLocation NOT_SILENT_AND_ALIVE_ID = FrozenSharedConstants.id("not_silent_and_alive");
+	public static final ResourceLocation DEFAULT_ID = FrozenLibConstants.id("default");
+	public static final ResourceLocation NOT_SILENT_AND_ALIVE_ID = FrozenLibConstants.id("not_silent_and_alive");
 
 	private final Supplier<LoopPredicate<T>> predicateSupplier;
 
@@ -59,7 +59,7 @@ public final class SoundPredicate<T extends Entity> {
 					return predicate.predicateSupplier.get();
 				}
 			}
-			FrozenSharedConstants.LOGGER.error("Unable to find sound predicate " + id + "! Using default sound predicate instead!");
+			FrozenLibConstants.LOGGER.error("Unable to find sound predicate " + id + "! Using default sound predicate instead!");
         }
         return defaultPredicate();
     }

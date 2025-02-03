@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.item.impl.network;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -32,7 +32,7 @@ public record CooldownChangePacket(
 ) implements CustomPacketPayload {
 
 	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("cooldown_change_packet")
+		FrozenLibConstants.id("cooldown_change_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -41,14 +41,15 @@ public class ServerPlayerMixin {
 	@Shadow
 	private boolean isChangingDimension;
 
-	@Unique @Nullable
+	@Unique
+	@Nullable
 	private CompoundTag frozenLib$savedScreenShakesTag;
 	@Unique
 	private boolean frozenLib$hasSyncedScreenShakes = false;
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))
 	public void frozenLib$syncScreenShakes(CallbackInfo info) {
-		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
+		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
 		if (!this.frozenLib$hasSyncedScreenShakes && this.connection != null && this.connection.isAcceptingMessages() && !this.isChangingDimension) {
 			entityScreenShakeManager.syncWithPlayer(ServerPlayer.class.cast(this));
 			this.frozenLib$hasSyncedScreenShakes = true;
@@ -58,7 +59,7 @@ public class ServerPlayerMixin {
 	@Inject(method = "changeDimension", at = @At(value = "HEAD"))
 	public void frozenLib$changeDimensionSaveScreenShakes(DimensionTransition dimensionTransition, CallbackInfoReturnable<Entity> cir) {
 		CompoundTag tempTag = new CompoundTag();
-		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
+		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
 		entityScreenShakeManager.save(tempTag);
 		this.frozenLib$savedScreenShakesTag = tempTag;
 	}
@@ -66,7 +67,7 @@ public class ServerPlayerMixin {
 	@Inject(method = "changeDimension", at = @At(value = "RETURN"))
 	public void frozenLib$changeDimensionLoadScreenShakes(DimensionTransition dimensionTransition, CallbackInfoReturnable<Entity> cir) {
 		if (this.frozenLib$savedScreenShakesTag != null) {
-			EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface)ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
+			EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
 			entityScreenShakeManager.load(this.frozenLib$savedScreenShakesTag);
 			this.frozenLib$hasSyncedScreenShakes = false;
 		}

@@ -21,3 +21,5 @@ Put changelog here:
 - Added the `downwards_chain_feature` worldgen feature.
   - This generates Chain blocks downwards, and waterlogs them if they replace water.
 - `BlockStateRespectingProcessorRule` now maintains water if a waterlogged block is replaced with air.
+- Added tinted flower bed models.
+- Cleaned up the Screen Shake system and made it much smoother.

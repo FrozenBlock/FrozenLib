@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.sound.api.networking;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -39,7 +39,7 @@ public record StartingMovingRestrictionSoundLoopPacket(
 	ResourceLocation predicateId,
 	boolean stopOnDeath
 ) implements CustomPacketPayload {
-	public static final Type<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = new Type<>(FrozenSharedConstants.id("starting_moving_restriction_looping_sound_packet"));
+	public static final Type<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("starting_moving_restriction_looping_sound_packet"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, StartingMovingRestrictionSoundLoopPacket> CODEC = StreamCodec.ofMember(StartingMovingRestrictionSoundLoopPacket::write, StartingMovingRestrictionSoundLoopPacket::new);
 
 	public StartingMovingRestrictionSoundLoopPacket(@NotNull RegistryFriendlyByteBuf buf) {

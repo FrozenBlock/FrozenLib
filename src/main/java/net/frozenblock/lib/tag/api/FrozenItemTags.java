@@ -18,7 +18,7 @@
 package net.frozenblock.lib.tag.api;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -31,6 +31,6 @@ public class FrozenItemTags {
 
 	@NotNull
 	private static TagKey<Item> bind(String path) {
-		return TagKey.create(Registries.ITEM, FrozenSharedConstants.id(path));
+		return TagKey.create(Registries.ITEM, FrozenLibConstants.id(path));
 	}
 }

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.sound.api.networking;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -41,7 +41,7 @@ public record FadingDistanceSwitchingSoundPacket(
 ) implements CustomPacketPayload {
 
 	public static final Type<FadingDistanceSwitchingSoundPacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("fading_distance_sound_packet")
+		FrozenLibConstants.id("fading_distance_sound_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, FadingDistanceSwitchingSoundPacket> CODEC = StreamCodec.ofMember(FadingDistanceSwitchingSoundPacket::write, FadingDistanceSwitchingSoundPacket::new);
 

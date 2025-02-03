@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.screenshake.impl.network;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -32,13 +32,12 @@ public record ScreenShakePacket(
 	float maxDistance,
 	int ticks
 ) implements CustomPacketPayload {
-
 	public static final Type<ScreenShakePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("screen_shake_packet")
+		FrozenLibConstants.id("screen_shake")
 	);
 	public static final StreamCodec<FriendlyByteBuf, ScreenShakePacket> CODEC = StreamCodec.ofMember(ScreenShakePacket::write, ScreenShakePacket::new);
 
-	public ScreenShakePacket(FriendlyByteBuf buf) {
+	public ScreenShakePacket(@NotNull FriendlyByteBuf buf) {
 		this(
 			buf.readFloat(),
 			buf.readInt(),
@@ -49,7 +48,7 @@ public record ScreenShakePacket(
 		);
 	}
 
-	public void write(FriendlyByteBuf buf) {
+	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeFloat(this.intensity());
 		buf.writeInt(this.duration());
 		buf.writeInt(this.falloffStart());

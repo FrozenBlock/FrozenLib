@@ -20,7 +20,8 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.Collection;
-import net.frozenblock.lib.FrozenSharedConstants;
+
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
@@ -155,6 +156,6 @@ public final class ServerPackets {
 	}
 
 	private static ResourceLocation id(String path) {
-		return FrozenSharedConstants.id(path);
+		return FrozenLibConstants.id(path);
 	}
 }

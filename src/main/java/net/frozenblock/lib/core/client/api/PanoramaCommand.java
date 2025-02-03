@@ -22,7 +22,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.frozenblock.lib.FrozenSharedConstants;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.NotNull;
 import java.io.File;

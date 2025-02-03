@@ -18,7 +18,7 @@
 package net.frozenblock.lib.wind.api;
 
 import java.util.Optional;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.registry.api.FrozenRegistry;
 import net.minecraft.core.Registry;
@@ -38,9 +38,9 @@ import org.jetbrains.annotations.NotNull;
  * <p> For the sake of syncing with the client and working properly overall, it is highly recommended you use the register method here.
  */
 public final class WindDisturbanceLogic<T> {
-	public static final ResourceLocation DEFAULT_ID = FrozenSharedConstants.id("default");
-	public static final ResourceLocation BREEZE = FrozenSharedConstants.id("breeze");
-	public static final ResourceLocation WIND_CHARGE = FrozenSharedConstants.id("wind_charge");
+	public static final ResourceLocation DEFAULT_ID = FrozenLibConstants.id("default");
+	public static final ResourceLocation BREEZE = FrozenLibConstants.id("breeze");
+	public static final ResourceLocation WIND_CHARGE = FrozenLibConstants.id("wind_charge");
 	public static final WindDisturbanceLogic DUMMY_LOGIC = new WindDisturbanceLogic((source, level, windOrigin, affectedArea, windTarget) -> WindDisturbance.DUMMY_RESULT);
 	private final DisturbanceLogic<T> disturbanceLogic;
 
@@ -70,7 +70,7 @@ public final class WindDisturbanceLogic<T> {
 					return Optional.of(disturbanceLogic);
 				}
 			}
-			FrozenSharedConstants.LOGGER.error("Unable to find wind disturbance logic " + id + "!");
+			FrozenLibConstants.LOGGER.error("Unable to find wind disturbance logic " + id + "!");
         }
         return Optional.empty();
     }

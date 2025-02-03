@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -33,17 +33,17 @@ public class ScreenShakeStorage extends SavedData {
 	}
 
 	@NotNull
-	@Override
-	public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
-		this.screenShakeManager.save(compoundTag);
-		return compoundTag;
-	}
-
-	@NotNull
 	public static ScreenShakeStorage load(CompoundTag compoundTag, ScreenShakeManager manager) {
 		ScreenShakeStorage storage = new ScreenShakeStorage(manager);
 
 		storage.screenShakeManager.load(compoundTag);
 		return storage;
+	}
+
+	@NotNull
+	@Override
+	public CompoundTag save(CompoundTag compoundTag, HolderLookup.Provider provider) {
+		this.screenShakeManager.save(compoundTag);
+		return compoundTag;
 	}
 }

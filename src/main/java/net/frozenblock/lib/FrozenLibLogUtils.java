@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,18 @@ package net.frozenblock.lib;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApiStatus.Internal
-public final class FrozenLogUtils {
-	private FrozenLogUtils() {}
+public final class FrozenLibLogUtils {
+
+	@ApiStatus.Internal
+	public static final Logger LOGGER = LoggerFactory.getLogger(FrozenLibConstants.PROJECT_ID);
 
 	public static void log(Object string, boolean should) {
 		if (should) {
-			FrozenLibConstants.LOGGER.info(string.toString());
+			LOGGER.info(string.toString());
 		}
 	}
 
@@ -36,7 +40,7 @@ public final class FrozenLogUtils {
 
 	public static void logWarning(Object string, boolean should) {
 		if (should) {
-			FrozenLibConstants.LOGGER.warn(string.toString());
+			LOGGER.warn(string.toString());
 		}
 	}
 
@@ -46,7 +50,7 @@ public final class FrozenLogUtils {
 
 	public static void logError(Object string, boolean should, @Nullable Throwable throwable) {
 		if (should) {
-			FrozenLibConstants.LOGGER.error(string.toString(), throwable);
+			LOGGER.error(string.toString(), throwable);
 		}
 	}
 

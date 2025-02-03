@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.spotting_icons.impl;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -29,7 +29,7 @@ public record SpottingIconRemovePacket(
 ) implements CustomPacketPayload {
 
 	public static final Type<SpottingIconRemovePacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("spotting_icon_remove_packet")
+		FrozenLibConstants.id("spotting_icon_remove_packet")
 	);
 	public static final StreamCodec<FriendlyByteBuf, SpottingIconRemovePacket> CODEC = ByteBufCodecs.VAR_INT
 		.map(SpottingIconRemovePacket::new, SpottingIconRemovePacket::entityId)

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.debug.networking;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public record ImprovedGameEventListenerDebugPayload(PositionSource listenerPos,
 													int listenerRange) implements CustomPacketPayload {
 	public static final Type<ImprovedGameEventListenerDebugPayload> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("debug_game_event_listener")
+		FrozenLibConstants.id("debug_game_event_listener")
 	);
 
 	public static final StreamCodec<RegistryFriendlyByteBuf, ImprovedGameEventListenerDebugPayload> STREAM_CODEC = StreamCodec.composite(

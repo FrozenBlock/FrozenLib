@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -22,8 +22,8 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public interface EntityScreenShakeInterface {
 
-    EntityScreenShakeManager frozenLib$getScreenShakeManager();
+	EntityScreenShakeManager frozenLib$getScreenShakeManager();
 
-    void frozenLib$addScreenShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks);
+	void frozenLib$addScreenShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks);
 
 }

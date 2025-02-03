@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.wind.impl;
 
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.FrozenSharedConstants;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.WindManagerExtension;
 import net.minecraft.core.HolderLookup;
@@ -58,7 +58,7 @@ public class WindStorage extends SavedData {
 			compoundTag.put(extension.extensionID().toString(), extensionTag);
 		}
 
-		FrozenLogUtils.log("Saving WindManager data.", FrozenSharedConstants.UNSTABLE_LOGGING);
+		FrozenLogUtils.log("Saving WindManager data.", FrozenLibConstants.UNSTABLE_LOGGING);
 
 		return compoundTag;
 	}
@@ -83,7 +83,7 @@ public class WindStorage extends SavedData {
 			extension.load(extensionTag);
 		}
 
-		FrozenLogUtils.log("Loading WindManager data.", FrozenSharedConstants.UNSTABLE_LOGGING);
+		FrozenLogUtils.log("Loading WindManager data.", FrozenLibConstants.UNSTABLE_LOGGING);
 
 		return windStorage;
 	}

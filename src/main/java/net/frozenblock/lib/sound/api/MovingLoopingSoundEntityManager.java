@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import net.frozenblock.lib.FrozenSharedConstants;
+
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -49,7 +50,7 @@ public class MovingLoopingSoundEntityManager {
         if (nbt.contains("frozenSounds", 9)) {
             this.sounds.clear();
             DataResult<List<SoundLoopData>> var10000 = SoundLoopData.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenSounds", 10)));
-            Logger var10001 = FrozenSharedConstants.LOGGER4;
+            Logger var10001 = FrozenLibConstants.LOGGER4;
             Objects.requireNonNull(var10001);
             Optional<List<SoundLoopData>> list = var10000.resultOrPartial(var10001::error);
             if (list.isPresent()) {
@@ -62,7 +63,7 @@ public class MovingLoopingSoundEntityManager {
     public void save(CompoundTag nbt) {
 		if (!this.sounds.isEmpty()) {
 			DataResult<Tag> var10000 = SoundLoopData.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
-			Logger var10001 = FrozenSharedConstants.LOGGER4;
+			Logger var10001 = FrozenLibConstants.LOGGER4;
 			Objects.requireNonNull(var10001);
 			var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenSounds", cursorsNbt));
 		}

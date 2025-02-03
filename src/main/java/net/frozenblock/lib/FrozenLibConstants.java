@@ -27,7 +27,7 @@ import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
 
 @ApiStatus.Internal
-public final class FrozenSharedConstants {
+public final class FrozenLibConstants {
 	public static final String PROJECT_ID = "FrozenLib";
 	public static final String MOD_ID = "frozenlib";
 	public static final Logger LOGGER = LoggerFactory.getLogger(PROJECT_ID);
@@ -43,7 +43,7 @@ public final class FrozenSharedConstants {
 	@Contract("_ -> new")
 	@NotNull
 	public static ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(FrozenSharedConstants.MOD_ID, path);
+		return ResourceLocation.fromNamespaceAndPath(FrozenLibConstants.MOD_ID, path);
 	}
 
 	@NotNull
@@ -51,5 +51,5 @@ public final class FrozenSharedConstants {
 		return id(path).toString();
 	}
 
-	private FrozenSharedConstants() {}
+	private FrozenLibConstants() {}
 }

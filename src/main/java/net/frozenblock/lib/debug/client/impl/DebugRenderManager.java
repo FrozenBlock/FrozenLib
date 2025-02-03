@@ -27,7 +27,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.debug.client.api.DebugRendererEvents;
 import net.frozenblock.lib.debug.client.renderer.ImprovedGameEventListenerRenderer;
@@ -81,7 +81,7 @@ public class DebugRenderManager {
 
 			addClearRunnable(improvedGoalSelectorRenderer::clear);
 
-			registerRenderer(FrozenSharedConstants.id("goal"), improvedGoalSelectorRenderer::render);
+			registerRenderer(FrozenLibConstants.id("goal"), improvedGoalSelectorRenderer::render);
 		});
 
 		DebugRendererEvents.DEBUG_RENDERERS_CREATED.register(client -> {
@@ -107,7 +107,7 @@ public class DebugRenderManager {
 				}
 			});
 
-			registerRenderer(FrozenSharedConstants.id("game_event"), improvedGameEventRenderer::render);
+			registerRenderer(FrozenLibConstants.id("game_event"), improvedGameEventRenderer::render);
 		});
 
 		DebugRendererEvents.DEBUG_RENDERERS_CREATED.register(client -> {
@@ -126,7 +126,7 @@ public class DebugRenderManager {
 
 			addClearRunnable(windDebugRenderer::clear);
 
-			registerRenderer(FrozenSharedConstants.id("wind"), windDebugRenderer::render);
+			registerRenderer(FrozenLibConstants.id("wind"), windDebugRenderer::render);
 		});
 
 		DebugRendererEvents.DEBUG_RENDERERS_CREATED.register(client -> {
@@ -140,7 +140,7 @@ public class DebugRenderManager {
 
 			addClearRunnable(windDisturbanceDebugRenderer::clear);
 
-			registerRenderer(FrozenSharedConstants.id("wind_disturbance"), windDisturbanceDebugRenderer::render);
+			registerRenderer(FrozenLibConstants.id("wind_disturbance"), windDisturbanceDebugRenderer::render);
 		});
 	}
 

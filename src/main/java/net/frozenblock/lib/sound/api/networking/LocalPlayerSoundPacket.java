@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.sound.api.networking;
 
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record LocalPlayerSoundPacket(Holder<SoundEvent> sound, float volume, float pitch) implements CustomPacketPayload {
 	public static final Type<LocalPlayerSoundPacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("local_player_sound_packet")
+		FrozenLibConstants.id("local_player_sound_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, LocalPlayerSoundPacket> CODEC = StreamCodec.ofMember(LocalPlayerSoundPacket::write, LocalPlayerSoundPacket::new);
 

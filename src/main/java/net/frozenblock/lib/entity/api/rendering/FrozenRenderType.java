@@ -22,7 +22,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.function.BiFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
@@ -45,7 +45,7 @@ public final class FrozenRenderType {
                         .setOverlayState(RenderStateShard.OVERLAY)
                         .createCompositeState(affectsOutline);
                 return create(
-					FrozenSharedConstants.string("entity_translucent_emissive_fixed"),
+					FrozenLibConstants.string("entity_translucent_emissive_fixed"),
                         DefaultVertexFormat.NEW_ENTITY,
                         VertexFormat.Mode.QUADS,
                         256,
@@ -67,7 +67,7 @@ public final class FrozenRenderType {
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline);
 			return create(
-				FrozenSharedConstants.string("entity_translucent_emissive_fixed_cull"),
+				FrozenLibConstants.string("entity_translucent_emissive_fixed_cull"),
 				DefaultVertexFormat.NEW_ENTITY,
 				VertexFormat.Mode.QUADS,
 				256,
@@ -80,7 +80,7 @@ public final class FrozenRenderType {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize(
 			((texture, affectsOutline) -> create(
-				FrozenSharedConstants.string("entity_translucent_emissive_always_render"),
+				FrozenLibConstants.string("entity_translucent_emissive_always_render"),
 					DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
 					VertexFormat.Mode.QUADS,
 					256,
@@ -101,7 +101,7 @@ public final class FrozenRenderType {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL = Util.memoize(
 		((texture, affectsOutline) -> create(
-			FrozenSharedConstants.string("entity_translucent_emissive_always_render_cull"),
+			FrozenLibConstants.string("entity_translucent_emissive_always_render_cull"),
 			DefaultVertexFormat.POSITION_COLOR_TEX_LIGHTMAP,
 			VertexFormat.Mode.QUADS,
 			256,
@@ -122,7 +122,7 @@ public final class FrozenRenderType {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER = Util.memoize(
 		((texture, affectsOutline) -> create(
-			FrozenSharedConstants.string("apparition_outer"),
+			FrozenLibConstants.string("apparition_outer"),
 			DefaultVertexFormat.NEW_ENTITY,
 			VertexFormat.Mode.QUADS,
 			1536,
@@ -140,7 +140,7 @@ public final class FrozenRenderType {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER_CULL = Util.memoize(
 		((texture, affectsOutline) -> create(
-			FrozenSharedConstants.string("apparition_outer_cull"),
+			FrozenLibConstants.string("apparition_outer_cull"),
 			DefaultVertexFormat.NEW_ENTITY,
 			VertexFormat.Mode.QUADS,
 			1536,
@@ -167,7 +167,7 @@ public final class FrozenRenderType {
 				.setDepthTestState(RenderStateShard.NO_DEPTH_TEST)
 				.createCompositeState(affectsOutline);
 			return create(
-				FrozenSharedConstants.string("entity_translucent_emissive_cull"),
+				FrozenLibConstants.string("entity_translucent_emissive_cull"),
 				DefaultVertexFormat.NEW_ENTITY,
 				VertexFormat.Mode.QUADS,
 				1536,

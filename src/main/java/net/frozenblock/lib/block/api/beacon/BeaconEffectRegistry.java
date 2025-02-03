@@ -20,7 +20,8 @@ package net.frozenblock.lib.block.api.beacon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
-import net.frozenblock.lib.FrozenSharedConstants;
+
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.level.block.entity.BeaconBlockEntity;
@@ -47,7 +48,7 @@ public class BeaconEffectRegistry {
 				.flatMap(Collection::stream)
 				.collect(Collectors.toSet());
 		} else {
-			FrozenSharedConstants.LOGGER.error("Attempted to register Beacon effect " + effect.unwrapKey().get().location() + " at tier " + tier + ". Tier list is not an instance of ArrayList!");
+			FrozenLibConstants.LOGGER.error("Attempted to register Beacon effect " + effect.unwrapKey().get().location() + " at tier " + tier + ". Tier list is not an instance of ArrayList!");
 		}
 	}
 }

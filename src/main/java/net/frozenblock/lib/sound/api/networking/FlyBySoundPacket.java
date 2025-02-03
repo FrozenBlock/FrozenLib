@@ -20,7 +20,7 @@ package net.frozenblock.lib.sound.api.networking;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.sound.api.FlyBySoundHub;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Holder;
@@ -42,7 +42,7 @@ public record FlyBySoundPacket(
 	float pitch
 ) implements CustomPacketPayload {
 	public static final Type<FlyBySoundPacket> PACKET_TYPE = new Type<>(
-		FrozenSharedConstants.id("flyby_sound_packet")
+		FrozenLibConstants.id("flyby_sound_packet")
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, FlyBySoundPacket> CODEC = StreamCodec.ofMember(FlyBySoundPacket::write, FlyBySoundPacket::new);
 

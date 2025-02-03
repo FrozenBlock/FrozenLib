@@ -18,7 +18,7 @@
 package net.frozenblock.lib.worldgen.surface.mixin;
 
 import net.frozenblock.lib.FrozenLogUtils;
-import net.frozenblock.lib.FrozenSharedConstants;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
 import net.minecraft.core.RegistryAccess;
@@ -60,7 +60,7 @@ public abstract class MinecraftServerMixin {
 		}
 
 		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().registryOrThrow(Registries.BIOME));
-		FrozenLogUtils.log("Optimized tag source count: " + OptimizedBiomeTagConditionSource.INSTANCES.size(), FrozenSharedConstants.UNSTABLE_LOGGING);
+		FrozenLogUtils.log("Optimized tag source count: " + OptimizedBiomeTagConditionSource.INSTANCES.size(), FrozenLibConstants.UNSTABLE_LOGGING);
 	}
 
 }
