@@ -15,9 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mobcategory.impl;
+package net.frozenblock.lib.entity.impl;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
-public record FrozenMobCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
+public interface StartTrackingEntityInterface {
+
+	void frozenLib$playerStartsTracking(ServerPlayer serverPlayer);
+
 }

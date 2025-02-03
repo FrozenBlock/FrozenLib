@@ -15,23 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mobcategory.api;
+package net.frozenblock.lib.entity.impl.behavior;
 
-import java.util.LinkedHashMap;
-import java.util.Map;
-import lombok.experimental.UtilityClass;
-import net.minecraft.world.entity.MobCategory;
+public interface FrozenLibBehavior {
 
-@UtilityClass
-public class FrozenMobCategories {
-
-	private static final Map<String, MobCategory> NEW_MOB_CATEROGIES = new LinkedHashMap<>();
-
-	public static void addMobCategory(String id, MobCategory category) {
-		NEW_MOB_CATEROGIES.put(id, category);
-	}
-
-	public static MobCategory getCategory(String modId, String name) {
-		return NEW_MOB_CATEROGIES.get(modId.toUpperCase() + name.toUpperCase());
-	}
+	int frozenLib$getDuration();
 }

@@ -15,22 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.mobcategory.api.entrypoint;
+package net.frozenblock.lib.entity.api.behavior;
 
-import java.util.ArrayList;
-import net.frozenblock.lib.mobcategory.impl.FrozenMobCategory;
-import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import lombok.experimental.UtilityClass;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.behavior.BehaviorControl;
+import net.minecraft.world.entity.ai.behavior.OneShot;
 
-public interface FrozenMobCategoryEntrypoint {
+@UtilityClass
+public class FrozenBehaviorUtils {
 
-	void newCategories(ArrayList<FrozenMobCategory> context);
-
-	@Contract("_, _, _, _, _ -> new")
-	static @NotNull FrozenMobCategory createCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
-		return new FrozenMobCategory(key, max, isFriendly, isPersistent, despawnDistance);
+	public static <E extends LivingEntity> OneShot<E> getOneShot(BehaviorControl<E> control) {
+		if (!(control instanceof OneShot<E> oneShot)) {
+			throw new IllegalStateException("Behavior control is not a OneShot");
+		} else {
+			return oneShot;
+		}
 	}
-
 }
-

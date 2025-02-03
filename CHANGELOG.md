@@ -24,3 +24,4 @@ Put changelog here:
 - Added tinted flower bed models.
 - Cleaned up the Screen Shake system and made it much smoother.
 - Cleaned up classes in the `block` package and condensed some of its contents.
+- Cleaned up classes in the `entity` package and condensed the `modcategory` package into it.

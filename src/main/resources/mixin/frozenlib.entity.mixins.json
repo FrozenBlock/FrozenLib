@@ -11,7 +11,8 @@
     "EntityMixin",
     "ServerEntityMixin",
     "WolfVariantsMixin",
-    "behavior.BehaviorMixin"
+    "behavior.BehaviorMixin",
+    "category.MobCategoryMixin"
   ],
   "client": [
     "client.rendering.LivingEntityRendererMixin",

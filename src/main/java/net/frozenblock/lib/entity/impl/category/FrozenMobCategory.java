@@ -15,21 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.behavior.api;
+package net.frozenblock.lib.entity.impl.category;
 
-import lombok.experimental.UtilityClass;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.behavior.BehaviorControl;
-import net.minecraft.world.entity.ai.behavior.OneShot;
+import net.minecraft.resources.ResourceLocation;
 
-@UtilityClass
-public class FrozenBehaviorUtils {
-
-	public static <E extends LivingEntity> OneShot<E> getOneShot(BehaviorControl<E> control) {
-		if (!(control instanceof OneShot<E> oneShot)) {
-			throw new IllegalStateException("Behavior control is not a OneShot");
-		} else {
-			return oneShot;
-		}
-	}
+public record FrozenMobCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
 }

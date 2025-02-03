@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -30,17 +30,19 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+@ApiStatus.Internal
 public class ScaleEntityCommand {
 
 	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("scale").requires(source -> source.hasPermission(2))
-				.then(Commands.argument("targets", EntityArgument.entities())
-					.then(Commands.argument("scale", DoubleArgumentType.doubleArg())
-						.executes(context -> scale(context.getSource(), EntityArgument.getEntities(context, "targets"), DoubleArgumentType.getDouble(context, "scale")))
-					)
+			.then(Commands.argument("targets", EntityArgument.entities())
+				.then(Commands.argument("scale", DoubleArgumentType.doubleArg())
+					.executes(context -> scale(context.getSource(), EntityArgument.getEntities(context, "targets"), DoubleArgumentType.getDouble(context, "scale")))
 				)
+			)
 		);
 	}
 

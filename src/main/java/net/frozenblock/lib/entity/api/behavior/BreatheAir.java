@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -40,28 +40,28 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 	}
 
 	@Override
-	public boolean checkExtraStartConditions(ServerLevel level, E owner) {
+	public boolean checkExtraStartConditions(@NotNull ServerLevel level, @NotNull E owner) {
 		return super.checkExtraStartConditions(level, owner) && owner.getAirSupply() < 140;
 	}
 
 	@Override
-	public boolean canStillUse(ServerLevel level, E owner, long gameTime) {
+	public boolean canStillUse(@NotNull ServerLevel level, @NotNull E owner, long gameTime) {
 		return this.checkExtraStartConditions(level, owner);
 	}
 
 	@Override
-	public void start(ServerLevel level, E entity, long gameTime) {
+	public void start(@NotNull ServerLevel level, @NotNull E entity, long gameTime) {
 		this.findAirPosition(entity);
 	}
 
 	private void findAirPosition(@NotNull E entity) {
 		Iterable<BlockPos> iterable = BlockPos.betweenClosed(
-				Mth.floor(entity.getX() - 1.0),
-				entity.getBlockY(),
-				Mth.floor(entity.getZ() - 1.0),
-				Mth.floor(entity.getX() + 1.0),
-				Mth.floor(entity.getY() + 8.0),
-				Mth.floor(entity.getZ() + 1.0)
+			Mth.floor(entity.getX() - 1.0),
+			entity.getBlockY(),
+			Mth.floor(entity.getZ() - 1.0),
+			Mth.floor(entity.getX() + 1.0),
+			Mth.floor(entity.getY() + 8.0),
+			Mth.floor(entity.getZ() + 1.0)
 		);
 		BlockPos blockPos = null;
 
@@ -80,7 +80,7 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 	}
 
 	@Override
-	public void tick(ServerLevel level, E entity, long gameTime) {
+	public void tick(@NotNull ServerLevel level, @NotNull E entity, long gameTime) {
 		this.findAirPosition(entity);
 		entity.moveRelative(0.02F, new Vec3(entity.xxa, entity.yya, entity.zza));
 		entity.move(MoverType.SELF, entity.getDeltaMovement());

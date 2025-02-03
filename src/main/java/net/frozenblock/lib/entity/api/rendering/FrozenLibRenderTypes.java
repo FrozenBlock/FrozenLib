@@ -31,8 +31,7 @@ import org.lwjgl.opengl.GL11C;
 import org.lwjgl.opengl.GL20C;
 
 @Environment(EnvType.CLIENT)
-public final class FrozenRenderType {
-	private FrozenRenderType() {}
+public final class FrozenLibRenderTypes {
 
     public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize(
             ((identifier, affectsOutline) -> {

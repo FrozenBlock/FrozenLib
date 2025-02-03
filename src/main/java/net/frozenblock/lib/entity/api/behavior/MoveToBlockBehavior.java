@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,27 +18,28 @@
 package net.frozenblock.lib.entity.api.behavior;
 
 import com.google.common.collect.ImmutableMap;
-import net.frozenblock.lib.entity.impl.behavior.FrozenBehavior;
+import net.frozenblock.lib.entity.impl.behavior.FrozenLibBehavior;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.LevelReader;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * {@link MoveToBlockGoal} as a behavior.
  */
 public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behavior<E> {
 	public static final int DURATION = 1200;
-	protected final E mob;
 	public final double speedModifier;
-	protected int tryTicks;
-	protected BlockPos blockPos = BlockPos.ZERO;
-	private boolean reachedTarget;
+	protected final E mob;
 	private final int searchRange;
 	private final int verticalSearchRange;
+	protected int tryTicks;
+	protected BlockPos blockPos = BlockPos.ZERO;
 	protected int verticalSearchStart;
+	private boolean reachedTarget;
 
 	public MoveToBlockBehavior(E mob, double speedModifier, int searchRange) {
 		this(mob, speedModifier, searchRange, 1);
@@ -54,17 +55,17 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 	}
 
 	@Override
-	public boolean checkExtraStartConditions(ServerLevel level, E owner) {
+	public boolean checkExtraStartConditions(@NotNull ServerLevel level, @NotNull E owner) {
 		return this.findNearestBlock();
 	}
 
 	@Override
-	public boolean canStillUse(ServerLevel level, E entity, long gameTime) {
-		return this.tryTicks >= -((FrozenBehavior) this).getDuration() && this.tryTicks <= DURATION && this.isValidTarget(level, this.blockPos);
+	public boolean canStillUse(@NotNull ServerLevel level, @NotNull E entity, long gameTime) {
+		return this.tryTicks >= -((FrozenLibBehavior) this).frozenLib$getDuration() && this.tryTicks <= DURATION && this.isValidTarget(level, this.blockPos);
 	}
 
 	@Override
-	public void start(ServerLevel level, E entity, long gameTime) {
+	public void start(@NotNull ServerLevel level, @NotNull E entity, long gameTime) {
 		this.moveMobToBlock();
 		this.tryTicks = 0;
 	}
@@ -72,11 +73,11 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 	protected void moveMobToBlock() {
 		this.mob
 			.getNavigation()
-			.moveTo(this.blockPos.getX() + 0.5, this.blockPos.getY() + 1, this.blockPos.getZ() + 0.5, this.speedModifier);
+			.moveTo(this.blockPos.getX() + 0.5D, this.blockPos.getY() + 1D, this.blockPos.getZ() + 0.5D, this.speedModifier);
 	}
 
 	public double acceptedDistance() {
-		return 1.0;
+		return 1D;
 	}
 
 	protected BlockPos getMoveToTarget() {
@@ -84,15 +85,15 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 	}
 
 	@Override
-	protected void tick(ServerLevel level, E owner, long gameTime) {
+	protected void tick(@NotNull ServerLevel level, @NotNull E owner, long gameTime) {
 		BlockPos blockPos = this.getMoveToTarget();
 		if (!blockPos.closerToCenterThan(owner.position(), this.acceptedDistance())) {
 			this.reachedTarget = false;
 			++this.tryTicks;
 			if (this.shouldRecalculatePath()) {
 				this.mob
-						.getNavigation()
-						.moveTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, this.speedModifier);
+					.getNavigation()
+					.moveTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, this.speedModifier);
 			}
 		} else {
 			this.reachedTarget = true;
@@ -115,10 +116,10 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 		BlockPos blockPos = this.mob.blockPosition();
 		BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 
-		for(int k = this.verticalSearchStart; k <= this.verticalSearchRange; k = k > 0 ? -k : 1 - k) {
-			for(int l = 0; l < this.searchRange; ++l) {
-				for(int m = 0; m <= l; m = m > 0 ? -m : 1 - m) {
-					for(int n = m < l && m > -l ? l : 0; n <= l; n = n > 0 ? -n : 1 - n) {
+		for (int k = this.verticalSearchStart; k <= this.verticalSearchRange; k = k > 0 ? -k : 1 - k) {
+			for (int l = 0; l < this.searchRange; ++l) {
+				for (int m = 0; m <= l; m = m > 0 ? -m : 1 - m) {
+					for (int n = m < l && m > -l ? l : 0; n <= l; n = n > 0 ? -n : 1 - n) {
 						mutableBlockPos.setWithOffset(blockPos, m, k - 1, n);
 						if (this.mob.isWithinRestriction(mutableBlockPos) && this.isValidTarget(this.mob.level(), mutableBlockPos)) {
 							this.blockPos = mutableBlockPos;

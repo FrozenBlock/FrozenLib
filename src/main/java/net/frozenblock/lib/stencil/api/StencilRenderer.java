@@ -24,7 +24,7 @@ import java.util.Collection;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.entity.api.rendering.FrozenRenderType;
+import net.frozenblock.lib.entity.api.rendering.FrozenLibRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.util.FastColor;
@@ -34,7 +34,7 @@ import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
 public class StencilRenderer {
-	private static final RenderType[] DYNAMIC_LIGHT = new RenderType[]{FrozenRenderType.dynamicLightStencil(), FrozenRenderType.dynamicLightColor()};
+	private static final RenderType[] DYNAMIC_LIGHT = new RenderType[]{FrozenLibRenderTypes.dynamicLightStencil(), FrozenLibRenderTypes.dynamicLightColor()};
 
 	public static final StencilRenderer.Triangle[] FACES_SPHERE = StencilRenderer.createNSphere(2);
 

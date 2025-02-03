@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.client;
+package net.frozenblock.lib.block.client.api;
 
 import java.util.Objects;
 import net.fabricmc.api.EnvType;
