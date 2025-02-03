@@ -36,7 +36,7 @@ public class FrozenLibModelHelper {
 		createModelTemplate("tinted_flowerbed_4", "_4", TextureSlot.FLOWERBED, TextureSlot.STEM)
 	);
 
-	public final void createTintedFlowerBed(@NotNull BlockModelGenerators generator, @NotNull Block block) {
+	public static void createTintedFlowerBed(@NotNull BlockModelGenerators generator, @NotNull Block block) {
 		generator.createSimpleFlatItemModel(block.asItem());
 		ResourceLocation resourceLocation = TINTED_FLOWERBED_1.create(block, generator.modelOutput);
 		ResourceLocation resourceLocation2 = TINTED_FLOWERBED_2.create(block, generator.modelOutput);
