@@ -24,7 +24,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.minecraft.network.chat.Component;
@@ -60,7 +60,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 
 			return instance;
 		} catch (Exception e) {
-			FrozenLogUtils.logError("Failed to modify config, returning original.", true, e);
+			FrozenLibLogUtils.logError("Failed to modify config, returning original.", true, e);
 			return original;
 		}
     }
@@ -75,7 +75,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
                 try {
                     field.set(destination, field.get(source));
                 } catch (IllegalAccessException e) {
-					FrozenLogUtils.logError("Failed to copy field " + field.getName(), true, e);
+					FrozenLibLogUtils.logError("Failed to copy field " + field.getName(), true, e);
                 }
             }
             clazz = clazz.getSuperclass();

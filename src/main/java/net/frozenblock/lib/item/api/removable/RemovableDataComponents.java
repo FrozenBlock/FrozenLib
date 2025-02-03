@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.api.removable;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
-import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,8 +45,8 @@ public class RemovableDataComponents {
 		if (removableDataComponent != null) {
 			return removableDataComponent.shouldRemove(level, entity, slot, selected);
 		} else {
-			FrozenLogUtils.logError("Unable to find RemovableDataComponent for DataComponent " + key.location() + "!", true, null);
-			FrozenLogUtils.logError("Please make sure " + key.location() + " is registered in RemovableDataComponents.class!", true, null);
+			FrozenLibLogUtils.logError("Unable to find RemovableDataComponent for DataComponent " + key.location() + "!", true, null);
+			FrozenLibLogUtils.logError("Please make sure " + key.location() + " is registered in RemovableDataComponents.class!", true, null);
 			return false;
 		}
 	}
@@ -58,8 +58,8 @@ public class RemovableDataComponents {
 		if (removableDataComponent != null) {
 			return removableDataComponent.shouldRemoveOnStackMerge();
 		} else {
-			FrozenLogUtils.logError("Unable to find RemovableDataComponent data for DataComponent " + key.location() + "!", true, null);
-			FrozenLogUtils.logError("Please make sure " + key.location() + " is registered in RemovableDataComponents.class!", true, null);
+			FrozenLibLogUtils.logError("Unable to find RemovableDataComponent data for DataComponent " + key.location() + "!", true, null);
+			FrozenLibLogUtils.logError("Please make sure " + key.location() + " is registered in RemovableDataComponents.class!", true, null);
 			return true;
 		}
 	}

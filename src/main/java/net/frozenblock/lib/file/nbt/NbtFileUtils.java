@@ -20,7 +20,6 @@ package net.frozenblock.lib.file.nbt;
 import java.io.File;
 import java.io.IOException;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import org.jetbrains.annotations.Contract;

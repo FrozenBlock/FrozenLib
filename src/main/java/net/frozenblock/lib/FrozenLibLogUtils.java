@@ -19,18 +19,13 @@ package net.frozenblock.lib;
 
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 @ApiStatus.Internal
 public final class FrozenLibLogUtils {
 
-	@ApiStatus.Internal
-	public static final Logger LOGGER = LoggerFactory.getLogger(FrozenLibConstants.PROJECT_ID);
-
 	public static void log(Object string, boolean should) {
 		if (should) {
-			LOGGER.info(string.toString());
+			FrozenLibConstants.LOGGER.info(string.toString());
 		}
 	}
 
@@ -40,7 +35,7 @@ public final class FrozenLibLogUtils {
 
 	public static void logWarning(Object string, boolean should) {
 		if (should) {
-			LOGGER.warn(string.toString());
+			FrozenLibConstants.LOGGER.warn(string.toString());
 		}
 	}
 
@@ -50,7 +45,7 @@ public final class FrozenLibLogUtils {
 
 	public static void logError(Object string, boolean should, @Nullable Throwable throwable) {
 		if (should) {
-			LOGGER.error(string.toString(), throwable);
+			FrozenLibConstants.LOGGER.error(string.toString(), throwable);
 		}
 	}
 

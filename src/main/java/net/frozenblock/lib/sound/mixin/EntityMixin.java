@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -108,7 +108,17 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 
 	@Unique
     @Override
-    public void frozenLib$addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {
+    public void frozenLib$addFadingDistanceSound(
+		ResourceLocation soundID,
+		ResourceLocation sound2ID,
+		SoundSource category,
+		float volume,
+		float pitch,
+		ResourceLocation restrictionId,
+		boolean stopOnDeath,
+		float fadeDist,
+		float maxDist
+	) {
         this.frozenLib$loopingFadingDistanceSoundManager.addSound(soundID, sound2ID, category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist);
     }
 

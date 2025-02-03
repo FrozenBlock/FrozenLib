@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -59,7 +59,7 @@ public final class SoundPredicate<T extends Entity> {
 					return predicate.predicateSupplier.get();
 				}
 			}
-			FrozenLibConstants.LOGGER.error("Unable to find sound predicate " + id + "! Using default sound predicate instead!");
+			FrozenLibLogUtils.LOGGER.error("Unable to find sound predicate {}! Using default sound predicate instead!", id);
         }
         return defaultPredicate();
     }

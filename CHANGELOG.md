@@ -27,3 +27,5 @@ Put changelog here:
 - Cleaned up classes in the `entity` package and condensed the `modcategory` package into it.
 - Renamed `FrozenFeatureFlags` to `FeatureFlagAPI.`
 - Reworked, renamed, and cleaned up the Axe, Bone Meal, and Shovel item use APIs.
+- Cleaned up classes in the `sound` package and condensed some of its contents.
+- Flyby sounds can now be properly sent to the client.

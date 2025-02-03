@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.api.removable;
 
 import java.util.LinkedHashMap;
 import java.util.Set;
-import net.frozenblock.lib.FrozenLogUtils;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -40,8 +40,8 @@ public class RemovableItemTags {
 		if (removableItemTag != null) {
 			return removableItemTag.shouldRemove(level, entity, slot, selected);
 		} else {
-			FrozenLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
-			FrozenLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
+			FrozenLibLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
+			FrozenLibLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
 			return false;
 		}
 	}
@@ -51,8 +51,8 @@ public class RemovableItemTags {
 		if (removableItemTag != null) {
 			return removableItemTag.shouldRemoveOnStackMerge();
 		} else {
-			FrozenLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
-			FrozenLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
+			FrozenLibLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
+			FrozenLibLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
 			return true;
 		}
 	}

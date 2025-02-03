@@ -46,12 +46,13 @@ import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
-import net.frozenblock.lib.sound.api.networking.FadingDistanceSwitchingSoundPacket;
-import net.frozenblock.lib.sound.api.networking.LocalPlayerSoundPacket;
-import net.frozenblock.lib.sound.api.networking.LocalSoundPacket;
-import net.frozenblock.lib.sound.api.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
-import net.frozenblock.lib.sound.api.networking.MovingRestrictionSoundPacket;
-import net.frozenblock.lib.sound.api.networking.StartingMovingRestrictionSoundLoopPacket;
+import net.frozenblock.lib.sound.impl.networking.FadingDistanceSwitchingSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.FlyBySoundPacket;
+import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.LocalSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.wind.api.WindManager;
@@ -109,7 +110,7 @@ public final class FrozenNetworking {
 		registry.register(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);
 		registry.register(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket.CODEC);
 		registry.register(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket.CODEC);
-
+		registry.register(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket.CODEC);
 		registry.register(FadingDistanceSwitchingSoundPacket.PACKET_TYPE, FadingDistanceSwitchingSoundPacket.CODEC);
 		registry.register(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, MovingFadingDistanceSwitchingRestrictionSoundPacket.CODEC);
 		registry.register(CooldownChangePacket.PACKET_TYPE, CooldownChangePacket.CODEC);

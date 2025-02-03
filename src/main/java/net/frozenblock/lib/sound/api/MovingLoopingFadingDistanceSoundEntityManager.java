@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2025 FrozenBlock
+ * Copyright (C) 2024 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,25 +18,20 @@
 package net.frozenblock.lib.sound.api;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 
-import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.impl.networking.FrozenLibSoundPackets;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
-import org.slf4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 public class MovingLoopingFadingDistanceSoundEntityManager {
     private final ArrayList<FadingDistanceSoundLoopNBT> sounds = new ArrayList<>();
@@ -46,31 +41,36 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         this.entity = entity;
     }
 
-    public void load(CompoundTag nbt) {
-        if (nbt.contains("frozenDistanceSounds", 9)) {
+    public void load(@NotNull CompoundTag nbt) {
+        if (nbt.contains("frozenlib_looping_fading_distance_sounds", 9)) {
             this.sounds.clear();
-            DataResult<List<FadingDistanceSoundLoopNBT>> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenDistanceSounds", 10)));
-            Logger var10001 = FrozenLibConstants.LOGGER4;
-            Objects.requireNonNull(var10001);
-            Optional<List<FadingDistanceSoundLoopNBT>> list = var10000.resultOrPartial(var10001::error);
-            if (list.isPresent()) {
-                List<FadingDistanceSoundLoopNBT> allSounds = list.get();
-                this.sounds.addAll(allSounds);
-            }
+			FadingDistanceSoundLoopNBT.CODEC.listOf()
+				.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenlib_looping_fading_distance_sounds", 10)))
+				.resultOrPartial(FrozenLibLogUtils.LOGGER::error)
+				.ifPresent(this.sounds::addAll);
         }
     }
 
     public void save(CompoundTag nbt) {
 		if (!this.sounds.isEmpty()) {
-			DataResult<Tag> var10000 = FadingDistanceSoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds);
-			Logger var10001 = FrozenLibConstants.LOGGER4;
-			Objects.requireNonNull(var10001);
-			var10000.resultOrPartial(var10001::error).ifPresent((cursorsNbt) -> nbt.put("frozenDistanceSounds", cursorsNbt));
+			FadingDistanceSoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds)
+				.resultOrPartial(FrozenLibLogUtils.LOGGER::error)
+				.ifPresent((cursorsNbt) -> nbt.put("frozenlib_looping_fading_distance_sounds", cursorsNbt));
 		}
     }
 
-    public void addSound(ResourceLocation soundID, ResourceLocation soundID2, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist) {
-        this.sounds.add(new FadingDistanceSoundLoopNBT(soundID, soundID2, category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist));
+    public void addSound(
+		ResourceLocation soundID,
+		ResourceLocation soundID2,
+		SoundSource category,
+		float volume,
+		float pitch,
+		ResourceLocation restrictionId,
+		boolean stopOnDeath,
+		float fadeDist,
+		float maxDist
+	) {
+        this.sounds.add(new FadingDistanceSoundLoopNBT(soundID, soundID2, category, volume, pitch, fadeDist, maxDist, restrictionId, stopOnDeath));
 		SoundPredicate.getPredicate(restrictionId).onStart(this.entity);
     }
 
@@ -93,13 +93,13 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 	}
 
 	public void syncWithPlayer(ServerPlayer serverPlayer) {
-		for (MovingLoopingFadingDistanceSoundEntityManager.FadingDistanceSoundLoopNBT nbt : this.getSounds()) {
-			FrozenSoundPackets.createMovingRestrictionLoopingFadingDistanceSound(
+		for (FadingDistanceSoundLoopNBT nbt : this.getSounds()) {
+			FrozenLibSoundPackets.createAndSendMovingRestrictionLoopingFadingDistanceSound(
 				serverPlayer,
 				this.entity,
-				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.getSoundEventID()).orElseThrow(),
-				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.getSound2EventID()).orElseThrow(),
-				SoundSource.valueOf(SoundSource.class, nbt.getOrdinal()),
+				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.soundEventID).orElseThrow(),
+				BuiltInRegistries.SOUND_EVENT.getHolder(nbt.soundEventID2()).orElseThrow(),
+				SoundSource.valueOf(SoundSource.class, nbt.category),
 				nbt.volume,
 				nbt.pitch,
 				nbt.restrictionID,
@@ -110,88 +110,42 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 		}
 	}
 
-    public static class FadingDistanceSoundLoopNBT {
-        public final ResourceLocation soundEventID;
-        public final ResourceLocation sound2EventID;
-        public final String categoryOrdinal;
-        public final float volume;
-        public final float pitch;
-        public final float fadeDist;
-        public final float maxDist;
-        public final ResourceLocation restrictionID;
-		public final boolean stopOnDeath;
+    public record FadingDistanceSoundLoopNBT(
+		ResourceLocation soundEventID,
+		ResourceLocation soundEventID2,
+		String category,
+		float volume,
+		float pitch,
+		float fadeDist,
+		float maxDist,
+		ResourceLocation restrictionID,
+		boolean stopOnDeath
+	) {
 
-        public static final Codec<FadingDistanceSoundLoopNBT> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-                ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(FadingDistanceSoundLoopNBT::getSoundEventID),
-                ResourceLocation.CODEC.fieldOf("sound2EventID").forGetter(FadingDistanceSoundLoopNBT::getSound2EventID),
-                Codec.STRING.fieldOf("categoryOrdinal").forGetter(FadingDistanceSoundLoopNBT::getOrdinal),
-                Codec.FLOAT.fieldOf("volume").forGetter(FadingDistanceSoundLoopNBT::getVolume),
-                Codec.FLOAT.fieldOf("pitch").forGetter(FadingDistanceSoundLoopNBT::getPitch),
-                ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(FadingDistanceSoundLoopNBT::getRestrictionID),
-				Codec.BOOL.fieldOf("stopOnDeath").forGetter(FadingDistanceSoundLoopNBT::getStopOnDeath),
-                Codec.FLOAT.fieldOf("fadeDist").forGetter(FadingDistanceSoundLoopNBT::getFadeDist),
-                Codec.FLOAT.fieldOf("maxDist").forGetter(FadingDistanceSoundLoopNBT::getMaxDist)
-        ).apply(instance, FadingDistanceSoundLoopNBT::new));
+		public static final Codec<FadingDistanceSoundLoopNBT> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+			ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(FadingDistanceSoundLoopNBT::soundEventID),
+			ResourceLocation.CODEC.fieldOf("sound2EventID").forGetter(FadingDistanceSoundLoopNBT::soundEventID2),
+			Codec.STRING.fieldOf("categoryOrdinal").forGetter(FadingDistanceSoundLoopNBT::category),
+			Codec.FLOAT.fieldOf("volume").forGetter(FadingDistanceSoundLoopNBT::volume),
+			Codec.FLOAT.fieldOf("pitch").forGetter(FadingDistanceSoundLoopNBT::pitch),
+			Codec.FLOAT.fieldOf("fadeDist").forGetter(FadingDistanceSoundLoopNBT::fadeDist),
+			Codec.FLOAT.fieldOf("maxDist").forGetter(FadingDistanceSoundLoopNBT::maxDist),
+			ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(FadingDistanceSoundLoopNBT::restrictionID),
+			Codec.BOOL.fieldOf("stopOnDeath").forGetter(FadingDistanceSoundLoopNBT::stopOnDeath)
+		).apply(instance, FadingDistanceSoundLoopNBT::new));
 
-        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID, ResourceLocation sound2EventID, String ordinal, float vol, float pitch, ResourceLocation restrictionID, boolean stopOnDeath, float fadeDist, float maxDist) {
-            this.soundEventID = soundEventID;
-            this.sound2EventID = sound2EventID;
-            this.categoryOrdinal = ordinal;
-            this.volume = vol;
-            this.pitch = pitch;
-            this.restrictionID = restrictionID;
-			this.stopOnDeath = stopOnDeath;
-            this.fadeDist = fadeDist;
-            this.maxDist = maxDist;
-        }
-
-        public FadingDistanceSoundLoopNBT(ResourceLocation soundEventID, ResourceLocation sound2EventID, SoundSource category, float vol, float pitch, ResourceLocation restrictionID, boolean stopOnDeath, float fadeDist, float maxDist) {
-            this.soundEventID = soundEventID;
-            this.sound2EventID = sound2EventID;
-            this.categoryOrdinal = category.toString();
-            this.volume = vol;
-            this.pitch = pitch;
-            this.restrictionID = restrictionID;
-			this.stopOnDeath = stopOnDeath;
-            this.fadeDist = fadeDist;
-            this.maxDist = maxDist;
-        }
-
-        public ResourceLocation getSoundEventID() {
-            return this.soundEventID;
-        }
-
-        public ResourceLocation getSound2EventID() {
-            return this.sound2EventID;
-        }
-
-        public String getOrdinal() {
-            return this.categoryOrdinal;
-        }
-
-        public float getVolume() {
-            return this.volume;
-        }
-
-        public float getPitch() {
-            return this.pitch;
-        }
-
-        public float getFadeDist() {
-            return this.fadeDist;
-        }
-
-        public float getMaxDist() {
-            return this.maxDist;
-        }
-
-        public ResourceLocation getRestrictionID() {
-            return this.restrictionID;
-        }
-
-		public boolean getStopOnDeath() {
-			return this.stopOnDeath;
+		public FadingDistanceSoundLoopNBT(
+			ResourceLocation soundEventID,
+			ResourceLocation soundEventID2,
+			@NotNull SoundSource category,
+			float volume,
+			float pitch,
+			float fadeDist,
+			float maxDist,
+			ResourceLocation restrictionID,
+			boolean stopOnDeath
+		) {
+			this(soundEventID, soundEventID2, category.toString(), volume, pitch, fadeDist, maxDist, restrictionID, stopOnDeath);
 		}
-
-    }
+	}
 }
