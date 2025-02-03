@@ -113,7 +113,8 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		prepared.getOverwrites().forEach(this::addFinalizedOverwrite);
 		// Load our queued overwrites.
 		this.builtInOverwrites.forEach(this::addFinalizedOverwrite);
-		return CompletableFuture.runAsync(() -> {});
+		return CompletableFuture.runAsync(() -> {
+		});
 	}
 
 	@NotNull

@@ -23,3 +23,4 @@ Put changelog here:
 - `BlockStateRespectingProcessorRule` now maintains water if a waterlogged block is replaced with air.
 - Added tinted flower bed models.
 - Cleaned up the Screen Shake system and made it much smoother.
+- Cleaned up classes in the `block` package and condensed some of its contents.

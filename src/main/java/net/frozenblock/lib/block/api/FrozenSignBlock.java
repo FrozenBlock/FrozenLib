@@ -24,20 +24,20 @@ import net.minecraft.world.level.block.state.properties.WoodType;
 import net.minecraft.world.level.storage.loot.LootTable;
 
 public class FrozenSignBlock extends StandingSignBlock {
-    public final ResourceKey<LootTable> lootTable;
+	public final ResourceKey<LootTable> lootTable;
 
-    public FrozenSignBlock(Properties settings, WoodType signType, ResourceKey<LootTable> lootTable) {
-        super(signType, settings);
-        this.lootTable = lootTable;
-    }
+	public FrozenSignBlock(Properties settings, WoodType signType, ResourceKey<LootTable> lootTable) {
+		super(signType, settings);
+		this.lootTable = lootTable;
+	}
 
-    @Override
+	@Override
 	public ResourceKey<LootTable> getLootTable() {
-        if (!Objects.equals(this.drops, this.lootTable)) {
-            this.drops = this.lootTable;
-        }
+		if (!Objects.equals(this.drops, this.lootTable)) {
+			this.drops = this.lootTable;
+		}
 
 		assert this.drops != null;
 		return this.drops;
-    }
+	}
 }

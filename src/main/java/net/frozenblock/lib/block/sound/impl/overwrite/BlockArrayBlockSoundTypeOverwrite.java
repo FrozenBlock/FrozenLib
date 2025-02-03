@@ -17,13 +17,12 @@
 
 package net.frozenblock.lib.block.sound.impl.overwrite;
 
+import java.util.Arrays;
+import java.util.function.BooleanSupplier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Arrays;
-import java.util.function.BooleanSupplier;
 
 @ApiStatus.Internal
 public class BlockArrayBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<Block[]> {

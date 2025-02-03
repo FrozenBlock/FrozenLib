@@ -55,8 +55,8 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 		MeshDefinition modelData = new MeshDefinition();
 		PartDefinition modelPartData = modelData.getRoot();
 		modelPartData.addOrReplaceChild("base", CubeListBuilder.create()
-			.texOffs(0, 0)
-			.addBox(-8F, -16F, 0F, 16F, 16F, 0.0F),
+				.texOffs(0, 0)
+				.addBox(-8F, -16F, 0F, 16F, 16F, 0.0F),
 			PartPose.offsetAndRotation(0F, 0F, 0F, Mth.PI, 0F, 0F)
 		);
 		return LayerDefinition.create(modelData, 16, 16);

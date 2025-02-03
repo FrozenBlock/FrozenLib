@@ -20,6 +20,7 @@ package net.frozenblock.lib.block.sound.api;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.sound.impl.overwrite.AbstractBlockSoundTypeOverwrite;
 import net.frozenblock.lib.block.sound.impl.overwrite.ResourceLocationBlockSoundTypeOverwrite;
@@ -30,7 +31,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.SoundType;
-import java.util.List;
 
 @UtilityClass
 public class SoundTypeCodecs {
