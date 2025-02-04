@@ -46,7 +46,7 @@ public class LowerHeightmapPlacement extends PlacementModifier {
 	}
 
 	@Override
-	public Stream<BlockPos> getPositions(@NotNull PlacementContext context, RandomSource random, @NotNull BlockPos pos) {
+	public @NotNull Stream<BlockPos> getPositions(@NotNull PlacementContext context, RandomSource random, @NotNull BlockPos pos) {
 		int x = pos.getX();
 		int z = pos.getZ();
 		int y = context.getHeight(this.heightmap, x, z) - 1;

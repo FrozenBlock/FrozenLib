@@ -18,6 +18,7 @@
 package net.frozenblock.lib.item.api.shovel;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.Map;
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -27,7 +28,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import java.util.Map;
 
 @UtilityClass
 public class ShovelApi {

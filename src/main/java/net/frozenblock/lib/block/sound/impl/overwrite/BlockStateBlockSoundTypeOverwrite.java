@@ -17,22 +17,21 @@
 
 package net.frozenblock.lib.block.sound.impl.overwrite;
 
-import java.util.Arrays;
 import java.util.function.BooleanSupplier;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public class BlockArrayBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<Block[]> {
+public class BlockStateBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<BlockState> {
 
-	public BlockArrayBlockSoundTypeOverwrite(Block[] value, SoundType soundType, BooleanSupplier soundCondition) {
+	public BlockStateBlockSoundTypeOverwrite(BlockState value, SoundType soundType, BooleanSupplier soundCondition) {
 		super(value, soundType, soundCondition);
 	}
 
 	@Override
-	public boolean matches(@NotNull Block block) {
-		return Arrays.stream(this.getValue()).anyMatch(currentBlock -> currentBlock == block);
+	public boolean matches(@NotNull BlockState blockState) {
+		return blockState.equals(this.getValue());
 	}
 }

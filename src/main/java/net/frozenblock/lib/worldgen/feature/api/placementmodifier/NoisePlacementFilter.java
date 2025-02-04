@@ -33,10 +33,10 @@ import org.jetbrains.annotations.NotNull;
 public class NoisePlacementFilter extends PlacementFilter {
 	public static final MapCodec<NoisePlacementFilter> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
 		Codec.intRange(1, 4).fieldOf("noise").orElse(4).forGetter((config) -> config.noise),
-		Codec.doubleRange(0.0001, 128).fieldOf("noise_scale").orElse(0.05).forGetter((config) -> config.noiseScale),
-		Codec.doubleRange(-1, 1).fieldOf("min_threshold").orElse(0.2).forGetter((config) -> config.minThreshold),
-		Codec.doubleRange(-1, 1).fieldOf("maxThresh").orElse(1D).forGetter((config) -> config.maxThreshold),
-		Codec.doubleRange(0, 1).fieldOf("fade_distance").orElse(0D).forGetter((config) -> config.fadeDistance),
+		Codec.doubleRange(0.0001D, 128D).fieldOf("noise_scale").orElse(0.05).forGetter((config) -> config.noiseScale),
+		Codec.doubleRange(-1D, 1D).fieldOf("min_threshold").orElse(0.2).forGetter((config) -> config.minThreshold),
+		Codec.doubleRange(-1D, 1D).fieldOf("maxThresh").orElse(1D).forGetter((config) -> config.maxThreshold),
+		Codec.doubleRange(0D, 1D).fieldOf("fade_distance").orElse(0D).forGetter((config) -> config.fadeDistance),
 		Codec.BOOL.fieldOf("use_y").orElse(false).forGetter((config) -> config.useY),
 		Codec.BOOL.fieldOf("scale_y").orElse(false).forGetter((config) -> config.scaleY),
 		Codec.BOOL.fieldOf("must_be_inside").orElse(false).forGetter((config) -> config.mustBeInside)
@@ -53,7 +53,16 @@ public class NoisePlacementFilter extends PlacementFilter {
 	private final boolean scaleY;
 	private final boolean mustBeInside;
 
-	public NoisePlacementFilter(int noise, double noiseScale, double minThreshold, double maxThreshold, double fadeDistance, boolean useY, boolean scaleY, boolean mustBeInside) {
+	public NoisePlacementFilter(
+		int noise,
+		double noiseScale,
+		double minThreshold,
+		double maxThreshold,
+		double fadeDistance,
+		boolean useY,
+		boolean scaleY,
+		boolean mustBeInside
+	) {
 		this.noise = noise;
 		this.noiseScale = noiseScale;
 		this.minThreshold = minThreshold;
@@ -64,12 +73,8 @@ public class NoisePlacementFilter extends PlacementFilter {
 		this.useY = useY;
 		this.scaleY = scaleY;
 		this.mustBeInside = mustBeInside;
-		if (this.minThreshold >= this.maxThreshold) {
-			throw new IllegalArgumentException("NoisePlacementFilter minThresh cannot be greater than or equal to maxThreshold!");
-		}
-		if (this.fadeDistance < 0) {
-			throw new IllegalArgumentException("NoisePlacementFilter fadeDistance cannot be less than 0!");
-		}
+		if (this.minThreshold >= this.maxThreshold) throw new IllegalArgumentException("minThresh cannot be greater than or equal to maxThreshold!");
+		if (this.fadeDistance < 0) throw new IllegalArgumentException("fadeDistance cannot be less than 0!");
 	}
 
 	@Override

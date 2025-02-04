@@ -20,6 +20,7 @@ package net.frozenblock.lib.block.sound.impl.overwrite;
 import java.util.function.BooleanSupplier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
@@ -46,5 +47,5 @@ public abstract class AbstractBlockSoundTypeOverwrite<T> {
 		return this.soundCondition;
 	}
 
-	public abstract boolean matches(Block block);
+	public abstract boolean matches(BlockState blockState);
 }

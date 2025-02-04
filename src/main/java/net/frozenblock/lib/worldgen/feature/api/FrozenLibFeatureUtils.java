@@ -17,11 +17,51 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
+import java.util.Iterator;
 import lombok.experimental.UtilityClass;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenLibFeatureUtils {
 
 	public static BootstrapContext<Object> BOOTSTRAP_CONTEXT = null;
+
+	public static boolean isBlockExposed(WorldGenLevel level, @NotNull BlockPos blockPos) {
+		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
+		for (Direction direction : Direction.values()) {
+			BlockState blockState = level.getBlockState(mutableBlockPos.setWithOffset(blockPos, direction));
+			if (blockState.canBeReplaced()) return true;
+		}
+		return false;
+	}
+
+	public static boolean isAirOrWaterNearby(WorldGenLevel level, @NotNull BlockPos pos, int searchDistance) {
+		Iterable<BlockPos> poses = BlockPos.betweenClosed(
+			pos.offset(-searchDistance, -searchDistance, -searchDistance),
+			pos.offset(searchDistance, searchDistance, searchDistance)
+		);
+		for (BlockPos blockPos : poses) {
+			if (BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE.test(level, blockPos)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public static boolean isWaterNearby(WorldGenLevel level, @NotNull BlockPos blockPos, int searchArea) {
+		Iterator<BlockPos> poses = BlockPos.betweenClosed(blockPos.offset(-searchArea, -searchArea, -searchArea), blockPos.offset(searchArea, searchArea, searchArea)).iterator();
+		BlockPos blockPos2;
+		do {
+			if (!poses.hasNext()) return false;
+			blockPos2 = poses.next();
+		} while (!level.getBlockState(blockPos2).is(Blocks.WATER));
+		return true;
+	}
 }

@@ -18,7 +18,6 @@
 package net.frozenblock.lib.debug.networking;
 
 import java.util.List;
-
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

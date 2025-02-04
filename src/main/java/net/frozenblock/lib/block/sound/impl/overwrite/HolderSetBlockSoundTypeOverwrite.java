@@ -17,25 +17,23 @@
 
 package net.frozenblock.lib.block.sound.impl.overwrite;
 
-import java.util.List;
 import java.util.function.BooleanSupplier;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.HolderSet;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public class ResourceLocationListBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<List<ResourceLocation>> {
+public class HolderSetBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<HolderSet<Block>> {
 
-	public ResourceLocationListBlockSoundTypeOverwrite(List<ResourceLocation> value, SoundType soundType, BooleanSupplier soundCondition) {
+	public HolderSetBlockSoundTypeOverwrite(HolderSet<Block> value, SoundType soundType, BooleanSupplier soundCondition) {
 		super(value, soundType, soundCondition);
 	}
 
 	@Override
-	public boolean matches(@NotNull Block block) {
-		Holder.Reference<Block> blockReference = block.builtInRegistryHolder();
-		return this.getValue().stream().anyMatch(blockReference::is);
+	public boolean matches(@NotNull BlockState blockState) {
+		return blockState.is(this.getValue());
 	}
 }

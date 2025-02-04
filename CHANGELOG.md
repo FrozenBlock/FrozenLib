@@ -6,16 +6,10 @@ Put changelog here:
 
 -----------------
 - Revamped the Block Sound Type API entirely, fixing a few glaring issues.
-  - Code-defined overwrites can now define:
-    - Individual Blocks.
-    - Arrays of Blocks.
-    - Lists of ResourceLocations.
-    - Block Tags.
-  - Data-drive overwrites can now define:
-    - Lists of ResourceLocations.
-    - Block Tags.
-  - Overwrites that list multiple blocks no longer create one instance per-block, saving space in RAM.
-  - Block Tags now actually work in overwrites.
+  - Block sound type overrides now use a `HolderSet` to define which blocks are affected.
+    - This allows tags and lists to work properly with this system, saving space in RAM.
+    - The new field for blocks is named `blocks`.
+  - The data-driven directory for block sound type overrides has been changed from `blocksoundoverwrites` to `block_sound_overwrites`.
 - All Fading Disk features check if surrounding blocks are replaceable, instead of strictly Air.
 - Potentially fixed an issue with C2ME during structure generation.
 - `BlockStateRespectingProcessorRule` now maintains water if a waterlogged block is replaced with air.
@@ -31,5 +25,6 @@ Put changelog here:
 - Removed a few unnecessary APIs.
 - Added the `requires_air_or_water_in_area_noise_path_feature,` which only places blocks when Air or Water is within a certain distance.
 - Removed many duplicate worldgen feature implementations, now just relying on HolderSets.
+- Cleaned up existing worldgen feature configurations and features.
 - Disconnecting from a FrozenLib server and joining a non-FrozenLib server afterwards no longer leaves client Wind running.
 - Wind can no longer return any non-zero value when on a non-FrozenLib server without the config option to override this behavior enabled.

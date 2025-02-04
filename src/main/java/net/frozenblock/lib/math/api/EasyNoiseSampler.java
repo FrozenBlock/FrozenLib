@@ -17,8 +17,11 @@
 
 package net.frozenblock.lib.math.api;
 
+import com.mojang.serialization.Codec;
+import java.util.function.Function;
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.Vec3i;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.ThreadSafeLegacyRandomSource;
@@ -33,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @UtilityClass
 public class EasyNoiseSampler {
+
 	@Contract("_ -> new")
 	public static @NotNull ImprovedNoise createCheckedNoise(long seed) {
 		return new ImprovedNoise(new LegacyRandomSource(seed));
@@ -75,5 +79,30 @@ public class EasyNoiseSampler {
 			return sampler.noise(pos.x() * multiplier, pos.y(), pos.z() * multiplier);
 		}
 		return sampler.noise(pos.x() * multiplier, 64, pos.z() * multiplier);
+	}
+
+	public enum NoiseType implements StringRepresentable {
+		CHECKED("CHECKED", EasyNoiseSampler::createCheckedNoise),
+		LEGACY_THREAD_SAFE("LEGACY_THREAD_SAFE", EasyNoiseSampler::createLegacyThreadSafeNoise),
+		LOCAL("LOCAL", EasyNoiseSampler::createLocalNoise),
+		XORO("XORO", EasyNoiseSampler::createXoroNoise);
+		public static final Codec<NoiseType> CODEC = StringRepresentable.fromEnum(NoiseType::values);
+
+		private final Function<Long, ImprovedNoise> noiseSupplier;
+		private final String serializationKey;
+
+		NoiseType(String serializationKey, Function<Long, ImprovedNoise> noiseSupplier) {
+			this.serializationKey = serializationKey;
+			this.noiseSupplier = noiseSupplier;
+		}
+
+		public ImprovedNoise createNoise(long seed) {
+			return this.noiseSupplier.apply(seed);
+		}
+
+		@Override
+		public @NotNull String getSerializedName() {
+			return this.serializationKey;
+		}
 	}
 }

@@ -27,8 +27,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public record ColumnFeatureConfig(BlockState state, IntProvider height,
-								  HolderSet<Block> replaceableBlocks) implements FeatureConfiguration {
+public record ColumnFeatureConfig(BlockState state, IntProvider height, HolderSet<Block> replaceableBlocks) implements FeatureConfiguration {
 	public static final Codec<ColumnFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
 		instance.group(
 			BlockState.CODEC.fieldOf("state").forGetter((config) -> config.state),

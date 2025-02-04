@@ -19,46 +19,39 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
-import net.frozenblock.lib.worldgen.feature.api.features.config.PathSwapUnderWaterFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.FrozenLibFeatureUtils;
+import net.frozenblock.lib.worldgen.feature.api.features.config.PathSwapUnderFluidFeatureConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
-import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import org.jetbrains.annotations.NotNull;
 
-public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFeatureConfig> {
+public class NoisePathSwapUnderFluidFeature extends Feature<PathSwapUnderFluidFeatureConfig> {
 
-	public NoisePathSwapUnderWaterFeature(Codec<PathSwapUnderWaterFeatureConfig> codec) {
+	public NoisePathSwapUnderFluidFeature(Codec<PathSwapUnderFluidFeatureConfig> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<PathSwapUnderWaterFeatureConfig> context) {
+	public boolean place(@NotNull FeaturePlaceContext<PathSwapUnderFluidFeatureConfig> context) {
 		boolean generated = false;
-		PathSwapUnderWaterFeatureConfig config = context.config();
+		PathSwapUnderFluidFeatureConfig config = context.config();
 		BlockPos blockPos = context.origin();
 		WorldGenLevel level = context.level();
 		int radiusSquared = config.radius() * config.radius();
 		RandomSource random = level.getRandom();
-		long noiseSeed = level.getSeed();
-		ImprovedNoise sampler =
-			config.noise() == 1 ? EasyNoiseSampler.createLocalNoise(noiseSeed) :
-				config.noise() == 2 ? EasyNoiseSampler.createCheckedNoise(noiseSeed) :
-					config.noise() == 3 ? EasyNoiseSampler.createLegacyThreadSafeNoise(noiseSeed) :
-						EasyNoiseSampler.createXoroNoise(noiseSeed);
+		ImprovedNoise sampler = config.noiseType().createNoise(level.getSeed());
 		float chance = config.placementChance();
 		int bx = blockPos.getX();
 		int by = blockPos.getY();
 		int bz = blockPos.getZ();
 		BlockPos.MutableBlockPos mutable = blockPos.mutable();
-		BlockPredicate predicate = config.onlyPlaceWhenExposed() ? BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE : BlockPredicate.alwaysTrue();
 
 		for (int x = bx - config.radius(); x <= bx + config.radius(); x++) {
 			for (int z = bz - config.radius(); z <= bz + config.radius(); z++) {
@@ -67,11 +60,7 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 					if (distance < radiusSquared) {
 						mutable.set(x, level.getHeight(Types.OCEAN_FLOOR, x, z) - 1, z);
 						double sample = EasyNoiseSampler.sample(sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
-						if (sample > config.minThreshold() && sample < config.maxThreshold() && level.getBlockState(mutable).is(config.replaceableBlocks()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
-							generated = true;
-							BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.underWaterState().getState(random, mutable) : config.state().getState(random, mutable);
-							level.setBlock(mutable, setState, 3);
-						}
+						generated = this.attemptPlaceBlock(config, level, random, chance, mutable, sample) || generated;
 					}
 				} else {
 					for (int y = by - config.radius(); y <= by + config.radius(); y++) {
@@ -79,11 +68,7 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 						if (distance < radiusSquared) {
 							mutable.set(x, y, z);
 							double sample = EasyNoiseSampler.sample(sampler, mutable, config.noiseScale(), config.scaleY(), config.useY());
-							if (sample > config.minThreshold() && sample < config.maxThreshold() && level.getBlockState(mutable).is(config.replaceableBlocks()) && checkSurroundingBlocks(level, mutable, predicate) && random.nextFloat() <= chance) {
-								generated = true;
-								BlockState setState = level.getFluidState(mutable.immutable().above()).is(FluidTags.WATER) ? config.underWaterState().getState(random, mutable) : config.state().getState(random, mutable);
-								level.setBlock(mutable, setState, 3);
-							}
+							generated = this.attemptPlaceBlock(config, level, random, chance, mutable, sample) || generated;
 						}
 					}
 				}
@@ -92,13 +77,33 @@ public class NoisePathSwapUnderWaterFeature extends Feature<PathSwapUnderWaterFe
 		return generated;
 	}
 
-	private static boolean checkSurroundingBlocks(WorldGenLevel level, BlockPos pos, BlockPredicate predicate) {
-		for (Direction direction : Direction.values()) {
-			if (predicate.test(level, pos.relative(direction))) {
-				return true;
-			}
+	public boolean attemptPlaceBlock(
+		@NotNull PathSwapUnderFluidFeatureConfig config,
+		WorldGenLevel level,
+		RandomSource random,
+		float chance,
+		BlockPos.MutableBlockPos mutable,
+		double sample
+	) {
+		if (sample > config.minThreshold()
+			&& sample < config.maxThreshold()
+			&& level.getBlockState(mutable).is(config.replaceableBlocks())
+			&& (!config.onlyPlaceWhenExposed() || FrozenLibFeatureUtils.isBlockExposed(level, mutable))
+			&& random.nextFloat() <= chance
+		) {
+			boolean hasFluidAbove = !level.getBlockState(mutable.immutable().above()).getFluidState().isEmpty();
+			return this.placeBlock(
+				level,
+				hasFluidAbove ? config.underWaterState().getState(random, mutable) : config.state().getState(random, mutable),
+				mutable
+			);
 		}
 		return false;
+	}
+
+	public boolean placeBlock(@NotNull WorldGenLevel level, BlockState state, BlockPos pos) {
+		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
+		return true;
 	}
 
 }
