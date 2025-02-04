@@ -28,8 +28,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
 public record ColumnWithDiskFeatureConfig(
-	BlockState state, IntProvider radius, IntProvider height, float surroundingPillarChance,
-	HolderSet<Block> replaceableBlocks, HolderSet<Block> diskBlocks
+	BlockState state,
+	IntProvider radius,
+	IntProvider height,
+	float surroundingPillarChance,
+	HolderSet<Block> replaceableBlocks,
+	HolderSet<Block> diskBlocks
 ) implements FeatureConfiguration {
 	public static final Codec<ColumnWithDiskFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
 		instance.group(

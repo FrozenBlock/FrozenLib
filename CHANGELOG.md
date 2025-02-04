@@ -30,3 +30,4 @@ Put changelog here:
 - Combined the `storage` and `block` packages.
 - Removed a few unnecessary APIs.
 - Added the `requires_air_or_water_in_area_noise_path_feature,` which only places blocks when Air or Water is within a certain distance.
+- Removed many duplicate worldgen feature implementations, now just relying on HolderSets.
