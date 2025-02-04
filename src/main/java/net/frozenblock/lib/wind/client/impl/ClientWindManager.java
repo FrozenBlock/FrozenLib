@@ -412,7 +412,7 @@ public final class ClientWindManager {
 	@NotNull
 	public static Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
 		if (!shouldUseWind()) return Vec3.ZERO;
-		
+
 		double sampledTime = time * 0.1D;
 		double xyz = pos.x() + pos.y() + pos.z();
 		double windX = noise.noise((xyz + sampledTime) * stretch, 0D, 0D);
