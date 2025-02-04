@@ -24,7 +24,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.frozenblock.lib.menu.api.PanoramaAPI;
+import net.frozenblock.lib.menu.api.PanoramaApi;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.CubeMap;
@@ -60,7 +60,7 @@ public class CubeMapMixin {
 		if (this.frozenLib$canReplacePanorama) {
 			this.frozenLib$canReplacePanorama = false;
 			List<ResourceLocation> validPanoramas = new ArrayList<>();
-			for (ResourceLocation panLocation : PanoramaAPI.getPanoramas()) {
+			for (ResourceLocation panLocation : PanoramaApi.getPanoramas()) {
 				String namespace = panLocation.getNamespace();
 				String path = panLocation.getPath();
 				for (int i = 0; i < 6; ++i) {
