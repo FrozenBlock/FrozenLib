@@ -6,16 +6,10 @@ Put changelog here:
 
 -----------------
 - Revamped the Block Sound Type API entirely, fixing a few glaring issues.
-  - Code-defined overwrites can now define:
-    - Individual Blocks.
-    - Arrays of Blocks.
-    - Lists of ResourceLocations.
-    - Block Tags.
-  - Data-drive overwrites can now define:
-    - Lists of ResourceLocations.
-    - Block Tags.
-  - Overwrites that list multiple blocks no longer create one instance per-block, saving space in RAM.
-  - Block Tags now actually work in overwrites.
+  - Block sound type overrides now use a `HolderSet` to define which blocks are affected.
+    - This allows tags and lists to work properly with this system, saving space in RAM.
+    - The new field for blocks is named `blocks`.
+  - The data-driven directory for block sound type overrides has been changed from `blocksoundoverwrites` to `block_sound_overwrites`.
 - All Fading Disk features check if surrounding blocks are replaceable, instead of strictly Air.
 - Potentially fixed an issue with C2ME during structure generation.
 - `BlockStateRespectingProcessorRule` now maintains water if a waterlogged block is replaced with air.

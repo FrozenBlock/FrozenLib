@@ -20,12 +20,12 @@ package net.frozenblock.lib.block.sound.impl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.datafixers.util.Pair;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -36,10 +36,9 @@ import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.sound.api.SoundTypeCodecs;
 import net.frozenblock.lib.block.sound.impl.overwrite.AbstractBlockSoundTypeOverwrite;
-import net.frozenblock.lib.block.sound.impl.overwrite.BlockArrayBlockSoundTypeOverwrite;
-import net.frozenblock.lib.block.sound.impl.overwrite.BlockBlockSoundTypeOverwrite;
-import net.frozenblock.lib.block.sound.impl.overwrite.ResourceLocationBlockSoundTypeOverwrite;
-import net.frozenblock.lib.block.sound.impl.overwrite.TagBlockSoundTypeOverwrite;
+import net.frozenblock.lib.block.sound.impl.overwrite.HolderSetBlockSoundTypeOverwrite;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -56,28 +55,63 @@ import org.slf4j.LoggerFactory;
 
 @ApiStatus.Internal
 public class BlockSoundTypeManager implements SimpleResourceReloadListener<BlockSoundTypeManager.SoundTypeLoader> {
-	private static final Logger LOGGER = LoggerFactory.getLogger("FrozenLib Block Sound Type Manager");
-	private static final String DIRECTORY = "blocksoundoverwrites";
+	private static final Logger LOGGER = LoggerFactory.getLogger("Block Sound Type Override Manager");
+	private static final String DIRECTORY = "block_sound_overwrites";
 
 	public static final BlockSoundTypeManager INSTANCE = new BlockSoundTypeManager();
 
 	private final List<AbstractBlockSoundTypeOverwrite<?>> builtInOverwrites = new ArrayList<>();
 	private final List<AbstractBlockSoundTypeOverwrite<?>> overwrites = new ArrayList<>();
 
-	public void addBuiltInOverwrite(Block block, SoundType soundType, BooleanSupplier condition) {
-		this.builtInOverwrites.add(new BlockBlockSoundTypeOverwrite(block, soundType, condition));
+	public void addBuiltInOverwrite(@NotNull Block block, SoundType soundType, BooleanSupplier condition) {
+		this.builtInOverwrites.add(
+			new HolderSetBlockSoundTypeOverwrite(
+				HolderSet.direct(block.builtInRegistryHolder()),
+				soundType,
+				condition
+			)
+		);
 	}
 
 	public void addBuiltInOverwrite(Block[] blocks, SoundType soundType, BooleanSupplier condition) {
-		this.builtInOverwrites.add(new BlockArrayBlockSoundTypeOverwrite(blocks, soundType, condition));
+		List<Block> blockList = Arrays.stream(blocks).toList();
+
+		if (!blockList.isEmpty()) {
+			this.builtInOverwrites.add(
+				new HolderSetBlockSoundTypeOverwrite(
+					HolderSet.direct(
+						Block::builtInRegistryHolder,
+						Arrays.stream(blocks).toList()
+					),
+					soundType,
+					condition
+				)
+			);
+		}
 	}
 
 	public void addBuiltInOverwrite(TagKey<Block> tagKey, SoundType soundType, BooleanSupplier condition) {
-		this.builtInOverwrites.add(new TagBlockSoundTypeOverwrite(tagKey, soundType, condition));
+		this.builtInOverwrites.add(
+			new HolderSetBlockSoundTypeOverwrite(
+				new HolderSet.Named<>(
+					BuiltInRegistries.BLOCK.holderOwner(),
+					tagKey
+				),
+				soundType,
+				condition
+			)
+		);
 	}
 
 	public void addBuiltInOverwrite(ResourceLocation resourceLocation, SoundType soundType, BooleanSupplier condition) {
-		this.builtInOverwrites.add(new ResourceLocationBlockSoundTypeOverwrite(resourceLocation, soundType, condition));
+		Optional<Block> optionalBlock = BuiltInRegistries.BLOCK.getOptional(resourceLocation);
+		optionalBlock.ifPresent(block -> this.builtInOverwrites.add(
+			new HolderSetBlockSoundTypeOverwrite(
+				HolderSet.direct(block.builtInRegistryHolder()),
+				soundType,
+				condition
+			)
+		));
 	}
 
 	public void addFinalizedOverwrite(AbstractBlockSoundTypeOverwrite<?> overwrite) {
@@ -85,12 +119,8 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 	}
 
 	public Optional<SoundType> getSoundType(@NotNull BlockState state) {
-		return this.getSoundType(state.getBlock());
-	}
-
-	public Optional<SoundType> getSoundType(Block block) {
 		for (AbstractBlockSoundTypeOverwrite<?> overwrite : this.overwrites) {
-			if (overwrite.getSoundCondition().getAsBoolean() && overwrite.matches(block)) {
+			if (overwrite.getSoundCondition().getAsBoolean() && overwrite.matches(state)) {
 				return Optional.of(overwrite.getSoundType());
 			}
 		}
@@ -119,7 +149,7 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 
 	@NotNull
 	public ResourceLocation getFabricId() {
-		return FrozenLibConstants.id("block_sound_type_reloader");
+		return FrozenLibConstants.id("block_sound_type_overwrites");
 	}
 
 	public static class SoundTypeLoader {
@@ -144,27 +174,16 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 			try {
 				reader = resource.openAsReader();
 			} catch (IOException e) {
-				LOGGER.error(String.format("Unable to open BufferedReader for id %s", location), e);
+				LOGGER.error("Unable to open BufferedReader for file: `{}`", location);
 				return;
 			}
 
 			JsonObject json = GsonHelper.parse(reader);
-			Optional<Pair<? extends AbstractBlockSoundTypeOverwrite<?>, JsonElement>> result = Optional.empty();
+			DataResult<? extends Pair<? extends AbstractBlockSoundTypeOverwrite<?>, JsonElement>> dataResult
+				= SoundTypeCodecs.HOLDER_SET_BLOCK_SOUND_TYPE_OVERWRITE_CODEC.decode(JsonOps.INSTANCE, json);
 
-			for (Codec<? extends AbstractBlockSoundTypeOverwrite<?>> codec : SoundTypeCodecs.possibleCodecs()) {
-				DataResult<? extends Pair<? extends AbstractBlockSoundTypeOverwrite<?>, JsonElement>> possibleResult = codec.decode(JsonOps.INSTANCE, json);
-				if (possibleResult.isSuccess()) {
-					result = Optional.of(possibleResult.getOrThrow());
-					break;
-				}
-			}
-
-			if (result.isEmpty()) {
-				LOGGER.error(String.format("Unable to parse sound overwrite file %s.", location));
-				return;
-			}
-
-			this.parsedOverwrites.add(result.get().getFirst());
+			dataResult.resultOrPartial((string) -> LOGGER.error("Failed to parse sound override for file: '{}'", location))
+				.ifPresent(overwrite -> parsedOverwrites.add(overwrite.getFirst()));
 		}
 
 		public List<AbstractBlockSoundTypeOverwrite<?>> getOverwrites() {
