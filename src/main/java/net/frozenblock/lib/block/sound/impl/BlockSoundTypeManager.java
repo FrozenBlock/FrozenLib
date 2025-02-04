@@ -104,7 +104,7 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		this.builtInOverwrites.add(
 			new HolderSetBlockSoundTypeOverwrite(
 				new HolderSet.Named<>(
-					BuiltInRegistries.BLOCK.holderOwner(),
+					BuiltInRegistries.BLOCK,
 					tagKey
 				),
 				soundType,
