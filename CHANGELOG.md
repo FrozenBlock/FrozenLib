@@ -29,3 +29,4 @@ Put changelog here:
 - Flyby sounds can now be properly sent to the client.
 - Combined the `storage` and `block` packages.
 - Removed a few unnecessary APIs.
+- Added the `requires_air_or_water_in_area_noise_path_feature,` which only places blocks when Air or Water is within a certain distance.

@@ -40,8 +40,10 @@ import net.frozenblock.lib.worldgen.feature.api.features.NoisePathTagFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathTagUnderWaterFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePathUnderWaterFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.NoisePlantFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.RequiresAirOrWaterInAreaNoisePathFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.SimpleBlockScheduleTickFeature;
 import net.frozenblock.lib.worldgen.feature.api.features.UpwardsColumnFeature;
+import net.frozenblock.lib.worldgen.feature.api.features.config.AirOrWaterInAreaPathFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnWithDiskFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ComboFeatureConfig;
@@ -60,7 +62,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConf
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 
 public class FrozenLibFeatures {
-
+	public static final RequiresAirOrWaterInAreaNoisePathFeature REQUIRES_AIR_OR_WATER_IN_AREA_NOISE_PATH_FEATURE = new RequiresAirOrWaterInAreaNoisePathFeature(AirOrWaterInAreaPathFeatureConfig.CODEC);
 	public static final NoisePathFeature NOISE_PATH_FEATURE = new NoisePathFeature(PathFeatureConfig.CODEC);
 	public static final NoisePathTagFeature NOISE_PATH_TAG_FEATURE = new NoisePathTagFeature(PathTagFeatureConfig.CODEC);
 	public static final NoisePlantFeature NOISE_PLANT_FEATURE = new NoisePlantFeature(PathFeatureConfig.CODEC);
@@ -87,6 +89,7 @@ public class FrozenLibFeatures {
 	public static final ComboFeature COMBO_FEATURE = new ComboFeature(ComboFeatureConfig.CODEC);
 
 	public static void init() {
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("requires_air_or_water_in_area_noise_path_feature"), REQUIRES_AIR_OR_WATER_IN_AREA_NOISE_PATH_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_feature"), NOISE_PATH_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_tag_feature"), NOISE_PATH_TAG_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_plant_feature"), NOISE_PLANT_FEATURE);
