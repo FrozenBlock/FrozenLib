@@ -19,6 +19,7 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
 import java.util.concurrent.atomic.AtomicBoolean;
+import net.frozenblock.lib.worldgen.feature.api.FrozenLibFeatureUtils;
 import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -88,7 +89,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 		if (distance < Math.pow(radius, 2)) {
 			mutableDisk.set(x, y, z);
 			BlockState state = level.getBlockState(mutableDisk);
-			if (!useHeightMapAndNotCircular && isBlockExposed(level, mutableDisk)) {
+			if (!useHeightMapAndNotCircular && FrozenLibFeatureUtils.isBlockExposed(level, mutableDisk)) {
 				boolean inner = mutableDisk.closerThan(origin, radius * config.innerChance());
 				boolean fade = !inner && !mutableDisk.closerThan(origin, radius * config.fadeStartDistancePercent());
 				if (random.nextFloat() < config.placementChance()) {
@@ -110,17 +111,8 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 	}
 
 	public boolean placeBlock(@NotNull WorldGenLevel level, BlockState state, BlockPos pos) {
-		level.setBlock(pos, state, Block.UPDATE_ALL);
+		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
 		return true;
-	}
-
-	public static boolean isBlockExposed(WorldGenLevel level, @NotNull BlockPos blockPos) {
-		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
-		for (Direction direction : Direction.values()) {
-			BlockState blockState = level.getBlockState(mutableBlockPos.setWithOffset(blockPos, direction));
-			if (blockState.canBeReplaced()) return true;
-		}
-		return false;
 	}
 
 }

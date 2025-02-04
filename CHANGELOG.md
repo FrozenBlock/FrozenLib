@@ -31,5 +31,6 @@ Put changelog here:
 - Removed a few unnecessary APIs.
 - Added the `requires_air_or_water_in_area_noise_path_feature,` which only places blocks when Air or Water is within a certain distance.
 - Removed many duplicate worldgen feature implementations, now just relying on HolderSets.
+- Cleaned up existing worldgen feature configurations and features.
 - Disconnecting from a FrozenLib server and joining a non-FrozenLib server afterwards no longer leaves client Wind running.
 - Wind can no longer return any non-zero value when on a non-FrozenLib server without the config option to override this behavior enabled.
