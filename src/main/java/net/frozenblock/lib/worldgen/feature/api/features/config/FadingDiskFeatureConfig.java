@@ -51,9 +51,9 @@ public record FadingDiskFeatureConfig(
 			Codec.FLOAT.fieldOf("inner_chance").forGetter(config -> config.innerChance),
 			Codec.FLOAT.fieldOf("inner_percent").forGetter(config -> config.innerPercent),
 			Codec.FLOAT.fieldOf("fade_start_distance_percent").forGetter(config -> config.fadeStartDistancePercent),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("inner_replaceable_blocks").forGetter((config) -> config.innerReplaceableBlocks),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("outer_replaceable_blocks").forGetter((config) -> config.outerReplaceableBlocks),
-			Heightmap.Types.CODEC.fieldOf("heightmap").forGetter((config) -> config.heightmap)
+			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("inner_replaceable_blocks").forGetter(config-> config.innerReplaceableBlocks),
+			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("outer_replaceable_blocks").forGetter(config -> config.outerReplaceableBlocks),
+			Heightmap.Types.CODEC.fieldOf("heightmap").forGetter(config -> config.heightmap)
 		).apply(instance, FadingDiskFeatureConfig::new)
 	);
 }
