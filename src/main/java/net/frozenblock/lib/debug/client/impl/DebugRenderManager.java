@@ -38,7 +38,7 @@ import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
 import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayload;
 import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
-import net.frozenblock.lib.wind.api.ClientWindManager;
+import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
