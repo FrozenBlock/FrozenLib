@@ -19,11 +19,12 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
 import java.util.concurrent.atomic.AtomicBoolean;
-import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskWithBiomeFeatureConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
@@ -32,18 +33,18 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import org.jetbrains.annotations.NotNull;
 
-public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
+public class FadingDiskExceptInBiomeFeature extends Feature<FadingDiskWithBiomeFeatureConfig> {
 
-	public FadingDiskFeature(Codec<FadingDiskFeatureConfig> codec) {
+	public FadingDiskExceptInBiomeFeature(Codec<FadingDiskWithBiomeFeatureConfig> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<FadingDiskFeatureConfig> context) {
+	public boolean place(@NotNull FeaturePlaceContext<FadingDiskWithBiomeFeatureConfig> context) {
 		AtomicBoolean success = new AtomicBoolean();
 		BlockPos blockPos = context.origin();
 		WorldGenLevel level = context.level();
-		FadingDiskFeatureConfig config = context.config();
+		FadingDiskWithBiomeFeatureConfig config = context.config();
 		boolean useHeightMapAndNotCircular = config.useHeightmapInsteadOfCircularPlacement();
 		Heightmap.Types heightmap = config.heightmap();
 		BlockPos origin = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
@@ -74,7 +75,7 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 
 	private boolean placeAtPos(
 		WorldGenLevel level,
-		FadingDiskFeatureConfig config,
+		FadingDiskWithBiomeFeatureConfig config,
 		BlockPos origin,
 		RandomSource random,
 		int radius,
@@ -88,19 +89,19 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 		if (distance < Math.pow(radius, 2)) {
 			mutableDisk.set(x, y, z);
 			BlockState state = level.getBlockState(mutableDisk);
-			if (!useHeightMapAndNotCircular && isBlockExposed(level, mutableDisk)) {
+			if (!useHeightMapAndNotCircular && FadingDiskFeature.isBlockExposed(level, mutableDisk)) {
 				boolean inner = mutableDisk.closerThan(origin, radius * config.innerChance());
 				boolean fade = !inner && !mutableDisk.closerThan(origin, radius * config.fadeStartDistancePercent());
 				if (random.nextFloat() < config.placementChance()) {
 					if (fade) {
 						if (random.nextFloat() > 0.5F && state.is(config.outerReplaceableBlocks())) {
-							return this.placeBlock(level, config.outerState().getState(random, mutableDisk), mutableDisk);
+							return this.placeBlock(level, config.outerState().getState(random, mutableDisk), mutableDisk, config.excludedBiomes());
 						}
 					} else {
 						boolean choseInner = inner && random.nextFloat() < config.innerChance();
 						if (state.is(choseInner ? config.innerReplaceableBlocks() : config.outerReplaceableBlocks())) {
 							BlockStateProvider newState = choseInner ? config.innerState() : config.outerState();
-							return this.placeBlock(level, newState.getState(random, mutableDisk), mutableDisk);
+							return this.placeBlock(level, newState.getState(random, mutableDisk), mutableDisk, config.excludedBiomes());
 						}
 					}
 				}
@@ -109,18 +110,10 @@ public class FadingDiskFeature extends Feature<FadingDiskFeatureConfig> {
 		return false;
 	}
 
-	public boolean placeBlock(@NotNull WorldGenLevel level, BlockState state, BlockPos pos) {
+	public boolean placeBlock(@NotNull WorldGenLevel level, BlockState state, BlockPos pos, @NotNull TagKey<Biome> excludedBiomes) {
+		if (level.getBiome(pos).is(excludedBiomes)) return false;
 		level.setBlock(pos, state, Block.UPDATE_ALL);
 		return true;
-	}
-
-	public static boolean isBlockExposed(WorldGenLevel level, @NotNull BlockPos blockPos) {
-		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
-		for (Direction direction : Direction.values()) {
-			BlockState blockState = level.getBlockState(mutableBlockPos.setWithOffset(blockPos, direction));
-			if (blockState.canBeReplaced()) return true;
-		}
-		return false;
 	}
 
 }
