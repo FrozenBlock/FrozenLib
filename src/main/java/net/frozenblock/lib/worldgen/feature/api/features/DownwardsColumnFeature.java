@@ -20,8 +20,10 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 import com.mojang.serialization.Codec;
 import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnFeatureConfig;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderSet;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
@@ -45,14 +47,17 @@ public class DownwardsColumnFeature extends Feature<ColumnFeatureConfig> {
 		int bz = blockPos.getZ();
 		int by = blockPos.getY();
 		int height = -context.config().height().sample(random);
+		HolderSet<Block> replaceableBlocks = context.config().replaceableBlocks();
+		BlockState placeState = context.config().state();
+
 		for (int y = 0; y > height; y--) {
 			BlockState blockState = level.getBlockState(mutable);
-			if (context.config().replaceableBlocks().contains(blockState.getBlockHolder())
+			if (replaceableBlocks.contains(blockState.getBlockHolder())
 				|| blockState.isAir()
 				| blockState.getFluidState() != Fluids.EMPTY.defaultFluidState()
 			) {
 				bl = true;
-				level.setBlock(mutable, context.config().state(), 3);
+				level.setBlock(mutable, placeState, Block.UPDATE_CLIENTS);
 				mutable.set(bx, by + y, bz);
 			} else {
 				mutable.set(bx, by + y, bz);
