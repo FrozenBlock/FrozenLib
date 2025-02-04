@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.wind.api;
+package net.frozenblock.lib.wind.client.impl;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
@@ -28,6 +28,9 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
+import net.frozenblock.lib.wind.api.WindDisturbance;
+import net.frozenblock.lib.wind.api.WindManager;
+import net.frozenblock.lib.wind.client.api.ClientWindManagerExtension;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -37,6 +40,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -148,6 +152,7 @@ public final class ClientWindManager {
 		return hasInitialized || FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS;
 	}
 
+	@ApiStatus.Internal
 	public static void tick(@NotNull ClientLevel level) {
 		if (level.tickRateManager().runsNormally()) {
 			float thunderLevel = level.getThunderLevel(1F) * 0.03F;
@@ -180,13 +185,39 @@ public final class ClientWindManager {
 				extension.clientTick();
 			}
 
-			if (!hasInitialized && time > 80D && FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS) {
+			if (!hasInitialized && FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS) {
+				hasInitialized = true;
 				RandomSource randomSource = AdvancedMath.random();
 				noise = EasyNoiseSampler.createXoroNoise(randomSource.nextLong());
 				time = randomSource.nextLong();
-				hasInitialized = true;
 			}
 		}
+	}
+
+	@ApiStatus.Internal
+	public static void reset() {
+		hasInitialized = false;
+		overrideWind = false;
+		commandWind = Vec3.ZERO;
+
+		time = 0L;
+
+		prevWindX = 0D;
+		prevWindY = 0D;
+		prevWindZ = 0D;
+		windX = 0D;
+		windY = 0D;
+		windZ = 0D;
+
+		prevLaggedWindX = 0D;
+		prevLaggedWindY = 0D;
+		prevLaggedWindZ = 0D;
+		laggedWindX = 0D;
+		laggedWindY = 0D;
+		laggedWindZ = 0D;
+
+		isSwitched = false;
+		clearAllWindDisturbances();
 	}
 
 	/**
@@ -279,6 +310,8 @@ public final class ClientWindManager {
 	 */
 	@NotNull
 	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
+		if (!shouldUseWind()) return Vec3.ZERO;
+
 		double brightness = level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
 		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
 		Pair<Double, Vec3> disturbance = WindManager.calculateWindDisturbance(getWindDisturbances(), level, pos);
@@ -378,6 +411,8 @@ public final class ClientWindManager {
 	@Deprecated
 	@NotNull
 	public static Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
+		if (!shouldUseWind()) return Vec3.ZERO;
+
 		double sampledTime = time * 0.1D;
 		double xyz = pos.x() + pos.y() + pos.z();
 		double windX = noise.noise((xyz + sampledTime) * stretch, 0D, 0D);

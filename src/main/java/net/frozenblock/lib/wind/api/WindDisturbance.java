@@ -20,6 +20,7 @@ package net.frozenblock.lib.wind.api;
 import com.google.common.collect.ImmutableList;
 import java.util.Optional;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;

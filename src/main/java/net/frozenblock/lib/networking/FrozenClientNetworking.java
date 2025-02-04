@@ -65,7 +65,7 @@ import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundL
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
-import net.frozenblock.lib.wind.api.ClientWindManager;
+import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;

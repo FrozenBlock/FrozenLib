@@ -19,7 +19,7 @@ package net.frozenblock.lib.wind.mixin.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.wind.api.ClientWindManager;
+import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.frozenblock.lib.wind.api.WindDisturbingEntity;
 import net.frozenblock.lib.wind.impl.WindDisturbingEntityImpl;
