@@ -27,7 +27,7 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.core.client.api.FrustumUtil;
-import net.frozenblock.lib.wind.api.ClientWindManager;
+import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
