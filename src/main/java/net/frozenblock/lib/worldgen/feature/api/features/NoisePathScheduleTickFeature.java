@@ -18,18 +18,10 @@
 package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.worldgen.feature.api.features.config.PathFeatureConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.Heightmap.Types;
-import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
-import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import org.jetbrains.annotations.NotNull;
 
 public class NoisePathScheduleTickFeature extends NoisePathFeature {

@@ -18,11 +18,10 @@
 package net.frozenblock.lib.math.api;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.function.Function;
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.StringRepresentable;
-import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.LegacyRandomSource;
 import net.minecraft.world.level.levelgen.SingleThreadedRandomSource;
 import net.minecraft.world.level.levelgen.ThreadSafeLegacyRandomSource;
@@ -31,8 +30,6 @@ import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import java.util.function.BiFunction;
-import java.util.function.Function;
 
 /**
  * Adds easy-to-use noise sampling and random number generators

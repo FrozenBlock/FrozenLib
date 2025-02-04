@@ -17,13 +17,12 @@
 
 package net.frozenblock.lib.block.storage.api.hopper;
 
+import java.util.ArrayList;
 import lombok.experimental.UtilityClass;
 import net.minecraft.world.CompoundContainer;
 import net.minecraft.world.Container;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-
-import java.util.ArrayList;
 
 @UtilityClass
 public class HopperApi {

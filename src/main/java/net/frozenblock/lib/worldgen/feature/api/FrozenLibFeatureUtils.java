@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
+import java.util.Iterator;
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -26,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import org.jetbrains.annotations.NotNull;
-import java.util.Iterator;
 
 @UtilityClass
 public class FrozenLibFeatureUtils {

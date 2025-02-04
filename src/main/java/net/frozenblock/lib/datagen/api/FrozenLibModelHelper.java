@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.datagen.api;
 
+import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Direction;
 import net.minecraft.data.models.BlockModelGenerators;
@@ -33,7 +34,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import java.util.Optional;
 
 public class FrozenLibModelHelper {
 	public static final TexturedModel.Provider TINTED_FLOWERBED_1 = TexturedModel.createDefault(

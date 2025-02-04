@@ -21,7 +21,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
-
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.minecraft.nbt.CompoundTag;
