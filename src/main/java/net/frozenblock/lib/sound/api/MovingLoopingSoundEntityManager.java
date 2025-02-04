@@ -20,6 +20,8 @@ package net.frozenblock.lib.sound.api;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.networking.FrozenLibSoundPackets;
@@ -31,8 +33,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 public class MovingLoopingSoundEntityManager {
     private final ArrayList<SoundLoopData> sounds = new ArrayList<>();

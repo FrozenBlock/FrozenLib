@@ -19,6 +19,7 @@ package net.frozenblock.lib.item.mixin.axe;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import java.util.Optional;
 import net.frozenblock.lib.item.api.axe.AxeApi;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,8 +30,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-
-import java.util.Optional;
 
 @Mixin(AxeItem.class)
 public class AxeItemMixin {

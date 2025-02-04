@@ -65,10 +65,10 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 							generated = true;
 							if (fade) {
 								if (random.nextFloat() > 0.65F) {
-									level.setBlock(mutableDisk, disk, Block.UPDATE_ALL);
+									level.setBlock(mutableDisk, disk, Block.UPDATE_CLIENTS);
 								}
 							} else {
-								level.setBlock(mutableDisk, disk, Block.UPDATE_ALL);
+								level.setBlock(mutableDisk, disk, Block.UPDATE_CLIENTS);
 							}
 						}
 					}
@@ -105,7 +105,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 			for (int i = 0; i < height; i++) {
 				BlockState state = level.getBlockState(mutablePos.move(Direction.UP));
 				if (state.canBeReplaced()) {
-					level.setBlock(mutablePos, columnState, Block.UPDATE_ALL);
+					level.setBlock(mutablePos, columnState, Block.UPDATE_CLIENTS);
 					generated = true;
 				}
 			}

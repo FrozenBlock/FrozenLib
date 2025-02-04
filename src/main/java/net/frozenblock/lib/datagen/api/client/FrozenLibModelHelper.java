@@ -19,6 +19,7 @@ package net.frozenblock.lib.datagen.api.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.blockstates.Condition;
@@ -35,7 +36,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibModelHelper {

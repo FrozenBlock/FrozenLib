@@ -37,10 +37,6 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BlockSoundTypeOverwrites {
 	private static final BlockSoundTypeManager MANAGER = BlockSoundTypeManager.INSTANCE;
 
-	public static Optional<SoundType> getSoundType(Block block) {
-		return MANAGER.getSoundType(block);
-	}
-
 	public static Optional<SoundType> getSoundType(BlockState blockState) {
 		return MANAGER.getSoundType(blockState);
 	}
@@ -64,6 +60,10 @@ public class BlockSoundTypeOverwrites {
 	 */
 	public static void addBlock(ResourceLocation location, SoundType sounds, BooleanSupplier condition) {
 		MANAGER.addBuiltInOverwrite(location, sounds, condition);
+	}
+
+	public static void addBlock(BlockState blockState, SoundType sounds, BooleanSupplier condition) {
+		MANAGER.addBuiltInOverwrite(blockState, sounds, condition);
 	}
 
 	public static void addBlock(Block block, SoundType sounds, BooleanSupplier condition) {

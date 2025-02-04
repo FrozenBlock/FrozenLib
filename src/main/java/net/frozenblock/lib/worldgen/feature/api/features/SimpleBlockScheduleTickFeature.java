@@ -20,6 +20,7 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -41,13 +42,11 @@ public class SimpleBlockScheduleTickFeature extends Feature<SimpleBlockConfigura
 		BlockState blockState = simpleBlockConfiguration.toPlace().getState(featurePlaceContext.random(), blockPos);
 		if (blockState.canSurvive(worldGenLevel, blockPos)) {
 			if (blockState.getBlock() instanceof DoublePlantBlock) {
-				if (!worldGenLevel.isEmptyBlock(blockPos.above())) {
-					return false;
-				}
-				DoublePlantBlock.placeAt(worldGenLevel, blockState, blockPos, 2);
+				if (!worldGenLevel.isEmptyBlock(blockPos.above())) return false;
+				DoublePlantBlock.placeAt(worldGenLevel, blockState, blockPos, Block.UPDATE_CLIENTS);
 				worldGenLevel.scheduleTick(blockPos, blockState.getBlock(), 1);
 			} else {
-				worldGenLevel.setBlock(blockPos, blockState, 2);
+				worldGenLevel.setBlock(blockPos, blockState, Block.UPDATE_CLIENTS);
 				worldGenLevel.scheduleTick(blockPos, blockState.getBlock(), 1);
 			}
 

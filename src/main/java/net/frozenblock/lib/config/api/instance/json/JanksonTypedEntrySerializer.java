@@ -27,7 +27,6 @@ import com.mojang.serialization.DataResult;
 import java.util.Collection;
 import java.util.Objects;
 import java.util.function.BiFunction;
-
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.entry.TypedEntry;

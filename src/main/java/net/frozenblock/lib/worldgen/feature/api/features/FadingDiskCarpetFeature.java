@@ -19,6 +19,7 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
 import java.util.concurrent.atomic.AtomicBoolean;
+import net.frozenblock.lib.worldgen.feature.api.FrozenLibFeatureUtils;
 import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskCarpetFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import org.jetbrains.annotations.NotNull;
 
 public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConfig> {
@@ -38,84 +40,78 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 
 	@Override
 	public boolean place(@NotNull FeaturePlaceContext<FadingDiskCarpetFeatureConfig> context) {
-		final AtomicBoolean bl = new AtomicBoolean(false);
+		AtomicBoolean success = new AtomicBoolean();
 		BlockPos blockPos = context.origin();
 		WorldGenLevel level = context.level();
 		FadingDiskCarpetFeatureConfig config = context.config();
 		boolean useHeightMapAndNotCircular = config.useHeightmapInsteadOfCircularPlacement();
 		Heightmap.Types heightmap = config.heightmap();
-		BlockPos s = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
+		BlockPos origin = useHeightMapAndNotCircular ? blockPos.atY(level.getHeight(heightmap, blockPos.getX(), blockPos.getZ())) : blockPos;
 		RandomSource random = level.getRandom();
 		int radius = config.radius().sample(random);
 		//DISK
-		BlockPos.MutableBlockPos mutableDisk = s.mutable();
-		int bx = s.getX();
-		int by = s.getY();
-		int bz = s.getZ();
-
+		BlockPos.MutableBlockPos mutableDisk = origin.mutable();
+		int bx = origin.getX();
+		int by = origin.getY();
+		int bz = origin.getZ();
 		for (int x = bx - radius; x <= bx + radius; x++) {
 			for (int z = bz - radius; z <= bz + radius; z++) {
 				if (useHeightMapAndNotCircular) {
-					double distance = ((bx - x) * (bx - x) + (bz - z) * (bz - z));
-					if (distance < radius * radius) {
-						mutableDisk.set(x, level.getHeight(heightmap, x, z), z);
-						BlockState state = level.getBlockState(mutableDisk);
-						boolean inner = mutableDisk.closerThan(s, radius * config.innerChance());
-						boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.fadeStartDistancePercent());
-						boolean choseInner;
-						if (random.nextFloat() < config.placementChance() && state.isAir()) {
-							if (fade) {
-								if (random.nextFloat() > 0.5F) {
-									BlockState placedState = config.outerState().getState(random, mutableDisk);
-									if (placedState.canSurvive(level, mutableDisk)) {
-										level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), Block.UPDATE_ALL);
-										bl.set(true);
-									}
-								}
-							} else {
-								choseInner = (inner && random.nextFloat() < config.innerChance());
-								BlockState placedState = choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk);
-								if (placedState.canSurvive(level, mutableDisk)) {
-									level.setBlock(mutableDisk, placedState, Block.UPDATE_ALL);
-									bl.set(true);
-								}
-							}
-						}
-					}
+					double distance = Math.pow((double) bx - x, 2) + Math.pow((double) bz - z, 2);
+					success.set(placeAtPos(level, config, origin, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z), z, distance, true) || success.get());
 				} else {
-					for (int y = by - radius; y <= by + radius; y++) {
-						double distance = ((bx - x) * (bx - x) + (by - y) * (by - y) + (bz - z) * (bz - z));
-						if (distance < radius * radius) {
-							mutableDisk.set(x, y, z);
-							BlockState state = level.getBlockState(mutableDisk);
-							boolean inner = mutableDisk.closerThan(s, radius * config.innerChance());
-							boolean fade = !inner && !mutableDisk.closerThan(s, radius * config.fadeStartDistancePercent());
-							boolean choseInner;
-							if (random.nextFloat() < config.placementChance() && state.isAir()) {
-								if (fade) {
-									if (random.nextFloat() > 0.5F) {
-										BlockState placedState = config.outerState().getState(random, mutableDisk);
-										if (placedState.canSurvive(level, mutableDisk)) {
-											level.setBlock(mutableDisk, config.outerState().getState(random, mutableDisk), 3);
-											bl.set(true);
-										}
-									}
-								} else {
-									choseInner = (inner && random.nextFloat() < config.innerChance());
-									BlockState placedState = choseInner ? config.innerState().getState(random, mutableDisk) : config.outerState().getState(random, mutableDisk);
-									if (placedState.canSurvive(level, mutableDisk)) {
-										level.setBlock(mutableDisk, placedState, Block.UPDATE_ALL);
-										bl.set(true);
-									}
-								}
-							}
-						}
+					int maxY = by + radius;
+					for (int y = by - radius; y <= maxY; y++) {
+						double distance = Math.pow((double) bx - x, 2) + Math.pow((double) by - y, 2) + Math.pow((double) bz - z, 2);
+						success.set(placeAtPos(level, config, origin, random, radius, mutableDisk, x, y + 1, z, distance, false) || success.get());
 					}
 				}
 			}
 		}
 
-		return bl.get();
+		return success.get();
+	}
+
+	private boolean placeAtPos(
+		WorldGenLevel level,
+		FadingDiskCarpetFeatureConfig config,
+		BlockPos origin,
+		RandomSource random,
+		int radius,
+		BlockPos.MutableBlockPos mutableDisk,
+		int x,
+		int y,
+		int z,
+		double distance,
+		boolean useHeightMapAndNotCircular
+	) {
+		if (distance < Math.pow(radius, 2)) {
+			mutableDisk.set(x, y, z);
+			if (!useHeightMapAndNotCircular && FrozenLibFeatureUtils.isBlockExposed(level, mutableDisk)) {
+				boolean inner = mutableDisk.closerThan(origin, radius * config.innerChance());
+				boolean fade = !inner && !mutableDisk.closerThan(origin, radius * config.fadeStartDistancePercent());
+				if (random.nextFloat() < config.placementChance()) {
+					if (fade) {
+						BlockState outerState = config.outerState().getState(random, mutableDisk);
+						if (random.nextFloat() > 0.5F && outerState.canSurvive(level, mutableDisk)) {
+							return this.placeBlock(level, config.outerState().getState(random, mutableDisk), mutableDisk);
+						}
+					} else {
+						BlockStateProvider innerStateProvider = inner && random.nextFloat() < config.innerChance() ? config.innerState() : config.outerState();
+						BlockState innerState = innerStateProvider.getState(random, mutableDisk);
+						if (innerState.canSurvive(level, mutableDisk)) {
+							return this.placeBlock(level, innerState, mutableDisk);
+						}
+					}
+				}
+			}
+		}
+		return false;
+	}
+
+	public boolean placeBlock(@NotNull WorldGenLevel level, BlockState state, BlockPos pos) {
+		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
+		return true;
 	}
 
 }

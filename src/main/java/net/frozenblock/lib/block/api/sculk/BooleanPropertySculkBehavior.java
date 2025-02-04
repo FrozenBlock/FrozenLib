@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.block.api.sculk;
 
+import java.util.Collection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
@@ -29,8 +30,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.Collection;
 
 /**
  * A {@link SculkBehaviour} that sets a specified {@link BooleanProperty} to a defined value.

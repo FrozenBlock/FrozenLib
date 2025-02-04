@@ -19,6 +19,7 @@ package net.frozenblock.lib.worldgen.feature.api.features;
 
 import com.mojang.serialization.Codec;
 import java.util.concurrent.atomic.AtomicBoolean;
+import net.frozenblock.lib.worldgen.feature.api.FrozenLibFeatureUtils;
 import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskWithBiomeFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
@@ -89,7 +90,7 @@ public class FadingDiskExceptInBiomeFeature extends Feature<FadingDiskWithBiomeF
 		if (distance < Math.pow(radius, 2)) {
 			mutableDisk.set(x, y, z);
 			BlockState state = level.getBlockState(mutableDisk);
-			if (!useHeightMapAndNotCircular && FadingDiskFeature.isBlockExposed(level, mutableDisk)) {
+			if (!useHeightMapAndNotCircular && FrozenLibFeatureUtils.isBlockExposed(level, mutableDisk)) {
 				boolean inner = mutableDisk.closerThan(origin, radius * config.innerChance());
 				boolean fade = !inner && !mutableDisk.closerThan(origin, radius * config.fadeStartDistancePercent());
 				if (random.nextFloat() < config.placementChance()) {
@@ -112,7 +113,7 @@ public class FadingDiskExceptInBiomeFeature extends Feature<FadingDiskWithBiomeF
 
 	public boolean placeBlock(@NotNull WorldGenLevel level, BlockState state, BlockPos pos, @NotNull TagKey<Biome> excludedBiomes) {
 		if (level.getBiome(pos).is(excludedBiomes)) return false;
-		level.setBlock(pos, state, Block.UPDATE_ALL);
+		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
 		return true;
 	}
 
