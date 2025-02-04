@@ -18,7 +18,7 @@
 package net.frozenblock.lib.feature_flag.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import net.frozenblock.lib.feature_flag.api.FeatureFlagAPI;
+import net.frozenblock.lib.feature_flag.api.FeatureFlagApi;
 import net.minecraft.world.flag.FeatureFlagRegistry;
 import net.minecraft.world.flag.FeatureFlags;
 import org.spongepowered.asm.mixin.Mixin;
@@ -38,6 +38,6 @@ public class FeatureFlagsMixin {
 		)
 	)
 	private static void frozenLib$save(CallbackInfo info, @Local FeatureFlagRegistry.Builder builder) {
-		FeatureFlagAPI.builder = builder;
+		FeatureFlagApi.builder = builder;
 	}
 }
