@@ -24,7 +24,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
-public class PanoramaAPI {
+public class PanoramaApi {
 	private static final List<ResourceLocation> PANORAMAS = new ArrayList<>();
 
 	public static void addPanorama(ResourceLocation location) {
