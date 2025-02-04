@@ -27,7 +27,7 @@ import org.jetbrains.annotations.ApiStatus;
  * Used to help with custom {@link net.minecraft.world.flag.FeatureFlag}s.
  */
 @UtilityClass
-public class FeatureFlagAPI {
+public class FeatureFlagApi {
 	@ApiStatus.Internal
 	public static FeatureFlagRegistry.Builder builder;
 
