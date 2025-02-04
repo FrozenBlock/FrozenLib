@@ -36,6 +36,7 @@ import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.sound.api.SoundTypeCodecs;
 import net.frozenblock.lib.block.sound.impl.overwrite.AbstractBlockSoundTypeOverwrite;
+import net.frozenblock.lib.block.sound.impl.overwrite.BlockStateBlockSoundTypeOverwrite;
 import net.frozenblock.lib.block.sound.impl.overwrite.HolderSetBlockSoundTypeOverwrite;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -62,6 +63,16 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 
 	private final List<AbstractBlockSoundTypeOverwrite<?>> builtInOverwrites = new ArrayList<>();
 	private final List<AbstractBlockSoundTypeOverwrite<?>> overwrites = new ArrayList<>();
+
+	public void addBuiltInOverwrite(@NotNull BlockState blockState, SoundType soundType, BooleanSupplier condition) {
+		this.builtInOverwrites.add(
+			new BlockStateBlockSoundTypeOverwrite(
+				blockState,
+				soundType,
+				condition
+			)
+		);
+	}
 
 	public void addBuiltInOverwrite(@NotNull Block block, SoundType soundType, BooleanSupplier condition) {
 		this.builtInOverwrites.add(

@@ -62,6 +62,10 @@ public class BlockSoundTypeOverwrites {
 		MANAGER.addBuiltInOverwrite(location, sounds, condition);
 	}
 
+	public static void addBlock(BlockState blockState, SoundType sounds, BooleanSupplier condition) {
+		MANAGER.addBuiltInOverwrite(blockState, sounds, condition);
+	}
+
 	public static void addBlock(Block block, SoundType sounds, BooleanSupplier condition) {
 		MANAGER.addBuiltInOverwrite(block, sounds, condition);
 	}
