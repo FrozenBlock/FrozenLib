@@ -177,7 +177,7 @@ public class LiquidRenderUtils {
 			vertex(vertexConsumer, d, e + y, w, ac, ae, ag, z, ad, aq);
 			vertex(vertexConsumer, d + 1F, e + y, w, ac, ae, ag, ab, ad, aq);
 			vertex(vertexConsumer, d + 1F, e + y, w + 1F, ac, ae, ag, ab, af, aq);
-			if (!downFluidState.equals(fluidState) && downBlockState.getBlock() != blockState.getBlock() && !downBlockState.canOcclude()) {
+			if (downBlockState.getBlock() != blockState.getBlock() && !downBlockState.canOcclude()) {
 				vertex(vertexConsumer, d, e + y, w + 1F, ac, ae, ag, z, af, aq);
 				vertex(vertexConsumer, d + 1F, e + y, w + 1F, ac, ae, ag, z, ad, aq);
 				vertex(vertexConsumer, d + 1F, e + y, w, ac, ae, ag, ab, ad, aq);
