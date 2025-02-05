@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
-import java.util.Iterator;
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,20 +47,19 @@ public class FrozenLibFeatureUtils {
 			pos.offset(searchDistance, searchDistance, searchDistance)
 		);
 		for (BlockPos blockPos : poses) {
-			if (BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE.test(level, blockPos)) {
-				return true;
-			}
+			if (BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE.test(level, blockPos)) return true;
 		}
 		return false;
 	}
 
-	public static boolean isWaterNearby(WorldGenLevel level, @NotNull BlockPos blockPos, int searchArea) {
-		Iterator<BlockPos> poses = BlockPos.betweenClosed(blockPos.offset(-searchArea, -searchArea, -searchArea), blockPos.offset(searchArea, searchArea, searchArea)).iterator();
-		BlockPos blockPos2;
-		do {
-			if (!poses.hasNext()) return false;
-			blockPos2 = poses.next();
-		} while (!level.getBlockState(blockPos2).is(Blocks.WATER));
-		return true;
+	public static boolean isWaterNearby(WorldGenLevel level, @NotNull BlockPos pos, int searchDistance) {
+		Iterable<BlockPos> poses = BlockPos.betweenClosed(
+			pos.offset(-searchDistance, -searchDistance, -searchDistance),
+			pos.offset(searchDistance, searchDistance, searchDistance)
+		);
+		for (BlockPos blockPos : poses) {
+			if (level.getBlockState(blockPos).is(Blocks.WATER)) return true;
+		}
+		return false;
 	}
 }
