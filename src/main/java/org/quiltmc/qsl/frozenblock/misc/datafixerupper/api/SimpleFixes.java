@@ -179,7 +179,7 @@ public final class SimpleFixes {
 	 * @param schema  the schema this fix should be a part of
 	 * @see ItemRenameFix
 	 */
-	private static void addRandomItemRenameFix(
+	public static void addRandomItemRenameFix(
 		@NotNull DataFixerBuilder builder,
 		@NotNull String name,
 		@NotNull ResourceLocation oldId,
