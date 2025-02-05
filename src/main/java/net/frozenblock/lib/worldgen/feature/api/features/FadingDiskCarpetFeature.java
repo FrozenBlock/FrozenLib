@@ -86,7 +86,7 @@ public class FadingDiskCarpetFeature extends Feature<FadingDiskCarpetFeatureConf
 	) {
 		if (distance < Math.pow(radius, 2)) {
 			mutableDisk.set(x, y, z);
-			if (FrozenLibFeatureUtils.isBlockExposed(level, mutableDisk)) {
+			if (level.getBlockState(mutableDisk).isAir()) {
 				boolean inner = mutableDisk.closerThan(origin, radius * config.innerChance());
 				boolean fade = !inner && !mutableDisk.closerThan(origin, radius * config.fadeStartDistancePercent());
 				if (random.nextFloat() < config.placementChance()) {
