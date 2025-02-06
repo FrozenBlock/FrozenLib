@@ -36,9 +36,9 @@ public final class LightningOverrideMixin {
 	@WrapOperation(
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/server/level/ServerLevel;isRainingAt(Lnet/minecraft/core/BlockPos;)Z")
-		,
-		method = "tickChunk"
+			target = "Lnet/minecraft/server/level/ServerLevel;isRainingAt(Lnet/minecraft/core/BlockPos;)Z"
+		),
+		method = "tickThunder"
 	)
 	public boolean frozenLib$getLightningTarget(ServerLevel serverLevel, BlockPos pos, Operation<Boolean> operation) {
 		return this.frozenLib$newLightningCheck(pos, serverLevel);

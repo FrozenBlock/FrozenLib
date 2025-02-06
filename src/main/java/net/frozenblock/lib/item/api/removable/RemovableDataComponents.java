@@ -25,6 +25,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.Level;
 
 public class RemovableDataComponents {
@@ -38,12 +39,12 @@ public class RemovableDataComponents {
 		REMOVABLE_DATA_COMPONENTS.put(holder, new RemovableDataComponent(holder, removalPredicate, removeOnStackMerge));
 	}
 
-	public static boolean canRemoveComponent(DataComponentType<?> component, Level level, Entity entity, int slot, boolean selected) {
+	public static boolean canRemoveComponent(DataComponentType<?> component, Level level, Entity entity, EquipmentSlot equipmentSlot) {
 		ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
 		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
 		RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
 		if (removableDataComponent != null) {
-			return removableDataComponent.shouldRemove(level, entity, slot, selected);
+			return removableDataComponent.shouldRemove(level, entity, equipmentSlot);
 		} else {
 			FrozenLibLogUtils.logError("Unable to find RemovableDataComponent for DataComponent " + key.location() + "!", true, null);
 			FrozenLibLogUtils.logError("Please make sure " + key.location() + " is registered in RemovableDataComponents.class!", true, null);
@@ -84,8 +85,8 @@ public class RemovableDataComponents {
 		}
 
 		@Override
-		public boolean shouldRemove(Level level, Entity entity, int slot, boolean selected) {
-			return this.predicate.shouldRemove(level, entity, slot, selected);
+		public boolean shouldRemove(Level level, Entity entity, EquipmentSlot equipmentSlot) {
+			return this.predicate.shouldRemove(level, entity, equipmentSlot);
 		}
 
 		public boolean shouldRemoveOnStackMerge() {

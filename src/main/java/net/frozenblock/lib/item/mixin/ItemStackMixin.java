@@ -24,6 +24,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
@@ -41,14 +42,14 @@ public final class ItemStackMixin implements ItemStackExtension {
 	private boolean frozenLib$canRemoveTags = false;
 
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
-	public void frozenLib$removeTags(Level level, Entity entity, int slot, boolean selected, CallbackInfo info) {
+	public void frozenLib$removeTags(Level level, Entity entity, EquipmentSlot equipmentSlot, CallbackInfo info) {
 		ItemStack stack = ItemStack.class.cast(this);
 
 		// Removable Item Tags
 
 		CustomData.update(DataComponents.CUSTOM_DATA, stack, compound -> {
 			for (String key : RemovableItemTags.keys()) {
-				if (RemovableItemTags.canRemoveTag(key, level, entity, slot, selected)) {
+				if (RemovableItemTags.canRemoveTag(key, level, entity, equipmentSlot)) {
 					compound.remove(key);
 				}
 			}
@@ -58,7 +59,7 @@ public final class ItemStackMixin implements ItemStackExtension {
 
 		for (Holder<DataComponentType<?>> component : RemovableDataComponents.keys()) {
 			DataComponentType<?> value = component.value();
-			if (RemovableDataComponents.canRemoveComponent(value, level, entity, slot, selected)) {
+			if (RemovableDataComponents.canRemoveComponent(value, level, entity, equipmentSlot)) {
 				stack.remove(value);
 			}
 		}
