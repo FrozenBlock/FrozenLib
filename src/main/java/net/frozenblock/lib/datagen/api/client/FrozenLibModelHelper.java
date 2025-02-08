@@ -21,6 +21,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.minecraft.client.color.item.GrassColorSource;
 import net.minecraft.client.data.models.BlockModelGenerators;
 import net.minecraft.client.data.models.blockstates.Condition;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
@@ -57,7 +58,9 @@ public class FrozenLibModelHelper {
 	);
 
 	public static void createTintedFlowerBed(@NotNull BlockModelGenerators generator, @NotNull Block block) {
-		generator.registerSimpleFlatItemModel(block.asItem());
+		ResourceLocation itemModel = generator.createFlatItemModel(block.asItem());
+		generator.registerSimpleTintedItemModel(block, itemModel, new GrassColorSource());
+
 		ResourceLocation resourceLocation = TINTED_FLOWERBED_1.create(block, generator.modelOutput);
 		ResourceLocation resourceLocation2 = TINTED_FLOWERBED_2.create(block, generator.modelOutput);
 		ResourceLocation resourceLocation3 = TINTED_FLOWERBED_3.create(block, generator.modelOutput);
