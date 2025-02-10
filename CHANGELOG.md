@@ -28,3 +28,4 @@ Put changelog here:
 - Cleaned up existing worldgen feature configurations and features.
 - Disconnecting from a FrozenLib server and joining a non-FrozenLib server afterwards no longer leaves client Wind running.
 - Wind can no longer return any non-zero value when on a non-FrozenLib server without the config option to override this behavior enabled.
+- Significantly cleaned up the Dripstone API and related mixins, removing edits that cause compatability issues in the process.

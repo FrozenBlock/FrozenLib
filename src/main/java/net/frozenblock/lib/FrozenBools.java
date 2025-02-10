@@ -28,8 +28,6 @@ public class FrozenBools {
 	 */
 	public static boolean isInitialized;
 
-    public static boolean useNewDripstoneLiquid = false;
-
 	// DATAGEN
 	/**
 	 * Whether the current instance is running in datagen mode.
