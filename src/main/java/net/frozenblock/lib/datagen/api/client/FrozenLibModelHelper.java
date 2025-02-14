@@ -23,14 +23,12 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.client.color.item.GrassColorSource;
 import net.minecraft.client.data.models.BlockModelGenerators;
-import net.minecraft.client.data.models.blockstates.Condition;
 import net.minecraft.client.data.models.blockstates.MultiPartGenerator;
-import net.minecraft.client.data.models.blockstates.Variant;
-import net.minecraft.client.data.models.blockstates.VariantProperties;
 import net.minecraft.client.data.models.model.ModelTemplate;
 import net.minecraft.client.data.models.model.TextureMapping;
 import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
+import net.minecraft.client.renderer.block.model.MultiVariant;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -61,76 +59,76 @@ public class FrozenLibModelHelper {
 		ResourceLocation itemModel = generator.createFlatItemModel(block.asItem());
 		generator.registerSimpleTintedItemModel(block, itemModel, new GrassColorSource());
 
-		ResourceLocation resourceLocation = TINTED_FLOWERBED_1.create(block, generator.modelOutput);
-		ResourceLocation resourceLocation2 = TINTED_FLOWERBED_2.create(block, generator.modelOutput);
-		ResourceLocation resourceLocation3 = TINTED_FLOWERBED_3.create(block, generator.modelOutput);
-		ResourceLocation resourceLocation4 = TINTED_FLOWERBED_4.create(block, generator.modelOutput);
+		MultiVariant multiVariant1 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_1.create(block, generator.modelOutput));
+		MultiVariant multiVariant2 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_2.create(block, generator.modelOutput));
+		MultiVariant multiVariant3 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_3.create(block, generator.modelOutput));
+		MultiVariant multiVariant4 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_4.create(block, generator.modelOutput));
 		generator.blockStateOutput
 			.accept(
 				MultiPartGenerator.multiPart(block)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 1, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 1, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH),
+						multiVariant1
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 1, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 1, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST),
+						multiVariant1.with(BlockModelGenerators.Y_ROT_90)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 1, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 1, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH),
+						multiVariant1.with(BlockModelGenerators.Y_ROT_180)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 1, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 1, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST),
+						multiVariant1.with(BlockModelGenerators.Y_ROT_270)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation2)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH),
+						multiVariant2
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST),
+						multiVariant2.with(BlockModelGenerators.Y_ROT_90)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH),
+						multiVariant2.with(BlockModelGenerators.Y_ROT_180)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation2).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 2, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST),
+						multiVariant2.with(BlockModelGenerators.Y_ROT_270)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation3)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH),
+						multiVariant3
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation3).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST),
+						multiVariant3.with(BlockModelGenerators.Y_ROT_90)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation3).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH),
+						multiVariant3.with(BlockModelGenerators.Y_ROT_180)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation3).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 3, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST),
+						multiVariant3.with(BlockModelGenerators.Y_ROT_270)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation4)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.NORTH),
+						multiVariant4
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation4).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.EAST),
+						multiVariant4.with(BlockModelGenerators.Y_ROT_90)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation4).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.SOUTH),
+						multiVariant4.with(BlockModelGenerators.Y_ROT_180)
 					)
 					.with(
-						Condition.condition().term(BlockStateProperties.FLOWER_AMOUNT, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST),
-						Variant.variant().with(VariantProperties.MODEL, resourceLocation4).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+						BlockModelGenerators.condition().term(BlockStateProperties.FLOWER_AMOUNT, 4).term(BlockStateProperties.HORIZONTAL_FACING, Direction.WEST),
+						multiVariant4.with(BlockModelGenerators.Y_ROT_270)
 					)
 			);
 	}

@@ -9,7 +9,7 @@
   "mixins": [
     "ListPoolElementMixin",
     "PoolElementStructurePieceMixin",
-    "RandomMixin",
+    "RandomPoolAliasMixin",
     "SinglePoolElementMixin",
     "StructureMixin",
     "StructurePlacementMixin",

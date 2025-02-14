@@ -34,6 +34,7 @@ import org.lwjgl.opengl.GL20C;
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderTypes {
 
+	// TODO: Look into RenderType, see how these are now handled. Use EndermanRenderer for reference with Eye rendering.
     public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize(
             ((identifier, affectsOutline) -> {
                 RenderType.CompositeState multiPhaseParameters = RenderType.CompositeState.builder()

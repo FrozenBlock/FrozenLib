@@ -40,15 +40,16 @@ public class ServerTexture extends DynamicTexture implements Tickable {
 	private final long timeInMilisBeforeClose;
 	private long timeSinceLastReference;
 
+	// TODO: Look into GpuTexture.getLabel(); usage
 	public ServerTexture(NativeImage nativeImage, String destPath, String fileName) {
-		super(nativeImage);
+		super(() -> fileName, nativeImage);
 		this.timeInMilisBeforeClose = 5000L;
 		this.destPath = destPath;
 		this.fileName = fileName;
 	}
 
 	public ServerTexture(NativeImage nativeImage, long timeInMilisBeforeClose, String destPath, String fileName) {
-		super(nativeImage);
+		super(() -> fileName, nativeImage);
 		this.timeInMilisBeforeClose = timeInMilisBeforeClose;
 		this.destPath = destPath;
 		this.fileName = fileName;

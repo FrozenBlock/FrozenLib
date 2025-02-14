@@ -26,7 +26,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.pools.alias.Random;
+import net.minecraft.world.level.levelgen.structure.pools.alias.RandomPoolAlias;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
@@ -35,14 +35,15 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Random.class)
-public class RandomMixin {
+@Mixin(RandomPoolAlias.class)
+public class RandomPoolAliasMixin {
 
 	@Shadow
 	@Final
 	@Mutable
 	private WeightedList<ResourceKey<StructureTemplatePool>> targets;
 
+	// TODO: Other classes?
     @Inject(method = "<init>", at = @At("TAIL"))
     public void frozenLib$addRandomPoolAliasTargets(
 		ResourceKey<StructureTemplatePool> alias, WeightedList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info
