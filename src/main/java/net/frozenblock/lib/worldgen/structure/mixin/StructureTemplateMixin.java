@@ -50,14 +50,12 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 		ServerLevelAccessor serverLevel, BlockPos offset, BlockPos pos, StructurePlaceSettings settings, RandomSource random, int flags,
 		CallbackInfoReturnable<Boolean> info
 	) {
-		if (this.frozenLib$additionalProcessors.isEmpty()) return;
 		this.frozenLib$additionalProcessors.forEach(settings::addProcessor);
 		this.frozenLib$additionalProcessors.clear();
 	}
 
 	@Override
 	public synchronized void frozenLib$addProcessors(List<StructureProcessor> processors) {
-		if (this.frozenLib$additionalProcessors.isEmpty()) return;
 		this.frozenLib$additionalProcessors.addAll(processors);
 	}
 }
