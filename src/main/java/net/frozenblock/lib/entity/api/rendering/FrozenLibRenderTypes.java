@@ -22,7 +22,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.Util;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
@@ -31,29 +30,30 @@ import net.minecraft.util.TriState;
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderTypes {
 
-	// TODO: Look into RenderType, see how these are now handled. Use EndermanRenderer for reference with Eye rendering.
-    public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE = Util.memoize(
+    public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize(
 		(resourceLocation, boolean_) -> {
-		RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setTextureState(
-			new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false)
-		).setOverlayState(RenderStateShard.OVERLAY).createCompositeState(boolean_);
+		RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
+			.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+			.setOverlayState(RenderStateShard.OVERLAY)
+			.createCompositeState(boolean_);
 		return RenderType.create(
-			FrozenLibConstants.string("entity_translucent_emissive"),
+			FrozenLibConstants.safeString("entity_translucent_emissive_fixed"),
 			1536,
 			true,
 			true,
-			RenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE,
+			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED,
 			compositeState
 		);
 	});
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_CULL = Util.memoize(
 		(resourceLocation, boolean_) -> {
-			RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setTextureState(
-				new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false)
-			).setOverlayState(RenderStateShard.OVERLAY).createCompositeState(boolean_);
+			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setOverlayState(RenderStateShard.OVERLAY)
+				.createCompositeState(boolean_);
 			return RenderType.create(
-				FrozenLibConstants.string("entity_translucent_emissive_cull"),
+				FrozenLibConstants.safeString("entity_translucent_emissive_cull"),
 				1536,
 				true,
 				true,
@@ -64,11 +64,12 @@ public final class FrozenLibRenderTypes {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize(
 		(resourceLocation, boolean_) -> {
-			RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setTextureState(
-				new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false)
-			).setOverlayState(RenderStateShard.OVERLAY).createCompositeState(boolean_);
+			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setOverlayState(RenderStateShard.OVERLAY)
+				.createCompositeState(boolean_);
 			return RenderType.create(
-				FrozenLibConstants.string("entity_translucent_emissive_always_render"),
+				FrozenLibConstants.safeString("entity_translucent_emissive_always_render"),
 				1536,
 				true,
 				true,
@@ -79,11 +80,12 @@ public final class FrozenLibRenderTypes {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL = Util.memoize(
 		(resourceLocation, boolean_) -> {
-			RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setTextureState(
-				new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false)
-			).setOverlayState(RenderStateShard.OVERLAY).createCompositeState(boolean_);
+			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setOverlayState(RenderStateShard.OVERLAY)
+				.createCompositeState(boolean_);
 			return RenderType.create(
-				FrozenLibConstants.string("entity_translucent_emissive_always_render_cull"),
+				FrozenLibConstants.safeString("entity_translucent_emissive_always_render_cull"),
 				1536,
 				true,
 				true,
@@ -94,11 +96,12 @@ public final class FrozenLibRenderTypes {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER = Util.memoize(
 		(resourceLocation, boolean_) -> {
-			RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setTextureState(
-				new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false)
-			).setOverlayState(RenderStateShard.OVERLAY).createCompositeState(false);
+			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setOverlayState(RenderStateShard.OVERLAY)
+				.createCompositeState(false);
 			return RenderType.create(
-				FrozenLibConstants.string("apparition_outer"),
+				FrozenLibConstants.safeString("apparition_outer"),
 				1536,
 				false,
 				true,
@@ -109,11 +112,12 @@ public final class FrozenLibRenderTypes {
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER_CULL = Util.memoize(
 		(resourceLocation, boolean_) -> {
-			RenderType.CompositeState compositeState = RenderType.CompositeState.builder().setTextureState(
-				new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false)
-			).setOverlayState(RenderStateShard.OVERLAY).createCompositeState(false);
+			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setOverlayState(RenderStateShard.OVERLAY)
+				.createCompositeState(false);
 			return RenderType.create(
-				FrozenLibConstants.string("apparition_outer_cull"),
+				FrozenLibConstants.safeString("apparition_outer_cull"),
 				1536,
 				false,
 				true,
@@ -122,16 +126,16 @@ public final class FrozenLibRenderTypes {
 			);
 		});
 
-    public static RenderType entityTranslucentEmissive(ResourceLocation resourceLocation) {
-        return ENTITY_TRANSLUCENT_EMISSIVE.apply(resourceLocation, true);
+    public static RenderType entityTranslucentEmissiveFixed(ResourceLocation resourceLocation) {
+        return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, true);
     }
 
 	public static RenderType entityTranslucentEmissiveCull(ResourceLocation resourceLocation) {
 		return ENTITY_TRANSLUCENT_EMISSIVE_CULL.apply(resourceLocation, true);
 	}
 
-	public static RenderType entityTranslucentEmissiveNoOutline(ResourceLocation resourceLocation) {
-		return ENTITY_TRANSLUCENT_EMISSIVE.apply(resourceLocation, false);
+	public static RenderType entityTranslucentEmissiveFixedNoOutline(ResourceLocation resourceLocation) {
+		return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, false);
 	}
 
 	public static RenderType entityTranslucentEmissiveAlwaysRender(ResourceLocation resourceLocation) {

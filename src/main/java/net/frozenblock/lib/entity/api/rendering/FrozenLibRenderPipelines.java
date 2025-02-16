@@ -30,12 +30,25 @@ import net.minecraft.client.renderer.RenderPipelines;
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderPipelines {
 
-	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_CULL = RenderPipelines.register(
+	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_FIXED = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-			.withLocation(FrozenLibConstants.string("pipeline/entity_translucent_emissive_cull"))
+			.withLocation("pipeline/entity_translucent_emissive")
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
-		.withSampler("Sampler1")
+			.withSampler("Sampler1")
+			.withBlend(BlendFunction.TRANSLUCENT)
+			.withCull(false)
+			.withDepthWrite(true)
+			.build()
+	);
+
+
+	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_CULL = RenderPipelines.register(
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_fixed"))
+			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
+			.withShaderDefine("EMISSIVE")
+			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withCull(true)
 			.withDepthWrite(false)
@@ -44,7 +57,7 @@ public final class FrozenLibRenderPipelines {
 
 	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-			.withLocation(FrozenLibConstants.string("pipeline/entity_translucent_emissive_always_render"))
+			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_always_render"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
 			.withSampler("Sampler1")
@@ -57,7 +70,7 @@ public final class FrozenLibRenderPipelines {
 
 	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-			.withLocation(FrozenLibConstants.string("pipeline/entity_translucent_emissive_always_render_cull"))
+			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_always_render_cull"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
 			.withSampler("Sampler1")
@@ -71,7 +84,7 @@ public final class FrozenLibRenderPipelines {
 	// TODO: See if the apparitions work
 	public static final RenderPipeline APPARITION_OUTER = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.MATRICES_COLOR_FOG_SNIPPET)
-			.withLocation(FrozenLibConstants.string("pipeline/apparition_outer"))
+			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer"))
 			.withVertexShader("core/entity")
 			.withFragmentShader("core/entity")
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
@@ -89,7 +102,7 @@ public final class FrozenLibRenderPipelines {
 
 	public static final RenderPipeline APPARITION_OUTER_CULL = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.MATRICES_COLOR_FOG_SNIPPET)
-			.withLocation(FrozenLibConstants.string("pipeline/apparition_outer_cull"))
+			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer_cull"))
 			.withVertexShader("core/entity")
 			.withFragmentShader("core/entity")
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)

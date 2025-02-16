@@ -51,5 +51,10 @@ public final class FrozenLibConstants {
 		return id(path).toString();
 	}
 
+	@NotNull
+	public static String safeString(String path) {
+		return id(path).toString().replace(":", "_");
+	}
+
 	private FrozenLibConstants() {}
 }
