@@ -27,7 +27,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.entity.animal.WolfVariant;
+import net.minecraft.world.entity.animal.wolf.WolfVariant;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
