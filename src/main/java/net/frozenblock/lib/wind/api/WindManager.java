@@ -81,6 +81,7 @@ public class WindManager extends SavedData {
 	private boolean isSwitchedServer;
 	public List<WindManagerExtension> attachedExtensions;
 	private boolean loadedExtensions;
+	private ServerLevel level;
 	public boolean overrideWind;
 	public long time;
 	public Vec3 commandWind = Vec3.ZERO;
@@ -126,6 +127,10 @@ public class WindManager extends SavedData {
 	@Override
 	public boolean isDirty() {
 		return true;
+	}
+
+	public void setLevel(@NotNull ServerLevel level) {
+		this.level = level;
 	}
 
 	/**
@@ -238,6 +243,7 @@ public class WindManager extends SavedData {
 	public static WindManager getOrCreateWindManager(@NotNull ServerLevel level) {
 		WindManager windManager = ((WindManagerInterface)level).frozenLib$getOrCreateWindManager();
 		windManager.loadExtensionsIfNotLoaded(level);
+		windManager.setLevel(level);
 		return windManager;
 	}
 
@@ -360,8 +366,8 @@ public class WindManager extends SavedData {
 	 * @return the wind movement at the center of the specified {@link BlockPos}.
 	 */
 	@NotNull
-	public Vec3 getWindMovement(@NotNull BlockPos pos, ServerLevel level) {
-		return this.getWindMovement(Vec3.atBottomCenterOf(pos), level);
+	public Vec3 getWindMovement(@NotNull BlockPos pos) {
+		return this.getWindMovement(Vec3.atBottomCenterOf(pos));
 	}
 
 	/**
@@ -372,8 +378,8 @@ public class WindManager extends SavedData {
 	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied.
 	 */
 	@NotNull
-	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale, ServerLevel level) {
-		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale, level);
+	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale) {
+		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale);
 	}
 
 	/**
@@ -385,8 +391,8 @@ public class WindManager extends SavedData {
 	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied and clamped.
 	 */
 	@NotNull
-	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale, double clamp, ServerLevel level) {
-		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale, clamp, level);
+	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale, double clamp) {
+		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale, clamp);
 	}
 
 	/**
@@ -396,8 +402,8 @@ public class WindManager extends SavedData {
 	 * @return the wind movement at the specified {@link Vec3}.
 	 */
 	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, ServerLevel level) {
-		return this.getWindMovement(pos, 1D, level);
+	public Vec3 getWindMovement(@NotNull Vec3 pos) {
+		return this.getWindMovement(pos, 1D);
 	}
 
 	/**
@@ -408,8 +414,8 @@ public class WindManager extends SavedData {
 	 * @return the wind movement at the specified {@link Vec3}, multiplied.
 	 */
 	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, ServerLevel level) {
-		return this.getWindMovement(pos, scale, Double.MAX_VALUE, level);
+	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale) {
+		return this.getWindMovement(pos, scale, Double.MAX_VALUE);
 	}
 
 	/**
@@ -421,8 +427,8 @@ public class WindManager extends SavedData {
 	 * @return the wind movement at the specified {@link Vec3}, multiplied and clamped.
 	 */
 	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp, ServerLevel level) {
-		return this.getWindMovement(pos, scale, clamp, 1D, level);
+	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp) {
+		return this.getWindMovement(pos, scale, clamp, 1D);
 	}
 
 	/**
@@ -435,10 +441,10 @@ public class WindManager extends SavedData {
 	 * @return the wind movement at the specified {@link Vec3}, multiplied, clamped, and with a separately multiplied wind disturbance value.
 	 */
 	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale, ServerLevel level) {
-		double brightness = level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
+	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
+		double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
 		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
-		Pair<Double, Vec3> disturbance = this.calculateWindDisturbance(level, pos);
+		Pair<Double, Vec3> disturbance = this.calculateWindDisturbance(pos);
 		double disturbanceAmount = disturbance.getFirst();
 		Vec3 windDisturbance = disturbance.getSecond();
 		double windX = Mth.lerp(disturbanceAmount, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
@@ -447,7 +453,7 @@ public class WindManager extends SavedData {
 
 		if (FrozenLibConfig.IS_DEBUG) {
 			FrozenNetworking.sendPacketToAllPlayers(
-				level,
+				this.level,
 				new WindAccessPacket(pos)
 			);
 		}
@@ -523,13 +529,12 @@ public class WindManager extends SavedData {
 	/**
 	 * Calculates the strength and movement of the current {@link WindDisturbance}s at a given position.
 	 *
-	 * @param level The provided {@link Level}.
 	 * @param pos The {@link Vec3} being checked.
 	 * @return the strength and movement of the current {@link WindDisturbance}s at a given position.
 	 */
 	@NotNull
-	private Pair<Double, Vec3> calculateWindDisturbance(@NotNull Level level, @NotNull Vec3 pos) {
-		return calculateWindDisturbance(this.getWindDisturbances(), level, pos);
+	private Pair<Double, Vec3> calculateWindDisturbance(@NotNull Vec3 pos) {
+		return calculateWindDisturbance(this.getWindDisturbances(), this.level, pos);
 	}
 
 	/**
