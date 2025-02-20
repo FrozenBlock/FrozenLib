@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.config.impl.network;
 
+import blue.endless.jankson.api.SyntaxError;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -64,10 +65,9 @@ public record ConfigSyncPacket<T>(
 		String modId = buf.readUtf();
 		String className = buf.readUtf();
 		try {
-			//T configData = ConfigByteBufUtil.readJankson(buf, modId, className);
-			T configData = ConfigByteBufUtil.readXjs(buf, modId, className);
+			T configData = ConfigByteBufUtil.readJankson(buf, modId, className);
 			return new ConfigSyncPacket<>(modId, className, configData);
-		} catch (Exception e) {
+		} catch (SyntaxError | ClassNotFoundException e) {
 			FrozenLibLogUtils.logError("Failed to read config data from packet.", true, e);
 			return null;
 		}
@@ -76,12 +76,7 @@ public record ConfigSyncPacket<T>(
 	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeUtf(modId);
 		buf.writeUtf(className);
-		try {
-			ConfigByteBufUtil.writeXjs(buf, configData);
-		} catch (Exception e) {
-			FrozenLibLogUtils.logError("Failed to write config data to packet.", e);
-		}
-		//ConfigByteBufUtil.writeJankson(buf, modId, configData);
+		ConfigByteBufUtil.writeJankson(buf, modId, configData);
 	}
 
 	public static <T> void receive(@NotNull ConfigSyncPacket<T> packet, @Nullable MinecraftServer server) {
