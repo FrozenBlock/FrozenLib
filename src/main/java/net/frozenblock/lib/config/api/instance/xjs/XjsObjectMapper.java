@@ -68,6 +68,18 @@ public class XjsObjectMapper {
 		return t;
 	}
 
+	public static <T> T deserializeObject(final @Nullable String modId, Optional<JsonObject> read, final Class<T> clazz) throws NonSerializableObjectException {
+		final T t = UnsafeUtils.constructUnsafely(clazz);
+
+		if (read.isEmpty()) return t;
+		final JsonObject json = read.get();
+		if (json.isEmpty()) return t;
+
+		writeObjectInto(modId, t, json);
+
+		return t;
+	}
+
 	public static JsonValue toJsonValue(final Object o) throws NonSerializableObjectException {
 		if (o.getClass().isArray()) {
 			return toJsonArray((Object[]) o);
