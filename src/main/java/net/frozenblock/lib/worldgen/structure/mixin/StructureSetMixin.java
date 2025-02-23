@@ -18,7 +18,7 @@
 package net.frozenblock.lib.worldgen.structure.mixin;
 
 import com.mojang.datafixers.util.Pair;
-import net.frozenblock.lib.worldgen.structure.impl.StructureAddExclusionInterface;
+import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
@@ -27,18 +27,43 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Mixin(StructureSet.class)
-public abstract class StructureSetMixin implements StructureAddExclusionInterface {
+public abstract class StructureSetMixin implements StructureSetAndPlacementInterface {
 
 	@Shadow
 	public abstract StructurePlacement placement();
 
 	@Unique
 	@Override
+	public synchronized void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions) {
+		if (this.placement() instanceof StructureSetAndPlacementInterface addExclusionInterface) {
+			addExclusionInterface.frozenLib$addGenerationConditions(generationConditions);
+		}
+	}
+
+	@Unique
+	@Override
+	public synchronized void frozenLib$flushGenerationConditions() {
+		if (this.placement() instanceof StructureSetAndPlacementInterface addExclusionInterface) {
+			addExclusionInterface.frozenLib$flushGenerationConditions();
+		}
+	}
+
+	@Unique
+	@Override
 	public synchronized void frozenLib$addExclusions(List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup) {
-		if (this.placement() instanceof StructureAddExclusionInterface addExclusionInterface) {
+		if (this.placement() instanceof StructureSetAndPlacementInterface addExclusionInterface) {
 			addExclusionInterface.frozenLib$addExclusions(exclusions, structureSetRegistryLookup);
+		}
+	}
+
+	@Unique
+	@Override
+	public synchronized void frozenLib$flushExclusions() {
+		if (this.placement() instanceof StructureSetAndPlacementInterface addExclusionInterface) {
+			addExclusionInterface.frozenLib$flushExclusions();
 		}
 	}
 }
