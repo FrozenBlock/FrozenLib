@@ -37,7 +37,6 @@ public class StructurePlacementExclusionApi {
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().forEach(structureSetReference -> {
 				if (structureSetReference.isBound() && (Object) (structureSetReference.value()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
-					setAndPlacementInterface.frozenLib$flushExclusions();
 					setAndPlacementInterface.frozenLib$addExclusions(
 						getAdditionalExcludedStructureSets(structureSetReference.key().location()),
 						level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET)

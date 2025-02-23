@@ -27,8 +27,6 @@ import java.util.function.Supplier;
 public interface StructureSetAndPlacementInterface {
 
 	void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions);
-	void frozenLib$flushGenerationConditions();
 
 	void frozenLib$addExclusions(List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup);
-	void frozenLib$flushExclusions();
 }
