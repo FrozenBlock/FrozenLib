@@ -37,10 +37,10 @@ public class BlockRandomTicks {
 	private static final Map<Block, List<InjectedRandomTick>> RANDOM_TICKS = new Object2ObjectOpenHashMap<>();
 
 	/**
-	 * Adds custom tick behavior to a {@link Block}.
+	 * Adds custom random tick behavior to a {@link Block}.
 	 *
-	 * @param block                 The {@link Block} to add custom tick behavior to.
-	 * @param injectedScheduledTick The behavior to run upon the {@link Block} being ticked.
+	 * @param block                 The {@link Block} to add custom random tick behavior to.
+	 * @param injectedRandomTick The behavior to run upon the {@link Block} being random ticked.
 	 */
 	public static void addToBlock(Block block, InjectedRandomTick injectedRandomTick) {
 		if (RANDOM_TICKS.containsKey(block)) {
