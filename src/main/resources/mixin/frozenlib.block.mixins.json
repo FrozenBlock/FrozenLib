@@ -11,7 +11,7 @@
     "dripstone.PointedDripstoneBlockMixin",
     "sound.BlockBehaviourMixin",
     "storage.hopper.HopperBlockEntityMixin",
-    "tick.BlockBehaviourMixin"
+    "tick.BlockStateBaseMixin"
   ],
   "client": [
     "entity.client.BlockEntityWithoutLevelRendererMixin"
