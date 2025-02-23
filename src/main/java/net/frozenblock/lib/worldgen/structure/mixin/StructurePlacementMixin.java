@@ -19,7 +19,7 @@ package net.frozenblock.lib.worldgen.structure.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.datafixers.util.Pair;
-import net.frozenblock.lib.worldgen.structure.impl.StructureAddExclusionInterface;
+import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -28,27 +28,49 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 
 @Mixin(StructurePlacement.class)
-public abstract class StructurePlacementMixin implements StructureAddExclusionInterface {
+public class StructurePlacementMixin implements StructureSetAndPlacementInterface {
 
+	@Unique
+	private final List<Supplier<Boolean>> frozenLib$generationConditions = new ArrayList<>();
 	@Unique
 	private final List<Pair<Holder<StructureSet>, Integer>> frozenLib$addedExclusions = new ArrayList<>();
 
 	@Unique
 	@Override
-	public synchronized void frozenLib$addExclusions(List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup) {
+	public synchronized void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions) {
+		this.frozenLib$generationConditions.addAll(generationConditions);
+	}
+
+	@Unique
+	@Override
+	public synchronized void frozenLib$flushGenerationConditions() {
+		this.frozenLib$generationConditions.clear();
+	}
+
+	@Unique
+	@Override
+	public synchronized void frozenLib$addExclusions(@NotNull List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup) {
 		exclusions.forEach(pair -> {
 			structureSetRegistryLookup.get(ResourceKey.create(Registries.STRUCTURE_SET, pair.getFirst())).ifPresent(structureSet -> {
 				this.frozenLib$addedExclusions.add(Pair.of(structureSet, pair.getSecond()));
 			});
 		});
+	}
+
+	@Unique
+	@Override
+	public synchronized void frozenLib$flushExclusions() {
+		this.frozenLib$addedExclusions.clear();
 	}
 
 	@ModifyReturnValue(
@@ -59,6 +81,11 @@ public abstract class StructurePlacementMixin implements StructureAddExclusionIn
 		boolean original,
 		ChunkGeneratorStructureState chunkGeneratorStructureState, int i, int j
 	) {
+		if (!this.frozenLib$generationConditions.isEmpty()) {
+			if (this.frozenLib$generationConditions.stream().anyMatch(Supplier::get)) {
+				return false;
+			}
+		}
 		if (original && !this.frozenLib$addedExclusions.isEmpty()) {
 			for (Pair<Holder<StructureSet>, Integer> pair : this.frozenLib$addedExclusions) {
 				if (chunkGeneratorStructureState.hasStructureChunkInRange(pair.getFirst(), i, j, pair.getSecond())) {
