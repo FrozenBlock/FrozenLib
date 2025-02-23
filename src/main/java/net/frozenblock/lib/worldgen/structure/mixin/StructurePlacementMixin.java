@@ -82,8 +82,8 @@ public class StructurePlacementMixin implements StructureSetAndPlacementInterfac
 		ChunkGeneratorStructureState chunkGeneratorStructureState, int i, int j
 	) {
 		if (!this.frozenLib$generationConditions.isEmpty()) {
-			if (this.frozenLib$generationConditions.stream().anyMatch(Supplier::get)) {
-				return false;
+			for (Supplier<Boolean> generationCondition : this.frozenLib$generationConditions) {
+				if (!generationCondition.get()) return false;
 			}
 		}
 		if (original && !this.frozenLib$addedExclusions.isEmpty()) {
