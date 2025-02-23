@@ -32,6 +32,8 @@ import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -48,18 +50,14 @@ public class StructurePlacementMixin implements StructureSetAndPlacementInterfac
 	@Unique
 	@Override
 	public synchronized void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions) {
+		this.frozenLib$generationConditions.clear();
 		this.frozenLib$generationConditions.addAll(generationConditions);
 	}
 
 	@Unique
 	@Override
-	public synchronized void frozenLib$flushGenerationConditions() {
-		this.frozenLib$generationConditions.clear();
-	}
-
-	@Unique
-	@Override
 	public synchronized void frozenLib$addExclusions(@NotNull List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup) {
+		this.frozenLib$addedExclusions.clear();
 		exclusions.forEach(pair -> {
 			structureSetRegistryLookup.get(ResourceKey.create(Registries.STRUCTURE_SET, pair.getFirst())).ifPresent(structureSet -> {
 				this.frozenLib$addedExclusions.add(Pair.of(structureSet, pair.getSecond()));
@@ -67,10 +65,14 @@ public class StructurePlacementMixin implements StructureSetAndPlacementInterfac
 		});
 	}
 
-	@Unique
-	@Override
-	public synchronized void frozenLib$flushExclusions() {
-		this.frozenLib$addedExclusions.clear();
+	@Inject(method = "isStructureChunk", at = @At("HEAD"), cancellable = true)
+	public void frozenLib$checkPlacementConditions(ChunkGeneratorStructureState chunkGeneratorStructureState, int i, int j, CallbackInfoReturnable<Boolean> info) {
+		if (!this.frozenLib$generationConditions.isEmpty()) {
+			for (Supplier<Boolean> generationCondition : this.frozenLib$generationConditions) {
+				if (!generationCondition.get()) info.setReturnValue(false);
+				return;
+			}
+		}
 	}
 
 	@ModifyReturnValue(
@@ -81,11 +83,6 @@ public class StructurePlacementMixin implements StructureSetAndPlacementInterfac
 		boolean original,
 		ChunkGeneratorStructureState chunkGeneratorStructureState, int i, int j
 	) {
-		if (!this.frozenLib$generationConditions.isEmpty()) {
-			if (this.frozenLib$generationConditions.stream().anyMatch(Supplier::get)) {
-				return false;
-			}
-		}
 		if (original && !this.frozenLib$addedExclusions.isEmpty()) {
 			for (Pair<Holder<StructureSet>, Integer> pair : this.frozenLib$addedExclusions) {
 				if (chunkGeneratorStructureState.hasStructureChunkInRange(pair.getFirst(), i, j, pair.getSecond())) {
