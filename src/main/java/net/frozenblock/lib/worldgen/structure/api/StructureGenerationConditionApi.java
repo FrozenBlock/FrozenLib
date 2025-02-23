@@ -18,42 +18,42 @@
 package net.frozenblock.lib.worldgen.structure.api;
 
 import com.google.common.collect.ImmutableList;
-import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Supplier;
 
 @UtilityClass
-public class StructurePlacementExclusionApi {
-	private static final Map<ResourceLocation, List<Pair<ResourceLocation, Integer>>> STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS = new Object2ObjectOpenHashMap<>();
+public class StructureGenerationConditionApi {
+	private static final Map<ResourceLocation, List<Supplier<Boolean>>> STRUCTURE_SET_TO_SUPPLIER_MAP = new Object2ObjectOpenHashMap<>();
 
 	public static void init() {
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().forEach(structureSetReference -> {
 				if (structureSetReference.isBound() && (Object) (structureSetReference.value()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
-					setAndPlacementInterface.frozenLib$flushExclusions();
-					setAndPlacementInterface.frozenLib$addExclusions(
-						getAdditionalExcludedStructureSets(structureSetReference.key().location()),
-						level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET)
+					setAndPlacementInterface.frozenLib$flushGenerationConditions();
+					setAndPlacementInterface.frozenLib$addGenerationConditions(
+						getGenerationConditions(structureSetReference.key().location())
 					);
 				}
 			});
 		});
 	}
 
-	public static void addExclusion(ResourceLocation structureSet, ResourceLocation excludedFrom, int chunkCount) {
-		List<Pair<ResourceLocation, Integer>> list = STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.getOrDefault(structureSet, new ArrayList<>());
-		list.add(Pair.of(excludedFrom, chunkCount));
-		STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.put(structureSet, list);
+	public static void addGenerationCondition(ResourceLocation structureSet, Supplier<Boolean> generationCondition) {
+		List<Supplier<Boolean>> list = STRUCTURE_SET_TO_SUPPLIER_MAP.getOrDefault(structureSet, new ArrayList<>());
+		list.add(generationCondition);
+		STRUCTURE_SET_TO_SUPPLIER_MAP.put(structureSet, list);
 	}
 
-	public static List<Pair<ResourceLocation, Integer>> getAdditionalExcludedStructureSets(ResourceLocation structureSet) {
-		return STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.getOrDefault(structureSet, ImmutableList.of());
+	public static List<Supplier<Boolean>> getGenerationConditions(ResourceLocation structureSet) {
+		return STRUCTURE_SET_TO_SUPPLIER_MAP.getOrDefault(structureSet, ImmutableList.of());
 	}
 }

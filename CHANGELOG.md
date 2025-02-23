@@ -32,3 +32,4 @@ Put changelog here:
 - Added `StructurePlacementExclusionApi,` which lets you add exclusion zones to existing structures.
 - Added `BlockRandomTicks,` allowing modders to add new Random Ticks to any existing block with ease.
 - `BlockScheduledTick` behavior now runs prior to Vanilla scheduled ticks, and runs for all blocks instead of only those without defined Scheduled Ticks.
+- Added `StructureGenerationConditionApi,` allowing modders to define custom conditions under which structures can generate with a Boolean Supplier.

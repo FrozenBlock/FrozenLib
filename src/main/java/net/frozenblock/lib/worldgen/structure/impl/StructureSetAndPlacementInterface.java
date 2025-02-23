@@ -22,8 +22,13 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import java.util.List;
+import java.util.function.Supplier;
 
-public interface StructureAddExclusionInterface {
+public interface StructureSetAndPlacementInterface {
+
+	void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions);
+	void frozenLib$flushGenerationConditions();
 
 	void frozenLib$addExclusions(List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup);
+	void frozenLib$flushExclusions();
 }
