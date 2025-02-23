@@ -30,3 +30,5 @@ Put changelog here:
 - Wind can no longer return any non-zero value when on a non-FrozenLib server without the config option to override this behavior enabled.
 - Significantly cleaned up the Dripstone API and related mixins, removing edits that cause compatability issues in the process.
 - Added `StructurePlacementExclusionApi,` which lets you add exclusion zones to existing structures.
+- Added `BlockRandomTicks,` allowing modders to add new Random Ticks to any existing block with ease.
+- `BlockScheduledTick` behavior now runs prior to Vanilla scheduled ticks, and runs for all blocks instead of only those without defined Scheduled Ticks.
