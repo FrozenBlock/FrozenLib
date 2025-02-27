@@ -40,7 +40,7 @@ public abstract class SilentTicker extends Marker {
 	@Override
 	public void readAdditionalSaveData(CompoundTag compound) {
 		super.readAdditionalSaveData(compound);
-		this.ticks = compound.getInt("frozenlib_ticks");
+		this.ticks = compound.getIntOr("frozenlib_ticks", 0);
 	}
 
 	@Override

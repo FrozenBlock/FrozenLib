@@ -68,12 +68,9 @@ public class SaveableItemCooldowns {
 	@NotNull
 	public static List<SaveableCooldownInstance> readCooldowns(@NotNull CompoundTag tag) {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
-		if (tag.contains("FrozenLibSavedItemCooldowns", 9)) {
-			Logger logger = FrozenLibConstants.LOGGER;
-			SaveableCooldownInstance.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, tag.getList("FrozenLibSavedItemCooldowns", 10)))
-					.resultOrPartial(logger::error)
-					.ifPresent(saveableCooldownInstances::addAll);
-		}
+		SaveableCooldownInstance.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, tag.getListOrEmpty("FrozenLibSavedItemCooldowns")))
+			.resultOrPartial(FrozenLibConstants.LOGGER::error)
+			.ifPresent(saveableCooldownInstances::addAll);
 		return saveableCooldownInstances;
 	}
 

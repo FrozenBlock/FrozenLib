@@ -38,13 +38,11 @@ public class EntityScreenShakeManager {
 	}
 
 	public void load(@NotNull CompoundTag nbt) {
-		if (nbt.contains("frozenlib_screen_shakes", 9)) {
-			this.shakes.clear();
-			EntityScreenShake.CODEC.listOf()
-				.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenlib_screen_shakes", 10)))
-				.resultOrPartial(FrozenLibConstants.LOGGER::error)
-				.ifPresent(this.shakes::addAll);
-		}
+		this.shakes.clear();
+		EntityScreenShake.CODEC.listOf()
+			.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getListOrEmpty("frozenlib_screen_shakes")))
+			.resultOrPartial(FrozenLibConstants.LOGGER::error)
+			.ifPresent(this.shakes::addAll);
 	}
 
 	public void save(CompoundTag nbt) {

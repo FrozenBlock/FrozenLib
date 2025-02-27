@@ -42,13 +42,11 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
     }
 
     public void load(@NotNull CompoundTag nbt) {
-        if (nbt.contains("frozenlib_looping_fading_distance_sounds", 9)) {
-            this.sounds.clear();
-			FadingDistanceSoundLoopNBT.CODEC.listOf()
-				.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenlib_looping_fading_distance_sounds", 10)))
-				.resultOrPartial(FrozenLibConstants.LOGGER::error)
-				.ifPresent(this.sounds::addAll);
-        }
+		this.sounds.clear();
+		FadingDistanceSoundLoopNBT.CODEC.listOf()
+			.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getListOrEmpty("frozenlib_looping_fading_distance_sounds")))
+			.resultOrPartial(FrozenLibConstants.LOGGER::error)
+			.ifPresent(this.sounds::addAll);
     }
 
     public void save(CompoundTag nbt) {

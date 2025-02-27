@@ -117,10 +117,10 @@ public class SpottingIconManager {
 	}
 
 	public void load(@NotNull CompoundTag nbt) {
-		this.ticksToCheck = nbt.getInt("frozenlib_spotting_icon_predicate_cooldown");
+		this.ticksToCheck = nbt.getIntOr("frozenlib_spotting_icon_predicate_cooldown", 0);
 		if (nbt.contains("frozenlib_spotting_icons")) {
 			this.icon = null;
-			SpottingIcon.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getCompound("frozenlib_spotting_icons")))
+			SpottingIcon.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getCompoundOrEmpty("frozenlib_spotting_icons")))
 				.resultOrPartial(FrozenLibConstants.LOGGER::error)
 				.ifPresent(spottingIcon -> this.icon = spottingIcon);
 		}

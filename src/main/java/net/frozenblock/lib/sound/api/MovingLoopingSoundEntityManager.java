@@ -43,13 +43,11 @@ public class MovingLoopingSoundEntityManager {
     }
 
     public void load(@NotNull CompoundTag nbt) {
-        if (nbt.contains("frozenlib_looping_sounds", 9)) {
-            this.sounds.clear();
-			SoundLoopData.CODEC.listOf()
-				.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getList("frozenlib_looping_sounds", 10)))
-				.resultOrPartial(FrozenLibConstants.LOGGER::error)
-				.ifPresent(this.sounds::addAll);
-        }
+		this.sounds.clear();
+		SoundLoopData.CODEC.listOf()
+			.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getListOrEmpty("frozenlib_looping_sounds")))
+			.resultOrPartial(FrozenLibConstants.LOGGER::error)
+			.ifPresent(this.sounds::addAll);
     }
 
     public void save(CompoundTag nbt) {

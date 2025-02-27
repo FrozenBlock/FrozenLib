@@ -24,6 +24,7 @@ import com.mojang.serialization.Dynamic;
 import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import java.util.Collections;
 import java.util.Map;
+import java.util.Optional;
 import java.util.OptionalInt;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
@@ -97,8 +98,8 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 
 		// Minecraft fixer added by FrozenBlock
 		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			// Changed to OptionalInt by FrozenBlock
-			OptionalInt modDataVersion = getModMinecraftDataVersion(compound, entry.getKey());
+			// Changed to Optional by FrozenBlock
+			Optional<Integer> modDataVersion = getModMinecraftDataVersion(compound, entry.getKey());
 			DataFixerEntry dataFixerEntry = entry.getValue();
 
 			// Check implemented by FrozenBlock for performance.
@@ -107,15 +108,15 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 				current = dataFixerEntry.dataFixer().update(
 					DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
 					current,
-					modDataVersion.getAsInt(),
+					modDataVersion.get(),
 					dataFixerEntry.currentVersion()
 				);
 			}
 		}
 
         for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-			// Changed to OptionalInt by FrozenBlock
-            OptionalInt modDataVersion = getModDataVersion(compound, entry.getKey());
+			// Changed to Optional by FrozenBlock
+            Optional<Integer> modDataVersion = getModDataVersion(compound, entry.getKey());
             DataFixerEntry dataFixerEntry = entry.getValue();
 
 			// Check implemented by FrozenBlock for performance.
@@ -124,7 +125,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 				current = dataFixerEntry.dataFixer().update(
 					DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
 					current,
-					modDataVersion.getAsInt(),
+					modDataVersion.get(),
 					dataFixerEntry.currentVersion()
 				);
 			}

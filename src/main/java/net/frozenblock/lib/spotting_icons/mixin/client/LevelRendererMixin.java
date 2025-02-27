@@ -18,6 +18,7 @@
 package net.frozenblock.lib.spotting_icons.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import com.mojang.blaze3d.resource.ResourceHandle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.spotting_icons.impl.EntityRenderDispatcherWithIcon;
@@ -27,7 +28,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogParameters;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderBuffers;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.util.Mth;
@@ -47,9 +47,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
 public class LevelRendererMixin {
-	@Shadow
-	@Final
-	private RenderBuffers renderBuffers;
 	@Shadow
 	@Final
 	private EntityRenderDispatcher entityRenderDispatcher;
@@ -72,17 +69,17 @@ public class LevelRendererMixin {
 		ProfilerFiller profilerFiller,
 		Matrix4f matrix4f,
 		Matrix4f matrix4f2,
-		ResourceHandle resourceHandle,
-		ResourceHandle resourceHandle2,
-		ResourceHandle resourceHandle3,
+		ResourceHandle<RenderTarget> resourceHandle,
+		ResourceHandle<RenderTarget> resourceHandle2,
 		boolean bl,
 		Frustum frustum,
-		ResourceHandle resourceHandle4,
+		ResourceHandle<RenderTarget> resourceHandle3,
+		ResourceHandle<RenderTarget> resourceHandle4,
 		CallbackInfo info,
 		@Local(ordinal = 0) float deltaTime,
 		@Local PoseStack poseStack,
 		@Local(ordinal = 0) MultiBufferSource.BufferSource bufferSource
-		) {
+	) {
 		if (this.level != null) {
 			for (Entity entity : this.level.entitiesForRendering()) {
 				Vec3 vec3 = camera.getPosition();

@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.slf4j.Logger;
-import java.util.OptionalInt;
+import java.util.Optional;
 
 /**
  * Modified to work on Fabric
@@ -46,17 +46,17 @@ public abstract class QuiltDataFixesInternals {
     public record DataFixerEntry(DataFixer dataFixer, int currentVersion) {}
 
     @Contract(pure = true)
-    @Range(from = 0, to = Integer.MAX_VALUE) // Changed to OptionalInt by FrozenBlock
-    public static OptionalInt getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
+    @Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional by FrozenBlock
+    public static Optional<Integer> getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
 		String key = modId + "_DataVersion";
-        return compound.contains(key) ? OptionalInt.of(compound.getInt(modId + "_DataVersion")) : OptionalInt.empty();
+        return compound.contains(key) ? compound.getInt(modId + "_DataVersion") : Optional.empty();
     }
 
 	@Contract(pure = true)
-	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to OptionalInt by FrozenBlock
-	public static OptionalInt getModMinecraftDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
+	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional by FrozenBlock
+	public static Optional<Integer> getModMinecraftDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
 		String key = modId + "_DataVersion_Minecraft";
-		return compound.contains(key) ? OptionalInt.of(compound.getInt(modId + "_DataVersion_Minecraft")) : OptionalInt.empty();
+		return compound.contains(key) ? compound.getInt(modId + "_DataVersion_Minecraft") : Optional.empty();
 	}
 
     private static QuiltDataFixesInternals instance;

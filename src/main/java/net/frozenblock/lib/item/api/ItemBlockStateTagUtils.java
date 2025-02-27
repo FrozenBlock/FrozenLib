@@ -59,13 +59,12 @@ public class ItemBlockStateTagUtils {
 
 	@NotNull
 	private static CompoundTag getOrCreateBlockStateTag(@NotNull CompoundTag compoundTag) {
-		CompoundTag blockStateTag;
-		if (compoundTag.contains("BlockStateTag", Tag.TAG_COMPOUND)) {
-			blockStateTag = compoundTag.getCompound("BlockStateTag");
-		} else {
-			blockStateTag = new CompoundTag();
-			compoundTag.put("BlockStateTag", blockStateTag);
-		}
-		return blockStateTag;
+		return compoundTag.getCompound("BlockStateTag").orElseGet(
+			() -> {
+				CompoundTag newStateTag = new CompoundTag();
+				compoundTag.put("BlockStateTag", newStateTag);
+				return newStateTag;
+			}
+		);
 	}
 }
