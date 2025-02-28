@@ -26,7 +26,9 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
 import org.jetbrains.annotations.NotNull;
 
 public class FrozenLibBlockPredicateTypes {
-	public static final BlockPredicateType<SearchingBlockPredicate> SEARCH = register("search", SearchingBlockPredicate.CODEC);
+	public static final BlockPredicateType<SearchInDirectionBlockPredicate> SEARCH_IN_DIRECTION = register("search_in_direction", SearchInDirectionBlockPredicate.CODEC);
+	public static final BlockPredicateType<SearchInAreaBlockPredicate> SEARCH_IN_AREA = register("search_in_area", SearchInAreaBlockPredicate.CODEC);
+	public static final BlockPredicateType<TouchingBlockPredicate> TOUCHING = register("touching", TouchingBlockPredicate.CODEC);
 
 	public static void init() {
 	}
