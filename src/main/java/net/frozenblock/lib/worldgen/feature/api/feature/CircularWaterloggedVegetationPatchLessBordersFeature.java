@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.api.features;
+package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
 import java.util.HashSet;
@@ -30,15 +30,16 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-public class CircularLavaVegetationPatchLessBordersFeature extends VegetationPatchFeature {
+public class CircularWaterloggedVegetationPatchLessBordersFeature extends VegetationPatchFeature {
 
-	public CircularLavaVegetationPatchLessBordersFeature(Codec<VegetationPatchConfiguration> codec) {
+	public CircularWaterloggedVegetationPatchLessBordersFeature(Codec<VegetationPatchConfiguration> codec) {
 		super(codec);
 	}
 
@@ -112,7 +113,7 @@ public class CircularLavaVegetationPatchLessBordersFeature extends VegetationPat
 
 		while (var11.hasNext()) {
 			blockPos = var11.next();
-			level.setBlock(blockPos, Blocks.LAVA.defaultBlockState(), 2);
+			level.setBlock(blockPos, Blocks.WATER.defaultBlockState(), 2);
 		}
 
 		return set2;
@@ -129,16 +130,25 @@ public class CircularLavaVegetationPatchLessBordersFeature extends VegetationPat
 	private static boolean isExposedDirection(@NotNull WorldGenLevel level, BlockPos pos, @NotNull MutableBlockPos mutablePos, Direction direction) {
 		mutablePos.setWithOffset(pos, direction);
 		BlockState state = level.getBlockState(mutablePos);
-		return !state.isFaceSturdy(level, mutablePos, direction.getOpposite()) && !state.is(Blocks.LAVA);
+		return !state.isFaceSturdy(level, mutablePos, direction.getOpposite()) && !state.is(Blocks.WATER);
 	}
 
 	@Override
 	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, @NotNull BlockPos pos) {
-		return super.placeVegetation(level, config, chunkGenerator, random, pos.below());
+		if (super.placeVegetation(level, config, chunkGenerator, random, pos.below())) {
+			BlockState blockState = level.getBlockState(pos);
+			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && !(Boolean) blockState.getValue(BlockStateProperties.WATERLOGGED)) {
+				level.setBlock(pos, blockState.setValue(BlockStateProperties.WATERLOGGED, true), 2);
+			}
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
-	protected boolean placeGround(WorldGenLevel level, VegetationPatchConfiguration config, Predicate<BlockState> replaceableblocks, RandomSource random, MutableBlockPos mutablePos, int maxDistance) {
+	protected boolean placeGround(WorldGenLevel level, VegetationPatchConfiguration config, Predicate<BlockState> replaceableblocks, RandomSource random, BlockPos.MutableBlockPos mutablePos, int maxDistance) {
 		for (int i = 0; i < maxDistance; ++i) {
 			BlockState blockState2 = level.getBlockState(mutablePos);
 			if (!replaceableblocks.test(blockState2)) {

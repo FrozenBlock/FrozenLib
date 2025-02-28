@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.api.features;
+package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
 import java.util.HashSet;
@@ -30,16 +30,15 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-public class CircularWaterloggedVegetationPatchLessBordersFeature extends VegetationPatchFeature {
+public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 
-	public CircularWaterloggedVegetationPatchLessBordersFeature(Codec<VegetationPatchConfiguration> codec) {
+	public CircularLavaVegetationPatchFeature(Codec<VegetationPatchConfiguration> codec) {
 		super(codec);
 	}
 
@@ -64,27 +63,35 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 		Set<BlockPos> set = new HashSet<>();
 
 		for (int i = -xRadius; i <= xRadius; ++i) {
+			boolean bl = i == -xRadius || i == xRadius;
+
 			for (int j = -zRadius; j <= zRadius; ++j) {
-				mutableBlockPos.setWithOffset(pos, i, 0, j);
+				boolean bl2 = j == -zRadius || j == zRadius;
+				boolean bl3 = bl || bl2;
+				boolean bl4 = bl && bl2;
+				boolean bl5 = bl3 && !bl4;
+				if (!bl4 && (!bl5 || config.extraEdgeColumnChance != 0.0F && !(random.nextFloat() > config.extraEdgeColumnChance))) {
+					mutableBlockPos.setWithOffset(pos, i, 0, j);
 
-				if (Math.sqrt(mutableBlockPos.distSqr(pos)) <= xRadius) {
-					int k;
-					for (k = 0; level.isStateAtPosition(mutableBlockPos, BlockBehaviour.BlockStateBase::isAir) && k < config.verticalRange; ++k) {
-						mutableBlockPos.move(direction);
-					}
+					if (Math.sqrt(mutableBlockPos.distSqr(pos)) <= xRadius) {
+						int k;
+						for (k = 0; level.isStateAtPosition(mutableBlockPos, BlockBehaviour.BlockStateBase::isAir) && k < config.verticalRange; ++k) {
+							mutableBlockPos.move(direction);
+						}
 
-					for (k = 0; level.isStateAtPosition(mutableBlockPos, (statex) -> !statex.isAir()) && k < config.verticalRange; ++k) {
-						mutableBlockPos.move(direction2);
-					}
+						for (k = 0; level.isStateAtPosition(mutableBlockPos, (statex) -> !statex.isAir()) && k < config.verticalRange; ++k) {
+							mutableBlockPos.move(direction2);
+						}
 
-					mutableBlockPos2.setWithOffset(mutableBlockPos, config.surface.getDirection());
-					BlockState blockState = level.getBlockState(mutableBlockPos2);
-					if (level.isEmptyBlock(mutableBlockPos) && blockState.isFaceSturdy(level, mutableBlockPos2, config.surface.getDirection().getOpposite())) {
-						int l = config.depth.sample(random) + (config.extraBottomBlockChance > 0.0F && random.nextFloat() < config.extraBottomBlockChance ? 1 : 0);
-						BlockPos blockPos = mutableBlockPos2.immutable();
-						boolean bl6 = this.placeGround(level, config, state, random, mutableBlockPos2, l);
-						if (bl6) {
-							set.add(blockPos);
+						mutableBlockPos2.setWithOffset(mutableBlockPos, config.surface.getDirection());
+						BlockState blockState = level.getBlockState(mutableBlockPos2);
+						if (level.isEmptyBlock(mutableBlockPos) && blockState.isFaceSturdy(level, mutableBlockPos2, config.surface.getDirection().getOpposite())) {
+							int l = config.depth.sample(random) + (config.extraBottomBlockChance > 0.0F && random.nextFloat() < config.extraBottomBlockChance ? 1 : 0);
+							BlockPos blockPos = mutableBlockPos2.immutable();
+							boolean bl6 = this.placeGround(level, config, state, random, mutableBlockPos2, l);
+							if (bl6) {
+								set.add(blockPos);
+							}
 						}
 					}
 				}
@@ -113,49 +120,23 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 
 		while (var11.hasNext()) {
 			blockPos = var11.next();
-			level.setBlock(blockPos, Blocks.WATER.defaultBlockState(), 2);
+			level.setBlock(blockPos, Blocks.LAVA.defaultBlockState(), 2);
 		}
 
 		return set2;
 	}
 
 	private static boolean isExposed(WorldGenLevel level, BlockPos pos, MutableBlockPos mutablePos) {
-		return isExposedDirection(level, pos, mutablePos, Direction.NORTH)
-			|| isExposedDirection(level, pos, mutablePos, Direction.EAST)
-			|| isExposedDirection(level, pos, mutablePos, Direction.SOUTH)
-			|| isExposedDirection(level, pos, mutablePos, Direction.WEST)
-			|| isExposedDirection(level, pos, mutablePos, Direction.DOWN);
+		return isExposedDirection(level, pos, mutablePos, Direction.NORTH) || isExposedDirection(level, pos, mutablePos, Direction.EAST) || isExposedDirection(level, pos, mutablePos, Direction.SOUTH) || isExposedDirection(level, pos, mutablePos, Direction.WEST) || isExposedDirection(level, pos, mutablePos, Direction.DOWN);
 	}
 
 	private static boolean isExposedDirection(@NotNull WorldGenLevel level, BlockPos pos, @NotNull MutableBlockPos mutablePos, Direction direction) {
 		mutablePos.setWithOffset(pos, direction);
-		BlockState state = level.getBlockState(mutablePos);
-		return !state.isFaceSturdy(level, mutablePos, direction.getOpposite()) && !state.is(Blocks.WATER);
+		return !level.getBlockState(mutablePos).isFaceSturdy(level, mutablePos, direction.getOpposite());
 	}
 
 	@Override
 	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, @NotNull BlockPos pos) {
-		if (super.placeVegetation(level, config, chunkGenerator, random, pos.below())) {
-			BlockState blockState = level.getBlockState(pos);
-			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && !(Boolean) blockState.getValue(BlockStateProperties.WATERLOGGED)) {
-				level.setBlock(pos, blockState.setValue(BlockStateProperties.WATERLOGGED, true), 2);
-			}
-
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	@Override
-	protected boolean placeGround(WorldGenLevel level, VegetationPatchConfiguration config, Predicate<BlockState> replaceableblocks, RandomSource random, BlockPos.MutableBlockPos mutablePos, int maxDistance) {
-		for (int i = 0; i < maxDistance; ++i) {
-			BlockState blockState2 = level.getBlockState(mutablePos);
-			if (!replaceableblocks.test(blockState2)) {
-				return i != 0;
-			}
-			mutablePos.move(config.surface.getDirection());
-		}
-		return true;
+		return super.placeVegetation(level, config, chunkGenerator, random, pos.below());
 	}
 }

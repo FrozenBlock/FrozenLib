@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.api.features;
+package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;

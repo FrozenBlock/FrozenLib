@@ -15,26 +15,25 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.api.features;
+package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.worldgen.feature.api.FrozenLibFeatureUtils;
-import net.frozenblock.lib.worldgen.feature.api.features.config.PathFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.FadingDiskFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class NoisePathNEARWaterFeature extends NoisePathFeature {
+public class FadingDiskScheduleTickFeature extends FadingDiskFeature {
 
-	public NoisePathNEARWaterFeature(Codec<PathFeatureConfig> codec) {
+	public FadingDiskScheduleTickFeature(Codec<FadingDiskFeatureConfig> codec) {
 		super(codec);
 	}
 
 	@Override
 	public boolean placeBlock(@NotNull WorldGenLevel level, BlockState state, BlockPos pos) {
-		if (!FrozenLibFeatureUtils.isWaterNearby(level, pos, 2)) return false;
-		return super.placeBlock(level, state, pos);
+		super.placeBlock(level, state, pos);
+		level.scheduleTick(pos, state.getBlock(), 1);
+		return true;
 	}
-
 }

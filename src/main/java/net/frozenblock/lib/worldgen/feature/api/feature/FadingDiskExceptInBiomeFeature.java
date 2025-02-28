@@ -15,12 +15,12 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.api.features;
+package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
 import java.util.concurrent.atomic.AtomicBoolean;
 import net.frozenblock.lib.worldgen.feature.api.FrozenLibFeatureUtils;
-import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskWithBiomeFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.FadingDiskWithBiomeFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;

@@ -15,17 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.api.features.config;
+package net.frozenblock.lib.worldgen.feature.api.feature.noise_path.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.List;
-import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
-import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
-public record ComboFeatureConfig(List<Holder<PlacedFeature>> features) implements FeatureConfiguration {
-	public static final Codec<ComboFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-		PlacedFeature.CODEC.listOf().fieldOf("features").forGetter(vegetationPatchConfiguration -> vegetationPatchConfiguration.features)
-	).apply(instance, ComboFeatureConfig::new));
+public record NoisePathFeatureConfig(
+	NoiseBandPlacement noiseBandPlacement,
+	int placementRadius
+) implements FeatureConfiguration {
+	public static final Codec<NoisePathFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+		NoiseBandPlacement.CODEC.fieldOf("noise_band_placement").forGetter(config -> config.noiseBandPlacement),
+		Codec.intRange(1, 12).fieldOf("placement_radius").orElse(10).forGetter(config -> config.placementRadius)
+	).apply(instance, NoisePathFeatureConfig::new));
 }

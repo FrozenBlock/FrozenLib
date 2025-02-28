@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.api.features;
+package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
 import java.util.HashSet;
@@ -30,15 +30,16 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 import org.jetbrains.annotations.NotNull;
 
-public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
+public class CircularWaterloggedVegetationPatchFeature extends VegetationPatchFeature {
 
-	public CircularLavaVegetationPatchFeature(Codec<VegetationPatchConfiguration> codec) {
+	public CircularWaterloggedVegetationPatchFeature(Codec<VegetationPatchConfiguration> codec) {
 		super(codec);
 	}
 
@@ -120,7 +121,7 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 
 		while (var11.hasNext()) {
 			blockPos = var11.next();
-			level.setBlock(blockPos, Blocks.LAVA.defaultBlockState(), 2);
+			level.setBlock(blockPos, Blocks.WATER.defaultBlockState(), 2);
 		}
 
 		return set2;
@@ -137,6 +138,15 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 
 	@Override
 	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, @NotNull BlockPos pos) {
-		return super.placeVegetation(level, config, chunkGenerator, random, pos.below());
+		if (super.placeVegetation(level, config, chunkGenerator, random, pos.below())) {
+			BlockState blockState = level.getBlockState(pos);
+			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && !(Boolean) blockState.getValue(BlockStateProperties.WATERLOGGED)) {
+				level.setBlock(pos, blockState.setValue(BlockStateProperties.WATERLOGGED, true), 2);
+			}
+
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

@@ -18,43 +18,34 @@
 package net.frozenblock.lib.worldgen.feature.api;
 
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.worldgen.feature.api.features.CircularLavaVegetationPatchFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.CircularLavaVegetationPatchLessBordersFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.CircularWaterloggedVegetationPatchFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.CircularWaterloggedVegetationPatchLessBordersFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.ColumnWithDiskFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.ComboFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.DownwardsColumnFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskCarpetFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskExceptInBiomeFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.FadingDiskScheduleTickFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.NoisePathFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.NoisePathNEARWaterFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.NoisePathScheduleTickFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.NoisePathSwapUnderFluidFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.RequiresAirOrWaterInAreaNoisePathFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.SimpleBlockScheduleTickFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.UpwardsColumnFeature;
-import net.frozenblock.lib.worldgen.feature.api.features.config.AirOrWaterInAreaPathFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnWithDiskFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.features.config.ComboFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskCarpetFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskWithBiomeFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.features.config.PathFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.features.config.PathSwapUnderFluidFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.CircularLavaVegetationPatchFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.CircularLavaVegetationPatchLessBordersFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.CircularWaterloggedVegetationPatchFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.CircularWaterloggedVegetationPatchLessBordersFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.ColumnWithDiskFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.ComboFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.DownwardsColumnFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.FadingDiskCarpetFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.FadingDiskExceptInBiomeFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.FadingDiskFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.FadingDiskScheduleTickFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.SimpleBlockScheduleTickFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.UpwardsColumnFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnWithDiskFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.ComboFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.FadingDiskCarpetFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.FadingDiskFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.FadingDiskWithBiomeFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.noise_path.NoisePathFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.noise_path.config.NoisePathFeatureConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 
 public class FrozenLibFeatures {
-	public static final RequiresAirOrWaterInAreaNoisePathFeature REQUIRES_AIR_OR_WATER_IN_AREA_NOISE_PATH_FEATURE = new RequiresAirOrWaterInAreaNoisePathFeature(AirOrWaterInAreaPathFeatureConfig.CODEC);
-	public static final NoisePathFeature NOISE_PATH_FEATURE = new NoisePathFeature(PathFeatureConfig.CODEC);
-	public static final NoisePathSwapUnderFluidFeature NOISE_PATH_SWAP_UNDER_FLUID_FEATURE = new NoisePathSwapUnderFluidFeature(PathSwapUnderFluidFeatureConfig.CODEC);
-	public static final NoisePathNEARWaterFeature NOISE_PATH_NEAR_WATER_FEATURE = new NoisePathNEARWaterFeature(PathFeatureConfig.CODEC);
+	public static final NoisePathFeature NOISE_PATH_FEATURE = new NoisePathFeature(NoisePathFeatureConfig.CODEC);
 	public static final ColumnWithDiskFeature COLUMN_WITH_DISK_FEATURE = new ColumnWithDiskFeature(ColumnWithDiskFeatureConfig.CODEC);
 	public static final UpwardsColumnFeature UPWARDS_COLUMN_FEATURE = new UpwardsColumnFeature(ColumnFeatureConfig.CODEC);
 	public static final DownwardsColumnFeature DOWNWARDS_COLUMN_FEATURE = new DownwardsColumnFeature(ColumnFeatureConfig.CODEC);
@@ -67,14 +58,10 @@ public class FrozenLibFeatures {
 	public static final CircularLavaVegetationPatchFeature CIRCULAR_LAVA_VEGETATION_PATCH = new CircularLavaVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularLavaVegetationPatchLessBordersFeature CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS = new CircularLavaVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
 	public static final SimpleBlockScheduleTickFeature SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE = new SimpleBlockScheduleTickFeature(SimpleBlockConfiguration.CODEC);
-	public static final NoisePathScheduleTickFeature NOISE_PATH_SCHEDULE_TICK_FEATURE = new NoisePathScheduleTickFeature(PathFeatureConfig.CODEC);
 	public static final ComboFeature COMBO_FEATURE = new ComboFeature(ComboFeatureConfig.CODEC);
 
 	public static void init() {
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("requires_air_or_water_in_area_noise_path_feature"), REQUIRES_AIR_OR_WATER_IN_AREA_NOISE_PATH_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_feature"), NOISE_PATH_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_swap_under_fluid_feature"), NOISE_PATH_SWAP_UNDER_FLUID_FEATURE);;
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_near_water_feature"), NOISE_PATH_NEAR_WATER_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column_with_disk_feature"), COLUMN_WITH_DISK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("upwards_column"), UPWARDS_COLUMN_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("downwards_column"), DOWNWARDS_COLUMN_FEATURE);
@@ -87,7 +74,6 @@ public class FrozenLibFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch"), CIRCULAR_LAVA_VEGETATION_PATCH);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch_less_borders"), CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("simple_block_schedule_tick"), SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path_schedule_tick_feature"), NOISE_PATH_SCHEDULE_TICK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("combo_feature"), COMBO_FEATURE);
 	}
 

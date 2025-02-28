@@ -15,25 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.api.features;
+package net.frozenblock.lib.worldgen.feature.api.feature.config;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.worldgen.feature.api.features.config.FadingDiskFeatureConfig;
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.List;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
-public class FadingDiskScheduleTickFeature extends FadingDiskFeature {
-
-	public FadingDiskScheduleTickFeature(Codec<FadingDiskFeatureConfig> codec) {
-		super(codec);
-	}
-
-	@Override
-	public boolean placeBlock(@NotNull WorldGenLevel level, BlockState state, BlockPos pos) {
-		super.placeBlock(level, state, pos);
-		level.scheduleTick(pos, state.getBlock(), 1);
-		return true;
-	}
+public record ComboFeatureConfig(List<Holder<PlacedFeature>> features) implements FeatureConfiguration {
+	public static final Codec<ComboFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+		PlacedFeature.CODEC.listOf().fieldOf("features").forGetter(vegetationPatchConfiguration -> vegetationPatchConfiguration.features)
+	).apply(instance, ComboFeatureConfig::new));
 }

@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.feature.api.features;
+package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.worldgen.feature.api.features.config.ColumnFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnFeatureConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.util.RandomSource;
@@ -30,9 +30,9 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 
-public class DownwardsColumnFeature extends Feature<ColumnFeatureConfig> {
+public class UpwardsColumnFeature extends Feature<ColumnFeatureConfig> {
 
-	public DownwardsColumnFeature(Codec<ColumnFeatureConfig> codec) {
+	public UpwardsColumnFeature(Codec<ColumnFeatureConfig> codec) {
 		super(codec);
 	}
 
@@ -46,18 +46,18 @@ public class DownwardsColumnFeature extends Feature<ColumnFeatureConfig> {
 		int bx = blockPos.getX();
 		int bz = blockPos.getZ();
 		int by = blockPos.getY();
-		int height = -context.config().height().sample(random);
+		int height = context.config().height().sample(random);
 		HolderSet<Block> replaceableBlocks = context.config().replaceableBlocks();
-		BlockState placeState = context.config().state();
+		BlockState placementState = context.config().state();
 
-		for (int y = 0; y > height; y--) {
+		for (int y = 0; y < height; y++) {
 			BlockState blockState = level.getBlockState(mutable);
 			if (replaceableBlocks.contains(blockState.getBlockHolder())
 				|| blockState.isAir()
 				| blockState.getFluidState() != Fluids.EMPTY.defaultFluidState()
 			) {
 				bl = true;
-				level.setBlock(mutable, placeState, Block.UPDATE_CLIENTS);
+				level.setBlock(mutable, placementState, Block.UPDATE_ALL);
 				mutable.set(bx, by + y, bz);
 			} else {
 				mutable.set(bx, by + y, bz);

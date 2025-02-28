@@ -59,9 +59,7 @@ public class EasyNoiseSampler {
 
     public static double sample(ImprovedNoise sampler, Vec3i pos, double multiplier, boolean multiplyY, boolean useY) {
         if (useY) {
-            if (multiplyY) {
-                return sampler.noise(pos.getX() * multiplier, pos.getY() * multiplier, pos.getZ() * multiplier);
-            }
+            if (multiplyY) return sampler.noise(pos.getX() * multiplier, pos.getY() * multiplier, pos.getZ() * multiplier);
             return sampler.noise(pos.getX() * multiplier, pos.getY(), pos.getZ() * multiplier);
         }
         return sampler.noise(pos.getX() * multiplier, 64, pos.getZ() * multiplier);
@@ -73,9 +71,7 @@ public class EasyNoiseSampler {
 
 	public static double sample(ImprovedNoise sampler, Vec3 pos, double multiplier, boolean multiplyY, boolean useY) {
 		if (useY) {
-			if (multiplyY) {
-				return sampler.noise(pos.x() * multiplier, pos.y() * multiplier, pos.z() * multiplier);
-			}
+			if (multiplyY) return sampler.noise(pos.x() * multiplier, pos.y() * multiplier, pos.z() * multiplier);
 			return sampler.noise(pos.x() * multiplier, pos.y(), pos.z() * multiplier);
 		}
 		return sampler.noise(pos.x() * multiplier, 64, pos.z() * multiplier);
