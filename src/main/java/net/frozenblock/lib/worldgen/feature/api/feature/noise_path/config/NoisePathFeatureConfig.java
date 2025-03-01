@@ -27,6 +27,6 @@ public record NoisePathFeatureConfig(
 ) implements FeatureConfiguration {
 	public static final Codec<NoisePathFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		NoiseBandPlacement.CODEC.fieldOf("noise_band_placement").forGetter(config -> config.noiseBandPlacement),
-		Codec.intRange(1, 12).fieldOf("placement_radius").orElse(10).forGetter(config -> config.placementRadius)
+		Codec.intRange(1, 16).fieldOf("placement_radius").orElse(10).forGetter(config -> config.placementRadius)
 	).apply(instance, NoisePathFeatureConfig::new));
 }

@@ -23,8 +23,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public class SearchInDirectionBlockPredicate implements BlockPredicate {
@@ -76,6 +78,16 @@ public class SearchInDirectionBlockPredicate implements BlockPredicate {
 
 	public static @NotNull SearchInDirectionBlockPredicate allBelowMatch(BlockPredicate blockPredicate, int searchSteps) {
 		return new SearchInDirectionBlockPredicate(blockPredicate, searchSteps, Direction.UP, true);
+	}
+
+	@Contract("_ -> new")
+	public static @NotNull SearchInDirectionBlockPredicate hasWaterAbove(int searchSteps) {
+		return anyAboveMatch(BlockPredicate.matchesBlocks(Blocks.WATER), searchSteps);
+	}
+
+	@Contract("_ -> new")
+	public static @NotNull SearchInDirectionBlockPredicate hasLavaAbove(int searchSteps) {
+		return anyAboveMatch(BlockPredicate.matchesBlocks(Blocks.LAVA), searchSteps);
 	}
 
 	@Override
