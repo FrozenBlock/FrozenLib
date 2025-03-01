@@ -60,12 +60,12 @@ public class FadingDiskExceptInBiomeFeature extends Feature<FadingDiskWithBiomeF
 			for (int z = bz - radius; z <= bz + radius; z++) {
 				if (useHeightMapAndNotCircular) {
 					double distance = Math.pow((double) bx - x, 2) + Math.pow((double) bz - z, 2);
-					success.set(placeAtPos(level, config, origin, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z) - 1, z, distance) || success.get());
+					success.set(placeAtPos(level, config, origin, random, radius, mutableDisk, x, level.getHeight(heightmap, x, z) - 1, z, distance, true) || success.get());
 				} else {
 					int maxY = by + radius;
 					for (int y = by - radius; y <= maxY; y++) {
 						double distance = Math.pow((double) bx - x, 2) + Math.pow((double) by - y, 2) + Math.pow((double) bz - z, 2);
-						success.set(placeAtPos(level, config, origin, random, radius, mutableDisk, x, y, z, distance) || success.get());
+						success.set(placeAtPos(level, config, origin, random, radius, mutableDisk, x, y, z, distance, false) || success.get());
 					}
 				}
 			}
@@ -84,12 +84,13 @@ public class FadingDiskExceptInBiomeFeature extends Feature<FadingDiskWithBiomeF
 		int x,
 		int y,
 		int z,
-		double distance
+		double distance,
+		boolean usingHeightmap
 	) {
 		if (distance < Math.pow(radius, 2)) {
 			mutableDisk.set(x, y, z);
 			BlockState state = level.getBlockState(mutableDisk);
-			if (FrozenLibFeatureUtils.isBlockExposed(level, mutableDisk)) {
+			if (usingHeightmap || FrozenLibFeatureUtils.isBlockExposed(level, mutableDisk)) {
 				boolean inner = mutableDisk.closerThan(origin, radius * config.innerChance());
 				boolean fade = !inner && !mutableDisk.closerThan(origin, radius * config.fadeStartDistancePercent());
 				if (random.nextFloat() < config.placementChance()) {
