@@ -50,7 +50,10 @@ public class NoiseBandBlockPlacement {
 				.forGetter(config -> config.replacementBlockPredicate),
 			BlockPredicate.CODEC
 				.fieldOf("searching_block_predicate")
-				.forGetter(config -> config.searchingBlockPredicate)
+				.forGetter(config -> config.searchingBlockPredicate),
+			Codec.INT
+				.lenientOptionalFieldOf("vertical_placement_offset", 0)
+				.forGetter(config -> config.verticalPlacementOffset)
 		).apply(instance, NoiseBandBlockPlacement::new)
 	);
 
@@ -61,6 +64,7 @@ public class NoiseBandBlockPlacement {
 	private final boolean scheduleTickOnPlacement;
 	private final BlockPredicate replacementBlockPredicate;
 	private final BlockPredicate searchingBlockPredicate;
+	private final int verticalPlacementOffset;
 
 	public NoiseBandBlockPlacement(
 		BlockStateProvider blockStateProvider,
@@ -69,7 +73,8 @@ public class NoiseBandBlockPlacement {
 		float placementChance,
 		boolean scheduleTickOnPlacement,
 		BlockPredicate replacementBlockPredicate,
-		BlockPredicate searchingBlockPredicate
+		BlockPredicate searchingBlockPredicate,
+		int verticalPlacementOffset
 	) {
 		this.blockStateProvider = blockStateProvider;
 		this.minNoiseThreshold = minNoiseThreshold;
@@ -78,16 +83,18 @@ public class NoiseBandBlockPlacement {
 		this.scheduleTickOnPlacement = scheduleTickOnPlacement;
 		this.replacementBlockPredicate = replacementBlockPredicate;
 		this.searchingBlockPredicate = searchingBlockPredicate;
+		this.verticalPlacementOffset = verticalPlacementOffset;
 	}
 
 	public boolean generate(
 		WorldGenLevel level,
-		BlockPos pos,
+		BlockPos.MutableBlockPos pos,
 		RandomSource random,
 		double sampleOutput
 	) {
 		if (sampleOutput >= this.minNoiseThreshold && sampleOutput <= this.maxNoiseThreshold) {
 			if (random.nextFloat() <= this.placementChance) {
+				pos.move(0, this.verticalPlacementOffset, 0);
 				if (this.replacementBlockPredicate.test(level, pos)) {
 					if (this.searchingBlockPredicate.test(level, pos)) {
 						BlockState state = this .blockStateProvider.getState(random, pos);
@@ -109,6 +116,7 @@ public class NoiseBandBlockPlacement {
 		private boolean scheduleTickOnPlacement = false;
 		private BlockPredicate replacementBlockPredicate;
 		private BlockPredicate searchingBlockPredicate;
+		private int verticalPlacementOffset = 0;
 
 		public Builder(BlockStateProvider blockStateProvider) {
 			this.blockStateProvider = blockStateProvider;
@@ -150,6 +158,11 @@ public class NoiseBandBlockPlacement {
 			return this;
 		}
 
+		public Builder verticalPlacementOffset(int verticalPlacementOffset) {
+			this.verticalPlacementOffset = verticalPlacementOffset;
+			return this;
+		}
+
 		public NoiseBandBlockPlacement build() {
 			if (this.searchingBlockPredicate == null) throw new IllegalArgumentException("searchingBlockPredicate cannot be null for NoiseBandBlockPlacement!");
 			if (this.replacementBlockPredicate == null) throw new IllegalArgumentException("replacementBlockPredicate cannot be null for NoiseBandBlockPlacement!");
@@ -160,7 +173,8 @@ public class NoiseBandBlockPlacement {
 				this.placementChance,
 				this.scheduleTickOnPlacement,
 				this.replacementBlockPredicate,
-				this.searchingBlockPredicate
+				this.searchingBlockPredicate,
+				this.verticalPlacementOffset
 			);
 		}
 	}

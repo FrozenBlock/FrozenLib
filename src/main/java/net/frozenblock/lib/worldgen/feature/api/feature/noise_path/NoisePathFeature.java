@@ -105,7 +105,7 @@ public class NoisePathFeature extends Feature<NoisePathFeatureConfig> {
 
 	public boolean attemptPlaceForAllBlockPlacements(
 		WorldGenLevel level,
-		BlockPos pos,
+		BlockPos.MutableBlockPos pos,
 		RandomSource random,
 		@NotNull List<NoiseBandBlockPlacement> blockPlacements,
 		ImprovedNoise sampler,
