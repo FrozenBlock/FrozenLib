@@ -52,12 +52,13 @@ public class ColumnFeature extends Feature<ColumnFeatureConfig> {
 
 		BlockPos.MutableBlockPos mutable = blockPos.mutable();
 		for (int step = 0; step < length; step++) {
-			if (replaceable.test(level, mutable.move(direction))) {
+			if (replaceable.test(level, mutable)) {
 				generated = true;
 				level.setBlock(mutable, blockStateProvider.getState(random, mutable), Block.UPDATE_ALL);
 			} else if (stopWhenEncounteringUnreplaceableBlock) {
 				return generated;
 			}
+			mutable.move(direction);
 		}
 		return generated;
 	}
