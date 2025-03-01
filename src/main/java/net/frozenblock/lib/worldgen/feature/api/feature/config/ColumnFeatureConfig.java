@@ -19,19 +19,25 @@ package net.frozenblock.lib.worldgen.feature.api.feature.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Direction;
 import net.minecraft.util.valueproviders.IntProvider;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record ColumnFeatureConfig(BlockState state, IntProvider height, HolderSet<Block> replaceableBlocks) implements FeatureConfiguration {
-	public static final Codec<ColumnFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
+public record ColumnFeatureConfig(
+	BlockStateProvider blockStateProvider,
+	BlockPredicate replaceable,
+	IntProvider length,
+	Direction direction,
+	boolean stopWhenEncounteringUnreplaceableBlock
+) implements FeatureConfiguration {
+	public static final Codec<ColumnFeatureConfig> CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
-			BlockState.CODEC.fieldOf("state").forGetter((config) -> config.state),
-			IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter((config) -> config.height),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter((config) -> config.replaceableBlocks)
+			BlockStateProvider.CODEC.fieldOf("block_state_provider").forGetter(config -> config.blockStateProvider),
+			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replaceable),
+			IntProvider.NON_NEGATIVE_CODEC.fieldOf("length").forGetter((config) -> config.length),
+			Direction.CODEC.fieldOf("direction").forGetter(config -> config.direction),
+			Codec.BOOL.lenientOptionalFieldOf("stop_when_encountering_unreplaceable_block", false).forGetter(config -> config.stopWhenEncounteringUnreplaceableBlock)
 		).apply(instance, ColumnFeatureConfig::new));
 }

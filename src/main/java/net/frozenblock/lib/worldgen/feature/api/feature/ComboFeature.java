@@ -44,8 +44,7 @@ public class ComboFeature extends Feature<ComboFeatureConfig> {
 		ChunkGenerator chunkGenerator = context.chunkGenerator();
 		boolean placedAny = false;
 		for (Holder<PlacedFeature> feature : config.features()) {
-			if (this.place(worldGenLevel, feature, chunkGenerator, randomSource, blockPos))
-				placedAny = true;
+			if (this.place(worldGenLevel, feature, chunkGenerator, randomSource, blockPos)) placedAny = true;
 		}
 		return placedAny;
 	}

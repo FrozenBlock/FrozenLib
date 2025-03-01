@@ -23,7 +23,6 @@ Put changelog here:
 - Flyby sounds can now be properly sent to the client.
 - Combined the `storage` and `block` packages.
 - Removed a few unnecessary APIs.
-- Added the `requires_air_or_water_in_area_noise_path_feature,` which only places blocks when Air or Water is within a certain distance.
 - Removed many duplicate worldgen feature implementations, now just relying on HolderSets.
 - Cleaned up existing worldgen feature configurations and features.
 - Disconnecting from a FrozenLib server and joining a non-FrozenLib server afterwards no longer leaves client Wind running.
@@ -33,3 +32,6 @@ Put changelog here:
 - Added `BlockRandomTicks,` allowing modders to add new Random Ticks to any existing block with ease.
 - `BlockScheduledTick` behavior now runs prior to Vanilla scheduled ticks, and runs for all blocks instead of only those without defined Scheduled Ticks.
 - Added `StructureGenerationConditionApi,` allowing modders to define custom conditions under which structures can generate with a Boolean Supplier.
+- Completely rewrote the Noise Path worldgen feature, being much more extensive and configurable.
+  - This has resulted in two other features being removed, as their behavior is now possible to achieve with the base feature.
+- Replaced the Upwards and Downwards column worldgen features with a single column feature, with a more robust config.

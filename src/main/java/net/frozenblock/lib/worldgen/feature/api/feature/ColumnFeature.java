@@ -20,50 +20,46 @@ package net.frozenblock.lib.worldgen.feature.api.feature;
 import com.mojang.serialization.Codec;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnFeatureConfig;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderSet;
+import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import org.jetbrains.annotations.NotNull;
 
-public class UpwardsColumnFeature extends Feature<ColumnFeatureConfig> {
+public class ColumnFeature extends Feature<ColumnFeatureConfig> {
 
-	public UpwardsColumnFeature(Codec<ColumnFeatureConfig> codec) {
+	public ColumnFeature(Codec<ColumnFeatureConfig> codec) {
 		super(codec);
 	}
 
 	@Override
 	public boolean place(@NotNull FeaturePlaceContext<ColumnFeatureConfig> context) {
-		boolean bl = false;
+		boolean generated = false;
 		BlockPos blockPos = context.origin();
 		WorldGenLevel level = context.level();
 		RandomSource random = level.getRandom();
-		BlockPos.MutableBlockPos mutable = blockPos.mutable();
-		int bx = blockPos.getX();
-		int bz = blockPos.getZ();
-		int by = blockPos.getY();
-		int height = context.config().height().sample(random);
-		HolderSet<Block> replaceableBlocks = context.config().replaceableBlocks();
-		BlockState placementState = context.config().state();
 
-		for (int y = 0; y < height; y++) {
-			BlockState blockState = level.getBlockState(mutable);
-			if (replaceableBlocks.contains(blockState.getBlockHolder())
-				|| blockState.isAir()
-				| blockState.getFluidState() != Fluids.EMPTY.defaultFluidState()
-			) {
-				bl = true;
-				level.setBlock(mutable, placementState, Block.UPDATE_ALL);
-				mutable.set(bx, by + y, bz);
-			} else {
-				mutable.set(bx, by + y, bz);
+		ColumnFeatureConfig config = context.config();
+		int length = config.length().sample(random);
+		BlockPredicate replaceable = config.replaceable();
+		BlockStateProvider blockStateProvider = config.blockStateProvider();
+		Direction direction = config.direction();
+		boolean stopWhenEncounteringUnreplaceableBlock = config.stopWhenEncounteringUnreplaceableBlock();
+
+		BlockPos.MutableBlockPos mutable = blockPos.mutable();
+		for (int step = 0; step < length; step++) {
+			if (replaceable.test(level, mutable.move(direction))) {
+				generated = true;
+				level.setBlock(mutable, blockStateProvider.getState(random, mutable), Block.UPDATE_ALL);
+			} else if (stopWhenEncounteringUnreplaceableBlock) {
+				return generated;
 			}
 		}
-		return bl;
+		return generated;
 	}
 
 }
