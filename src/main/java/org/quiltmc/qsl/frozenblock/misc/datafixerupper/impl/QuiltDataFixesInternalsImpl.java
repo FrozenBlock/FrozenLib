@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
+import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
@@ -32,7 +33,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin.DataFixTypesAccessor;
 
 /**
  * Modified to work on Fabric
@@ -92,7 +92,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     }
 
     @Override
-    public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> current) {
+    public @NotNull Dynamic<Tag> updateWithAllFixers(DSL.TypeReference typeReference, @NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> current) {
         var compound = (CompoundTag) current.getValue();
 
 		// Minecraft fixer added by FrozenBlock
@@ -105,7 +105,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
 			if (modDataVersion.isPresent()) {
 				current = dataFixerEntry.dataFixer().update(
-					DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
+					typeReference,
 					current,
 					modDataVersion.getAsInt(),
 					dataFixerEntry.currentVersion()
@@ -122,7 +122,7 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
 			if (modDataVersion.isPresent()) {
 				current = dataFixerEntry.dataFixer().update(
-					DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
+					typeReference,
 					current,
 					modDataVersion.getAsInt(),
 					dataFixerEntry.currentVersion()

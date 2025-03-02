@@ -57,7 +57,7 @@ public class DataFixTypesMixin {
 
 		if (value.getValue() instanceof Tag && !FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(typeReference.typeName())) {
 			//noinspection unchecked
-			return (Dynamic<T>) QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) value);
+			return (Dynamic<T>) QuiltDataFixesInternals.get().updateWithAllFixers(typeReference, type, (Dynamic<Tag>) value);
 		}
 		return value;
 	}

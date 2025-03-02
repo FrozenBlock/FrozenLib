@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
+import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
@@ -72,7 +73,7 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     }
 
     @Override
-    public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic) {
+    public @NotNull Dynamic<Tag> updateWithAllFixers(DSL.TypeReference typeReference, @NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic) {
         return new Dynamic<>(dynamic.getOps(), dynamic.getValue().copy());
     }
 

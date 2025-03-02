@@ -18,6 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
+import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
@@ -97,7 +98,7 @@ public abstract class QuiltDataFixesInternals {
     @Contract(value = "-> new", pure = true)
     public abstract @NotNull Schema createBaseSchema();
 
-    public abstract @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic);
+    public abstract @NotNull Dynamic<Tag> updateWithAllFixers(DSL.TypeReference typeReference, @NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic);
 
     public abstract @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound);
 
