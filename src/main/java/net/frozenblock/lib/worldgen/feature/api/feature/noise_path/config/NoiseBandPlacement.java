@@ -20,12 +20,12 @@ package net.frozenblock.lib.worldgen.feature.api.feature.noise_path.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.math.api.EasyNoiseSampler;
-import net.minecraft.world.level.levelgen.Heightmap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import net.frozenblock.lib.math.api.EasyNoiseSampler;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public class NoiseBandPlacement {
 	public static final MapCodec<NoiseBandPlacement> CODEC = RecordCodecBuilder.mapCodec(

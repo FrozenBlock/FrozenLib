@@ -22,20 +22,15 @@ import net.frozenblock.lib.worldgen.feature.api.feature.CircularLavaVegetationPa
 import net.frozenblock.lib.worldgen.feature.api.feature.CircularLavaVegetationPatchLessBordersFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.CircularWaterloggedVegetationPatchFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.CircularWaterloggedVegetationPatchLessBordersFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.ColumnFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.ColumnWithDiskFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.ComboFeature;
-import net.frozenblock.lib.worldgen.feature.api.feature.FadingDiskCarpetFeature;
-import net.frozenblock.lib.worldgen.feature.api.feature.FadingDiskExceptInBiomeFeature;
-import net.frozenblock.lib.worldgen.feature.api.feature.FadingDiskFeature;
-import net.frozenblock.lib.worldgen.feature.api.feature.FadingDiskScheduleTickFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.SimpleBlockScheduleTickFeature;
-import net.frozenblock.lib.worldgen.feature.api.feature.ColumnFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnWithDiskFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ComboFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.feature.config.FadingDiskCarpetFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.feature.config.FadingDiskFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.feature.config.FadingDiskWithBiomeFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.disk.BallFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.disk.config.BallFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.noise_path.NoisePathFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.noise_path.config.NoisePathFeatureConfig;
 import net.minecraft.core.Registry;
@@ -47,33 +42,24 @@ public class FrozenLibFeatures {
 	public static final ComboFeature COMBO_FEATURE = new ComboFeature(ComboFeatureConfig.CODEC);
 	public static final SimpleBlockScheduleTickFeature SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE = new SimpleBlockScheduleTickFeature(SimpleBlockConfiguration.CODEC);
 	public static final NoisePathFeature NOISE_PATH_FEATURE = new NoisePathFeature(NoisePathFeatureConfig.CODEC);
+	public static final BallFeature BALL_FEATURE = new BallFeature(BallFeatureConfig.CODEC);
 	public static final ColumnFeature COLUMN_FEATURE = new ColumnFeature(ColumnFeatureConfig.CODEC);
-
 	public static final ColumnWithDiskFeature COLUMN_WITH_DISK_FEATURE = new ColumnWithDiskFeature(ColumnWithDiskFeatureConfig.CODEC);
 	public static final CircularWaterloggedVegetationPatchFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH = new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularWaterloggedVegetationPatchLessBordersFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS = new CircularWaterloggedVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
-	public static final FadingDiskExceptInBiomeFeature FADING_DISK_EXCEPT_IN_BIOME_FEATURE = new FadingDiskExceptInBiomeFeature(FadingDiskWithBiomeFeatureConfig.CODEC);
-	public static final FadingDiskFeature FADING_DISK_FEATURE = new FadingDiskFeature(FadingDiskFeatureConfig.CODEC);
-	public static final FadingDiskScheduleTickFeature FADING_DISK_SCHEDULE_TICK_FEATURE = new FadingDiskScheduleTickFeature(FadingDiskFeatureConfig.CODEC);
-	public static final FadingDiskCarpetFeature FADING_DISK_CARPET_FEATURE = new FadingDiskCarpetFeature(FadingDiskCarpetFeatureConfig.CODEC);
 	public static final CircularLavaVegetationPatchFeature CIRCULAR_LAVA_VEGETATION_PATCH = new CircularLavaVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularLavaVegetationPatchLessBordersFeature CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS = new CircularLavaVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("combo"), COMBO_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("simple_block_schedule_tick"), SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE);
-
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path"), NOISE_PATH_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("ball"), BALL_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column"), COLUMN_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column_with_disk"), COLUMN_WITH_DISK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_waterlogged_vegetation_patch_less_borders"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_except_in_biome"), FADING_DISK_EXCEPT_IN_BIOME_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_feature"), FADING_DISK_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_schedule_tick_feature"), FADING_DISK_SCHEDULE_TICK_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("fading_disk_carpet_feature"), FADING_DISK_CARPET_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch"), CIRCULAR_LAVA_VEGETATION_PATCH);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch_less_borders"), CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS);
 	}
-
 }

@@ -25,7 +25,7 @@ import java.io.Serializable;
  * Allows you to create a 3D point with x, y and z.
  *
  * @author LiukRast (2021-2022)
- * @since 4.0
+ * @since 1.0
  */
 public abstract class Point3D implements Cloneable {
 

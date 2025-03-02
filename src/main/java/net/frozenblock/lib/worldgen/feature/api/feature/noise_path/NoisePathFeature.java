@@ -18,6 +18,8 @@
 package net.frozenblock.lib.worldgen.feature.api.feature.noise_path;
 
 import com.mojang.serialization.Codec;
+import java.util.List;
+import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.worldgen.feature.api.feature.noise_path.config.NoiseBandBlockPlacement;
 import net.frozenblock.lib.worldgen.feature.api.feature.noise_path.config.NoiseBandPlacement;
@@ -30,7 +32,6 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import org.jetbrains.annotations.NotNull;
-import java.util.List;
 
 public class NoisePathFeature extends Feature<NoisePathFeatureConfig> {
 
@@ -47,7 +48,6 @@ public class NoisePathFeature extends Feature<NoisePathFeatureConfig> {
 		RandomSource random = level.getRandom();
 
 		int radius = config.placementRadius();
-		int radiusSquared = radius * radius;
 		NoiseBandPlacement noiseBandPlacement = config.noiseBandPlacement();
 
 		ImprovedNoise sampler = noiseBandPlacement.getNoiseType().createNoise(level.getSeed());
@@ -67,9 +67,8 @@ public class NoisePathFeature extends Feature<NoisePathFeatureConfig> {
 		for (int x = startX - radius; x <= startX + radius; x++) {
 			for (int z = startZ - radius; z <= startZ + radius; z++) {
 				if (!missingHeightmap) {
-					double distance = ((startX - x) * (startX - x) + ((startZ - z) * (startZ - z)));
-					if (distance < radiusSquared) {
-						mutable.set(x, level.getHeight(heightmapType, x, z) - 1, z);
+					mutable.set(x, level.getHeight(heightmapType, x, z) - 1, z);
+					if (AdvancedMath.distanceBetween(blockPos, mutable, false) < radius) {
 						generated = this.attemptPlaceForAllBlockPlacements(
 							level,
 							mutable,
@@ -84,7 +83,7 @@ public class NoisePathFeature extends Feature<NoisePathFeatureConfig> {
 				} else {
 					for (int y = startY - radius; y <= startY + radius; y++) {
 						mutable.set(x, y, z);
-						if (mutable.distSqr(blockPos) < radiusSquared) {
+						if (AdvancedMath.distanceBetween(blockPos, mutable, true) < radius) {
 							generated = this.attemptPlaceForAllBlockPlacements(
 								level,
 								mutable,
