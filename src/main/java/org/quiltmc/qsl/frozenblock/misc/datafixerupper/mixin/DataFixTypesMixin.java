@@ -18,7 +18,8 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.serialization.Dynamic;
@@ -26,9 +27,7 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
@@ -38,22 +37,28 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = DataFixTypes.class, priority = 1001)
 public class DataFixTypesMixin {
 
-	@Shadow(remap = false)
-	@Final
-	private DSL.TypeReference type;
-
-	@ModifyReturnValue(
+	@WrapOperation(
 		method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
-		at = @At("RETURN")
-    )
-    private <T> Dynamic<T> updateDataWithFixers(Dynamic<T> original, DataFixer fixer, Dynamic<T> dynamic, int oldVersion, int targetVersion) {
+		at = @At(
+			value = "INVOKE",
+			target = "Lcom/mojang/datafixers/DataFixer;update(Lcom/mojang/datafixers/DSL$TypeReference;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;"
+		)
+	)
+	private <T> Dynamic<T> updateDataWithFixers(
+		DataFixer instance,
+		DSL.TypeReference typeReference,
+		Dynamic<T> tDynamic,
+		int oldVersion,
+		int targetVersion,
+		Operation<Dynamic<T>> original
+	) {
 		var type = DataFixTypes.class.cast(this);
-		var value = original.getValue();
+		Dynamic<T> value = original.call(instance, typeReference, tDynamic, oldVersion, targetVersion);
 
-		if (value instanceof Tag && !FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(this.type.typeName())) {
+		if (value.getValue() instanceof Tag && !FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(typeReference.typeName())) {
 			//noinspection unchecked
-			return (Dynamic<T>) QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) original);
+			return (Dynamic<T>) QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) value);
 		}
-		return original;
+		return value;
 	}
 }
