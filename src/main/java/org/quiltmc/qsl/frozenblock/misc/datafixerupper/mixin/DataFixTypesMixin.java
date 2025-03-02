@@ -38,13 +38,13 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = DataFixTypes.class, priority = 1001)
 public class DataFixTypesMixin {
 
-	@Shadow(remap = false)
+	@Shadow
 	@Final
 	private DSL.TypeReference type;
 
 	@ModifyReturnValue(
-		method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
-		at = @At("RETURN")
+            method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
+            at = @At("RETURN")
     )
     private <T> Dynamic<T> updateDataWithFixers(Dynamic<T> original, DataFixer fixer, Dynamic<T> dynamic, int oldVersion, int targetVersion) {
 		var type = DataFixTypes.class.cast(this);
