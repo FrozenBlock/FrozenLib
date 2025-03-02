@@ -306,6 +306,7 @@ tasks {
             exclude {
                 it.moduleGroup.contains("fabric")
             }
+            exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
         }
 
         //relocate("blue.endless.jankson", "net.frozenblock.lib.config.api.jankson")
