@@ -15,13 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.loot;
+package net.frozenblock.lib.loot.api;
 
+import io.netty.util.internal.UnstableApi;
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
+import net.frozenblock.lib.loot.impl.MutableLootTable;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.storage.loot.LootTable;
 
-public class LootTableModifier {
+@UnstableApi
+public class LootTableModificationApi {
 
 	public static void editTable(ResourceKey<LootTable> targetLootTable, boolean requiresBuiltIn, Edit listener) {
 		LootTableEvents.Replace modification = (id, lootTable, source, registries) -> {

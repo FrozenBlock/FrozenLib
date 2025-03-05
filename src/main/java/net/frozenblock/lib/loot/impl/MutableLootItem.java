@@ -15,9 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.loot;
+package net.frozenblock.lib.loot.impl;
 
 import java.util.List;
+import io.netty.util.internal.UnstableApi;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.NotNull;
 
+@UnstableApi
 public class MutableLootItem {
 	public final List<LootItemCondition> conditions;
 	public int weight;

@@ -15,10 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.loot;
+package net.frozenblock.lib.loot.impl;
 
 import java.util.ArrayList;
 import java.util.function.Predicate;
+import io.netty.util.internal.UnstableApi;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import org.jetbrains.annotations.NotNull;
 
+@UnstableApi
 public class MutableLootPool {
 	public ArrayList<LootPoolEntryContainer> entries = new ArrayList<>();
 	public ArrayList<LootItemCondition> conditions = new ArrayList<>();
