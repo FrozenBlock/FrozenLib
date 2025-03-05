@@ -35,3 +35,4 @@ Put changelog here:
 - Completely rewrote the Noise Path worldgen feature, being much more extensive and configurable.
   - This has resulted in two other features being removed, as their behavior is now possible to achieve with the base feature.
 - Replaced the Upwards and Downwards column worldgen features with a single column feature, with a more robust config.
+- Optimized entity easter egg texture rendering.

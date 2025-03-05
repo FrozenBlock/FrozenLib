@@ -105,6 +105,6 @@ public record EntityTextureOverride<T extends LivingEntity>(EntityType<T> type, 
 	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface Condition<T extends LivingEntity> {
-		boolean condition(T entity);
+		boolean test(T entity);
 	}
 }
