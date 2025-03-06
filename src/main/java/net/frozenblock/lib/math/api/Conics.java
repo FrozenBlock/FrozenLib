@@ -26,7 +26,7 @@ import lombok.experimental.UtilityClass;
  * Defining a point or 3D point allows you to define if it is inside or at the border of a conic.
  *
  * @author LiukRast (2021-2022)
- * @since 4.0
+ * @since 1.0
  */
 @UtilityClass
 public class Conics {

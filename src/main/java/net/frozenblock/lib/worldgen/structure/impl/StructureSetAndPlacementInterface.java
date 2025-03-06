@@ -28,5 +28,7 @@ public interface StructureSetAndPlacementInterface {
 
 	void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions);
 
+	List<Supplier<Boolean>> frozenLib$getGenerationConditions();
+
 	void frozenLib$addExclusions(List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup);
 }

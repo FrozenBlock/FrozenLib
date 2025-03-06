@@ -52,7 +52,7 @@ public class XjsConfig<T> extends Config<T> {
 	}
 
 	public XjsConfig(String modId, Class<T> config, Path path, XjsFormat type, boolean supportsModification) {
-		super(modId, config, path, supportsModification, null, null);
+		super(modId, config, path, supportsModification);
 
 		this.format = type;
 

@@ -27,13 +27,6 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Adds more math operations.
- *
- * @author LiukRast (2021-2022)
- * @author FrozenBlock (2022)
- * @since 4.0
- */
 @UtilityClass
 public class AdvancedMath {
 
@@ -199,16 +192,23 @@ public class AdvancedMath {
         double random = random().nextDouble();
 		switch (axis) {
 			case X -> {
-				return random > 0.5 ? Direction.EAST : Direction.WEST;
+				return random > 0.5D ? Direction.EAST : Direction.WEST;
 			}
 			case Y -> {
-				return random > 0.5 ? Direction.UP : Direction.DOWN;
+				return random > 0.5D ? Direction.UP : Direction.DOWN;
 			}
 			default -> {
-				return random > 0.5 ? Direction.NORTH : Direction.SOUTH;
+				return random > 0.5D ? Direction.NORTH : Direction.SOUTH;
 			}
 		}
     }
+
+	public static double distanceBetween(@NotNull BlockPos center, @NotNull BlockPos currentPos, boolean includeY) {
+		double xSquared = Mth.square(center.getX() - currentPos.getX());
+		double ySquared = includeY ? Mth.square(center.getY() - currentPos.getY()) : 0D;
+		double zSquared = Mth.square(center.getZ() - currentPos.getZ());
+		return Math.sqrt(xSquared + ySquared + zSquared);
+	}
 
 	@NotNull
 	public static Vec3 rotateAboutXZ(@NotNull Vec3 original, double distanceFrom, double angle) {

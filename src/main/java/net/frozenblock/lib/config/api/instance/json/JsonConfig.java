@@ -18,7 +18,6 @@
 package net.frozenblock.lib.config.api.instance.json;
 
 import blue.endless.jankson.Jankson;
-import com.mojang.datafixers.DataFixer;
 import java.io.BufferedWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -36,29 +35,29 @@ public class JsonConfig<T> extends Config<T> {
 
 	private final JsonType type;
 
-	public JsonConfig(String modId, Class<T> config, @Nullable DataFixer dataFixer, @Nullable Integer version) {
-		this(modId, config, true, dataFixer, version);
+	public JsonConfig(String modId, Class<T> config) {
+		this(modId, config, true);
 	}
 
-	public JsonConfig(String modId, Class<T> config, JsonType type, @Nullable DataFixer dataFixer, @Nullable Integer version) {
-		this(modId, config, type, true, dataFixer, version);
+	public JsonConfig(String modId, Class<T> config, JsonType type) {
+		this(modId, config, type, true);
 	}
 
-	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, @Nullable DataFixer dataFixer, @Nullable Integer version) {
-		this(modId, config, path, type, true, dataFixer, version);
+	public JsonConfig(String modId, Class<T> config, Path path, JsonType type) {
+		this(modId, config, path, type, true);
 	}
 
-	public JsonConfig(String modId, Class<T> config, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
-		this(modId, config, JsonType.JSON, supportsModification, dataFixer, version);
+	public JsonConfig(String modId, Class<T> config, boolean supportsModification) {
+		this(modId, config, JsonType.JSON, supportsModification);
 	}
 
-	public JsonConfig(String modId, Class<T> config, JsonType type, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
-		this(modId, config, makePath(modId, type.getSerializedName()), type, supportsModification, dataFixer, version);
+	public JsonConfig(String modId, Class<T> config, JsonType type, boolean supportsModification) {
+		this(modId, config, makePath(modId, type.getSerializedName()), type, supportsModification);
 	}
 
-	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, boolean supportsModification, @Nullable DataFixer dataFixer, @Nullable Integer version) {
-		super(modId, config, path, supportsModification, dataFixer, version);
-		var janksonBuilder = Jankson.builder().withFixer(dataFixer).withVersion(version);
+	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, boolean supportsModification) {
+		super(modId, config, path, supportsModification);
+		var janksonBuilder = Jankson.builder();
 
 		this.jankson = ConfigSerialization.createJankson(janksonBuilder, modId);
 		this.type = type;

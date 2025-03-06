@@ -41,24 +41,34 @@ public class FrozenLibFeatureUtils {
 		return false;
 	}
 
-	public static boolean isAirOrWaterNearby(WorldGenLevel level, @NotNull BlockPos pos, int searchDistance) {
-		Iterable<BlockPos> poses = BlockPos.betweenClosed(
-			pos.offset(-searchDistance, -searchDistance, -searchDistance),
-			pos.offset(searchDistance, searchDistance, searchDistance)
-		);
-		for (BlockPos blockPos : poses) {
-			if (BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE.test(level, blockPos)) return true;
+	public static boolean matchesConditionsTouching(WorldGenLevel level, @NotNull BlockPos blockPos, boolean requiredOnAllSides, BlockPredicate predicate) {
+		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
+		int validSides = 0;
+
+		for (Direction direction : Direction.values()) {
+			if (predicate.test(level, mutableBlockPos.setWithOffset(blockPos, direction))) {
+				if (!requiredOnAllSides) return true;
+				validSides += 1;
+			}
 		}
-		return false;
+		return validSides == 6;
+	}
+
+	public static boolean isAirOrWaterNearby(WorldGenLevel level, @NotNull BlockPos pos, int searchDistance) {
+		return matchesConditionNearby(level, pos, searchDistance, BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE);
 	}
 
 	public static boolean isWaterNearby(WorldGenLevel level, @NotNull BlockPos pos, int searchDistance) {
+		return matchesConditionNearby(level, pos, searchDistance, BlockPredicate.matchesBlocks(Blocks.WATER));
+	}
+
+	public static boolean matchesConditionNearby(WorldGenLevel level, @NotNull BlockPos pos, int searchDistance, BlockPredicate predicate) {
 		Iterable<BlockPos> poses = BlockPos.betweenClosed(
 			pos.offset(-searchDistance, -searchDistance, -searchDistance),
 			pos.offset(searchDistance, searchDistance, searchDistance)
 		);
-		for (BlockPos blockPos : poses) {
-			if (level.getBlockState(blockPos).is(Blocks.WATER)) return true;
+		for (BlockPos currentPos : poses) {
+			if (predicate.test(level, currentPos)) return true;
 		}
 		return false;
 	}
