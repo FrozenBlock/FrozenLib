@@ -30,16 +30,12 @@ fun <T> JsonConfig(
     type: JsonType = JsonType.JSON,
     path: Path = Config.makePath(modId, type.serializedName),
     supportsModification: Boolean = true,
-    dataFixer: DataFixer? = null,
-    version: Int? = null
 ): RealJsonConfig<T> {
     return RealJsonConfig(
         modId,
         config,
         path,
         type,
-        supportsModification,
-        dataFixer,
-        version
+        supportsModification
     )
 }

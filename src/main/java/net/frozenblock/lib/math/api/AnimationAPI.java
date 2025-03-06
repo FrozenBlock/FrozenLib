@@ -29,7 +29,7 @@ import org.jetbrains.annotations.ApiStatus;
  * Learn more at <a href="https://github.com/LIUKRAST/AnimationAPI/blob/main/README.md">the README</a>
  *
  * @author LiukRast (2021-2022)
- * @since 4.0
+ * @since 1.0
  */
 @ApiStatus.Obsolete(since = "Minecraft 1.19")
 @UtilityClass
