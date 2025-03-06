@@ -38,9 +38,7 @@ public class FrozenLibConfig {
 			FrozenLibConstants.MOD_ID,
 			FrozenLibConfig.class,
 			JsonType.JSON5_UNQUOTED_KEYS,
-			true,
-			QuiltDataFixes.buildFixer(new QuiltDataFixerBuilder(0)),
-			0
+			true
 		) {
 			@Override
 			public void onSave() throws Exception {

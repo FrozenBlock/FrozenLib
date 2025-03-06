@@ -19,6 +19,9 @@ package net.frozenblock.lib.worldgen.structure.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.datafixers.util.Pair;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Supplier;
 import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -35,10 +38,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Supplier;
-
 @Mixin(StructurePlacement.class)
 public class StructurePlacementMixin implements StructureSetAndPlacementInterface {
 
@@ -52,6 +51,12 @@ public class StructurePlacementMixin implements StructureSetAndPlacementInterfac
 	public synchronized void frozenLib$addGenerationConditions(List<Supplier<Boolean>> generationConditions) {
 		this.frozenLib$generationConditions.clear();
 		this.frozenLib$generationConditions.addAll(generationConditions);
+	}
+
+	@Unique
+	@Override
+	public synchronized List<Supplier<Boolean>> frozenLib$getGenerationConditions() {
+		return this.frozenLib$generationConditions;
 	}
 
 	@Unique

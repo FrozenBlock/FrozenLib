@@ -9,6 +9,7 @@
   "mixins": [
     "beacon.BeaconBlockEntityMixin",
     "dripstone.PointedDripstoneBlockMixin",
+    "friction.LivingEntityMixin",
     "sound.BlockBehaviourMixin",
     "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin"

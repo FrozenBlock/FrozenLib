@@ -173,6 +173,10 @@ val api by sourceSets.registering {
     }
 }
 
+val relocModImplementation: Configuration by configurations.creating {
+    configurations.modImplementation.get().extendsFrom(this)
+}
+
 val relocModApi: Configuration by configurations.creating {
     configurations.modApi.get().extendsFrom(this)
 }
@@ -299,16 +303,24 @@ tasks {
     }
 
     shadowJar {
-        configurations = listOf(relocModApi)
+        configurations = listOf(relocModImplementation, relocModApi)
         enableRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         dependencies {
             exclude {
                 it.moduleGroup.contains("fabric")
             }
+            exclude("META-INF/maven/**", "META-INF/proguard/**", "META-INF/LICENSE*")
+
+            exclude {
+                it.moduleGroup.contains("google") || it.moduleGroup.contains("mojang")
+                    || it.moduleGroup.contains("checkerframework") || it.moduleGroup.contains("slf4j")
+                    || it.moduleGroup.contains("unimi") || it.moduleGroup.contains("javax")
+                    || it.moduleGroup.contains("intellij") || it.moduleGroup.contains("jetbrains")
+            }
         }
 
-        //relocate("blue.endless.jankson", "net.frozenblock.lib.config.api.jankson")
+        relocate("blue.endless.jankson", "net.frozenblock.lib.shadow.blue.endless.jankson")
     }
 
     register("javadocJar", Jar::class) {

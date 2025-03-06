@@ -48,6 +48,7 @@ import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindCommand;
 import net.frozenblock.lib.worldgen.feature.api.FrozenLibFeatures;
+import net.frozenblock.lib.worldgen.feature.api.block_predicate.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.structure.api.StructureGenerationConditionApi;
 import net.frozenblock.lib.worldgen.structure.api.StructurePlacementExclusionApi;
@@ -89,6 +90,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		SpottingIconPredicate.init();
 		WindDisturbanceLogic.init();
 		FrozenLibFeatures.init();
+		FrozenLibBlockPredicateTypes.init();
 		FrozenPlacementModifiers.init();
 		DataPackReloadMarker.init();
 		StructureGenerationConditionApi.init();
