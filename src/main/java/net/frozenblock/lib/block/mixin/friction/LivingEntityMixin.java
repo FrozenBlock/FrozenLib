@@ -39,7 +39,7 @@ public abstract class LivingEntityMixin extends Entity {
 	}
 
 	@WrapOperation(
-		method = "travel",
+		method = "travelInAir",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/level/block/Block;getFriction()F"
