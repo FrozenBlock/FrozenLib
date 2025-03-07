@@ -20,11 +20,9 @@ package net.frozenblock.lib.config.api.instance;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonElement;
 import blue.endless.jankson.JsonGrammar;
-import com.mojang.datafixers.DataFixer;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
 import net.frozenblock.lib.config.api.instance.json.JanksonTypedEntrySerializer;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class ConfigSerialization {
 	private ConfigSerialization() {}
@@ -46,11 +44,7 @@ public class ConfigSerialization {
 			.build();
 	}
 
-	public static Jankson createJankson(String modId, @Nullable DataFixer dataFixer) {
-		return createJankson(Jankson.builder().withFixer(dataFixer), modId);
-	}
-
 	public static Jankson createJankson(String modId) {
-		return createJankson(modId, null);
+		return createJankson(Jankson.builder(), modId);
 	}
 }

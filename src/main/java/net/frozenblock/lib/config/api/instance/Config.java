@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.config.api.instance;
 
-import com.mojang.datafixers.DataFixer;
 import java.nio.file.Path;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,7 +31,6 @@ import net.frozenblock.lib.config.api.sync.annotation.UnsyncableConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public abstract class Config<T> {
 	private final String modId;
