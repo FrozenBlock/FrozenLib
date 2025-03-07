@@ -18,6 +18,7 @@
 package net.frozenblock.lib.datagen.api;
 
 import java.util.List;
+import net.minecraft.advancements.critereon.DataComponentMatchers;
 import net.minecraft.advancements.critereon.EnchantmentPredicate;
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
@@ -51,11 +52,14 @@ public class EntityLootHelper {
 						EntityEquipmentPredicate.Builder.equipment()
 							.mainhand(
 								ItemPredicate.Builder.item()
-									.withSubPredicate(
-										DataComponentPredicates.ENCHANTMENTS,
-										EnchantmentsPredicate.enchantments(
-											List.of(new EnchantmentPredicate(registryLookup.getOrThrow(EnchantmentTags.SMELTS_LOOT), MinMaxBounds.Ints.ANY))
-										)
+									.withComponents(
+										DataComponentMatchers.Builder.components()
+											.partial(
+												DataComponentPredicates.ENCHANTMENTS,
+												EnchantmentsPredicate.enchantments(
+													List.of(new EnchantmentPredicate(registryLookup.getOrThrow(EnchantmentTags.SMELTS_LOOT), MinMaxBounds.Ints.ANY))
+												)
+											).build()
 									)
 							)
 					)
