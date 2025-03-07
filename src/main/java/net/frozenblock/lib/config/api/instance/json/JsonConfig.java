@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigSerialization;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * Serializes and deserializes config data with Jankson.
