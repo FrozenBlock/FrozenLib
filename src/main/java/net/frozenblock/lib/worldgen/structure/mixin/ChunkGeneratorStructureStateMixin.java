@@ -46,8 +46,11 @@ public class ChunkGeneratorStructureStateMixin {
 		if (placements != null) {
 			for (StructurePlacement placement : placements) {
 				if (placement instanceof StructureSetAndPlacementInterface structureSetAndPlacementInterface) {
-					if (structureSetAndPlacementInterface.frozenLib$getGenerationConditions().stream().noneMatch(Supplier::get)) {
-						info.setReturnValue(List.of());
+					List<Supplier<Boolean>> supplierList = structureSetAndPlacementInterface.frozenLib$getGenerationConditions();
+					if (supplierList != null && !supplierList.isEmpty()) {
+						if (supplierList.stream().noneMatch(Supplier::get)) {
+							info.setReturnValue(List.of());
+						}
 					}
 				}
 			}
