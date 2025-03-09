@@ -172,6 +172,21 @@ public class FrozenLibSoundPackets {
 				);
 				soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
 			}
+			if (entity instanceof ServerPlayer player) {
+				ServerPlayNetworking.send(
+					player,
+					new MovingRestrictionSoundPacket(
+						entity.getId(),
+						sound,
+						category,
+						volume,
+						pitch,
+						predicate,
+						stopOnDeath,
+						true
+					)
+				);
+			}
 		}
     }
 
