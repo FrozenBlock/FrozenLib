@@ -66,7 +66,7 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 					mutableBlockPos.setWithOffset(blockPos, k, 0, l);
 
 					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, this::isValidWater)
+						 worldGenLevel.isStateAtPosition(mutableBlockPos, this::isWaterAt)
 							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
 						 verticalSteps++
 					) {
@@ -74,7 +74,7 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 					}
 
 					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, this::isValidWater)
+						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !this.isWaterAt(blockStatex))
 							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
 						 verticalSteps++
 					) {
@@ -83,7 +83,7 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 
 					mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
 					BlockState blockState = worldGenLevel.getBlockState(mutableBlockPos2);
-					if (worldGenLevel.isEmptyBlock(mutableBlockPos)
+					if (this.isWaterAt(worldGenLevel.getBlockState(mutableBlockPos))
 						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())) {
 						int depth = vegetationPatchConfiguration.depth.sample(randomSource)
 							+ (vegetationPatchConfiguration.extraBottomBlockChance > 0F && randomSource.nextFloat() < vegetationPatchConfiguration.extraBottomBlockChance ? 1 : 0);
@@ -100,8 +100,12 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 		return set;
 	}
 
-	public boolean isValidWater(@NotNull BlockState blockState) {
+	public boolean isValidWaterAt(@NotNull BlockState blockState) {
 		FluidState fluidState = blockState.getFluidState();
 		return fluidState.is(FluidTags.WATER) && fluidState.getAmount() == 8;
+	}
+
+	public boolean isWaterAt(@NotNull BlockState blockState) {
+		return blockState.getFluidState().is(FluidTags.WATER);
 	}
 }
