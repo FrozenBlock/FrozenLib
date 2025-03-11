@@ -66,7 +66,7 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 					mutableBlockPos.setWithOffset(blockPos, k, 0, l);
 
 					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !this.isValidWater(blockStatex))
+						 worldGenLevel.isStateAtPosition(mutableBlockPos, this::isValidWater)
 							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
 						 verticalSteps++
 					) {
@@ -74,7 +74,7 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 					}
 
 					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !this.isValidWater(blockStatex))
+						 worldGenLevel.isStateAtPosition(mutableBlockPos, this::isValidWater)
 							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
 						 verticalSteps++
 					) {
