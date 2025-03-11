@@ -23,10 +23,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 import net.minecraft.world.level.material.FluidState;
@@ -104,24 +101,5 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 	public boolean isValidWater(@NotNull BlockState blockState) {
 		FluidState fluidState = blockState.getFluidState();
 		return fluidState.is(FluidTags.WATER) && fluidState.getAmount() == 8;
-	}
-
-	@Override
-	protected boolean placeVegetation(
-		@NotNull WorldGenLevel worldGenLevel,
-		@NotNull VegetationPatchConfiguration vegetationPatchConfiguration,
-		@NotNull ChunkGenerator chunkGenerator,
-		@NotNull RandomSource randomSource,
-		@NotNull BlockPos blockPos
-	) {
-		if (super.placeVegetation(worldGenLevel, vegetationPatchConfiguration, chunkGenerator, randomSource, blockPos.below())) {
-			BlockState blockState = worldGenLevel.getBlockState(blockPos);
-			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && !blockState.getValue(BlockStateProperties.WATERLOGGED)) {
-				worldGenLevel.setBlock(blockPos, blockState.setValue(BlockStateProperties.WATERLOGGED, true), Block.UPDATE_CLIENTS);
-			}
-			return true;
-		} else {
-			return false;
-		}
 	}
 }
