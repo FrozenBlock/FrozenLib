@@ -66,14 +66,16 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 					mutableBlockPos.setWithOffset(blockPos, k, 0, l);
 
 					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !this.isValidWater(blockStatex)) && verticalSteps < vegetationPatchConfiguration.verticalRange;
+						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !this.isValidWater(blockStatex))
+							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
 						 verticalSteps++
 					) {
 						mutableBlockPos.move(surfaceDirection);
 					}
 
 					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !this.isValidWater(blockStatex)) && verticalSteps < vegetationPatchConfiguration.verticalRange;
+						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !this.isValidWater(blockStatex))
+							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
 						 verticalSteps++
 					) {
 						mutableBlockPos.move(oppositeDirection);
