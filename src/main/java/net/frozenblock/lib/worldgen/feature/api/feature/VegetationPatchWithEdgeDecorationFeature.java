@@ -106,7 +106,7 @@ public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFea
 									set.add(belowExtraPos);
 								}
 							}
-							mutableBlockPos2.move(direction.getOpposite());
+							mutableBlockPos.move(direction.getOpposite());
 						}
 					}
 				}

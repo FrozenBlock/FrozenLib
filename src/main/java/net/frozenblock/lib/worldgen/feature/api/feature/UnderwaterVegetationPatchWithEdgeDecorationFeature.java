@@ -102,7 +102,7 @@ public class UnderwaterVegetationPatchWithEdgeDecorationFeature extends Underwat
 									set.add(belowExtraPos);
 								}
 							}
-							mutableBlockPos2.move(direction.getOpposite());
+							mutableBlockPos.move(direction.getOpposite());
 						}
 					}
 				}
