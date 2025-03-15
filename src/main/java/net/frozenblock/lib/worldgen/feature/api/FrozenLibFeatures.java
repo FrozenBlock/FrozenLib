@@ -26,6 +26,7 @@ import net.frozenblock.lib.worldgen.feature.api.feature.ColumnFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.ColumnWithDiskFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.ComboFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.SimpleBlockScheduleTickFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.UnderwaterVegetationPatchFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnWithDiskFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ComboFeatureConfig;
@@ -45,6 +46,7 @@ public class FrozenLibFeatures {
 	public static final BallFeature BALL_FEATURE = new BallFeature(BallFeatureConfig.CODEC);
 	public static final ColumnFeature COLUMN_FEATURE = new ColumnFeature(ColumnFeatureConfig.CODEC);
 	public static final ColumnWithDiskFeature COLUMN_WITH_DISK_FEATURE = new ColumnWithDiskFeature(ColumnWithDiskFeatureConfig.CODEC);
+	public static final UnderwaterVegetationPatchFeature UNDERWATER_VEGETATION_PATCH = new UnderwaterVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularWaterloggedVegetationPatchFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH = new CircularWaterloggedVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularWaterloggedVegetationPatchLessBordersFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS = new CircularWaterloggedVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularLavaVegetationPatchFeature CIRCULAR_LAVA_VEGETATION_PATCH = new CircularLavaVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
@@ -57,6 +59,7 @@ public class FrozenLibFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("ball"), BALL_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column"), COLUMN_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column_with_disk"), COLUMN_WITH_DISK_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("underwater_vegetation_patch"), UNDERWATER_VEGETATION_PATCH);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_waterlogged_vegetation_patch"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_waterlogged_vegetation_patch_less_borders"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch"), CIRCULAR_LAVA_VEGETATION_PATCH);
