@@ -23,6 +23,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
@@ -99,6 +100,6 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 	}
 
 	public boolean isWaterAt(@NotNull BlockState blockState) {
-		return blockState.getFluidState().is(FluidTags.WATER);
+		return blockState.is(Blocks.WATER);
 	}
 }

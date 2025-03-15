@@ -97,7 +97,7 @@ public class UnderwaterVegetationPatchWithEdgeDecorationFeature extends Underwat
 
 							if (!set.contains(belowExtraPos)) {
                                 if (this.isWaterAt(worldGenLevel.getBlockState(mutableBlockPos))
-                                        && blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
+									&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
                                 ) {
 									set.add(belowExtraPos);
 								}
