@@ -18,23 +18,20 @@
 package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.tags.FluidTags;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
-import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
+import org.jetbrains.annotations.NotNull;
 
-public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
+public class UnderwaterVegetationPatchWithEdgeDecorationFeature extends UnderwaterVegetationPatchFeature {
 
-	public UnderwaterVegetationPatchFeature(Codec<VegetationPatchConfiguration> codec) {
+	public UnderwaterVegetationPatchWithEdgeDecorationFeature(Codec<VegetationPatchConfiguration> codec) {
 		super(codec);
 	}
 
@@ -89,17 +86,29 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 						int depth = vegetationPatchConfiguration.depth.sample(randomSource)
 							+ (vegetationPatchConfiguration.extraBottomBlockChance > 0F && randomSource.nextFloat() < vegetationPatchConfiguration.extraBottomBlockChance ? 1 : 0);
 						BlockPos blockPos2 = mutableBlockPos2.immutable();
+
 						boolean placedGround = this.placeGround(worldGenLevel, vegetationPatchConfiguration, canReplace, randomSource, mutableBlockPos2, depth);
 						if (placedGround) set.add(blockPos2);
+
+						for (Direction direction : Direction.Plane.HORIZONTAL) {
+							mutableBlockPos.move(direction);
+							mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
+							BlockPos belowExtraPos = mutableBlockPos2.immutable();
+
+							if (!set.contains(belowExtraPos)) {
+                                if (this.isWaterAt(worldGenLevel.getBlockState(mutableBlockPos))
+									&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
+                                ) {
+									set.add(belowExtraPos);
+								}
+							}
+							mutableBlockPos.move(direction.getOpposite());
+						}
 					}
 				}
 			}
 		}
 
 		return set;
-	}
-
-	public boolean isWaterAt(@NotNull BlockState blockState) {
-		return blockState.is(Blocks.WATER);
 	}
 }

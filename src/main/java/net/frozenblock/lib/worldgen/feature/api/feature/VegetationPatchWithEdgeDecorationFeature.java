@@ -23,18 +23,19 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
+import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
 
-public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
+public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFeature {
 
-	public UnderwaterVegetationPatchFeature(Codec<VegetationPatchConfiguration> codec) {
+	public VegetationPatchWithEdgeDecorationFeature(Codec<VegetationPatchConfiguration> codec) {
 		super(codec);
 	}
 
@@ -66,7 +67,7 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 					mutableBlockPos.setWithOffset(blockPos, k, 0, l);
 
 					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, this::isWaterAt)
+						 worldGenLevel.isStateAtPosition(mutableBlockPos, BlockBehaviour.BlockStateBase::isAir)
 							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
 						 verticalSteps++
 					) {
@@ -74,7 +75,7 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 					}
 
 					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !this.isWaterAt(blockStatex))
+						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !blockStatex.isAir())
 							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
 						 verticalSteps++
 					) {
@@ -83,23 +84,35 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 
 					mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
 					BlockState blockState = worldGenLevel.getBlockState(mutableBlockPos2);
-					if (this.isWaterAt(worldGenLevel.getBlockState(mutableBlockPos))
+					if (worldGenLevel.isEmptyBlock(mutableBlockPos)
 						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
 					) {
 						int depth = vegetationPatchConfiguration.depth.sample(randomSource)
 							+ (vegetationPatchConfiguration.extraBottomBlockChance > 0F && randomSource.nextFloat() < vegetationPatchConfiguration.extraBottomBlockChance ? 1 : 0);
 						BlockPos blockPos2 = mutableBlockPos2.immutable();
+
 						boolean placedGround = this.placeGround(worldGenLevel, vegetationPatchConfiguration, canReplace, randomSource, mutableBlockPos2, depth);
 						if (placedGround) set.add(blockPos2);
+
+						for (Direction direction : Direction.Plane.HORIZONTAL) {
+							mutableBlockPos.move(direction);
+							mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
+							BlockPos belowExtraPos = mutableBlockPos2.immutable();
+
+							if (!set.contains(belowExtraPos)) {
+								if (worldGenLevel.isEmptyBlock(mutableBlockPos)
+									&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
+								) {
+									set.add(belowExtraPos);
+								}
+							}
+							mutableBlockPos.move(direction.getOpposite());
+						}
 					}
 				}
 			}
 		}
 
 		return set;
-	}
-
-	public boolean isWaterAt(@NotNull BlockState blockState) {
-		return blockState.is(Blocks.WATER);
 	}
 }

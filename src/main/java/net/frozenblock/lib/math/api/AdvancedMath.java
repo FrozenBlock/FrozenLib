@@ -57,39 +57,6 @@ public class AdvancedMath {
         return cond1 && cond2;
     }
 
-    public static BlockPos offset(final BlockPos pos, final @NotNull Direction dir, final int a) {
-        return switch (dir) {
-            case WEST -> pos.west(a);
-            case EAST -> pos.east(a);
-            case SOUTH -> pos.south(a);
-            case NORTH -> pos.north(a);
-            case UP -> pos.above(a);
-            case DOWN -> pos.below(a);
-        };
-    }
-
-    public static BlockPos offset(final BlockPos pos, final Direction dir) {
-        return offset(pos, dir, 1);
-    }
-
-    public static int waterToHollowedProperty(final int value) {
-        if (value > 8) {
-            return 8;
-        } else if (value < 0) {
-            return -1;
-        } else {
-            return value;
-        }
-    }
-
-    public static int waterLevelReduce(final int value) {
-        if (value < 8) {
-            return value + 1;
-        } else {
-            return 8;
-        }
-    }
-
     public static double cutCos(double value, double offset, boolean inverse) {
         double equation = Math.cos(value);
         if (!inverse) {
