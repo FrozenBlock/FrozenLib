@@ -18,6 +18,9 @@
 package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -46,6 +49,7 @@ public class UnderwaterVegetationPatchWithEdgeDecorationFeature extends Underwat
 	) {
 		BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 		BlockPos.MutableBlockPos mutableBlockPos2 = new BlockPos.MutableBlockPos();
+		List<BlockPos> finalDecorationPoses = new ArrayList<>(set);
 
 		for (BlockPos blockPos : set) {
 			mutableBlockPos.set(blockPos);
@@ -54,17 +58,19 @@ public class UnderwaterVegetationPatchWithEdgeDecorationFeature extends Underwat
 				mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
 				BlockPos belowPos = mutableBlockPos2.immutable();
 
-				if (!set.contains(belowPos)) {
+				if (!finalDecorationPoses.contains(belowPos)) {
 					BlockState blockState = worldGenLevel.getBlockState(mutableBlockPos2);
 					if (this.isWaterAt(worldGenLevel.getBlockState(mutableBlockPos))
 						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
 					) {
-						set.add(belowPos);
+						finalDecorationPoses.add(belowPos);
 					}
 				}
 				mutableBlockPos.move(direction.getOpposite());
 			}
 		}
+
+		set = new HashSet<>(finalDecorationPoses);
 
 		super.distributeVegetation(featurePlaceContext, worldGenLevel, vegetationPatchConfiguration, randomSource, set, i, j);
 	}

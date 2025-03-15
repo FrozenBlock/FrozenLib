@@ -27,6 +27,9 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 import org.jetbrains.annotations.NotNull;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFeature {
@@ -47,6 +50,7 @@ public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFea
 	) {
 		BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 		BlockPos.MutableBlockPos mutableBlockPos2 = new BlockPos.MutableBlockPos();
+		List<BlockPos> finalDecorationPoses = new ArrayList<>(set);
 
 		for (BlockPos blockPos : set) {
 			mutableBlockPos.set(blockPos);
@@ -55,17 +59,19 @@ public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFea
 				mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
 				BlockPos belowPos = mutableBlockPos2.immutable();
 
-				if (!set.contains(belowPos)) {
+				if (!finalDecorationPoses.contains(belowPos)) {
 					BlockState blockState = worldGenLevel.getBlockState(mutableBlockPos2);
 					if (worldGenLevel.isEmptyBlock(mutableBlockPos)
 						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
 					) {
-						set.add(belowPos);
+						finalDecorationPoses.add(belowPos);
 					}
 				}
 				mutableBlockPos.move(direction.getOpposite());
 			}
 		}
+
+		set = new HashSet<>(finalDecorationPoses);
 
 		super.distributeVegetation(featurePlaceContext, worldGenLevel, vegetationPatchConfiguration, randomSource, set, i, j);
 	}
