@@ -50,18 +50,20 @@ public class UnderwaterVegetationPatchWithEdgeDecorationFeature extends Underwat
 		BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 		BlockPos.MutableBlockPos mutableBlockPos2 = new BlockPos.MutableBlockPos();
 		List<BlockPos> finalDecorationPoses = new ArrayList<>(set);
+		Direction surfaceDirection = vegetationPatchConfiguration.surface.getDirection();
+		Direction oppositeDirection = surfaceDirection.getOpposite();
 
 		for (BlockPos blockPos : set) {
-			mutableBlockPos.set(blockPos);
+			mutableBlockPos.setWithOffset(blockPos, oppositeDirection);
 			for (Direction direction : Direction.Plane.HORIZONTAL) {
 				mutableBlockPos.move(direction);
-				mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
+				mutableBlockPos2.setWithOffset(mutableBlockPos, surfaceDirection);
 				BlockPos belowPos = mutableBlockPos2.immutable();
 
 				if (!finalDecorationPoses.contains(belowPos)) {
-					BlockState blockState = worldGenLevel.getBlockState(mutableBlockPos2);
+					BlockState blockState = worldGenLevel.getBlockState(belowPos);
 					if (this.isWaterAt(worldGenLevel.getBlockState(mutableBlockPos))
-						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
+						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, oppositeDirection)
 					) {
 						finalDecorationPoses.add(belowPos);
 					}
