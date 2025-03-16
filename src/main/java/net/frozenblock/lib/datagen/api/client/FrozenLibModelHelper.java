@@ -77,7 +77,17 @@ public class FrozenLibModelHelper {
 		MultiVariant multiVariant2 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_2.create(block, generator.modelOutput));
 		MultiVariant multiVariant3 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_3.create(block, generator.modelOutput));
 		MultiVariant multiVariant4 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_4.create(block, generator.modelOutput));
-		generator.createSegmentedBlock(block, BlockStateProperties.FLOWER_AMOUNT, multiVariant1, multiVariant2, multiVariant3, multiVariant4);
+		generator.createSegmentedBlock(
+			block,
+			multiVariant1,
+			BlockModelGenerators.FLOWER_BED_MODEL_1_SEGMENT_CONDITION,
+			multiVariant2,
+			BlockModelGenerators.FLOWER_BED_MODEL_2_SEGMENT_CONDITION,
+			multiVariant3,
+			BlockModelGenerators.FLOWER_BED_MODEL_3_SEGMENT_CONDITION,
+			multiVariant4,
+			BlockModelGenerators.FLOWER_BED_MODEL_4_SEGMENT_CONDITION
+		);
 	}
 
 	public static <T extends Property<?>> @Unmodifiable @NotNull Map<T, VariantMutator> selectMultifaceNoUvLockProperties(

@@ -250,6 +250,10 @@ transitive-extendable class net/minecraft/data/DataGenerator$PackGenerator
 transitive-accessible class net/minecraft/data/DataGenerator$PackGenerator
 transitive-extendable method net/minecraft/data/DataGenerator$PackGenerator <init> (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
 transitive-accessible method net/minecraft/data/DataGenerator$PackGenerator <init> (Lnet/minecraft/data/DataGenerator;ZLjava/lang/String;Lnet/minecraft/data/PackOutput;)V
+transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_1_SEGMENT_CONDITION Ljava/util/function/Function;
+transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_2_SEGMENT_CONDITION Ljava/util/function/Function;
+transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_3_SEGMENT_CONDITION Ljava/util/function/Function;
+transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_4_SEGMENT_CONDITION Ljava/util/function/Function;
 
 # Particle
 transitive-accessible field net/minecraft/client/particle/Particle x D
