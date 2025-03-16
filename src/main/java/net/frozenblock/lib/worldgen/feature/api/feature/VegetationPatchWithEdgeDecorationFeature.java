@@ -20,18 +20,17 @@ package net.frozenblock.lib.worldgen.feature.api.feature;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
-import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.NotNull;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
-import java.util.function.Predicate;
 
 public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFeature {
 
@@ -40,79 +39,42 @@ public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFea
 	}
 
 	@Override
-	public @NotNull Set<BlockPos> placeGroundPatch(
+	protected void distributeVegetation(
+		@NotNull FeaturePlaceContext<VegetationPatchConfiguration> featurePlaceContext,
 		@NotNull WorldGenLevel worldGenLevel,
 		@NotNull VegetationPatchConfiguration vegetationPatchConfiguration,
 		@NotNull RandomSource randomSource,
-		@NotNull BlockPos blockPos,
-		@NotNull Predicate<BlockState> canReplace,
+		@NotNull Set<BlockPos> set,
 		int i,
 		int j
 	) {
-		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
-		BlockPos.MutableBlockPos mutableBlockPos2 = mutableBlockPos.mutable();
+		BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+		BlockPos.MutableBlockPos mutableBlockPos2 = new BlockPos.MutableBlockPos();
+		List<BlockPos> finalDecorationPoses = new ArrayList<>(set);
 		Direction surfaceDirection = vegetationPatchConfiguration.surface.getDirection();
 		Direction oppositeDirection = surfaceDirection.getOpposite();
-		Set<BlockPos> set = new HashSet<>();
 
-		for (int k = -i; k <= i; k++) {
-			boolean bl = k == -i || k == i;
+		for (BlockPos blockPos : set) {
+			mutableBlockPos.setWithOffset(blockPos, oppositeDirection);
+			for (Direction direction : Direction.Plane.HORIZONTAL) {
+				mutableBlockPos.move(direction);
+				mutableBlockPos2.setWithOffset(mutableBlockPos, surfaceDirection);
+				BlockPos belowPos = mutableBlockPos2.immutable();
 
-			for (int l = -j; l <= j; l++) {
-				boolean bl2 = l == -j || l == j;
-				boolean bl3 = bl || bl2;
-				boolean bl4 = bl && bl2;
-				boolean bl5 = bl3 && !bl4;
-				if (!bl4 && (!bl5 || vegetationPatchConfiguration.extraEdgeColumnChance != 0F && !(randomSource.nextFloat() > vegetationPatchConfiguration.extraEdgeColumnChance))) {
-					mutableBlockPos.setWithOffset(blockPos, k, 0, l);
-
-					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, BlockBehaviour.BlockStateBase::isAir)
-							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
-						 verticalSteps++
-					) {
-						mutableBlockPos.move(surfaceDirection);
-					}
-
-					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !blockStatex.isAir())
-							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
-						 verticalSteps++
-					) {
-						mutableBlockPos.move(oppositeDirection);
-					}
-
-					mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
-					BlockState blockState = worldGenLevel.getBlockState(mutableBlockPos2);
+				if (!finalDecorationPoses.contains(belowPos)) {
+					BlockState blockState = worldGenLevel.getBlockState(belowPos);
 					if (worldGenLevel.isEmptyBlock(mutableBlockPos)
-						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
+						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, oppositeDirection)
 					) {
-						int depth = vegetationPatchConfiguration.depth.sample(randomSource)
-							+ (vegetationPatchConfiguration.extraBottomBlockChance > 0F && randomSource.nextFloat() < vegetationPatchConfiguration.extraBottomBlockChance ? 1 : 0);
-						BlockPos blockPos2 = mutableBlockPos2.immutable();
-
-						boolean placedGround = this.placeGround(worldGenLevel, vegetationPatchConfiguration, canReplace, randomSource, mutableBlockPos2, depth);
-						if (placedGround) set.add(blockPos2);
-
-						for (Direction direction : Direction.Plane.HORIZONTAL) {
-							mutableBlockPos.move(direction);
-							mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
-							BlockPos belowExtraPos = mutableBlockPos2.immutable();
-
-							if (!set.contains(belowExtraPos)) {
-								if (worldGenLevel.isEmptyBlock(mutableBlockPos)
-									&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
-								) {
-									set.add(belowExtraPos);
-								}
-							}
-							mutableBlockPos.move(direction.getOpposite());
-						}
+						finalDecorationPoses.add(belowPos);
 					}
 				}
+				mutableBlockPos.move(direction.getOpposite());
 			}
 		}
 
-		return set;
+		set = new HashSet<>(finalDecorationPoses);
+
+		super.distributeVegetation(featurePlaceContext, worldGenLevel, vegetationPatchConfiguration, randomSource, set, i, j);
 	}
 }
