@@ -99,7 +99,7 @@ public final class FrozenLibRenderTypes {
 			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
 				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
-				.createCompositeState(false);
+				.createCompositeState(boolean_);
 			return RenderType.create(
 				FrozenLibConstants.safeString("apparition_outer"),
 				1536,
@@ -115,7 +115,7 @@ public final class FrozenLibRenderTypes {
 			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
 				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
-				.createCompositeState(false);
+				.createCompositeState(boolean_);
 			return RenderType.create(
 				FrozenLibConstants.safeString("apparition_outer_cull"),
 				1536,

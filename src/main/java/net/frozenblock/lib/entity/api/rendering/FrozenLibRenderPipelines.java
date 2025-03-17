@@ -83,10 +83,8 @@ public final class FrozenLibRenderPipelines {
 
 	// TODO: See if the apparitions work
 	public static final RenderPipeline APPARITION_OUTER = RenderPipelines.register(
-		RenderPipeline.builder(RenderPipelines.MATRICES_COLOR_FOG_SNIPPET)
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer"))
-			.withVertexShader("core/entity")
-			.withFragmentShader("core/entity")
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
 			.withShaderDefine("NO_OVERLAY")
@@ -94,17 +92,14 @@ public final class FrozenLibRenderPipelines {
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withDepthWrite(false)
-			.withVertexFormat(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS)
 			.withCull(false)
 			.withDepthWrite(false)
 			.build()
 	);
 
 	public static final RenderPipeline APPARITION_OUTER_CULL = RenderPipelines.register(
-		RenderPipeline.builder(RenderPipelines.MATRICES_COLOR_FOG_SNIPPET)
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer_cull"))
-			.withVertexShader("core/entity")
-			.withFragmentShader("core/entity")
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
 			.withShaderDefine("NO_OVERLAY")
@@ -112,7 +107,6 @@ public final class FrozenLibRenderPipelines {
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withDepthWrite(false)
-			.withVertexFormat(DefaultVertexFormat.NEW_ENTITY, VertexFormat.Mode.QUADS)
 			.withCull(true)
 			.withDepthWrite(false)
 			.build()
