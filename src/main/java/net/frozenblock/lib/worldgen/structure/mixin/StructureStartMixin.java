@@ -121,6 +121,13 @@ public class StructureStartMixin implements StructureStartInterface {
 		original.call(instance, worldGenLevel, structureManager, chunkGenerator, randomSource, boundingBox, chunkPos, blockPos);
 	}
 
+	@Unique
+	@Override
+	public ResourceLocation frozenLib$getId() {
+		return this.frozenLib$id;
+	}
+
+	@Unique
 	@Override
 	public void frozenLib$setId(ResourceLocation id) {
 		this.frozenLib$id = id;
