@@ -15,19 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.music.api.client;
+package net.frozenblock.lib.music.api.client.pitch;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.sounds.Music;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
+import net.minecraft.resources.ResourceLocation;
+import java.util.function.Function;
 
 /**
- * @param music The {@link Music} to play while in a {@link Structure}.
- * @param mustBeInsidePiece Whether this can play only while the {@link Player} is directly inside a {@link StructurePiece}.
+ * @param type The in-game location type to check, in {@link MusicPitchDetectionType} form.
+ * @param location The {@link ResourceLocation} of the in-game location that triggers the pitch change.
+ * @param pitchFunction The target pitch to play music at. This is passed as a {@link Function} with a {@link Long} as the parameter, allowing pitch to continuously shift.
  */
 @Environment(EnvType.CLIENT)
-public record StructureMusic(Music music, boolean mustBeInsidePiece) {
+public record MusicPitchInfo(MusicPitchDetectionType type, ResourceLocation location, Function<Long, Float> pitchFunction) {
 }
