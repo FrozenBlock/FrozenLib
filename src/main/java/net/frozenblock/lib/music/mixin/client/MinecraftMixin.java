@@ -18,7 +18,6 @@
 package net.frozenblock.lib.music.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
@@ -33,13 +32,14 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.Music;
-import net.minecraft.sounds.Musics;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Minecraft.class)
@@ -87,34 +87,9 @@ public class MinecraftMixin {
 		return original.call(instance, pos);
 	}
 
-	@ModifyReturnValue(method = "getSituationalMusic", at = @At(value = "RETURN", ordinal = 0))
-	public Music frozenLib$resetPitchIfPlayingScreenMusic(Music original) {
+	@Inject(method = "getSituationalMusic", at = @At("HEAD"))
+	public void frozenLib$resetPitch(CallbackInfoReturnable<Music> info) {
 		MusicPitchApi.resetCurrentPitch();
-		return original;
-	}
-
-	@ModifyExpressionValue(
-		method = "getSituationalMusic",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/gui/components/BossHealthOverlay;shouldPlayMusic()Z"
-		)
-	)
-	public boolean frozenLib$resetPitchIfFightingEndBoss(boolean original) {
-		if (original) MusicPitchApi.resetCurrentPitch();
-		return original;
-	}
-
-	@ModifyReturnValue(method = "getSituationalMusic", at = @At(value = "RETURN", ordinal = 2))
-	public Music frozenLib$resetPitchIfCreative(Music original) {
-		if (original == Musics.CREATIVE) MusicPitchApi.resetCurrentPitch();
-		return original;
-	}
-
-	@ModifyReturnValue(method = "getSituationalMusic", at = @At(value = "RETURN", ordinal = 4))
-	public Music frozenLib$resetPitchIfInMenu(Music original) {
-		MusicPitchApi.resetCurrentPitch();
-		return original;
 	}
 
 	@ModifyExpressionValue(
