@@ -17,11 +17,11 @@
 
 package net.frozenblock.lib.music.api.client.pitch;
 
+import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
 import net.minecraft.resources.ResourceLocation;
-import java.util.function.Function;
 
 /**
  * @param type The in-game location type to check, in {@link MusicPitchDetectionType} form.
