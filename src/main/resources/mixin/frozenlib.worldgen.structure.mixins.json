@@ -19,8 +19,5 @@
     "StructureTemplateMixin",
     "TemplateStructurePieceMixin",
     "status.ServerPlayerMixin"
-  ],
-  "client": [
-    "music.MinecraftMixin"
   ]
 }
