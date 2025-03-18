@@ -103,7 +103,6 @@ public class MusicPitchApi {
 					ResourceLocation structureLocation = structureStatus.getStructure();
 					boolean isInsidePiece = structureStatus.isInsidePiece();
 
-
 					if (info.type().isForStructureAndMatchesInside(isInsidePiece) && info.location().equals(structureLocation)) {
 						pitches.add(info.pitchFunction().apply(gameTime));
 						pitchContributors += 1;
