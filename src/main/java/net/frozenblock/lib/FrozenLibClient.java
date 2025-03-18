@@ -31,7 +31,6 @@ import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
 import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
-import net.frozenblock.lib.menu.api.PanoramaApi;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
@@ -39,7 +38,6 @@ import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.protocol.common.ServerboundCustomPayloadPacket;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
@@ -60,7 +58,6 @@ public final class FrozenLibClient implements ClientModInitializer {
 		FrozenClientNetworking.registerClientReceivers();
 		DebugRenderManager.init();
 
-		PanoramaApi.addPanorama(ResourceLocation.withDefaultNamespace("textures/gui/title/background/panorama"));
 		ClientCapeData.init();
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
