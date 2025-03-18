@@ -45,7 +45,7 @@ public class StructureMusicApi {
 	 * Registers {@link StructureMusicInfo} to be played while in a {@link Structure}.
 	 *
 	 * @param structureLocation The {@link ResourceLocation} of the {@link Structure} to play {@link StructureMusicInfo} in.
-	 * @param music The {@link StructureMusicInfo} to play.
+	 * @param musicInfo The {@link StructureMusicInfo} to play.
 	 */
 	public static void registerMusicInfoForStructure(ResourceLocation structureLocation, StructureMusicInfo musicInfo) {
 		List<StructureMusicInfo> musicList = STRUCTURE_TO_MUSIC_INFO_MAP.computeIfAbsent(structureLocation, location -> new ArrayList<>());
@@ -57,7 +57,7 @@ public class StructureMusicApi {
 	 * Registers {@link StructureMusicInfo} to be played while in a {@link Structure}.
 	 *
 	 * @param structureKey The {@link ResourceKey} of the {@link Structure} to play {@link StructureMusicInfo} in.
-	 * @param music The {@link StructureMusicInfo} to play.
+	 * @param musicInfo The {@link StructureMusicInfo} to play.
 	 */
 	public static void registerMusicInfoForStructure(@NotNull ResourceKey<Structure> structureKey, StructureMusicInfo musicInfo) {
 		registerMusicInfoForStructure(structureKey.location(), musicInfo);
