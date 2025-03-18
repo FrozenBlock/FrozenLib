@@ -15,13 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.structure.impl;
+package net.frozenblock.lib.worldgen.structure.api.music.client;
 
-import net.minecraft.resources.ResourceLocation;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.sounds.MusicInfo;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.levelgen.structure.Structure;
+import net.minecraft.world.level.levelgen.structure.StructurePiece;
 
-public interface StructureStartInterface {
-
-	ResourceLocation frozenLib$getId();
-
-	void frozenLib$setId(ResourceLocation id);
+/**
+ * @param musicInfo The {@link MusicInfo} to play while in a {@link Structure}.
+ * @param mustBeInsidePiece Whether this can play only while the {@link Player} is directly inside a {@link StructurePiece}.
+ */
+@Environment(EnvType.CLIENT)
+public record StructureMusicInfo(MusicInfo musicInfo, boolean mustBeInsidePiece) {
 }

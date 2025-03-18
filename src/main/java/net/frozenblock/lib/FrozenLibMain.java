@@ -55,6 +55,7 @@ import net.frozenblock.lib.worldgen.structure.api.StructurePlacementExclusionApi
 import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
 import net.frozenblock.lib.worldgen.structure.impl.StructureUpgradeCommand;
+import net.frozenblock.lib.worldgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.worldgen.surface.impl.BiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -129,6 +130,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			WindManager.getOrCreateWindManager(serverLevel).tick(serverLevel);
 			ScreenShakeManager.getOrCreateScreenShakeManager(serverLevel).tick(serverLevel);
 			EntityUtils.populateEntitiesPerLevel(serverLevel);
+			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
 		});
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
