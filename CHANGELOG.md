@@ -6,4 +6,5 @@ Put changelog here:
 
 -----------------
 - Added `StructureMusicApi,` allowing modders to define custom music to play within structures.
+- Removed `PanoramaApi` as it has potentially unsafe implementation on 1.21.5.
 - Fixed spam-logging of structure names upon world load.
