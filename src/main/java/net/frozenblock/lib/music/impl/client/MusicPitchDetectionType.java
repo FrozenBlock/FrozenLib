@@ -15,19 +15,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.structure.api.music.client;
+package net.frozenblock.lib.music.impl.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.sounds.Music;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
 
-/**
- * @param music The {@link Music} to play while in a {@link Structure}.
- * @param mustBeInsidePiece Whether this can play only while the {@link Player} is directly inside a {@link StructurePiece}.
- */
 @Environment(EnvType.CLIENT)
-public record StructureMusic(Music music, boolean mustBeInsidePiece) {
+public enum MusicPitchDetectionType {
+	BIOME,
+	STRUCTURE,
+	STRUCTURE_INSIDE,
+	DIMENSION;
+
+	public boolean isForBiome() {
+		return this == BIOME;
+	}
+
+	public boolean isForStructure() {
+		return this == STRUCTURE || this == STRUCTURE_INSIDE;
+	}
+
+	public boolean isForStructureAndMatchesInside(boolean insidePiece) {
+		if (this == STRUCTURE_INSIDE && !insidePiece) return false;
+		return this.isForStructure();
+	}
+
+	public boolean isForDimension() {
+		return this == DIMENSION;
+	}
 }
