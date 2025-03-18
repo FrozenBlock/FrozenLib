@@ -15,13 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.structure.impl;
+package net.frozenblock.lib.worldgen.structure.impl.status;
 
-import net.minecraft.resources.ResourceLocation;
+import java.util.List;
 
-public interface StructureStartInterface {
+public interface PlayerStructureStatusInterface {
 
-	ResourceLocation frozenLib$getId();
+	List<PlayerStructureStatus> frozenLib$getStructureStatuses();
 
-	void frozenLib$setId(ResourceLocation id);
+	void frozenLib$setStructureStatuses(List<PlayerStructureStatus> structureStatuses);
 }
