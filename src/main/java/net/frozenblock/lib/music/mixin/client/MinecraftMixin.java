@@ -18,7 +18,6 @@
 package net.frozenblock.lib.music.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
@@ -40,6 +39,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Slice;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Minecraft.class)
@@ -87,34 +88,9 @@ public class MinecraftMixin {
 		return original.call(instance, pos);
 	}
 
-	@ModifyReturnValue(method = "getSituationalMusic", at = @At(value = "RETURN", ordinal = 0))
-	public MusicInfo frozenLib$resetPitchIfPlayingScreenMusic(MusicInfo original) {
+	@Inject(method = "getSituationalMusic", at = @At("HEAD"))
+	public void frozenLib$resetPitch(CallbackInfoReturnable<MusicInfo> info) {
 		MusicPitchApi.resetCurrentPitch();
-		return original;
-	}
-
-	@ModifyExpressionValue(
-		method = "getSituationalMusic",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/gui/components/BossHealthOverlay;shouldPlayMusic()Z"
-		)
-	)
-	public boolean frozenLib$resetPitchIfFightingEndBoss(boolean original) {
-		if (original) MusicPitchApi.resetCurrentPitch();
-		return original;
-	}
-
-	@ModifyReturnValue(method = "getSituationalMusic", at = @At(value = "RETURN", ordinal = 2))
-	public MusicInfo frozenLib$resetPitchIfCreative(MusicInfo original) {
-		MusicPitchApi.resetCurrentPitch();
-		return original;
-	}
-
-	@ModifyReturnValue(method = "getSituationalMusic", at = @At(value = "RETURN", ordinal = 6))
-	public MusicInfo frozenLib$resetPitchIfInMenu(MusicInfo original) {
-		MusicPitchApi.resetCurrentPitch();
-		return original;
 	}
 
 	@ModifyExpressionValue(
