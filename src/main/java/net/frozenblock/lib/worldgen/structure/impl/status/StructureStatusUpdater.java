@@ -18,11 +18,9 @@
 package net.frozenblock.lib.worldgen.structure.impl.status;
 
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
 import net.frozenblock.lib.worldgen.structure.impl.status.networking.PlayerStructureStatusPacket;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
@@ -75,7 +73,7 @@ public class StructureStatusUpdater {
 				}
 			}
 
-			if (!(newStructureStatuses.containsAll(currentStructureStatuses) && currentStructureStatuses.containsAll(newStructureStatuses))) {
+			if (!newStructureStatuses.equals(currentStructureStatuses)) {
 				structureStatusInterface.frozenLib$setStructureStatuses(newStructureStatuses);
 				sendStructureStatusPacket(player, newStructureStatuses);
 			}
@@ -84,8 +82,6 @@ public class StructureStatusUpdater {
 
 	@ApiStatus.Internal
 	private static void sendStructureStatusPacket(@NotNull ServerPlayer player, @NotNull List<PlayerStructureStatus> structureStatuses) {
-		Packet<?> packet = new ClientboundCustomPayloadPacket(new PlayerStructureStatusPacket(structureStatuses));
-		player.connection.send(packet);
-		FrozenLibLogUtils.log("Sending structure status packet to " + player.getUUID(), FrozenLibConstants.UNSTABLE_LOGGING);
+		player.connection.send(new ClientboundCustomPayloadPacket(new PlayerStructureStatusPacket(structureStatuses)));
 	}
 }

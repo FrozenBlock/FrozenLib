@@ -56,4 +56,19 @@ public class PlayerStructureStatus {
 	public void setInsidePiece(boolean insidePiece) {
 		this.insidePiece = insidePiece;
 	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (obj instanceof PlayerStructureStatus other) {
+			return this.structure.equals(other.structure) && this.insidePiece == other.insidePiece;
+		}
+		return false;
+	}
+
+	@Override
+	public int hashCode() {
+		int i = 1;
+		i = 31 * i + this.structure.hashCode();
+		return 31 * i + Boolean.hashCode(this.insidePiece);
+	}
 }
