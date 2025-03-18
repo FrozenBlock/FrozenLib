@@ -64,7 +64,7 @@ public class StructureMusicApi {
 	}
 
 	@ApiStatus.Internal
-	public static @NotNull Optional<Music> getCurrentStructureMusic(RandomSource random) {
+	private static @NotNull Optional<Music> getCurrentStructureMusic(RandomSource random) {
 		Optional<PlayerStructureStatus> optionalStructureStatus = ClientStructureStatuses.getProminentStructureStatus();
 		if (optionalStructureStatus.isPresent()) {
 			PlayerStructureStatus structureStatus = optionalStructureStatus.get();
