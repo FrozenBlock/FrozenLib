@@ -21,6 +21,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.menu.api.PanoramaApi;
 import net.frozenblock.lib.menu.api.SplashTextAPI;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.minecraft.resources.ResourceLocation;
@@ -35,5 +36,7 @@ public final class FrozenTestClient implements ClientModInitializer {
     public void onInitializeClient() {
         FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
 		SplashTextAPI.addSplashLocation(ResourceLocation.fromNamespaceAndPath(FrozenLibConstants.MOD_ID, "texts/splashes.txt"));
+		PanoramaApi.addPanorama(ResourceLocation.fromNamespaceAndPath(FrozenLibConstants.MOD_ID, "textures/gui/title/background/panorama"));
+		PanoramaApi.addPanorama(ResourceLocation.fromNamespaceAndPath("this_will_throw_an_error", "textures/gui/title/background/panorama"));
     }
 }
