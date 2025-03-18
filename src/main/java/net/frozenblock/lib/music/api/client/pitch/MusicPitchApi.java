@@ -128,9 +128,9 @@ public class MusicPitchApi {
 
 		float totalPitches = 0F;
 		for (float suppliedPitch : pitches) {
-			totalPitches += suppliedPitch;
+			totalPitches += suppliedPitch - 1F;
 		}
 
-		setCurrentPitch(totalPitches / pitchContributors);
+		setCurrentPitch(1F + (totalPitches / pitchContributors));
 	}
 }
