@@ -546,7 +546,7 @@ modrinth {
     changelog = changelog_text
     uploadFile = remapJar
     gameVersions = listOf(minecraft_version)
-    loaders = listOf("fabric")
+    loaders = listOf("fabric", "quilt")
     /*
     additionalFiles = listOf(
         tasks.remapSourcesJar.get(),
@@ -557,6 +557,7 @@ modrinth {
     dependencies {
         required.project("fabric-api")
         optional.project("cloth-config")
+        optional.project("modmenu")
     }
 }
 
