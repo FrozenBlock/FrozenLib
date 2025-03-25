@@ -259,11 +259,11 @@ dependencies {
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    relocModImplementation("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
+    relocModImplementation("blue.endless:jankson:1.2.3")
 
     // ExJson
     //relocModApi("org.exjson:xjs-data:$xjs_data_version")
-    relocModApi("org.exjson:xjs-data:0.6-infinity-compat-SNAPSHOT")
+    relocModApi("org.exjson:xjs-data:0.6")
     relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
     relocModApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.34")?.let { annotationProcessor(it) }
