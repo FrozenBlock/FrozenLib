@@ -23,11 +23,13 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.api.sync.SyncBehavior;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
 import net.frozenblock.lib.config.api.sync.network.ConfigSyncData;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +50,26 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 			config.setSynced(true);
 			ConfigModification.copyInto(source, destination, true);
 		} catch (NullPointerException ignored) {}
+	}
+
+	@ApiStatus.Internal
+	public static <T> void clearSyncData(Config<T> config) {
+		if (!ConfigRegistry.contains(config)) throw new IllegalStateException("Config " + config + " not in registry!");
+		ConfigRegistry.removeSyncData(config);
+		ConfigRegistry.getModificationsForConfig(config).keySet().removeIf(key -> {
+			if (key.modification() instanceof ConfigSyncModification<?>) {
+				System.out.println("LOL");
+				return true;
+			}
+			return false;
+		});
+		ConfigRegistry.getModificationsForConfig(config).forEach((tConfigModification, integer) -> {
+			if (tConfigModification.modification() instanceof ConfigSyncModification<?>) {
+				System.out.println("FUCK");
+				throw new AssertionError();
+			}
+		});
+		config.setSynced(false);
 	}
 
 	@FunctionalInterface
