@@ -118,6 +118,12 @@ public class ConfigRegistry {
 	}
 
 	@ApiStatus.Internal
+	public static <T>  void removeSyncData(Config<T> config) {
+		if (!contains(config)) throw new IllegalStateException("Config " + config + " not in registry!");
+		CONFIG_SYNC_DATA.remove(config);
+	}
+
+	@ApiStatus.Internal
 	@Nullable
 	public static <T> ConfigSyncData<T> getSyncData(Config<T> config) {
 		return (ConfigSyncData<T>) CONFIG_SYNC_DATA.get(config);
