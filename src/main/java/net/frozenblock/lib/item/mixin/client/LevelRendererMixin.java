@@ -29,11 +29,16 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.item.api.PlaceInAirBlockItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -47,6 +52,10 @@ public abstract class LevelRendererMixin {
 	@Final
 	private Minecraft minecraft;
 
+	@Shadow
+	@Nullable
+	private ClientLevel level;
+
 	@ModifyExpressionValue(
 		method = "renderBlockOutline",
 		at = @At(
@@ -56,12 +65,26 @@ public abstract class LevelRendererMixin {
 	)
 	public HitResult.Type frozenLib$useBlockTypeIfPlaceableInAir(
 		HitResult.Type original,
+		@Local BlockHitResult blockHitResult,
 		@Share("frozenLib$canPlaceInAir") LocalBooleanRef canPlaceInAir
 	) {
 		if (this.minecraft.player != null && original == HitResult.Type.MISS) {
-			if (this.minecraft.player.getMainHandItem().getItem() instanceof PlaceInAirBlockItem || this.minecraft.player.getOffhandItem().getItem() instanceof PlaceInAirBlockItem) {
-				canPlaceInAir.set(true);
-				return HitResult.Type.BLOCK;
+			BlockPos pos = blockHitResult.getBlockPos();
+
+			ItemStack mainHandItem = this.minecraft.player.getMainHandItem();
+			if (mainHandItem.getItem() instanceof PlaceInAirBlockItem placeInAirBlockItem) {
+				if (placeInAirBlockItem.checkIfPlayerCanPlaceBlock(this.minecraft.player, mainHandItem, this.level, pos)) {
+					canPlaceInAir.set(true);
+					return HitResult.Type.BLOCK;
+				}
+			}
+
+			ItemStack offHandItem = this.minecraft.player.getOffhandItem();
+			if (offHandItem.getItem() instanceof PlaceInAirBlockItem placeInAirBlockItem) {
+				if (placeInAirBlockItem.checkIfPlayerCanPlaceBlock(this.minecraft.player, offHandItem, this.level, pos)) {
+					canPlaceInAir.set(true);
+					return HitResult.Type.BLOCK;
+				}
 			}
 		}
 

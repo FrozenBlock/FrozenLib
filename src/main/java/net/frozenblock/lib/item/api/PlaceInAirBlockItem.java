@@ -30,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.pattern.BlockInWorld;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -44,7 +45,7 @@ public class PlaceInAirBlockItem extends BlockItem {
 
 	@Override
 	@NotNull
-	public InteractionResult use(@NotNull Level level, @NotNull Player player, InteractionHand hand) {
+	public InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
 		ItemStack itemStack = player.getItemInHand(hand);
 
 		double blockInteractionRange = player.blockInteractionRange();
@@ -68,6 +69,8 @@ public class PlaceInAirBlockItem extends BlockItem {
 		if (entityHitResult == null) {
 			BlockPos pos = BlockPos.containing(placementPos);
 
+			if (!this.checkIfPlayerCanPlaceBlock(player, itemStack, level, pos)) return InteractionResult.PASS;
+
 			if (level.isInWorldBounds(pos) && level.getWorldBorder().isWithinBounds(pos) && level.getBlockState(pos).canBeReplaced()) {
 				Direction reflectedFacingDirection = Direction.getApproximateNearest(lookAngle);
 				BlockPlaceContext context = new BlockPlaceContext(player, hand, itemStack, new BlockHitResult(pos.getCenter(), reflectedFacingDirection, pos, false));
@@ -78,5 +81,11 @@ public class PlaceInAirBlockItem extends BlockItem {
 			}
 		}
 		return super.use(level, player, hand);
+	}
+
+	public boolean checkIfPlayerCanPlaceBlock(@NotNull Player player, ItemStack itemStack, Level level, BlockPos pos) {
+		if (player.isSpectator()) return false;
+		if (!player.getAbilities().mayBuild && !itemStack.canPlaceOnBlockInAdventureMode(new BlockInWorld(level, pos, false))) return false;
+		return true;
 	}
 }
