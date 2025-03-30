@@ -17,11 +17,18 @@
 
 package net.frozenblock.lib;
 
+import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 @ApiStatus.Internal
 public final class FrozenLibLogUtils {
+	/**
+	 * Used for features that may be unstable and crash in public builds.
+	 * <p>
+	 * It's smart to use this for at least registries.
+	 */
+	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	public static void log(Object string, boolean should) {
 		if (should) {

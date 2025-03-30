@@ -56,19 +56,7 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 	public static <T> void clearSyncData(Config<T> config) {
 		if (!ConfigRegistry.contains(config)) throw new IllegalStateException("Config " + config + " not in registry!");
 		ConfigRegistry.removeSyncData(config);
-		ConfigRegistry.getModificationsForConfig(config).keySet().removeIf(key -> {
-			if (key.modification() instanceof ConfigSyncModification<?>) {
-				System.out.println("LOL");
-				return true;
-			}
-			return false;
-		});
-		ConfigRegistry.getModificationsForConfig(config).forEach((tConfigModification, integer) -> {
-			if (tConfigModification.modification() instanceof ConfigSyncModification<?>) {
-				System.out.println("FUCK");
-				throw new AssertionError();
-			}
-		});
+		ConfigRegistry.getModificationsForConfig(config).keySet().removeIf(key -> key.modification() instanceof ConfigSyncModification<?>);
 		config.setSynced(false);
 	}
 

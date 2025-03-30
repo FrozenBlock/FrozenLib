@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib;
 
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -37,7 +36,7 @@ public final class FrozenLibConstants {
 	 * <p>
 	 * It's smart to use this for at least registries.
 	 */
-	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
+	public static boolean UNSTABLE_LOGGING = FrozenLibLogUtils.UNSTABLE_LOGGING;
 	public static final int DATA_VERSION = 2;
 
 	@Contract("_ -> new")
