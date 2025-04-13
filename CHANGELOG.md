@@ -5,4 +5,4 @@ Make sure to clear this after each release
 Put changelog here:
 
 -----------------
-- `LOL` is no longer spammed in logs.
+- Added `BlockAnimateTicks`, letting modders define custom behavior to be run every time `animateTick` is run.

@@ -15,6 +15,7 @@
     "tick.BlockStateBaseMixin"
   ],
   "client": [
-    "entity.client.BlockEntityWithoutLevelRendererMixin"
+    "entity.client.BlockEntityWithoutLevelRendererMixin",
+    "tick.client.ClientLevelMixin"
   ]
 }
