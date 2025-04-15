@@ -120,9 +120,9 @@ public final class FrozenLibRenderTypes {
 		))
 	);
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER = Util.memoize(
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION = Util.memoize(
 		((texture, affectsOutline) -> create(
-			FrozenLibConstants.string("apparition_outer"),
+			FrozenLibConstants.string("apparition"),
 			DefaultVertexFormat.NEW_ENTITY,
 			VertexFormat.Mode.QUADS,
 			1536,
@@ -138,9 +138,9 @@ public final class FrozenLibRenderTypes {
 		))
 	);
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER_CULL = Util.memoize(
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_CULL = Util.memoize(
 		((texture, affectsOutline) -> create(
-			FrozenLibConstants.string("apparition_outer_cull"),
+			FrozenLibConstants.string("apparition_cull"),
 			DefaultVertexFormat.NEW_ENTITY,
 			VertexFormat.Mode.QUADS,
 			1536,
@@ -151,6 +151,7 @@ public final class FrozenLibRenderTypes {
 				.setTextureState(new RenderStateShard.TextureStateShard(texture, TriState.FALSE, false))
 				.setTransparencyState(RenderType.TRANSLUCENT_TRANSPARENCY)
 				.setWriteMaskState(RenderType.COLOR_WRITE)
+				.setCullState(RenderStateShard.CULL)
 				.createCompositeState(false)
 		))
 	);
@@ -198,12 +199,12 @@ public final class FrozenLibRenderTypes {
 		return ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL.apply(resourceLocation, false);
 	}
 
-	public static RenderType apparitionOuter(ResourceLocation resourceLocation) {
-		return APPARITION_OUTER.apply(resourceLocation, false);
+	public static RenderType apparition(ResourceLocation resourceLocation) {
+		return APPARITION.apply(resourceLocation, false);
 	}
 
-	public static RenderType apparitionOuterCull(ResourceLocation resourceLocation) {
-		return APPARITION_OUTER_CULL.apply(resourceLocation, false);
+	public static RenderType apparitionCull(ResourceLocation resourceLocation) {
+		return APPARITION_CULL.apply(resourceLocation, false);
 	}
 
 	public static RenderType entityTranslucentEmissiveCull(ResourceLocation resourceLocation) {
