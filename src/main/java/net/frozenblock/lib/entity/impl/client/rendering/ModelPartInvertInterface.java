@@ -19,6 +19,6 @@ package net.frozenblock.lib.entity.impl.client.rendering;
 
 public interface ModelPartInvertInterface {
 
-	void frozenLib$setInverted(boolean inverted);
+	void frozenLib$setInverted();
 
 }
