@@ -94,34 +94,34 @@ public final class FrozenLibRenderTypes {
 			);
 		});
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER = Util.memoize(
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION = Util.memoize(
 		(resourceLocation, boolean_) -> {
 			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
 				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(boolean_);
 			return RenderType.create(
-				FrozenLibConstants.safeString("apparition_outer"),
+				FrozenLibConstants.safeString("apparition"),
 				1536,
 				false,
 				true,
-				FrozenLibRenderPipelines.APPARITION_OUTER,
+				FrozenLibRenderPipelines.APPARITION,
 				compositeState
 			);
 		});
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER_CULL = Util.memoize(
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_CULL = Util.memoize(
 		(resourceLocation, boolean_) -> {
 			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
 				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(boolean_);
 			return RenderType.create(
-				FrozenLibConstants.safeString("apparition_outer_cull"),
+				FrozenLibConstants.safeString("apparition_cull"),
 				1536,
 				false,
 				true,
-				FrozenLibRenderPipelines.APPARITION_OUTER_CULL,
+				FrozenLibRenderPipelines.APPARITION_CULL,
 				compositeState
 			);
 		});
@@ -146,11 +146,11 @@ public final class FrozenLibRenderTypes {
 		return ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL.apply(resourceLocation, false);
 	}
 
-	public static RenderType apparitionOuter(ResourceLocation resourceLocation) {
-		return APPARITION_OUTER.apply(resourceLocation, false);
+	public static RenderType apparition(ResourceLocation resourceLocation) {
+		return APPARITION.apply(resourceLocation, false);
 	}
 
-	public static RenderType apparitionOuterCull(ResourceLocation resourceLocation) {
-		return APPARITION_OUTER_CULL.apply(resourceLocation, false);
+	public static RenderType apparitionCull(ResourceLocation resourceLocation) {
+		return APPARITION_CULL.apply(resourceLocation, false);
 	}
 }

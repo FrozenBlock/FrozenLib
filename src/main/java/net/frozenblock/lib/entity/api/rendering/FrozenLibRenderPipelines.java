@@ -20,8 +20,6 @@ package net.frozenblock.lib.entity.api.rendering;
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.DepthTestFunction;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
@@ -81,8 +79,7 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
-	// TODO: See if the apparitions work
-	public static final RenderPipeline APPARITION_OUTER = RenderPipelines.register(
+	public static final RenderPipeline APPARITION = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
@@ -91,13 +88,12 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("NO_CARDINAL_LIGHTING")
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
-			.withDepthWrite(false)
 			.withCull(false)
 			.withDepthWrite(false)
 			.build()
 	);
 
-	public static final RenderPipeline APPARITION_OUTER_CULL = RenderPipelines.register(
+	public static final RenderPipeline APPARITION_CULL = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer_cull"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
@@ -106,7 +102,6 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("NO_CARDINAL_LIGHTING")
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
-			.withDepthWrite(false)
 			.withCull(true)
 			.withDepthWrite(false)
 			.build()
