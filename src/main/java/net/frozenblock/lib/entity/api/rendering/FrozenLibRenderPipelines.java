@@ -45,7 +45,7 @@ public final class FrozenLibRenderPipelines {
 
 	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_CULL = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_fixed_cull"))
+			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_cull"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
 			.withSampler("Sampler1")
