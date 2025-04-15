@@ -88,7 +88,7 @@ public class StructureUpgradeCommand {
 		});
 
 		Path outputPath = source.getServer().getServerDirectory()
-			.resolve("upgraded_structure/data_version_" + SharedConstants.getCurrentVersion().getDataVersion().getVersion());
+			.resolve("upgraded_structure/data_version_" + SharedConstants.getCurrentVersion().dataVersion().version());
 
 		savedTemplates.forEach((resourceLocation, compoundTag) -> {
 			NbtFileUtils.saveToFile(

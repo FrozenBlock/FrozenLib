@@ -33,7 +33,7 @@ public final class FrozenLibRenderTypes {
     public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize(
 		(resourceLocation, boolean_) -> {
 		RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
-			.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+			.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 			.setOverlayState(RenderStateShard.OVERLAY)
 			.createCompositeState(boolean_);
 		return RenderType.create(
@@ -49,7 +49,7 @@ public final class FrozenLibRenderTypes {
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_CULL = Util.memoize(
 		(resourceLocation, boolean_) -> {
 			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(boolean_);
 			return RenderType.create(
@@ -65,7 +65,7 @@ public final class FrozenLibRenderTypes {
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize(
 		(resourceLocation, boolean_) -> {
 			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(boolean_);
 			return RenderType.create(
@@ -81,7 +81,7 @@ public final class FrozenLibRenderTypes {
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL = Util.memoize(
 		(resourceLocation, boolean_) -> {
 			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(boolean_);
 			return RenderType.create(
@@ -97,7 +97,7 @@ public final class FrozenLibRenderTypes {
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER = Util.memoize(
 		(resourceLocation, boolean_) -> {
 			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(boolean_);
 			return RenderType.create(
@@ -113,7 +113,7 @@ public final class FrozenLibRenderTypes {
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER_CULL = Util.memoize(
 		(resourceLocation, boolean_) -> {
 			RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(boolean_);
 			return RenderType.create(

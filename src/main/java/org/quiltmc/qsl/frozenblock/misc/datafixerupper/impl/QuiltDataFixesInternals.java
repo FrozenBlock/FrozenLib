@@ -66,7 +66,7 @@ public abstract class QuiltDataFixesInternals {
             Schema latestVanillaSchema;
             try {
                 latestVanillaSchema = DataFixers.getDataFixer()
-                        .getSchema(DataFixUtils.makeKey(SharedConstants.getCurrentVersion().getDataVersion().getVersion()));
+                        .getSchema(DataFixUtils.makeKey(SharedConstants.getCurrentVersion().dataVersion().version()));
             } catch (Exception e) {
                 latestVanillaSchema = null;
             }
