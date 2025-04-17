@@ -15,9 +15,8 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.mixin.client.rendering.invert;
+package net.frozenblock.lib.render.mixin.invert;
 
-import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.entity.impl.client.rendering.ModelPartInvertInterface;
@@ -27,17 +26,17 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Environment(EnvType.CLIENT)
-@Mixin(ModelPart.class)
-public class ModelPartMixin implements ModelPartInvertInterface {
+@Mixin(ModelPart.Cube.class)
+public class ModelPartCubeMixin implements ModelPartInvertInterface {
 
 	@Shadow
 	@Final
-	private List<ModelPart.Cube> cubes;
+	public ModelPart.Polygon[] polygons;
 
 	@Override
 	public void frozenLib$setInverted() {
-		for (ModelPart.Cube cube : cubes) {
-			if (cube instanceof ModelPartInvertInterface invertInterface) {
+		for (ModelPart.Polygon polygon : polygons) {
+			if (((Object)polygon) instanceof ModelPartInvertInterface invertInterface) {
 				invertInterface.frozenLib$setInverted();
 			}
 		}
