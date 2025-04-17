@@ -15,34 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.mixin.client.rendering.invert;
+package net.frozenblock.lib.render.mixin.invert;
 
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.entity.impl.client.rendering.ModelPartInvertInterface;
 import net.minecraft.client.model.geom.ModelPart;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import java.util.ArrayList;
-import java.util.List;
 
 @Environment(EnvType.CLIENT)
-@Mixin(ModelPart.Polygon.class)
-public class PolygonMixin implements ModelPartInvertInterface {
+@Mixin(ModelPart.class)
+public class ModelPartMixin implements ModelPartInvertInterface {
 
-	@Mutable
 	@Shadow
 	@Final
-	public ModelPart.Vertex[] vertices;
+	private List<ModelPart.Cube> cubes;
 
 	@Override
 	public void frozenLib$setInverted() {
-		List<ModelPart.Vertex> newVertices = new ArrayList<>();
-		for (int i = 0; i < this.vertices.length; ++i) {
-			newVertices.add(this.vertices[(this.vertices.length - 1) - i]);
+		for (ModelPart.Cube cube : cubes) {
+			if (cube instanceof ModelPartInvertInterface invertInterface) {
+				invertInterface.frozenLib$setInverted();
+			}
 		}
-		this.vertices = newVertices.toArray(new ModelPart.Vertex[0]);
 	}
 }

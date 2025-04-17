@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.api.rendering;
+package net.frozenblock.lib.render;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
@@ -40,7 +40,6 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
-
 	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_CULL = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_cull"))
@@ -50,6 +49,18 @@ public final class FrozenLibRenderPipelines {
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withCull(true)
 			.withDepthWrite(false)
+			.build()
+	);
+
+	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL = RenderPipelines.register(
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_fixed_cull"))
+			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
+			.withShaderDefine("EMISSIVE")
+			.withSampler("Sampler1")
+			.withBlend(BlendFunction.TRANSLUCENT)
+			.withCull(true)
+			.withDepthWrite(true)
 			.build()
 	);
 
@@ -79,26 +90,11 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
-	public static final RenderPipeline APPARITION = RenderPipelines.register(
+	public static final RenderPipeline APPARITION_OUTER = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
-			.withShaderDefine("NO_OVERLAY")
-			.withShaderDefine("NO_CARDINAL_LIGHTING")
-			.withSampler("Sampler1")
-			.withBlend(BlendFunction.TRANSLUCENT)
-			.withCull(false)
-			.withDepthWrite(false)
-			.build()
-	);
-
-	public static final RenderPipeline APPARITION_CULL = RenderPipelines.register(
-		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
-			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer_cull"))
-			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
-			.withShaderDefine("EMISSIVE")
-			.withShaderDefine("NO_OVERLAY")
 			.withShaderDefine("NO_CARDINAL_LIGHTING")
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
