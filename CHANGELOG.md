@@ -12,3 +12,4 @@ Put changelog here:
 - Added `ShaderRegistryAPI`, allowing modders to register custom shaders.
   - This API is not present past 1.21.1 as Vanilla gained this functionality in 1.21.2.
 - Added `ItemTooltipAdditionAPI`, letting modders append custom text tooltips to items when certain conditions are met.
+- Added `FrozenLibLootTableEvents`, currently only containing an event for when an Item generates inside a Container.

@@ -127,7 +127,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
 			ordinal = 1
 		)
 	)
-	public List<Component> wilderWild$appendTrailierTalesRequirementTooltip(List<Component> original) {
+	public List<Component> frozenLib$appendAdditionalTooltips(List<Component> original) {
 		ItemTooltipAdditionAPI.getTooltipsForItemStack(ItemStack.class.cast(this)).ifPresent(original::addAll);
 		return original;
 	}
