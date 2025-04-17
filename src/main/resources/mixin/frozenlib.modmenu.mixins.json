@@ -5,9 +5,10 @@
   "compatibilityLevel": "JAVA_21",
   "plugin": "net.frozenblock.lib.modmenu.mixin.plugin.RequiresModMenuMixinPlugin",
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   },
   "client": [
-    "client.BadgeMixin"
+    "client.BadgeMixin",
+    "client.ModListWidgetMixin"
   ]
 }

@@ -1,13 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib.core.mixin",
+  "package": "net.frozenblock.lib.loot.mixin",
   "compatibilityLevel": "JAVA_21",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "BootstrapMixin",
-    "DecoderExceptionMixin"
+    "LootTableMixin"
   ]
 }

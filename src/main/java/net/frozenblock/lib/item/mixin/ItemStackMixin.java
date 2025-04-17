@@ -17,25 +17,34 @@
 
 package net.frozenblock.lib.item.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.frozenblock.lib.item.api.ItemTooltipAdditionAPI;
 import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
 import net.frozenblock.lib.item.api.removable.RemovableItemTags;
 import net.frozenblock.lib.item.impl.ItemStackExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import java.util.List;
 
 @Mixin(ItemStack.class)
-public final class ItemStackMixin implements ItemStackExtension {
+public abstract class ItemStackMixin implements ItemStackExtension {
+
+	@Shadow
+	public abstract Item getItem();
 
 	@Unique
 	private boolean frozenLib$canRemoveTags = false;
@@ -62,7 +71,6 @@ public final class ItemStackMixin implements ItemStackExtension {
 				stack.remove(value);
 			}
 		}
-
 	}
 
 	@Inject(method = "isSameItemSameComponents", at = @At("HEAD"))
@@ -110,5 +118,17 @@ public final class ItemStackMixin implements ItemStackExtension {
 	@Override
 	public void frozenLib$setCanRemoveTags(boolean canRemoveTags) {
 		this.frozenLib$canRemoveTags = canRemoveTags;
+	}
+
+	@ModifyReturnValue(
+		method = "getTooltipLines",
+		at = @At(
+			value = "RETURN",
+			ordinal = 1
+		)
+	)
+	public List<Component> frozenLib$appendAdditionalTooltips(List<Component> original) {
+		ItemTooltipAdditionAPI.getTooltipsForItemStack(ItemStack.class.cast(this)).ifPresent(original::addAll);
+		return original;
 	}
 }

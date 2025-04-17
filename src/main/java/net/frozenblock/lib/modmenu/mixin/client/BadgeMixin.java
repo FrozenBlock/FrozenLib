@@ -20,25 +20,31 @@ package net.frozenblock.lib.modmenu.mixin.client;
 import com.terraformersmc.modmenu.util.mod.Mod;
 import java.util.ArrayList;
 import java.util.Arrays;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.modmenu.api.FrozenModMenuEntrypoint;
 import net.frozenblock.lib.modmenu.impl.FrozenModMenuBadge;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Pseudo
+@Environment(EnvType.CLIENT)
 @Mixin(Mod.Badge.class)
 public class BadgeMixin {
 
 	@SuppressWarnings("InvokerTarget")
 	@Invoker("<init>")
-	private static Mod.Badge newType(String internalName, int internalId, String translationKey, int outlineColor, int fillColor, String key) {
+	private static Mod.Badge frozenLib$newBadge(String internalName, int internalId, String translationKey, int outlineColor, int fillColor, String key) {
 		throw new AssertionError("Mixin injection failed - FrozenLib BadgeMixin");
 	}
 
@@ -49,23 +55,24 @@ public class BadgeMixin {
 	private static Mod.Badge[] $VALUES;
 
 	@Inject(
-			method = "<clinit>",
-			remap = false,
-			at = @At(
-					value = "FIELD",
-					opcode = Opcodes.PUTSTATIC,
-					target = "Lcom/terraformersmc/modmenu/util/mod/Mod$Badge;$VALUES:[Lcom/terraformersmc/modmenu/util/mod/Mod$Badge;",
-					shift = At.Shift.AFTER
-			)
+		method = "<clinit>",
+		remap = false,
+		at = @At(
+			value = "FIELD",
+			opcode = Opcodes.PUTSTATIC,
+			target = "Lcom/terraformersmc/modmenu/util/mod/Mod$Badge;$VALUES:[Lcom/terraformersmc/modmenu/util/mod/Mod$Badge;",
+			shift = At.Shift.AFTER
+		),
+		require = 0
 	)
-	private static void addCustomBadges(CallbackInfo ci) {
+	private static void frozenLib$addCustomBadges(CallbackInfo info) {
 		var badges = new ArrayList<>(Arrays.asList($VALUES));
 		var last = badges.get(badges.size() - 1);
 		int currentOrdinal = last.ordinal() + 1;
 
-		var frozenblock = newType("FROZENBLOCK", currentOrdinal, "FrozenBlock", 0xFF84A0FE, 0xFF000D5B, "frozenblock");
+		var frozenblock = frozenLib$newBadge("FROZENBLOCK", currentOrdinal, "FrozenBlock", 0xFF84A0FE, 0xFF000D5B, "frozenblock");
 		currentOrdinal += 1;
-		var indev = newType("INDEV", currentOrdinal, "Indev", 0xFF71BC00, 0xFF1C5400, "indev");
+		var indev = frozenLib$newBadge("FROZENBLOCK_INDEV", currentOrdinal, "Indev", 0xFF71BC00, 0xFF1C5400, "indev");
 		badges.add(frozenblock);
 		badges.add(indev);
 
@@ -87,10 +94,11 @@ public class BadgeMixin {
 		for (FrozenModMenuBadge newBadge : newBadges) {
 			currentOrdinal += 1;
 			StringBuilder internalId = new StringBuilder(newBadge.key.toUpperCase());
-			while (internalIds.contains(internalId.toString())) {
-				internalId.append("A");
+			if (internalIds.contains(internalId.toString())) {
+				FrozenLibLogUtils.logError("ModMenu Badge " + newBadge.key + " already exists!");
+				continue;
 			}
-			var addedBadge = newType(internalId.toString(), currentOrdinal, newBadge.translationKey, newBadge.outlineColor, newBadge.fillColor, newBadge.key);
+			var addedBadge = frozenLib$newBadge(internalId.toString(), currentOrdinal, newBadge.translationKey, newBadge.outlineColor, newBadge.fillColor, newBadge.key);
 			badges.add(addedBadge);
 		}
 
