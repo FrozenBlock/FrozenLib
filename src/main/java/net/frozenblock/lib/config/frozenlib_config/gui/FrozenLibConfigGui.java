@@ -17,9 +17,7 @@
 
 package net.frozenblock.lib.config.frozenlib_config.gui;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -29,6 +27,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.api.instance.Config;
@@ -162,9 +161,7 @@ public final class FrozenLibConfigGui {
 			disabledDataFixTypes
 		);
 
-		UUID playerUUID = Minecraft.getInstance().getUser().getProfileId();
-		List<String> usableCapes = new ArrayList<>();
-		CapeUtil.getUsableCapes(playerUUID).forEach(cape -> usableCapes.add(cape.registryId().toString()));
+		List<String> usableCapes = ClientCapeUtil.getUsableCapes(true).stream().map(cape -> cape.registryId().toString()).toList();
 		if (usableCapes.size() > 1) {
 			var capeEntry = category.addEntry(
 				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
@@ -177,7 +174,7 @@ public final class FrozenLibConfigGui {
 						ResourceLocation capeId = ResourceLocation.parse((String) newValue);
 						config.cape = (String) newValue;
 						if (Minecraft.getInstance().getConnection() != null) {
-							ClientPlayNetworking.send(CapeCustomizePacket.createPacket(playerUUID, capeId));
+							ClientPlayNetworking.send(CapeCustomizePacket.createPacket(Minecraft.getInstance().getUser().getProfileId(), capeId));
 						}
 					})
 					.setTooltip(tooltip("cape"))
