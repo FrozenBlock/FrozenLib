@@ -19,7 +19,7 @@ package net.frozenblock.lib.spotting_icons.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.frozenblock.lib.entity.api.rendering.FrozenLibRenderTypes;
+import net.frozenblock.lib.render.FrozenLibRenderTypes;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntityRendererWithIcon;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;

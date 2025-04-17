@@ -15,10 +15,6 @@
     "category.MobCategoryMixin"
   ],
   "client": [
-    "client.rendering.LivingEntityRendererMixin",
-    "client.rendering.invert.ModelPartCubeMixin",
-    "client.rendering.invert.ModelPartMixin",
-    "client.rendering.invert.PartDefinitionMixin",
-    "client.rendering.invert.PolygonMixin"
+    "client.rendering.LivingEntityRendererMixin"
   ]
 }
