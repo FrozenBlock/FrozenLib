@@ -16,3 +16,4 @@ Put changelog here:
 - FrozenLib's ModMenu Badge API will now log when a badge with a duplicate internal id is registered.
 - Added additional helper methods to `ClientCapeUtil` to make it easier to see what Capes a player can wear.
 - FrozenLib now shows up in ModMenu's mod list if the user can wear Capes, regardless of the `Show Libraries` config option's value.
+- Added `RecipeExportNamespaceFix`, used to fix the exporting of recipes sometimes using incorrect `ResourceLocation`s.
