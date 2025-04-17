@@ -29,10 +29,8 @@ public final class ModMenuIntegration implements ModMenuApi {
 
     @Override
     public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-        if (FrozenBools.HAS_CLOTH_CONFIG) {
-            return FrozenLibConfigGui::buildScreen;
-        }
-        return (screen -> null);
+        if (FrozenBools.HAS_CLOTH_CONFIG) return FrozenLibConfigGui::buildScreen;
+        return screen -> null;
     }
 
 }
