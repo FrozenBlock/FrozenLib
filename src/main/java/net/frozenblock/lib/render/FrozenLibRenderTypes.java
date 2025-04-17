@@ -17,8 +17,6 @@
 
 package net.frozenblock.lib.render;
 
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import java.util.function.BiFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -27,7 +25,6 @@ import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.TriState;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderTypes {
@@ -40,7 +37,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -54,7 +51,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_CULL,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -68,7 +65,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -82,7 +79,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -96,7 +93,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -110,7 +107,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.APPARITION_OUTER,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, TriState.FALSE, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)

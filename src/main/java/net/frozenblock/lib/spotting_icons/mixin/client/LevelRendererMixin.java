@@ -18,25 +18,18 @@
 package net.frozenblock.lib.spotting_icons.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.pipeline.RenderTarget;
-import com.mojang.blaze3d.resource.ResourceHandle;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.frozenblock.lib.spotting_icons.impl.EntityRenderDispatcherWithIcon;
 import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.FogParameters;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.util.Mth;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -63,19 +56,8 @@ public class LevelRendererMixin {
 		)
 	)
 	public void frozenLib$renderEntities(
-		FogParameters fogParameters,
-		DeltaTracker deltaTracker,
-		Camera camera,
-		ProfilerFiller profilerFiller,
-		Matrix4f matrix4f,
-		Matrix4f matrix4f2,
-		ResourceHandle<RenderTarget> resourceHandle,
-		ResourceHandle<RenderTarget> resourceHandle2,
-		boolean bl,
-		Frustum frustum,
-		ResourceHandle<RenderTarget> resourceHandle3,
-		ResourceHandle<RenderTarget> resourceHandle4,
 		CallbackInfo info,
+		@Local(argsOnly = true) Camera camera,
 		@Local(ordinal = 0) float deltaTime,
 		@Local PoseStack poseStack,
 		@Local(ordinal = 0) MultiBufferSource.BufferSource bufferSource
@@ -104,8 +86,8 @@ public class LevelRendererMixin {
 		double e = Mth.lerp(partialTick, entity.yOld, entity.getY());
 		double f = Mth.lerp(partialTick, entity.zOld, entity.getZ());
 		float g = Mth.lerp(partialTick, entity.yRotO, entity.getYRot());
-		((EntityRenderDispatcherWithIcon)this.entityRenderDispatcher)
-			.frozenLib$renderIcon(
+		if (this.entityRenderDispatcher instanceof EntityRenderDispatcherWithIcon renderDispatcherWithIcon) {
+			renderDispatcherWithIcon.frozenLib$renderIcon(
 				entity,
 				d - camX,
 				e - camY,
@@ -116,6 +98,7 @@ public class LevelRendererMixin {
 				bufferSource,
 				this.entityRenderDispatcher.getPackedLightCoords(entity, partialTick)
 			);
+		}
 	}
 
 }
