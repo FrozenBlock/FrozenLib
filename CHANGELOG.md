@@ -10,3 +10,4 @@ Put changelog here:
   - The `CubeDefinition`'s `mirror` method can fix issues with `ModelPart` inversion.
 - Fixed Apparition `RenderType`s, and cleaned up existing ones.
 - Added `ShaderRegistryAPI`, allowing modders to register custom shaders.
+  - This API is not present past 1.21.1 as Vanilla gained this functionality in 1.21.2.
