@@ -18,6 +18,7 @@
 package net.frozenblock.lib.item.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import net.frozenblock.lib.item.api.ItemTooltipAdditionAPI;
 import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
 import net.frozenblock.lib.item.api.removable.RemovableItemTags;
 import net.frozenblock.lib.item.impl.ItemStackExtension;
@@ -127,9 +128,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
 		)
 	)
 	public List<Component> wilderWild$appendTrailierTalesRequirementTooltip(List<Component> original) {
-		if (this.getItem().requiredFeatures().contains(WWFeatureFlags.TRAILIER_TALES_COMPAT)) {
-			original.add(WILDERWILD$TRAILIERTALES_DISABLED_ITEM_TOOLTIP);
-		}
+		ItemTooltipAdditionAPI.getTooltipsForItemStack(ItemStack.class.cast(this)).ifPresent(original::addAll);
 		return original;
 	}
 }

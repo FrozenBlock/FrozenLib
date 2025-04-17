@@ -19,9 +19,9 @@ package net.frozenblock.lib.item.api;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import lombok.experimental.UtilityClass;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
