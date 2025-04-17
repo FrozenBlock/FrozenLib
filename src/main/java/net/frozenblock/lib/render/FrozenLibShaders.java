@@ -31,10 +31,14 @@ import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibShaders {
-	public static final ShaderProgram RENDERTYPE_APPARITION = register(FrozenLibConstants.MOD_ID, "rendertype_apparition", DefaultVertexFormat.NEW_ENTITY);
+	private static final ShaderProgram RENDERTYPE_APPARITION = register("rendertype_apparition", DefaultVertexFormat.NEW_ENTITY);
 	public static final RenderStateShard.ShaderStateShard RENDERTYPE_APPARITION_SHADER = new RenderStateShard.ShaderStateShard(RENDERTYPE_APPARITION);
 
 	public static void init() {
+	}
+
+	private static @NotNull ShaderProgram register(String string, VertexFormat vertexFormat) {
+		return register(FrozenLibConstants.MOD_ID, string, vertexFormat);
 	}
 
 	public static @NotNull ShaderProgram register(String modId, String string, VertexFormat vertexFormat) {
