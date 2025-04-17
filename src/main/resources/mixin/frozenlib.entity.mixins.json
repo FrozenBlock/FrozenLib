@@ -12,7 +12,8 @@
     "ServerEntityMixin",
     "WolfVariantsMixin",
     "behavior.BehaviorMixin",
-    "category.MobCategoryMixin"
+    "category.MobCategoryMixin",
+    "command.WardenSpawnTrackerCommandMixin"
   ],
   "client": [
     "client.rendering.LivingEntityRendererMixin"

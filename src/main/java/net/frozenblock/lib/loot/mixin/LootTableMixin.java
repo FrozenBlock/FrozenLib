@@ -15,28 +15,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
+package net.frozenblock.lib.loot.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.world.level.chunk.storage.ChunkStorage;
-import net.minecraft.world.level.storage.DataVersion;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
+import net.frozenblock.lib.loot.api.FrozenLibLootTableEvents;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(ChunkStorage.class)
-public class ChunkStorageMixin {
+@Mixin(LootTable.class)
+public class LootTableMixin {
 
 	@WrapOperation(
-		method = "upgradeChunkTag",
+		method = "fill",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/storage/DataVersion;getVersion()I"
+			target = "Lnet/minecraft/world/Container;setItem(ILnet/minecraft/world/item/ItemStack;)V",
+			ordinal = 1
 		)
 	)
-	private int bypassCheck(DataVersion instance, Operation<Integer> original) {
-		if (!QuiltDataFixesInternals.get().isEmpty()) return -1;
-		return original.call(instance);
+	public void frozenLib$triggerItemGeneratedInContainer(Container instance, int i, ItemStack itemStack, Operation<Void> original) {
+		FrozenLibLootTableEvents.ON_ITEM_GENERATED_IN_CONTAINER.invoker().onItemGeneratedInContainer(instance, itemStack);
+		original.call(instance, i, itemStack);
 	}
 }

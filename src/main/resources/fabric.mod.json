@@ -54,6 +54,7 @@
     "mixin/frozenlib.feature_flag.mixins.json",
     "mixin/frozenlib.gravity.mixins.json",
     "mixin/frozenlib.item.mixins.json",
+    "mixin/frozenlib.loot.mixins.json",
     "mixin/frozenlib.menu.mixins.json",
     "mixin/frozenlib.modmenu.mixins.json",
     "mixin/frozenlib.music.mixins.json",

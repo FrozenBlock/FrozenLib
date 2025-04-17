@@ -15,22 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.frozenlib_config.gui;
+package net.frozenblock.lib.recipe.api;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenBools;
-import net.minecraft.client.gui.screens.Screen;
+import lombok.experimental.UtilityClass;
+import java.util.Optional;
 
-@Environment(EnvType.CLIENT)
-public final class ModMenuIntegration implements ModMenuApi {
+@UtilityClass
+public final class RecipeExportNamespaceFix {
+	private static Optional<String> CURRENT_GENERATING_MOD_ID = Optional.empty();
 
-    @Override
-    public ConfigScreenFactory<Screen> getModConfigScreenFactory() {
-        if (FrozenBools.HAS_CLOTH_CONFIG) return FrozenLibConfigGui::buildScreen;
-        return screen -> null;
-    }
+	public static void setCurrentGeneratingModId(String modId) {
+		CURRENT_GENERATING_MOD_ID = Optional.of(modId);
+	}
 
+	public static Optional<String> getCurrentGeneratingModId() {
+		return CURRENT_GENERATING_MOD_ID;
+	}
+
+	public static void clearCurrentGeneratingModId() {
+		CURRENT_GENERATING_MOD_ID = Optional.empty();
+	}
 }
