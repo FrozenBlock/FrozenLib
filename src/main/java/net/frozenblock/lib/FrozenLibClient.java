@@ -34,6 +34,7 @@ import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
+import net.frozenblock.lib.render.FrozenLibShaders;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
@@ -59,6 +60,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 		registerClientEvents();
 		FrozenClientNetworking.registerClientReceivers();
 		DebugRenderManager.init();
+		FrozenLibShaders.init();
 
 		ClientCapeData.init();
 

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.mixin.client.rendering.invert;
+package net.frozenblock.lib.render.mixin.invert;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
