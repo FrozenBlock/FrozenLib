@@ -28,12 +28,15 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ChunkStorage.class)
 public class ChunkStorageMixin {
 
-	@WrapOperation(method = "upgradeChunkTag", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/storage/DataVersion;getVersion()I"))
+	@WrapOperation(
+		method = "upgradeChunkTag",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/storage/DataVersion;getVersion()I"
+		)
+	)
 	private int bypassCheck(DataVersion instance, Operation<Integer> original) {
-		if (!QuiltDataFixesInternals.get().isEmpty()) {
-			return -1;
-		}
-
+		if (!QuiltDataFixesInternals.get().isEmpty()) return -1;
 		return original.call(instance);
 	}
 }
