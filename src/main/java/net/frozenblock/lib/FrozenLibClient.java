@@ -33,6 +33,7 @@ import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
+import net.frozenblock.lib.particle.client.engine.FrozenLibParticleEngine;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
@@ -61,6 +62,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 		DebugRenderManager.init();
 
 		ClientCapeData.init();
+		FrozenLibParticleEngine.init();
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
 			PanoramaCommand.register(dispatcher);
