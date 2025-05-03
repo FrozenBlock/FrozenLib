@@ -18,22 +18,26 @@
 package net.frozenblock.lib.particle.client;
 
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import java.util.List;
+import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.particle.client.options.WindParticleOptions;
+import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.*;
+import net.minecraft.client.particle.Particle;
+import net.minecraft.client.particle.ParticleProvider;
+import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
-import java.util.List;
-import java.util.function.Consumer;
 
 @Environment(EnvType.CLIENT)
 public class WindParticle extends TextureSheetParticle {

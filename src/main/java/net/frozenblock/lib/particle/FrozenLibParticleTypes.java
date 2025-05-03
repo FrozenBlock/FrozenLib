@@ -18,6 +18,7 @@
 package net.frozenblock.lib.particle;
 
 import com.mojang.serialization.MapCodec;
+import java.util.function.Function;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.particle.client.options.WindParticleOptions;
@@ -30,7 +31,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
-import java.util.function.Function;
 
 public class FrozenLibParticleTypes {
 	public static final ParticleType<WindParticleOptions> WIND = register(

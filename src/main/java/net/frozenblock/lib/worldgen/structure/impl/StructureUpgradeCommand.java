@@ -27,7 +27,6 @@ import java.nio.file.Path;
 import java.util.Map;
 import java.util.Set;
 import net.frozenblock.lib.file.nbt.NbtFileUtils;
-import net.minecraft.SharedConstants;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.nbt.CompoundTag;
@@ -40,6 +39,7 @@ import net.minecraft.util.FastBufferedInputStream;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.SharedConstants;
 
 public class StructureUpgradeCommand {
 	private StructureUpgradeCommand() {

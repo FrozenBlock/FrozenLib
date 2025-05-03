@@ -22,7 +22,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
-import net.minecraft.Util;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
@@ -33,6 +32,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockent
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import net.minecraft.Util;
 
 public class AppendSherds implements RuleBlockEntityModifier {
 	public static final MapCodec<AppendSherds> CODEC = RecordCodecBuilder.mapCodec(

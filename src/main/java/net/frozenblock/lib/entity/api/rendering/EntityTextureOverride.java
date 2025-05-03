@@ -22,13 +22,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.ChatFormatting;
 
 /**
  * Used to override an entity's texture if a condition is met.

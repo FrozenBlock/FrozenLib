@@ -17,9 +17,10 @@
 
 package net.frozenblock.lib.block.api;
 
-import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.Maps;
-import net.minecraft.Util;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.Function;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -39,9 +40,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import java.util.Map;
-import java.util.Objects;
-import java.util.function.Function;
+import net.minecraft.Util;
 
 /**
  * A block that combines an amethyst cluster-type block with a multiface spreadable block.

@@ -38,7 +38,6 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
-import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
@@ -66,6 +65,7 @@ import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundL
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
+import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;

@@ -18,13 +18,9 @@
 package net.frozenblock.lib.screenshake.impl;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.Dynamic;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
-import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.ValueInput;

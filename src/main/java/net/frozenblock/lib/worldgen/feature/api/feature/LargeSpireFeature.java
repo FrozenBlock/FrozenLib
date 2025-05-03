@@ -18,6 +18,7 @@
 package net.frozenblock.lib.worldgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
+import java.util.Optional;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.LargeSpireConfig;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -38,7 +39,6 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import java.util.Optional;
 
 public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 

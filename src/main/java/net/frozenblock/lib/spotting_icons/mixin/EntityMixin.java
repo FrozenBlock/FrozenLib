@@ -19,7 +19,6 @@ package net.frozenblock.lib.spotting_icons.mixin;
 
 import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
@@ -30,7 +29,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
 public class EntityMixin implements EntitySpottingIconInterface {

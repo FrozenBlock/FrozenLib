@@ -18,6 +18,9 @@
 package net.frozenblock.lib.block.client.api.tick;
 
 import com.mojang.datafixers.util.Pair;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Predicate;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.core.BlockPos;
@@ -27,9 +30,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.function.Predicate;
 
 /**
  * Lets you add custom behavior to be run each time {@link Block#animateTick(BlockState, Level, BlockPos, RandomSource)} is called.
