@@ -1,13 +1,9 @@
-Hello
-Put changelog in plain text please
-Make sure to clear this after each release
-
-Put changelog here:
-
+Please clear changelog after each release.
+Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-- Significantly optimized `ModelPart` inversion.
-  - ModelPart inversion should now be run on a `CubeDefinition`, as inverting a ModelPart once the model has been created sometimes will not work properly.
-  - The `CubeDefinition`'s `mirror` method can fix issues with `ModelPart` inversion.
-- Fixed Apparition `RenderType`s, and cleaned up existing ones.
-- Added `ShaderRegistryAPI`, allowing modders to register custom shaders.
-  - This API is not present past 1.21.1 as Vanilla gained this functionality in 1.21.2.
+- Modded Nether surface rules now account for the Bedrock ceilings and floors.
+- Added `NetherFrozenBiome,` to slightly increase quality of life when making Nether biomes.
+- Added `LargeSpireFeature,` a more versatile alternative to `LargeDripstoneFeature.`
+- Added `CurvingSpikeFeature,` a stalagmite-like feature that curves as it gets higher.
+- Fixed an issue with Removable Item Tags being improperly removed upon shift-clicking.
+- Moved Wilder Wild's Wind particle to FrozenLib.

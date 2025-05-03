@@ -37,6 +37,7 @@ import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
@@ -90,6 +91,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		WindDisturbanceLogic.init();
+		FrozenLibParticleTypes.init();
 		FrozenLibFeatures.init();
 		FrozenLibBlockPredicateTypes.init();
 		FrozenPlacementModifiers.init();
@@ -144,9 +146,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		FrozenNetworking.registerNetworking();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
-			if (!allRegistries) return;
-
-			ModIntegrations.initialize();
+			if (allRegistries) ModIntegrations.initialize();
 		});
 
 		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {

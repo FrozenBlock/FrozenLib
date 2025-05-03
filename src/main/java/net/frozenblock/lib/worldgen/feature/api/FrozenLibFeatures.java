@@ -25,6 +25,8 @@ import net.frozenblock.lib.worldgen.feature.api.feature.CircularWaterloggedVeget
 import net.frozenblock.lib.worldgen.feature.api.feature.ColumnFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.ColumnWithDiskFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.ComboFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.CurvingSpikeFeature;
+import net.frozenblock.lib.worldgen.feature.api.feature.LargeSpireFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.SimpleBlockScheduleTickFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.UnderwaterVegetationPatchFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.UnderwaterVegetationPatchWithEdgeDecorationFeature;
@@ -32,6 +34,8 @@ import net.frozenblock.lib.worldgen.feature.api.feature.VegetationPatchWithEdgeD
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnWithDiskFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ComboFeatureConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.CurvingSpikeConfig;
+import net.frozenblock.lib.worldgen.feature.api.feature.config.LargeSpireConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.disk.BallFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.disk.config.BallFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.noise_path.NoisePathFeature;
@@ -54,6 +58,8 @@ public class FrozenLibFeatures {
 	public static final CircularWaterloggedVegetationPatchLessBordersFeature CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS = new CircularWaterloggedVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularLavaVegetationPatchFeature CIRCULAR_LAVA_VEGETATION_PATCH = new CircularLavaVegetationPatchFeature(VegetationPatchConfiguration.CODEC);
 	public static final CircularLavaVegetationPatchLessBordersFeature CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS = new CircularLavaVegetationPatchLessBordersFeature(VegetationPatchConfiguration.CODEC);
+	public static final LargeSpireFeature LARGE_SPIRE_FEATURE = new LargeSpireFeature(LargeSpireConfig.CODEC);
+	public static final CurvingSpikeFeature CURVING_SPIKE = new CurvingSpikeFeature(CurvingSpikeConfig.CODEC);
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("combo"), COMBO_FEATURE);
@@ -69,5 +75,7 @@ public class FrozenLibFeatures {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_waterlogged_vegetation_patch_less_borders"), CIRCULAR_WATERLOGGED_VEGETATION_PATCH_LESS_BORDERS);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch"), CIRCULAR_LAVA_VEGETATION_PATCH);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("circular_lava_vegetation_patch_less_borders"), CIRCULAR_LAVA_VEGETATION_PATCH_LESS_BORDERS);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("large_spire"), LARGE_SPIRE_FEATURE);
+		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("curving_spike"), CURVING_SPIKE);
 	}
 }

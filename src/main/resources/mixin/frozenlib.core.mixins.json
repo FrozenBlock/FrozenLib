@@ -8,11 +8,6 @@
   },
   "mixins": [
     "BootstrapMixin",
-    "DecoderExceptionMixin",
-    "RemapStateImplMixin",
-    "WardenSpawnTrackerCommandMixin"
-  ],
-  "client": [
-    "client.NoExperimentalMixin"
+    "DecoderExceptionMixin"
   ]
 }

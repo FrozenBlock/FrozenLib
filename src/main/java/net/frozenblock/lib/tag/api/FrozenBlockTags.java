@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenBlockTags {
-
     public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
 
 	@NotNull

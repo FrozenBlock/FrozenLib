@@ -17,26 +17,36 @@
 
 package net.frozenblock.lib.item.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.frozenblock.lib.item.api.ItemTooltipAdditionAPI;
 import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
 import net.frozenblock.lib.item.api.removable.RemovableItemTags;
 import net.frozenblock.lib.item.impl.ItemStackExtension;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import java.util.List;
 
 @Mixin(ItemStack.class)
-public final class ItemStackMixin implements ItemStackExtension {
+public abstract class ItemStackMixin implements ItemStackExtension {
+
+	@Shadow
+	public abstract Item getItem();
 
 	@Unique
 	private boolean frozenLib$canRemoveTags = false;
@@ -63,41 +73,35 @@ public final class ItemStackMixin implements ItemStackExtension {
 				stack.remove(value);
 			}
 		}
-
 	}
 
-	@Inject(method = "isSameItemSameComponents", at = @At("HEAD"))
-	private static void frozenLib$removeTagsAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
-		var extendedLeft = ItemStackExtension.class.cast(left);
-		var extendedRight = ItemStackExtension.class.cast(right);
-
-
-		if (extendedLeft.frozenLib$canRemoveTags()) {
-			frozenLib$fixEmptyTags(left);
-			extendedLeft.frozenLib$setCanRemoveTags(false);
-		}
-
-		if (extendedRight.frozenLib$canRemoveTags()) {
-			frozenLib$fixEmptyTags(right);
-			extendedRight.frozenLib$setCanRemoveTags(false);
-		}
+	@WrapOperation(
+		method = "isSameItemSameComponents",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/Objects;equals(Ljava/lang/Object;Ljava/lang/Object;)Z"
+		)
+	)
+	private static boolean frozenLib$removeTagsAndCompare(
+		Object a, Object b, Operation<Boolean> original,
+		ItemStack left, ItemStack right
+	) {
+		if (ItemStackExtension.class.cast(left).frozenLib$canRemoveTags()) frozenLib$fixEmptyTags(left);
+		if (ItemStackExtension.class.cast(right).frozenLib$canRemoveTags()) frozenLib$fixEmptyTags(right);
+		return original.call(a, b);
 	}
 
 	@Unique
 	private static void frozenLib$fixEmptyTags(ItemStack stack) {
 		CustomData.update(DataComponents.CUSTOM_DATA, stack, compound -> {
 			for (String key : RemovableItemTags.keys()) {
-				if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) {
-					compound.remove(key);
-				}
+				if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) compound.remove(key);
 			}
 		});
 
 		for (Holder<DataComponentType<?>> holder : RemovableDataComponents.keys()) {
 			var value = holder.value();
-			if (RemovableDataComponents.shouldRemoveComponentOnStackMerge(value)) {
-				stack.remove(value);
-			}
+			if (RemovableDataComponents.shouldRemoveComponentOnStackMerge(value)) stack.remove(value);
 		}
 	}
 
@@ -111,5 +115,17 @@ public final class ItemStackMixin implements ItemStackExtension {
 	@Override
 	public void frozenLib$setCanRemoveTags(boolean canRemoveTags) {
 		this.frozenLib$canRemoveTags = canRemoveTags;
+	}
+
+	@ModifyReturnValue(
+		method = "getTooltipLines",
+		at = @At(
+			value = "RETURN",
+			ordinal = 1
+		)
+	)
+	public List<Component> frozenLib$appendAdditionalTooltips(List<Component> original) {
+		ItemTooltipAdditionAPI.getTooltipsForItemStack(ItemStack.class.cast(this)).ifPresent(original::addAll);
+		return original;
 	}
 }

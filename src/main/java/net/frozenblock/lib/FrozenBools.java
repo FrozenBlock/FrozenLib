@@ -50,6 +50,7 @@ public class FrozenBools {
 	public static final boolean HAS_TRAILIERTALES = hasMod("trailiertales");
 	public static final boolean HAS_ARCHITECTURY = hasMod("architectury");
 	public static final boolean HAS_C2ME = hasMod("c2me");
+	public static final boolean HAS_MODMENU = hasMod("modmenu");
     public static final boolean HAS_CLOTH_CONFIG = hasMod("cloth-config");
 	public static final boolean HAS_INDIUM = hasMod("indium");
 	public static final boolean HAS_IRIS = hasMod("iris");

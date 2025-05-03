@@ -38,24 +38,18 @@ public class RemovableItemTags {
 
 	public static boolean canRemoveTag(String tagKey, Level level, Entity entity, EquipmentSlot equipmentSlot) {
 		RemovableItemTag removableItemTag = REMOVABLE_ITEM_TAGS.get(tagKey);
-		if (removableItemTag != null) {
-			return removableItemTag.shouldRemove(level, entity, equipmentSlot);
-		} else {
-			FrozenLibLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
-			FrozenLibLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
-			return false;
-		}
+		if (removableItemTag != null) return removableItemTag.shouldRemove(level, entity, equipmentSlot);
+		FrozenLibLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
+		FrozenLibLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
+		return false;
 	}
 
 	public static boolean shouldRemoveTagOnStackMerge(String tagKey) {
 		RemovableItemTag removableItemTag = REMOVABLE_ITEM_TAGS.get(tagKey);
-		if (removableItemTag != null) {
-			return removableItemTag.shouldRemoveOnStackMerge();
-		} else {
-			FrozenLibLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
-			FrozenLibLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
-			return true;
-		}
+		if (removableItemTag != null) return removableItemTag.shouldRemoveOnStackMerge();
+		FrozenLibLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
+		FrozenLibLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
+		return true;
 	}
 
 	public static Set<String> keys() {
