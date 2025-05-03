@@ -15,21 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.tag.api;
+package net.frozenblock.lib.particle.client.engine;
 
-import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.frozenblock.lib.particle.FrozenLibParticleTypes;
+import net.frozenblock.lib.particle.client.WindParticle;
 
-@UtilityClass
-public class FrozenBlockTags {
-    public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
+@Environment(EnvType.CLIENT)
+public class FrozenLibParticleEngine {
 
-	@NotNull
-    private static TagKey<Block> bind(String path) {
-        return TagKey.create(Registries.BLOCK, FrozenLibConstants.id(path));
-    }
+	public static void init() {
+		ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
+
+		particleRegistry.register(FrozenLibParticleTypes.WIND, WindParticle.Factory::new);
+	}
 }

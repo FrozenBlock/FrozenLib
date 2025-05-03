@@ -17,30 +17,32 @@
 
 package net.frozenblock.lib.item.mixin;
 
-import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.item.impl.ItemStackExtension;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerMenu.class)
 public class AbstractContainerMenuMixin {
 
-	@Inject(
+	@WrapOperation(
 		method = "moveItemStackTo",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameComponents(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
 		)
 	)
-	private void frozenLib$triggerSlotListeners(
-		ItemStack stack, int startIndex, int endIndex, boolean reverseDirection, CallbackInfoReturnable<Boolean> info,
-		@Local(ordinal = 1) ItemStack itemStack
+	private boolean frozenLib$moveItemStackTo(
+		ItemStack stackA, ItemStack stackB, Operation<Boolean> original
 	) {
-		ItemStackExtension.class.cast(stack).frozenLib$setCanRemoveTags(true);
-		ItemStackExtension.class.cast(itemStack).frozenLib$setCanRemoveTags(true);
+		ItemStackExtension.class.cast(stackA).frozenLib$setCanRemoveTags(true);
+		ItemStackExtension.class.cast(stackB).frozenLib$setCanRemoveTags(true);
+		boolean retValue = original.call(stackA, stackB);
+		ItemStackExtension.class.cast(stackA).frozenLib$setCanRemoveTags(false);
+		ItemStackExtension.class.cast(stackB).frozenLib$setCanRemoveTags(false);
+		return retValue;
 	}
 }
