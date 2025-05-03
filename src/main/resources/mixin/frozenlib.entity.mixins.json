@@ -13,8 +13,7 @@
     "WolfVariantsMixin",
     "behavior.BehaviorMixin",
     "category.MobCategoryMixin",
-    "command.WardenSpawnTrackerCommandMixin",
-    "footstep.EntityMixin"
+    "command.WardenSpawnTrackerCommandMixin"
   ],
   "client": [
     "client.rendering.LivingEntityRendererMixin"
