@@ -22,6 +22,7 @@ import net.minecraft.data.worldgen.biome.OverworldBiomes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
+import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
@@ -71,7 +72,7 @@ public abstract class NetherFrozenBiome extends FrozenBiome {
 	}
 
 	@Override
-	public final void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters) {
+	public final void injectToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, OverworldBiomeBuilder.Modifier modifier) {
 	}
 
 }
