@@ -23,9 +23,16 @@ import net.frozenblock.lib.item.impl.SaveableItemCooldowns;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.portal.TeleportTransition;
+import net.minecraft.world.level.storage.TagValueInput;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -42,19 +49,22 @@ public class ServerPlayerMixin {
 	@Shadow
 	private boolean isChangingDimension;
 
+	@Shadow
+	@Final
+	private static Logger LOGGER;
 	@Unique
 	public Optional<List<SaveableItemCooldowns.SaveableCooldownInstance>> frozenLib$savedItemCooldowns = Optional.empty();
 	@Unique @Nullable
 	private CompoundTag frozenLib$savedCooldownTag;
 
 	@Inject(method = "readAdditionalSaveData", at = @At(value = "TAIL"))
-	public void frozenLib$readAdditionalSaveData(CompoundTag compound, CallbackInfo info) {
-		this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(compound));
+	public void frozenLib$readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+		this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(input));
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At(value = "TAIL"))
-	public void frozenLib$addAdditionalSaveData(CompoundTag compound, CallbackInfo info) {
-		SaveableItemCooldowns.saveCooldowns(compound, ServerPlayer.class.cast(this));
+	public void frozenLib$addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
+		SaveableItemCooldowns.saveCooldowns(output, ServerPlayer.class.cast(this));
 	}
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))
@@ -67,15 +77,29 @@ public class ServerPlayerMixin {
 
 	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At(value = "HEAD"))
 	public void frozenLib$changeDimensionSaveCooldowns(TeleportTransition transition, CallbackInfoReturnable<Entity> cir) {
-		CompoundTag tempTag = new CompoundTag();
-		SaveableItemCooldowns.saveCooldowns(tempTag, ServerPlayer.class.cast(this));
+		ServerPlayer player = ServerPlayer.class.cast(this);
+		CompoundTag tempTag;
+		try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
+			TagValueOutput output = TagValueOutput.createWithContext(scopedCollector, player.registryAccess());
+			SaveableItemCooldowns.saveCooldowns(output, player);
+
+			tempTag = output.buildResult();
+		} catch (Exception e) {
+			tempTag = new CompoundTag();
+		}
 		this.frozenLib$savedCooldownTag = tempTag;
 	}
 
 	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At(value = "RETURN"))
 	public void frozenLib$changeDimensionLoadCooldowns(TeleportTransition transition, CallbackInfoReturnable<Entity> cir) {
+		ServerPlayer player = ServerPlayer.class.cast(this);
 		if (this.frozenLib$savedCooldownTag != null) {
-			this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(this.frozenLib$savedCooldownTag));
+			try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
+				ValueInput input = TagValueInput.create(scopedCollector, player.registryAccess(), this.frozenLib$savedCooldownTag);
+				this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(input));
+			} catch (Exception e) {
+				this.frozenLib$savedItemCooldowns = Optional.empty();
+			}
 		}
 	}
 

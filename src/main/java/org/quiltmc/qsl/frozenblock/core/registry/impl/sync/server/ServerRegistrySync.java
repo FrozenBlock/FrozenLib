@@ -18,6 +18,8 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server;
 
+import com.google.gson.JsonElement;
+import com.mojang.serialization.JsonOps;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
@@ -27,7 +29,9 @@ import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking.Context;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.StrictJsonParser;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
@@ -93,7 +97,11 @@ public final class ServerRegistrySync {
 
 		Component text = null;
 		try {
-			text = Component.Serializer.fromJson(string, RegistryAccess.EMPTY);
+			JsonElement json = StrictJsonParser.parse(string);
+			text = ComponentSerialization.CODEC
+				.parse(RegistryAccess.EMPTY.createSerializationContext(JsonOps.INSTANCE), json)
+				.resultOrPartial()
+				.orElseThrow();
 		} catch (Exception ignored) {
 		}
 

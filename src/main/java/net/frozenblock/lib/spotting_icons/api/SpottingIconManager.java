@@ -36,8 +36,11 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import java.util.Optional;
 
 @ApiStatus.Internal
 public class SpottingIconManager {
@@ -116,24 +119,19 @@ public class SpottingIconManager {
 		return Minecraft.getInstance().getResourceManager().getResource(resourceLocation).isPresent();
 	}
 
-	public void load(@NotNull CompoundTag nbt) {
-		this.ticksToCheck = nbt.getIntOr("frozenlib_spotting_icon_predicate_cooldown", 0);
-		if (nbt.contains("frozenlib_spotting_icons")) {
-			this.icon = null;
-			SpottingIcon.CODEC.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getCompoundOrEmpty("frozenlib_spotting_icons")))
-				.resultOrPartial(FrozenLibConstants.LOGGER::error)
-				.ifPresent(spottingIcon -> this.icon = spottingIcon);
-		}
+	public void load(@NotNull ValueInput input) {
+		this.ticksToCheck = input.getIntOr("frozenlib_spotting_icon_predicate_cooldown", 0);
+		this.icon = null;
+		Optional<SpottingIcon> icon = input.read("frozenlib_spotting_icons", SpottingIcon.CODEC);
+		icon.ifPresent(spottingIcon -> this.icon = spottingIcon);
 	}
 
-	public void save(@NotNull CompoundTag nbt) {
-		nbt.putInt("frozenlib_spotting_icon_predicate_cooldown", this.ticksToCheck);
+	public void save(@NotNull ValueOutput output) {
+		output.putInt("frozenlib_spotting_icon_predicate_cooldown", this.ticksToCheck);
 		if (this.icon != null) {
-			SpottingIcon.CODEC.encodeStart(NbtOps.INSTANCE, this.icon)
-				.resultOrPartial(FrozenLibConstants.LOGGER::error)
-				.ifPresent(spottingIcon -> nbt.put("frozenlib_spotting_icons", spottingIcon));
-		} else if (nbt.contains("frozenlib_spotting_icons")) {
-			nbt.remove("frozenlib_spotting_icons");
+			output.store("frozenlib_spotting_icons", SpottingIcon.CODEC, this.icon);
+		} else {
+			output.discard("frozenlib_spotting_icons");
 		}
 	}
 

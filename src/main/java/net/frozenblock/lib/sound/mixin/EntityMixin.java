@@ -27,6 +27,8 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -53,16 +55,16 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 		method = "saveWithoutId",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V",
+			target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueOutput;)V",
 			shift = At.Shift.AFTER
 		)
 	)
-    public void frozenLib$saveLoopingSoundData(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> info) {
+    public void frozenLib$saveLoopingSoundData(ValueOutput output, CallbackInfo info) {
         if (this.frozenLib$loopingSoundManager != null) {
-            this.frozenLib$loopingSoundManager.save(compoundTag);
+            this.frozenLib$loopingSoundManager.save(output);
         }
         if (this.frozenLib$loopingFadingDistanceSoundManager != null) {
-            this.frozenLib$loopingFadingDistanceSoundManager.save(compoundTag);
+            this.frozenLib$loopingFadingDistanceSoundManager.save(output);
         }
     }
 
@@ -70,13 +72,13 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 		method = "load",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V",
+			target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueInput;)V",
 			shift = At.Shift.AFTER
 		)
 	)
-    public void frozenLib$loadLoopingSoundData(CompoundTag compoundTag, CallbackInfo info) {
-        this.frozenLib$loopingSoundManager.load(compoundTag);
-        this.frozenLib$loopingFadingDistanceSoundManager.load(compoundTag);
+    public void frozenLib$loadLoopingSoundData(ValueInput input, CallbackInfo info) {
+        this.frozenLib$loopingSoundManager.load(input);
+        this.frozenLib$loopingFadingDistanceSoundManager.load(input);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))

@@ -36,6 +36,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -57,20 +59,21 @@ public class SaveableItemCooldowns {
 		return saveableCooldownInstances;
 	}
 
-	public static void saveCooldowns(@NotNull CompoundTag tag,  @NotNull ServerPlayer player) {
+	public static void saveCooldowns(@NotNull ValueOutput output, @NotNull ServerPlayer player) {
 		Logger logger = FrozenLibConstants.LOGGER;
-		SaveableCooldownInstance.CODEC.listOf()
-				.encodeStart(NbtOps.INSTANCE, makeSaveableCooldownInstanceList(player))
-				.resultOrPartial(logger::error)
-				.ifPresent((savedItemCooldownsNbt) -> tag.put("FrozenLibSavedItemCooldowns", savedItemCooldownsNbt));
+		ValueOutput.TypedOutputList<SaveableCooldownInstance> list = output.list("FrozenLibSavedItemCooldowns", SaveableCooldownInstance.CODEC);
+		for (SaveableCooldownInstance cooldown : makeSaveableCooldownInstanceList(player)) {
+			list.add(cooldown);
+		}
 	}
 
 	@NotNull
-	public static List<SaveableCooldownInstance> readCooldowns(@NotNull CompoundTag tag) {
+	public static List<SaveableCooldownInstance> readCooldowns(@NotNull ValueInput input) {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
-		SaveableCooldownInstance.CODEC.listOf().parse(new Dynamic<>(NbtOps.INSTANCE, tag.getListOrEmpty("FrozenLibSavedItemCooldowns")))
-			.resultOrPartial(FrozenLibConstants.LOGGER::error)
-			.ifPresent(saveableCooldownInstances::addAll);
+		ValueInput.TypedInputList<SaveableCooldownInstance> list = input.listOrEmpty("FrozenLibSavedItemCooldowns", SaveableCooldownInstance.CODEC);
+		for (SaveableCooldownInstance cooldown : list) {
+			saveableCooldownInstances.add(cooldown);
+		}
 		return saveableCooldownInstances;
 	}
 

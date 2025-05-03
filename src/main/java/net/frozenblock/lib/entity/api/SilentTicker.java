@@ -22,7 +22,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Marker;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 public abstract class SilentTicker extends Marker {
 	private int ticks;
@@ -38,15 +41,15 @@ public abstract class SilentTicker extends Marker {
 	}
 
 	@Override
-	public void readAdditionalSaveData(CompoundTag compound) {
-		super.readAdditionalSaveData(compound);
-		this.ticks = compound.getIntOr("frozenlib_ticks", 0);
+	protected void readAdditionalSaveData(@NotNull ValueInput input) {
+		super.readAdditionalSaveData(input);
+		this.ticks = input.getIntOr("frozenlib_ticks", 0);
 	}
 
 	@Override
-	public void addAdditionalSaveData(CompoundTag compound) {
-		super.addAdditionalSaveData(compound);
-		compound.putInt("frozenlib_ticks", this.ticks);
+	protected void addAdditionalSaveData(@NotNull ValueOutput output) {
+		super.addAdditionalSaveData(output);
+		output.putInt("frozenlib_ticks", this.ticks);
 	}
 
 	public abstract void tick(Level level, Vec3 vec3, BlockPos pos, int ticks);

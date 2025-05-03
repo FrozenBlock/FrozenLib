@@ -32,6 +32,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 public class MovingLoopingSoundEntityManager {
@@ -42,20 +44,20 @@ public class MovingLoopingSoundEntityManager {
         this.entity = entity;
     }
 
-    public void load(@NotNull CompoundTag nbt) {
+    public void load(@NotNull ValueInput input) {
 		this.sounds.clear();
-		SoundLoopData.CODEC.listOf()
-			.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getListOrEmpty("frozenlib_looping_sounds")))
-			.resultOrPartial(FrozenLibConstants.LOGGER::error)
-			.ifPresent(this.sounds::addAll);
+		ValueInput.TypedInputList<SoundLoopData> list = input.listOrEmpty("frozenlib_looping_sounds", SoundLoopData.CODEC);
+		for (SoundLoopData sound : list) {
+			this.sounds.add(sound);
+		}
     }
 
-    public void save(CompoundTag nbt) {
+    public void save(ValueOutput output) {
 		if (!this.sounds.isEmpty()) {
-			SoundLoopData.CODEC.listOf()
-				.encodeStart(NbtOps.INSTANCE, this.sounds)
-				.resultOrPartial(FrozenLibConstants.LOGGER::error)
-				.ifPresent((sounds) -> nbt.put("frozenlib_looping_sounds", sounds));
+			ValueOutput.TypedOutputList<SoundLoopData> list = output.list("frozenlib_looping_sounds", SoundLoopData.CODEC);
+			for (SoundLoopData sound : this.sounds) {
+				list.add(sound);
+			}
 		}
     }
 

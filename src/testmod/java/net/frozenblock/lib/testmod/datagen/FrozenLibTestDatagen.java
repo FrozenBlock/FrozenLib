@@ -28,6 +28,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
 import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider;
 import net.frozenblock.lib.recipe.api.ShapedRecipeUtil;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
@@ -71,6 +72,7 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		@Override
+		@NotNull
 		protected RecipeProvider createRecipeProvider(HolderLookup.Provider provider, RecipeOutput recipeOutput) {
 			return new RecipeProvider(provider, recipeOutput) {
 				@Override
@@ -112,7 +114,7 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		private void generateStructureTags() {
-			this.getOrCreateTagBuilder(BiomeTags.HAS_ANCIENT_CITY)
+			this.builder(BiomeTags.HAS_ANCIENT_CITY)
 					.add(Biomes.DARK_FOREST);
 		}
 	}
@@ -129,8 +131,8 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		private void generateUtilityTags() {
-			this.getOrCreateTagBuilder(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON)
-					.add(Blocks.DIAMOND_BLOCK);
+			this.builder(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON)
+					.add(Blocks.DIAMOND_BLOCK.builtInRegistryHolder().key());
 		}
 	}
 

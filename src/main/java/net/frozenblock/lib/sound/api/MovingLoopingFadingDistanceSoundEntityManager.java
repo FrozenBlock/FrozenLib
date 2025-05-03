@@ -31,6 +31,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 public class MovingLoopingFadingDistanceSoundEntityManager {
@@ -41,19 +43,20 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         this.entity = entity;
     }
 
-    public void load(@NotNull CompoundTag nbt) {
+    public void load(@NotNull ValueInput input) {
 		this.sounds.clear();
-		FadingDistanceSoundLoopNBT.CODEC.listOf()
-			.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getListOrEmpty("frozenlib_looping_fading_distance_sounds")))
-			.resultOrPartial(FrozenLibConstants.LOGGER::error)
-			.ifPresent(this.sounds::addAll);
+		ValueInput.TypedInputList<FadingDistanceSoundLoopNBT> list = input.listOrEmpty("frozenlib_looping_fading_distance_sounds", FadingDistanceSoundLoopNBT.CODEC);
+		for (FadingDistanceSoundLoopNBT sound : list) {
+			this.sounds.add(sound);
+		}
     }
 
-    public void save(CompoundTag nbt) {
+    public void save(ValueOutput nbt) {
 		if (!this.sounds.isEmpty()) {
-			FadingDistanceSoundLoopNBT.CODEC.listOf().encodeStart(NbtOps.INSTANCE, this.sounds)
-				.resultOrPartial(FrozenLibConstants.LOGGER::error)
-				.ifPresent((cursorsNbt) -> nbt.put("frozenlib_looping_fading_distance_sounds", cursorsNbt));
+			ValueOutput.TypedOutputList<FadingDistanceSoundLoopNBT> list = nbt.list("frozenlib_looping_fading_distance_sounds", FadingDistanceSoundLoopNBT.CODEC);
+			for (FadingDistanceSoundLoopNBT sound : this.sounds) {
+				list.add(sound);
+			}
 		}
     }
 

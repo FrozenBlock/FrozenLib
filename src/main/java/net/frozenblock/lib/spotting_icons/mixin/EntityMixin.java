@@ -23,6 +23,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -43,16 +45,16 @@ public class EntityMixin implements EntitySpottingIconInterface {
     }
 
 
-    @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
-    public void frozenLib$saveIconManager(CompoundTag compoundTag, CallbackInfoReturnable<CompoundTag> info) {
+    @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueOutput;)V", shift = At.Shift.AFTER))
+    public void frozenLib$saveIconManager(ValueOutput output, CallbackInfo info) {
 		if (this.frozenLib$SpottingIconManager != null) {
-			this.frozenLib$SpottingIconManager.save(compoundTag);
+			this.frozenLib$SpottingIconManager.save(output);
 		}
     }
 
-    @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/nbt/CompoundTag;)V", shift = At.Shift.AFTER))
-    public void frozenLib$loadIconManager(CompoundTag compoundTag, CallbackInfo info) {
-		this.frozenLib$SpottingIconManager.load(compoundTag);
+    @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueInput;)V", shift = At.Shift.AFTER))
+    public void frozenLib$loadIconManager(ValueInput input, CallbackInfo info) {
+		this.frozenLib$SpottingIconManager.load(input);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))

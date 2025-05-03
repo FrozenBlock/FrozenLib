@@ -27,6 +27,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.NotNull;
 
 public class EntityScreenShakeManager {
@@ -37,20 +39,20 @@ public class EntityScreenShakeManager {
 		this.entity = entity;
 	}
 
-	public void load(@NotNull CompoundTag nbt) {
+	public void load(@NotNull ValueInput input) {
 		this.shakes.clear();
-		EntityScreenShake.CODEC.listOf()
-			.parse(new Dynamic<>(NbtOps.INSTANCE, nbt.getListOrEmpty("frozenlib_screen_shakes")))
-			.resultOrPartial(FrozenLibConstants.LOGGER::error)
-			.ifPresent(this.shakes::addAll);
+		ValueInput.TypedInputList<EntityScreenShake> list = input.listOrEmpty("frozenlib_screen_shakes", EntityScreenShake.CODEC);
+		for (EntityScreenShake shake : list) {
+			this.shakes.add(shake);
+		}
 	}
 
-	public void save(CompoundTag nbt) {
+	public void save(ValueOutput nbt) {
 		if (!this.shakes.isEmpty()) {
-			EntityScreenShake.CODEC.listOf()
-				.encodeStart(NbtOps.INSTANCE, this.shakes)
-				.resultOrPartial(FrozenLibConstants.LOGGER::error)
-				.ifPresent(screenShakes -> nbt.put("frozenlib_screen_shakes", screenShakes));
+			ValueOutput.TypedOutputList<EntityScreenShake> list = nbt.list("frozenlib_screen_shakes", EntityScreenShake.CODEC);
+			for (EntityScreenShake shake : this.shakes) {
+				list.add(shake);
+			}
 		}
 	}
 
