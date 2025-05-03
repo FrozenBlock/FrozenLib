@@ -18,6 +18,8 @@
 package net.frozenblock.lib.item.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.item.api.ItemTooltipAdditionAPI;
 import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
 import net.frozenblock.lib.item.api.removable.RemovableItemTags;
@@ -37,7 +39,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 
 @Mixin(ItemStack.class)
@@ -73,38 +74,42 @@ public abstract class ItemStackMixin implements ItemStackExtension {
 		}
 	}
 
-	@Inject(method = "isSameItemSameComponents", at = @At("HEAD"))
-	private static void frozenLib$removeTagsAndCompare(ItemStack left, ItemStack right, CallbackInfoReturnable<Boolean> info) {
-		var extendedLeft = ItemStackExtension.class.cast(left);
-		var extendedRight = ItemStackExtension.class.cast(right);
+	@WrapOperation(
+		method = "isSameItemSameComponents",
+		at = @At(
+			value = "INVOKE",
+			target = "Ljava/util/Objects;equals(Ljava/lang/Object;Ljava/lang/Object;)Z"
+		)
+	)
+	private static boolean frozenLib$removeTagsAndCompare(Object a, Object b, Operation<Boolean> original) {
+		if (a instanceof ItemStack left && b instanceof ItemStack right) {
+			var extendedLeft = ItemStackExtension.class.cast(left);
+			var extendedRight = ItemStackExtension.class.cast(right);
 
+			if (extendedLeft.frozenLib$canRemoveTags()) {
+				frozenLib$fixEmptyTags(left);
+				extendedLeft.frozenLib$setCanRemoveTags(false);
+			}
 
-		if (extendedLeft.frozenLib$canRemoveTags()) {
-			frozenLib$fixEmptyTags(left);
-			extendedLeft.frozenLib$setCanRemoveTags(false);
+			if (extendedRight.frozenLib$canRemoveTags()) {
+				frozenLib$fixEmptyTags(right);
+				extendedRight.frozenLib$setCanRemoveTags(false);
+			}
 		}
-
-		if (extendedRight.frozenLib$canRemoveTags()) {
-			frozenLib$fixEmptyTags(right);
-			extendedRight.frozenLib$setCanRemoveTags(false);
-		}
+		return original.call(a, b);
 	}
 
 	@Unique
 	private static void frozenLib$fixEmptyTags(ItemStack stack) {
 		CustomData.update(DataComponents.CUSTOM_DATA, stack, compound -> {
 			for (String key : RemovableItemTags.keys()) {
-				if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) {
-					compound.remove(key);
-				}
+				if (RemovableItemTags.shouldRemoveTagOnStackMerge(key)) compound.remove(key);
 			}
 		});
 
 		for (Holder<DataComponentType<?>> holder : RemovableDataComponents.keys()) {
 			var value = holder.value();
-			if (RemovableDataComponents.shouldRemoveComponentOnStackMerge(value)) {
-				stack.remove(value);
-			}
+			if (RemovableDataComponents.shouldRemoveComponentOnStackMerge(value)) stack.remove(value);
 		}
 	}
 
