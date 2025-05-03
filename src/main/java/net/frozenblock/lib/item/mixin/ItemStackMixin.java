@@ -81,21 +81,12 @@ public abstract class ItemStackMixin implements ItemStackExtension {
 			target = "Ljava/util/Objects;equals(Ljava/lang/Object;Ljava/lang/Object;)Z"
 		)
 	)
-	private static boolean frozenLib$removeTagsAndCompare(Object a, Object b, Operation<Boolean> original) {
-		if (a instanceof ItemStack left && b instanceof ItemStack right) {
-			var extendedLeft = ItemStackExtension.class.cast(left);
-			var extendedRight = ItemStackExtension.class.cast(right);
-
-			if (extendedLeft.frozenLib$canRemoveTags()) {
-				frozenLib$fixEmptyTags(left);
-				extendedLeft.frozenLib$setCanRemoveTags(false);
-			}
-
-			if (extendedRight.frozenLib$canRemoveTags()) {
-				frozenLib$fixEmptyTags(right);
-				extendedRight.frozenLib$setCanRemoveTags(false);
-			}
-		}
+	private static boolean frozenLib$removeTagsAndCompare(
+		Object a, Object b, Operation<Boolean> original,
+		ItemStack left, ItemStack right
+	) {
+		if (ItemStackExtension.class.cast(left).frozenLib$canRemoveTags()) frozenLib$fixEmptyTags(left);
+		if (ItemStackExtension.class.cast(right).frozenLib$canRemoveTags()) frozenLib$fixEmptyTags(right);
 		return original.call(a, b);
 	}
 
