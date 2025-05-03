@@ -34,7 +34,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class FrozenSurfaceRules {
-
 	public static final SurfaceRules.RuleSource AIR = makeStateRule(Blocks.AIR);
 	public static final SurfaceRules.RuleSource BEDROCK = makeStateRule(Blocks.BEDROCK);
 	public static final SurfaceRules.RuleSource WHITE_TERRACOTTA = makeStateRule(Blocks.WHITE_TERRACOTTA);
@@ -110,11 +109,7 @@ public final class FrozenSurfaceRules {
 		SurfaceRules.RuleSource generic = getGenericSurfaceRules(dimension);
 
 		if (generic != null) {
-			if (returnValue == null) {
-				returnValue = generic;
-			} else {
-				returnValue = SurfaceRules.sequence(returnValue, generic);
-			}
+			returnValue = returnValue == null ? generic : SurfaceRules.sequence(returnValue, generic);
 		}
 
 		return returnValue;
@@ -123,21 +118,25 @@ public final class FrozenSurfaceRules {
 	@Nullable
 	public static SurfaceRules.RuleSource getOverworldSurfaceRules() {
 		SurfaceRules.RuleSource newRule = null;
+
 		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
-
 		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldSurfaceRules(sourceHolders);
-		SurfaceRules.RuleSource newSource = sequence(sourceHolders);
 
-		newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
-		newRule = newSource;
+		if (!sourceHolders.isEmpty()) {
+			SurfaceRules.RuleSource newSource = sequence(sourceHolders);
 
-		// NO PRELIM
+			newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
+			newRule = newSource;
+		}
 
+		// NO PRELIMINARY SURFACE
 		ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
 		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimSurfaceRules(noPrelimSourceHolders);
 
-		SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
-		newRule = SurfaceRules.sequence(noPrelimSource, newRule);
+		if (!noPrelimSourceHolders.isEmpty()) {
+			SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
+			newRule = SurfaceRules.sequence(noPrelimSource, newRule);
+		}
 
 		return newRule;
 	}
@@ -145,23 +144,17 @@ public final class FrozenSurfaceRules {
 	@Nullable
 	public static SurfaceRules.RuleSource getNetherSurfaceRules() {
 		SurfaceRules.RuleSource newSource = null;
-		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
+		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 		SurfaceRuleEvents.MODIFY_NETHER.invoker().addNetherSurfaceRules(sourceHolders);
 
-		for (SurfaceRules.RuleSource rule : sourceHolders) {
-			if (newSource == null) {
-				newSource = rule;
-			} else {
-				newSource = SurfaceRules.sequence(newSource, rule);
-			}
+		if (!sourceHolders.isEmpty()) {
+			newSource = SurfaceRules.sequence(
+				SurfaceRules.ifTrue(SurfaceRules.verticalGradient("frozenlib_bedrock_floor", VerticalAnchor.bottom(), VerticalAnchor.aboveBottom(5)), BEDROCK),
+				SurfaceRules.ifTrue(SurfaceRules.not(SurfaceRules.verticalGradient("frozenlib_bedrock_roof", VerticalAnchor.belowTop(5), VerticalAnchor.top())), BEDROCK),
+				sequence(sourceHolders)
+			);
 		}
-
-		newSource = SurfaceRules.sequence(
-			SurfaceRules.ifTrue(SurfaceRules.verticalGradient("bedrock_floor", VerticalAnchor.bottom(), VerticalAnchor.aboveBottom(5)), BEDROCK),
-			SurfaceRules.ifTrue(SurfaceRules.not(SurfaceRules.verticalGradient("bedrock_roof", VerticalAnchor.belowTop(5), VerticalAnchor.top())), BEDROCK),
-			newSource
-		);
 
 		return newSource;
 	}
@@ -169,17 +162,11 @@ public final class FrozenSurfaceRules {
 	@Nullable
 	public static SurfaceRules.RuleSource getEndSurfaceRules() {
 		SurfaceRules.RuleSource newSource = null;
-		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 
+		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 		SurfaceRuleEvents.MODIFY_END.invoker().addEndSurfaceRules(sourceHolders);
 
-		for (SurfaceRules.RuleSource rule : sourceHolders) {
-			if (newSource == null) {
-				newSource = rule;
-			} else {
-				newSource = SurfaceRules.sequence(newSource, rule);
-			}
-		}
+		if (!sourceHolders.isEmpty()) newSource = sequence(sourceHolders);
 
 		return newSource;
 	}
@@ -190,16 +177,13 @@ public final class FrozenSurfaceRules {
 		ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
 
 		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(sourceHolders);
+		List<SurfaceRules.RuleSource> sourceHoldersForDimension = sourceHolders
+			.stream()
+			.filter(dimRuleSource -> dimRuleSource.dimension().equals(dimension.location()))
+			.map(FrozenDimensionBoundRuleSource::ruleSource)
+			.toList();
 
-		for (FrozenDimensionBoundRuleSource dimRuleSource : sourceHolders) {
-			if (dimRuleSource.dimension().equals(dimension.location())) {
-				if (newSource == null) {
-					newSource = dimRuleSource.ruleSource();
-				} else {
-					newSource = SurfaceRules.sequence(newSource, dimRuleSource.ruleSource());
-				}
-			}
-		}
+		if (!sourceHoldersForDimension.isEmpty()) newSource = sequence(sourceHoldersForDimension);
 
 		return newSource;
 	}
