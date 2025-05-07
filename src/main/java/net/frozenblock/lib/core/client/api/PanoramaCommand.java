@@ -42,7 +42,7 @@ public class PanoramaCommand {
 						File directory1 = new File(directory, "screenshots");
 						directory1.mkdir();
 						directory1.mkdirs();
-						client.grabPanoramixScreenshot(directory, 1024, 1024);
+						client.grabPanoramixScreenshot(directory);
 						return 1;
 					}
 				)

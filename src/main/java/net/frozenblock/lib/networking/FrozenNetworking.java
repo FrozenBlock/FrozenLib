@@ -104,7 +104,7 @@ public final class FrozenNetworking {
 
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, ctx) -> {
 			if (ConfigSyncPacket.hasPermissionsToSendSync(ctx.player(), true))
-				ConfigSyncPacket.receive(packet, ctx.player().server);
+				ConfigSyncPacket.receive(packet, ctx.server());
 		}));
 
 		registry.register(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
@@ -173,7 +173,7 @@ public final class FrozenNetworking {
 
 		c2sRegistry.register(StructureDebugRequestPayload.PACKET_TYPE, StructureDebugRequestPayload.STREAM_CODEC);
 		ServerPlayNetworking.registerGlobalReceiver(StructureDebugRequestPayload.PACKET_TYPE,
-			(packet, ctx) -> StructureDebugRequestPayload.sendBack(ctx.player(), ctx.player().serverLevel(), packet.chunkPos())
+			(packet, ctx) -> StructureDebugRequestPayload.sendBack(ctx.player(), ctx.player().level(), packet.chunkPos())
 		);
 	}
 
