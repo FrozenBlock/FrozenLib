@@ -24,12 +24,13 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Targets {@link DataComponents#CUSTOM_DATA }
  */
 public class RemovableItemTags {
-
 	private static final LinkedHashMap<String, RemovableItemTag> REMOVABLE_ITEM_TAGS = new LinkedHashMap<>();
 
 	public static void register(String tagKey, RemovalPredicate removalPredicate, boolean removeOnStackMerge) {
@@ -52,7 +53,8 @@ public class RemovableItemTags {
 		return true;
 	}
 
-	public static Set<String> keys() {
+	@Contract(pure = true)
+	public static @NotNull Set<String> keys() {
 		return REMOVABLE_ITEM_TAGS.keySet();
 	}
 

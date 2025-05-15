@@ -30,12 +30,11 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 public class WeightedProcessorRule {
 	public static final Codec<WeightedProcessorRule> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
-				RuleTest.CODEC.fieldOf("input_predicate").forGetter(rule -> rule.inputPredicate),
-				RuleTest.CODEC.fieldOf("location_predicate").forGetter(rule -> rule.locPredicate),
-				PosRuleTest.CODEC.lenientOptionalFieldOf("position_predicate", PosAlwaysTrueTest.INSTANCE).forGetter(rule -> rule.posPredicate),
-				WeightedList.codec(BlockState.CODEC).fieldOf("output_states").forGetter(rule -> rule.outputStates)
-			)
-			.apply(instance, WeightedProcessorRule::new)
+			RuleTest.CODEC.fieldOf("input_predicate").forGetter(rule -> rule.inputPredicate),
+			RuleTest.CODEC.fieldOf("location_predicate").forGetter(rule -> rule.locPredicate),
+			PosRuleTest.CODEC.lenientOptionalFieldOf("position_predicate", PosAlwaysTrueTest.INSTANCE).forGetter(rule -> rule.posPredicate),
+			WeightedList.codec(BlockState.CODEC).fieldOf("output_states").forGetter(rule -> rule.outputStates)
+		).apply(instance, WeightedProcessorRule::new)
 	);
 	private final RuleTest inputPredicate;
 	private final RuleTest locPredicate;

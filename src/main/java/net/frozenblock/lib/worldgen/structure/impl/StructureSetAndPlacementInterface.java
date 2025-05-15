@@ -18,11 +18,11 @@
 package net.frozenblock.lib.worldgen.structure.impl;
 
 import com.mojang.datafixers.util.Pair;
+import java.util.List;
+import java.util.function.Supplier;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
-import java.util.List;
-import java.util.function.Supplier;
 
 public interface StructureSetAndPlacementInterface {
 

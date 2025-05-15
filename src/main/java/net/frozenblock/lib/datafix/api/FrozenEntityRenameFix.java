@@ -45,9 +45,8 @@ public abstract class FrozenEntityRenameFix extends DataFix {
         Type<Pair<String, String>> type = DSL.named(References.ENTITY_NAME.typeName(), NamespacedSchema.namespacedString());
         if (!Objects.equals(this.getInputSchema().getType(References.ENTITY_NAME), type)) {
             throw new IllegalStateException("Unexpected entity name type.");
-        } else {
-            return this.fixTypeEverywhere(this.name, type, dynamicOps -> pair -> pair.mapSecond(this::fixEntity));
         }
+		return this.fixTypeEverywhere(this.name, type, dynamicOps -> pair -> pair.mapSecond(this::fixEntity));
     }
 
     protected abstract String fixEntity(String string);

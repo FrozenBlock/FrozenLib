@@ -26,12 +26,8 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 
 public record BallFeatureConfig(BallBlockPlacement ballBlockPlacement, Optional<Heightmap.Types> heightmapType, IntProvider placementRadius) implements FeatureConfiguration {
 	public static final Codec<BallFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-		BallBlockPlacement.CODEC
-			.fieldOf("block_placement")
-			.forGetter(config -> config.ballBlockPlacement),
-		Heightmap.Types.CODEC
-			.lenientOptionalFieldOf("heightmap")
-			.forGetter(config -> config.heightmapType),
+		BallBlockPlacement.CODEC.fieldOf("block_placement").forGetter(config -> config.ballBlockPlacement),
+		Heightmap.Types.CODEC.lenientOptionalFieldOf("heightmap").forGetter(config -> config.heightmapType),
 		IntProvider.codec(1, 16).fieldOf("placement_radius").forGetter(config -> config.placementRadius)
 	).apply(instance, BallFeatureConfig::new));
 }

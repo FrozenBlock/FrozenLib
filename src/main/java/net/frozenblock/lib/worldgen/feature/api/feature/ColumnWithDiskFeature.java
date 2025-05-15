@@ -64,9 +64,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 						if (level.getBlockState(mutableDisk).is(config.replaceableBlocks())) {
 							generated = true;
 							if (fade) {
-								if (random.nextFloat() > 0.65F) {
-									level.setBlock(mutableDisk, disk, Block.UPDATE_CLIENTS);
-								}
+								if (random.nextFloat() > 0.65F) level.setBlock(mutableDisk, disk, Block.UPDATE_CLIENTS);
 							} else {
 								level.setBlock(mutableDisk, disk, Block.UPDATE_CLIENTS);
 							}

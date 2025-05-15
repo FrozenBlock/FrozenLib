@@ -17,13 +17,13 @@
 
 package net.frozenblock.lib.worldgen.structure.impl.status.networking;
 
+import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
-import java.util.List;
 
 public record PlayerStructureStatusPacket(List<PlayerStructureStatus> structureStatuses) implements CustomPacketPayload {
 	public static final StreamCodec<RegistryFriendlyByteBuf, PlayerStructureStatusPacket> CODEC = StreamCodec.ofMember(PlayerStructureStatusPacket::write, PlayerStructureStatusPacket::new);

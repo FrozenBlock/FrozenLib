@@ -37,36 +37,16 @@ import org.jetbrains.annotations.NotNull;
 public class BallBlockPlacement {
 	public static final Codec<BallBlockPlacement> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
-			BlockStateProvider.CODEC
-				.fieldOf("state_provider")
-				.forGetter(config -> config.blockStateProvider),
-			Codec.floatRange(0F, 1F)
-				.lenientOptionalFieldOf("placement_chance", 1F)
-				.forGetter(config -> config.placementChance),
-			Codec.floatRange(0F, 1F)
-				.lenientOptionalFieldOf("chance_to_choose_inner_block_in_outer_ring", 0F)
-				.forGetter(config -> config.chanceToChooseInnerBlockInOuterRing),
-			Codec.floatRange(0F, 1F)
-				.lenientOptionalFieldOf("fade_start_percentage", 1F)
-				.forGetter(config -> config.fadeStartPercentage),
-			BlockPredicate.CODEC
-				.fieldOf("replacement_block_predicate")
-				.forGetter(config -> config.replacementBlockPredicate),
-			BlockPredicate.CODEC
-				.fieldOf("searching_block_predicate")
-				.forGetter(config -> config.searchingBlockPredicate),
-			Codec.BOOL
-				.lenientOptionalFieldOf("schedule_tick_on_placement", false)
-				.forGetter(config -> config.scheduleTickOnPlacement),
-			Codec.INT
-				.lenientOptionalFieldOf("vertical_placement_offset", 0)
-				.forGetter(config -> config.verticalPlacementOffset),
-			RegistryCodecs.homogeneousList(Registries.BIOME)
-				.lenientOptionalFieldOf("excluded_biomes")
-				.forGetter(config -> config.excludedBiomes),
-			BallOuterRingBlockPlacement.CODEC
-				.lenientOptionalFieldOf("outer_placement")
-				.forGetter(config -> config.outerRingBlockPlacement)
+			BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.blockStateProvider),
+			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
+			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("chance_to_choose_inner_block_in_outer_ring", 0F).forGetter(config -> config.chanceToChooseInnerBlockInOuterRing),
+			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("fade_start_percentage", 1F).forGetter(config -> config.fadeStartPercentage),
+			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementBlockPredicate),
+			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingBlockPredicate),
+			Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
+			Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset),
+			RegistryCodecs.homogeneousList(Registries.BIOME).lenientOptionalFieldOf("excluded_biomes").forGetter(config -> config.excludedBiomes),
+			BallOuterRingBlockPlacement.CODEC.lenientOptionalFieldOf("outer_placement").forGetter(config -> config.outerRingBlockPlacement)
 		).apply(instance, BallBlockPlacement::new)
 	);
 
@@ -134,9 +114,7 @@ public class BallBlockPlacement {
 				}
 			}
 
-			if (random.nextFloat() <= this.placementChance) {
-				return this.generateBlock(level, pos, random);
-			}
+			if (random.nextFloat() <= this.placementChance) return this.generateBlock(level, pos, random);
 		}
 		return false;
 	}

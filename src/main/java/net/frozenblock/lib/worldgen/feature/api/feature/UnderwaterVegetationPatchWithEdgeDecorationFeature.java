@@ -62,9 +62,7 @@ public class UnderwaterVegetationPatchWithEdgeDecorationFeature extends Underwat
 
 				if (!finalDecorationPoses.contains(belowPos)) {
 					BlockState blockState = worldGenLevel.getBlockState(belowPos);
-					if (this.isWaterAt(worldGenLevel.getBlockState(mutableBlockPos))
-						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, oppositeDirection)
-					) {
+					if (this.isWaterAt(worldGenLevel.getBlockState(mutableBlockPos)) && blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, oppositeDirection)) {
 						finalDecorationPoses.add(belowPos);
 					}
 				}

@@ -94,9 +94,7 @@ public class ShovelItemMixin {
 		Block original,
 		@Share("frozenLib$isCustomBehavior") LocalBooleanRef isCustomBehavior
 	) {
-		if (isCustomBehavior.get()) {
-			return Blocks.AIR;
-		}
+		if (isCustomBehavior.get()) return Blocks.AIR;
 		return original;
 	}
 

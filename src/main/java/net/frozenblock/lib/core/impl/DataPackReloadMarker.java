@@ -51,9 +51,7 @@ public class DataPackReloadMarker {
 		});
 
 		ServerTickEvents.END_SERVER_TICK.register((server) -> {
-			if (markedReloaded()) {
-				unmarkReloaded();
-			}
+			unmarkReloaded();
 		});
 	}
 

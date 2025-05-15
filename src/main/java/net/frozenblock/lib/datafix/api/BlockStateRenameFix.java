@@ -56,7 +56,7 @@ public class BlockStateRenameFix extends DataFix {
     @Override
     protected TypeRewriteRule makeRule() {
         return this.fixTypeEverywhereTyped(
-                this.name, this.getInputSchema().getType(References.BLOCK_STATE), typed -> typed.update(DSL.remainderFinder(), this::fix)
+			this.name, this.getInputSchema().getType(References.BLOCK_STATE), typed -> typed.update(DSL.remainderFinder(), this::fix)
         );
     }
 }

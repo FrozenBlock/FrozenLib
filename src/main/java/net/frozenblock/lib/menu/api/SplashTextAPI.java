@@ -19,12 +19,14 @@ package net.frozenblock.lib.menu.api;
 
 import java.util.ArrayList;
 import java.util.List;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 
+@UtilityClass
 @Environment(EnvType.CLIENT)
 public final class SplashTextAPI {
 	private static final List<ResourceLocation> SPLASH_FILES = new ArrayList<>();

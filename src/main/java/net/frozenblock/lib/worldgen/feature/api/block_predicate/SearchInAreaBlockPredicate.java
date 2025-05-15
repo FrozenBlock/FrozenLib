@@ -32,12 +32,8 @@ import org.jetbrains.annotations.NotNull;
 public class SearchInAreaBlockPredicate implements BlockPredicate {
 	public static final MapCodec<SearchInAreaBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(
 		instance -> instance.group(
-			BlockPredicate.CODEC
-				.fieldOf("block_predicate")
-				.forGetter(config -> config.blockPredicate),
-			Codec.INT
-				.fieldOf("search_area")
-				.forGetter(config -> config.searchArea)
+			BlockPredicate.CODEC.fieldOf("block_predicate").forGetter(config -> config.blockPredicate),
+			Codec.INT.fieldOf("search_area").forGetter(config -> config.searchArea)
 		).apply(instance, SearchInAreaBlockPredicate::new)
 	);
 

@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.loot.impl;
 
-import java.util.List;
 import io.netty.util.internal.UnstableApi;
+import java.util.List;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;

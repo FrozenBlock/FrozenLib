@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.worldgen.biome.api.parameters;
+package net.frozenblock.lib.worldgen.biome.impl;
 
 import java.util.ArrayList;
 import java.util.List;

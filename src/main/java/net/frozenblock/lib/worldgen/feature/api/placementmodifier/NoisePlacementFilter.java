@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class NoisePlacementFilter extends PlacementFilter {
 	public static final MapCodec<NoisePlacementFilter> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
-		Codec.intRange(1, 4).fieldOf("noise").orElse(4).forGetter((config) -> config.noise),
+		EasyNoiseSampler.NoiseType.CODEC.fieldOf("noise_type").forGetter(config -> config.noiseType),
 		Codec.doubleRange(0.0001D, 128D).fieldOf("noise_scale").orElse(0.05).forGetter((config) -> config.noiseScale),
 		Codec.doubleRange(-1D, 1D).fieldOf("min_threshold").orElse(0.2).forGetter((config) -> config.minThreshold),
 		Codec.doubleRange(-1D, 1D).fieldOf("maxThresh").orElse(1D).forGetter((config) -> config.maxThreshold),
@@ -42,7 +42,7 @@ public class NoisePlacementFilter extends PlacementFilter {
 		Codec.BOOL.fieldOf("must_be_inside").orElse(false).forGetter((config) -> config.mustBeInside)
 	).apply(instance, NoisePlacementFilter::new));
 
-	private final int noise;
+	private final EasyNoiseSampler.NoiseType noiseType;
 	private final double noiseScale;
 	private final double minThreshold;
 	private final double minFadeThreshold;
@@ -54,7 +54,7 @@ public class NoisePlacementFilter extends PlacementFilter {
 	private final boolean mustBeInside;
 
 	public NoisePlacementFilter(
-		int noise,
+		EasyNoiseSampler.NoiseType noiseType,
 		double noiseScale,
 		double minThreshold,
 		double maxThreshold,
@@ -63,7 +63,7 @@ public class NoisePlacementFilter extends PlacementFilter {
 		boolean scaleY,
 		boolean mustBeInside
 	) {
-		this.noise = noise;
+		this.noiseType = noiseType;
 		this.noiseScale = noiseScale;
 		this.minThreshold = minThreshold;
 		this.maxThreshold = maxThreshold;
@@ -81,16 +81,10 @@ public class NoisePlacementFilter extends PlacementFilter {
 	protected boolean shouldPlace(@NotNull PlacementContext context, RandomSource random, BlockPos pos) {
 		WorldGenLevel level = context.level;
 		boolean isInside = false;
-		long noiseSeed = level.getSeed();
-		ImprovedNoise sampler =
-			this.noise == 1 ? EasyNoiseSampler.createLocalNoise(noiseSeed) :
-				this.noise == 2 ? EasyNoiseSampler.createCheckedNoise(noiseSeed) :
-					this.noise == 3 ? EasyNoiseSampler.createLegacyThreadSafeNoise(noiseSeed) :
-						EasyNoiseSampler.createXoroNoise(noiseSeed);
+		ImprovedNoise sampler = this.noiseType.createNoise(level.getSeed());
 		double sample = EasyNoiseSampler.sample(sampler, pos, this.noiseScale, this.scaleY, this.useY);
-		if (sample > this.minThreshold && sample < this.maxThreshold) {
-			isInside = true;
-		}
+
+		if (sample > this.minThreshold && sample < this.maxThreshold) isInside = true;
 		if (this.fadeDistance > 0) {
 			if (sample > this.minFadeThreshold && sample < this.minThreshold) {
 				isInside = random.nextDouble() > Math.abs((this.minThreshold - sample) / this.fadeDistance);

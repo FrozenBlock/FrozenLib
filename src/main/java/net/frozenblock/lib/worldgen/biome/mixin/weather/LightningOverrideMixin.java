@@ -45,17 +45,15 @@ public final class LightningOverrideMixin {
 	}
 
 	@Unique
-	public boolean frozenLib$newLightningCheck(BlockPos position, LevelReader levelReader) {
+	public boolean frozenLib$newLightningCheck(BlockPos pos, LevelReader levelReader) {
 		ServerLevel level = ServerLevel.class.cast(this);
-		if (!level.isRaining() || !level.canSeeSky(position)) {
-			return false;
-		}
-		if (level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, position).getY() > position.getY()) {
-			return false;
-		}
-		Holder<Biome> biome = level.getBiome(position);
-		return ((biome.value().hasPrecipitation() && biome.value().warmEnoughToRain(position, levelReader.getSeaLevel()))
-			|| biome.is(FrozenBiomeTags.CAN_LIGHTNING_OVERRIDE)) && !biome.is(FrozenBiomeTags.CANNOT_LIGHTNING_OVERRIDE);
+		if (!level.isRaining() || !level.canSeeSky(pos)) return false;
+		if (level.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, pos).getY() > pos.getY()) return false;
+
+		Holder<Biome> biomeHolder = level.getBiome(pos);
+		Biome biome = biomeHolder.value();
+		return (biome.getPrecipitationAt(pos, levelReader.getSeaLevel()) == Biome.Precipitation.RAIN || biomeHolder.is(FrozenBiomeTags.CAN_LIGHTNING_OVERRIDE))
+			&& !biomeHolder.is(FrozenBiomeTags.CANNOT_LIGHTNING_OVERRIDE);
 	}
 
 }
