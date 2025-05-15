@@ -37,9 +37,6 @@
     ],
     "modmenu": [
       "net.frozenblock.lib.config.frozenlib_config.gui.ModMenuIntegration"
-    ],
-    "terrablender": [
-      "net.frozenblock.lib.worldgen.surface.impl.terrablender.FrozenTerraBlenderCompat"
     ]
   },
   "mixins": [

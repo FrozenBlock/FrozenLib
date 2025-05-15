@@ -17,11 +17,13 @@
 
 package net.frozenblock.lib.worldgen.biome.api.parameters;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.level.biome.Climate;
 
 /**
  * Contains a list of all depth parameters used in vanilla worldgen, named for ease of use.
  */
+@UtilityClass
 public final class Depth {
 	public static final Climate.Parameter SURFACE = Climate.Parameter.point(0F);
 	public static final Climate.Parameter UNDERGROUND = Climate.Parameter.span(0.2F, 0.9F);

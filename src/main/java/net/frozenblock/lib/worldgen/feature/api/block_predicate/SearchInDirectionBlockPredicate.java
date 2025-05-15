@@ -32,18 +32,10 @@ import org.jetbrains.annotations.NotNull;
 public class SearchInDirectionBlockPredicate implements BlockPredicate {
 	public static final MapCodec<SearchInDirectionBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(
 		instance -> instance.group(
-			BlockPredicate.CODEC
-				.fieldOf("block_predicate")
-				.forGetter(config -> config.blockPredicate),
-			Codec.INT
-				.fieldOf("search_steps")
-				.forGetter(config -> config.searchSteps),
-			Direction.CODEC
-				.fieldOf("search_direction")
-				.forGetter(config -> config.searchDirection),
-			Codec.BOOL
-				.fieldOf("all_must_match")
-				.forGetter(config -> config.allMustMatch)
+			BlockPredicate.CODEC.fieldOf("block_predicate").forGetter(config -> config.blockPredicate),
+			Codec.INT.fieldOf("search_steps").forGetter(config -> config.searchSteps),
+			Direction.CODEC.fieldOf("search_direction").forGetter(config -> config.searchDirection),
+			Codec.BOOL.fieldOf("all_must_match").forGetter(config -> config.allMustMatch)
 		).apply(instance, SearchInDirectionBlockPredicate::new)
 	);
 

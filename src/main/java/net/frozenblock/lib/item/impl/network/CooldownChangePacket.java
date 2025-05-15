@@ -28,10 +28,7 @@ public record CooldownChangePacket(
 	ResourceLocation cooldownGroup,
 	int additional
 ) implements CustomPacketPayload {
-
-	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("cooldown_change")
-	);
+	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cooldown_change"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
 
 	public CooldownChangePacket(@NotNull RegistryFriendlyByteBuf buf) {

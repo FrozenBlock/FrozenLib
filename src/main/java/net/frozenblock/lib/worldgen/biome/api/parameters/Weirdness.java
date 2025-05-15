@@ -17,11 +17,13 @@
 
 package net.frozenblock.lib.worldgen.biome.api.parameters;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.level.biome.Climate;
 
 /**
  * Contains a list of all weirdness parameters used in vanilla worldgen, named for ease of use.
  */
+@UtilityClass
 public final class Weirdness {
 	public static final Climate.Parameter MID_SLICE_NORMAL_ASCENDING = Climate.Parameter.span(-1F, -0.93333334F);
 	public static final Climate.Parameter HIGH_SLICE_NORMAL_ASCENDING = Climate.Parameter.span(-0.93333334F, -0.7666667F);

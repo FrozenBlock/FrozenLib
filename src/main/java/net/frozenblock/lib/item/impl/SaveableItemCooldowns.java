@@ -45,15 +45,13 @@ public class SaveableItemCooldowns {
 	public static List<SaveableCooldownInstance> makeSaveableCooldownInstanceList(@NotNull ServerPlayer player) {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		int tickCount = player.getCooldowns().tickCount;
-		player.getCooldowns().cooldowns.forEach(
-				((cooldownGroup, cooldownInstance) -> {
-					Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(cooldownGroup);
-					boolean alwaysSave = optionalItem.isPresent() && optionalItem.get().builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS);
-					if (alwaysSave || FrozenLibConfig.get().saveItemCooldowns) {
-						saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(cooldownGroup, cooldownInstance, tickCount));
-					}
-				})
-		);
+		player.getCooldowns().cooldowns.forEach((cooldownGroup, cooldownInstance) -> {
+			Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(cooldownGroup);
+			boolean alwaysSave = optionalItem.isPresent() && optionalItem.get().builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS);
+			if (alwaysSave || FrozenLibConfig.get().saveItemCooldowns) {
+				saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(cooldownGroup, cooldownInstance, tickCount));
+			}
+		});
 		return saveableCooldownInstances;
 	}
 
@@ -96,7 +94,6 @@ public class SaveableItemCooldowns {
 	}
 
 	public record SaveableCooldownInstance(ResourceLocation cooldownGroup, int cooldownLeft, int totalCooldownTime) {
-
 		public static final Codec<SaveableCooldownInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ResourceLocation.CODEC.fieldOf("CooldownGroup").forGetter(SaveableCooldownInstance::cooldownGroup),
 			Codec.INT.fieldOf("CooldownLeft").orElse(0).forGetter(SaveableCooldownInstance::cooldownLeft),

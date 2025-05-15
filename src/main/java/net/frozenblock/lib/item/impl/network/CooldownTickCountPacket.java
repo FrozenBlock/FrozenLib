@@ -25,9 +25,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 
 public record CooldownTickCountPacket(int count) implements CustomPacketPayload {
-	public static final Type<CooldownTickCountPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("cooldown_tick_count_packet")
-	);
+	public static final Type<CooldownTickCountPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cooldown_tick_count_packet"));
 	public static final StreamCodec<FriendlyByteBuf, CooldownTickCountPacket> CODEC = ByteBufCodecs.VAR_INT.map(CooldownTickCountPacket::new, CooldownTickCountPacket::count).cast();
 
 	@Override

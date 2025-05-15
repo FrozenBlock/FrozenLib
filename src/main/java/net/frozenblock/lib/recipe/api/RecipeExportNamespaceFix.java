@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.recipe.api;
 
-import lombok.experimental.UtilityClass;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 
 @UtilityClass
 public final class RecipeExportNamespaceFix {

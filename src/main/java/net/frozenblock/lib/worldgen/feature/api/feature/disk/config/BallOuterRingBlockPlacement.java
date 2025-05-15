@@ -31,30 +31,14 @@ import org.jetbrains.annotations.NotNull;
 public class BallOuterRingBlockPlacement {
 	public static final Codec<BallOuterRingBlockPlacement> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
-			BlockStateProvider.CODEC
-				.fieldOf("state_provider")
-				.forGetter(config -> config.blockStateProvider),
-			Codec.floatRange(0F, 1F)
-				.lenientOptionalFieldOf("placement_chance", 1F)
-				.forGetter(config -> config.placementChance),
-			Codec.floatRange(0F, 1F)
-				.lenientOptionalFieldOf("outer_ring_start_percentage", 0F)
-				.forGetter(config -> config.outerRingStartPercentage),
-			Codec.floatRange(0F, 1F)
-				.lenientOptionalFieldOf("chance_to_choose_in_inner_ring", 0F)
-				.forGetter(config -> config.chanceToChooseInInnerRing),
-			BlockPredicate.CODEC
-				.fieldOf("replacement_block_predicate")
-				.forGetter(config -> config.replacementBlockPredicate),
-			BlockPredicate.CODEC
-				.fieldOf("searching_block_predicate")
-				.forGetter(config -> config.searchingBlockPredicate),
-			Codec.BOOL
-				.lenientOptionalFieldOf("schedule_tick_on_placement", false)
-				.forGetter(config -> config.scheduleTickOnPlacement),
-			Codec.INT
-				.lenientOptionalFieldOf("vertical_placement_offset", 0)
-				.forGetter(config -> config.verticalPlacementOffset)
+			BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.blockStateProvider),
+			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
+			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("outer_ring_start_percentage", 0F).forGetter(config -> config.outerRingStartPercentage),
+			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("chance_to_choose_in_inner_ring", 0F).forGetter(config -> config.chanceToChooseInInnerRing),
+			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementBlockPredicate),
+			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingBlockPredicate),
+			Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
+			Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset)
 		).apply(instance, BallOuterRingBlockPlacement::new)
 	);
 

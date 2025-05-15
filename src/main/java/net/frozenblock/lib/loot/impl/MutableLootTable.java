@@ -17,11 +17,11 @@
 
 package net.frozenblock.lib.loot.impl;
 
+import io.netty.util.internal.UnstableApi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
-import io.netty.util.internal.UnstableApi;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;

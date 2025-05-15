@@ -28,7 +28,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.core.client.api.FrustumUtil;
 import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
-import net.minecraft.Util;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -51,6 +50,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
+import net.minecraft.Util;
 
 public class ImprovedGameEventListenerRenderer implements DebugRenderer.SimpleDebugRenderer {
 	private final Minecraft minecraft;

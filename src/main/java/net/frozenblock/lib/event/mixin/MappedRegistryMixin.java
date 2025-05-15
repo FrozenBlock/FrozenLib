@@ -29,12 +29,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class MappedRegistryMixin<T> {
 
 	@Inject(method = "freeze", at = @At("HEAD"))
-	private void frozenLib$freezeStart(CallbackInfoReturnable<Registry<T>> cir) {
+	private void frozenLib$freezeStart(CallbackInfoReturnable<Registry<T>> info) {
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.invoker().onStartRegistryFreeze(MappedRegistry.class.cast(this), false);
 	}
 
 	@Inject(method = "freeze", at = @At("TAIL"))
-	private void frozenLib$freezeEnd(CallbackInfoReturnable<Registry<T>> cir) {
+	private void frozenLib$freezeEnd(CallbackInfoReturnable<Registry<T>> info) {
 		RegistryFreezeEvents.END_REGISTRY_FREEZE.invoker().onEndRegistryFreeze(MappedRegistry.class.cast(this), false);
 	}
 }

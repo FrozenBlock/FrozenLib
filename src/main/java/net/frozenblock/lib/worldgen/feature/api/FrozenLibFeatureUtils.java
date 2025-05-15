@@ -29,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenLibFeatureUtils {
-
 	public static BootstrapContext<Object> BOOTSTRAP_CONTEXT = null;
 
 	public static boolean isBlockExposed(WorldGenLevel level, @NotNull BlockPos blockPos) {
@@ -67,9 +66,7 @@ public class FrozenLibFeatureUtils {
 			pos.offset(-searchDistance, -searchDistance, -searchDistance),
 			pos.offset(searchDistance, searchDistance, searchDistance)
 		);
-		for (BlockPos currentPos : poses) {
-			if (predicate.test(level, currentPos)) return true;
-		}
+		for (BlockPos currentPos : poses) if (predicate.test(level, currentPos)) return true;
 		return false;
 	}
 }

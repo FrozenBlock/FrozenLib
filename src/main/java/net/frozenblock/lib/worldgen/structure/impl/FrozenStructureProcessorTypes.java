@@ -25,6 +25,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
+import org.jetbrains.annotations.NotNull;
 
 public class FrozenStructureProcessorTypes {
 	public static final StructureProcessorType<BlockStateRespectingRuleProcessor> BLOCK_STATE_RESPECTING_RULE_PROCESSOR = register(
@@ -39,7 +40,7 @@ public class FrozenStructureProcessorTypes {
 	public static void init() {
 	}
 
-	private static <P extends StructureProcessor> StructureProcessorType<P> register(String id, MapCodec<P> codec) {
+	private static <P extends StructureProcessor> @NotNull StructureProcessorType<P> register(String id, MapCodec<P> codec) {
 		return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, FrozenLibConstants.id(id), () -> codec);
 	}
 }

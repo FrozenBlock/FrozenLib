@@ -32,12 +32,8 @@ import org.jetbrains.annotations.NotNull;
 public class TouchingBlockPredicate implements BlockPredicate {
 	public static final MapCodec<TouchingBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(
 		instance -> instance.group(
-			BlockPredicate.CODEC
-				.fieldOf("block_predicate")
-				.forGetter(config -> config.blockPredicate),
-			Codec.BOOL
-				.fieldOf("all_must_match")
-				.forGetter(config -> config.allMustMatch)
+			BlockPredicate.CODEC.fieldOf("block_predicate").forGetter(config -> config.blockPredicate),
+			Codec.BOOL.fieldOf("all_must_match").forGetter(config -> config.allMustMatch)
 		).apply(instance, TouchingBlockPredicate::new)
 	);
 

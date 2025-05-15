@@ -23,8 +23,10 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 import net.minecraft.resources.ResourceLocation;
 
+@UtilityClass
 public class RandomPoolAliasApi {
 	private static final Map<ResourceLocation, List<Pair<ResourceLocation, Integer>>> ALIAS_TO_TARGETS = new Object2ObjectOpenHashMap<>();
 

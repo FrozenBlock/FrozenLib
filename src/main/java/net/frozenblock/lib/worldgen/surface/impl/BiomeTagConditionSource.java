@@ -29,12 +29,11 @@ import org.jetbrains.annotations.NotNull;
  * A {@link SurfaceRules.ConditionSource} that uses a tag to control which biomes it generates in.
  */
 public final class BiomeTagConditionSource implements SurfaceRules.ConditionSource {
-	public static final KeyDispatchDataCodec<BiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.mapCodec((instance) ->
+	public static final KeyDispatchDataCodec<BiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(
+		RecordCodecBuilder.mapCodec(instance ->
 			instance.group(
-				TagKey.codec(Registries.BIOME)
-					.fieldOf("biome_tag")
-					.forGetter(BiomeTagConditionSource::getBiomeTagKey))
-				.apply(instance, BiomeTagConditionSource::new)
+				TagKey.codec(Registries.BIOME).fieldOf("biome_tag").forGetter(BiomeTagConditionSource::getBiomeTagKey)
+			).apply(instance, BiomeTagConditionSource::new)
 		)
 	);
 
@@ -45,7 +44,7 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 	}
 
 	@Override
-	public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
+	public @NotNull KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
 		return CODEC;
 	}
 
@@ -67,13 +66,9 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 
 	@Override
 	public boolean equals(Object object) {
-		if (this == object) {
-			return true;
-		} else if (object instanceof BiomeTagConditionSource biomeConditionSource) {
-			return this.biomeTagKey.equals(biomeConditionSource.biomeTagKey);
-		} else {
-			return false;
-		}
+		if (this == object) return true;
+		if (object instanceof BiomeTagConditionSource biomeConditionSource) return this.biomeTagKey.equals(biomeConditionSource.biomeTagKey);
+		return false;
 	}
 
 	@Override
