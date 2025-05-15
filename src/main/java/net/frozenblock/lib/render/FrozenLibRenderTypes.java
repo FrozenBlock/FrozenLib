@@ -23,13 +23,11 @@ import java.util.function.BiFunction;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.Util;
 import net.minecraft.client.renderer.RenderStateShard;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.TriState;
-import org.lwjgl.opengl.GL11C;
-import org.lwjgl.opengl.GL20C;
+import net.minecraft.Util;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderTypes {

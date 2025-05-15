@@ -17,13 +17,13 @@
 
 package net.frozenblock.lib.worldgen.structure.mixin.status;
 
+import java.util.List;
 import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatus;
 import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatusInterface;
 import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
-import java.util.List;
 
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin implements PlayerStructureStatusInterface {

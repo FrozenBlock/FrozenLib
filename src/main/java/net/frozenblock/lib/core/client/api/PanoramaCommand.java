@@ -53,13 +53,11 @@ public class PanoramaCommand {
 
 	private static @NotNull File getPanoramaFolderName(File directory) {
 		String string = DATE_FORMAT.format(new Date());
-		int i = 1;
+		int fileIndex = 1;
 		while (true) {
-			File file = new File(directory, string + (i == 1 ? "" : "_" + i));
-			if (!file.exists()) {
-				return file;
-			}
-			++i;
+			File file = new File(directory, string + (fileIndex == 1 ? "" : "_" + fileIndex));
+			if (!file.exists()) return file;
+			++fileIndex;
 		}
 	}
 }

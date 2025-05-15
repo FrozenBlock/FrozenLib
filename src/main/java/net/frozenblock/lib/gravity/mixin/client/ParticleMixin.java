@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ParticleMixin {
 
 	@Unique
-	private static final double BASE_GRAVITY = 0.04;
+	private static final double BASE_GRAVITY = 0.04D;
 
 	@Shadow
 	protected double xd;
@@ -58,7 +58,7 @@ public class ParticleMixin {
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	private void frozenLib$storeY(
-		CallbackInfo ci,
+		CallbackInfo info,
 		@Share("oldX") LocalDoubleRef oldX,
 		@Share("oldY") LocalDoubleRef oldY,
 		@Share("oldZ") LocalDoubleRef oldZ
@@ -77,7 +77,7 @@ public class ParticleMixin {
 		)
 	)
 	private void frozenLib$useGravity(
-		CallbackInfo ci,
+		CallbackInfo info,
 		@Share("oldX") LocalDoubleRef oldX,
 		@Share("oldY") LocalDoubleRef oldY,
 		@Share("oldZ") LocalDoubleRef oldZ

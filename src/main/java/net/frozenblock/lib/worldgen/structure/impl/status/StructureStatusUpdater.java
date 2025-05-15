@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.worldgen.structure.impl.status;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
 import net.frozenblock.lib.worldgen.structure.impl.status.networking.PlayerStructureStatusPacket;
@@ -30,9 +32,6 @@ import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @ApiStatus.Internal
 public class StructureStatusUpdater {

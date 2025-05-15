@@ -19,16 +19,15 @@ package net.frozenblock.lib.worldgen.structure.api;
 
 import com.google.common.collect.ImmutableList;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
 
 @UtilityClass
 public class StructureGenerationConditionApi {
@@ -38,9 +37,7 @@ public class StructureGenerationConditionApi {
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().forEach(structureSetReference -> {
 				if (structureSetReference.isBound() && (Object) (structureSetReference.value()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
-					setAndPlacementInterface.frozenLib$addGenerationConditions(
-						getGenerationConditions(structureSetReference.key().location())
-					);
+					setAndPlacementInterface.frozenLib$addGenerationConditions(getGenerationConditions(structureSetReference.key().location()));
 				}
 			});
 		});

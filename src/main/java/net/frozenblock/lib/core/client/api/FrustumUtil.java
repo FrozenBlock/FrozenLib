@@ -35,9 +35,7 @@ public class FrustumUtil {
 	 */
 	public static boolean isVisible(AABB aabb) {
 		Frustum frustum = Minecraft.getInstance().levelRenderer.cullingFrustum;
-		if (frustum != null) {
-			return frustum.isVisible(aabb);
-		}
+		if (frustum != null) return frustum.isVisible(aabb);
 		return true;
 	}
 

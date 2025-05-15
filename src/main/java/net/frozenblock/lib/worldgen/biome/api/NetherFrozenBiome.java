@@ -18,6 +18,7 @@
 package net.frozenblock.lib.worldgen.biome.api;
 
 import com.mojang.datafixers.util.Pair;
+import java.util.function.Consumer;
 import net.minecraft.data.worldgen.biome.OverworldBiomes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
-import java.util.function.Consumer;
 
 public abstract class NetherFrozenBiome extends FrozenBiome {
 

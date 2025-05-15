@@ -56,7 +56,8 @@ public class FrozenLibConfiguredFeatureUtils {
 		DynamicRegistryManagerSetupContext.@NotNull RegistryMap registries,
 		@NotNull String namespace,
 		@NotNull String id,
-		F feature, @NotNull FC config
+		F feature,
+		@NotNull FC config
 	) {
 		var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
 		final ConfiguredFeature<FC, ?> configuredFeature = new ConfiguredFeature<>(feature, config);

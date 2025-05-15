@@ -17,11 +17,13 @@
 
 package net.frozenblock.lib.worldgen.biome.api.parameters;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.level.biome.Climate;
 
 /**
  * Contains a list of all erosion parameters used in vanilla worldgen, for ease of use.
  */
+@UtilityClass
 public final class Erosion {
 	public static final Climate.Parameter EROSION_0 = Climate.Parameter.span(-1F, -0.78F);
 	public static final Climate.Parameter EROSION_1 = Climate.Parameter.span(-0.78F, -0.375F);

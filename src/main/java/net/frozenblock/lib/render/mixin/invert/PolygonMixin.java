@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.render.mixin.invert;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.entity.impl.client.rendering.ModelPartInvertInterface;
@@ -25,8 +27,6 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
-import java.util.ArrayList;
-import java.util.List;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ModelPart.Polygon.class)

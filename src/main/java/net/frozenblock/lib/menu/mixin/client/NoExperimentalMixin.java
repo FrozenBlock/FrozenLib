@@ -45,11 +45,15 @@ public class NoExperimentalMixin {
 		}
 	}
 
-	@ModifyVariable(method = "confirmWorldCreation", at = @At("HEAD"), argsOnly = true, ordinal = 0, require = 0)
+	@ModifyVariable(
+		method = "confirmWorldCreation",
+		at = @At("HEAD"),
+		argsOnly = true,
+		ordinal = 0,
+		require = 0
+	)
 	private static boolean frozenLib$skipCreationWarning(boolean original) {
-		if (FrozenLibConfig.get().removeExperimentalWarning)  {
-			return true;
-		}
+		if (FrozenLibConfig.get().removeExperimentalWarning) return true;
 		return original;
 	}
 

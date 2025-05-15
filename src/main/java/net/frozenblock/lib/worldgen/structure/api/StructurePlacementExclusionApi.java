@@ -20,14 +20,14 @@ package net.frozenblock.lib.worldgen.structure.api;
 import com.google.common.collect.ImmutableList;
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 @UtilityClass
 public class StructurePlacementExclusionApi {

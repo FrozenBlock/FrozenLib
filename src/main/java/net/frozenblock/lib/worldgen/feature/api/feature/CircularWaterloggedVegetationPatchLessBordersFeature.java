@@ -27,6 +27,7 @@ import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
@@ -80,12 +81,10 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 					mutableBlockPos2.setWithOffset(mutableBlockPos, config.surface.getDirection());
 					BlockState blockState = level.getBlockState(mutableBlockPos2);
 					if (level.isEmptyBlock(mutableBlockPos) && blockState.isFaceSturdy(level, mutableBlockPos2, config.surface.getDirection().getOpposite())) {
-						int l = config.depth.sample(random) + (config.extraBottomBlockChance > 0.0F && random.nextFloat() < config.extraBottomBlockChance ? 1 : 0);
+						int depth = config.depth.sample(random) + (config.extraBottomBlockChance > 0F && random.nextFloat() < config.extraBottomBlockChance ? 1 : 0);
 						BlockPos blockPos = mutableBlockPos2.immutable();
-						boolean bl6 = this.placeGround(level, config, state, random, mutableBlockPos2, l);
-						if (bl6) {
-							set.add(blockPos);
-						}
+						boolean placedGround = this.placeGround(level, config, state, random, mutableBlockPos2, depth);
+						if (placedGround) set.add(blockPos);
 					}
 				}
 			}
@@ -104,16 +103,14 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 		BlockPos blockPos;
 		while (var11.hasNext()) {
 			blockPos = var11.next();
-			if (!isExposed(level, blockPos, mutableBlockPos)) {
-				set2.add(blockPos);
-			}
+			if (!isExposed(level, blockPos, mutableBlockPos)) set2.add(blockPos);
 		}
 
 		var11 = set2.iterator();
 
 		while (var11.hasNext()) {
 			blockPos = var11.next();
-			level.setBlock(blockPos, Blocks.WATER.defaultBlockState(), 2);
+			level.setBlock(blockPos, Blocks.WATER.defaultBlockState(), Block.UPDATE_CLIENTS);
 		}
 
 		return set2;
@@ -138,22 +135,19 @@ public class CircularWaterloggedVegetationPatchLessBordersFeature extends Vegeta
 		if (super.placeVegetation(level, config, chunkGenerator, random, pos.below())) {
 			BlockState blockState = level.getBlockState(pos);
 			if (blockState.hasProperty(BlockStateProperties.WATERLOGGED) && !(Boolean) blockState.getValue(BlockStateProperties.WATERLOGGED)) {
-				level.setBlock(pos, blockState.setValue(BlockStateProperties.WATERLOGGED, true), 2);
+				level.setBlock(pos, blockState.setValue(BlockStateProperties.WATERLOGGED, true), Block.UPDATE_CLIENTS);
 			}
 
 			return true;
-		} else {
-			return false;
 		}
+		return false;
 	}
 
 	@Override
 	protected boolean placeGround(WorldGenLevel level, VegetationPatchConfiguration config, Predicate<BlockState> replaceableblocks, RandomSource random, BlockPos.MutableBlockPos mutablePos, int maxDistance) {
 		for (int i = 0; i < maxDistance; ++i) {
 			BlockState blockState2 = level.getBlockState(mutablePos);
-			if (!replaceableblocks.test(blockState2)) {
-				return i != 0;
-			}
+			if (!replaceableblocks.test(blockState2)) return i != 0;
 			mutablePos.move(config.surface.getDirection());
 		}
 		return true;

@@ -17,11 +17,13 @@
 
 package net.frozenblock.lib.worldgen.biome.api.parameters;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.level.biome.Climate;
 
 /**
  * Contains a list of all tmeperature parameters used in vanilla worldgen, named for ease of use.
  */
+@UtilityClass
 public final class Temperature {
 	public static final Climate.Parameter ICY = Climate.Parameter.span(-1F, -0.45F);
 	public static final Climate.Parameter COOL = Climate.Parameter.span(-0.45F, -0.15F);

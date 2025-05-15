@@ -45,12 +45,12 @@ public class WeightedRuleProcessor extends StructureProcessor {
 	@Nullable
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(
-		LevelReader world,
-		BlockPos pos,
-		BlockPos pivot,
-		StructureTemplate.StructureBlockInfo localBlockInfo,
-		StructureTemplate.StructureBlockInfo absoluteBlockInfo,
-		StructurePlaceSettings placementData
+		@NotNull LevelReader world,
+		@NotNull BlockPos pos,
+		@NotNull BlockPos pivot,
+		StructureTemplate.@NotNull StructureBlockInfo localBlockInfo,
+		StructureTemplate.@NotNull StructureBlockInfo absoluteBlockInfo,
+		@NotNull StructurePlaceSettings placementData
 	) {
 		BlockPos posInfo = absoluteBlockInfo.pos();
 		RandomSource randomSource = RandomSource.create(Mth.getSeed(posInfo));

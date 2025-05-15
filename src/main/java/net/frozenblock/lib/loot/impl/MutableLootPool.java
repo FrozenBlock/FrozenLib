@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.loot.impl;
 
+import io.netty.util.internal.UnstableApi;
 import java.util.ArrayList;
 import java.util.function.Predicate;
-import io.netty.util.internal.UnstableApi;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;

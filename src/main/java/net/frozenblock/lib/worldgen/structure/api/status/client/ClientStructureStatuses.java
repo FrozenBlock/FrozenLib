@@ -20,12 +20,14 @@ package net.frozenblock.lib.worldgen.structure.api.status.client;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatus;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
+@UtilityClass
 @Environment(EnvType.CLIENT)
 public class ClientStructureStatuses {
 	private static final List<PlayerStructureStatus> STRUCTURE_STATUSES = new ArrayList<>();
