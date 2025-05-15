@@ -63,9 +63,7 @@ public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFea
 
 				if (!finalDecorationPoses.contains(belowPos)) {
 					BlockState blockState = worldGenLevel.getBlockState(belowPos);
-					if (worldGenLevel.isEmptyBlock(mutableBlockPos)
-						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, oppositeDirection)
-					) {
+					if (worldGenLevel.isEmptyBlock(mutableBlockPos) && blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, oppositeDirection)) {
 						finalDecorationPoses.add(belowPos);
 					}
 				}

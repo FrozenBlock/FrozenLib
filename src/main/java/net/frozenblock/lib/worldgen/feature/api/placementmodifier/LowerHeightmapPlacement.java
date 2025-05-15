@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class LowerHeightmapPlacement extends PlacementModifier {
 	public static final MapCodec<LowerHeightmapPlacement> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		(Heightmap.Types.CODEC.fieldOf("heightmap")).forGetter(modifier -> modifier.heightmap)
+		Heightmap.Types.CODEC.fieldOf("heightmap").forGetter(modifier -> modifier.heightmap)
 	).apply(instance, LowerHeightmapPlacement::new));
 
 	private final Heightmap.Types heightmap;
@@ -57,7 +57,7 @@ public class LowerHeightmapPlacement extends PlacementModifier {
 	}
 
 	@Override
-	public PlacementModifierType<?> type() {
+	public @NotNull PlacementModifierType<?> type() {
 		return FrozenPlacementModifiers.ACCURATE_HEIGHTMAP;
 	}
 

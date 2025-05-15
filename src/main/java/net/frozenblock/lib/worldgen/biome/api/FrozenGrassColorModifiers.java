@@ -27,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenGrassColorModifiers {
-
 	private static final Map<ResourceLocation, FrozenGrassColorModifier> NEW_GRASS_COLOR_MODIFIERS = new LinkedHashMap<>();
 
 	public static void addGrassColorModifier(ResourceLocation id, FrozenGrassColorModifier grassColorModifier) {

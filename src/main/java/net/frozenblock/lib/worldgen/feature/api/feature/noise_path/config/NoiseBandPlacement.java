@@ -30,24 +30,12 @@ import net.minecraft.world.level.levelgen.Heightmap;
 public class NoiseBandPlacement {
 	public static final MapCodec<NoiseBandPlacement> CODEC = RecordCodecBuilder.mapCodec(
 		instance -> instance.group(
-			EasyNoiseSampler.NoiseType.CODEC
-				.fieldOf("noise_type")
-				.forGetter(config -> config.noiseType),
-			Codec.DOUBLE
-				.lenientOptionalFieldOf("noise_scale", 1D)
-				.forGetter(config -> config.noiseScale),
-			Codec.BOOL
-				.lenientOptionalFieldOf("include_y_in_noise_calculation", false)
-				.forGetter(config -> config.calculateNoiseWithY),
-			Codec.BOOL
-				.lenientOptionalFieldOf("scale_noise_y", false)
-				.forGetter(config -> config.scaleYNoise),
-			Heightmap.Types.CODEC
-				.lenientOptionalFieldOf("heightmap")
-				.forGetter(config -> config.heightmapType),
-			NoiseBandBlockPlacement.CODEC.listOf()
-				.fieldOf("block_placements")
-				.forGetter(config -> config.blockPlacements)
+			EasyNoiseSampler.NoiseType.CODEC.fieldOf("noise_type").forGetter(config -> config.noiseType),
+			Codec.DOUBLE.lenientOptionalFieldOf("noise_scale", 1D).forGetter(config -> config.noiseScale),
+			Codec.BOOL.lenientOptionalFieldOf("include_y_in_noise_calculation", false).forGetter(config -> config.calculateNoiseWithY),
+			Codec.BOOL.lenientOptionalFieldOf("scale_noise_y", false).forGetter(config -> config.scaleYNoise),
+			Heightmap.Types.CODEC.lenientOptionalFieldOf("heightmap").forGetter(config -> config.heightmapType),
+			NoiseBandBlockPlacement.CODEC.listOf().fieldOf("block_placements").forGetter(config -> config.blockPlacements)
 		).apply(instance, NoiseBandPlacement::new)
 	);
 

@@ -22,10 +22,12 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lombok.experimental.UtilityClass;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import org.jetbrains.annotations.NotNull;
 
+@UtilityClass
 public class StructureProcessorApi {
 	private static final List<StructureProcessor> EMPTY = ImmutableList.of();
 

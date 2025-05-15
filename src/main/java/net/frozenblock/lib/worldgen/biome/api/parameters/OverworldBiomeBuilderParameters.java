@@ -25,64 +25,20 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.worldgen.biome.impl.BiomeParameters;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
+import org.jetbrains.annotations.Contract;
+import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class OverworldBiomeBuilderParameters {
-
-	public static final float VALLEY_SIZE = 0.05F;
-	public static final float LOW_START = 0.26666668F;
-	public static final float HIGH_START = 0.4F;
-	public static final float HIGH_END = 0.93333334F;
-	public static final float PEAK_SIZE = 0.1F;
-	public static final float PEAK_START = 0.56666666F;
-	public static final float PEAK_END = 0.7666667F;
-	public static final float NEAR_INLAND_START = -0.11F;
-	public static final float MID_INLAND_START = 0.03F;
-	public static final float FAR_INLAND_START = 0.3F;
-	public static final float EROSION_INDEX_1_START = -0.78F;
-	public static final float EROSION_INDEX_2_START = -0.375F;
-	private static final float EROSION_DEEP_DARK_DRYNESS_THRESHOLD = -0.225F;
-	private static final float DEPTH_DEEP_DARK_DRYNESS_THRESHOLD = 0.9F;
-	public static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1.0F, 1.0F);
-	public static final Climate.Parameter[] TEMPERATURES = new Climate.Parameter[]{
-		Climate.Parameter.span(-1.0F, -0.45F),
-		Climate.Parameter.span(-0.45F, -0.15F),
-		Climate.Parameter.span(-0.15F, 0.2F),
-		Climate.Parameter.span(0.2F, 0.55F),
-		Climate.Parameter.span(0.55F, 1.0F)
-	};
-	public static final Climate.Parameter[] HUMIDITIES = new Climate.Parameter[]{
-		Climate.Parameter.span(-1.0F, -0.35F),
-		Climate.Parameter.span(-0.35F, -0.1F),
-		Climate.Parameter.span(-0.1F, 0.1F),
-		Climate.Parameter.span(0.1F, 0.3F),
-		Climate.Parameter.span(0.3F, 1.0F)
-	};
-	public static final Climate.Parameter[] EROSIONS = new Climate.Parameter[]{
-		Climate.Parameter.span(-1.0F, -0.78F),
-		Climate.Parameter.span(-0.78F, -0.375F),
-		Climate.Parameter.span(-0.375F, -0.2225F),
-		Climate.Parameter.span(-0.2225F, 0.05F),
-		Climate.Parameter.span(0.05F, 0.45F),
-		Climate.Parameter.span(0.45F, 0.55F),
-		Climate.Parameter.span(0.55F, 1.0F)
-	};
-	public static final Climate.Parameter FROZEN_RANGE = TEMPERATURES[0];
-	public static final Climate.Parameter UNFROZEN_RANGE = Climate.Parameter.span(TEMPERATURES[1], TEMPERATURES[4]);
-	public static final Climate.Parameter MUSHROOM_FIELDS_CONTINENTALNESS = Climate.Parameter.span(-1.2F, -1.05F);
-	public static final Climate.Parameter DEEP_OCEAN_CONTINENTALNESS = Climate.Parameter.span(-1.05F, -0.455F);
-	public static final Climate.Parameter OCEAN_CONTINENTALNESS = Climate.Parameter.span(-0.455F, -0.19F);
-	public static final Climate.Parameter COAST_CONTINENTALNESS = Climate.Parameter.span(-0.19F, -0.11F);
-	public static final Climate.Parameter INLAND_CONTINENTALNESS = Climate.Parameter.span(-0.11F, 0.55F);
-	public static final Climate.Parameter NEAR_INLAND_CONTINENTALNESS = Climate.Parameter.span(-0.11F, 0.03F);
-	public static final Climate.Parameter MID_INLAND_CONTINENTALNESS = Climate.Parameter.span(0.03F, 0.3F);
-	public static final Climate.Parameter FAR_INLAND_CONTINENTALNESS = Climate.Parameter.span(0.3F, 1.0F);
+	public static final Climate.Parameter FULL_RANGE = Climate.Parameter.span(-1F, 1F);
 	public static final Map<ResourceLocation, BiomeParameters> BIOMES = new LinkedHashMap<>();
+
 	private static boolean hasRun = false;
 
 	public static BiomeParameters getParameters(ResourceLocation location) {
@@ -97,7 +53,7 @@ public class OverworldBiomeBuilderParameters {
 		}
 	}
 
-	public static BiomeParameters getParameters(ResourceKey<Biome> key) {
+	public static BiomeParameters getParameters(@NotNull ResourceKey<Biome> key) {
 		return getParameters(key.location());
 	}
 
@@ -116,11 +72,12 @@ public class OverworldBiomeBuilderParameters {
 		}
 	}
 
-	public static List<Climate.ParameterPoint> points(BiomeParameters parameters) {
+	@Contract(pure = true)
+	public static List<Climate.ParameterPoint> points(@NotNull BiomeParameters parameters) {
 		return parameters.points;
 	}
 
-	public static List<Climate.ParameterPoint> points(ResourceKey<Biome> key) {
+	public static List<Climate.ParameterPoint> points(@NotNull ResourceKey<Biome> key) {
 		return points(key.location());
 	}
 

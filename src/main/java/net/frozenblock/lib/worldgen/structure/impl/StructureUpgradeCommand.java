@@ -64,9 +64,7 @@ public class StructureUpgradeCommand {
 			resourceLocation -> resourceLocation.getPath().endsWith(".nbt") && resourceLocation.getNamespace().equals(namespace)
 		).keySet();
 
-		if (log) {
-			foundPieces.forEach(resourceLocation -> System.out.println("Found piece: " + resourceLocation.toString()));
-		}
+		if (log) foundPieces.forEach(resourceLocation -> System.out.println("Found piece: " + resourceLocation.toString()));
 
 		StructureTemplateManager structureTemplateManager = source.getLevel().getStructureManager();
 		Map<ResourceLocation, CompoundTag> savedTemplates = new Object2ObjectLinkedOpenHashMap<>();
