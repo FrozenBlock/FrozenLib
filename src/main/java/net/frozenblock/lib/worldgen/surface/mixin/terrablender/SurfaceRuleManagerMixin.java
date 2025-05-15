@@ -24,9 +24,11 @@ import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
 import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import terrablender.api.SurfaceRuleManager;
 
+@Pseudo
 @Mixin(SurfaceRuleManager.class)
 public class SurfaceRuleManagerMixin {
 
@@ -35,9 +37,7 @@ public class SurfaceRuleManagerMixin {
 		SurfaceRules.RuleSource original, SurfaceRuleManager.RuleCategory category, SurfaceRules.RuleSource fallback
 	) {
 		SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(
-			category == SurfaceRuleManager.RuleCategory.OVERWORLD
-				? BuiltinDimensionTypes.OVERWORLD
-				: BuiltinDimensionTypes.NETHER
+			category == SurfaceRuleManager.RuleCategory.OVERWORLD ? BuiltinDimensionTypes.OVERWORLD : BuiltinDimensionTypes.NETHER
 		);
 
 		if (newRules != null) {

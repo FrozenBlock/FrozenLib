@@ -30,12 +30,12 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import org.jetbrains.annotations.Nullable;
 
-public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration, C extends ConfiguredFeature<FC, ?>> {
+public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration> {
 
 	/**
 	 * Can be used for setting all bootstrap contexts on 1.19.3+.
 	 */
-	public static final List<FrozenLibConfiguredFeature<?, ?>> FEATURES = new ArrayList<>();
+	public static final List<FrozenLibConfiguredFeature<?>> FEATURES = new ArrayList<>();
 
 	private final ResourceKey<ConfiguredFeature<?, ?>> key;
 
@@ -49,8 +49,7 @@ public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration, C exten
 	}
 
 	public Holder<ConfiguredFeature<?, ?>> getHolder(@Nullable LevelReader level) {
-		if (level == null)
-			return FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
+		if (level == null) return FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 		return level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
 	}
 
@@ -63,8 +62,8 @@ public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration, C exten
 	}
 
 	@SuppressWarnings("unchecked")
-	public <F extends Feature<FC>> FrozenLibConfiguredFeature<FC, C> makeAndSetHolder(F feature, FC config) {
-		FrozenLibLogUtils.log("Registering configured feature: " + this.getKey().location(), true);
+	public <F extends Feature<FC>> FrozenLibConfiguredFeature<FC> makeAndSetHolder(F feature, FC config) {
+		FrozenLibLogUtils.log("Registering configured feature: " + this.getKey().location(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 
 		assert FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().location();
 

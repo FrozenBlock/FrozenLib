@@ -26,6 +26,7 @@ import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
 public class SurfaceRulePlugin implements IMixinConfigPlugin {
+
 	@Override
 	public void onLoad(String mixinPackage) {
 
@@ -38,8 +39,7 @@ public class SurfaceRulePlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, @NotNull String mixinClassName) {
-		if (mixinClassName.contains("terrablender"))
-			return FrozenBools.HAS_TERRABLENDER;
+		if (mixinClassName.contains("terrablender")) return FrozenBools.HAS_TERRABLENDER;
 		return true;
 	}
 

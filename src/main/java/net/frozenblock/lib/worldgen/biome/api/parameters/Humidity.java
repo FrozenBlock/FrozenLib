@@ -17,11 +17,13 @@
 
 package net.frozenblock.lib.worldgen.biome.api.parameters;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.world.level.biome.Climate;
 
 /**
  * Contains a list of all humidity parameters used in vanilla worldgen, named for ease of use.
  */
+@UtilityClass
 public final class Humidity {
 	public static final Climate.Parameter ARID = Climate.Parameter.span(-1F, -0.35F);
 	public static final Climate.Parameter DRY = Climate.Parameter.span(-0.35F, -0.1F);

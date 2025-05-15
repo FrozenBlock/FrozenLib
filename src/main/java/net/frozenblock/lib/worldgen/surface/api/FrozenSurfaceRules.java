@@ -135,7 +135,7 @@ public final class FrozenSurfaceRules {
 
 		if (!noPrelimSourceHolders.isEmpty()) {
 			SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
-			newRule = SurfaceRules.sequence(noPrelimSource, newRule);
+			newRule = newRule == null ? noPrelimSource : SurfaceRules.sequence(noPrelimSource, newRule);
 		}
 
 		return newRule;

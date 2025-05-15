@@ -30,30 +30,14 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvi
 public class NoiseBandBlockPlacement {
 	public static final Codec<NoiseBandBlockPlacement> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
-			BlockStateProvider.CODEC
-				.fieldOf("state_provider")
-				.forGetter(config -> config.blockStateProvider),
-			Codec.doubleRange(-1D, 1D)
-				.lenientOptionalFieldOf("minimum_noise_threshold", 1D)
-				.forGetter(config -> config.minNoiseThreshold),
-			Codec.doubleRange(-1D, 1D)
-				.lenientOptionalFieldOf("maximum_noise_threshold", 1D)
-				.forGetter(config -> config.maxNoiseThreshold),
-			Codec.floatRange(0F, 1F)
-				.lenientOptionalFieldOf("placement_chance", 1F)
-				.forGetter(config -> config.placementChance),
-			Codec.BOOL
-				.lenientOptionalFieldOf("schedule_tick_on_placement", false)
-				.forGetter(config -> config.scheduleTickOnPlacement),
-			BlockPredicate.CODEC
-				.fieldOf("replacement_block_predicate")
-				.forGetter(config -> config.replacementBlockPredicate),
-			BlockPredicate.CODEC
-				.fieldOf("searching_block_predicate")
-				.forGetter(config -> config.searchingBlockPredicate),
-			Codec.INT
-				.lenientOptionalFieldOf("vertical_placement_offset", 0)
-				.forGetter(config -> config.verticalPlacementOffset)
+			BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.blockStateProvider),
+			Codec.doubleRange(-1D, 1D).lenientOptionalFieldOf("minimum_noise_threshold", 1D).forGetter(config -> config.minNoiseThreshold),
+			Codec.doubleRange(-1D, 1D).lenientOptionalFieldOf("maximum_noise_threshold", 1D).forGetter(config -> config.maxNoiseThreshold),
+			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
+			Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
+			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementBlockPredicate),
+			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingBlockPredicate),
+			Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset)
 		).apply(instance, NoiseBandBlockPlacement::new)
 	);
 

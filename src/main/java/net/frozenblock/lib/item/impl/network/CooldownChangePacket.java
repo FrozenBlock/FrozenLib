@@ -30,10 +30,7 @@ public record CooldownChangePacket(
 	Item item,
 	int additional
 ) implements CustomPacketPayload {
-
-	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("cooldown_change_packet")
-	);
+	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cooldown_change_packet"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
 
 	public CooldownChangePacket(RegistryFriendlyByteBuf buf) {

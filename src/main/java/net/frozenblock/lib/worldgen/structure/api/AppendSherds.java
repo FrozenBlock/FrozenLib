@@ -54,9 +54,7 @@ public class AppendSherds implements RuleBlockEntityModifier {
 		this.sherds = sherds;
 		this.chancePerSlot = chancePerSlot;
 		this.defaultToBrick = defaultToBrick;
-		if (this.sherds.isEmpty()) {
-			throw new IllegalArgumentException("AppendSherds requires at least one sherd!");
-		}
+		if (this.sherds.isEmpty()) throw new IllegalArgumentException("AppendSherds requires at least one sherd!");
 	}
 
 	@Override

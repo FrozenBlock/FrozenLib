@@ -46,11 +46,11 @@ public class SaveableItemCooldowns {
 		ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		int tickCount = player.getCooldowns().tickCount;
 		player.getCooldowns().cooldowns.forEach(
-				((item, cooldownInstance) -> {
-					if (item.builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS) || FrozenLibConfig.get().saveItemCooldowns) {
-						saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(item, cooldownInstance, tickCount));
-					}
-				})
+			(item, cooldownInstance) -> {
+				if (item.builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS) || FrozenLibConfig.get().saveItemCooldowns) {
+					saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(item, cooldownInstance, tickCount));
+				}
+			}
 		);
 		return saveableCooldownInstances;
 	}
@@ -97,7 +97,6 @@ public class SaveableItemCooldowns {
 	}
 
 	public record SaveableCooldownInstance(ResourceLocation itemResourceLocation, int cooldownLeft, int totalCooldownTime) {
-
 		public static final Codec<SaveableCooldownInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			ResourceLocation.CODEC.fieldOf("ItemResourceLocation").forGetter(SaveableCooldownInstance::itemResourceLocation),
 			Codec.INT.fieldOf("CooldownLeft").orElse(0).forGetter(SaveableCooldownInstance::cooldownLeft),

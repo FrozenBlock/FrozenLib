@@ -31,10 +31,7 @@ public record ForcedCooldownPacket(
 	int startTime,
 	int endTime
 ) implements CustomPacketPayload {
-
-	public static final Type<ForcedCooldownPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("forced_cooldown_packet")
-	);
+	public static final Type<ForcedCooldownPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("forced_cooldown_packet"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, ForcedCooldownPacket> CODEC = StreamCodec.ofMember(ForcedCooldownPacket::write, ForcedCooldownPacket::new);
 
 	public ForcedCooldownPacket(RegistryFriendlyByteBuf buf) {

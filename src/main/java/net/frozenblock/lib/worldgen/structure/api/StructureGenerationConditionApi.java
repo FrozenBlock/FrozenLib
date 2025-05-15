@@ -38,9 +38,7 @@ public class StructureGenerationConditionApi {
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().forEach(structureSetReference -> {
 				if (structureSetReference.isBound() && (Object) (structureSetReference.value()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
-					setAndPlacementInterface.frozenLib$addGenerationConditions(
-						getGenerationConditions(structureSetReference.key().location())
-					);
+					setAndPlacementInterface.frozenLib$addGenerationConditions(getGenerationConditions(structureSetReference.key().location()));
 				}
 			});
 		});

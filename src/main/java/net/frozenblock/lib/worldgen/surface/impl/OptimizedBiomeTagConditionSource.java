@@ -36,12 +36,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class OptimizedBiomeTagConditionSource implements SurfaceRules.ConditionSource {
-	public static final KeyDispatchDataCodec<OptimizedBiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(RecordCodecBuilder.mapCodec((instance) ->
+	public static final KeyDispatchDataCodec<OptimizedBiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(
+		RecordCodecBuilder.mapCodec(instance ->
 			instance.group(
-					TagKey.codec(Registries.BIOME)
-						.fieldOf("biome_tag")
-						.forGetter(OptimizedBiomeTagConditionSource::getBiomeTagKey))
-				.apply(instance, OptimizedBiomeTagConditionSource::new)
+				TagKey.codec(Registries.BIOME).fieldOf("biome_tag").forGetter(OptimizedBiomeTagConditionSource::getBiomeTagKey)
+			).apply(instance, OptimizedBiomeTagConditionSource::new)
 		)
 	);
 
@@ -63,9 +62,7 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 		ArrayList<ResourceKey<Biome>> biomeList = new ArrayList<>();
 
 		biomeRegistry.getTag(this.biomeTagKey).ifPresent((biomes -> {
-			for (Holder<Biome> biomeHolder : biomes) {
-				biomeHolder.unwrapKey().ifPresent(biomeList::add);
-			}
+			for (Holder<Biome> biomeHolder : biomes) biomeHolder.unwrapKey().ifPresent(biomeList::add);
 			this.biomes = biomeList;
 		}));
 		if (this.biomes != null) {
@@ -82,7 +79,7 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 	}
 
 	@Override
-	public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
+	public @NotNull KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
 		return CODEC;
 	}
 
@@ -107,13 +104,9 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 
 	@Override
 	public boolean equals(Object object) {
-		if (this == object) {
-			return true;
-		} else if (object instanceof OptimizedBiomeTagConditionSource biomeConditionSource) {
-			return this.biomeTagKey.equals(biomeConditionSource.biomeTagKey);
-		} else {
-			return false;
-		}
+		if (this == object) return true;
+		if (object instanceof OptimizedBiomeTagConditionSource biomeConditionSource) return this.biomeTagKey.equals(biomeConditionSource.biomeTagKey);
+		return false;
 	}
 
 	@Override

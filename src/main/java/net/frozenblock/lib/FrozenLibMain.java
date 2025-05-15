@@ -162,10 +162,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 
 		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (!allRegistries) return;
-
-			for (Config<?> config : ConfigRegistry.getAllConfigs()) {
-				config.save();
-			}
+			for (Config<?> config : ConfigRegistry.getAllConfigs()) config.save();
 		});
 
 		var resourceLoader = ResourceManagerHelper.get(PackType.SERVER_DATA);
