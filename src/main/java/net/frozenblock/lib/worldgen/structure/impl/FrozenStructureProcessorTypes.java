@@ -19,7 +19,6 @@ package net.frozenblock.lib.worldgen.structure.impl;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.worldgen.structure.api.BlockStateRespectingBiomeRuleProcessor;
 import net.frozenblock.lib.worldgen.structure.api.BlockStateRespectingRuleProcessor;
 import net.frozenblock.lib.worldgen.structure.api.WeightedRuleProcessor;
 import net.minecraft.core.Registry;
@@ -32,10 +31,6 @@ public class FrozenStructureProcessorTypes {
 	public static final StructureProcessorType<BlockStateRespectingRuleProcessor> BLOCK_STATE_RESPECTING_RULE_PROCESSOR = register(
 		"block_state_respecting_rule",
 		BlockStateRespectingRuleProcessor.CODEC
-	);
-	public static final StructureProcessorType<BlockStateRespectingBiomeRuleProcessor> BLOCK_STATE_RESPECTING_BIOME_BASED_RULE_PROCESSOR = register(
-		"block_state_respecting_biome_based_rule",
-		BlockStateRespectingBiomeRuleProcessor.CODEC
 	);
 	public static final StructureProcessorType<WeightedRuleProcessor> WEIGHTED_RULE_PROCESSOR = register(
 		"weighted_rule",

@@ -38,12 +38,13 @@ public class BlockStateRespectingProcessorRule {
 	public static final Passthrough DEFAULT_BLOCK_ENTITY_MODIFIER = Passthrough.INSTANCE;
 	public static final Codec<BlockStateRespectingProcessorRule> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
-			RuleTest.CODEC.fieldOf("input_predicate").forGetter(rule -> rule.inputPredicate),
-			RuleTest.CODEC.fieldOf("location_predicate").forGetter(rule -> rule.locPredicate),
-			PosRuleTest.CODEC.lenientOptionalFieldOf("position_predicate", PosAlwaysTrueTest.INSTANCE).forGetter(rule -> rule.posPredicate),
-			BuiltInRegistries.BLOCK.byNameCodec().fieldOf("output_block").forGetter(rule -> rule.outputBlock),
-			RuleBlockEntityModifier.CODEC.lenientOptionalFieldOf("block_entity_modifier", DEFAULT_BLOCK_ENTITY_MODIFIER).forGetter(rule -> rule.blockEntityModifier)
-		).apply(instance, BlockStateRespectingProcessorRule::new)
+				RuleTest.CODEC.fieldOf("input_predicate").forGetter(rule -> rule.inputPredicate),
+				RuleTest.CODEC.fieldOf("location_predicate").forGetter(rule -> rule.locPredicate),
+				PosRuleTest.CODEC.lenientOptionalFieldOf("position_predicate", PosAlwaysTrueTest.INSTANCE).forGetter(rule -> rule.posPredicate),
+				BuiltInRegistries.BLOCK.byNameCodec().fieldOf("output_block").forGetter(rule -> rule.outputBlock),
+				RuleBlockEntityModifier.CODEC.lenientOptionalFieldOf("block_entity_modifier", DEFAULT_BLOCK_ENTITY_MODIFIER).forGetter(rule -> rule.blockEntityModifier)
+			)
+			.apply(instance, BlockStateRespectingProcessorRule::new)
 	);
 	private final RuleTest inputPredicate;
 	private final RuleTest locPredicate;
