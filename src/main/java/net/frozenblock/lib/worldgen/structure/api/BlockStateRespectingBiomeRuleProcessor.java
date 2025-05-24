@@ -21,9 +21,11 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
@@ -56,14 +58,14 @@ public class BlockStateRespectingBiomeRuleProcessor extends StructureProcessor {
 		RandomSource randomSource = RandomSource.create(Mth.getSeed(posInfo));
 		BlockState blockState = world.getBlockState(posInfo);
 		BlockState inputState = absoluteBlockInfo.state();
+		Holder<Biome> biome = world.getBiome(posInfo);
 
 		for (BlockStateRespectingBiomeProcessorRule processorRule : this.rules) {
-			if (!processorRule.test(inputState, blockState, localBlockInfo.pos(), absoluteBlockInfo.pos(), pivot, randomSource)) continue;
-			if (!processorRule.doesBiomeMatch(world.getBiome(posInfo))) continue;
-
-			return new StructureTemplate.StructureBlockInfo(
-				absoluteBlockInfo.pos(), processorRule.getOutputState(inputState), processorRule.getOutputTag(randomSource, absoluteBlockInfo.nbt())
-			);
+			if (processorRule.test(biome, inputState, blockState, localBlockInfo.pos(), absoluteBlockInfo.pos(), pivot, randomSource)) {
+				return new StructureTemplate.StructureBlockInfo(
+					absoluteBlockInfo.pos(), processorRule.getOutputState(inputState), processorRule.getOutputTag(randomSource, absoluteBlockInfo.nbt())
+				);
+			}
 		}
 
 		return absoluteBlockInfo;
