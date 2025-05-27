@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(VibrationSystem.Ticker.class)
-public class VibrationSystemTickerMixin {
+public interface VibrationSystemTickerMixin {
 
 	@WrapOperation(
 		method = "method_51408",
