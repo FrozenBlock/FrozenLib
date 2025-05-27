@@ -30,7 +30,8 @@ public class FeatureFlagBuilderMixin {
 		at = @At(
 			value = "CONSTANT",
 			args = "intValue=64"
-		)
+		),
+		require = 0
 	)
 	private int frozenLib$increaseMax(int constant) {
 		return Math.max(constant, 512);
