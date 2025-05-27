@@ -54,9 +54,13 @@ public abstract class AddDebugMenuButtonMixin extends Screen {
 		@Local GridLayout.RowHelper rowHelper
 	) {
 		if (FrozenLibConfig.IS_DEBUG) {
-			rowHelper.addChild(Button.builder(DebugScreen.DEBUG, button -> {
-				this.minecraft.setScreen(new DebugScreen());
-			}).width(204).build(), 2);
+			rowHelper.addChild(
+				Button.builder(
+					DebugScreen.DEBUG,
+					button -> this.minecraft.setScreen(new DebugScreen())
+				).width(204).build(),
+				2
+			);
 		}
 	}
 
