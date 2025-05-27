@@ -43,7 +43,7 @@ public class DataPackReloadMarker {
 				markReloaded();
 			}
 		});
-		
+
 		ServerTickEvents.START_SERVER_TICK.register((server) -> {
 			if (!markedReloaded()) return;
 			OptimizedBiomeTagConditionSource.optimizeAll(server.registryAccess().lookupOrThrow(Registries.BIOME));
