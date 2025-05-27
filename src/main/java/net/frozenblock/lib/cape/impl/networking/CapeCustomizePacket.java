@@ -53,17 +53,13 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 
 	public CapeCustomizePacket(@NotNull FriendlyByteBuf buf) {
 		this(buf.readUUID(), buf.readBoolean());
-		if (this.enabled) {
-			this.capeId = buf.readResourceLocation();
-		}
+		if (this.enabled) this.capeId = buf.readResourceLocation();
 	}
 
 	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeUUID(this.playerUUID);
 		buf.writeBoolean(this.enabled);
-		if (this.enabled) {
-			buf.writeResourceLocation(this.capeId);
-		}
+		if (this.enabled) buf.writeResourceLocation(this.capeId);
 	}
 
 	public static @NotNull CapeCustomizePacket createDisablePacket(UUID uuid) {
@@ -100,6 +96,7 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 		return this.enabled;
 	}
 
+	@Nullable
 	public ResourceLocation getCapeId() {
 		return this.capeId;
 	}
