@@ -64,9 +64,7 @@ public abstract class HopperBlockEntityMixin {
 		Level level, BlockPos blockPos, HopperBlockEntity hopperBlockEntity, CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$container") LocalRef<Container> containerRef
 	) {
-        if (HopperApi.isContainerBlacklisted(containerRef.get())) {
-            info.setReturnValue(false);
-        }
+        if (HopperApi.isContainerBlacklisted(containerRef.get())) info.setReturnValue(false);
     }
 
     @ModifyExpressionValue(
@@ -99,8 +97,6 @@ public abstract class HopperBlockEntityMixin {
 		Level level, Hopper hopper, CallbackInfoReturnable<Boolean> info,
 		@Share("frozenLib$container") LocalRef<Container> containerRef
 	) {
-		if (HopperApi.isContainerBlacklisted(containerRef.get())) {
-			info.setReturnValue(false);
-		}
+		if (HopperApi.isContainerBlacklisted(containerRef.get())) info.setReturnValue(false);
 	}
 }

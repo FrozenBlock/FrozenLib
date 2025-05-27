@@ -26,10 +26,7 @@ import net.minecraft.network.protocol.common.custom.GoalDebugPayload;
 import org.jetbrains.annotations.NotNull;
 
 public record ImprovedGoalDebugPayload(int entityId, List<GoalDebugPayload.DebugGoal> goals) implements CustomPacketPayload {
-	public static final Type<ImprovedGoalDebugPayload> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("debug_goals")
-	);
-
+	public static final Type<ImprovedGoalDebugPayload> PACKET_TYPE = new Type<>(FrozenLibConstants.id("debug_goals"));
 	public static final StreamCodec<FriendlyByteBuf, ImprovedGoalDebugPayload> STREAM_CODEC = StreamCodec.ofMember(
 		ImprovedGoalDebugPayload::write, ImprovedGoalDebugPayload::new
 	);

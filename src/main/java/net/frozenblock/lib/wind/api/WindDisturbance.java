@@ -63,9 +63,7 @@ public class WindDisturbance<T> {
 				this.affectedArea,
 				windTarget
 			);
-			if (disturbanceResult != null) {
-				return disturbanceResult;
-			}
+			if (disturbanceResult != null) return disturbanceResult;
 		}
 		return DUMMY_RESULT;
 	}
@@ -74,9 +72,7 @@ public class WindDisturbance<T> {
 		for (double xCorner : ImmutableList.of(this.affectedArea.minX, this.affectedArea.maxX)) {
 			for (double zCorner : ImmutableList.of(this.affectedArea.minZ, this.affectedArea.maxZ)) {
 				ChunkPos chunkPos = new ChunkPos(BlockPos.containing(xCorner, 0, zCorner));
-				if (chunkTrackingView.isInViewDistance(chunkPos.x, chunkPos.z)) {
-					return true;
-				}
+				if (chunkTrackingView.isInViewDistance(chunkPos.x, chunkPos.z)) return true;
 			}
 		}
 		return false;
@@ -102,24 +98,16 @@ public class WindDisturbance<T> {
 	}
 
 	private WindDisturbanceLogic.SourceType getSourceTypeFromSource() {
-		if (this.source.isPresent()) {
-			if (this.source.get() instanceof Entity) {
-				return WindDisturbanceLogic.SourceType.ENTITY;
-			} else if (this.source.get() instanceof BlockEntity) {
-				return WindDisturbanceLogic.SourceType.BLOCK_ENTITY;
-			}
-		}
+		if (this.source.isEmpty()) return WindDisturbanceLogic.SourceType.NONE;
+		if (this.source.get() instanceof Entity) return WindDisturbanceLogic.SourceType.ENTITY;
+		if (this.source.get() instanceof BlockEntity) return WindDisturbanceLogic.SourceType.BLOCK_ENTITY;
 		return WindDisturbanceLogic.SourceType.NONE;
 	}
 
 	private long encodePosOrID() {
-		if (this.source.isPresent()) {
-			if (this.source.get() instanceof Entity entity) {
-				return entity.getId();
-			} else if (this.source.get() instanceof BlockEntity blockEntity) {
-				return blockEntity.getBlockPos().asLong();
-			}
-		}
+		if (this.source.isEmpty()) return 0L;
+		if (this.source.get() instanceof Entity entity) return entity.getId();
+		if (this.source.get() instanceof BlockEntity blockEntity) return blockEntity.getBlockPos().asLong();
 		return 0L;
 	}
 

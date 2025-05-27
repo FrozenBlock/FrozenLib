@@ -43,14 +43,13 @@ public class DataPackReloadMarker {
 				markReloaded();
 			}
 		});
-
+		
 		ServerTickEvents.START_SERVER_TICK.register((server) -> {
-			if (markedReloaded()) {
-				OptimizedBiomeTagConditionSource.optimizeAll(server.registryAccess().lookupOrThrow(Registries.BIOME));
-			}
+			if (!markedReloaded()) return;
+			OptimizedBiomeTagConditionSource.optimizeAll(server.registryAccess().lookupOrThrow(Registries.BIOME));
 		});
 
-		ServerTickEvents.END_SERVER_TICK.register((server) -> {
+		ServerTickEvents.END_SERVER_TICK.register(server -> {
 			unmarkReloaded();
 		});
 	}

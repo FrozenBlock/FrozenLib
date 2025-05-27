@@ -35,10 +35,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public record StructureDebugRequestPayload(ChunkPos chunkPos) implements CustomPacketPayload {
-	public static final Type<StructureDebugRequestPayload> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("debug_structure_request")
-	);
-
+	public static final Type<StructureDebugRequestPayload> PACKET_TYPE = new Type<>(FrozenLibConstants.id("debug_structure_request"));
 	public static final StreamCodec<FriendlyByteBuf, StructureDebugRequestPayload> STREAM_CODEC = StreamCodec.ofMember(
 		StructureDebugRequestPayload::write, StructureDebugRequestPayload::new
 	);
