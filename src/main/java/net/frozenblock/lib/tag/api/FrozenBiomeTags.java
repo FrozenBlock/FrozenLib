@@ -26,7 +26,6 @@ import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenBiomeTags {
-
 	public static final TagKey<Biome> CAN_LIGHTNING_OVERRIDE = of("can_lightning_override");
 	public static final TagKey<Biome> CANNOT_LIGHTNING_OVERRIDE = of("cannot_lightning_override");
 

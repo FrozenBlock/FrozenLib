@@ -35,7 +35,7 @@ public class PoolElementStructurePieceMixin implements InitialPieceProcessorInje
 	protected StructurePoolElement element;
 
 	@Override
-	public void frozenLib$addProcessors(List<StructureProcessor> processors) {
+	public synchronized void frozenLib$addProcessors(List<StructureProcessor> processors) {
 		if (this.element instanceof StructurePoolElementInterface structurePoolElementInterface) {
 			structurePoolElementInterface.frozenLib$addProcessors(processors);
 		}

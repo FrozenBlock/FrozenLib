@@ -24,10 +24,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.NotNull;
 
 public record GoalDebugRemovePayload(int entityId) implements CustomPacketPayload {
-	public static final Type<GoalDebugRemovePayload> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("debug_goals_remove")
-	);
-
+	public static final Type<GoalDebugRemovePayload> PACKET_TYPE = new Type<>(FrozenLibConstants.id("debug_goals_remove"));
 	public static final StreamCodec<FriendlyByteBuf, GoalDebugRemovePayload> STREAM_CODEC = StreamCodec.ofMember(
 		GoalDebugRemovePayload::write, GoalDebugRemovePayload::new
 	);

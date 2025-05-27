@@ -44,7 +44,9 @@ public class RandomMixin {
 	private SimpleWeightedRandomList<ResourceKey<StructureTemplatePool>> targets;
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	public void frozenLib$addRandomPoolAliasTargets(ResourceKey<StructureTemplatePool> alias, SimpleWeightedRandomList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info) {
+	public void frozenLib$addRandomPoolAliasTargets(
+		ResourceKey<StructureTemplatePool> alias, SimpleWeightedRandomList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info
+	) {
 		ResourceLocation aliasLocation = alias.location();
 		List<Pair<ResourceLocation, Integer>> additions = RandomPoolAliasApi.getAdditionalTargets(aliasLocation);
 

@@ -18,21 +18,20 @@
 package net.frozenblock.lib.tag.mixin;
 
 import net.frozenblock.lib.tag.api.FrozenEntityTags;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.Creeper;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.warden.Warden;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Creeper.class)
-public class CreeperMixin {
+@Mixin(Warden.class)
+public class WardenMixin {
 
-    @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
-    public void frozenLib$ignoreTag(@Nullable LivingEntity livingEntity, CallbackInfo info) {
-        if (livingEntity == null) return;
-		if (livingEntity.getType().is(FrozenEntityTags.CREEPER_IGNORES)) info.cancel();
+    @Inject(method = "canTargetEntity", at = @At("HEAD"), cancellable = true)
+    public void frozenLib$ignoreTag(Entity entity, CallbackInfoReturnable<Boolean> info) {
+        if (entity == null) return;
+		if (entity.getType().is(FrozenEntityTags.WARDEN_CANNOT_TARGET)) info.setReturnValue(false);
     }
 
 }
