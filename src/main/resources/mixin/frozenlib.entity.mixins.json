@@ -10,7 +10,7 @@
     "AbstractFishMixin",
     "EntityMixin",
     "ServerEntityMixin",
-    "WolfVariantsMixin",
+    "VariantUtilsMixin",
     "behavior.BehaviorMixin",
     "category.MobCategoryMixin",
     "command.WardenSpawnTrackerCommandMixin"

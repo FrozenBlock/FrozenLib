@@ -44,18 +44,17 @@ public class PathMixin {
 
 	@Inject(method = "writeToStream", at = @At("HEAD"))
 	private void frozenLib$writeToStream(FriendlyByteBuf buf, CallbackInfo info) {
-		if (FrozenLibConfig.IS_DEBUG) {
-			this.debugData = new Path.DebugData(
-				this.nodes.stream().filter((pathNode) -> !pathNode.closed).toArray(Node[]::new),
-				this.nodes.stream().filter((pathNode) -> pathNode.closed).toArray(Node[]::new),
-				Set.of(
-					new Target(
-						this.target.getX(),
-						this.target.getY(),
-						this.target.getZ()
-					)
+		if (!FrozenLibConfig.IS_DEBUG) return;
+		this.debugData = new Path.DebugData(
+			this.nodes.stream().filter((pathNode) -> !pathNode.closed).toArray(Node[]::new),
+			this.nodes.stream().filter((pathNode) -> pathNode.closed).toArray(Node[]::new),
+			Set.of(
+				new Target(
+					this.target.getX(),
+					this.target.getY(),
+					this.target.getZ()
 				)
-			);
-		}
+			)
+		);
 	}
 }

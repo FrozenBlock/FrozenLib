@@ -84,10 +84,6 @@ transitive-extendable method net/minecraft/world/entity/Mob getLootTable ()Ljava
 
 # Entity Models
 transitive-accessible field net/minecraft/world/entity/Entity DATA_POSE Lnet/minecraft/network/syncher/EntityDataAccessor;
-transitive-accessible method net/minecraft/client/model/Model animate (Lnet/minecraft/world/entity/AnimationState;Lnet/minecraft/client/animation/AnimationDefinition;F)V
-transitive-accessible method net/minecraft/client/model/Model animateWalk (Lnet/minecraft/client/animation/AnimationDefinition;FFFF)V
-transitive-accessible method net/minecraft/client/model/Model animate (Lnet/minecraft/world/entity/AnimationState;Lnet/minecraft/client/animation/AnimationDefinition;FF)V
-transitive-accessible method net/minecraft/client/model/Model applyStatic (Lnet/minecraft/client/animation/AnimationDefinition;)V
 transitive-accessible field net/minecraft/world/entity/LivingEntity dead Z
 transitive-extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
 

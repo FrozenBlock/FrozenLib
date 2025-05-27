@@ -31,9 +31,7 @@ public final class FrozenLibLogUtils {
 	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
 
 	public static void log(Object string, boolean should) {
-		if (should) {
-			FrozenLibConstants.LOGGER.info(string.toString());
-		}
+		if (should) FrozenLibConstants.LOGGER.info(string.toString());
 	}
 
 	public static void log(Object string) {
@@ -41,9 +39,7 @@ public final class FrozenLibLogUtils {
 	}
 
 	public static void logWarning(Object string, boolean should) {
-		if (should) {
-			FrozenLibConstants.LOGGER.warn(string.toString());
-		}
+		if (should) FrozenLibConstants.LOGGER.warn(string.toString());
 	}
 
 	public static void logWarning(Object string) {
@@ -51,9 +47,7 @@ public final class FrozenLibLogUtils {
 	}
 
 	public static void logError(Object string, boolean should, @Nullable Throwable throwable) {
-		if (should) {
-			FrozenLibConstants.LOGGER.error(string.toString(), throwable);
-		}
+		if (should) FrozenLibConstants.LOGGER.error(string.toString(), throwable);
 	}
 
 	public static void logError(Object string, boolean should) {

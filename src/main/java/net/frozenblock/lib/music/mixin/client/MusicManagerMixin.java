@@ -27,6 +27,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.MusicInfo;
 import net.minecraft.client.sounds.MusicManager;
+import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
@@ -71,14 +72,15 @@ public class MusicManagerMixin {
 		method = "startPlaying",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/sounds/SoundManager;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)V"
+			target = "Lnet/minecraft/client/sounds/SoundManager;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)Lnet/minecraft/client/sounds/SoundEngine$PlayResult;"
 		)
 	)
-	public void frozenLib$startPlayingAtCorrectPitch(SoundManager instance, SoundInstance soundInstance, Operation<Void> original) {
-		original.call(instance, soundInstance);
-		if (this.minecraft.getSoundManager().soundEngine instanceof SoundEngineInterface soundEngineInterface) {
-			soundEngineInterface.frozenLib$setPitch(this.currentMusic, MusicPitchApi.getCurrentPitch());
+	public SoundEngine.PlayResult frozenLib$startPlayingAtCorrectPitch(SoundManager instance, SoundInstance currentMusic, Operation<SoundEngine.PlayResult> original) {
+		SoundEngine.PlayResult playResult = original.call(instance, currentMusic);
+		if (instance.soundEngine instanceof SoundEngineInterface soundEngineInterface) {
+			soundEngineInterface.frozenLib$setPitch(currentMusic, MusicPitchApi.getCurrentPitch());
 		}
+		return playResult;
 	}
 
 	@Inject(method = "startPlaying", at = @At("TAIL"))

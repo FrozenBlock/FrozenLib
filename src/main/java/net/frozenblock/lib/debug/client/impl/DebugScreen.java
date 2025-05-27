@@ -85,7 +85,7 @@ public class DebugScreen extends Screen {
 				this.rendererName = rendererName;
 				this.button = Button.builder(
 					rendererHolder.getButtonComponent(),
-					(button) -> {
+					button -> {
 						rendererHolder.toggle();
 						button.setMessage(rendererHolder.getButtonComponent());
 					}).width(80).pos((screen.width / 2 + 30), 0).build();

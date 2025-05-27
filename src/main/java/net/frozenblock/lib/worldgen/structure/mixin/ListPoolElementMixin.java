@@ -34,7 +34,7 @@ public class ListPoolElementMixin implements StructurePoolElementInterface {
 	private List<StructurePoolElement> elements;
 
 	@Override
-	public void frozenLib$addProcessors(List<StructureProcessor> processors) {
+	public synchronized void frozenLib$addProcessors(List<StructureProcessor> processors) {
 		this.elements.forEach(element -> {
 			if (element instanceof StructurePoolElementInterface structurePoolElementInterface) {
 				structurePoolElementInterface.frozenLib$addProcessors(processors);

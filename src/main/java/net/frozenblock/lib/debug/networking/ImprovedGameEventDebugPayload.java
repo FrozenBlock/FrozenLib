@@ -28,11 +28,9 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public record ImprovedGameEventDebugPayload(ResourceKey<GameEvent> gameEventType, Vec3 pos) implements CustomPacketPayload {
+	public static final Type<ImprovedGameEventDebugPayload> PACKET_TYPE = new Type<>(FrozenLibConstants.id("debug_game_event"));
 	public static final StreamCodec<FriendlyByteBuf, ImprovedGameEventDebugPayload> STREAM_CODEC = CustomPacketPayload.codec(
 		ImprovedGameEventDebugPayload::write, ImprovedGameEventDebugPayload::new
-	);
-	public static final Type<ImprovedGameEventDebugPayload> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("debug_game_event")
 	);
 
 	private ImprovedGameEventDebugPayload(@NotNull FriendlyByteBuf buf) {

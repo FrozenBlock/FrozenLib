@@ -15,25 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.feature_flag.mixin;
+package net.frozenblock.lib.tag.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import net.minecraft.world.flag.FeatureFlagRegistry;
+import net.frozenblock.lib.tag.api.FrozenEntityTags;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.warden.Warden;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(value = FeatureFlagRegistry.Builder.class, priority = 1001)
-public class FeatureFlagBuilderMixin {
+@Mixin(Warden.class)
+public class WardenMixin {
 
-	@ModifyExpressionValue(
-		method = "create",
-		at = @At(
-			value = "CONSTANT",
-			args = "intValue=64"
-		),
-		require = 0
-	)
-	private int frozenLib$increaseMax(int constant) {
-		return Math.max(constant, 512);
-	}
+    @Inject(method = "canTargetEntity", at = @At("HEAD"), cancellable = true)
+    public void frozenLib$ignoreTag(Entity entity, CallbackInfoReturnable<Boolean> info) {
+        if (entity == null) return;
+		if (entity.getType().is(FrozenEntityTags.WARDEN_CANNOT_TARGET)) info.setReturnValue(false);
+    }
+
 }

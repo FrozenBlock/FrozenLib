@@ -55,6 +55,7 @@
     "mixin/frozenlib.menu.mixins.json",
     "mixin/frozenlib.modmenu.mixins.json",
     "mixin/frozenlib.music.mixins.json",
+    "mixin/frozenlib.particle.mixins.json",
     "mixin/frozenlib.recipe.mixins.json",
     "mixin/frozenlib.render.mixins.json",
     "mixin/frozenlib.screenshake.mixins.json",
