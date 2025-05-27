@@ -84,14 +84,14 @@ public class DebugRendererMixin {
 	private void frozenLib$render(
 		PoseStack matrices, Frustum frustum, MultiBufferSource.BufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci
 	) {
-		if (FrozenLibConfig.IS_DEBUG) {
-			DebugRenderManager.updatePartialTick();
-			DebugRenderManager.DEBUG_RENDERER_HOLDERS.keySet().forEach((rendererEntry) -> rendererEntry.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ));
-		}
+		if (!FrozenLibConfig.IS_DEBUG) return;
+		DebugRenderManager.updatePartialTick();
+		DebugRenderManager.DEBUG_RENDERER_HOLDERS.keySet()
+			.forEach((rendererEntry) -> rendererEntry.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ));
 	}
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void devtools$init(Minecraft client, CallbackInfo info) {
+	private void frozenLib$init(Minecraft client, CallbackInfo info) {
 		DebugRenderManager.registerRenderer(
 			FrozenLibConstants.id("pathfinding"),
 			this.pathfindingRenderer::render);
@@ -175,7 +175,7 @@ public class DebugRendererMixin {
 	}
 
 	@Inject(method = "clear", at = @At("TAIL"))
-	private void devtools$clear(CallbackInfo info) {
+	private void frozenLib$clear(CallbackInfo info) {
 		DebugRenderManager.clearAdditionalRenderers();
 	}
 }

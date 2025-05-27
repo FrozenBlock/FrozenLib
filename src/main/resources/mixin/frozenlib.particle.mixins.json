@@ -1,13 +1,12 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib.tag.mixin",
+  "package": "net.frozenblock.lib.particle.mixin",
   "compatibilityLevel": "JAVA_21",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "CreeperMixin",
-    "WardenMixin"
+    "VibrationSystemTickerMixin"
   ]
 }

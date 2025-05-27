@@ -61,14 +61,10 @@ public final class WindDisturbanceLogic<T> {
         if (id != null) {
             if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.containsKey(id)) {
 				WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getValue(id);
-				if (disturbanceLogic != null) {
-					return Optional.of(disturbanceLogic);
-				}
+				if (disturbanceLogic != null) return Optional.of(disturbanceLogic);
 			} else if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.containsKey(id)) {
 				WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.getValue(id);
-				if (disturbanceLogic != null) {
-					return Optional.of(disturbanceLogic);
-				}
+				if (disturbanceLogic != null) return Optional.of(disturbanceLogic);
 			}
 			FrozenLibConstants.LOGGER.error("Unable to find wind disturbance logic {}!", id);
         }
@@ -109,7 +105,7 @@ public final class WindDisturbanceLogic<T> {
 	@Contract(pure = true)
 	private static DisturbanceLogic<Breeze> breeze() {
 		return (source, level, windOrigin, affectedArea, windTarget) -> {
-			if (source.isPresent()) {
+			if (source.isEmpty()) {
 				double distance = windOrigin.distanceTo(windTarget);
 				if (distance <= WIND_RANGE_BREEZE) {
 					Vec3 breezeLookVec = source.get().getForward();

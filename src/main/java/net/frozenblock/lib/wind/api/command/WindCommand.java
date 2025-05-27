@@ -65,15 +65,11 @@ public class WindCommand {
 				Commands.literal("display")
 					.then(
 						Commands.literal("global")
-							.executes(
-								context -> displayWindValue(context.getSource(), false)
-							)
+							.executes(context -> displayWindValue(context.getSource(), false))
 					)
 					.then(
 						Commands.literal("pos")
-							.executes(
-								context -> displayWindValue(context.getSource(), true)
-							)
+							.executes(context -> displayWindValue(context.getSource(), true))
 					)
 			)
 		);
