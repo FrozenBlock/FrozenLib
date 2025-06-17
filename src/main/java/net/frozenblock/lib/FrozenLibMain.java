@@ -29,7 +29,6 @@ import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
-import net.frozenblock.lib.entity.api.EntityUtils;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
@@ -134,7 +133,6 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		});
 
 		ServerWorldEvents.UNLOAD.register((server, serverLevel) -> {
-			EntityUtils.clearEntitiesPerLevel(serverLevel);
 			WindManager.getWindManager(serverLevel).clearAllWindDisturbances();
 		});
 
@@ -142,7 +140,6 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			WindManager.getWindManager(serverLevel).clearAndSwitchWindDisturbances();
 			WindManager.getWindManager(serverLevel).tick(serverLevel);
 			ScreenShakeManager.getScreenShakeManager(serverLevel).tick(serverLevel);
-			EntityUtils.populateEntitiesPerLevel(serverLevel);
 			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
 		});
 
