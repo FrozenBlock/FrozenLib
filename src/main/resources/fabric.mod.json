@@ -86,25 +86,6 @@
     "fabric-language-kotlin": "<${fabric_kotlin_version}"
   },
   "custom": {
-    "loom:injected_interfaces": {
-      "net/minecraft/class_2447": [
-        "net/frozenblock/lib/recipe/api/ShapedRecipeBuilderExtension"
-      ],
-      "net/minecraft/class_1796": [
-        "net/frozenblock/lib/item/impl/CooldownInterface"
-      ],
-      "net/minecraft/class_1817": [
-        "net/frozenblock/lib/item/impl/CooldownInterface"
-      ],
-      "net/minecraft/class_1309": [
-        "net/frozenblock/lib/sound/impl/EntityLoopingSoundInterface",
-        "net/frozenblock/lib/sound/impl/EntityLoopingFadingDistanceSoundInterface",
-        "net/frozenblock/lib/spotting_icons/impl/EntitySpottingIconInterface"
-      ],
-      "net/minecraft/class_4766": [
-        "net/frozenblock/lib/worldgen/biome/api/FrozenBiomeSourceAccess"
-      ]
-    },
     "modmenu": {
       "links": {
         "X": "https://x.com/FB_Oasis",

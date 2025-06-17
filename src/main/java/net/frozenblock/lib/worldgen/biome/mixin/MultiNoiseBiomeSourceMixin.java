@@ -30,13 +30,13 @@ public class MultiNoiseBiomeSourceMixin implements FrozenBiomeSourceAccess {
 
 	@Unique
 	@Override
-	public void frozenLib_setModifyBiomeEntries(boolean modifyBiomeEntries) {
+	public void frozenLib$setModifyBiomeEntries(boolean modifyBiomeEntries) {
 		this.frozenLib$modifyBiomeEntries = modifyBiomeEntries;
 	}
 
 	@Unique
 	@Override
-	public boolean frozenLib_shouldModifyBiomeEntries() {
+	public boolean frozenLib$shouldModifyBiomeEntries() {
 		return this.frozenLib$modifyBiomeEntries;
 	}
 }

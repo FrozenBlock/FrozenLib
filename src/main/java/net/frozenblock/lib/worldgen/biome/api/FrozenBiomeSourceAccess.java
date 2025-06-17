@@ -19,7 +19,7 @@ package net.frozenblock.lib.worldgen.biome.api;
 
 public interface FrozenBiomeSourceAccess {
 
-	boolean frozenLib_shouldModifyBiomeEntries();
+	boolean frozenLib$shouldModifyBiomeEntries();
 
-	void frozenLib_setModifyBiomeEntries(boolean modifyBiomeEntries);
+	void frozenLib$setModifyBiomeEntries(boolean modifyBiomeEntries);
 }
