@@ -19,7 +19,11 @@ package net.frozenblock.lib.worldgen.biome.api;
 
 public interface FrozenBiomeSourceAccess {
 
-	boolean frozenLib_shouldModifyBiomeEntries();
+	default boolean frozenLib_shouldModifyBiomeEntries() {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 
-	void frozenLib_setModifyBiomeEntries(boolean modifyBiomeEntries);
+	default void frozenLib_setModifyBiomeEntries(boolean modifyBiomeEntries) {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 }

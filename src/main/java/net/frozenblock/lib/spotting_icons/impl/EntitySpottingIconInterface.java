@@ -21,6 +21,8 @@ import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 
 public interface EntitySpottingIconInterface {
 
-	SpottingIconManager getSpottingIconManager();
+	default SpottingIconManager getSpottingIconManager() {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 
 }

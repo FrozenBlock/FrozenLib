@@ -25,8 +25,19 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public interface EntityLoopingSoundInterface {
 
-    MovingLoopingSoundEntityManager frozenLib$getSoundManager();
+    default MovingLoopingSoundEntityManager frozenLib$getSoundManager() {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 
-    void frozenLib$addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath);
+    default void frozenLib$addSound(
+		ResourceLocation soundID,
+		SoundSource category,
+		float volume,
+		float pitch,
+		ResourceLocation restrictionId,
+		boolean stopOnDeath
+	) {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 
 }

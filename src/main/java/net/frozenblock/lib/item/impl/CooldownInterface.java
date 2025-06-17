@@ -21,8 +21,12 @@ import net.minecraft.resources.ResourceLocation;
 
 public interface CooldownInterface {
 
-    void frozenLib$changeCooldown(ResourceLocation cooldownGroup, int additional);
+    default void frozenLib$changeCooldown(ResourceLocation cooldownGroup, int additional) {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 
-    void frozenLib$onCooldownChanged(ResourceLocation cooldownGroup, int additional);
+    default void frozenLib$onCooldownChanged(ResourceLocation cooldownGroup, int additional) {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 
 }
