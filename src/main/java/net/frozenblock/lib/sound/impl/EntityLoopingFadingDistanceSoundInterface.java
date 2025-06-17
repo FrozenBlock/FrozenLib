@@ -25,8 +25,21 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public interface EntityLoopingFadingDistanceSoundInterface {
 
-    MovingLoopingFadingDistanceSoundEntityManager frozenLib$getFadingSoundManager();
+    default MovingLoopingFadingDistanceSoundEntityManager frozenLib$getFadingSoundManager() {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 
-    void frozenLib$addFadingDistanceSound(ResourceLocation soundID, ResourceLocation sound2ID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath, float fadeDist, float maxDist);
+    default void frozenLib$addFadingDistanceSound(
+		ResourceLocation soundID,
+		ResourceLocation sound2ID,
+		SoundSource category,
+		float volume,
+		float pitch,
+		ResourceLocation restrictionId,
+		boolean stopOnDeath,
+		float fadeDist, float maxDist
+	) {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 
 }

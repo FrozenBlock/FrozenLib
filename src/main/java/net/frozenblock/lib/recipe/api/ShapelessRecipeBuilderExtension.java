@@ -22,5 +22,7 @@ import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import org.jetbrains.annotations.Nullable;
 
 public interface ShapelessRecipeBuilderExtension {
-	ShapelessRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch tag);
+	default ShapelessRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch tag) {
+		throw new UnsupportedOperationException("IMPLEMENT ME");
+	}
 }
