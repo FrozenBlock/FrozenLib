@@ -53,7 +53,7 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 
 	// HACK TODO for some reason initializing this like normal doesnt work. i dont care to figure out why - glitch
 	@Inject(method = "<init>(Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Z)V", at = @At("TAIL"))
-	private void hackBecauseMixinHatesMe(ResourceKey<? extends Registry<V>> key, Lifecycle lifecycle, boolean useIntrusiveHolders, CallbackInfo ci) {
+	private void frozenLib_quilt$hackBecauseMixinHatesMe(ResourceKey<? extends Registry<V>> key, Lifecycle lifecycle, boolean useIntrusiveHolders, CallbackInfo ci) {
 		this.frozenLib_quilt$entryContext = new MutableRegistryEntryContextImpl<>(this);
 		this.frozenLib_quilt$entryAddedEvent = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class,
 			callbacks -> context -> {
@@ -72,7 +72,7 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 			ordinal = 0
 		)
 	)
-	private V quilt$eagerFillReference(V object, ResourceKey<V> key, V value, RegistrationInfo registrationInfo) {
+	private V frozenLib_quilt$$eagerFillReference(V object, ResourceKey<V> key, V value, RegistrationInfo registrationInfo) {
 		if (object instanceof Holder.Reference reference) {
 			reference.bindValue(value);
 		}
@@ -88,7 +88,7 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 		at = @At("RETURN"),
 		locals = LocalCapture.CAPTURE_FAILEXCEPTION
 	)
-	private void quilt$invokeEntryAddEvent(ResourceKey<V> key, V entry, RegistrationInfo registrationInfo, CallbackInfoReturnable<Holder<V>> cir, Holder.Reference reference, int i) {
+	private void frozenLib_quilt$$invokeEntryAddEvent(ResourceKey<V> key, V entry, RegistrationInfo registrationInfo, CallbackInfoReturnable<Holder<V>> cir, Holder.Reference reference, int i) {
 		this.frozenLib_quilt$entryContext.set(key.location(), entry, i);
 		RegistryEventStorage.as((MappedRegistry<V>) (Object) this).frozenLib_quilt$getEntryAddedEvent().invoker().onAdded(this.frozenLib_quilt$entryContext);
 	}

@@ -30,8 +30,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
-	@Inject(method = "disconnect(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("TAIL"))
-	private void quilt$restoreRegistries(CallbackInfo ci) {
-		ClientRegistrySync.disconnectCleanup((Minecraft) (Object) this);
+
+	@Inject(method = "disconnect", at = @At("TAIL"))
+	private void quilt$restoreRegistries(CallbackInfo info) {
+		ClientRegistrySync.disconnectCleanup(Minecraft.class.cast(this));
 	}
+
 }
