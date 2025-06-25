@@ -30,7 +30,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.1.21")
+    kotlin("jvm") version("2.2.0")
 }
 
 val minecraft_version: String by project
@@ -326,7 +326,7 @@ tasks {
     register("javadocJar", Jar::class) {
         dependsOn(javadoc)
         archiveClassifier = "javadoc"
-        from(javadoc.get().destinationDir)
+        from(javadoc.get().destinationDir!!)
     }
 
     register("sourcesJar", Jar::class) {
