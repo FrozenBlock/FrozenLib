@@ -65,9 +65,10 @@ public class FrozenLibModResourcePackApi {
 		Optional<Path> resourcePack = container.findPath(subPath);
 		if (resourcePack.isPresent()) {
 			Path jarPackPath = resourcePack.get();
+			InputStream inputFromJar = Files.newInputStream(jarPackPath);
 
 			// Calculate SHA256 hash of the jar's zip file
-			String currentHash = calculateSHA256(jarPackPath);
+			String currentHash = calculateSHA256(inputFromJar);
 			// Check if the hash has changed
 			boolean hasHashChanged = skipHashCheck || hasHashChanged(packName, currentHash);
 
@@ -75,11 +76,13 @@ public class FrozenLibModResourcePackApi {
 			File destFile = new File(RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
 			if (hasHashChanged || !destFile.exists()) {
 				if (destFile.exists()) {
-					if (!hasHashChanged) return;
+					if (!hasHashChanged) {
+						inputFromJar.close();
+						return;
+					}
 					destFile.delete();
 				}
 
-				InputStream inputFromJar = Files.newInputStream(jarPackPath);
 				FileUtils.copyInputStreamToFile(inputFromJar, destFile);
 				inputFromJar.close();
 
@@ -106,10 +109,10 @@ public class FrozenLibModResourcePackApi {
 	 * @return The SHA256 hash as a hexadecimal string.
 	 * @throws IOException If an I/O error occurs.
 	 */
-	private static String calculateSHA256(Path path) throws IOException {
+	private static String calculateSHA256(InputStream inputStream) throws IOException {
 		try {
 			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			byte[] fileBytes = Files.readAllBytes(path);
+			byte[] fileBytes = inputStream.readAllBytes();
 			byte[] hashBytes = digest.digest(fileBytes);
 
 			StringBuilder hexString = new StringBuilder();
