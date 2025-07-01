@@ -57,7 +57,7 @@ public class FrozenLibModResourcePackApi {
 	 * @param packName The name of the zip file, without the ".zip" extension.
 	 * @throws IOException
 	 */
-	public static void findAndExtractAllResourcePackZips(@NotNull ModContainer container, String packName) throws IOException {
+	public static void findAndPrepareResourcePack(@NotNull ModContainer container, String packName) throws IOException {
 		String zipPackName = packName + ".zip";
 		String subPath = "frozenlib_resourcepacks/" + zipPackName;
 
