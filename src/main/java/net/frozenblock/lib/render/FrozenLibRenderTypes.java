@@ -183,13 +183,13 @@ public final class FrozenLibRenderTypes {
 	}
 
 	public static RenderType.CompositeRenderType create(
-            String name,
-            VertexFormat vertexFormat,
-            VertexFormat.Mode drawMode,
-            int expectedBufferSize,
-            boolean hasCrumbling,
-            boolean translucent,
-            RenderType.CompositeState phases
+		String name,
+		VertexFormat vertexFormat,
+		VertexFormat.Mode drawMode,
+		int expectedBufferSize,
+		boolean hasCrumbling,
+		boolean translucent,
+		RenderType.CompositeState phases
     ) {
         return new RenderType.CompositeRenderType(name, vertexFormat, drawMode, expectedBufferSize, hasCrumbling, translucent, phases);
     }
