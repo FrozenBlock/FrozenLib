@@ -30,7 +30,7 @@ public class TintRegistryHelper {
 	public static void registerAverageFoliageColorForBlock(Block block) {
 		ColorProviderRegistry.BLOCK.register(
 			(state, level, pos, tintIndex) -> {
-				if (level == null || pos == null) return FoliageColor.getDefaultColor();
+				if (level == null || pos == null) return FoliageColor.FOLIAGE_DEFAULT;
 				return BiomeColors.getAverageFoliageColor(level, pos);
 			},
 			block
