@@ -104,8 +104,8 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	/**
-	 * Calculates the SHA256 hash of a file.
-	 * @param path The file to calculate the hash for.
+	 * Calculates the SHA256 hash of an {@link InputStream}.
+	 * @param inputStream The {@link InputStream} to calculate the hash for.
 	 * @return The SHA256 hash as a hexadecimal string.
 	 * @throws IOException If an I/O error occurs.
 	 */
