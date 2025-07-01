@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.block.client.api;
 
-import java.util.Objects;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
@@ -30,7 +29,10 @@ public class TintRegistryHelper {
 
 	public static void registerAverageFoliageColorForBlock(Block block) {
 		ColorProviderRegistry.BLOCK.register(
-			(state, level, pos, tintIndex) -> BiomeColors.getAverageFoliageColor(Objects.requireNonNull(level), Objects.requireNonNull(pos)),
+			(state, level, pos, tintIndex) -> {
+				if (level == null || pos == null) return FoliageColor.getDefaultColor();
+				return BiomeColors.getAverageFoliageColor(level, pos);
+			},
 			block
 		);
 	}
