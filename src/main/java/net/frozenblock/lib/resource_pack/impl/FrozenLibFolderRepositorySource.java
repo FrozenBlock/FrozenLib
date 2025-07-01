@@ -23,6 +23,13 @@ import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.level.validation.DirectoryValidator;
 import java.nio.file.Path;
 
+/**
+ * An extension of {@link FolderRepositorySource}.
+ * <p>
+ * Resource packs loaded from this repository will have a translatable name of frozenlib.resourcepack.[pack name without ".zip" extension].
+ * <p>
+ * Resource packs loaded from this repository will be marked as built-in and will always be enabled, with no way to disable them.
+ */
 public class FrozenLibFolderRepositorySource extends FolderRepositorySource {
 
 	public FrozenLibFolderRepositorySource(Path path, PackType packType, PackSource packSource, DirectoryValidator directoryValidator) {

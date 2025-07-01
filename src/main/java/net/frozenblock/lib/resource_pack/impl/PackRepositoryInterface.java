@@ -17,8 +17,14 @@
 
 package net.frozenblock.lib.resource_pack.impl;
 
+import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.RepositorySource;
 
+/**
+ * Implemented into {@link PackRepository}.
+ * <p>
+ * Allows modders to add their own {@link RepositorySource}s for resource packs.
+ */
 public interface PackRepositoryInterface {
 	void frozenLib$addRepositorySource(RepositorySource repositorySource);
 }

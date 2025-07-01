@@ -32,7 +32,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.zip.ZipFile;
@@ -41,9 +43,12 @@ import java.util.zip.ZipFile;
 public class FrozenLibModResourcePackApi {
 	@ApiStatus.Internal
 	public static final Path RESOURCE_PACK_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resourcepacks");
-
 	@ApiStatus.Internal
-	public static final Path HASH_FILE = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resource_pack_hashes.txt");
+	private static final Path PENDING_EXTRACTION_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resourcepacks_pending_extraction");
+	@ApiStatus.Internal
+	private static final Path HASH_FILE = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resource_pack_hashes.txt");
+	@ApiStatus.Internal
+	private static final List<String> HIDDEN_PACK_IDS = new ArrayList<>();
 
 	/**
 	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then extracts them to the game's run directory.
@@ -55,9 +60,10 @@ public class FrozenLibModResourcePackApi {
 	 * These resource packs will be force-enabled.
 	 * @param container The {@link ModContainer} of the mod.
 	 * @param packName The name of the zip file, without the ".zip" extension.
+	 * @param hidePackFromMenu Whether the resource pack should be hidden from the resource pack selection menu.
 	 * @throws IOException
 	 */
-	public static void findAndPrepareResourcePack(@NotNull ModContainer container, String packName) throws IOException {
+	public static void findAndPrepareResourcePack(@NotNull ModContainer container, String packName, boolean hidePackFromMenu) throws IOException {
 		String zipPackName = packName + ".zip";
 		String subPath = "frozenlib_resourcepacks/" + zipPackName;
 
@@ -74,7 +80,7 @@ public class FrozenLibModResourcePackApi {
 			File destFile = new File(RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
 			if (hasHashChanged || !destFile.exists()) {
 				InputStream inputFromJar = Files.newInputStream(path);
-				File extractionFile = new File(RESOURCE_PACK_DIRECTORY.resolve("pending_extraction").toFile(), zipPackName);
+				File extractionFile = new File(PENDING_EXTRACTION_DIRECTORY.toFile(), zipPackName);
 				FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
 				inputFromJar.close();
 
@@ -100,11 +106,20 @@ public class FrozenLibModResourcePackApi {
 
 				// Clean up the temporary extraction file
 				extractionFile.delete();
+
+				if (hidePackFromMenu) HIDDEN_PACK_IDS.add("frozenlib/file/" + zipPackName);
 			}
 
 			// Update the hash record after successful extraction
 			updateHashRecord(packName, currentHash);
 		}
+	}
+
+	/**
+	 * @return Whether the resource pack with the specified id should be hidden from the resource pack selection menu.
+	 */
+	public static boolean isPackHiddenFromMenu(String packId) {
+		return HIDDEN_PACK_IDS.contains(packId);
 	}
 
 	/**

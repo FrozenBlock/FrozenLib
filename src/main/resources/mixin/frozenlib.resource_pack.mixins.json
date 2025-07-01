@@ -12,6 +12,7 @@
   ],
   "client": [
     "client.ClientPackSourceMixin",
-    "client.MinecraftMixin"
+    "client.MinecraftMixin",
+    "client.PackSelectionScreenMixin"
   ]
 }
