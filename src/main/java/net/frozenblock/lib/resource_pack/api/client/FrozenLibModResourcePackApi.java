@@ -86,7 +86,7 @@ public class FrozenLibModResourcePackApi {
 				FileUtils.copyInputStreamToFile(inputFromJar, destFile);
 				inputFromJar.close();
 
-				if (hidePackFromMenu) HIDDEN_PACK_IDS.add("frozenlib/file/" + zipPackName);
+				if (hidePackFromMenu) registerHiddenPackId("frozenlib/file/" + zipPackName);
 			}
 
 			// Update the hash record after successful extraction
@@ -94,6 +94,13 @@ public class FrozenLibModResourcePackApi {
 		} else {
 			FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
 		}
+	}
+
+	/**
+	 * Lets you specify the id of a Resource Pack to hide from the selection menu.
+	 */
+	public static void registerHiddenPackId(String packId) {
+		HIDDEN_PACK_IDS.add(packId);
 	}
 
 	/**
