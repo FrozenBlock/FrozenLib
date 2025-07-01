@@ -48,7 +48,9 @@ public class FrozenLibModResourcePackApi {
 	/**
 	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then extracts them to the game's run directory.
 	 * <p>
-	 * Note that this has only been tested on double-zipped resource packs, as means of permitting the use of obfuscated resource packs within mods.
+	 * Note that this is only intended for use with double-zipped resource packs, as a means of allowing modders to include obfuscated resource packs in their mods.
+	 * <p>
+	 * The "double-zip" file name must have the same name as the contained zip file in order for this to function as intended.
 	 * <p>
 	 * These resource packs will be force-enabled.
 	 * @param container The {@link ModContainer} of the mod.
@@ -56,7 +58,8 @@ public class FrozenLibModResourcePackApi {
 	 * @throws IOException
 	 */
 	public static void findAndExtractAllResourcePackZips(@NotNull ModContainer container, String packName) throws IOException {
-		String subPath = "frozenlib_resourcepacks/" + packName + ".zip";
+		String zipPackName = packName + ".zip";
+		String subPath = "frozenlib_resourcepacks/" + zipPackName;
 
 		Optional<Path> resourcePack = container.findPath(subPath);
 		if (resourcePack.isPresent()) {
@@ -68,34 +71,36 @@ public class FrozenLibModResourcePackApi {
 			boolean hasHashChanged = hasHashChanged(packName, currentHash);
 
 			// Hash has changed or this is a new pack, proceed with extraction
-			InputStream inputFromJar = Files.newInputStream(path);
-			File extractionFile = new File(RESOURCE_PACK_DIRECTORY.resolve("pending_extraction").toFile(), packName + ".zip");
-			FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
-			inputFromJar.close();
+			File destFile = new File(RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
+			if (hasHashChanged || !destFile.exists()) {
+				InputStream inputFromJar = Files.newInputStream(path);
+				File extractionFile = new File(RESOURCE_PACK_DIRECTORY.resolve("pending_extraction").toFile(), zipPackName);
+				FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
+				inputFromJar.close();
 
-			ZipFile zip = new ZipFile(extractionFile);
+				ZipFile zip = new ZipFile(extractionFile);
 
-			zip.entries().asIterator().forEachRemaining(entry -> {
-				String name = entry.getName();
-				File destFile = new File(RESOURCE_PACK_DIRECTORY.toString(), name);
-				if (destFile.exists()) {
-					if (!hasHashChanged) return;
-					destFile.delete();
-				}
+				zip.entries().asIterator().forEachRemaining(entry -> {
+					if (!entry.getName().equals(zipPackName)) throw new IllegalStateException("FrozenLib resource packs can only a zip of the same name contained within them!");
+					if (destFile.exists()) {
+						if (!hasHashChanged) return;
+						destFile.delete();
+					}
 
-				try {
-					InputStream zipInputStream = zip.getInputStream(entry);
-					FileUtils.copyInputStreamToFile(zipInputStream, destFile);
-					zipInputStream.close();
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			});
+					try {
+						InputStream zipInputStream = zip.getInputStream(entry);
+						FileUtils.copyInputStreamToFile(zipInputStream, destFile);
+						zipInputStream.close();
+					} catch (IOException e) {
+						throw new RuntimeException(e);
+					}
+				});
 
-			zip.close();
+				zip.close();
 
-			// Clean up the temporary extraction file
-			extractionFile.delete();
+				// Clean up the temporary extraction file
+				extractionFile.delete();
+			}
 
 			// Update the hash record after successful extraction
 			updateHashRecord(packName, currentHash);
@@ -158,7 +163,9 @@ public class FrozenLibModResourcePackApi {
 			Files.createDirectories(FrozenLibConstants.FROZENLIB_GAME_DIRECTORY);
 			StringBuilder content = new StringBuilder();
 			for (Map.Entry<String, String> entry : hashes.entrySet()) {
-				content.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
+				String packName = entry.getKey();
+				if (!new File(RESOURCE_PACK_DIRECTORY.toString(), packName + ".zip").exists()) continue;
+				content.append(packName).append("=").append(entry.getValue()).append("\n");
 			}
 			Files.write(HASH_FILE, content.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
 		} catch (IOException e) {
