@@ -81,7 +81,7 @@ public class FrozenLibModResourcePackApi {
 				ZipFile zip = new ZipFile(extractionFile);
 
 				zip.entries().asIterator().forEachRemaining(entry -> {
-					if (!entry.getName().equals(zipPackName)) throw new IllegalStateException("FrozenLib resource packs can only a zip of the same name contained within them!");
+					if (!entry.getName().equals(zipPackName)) throw new IllegalStateException("FrozenLib resource packs can only contain a zip of the same name within them!");
 					if (destFile.exists()) {
 						if (!hasHashChanged) return;
 						destFile.delete();
