@@ -21,6 +21,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -37,25 +38,18 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.zip.ZipFile;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibModResourcePackApi {
 	@ApiStatus.Internal
 	public static final Path RESOURCE_PACK_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resourcepacks");
 	@ApiStatus.Internal
-	private static final Path PENDING_EXTRACTION_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resourcepacks_pending_extraction");
-	@ApiStatus.Internal
 	private static final Path HASH_FILE = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resource_pack_hashes.txt");
 	@ApiStatus.Internal
 	private static final List<String> HIDDEN_PACK_IDS = new ArrayList<>();
 
 	/**
-	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then extracts them to the game's run directory.
-	 * <p>
-	 * Note that this is only intended for use with double-zipped resource packs, as a means of allowing modders to include obfuscated resource packs in their mods.
-	 * <p>
-	 * The "double-zip" file name must have the same name as the contained zip file in order for this to function as intended.
+	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then copies them to FrozenLib's resource pack directory.
 	 * <p>
 	 * These resource packs will be force-enabled.
 	 * @param container The {@link ModContainer} of the mod.
@@ -70,49 +64,32 @@ public class FrozenLibModResourcePackApi {
 
 		Optional<Path> resourcePack = container.findPath(subPath);
 		if (resourcePack.isPresent()) {
-			Path path = resourcePack.get();
+			Path jarPackPath = resourcePack.get();
 
-			// Calculate SHA256 hash of the extracted zip file
-			String currentHash = calculateSHA256(path);
+			// Calculate SHA256 hash of the jar's zip file
+			String currentHash = calculateSHA256(jarPackPath);
 			// Check if the hash has changed
 			boolean hasHashChanged = skipHashCheck || hasHashChanged(packName, currentHash);
 
 			// Hash has changed or this is a new pack, proceed with extraction
 			File destFile = new File(RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
 			if (hasHashChanged || !destFile.exists()) {
-				InputStream inputFromJar = Files.newInputStream(path);
-				File extractionFile = new File(PENDING_EXTRACTION_DIRECTORY.toFile(), zipPackName);
-				FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
+				if (destFile.exists()) {
+					if (!hasHashChanged) return;
+					destFile.delete();
+				}
+
+				InputStream inputFromJar = Files.newInputStream(jarPackPath);
+				FileUtils.copyInputStreamToFile(inputFromJar, destFile);
 				inputFromJar.close();
-
-				ZipFile zip = new ZipFile(extractionFile);
-
-				zip.entries().asIterator().forEachRemaining(entry -> {
-					if (!entry.getName().equals(zipPackName)) throw new IllegalStateException("FrozenLib resource packs can only contain a zip of the same name within them!");
-					if (destFile.exists()) {
-						if (!hasHashChanged) return;
-						destFile.delete();
-					}
-
-					try {
-						InputStream zipInputStream = zip.getInputStream(entry);
-						FileUtils.copyInputStreamToFile(zipInputStream, destFile);
-						zipInputStream.close();
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
-				});
-
-				zip.close();
-
-				// Clean up the temporary extraction file
-				extractionFile.delete();
 
 				if (hidePackFromMenu) HIDDEN_PACK_IDS.add("frozenlib/file/" + zipPackName);
 			}
 
 			// Update the hash record after successful extraction
 			updateHashRecord(packName, currentHash);
+		} else {
+			FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
 		}
 	}
 
