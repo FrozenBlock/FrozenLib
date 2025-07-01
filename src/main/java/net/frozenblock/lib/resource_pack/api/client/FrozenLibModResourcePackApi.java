@@ -67,7 +67,10 @@ public class FrozenLibModResourcePackApi {
 		String packId = "frozenlib:mod/file/" + zipPackName;
 		String subPath = "frozenlib_resourcepacks/" + zipPackName;
 
+		// Mark the pack as registered by a mod
 		MOD_RESOURCE_PACK_IDS.add(packId);
+		// Mark the pack as hidden if needed
+		if (hidePackFromMenu) registerHiddenPackId(packId);
 
 		Optional<Path> resourcePack = container.findPath(subPath);
 		if (resourcePack.isPresent()) {
@@ -89,8 +92,6 @@ public class FrozenLibModResourcePackApi {
 				InputStream inputFromJar = Files.newInputStream(jarPackPath);
 				FileUtils.copyInputStreamToFile(inputFromJar, destFile);
 				inputFromJar.close();
-
-				if (hidePackFromMenu) registerHiddenPackId(packId);
 			}
 
 			// Update the hash record after successful extraction
