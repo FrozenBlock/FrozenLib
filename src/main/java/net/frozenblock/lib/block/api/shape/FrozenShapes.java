@@ -80,10 +80,7 @@ public class FrozenShapes {
 	 */
 	public static @NotNull @Unmodifiable ImmutableMap<Direction, VoxelShape> createPlanesForDirection(float width) {
 		Map<Direction, VoxelShape> map = new Object2ObjectLinkedOpenHashMap<>();
-
-		for (Direction direction : Direction.values()) {
-			map.put(direction, makePlaneFromDirection(direction, width));
-		}
+		for (Direction direction : Direction.values()) map.put(direction, makePlaneFromDirection(direction, width));
 		return Maps.immutableEnumMap(map);
 	}
 
@@ -96,9 +93,7 @@ public class FrozenShapes {
 	 * @return the closest point of a shape to a given position.
 	 */
 	public static Optional<Vec3> closestPointTo(BlockPos originalPos, @NotNull VoxelShape blockShape, Vec3 point) {
-		if (blockShape.isEmpty()) {
-			return Optional.empty();
-		}
+		if (blockShape.isEmpty()) return Optional.empty();
 		double x = originalPos.getX();
 		double y = originalPos.getY();
 		double z = originalPos.getZ();

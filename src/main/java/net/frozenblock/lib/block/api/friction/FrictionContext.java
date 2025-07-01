@@ -22,7 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class FrictionContext {
-
 	/**
 	 * A mutable property that will determine the outputting friction
 	 */

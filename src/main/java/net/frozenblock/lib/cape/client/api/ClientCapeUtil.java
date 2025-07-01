@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 @Environment(EnvType.CLIENT)
 public class ClientCapeUtil {
-	public static final Path CAPE_CACHE_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("frozenlib_cape_cache");
+	public static final Path CAPE_CACHE_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("frozenlib").resolve("cape_cache");
 	private static final List<ResourceLocation> REGISTERED_CAPE_LISTENERS = new ArrayList<>();
 	private static final List<Cape> USABLE_CAPES = new ArrayList<>();
 

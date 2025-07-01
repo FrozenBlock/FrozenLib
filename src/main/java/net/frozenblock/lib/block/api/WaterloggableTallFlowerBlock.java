@@ -44,9 +44,7 @@ public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements Sim
 
 	@Override
 	public BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor world, BlockPos pos, BlockPos neighborPos) {
-		if (state.getValue(WATERLOGGED)) {
-			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-		}
+		if (state.getValue(WATERLOGGED)) world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 		return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
 	}
 

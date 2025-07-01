@@ -59,6 +59,7 @@
     "mixin/frozenlib.particle.mixins.json",
     "mixin/frozenlib.recipe.mixins.json",
     "mixin/frozenlib.render.mixins.json",
+    "mixin/frozenlib.resource_pack.mixins.json",
     "mixin/frozenlib.screenshake.mixins.json",
     "mixin/frozenlib.sound.mixins.json",
     "mixin/frozenlib.spotting_icons.mixins.json",

@@ -35,9 +35,7 @@ public class FrozenCeilingHangingSignBlock extends CeilingHangingSignBlock {
 
 	@Override
 	public ResourceKey<LootTable> getLootTable() {
-		if (!Objects.equals(this.drops, this.lootTable)) {
-			this.drops = this.lootTable;
-		}
+		if (!Objects.equals(this.drops, this.lootTable)) this.drops = this.lootTable;
 
 		assert this.drops != null;
 		return this.drops;

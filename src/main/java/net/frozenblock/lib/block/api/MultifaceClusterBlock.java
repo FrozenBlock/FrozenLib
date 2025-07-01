@@ -89,9 +89,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
 		VoxelShape voxelShape = Shapes.empty();
 
 		for (Direction direction : DIRECTIONS) {
-			if (hasFace(state, direction)) {
-				voxelShape = Shapes.or(voxelShape, this.shapeByDirection.get(direction));
-			}
+			if (hasFace(state, direction)) voxelShape = Shapes.or(voxelShape, this.shapeByDirection.get(direction));
 		}
 
 		return voxelShape.isEmpty() ? Shapes.block() : voxelShape;
@@ -100,9 +98,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
 	@Override
 	@NotNull
 	public BlockState updateShape(BlockState state, @NotNull Direction direction, @NotNull BlockState neighborState, @NotNull LevelAccessor world, @NotNull BlockPos pos, @NotNull BlockPos neighborPos) {
-		if (state.getValue(WATERLOGGED)) {
-			world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
-		}
+		if (state.getValue(WATERLOGGED)) world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
 
 		return super.updateShape(state, direction, neighborState, world, pos, neighborPos);
 	}
