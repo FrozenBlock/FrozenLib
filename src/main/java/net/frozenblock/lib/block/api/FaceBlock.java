@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
  * A {@link MultifaceBlock}, but only one face is permitted.
  */
 public abstract class FaceBlock extends MultifaceBlock {
+
 	public FaceBlock(Properties properties) {
 		super(properties);
 	}
@@ -36,8 +37,7 @@ public abstract class FaceBlock extends MultifaceBlock {
 		if (this.isFaceSupported(direction) && !state.is(this)) {
 			BlockPos blockPos = pos.relative(direction);
 			return canAttachTo(level, direction, blockPos, level.getBlockState(blockPos));
-		} else {
-			return false;
 		}
+		return false;
 	}
 }
