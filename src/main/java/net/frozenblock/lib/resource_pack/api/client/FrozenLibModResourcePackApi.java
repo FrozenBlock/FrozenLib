@@ -19,8 +19,8 @@ package net.frozenblock.lib.resource_pack.api.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
+import net.frozenblock.lib.FrozenLibConstants;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -40,13 +40,67 @@ import java.util.zip.ZipFile;
 @Environment(EnvType.CLIENT)
 public class FrozenLibModResourcePackApi {
 	@ApiStatus.Internal
-	public static final Path FROZENLIB_DIRECTORY = FabricLoader.getInstance().getGameDir().resolve("frozenlib");
+	public static final Path RESOURCE_PACK_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resourcepacks");
 
 	@ApiStatus.Internal
-	public static final Path RESOURCE_PACK_DIRECTORY = FROZENLIB_DIRECTORY.resolve("resourcepacks");
+	public static final Path HASH_FILE = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resource_pack_hashes.txt");
 
-	@ApiStatus.Internal
-	public static final Path HASH_FILE = FROZENLIB_DIRECTORY.resolve("resource_pack_hashes.txt");
+	/**
+	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then extracts them to the game's run directory.
+	 * <p>
+	 * Note that this has only been tested on double-zipped resource packs, as means of permitting the use of obfuscated resource packs within mods.
+	 * <p>
+	 * These resource packs will be force-enabled.
+	 * @param container The {@link ModContainer} of the mod.
+	 * @param packName The name of the zip file, without the ".zip" extension.
+	 * @throws IOException
+	 */
+	public static void findAndExtractAllResourcePackZips(@NotNull ModContainer container, String packName) throws IOException {
+		String subPath = "frozenlib_resourcepacks/" + packName + ".zip";
+
+		Optional<Path> resourcePack = container.findPath(subPath);
+		if (resourcePack.isPresent()) {
+			Path path = resourcePack.get();
+
+			// Calculate SHA256 hash of the extracted zip file
+			String currentHash = calculateSHA256(path);
+			// Check if the hash has changed
+			boolean hasHashChanged = hasHashChanged(packName, currentHash);
+
+			// Hash has changed or this is a new pack, proceed with extraction
+			InputStream inputFromJar = Files.newInputStream(path);
+			File extractionFile = new File(RESOURCE_PACK_DIRECTORY.resolve("pending_extraction").toFile(), packName + ".zip");
+			FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
+			inputFromJar.close();
+
+			ZipFile zip = new ZipFile(extractionFile);
+
+			zip.entries().asIterator().forEachRemaining(entry -> {
+				String name = entry.getName();
+				File destFile = new File(RESOURCE_PACK_DIRECTORY.toString(), name);
+				if (destFile.exists()) {
+					if (!hasHashChanged) return;
+					destFile.delete();
+				}
+
+				try {
+					InputStream zipInputStream = zip.getInputStream(entry);
+					FileUtils.copyInputStreamToFile(zipInputStream, destFile);
+					zipInputStream.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			});
+
+			zip.close();
+
+			// Clean up the temporary extraction file
+			extractionFile.delete();
+
+			// Update the hash record after successful extraction
+			updateHashRecord(packName, currentHash);
+		}
+	}
 
 	/**
 	 * Calculates the SHA256 hash of a file.
@@ -101,7 +155,7 @@ public class FrozenLibModResourcePackApi {
 	 */
 	private static void writeHashRecords(Map<String, String> hashes) {
 		try {
-			Files.createDirectories(FROZENLIB_DIRECTORY);
+			Files.createDirectories(FrozenLibConstants.FROZENLIB_GAME_DIRECTORY);
 			StringBuilder content = new StringBuilder();
 			for (Map.Entry<String, String> entry : hashes.entrySet()) {
 				content.append(entry.getKey()).append("=").append(entry.getValue()).append("\n");
@@ -133,61 +187,6 @@ public class FrozenLibModResourcePackApi {
 		Map<String, String> hashes = readHashRecords();
 		hashes.put(packName, newHash);
 		writeHashRecords(hashes);
-	}
-
-	/**
-	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then extracts them to the game's run directory.
-	 * <p>
-	 * Note that this has only been tested on double-zipped resource packs, as means of permitting the use of obfuscated resource packs within mods.
-	 * <p>
-	 * These resource packs will be force-enabled.
-	 * @param container The {@link ModContainer} of the mod.
-	 * @param packName The name of the zip file, without the ".zip" extension.
-	 * @throws IOException
-	 */
-	public static void findAndExtractAllResourcePackZips(@NotNull ModContainer container, String packName) throws IOException {
-		String subPath = "frozenlib_resourcepacks/" + packName + ".zip";
-
-		Optional<Path> resourcePack = container.findPath(subPath);
-		if (resourcePack.isPresent()) {
-			Path path = resourcePack.get();
-
-			// Calculate SHA256 hash of the extracted zip file
-			String currentHash = calculateSHA256(path);
-
-			// Check if the hash has changed
-			if (hasHashChanged(packName, currentHash)) {
-				// Hash has changed or this is a new pack, proceed with extraction
-				InputStream inputFromJar = Files.newInputStream(path);
-				File extractionFile = new File(RESOURCE_PACK_DIRECTORY.resolve("pending_extraction").toFile(), packName + ".zip");
-				FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
-				inputFromJar.close();
-
-				ZipFile zip = new ZipFile(extractionFile);
-
-				zip.entries().asIterator().forEachRemaining(entry -> {
-					String name = entry.getName();
-					File destFile = new File(RESOURCE_PACK_DIRECTORY.toString(), name);
-					if (destFile.exists()) destFile.delete();
-
-					try {
-						InputStream zipInputStream = zip.getInputStream(entry);
-						FileUtils.copyInputStreamToFile(zipInputStream, destFile);
-						zipInputStream.close();
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
-				});
-
-				zip.close();
-
-				// Clean up the temporary extraction file
-				extractionFile.delete();
-
-				// Update the hash record after successful extraction
-				updateHashRecord(packName, currentHash);
-			}
-		}
 	}
 
 }
