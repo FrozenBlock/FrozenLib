@@ -27,6 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Optional;
 import java.util.zip.ZipFile;
@@ -52,7 +53,13 @@ public class FrozenLibModResourcePackApi {
 		Optional<Path> resourcePack = container.findPath(subPath);
 		if (resourcePack.isPresent()) {
 			Path path = resourcePack.get();
-			ZipFile zip = new ZipFile(path.toFile());
+
+			InputStream inputFromJar = Files.newInputStream(path);
+			File extractionFile = new File(RESOURCE_PACK_DIRECTORY.resolve("pending_extraction").toFile(), packName + ".zip");
+			FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
+			inputFromJar.close();
+
+			ZipFile zip = new ZipFile(extractionFile);
 
 			zip.entries().asIterator().forEachRemaining(entry -> {
 				String name = entry.getName();
@@ -69,6 +76,7 @@ public class FrozenLibModResourcePackApi {
 			});
 
 			zip.close();
+			extractionFile.delete();
 		}
 	}
 
