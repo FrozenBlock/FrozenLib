@@ -17,11 +17,11 @@
 
 package net.frozenblock.lib.resource_pack.impl;
 
+import java.nio.file.Path;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.level.validation.DirectoryValidator;
-import java.nio.file.Path;
 
 /**
  * An extension of {@link FolderRepositorySource}.
@@ -31,9 +31,15 @@ import java.nio.file.Path;
  * Resource packs loaded from this repository will be marked as built-in and will always be enabled, with no way to disable them.
  */
 public class FrozenLibFolderRepositorySource extends FolderRepositorySource {
+	private final String suffix;
 
-	public FrozenLibFolderRepositorySource(Path path, PackType packType, PackSource packSource, DirectoryValidator directoryValidator) {
+	public FrozenLibFolderRepositorySource(Path path, PackType packType, PackSource packSource, DirectoryValidator directoryValidator, String suffix) {
 		super(path, packType, packSource, directoryValidator);
+		this.suffix = suffix;
+	}
+
+	public String getSuffix() {
+		return this.suffix;
 	}
 
 }
