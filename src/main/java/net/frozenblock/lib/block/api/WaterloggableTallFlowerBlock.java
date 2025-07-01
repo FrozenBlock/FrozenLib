@@ -55,9 +55,7 @@ public class WaterloggableTallFlowerBlock extends TallFlowerBlock implements Sim
 		BlockState neighborState,
 		RandomSource randomSource
 	) {
-        if (blockState.getValue(WATERLOGGED)) {
-            scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
-        }
+        if (blockState.getValue(WATERLOGGED)) scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
         return super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, neighborPos, neighborState, randomSource);
     }
 
