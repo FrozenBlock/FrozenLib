@@ -61,9 +61,10 @@ public class FrozenLibModResourcePackApi {
 	 * @param container The {@link ModContainer} of the mod.
 	 * @param packName The name of the zip file, without the ".zip" extension.
 	 * @param hidePackFromMenu Whether the resource pack should be hidden from the resource pack selection menu.
+	 * @param skipHashCheck Whether the resource pack will still be extracted even if an identical version was already extracted prior.
 	 * @throws IOException
 	 */
-	public static void findAndPrepareResourcePack(@NotNull ModContainer container, String packName, boolean hidePackFromMenu) throws IOException {
+	public static void findAndPrepareResourcePack(@NotNull ModContainer container, String packName, boolean hidePackFromMenu, boolean skipHashCheck) throws IOException {
 		String zipPackName = packName + ".zip";
 		String subPath = "frozenlib_resourcepacks/" + zipPackName;
 
@@ -74,7 +75,7 @@ public class FrozenLibModResourcePackApi {
 			// Calculate SHA256 hash of the extracted zip file
 			String currentHash = calculateSHA256(path);
 			// Check if the hash has changed
-			boolean hasHashChanged = hasHashChanged(packName, currentHash);
+			boolean hasHashChanged = skipHashCheck || hasHashChanged(packName, currentHash);
 
 			// Hash has changed or this is a new pack, proceed with extraction
 			File destFile = new File(RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
