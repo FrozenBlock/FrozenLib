@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -24,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.helpers.NOPLogger;
+import java.nio.file.Path;
 
 @ApiStatus.Internal
 public final class FrozenLibConstants {
@@ -37,6 +39,7 @@ public final class FrozenLibConstants {
 	 * It's smart to use this for at least registries.
 	 */
 	public static boolean UNSTABLE_LOGGING = FrozenLibLogUtils.UNSTABLE_LOGGING;
+	public static final Path FROZENLIB_GAME_DIRECTORY = FabricLoader.getInstance().getGameDir().resolve(MOD_ID);
 	public static final int DATA_VERSION = 2;
 
 	@Contract("_ -> new")

@@ -15,27 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.api.friction;
+package net.frozenblock.lib.resource_pack.impl;
 
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.server.packs.repository.PackRepository;
+import net.minecraft.server.packs.repository.RepositorySource;
 
-public class FrictionContext {
-	/**
-	 * A mutable property that will determine the outputting friction
-	 */
-	public float friction;
-
-	public final Level level;
-	public final LivingEntity entity;
-	public final BlockState state;
-
-	public FrictionContext(Level level, LivingEntity entity, BlockState state, float friction) {
-		this.level = level;
-		this.entity = entity;
-		this.state = state;
-
-		this.friction = friction;
-	}
+/**
+ * Implemented into {@link PackRepository}.
+ * <p>
+ * Allows modders to add their own {@link RepositorySource}s for resource packs.
+ */
+public interface PackRepositoryInterface {
+	void frozenLib$addRepositorySource(RepositorySource repositorySource);
 }
