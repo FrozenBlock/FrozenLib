@@ -17,18 +17,18 @@
 
 package net.frozenblock.lib.gravity.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
 import net.minecraft.world.entity.vehicle.Boat;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyArgs;
-import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(Boat.class)
 public abstract class BoatMixin implements EntityGravityInterface {
 
-	@ModifyArgs(
+	@WrapOperation(
 		method = "floatBoat",
 		at = @At(
 			value = "INVOKE",
@@ -36,14 +36,8 @@ public abstract class BoatMixin implements EntityGravityInterface {
 			ordinal = 0
 		)
 	)
-	private void frozenLib$useGravity(Args args) {
-		double x = args.get(0);
-		double y = (double) args.get(1) + this.frozenLib$getGravity();
-		double z = args.get(2);
-
-		Vec3 newVec = new Vec3(x, y, z).subtract(this.frozenLib$getEffectiveGravity());
-		args.set(0, newVec.x);
-		args.set(1, newVec.y);
-		args.set(2, newVec.z);
+	private void frozenLib$useGravity(Boat instance, double x, double y, double z, Operation<Void> original) {
+		Vec3 newVec = new Vec3(x, y + this.frozenLib$getGravity(), z).subtract(this.frozenLib$getEffectiveGravity());
+		original.call(instance, newVec.x(), newVec.y(), newVec.z());
 	}
 }
