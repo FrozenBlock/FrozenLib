@@ -17,13 +17,6 @@
 
 package net.frozenblock.lib.resource_pack.api.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.loader.api.ModContainer;
-import net.frozenblock.lib.FrozenLibConstants;
-import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -37,25 +30,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.zip.ZipFile;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.loader.api.ModContainer;
+import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
+import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibModResourcePackApi {
 	@ApiStatus.Internal
 	public static final Path RESOURCE_PACK_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resourcepacks");
 	@ApiStatus.Internal
-	private static final Path PENDING_EXTRACTION_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resourcepacks_pending_extraction");
+	public static final Path MOD_RESOURCE_PACK_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("mod_resourcepacks");
 	@ApiStatus.Internal
-	private static final Path HASH_FILE = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("resource_pack_hashes.txt");
+	private static final Path HASH_FILE = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("mod_resource_pack_hashes.txt");
 	@ApiStatus.Internal
 	private static final List<String> HIDDEN_PACK_IDS = new ArrayList<>();
+	@ApiStatus.Internal
+	private static final List<String> MOD_RESOURCE_PACK_IDS = new ArrayList<>();
 
 	/**
-	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then extracts them to the game's run directory.
-	 * <p>
-	 * Note that this is only intended for use with double-zipped resource packs, as a means of allowing modders to include obfuscated resource packs in their mods.
-	 * <p>
-	 * The "double-zip" file name must have the same name as the contained zip file in order for this to function as intended.
+	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then copies them to FrozenLib's resource pack directory.
 	 * <p>
 	 * These resource packs will be force-enabled.
 	 * @param container The {@link ModContainer} of the mod.
@@ -66,54 +64,47 @@ public class FrozenLibModResourcePackApi {
 	 */
 	public static void findAndPrepareResourcePack(@NotNull ModContainer container, String packName, boolean hidePackFromMenu, boolean skipHashCheck) throws IOException {
 		String zipPackName = packName + ".zip";
+		String packId = "frozenlib:mod/file/" + zipPackName;
 		String subPath = "frozenlib_resourcepacks/" + zipPackName;
+
+		MOD_RESOURCE_PACK_IDS.add(packId);
 
 		Optional<Path> resourcePack = container.findPath(subPath);
 		if (resourcePack.isPresent()) {
-			Path path = resourcePack.get();
+			Path jarPackPath = resourcePack.get();
 
-			// Calculate SHA256 hash of the extracted zip file
-			String currentHash = calculateSHA256(path);
+			// Calculate SHA256 hash of the jar's zip file
+			String currentHash = calculateSHA256(jarPackPath);
 			// Check if the hash has changed
 			boolean hasHashChanged = skipHashCheck || hasHashChanged(packName, currentHash);
 
 			// Hash has changed or this is a new pack, proceed with extraction
-			File destFile = new File(RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
+			File destFile = new File(MOD_RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
 			if (hasHashChanged || !destFile.exists()) {
-				InputStream inputFromJar = Files.newInputStream(path);
-				File extractionFile = new File(PENDING_EXTRACTION_DIRECTORY.toFile(), zipPackName);
-				FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
+				if (destFile.exists()) {
+					if (!hasHashChanged) return;
+					destFile.delete();
+				}
+
+				InputStream inputFromJar = Files.newInputStream(jarPackPath);
+				FileUtils.copyInputStreamToFile(inputFromJar, destFile);
 				inputFromJar.close();
 
-				ZipFile zip = new ZipFile(extractionFile);
-
-				zip.entries().asIterator().forEachRemaining(entry -> {
-					if (!entry.getName().equals(zipPackName)) throw new IllegalStateException("FrozenLib resource packs can only contain a zip of the same name within them!");
-					if (destFile.exists()) {
-						if (!hasHashChanged) return;
-						destFile.delete();
-					}
-
-					try {
-						InputStream zipInputStream = zip.getInputStream(entry);
-						FileUtils.copyInputStreamToFile(zipInputStream, destFile);
-						zipInputStream.close();
-					} catch (IOException e) {
-						throw new RuntimeException(e);
-					}
-				});
-
-				zip.close();
-
-				// Clean up the temporary extraction file
-				extractionFile.delete();
-
-				if (hidePackFromMenu) HIDDEN_PACK_IDS.add("frozenlib/file/" + zipPackName);
+				if (hidePackFromMenu) registerHiddenPackId(packId);
 			}
 
 			// Update the hash record after successful extraction
 			updateHashRecord(packName, currentHash);
+		} else {
+			FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
 		}
+	}
+
+	/**
+	 * Lets you specify the id of a Resource Pack to hide from the selection menu.
+	 */
+	public static void registerHiddenPackId(String packId) {
+		HIDDEN_PACK_IDS.add(packId);
 	}
 
 	/**
@@ -124,8 +115,15 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	/**
-	 * Calculates the SHA256 hash of a file.
-	 * @param path The file to calculate the hash for.
+	 * @return Whether the resource pack with the specified id is currently registered by a mod.
+	 */
+	public static boolean isFrozenLibPackRegisteredByMod(String packId) {
+		return MOD_RESOURCE_PACK_IDS.contains(packId);
+	}
+
+	/**
+	 * Calculates the SHA256 hash of a {@link Path}.
+	 * @param path The {@link Path} to calculate the hash for.
 	 * @return The SHA256 hash as a hexadecimal string.
 	 * @throws IOException If an I/O error occurs.
 	 */
@@ -180,7 +178,7 @@ public class FrozenLibModResourcePackApi {
 			StringBuilder content = new StringBuilder();
 			for (Map.Entry<String, String> entry : hashes.entrySet()) {
 				String packName = entry.getKey();
-				if (!new File(RESOURCE_PACK_DIRECTORY.toString(), packName + ".zip").exists()) continue;
+				if (!new File(MOD_RESOURCE_PACK_DIRECTORY.toString(), packName + ".zip").exists()) continue;
 				content.append(packName).append("=").append(entry.getValue()).append("\n");
 			}
 			Files.write(HASH_FILE, content.toString().getBytes(), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);

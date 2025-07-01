@@ -28,7 +28,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.PackSource;
-import net.minecraft.server.packs.repository.RepositorySource;
 import net.minecraft.world.level.validation.DirectoryValidator;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -51,11 +50,25 @@ public class MinecraftMixin {
 		)
 	)
 	public PackRepository frozenLib$addFrozenLibRepositorySource(PackRepository original) {
-		RepositorySource frozenLibRepositorySource = new FrozenLibFolderRepositorySource(
-			FrozenLibModResourcePackApi.RESOURCE_PACK_DIRECTORY, PackType.CLIENT_RESOURCES, PackSource.BUILT_IN, this.directoryValidator
-		);
 		if (original instanceof PackRepositoryInterface packRepositoryInterface) {
-			packRepositoryInterface.frozenLib$addRepositorySource(frozenLibRepositorySource);
+			packRepositoryInterface.frozenLib$addRepositorySource(
+				new FrozenLibFolderRepositorySource(
+					FrozenLibModResourcePackApi.RESOURCE_PACK_DIRECTORY,
+					PackType.CLIENT_RESOURCES,
+					PackSource.BUILT_IN,
+					this.directoryValidator,
+					"frozenlib:"
+				)
+			);
+			packRepositoryInterface.frozenLib$addRepositorySource(
+				new FrozenLibFolderRepositorySource(
+					FrozenLibModResourcePackApi.MOD_RESOURCE_PACK_DIRECTORY,
+					PackType.CLIENT_RESOURCES,
+					PackSource.BUILT_IN,
+					this.directoryValidator,
+					"frozenlib:mod/"
+				)
+			);
 		} else if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 			throw new AssertionError("BRUHHHH ITS NOT A FROZENLIB PACK REPOSITORY SOURCEEE BURHHHHHHGHGTY");
 		}

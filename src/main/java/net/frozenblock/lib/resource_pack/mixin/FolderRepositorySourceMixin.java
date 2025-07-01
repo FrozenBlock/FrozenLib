@@ -17,16 +17,21 @@
 
 package net.frozenblock.lib.resource_pack.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import java.nio.file.Path;
+import java.util.Optional;
+import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.resource_pack.impl.FrozenLibFolderRepositorySource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
+import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
-import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import java.util.Optional;
 
 @Mixin(FolderRepositorySource.class)
 public class FolderRepositorySourceMixin {
@@ -39,15 +44,38 @@ public class FolderRepositorySourceMixin {
 		)
 	)
 	private PackLocationInfo frozenLib$modifyPackLocationInfo(String string, Component component, PackSource packSource, Optional optional, Operation<PackLocationInfo> original) {
-		if (FolderRepositorySource.class.cast(this) instanceof FrozenLibFolderRepositorySource) {
+		if (FolderRepositorySource.class.cast(this) instanceof FrozenLibFolderRepositorySource frozenLibFolderRepositorySource) {
 			String componentString = string;
 			if (componentString.endsWith(".zip")) componentString = componentString.substring(0, componentString.length() - 4);
 			if (componentString.startsWith("file/")) componentString = componentString.substring(5);
 			component = Component.translatable("frozenlib.resourcepack." + componentString);
 
-			string = "frozenlib/" + string;
+			string = frozenLibFolderRepositorySource.getSuffix() + string;
 		}
 		return original.call(string, component, packSource, optional);
+	}
+
+	@ModifyExpressionValue(
+		method = "method_45272",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/server/packs/repository/Pack;readMetaAndCreate(Lnet/minecraft/server/packs/PackLocationInfo;Lnet/minecraft/server/packs/repository/Pack$ResourcesSupplier;Lnet/minecraft/server/packs/PackType;Lnet/minecraft/server/packs/PackSelectionConfig;)Lnet/minecraft/server/packs/repository/Pack;"
+		)
+	)
+	private Pack frozenLib$denyLoadingOfUnregisteredPacks(
+		Pack original,
+		@Local(argsOnly = true) Path path
+	) {
+		if (FolderRepositorySource.class.cast(this) instanceof FrozenLibFolderRepositorySource frozenLibFolderRepositorySource && original != null) {
+			if (frozenLibFolderRepositorySource.getSuffix().equals("frozenlib:mod/")) {
+				String packId = original.getId();
+				if (!FrozenLibModResourcePackApi.isFrozenLibPackRegisteredByMod(packId)) {
+					path.toFile().delete();
+					return null;
+				}
+			}
+		}
+		return original;
 	}
 
 }
