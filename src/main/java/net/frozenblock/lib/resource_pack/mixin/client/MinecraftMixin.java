@@ -21,6 +21,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.resource_pack.impl.FrozenLibFolderRepositorySource;
 import net.frozenblock.lib.resource_pack.impl.PackRepositoryInterface;
 import net.minecraft.client.Minecraft;
@@ -33,16 +34,10 @@ import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import java.io.File;
-import java.nio.file.Path;
 
 @Environment(EnvType.CLIENT)
 @Mixin(Minecraft.class)
 public class MinecraftMixin {
-
-	@Shadow
-	@Final
-	public File gameDirectory;
 
 	@Shadow
 	@Final
@@ -56,9 +51,8 @@ public class MinecraftMixin {
 		)
 	)
 	public PackRepository frozenLib$addFrozenLibRepositorySource(PackRepository original) {
-		Path frozenLibResourcePackPath = this.gameDirectory.toPath().resolve("frozenlib").resolve("resourcepacks");
 		RepositorySource frozenLibRepositorySource = new FrozenLibFolderRepositorySource(
-			frozenLibResourcePackPath, PackType.CLIENT_RESOURCES, PackSource.BUILT_IN, this.directoryValidator
+			FrozenLibModResourcePackApi.RESOURCE_PACK_DIRECTORY, PackType.CLIENT_RESOURCES, PackSource.BUILT_IN, this.directoryValidator
 		);
 		if (original instanceof PackRepositoryInterface packRepositoryInterface) {
 			packRepositoryInterface.frozenLib$addRepositorySource(frozenLibRepositorySource);

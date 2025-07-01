@@ -28,6 +28,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.minecraft.client.Minecraft;
@@ -41,7 +42,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 @Environment(EnvType.CLIENT)
 public class ClientCapeUtil {
-	public static final Path CAPE_CACHE_PATH = Minecraft.getInstance().gameDirectory.toPath().resolve("frozenlib").resolve("cape_cache");
+	public static final Path CAPE_CACHE_PATH = FabricLoader.getInstance().getGameDir().resolve("frozenlib").resolve("cape_cache");
 	private static final List<ResourceLocation> REGISTERED_CAPE_LISTENERS = new ArrayList<>();
 	private static final List<Cape> USABLE_CAPES = new ArrayList<>();
 
