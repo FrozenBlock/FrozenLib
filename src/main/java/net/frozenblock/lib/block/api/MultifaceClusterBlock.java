@@ -91,9 +91,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
 		VoxelShape voxelShape = Shapes.empty();
 
 		for (Direction direction : DIRECTIONS) {
-			if (hasFace(state, direction)) {
-				voxelShape = Shapes.or(voxelShape, this.shapeByDirection.get(direction));
-			}
+			if (hasFace(state, direction)) voxelShape = Shapes.or(voxelShape, this.shapeByDirection.get(direction));
 		}
 
 		return voxelShape.isEmpty() ? Shapes.block() : voxelShape;
@@ -110,9 +108,7 @@ public abstract class MultifaceClusterBlock extends MultifaceBlock implements Si
 		BlockState neighborState,
 		RandomSource randomSource
 	) {
-		if (blockState.getValue(WATERLOGGED)) {
-			scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
-		}
+		if (blockState.getValue(WATERLOGGED)) scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
 		return super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, neighborPos, neighborState, randomSource);
 	}
 

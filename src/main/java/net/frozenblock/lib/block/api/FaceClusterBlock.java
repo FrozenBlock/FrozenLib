@@ -35,8 +35,7 @@ public abstract class FaceClusterBlock extends MultifaceClusterBlock {
 		if (this.isFaceSupported(direction) && !state.is(this)) {
 			BlockPos blockPos = pos.relative(direction);
 			return canAttachTo(level, direction, blockPos, level.getBlockState(blockPos));
-		} else {
-			return false;
 		}
+		return false;
 	}
 }

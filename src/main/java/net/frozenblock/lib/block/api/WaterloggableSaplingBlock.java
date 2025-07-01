@@ -76,9 +76,7 @@ public class WaterloggableSaplingBlock extends SaplingBlock implements SimpleWat
 		BlockState neighborState,
 		RandomSource randomSource
 	) {
-        if (blockState.getValue(WATERLOGGED)) {
-            scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
-        }
+        if (blockState.getValue(WATERLOGGED)) scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
 
         return direction == Direction.UP && !blockState.canSurvive(levelReader, blockPos) ? Blocks.AIR.defaultBlockState()
 			: super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, neighborPos, neighborState, randomSource);
