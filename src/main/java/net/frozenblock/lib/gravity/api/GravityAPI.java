@@ -59,11 +59,9 @@ public final class GravityAPI {
     static {
         MODIFICATIONS.register(context -> {
             if (GRAVITY_BELTS.containsKey(context.dimension)) {
-                Optional<GravityBelt<?>> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(context.dimension), context.y);
-                if (optionalGravityBelt.isPresent()) {
-                    GravityBelt<?> belt = optionalGravityBelt.get();
-                    context.gravity = belt.getGravity(null, context.y);
-                }
+				for (GravityBelt<?> belt : getAffectingGravityBelts(GRAVITY_BELTS.get(context.dimension), context.y)) {
+					context.gravity = belt.getGravity(null, context.y);
+				}
             }
         });
     }
@@ -86,15 +84,12 @@ public final class GravityAPI {
         return context.gravity;
     }
 
-    public static Optional<GravityBelt<?>> getAffectingGravityBelt(List<GravityBelt<?>> belts, double y) {
-        Optional<GravityBelt<?>> optionalGravityBelt = Optional.empty();
+    public static List<GravityBelt<?>> getAffectingGravityBelts(List<GravityBelt<?>> belts, double y) {
+		List<GravityBelt<?>> gravityBelts = new ArrayList<>();
         for (GravityBelt<?> belt : belts) {
-            if (belt.affectsPosition(y)) {
-                optionalGravityBelt = Optional.of(belt);
-                break;
-            }
+            if (belt.affectsPosition(y)) gravityBelts.add(belt);
         }
-        return optionalGravityBelt;
+        return gravityBelts;
     }
 
     @FunctionalInterface
