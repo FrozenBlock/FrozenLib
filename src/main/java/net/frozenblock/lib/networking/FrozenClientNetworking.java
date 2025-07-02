@@ -38,6 +38,7 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
+import net.frozenblock.lib.file.transfer.FileTransferRebuilder;
 import net.frozenblock.lib.file.transfer.client.ServerTexture;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
@@ -118,7 +119,7 @@ public final class FrozenClientNetworking {
 		receiveWindSyncPacket();
 		receiveWindDisturbancePacket();
 		receiveStructureStatusPacket();
-		receiveTransferImagePacket();
+		receiveFileTransferPacket();
 		receiveCapePacket();
 		receiveCapeRepoPacket();
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
@@ -129,28 +130,6 @@ public final class FrozenClientNetworking {
 				ConfigSyncModification.clearSyncData(config);
 			}
 		}));
-
-		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
-			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT) return;
-			if (packet.request()) {
-				Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
-				try {
-					FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
-					ClientPlayNetworking.send(fileTransferPacket);
-				} catch (IOException ignored) {
-				}
-			} else {
-				try {
-					Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
-					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
-					ServerTexture serverTexture = ServerTexture.WAITING_TEXTURES.get(packet.transferPath() + "/" + packet.fileName());
-					if (serverTexture != null) {
-						serverTexture.runFutureForTexture();
-					}
-				} catch (IOException ignored) {
-				}
-			}
-		});
 	}
 
 	@ApiStatus.Internal
@@ -410,26 +389,27 @@ public final class FrozenClientNetworking {
 		});
 	}
 
-	private static void receiveTransferImagePacket() {
+	private static void receiveFileTransferPacket() {
+		if (!FrozenLibConfig.FILE_TRANSFER_CLIENT) return;
 		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
 			if (packet.request()) {
 				Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
 				try {
-					FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
-					ClientPlayNetworking.send(fileTransferPacket);
+					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(packet.transferPath(), path.toFile())) {
+						ClientPlayNetworking.send(fileTransferPacket);
+					}
 				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
+					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on client!", packet.fileName());
 				}
 			} else {
 				try {
 					Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
-					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
-					ServerTexture serverTexture = ServerTexture.WAITING_TEXTURES.get(packet.transferPath() + "/" + packet.fileName());
-					if (serverTexture != null) {
-						serverTexture.runFutureForTexture();
+					if (FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), true)) {
+						ServerTexture serverTexture = ServerTexture.WAITING_TEXTURES.get(packet.transferPath() + "/" + packet.fileName());
+						if (serverTexture != null) serverTexture.runFutureForTexture();
 					}
 				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable save transferred file {}!", packet.fileName());
+					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", packet.fileName());
 				}
 			}
 		});
