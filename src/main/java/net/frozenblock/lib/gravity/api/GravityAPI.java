@@ -32,15 +32,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public final class GravityAPI {
-    private GravityAPI() {}
+    public static final Vec3 DEFAULT_GRAVITY = new Vec3(0D, 1D, 0D);
 
-    public static final Vec3 DEFAULT_GRAVITY = new Vec3(0.0, 1.0, 0.0);
-
-    public static final Event<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(GravityModification.class, callbacks -> context -> {
-        for (GravityModification callback : callbacks) {
-            callback.modifyGravity(context);
-        }
-    });
+    public static final Event<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(
+		GravityModification.class, callbacks -> context -> {
+			for (GravityModification callback : callbacks) {
+				callback.modifyGravity(context);
+			}
+		});
 
     private static final Map<ResourceKey<Level>, List<GravityBelt<?>>> GRAVITY_BELTS = new HashMap<>();
 
