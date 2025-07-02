@@ -44,7 +44,7 @@ public class FileTransferRebuilder {
 					List<Byte> finalBytes = new ArrayList<>();
 					snippets.forEach(snippetInList -> finalBytes.addAll(List.of(ArrayUtils.toObject(snippetInList.bytes()))));
 
-					FileUtils.copyInputStreamToFile(new ByteArrayInputStream((byte[]) ArrayUtils.toPrimitive(finalBytes.toArray())), destinationPath.toFile());
+					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(ArrayUtils.toPrimitive(finalBytes.toArray(new Byte[0]))), destinationPath.toFile());
 					map.remove(destinationPath);
 					return true;
 				}

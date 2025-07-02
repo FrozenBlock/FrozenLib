@@ -158,7 +158,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 		Lists.partition(Arrays.asList(ArrayUtils.toObject(bytes)), MAX_BYTES_PER_TRANSFER).forEach(byteChunk -> {
 			snippets.add(
 				new FileTransferSnippet(
-					(byte[]) ArrayUtils.toPrimitive(byteChunk.toArray()),
+					ArrayUtils.toPrimitive(byteChunk.toArray(new Byte[0])),
 					index.incrementAndGet()
 				)
 			);
