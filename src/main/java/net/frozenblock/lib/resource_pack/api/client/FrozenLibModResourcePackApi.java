@@ -30,6 +30,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.zip.ZipFile;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.loader.api.ModContainer;
@@ -46,6 +48,8 @@ public class FrozenLibModResourcePackApi {
 	@ApiStatus.Internal
 	public static final Path MOD_RESOURCE_PACK_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("mod_resourcepacks");
 	@ApiStatus.Internal
+	public static final Path MOD_RESOURCE_PACK_PENDING_EXTRACTION_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("mod_resourcepacks_pending_extraction");
+	@ApiStatus.Internal
 	private static final Path HASH_FILE = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("mod_resource_pack_hashes.txt");
 	@ApiStatus.Internal
 	private static final List<String> HIDDEN_PACK_IDS = new ArrayList<>();
@@ -58,11 +62,14 @@ public class FrozenLibModResourcePackApi {
 	 * These resource packs will be force-enabled.
 	 * @param container The {@link ModContainer} of the mod.
 	 * @param packName The name of the zip file, without the ".zip" extension.
+	 * @param isDoubleZip Whether the resource pack is double-zipped.
 	 * @param hidePackFromMenu Whether the resource pack should be hidden from the resource pack selection menu.
 	 * @param skipHashCheck Whether the resource pack will still be extracted even if an identical version was already extracted prior.
 	 * @throws IOException
 	 */
-	public static void findAndPrepareResourcePack(@NotNull ModContainer container, String packName, boolean hidePackFromMenu, boolean skipHashCheck) throws IOException {
+	public static void findAndPrepareResourcePack(
+		@NotNull ModContainer container, String packName, boolean isDoubleZip, boolean hidePackFromMenu, boolean skipHashCheck
+	) throws IOException {
 		String zipPackName = packName + ".zip";
 		String packId = "frozenlib:mod/file/" + zipPackName;
 		String subPath = "frozenlib_resourcepacks/" + zipPackName;
@@ -90,8 +97,32 @@ public class FrozenLibModResourcePackApi {
 				}
 
 				InputStream inputFromJar = Files.newInputStream(jarPackPath);
-				FileUtils.copyInputStreamToFile(inputFromJar, destFile);
-				inputFromJar.close();
+				if (isDoubleZip) {
+					File extractionFile = new File(MOD_RESOURCE_PACK_PENDING_EXTRACTION_DIRECTORY.toString(), zipPackName);
+					FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
+					inputFromJar.close();
+
+					AtomicBoolean extracted = new AtomicBoolean(false);
+					ZipFile zipFile = new ZipFile(extractionFile);
+					zipFile.entries().asIterator().forEachRemaining(entry -> {
+						if (entry.getName().equals(zipPackName) && !extracted.get()) {
+							try {
+								InputStream zipInputStream = zipFile.getInputStream(entry);
+								FileUtils.copyInputStreamToFile(zipInputStream, destFile);
+								zipInputStream.close();
+								extracted.set(true);
+							} catch (IOException e) {
+								throw new RuntimeException(e);
+							}
+						}
+					});
+
+					extractionFile.delete();
+					if (!extracted.get()) FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
+				} else {
+					FileUtils.copyInputStreamToFile(inputFromJar, destFile);
+					inputFromJar.close();
+				}
 			}
 
 			// Update the hash record after successful extraction

@@ -15,9 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.resource_pack.impl;
+package net.frozenblock.lib.resource_pack.impl.client;
 
 import java.nio.file.Path;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.FolderRepositorySource;
 import net.minecraft.server.packs.repository.PackSource;
@@ -30,6 +32,7 @@ import net.minecraft.world.level.validation.DirectoryValidator;
  * <p>
  * Resource packs loaded from this repository will be marked as built-in and will always be enabled, with no way to disable them.
  */
+@Environment(EnvType.CLIENT)
 public class FrozenLibFolderRepositorySource extends FolderRepositorySource {
 	private final String suffix;
 

@@ -6,13 +6,11 @@
   "injectors": {
     "defaultRequire": 1
   },
-  "mixins": [
-    "FolderRepositorySourceMixin",
-    "PackRepositoryMixin"
-  ],
   "client": [
     "client.ClientPackSourceMixin",
+    "client.FolderRepositorySourceMixin",
     "client.MinecraftMixin",
+    "client.PackRepositoryMixin",
     "client.PackSelectionScreenMixin"
   ]
 }
