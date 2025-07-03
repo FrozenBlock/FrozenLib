@@ -15,8 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.resource_pack.impl;
+package net.frozenblock.lib.resource_pack.impl.client;
 
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.RepositorySource;
 
@@ -25,6 +27,7 @@ import net.minecraft.server.packs.repository.RepositorySource;
  * <p>
  * Allows modders to add their own {@link RepositorySource}s for resource packs.
  */
+@Environment(EnvType.CLIENT)
 public interface PackRepositoryInterface {
 	void frozenLib$addRepositorySource(RepositorySource repositorySource);
 }

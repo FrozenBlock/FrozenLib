@@ -32,15 +32,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public final class GravityAPI {
-    private GravityAPI() {}
+    public static final Vec3 DEFAULT_GRAVITY = new Vec3(0D, 1D, 0D);
 
-    public static final Vec3 DEFAULT_GRAVITY = new Vec3(0.0, 1.0, 0.0);
-
-    public static final Event<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(GravityModification.class, callbacks -> context -> {
-        for (GravityModification callback : callbacks) {
-            callback.modifyGravity(context);
-        }
-    });
+    public static final Event<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(
+		GravityModification.class, callbacks -> context -> {
+			for (GravityModification callback : callbacks) {
+				callback.modifyGravity(context);
+			}
+		});
 
     private static final Map<ResourceKey<Level>, List<GravityBelt<?>>> GRAVITY_BELTS = new HashMap<>();
 
@@ -60,11 +59,9 @@ public final class GravityAPI {
     static {
         MODIFICATIONS.register(context -> {
             if (GRAVITY_BELTS.containsKey(context.dimension)) {
-                Optional<GravityBelt<?>> optionalGravityBelt = getAffectingGravityBelt(GRAVITY_BELTS.get(context.dimension), context.y);
-                if (optionalGravityBelt.isPresent()) {
-                    GravityBelt<?> belt = optionalGravityBelt.get();
-                    context.gravity = belt.getGravity(null, context.y);
-                }
+				for (GravityBelt<?> belt : getAffectingGravityBelts(GRAVITY_BELTS.get(context.dimension), context.y)) {
+					context.gravity = belt.getGravity(null, context.y);
+				}
             }
         });
     }
@@ -87,15 +84,12 @@ public final class GravityAPI {
         return context.gravity;
     }
 
-    public static Optional<GravityBelt<?>> getAffectingGravityBelt(List<GravityBelt<?>> belts, double y) {
-        Optional<GravityBelt<?>> optionalGravityBelt = Optional.empty();
+    public static List<GravityBelt<?>> getAffectingGravityBelts(List<GravityBelt<?>> belts, double y) {
+		List<GravityBelt<?>> gravityBelts = new ArrayList<>();
         for (GravityBelt<?> belt : belts) {
-            if (belt.affectsPosition(y)) {
-                optionalGravityBelt = Optional.of(belt);
-                break;
-            }
+            if (belt.affectsPosition(y)) gravityBelts.add(belt);
         }
-        return optionalGravityBelt;
+        return gravityBelts;
     }
 
     @FunctionalInterface

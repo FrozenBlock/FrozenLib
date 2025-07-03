@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.networking;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -37,8 +37,10 @@ import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
+import net.frozenblock.lib.file.transfer.FileTransferRebuilder;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
@@ -49,6 +51,7 @@ import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacke
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.client.api.sounds.RelativeMovingSoundInstance;
 import net.frozenblock.lib.sound.client.api.sounds.RestrictedMovingSound;
 import net.frozenblock.lib.sound.client.api.sounds.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.client.api.sounds.RestrictedStartingSound;
@@ -62,6 +65,7 @@ import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.LocalSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
@@ -87,7 +91,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
-import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 
 @Environment(EnvType.CLIENT)
@@ -100,6 +103,7 @@ public final class FrozenClientNetworking {
 	public static void registerClientReceivers() {
 		receiveLocalPlayerSoundPacket();
 		receiveLocalSoundPacket();
+		receiveRelativeMovingSoundPacket();
 		receiveStartingMovingRestrictionSoundLoopPacket();
 		receiveMovingRestrictionSoundPacket();
 		receiveFadingDistanceSwitchingSoundPacket();
@@ -153,6 +157,25 @@ public final class FrozenClientNetworking {
 			ClientLevel level = ctx.client().level;
 			Vec3 pos = packet.pos();
 			level.playLocalSound(pos.x, pos.y, pos.z, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), packet.distanceDelay());
+		});
+	}
+
+	@ApiStatus.Internal
+	private static void receiveRelativeMovingSoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(RelativeMovingSoundPacket.PACKET_TYPE, (packet, ctx) -> {
+			LocalPlayer player = ctx.player();
+			if (player == null) return;
+			ctx.client().getSoundManager().play(
+				new RelativeMovingSoundInstance(
+					packet.sound().value(),
+					packet.category(),
+					packet.volume(),
+					packet.pitch(),
+					player,
+					packet.pos(),
+					ctx.client().level.random.nextLong()
+				)
+			);
 		});
 	}
 
@@ -391,25 +414,35 @@ public final class FrozenClientNetworking {
 		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
 			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT) return;
 			if (packet.request()) {
-				Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+				String requestPath = packet.transferPath();
+				String fileName = packet.fileName();
+				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, null)) return;
+
+				File file = ctx.client().gameDirectory.toPath().resolve(requestPath).resolve(fileName).toFile();
 				try {
-					FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
-					ClientPlayNetworking.send(fileTransferPacket);
+					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
+						ClientPlayNetworking.send(fileTransferPacket);
+					}
 				} catch (IOException ignored) {
 					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
 				}
 			} else {
+				String destPath = packet.transferPath();
+				String fileName = packet.fileName();
+				if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, null)) return;
+
 				try {
-					Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
-					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
-					ResourceLocation resourceLocation = ServerTextureDownloader.WAITING_TEXTURES.get(
-						ServerTextureDownloader.makePathFromRootAndDest(packet.transferPath(), packet.fileName())
-					);
-					if (resourceLocation != null) {
-						ServerTextureDownloader.downloadAndRegisterServerTexture(resourceLocation, packet.transferPath(), packet.fileName());
+					Path path = ctx.client().gameDirectory.toPath().resolve(destPath).resolve(fileName);
+					if (FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), true)) {
+						ResourceLocation resourceLocation = ServerTextureDownloader.WAITING_TEXTURES.get(
+							ServerTextureDownloader.makePathFromRootAndDest(packet.transferPath(), packet.fileName())
+						);
+						if (resourceLocation != null) {
+							ServerTextureDownloader.downloadAndRegisterServerTexture(resourceLocation, packet.transferPath(), packet.fileName());
+						}
 					}
 				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable save transferred file {}!", packet.fileName());
+					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
 				}
 			}
 		});

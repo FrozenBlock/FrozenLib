@@ -225,9 +225,7 @@ public class DebugInfoSenderMixin {
 
 	@Unique
 	private static void frozenLib$addPoi(Brain<?> brain, MemoryModuleType<GlobalPos> memoryModuleType, Set<BlockPos> set) {
-		if (set != null) {
-			brain.getMemory(memoryModuleType).map(GlobalPos::pos).ifPresent(set::add);
-		}
+		if (set != null) brain.getMemory(memoryModuleType).map(GlobalPos::pos).ifPresent(set::add);
 	}
 
 	@Inject(method = "sendBeeInfo", at = @At("HEAD"))
