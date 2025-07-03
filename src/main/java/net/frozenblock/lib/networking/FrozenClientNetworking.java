@@ -51,6 +51,7 @@ import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacke
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.client.api.sounds.RelativeMovingSoundInstance;
 import net.frozenblock.lib.sound.client.api.sounds.RestrictedMovingSound;
 import net.frozenblock.lib.sound.client.api.sounds.RestrictedMovingSoundLoop;
 import net.frozenblock.lib.sound.client.api.sounds.RestrictedStartingSound;
@@ -64,6 +65,7 @@ import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.LocalSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
@@ -102,6 +104,7 @@ public final class FrozenClientNetworking {
 	public static void registerClientReceivers() {
 		receiveLocalPlayerSoundPacket();
 		receiveLocalSoundPacket();
+		receiveRelativeMovingSoundPacket();
 		receiveStartingMovingRestrictionSoundLoopPacket();
 		receiveMovingRestrictionSoundPacket();
 		receiveFadingDistanceSwitchingSoundPacket();
@@ -155,6 +158,25 @@ public final class FrozenClientNetworking {
 			ClientLevel level = ctx.client().level;
 			Vec3 pos = packet.pos();
 			level.playLocalSound(pos.x, pos.y, pos.z, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), packet.distanceDelay());
+		});
+	}
+
+	@ApiStatus.Internal
+	private static void receiveRelativeMovingSoundPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(RelativeMovingSoundPacket.PACKET_TYPE, (packet, ctx) -> {
+			LocalPlayer player = ctx.player();
+			if (player == null) return;
+			ctx.client().getSoundManager().play(
+				new RelativeMovingSoundInstance(
+					packet.sound().value(),
+					packet.category(),
+					packet.volume(),
+					packet.pitch(),
+					player,
+					packet.pos(),
+					ctx.client().level.random.nextLong()
+				)
+			);
 		});
 	}
 

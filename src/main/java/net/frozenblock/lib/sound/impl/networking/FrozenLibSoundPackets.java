@@ -39,21 +39,14 @@ public class FrozenLibSoundPackets {
 
 	public static void createAndSendLocalSound(
 		@NotNull Level level,
-		BlockPos pos,
+		@NotNull BlockPos pos,
 		Holder<SoundEvent> sound,
 		SoundSource source,
 		float volume,
 		float pitch,
 		boolean distanceDelay
 	) {
-		if (level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer player : PlayerLookup.tracking(serverLevel, pos)) {
-				ServerPlayNetworking.send(
-					player,
-					new LocalSoundPacket(Vec3.atCenterOf(pos), sound, source, volume, pitch, distanceDelay)
-				);
-			}
-		}
+		createAndSendLocalSound(level, pos.getX() + 0.5D, pos.getY() + 0.5D, pos.getZ() + 0.5D, sound, source, volume, pitch, distanceDelay);
 	}
 
 	public static void createAndSendLocalSound(
@@ -72,6 +65,25 @@ public class FrozenLibSoundPackets {
 				ServerPlayNetworking.send(
 					player,
 					new LocalSoundPacket(new Vec3(x, y, z), sound, source, volume, pitch, distanceDelay)
+				);
+			}
+		}
+	}
+
+
+	public static void createAndSendRelativeMovingSound(
+		@NotNull Level level,
+		@NotNull BlockPos pos,
+		Holder<SoundEvent> sound,
+		SoundSource source,
+		float volume,
+		float pitch
+	) {
+		if (level instanceof ServerLevel serverLevel) {
+			for (ServerPlayer player : PlayerLookup.tracking(serverLevel, pos)) {
+				ServerPlayNetworking.send(
+					player,
+					new RelativeMovingSoundPacket(pos, sound, source, volume, pitch)
 				);
 			}
 		}

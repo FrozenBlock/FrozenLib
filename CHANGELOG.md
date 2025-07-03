@@ -16,4 +16,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
       - Request paths can be whitelisted separately on the server and client.
       - A destination path can be whitelisted using the `whitelistRequestPath` method.
       - Players requesting a file with a file extension or request path that isn't whitelisted will instantly be kicked from the server.
+- Added `RelativeMovingSoundInstance`, a type of `SoundInstance` that will move alongside the player with an offset.
 - Fixed a crash upon booting servers.

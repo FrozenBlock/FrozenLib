@@ -55,6 +55,7 @@ import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.LocalSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
@@ -111,6 +112,7 @@ public final class FrozenNetworking {
 
 		registry.register(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
 		registry.register(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);
+		registry.register(RelativeMovingSoundPacket.PACKET_TYPE, RelativeMovingSoundPacket.CODEC);
 		registry.register(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket.CODEC);
 		registry.register(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket.CODEC);
 		registry.register(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket.CODEC);
