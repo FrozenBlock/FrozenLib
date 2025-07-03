@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.networking;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -91,7 +90,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
-import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 
 @Environment(EnvType.CLIENT)

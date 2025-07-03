@@ -18,12 +18,12 @@
 package net.frozenblock.lib.file.transfer;
 
 import com.google.common.collect.ImmutableList;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FileTransferFilter {
 	private static final List<String> WHITELISTED_FILE_EXTENSIONS = ImmutableList.of("png", "json");
@@ -32,28 +32,23 @@ public class FileTransferFilter {
 	private static final List<String> WHITELISTED_SERVER_REQUEST_PATHS = new ArrayList<>();
 	private static final List<String> WHITELISTED_CLIENT_REQUEST_PATHS = new ArrayList<>();
 
-	static {
-		WHITELISTED_FILE_EXTENSIONS.add("png");
-		WHITELISTED_FILE_EXTENSIONS.add("json");
-	}
-
 	public static boolean isTransferAcceptable(String destPath, String fileName, @Nullable ServerPlayer player) {
 		boolean isServer = player != null;
-		boolean returnValue = true;
-		if (!WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName))) returnValue = false;
-		if (!isDestinationPathAcceptable(destPath, !isServer)) returnValue = false;
+		boolean returnValue = WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName)) && isDestinationPathAcceptable(destPath, !isServer);
 
-		if (!returnValue && isServer) player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file"));
+		if (!returnValue && isServer) {
+			player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file"));
+		}
 		return returnValue;
 	}
 
 	public static boolean isRequestAcceptable(String requestPath, String fileName, @Nullable ServerPlayer player) {
 		boolean isServer = player != null;
-		boolean returnValue = true;
-		if (!WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName))) returnValue = false;
-		if (!isRequestPathAcceptable(requestPath, !isServer)) returnValue = false;
+		boolean returnValue = WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName)) && isRequestPathAcceptable(requestPath, !isServer);
 
-		if (!returnValue && isServer) player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file_request"));
+		if (!returnValue && isServer) {
+			player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file_request"));
+		}
 		return returnValue;
 	}
 
