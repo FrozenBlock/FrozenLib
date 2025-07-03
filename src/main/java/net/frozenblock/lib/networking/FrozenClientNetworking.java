@@ -413,6 +413,7 @@ public final class FrozenClientNetworking {
 	private static void receiveFileTransferPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
 			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT) return;
+
 			if (packet.request()) {
 				String requestPath = packet.transferPath();
 				String fileName = packet.fileName();

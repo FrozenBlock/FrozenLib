@@ -5,7 +5,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Multiple `GravityBelt`s can now apply at the same position.
 - Reworked a few aspects of the File Transferring system!
   - File transfers can now have a much larger size, thanks to `FileTransferPacket` now being able to split into multiple packets.
-  - The client's config option for accepting file transfers/requests is now only read on boot. The client must restart for changes to apply.
   - The `FileTransferFilter` class has been added, filtering out file transfers/requests that are not whitelisted.
     - Only `.png` and `.json` files can be accepted by file transfers/requests. This is hardcoded.
     - By default, no destination paths are whitelisted.

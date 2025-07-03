@@ -136,7 +136,6 @@ public final class FrozenLibConfigGui {
 					.setDefaultValue(defaultConfig.fileTransferClient)
 					.setSaveConsumer(newValue -> config.fileTransferClient = newValue)
 					.setTooltip(tooltip("file_transfer_client"))
-					.requireRestart()
 					.build(),
 				config.getClass(),
 				"fileTransferClient",
