@@ -166,12 +166,12 @@ public final class FrozenNetworking {
 				} else {
 					if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
 
-					String destPath = packet.transferPath();
+					String destPath = packet.transferPath().replace("/.local", "");
 					String fileName = packet.fileName();
 					if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, ctx.player())) return;
 
 					try {
-						Path path = ctx.server().getServerDirectory().resolve(packet.transferPath().replace(".local/", "")).resolve(packet.fileName());
+						Path path = ctx.server().getServerDirectory().resolve(destPath).resolve(packet.fileName());
 						FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), false);
 					} catch (IOException ignored) {
 						FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on server!", packet.fileName());
