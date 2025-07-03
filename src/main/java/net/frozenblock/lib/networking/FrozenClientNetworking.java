@@ -421,7 +421,7 @@ public final class FrozenClientNetworking {
 
 				Path requestedPath = ctx.client().gameDirectory.toPath().resolve(requestPath);
 				File file = requestedPath.resolve(fileName).toFile();
-				File localFile = requestedPath.resolve(ServerTexture.LOCAL_TEXTURE_SOURCE).resolve(fileName).toFile();
+				File localFile = requestedPath.resolve(ServerTextureDownloader.LOCAL_TEXTURE_SOURCE).resolve(fileName).toFile();
 
 				File sendingFile = file.exists() ? file : localFile;
 				try {
