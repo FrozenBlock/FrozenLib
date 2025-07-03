@@ -420,9 +420,13 @@ public final class FrozenClientNetworking {
 				String fileName = packet.fileName();
 				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, null)) return;
 
-				File file = ctx.client().gameDirectory.toPath().resolve(requestPath).resolve(fileName).toFile();
+				Path requestedPath = ctx.client().gameDirectory.toPath().resolve(requestPath);
+				File file = requestedPath.resolve(fileName).toFile();
+				File localFile = requestedPath.resolve(ServerTexture.LOCAL_TEXTURE_SOURCE).resolve(fileName).toFile();
+
+				File sendingFile = file.exists() ? file : localFile;
 				try {
-					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
+					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, sendingFile)) {
 						ClientPlayNetworking.send(fileTransferPacket);
 					}
 				} catch (IOException ignored) {
