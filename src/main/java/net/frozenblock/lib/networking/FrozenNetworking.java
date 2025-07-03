@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.networking;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -38,6 +39,7 @@ import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayloa
 import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
 import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
+import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.file.transfer.FileTransferRebuilder;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
@@ -147,16 +149,25 @@ public final class FrozenNetworking {
 		ServerPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE,
 			(packet, ctx) -> {
 				if (packet.request()) {
-					Path path = ctx.server().getServerDirectory().resolve(packet.transferPath()).resolve(packet.fileName());
+					String requestPath = packet.transferPath();
+					String fileName = packet.fileName();
+					if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, ctx.player())) return;
+
+					File file = ctx.server().getServerDirectory().resolve(requestPath).resolve(fileName).toFile();
 					try {
-						for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(packet.transferPath(), path.toFile())) {
+						for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
 							ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
 						}
 					} catch (IOException ignored) {
-						FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on server!", packet.fileName());
+						FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on server!", fileName);
 					}
 				} else {
 					if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
+
+					String destPath = packet.transferPath();
+					String fileName = packet.fileName();
+					if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, ctx.player())) return;
+
 					try {
 						Path path = ctx.server().getServerDirectory().resolve(packet.transferPath().replace(".local/", "")).resolve(packet.fileName());
 						FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), false);

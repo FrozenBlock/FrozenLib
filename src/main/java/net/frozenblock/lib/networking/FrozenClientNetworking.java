@@ -18,6 +18,7 @@
 package net.frozenblock.lib.networking;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Optional;
@@ -37,6 +38,7 @@ import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.file.transfer.FileTransferRebuilder;
 import net.frozenblock.lib.file.transfer.client.ServerTexture;
@@ -391,25 +393,34 @@ public final class FrozenClientNetworking {
 
 	private static void receiveFileTransferPacket() {
 		if (!FrozenLibConfig.FILE_TRANSFER_CLIENT) return;
+
 		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
 			if (packet.request()) {
-				Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+				String requestPath = packet.transferPath();
+				String fileName = packet.fileName();
+				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, null)) return;
+
+				File file = ctx.client().gameDirectory.toPath().resolve(requestPath).resolve(fileName).toFile();
 				try {
-					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(packet.transferPath(), path.toFile())) {
+					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
 						ClientPlayNetworking.send(fileTransferPacket);
 					}
 				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on client!", packet.fileName());
+					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on client!", fileName);
 				}
 			} else {
+				String destPath = packet.transferPath();
+				String fileName = packet.fileName();
+				if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, null)) return;
+
 				try {
-					Path path = ctx.client().gameDirectory.toPath().resolve(packet.transferPath()).resolve(packet.fileName());
+					Path path = ctx.client().gameDirectory.toPath().resolve(destPath).resolve(fileName);
 					if (FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), true)) {
-						ServerTexture serverTexture = ServerTexture.WAITING_TEXTURES.get(packet.transferPath() + "/" + packet.fileName());
+						ServerTexture serverTexture = ServerTexture.WAITING_TEXTURES.get(destPath + "/" + fileName);
 						if (serverTexture != null) serverTexture.runFutureForTexture();
 					}
 				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", packet.fileName());
+					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
 				}
 			}
 		});

@@ -29,13 +29,15 @@ public class FileTransferFilter {
 	private static final List<String> WHITELISTED_FILE_EXTENSIONS = ImmutableList.of("png", "json");
 	private static final List<String> WHITELISTED_SERVER_DESTINATIONS = new ArrayList<>();
 	private static final List<String> WHITELISTED_CLIENT_DESTINATIONS = new ArrayList<>();
+	private static final List<String> WHITELISTED_SERVER_REQUEST_PATHS = new ArrayList<>();
+	private static final List<String> WHITELISTED_CLIENT_REQUEST_PATHS = new ArrayList<>();
 
 	static {
 		WHITELISTED_FILE_EXTENSIONS.add("png");
 		WHITELISTED_FILE_EXTENSIONS.add("json");
 	}
 
-	public static boolean isFileAcceptable(String destPath, String fileName, @Nullable ServerPlayer player) {
+	public static boolean isTransferAcceptable(String destPath, String fileName, @Nullable ServerPlayer player) {
 		boolean isServer = player != null;
 		boolean returnValue = true;
 		if (!WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName))) returnValue = false;
@@ -45,12 +47,30 @@ public class FileTransferFilter {
 		return returnValue;
 	}
 
+	public static boolean isRequestAcceptable(String requestPath, String fileName, @Nullable ServerPlayer player) {
+		boolean isServer = player != null;
+		boolean returnValue = true;
+		if (!WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName))) returnValue = false;
+		if (!isRequestPathAcceptable(requestPath, !isServer)) returnValue = false;
+
+		if (!returnValue && isServer) player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file_request"));
+		return returnValue;
+	}
+
 	private static boolean isDestinationPathAcceptable(String destPath, boolean client) {
 		return (client ? WHITELISTED_CLIENT_DESTINATIONS : WHITELISTED_SERVER_DESTINATIONS).contains(destPath);
 	}
 
+	private static boolean isRequestPathAcceptable(String destPath, boolean client) {
+		return (client ? WHITELISTED_CLIENT_REQUEST_PATHS : WHITELISTED_SERVER_REQUEST_PATHS).contains(destPath);
+	}
+
 	public static void whitelistDestinationPath(String destPath, boolean client) {
 		(client ? WHITELISTED_CLIENT_DESTINATIONS : WHITELISTED_SERVER_DESTINATIONS).add(destPath);
+	}
+
+	public static void whitelistRequestPath(String destPath, boolean client) {
+		(client ? WHITELISTED_CLIENT_REQUEST_PATHS : WHITELISTED_SERVER_REQUEST_PATHS).add(destPath);
 	}
 
 }
