@@ -30,8 +30,6 @@ public class TextureManagerMixin {
 
     @Inject(method = "getTexture*", at = @At("RETURN"))
     public void frozenLib$updateServerTextureReferenceTime(CallbackInfoReturnable<AbstractTexture> info) {
-        if (info.getReturnValue() instanceof ServerTexture serverTexture) {
-            serverTexture.updateReferenceTime();
-        }
+        if (info.getReturnValue() instanceof ServerTexture serverTexture) serverTexture.updateReferenceTime();
     }
 }
