@@ -23,8 +23,8 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public record GravityBelt<T extends GravityFunction>(double minY, double maxY, boolean renderBottom, boolean renderTop,
-													 T function) {
+public record GravityBelt<T extends GravityFunction>(double minY, double maxY, boolean renderBottom, boolean renderTop, T function) {
+
 	public GravityBelt(double minY, double maxY, T function) {
 		this(minY, maxY, false, false, function);
 	}
@@ -34,9 +34,7 @@ public record GravityBelt<T extends GravityFunction>(double minY, double maxY, b
 	}
 
 	public Vec3 getGravity(@Nullable Entity entity, double y) {
-		if (this.affectsPosition(y)) {
-            return this.function.get(entity, y, this.minY, this.maxY);
-		}
+		if (this.affectsPosition(y)) return this.function.get(entity, y, this.minY, this.maxY);
 		return GravityAPI.DEFAULT_GRAVITY;
 	}
 

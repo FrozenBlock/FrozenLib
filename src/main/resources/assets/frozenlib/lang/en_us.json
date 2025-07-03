@@ -114,5 +114,8 @@
   "frozenlib.core.registry_sync.and": " and ",
   "frozenlib.core.registry_sync.unsupported_mod_protocol": "Unsupported mod protocol versions for:\n%s",
   "frozenlib.core.registry_sync.require_main_mod_protocol": "This server requires %s with protocol version of %s.",
-  "frozenlib.core.registry_sync.main_mod_protocol": "You are on %s with protocol version of %s."
+  "frozenlib.core.registry_sync.main_mod_protocol": "You are on %s with protocol version of %s.",
+
+  "frozenlib.file_transfer.unsupported_file": "Let's try to not send random files!",
+  "frozenlib.file_transfer.unsupported_file_request": "Let's try to not request random files!"
 }

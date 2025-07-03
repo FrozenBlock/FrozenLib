@@ -15,11 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.resource_pack.mixin;
+package net.frozenblock.lib.resource_pack.mixin.client;
 
 import com.google.common.collect.ImmutableSet;
 import java.util.Set;
-import net.frozenblock.lib.resource_pack.impl.PackRepositoryInterface;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.frozenblock.lib.resource_pack.impl.client.PackRepositoryInterface;
 import net.minecraft.server.packs.repository.PackRepository;
 import net.minecraft.server.packs.repository.RepositorySource;
 import org.spongepowered.asm.mixin.Final;
@@ -28,6 +30,7 @@ import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+@Environment(EnvType.CLIENT)
 @Mixin(PackRepository.class)
 public class PackRepositoryMixin implements PackRepositoryInterface {
 

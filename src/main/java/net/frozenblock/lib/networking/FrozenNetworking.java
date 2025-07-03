@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.networking;
 
-import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.UUID;
@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
@@ -38,7 +39,9 @@ import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayloa
 import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
 import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
+import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
+import net.frozenblock.lib.file.transfer.FileTransferRebuilder;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
@@ -52,6 +55,7 @@ import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.LocalSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
+import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
@@ -70,7 +74,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
@@ -109,6 +112,7 @@ public final class FrozenNetworking {
 
 		registry.register(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
 		registry.register(LocalSoundPacket.PACKET_TYPE, LocalSoundPacket.CODEC);
+		registry.register(RelativeMovingSoundPacket.PACKET_TYPE, RelativeMovingSoundPacket.CODEC);
 		registry.register(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, StartingMovingRestrictionSoundLoopPacket.CODEC);
 		registry.register(MovingRestrictionSoundPacket.PACKET_TYPE, MovingRestrictionSoundPacket.CODEC);
 		registry.register(FlyBySoundPacket.PACKET_TYPE, FlyBySoundPacket.CODEC);
@@ -147,18 +151,30 @@ public final class FrozenNetworking {
 		ServerPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE,
 			(packet, ctx) -> {
 				if (packet.request()) {
-					Path path = ctx.server().getServerDirectory().resolve(packet.transferPath()).resolve(packet.fileName());
+					String requestPath = packet.transferPath();
+					String fileName = packet.fileName();
+					if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, ctx.player())) return;
+
+					File file = ctx.server().getServerDirectory().resolve(requestPath).resolve(fileName).toFile();
 					try {
-						FileTransferPacket fileTransferPacket = FileTransferPacket.create(packet.transferPath(), path.toFile());
-						ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
+						for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
+							ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
+						}
 					} catch (IOException ignored) {
+						FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on server!", fileName);
 					}
 				} else {
 					if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
+
+					String destPath = packet.transferPath();
+					String fileName = packet.fileName();
+					if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, ctx.player())) return;
+
 					try {
 						Path path = ctx.server().getServerDirectory().resolve(packet.transferPath().replace(".local/", "")).resolve(packet.fileName());
-						FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.bytes()), path.toFile());
+						FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), false);
 					} catch (IOException ignored) {
+						FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on server!", packet.fileName());
 					}
 				}
 			}
@@ -179,22 +195,18 @@ public final class FrozenNetworking {
 
 	public static void sendPacketToAllPlayers(@NotNull ServerLevel world, CustomPacketPayload payload) {
 		Packet<?> packet = new ClientboundCustomPayloadPacket(payload);
-
-		for (ServerPlayer serverPlayer : world.players()) {
-			serverPlayer.connection.send(packet);
-		}
+		for (ServerPlayer serverPlayer : world.players()) serverPlayer.connection.send(packet);
 	}
 
 	public static boolean isLocalPlayer(Player player) {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-			return false;
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return false;
 
 		return Minecraft.getInstance().isLocalPlayer(player.getGameProfile().getId());
 	}
 
 	public static boolean connectedToIntegratedServer() {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-			return false;
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return false;
+
 		Minecraft minecraft = Minecraft.getInstance();
 		return minecraft.hasSingleplayerServer();
 	}
@@ -203,12 +215,12 @@ public final class FrozenNetworking {
 	 * @return if the client is connected to any server
 	 */
 	public static boolean connectedToServer() {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-			return false;
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return false;
+
 		Minecraft minecraft = Minecraft.getInstance();
 		ClientPacketListener listener = minecraft.getConnection();
-		if (listener == null)
-			return false;
+		if (listener == null) return false;
+
 		return listener.getConnection().isConnected();
 	}
 
@@ -216,9 +228,7 @@ public final class FrozenNetworking {
 	 * @return if the current server is multiplayer (LAN/dedicated) or not (singleplayer)
 	 */
 	public static boolean isMultiplayer() {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-			return true;
-
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return true;
 		return !Minecraft.getInstance().isSingleplayer();
 	}
 

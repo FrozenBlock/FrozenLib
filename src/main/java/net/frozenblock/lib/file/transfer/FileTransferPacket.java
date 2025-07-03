@@ -17,10 +17,18 @@
 
 package net.frozenblock.lib.file.transfer;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.mojang.datafixers.util.Pair;
+import io.netty.buffer.ByteBuf;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -28,41 +36,62 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 /**
  * Used to both request and transfer files between both the client and server.
  *
  * @param transferPath The directory containing the wanted file.
- * @param fileName     The name of the wanted file, including the file extension.
- * @param request      Whether this is for a file request or not. If true, will cause a second transfer packet to be sent back in response with the file if possible.
- * @param bytes        The raw data being transferred over the packet. Will be ignored if this is a request.
+ * @param fileName The name of the wanted file, including the file extension.
+ * @param request Whether this is for a file request or not. If true, will cause a second transfer packet to be sent back in response with the file if possible.
+ * @param snippet The raw data being transferred over the packet, as well as its index (used when split into multiple packets.) Will be ignored if this is a request.
+ * @param totalPacketCount The total amount of packets to be sent for the file transfer. Will be ignored if this is a request.
  */
-public record FileTransferPacket(String transferPath, String fileName, boolean request, byte[] bytes) implements CustomPacketPayload {
+public record FileTransferPacket(String transferPath, String fileName, boolean request, FileTransferSnippet snippet, int totalPacketCount) implements CustomPacketPayload {
 	@ApiStatus.Internal
 	public static final Type<FileTransferPacket> PACKET_TYPE = new Type<>(
 		FrozenLibConstants.id("file_transfer")
 	);
 	@ApiStatus.Internal
 	public static final StreamCodec<FriendlyByteBuf, FileTransferPacket> STREAM_CODEC = StreamCodec.ofMember(FileTransferPacket::write, FileTransferPacket::create);
+	private static final int MAX_BYTES_PER_TRANSFER = 1835008; // 1.75MB
 
 	@ApiStatus.Internal
 	public static @NotNull FileTransferPacket create(@NotNull FriendlyByteBuf buf) {
-		return new FileTransferPacket(buf.readUtf(), buf.readUtf(), buf.readBoolean(), buf.readByteArray());
+		return new FileTransferPacket(buf.readUtf(), buf.readUtf(), buf.readBoolean(), FileTransferSnippet.read(buf), buf.readVarInt());
 	}
 
 	/**
-	 * Creates a file transfer packet.
+	 * Creates a {@link List} of file transfer packets.
 	 *
 	 * @param destPath The path inside Minecraft's directory to send the file to.
-	 * @param file     The file to be sent.
-	 * @return The new file transfer packet.
+	 * @param file The file to be sent.
+	 * @return A {@link List} of new file transfer packets.
 	 * @throws IOException
 	 */
-	public static @NotNull FileTransferPacket create(String destPath, @NotNull File file) throws IOException {
-		return new FileTransferPacket(destPath, file.getName(), false, readFile(file));
+	public static @NotNull @Unmodifiable List<FileTransferPacket> create(String destPath, @NotNull File file) throws IOException {
+		Pair<Integer, List<FileTransferSnippet>> snippets = createSnippets(readFile(file));
+		int totalPacketCount = snippets.getFirst();
+
+		ArrayList<FileTransferPacket> packets = new ArrayList<>();
+		for (FileTransferSnippet snippet : snippets.getSecond()) {
+			packets.add(
+				new FileTransferPacket(
+					destPath,
+					file.getName(),
+					false,
+					snippet,
+					totalPacketCount
+				)
+			);
+		}
+
+		return ImmutableList.copyOf(packets);
 	}
 
 	/**
@@ -73,7 +102,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	 * @return The new file request packet.
 	 */
 	public static @NotNull FileTransferPacket createRequest(String requestPath, String fileName) {
-		return new FileTransferPacket(requestPath, fileName, true, new byte[0]);
+		return new FileTransferPacket(requestPath, fileName, true, FileTransferSnippet.EMPTY, 0);
 	}
 
 	@ApiStatus.Internal
@@ -101,15 +130,18 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	 */
 	public static void sendToPlayer(File file, String destPath, ServerPlayer player) throws IOException {
 		if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
-		ServerPlayNetworking.send(player, create(destPath, file));
+		for (FileTransferPacket packet : create(destPath, file)) {
+			ServerPlayNetworking.send(player, packet);
+		}
 	}
 
 	@ApiStatus.Internal
-	public void write(@NotNull FriendlyByteBuf buf) {
+	private void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeUtf(this.transferPath);
 		buf.writeUtf(this.fileName);
 		buf.writeBoolean(this.request);
-		buf.writeByteArray(this.bytes);
+		this.snippet.write(buf);
+		buf.writeVarInt(this.totalPacketCount);
 	}
 
 	@ApiStatus.Internal
@@ -117,6 +149,38 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	@NotNull
 	public Type<? extends CustomPacketPayload> type() {
 		return PACKET_TYPE;
+	}
+
+	private static @NotNull Pair<Integer, List<FileTransferSnippet>> createSnippets(byte[] bytes) {
+		AtomicInteger index = new AtomicInteger(0);
+		List<FileTransferSnippet> snippets = new ArrayList<>();
+
+		Lists.partition(Arrays.asList(ArrayUtils.toObject(bytes)), MAX_BYTES_PER_TRANSFER).forEach(byteChunk -> {
+			snippets.add(
+				new FileTransferSnippet(
+					ArrayUtils.toPrimitive(byteChunk.toArray(new Byte[0])),
+					index.incrementAndGet()
+				)
+			);
+		});
+
+		return Pair.of(index.get(), snippets);
+	}
+
+	public record FileTransferSnippet(byte[] bytes, int index) {
+		public static final FileTransferSnippet EMPTY = new FileTransferSnippet(new byte[0], 0);
+
+		@Contract("_ -> new")
+		public static @NotNull FileTransferSnippet read(@NotNull FriendlyByteBuf byteBuf) {
+			return new FileTransferSnippet(byteBuf.readByteArray(), byteBuf.readVarInt());
+		}
+
+		@Contract("_ -> param1")
+		public @NotNull ByteBuf write(@NotNull FriendlyByteBuf byteBuf) {
+			byteBuf.writeByteArray(this.bytes);
+			byteBuf.writeVarInt(this.index);
+			return byteBuf;
+		}
 	}
 }
 

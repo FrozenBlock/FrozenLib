@@ -37,9 +37,7 @@ public class BiomeMixin implements BiomeInterface {
 		)
 	)
 	public int frozenLib$modifyGrassColor(int original, double x, double y) {
-		if (this.frozenLib$frozenGrassColorModifier != null) {
-			return this.frozenLib$frozenGrassColorModifier.modifyGrassColor(x, y, original);
-		}
+		if (this.frozenLib$frozenGrassColorModifier != null) return this.frozenLib$frozenGrassColorModifier.modifyGrassColor(x, y, original);
 		return original;
 	}
 
