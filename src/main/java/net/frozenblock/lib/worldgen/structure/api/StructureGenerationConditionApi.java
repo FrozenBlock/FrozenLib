@@ -36,7 +36,7 @@ public class StructureGenerationConditionApi {
 
 	public static void init() {
 		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register((RegistryAccess registryAccess) -> {
-			registryAccess.registry(Registries.STRUCTURE_SET).ifPresent(structureSetRegistry -> {
+			registryAccess.lookup(Registries.STRUCTURE_SET).ifPresent(structureSetRegistry -> {
 				structureSetRegistry.entrySet().forEach(structureSetEntry -> {
 					if ((Object) (structureSetEntry.getValue()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
 						setAndPlacementInterface.frozenLib$addGenerationConditions(getGenerationConditions(structureSetEntry.getKey().location()));
