@@ -24,21 +24,24 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
 @UtilityClass
 public class StructureGenerationConditionApi {
 	private static final Map<ResourceLocation, List<Supplier<Boolean>>> STRUCTURE_SET_TO_SUPPLIER_MAP = new Object2ObjectOpenHashMap<>();
 
 	public static void init() {
-		ServerWorldEvents.LOAD.register((server, level) -> {
-			level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().forEach(structureSetReference -> {
-				if (structureSetReference.isBound() && (Object) (structureSetReference.value()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
-					setAndPlacementInterface.frozenLib$addGenerationConditions(getGenerationConditions(structureSetReference.key().location()));
-				}
+		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register((RegistryAccess registryAccess) -> {
+			registryAccess.registry(Registries.STRUCTURE_SET).ifPresent(structureSetRegistry -> {
+				structureSetRegistry.entrySet().forEach(structureSetEntry -> {
+					if ((Object) (structureSetEntry.getValue()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
+						setAndPlacementInterface.frozenLib$addGenerationConditions(getGenerationConditions(structureSetEntry.getKey().location()));
+					}
+				});
 			});
 		});
 	}

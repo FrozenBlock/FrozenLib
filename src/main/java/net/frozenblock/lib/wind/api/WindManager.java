@@ -118,7 +118,7 @@ public class WindManager {
 	public void addWindDisturbanceAndSync(@NotNull WindDisturbance<?> windDisturbance) {
 		Optional<WindDisturbancePacket> optionalPacket = windDisturbance.toPacket();
 		if (optionalPacket.isPresent()) {
-			for (ServerPlayer player : PlayerLookup.world(level)) {
+			for (ServerPlayer player : PlayerLookup.world(this.level)) {
 				if (windDisturbance.isWithinViewDistance(player.getChunkTrackingView())) {
 					ServerPlayNetworking.send(player, optionalPacket.get());
 				}

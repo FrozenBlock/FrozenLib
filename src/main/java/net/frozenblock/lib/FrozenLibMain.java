@@ -55,6 +55,7 @@ import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacemen
 import net.frozenblock.lib.worldgen.structure.api.StructureGenerationConditionApi;
 import net.frozenblock.lib.worldgen.structure.api.StructurePlacementExclusionApi;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
+import net.frozenblock.lib.worldgen.structure.impl.FrozenStructurePoolElementTypes;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
 import net.frozenblock.lib.worldgen.structure.impl.StructureUpgradeCommand;
 import net.frozenblock.lib.worldgen.structure.impl.status.StructureStatusUpdater;
@@ -90,6 +91,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 
 		FrozenRuleBlockEntityModifiers.init();
 		FrozenStructureProcessorTypes.init();
+		FrozenStructurePoolElementTypes.init();
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		WindDisturbanceLogic.init();
