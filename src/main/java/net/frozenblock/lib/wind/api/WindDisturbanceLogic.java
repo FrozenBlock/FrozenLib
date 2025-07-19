@@ -105,27 +105,27 @@ public final class WindDisturbanceLogic<T> {
 	@Contract(pure = true)
 	private static DisturbanceLogic<Breeze> breeze() {
 		return (source, level, windOrigin, affectedArea, windTarget) -> {
-			if (source.isEmpty()) {
-				double distance = windOrigin.distanceTo(windTarget);
-				if (distance <= WIND_RANGE_BREEZE) {
-					Vec3 breezeLookVec = source.get().getForward();
-					Vec3 differenceInPoses = windOrigin.subtract(windTarget);
-					double scaledDistance = (WIND_RANGE_BREEZE - distance) / WIND_RANGE_BREEZE;
-					double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE * 0.75D), 0D, 1D);
-					double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses);
+			if (source.isEmpty()) return null;
 
-					double x = Math.cos((angleBetween * Math.PI) / 180D);
-					double z = -Math.sin((angleBetween * Math.PI) / 180D);
-					x = -Mth.lerp(scaledDistance, (x - (differenceInPoses.x * 0.45D)) * 0.5D, x);
-					z = -Mth.lerp(scaledDistance, (z - (differenceInPoses.z * 0.45D)) * 0.5D, z);
+			double distance = windOrigin.distanceTo(windTarget);
+			if (distance <= WIND_RANGE_BREEZE) {
+				Vec3 breezeLookVec = source.get().getForward();
+				Vec3 differenceInPoses = windOrigin.subtract(windTarget);
+				double scaledDistance = (WIND_RANGE_BREEZE - distance) / WIND_RANGE_BREEZE;
+				double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE * 0.75D), 0D, 1D);
+				double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses);
 
-					Vec3 windVec = new Vec3(x, strengthFromDistance, z).scale(1D);
-					return new WindDisturbance.DisturbanceResult(
-						strengthFromDistance,
-						WIND_RANGE_BREEZE - distance,
-						windVec
-					);
-				}
+				double x = Math.cos((angleBetween * Math.PI) / 180D);
+				double z = -Math.sin((angleBetween * Math.PI) / 180D);
+				x = -Mth.lerp(scaledDistance, (x - (differenceInPoses.x * 0.45D)) * 0.5D, x);
+				z = -Mth.lerp(scaledDistance, (z - (differenceInPoses.z * 0.45D)) * 0.5D, z);
+
+				Vec3 windVec = new Vec3(x, strengthFromDistance, z).scale(1D);
+				return new WindDisturbance.DisturbanceResult(
+					strengthFromDistance,
+					WIND_RANGE_BREEZE - distance,
+					windVec
+				);
 			}
 			return null;
 		};
@@ -135,18 +135,18 @@ public final class WindDisturbanceLogic<T> {
 	@Contract(pure = true)
 	private static DisturbanceLogic<AbstractWindCharge> windCharge() {
 		return (source, level, windOrigin, affectedArea, windTarget) -> {
-			if (source.isPresent()) {
-				double distance = windOrigin.distanceTo(windTarget);
-				if (distance <= WIND_RANGE_WIND_CHARGE) {
-					Vec3 chargeMovement = source.get().getDeltaMovement();
-					double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE * 0.5D), 0D, 1D);
-					Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(3D * strengthFromDistance);
-					return new WindDisturbance.DisturbanceResult(
-						strengthFromDistance,
-						(WIND_RANGE_WIND_CHARGE - distance) * 2D,
-						windVec
-					);
-				}
+			if (source.isEmpty()) return null;
+
+			double distance = windOrigin.distanceTo(windTarget);
+			if (distance <= WIND_RANGE_WIND_CHARGE) {
+				Vec3 chargeMovement = source.get().getDeltaMovement();
+				double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE * 0.5D), 0D, 1D);
+				Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(3D * strengthFromDistance);
+				return new WindDisturbance.DisturbanceResult(
+					strengthFromDistance,
+					(WIND_RANGE_WIND_CHARGE - distance) * 2D,
+					windVec
+				);
 			}
 			return null;
 		};
