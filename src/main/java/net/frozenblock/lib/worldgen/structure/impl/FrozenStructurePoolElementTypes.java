@@ -20,6 +20,7 @@ package net.frozenblock.lib.worldgen.structure.impl;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.worldgen.structure.api.DataMarkerProcessableLegacySinglePoolElement;
+import net.frozenblock.lib.worldgen.structure.api.DataMarkerProcessableSinglePoolElement;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
@@ -30,6 +31,10 @@ public final class FrozenStructurePoolElementTypes {
 	public static final StructurePoolElementType<DataMarkerProcessableLegacySinglePoolElement> DATA_MARKER_PROCESSABLE_LEGACY_SINGLE = register(
 		"data_marker_processable_legacy_single_pool_element",
 		DataMarkerProcessableLegacySinglePoolElement.CODEC
+	);
+	public static final StructurePoolElementType<DataMarkerProcessableSinglePoolElement> DATA_MARKER_PROCESSABLE_SINGLE = register(
+		"data_marker_processable_single_pool_element",
+		DataMarkerProcessableSinglePoolElement.CODEC
 	);
 
 	public static void init() {
