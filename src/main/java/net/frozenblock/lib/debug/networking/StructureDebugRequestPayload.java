@@ -49,14 +49,13 @@ public record StructureDebugRequestPayload(ChunkPos chunkPos) implements CustomP
 	}
 
 	public static void sendBack(ServerPlayer sender, ServerLevel serverLevel, ChunkPos chunkPos) {
-		if (FrozenLibConfig.IS_DEBUG) {
-			if (serverLevel.hasChunk(chunkPos.x, chunkPos.z)) {
-				LevelChunk chunk = serverLevel.getChunk(chunkPos.x, chunkPos.z);
-				chunk.getAllStarts().values().forEach(
-					structureStart -> sender.connection.send(new ClientboundCustomPayloadPacket(createStructurePayload(serverLevel, structureStart)))
-				);
-			}
-		}
+		if (!FrozenLibConfig.IS_DEBUG) return;
+		if (!serverLevel.hasChunk(chunkPos.x, chunkPos.z)) return;
+
+		LevelChunk chunk = serverLevel.getChunk(chunkPos.x, chunkPos.z);
+		chunk.getAllStarts().values().forEach(
+			structureStart -> sender.connection.send(new ClientboundCustomPayloadPacket(createStructurePayload(serverLevel, structureStart)))
+		);
 	}
 
 	@Contract("_, _ -> new")
