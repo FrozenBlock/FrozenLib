@@ -50,6 +50,12 @@
   "option.frozenlib.file_transfer_client": "Client File Transfer",
   "tooltip.frozenlib.file_transfer_client": "Whether the client can send/receive files to/from the server.\nThis is intended to be used for features such as sharing screenshots.\nThis config is implemented for the sake of security.",
 
+  "option.frozenlib.pack_downloading": "Resource Pack Downloading",
+  "tooltip.frozenlib.pack_downloading": "§aEnabled§f: Resource Packs will be downloaded, and a toast will be displayed if it fails or succeeds.\n§aNo Toasts§f: Resource Packs will be downloaded, but no toasts will be displayed.\n§cDisabled§f: Resource Packs will not be downloaded.",
+  "enum.frozenlib.pack_downloading.enabled": "§aEnabled",
+  "enum.frozenlib.pack_downloading.enabled_no_toasts": "§aNo Toasts",
+  "enum.frozenlib.pack_downloading.disabled": "§cDisabled",
+
   "option.frozenlib.cape": "Cape",
   "tooltip.frozenlib.cape": "A list of capes added through FrozenLib.\nClick to select the next cape.",
 
