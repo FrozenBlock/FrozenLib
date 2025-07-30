@@ -70,7 +70,7 @@ public class FolderRepositorySourceMixin {
 		@Local(argsOnly = true) Path path
 	) {
 		if (FolderRepositorySource.class.cast(this) instanceof FrozenLibFolderRepositorySource frozenLibFolderRepositorySource && original != null) {
-			if (frozenLibFolderRepositorySource.getSuffix().equals("frozenlib:mod/")) {
+			if (frozenLibFolderRepositorySource.getSuffix().startsWith("frozenlib:mod/")) {
 				String packId = original.getId();
 				if (!FrozenLibModResourcePackApi.isFrozenLibPackRegisteredByMod(packId)) {
 					path.toFile().delete();
