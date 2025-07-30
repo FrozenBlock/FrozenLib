@@ -69,6 +69,15 @@ public class MinecraftMixin {
 					"frozenlib:mod/"
 				)
 			);
+			packRepositoryInterface.frozenLib$addRepositorySource(
+				new FrozenLibFolderRepositorySource(
+					FrozenLibModResourcePackApi.DOWNLOADED_RESOURCE_PACK_DIRECTORY,
+					PackType.CLIENT_RESOURCES,
+					PackSource.BUILT_IN,
+					this.directoryValidator,
+					"frozenlib:mod/downloaded/"
+				)
+			);
 		} else if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
 			throw new AssertionError("BRUHHHH ITS NOT A FROZENLIB PACK REPOSITORY SOURCEEE BURHHHHHHGHGTY");
 		}
