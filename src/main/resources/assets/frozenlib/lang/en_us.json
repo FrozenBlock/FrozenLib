@@ -117,5 +117,13 @@
   "frozenlib.core.registry_sync.main_mod_protocol": "You are on %s with protocol version of %s.",
 
   "frozenlib.file_transfer.unsupported_file": "Let's try to not send random files!",
-  "frozenlib.file_transfer.unsupported_file_request": "Let's try to not request random files!"
+  "frozenlib.file_transfer.unsupported_file_request": "Let's try to not request random files!",
+
+  "frozenlib.resourcepack.download.success": "%s has been downloaded!",
+  "frozenlib.resourcepack.download.press_f3": "Press F3+T to reload resources.",
+  "frozenlib.resourcepack.download.open_menu": "Open the Resource Packs menu to reload resources.",
+  "frozenlib.resourcepack.download.failure": "Could not download %s!",
+  "frozenlib.resourcepack.download.present": "%s is already present!",
+  "frozenlib.resourcepack.download.debug_notice": "(Debug feature - FrozenLib)",
+  "frozenlib.resourcepack.test_pack": "Test Pack"
 }
