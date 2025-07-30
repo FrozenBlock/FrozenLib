@@ -13,4 +13,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `pack`: The URL of the resource pack, which must be a `.zip` file.
     - `version`: A numerical id for the resource pack. If the pack has been downloaded before with the same `version`, the download will be skipped.
   - A toast will be displayed on-screen to tell the player when a pack has finished or failed downloading.
-  - A config option to disable pack downloading and toasts have been added.
+  - A config option to disable pack downloading and toasts has been added.
