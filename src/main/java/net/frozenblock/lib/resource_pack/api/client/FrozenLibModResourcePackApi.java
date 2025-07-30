@@ -470,10 +470,12 @@ public class FrozenLibModResourcePackApi {
 		writeDownloadRecords(downloads);
 	}
 
+	@ApiStatus.Internal
 	public static void init() {
 		ClientTickEvents.END_CLIENT_TICK.register(client -> QUEUED_TOASTS.removeIf(ToastInfo::addToast));
 	}
 
+	@ApiStatus.Internal
 	private record ToastInfo(String packName, ToastType toastType) {
 		public boolean addToast() {
 			if (FrozenLibConfig.get().packDownloading != PackDownloadSetting.ENABLED) return false;
@@ -487,6 +489,7 @@ public class FrozenLibModResourcePackApi {
 		}
 	}
 
+	@ApiStatus.Internal
 	private enum ToastType {
 		SUCCESS((packName) -> onPackDownloadComplete(Minecraft.getInstance(), packName)),
 		FAILURE((packName) -> onPackDownloadFailure(Minecraft.getInstance(), packName)),
@@ -502,6 +505,7 @@ public class FrozenLibModResourcePackApi {
 		}
 	}
 
+	@ApiStatus.Internal
 	public enum PackDownloadSetting implements StringRepresentable {
 		ENABLED("pack_downloading.enabled"),
 		ENABLED_NO_TOASTS("pack_downloading.enabled_no_toasts"),
