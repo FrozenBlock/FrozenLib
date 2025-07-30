@@ -48,10 +48,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -84,14 +86,14 @@ public class FrozenLibModResourcePackApi {
 	private static final SystemToast.SystemToastId PACK_DOWNLOAD_PRESENT = new SystemToast.SystemToastId();
 
 	/**
-	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then copies them to FrozenLib's resource pack directory.
+	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then copies them to FrozenLib's Resource Pack directory.
 	 * <p>
-	 * These resource packs will be force-enabled.
+	 * These Resource Packs will be force-enabled.
 	 * @param container The {@link ModContainer} of the mod.
 	 * @param packName The name of the zip file, without the ".zip" extension.
-	 * @param isDoubleZip Whether the resource pack is double-zipped.
-	 * @param hidePackFromMenu Whether the resource pack should be hidden from the resource pack selection menu.
-	 * @param skipHashCheck Whether the resource pack will still be extracted even if an identical version was already extracted prior.
+	 * @param isDoubleZip Whether the Resource Pack is double-zipped.
+	 * @param hidePackFromMenu Whether the Resource Pack should be hidden from the Resource Pack selection menu.
+	 * @param skipHashCheck Whether the Resource Pack will still be extracted even if an identical version was already extracted prior.
 	 * @throws IOException
 	 */
 	public static void findAndPrepareResourcePack(
@@ -159,6 +161,17 @@ public class FrozenLibModResourcePackApi {
 		}
 	}
 
+	/**
+	 * Downloads a Resource Pack, using a url contained in an online {@link JsonElement}.
+	 * <p>
+	 * These Resource Packs will be force-enabled, but may require resources to be reloaded depending on when they finish downloading.
+	 * <p>
+	 * Downloads will not occur if {@link FrozenLibConfig#packDownloading} is set to {@link PackDownloadSetting#DISABLED}.
+	 * @param urlString The url, in {@link String} format, to read as a {@link JsonElement} to extract the Resource Pack's url and version from.
+	 * @param packName The name of the Resource Pack, without the ".zip" extension.
+	 * @param hidePackFromMenu Whether the Resource Pack should be hidden from the Resource Pack selection menu.
+	 * @param skipVersionCheck Whether the Resource Pack will still be downloaded even if an identical version was already downloaded prior.
+	 */
 	public static void downloadResourcePack(String urlString, String packName, boolean hidePackFromMenu, boolean skipVersionCheck) {
 		String zipPackName = packName + ".zip";
 		String packId = "frozenlib:mod/downloaded/file/" + zipPackName;
@@ -167,6 +180,8 @@ public class FrozenLibModResourcePackApi {
 		MOD_RESOURCE_PACK_IDS.add(packId);
 		// Mark the pack as hidden if needed
 		if (hidePackFromMenu) registerHiddenPackId(packId);
+
+		if (FrozenLibConfig.get().packDownloading == PackDownloadSetting.DISABLED) return;
 
 		CompletableFuture.supplyAsync(
 			() -> {
@@ -205,6 +220,13 @@ public class FrozenLibModResourcePackApi {
 		});
 	}
 
+	/**
+	 * Downloads a Resource Pack from a url, and updates the download record to store the new pack version.
+	 * @param urlString The url, in {@link String} format, to download the .zip from.
+	 * @param packName The name of the Resource Pack.
+	 * @param destFile The destination {@link File} of the Resource Pack.
+	 * @param newVersion The new version number of the Resource Pack to store to the download record.
+	 */
 	private static Optional<File> downloadPackFromURL(String urlString, String packName, File destFile, int newVersion) {
 		try {
 			if (destFile.exists()) destFile.delete();
@@ -227,6 +249,13 @@ public class FrozenLibModResourcePackApi {
 		return Optional.empty();
 	}
 
+	/**
+	 * Displays a {@link SystemToast} to notify the player when a Resource Pack has been downloaded.
+	 * <p>
+	 * Displays secondary text explaining to the player to reload resources.
+	 * @param minecraft The {@link Minecraft} instance.
+	 * @param packName The name of the Resource Pack.
+	 */
 	private static void onPackDownloadComplete(@NotNull Minecraft minecraft, String packName) {
 		SystemToast.add(
 			minecraft.getToastManager(),
@@ -238,6 +267,11 @@ public class FrozenLibModResourcePackApi {
 		);
 	}
 
+	/**
+	 * Displays a {@link SystemToast} to notify the player when a Resource Pack has failed to download.
+	 * @param minecraft The {@link Minecraft} instance.
+	 * @param packName The name of the Resource Pack.
+	 */
 	private static void onPackDownloadFailure(@NotNull Minecraft minecraft, String packName) {
 		SystemToast.add(
 			minecraft.getToastManager(),
@@ -247,6 +281,13 @@ public class FrozenLibModResourcePackApi {
 		);
 	}
 
+	/**
+	 * Displays a {@link SystemToast} to notify developers when a Resource Pack is already present and will not be re-downloaded.
+	 * <p>
+	 * Used for debugging purposes.
+	 * @param minecraft The {@link Minecraft} instance.
+	 * @param packName The name of the Resource Pack.
+	 */
 	private static void onPackDownloadPresent(@NotNull Minecraft minecraft, String packName) {
 		SystemToast.add(
 			minecraft.getToastManager(),
@@ -264,14 +305,14 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	/**
-	 * @return Whether the resource pack with the specified id should be hidden from the resource pack selection menu.
+	 * @return Whether the Resource Pack with the specified id should be hidden from the Resource Pack selection menu.
 	 */
 	public static boolean isPackHiddenFromMenu(String packId) {
 		return HIDDEN_PACK_IDS.contains(packId);
 	}
 
 	/**
-	 * @return Whether the resource pack with the specified id is currently registered by a mod.
+	 * @return Whether the Resource Pack with the specified id is currently registered by a mod.
 	 */
 	public static boolean isFrozenLibPackRegisteredByMod(String packId) {
 		return MOD_RESOURCE_PACK_IDS.contains(packId);
@@ -344,9 +385,9 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	/**
-	 * Checks if the hash of a resource pack has changed.
-	 * @param packName The name of the resource pack.
-	 * @param currentHash The current SHA256 hash of the resource pack.
+	 * Checks if the hash of a Resource Pack has changed.
+	 * @param packName The name of the Resource Pack.
+	 * @param currentHash The current SHA256 hash of the Resource Pack.
 	 * @return true if the hash has changed or if this is a new pack, false otherwise.
 	 */
 	private static boolean hasHashChanged(String packName, String currentHash) {
@@ -356,9 +397,9 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	/**
-	 * Updates the hash record for a resource pack.
-	 * @param packName The name of the resource pack.
-	 * @param newHash The new SHA256 hash of the resource pack.
+	 * Updates the hash record for a Resource Pack.
+	 * @param packName The name of the Resource Pack.
+	 * @param newHash The new SHA256 hash of the Resource Pack.
 	 */
 	private static void updateHashRecord(String packName, String newHash) {
 		Map<String, String> hashes = readHashRecords();
@@ -407,9 +448,9 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	/**
-	 * Checks if the version of a resource pack has changed.
-	 * @param packName The name of the resource pack.
-	 * @param currentVersion The current version of the resource pack.
+	 * Checks if the version of a Resource Pack has changed.
+	 * @param packName The name of the Resource Pack.
+	 * @param currentVersion The current version of the Resource Pack.
 	 * @return true if the version has changed or if this is a new pack, false otherwise.
 	 */
 	private static boolean hasDownloadVersionChanged(String packName, int currentVersion) {
@@ -419,9 +460,9 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	/**
-	 * Updates the download record for a resource pack.
-	 * @param packName The name of the resource pack.
-	 * @param newVersion The new version of the resource pack.
+	 * Updates the download record for a Resource Pack.
+	 * @param packName The name of the Resource Pack.
+	 * @param newVersion The new version of the Resource Pack.
 	 */
 	private static void updateDownloadRecord(String packName, int newVersion) {
 		Map<String, Integer> downloads = readDownloadRecords();
@@ -429,14 +470,15 @@ public class FrozenLibModResourcePackApi {
 		writeDownloadRecords(downloads);
 	}
 
+	@ApiStatus.Internal
 	public static void init() {
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			QUEUED_TOASTS.removeIf(ToastInfo::addToast);
-		});
+		ClientTickEvents.END_CLIENT_TICK.register(client -> QUEUED_TOASTS.removeIf(ToastInfo::addToast));
 	}
 
+	@ApiStatus.Internal
 	private record ToastInfo(String packName, ToastType toastType) {
 		public boolean addToast() {
+			if (FrozenLibConfig.get().packDownloading != PackDownloadSetting.ENABLED) return false;
 			Minecraft minecraft = Minecraft.getInstance();
 			if (minecraft == null || minecraft.getToastManager() == null || minecraft.getResourceManager() == null) {
 				if (!QUEUED_TOASTS.contains(this)) QUEUED_TOASTS.add(this);
@@ -447,6 +489,7 @@ public class FrozenLibModResourcePackApi {
 		}
 	}
 
+	@ApiStatus.Internal
 	private enum ToastType {
 		SUCCESS((packName) -> onPackDownloadComplete(Minecraft.getInstance(), packName)),
 		FAILURE((packName) -> onPackDownloadFailure(Minecraft.getInstance(), packName)),
@@ -459,6 +502,28 @@ public class FrozenLibModResourcePackApi {
 
 		public void displayToast(String packName) {
 			this.toastMaker.accept(packName);
+		}
+	}
+
+	@ApiStatus.Internal
+	public enum PackDownloadSetting implements StringRepresentable {
+		ENABLED("pack_downloading.enabled"),
+		ENABLED_NO_TOASTS("pack_downloading.enabled_no_toasts"),
+		DISABLED("pack_downloading.disabled");
+		private final String name;
+
+		PackDownloadSetting(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return this.name;
+		}
+
+		@Override
+		public @NotNull String getSerializedName() {
+			return this.name;
 		}
 	}
 }

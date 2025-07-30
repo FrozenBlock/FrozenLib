@@ -28,6 +28,7 @@ import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.api.sync.SyncBehavior;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
+import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 
 public class FrozenLibConfig {
 
@@ -83,6 +84,9 @@ public class FrozenLibConfig {
 	@EntrySyncData(value = "fileTransferClient", behavior = SyncBehavior.UNSYNCABLE)
 	public boolean fileTransferClient = true;
 
+	@EntrySyncData(value = "packDownloading", behavior = SyncBehavior.UNSYNCABLE)
+	public FrozenLibModResourcePackApi.PackDownloadSetting packDownloading = FrozenLibModResourcePackApi.PackDownloadSetting.ENABLED;
+
 	@EntrySyncData(value = "cape", behavior = SyncBehavior.UNSYNCABLE)
 	public String cape = FrozenLibConstants.string("dummy");
 
@@ -90,7 +94,6 @@ public class FrozenLibConfig {
 	public final DataFixerConfig dataFixer = new DataFixerConfig();
 
 	public static class DataFixerConfig {
-
 		@Comment("Mods can only add to this list. User settings will always apply.")
 		@EntrySyncData("disabledDataFixTypes")
 		public List<String> disabledDataFixTypes = List.of(
@@ -99,9 +102,7 @@ public class FrozenLibConfig {
 	}
 
 	public static FrozenLibConfig get(boolean real) {
-		if (real)
-			return INSTANCE.instance();
-
+		if (real) return INSTANCE.instance();
 		return INSTANCE.config();
 	}
 
