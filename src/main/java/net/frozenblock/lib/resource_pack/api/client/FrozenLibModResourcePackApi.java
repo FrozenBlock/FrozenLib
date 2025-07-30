@@ -48,10 +48,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -162,7 +164,9 @@ public class FrozenLibModResourcePackApi {
 	/**
 	 * Downloads a Resource Pack, using a url contained in an online {@link JsonElement}.
 	 * <p>
-	 * These Resource Packs will be force-enabled, but may require resources to be reloaded first.
+	 * These Resource Packs will be force-enabled, but may require resources to be reloaded depending on when they finish downloading.
+	 * <p>
+	 * Downloads will not occur if {@link FrozenLibConfig#packDownloading} is set to {@link PackDownloadSetting#DISABLED}.
 	 * @param urlString The url, in {@link String} format, to read as a {@link JsonElement} to extract the Resource Pack's url and version from.
 	 * @param packName The name of the Resource Pack, without the ".zip" extension.
 	 * @param hidePackFromMenu Whether the Resource Pack should be hidden from the Resource Pack selection menu.
@@ -176,6 +180,8 @@ public class FrozenLibModResourcePackApi {
 		MOD_RESOURCE_PACK_IDS.add(packId);
 		// Mark the pack as hidden if needed
 		if (hidePackFromMenu) registerHiddenPackId(packId);
+
+		if (FrozenLibConfig.get().packDownloading == PackDownloadSetting.DISABLED) return;
 
 		CompletableFuture.supplyAsync(
 			() -> {
@@ -465,13 +471,12 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	public static void init() {
-		ClientTickEvents.END_CLIENT_TICK.register(client -> {
-			QUEUED_TOASTS.removeIf(ToastInfo::addToast);
-		});
+		ClientTickEvents.END_CLIENT_TICK.register(client -> QUEUED_TOASTS.removeIf(ToastInfo::addToast));
 	}
 
 	private record ToastInfo(String packName, ToastType toastType) {
 		public boolean addToast() {
+			if (FrozenLibConfig.get().packDownloading != PackDownloadSetting.ENABLED) return false;
 			Minecraft minecraft = Minecraft.getInstance();
 			if (minecraft == null || minecraft.getToasts() == null || minecraft.getResourceManager() == null) {
 				if (!QUEUED_TOASTS.contains(this)) QUEUED_TOASTS.add(this);
@@ -494,6 +499,27 @@ public class FrozenLibModResourcePackApi {
 
 		public void displayToast(String packName) {
 			this.toastMaker.accept(packName);
+		}
+	}
+
+	public enum PackDownloadSetting implements StringRepresentable {
+		ENABLED("pack_downloading.enabled"),
+		ENABLED_NO_TOASTS("pack_downloading.enabled_no_toasts"),
+		DISABLED("pack_downloading.disabled");
+		private final String name;
+
+		PackDownloadSetting(String name) {
+			this.name = name;
+		}
+
+		@Override
+		public String toString() {
+			return this.name;
+		}
+
+		@Override
+		public @NotNull String getSerializedName() {
+			return this.name;
 		}
 	}
 }
