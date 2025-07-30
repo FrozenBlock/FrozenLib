@@ -258,7 +258,7 @@ public class FrozenLibModResourcePackApi {
 	 */
 	private static void onPackDownloadComplete(@NotNull Minecraft minecraft, String packName) {
 		SystemToast.add(
-			minecraft.getToasts(),
+			minecraft.getToastManager(),
 			PACK_DOWNLOAD,
 			Component.translatable("frozenlib.resourcepack.download.success", Component.translatable("frozenlib.resourcepack." + packName)),
 			FrozenClientNetworking.notConnected()
@@ -274,7 +274,7 @@ public class FrozenLibModResourcePackApi {
 	 */
 	private static void onPackDownloadFailure(@NotNull Minecraft minecraft, String packName) {
 		SystemToast.add(
-			minecraft.getToasts(),
+			minecraft.getToastManager(),
 			PACK_DOWNLOAD_FAILURE,
 			Component.translatable("frozenlib.resourcepack.download.failure", Component.translatable("frozenlib.resourcepack." + packName)),
 			null
@@ -290,7 +290,7 @@ public class FrozenLibModResourcePackApi {
 	 */
 	private static void onPackDownloadPresent(@NotNull Minecraft minecraft, String packName) {
 		SystemToast.add(
-			minecraft.getToasts(),
+			minecraft.getToastManager(),
 			PACK_DOWNLOAD_PRESENT,
 			Component.translatable("frozenlib.resourcepack.download.present", Component.translatable("frozenlib.resourcepack." + packName)),
 			Component.translatable("frozenlib.resourcepack.download.debug_notice")
@@ -480,7 +480,7 @@ public class FrozenLibModResourcePackApi {
 		public boolean addToast() {
 			if (FrozenLibConfig.get().packDownloading != PackDownloadSetting.ENABLED) return false;
 			Minecraft minecraft = Minecraft.getInstance();
-			if (minecraft == null || minecraft.getToasts() == null || minecraft.getResourceManager() == null) {
+			if (minecraft == null || minecraft.getToastManager() == null || minecraft.getResourceManager() == null) {
 				if (!QUEUED_TOASTS.contains(this)) QUEUED_TOASTS.add(this);
 				return false;
 			}
