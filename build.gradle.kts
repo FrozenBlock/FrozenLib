@@ -247,7 +247,7 @@ dependencies {
     modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modCompileOnlyApi("me.shedaniel.cloth:cloth-config-fabric:${cloth_config_version}") {
+    modImplementation("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }

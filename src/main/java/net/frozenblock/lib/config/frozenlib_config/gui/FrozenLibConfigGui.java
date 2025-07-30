@@ -33,6 +33,7 @@ import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -143,6 +144,20 @@ public final class FrozenLibConfigGui {
 			)
 		);
 
+		var packDownloading = category.addEntry(
+			FrozenClothConfig.syncedEntry(
+				entryBuilder.startEnumSelector(text("pack_downloading"), FrozenLibModResourcePackApi.PackDownloadSetting.class, modifiedConfig.packDownloading)
+					.setDefaultValue(defaultConfig.packDownloading)
+					.setSaveConsumer(newValue -> config.packDownloading = newValue)
+					.setEnumNameProvider(downloadSetting -> enumNameProvider(downloadSetting.toString()))
+					.setTooltip(tooltip("pack_downloading"))
+					.build(),
+				config.getClass(),
+				"packDownloading",
+				configInstance
+			)
+		);
+
 		var disabledDataFixTypes = FrozenClothConfig.syncedEntry(
 			entryBuilder.startStrList(text("disabled_datafix_types"), modifiedConfig.dataFixer.disabledDataFixTypes)
 				.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
@@ -200,5 +215,10 @@ public final class FrozenLibConfigGui {
 	@Contract(value = "_ -> new", pure = true)
 	public static @NotNull Component tooltip(String key) {
 		return Component.translatable("tooltip." + FrozenLibConstants.MOD_ID + "." + key);
+	}
+
+	@Contract(value = "_ -> new", pure = true)
+	public static @NotNull Component enumNameProvider(String key) {
+		return Component.translatable("enum." + FrozenLibConstants.MOD_ID + "." + key);
 	}
 }
