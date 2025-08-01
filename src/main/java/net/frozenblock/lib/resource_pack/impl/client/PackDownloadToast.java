@@ -81,7 +81,8 @@ public class PackDownloadToast implements Toast {
 
 		Font font = Minecraft.getInstance().font;
 		List<Integer> allLines = new ArrayList<>();
-		allLines.add(WIDTH_BUFFER + Minecraft.getInstance().font.width(this.title));
+		allLines.add(WIDTH_BUFFER + font.width(this.title));
+		this.bottomText.ifPresent(supplier -> font.width(supplier.get()));
 		this.messageLines.forEach(line -> allLines.add(font.width(line)));
 
 		this.width = Math.max(MAX_LINE_SIZE, allLines.stream().mapToInt(Integer::intValue).max().orElse(MAX_LINE_SIZE));
