@@ -143,18 +143,6 @@ public class PackDownloadToast implements Toast {
 		}
 	}
 
-	private void renderBackgroundRow(GuiGraphics guiGraphics, int i, int j, int k, int l) {
-		int m = j == 0 ? DOUBLE_MARGIN : 5;
-		int n = Math.min(60, i - m);
-		guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 160, 32, 0, j, 0, k, m, l);
-
-		for(int o = m; o < i - n; o += 64) {
-			guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 160, 32, 32, j, o, k, Math.min(64, i - o - n), l);
-		}
-
-		guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 160, 32, 160 - n, j, i - n, k, n, l);
-	}
-
 	public void setChanged() {
 		this.changed = true;
 	}
