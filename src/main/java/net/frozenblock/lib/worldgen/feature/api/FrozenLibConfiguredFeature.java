@@ -45,7 +45,7 @@ public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration> {
 	}
 
 	public ResourceKey<ConfiguredFeature<?, ?>> getKey() {
-		return key;
+		return this.key;
 	}
 
 	public Holder<ConfiguredFeature<?, ?>> getHolder(@Nullable LevelReader level) {
