@@ -32,7 +32,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
@@ -132,7 +132,7 @@ public class PackDownloadToast implements Toast {
 
 	@Override
 	public void render(@NotNull GuiGraphics guiGraphics, @NotNull Font font, long l) {
-		guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
+		guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		if (this.messageLines.isEmpty()) {
 			guiGraphics.drawString(font, this.title, 15, 12, -256, false);
 		} else {
@@ -141,18 +141,6 @@ public class PackDownloadToast implements Toast {
 				guiGraphics.drawString(font, this.messageLines.get(i), 18, 18 + i * 12, -1, false);
 			}
 		}
-	}
-
-	private void renderBackgroundRow(GuiGraphics guiGraphics, int i, int j, int k, int l) {
-		int m = j == 0 ? DOUBLE_MARGIN : 5;
-		int n = Math.min(60, i - m);
-		guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 160, 32, 0, j, 0, k, m, l);
-
-		for(int o = m; o < i - n; o += 64) {
-			guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 160, 32, 32, j, o, k, Math.min(64, i - o - n), l);
-		}
-
-		guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 160, 32, 160 - n, j, i - n, k, n, l);
 	}
 
 	public void setChanged() {
