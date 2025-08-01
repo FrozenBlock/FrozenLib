@@ -104,7 +104,7 @@ public class PackDownloadToast implements Toast {
 
 	@Override
 	public int height() {
-		return DOUBLE_MARGIN + Math.max(this.messageProviders.size(), 1) * LINE_SPACING;
+		return DOUBLE_MARGIN + Math.max(this.messageLines.size(), 1) * LINE_SPACING;
 	}
 
 	public void forceHide() {
@@ -134,11 +134,11 @@ public class PackDownloadToast implements Toast {
 	public void render(@NotNull GuiGraphics guiGraphics, @NotNull Font font, long l) {
 		guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		if (this.messageLines.isEmpty()) {
-			guiGraphics.drawString(font, this.title, 15, 12, -256, false);
+			guiGraphics.drawString(font, this.title, 15, LINE_SPACING, -256, false);
 		} else {
 			guiGraphics.drawString(font, this.title, 15, 7, -256, false);
 			for (int i = 0; i < this.messageLines.size(); ++i) {
-				guiGraphics.drawString(font, this.messageLines.get(i), 18, 18 + i * 12, -1, false);
+				guiGraphics.drawString(font, this.messageLines.get(i), 18, 18 + i * LINE_SPACING, -1, false);
 			}
 		}
 	}
