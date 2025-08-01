@@ -125,11 +125,12 @@
   "frozenlib.file_transfer.unsupported_file": "Let's try to not send random files!",
   "frozenlib.file_transfer.unsupported_file_request": "Let's try to not request random files!",
 
-  "frozenlib.resourcepack.download.success": "%s has been downloaded!",
+  "frozenlib.resourcepack.download.success": "Downloaded Resource Packs:",
+  "frozenlib.resourcepack.download.success.update": "Updated Resource Packs:",
   "frozenlib.resourcepack.download.press_f3": "Press F3+T to reload resources.",
   "frozenlib.resourcepack.download.open_menu": "Open the Resource Packs menu to reload resources.",
-  "frozenlib.resourcepack.download.failure": "Could not download %s!",
-  "frozenlib.resourcepack.download.present": "%s is already present!",
-  "frozenlib.resourcepack.download.debug_notice": "(Debug feature - FrozenLib)",
-  "frozenlib.resourcepack.test_pack": "Test Pack"
+  "frozenlib.resourcepack.download.failure": "Could not download Resource Packs:",
+  "frozenlib.resourcepack.download.failure.present": "(DEBUG) Could not verify Resource Packs are up to date:",
+  "frozenlib.resourcepack.download.present": "(DEBUG) Resource Packs are already present:",
+  "frozenlib.resourcepack.download.group": "%s: (%s/%s)"
 }
