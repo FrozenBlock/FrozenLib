@@ -116,7 +116,8 @@ loom {
     }
 
     mixin {
-        defaultRefmapName = "mixins.frozenlib.refmap.json"
+        useLegacyMixinAp.set(true)
+        defaultRefmapName.set("mixins.frozenlib.refmap.json")
     }
 
     accessWidenerPath = file("src/main/resources/frozenlib.accesswidener")
