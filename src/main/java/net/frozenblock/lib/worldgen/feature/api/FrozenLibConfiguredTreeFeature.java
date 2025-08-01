@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
+import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.resources.ResourceKey;
@@ -38,7 +40,7 @@ import java.util.List;
 public class FrozenLibConfiguredTreeFeature {
 	private final FrozenLibConfiguredFeature<TreeConfiguration> feature;
 	private final FrozenLibConfiguredFeature<TreeConfiguration> featureWithLitter;
-	private final List<TreeDecorator> litterDecorators = new ArrayList<>();
+	private final List<TreeDecorator> litterDecorators;
 
 	public FrozenLibConfiguredTreeFeature(
 		ResourceLocation key,
@@ -48,6 +50,8 @@ public class FrozenLibConfiguredTreeFeature {
 	) {
 		this.feature = new FrozenLibConfiguredFeature<>(key);
 		this.featureWithLitter = new FrozenLibConfiguredFeature<>(key.withSuffix("_leaf_litter"));
+		this.litterDecorators = FrozenBools.IS_DATAGEN ? new ArrayList<>() : null;
+		if (this.litterDecorators == null) return;
 		this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock, triesA, radiusA, heightA, 3));
 		this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock, triesB, radiusB, heightB, 4));
 	}
