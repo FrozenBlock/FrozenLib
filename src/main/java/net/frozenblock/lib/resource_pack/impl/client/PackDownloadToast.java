@@ -84,7 +84,8 @@ public class PackDownloadToast implements Toast {
 
 		Font font = Minecraft.getInstance().font;
 		List<Integer> allLines = new ArrayList<>();
-		allLines.add(WIDTH_BUFFER + Minecraft.getInstance().font.width(this.title));
+		allLines.add(WIDTH_BUFFER + font.width(this.title));
+		this.bottomText.ifPresent(supplier -> font.width(supplier.get()));
 		this.messageLines.forEach(line -> allLines.add(font.width(line)));
 
 		this.width = Math.max(MAX_LINE_SIZE, allLines.stream().mapToInt(Integer::intValue).max().orElse(MAX_LINE_SIZE));
@@ -134,7 +135,7 @@ public class PackDownloadToast implements Toast {
 	public void render(@NotNull GuiGraphics guiGraphics, @NotNull Font font, long l) {
 		guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		if (this.messageLines.isEmpty()) {
-			guiGraphics.drawString(font, this.title, 15, LINE_SPACING, -256, false);
+			guiGraphics.drawString(font, this.title, 15, 12, -256, false);
 		} else {
 			guiGraphics.drawString(font, this.title, 15, 7, -256, false);
 			for (int i = 0; i < this.messageLines.size(); ++i) {
