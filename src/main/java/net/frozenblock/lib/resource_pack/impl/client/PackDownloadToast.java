@@ -134,7 +134,7 @@ public class PackDownloadToast implements Toast {
 	public void render(@NotNull GuiGraphics guiGraphics, @NotNull Font font, long l) {
 		guiGraphics.blitSprite(RenderType::guiTextured, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		if (this.messageLines.isEmpty()) {
-			guiGraphics.drawString(font, this.title, 15, LINE_SPACING, -256, false);
+			guiGraphics.drawString(font, this.title, 15, 12, -256, false);
 		} else {
 			guiGraphics.drawString(font, this.title, 15, 7, -256, false);
 			for (int i = 0; i < this.messageLines.size(); ++i) {
