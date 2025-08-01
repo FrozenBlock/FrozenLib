@@ -8,6 +8,7 @@
   },
   "client": [
     "client.NoExperimentalMixin",
-    "client.SplashManagerMixin"
+    "client.SplashManagerMixin",
+    "client.SystemToastMixin"
   ]
 }

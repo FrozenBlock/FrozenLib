@@ -49,6 +49,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.menu.api.SystemToastUpdater;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.toasts.SystemToast;
@@ -68,21 +69,14 @@ public class FrozenLibModResourcePackApi {
 	public static final Path MOD_RESOURCE_PACK_PENDING_EXTRACTION_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("mod_resourcepacks_pending_extraction");
 	@ApiStatus.Internal
 	public static final Path DOWNLOADED_RESOURCE_PACK_DIRECTORY = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("downloaded_resourcepacks");
-	@ApiStatus.Internal
 	private static final Path HASH_FILE = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("mod_resource_pack_hashes.txt");
-	@ApiStatus.Internal
 	private static final Path DOWNLOADED_PACK_LOG_FILE = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("mod_downloaded_resource_packs.txt");
-	@ApiStatus.Internal
 	private static final List<String> HIDDEN_PACK_IDS = new ArrayList<>();
-	@ApiStatus.Internal
 	private static final List<String> MOD_RESOURCE_PACK_IDS = new ArrayList<>();
-	@ApiStatus.Internal
 	private static final List<ToastInfo> QUEUED_TOASTS = new ArrayList<>();
-	@ApiStatus.Internal
 	private static final SystemToast.SystemToastId PACK_DOWNLOAD = new SystemToast.SystemToastId();
-	@ApiStatus.Internal
+	private static final SystemToast.SystemToastId PACK_UPDATE = new SystemToast.SystemToastId();
 	private static final SystemToast.SystemToastId PACK_DOWNLOAD_FAILURE = new SystemToast.SystemToastId();
-	@ApiStatus.Internal
 	private static final SystemToast.SystemToastId PACK_DOWNLOAD_PRESENT = new SystemToast.SystemToastId();
 
 	/**
@@ -208,7 +202,7 @@ public class FrozenLibModResourcePackApi {
 
 					Optional<File> downloadedPack = downloadPackFromURL(packURL, packName, destFile, packVersion);
 					return downloadedPack.isPresent()
-						? Optional.of(new ToastInfo(packName, ToastType.SUCCESS))
+						? Optional.of(new ToastInfo(packName, isPackPresent ? ToastType.SUCCESS_UPDATE : ToastType.SUCCESS_DOWNLOAD))
 						: Optional.of(new ToastInfo(packName, ToastType.FAILURE));
 				} catch (IOException ignored) {
 					return Optional.of(new ToastInfo(packName, ToastType.FAILURE));
@@ -257,13 +251,51 @@ public class FrozenLibModResourcePackApi {
 	 * @param packName The name of the Resource Pack.
 	 */
 	private static void onPackDownloadComplete(@NotNull Minecraft minecraft, String packName) {
-		SystemToast.add(
+		if (!SystemToastUpdater.doesToastOfTypeExist(minecraft.getToasts(), PACK_DOWNLOAD)) {
+			SystemToast.add(
+				minecraft.getToasts(),
+				PACK_DOWNLOAD,
+				Component.translatable("frozenlib.resourcepack.download.success"),
+				FrozenClientNetworking.notConnected()
+					? Component.translatable("frozenlib.resourcepack.download.open_menu")
+					: Component.translatable("frozenlib.resourcepack.download.press_f3")
+			);
+		}
+
+		SystemToastUpdater.updateMultiLine(
 			minecraft.getToasts(),
 			PACK_DOWNLOAD,
-			Component.translatable("frozenlib.resourcepack.download.success", Component.translatable("frozenlib.resourcepack." + packName)),
-			FrozenClientNetworking.notConnected()
-				? Component.translatable("frozenlib.resourcepack.download.open_menu")
-				: Component.translatable("frozenlib.resourcepack.download.press_f3")
+			Component.translatable("frozenlib.resourcepack.download.success"),
+			Component.translatable("frozenlib.resourcepack." + packName),
+			null
+		);
+	}
+
+	/**
+	 * Displays a {@link SystemToast} to notify the player when a Resource Pack has been updated.
+	 * <p>
+	 * Displays secondary text explaining to the player to reload resources.
+	 * @param minecraft The {@link Minecraft} instance.
+	 * @param packName The name of the Resource Pack.
+	 */
+	private static void onPackUpdateComplete(@NotNull Minecraft minecraft, String packName) {
+		if (!SystemToastUpdater.doesToastOfTypeExist(minecraft.getToasts(), PACK_UPDATE)) {
+			SystemToast.add(
+				minecraft.getToasts(),
+				PACK_UPDATE,
+				Component.translatable("frozenlib.resourcepack.download.updated"),
+				FrozenClientNetworking.notConnected()
+					? Component.translatable("frozenlib.resourcepack.download.open_menu")
+					: Component.translatable("frozenlib.resourcepack.download.press_f3")
+			);
+		}
+
+		SystemToastUpdater.updateMultiLine(
+			minecraft.getToasts(),
+			PACK_UPDATE,
+			Component.translatable("frozenlib.resourcepack.download.updated"),
+			Component.translatable("frozenlib.resourcepack." + packName),
+			null
 		);
 	}
 
@@ -273,10 +305,20 @@ public class FrozenLibModResourcePackApi {
 	 * @param packName The name of the Resource Pack.
 	 */
 	private static void onPackDownloadFailure(@NotNull Minecraft minecraft, String packName) {
-		SystemToast.add(
+		if (!SystemToastUpdater.doesToastOfTypeExist(minecraft.getToasts(), PACK_DOWNLOAD_FAILURE)) {
+			SystemToast.add(
+				minecraft.getToasts(),
+				PACK_DOWNLOAD_FAILURE,
+				Component.translatable("frozenlib.resourcepack.download.failure"),
+				null
+			);
+		}
+
+		SystemToastUpdater.updateMultiLine(
 			minecraft.getToasts(),
 			PACK_DOWNLOAD_FAILURE,
-			Component.translatable("frozenlib.resourcepack.download.failure", Component.translatable("frozenlib.resourcepack." + packName)),
+			Component.translatable("frozenlib.resourcepack.download.failure"),
+			Component.translatable("frozenlib.resourcepack." + packName),
 			null
 		);
 	}
@@ -289,11 +331,21 @@ public class FrozenLibModResourcePackApi {
 	 * @param packName The name of the Resource Pack.
 	 */
 	private static void onPackDownloadPresent(@NotNull Minecraft minecraft, String packName) {
-		SystemToast.add(
+		if (!SystemToastUpdater.doesToastOfTypeExist(minecraft.getToasts(), PACK_DOWNLOAD_PRESENT)) {
+			SystemToast.add(
+				minecraft.getToasts(),
+				PACK_DOWNLOAD_PRESENT,
+				Component.translatable("frozenlib.resourcepack.download.present"),
+				null
+			);
+		}
+
+		SystemToastUpdater.updateMultiLine(
 			minecraft.getToasts(),
 			PACK_DOWNLOAD_PRESENT,
-			Component.translatable("frozenlib.resourcepack.download.present", Component.translatable("frozenlib.resourcepack." + packName)),
-			Component.translatable("frozenlib.resourcepack.download.debug_notice")
+			Component.translatable("frozenlib.resourcepack.download.present"),
+			Component.translatable("frozenlib.resourcepack." + packName),
+			null
 		);
 	}
 
@@ -491,7 +543,8 @@ public class FrozenLibModResourcePackApi {
 
 	@ApiStatus.Internal
 	private enum ToastType {
-		SUCCESS((packName) -> onPackDownloadComplete(Minecraft.getInstance(), packName)),
+		SUCCESS_DOWNLOAD((packName) -> onPackDownloadComplete(Minecraft.getInstance(), packName)),
+		SUCCESS_UPDATE((packName) -> onPackUpdateComplete(Minecraft.getInstance(), packName)),
 		FAILURE((packName) -> onPackDownloadFailure(Minecraft.getInstance(), packName)),
 		PRESENT((packName) -> onPackDownloadPresent(Minecraft.getInstance(), packName));
 		private final Consumer<String> toastMaker;
