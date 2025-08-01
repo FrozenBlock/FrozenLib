@@ -104,7 +104,7 @@ public class PackDownloadToast implements Toast {
 
 	@Override
 	public int height() {
-		return DOUBLE_MARGIN + Math.max(this.messageProviders.size(), 1) * LINE_SPACING;
+		return DOUBLE_MARGIN + Math.max(this.messageLines.size(), 1) * LINE_SPACING;
 	}
 
 	public void forceHide() {
