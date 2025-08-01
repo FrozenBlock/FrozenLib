@@ -115,6 +115,11 @@ loom {
         }
     }
 
+    mixin {
+        useLegacyMixinAp.set(true)
+        defaultRefmapName.set("mixins.frozenlib.refmap.json")
+    }
+
     accessWidenerPath = file("src/main/resources/frozenlib.accesswidener")
 	interfaceInjection {
 		// When enabled, injected interfaces from dependecies will be applied.
