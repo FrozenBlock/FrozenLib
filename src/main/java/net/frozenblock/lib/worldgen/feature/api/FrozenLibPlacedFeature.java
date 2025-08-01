@@ -26,9 +26,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
+import org.jetbrains.annotations.NotNull;
 
 public class FrozenLibPlacedFeature {
 
@@ -62,8 +62,8 @@ public class FrozenLibPlacedFeature {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public <FC extends FeatureConfiguration> FrozenLibPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, List<PlacementModifier> modifiers) {
-		setConfiguredHolder(configuredHolder);
+	public FrozenLibPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, List<PlacementModifier> modifiers) {
+		this.setConfiguredHolder(configuredHolder);
 
 		FrozenLibLogUtils.log("Registering placed feature " + this.getKey().location(), true);
 
@@ -76,7 +76,17 @@ public class FrozenLibPlacedFeature {
 		return this;
 	}
 
-	public <FC extends FeatureConfiguration> FrozenLibPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, PlacementModifier... modifiers) {
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public FrozenLibPlacedFeature makeAndSetHolder(@NotNull FrozenLibConfiguredFeature configuredFeature, List<PlacementModifier> modifiers) {
+		return this.makeAndSetHolder(configuredFeature.getHolder(), modifiers);
+	}
+
+	public FrozenLibPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, PlacementModifier... modifiers) {
 		return this.makeAndSetHolder(configuredHolder, List.of(modifiers));
+	}
+
+	@SuppressWarnings({"unchecked", "rawtypes"})
+	public FrozenLibPlacedFeature makeAndSetHolder(@NotNull FrozenLibConfiguredFeature configuredFeature, PlacementModifier... modifiers) {
+		return this.makeAndSetHolder(configuredFeature.getHolder(), List.of(modifiers));
 	}
 }
