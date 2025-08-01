@@ -17,6 +17,10 @@
 
 package net.frozenblock.lib.resource_pack.api.client;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -39,9 +43,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 import java.util.zip.ZipFile;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
@@ -49,14 +50,13 @@ import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.menu.api.SystemToastUpdater;
-import net.frozenblock.lib.networking.FrozenClientNetworking;
+import net.frozenblock.lib.resource_pack.impl.client.PackDownloadToast;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.components.toasts.SystemToast;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringRepresentable;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
@@ -74,10 +74,7 @@ public class FrozenLibModResourcePackApi {
 	private static final List<String> HIDDEN_PACK_IDS = new ArrayList<>();
 	private static final List<String> MOD_RESOURCE_PACK_IDS = new ArrayList<>();
 	private static final List<ToastInfo> QUEUED_TOASTS = new ArrayList<>();
-	private static final SystemToast.SystemToastId PACK_DOWNLOAD = new SystemToast.SystemToastId();
-	private static final SystemToast.SystemToastId PACK_UPDATE = new SystemToast.SystemToastId();
-	private static final SystemToast.SystemToastId PACK_DOWNLOAD_FAILURE = new SystemToast.SystemToastId();
-	private static final SystemToast.SystemToastId PACK_DOWNLOAD_PRESENT = new SystemToast.SystemToastId();
+	private static final boolean SHOW_DEBUG_TOASTS = FrozenLibConstants.UNSTABLE_LOGGING;
 
 	/**
 	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then copies them to FrozenLib's Resource Pack directory.
@@ -156,17 +153,32 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	/**
-	 * Downloads a Resource Pack, using a url contained in an online {@link JsonElement}.
+	 * Downloads Resource Packs, using URLs contained within a list of {@link PackDownloadInfo}s.
 	 * <p>
 	 * These Resource Packs will be force-enabled, but may require resources to be reloaded depending on when they finish downloading.
 	 * <p>
 	 * Downloads will not occur if {@link FrozenLibConfig#packDownloading} is set to {@link PackDownloadSetting#DISABLED}.
-	 * @param urlString The url, in {@link String} format, to read as a {@link JsonElement} to extract the Resource Pack's url and version from.
-	 * @param packName The name of the Resource Pack, without the ".zip" extension.
+	 * @param downloadGroup The Resource Packs to download, in {@link PackDownloadGroup} form.
+	 * @param hidePackdFromMenu Whether the Resource Packs should be hidden from the Resource Pack selection menu.
+	 * @param skipVersionCheck Whether the Resource Packs will still be downloaded even if an identical version was already downloaded prior.
+	 */
+	public static void downloadResourcePacks(@NotNull PackDownloadGroup downloadGroup, boolean hidePackdFromMenu, boolean skipVersionCheck) {
+		downloadGroup.resetPackStatuses();
+		downloadGroup.packs().forEach(downloadInfo -> downloadResourcePack(downloadInfo, hidePackdFromMenu, skipVersionCheck));
+	}
+
+	/**
+	 * Downloads a Resource Pack, using a URL contained in an online {@link JsonElement}.
+	 * <p>
+	 * The Resource Packs will be force-enabled, but may require resources to be reloaded depending on when it finishes downloading.
+	 * <p>
+	 * Downloads will not occur if {@link FrozenLibConfig#packDownloading} is set to {@link PackDownloadSetting#DISABLED}.
+	 * @param downloadInfo The {@link PackDownloadInfo} to pull the URL and pack name from.
 	 * @param hidePackFromMenu Whether the Resource Pack should be hidden from the Resource Pack selection menu.
 	 * @param skipVersionCheck Whether the Resource Pack will still be downloaded even if an identical version was already downloaded prior.
 	 */
-	public static void downloadResourcePack(String urlString, String packName, boolean hidePackFromMenu, boolean skipVersionCheck) {
+	public static void downloadResourcePack(@NotNull PackDownloadInfo downloadInfo, boolean hidePackFromMenu, boolean skipVersionCheck) {
+		String packName = downloadInfo.getPackName();
 		String zipPackName = packName + ".zip";
 		String packId = "frozenlib:mod/downloaded/file/" + zipPackName;
 
@@ -179,33 +191,41 @@ public class FrozenLibModResourcePackApi {
 
 		CompletableFuture.supplyAsync(
 			() -> {
+				Optional<ToastInfo> failToast = Optional.empty();
 				try {
-					URL url = URI.create(urlString).toURL();
+					File destFile = new File(DOWNLOADED_RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
+					// Check if the pack already exists
+					boolean isPackPresent = destFile.exists();
+					// Select proper failure toast accordingly
+					failToast = isPackPresent
+						? SHOW_DEBUG_TOASTS ? Optional.of(new ToastInfo(downloadInfo, ToastType.FAILURE_PRESENT)) : Optional.empty()
+						: Optional.of(new ToastInfo(downloadInfo, ToastType.FAILURE));
+
+					// Connect online to attempt pack download
+					URL url = URI.create(downloadInfo.getURL()).toURL();
 					URLConnection request = url.openConnection();
 					request.connect();
 
+					// Parse JSON
 					JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent()));
 					JsonObject packDir = parsedJson.getAsJsonObject();
 					String packURL = packDir.get("pack").getAsString();
 					int packVersion = packDir.get("version").getAsInt();
 
-					File destFile = new File(DOWNLOADED_RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
 					// Check if the version has changed
 					boolean hasDownloadVersionChanged = skipVersionCheck || hasDownloadVersionChanged(packName, packVersion);
-					// Check if pack file is present
-					boolean isPackPresent = destFile.exists();
 
 					// Cancel download if pack is unchanged and already present
-					if (!hasDownloadVersionChanged && isPackPresent) return FrozenLibConstants.UNSTABLE_LOGGING
-						? Optional.of(new ToastInfo(packName, ToastType.PRESENT))
+					if (!hasDownloadVersionChanged && isPackPresent) return SHOW_DEBUG_TOASTS
+						? Optional.of(new ToastInfo(downloadInfo, ToastType.PRESENT))
 						: Optional.empty();
 
 					Optional<File> downloadedPack = downloadPackFromURL(packURL, packName, destFile, packVersion);
 					return downloadedPack.isPresent()
-						? Optional.of(new ToastInfo(packName, isPackPresent ? ToastType.SUCCESS_UPDATE : ToastType.SUCCESS_DOWNLOAD))
-						: Optional.of(new ToastInfo(packName, ToastType.FAILURE));
+						? Optional.of(new ToastInfo(downloadInfo, isPackPresent ? ToastType.SUCCESS_UPDATE : ToastType.SUCCESS_DOWNLOAD))
+						: failToast;
 				} catch (IOException ignored) {
-					return Optional.of(new ToastInfo(packName, ToastType.FAILURE));
+					return failToast;
 				}
 			},
 			Executors.newCachedThreadPool()
@@ -215,8 +235,8 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	/**
-	 * Downloads a Resource Pack from a url, and updates the download record to store the new pack version.
-	 * @param urlString The url, in {@link String} format, to download the .zip from.
+	 * Downloads a Resource Pack from a URL, and updates the download record to store the new pack version.
+	 * @param urlString The URL, in {@link String} format, to download the .zip from.
 	 * @param packName The name of the Resource Pack.
 	 * @param destFile The destination {@link File} of the Resource Pack.
 	 * @param newVersion The new version number of the Resource Pack to store to the download record.
@@ -241,112 +261,6 @@ public class FrozenLibModResourcePackApi {
 			FrozenLibConstants.LOGGER.error("Failed to download pack from URL: {}", urlString);
 		}
 		return Optional.empty();
-	}
-
-	/**
-	 * Displays a {@link SystemToast} to notify the player when a Resource Pack has been downloaded.
-	 * <p>
-	 * Displays secondary text explaining to the player to reload resources.
-	 * @param minecraft The {@link Minecraft} instance.
-	 * @param packName The name of the Resource Pack.
-	 */
-	private static void onPackDownloadComplete(@NotNull Minecraft minecraft, String packName) {
-		if (!SystemToastUpdater.doesToastOfTypeExist(minecraft.getToasts(), PACK_DOWNLOAD)) {
-			SystemToast.add(
-				minecraft.getToasts(),
-				PACK_DOWNLOAD,
-				Component.translatable("frozenlib.resourcepack.download.success"),
-				FrozenClientNetworking.notConnected()
-					? Component.translatable("frozenlib.resourcepack.download.open_menu")
-					: Component.translatable("frozenlib.resourcepack.download.press_f3")
-			);
-		}
-
-		SystemToastUpdater.updateMultiLine(
-			minecraft.getToasts(),
-			PACK_DOWNLOAD,
-			Component.translatable("frozenlib.resourcepack.download.success"),
-			Component.translatable("frozenlib.resourcepack." + packName),
-			null
-		);
-	}
-
-	/**
-	 * Displays a {@link SystemToast} to notify the player when a Resource Pack has been updated.
-	 * <p>
-	 * Displays secondary text explaining to the player to reload resources.
-	 * @param minecraft The {@link Minecraft} instance.
-	 * @param packName The name of the Resource Pack.
-	 */
-	private static void onPackUpdateComplete(@NotNull Minecraft minecraft, String packName) {
-		if (!SystemToastUpdater.doesToastOfTypeExist(minecraft.getToasts(), PACK_UPDATE)) {
-			SystemToast.add(
-				minecraft.getToasts(),
-				PACK_UPDATE,
-				Component.translatable("frozenlib.resourcepack.download.updated"),
-				FrozenClientNetworking.notConnected()
-					? Component.translatable("frozenlib.resourcepack.download.open_menu")
-					: Component.translatable("frozenlib.resourcepack.download.press_f3")
-			);
-		}
-
-		SystemToastUpdater.updateMultiLine(
-			minecraft.getToasts(),
-			PACK_UPDATE,
-			Component.translatable("frozenlib.resourcepack.download.updated"),
-			Component.translatable("frozenlib.resourcepack." + packName),
-			null
-		);
-	}
-
-	/**
-	 * Displays a {@link SystemToast} to notify the player when a Resource Pack has failed to download.
-	 * @param minecraft The {@link Minecraft} instance.
-	 * @param packName The name of the Resource Pack.
-	 */
-	private static void onPackDownloadFailure(@NotNull Minecraft minecraft, String packName) {
-		if (!SystemToastUpdater.doesToastOfTypeExist(minecraft.getToasts(), PACK_DOWNLOAD_FAILURE)) {
-			SystemToast.add(
-				minecraft.getToasts(),
-				PACK_DOWNLOAD_FAILURE,
-				Component.translatable("frozenlib.resourcepack.download.failure"),
-				null
-			);
-		}
-
-		SystemToastUpdater.updateMultiLine(
-			minecraft.getToasts(),
-			PACK_DOWNLOAD_FAILURE,
-			Component.translatable("frozenlib.resourcepack.download.failure"),
-			Component.translatable("frozenlib.resourcepack." + packName),
-			null
-		);
-	}
-
-	/**
-	 * Displays a {@link SystemToast} to notify developers when a Resource Pack is already present and will not be re-downloaded.
-	 * <p>
-	 * Used for debugging purposes.
-	 * @param minecraft The {@link Minecraft} instance.
-	 * @param packName The name of the Resource Pack.
-	 */
-	private static void onPackDownloadPresent(@NotNull Minecraft minecraft, String packName) {
-		if (!SystemToastUpdater.doesToastOfTypeExist(minecraft.getToasts(), PACK_DOWNLOAD_PRESENT)) {
-			SystemToast.add(
-				minecraft.getToasts(),
-				PACK_DOWNLOAD_PRESENT,
-				Component.translatable("frozenlib.resourcepack.download.present"),
-				null
-			);
-		}
-
-		SystemToastUpdater.updateMultiLine(
-			minecraft.getToasts(),
-			PACK_DOWNLOAD_PRESENT,
-			Component.translatable("frozenlib.resourcepack.download.present"),
-			Component.translatable("frozenlib.resourcepack." + packName),
-			null
-		);
 	}
 
 	/**
@@ -528,7 +442,7 @@ public class FrozenLibModResourcePackApi {
 	}
 
 	@ApiStatus.Internal
-	private record ToastInfo(String packName, ToastType toastType) {
+	private record ToastInfo(PackDownloadInfo downloadInfo, ToastType toastType) {
 		public boolean addToast() {
 			if (FrozenLibConfig.get().packDownloading != PackDownloadSetting.ENABLED) return false;
 			Minecraft minecraft = Minecraft.getInstance();
@@ -536,25 +450,31 @@ public class FrozenLibModResourcePackApi {
 				if (!QUEUED_TOASTS.contains(this)) QUEUED_TOASTS.add(this);
 				return false;
 			}
-			this.toastType.displayToast(this.packName);
+			this.toastType.displayToast(this.downloadInfo);
 			return true;
 		}
 	}
 
 	@ApiStatus.Internal
 	private enum ToastType {
-		SUCCESS_DOWNLOAD((packName) -> onPackDownloadComplete(Minecraft.getInstance(), packName)),
-		SUCCESS_UPDATE((packName) -> onPackUpdateComplete(Minecraft.getInstance(), packName)),
-		FAILURE((packName) -> onPackDownloadFailure(Minecraft.getInstance(), packName)),
-		PRESENT((packName) -> onPackDownloadPresent(Minecraft.getInstance(), packName));
-		private final Consumer<String> toastMaker;
+		SUCCESS_DOWNLOAD(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_DOWNLOAD_SUCCESS, downloadInfo)),
+		SUCCESS_UPDATE(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_UPDATE_SUCCESS, downloadInfo)),
+		FAILURE(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_DOWNLOAD_FAILURE, downloadInfo)),
+		FAILURE_PRESENT(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_DOWNLOAD_FAILURE_PRESENT, downloadInfo)),
+		PRESENT(downloadInfo -> displayOrUpdateToast(PackDownloadToast.PackDownloadToastId.PACK_DOWNLOAD_PRESENT, downloadInfo));
+		private final Consumer<PackDownloadInfo> toastMaker;
 
-		ToastType(Consumer<String> toastMaker) {
+		ToastType(Consumer<PackDownloadInfo> toastMaker) {
 			this.toastMaker = toastMaker;
 		}
 
-		public void displayToast(String packName) {
-			this.toastMaker.accept(packName);
+		public void displayToast(PackDownloadInfo downloadInfo) {
+			this.toastMaker.accept(downloadInfo);
+		}
+
+		private static void displayOrUpdateToast(PackDownloadToast.PackDownloadToastId id, @NotNull PackDownloadInfo downloadInfo) {
+			downloadInfo.setGroupStatus(id);
+			PackDownloadToast.addOrAppendIfNotPresent(Minecraft.getInstance().getToasts(), id, downloadInfo);
 		}
 	}
 
@@ -578,5 +498,120 @@ public class FrozenLibModResourcePackApi {
 		public @NotNull String getSerializedName() {
 			return this.name;
 		}
+	}
+
+	public static class PackDownloadGroup implements PackDownloadStatusProvider {
+		private final String groupName;
+		private final List<PackDownloadInfo> packs = new ArrayList<>();
+		private final Map<PackDownloadToast.PackDownloadToastId, List<PackDownloadInfo>> packStatuses = new Object2ObjectLinkedOpenHashMap<>();
+
+		private PackDownloadGroup(String packGroup) {
+			this.groupName = packGroup;
+		}
+
+		@Contract("_ -> new")
+		public static @NotNull PackDownloadGroup create(String packGroup) {
+			return new PackDownloadGroup(packGroup);
+		}
+
+		public PackDownloadGroup add(String url, String packName) {
+			this.packs.add(PackDownloadInfo.of(url, packName, this));
+			return this;
+		}
+
+		public void setPackStatus(PackDownloadToast.PackDownloadToastId id, PackDownloadInfo info) {
+			for (List<PackDownloadInfo> list : this.packStatuses.values()) list.removeIf(foundInfo -> foundInfo.equals(info));
+			this.packStatuses.computeIfAbsent(id, toastId -> new ArrayList<>()).add(info);
+		}
+
+		public void resetPackStatuses() {
+			this.packStatuses.clear();
+		}
+
+		public int size() {
+			return this.packs.size();
+		}
+
+		public int getPacksWithStatus(PackDownloadToast.PackDownloadToastId id) {
+			return this.packStatuses.getOrDefault(id, List.of()).size();
+		}
+
+		public List<PackDownloadInfo> packs() {
+			return this.packs;
+		}
+
+		public String getGroupName() {
+			return this.groupName;
+		}
+
+		@Override
+		public PackDownloadStatusProvider getDirectProvider() {
+			return this;
+		}
+
+		@Override
+		public Component getComponent(PackDownloadToast.PackDownloadToastId id) {
+			return Component.translatable(
+				"frozenlib.resourcepack.download.group",
+				Component.translatable("frozenlib.resourcepack.group." + this.groupName),
+				this.getPacksWithStatus(id),
+				this.size()
+			);
+		}
+	}
+
+	public static class PackDownloadInfo implements PackDownloadStatusProvider {
+		private final String url;
+		private final String packName;
+		private final Optional<PackDownloadGroup> packGroup;
+
+		private PackDownloadInfo(String url, String packName, Optional<PackDownloadGroup> packGroup) {
+			this.url = url;
+			this.packName = packName;
+			this.packGroup = packGroup;
+		}
+
+		@Contract("_, _, _ -> new")
+		public static @NotNull PackDownloadInfo of(String url, String packName, PackDownloadGroup packGroup) {
+			return new PackDownloadInfo(url, packName, Optional.ofNullable(packGroup));
+		}
+
+		@Contract("_, _ -> new")
+		public static @NotNull PackDownloadInfo of(String url, String packName) {
+			return new PackDownloadInfo(url, packName, Optional.empty());
+		}
+
+		public void setGroupStatus(PackDownloadToast.PackDownloadToastId id) {
+			if (this.packGroup.isEmpty()) return;
+			this.packGroup.get().setPackStatus(id, this);
+		}
+
+		public String getURL() {
+			return this.url;
+		}
+
+		public String getPackName() {
+			return this.packName;
+		}
+
+		public Optional<PackDownloadGroup> getPackGroup() {
+			return this.packGroup;
+		}
+
+		@Override
+		public PackDownloadStatusProvider getDirectProvider() {
+			if (this.packGroup.isEmpty()) return this;
+			return this.packGroup.get();
+		}
+
+		@Override
+		public Component getComponent(PackDownloadToast.PackDownloadToastId id) {
+			return Component.translatable("frozenlib.resourcepack.pack." + this.packName);
+		}
+	}
+
+	public interface PackDownloadStatusProvider {
+		PackDownloadStatusProvider getDirectProvider();
+		Component getComponent(PackDownloadToast.PackDownloadToastId id);
 	}
 }

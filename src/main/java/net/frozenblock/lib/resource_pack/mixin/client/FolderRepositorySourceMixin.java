@@ -51,7 +51,7 @@ public class FolderRepositorySourceMixin {
 			String componentString = string;
 			if (componentString.endsWith(".zip")) componentString = componentString.substring(0, componentString.length() - 4);
 			if (componentString.startsWith("file/")) componentString = componentString.substring(5);
-			component = Component.translatable("frozenlib.resourcepack." + componentString);
+			component = Component.translatable("frozenlib.resourcepack.pack." + componentString);
 
 			string = frozenLibFolderRepositorySource.getSuffix() + string;
 		}

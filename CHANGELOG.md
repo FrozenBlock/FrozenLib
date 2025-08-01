@@ -7,12 +7,12 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Data Blocks can be processed by writing a mixin on `StructurePoolElement`'s `handleDataMarker` method.
 - Fixed an issue that prevented Breezes from emitting a wind disturbance.
 - Fixed an issue that allowed structures disabled via the `StructureGenerationConditionApi` to still cause lag when using the locate command.
-- Added the `downloadResourcePack` method to `FrozenLibModResourcePackApi`!
-  - This method will download a resource pack, which will be loaded either open Minecraft's next boot or resources being reloaded.
+- Added the `downloadResourcePack` and `downloadResourcePacks` methods to `FrozenLibModResourcePackApi`!
+  - This method will download a resource pack/resource packs, which will be loaded either open Minecraft's next boot or resources being reloaded.
+  - Resource Pack downloads can be "grouped" together using the `PackDownloadGroup` class.
   - The file the URL points to must be a JSON with the two following fields:
     - `pack`: The URL of the resource pack, which must be a `.zip` file.
     - `version`: A numerical id for the resource pack. If the pack has been downloaded before with the same `version`, the download will be skipped.
   - A toast will be displayed on-screen to tell the player when a pack has finished or failed downloading.
   - A config option to disable pack downloading and toasts has been added.
-- Added the `SystemToastUpdater` class, allowing modders to add new lines to `SystemToast` instances that are already being displayed.
 - Added `FrozenLibConfiguredTreeFeature` and `FrozenLibPlacedTreeFeature,` designed to speed up the process of designing tree variants both with and without leaf litters.
