@@ -14,3 +14,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `version`: A numerical id for the resource pack. If the pack has been downloaded before with the same `version`, the download will be skipped.
   - A toast will be displayed on-screen to tell the player when a pack has finished or failed downloading.
   - A config option to disable pack downloading and toasts has been added.
+- Added `FrozenLibConfiguredTreeFeature` and `FrozenLibPlacedTreeFeature,` designed to speed up the process of designing tree variants both with and without leaf litters.
