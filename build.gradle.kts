@@ -305,7 +305,7 @@ tasks {
 
     shadowJar {
         configurations = listOf(relocModImplementation, relocModApi)
-        enableRelocation = true
+        enableAutoRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         dependencies {
             exclude {
