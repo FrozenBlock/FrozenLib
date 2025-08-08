@@ -55,7 +55,7 @@ public class SpottingIconManager {
 		} else {
 			this.ticksToCheck = 20;
 			if (this.icon != null) {
-				if (this.entity.level().isClientSide) {
+				if (this.entity.level().isClientSide()) {
 					this.clientHasIconResource = hasTexture(this.icon.texture());
 				}
 				if (!SpottingIconPredicate.getPredicate(this.icon.restrictionID).test(this.entity)) {
@@ -67,7 +67,7 @@ public class SpottingIconManager {
 
 	public void setIcon(ResourceLocation texture, float startFade, float endFade, ResourceLocation restrictionID) {
 		this.icon = new SpottingIcon(texture, startFade, endFade, restrictionID);
-		if (!this.entity.level().isClientSide) {
+		if (!this.entity.level().isClientSide()) {
 			CustomPacketPayload packet = new SpottingIconPacket(this.entity.getId(), texture, startFade, endFade, restrictionID);
 			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
 				ServerPlayNetworking.send(player, packet);
@@ -81,7 +81,7 @@ public class SpottingIconManager {
 	public void removeIcon() {
 		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onRemoved(this.entity);
 		this.icon = null;
-		if (!this.entity.level().isClientSide) {
+		if (!this.entity.level().isClientSide()) {
 			CustomPacketPayload packet = new SpottingIconRemovePacket(this.entity.getId());
 			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
 				ServerPlayNetworking.send(player, packet);

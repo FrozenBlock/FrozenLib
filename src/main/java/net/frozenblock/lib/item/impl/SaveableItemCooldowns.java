@@ -70,7 +70,7 @@ public class SaveableItemCooldowns {
 	}
 
 	public static void setCooldowns(@NotNull List<SaveableCooldownInstance> saveableCooldownInstances, @NotNull ServerPlayer player) {
-		if (player.level().isClientSide) return;
+		if (player.level().isClientSide()) return;
 
 		ItemCooldowns itemCooldowns = player.getCooldowns();
 		int tickCount = itemCooldowns.tickCount;

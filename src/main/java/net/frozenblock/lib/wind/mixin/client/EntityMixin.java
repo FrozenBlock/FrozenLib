@@ -43,7 +43,7 @@ public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbin
 		)
 	)
 	public void frozenLib$addWindDisturbanceClient(CallbackInfo info) {
-		if (this.level().isClientSide && !this.frozenLib$useSyncPacket()) {
+		if (this.level().isClientSide() && !this.frozenLib$useSyncPacket()) {
 			WindDisturbance windDisturbance = this.frozenLib$makeWindDisturbance();
 			if (windDisturbance != null) {
 				ClientWindManager.addWindDisturbance(windDisturbance);

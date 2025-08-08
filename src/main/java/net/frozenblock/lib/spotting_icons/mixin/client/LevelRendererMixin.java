@@ -51,7 +51,7 @@ public class LevelRendererMixin {
 		method = "method_62214",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/LevelRenderer;renderEntities(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;Lnet/minecraft/client/Camera;Lnet/minecraft/client/DeltaTracker;Ljava/util/List;)V",
+			target = "Lnet/minecraft/client/renderer/LevelRenderer;submitEntities(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/LevelRenderState;Lnet/minecraft/client/renderer/SubmitNodeCollector;)V",
 			shift = At.Shift.AFTER
 		)
 	)

@@ -24,7 +24,6 @@ import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.progress.ChunkProgressListener;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
@@ -41,7 +40,7 @@ public abstract class MinecraftServerMixin {
 	public abstract RegistryAccess.Frozen registryAccess();
 
 	@Inject(method = "createLevels", at = @At("HEAD"))
-	private void frozenLib$addSurfaceRules(ChunkProgressListener worldGenerationProgressListener, CallbackInfo ci) {
+	private void frozenLib$addSurfaceRules(CallbackInfo ci) {
 		var server = MinecraftServer.class.cast(this);
 		var registryAccess = server.registryAccess();
 		var levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);

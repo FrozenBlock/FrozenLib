@@ -82,7 +82,7 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
     @Inject(method = "tick", at = @At("TAIL"))
     public void frozenLib$tickSounds(CallbackInfo info) {
 		Entity entity = Entity.class.cast(this);
-        if (!entity.level().isClientSide) {
+        if (!entity.level().isClientSide()) {
             this.frozenLib$loopingSoundManager.tick();
             this.frozenLib$loopingFadingDistanceSoundManager.tick();
         }

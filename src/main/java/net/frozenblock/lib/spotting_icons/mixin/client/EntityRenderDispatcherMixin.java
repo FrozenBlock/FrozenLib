@@ -37,9 +37,6 @@ import net.minecraft.ReportedException;
 @Mixin(EntityRenderDispatcher.class)
 public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIcon {
 
-	@Shadow
-	private Level level;
-
 	@Unique
 	public <T extends Entity> void frozenLib$renderIcon(
 		T entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight
@@ -60,7 +57,7 @@ public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIc
 			entity.fillCrashReportCategory(crashReportCategory);
 			CrashReportCategory crashReportCategory2 = crashReport.addCategory("Renderer details");
 			crashReportCategory2.setDetail("Assigned renderer", entityRenderer);
-			crashReportCategory2.setDetail("Location", CrashReportCategory.formatLocation(this.level, x, y, z));
+			crashReportCategory2.setDetail("Location", CrashReportCategory.formatLocation(entity.level(), x, y, z));
 			crashReportCategory2.setDetail("Rotation", rotationYaw);
 			crashReportCategory2.setDetail("Delta", partialTicks);
 			throw new ReportedException(crashReport);

@@ -25,6 +25,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.cape.client.impl.PlayerCapeInterface;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
 import net.minecraft.client.renderer.entity.state.PlayerRenderState;
 import net.minecraft.resources.ResourceLocation;
@@ -36,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public class CapeLayerMixin {
 
 	@ModifyExpressionValue(
-		method = "render*",
+		method = "submit*",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/client/resources/PlayerSkin;capeTexture()Lnet/minecraft/resources/ResourceLocation;",
@@ -45,7 +46,7 @@ public class CapeLayerMixin {
 	)
 	public ResourceLocation frozenLib$captureAndChangeCapeLocation(
 		ResourceLocation resourceLocation,
-		PoseStack poseStack, MultiBufferSource multiBufferSource, int i, PlayerRenderState playerRenderState,
+		PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, PlayerRenderState playerRenderState, float f, float g,
 		@Share("frozenLib$newCapeTexture") LocalRef<ResourceLocation> newCapeTexture
 	) {
 		if (playerRenderState instanceof PlayerCapeInterface capeInterface) {
@@ -59,7 +60,7 @@ public class CapeLayerMixin {
 	}
 
 	@ModifyExpressionValue(
-		method = "render*",
+		method = "submit*",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/client/resources/PlayerSkin;capeTexture()Lnet/minecraft/resources/ResourceLocation;",
