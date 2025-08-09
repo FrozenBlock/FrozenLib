@@ -40,7 +40,7 @@ public abstract class MinecraftServerMixin {
 	public abstract RegistryAccess.Frozen registryAccess();
 
 	@Inject(method = "createLevels", at = @At("HEAD"))
-	private void frozenLib$addSurfaceRules(CallbackInfo ci) {
+	private void frozenLib$addSurfaceRules(CallbackInfo info) {
 		var server = MinecraftServer.class.cast(this);
 		var registryAccess = server.registryAccess();
 		var levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
