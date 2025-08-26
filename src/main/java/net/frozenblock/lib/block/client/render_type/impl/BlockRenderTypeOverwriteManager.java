@@ -115,7 +115,12 @@ public class BlockRenderTypeOverwriteManager implements SimpleResourceReloadList
 
 			dataResult.resultOrPartial((string) -> LOGGER.error("Failed to parse render type override for file: '{}'", location))
 				.ifPresent(overwrite -> {
-					ResourceLocation blockName = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath().replace(".json", ""));
+					ResourceLocation blockName = ResourceLocation.fromNamespaceAndPath(
+						location.getNamespace(),
+						location.getPath()
+							.replace(".json", "")
+							.replaceFirst(DIRECTORY, "")
+					);
 					LOGGER.info(blockName.toString());
 
 					Block block = BuiltInRegistries.BLOCK.getOptional(blockName).orElse(null);
