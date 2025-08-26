@@ -18,3 +18,9 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added `FrozenLibConfiguredTreeFeature` and `FrozenLibPlacedTreeFeature,` designed to speed up the process of designing tree variants both with and without leaf litters.
 - All Block textures with the `_frozenlib_emissive` suffix appended to their name will now be applied to models as an emissive overlay!
 - Added the `frozenlib_emissive` metadata section for texture `mcmeta` files, allowing you to specify the emissive overlay's light emission, and whether it should have block shading.
+- Block Render Types can now be overriden, letting players and modders alike specify how they want a Block to render!
+  - This is achieved via a new `block_render_type_overwrites` path within Resource Packs.
+  - Each json file must contain:
+    - The Block's id in the `block` field.
+    - The new Render Type in the `render_type` field.
+      - This can be `solid`, `cutout_mipped`, `cutout`, `translucent`, or `tripwire`.

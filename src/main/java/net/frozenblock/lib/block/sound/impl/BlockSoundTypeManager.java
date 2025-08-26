@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
 
 @ApiStatus.Internal
 public class BlockSoundTypeManager implements SimpleResourceReloadListener<BlockSoundTypeManager.SoundTypeLoader> {
-	private static final Logger LOGGER = LoggerFactory.getLogger("Block Sound Type Override Manager");
+	private static final Logger LOGGER = LoggerFactory.getLogger("Block Sound Type Overwrite Manager");
 	private static final String DIRECTORY = "block_sound_overwrites";
 
 	public static final BlockSoundTypeManager INSTANCE = new BlockSoundTypeManager();
