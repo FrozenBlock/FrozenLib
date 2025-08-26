@@ -16,10 +16,10 @@
   ],
   "client": [
     "client.entity.SpecialModelRenderersMixin",
+    "client.model.AtlasConfigMixin",
     "client.model.FaceBakeryMixin",
     "client.model.ModelManagerMixin",
     "client.model.SimpleUnbakedGeometryMixin",
-    "client.model.SpriteLoaderMixin",
     "tick.client.ClientLevelMixin"
   ]
 }

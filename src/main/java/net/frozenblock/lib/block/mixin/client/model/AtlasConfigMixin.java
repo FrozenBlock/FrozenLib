@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.mixin.client.model;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.client.resources.metadata.emissive.EmissiveMetadataSection;
-import net.minecraft.client.renderer.texture.SpriteLoader;
+import net.minecraft.client.resources.model.AtlasManager;
 import net.minecraft.server.packs.metadata.MetadataSectionType;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,23 +29,27 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
 import java.util.ArrayList;
 import java.util.Set;
 
 @Environment(EnvType.CLIENT)
-@Mixin(SpriteLoader.class)
-public class SpriteLoaderMixin {
+@Mixin(AtlasManager.AtlasConfig.class)
+public class AtlasConfigMixin {
 
 	@Mutable
 	@Shadow
 	@Final
-	public static Set<MetadataSectionType<?>> DEFAULT_METADATA_SECTIONS;
+	Set<MetadataSectionType<?>> additionalMetadata;
 
-	@Inject(method = "<clinit>", at = @At("TAIL"))
-	private static void frozenLib$addEmissiveMetadataSection(CallbackInfo info) {
-		ArrayList<MetadataSectionType<?>> sections = new ArrayList<>(DEFAULT_METADATA_SECTIONS);
+	@Inject(
+		method = "<init>(Lnet/minecraft/resources/ResourceLocation;Lnet/minecraft/resources/ResourceLocation;ZLjava/util/Set;)V",
+		at = @At("TAIL")
+	)
+	private void frozenLib$addEmissiveMetadataSection(CallbackInfo info) {
+		ArrayList<MetadataSectionType<?>> sections = new ArrayList<>(this.additionalMetadata);
 		sections.add(EmissiveMetadataSection.TYPE);
-		DEFAULT_METADATA_SECTIONS = Set.copyOf(sections);
+		this.additionalMetadata = Set.copyOf(sections);
 	}
 
 }
