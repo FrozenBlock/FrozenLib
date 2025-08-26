@@ -84,6 +84,7 @@ public class BlockRenderTypeOverwriteManager implements SimpleResourceReloadList
 	}
 
 	public static class RenderTypeLoader {
+		private static final String REPLACEMENT_DIRECTORY = DIRECTORY + "/";
 		private final ResourceManager manager;
 		private final List<BlockRenderTypeOverwrite> parsedOverwrites = new ArrayList<>();
 
@@ -119,7 +120,7 @@ public class BlockRenderTypeOverwriteManager implements SimpleResourceReloadList
 						location.getNamespace(),
 						location.getPath()
 							.replace(".json", "")
-							.replaceFirst(DIRECTORY, "")
+							.replaceFirst(REPLACEMENT_DIRECTORY, "")
 					);
 					LOGGER.info(blockName.toString());
 
