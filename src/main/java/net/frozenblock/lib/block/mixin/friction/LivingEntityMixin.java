@@ -45,7 +45,7 @@ public abstract class LivingEntityMixin extends Entity {
 			target = "Lnet/minecraft/world/level/block/Block;getFriction()F"
 		)
 	)
-	private float frictionApi(Block instance, Operation<Float> original, @Local BlockPos blockPos) {
+	private float frozenLib$applyFrictionApi(Block instance, Operation<Float> original, @Local BlockPos blockPos) {
 		FrictionContext frictionContext = new FrictionContext(
 			this.level(),
 			LivingEntity.class.cast(this),
