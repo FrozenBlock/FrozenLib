@@ -16,6 +16,7 @@
   ],
   "client": [
     "client.entity.SpecialModelRenderersMixin",
+    "client.model.FaceBakeryMixin",
     "client.model.ModelManagerMixin",
     "client.model.SimpleUnbakedGeometryMixin",
     "client.model.SpriteLoaderMixin",

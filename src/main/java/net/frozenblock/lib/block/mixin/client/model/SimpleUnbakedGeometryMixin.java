@@ -25,14 +25,11 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.block.client.resources.metadata.emissive.EmissiveMetadataSection;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.BlockElement;
 import net.minecraft.client.renderer.block.model.BlockElementFace;
-import net.minecraft.client.renderer.block.model.BlockElementRotation;
 import net.minecraft.client.renderer.block.model.SimpleUnbakedGeometry;
 import net.minecraft.client.renderer.texture.MissingTextureAtlasSprite;
-import net.minecraft.client.renderer.texture.SpriteContents;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelDebugName;
@@ -41,15 +38,12 @@ import net.minecraft.client.resources.model.QuadCollection;
 import net.minecraft.client.resources.model.SpriteGetter;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.ResourceMetadata;
-import org.joml.Vector3fc;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
-@Mixin(value = SimpleUnbakedGeometry.class, priority = 999)
+@Mixin(SimpleUnbakedGeometry.class)
 public abstract class SimpleUnbakedGeometryMixin {
 
 	@Shadow
@@ -129,40 +123,6 @@ public abstract class SimpleUnbakedGeometryMixin {
 		}
 
 		return builder;
-	}
-
-	@WrapOperation(
-		method = "bakeFace",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/block/model/FaceBakery;bakeQuad(Lorg/joml/Vector3fc;Lorg/joml/Vector3fc;Lnet/minecraft/client/renderer/block/model/BlockElementFace;Lnet/minecraft/client/renderer/texture/TextureAtlasSprite;Lnet/minecraft/core/Direction;Lnet/minecraft/client/resources/model/ModelState;Lnet/minecraft/client/renderer/block/model/BlockElementRotation;ZI)Lnet/minecraft/client/renderer/block/model/BakedQuad;"
-		)
-	)
-	private static BakedQuad frozenLib$bakeFaceWithEmission(
-		Vector3fc from,
-		Vector3fc to,
-		BlockElementFace blockElementFace,
-		TextureAtlasSprite sprite,
-		Direction direction,
-		ModelState modelState,
-		BlockElementRotation rotation,
-		boolean shade,
-		int lightEmission,
-		Operation<BakedQuad> original
-	) {
-		SpriteContents contents = sprite.contents();
-		ResourceMetadata metadata = contents.metadata();
-
-		Optional<EmissiveMetadataSection> optionalEmissiveMetadata = metadata.getSection(EmissiveMetadataSection.TYPE);
-		if (optionalEmissiveMetadata.isPresent()) {
-			EmissiveMetadataSection emissiveMetadata = optionalEmissiveMetadata.get();
-			shade = emissiveMetadata.shade().orElse(shade);
-			lightEmission = emissiveMetadata.lightEmission();
-		} else {
-			lightEmission = contents.name().getPath().endsWith("_frozenlib_emissive") ? 15 : lightEmission;
-		}
-
-		return original.call(from, to, blockElementFace, sprite, direction, modelState, rotation, shade, lightEmission);
 	}
 
 }
