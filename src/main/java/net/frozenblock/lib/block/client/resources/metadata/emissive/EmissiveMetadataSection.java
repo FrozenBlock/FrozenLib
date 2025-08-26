@@ -29,7 +29,7 @@ import java.util.Optional;
 public record EmissiveMetadataSection(int lightEmission, Optional<Boolean> shade) {
 	public static final Codec<EmissiveMetadataSection> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
-				ExtraCodecs.intRange(0, 15).optionalFieldOf("frametime", 15).forGetter(EmissiveMetadataSection::lightEmission),
+				ExtraCodecs.intRange(0, 15).optionalFieldOf("light_emission", 15).forGetter(EmissiveMetadataSection::lightEmission),
 				Codec.BOOL.optionalFieldOf("shade").forGetter(EmissiveMetadataSection::shade)
 			)
 			.apply(instance, EmissiveMetadataSection::new)
