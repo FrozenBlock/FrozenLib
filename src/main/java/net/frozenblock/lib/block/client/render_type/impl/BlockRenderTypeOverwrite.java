@@ -18,6 +18,7 @@
 package net.frozenblock.lib.block.client.render_type.impl;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
@@ -49,6 +50,14 @@ public class BlockRenderTypeOverwrite {
 
 	public RenderType getRenderType() {
 		return this.getRenderTypeOverwrite().get();
+	}
+
+	protected record RenderTypeOverwriteHolder(RenderTypeOverwrite renderTypeOverwrite) {
+		public static final Codec<RenderTypeOverwriteHolder> CODEC = RecordCodecBuilder.create(instance ->
+			instance.group(
+				RenderTypeOverwrite.CODEC.fieldOf("render_type").forGetter(RenderTypeOverwriteHolder::renderTypeOverwrite)
+			).apply(instance, RenderTypeOverwriteHolder::new)
+		);
 	}
 
 	public enum RenderTypeOverwrite implements StringRepresentable {

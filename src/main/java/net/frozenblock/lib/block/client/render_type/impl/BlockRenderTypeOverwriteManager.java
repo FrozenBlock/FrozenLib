@@ -110,8 +110,8 @@ public class BlockRenderTypeOverwriteManager implements SimpleResourceReloadList
 			}
 
 			JsonObject json = GsonHelper.parse(reader);
-			DataResult<? extends Pair<? extends BlockRenderTypeOverwrite.RenderTypeOverwrite, JsonElement>> dataResult
-				= BlockRenderTypeOverwrite.RenderTypeOverwrite.CODEC.decode(JsonOps.INSTANCE, json);
+			DataResult<? extends Pair<? extends BlockRenderTypeOverwrite.RenderTypeOverwriteHolder, JsonElement>> dataResult
+				= BlockRenderTypeOverwrite.RenderTypeOverwriteHolder.CODEC.decode(JsonOps.INSTANCE, json);
 
 			dataResult.resultOrPartial((string) -> LOGGER.error("Failed to parse render type override for file: '{}'", location))
 				.ifPresent(overwrite -> {
@@ -120,7 +120,7 @@ public class BlockRenderTypeOverwriteManager implements SimpleResourceReloadList
 
 					Block block = BuiltInRegistries.BLOCK.getOptional(blockName).orElse(null);
 					if (block != null) {
-						parsedOverwrites.add(new BlockRenderTypeOverwrite(block, overwrite.getFirst()));
+						parsedOverwrites.add(new BlockRenderTypeOverwrite(block, overwrite.getFirst().renderTypeOverwrite()));
 					} else {
 						LOGGER.error("Failed to find block of name: '{}'", blockName);
 					}
