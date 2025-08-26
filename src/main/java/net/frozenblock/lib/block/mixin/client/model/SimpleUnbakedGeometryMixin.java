@@ -71,7 +71,7 @@ public abstract class SimpleUnbakedGeometryMixin {
 		@Share("frozenLib$emissiveSprite") LocalRef<TextureAtlasSprite> emissiveSpriteRef
 	) {
 		ResourceLocation location = original.contents().name();
-		ResourceLocation emissiveLocation = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + "_frozenLib_emissive");
+		ResourceLocation emissiveLocation = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath() + "_frozenlib_emissive");
 
 		TextureAtlasSprite emissiveSprite = spriteGetter.get(new Material(original.atlasLocation(), emissiveLocation), modelDebugName);
 		if (emissiveSprite != null && !emissiveSprite.contents().name().equals(MissingTextureAtlasSprite.getLocation())) {
@@ -159,7 +159,7 @@ public abstract class SimpleUnbakedGeometryMixin {
 			shade = emissiveMetadata.shade().orElse(shade);
 			lightEmission = emissiveMetadata.lightEmission();
 		} else {
-			lightEmission = contents.name().getPath().endsWith("_frozenLib_emissive") ? 15 : lightEmission;
+			lightEmission = contents.name().getPath().endsWith("_frozenlib_emissive") ? 15 : lightEmission;
 		}
 
 		return original.call(from, to, blockElementFace, sprite, direction, modelState, rotation, shade, lightEmission);

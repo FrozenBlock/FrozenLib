@@ -39,7 +39,7 @@ public class ModelManagerMixin {
 	private static boolean frozenLib$ignoreEmissiveLoggingA(
 		Logger instance, String string, Object object1, Object object2
 	) {
-		if (object2 instanceof String object2String) return !object2String.endsWith("_frozenLib_emissive");
+		if (object2 instanceof String object2String) return !object2String.endsWith("_frozenlib_emissive");
 		return true;
 	}
 
@@ -53,7 +53,7 @@ public class ModelManagerMixin {
 	private static boolean frozenLib$ignoreEmissiveLoggingB(
 		Logger instance, String string, Object object1, Object object2
 	) {
-		if (object2 instanceof String object2String) return !object2String.endsWith("_frozenLib_emissive");
+		if (object2 instanceof String object2String) return !object2String.endsWith("_frozenlib_emissive");
 		return true;
 	}
 
