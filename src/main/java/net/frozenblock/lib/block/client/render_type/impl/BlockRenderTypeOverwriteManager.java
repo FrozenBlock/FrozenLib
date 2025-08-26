@@ -27,11 +27,12 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.blockrenderlayer.v1.BlockRenderLayerMap;
 import net.fabricmc.fabric.api.resource.SimpleResourceReloadListener;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.block.client.render_type.api.BlockRenderTypeOverwriteCodecs;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
@@ -73,9 +74,7 @@ public class BlockRenderTypeOverwriteManager implements SimpleResourceReloadList
 		BlockRenderLayerMap renderLayerRegistry = BlockRenderLayerMap.INSTANCE;
 
 		this.overwrites.forEach(overwrite -> {
-			overwrite.getBlock().ifPresent(block -> {
-				renderLayerRegistry.putBlock(block, overwrite.getRenderType());
-			});
+			renderLayerRegistry.putBlock(overwrite.getBlock(), overwrite.getRenderType());
 		});
 	}
 
@@ -111,11 +110,21 @@ public class BlockRenderTypeOverwriteManager implements SimpleResourceReloadList
 			}
 
 			JsonObject json = GsonHelper.parse(reader);
-			DataResult<? extends Pair<? extends BlockRenderTypeOverwrite, JsonElement>> dataResult
-				= BlockRenderTypeOverwriteCodecs.BLOCK_RENDER_TYPE_OVERWRITE.decode(JsonOps.INSTANCE, json);
+			DataResult<? extends Pair<? extends BlockRenderTypeOverwrite.RenderTypeOverwrite, JsonElement>> dataResult
+				= BlockRenderTypeOverwrite.RenderTypeOverwrite.CODEC.decode(JsonOps.INSTANCE, json);
 
 			dataResult.resultOrPartial((string) -> LOGGER.error("Failed to parse render type override for file: '{}'", location))
-				.ifPresent(overwrite -> parsedOverwrites.add(overwrite.getFirst()));
+				.ifPresent(overwrite -> {
+					ResourceLocation blockName = ResourceLocation.fromNamespaceAndPath(location.getNamespace(), location.getPath().replace(".json", ""));
+					LOGGER.info(blockName.toString());
+
+					Block block = BuiltInRegistries.BLOCK.getOptional(blockName).orElse(null);
+					if (block != null) {
+						parsedOverwrites.add(new BlockRenderTypeOverwrite(block, overwrite.getFirst()));
+					} else {
+						LOGGER.error("Failed to find block of name: '{}'", blockName);
+					}
+				});
 		}
 
 		public List<BlockRenderTypeOverwrite> getOverwrites() {

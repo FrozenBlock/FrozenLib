@@ -21,29 +21,26 @@ import com.mojang.serialization.Codec;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
 import java.util.function.Supplier;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 public class BlockRenderTypeOverwrite {
-	private final ResourceLocation blockName;
+	private final Block block;
 	private final RenderTypeOverwrite renderTypeOverwrite;
 
-	public BlockRenderTypeOverwrite(ResourceLocation blockName, RenderTypeOverwrite renderTypeOverwrite) {
-		this.blockName = blockName;
+	public BlockRenderTypeOverwrite(Block block, RenderTypeOverwrite renderTypeOverwrite) {
+		this.block = block;
 		this.renderTypeOverwrite = renderTypeOverwrite;
 	}
 
-	public ResourceLocation getBlockName() {
-		return this.blockName;
+	public Block getBlock() {
+		return this.block;
 	}
 
 	public RenderTypeOverwrite getRenderTypeOverwrite() {
@@ -52,10 +49,6 @@ public class BlockRenderTypeOverwrite {
 
 	public RenderType getRenderType() {
 		return this.getRenderTypeOverwrite().get();
-	}
-
-	public Optional<Block> getBlock() {
-		return BuiltInRegistries.BLOCK.getOptional(this.blockName);
 	}
 
 	public enum RenderTypeOverwrite implements StringRepresentable {
