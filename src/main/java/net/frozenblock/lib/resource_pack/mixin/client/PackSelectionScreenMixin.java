@@ -17,36 +17,46 @@
 
 package net.frozenblock.lib.resource_pack.mixin.client;
 
-import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.client.gui.screens.packs.PackSelectionModel;
 import net.minecraft.client.gui.screens.packs.PackSelectionScreen;
-import net.minecraft.client.gui.screens.packs.TransferableSelectionList;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
 
 @Environment(EnvType.CLIENT)
 @Mixin(PackSelectionScreen.class)
 public class PackSelectionScreenMixin {
 
-	@Inject(
-		method = "method_29672",
+	@ModifyExpressionValue(
+		method = "populateLists",
 		at = @At(
 			value = "INVOKE",
-			target = "Ljava/util/List;add(Ljava/lang/Object;)Z",
-			shift = At.Shift.BEFORE
-		),
-		cancellable = true
+			target = "Lnet/minecraft/client/gui/screens/packs/PackSelectionModel;getSelected()Ljava/util/stream/Stream;"
+		)
 	)
-	public void frozenLib$hidePacks(
-		TransferableSelectionList transferableSelectionList, String string, PackSelectionModel.Entry entry, CallbackInfo info,
-		@Local TransferableSelectionList.PackEntry packEntry
-	) {
-		if (FrozenLibModResourcePackApi.isPackHiddenFromMenu(packEntry.getPackId())) info.cancel();
+	public Stream<PackSelectionModel.Entry> frozenLib$hidePacksA(Stream<PackSelectionModel.Entry> selected) {
+		List<PackSelectionModel.Entry> entries = new ArrayList<>(selected.toList());
+		entries.removeIf(entry -> FrozenLibModResourcePackApi.isPackHiddenFromMenu(entry.getId()));
+		return entries.stream();
+	}
+
+	@ModifyExpressionValue(
+		method = "populateLists",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/gui/screens/packs/PackSelectionModel;getUnselected()Ljava/util/stream/Stream;"
+		)
+	)
+	public Stream<PackSelectionModel.Entry> frozenLib$hidePacksB(Stream<PackSelectionModel.Entry> selected) {
+		List<PackSelectionModel.Entry> entries = new ArrayList<>(selected.toList());
+		entries.removeIf(entry -> FrozenLibModResourcePackApi.isPackHiddenFromMenu(entry.getId()));
+		return entries.stream();
 	}
 
 }

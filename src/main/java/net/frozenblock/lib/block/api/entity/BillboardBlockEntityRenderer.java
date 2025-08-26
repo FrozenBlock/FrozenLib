@@ -28,15 +28,17 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
+import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 /**
@@ -66,21 +68,29 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 	private final Quaternionf rotation = new Quaternionf(0F, 0F, 0F, 1F);
 
 	@Override
-	public void render(
-		T blockEntity,
+	public void submit(
+		@NotNull T blockEntity,
 		float tickDelta,
 		@NotNull PoseStack poseStack,
-		@NotNull MultiBufferSource multiBufferSource,
 		int light,
 		int overlay,
-		Vec3 cameraPos
+		@NotNull Vec3 cameraPos,
+		@Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay,
+		@NotNull SubmitNodeCollector submitNodeCollector
 	) {
 		this.rotation.set(0F, 0F, 0F, 1F);
 		this.rotation.mul(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().yRot));
 		poseStack.translate(0.5F, 0F, 0.5F);
 		poseStack.pushPose();
 		poseStack.mulPose(this.rotation);
-		this.base.render(poseStack, multiBufferSource.getBuffer(RenderType.entityCutout(this.getTexture(blockEntity))), light, overlay);
+		submitNodeCollector.submitModelPart(
+			this.base,
+			poseStack,
+			RenderType.entityCutout(this.getTexture(blockEntity)),
+			light,
+			overlay,
+			null
+		);
 		poseStack.popPose();
 	}
 

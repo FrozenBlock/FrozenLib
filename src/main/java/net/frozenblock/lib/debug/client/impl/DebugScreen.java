@@ -102,12 +102,10 @@ public class DebugScreen extends Screen {
 			}
 
 			@Override
-			public void render(
-				GuiGraphics context, int index, int y, int x, int width, int height, int mouseX, int mouseY, boolean hovered, float tickDelta
-			) {
-				this.button.setY(y);
-				this.button.render(context, mouseX, mouseY, tickDelta);
-				context.drawString(this.font, this.rendererName, x, y + 6, -1, true);
+			public void renderContent(GuiGraphics guiGraphics, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+				this.button.setY(this.getContentY());
+				this.button.render(guiGraphics, mouseX, mouseY, tickDelta);
+				guiGraphics.drawString(this.font, this.rendererName, this.getContentX(), this.getY() + 6, -1, true);
 			}
 		}
 	}

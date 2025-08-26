@@ -23,7 +23,6 @@ import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldCallback;
 import net.minecraft.client.gui.screens.worldselection.CreateWorldScreen;
 import net.minecraft.client.gui.screens.worldselection.DataPackReloadCookie;
@@ -94,7 +93,7 @@ public abstract class CreateWorldScreenMixin {
 	)
 	private static void onDataPackLoadStart(
 		Minecraft minecraft,
-		Screen screen,
+		Runnable runnable,
 		Function<WorldLoader.DataLoadContext, WorldGenSettings> function,
 		WorldCreationContextMapper worldCreationContextMapper,
 		ResourceKey<WorldPreset> resourceKey,
@@ -110,8 +109,13 @@ public abstract class CreateWorldScreenMixin {
 		at = @At("HEAD"),
 		require = 1
 	)
-	private static void onCreateDataPackLoadEnd(CloseableResourceManager resourceManager, ReloadableServerResources resources,
-												LayeredRegistryAccess<?> layeredRegistryAccess, @Coerce Object object, CallbackInfoReturnable<WorldCreationContext> cir) {
+	private static void onCreateDataPackLoadEnd(
+		CloseableResourceManager resourceManager,
+		ReloadableServerResources resources,
+		LayeredRegistryAccess<?> layeredRegistryAccess,
+		@Coerce Object object,
+		CallbackInfoReturnable<WorldCreationContext> info
+	) {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
 	}
 
@@ -122,7 +126,12 @@ public abstract class CreateWorldScreenMixin {
 			target = "Lnet/minecraft/server/WorldLoader;load(Lnet/minecraft/server/WorldLoader$InitConfig;Lnet/minecraft/server/WorldLoader$WorldDataSupplier;Lnet/minecraft/server/WorldLoader$ResultFactory;Ljava/util/concurrent/Executor;Ljava/util/concurrent/Executor;)Ljava/util/concurrent/CompletableFuture;"
 		)
 	)
-	private void onDataPackLoadStart(PackRepository packRepository, WorldDataConfiguration worldDataConfiguration, Consumer<WorldDataConfiguration> consumer, CallbackInfo ci) {
+	private void onDataPackLoadStart(
+		PackRepository packRepository,
+		WorldDataConfiguration worldDataConfiguration,
+		Consumer<WorldDataConfiguration> consumer,
+		CallbackInfo info
+	) {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
 	}
 
@@ -135,7 +144,12 @@ public abstract class CreateWorldScreenMixin {
 			remap = false
 		)
 	)
-	private void onFailDataPackLoading(Consumer<WorldDataConfiguration> consumer, Void unused, Throwable throwable, CallbackInfoReturnable<Object> cir) {
+	private void onFailDataPackLoading(
+		Consumer<WorldDataConfiguration> consumer,
+		Void unused,
+		Throwable throwable,
+		CallbackInfoReturnable<Object> info
+	) {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, null, throwable);
 	}
 }

@@ -31,7 +31,6 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.SkinTextureDownloader;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -56,7 +55,7 @@ public class ClientCapeUtil {
 
 				@Override
 				public void onResourceManagerReload(@NotNull ResourceManager resourceManager) {
-					SkinTextureDownloader.downloadAndRegisterSkin(
+					Minecraft.getInstance().getSkinManager().skinTextureDownloader.downloadAndRegisterSkin(
 						capeTextureLocation,
 						CAPE_CACHE_PATH.resolve(capeLocation.getNamespace()).resolve(capeLocation.getPath() + ".png"),
 						textureURL,
