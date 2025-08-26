@@ -16,6 +16,8 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - A toast will be displayed on-screen to tell the player when a pack has finished or failed downloading.
   - A config option to disable pack downloading and toasts has been added.
 - Added `FrozenLibConfiguredTreeFeature` and `FrozenLibPlacedTreeFeature,` designed to speed up the process of designing tree variants both with and without leaf litters.
+
+### 1.21.5+
 - All Block textures with the `_frozenlib_emissive` suffix appended to their name will now be applied to models as an emissive overlay!
 - Added the `frozenlib_emissive` metadata section for texture `mcmeta` files, allowing you to specify the emissive overlay's light emission, and whether it should have block shading.
 - Block Render Types can now be overriden, letting players and modders alike specify how they want a Block to render!
