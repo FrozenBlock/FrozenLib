@@ -9,8 +9,8 @@
   "client": [
     "client.AbstractClientPlayerMixin",
     "client.CapeLayerMixin",
-    "client.PlayerRendererMixin",
-    "client.PlayerRenderStateMixin",
+    "client.AvatarRendererMixin",
+    "client.AvatarRenderStateMixin",
     "client.WingsLayerMixin"
   ]
 }

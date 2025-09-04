@@ -17,9 +17,7 @@
 
 package net.frozenblock.lib.particle.client;
 
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import java.util.List;
-import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.math.api.AdvancedMath;
@@ -29,10 +27,12 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.particle.TextureSheetParticle;
+import net.minecraft.client.renderer.QuadParticleRenderState;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -40,9 +40,9 @@ import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 @Environment(EnvType.CLIENT)
-public class WindParticle extends TextureSheetParticle {
+public class WindParticle extends SingleQuadParticle {
 	private static final Vector3f NORMALIZED_QUAT_VECTOR = new Vector3f(0.5F, 0.5F, 0.5F).normalize();
-	private final SpriteSet spriteProvider;
+	private final SpriteSet spriteSet;
 	private int ageBeforeDissipating;
 
 	private float prevYRot;
@@ -55,12 +55,11 @@ public class WindParticle extends TextureSheetParticle {
 	private boolean flipped;
 	private boolean chosenSide;
 
-	WindParticle(@NotNull ClientLevel level, @NotNull SpriteSet spriteProvider, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-		super(level, x, y, z, velocityX, velocityY, velocityZ);
+	WindParticle(@NotNull ClientLevel level, @NotNull SpriteSet spriteSet, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
+		super(level, x, y, z, velocityX, velocityY, velocityZ, spriteSet.first());
 		this.quadSize *= 3F;
 		this.setSize(0.3F, 0.3F);
-		this.spriteProvider = spriteProvider;
-		this.setSpriteFromAge(spriteProvider);
+		this.spriteSet = spriteSet;
 		this.lifetime = 19;
 		this.hasPhysics = false;
 		this.friction = 0.95F;
@@ -128,7 +127,7 @@ public class WindParticle extends TextureSheetParticle {
 			this.flipped = this.level.random.nextBoolean();
 			this.lifetime = this.ageBeforeDissipating + 11;
 		}
-		this.setSpriteFromAge(this.spriteProvider);
+		this.setSpriteFromAge(this.spriteSet);
 	}
 
 	@Override
@@ -174,30 +173,30 @@ public class WindParticle extends TextureSheetParticle {
 	}
 
 	@Override
-	public void setSpriteFromAge(@NotNull SpriteSet spriteProvider) {
+	public void setSpriteFromAge(@NotNull SpriteSet spriteSet) {
 		if (this.removed) return;
 		int i = this.age < 8 ? this.age : (this.age < this.ageBeforeDissipating ? 8 : this.age - (this.ageBeforeDissipating) + 9);
-		this.setSprite(spriteProvider.get(Math.min(i, 20), 20));
+		this.setSprite(spriteSet.get(Math.min(i, 20), 20));
 	}
 
 	@Override
-	public void render(@NotNull VertexConsumer buffer, @NotNull Camera renderInfo, float partialTicks) {
-		float yRot = Mth.lerp(partialTicks, this.prevYRot, this.yRot) * Mth.DEG_TO_RAD;
-		float xRot = Mth.lerp(partialTicks, this.prevXRot, this.xRot) * -Mth.DEG_TO_RAD;
-		float cameraRotWhileVertical = ((-renderInfo.getYRot()) * (1F - Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
-		float cameraXRot = renderInfo.getXRot();
-		float rotationOffset = 90F;
+	public void extract(QuadParticleRenderState renderState, @NotNull Camera camera, float partialTicks) {
+		final float yRot = Mth.lerp(partialTicks, this.prevYRot, this.yRot) * Mth.DEG_TO_RAD;
+		final float xRot = Mth.lerp(partialTicks, this.prevXRot, this.xRot) * -Mth.DEG_TO_RAD;
+		final float cameraRotWhileVertical = ((-camera.getYRot()) * (1F - Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
+		float cameraXRot = camera.getXRot();
+		final float rotationOffset = 90F;
 
-		float x = (float)(Mth.lerp(partialTicks, this.xo, this.x));
-		float y = (float)(Mth.lerp(partialTicks, this.yo, this.y));
-		float z = (float)(Mth.lerp(partialTicks, this.zo, this.z));
-		Vec3 particlePos = new Vec3(x, y, z);
-		Vec3 cameraPos = renderInfo.getPosition();
+		final float x = (float)(Mth.lerp(partialTicks, this.xo, this.x));
+		final float y = (float)(Mth.lerp(partialTicks, this.yo, this.y));
+		final float z = (float)(Mth.lerp(partialTicks, this.zo, this.z));
+		final Vec3 particlePos = new Vec3(x, y, z);
+		final Vec3 cameraPos = camera.getPosition();
 		double normalizedRelativeY = particlePos.subtract(cameraPos).normalize().subtract(new Vec3(this.xd, this.yd, this.zd).normalize()).normalize().y;
 
-		double particleRotation = AdvancedMath.getAngleFromOriginXZ(new Vec3(this.xd, 0D, this.zd));
-		double angleToParticle = AdvancedMath.getAngleBetweenXZ(particlePos, cameraPos);
-		double relativeParticleAngle = (360D + (angleToParticle - particleRotation)) % 360D;
+		final double particleRotation = AdvancedMath.getAngleFromOriginXZ(new Vec3(this.xd, 0D, this.zd));
+		final double angleToParticle = AdvancedMath.getAngleBetweenXZ(particlePos, cameraPos);
+		final double relativeParticleAngle = (360D + (angleToParticle - particleRotation)) % 360D;
 
 		if (normalizedRelativeY > 0D) {
 			cameraXRot = Mth.lerp(Mth.square((float)normalizedRelativeY), cameraXRot, -90F);
@@ -208,75 +207,94 @@ public class WindParticle extends TextureSheetParticle {
 		float fixedRotation = rotationOffset + cameraXRot;
 		if (relativeParticleAngle > 0D && relativeParticleAngle < 180D) fixedRotation *= -1F;
 
-		float cameraRotWhileSideways = ((fixedRotation) * (Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
-		this.renderParticle(buffer, cameraPos, partialTicks, this.flipped, transforms -> transforms.rotateY(yRot)
+		final float cameraRotWhileSideways = ((fixedRotation) * (Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
+
+		final Quaternionf quatA = createBaseQuaternion()
+			.rotateY(yRot)
 			.rotateX(-xRot)
 			.rotateY(cameraRotWhileSideways)
-			.rotateY(cameraRotWhileVertical)
-		);
-		this.renderParticle(buffer, cameraPos, partialTicks, !this.flipped, transforms -> transforms.rotateY((float) -Math.PI + yRot)
+			.rotateY(cameraRotWhileVertical);
+
+		final Quaternionf quatB = createBaseQuaternion()
+			.rotateY(-Mth.PI + yRot)
 			.rotateX(xRot)
 			.rotateY(cameraRotWhileSideways)
-			.rotateY(cameraRotWhileVertical));
+			.rotateY(cameraRotWhileVertical);
+
+		submit(
+			renderState,
+			this.getLayer(),
+			(float) (x - cameraPos.x()),
+			(float) (y - cameraPos.y()),
+			(float) (z - cameraPos.z()),
+			quatA,
+			quatB,
+			this.getQuadSize(partialTicks),
+			!this.flipped ? this.getU0() : this.getU1(),
+			!this.flipped ? this.getU1() : this.getU0(),
+			this.getV0(),
+			this.getV1(),
+			ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol),
+			this.getLightColor(partialTicks)
+		);
 	}
 
-	private void renderParticle(VertexConsumer buffer, @NotNull Vec3 cameraPos, float partialTicks, boolean flipped, @NotNull Consumer<Quaternionf> quaternionConsumer) {
-		float f = (float)(Mth.lerp(partialTicks, this.xo, this.x) - cameraPos.x());
-		float g = (float)(Mth.lerp(partialTicks, this.yo, this.y) - cameraPos.y());
-		float h = (float)(Mth.lerp(partialTicks, this.zo, this.z) - cameraPos.z());
-		Quaternionf quaternionf = new Quaternionf().setAngleAxis(0F, NORMALIZED_QUAT_VECTOR.x(), NORMALIZED_QUAT_VECTOR.y(), NORMALIZED_QUAT_VECTOR.z());
-		quaternionConsumer.accept(quaternionf);
-		Vector3f[] vector3fs = new Vector3f[]{
-			new Vector3f(-1F, -1F, 0F), new Vector3f(-1F, 1F, 0F), new Vector3f(1F, 1F, 0F), new Vector3f(1F, -1F, 0F)
-		};
-		float i = this.getQuadSize(partialTicks);
+	private static void submit(
+		@NotNull QuadParticleRenderState renderState,
+		Layer layer,
+		float x, float y, float z,
+		@NotNull Quaternionf quatA, @NotNull Quaternionf quatB,
+		float quadSize,
+		float uA, float uB, float vA, float vB,
+		int color,
+		int lightColor
+	) {
+		renderState.add(
+			layer,
+			x, y, z,
+			quatA.x, quatA.y, quatA.z, quatA.w,
+			quadSize,
+			uA, uB, vA, vB,
+			color,
+			lightColor
+		);
+		renderState.add(
+			layer,
+			x, y, z,
+			quatB.x, quatB.y, quatB.z, quatB.w,
+			quadSize,
+			uB, uA, vA, vB,
+			color,
+			lightColor
+		);
+	}
 
-		for(int j = 0; j < 4; ++j) {
-			Vector3f vector3f2 = vector3fs[j];
-			vector3f2.rotate(quaternionf);
-			vector3f2.mul(i);
-			vector3f2.add(f, g, h);
-		}
-
-		float k = !flipped ? this.getU0() : this.getU1();
-		float l = !flipped ? this.getU1() : this.getU0();
-		float m = this.getV0();
-		float n = this.getV1();
-		int light = this.getLightColor(partialTicks);
-		buffer.addVertex(vector3fs[0].x(), vector3fs[0].y(), vector3fs[0].z())
-			.setUv(l, n)
-			.setColor(this.rCol, this.gCol, this.bCol, this.alpha)
-			.setLight(light);
-		buffer.addVertex(vector3fs[1].x(), vector3fs[1].y(), vector3fs[1].z())
-			.setUv(l, m)
-			.setColor(this.rCol, this.gCol, this.bCol, this.alpha)
-			.setLight(light);
-		buffer.addVertex(vector3fs[2].x(), vector3fs[2].y(), vector3fs[2].z())
-			.setUv(k, m)
-			.setColor(this.rCol, this.gCol, this.bCol, this.alpha)
-			.setLight(light);
-		buffer.addVertex(vector3fs[3].x(), vector3fs[3].y(), vector3fs[3].z())
-			.setUv(k, n)
-			.setColor(this.rCol, this.gCol, this.bCol, this.alpha)
-			.setLight(light);
+	private static Quaternionf createBaseQuaternion() {
+		return new Quaternionf().setAngleAxis(0F, NORMALIZED_QUAT_VECTOR.x(), NORMALIZED_QUAT_VECTOR.y(), NORMALIZED_QUAT_VECTOR.z());
 	}
 
 	@Override
-	@NotNull
-	public ParticleRenderType getRenderType() {
-		return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+	protected @NotNull Layer getLayer() {
+		return Layer.TRANSLUCENT;
 	}
 
 	@Environment(EnvType.CLIENT)
 	public record Factory(@NotNull SpriteSet spriteProvider) implements ParticleProvider<WindParticleOptions> {
+
 		@Override
 		@NotNull
-		public Particle createParticle(@NotNull WindParticleOptions options, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed, double zSpeed) {
+		public Particle createParticle(
+			@NotNull WindParticleOptions options,
+			@NotNull ClientLevel level,
+			double x, double y, double z,
+			double xSpeed, double ySpeed, double zSpeed,
+			@NotNull RandomSource random
+		) {
 			Vec3 velocity = options.getVelocity();
 			WindParticle windParticle = new WindParticle(level, this.spriteProvider, x, y, z, 0D, 0D, 0D);
 			windParticle.ageBeforeDissipating = options.getLifespan();
 			windParticle.lifetime += windParticle.ageBeforeDissipating;
-			windParticle.flipped = level.random.nextBoolean();
+			windParticle.flipped = random.nextBoolean();
 			windParticle.xd = velocity.x;
 			windParticle.zd = velocity.z;
 			windParticle.yd = velocity.y;
@@ -289,5 +307,4 @@ public class WindParticle extends TextureSheetParticle {
 			return windParticle;
 		}
 	}
-
 }

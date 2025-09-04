@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.api.entity;
+package net.frozenblock.lib.block.client.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
@@ -32,20 +32,19 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
-import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
+import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 
 /**
  * A {@link BlockEntityRenderer} that renders a given texture as a billboard, like a particle.
  */
 @Environment(EnvType.CLIENT)
-public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implements BlockEntityRenderer<T> {
+public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S extends BlockEntityRenderState> implements BlockEntityRenderer<T, S> {
 	private final ModelPart base;
 
 	public BillboardBlockEntityRenderer(Context ctx) {
@@ -69,13 +68,8 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 
 	@Override
 	public void submit(
-		@NotNull T blockEntity,
-		float tickDelta,
+		@NotNull S renderState,
 		@NotNull PoseStack poseStack,
-		int light,
-		int overlay,
-		@NotNull Vec3 cameraPos,
-		@Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay,
 		@NotNull SubmitNodeCollector submitNodeCollector
 	) {
 		this.rotation.set(0F, 0F, 0F, 1F);
@@ -86,15 +80,17 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity> implem
 		submitNodeCollector.submitModelPart(
 			this.base,
 			poseStack,
-			RenderType.entityCutout(this.getTexture(blockEntity)),
-			light,
-			overlay,
-			null
+			RenderType.entityCutout(this.getTexture(renderState)),
+			renderState.lightCoords,
+			OverlayTexture.NO_OVERLAY,
+			null,
+			-1,
+			renderState.breakProgress
 		);
 		poseStack.popPose();
 	}
 
-	public abstract ResourceLocation getTexture(T entity);
+	public abstract ResourceLocation getTexture(S renderState);
 
 	public abstract ModelPart getRoot(Context ctx);
 }

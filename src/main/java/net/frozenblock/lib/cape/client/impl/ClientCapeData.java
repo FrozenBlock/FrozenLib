@@ -55,7 +55,7 @@ public class ClientCapeData {
 	private static void setPlayerCape(UUID uuid, @NotNull Optional<Cape> optionalCape) {
 		optionalCape.ifPresentOrElse(cape -> CAPES_IN_WORLD.put(uuid, cape), () -> CAPES_IN_WORLD.remove(uuid));
 		ClientLevel level = Minecraft.getInstance().level;
-		if (level != null && level.getPlayerByUUID(uuid) instanceof PlayerCapeInterface capeInterface) {
+		if (level != null && level.getPlayerByUUID(uuid) instanceof AvatarCapeInterface capeInterface) {
 			capeInterface.frozenLib$setCape(optionalCape.map(Cape::texture).orElse(null));
 		}
 	}
@@ -66,7 +66,7 @@ public class ClientCapeData {
 		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) ->
 			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), ResourceLocation.parse(FrozenLibConfig.get().cape))));
 		ClientEntityEvents.ENTITY_LOAD.register((entity, clientLevel) -> {
-			if (entity instanceof PlayerCapeInterface capeInterface) {
+			if (entity instanceof AvatarCapeInterface capeInterface) {
 				getCapeTexture(entity.getUUID()).ifPresent(capeInterface::frozenLib$setCape);
 			}
 		});

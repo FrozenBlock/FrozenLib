@@ -23,11 +23,10 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.cape.client.impl.PlayerCapeInterface;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.frozenblock.lib.cape.client.impl.AvatarCapeInterface;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -46,10 +45,10 @@ public class CapeLayerMixin {
 	)
 	public ResourceLocation frozenLib$captureAndChangeCapeLocation(
 		ResourceLocation resourceLocation,
-		PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, PlayerRenderState playerRenderState, float f, float g,
+		PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, AvatarRenderState avatarRenderState, float f, float g,
 		@Share("frozenLib$newCapeTexture") LocalRef<ResourceLocation> newCapeTexture
 	) {
-		if (playerRenderState instanceof PlayerCapeInterface capeInterface) {
+		if (avatarRenderState instanceof AvatarCapeInterface capeInterface) {
 			ResourceLocation capeTexture = capeInterface.frozenLib$getCape();
 			if (capeTexture != null) {
 				newCapeTexture.set(capeTexture);

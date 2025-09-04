@@ -23,9 +23,9 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.cape.client.impl.PlayerCapeInterface;
+import net.frozenblock.lib.cape.client.impl.AvatarCapeInterface;
 import net.minecraft.client.renderer.entity.layers.WingsLayer;
-import net.minecraft.client.renderer.entity.state.PlayerRenderState;
+import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -44,10 +44,10 @@ public class WingsLayerMixin {
 	)
 	private static ResourceLocation frozenLib$captureAndChangeCapeLocation(
 		ResourceLocation resourceLocation,
-		@Local(ordinal = 0) PlayerRenderState playerRenderState,
+		@Local(ordinal = 0) AvatarRenderState avatarRenderState,
 		@Share("frozenLib$newCapeTexture") LocalRef<ResourceLocation> newCapeTexture
 	) {
-		if (playerRenderState instanceof PlayerCapeInterface capeInterface) {
+		if (avatarRenderState instanceof AvatarCapeInterface capeInterface) {
 			ResourceLocation capeTexture = capeInterface.frozenLib$getCape();
 			if (capeTexture != null) {
 				newCapeTexture.set(capeTexture);
