@@ -21,6 +21,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 
 ### 1.21.9+
 - Removed FrozenLib's modified Vanilla debug renderers.
+- Removed FrozenLib's modified Vanilla debug packets.
 - Removed FrozenLib's `DebugRendererEvents` class.
 - Removed FrozenLIb's custom Debug menu.
 - FrozenLib's Wind and Wind Disturbance debug renderers are now enabled via the `MC_DEBUG_FROZENLIB_WIND` and `MC_DEBUG_FROZENLIB_WIND_DISTURBANCE` launch arguments.
