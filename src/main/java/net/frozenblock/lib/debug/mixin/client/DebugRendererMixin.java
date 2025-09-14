@@ -17,29 +17,19 @@
 
 package net.frozenblock.lib.debug.mixin.client;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.debug.client.api.DebugRendererEvents;
-import net.frozenblock.lib.debug.client.impl.DebugRenderManager;
-import net.minecraft.client.Minecraft;
+import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.debug.client.renderer.WindDebugRenderer;
+import net.frozenblock.lib.debug.client.renderer.WindDisturbanceDebugRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
-import net.minecraft.client.renderer.debug.BeeDebugRenderer;
-import net.minecraft.client.renderer.debug.BrainDebugRenderer;
-import net.minecraft.client.renderer.debug.BreezeDebugRenderer;
 import net.minecraft.client.renderer.debug.DebugRenderer;
-import net.minecraft.client.renderer.debug.LightSectionDebugRenderer;
-import net.minecraft.client.renderer.debug.NeighborsUpdateRenderer;
-import net.minecraft.client.renderer.debug.PathfindingRenderer;
-import net.minecraft.client.renderer.debug.RaidDebugRenderer;
-import net.minecraft.client.renderer.debug.StructureRenderer;
-import net.minecraft.client.renderer.debug.VillageSectionsDebugRenderer;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.util.debug.DebugValueAccess;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -47,135 +37,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Environment(EnvType.CLIENT)
 @Mixin(DebugRenderer.class)
 public class DebugRendererMixin {
-	@Shadow @Final
-	public PathfindingRenderer pathfindingRenderer;
-	@Shadow @Final
-	public DebugRenderer.SimpleDebugRenderer waterDebugRenderer;
-	@Shadow @Final
-	public DebugRenderer.SimpleDebugRenderer heightMapRenderer;
-	@Shadow @Final
-	public DebugRenderer.SimpleDebugRenderer collisionBoxRenderer;
-	@Shadow @Final
-	public DebugRenderer.SimpleDebugRenderer supportBlockRenderer;
-	@Shadow @Final
-	public NeighborsUpdateRenderer neighborsUpdateRenderer;
-	@Shadow @Final
-	public StructureRenderer structureRenderer;
-	@Shadow @Final
-	public LightSectionDebugRenderer skyLightSectionDebugRenderer;
-	@Shadow @Final
-	public DebugRenderer.SimpleDebugRenderer solidFaceRenderer;
-	@Shadow @Final
-	public DebugRenderer.SimpleDebugRenderer chunkRenderer;
-	@Shadow @Final
-	public BrainDebugRenderer brainDebugRenderer;
-	@Shadow @Final
-	public VillageSectionsDebugRenderer villageSectionsDebugRenderer;
-	@Shadow @Final
-	public BeeDebugRenderer beeDebugRenderer;
-	@Shadow @Final
-	public RaidDebugRenderer raidDebugRenderer;
-	@Shadow @Final
-	public DebugRenderer.SimpleDebugRenderer lightDebugRenderer;
-	@Shadow @Final
-	public BreezeDebugRenderer breezeDebugRenderer;
+
+	@Unique
+	public final WindDebugRenderer frozenLib$windDebugRenderer = new WindDebugRenderer();
+	@Unique
+	public final WindDisturbanceDebugRenderer frozenLib$windDisturbanceDebugRenderer = new WindDisturbanceDebugRenderer();
 
 	@Inject(method = "render", at = @At("TAIL"))
 	private void frozenLib$render(
-		PoseStack matrices, Frustum frustum, MultiBufferSource.BufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, CallbackInfo ci
+		PoseStack matrices, Frustum frustum, MultiBufferSource.BufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ,
+		CallbackInfo info,
+		@Local DebugValueAccess debugValueAccess
 	) {
-		if (!FrozenLibConfig.IS_DEBUG) return;
-		DebugRenderManager.updatePartialTick();
-		DebugRenderManager.DEBUG_RENDERER_HOLDERS.keySet()
-			.forEach((rendererEntry) -> rendererEntry.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ));
-	}
-
-	@Inject(method = "<init>", at = @At("TAIL"))
-	private void frozenLib$init(Minecraft client, CallbackInfo info) {
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("pathfinding"),
-			this.pathfindingRenderer::render);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("water_level"),
-			this.waterDebugRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("heightmap"),
-			this.heightMapRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("collision"),
-			this.collisionBoxRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("support_block"),
-			this.supportBlockRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("neighbor_update"),
-			this.neighborsUpdateRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("structure"),
-			this.structureRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("sky_light"),
-			this.skyLightSectionDebugRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("solid_face"),
-			this.solidFaceRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("chunk_status"),
-			this.chunkRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("brain"),
-			this.brainDebugRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("village_sections"),
-			this.villageSectionsDebugRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("bee"),
-			this.beeDebugRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("raid"),
-			this.raidDebugRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("light"),
-			this.lightDebugRenderer::render
-		);
-
-		DebugRenderManager.registerRenderer(
-			FrozenLibConstants.id("breeze"),
-			this.breezeDebugRenderer::render
-		);
-
-		DebugRendererEvents.DEBUG_RENDERERS_CREATED.invoker().onDebugRenderersCreated(client);
+		if (FrozenBools.DEBUG_WIND) this.frozenLib$windDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, debugValueAccess);
+		if (FrozenBools.DEBUG_WIND_DISTURBANCES) this.frozenLib$windDisturbanceDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, debugValueAccess);
 	}
 
 	@Inject(method = "clear", at = @At("TAIL"))
 	private void frozenLib$clear(CallbackInfo info) {
-		DebugRenderManager.clearAdditionalRenderers();
+		this.frozenLib$windDebugRenderer.clear();
+		this.frozenLib$windDisturbanceDebugRenderer.clear();
 	}
 }

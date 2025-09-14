@@ -34,7 +34,7 @@ public class FrustumUtil {
 	 * @return if an area is visible in the client's frustum.
 	 */
 	public static boolean isVisible(AABB aabb) {
-		Frustum frustum = Minecraft.getInstance().levelRenderer.cullingFrustum;
+		Frustum frustum = Minecraft.getInstance().levelRenderer.getCapturedFrustum();
 		if (frustum != null) return frustum.isVisible(aabb);
 		return true;
 	}

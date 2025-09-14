@@ -17,110 +17,29 @@
 
 package net.frozenblock.lib.debug.client.renderer;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.datafixers.util.Pair;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.core.client.api.FrustumUtil;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.debug.DebugRenderer;
-import net.minecraft.util.ARGB;
-import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
+import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
-	private final Minecraft minecraft;
-	private List<Vec3> accessedWindPositions = Collections.emptyList();
-	private List<List<Pair<Vec3, Integer>>> windNodes = Collections.emptyList();
 
-	public WindDebugRenderer(Minecraft client) {
-		this.minecraft = client;
-	}
-
-	public void tick() {
-		this.accessedWindPositions = ClientWindManager.getAccessedPositions();
-		this.windNodes = ImmutableList.copyOf(
-			this.createAllWindNodes()
-		);
+	public WindDebugRenderer() {
 	}
 
 	@Override
-	public void clear() {
-		this.accessedWindPositions = Collections.emptyList();
-		this.windNodes = Collections.emptyList();
-	}
-
-	@Override
-	public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ) {
-		renderWindNodesFromList(matrices, vertexConsumers, cameraX, cameraY, cameraZ, this.windNodes);
-	}
-
-	private @NotNull List<List<Pair<Vec3, Integer>>> createAllWindNodes() {
-		List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
-		this.accessedWindPositions.forEach(
-			vec3 -> {
-				if (FrustumUtil.isVisible(vec3, 0.5D)) {
-					windNodes.add(createWindNodes(this.minecraft.level, vec3, 1.5D, false));
-				}
-			}
-		);
-
-		return windNodes;
-	}
-
-	protected static @NotNull List<Pair<Vec3, Integer>> createWindNodes(Level level, Vec3 origin, double stretch, boolean disturbanceOnly) {
-		List<Pair<Vec3, Integer>> windNodes = new ArrayList<>();
-		Vec3 wind = disturbanceOnly ?
-			ClientWindManager.getRawDisturbanceMovement(level, origin)
-			: ClientWindManager.getWindMovement(level, origin);
-		double windlength = wind.length();
-		if (windlength != 0D) {
-			int increments = 3;
-			Vec3 lineStart = origin;
-			double windLineScale = (1D / increments) * stretch;
-			windNodes.add(
-				Pair.of(
-					lineStart,
-					calculateNodeColor(Math.min(1D, wind.length()), disturbanceOnly)
-				)
-			);
-
-			for (int i = 0; i < increments; ++i) {
-				Vec3 lineEnd = lineStart.add(wind.scale(windLineScale));
-				windNodes.add(
-					Pair.of(
-						lineEnd,
-						calculateNodeColor(Math.min(1D, wind.length()), disturbanceOnly)
-					)
-				);
-				lineStart = lineEnd;
-				wind = disturbanceOnly ?
-					ClientWindManager.getRawDisturbanceMovement(level, lineStart)
-					: ClientWindManager.getWindMovement(level, lineStart);
-			}
-		}
-
-		return windNodes;
-	}
-
-	protected static int calculateNodeColor(double strength, boolean disturbanceOnly) {
-		return ARGB.color(
-			255,
-			(int) Mth.lerp(strength, 255, 0),
-			(int) Mth.lerp(strength, 90, 255),
-			disturbanceOnly ? 0 : 255
-		);
+	public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, DebugValueAccess debugValueAccess) {
+		renderWindNodesFromList(matrices, vertexConsumers, cameraX, cameraY, cameraZ, ClientWindManager.Debug.getDebugNodes());
 	}
 
 	protected static void renderWindNodesFromList(

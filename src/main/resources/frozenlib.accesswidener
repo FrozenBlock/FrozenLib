@@ -73,15 +73,9 @@ transitive-accessible class net/minecraft/world/level/levelgen/structure/pools/a
 
 # Entities
 transitive-accessible method net/minecraft/world/entity/Entity updateInWaterStateAndDoWaterCurrentPushing ()V
-transitive-accessible field net/minecraft/server/level/ServerLevel entityManager Lnet/minecraft/world/level/entity/PersistentEntitySectionManager;
 transitive-accessible class net/minecraft/world/entity/monster/warden/Warden$VibrationUser
 transitive-accessible field net/minecraft/world/entity/ai/navigation/WallClimberNavigation pathToPosition Lnet/minecraft/core/BlockPos;
 transitive-accessible method net/minecraft/world/entity/LivingEntity canBreatheUnderwater ()Z
-transitive-accessible field net/minecraft/client/renderer/debug/GoalSelectorDebugRenderer goalSelectors Lit/unimi/dsi/fastutil/ints/Int2ObjectMap;
-transitive-accessible field net/minecraft/client/renderer/debug/GameEventListenerRenderer trackedListeners Ljava/util/List;
-transitive-accessible field net/minecraft/world/level/gameevent/EntityPositionSource yOffset F
-transitive-accessible field net/minecraft/world/level/gameevent/EntityPositionSource entityOrUuidOrId Lcom/mojang/datafixers/util/Either;
-transitive-accessible method net/minecraft/world/level/gameevent/EntityPositionSource resolveEntity (Lnet/minecraft/world/level/Level;)V
 transitive-extendable method net/minecraft/world/entity/Mob getLootTable ()Ljava/util/Optional;
 
 # Entity Models
@@ -113,7 +107,7 @@ transitive-accessible field net/minecraft/world/CompoundContainer container2 Lne
 transitive-accessible method net/minecraft/world/level/block/AbstractCauldronBlock canReceiveStalactiteDrip (Lnet/minecraft/world/level/material/Fluid;)Z
 transitive-accessible method net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader config Lnet/minecraft/world/level/block/MultifaceSpreader$SpreadConfig;
-transitive-accessible method net/minecraft/data/BlockFamilies   familyBuilder (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
+transitive-accessible method net/minecraft/data/BlockFamilies familyBuilder (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
 
 # Block Entities
 transitive-accessible field net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity lootTable Lnet/minecraft/resources/ResourceKey;
@@ -255,7 +249,10 @@ transitive-accessible method net/minecraft/util/datafix/DataFixers createRenamer
 transitive-accessible field net/minecraft/client/gui/screens/BackupConfirmScreen onProceed Lnet/minecraft/client/gui/screens/BackupConfirmScreen$Listener;
 
 # Rendering
-transitive-accessible field net/minecraft/client/renderer/LevelRenderer cullingFrustum Lnet/minecraft/client/renderer/culling/Frustum;
+transitive-accessible field net/minecraft/client/renderer/LevelRenderer capturedFrustum Lnet/minecraft/client/renderer/culling/Frustum;
 
 # Client Level
 transitive-accessible class net/minecraft/client/multiplayer/ClientLevel$EntityCallbacks
+
+# Debug
+transitive-accessible method net/minecraft/SharedConstants debugFlag (Ljava/lang/String;)Z

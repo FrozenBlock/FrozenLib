@@ -15,31 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.debug.client.api;
+package net.frozenblock.lib.particle.client.resource;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.event.Event;
-import net.frozenblock.lib.entrypoint.api.ClientEventEntrypoint;
-import net.frozenblock.lib.event.api.FrozenEvents;
-import net.minecraft.client.Minecraft;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.frozenblock.lib.particle.FrozenLibParticleTypes;
+import net.frozenblock.lib.particle.client.WindParticle;
 
 @Environment(EnvType.CLIENT)
-public class DebugRendererEvents {
+public class FrozenLibParticleResources {
 
-	/**
-	 * An event that triggers upon Minecraft's debug renderers being created.
-	 */
-	public static final Event<DebugRenderersCreated> DEBUG_RENDERERS_CREATED = FrozenEvents.createEnvironmentEvent(
-		DebugRenderersCreated.class,
-		callbacks -> (client) -> {
-			for (var callback : callbacks) {
-				callback.onDebugRenderersCreated(client);
-			}
-		});
+	public static void init() {
+		ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
 
-	@FunctionalInterface
-	public interface DebugRenderersCreated extends ClientEventEntrypoint {
-		void onDebugRenderersCreated(Minecraft client);
+		particleRegistry.register(FrozenLibParticleTypes.WIND, WindParticle.Factory::new);
 	}
 }

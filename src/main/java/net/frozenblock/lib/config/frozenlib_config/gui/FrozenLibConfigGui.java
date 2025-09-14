@@ -24,7 +24,6 @@ import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
@@ -50,21 +49,6 @@ public final class FrozenLibConfigGui {
 		Config<?> configInstance = FrozenLibConfig.INSTANCE;
 		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
 		var dataFixer = config.dataFixer;
-
-		if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-			var isDebug = category.addEntry(
-				FrozenClothConfig.syncedEntry(
-					entryBuilder.startBooleanToggle(text("is_debug"), modifiedConfig.isDebug)
-						.setDefaultValue(defaultConfig.isDebug)
-						.setSaveConsumer(newValue -> config.isDebug = newValue)
-						.setTooltip(tooltip("is_debug"))
-						.build(),
-					config.getClass(),
-					"isDebug",
-					configInstance
-				)
-			);
-		}
 
 		var useWindOnNonFrozenServers = category.addEntry(
 			FrozenClothConfig.syncedEntry(

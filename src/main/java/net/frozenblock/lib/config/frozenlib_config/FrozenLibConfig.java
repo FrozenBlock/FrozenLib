@@ -20,7 +20,6 @@ package net.frozenblock.lib.config.frozenlib_config;
 import blue.endless.jankson.Comment;
 import java.util.List;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
-import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
@@ -51,7 +50,6 @@ public class FrozenLibConfig {
 				USE_WIND_ON_NON_FROZEN_SERVERS = config.useWindOnNonFrozenServers;
 				FILE_TRANSFER_SERVER = config.fileTransferServer;
 				FILE_TRANSFER_CLIENT = config.fileTransferClient;
-				IS_DEBUG = config.isDebug && FabricLoader.getInstance().isDevelopmentEnvironment();
 			}
 		}
 	);
@@ -59,12 +57,8 @@ public class FrozenLibConfig {
 	public static volatile boolean USE_WIND_ON_NON_FROZEN_SERVERS = true;
 	public static volatile boolean FILE_TRANSFER_SERVER = true;
 	public static volatile boolean FILE_TRANSFER_CLIENT = true;
-	public static volatile boolean IS_DEBUG = false;
 
 	@Comment("Mods may override any of these options, but the config file will not change.")
-
-	@EntrySyncData("isDebug")
-	public boolean isDebug = false;
 
 	@EntrySyncData(value = "useWindOnNonFrozenServers", behavior = SyncBehavior.UNSYNCABLE)
 	public boolean useWindOnNonFrozenServers = true;

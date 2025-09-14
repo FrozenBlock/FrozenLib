@@ -19,6 +19,7 @@ package net.frozenblock.lib;
 
 import java.util.Arrays;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.SharedConstants;
 import net.minecraft.server.Bootstrap;
 
 public class FrozenBools {
@@ -39,6 +40,10 @@ public class FrozenBools {
 			FabricLoader.getInstance().getLaunchArguments(true)
 		).toList().stream().anyMatch(string -> string.contains("datagen"));
 	}
+
+	// DEBUG
+	public static final boolean DEBUG_WIND = SharedConstants.debugFlag("FROZENLIB_WIND");
+	public static final boolean DEBUG_WIND_DISTURBANCES = SharedConstants.debugFlag("FROZENLIB_WIND_DISTURBANCES");
 
 	// MOD LOADERS
 	public static final boolean IS_FABRIC = hasMod("fabricloader") && !hasMod("quilt_loader") && !hasMod("connector");

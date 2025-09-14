@@ -26,7 +26,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
@@ -73,6 +73,7 @@ import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
+import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.frozenblock.lib.worldgen.structure.api.status.client.ClientStructureStatuses;
@@ -85,7 +86,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -95,10 +95,6 @@ import org.jetbrains.annotations.ApiStatus;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenClientNetworking {
-
-	private static PayloadTypeRegistry<RegistryFriendlyByteBuf> registry() {
-		return PayloadTypeRegistry.playS2C();
-	}
 
 	public static void registerClientReceivers() {
 		receiveLocalPlayerSoundPacket();
@@ -132,6 +128,9 @@ public final class FrozenClientNetworking {
 				ConfigSyncModification.clearSyncData(config);
 			}
 		}));
+
+		// DEBUG
+		receiveWindDebugPacket();
 	}
 
 	@ApiStatus.Internal
@@ -467,6 +466,14 @@ public final class FrozenClientNetworking {
 	private static void receiveCapeRepoPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(LoadCapeRepoPacket.PACKET_TYPE, (packet, ctx) -> {
 			CapeUtil.registerCapesFromURL(packet.capeRepo());
+		});
+	}
+
+	// DEBUG
+	private static void receiveWindDebugPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(WindAccessPacket.PACKET_TYPE, (packet, ctx) -> {
+			if (!FrozenBools.DEBUG_WIND) return;
+			ClientWindManager.Debug.addAccessedPosition(packet.accessPos());
 		});
 	}
 

@@ -7,12 +7,8 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "DebugInfoSenderMixin",
-    "EntityMixin",
-    "PathMixin"
   ],
   "client": [
-    "client.AddDebugMenuButtonMixin",
     "client.DebugRendererMixin"
   ]
 }

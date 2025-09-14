@@ -33,11 +33,6 @@ import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
-import net.frozenblock.lib.debug.networking.GoalDebugRemovePayload;
-import net.frozenblock.lib.debug.networking.ImprovedGameEventDebugPayload;
-import net.frozenblock.lib.debug.networking.ImprovedGameEventListenerDebugPayload;
-import net.frozenblock.lib.debug.networking.ImprovedGoalDebugPayload;
-import net.frozenblock.lib.debug.networking.StructureDebugRequestPayload;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
@@ -181,16 +176,7 @@ public final class FrozenNetworking {
 		);
 
 		// DEBUG
-		registry.register(ImprovedGoalDebugPayload.PACKET_TYPE, ImprovedGoalDebugPayload.STREAM_CODEC);
-		registry.register(GoalDebugRemovePayload.PACKET_TYPE, GoalDebugRemovePayload.STREAM_CODEC);
-		registry.register(ImprovedGameEventListenerDebugPayload.PACKET_TYPE, ImprovedGameEventListenerDebugPayload.STREAM_CODEC);
-		registry.register(ImprovedGameEventDebugPayload.PACKET_TYPE, ImprovedGameEventDebugPayload.STREAM_CODEC);
 		registry.register(WindAccessPacket.PACKET_TYPE, WindAccessPacket.STREAM_CODEC);
-
-		c2sRegistry.register(StructureDebugRequestPayload.PACKET_TYPE, StructureDebugRequestPayload.STREAM_CODEC);
-		ServerPlayNetworking.registerGlobalReceiver(StructureDebugRequestPayload.PACKET_TYPE,
-			(packet, ctx) -> StructureDebugRequestPayload.sendBack(ctx.player(), ctx.player().level(), packet.chunkPos())
-		);
 	}
 
 	public static void sendPacketToAllPlayers(@NotNull ServerLevel world, CustomPacketPayload payload) {

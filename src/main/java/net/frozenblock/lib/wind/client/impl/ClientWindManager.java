@@ -25,7 +25,9 @@ import java.util.List;
 import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.core.client.api.FrustumUtil;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.wind.api.WindDisturbance;
@@ -33,6 +35,7 @@ import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.client.api.ClientWindManagerExtension;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.VisibleForDebug;
@@ -154,43 +157,44 @@ public final class ClientWindManager {
 
 	@ApiStatus.Internal
 	public static void tick(@NotNull ClientLevel level) {
-		if (level.tickRateManager().runsNormally()) {
-			float thunderLevel = level.getThunderLevel(1F) * 0.03F;
-			//WIND
-			prevWindX = windX;
-			prevWindY = windY;
-			prevWindZ = windZ;
-			time += 1;
-			double calcTime = time * 0.0005D;
-			double calcTimeY = time * 0.00035D;
-			Vec3 vec3 = sampleVec3(noise, calcTime, calcTimeY, calcTime);
-			windX = vec3.x + (vec3.x * thunderLevel);
-			windY = vec3.y + (vec3.y * thunderLevel);
-			windZ = vec3.z + (vec3.z * thunderLevel);
+		Debug.tick(level);
 
-			//LAGGED WIND
-			prevLaggedWindX = laggedWindX;
-			prevLaggedWindY = laggedWindY;
-			prevLaggedWindZ = laggedWindZ;
-			double calcLaggedTime = (time - 40D) * 0.0005D;
-			double calcLaggedTimeY = (time - 60D) * 0.00035D;
-			Vec3 laggedVec = sampleVec3(noise, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
-			laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
-			laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
-			laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+		if (!level.tickRateManager().runsNormally()) return;
+		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
+		//WIND
+		prevWindX = windX;
+		prevWindY = windY;
+		prevWindZ = windZ;
+		time += 1;
+		double calcTime = time * 0.0005D;
+		double calcTimeY = time * 0.00035D;
+		Vec3 vec3 = sampleVec3(noise, calcTime, calcTimeY, calcTime);
+		windX = vec3.x + (vec3.x * thunderLevel);
+		windY = vec3.y + (vec3.y * thunderLevel);
+		windZ = vec3.z + (vec3.z * thunderLevel);
 
-			// EXTENSIONS
-			for (ClientWindManagerExtension extension : EXTENSIONS) {
-				extension.baseTick();
-				extension.clientTick();
-			}
+		//LAGGED WIND
+		prevLaggedWindX = laggedWindX;
+		prevLaggedWindY = laggedWindY;
+		prevLaggedWindZ = laggedWindZ;
+		double calcLaggedTime = (time - 40D) * 0.0005D;
+		double calcLaggedTimeY = (time - 60D) * 0.00035D;
+		Vec3 laggedVec = sampleVec3(noise, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
+		laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
+		laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
+		laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 
-			if (!hasInitialized && FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS) {
-				hasInitialized = true;
-				RandomSource randomSource = AdvancedMath.random();
-				noise = EasyNoiseSampler.createXoroNoise(randomSource.nextLong());
-				time = randomSource.nextLong();
-			}
+		// EXTENSIONS
+		for (ClientWindManagerExtension extension : EXTENSIONS) {
+			extension.baseTick();
+			extension.clientTick();
+		}
+
+		if (!hasInitialized && FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS) {
+			hasInitialized = true;
+			RandomSource randomSource = AdvancedMath.random();
+			noise = EasyNoiseSampler.createXoroNoise(randomSource.nextLong());
+			time = randomSource.nextLong();
 		}
 	}
 
@@ -321,9 +325,7 @@ public final class ClientWindManager {
 		double newWindY = Mth.lerp(disturbanceAmount, windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
 		double newWindZ = Mth.lerp(disturbanceAmount, windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 
-		if (FrozenLibConfig.IS_DEBUG) {
-			addAccessedPosition(pos);
-		}
+		if (FrozenBools.DEBUG_WIND) Debug.addAccessedPosition(pos);
 
 		return new Vec3(
 			Mth.clamp(newWindX, -clamp, clamp),
@@ -421,20 +423,130 @@ public final class ClientWindManager {
 		return new Vec3(windX, windY, windZ);
 	}
 
-	private static final List<Vec3> ACCESSED_POSITIONS = new ArrayList<>();
-
 	@VisibleForDebug
-	public static void addAccessedPosition(Vec3 vec3) {
-		ACCESSED_POSITIONS.add(vec3);
-	}
+	public static class Debug {
+		private static final List<Vec3> ACCESSED_POSITIONS = new ArrayList<>();
+		private static final List<WindDisturbance<?>> WIND_DISTURBANCES = new ArrayList<>();
+		private static final List<List<Pair<Vec3, Integer>>> DEBUG_NODES = new ArrayList<>();
+		private static final List<List<Pair<Vec3, Integer>>> DEBUG_DISTURBANCE_NODES = new ArrayList<>();
 
-	@VisibleForDebug
-	public static @NotNull @Unmodifiable List<Vec3> getAccessedPositions() {
-		return ImmutableList.copyOf(ACCESSED_POSITIONS);
-	}
+		public static void tick(ClientLevel level) {
+			WIND_DISTURBANCES.clear();
+			DEBUG_NODES.clear();
+			DEBUG_DISTURBANCE_NODES.clear();
 
-	@VisibleForDebug
-	public static void clearAccessedPositions() {
-		ACCESSED_POSITIONS.clear();
+			if (FrozenBools.DEBUG_WIND) DEBUG_NODES.addAll(createWindNodes(level));
+			if (FrozenBools.DEBUG_WIND_DISTURBANCES) {
+				WIND_DISTURBANCES.addAll(getWindDisturbances());
+				DEBUG_DISTURBANCE_NODES.addAll(createWindDisturbanceNodes(level));
+			}
+
+			ACCESSED_POSITIONS.clear();
+		}
+
+		@VisibleForDebug
+		public static void addAccessedPosition(Vec3 vec3) {
+			ACCESSED_POSITIONS.add(vec3);
+		}
+
+		@VisibleForDebug
+		public static void clear() {
+			ACCESSED_POSITIONS.clear();
+			WIND_DISTURBANCES.clear();
+			DEBUG_NODES.clear();
+			DEBUG_DISTURBANCE_NODES.clear();
+		}
+
+		@VisibleForDebug
+		public static @NotNull List<List<Pair<Vec3, Integer>>> getDebugNodes() {
+			return DEBUG_NODES;
+		}
+
+		private static @NotNull List<List<Pair<Vec3, Integer>>> createWindNodes(ClientLevel level) {
+			List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
+			ACCESSED_POSITIONS.forEach(
+				vec3 -> {
+					if (!FrustumUtil.isVisible(vec3, 0.5D)) return;
+					windNodes.add(createWindNodes(level, vec3, 1.5D, false));
+				}
+			);
+
+			return windNodes;
+		}
+
+		@VisibleForDebug
+		public static @NotNull @Unmodifiable List<WindDisturbance<?>> getWindDisturbances() {
+			return ImmutableList.copyOf(WIND_DISTURBANCES);
+		}
+
+		@VisibleForDebug
+		public static @NotNull List<List<Pair<Vec3, Integer>>> getDebugDisturbanceNodes() {
+			return DEBUG_DISTURBANCE_NODES;
+		}
+
+		private static @NotNull List<List<Pair<Vec3, Integer>>> createWindDisturbanceNodes(ClientLevel level) {
+			List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
+			WIND_DISTURBANCES.forEach(
+				windDisturbance -> {
+					if (FrustumUtil.isVisible(windDisturbance.affectedArea)) {
+						BlockPos.betweenClosed(
+							BlockPos.containing(windDisturbance.affectedArea.getMinPosition()),
+							BlockPos.containing(windDisturbance.affectedArea.getMaxPosition())
+						).forEach(
+							blockPos -> {
+								Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
+								windNodes.add(createWindNodes(level, blockPosCenter, 1D, true));
+							}
+						);
+					}
+				}
+			);
+			return windNodes;
+		}
+
+		private static @NotNull List<Pair<Vec3, Integer>> createWindNodes(Level level, Vec3 origin, double stretch, boolean disturbanceOnly) {
+			List<Pair<Vec3, Integer>> windNodes = new ArrayList<>();
+			Vec3 wind = disturbanceOnly ?
+				ClientWindManager.getRawDisturbanceMovement(level, origin)
+				: ClientWindManager.getWindMovement(level, origin);
+
+			final double windlength = wind.length();
+			if (windlength != 0D) {
+				int increments = 3;
+				Vec3 lineStart = origin;
+				double windLineScale = (1D / increments) * stretch;
+				windNodes.add(
+					Pair.of(
+						lineStart,
+						calculateNodeColor(Math.min(1D, windlength), disturbanceOnly)
+					)
+				);
+
+				for (int i = 0; i < increments; ++i) {
+					Vec3 lineEnd = lineStart.add(wind.scale(windLineScale));
+					windNodes.add(
+						Pair.of(
+							lineEnd,
+							calculateNodeColor(Math.min(1D, windlength), disturbanceOnly)
+						)
+					);
+					lineStart = lineEnd;
+					wind = disturbanceOnly ?
+						ClientWindManager.getRawDisturbanceMovement(level, lineStart)
+						: ClientWindManager.getWindMovement(level, lineStart);
+				}
+			}
+
+			return windNodes;
+		}
+
+		private static int calculateNodeColor(double strength, boolean disturbanceOnly) {
+			return ARGB.color(
+				255,
+				(int) Mth.lerp(strength, 255, 0),
+				(int) Mth.lerp(strength, 90, 255),
+				disturbanceOnly ? 0 : 255
+			);
+		}
 	}
 }
