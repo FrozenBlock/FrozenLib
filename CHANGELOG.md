@@ -15,6 +15,10 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `version`: A numerical id for the resource pack. If the pack has been downloaded before with the same `version`, the download will be skipped.
   - A toast will be displayed on-screen to tell the player when a pack has finished or failed downloading.
   - A config option to disable pack downloading and toasts has been added.
+- Added the `CustomRotationalParticleRenderer` class, used to make the creation of particles with 3D rotation much easier.
+  - An example of this can be seen in the `WindParticle` class.
+  - This class's name in 1.21.9+ is `CustomRotationalParticleHelper.`
+- Removed two unused item textures.
 
 ### 1.21.5+
 - Added `FrozenLibConfiguredTreeFeature` and `FrozenLibPlacedTreeFeature,` designed to speed up the process of designing tree variants both with and without leaf litters.
