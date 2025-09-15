@@ -47,11 +47,11 @@ public class CustomRotationalParticleRenderer {
 	}
 
 	public void setPrevRotationFromCurrent() {
-		this.prevXRot = this.xRot;
 		this.prevYRot = this.yRot;
+		this.prevXRot = this.xRot;
 	}
 
-	public void setRotation(float xRot, float yRot) {
+	public void setRotation(float yRot, float xRot) {
 		this.yRot = yRot;
 		this.xRot = xRot;
 		this.setRotMultiplierFromXRot();
@@ -70,22 +70,6 @@ public class CustomRotationalParticleRenderer {
 
 		this.yRot += (float)newYRotDifference * rotationAmount;
 		this.xRot += (float)newXRotDifference * rotationAmount;
-
-		if (this.yRot > 360F) {
-			this.yRot -= 360F;
-			this.prevYRot -= 360F;
-		} else if (this.yRot < 0F) {
-			this.yRot += 360F;
-			this.prevYRot += 360F;
-		}
-
-		if (this.xRot > 360F) {
-			this.xRot -= 360F;
-			this.prevXRot -= 360F;
-		} else if (this.xRot < 0F) {
-			this.xRot += 360F;
-			this.prevXRot += 360F;
-		}
 
 		this.setRotMultiplierFromXRot();
 	}
@@ -163,7 +147,7 @@ public class CustomRotationalParticleRenderer {
 			quadSize,
 			rCol, gCol, bCol, alpha,
 			light,
-			transforms -> transforms.rotateY((float) -Math.PI + yRot)
+			transforms -> transforms.rotateY(-Mth.PI + yRot)
 				.rotateX(xRot)
 				.rotateY(cameraRotWhileSideways)
 				.rotateY(cameraRotWhileVertical),
