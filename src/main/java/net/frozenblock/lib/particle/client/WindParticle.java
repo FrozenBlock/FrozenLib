@@ -177,6 +177,7 @@ public class WindParticle extends TextureSheetParticle {
 			windParticle.zd = velocity.z;
 			windParticle.yd = velocity.y;
 			windParticle.setRotationFromMovement(1F);
+			windParticle.rotationalRenderer.setPrevRotationFromCurrent();
 
 			return windParticle;
 		}
