@@ -73,7 +73,7 @@ public class WindParticle extends SingleQuadParticle {
 			this.yd += wind.y() * multY;
 			this.zd += wind.z() * multXZ;
 
-			this.setRotationFromMovement();
+			this.setRotationFromMovement(0.25F);
 		} else {
 			this.friction = 0.2F;
 		}
@@ -89,9 +89,9 @@ public class WindParticle extends SingleQuadParticle {
 		}
 		this.setSpriteFromAge(this.spriteSet);
 	}
-
-	public void setRotationFromMovement() {
-		this.rotationalHelper.setRotationFromMovement(this.xd, this.yd, this.zd, 0.25F);
+	
+	public void setRotationFromMovement(float rotationAmount) {
+		this.rotationalHelper.setRotationFromMovement(this.xd, this.yd, this.zd, rotationAmount);
 	}
 
 	@Override
@@ -189,7 +189,7 @@ public class WindParticle extends SingleQuadParticle {
 			windParticle.xd = velocity.x;
 			windParticle.zd = velocity.z;
 			windParticle.yd = velocity.y;
-			windParticle.setRotationFromMovement();
+			windParticle.setRotationFromMovement(1F);
 
 			return windParticle;
 		}
