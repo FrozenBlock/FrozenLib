@@ -89,7 +89,7 @@ public class WindParticle extends SingleQuadParticle {
 		}
 		this.setSpriteFromAge(this.spriteSet);
 	}
-	
+
 	public void setRotationFromMovement(float rotationAmount) {
 		this.rotationalHelper.setRotationFromMovement(this.xd, this.yd, this.zd, rotationAmount);
 	}
@@ -147,9 +147,9 @@ public class WindParticle extends SingleQuadParticle {
 			renderState,
 			camera,
 			this.getLayer(),
-			(float)(Mth.lerp(partialTicks, this.xo, this.x)),
-			(float)(Mth.lerp(partialTicks, this.yo, this.y)),
-			(float)(Mth.lerp(partialTicks, this.zo, this.z)),
+			Mth.lerp(partialTicks, this.xo, this.x),
+			Mth.lerp(partialTicks, this.yo, this.y),
+			Mth.lerp(partialTicks, this.zo, this.z),
 			this.xd,
 			this.yd,
 			this.zd,
@@ -190,6 +190,7 @@ public class WindParticle extends SingleQuadParticle {
 			windParticle.zd = velocity.z;
 			windParticle.yd = velocity.y;
 			windParticle.setRotationFromMovement(1F);
+			windParticle.rotationalRenderer.setPrevRotationFromCurrent();
 
 			return windParticle;
 		}

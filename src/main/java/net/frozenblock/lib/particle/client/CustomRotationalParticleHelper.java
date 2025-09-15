@@ -62,8 +62,8 @@ public class CustomRotationalParticleHelper {
 		double newYRot = (Mth.atan2(xd, zd)) * Mth.RAD_TO_DEG;
 		double newXRot = (Mth.atan2(horizontalDistance, yd)) * Mth.RAD_TO_DEG;
 
-		if (Math.abs(newYRot - this.prevYRot) > 180D) newYRot += 360D;
-		if (Math.abs(newXRot - this.prevXRot) > 180D) newXRot += 360D;
+		if (Math.abs(newYRot - this.yRot) > 180D) newYRot += 360D;
+		if (Math.abs(newXRot - this.xRot) > 180D) newXRot += 360D;
 
 		double newYRotDifference = newYRot - this.yRot;
 		double newXRotDifference = newXRot - this.xRot;
@@ -100,7 +100,7 @@ public class CustomRotationalParticleHelper {
 		QuadParticleRenderState renderState,
 		@NotNull Camera camera,
 		SingleQuadParticle.Layer layer,
-		float x, float y, float z,
+		double x, double y, double z,
 		double xd, double yd, double zd,
 		float U0, float U1, float V0, float V1,
 		float quadSize,
@@ -112,7 +112,6 @@ public class CustomRotationalParticleHelper {
 		final float xRot = Mth.lerp(partialTicks, this.prevXRot, this.xRot) * -Mth.DEG_TO_RAD;
 		final float cameraRotWhileVertical = ((-camera.getYRot()) * (1F - Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
 		float cameraXRot = camera.getXRot();
-		final float rotationOffset = 90F;
 
 		final Vec3 particlePos = new Vec3(x, y, z);
 		final Vec3 cameraPos = camera.getPosition();
@@ -128,7 +127,7 @@ public class CustomRotationalParticleHelper {
 			cameraXRot = Mth.lerp(Mth.square((float)Math.abs(normalizedRelativeY)), cameraXRot, 90F);
 		}
 
-		float fixedRotation = rotationOffset + cameraXRot;
+		float fixedRotation = 90F + cameraXRot;
 		if (relativeParticleAngle > 0D && relativeParticleAngle < 180D) fixedRotation *= -1F;
 
 		final float cameraRotWhileSideways = ((fixedRotation) * (Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
