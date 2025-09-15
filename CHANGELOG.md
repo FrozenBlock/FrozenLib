@@ -16,6 +16,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - A toast will be displayed on-screen to tell the player when a pack has finished or failed downloading.
   - A config option to disable pack downloading and toasts has been added.
 - Added the `CustomRotationalParticleRenderer` class, used to make the creation of particles with 3D rotation much easier.
+  - This new implementation also fixes a bug that resulted in Wind particles spinning rapidly under otherwise normal conditions.
   - An example of this can be seen in the `WindParticle` class.
   - This class's name in 1.21.9+ is `CustomRotationalParticleHelper.`
 - Removed two unused item textures.
