@@ -62,8 +62,8 @@ public class CustomRotationalParticleRenderer {
 		double newYRot = (Mth.atan2(xd, zd)) * Mth.RAD_TO_DEG;
 		double newXRot = (Mth.atan2(horizontalDistance, yd)) * Mth.RAD_TO_DEG;
 
-		if (Math.abs(newYRot - this.prevYRot) > 180D) newYRot += 360D;
-		if (Math.abs(newXRot - this.prevXRot) > 180D) newXRot += 360D;
+		if (Math.abs(newYRot - this.yRot) > 180D) newYRot += 360D;
+		if (Math.abs(newXRot - this.xRot) > 180D) newXRot += 360D;
 
 		double newYRotDifference = newYRot - this.yRot;
 		double newXRotDifference = newXRot - this.xRot;
@@ -95,7 +95,7 @@ public class CustomRotationalParticleRenderer {
 	public void render(
 		@NotNull VertexConsumer buffer,
 		@NotNull Camera camera,
-		float x, float y, float z,
+		double x, double y, double z,
 		double xd, double yd, double zd,
 		float U0, float U1, float V0, float V1,
 		float quadSize,
@@ -107,9 +107,8 @@ public class CustomRotationalParticleRenderer {
 		final float xRot = Mth.lerp(partialTicks, this.prevXRot, this.xRot) * -Mth.DEG_TO_RAD;
 		final float cameraRotWhileVertical = ((-camera.getYRot()) * (1F - Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
 		float cameraXRot = camera.getXRot();
-		float rotationOffset = 90F;
 
-		Vec3 particlePos = new Vec3(x, y, z);
+		final Vec3 particlePos = new Vec3(x, y, z);
 		Vec3 cameraPos = camera.getPosition();
 		double normalizedRelativeY = particlePos.subtract(cameraPos).normalize().subtract(new Vec3(xd, yd, zd).normalize()).normalize().y;
 
@@ -123,14 +122,14 @@ public class CustomRotationalParticleRenderer {
 			cameraXRot = Mth.lerp(Mth.square((float)Math.abs(normalizedRelativeY)), cameraXRot, 90F);
 		}
 
-		float fixedRotation = rotationOffset + cameraXRot;
+		float fixedRotation = 90F + cameraXRot;
 		if (relativeParticleAngle > 0D && relativeParticleAngle < 180D) fixedRotation *= -1F;
 
 		float cameraRotWhileSideways = ((fixedRotation) * (Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
 		this.renderParticle(
 			buffer,
 			cameraPos,
-			x, y, z,
+			particlePos,
 			quadSize,
 			rCol, gCol, bCol, alpha,
 			light,
@@ -143,7 +142,7 @@ public class CustomRotationalParticleRenderer {
 		this.renderParticle(
 			buffer,
 			cameraPos,
-			x, y, z,
+			particlePos,
 			quadSize,
 			rCol, gCol, bCol, alpha,
 			light,
@@ -158,16 +157,16 @@ public class CustomRotationalParticleRenderer {
 	private void renderParticle(
 		VertexConsumer buffer,
 		@NotNull Vec3 cameraPos,
-		float x, float y, float z,
+		Vec3 particlePos,
 		float quadSize,
 		float rCol, float gCol, float bCol, float alpha,
 		int light,
 		@NotNull Consumer<Quaternionf> quaternionConsumer,
 		float[] uvMapping
 	) {
-		float xDifference = (float)(x - cameraPos.x());
-		float yDifference = (float)(y - cameraPos.y());
-		float zDifference = (float)(z - cameraPos.z());
+		float xDifference = (float)(particlePos.x() - cameraPos.x());
+		float yDifference = (float)(particlePos.y() - cameraPos.y());
+		float zDifference = (float)(particlePos.z() - cameraPos.z());
 		Quaternionf quaternionf = new Quaternionf().setAngleAxis(0F, NORMALIZED_QUAT_VECTOR.x(), NORMALIZED_QUAT_VECTOR.y(), NORMALIZED_QUAT_VECTOR.z());
 		quaternionConsumer.accept(quaternionf);
 		Vector3f[] vector3fs = new Vector3f[]{
