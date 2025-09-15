@@ -72,7 +72,7 @@ public class WindParticle extends TextureSheetParticle {
 			this.yd += wind.y() * multY;
 			this.zd += wind.z() * multXZ;
 
-			this.setRotationFromMovement();
+			this.setRotationFromMovement(0.25F);
 		} else {
 			this.friction = 0.2F;
 		}
@@ -89,8 +89,8 @@ public class WindParticle extends TextureSheetParticle {
 		this.setSpriteFromAge(this.spriteProvider);
 	}
 
-	public void setRotationFromMovement() {
-		this.rotationalRenderer.setRotationFromMovement(this.xd, this.yd, this.zd, 0.25F);
+	public void setRotationFromMovement(float rotationAmount) {
+		this.rotationalRenderer.setRotationFromMovement(this.xd, this.yd, this.zd, rotationAmount);
 	}
 
 	@Override
@@ -176,7 +176,7 @@ public class WindParticle extends TextureSheetParticle {
 			windParticle.xd = velocity.x;
 			windParticle.zd = velocity.z;
 			windParticle.yd = velocity.y;
-			windParticle.setRotationFromMovement();
+			windParticle.setRotationFromMovement(1F);
 
 			return windParticle;
 		}
