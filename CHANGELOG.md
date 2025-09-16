@@ -21,6 +21,9 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - This class's name in 1.21.9+ is `CustomRotationalParticleHelper.`
 - Blocks can now be passed as sources for Wind Disturbances.
   - Their position will be encoded using the `origin` field of the Wind Disturbance.
+- Added the `frozenlib:blowing_can_pass_through` and `frozenlib:blowing_cannot_pass_through` block tags.
+  - These tags define blocks that Wind Particles and blocks that create wind disturbances can blow through.
+  - The `BlowingHelper` class contains a single method, used to unify the logic behind finding blocks that can be blown through.
 - Removed two unused item textures.
 
 ### 1.21.5+
