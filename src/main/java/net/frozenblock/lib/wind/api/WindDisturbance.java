@@ -28,6 +28,7 @@ import net.minecraft.server.level.ChunkTrackingView;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -89,7 +90,7 @@ public class WindDisturbance<T> {
 					this.origin,
 					this.getSourceTypeFromSource(),
 					resourceLocation,
-					this.encodePosOrID()
+					this.encodePosOrID(this.origin)
 				)
 			);
 		}
@@ -101,13 +102,15 @@ public class WindDisturbance<T> {
 		if (this.source.isEmpty()) return WindDisturbanceLogic.SourceType.NONE;
 		if (this.source.get() instanceof Entity) return WindDisturbanceLogic.SourceType.ENTITY;
 		if (this.source.get() instanceof BlockEntity) return WindDisturbanceLogic.SourceType.BLOCK_ENTITY;
+		if (this.source.get() instanceof Block) return WindDisturbanceLogic.SourceType.BLOCK;
 		return WindDisturbanceLogic.SourceType.NONE;
 	}
 
-	private long encodePosOrID() {
+	private long encodePosOrID(Vec3 origin) {
 		if (this.source.isEmpty()) return 0L;
 		if (this.source.get() instanceof Entity entity) return entity.getId();
 		if (this.source.get() instanceof BlockEntity blockEntity) return blockEntity.getBlockPos().asLong();
+		if (this.source.get() instanceof Block) return BlockPos.containing(origin).asLong();
 		return 0L;
 	}
 
