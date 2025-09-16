@@ -19,6 +19,8 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - This new implementation also fixes a bug that resulted in Wind particles spinning rapidly under otherwise normal conditions.
   - An example of this can be seen in the `WindParticle` class.
   - This class's name in 1.21.9+ is `CustomRotationalParticleHelper.`
+- Blocks can now be passed as sources for Wind Disturbances.
+  - Their position will be encoded using the `origin` field of the Wind Disturbance.
 - Removed two unused item textures.
 
 ### 1.21.5+
