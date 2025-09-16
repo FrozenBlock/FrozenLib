@@ -380,6 +380,8 @@ public final class FrozenClientNetworking {
 	private static void receiveWindDisturbancePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(WindDisturbancePacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientLevel level = ctx.client().level;
+			if (level == null) return;
+
 			long posOrID = packet.posOrID();
 			Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(packet.id());
 			if (disturbanceLogic.isPresent()) {
@@ -389,6 +391,8 @@ public final class FrozenClientNetworking {
 					source = Optional.ofNullable(level.getEntity((int) posOrID));
 				} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK_ENTITY) {
 					source = Optional.ofNullable(level.getBlockEntity(BlockPos.of(posOrID)));
+				} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK) {
+					source = Optional.of(level.getBlockState(BlockPos.of(posOrID)).getBlock());
 				}
 
 				ClientWindManager.addWindDisturbance(
