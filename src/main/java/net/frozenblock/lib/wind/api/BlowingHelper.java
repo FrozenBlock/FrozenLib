@@ -15,23 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.tag.api;
+package net.frozenblock.lib.wind.api;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
+import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.SupportType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
-public class FrozenBlockTags {
-    public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
-	public static final TagKey<Block> BLOWING_CAN_PASS_THROUGH = bind("blowing_can_pass_through");
-	public static final TagKey<Block> BLOWING_CANNOT_PASS_THROUGH = bind("blowing_cannot_pass_through");
+public class BlowingHelper {
 
-	@NotNull
-    private static TagKey<Block> bind(String path) {
-        return TagKey.create(Registries.BLOCK, FrozenLibConstants.id(path));
-    }
+	public static boolean canBlowingPassThrough(LevelAccessor level, BlockPos pos, @NotNull BlockState state, @NotNull Direction direction) {
+		return !((state.isFaceSturdy(level, pos, direction.getOpposite(), SupportType.CENTER)
+			&& !state.is(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH))
+			|| state.is(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH));
+	}
+
 }

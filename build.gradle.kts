@@ -46,7 +46,6 @@ val archives_base_name: String by project
 
 val fabric_api_version: String by project
 val fabric_kotlin_version: String by project
-val fabric_asm_version: String by project
 val toml4j_version: String by project
 val jankson_version: String by project
 val xjs_data_version: String by project
@@ -57,21 +56,6 @@ val modmenu_version: String by project
 val cloth_config_version: String by project
 val copperpipes_version: String by project
 val terrablender_version: String by project
-
-val sodium_version: String by project
-val iris_version: String by project
-val indium_version: String by project
-val sodium_extra_version: String by project
-val reeses_sodium_options_version: String by project
-val lithium_version: String by project
-val fastanim_version: String by project
-val ferritecore_version: String by project
-val lazydfu_version: String by project
-val starlight_version: String by project
-val entityculling_version: String by project
-val memoryleakfix_version: String by project
-val no_unused_chunks_version: String by project
-val ksyxis_version: String by project
 
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
 val licenseChecks: Boolean = githubActions
@@ -88,6 +72,11 @@ val release = findProperty("releaseType")?.equals("stable")
 val testmod by sourceSets.registering {
     runtimeClasspath += sourceSets.main.get().runtimeClasspath
     compileClasspath += sourceSets.main.get().compileClasspath
+}
+
+val datagen by sourceSets.registering {
+    compileClasspath += sourceSets.main.get().compileClasspath
+    runtimeClasspath += sourceSets.main.get().runtimeClasspath
 }
 
 loom {
@@ -123,26 +112,33 @@ loom {
 }
 
 sourceSets {
-    testmod {
+    main {
         resources {
-            srcDirs("src/testmod/generated")
+            srcDirs("src/main/generated")
         }
     }
 }
 
 loom {
     runs {
-        register("testmodDatagen") {
+        register("datagen") {
             client()
-            name("Testmod Data Generation")
-            source(testmod.get())
+            name("Data Generation")
+            source(datagen.get())
             vmArg("-Dfabric-api.datagen")
-            vmArg("-Dfabric-api.datagen.output-dir=${file("src/testmod/generated")}")
+            vmArg("-Dfabric-api.datagen.output-dir=${file("src/main/generated")}")
             //vmArg("-Dfabric-api.datagen.strict-validation")
-            vmArg("-Dfabric-api.datagen.modid=frozenlib_testmod")
+            vmArg("-Dfabric-api.datagen.modid=frozenlib")
 
             ideConfigGenerated(true)
-            runDir = "build/test_datagen"
+            runDir = "build/datagen"
+        }
+
+        named("client") {
+            ideConfigGenerated(true)
+        }
+        named("server") {
+            ideConfigGenerated(true)
         }
     }
 }

@@ -15,23 +15,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.tag.api;
+package net.frozenblock.lib.datagen.frozenlib;
 
-import lombok.experimental.UtilityClass;
+import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
+import net.frozenblock.lib.datagen.frozenlib.tag.FrozenLibBlockTagProvider;
+import net.minecraft.core.RegistrySetBuilder;
 import org.jetbrains.annotations.NotNull;
 
-@UtilityClass
-public class FrozenBlockTags {
-    public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
-	public static final TagKey<Block> BLOWING_CAN_PASS_THROUGH = bind("blowing_can_pass_through");
-	public static final TagKey<Block> BLOWING_CANNOT_PASS_THROUGH = bind("blowing_cannot_pass_through");
+public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 
-	@NotNull
-    private static TagKey<Block> bind(String path) {
-        return TagKey.create(Registries.BLOCK, FrozenLibConstants.id(path));
-    }
+	@Override
+	public void onInitializeDataGenerator(@NotNull FabricDataGenerator dataGenerator) {
+		final FabricDataGenerator.Pack pack = dataGenerator.createPack();
+
+		pack.addProvider(FrozenLibBlockTagProvider::new);
+	}
+
+	@Override
+	public void buildRegistry(@NotNull RegistrySetBuilder registryBuilder) {
+	}
+
+	@Override
+	public @NotNull String getEffectiveModId() {
+		return FrozenLibConstants.MOD_ID;
+	}
 }

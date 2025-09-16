@@ -17,9 +17,11 @@
 
 package net.frozenblock.lib.particle.client;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.particle.client.options.WindParticleOptions;
 import net.minecraft.client.Camera;
@@ -27,7 +29,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.BlockCollisions;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
@@ -98,7 +105,7 @@ public class WindParticle extends TextureSheetParticle {
 		final double f = z;
 
 		if ((x != 0D || y != 0D || z != 0D) && x * x + y * y + z * z < Mth.square(100D)) {
-			Vec3 vec3 = Entity.collideBoundingBox(null, new Vec3(x, y, z), this.getBoundingBox(), this.level, List.of());
+			Vec3 vec3 = this.collideBoundingBox(new Vec3(x, y, z));
 			x = vec3.x;
 			y = vec3.y;
 			z = vec3.z;
@@ -127,6 +134,26 @@ public class WindParticle extends TextureSheetParticle {
 			this.zd = 0D;
 			this.shouldDissipate = true;
 		}
+	}
+
+	private @NotNull Vec3 collideBoundingBox(Vec3 vec3) {
+		final AABB box = this.getBoundingBox();
+		final List<VoxelShape> shapes = ImmutableList.copyOf(this.getBlockCollisions(box.expandTowards(vec3)));
+		return Entity.collideWithShapes(vec3, box, shapes);
+	}
+
+	@Contract(pure = true)
+	private @NotNull Iterable<VoxelShape> getBlockCollisions(AABB box) {
+		return () -> new BlockCollisions<>(
+			this.level,
+			null,
+			box,
+			false,
+			(pos, shape) -> {
+				if (this.level.getBlockState(pos).is(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH)) return Shapes.empty();
+				return shape;
+			}
+		);
 	}
 
 	@Override
