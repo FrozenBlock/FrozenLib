@@ -190,7 +190,7 @@ public class WindParticle extends SingleQuadParticle {
 			windParticle.zd = velocity.z;
 			windParticle.yd = velocity.y;
 			windParticle.setRotationFromMovement(1F);
-			windParticle.rotationalRenderer.setPrevRotationFromCurrent();
+			windParticle.rotationalHelper.setPrevRotationFromCurrent();
 
 			return windParticle;
 		}
