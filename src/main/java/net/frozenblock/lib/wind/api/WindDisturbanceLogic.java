@@ -83,7 +83,6 @@ public final class WindDisturbanceLogic<T> {
 		register(WIND_CHARGE, windCharge());
 	}
 
-
 	public static <T> void register(ResourceLocation id, DisturbanceLogic<T> predicate) {
 		Registry.register(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC, id, new WindDisturbanceLogic<>(predicate));
 	}
@@ -95,6 +94,7 @@ public final class WindDisturbanceLogic<T> {
     public enum SourceType {
 		ENTITY,
 		BLOCK_ENTITY,
+		BLOCK,
 		NONE
 	}
 
