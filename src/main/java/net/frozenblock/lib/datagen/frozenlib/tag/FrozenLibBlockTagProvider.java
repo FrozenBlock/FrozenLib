@@ -35,7 +35,7 @@ public final class FrozenLibBlockTagProvider extends FabricTagProvider.BlockTagP
 
 	@Override
 	protected void addTags(@NotNull HolderLookup.Provider arg) {
-		this.getOrCreateTagBuilder(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH)
+		this.valueLookupBuilder(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH)
 			.addOptionalTag(BlockTags.FENCES)
 			.addOptionalTag(BlockTags.FENCE_GATES)
 			.addOptionalTag(BlockTags.TRAPDOORS)
@@ -49,7 +49,7 @@ public final class FrozenLibBlockTagProvider extends FabricTagProvider.BlockTagP
 			.add(Blocks.WAXED_WEATHERED_COPPER_GRATE)
 			.add(Blocks.WAXED_OXIDIZED_COPPER_GRATE);
 
-		this.getOrCreateTagBuilder(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH)
+		this.valueLookupBuilder(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH)
 			.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS);
 	}
 
