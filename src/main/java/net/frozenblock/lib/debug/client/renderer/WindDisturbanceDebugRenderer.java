@@ -23,11 +23,13 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
@@ -37,41 +39,47 @@ public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRe
 	}
 
 	@Override
-	public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, DebugValueAccess debugValueAccess) {
+	public void render(PoseStack poseStack, MultiBufferSource bufferSource, double cameraX, double cameraY, double cameraZ, DebugValueAccess debugValueAccess, Frustum frustum) {
 		ClientWindManager.Debug.getWindDisturbances().forEach(
 			windDisturbance -> {
-				DebugRenderer.renderVoxelShape(
-					matrices,
-					vertexConsumers.getBuffer(RenderType.lines()),
-					Shapes.create(windDisturbance.affectedArea),
-					-cameraX,
-					-cameraY,
-					-cameraZ,
-					0.5F,
-					1F,
-					0.5F,
-					0.35F,
-					true
-				);
+				final VoxelShape shape = Shapes.create(windDisturbance.affectedArea);
+				if (frustum.isVisible(shape.bounds())) {
+					DebugRenderer.renderVoxelShape(
+						poseStack,
+						bufferSource.getBuffer(RenderType.lines()),
+						Shapes.create(windDisturbance.affectedArea),
+						-cameraX,
+						-cameraY,
+						-cameraZ,
+						0.5F,
+						1F,
+						0.5F,
+						0.35F,
+						true
+					);
+				}
 				renderFilledBox(
-					matrices,
-					vertexConsumers,
+					poseStack,
+					bufferSource,
 					AABB.ofSize(windDisturbance.origin, 0.2D, 0.2D, 0.2D),
-					cameraX, cameraY, cameraZ
+					cameraX, cameraY, cameraZ,
+					frustum
 				);
 			}
 		);
 
-		WindDebugRenderer.renderWindNodesFromList(matrices, vertexConsumers, cameraX, cameraY, cameraZ, ClientWindManager.Debug.getDebugDisturbanceNodes());
+		WindDebugRenderer.renderWindNodesFromList(poseStack, bufferSource, cameraX, cameraY, cameraZ, ClientWindManager.Debug.getDebugDisturbanceNodes(), frustum);
 	}
 
 	private static void renderFilledBox(
-		PoseStack matrices,
-		MultiBufferSource vertexConsumers,
+		PoseStack poseStack,
+		MultiBufferSource bufferSource,
 		@NotNull AABB box,
-		double cameraX, double cameraY, double cameraZ
+		double cameraX, double cameraY, double cameraZ,
+		@NotNull Frustum frustum
 	) {
+		if (!frustum.isVisible(box)) return;
 		Vec3 vec3 = new Vec3(-cameraX, -cameraY, -cameraZ);
-		DebugRenderer.renderFilledBox(matrices, vertexConsumers, box.move(vec3), 1F, 1F, 1F, 1F);
+		DebugRenderer.renderFilledBox(poseStack, bufferSource, box.move(vec3), 1F, 1F, 1F, 1F);
 	}
 }

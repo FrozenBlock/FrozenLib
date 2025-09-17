@@ -30,7 +30,7 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.client.renderer.QuadParticleRenderState;
+import net.minecraft.client.renderer.state.QuadParticleRenderState;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -54,8 +54,8 @@ public class WindParticle extends SingleQuadParticle {
 	private boolean shouldDissipate;
 	private boolean chosenSide;
 
-	WindParticle(@NotNull ClientLevel level, @NotNull SpriteSet spriteSet, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-		super(level, x, y, z, velocityX, velocityY, velocityZ, spriteSet.first());
+	WindParticle(@NotNull ClientLevel level, @NotNull SpriteSet spriteSet, double x, double y, double z, double xd, double yd, double zd) {
+		super(level, x, y, z, xd, yd, zd, spriteSet.first());
 		this.quadSize *= 3F;
 		this.setSize(0.3F, 0.3F);
 		this.spriteSet = spriteSet;

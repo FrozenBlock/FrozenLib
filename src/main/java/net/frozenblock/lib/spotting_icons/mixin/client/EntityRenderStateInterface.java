@@ -20,29 +20,20 @@ package net.frozenblock.lib.spotting_icons.mixin.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.spotting_icons.impl.client.EntityRenderStateWithIcon;
-import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
+import net.frozenblock.lib.spotting_icons.impl.client.SpottingIconRenderState;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.world.entity.Entity;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.Unique;
 
 @Environment(EnvType.CLIENT)
-@Mixin(EntityRenderer.class)
-public class EntityRendererMixin<T extends Entity, S extends EntityRenderState> {
+@Mixin(EntityRenderState.class)
+public class EntityRenderStateInterface implements EntityRenderStateWithIcon {
 
-	@Shadow
-	@Final
-	protected EntityRenderDispatcher entityRenderDispatcher;
+	@Unique
+	private final SpottingIconRenderState frozenLib$spottingIconRenderState = new SpottingIconRenderState();
 
-	@Inject(method = "extractRenderState", at = @At("TAIL"))
-	public void frozenLib$extractSpottingIconRenderState(T entity, S renderState, float partialTick, CallbackInfo info) {
-		if (!(renderState instanceof EntityRenderStateWithIcon stateWithIcon)) return;
-		stateWithIcon.frozenLib$getIconRenderState().extract(entity, this.entityRenderDispatcher, partialTick);
+	@Override
+	public SpottingIconRenderState frozenLib$getIconRenderState() {
+		return this.frozenLib$spottingIconRenderState;
 	}
-
 }

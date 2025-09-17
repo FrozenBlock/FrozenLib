@@ -17,60 +17,37 @@
 
 package net.frozenblock.lib.cape.mixin.client;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.cape.client.impl.AvatarCapeInterface;
 import net.minecraft.client.renderer.entity.layers.WingsLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
+import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.ResourceLocation;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(WingsLayer.class)
 public class WingsLayerMixin {
 
-	@ModifyExpressionValue(
+	@Inject(
 		method = "getPlayerElytraTexture",
 		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/resources/PlayerSkin;capeTexture()Lnet/minecraft/resources/ResourceLocation;",
-			ordinal = 0
-		)
+			value = "FIELD",
+			target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;skin:Lnet/minecraft/world/entity/player/PlayerSkin;"
+		),
+		cancellable = true
 	)
-	private static ResourceLocation frozenLib$captureAndChangeCapeLocation(
-		ResourceLocation resourceLocation,
-		@Local(ordinal = 0) AvatarRenderState avatarRenderState,
-		@Share("frozenLib$newCapeTexture") LocalRef<ResourceLocation> newCapeTexture
+	private static void frozenLib$useFrozenLibCapeAsElytra(
+		CallbackInfoReturnable<ResourceLocation> info,
+		@Local(ordinal = 0) AvatarRenderState avatarRenderState
 	) {
-		if (avatarRenderState instanceof AvatarCapeInterface capeInterface) {
-			ResourceLocation capeTexture = capeInterface.frozenLib$getCape();
-			if (capeTexture != null) {
-				newCapeTexture.set(capeTexture);
-				return capeTexture;
-			}
-		}
-		return resourceLocation;
-	}
-
-	@ModifyExpressionValue(
-		method = "getPlayerElytraTexture",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/resources/PlayerSkin;capeTexture()Lnet/minecraft/resources/ResourceLocation;",
-			ordinal = 1
-		)
-	)
-	private static ResourceLocation frozenLib$useNewCape(
-		ResourceLocation resourceLocation,
-		@Share("frozenLib$newCapeTexture") LocalRef<ResourceLocation> newCapeTexture
-	) {
-		ResourceLocation capeTexture = newCapeTexture.get();
-		if (capeTexture != null) return capeTexture;
-		return resourceLocation;
+		if (!(avatarRenderState instanceof AvatarCapeInterface capeInterface) || !avatarRenderState.showCape) return;
+		final ClientAsset.Texture capeAsset = capeInterface.frozenLib$getCape();
+		if (capeAsset != null) info.setReturnValue(capeAsset.texturePath());
 	}
 }

@@ -42,7 +42,7 @@ public abstract class AvatarRendererMixin<AvatarlikeEntity extends Avatar & Clie
 
 	@Inject(method = "extractCapeState", at = @At("TAIL"))
 	private void frozenLib$extractCapeState(
-		AvatarlikeEntity avatarlikeEntity, AvatarRenderState avatarRenderState, float f, CallbackInfo ci
+		AvatarlikeEntity avatarlikeEntity, AvatarRenderState avatarRenderState, float f, CallbackInfo info
 	) {
 		if (!(avatarRenderState instanceof AvatarCapeInterface stateInterface)) return;
 		if (!(avatarlikeEntity instanceof AvatarCapeInterface entityInterface)) return;

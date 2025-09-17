@@ -27,52 +27,45 @@ import net.frozenblock.lib.cape.client.impl.AvatarCapeInterface;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.ClientAsset;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(CapeLayer.class)
 public class CapeLayerMixin {
 
-	@ModifyExpressionValue(
-		method = "submit*",
+	@Inject(
+		method = "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V",
 		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/resources/PlayerSkin;capeTexture()Lnet/minecraft/resources/ResourceLocation;",
-			ordinal = 0
+			value = "FIELD",
+			target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;skin:Lnet/minecraft/world/entity/player/PlayerSkin;"
 		)
 	)
-	public ResourceLocation frozenLib$captureAndChangeCapeLocation(
-		ResourceLocation resourceLocation,
-		PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, AvatarRenderState avatarRenderState, float f, float g,
-		@Share("frozenLib$newCapeTexture") LocalRef<ResourceLocation> newCapeTexture
+	private static void frozenLib$captureFrozenLibCape(
+		PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, AvatarRenderState avatarRenderState, float f, float g, CallbackInfo info,
+		@Share("frozenLib$newCapeTexture") LocalRef<ClientAsset.Texture> newCapeAssetRef
 	) {
-		if (avatarRenderState instanceof AvatarCapeInterface capeInterface) {
-			ResourceLocation capeTexture = capeInterface.frozenLib$getCape();
-			if (capeTexture != null) {
-				newCapeTexture.set(capeTexture);
-				return capeTexture;
-			}
-		}
-		return resourceLocation;
+		if (!(avatarRenderState instanceof AvatarCapeInterface capeInterface)) return;
+		newCapeAssetRef.set(capeInterface.frozenLib$getCape());
 	}
 
 	@ModifyExpressionValue(
-		method = "submit*",
+		method = "submit(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;ILnet/minecraft/client/renderer/entity/state/AvatarRenderState;FF)V",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/resources/PlayerSkin;capeTexture()Lnet/minecraft/resources/ResourceLocation;",
-			ordinal = 1
+			target = "Lnet/minecraft/world/entity/player/PlayerSkin;cape()Lnet/minecraft/core/ClientAsset$Texture;"
 		)
 	)
-	public ResourceLocation frozenLib$renderNewCape(
-		ResourceLocation resourceLocation,
-		@Share("frozenLib$newCapeTexture") LocalRef<ResourceLocation> newCapeTexture
+	public ClientAsset.Texture frozenLib$useFrozenLibCape(
+		ClientAsset.Texture original,
+		@Share("frozenLib$newCapeTexture") LocalRef<ClientAsset.Texture> newCapeAssetRef
 	) {
-		ResourceLocation capeTexture = newCapeTexture.get();
-		if (capeTexture != null) return capeTexture;
-		return resourceLocation;
+		final ClientAsset.Texture newCapeAsset = newCapeAssetRef.get();
+		if (newCapeAsset != null) return newCapeAsset;
+		return original;
 	}
 
 }

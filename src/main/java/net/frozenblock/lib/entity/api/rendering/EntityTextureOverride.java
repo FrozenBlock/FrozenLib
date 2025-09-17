@@ -36,11 +36,7 @@ import net.minecraft.ChatFormatting;
  * @param <T> The entity class the override is for.
  */
 @Environment(EnvType.CLIENT)
-public record EntityTextureOverride<T extends LivingEntity>(
-	Class<? extends LivingEntityRenderer<?, ?, ?>> clazz,
-	ResourceLocation texture,
-	Condition condition
-) {
+public record EntityTextureOverride<T extends LivingEntity>(Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, ResourceLocation texture, Condition condition) {
 
 	/**
 	 * Creates and registers an {@link EntityTextureOverride} based on an entity's name, not-case-sensitive.
@@ -70,30 +66,23 @@ public record EntityTextureOverride<T extends LivingEntity>(
 	public static <T extends LivingEntity> @NotNull EntityTextureOverride<T> register(
 		ResourceLocation key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, ResourceLocation texture, boolean caseSensitive, String... names
 	) {
-		if (texture == null) {
-			throw new IllegalArgumentException("Texture cannot be null!");
-		}
+		if (texture == null) throw new IllegalArgumentException("Texture cannot be null!");
+
 		return register(key, clazz, texture, renderState -> {
-			if (renderState.customName == null)
-				return false;
-			String entityName = ChatFormatting.stripFormatting(renderState.customName.getString());
+			if (renderState.nameTag == null) return false;
+			
+			String entityName = ChatFormatting.stripFormatting(renderState.nameTag.getString());
 			AtomicBoolean isNameCorrect = new AtomicBoolean(false);
-			if (names.length == 0) {
-				return true;
-			} else {
-				Arrays.stream(names).toList().forEach(name -> {
-						if (caseSensitive) {
-							if (entityName.equalsIgnoreCase(name)) {
-								isNameCorrect.set(true);
-							}
-						} else {
-							if (entityName.equals(name)) {
-								isNameCorrect.set(true);
-							}
-						}
-				});
-				return isNameCorrect.get();
-			}
+			if (names.length == 0) return true;
+
+			Arrays.stream(names).toList().forEach(name -> {
+				if (caseSensitive) {
+					if (entityName.equalsIgnoreCase(name)) isNameCorrect.set(true);
+				} else {
+					if (entityName.equals(name)) isNameCorrect.set(true);
+				}
+			});
+			return isNameCorrect.get();
 		});
 	}
 

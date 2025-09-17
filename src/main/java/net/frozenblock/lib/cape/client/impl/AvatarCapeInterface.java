@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.cape.client.impl;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.ClientAsset;
 
 public interface AvatarCapeInterface {
-	void frozenLib$setCape(ResourceLocation cape);
-	ResourceLocation frozenLib$getCape();
+	void frozenLib$setCape(ClientAsset.Texture cape);
+	ClientAsset.Texture frozenLib$getCape();
 }

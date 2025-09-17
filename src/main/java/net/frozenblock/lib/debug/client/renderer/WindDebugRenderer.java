@@ -26,6 +26,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.Vec3;
@@ -38,51 +39,49 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 	}
 
 	@Override
-	public void render(PoseStack matrices, MultiBufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ, DebugValueAccess debugValueAccess) {
-		renderWindNodesFromList(matrices, vertexConsumers, cameraX, cameraY, cameraZ, ClientWindManager.Debug.getDebugNodes());
+	public void render(PoseStack poseStack, MultiBufferSource bufferSource, double cameraX, double cameraY, double cameraZ, DebugValueAccess debugValueAccess, Frustum frustum) {
+		renderWindNodesFromList(poseStack, bufferSource, cameraX, cameraY, cameraZ, ClientWindManager.Debug.getDebugNodes(), frustum);
 	}
 
 	protected static void renderWindNodesFromList(
-		PoseStack matrices,
-		MultiBufferSource vertexConsumers,
+		PoseStack poseStack,
+		MultiBufferSource bufferSource,
 		double cameraX,
 		double cameraY,
 		double cameraZ,
-		@NotNull List<List<Pair<Vec3, Integer>>> windNodes
+		@NotNull List<List<Pair<Vec3, Integer>>> windNodes,
+		Frustum frustum
 	) {
-		windNodes.forEach(nodes -> renderWindNodes(matrices, vertexConsumers, cameraX, cameraY, cameraZ, nodes));
+		windNodes.forEach(nodes -> renderWindNodes(poseStack, bufferSource, cameraX, cameraY, cameraZ, nodes, frustum));
 	}
 
 	protected static void renderWindNodes(
-		PoseStack matrices,
-		MultiBufferSource vertexConsumers,
+		PoseStack poseStack,
+		MultiBufferSource bufferSource,
 		double cameraX,
 		double cameraY,
 		double cameraZ,
-		@NotNull List<Pair<Vec3, Integer>> windNodes
+		@NotNull List<Pair<Vec3, Integer>> windNodes,
+		Frustum frustum
 	) {
-		int size = windNodes.size();
-		if (size > 1) {
-			for (int i = 1; i < windNodes.size(); i++) {
-				Pair<Vec3, Integer> startNode = windNodes.get(i - 1);
-				Pair<Vec3, Integer> endNode = windNodes.get(i);
-				drawLine(
-					matrices,
-					vertexConsumers,
-					cameraX,
-					cameraY,
-					cameraZ,
-					startNode.getFirst(),
-					endNode.getFirst(),
-					startNode.getSecond()
-				);
-			}
+		final int size = windNodes.size();
+		if (size <= 1) return;
+
+		for (int i = 1; i < size; i++) {
+			final Pair<Vec3, Integer> startNode = windNodes.get(i - 1);
+			final Pair<Vec3, Integer> endNode = windNodes.get(i);
+
+			final Vec3 startVec = startNode.getFirst();
+			final Vec3 endVec = endNode.getFirst();
+			if (!frustum.pointInFrustum(startVec.x, startVec.y, startVec.z) && !frustum.pointInFrustum(endVec.x, endVec.y, endVec.z)) continue;
+
+			drawLine(poseStack, bufferSource, cameraX, cameraY, cameraZ, startVec, endVec, startNode.getSecond());
 		}
 	}
 
 	private static void drawLine(
-		@NotNull PoseStack matrices,
-		@NotNull MultiBufferSource vertexConsumers,
+		@NotNull PoseStack poseStack,
+		@NotNull MultiBufferSource bufferSource,
 		double cameraX,
 		double cameraY,
 		double cameraZ,
@@ -90,8 +89,8 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		@NotNull Vec3 target,
 		int color
 	) {
-		VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.debugLineStrip(24D));
-		vertexConsumer.addVertex(matrices.last(), (float)(start.x - cameraX), (float)(start.y - cameraY), (float)(start.z - cameraZ)).setColor(color);
-		vertexConsumer.addVertex(matrices.last(), (float)(target.x - cameraX), (float)(target.y - cameraY), (float)(target.z - cameraZ)).setColor(color);
+		VertexConsumer vertexConsumer = bufferSource.getBuffer(RenderType.debugLineStrip(24D));
+		vertexConsumer.addVertex(poseStack.last(), (float)(start.x - cameraX), (float)(start.y - cameraY), (float)(start.z - cameraZ)).setColor(color);
+		vertexConsumer.addVertex(poseStack.last(), (float)(target.x - cameraX), (float)(target.y - cameraY), (float)(target.z - cameraZ)).setColor(color);
 	}
 }

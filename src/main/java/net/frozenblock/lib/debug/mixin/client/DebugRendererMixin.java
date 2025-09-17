@@ -17,45 +17,36 @@
 
 package net.frozenblock.lib.debug.mixin.client;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.debug.client.renderer.WindDebugRenderer;
 import net.frozenblock.lib.debug.client.renderer.WindDisturbanceDebugRenderer;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
-import net.minecraft.util.debug.DebugValueAccess;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import java.util.List;
 
 @Environment(EnvType.CLIENT)
 @Mixin(DebugRenderer.class)
 public class DebugRendererMixin {
 
-	@Unique
-	public final WindDebugRenderer frozenLib$windDebugRenderer = new WindDebugRenderer();
-	@Unique
-	public final WindDisturbanceDebugRenderer frozenLib$windDisturbanceDebugRenderer = new WindDisturbanceDebugRenderer();
+	@Shadow
+	@Final
+	private List<DebugRenderer.SimpleDebugRenderer> opaqueRenderers;
 
-	@Inject(method = "render", at = @At("TAIL"))
-	private void frozenLib$render(
-		PoseStack matrices, Frustum frustum, MultiBufferSource.BufferSource vertexConsumers, double cameraX, double cameraY, double cameraZ,
-		CallbackInfo info,
-		@Local DebugValueAccess debugValueAccess
-	) {
-		if (FrozenBools.DEBUG_WIND) this.frozenLib$windDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, debugValueAccess);
-		if (FrozenBools.DEBUG_WIND_DISTURBANCES) this.frozenLib$windDisturbanceDebugRenderer.render(matrices, vertexConsumers, cameraX, cameraY, cameraZ, debugValueAccess);
+	@Shadow
+	@Final
+	private List<DebugRenderer.SimpleDebugRenderer> translucentRenderers;
+
+	@Inject(method = "refreshRendererList", at = @At("TAIL"))
+	private void frozenLib$render(CallbackInfo info) {
+		if (FrozenBools.DEBUG_WIND) this.opaqueRenderers.add(new WindDebugRenderer());
+		if (FrozenBools.DEBUG_WIND_DISTURBANCES) this.translucentRenderers.add(new WindDisturbanceDebugRenderer());
 	}
 
-	@Inject(method = "clear", at = @At("TAIL"))
-	private void frozenLib$clear(CallbackInfo info) {
-		this.frozenLib$windDebugRenderer.clear();
-		this.frozenLib$windDisturbanceDebugRenderer.clear();
-	}
 }

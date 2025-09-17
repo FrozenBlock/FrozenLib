@@ -33,8 +33,11 @@ import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class ClientCapeData {
@@ -55,9 +58,29 @@ public class ClientCapeData {
 	private static void setPlayerCape(UUID uuid, @NotNull Optional<Cape> optionalCape) {
 		optionalCape.ifPresentOrElse(cape -> CAPES_IN_WORLD.put(uuid, cape), () -> CAPES_IN_WORLD.remove(uuid));
 		ClientLevel level = Minecraft.getInstance().level;
-		if (level != null && level.getPlayerByUUID(uuid) instanceof AvatarCapeInterface capeInterface) {
-			capeInterface.frozenLib$setCape(optionalCape.map(Cape::texture).orElse(null));
+		if (level == null) return;
+		setCape(level.getPlayerByUUID(uuid), optionalCape.map(Cape::texture).orElse(null));
+	}
+
+	private static void setCape(@Nullable Entity entity, @Nullable ResourceLocation capeTexture) {
+		if (!(entity instanceof AvatarCapeInterface capeInterface)) return;
+
+		if (capeTexture == null) {
+			capeInterface.frozenLib$setCape(null);
+			return;
 		}
+
+		capeInterface.frozenLib$setCape(new ClientAsset.Texture() {
+			@Override
+			public @NotNull ResourceLocation texturePath() {
+				return capeTexture;
+			}
+
+			@Override
+			public @NotNull ResourceLocation id() {
+				return capeTexture;
+			}
+		});
 	}
 
 	public static void init() {
@@ -66,9 +89,7 @@ public class ClientCapeData {
 		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) ->
 			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), ResourceLocation.parse(FrozenLibConfig.get().cape))));
 		ClientEntityEvents.ENTITY_LOAD.register((entity, clientLevel) -> {
-			if (entity instanceof AvatarCapeInterface capeInterface) {
-				getCapeTexture(entity.getUUID()).ifPresent(capeInterface::frozenLib$setCape);
-			}
+			getCapeTexture(entity.getUUID()).ifPresent(capeTexture -> setCape(entity, capeTexture));
 		});
 	}
 }

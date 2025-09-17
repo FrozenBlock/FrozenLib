@@ -18,10 +18,8 @@
 package net.frozenblock.lib.block.client.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Axis;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.CubeListBuilder;
@@ -33,18 +31,21 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
+import org.joml.Vector3f;
 
 /**
  * A {@link BlockEntityRenderer} that renders a given texture as a billboard, like a particle.
  */
 @Environment(EnvType.CLIENT)
 public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S extends BlockEntityRenderState> implements BlockEntityRenderer<T, S> {
+	private static final Vector3f Y_AXIS_NEGATIVE = new Vector3f(0F, -1F, 0F);
 	private final ModelPart base;
 
 	public BillboardBlockEntityRenderer(Context ctx) {
@@ -64,19 +65,16 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 		return LayerDefinition.create(modelData, 16, 16);
 	}
 
-	private final Quaternionf rotation = new Quaternionf(0F, 0F, 0F, 1F);
-
 	@Override
 	public void submit(
 		@NotNull S renderState,
 		@NotNull PoseStack poseStack,
-		@NotNull SubmitNodeCollector submitNodeCollector
+		@NotNull SubmitNodeCollector submitNodeCollector,
+		@NotNull CameraRenderState cameraRenderState
 	) {
-		this.rotation.set(0F, 0F, 0F, 1F);
-		this.rotation.mul(Axis.YP.rotationDegrees(-Minecraft.getInstance().gameRenderer.getMainCamera().yRot));
 		poseStack.translate(0.5F, 0F, 0.5F);
 		poseStack.pushPose();
-		poseStack.mulPose(this.rotation);
+		poseStack.mulPose(Mth.rotationAroundAxis(Y_AXIS_NEGATIVE, cameraRenderState.orientation, new Quaternionf()));
 		submitNodeCollector.submitModelPart(
 			this.base,
 			poseStack,

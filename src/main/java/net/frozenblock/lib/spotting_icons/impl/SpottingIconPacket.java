@@ -33,10 +33,7 @@ public record SpottingIconPacket(
 	float endFade,
 	ResourceLocation restrictionID
 ) implements CustomPacketPayload {
-
-	public static final Type<SpottingIconPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("spotting_icon_packet")
-	);
+	public static final Type<SpottingIconPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("spotting_icon_packet"));
 	public static final StreamCodec<FriendlyByteBuf, SpottingIconPacket> CODEC = StreamCodec.ofMember(SpottingIconPacket::write, SpottingIconPacket::new);
 
 	public SpottingIconPacket(@NotNull FriendlyByteBuf buf) {

@@ -42,7 +42,6 @@ public class EntityMixin implements EntitySpottingIconInterface {
 		this.frozenLib$SpottingIconManager = new SpottingIconManager(entity);
     }
 
-
     @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueOutput;)V", shift = At.Shift.AFTER))
     public void frozenLib$saveIconManager(ValueOutput output, CallbackInfo info) {
 		if (this.frozenLib$SpottingIconManager != null) {
@@ -58,9 +57,7 @@ public class EntityMixin implements EntitySpottingIconInterface {
     @Inject(method = "tick", at = @At("TAIL"))
     public void frozenLib$tickIcon(CallbackInfo info) {
 		Entity entity = Entity.class.cast(this);
-        if (!entity.level().isClientSide()) {
-			this.frozenLib$SpottingIconManager.tick();
-        }
+        if (!entity.level().isClientSide()) this.frozenLib$SpottingIconManager.tick();
     }
 
 	@Unique

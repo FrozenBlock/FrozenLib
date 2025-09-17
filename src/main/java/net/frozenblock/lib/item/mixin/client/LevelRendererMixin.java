@@ -18,13 +18,9 @@
 package net.frozenblock.lib.item.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.item.api.PlaceInAirBlockItem;
@@ -46,7 +42,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LevelRenderer.class)
-public abstract class LevelRendererMixin {
+public class LevelRendererMixin {
 
 	@Shadow
 	@Final
@@ -57,7 +53,7 @@ public abstract class LevelRendererMixin {
 	private ClientLevel level;
 
 	@ModifyExpressionValue(
-		method = "renderBlockOutline",
+		method = "extractBlockOutline",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/phys/BlockHitResult;getType()Lnet/minecraft/world/phys/HitResult$Type;"
@@ -93,7 +89,7 @@ public abstract class LevelRendererMixin {
 	}
 
 	@ModifyExpressionValue(
-		method = "renderBlockOutline",
+		method = "extractBlockOutline",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z"
@@ -106,20 +102,35 @@ public abstract class LevelRendererMixin {
 		return original && !canPlaceInAir.get();
 	}
 
-	@WrapOperation(
-		method = "renderHitOutline",
+	@ModifyExpressionValue(
+		method = "extractBlockOutline",
 		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/ShapeRenderer;renderShape(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;Lnet/minecraft/world/phys/shapes/VoxelShape;DDDI)V"
+			value = "FIELD",
+			target = "Lnet/minecraft/SharedConstants;DEBUG_SHAPES:Z"
 		)
 	)
-	private void frozenLib$renderOutlineForAir(
-		PoseStack poseStack, VertexConsumer vertexConsumer, VoxelShape voxelShape, double d, double e, double f, int i,
-		Operation<Void> original, @Local(argsOnly = true) BlockState blockState
+	private boolean frozenLib$fixAirCrash(
+		boolean original,
+		@Share("frozenLib$canPlaceInAir") LocalBooleanRef canPlaceInAir,
+		@Local BlockState state
 	) {
-		if (blockState.isAir()) voxelShape = Shapes.block();
+		if (state.isAir() && canPlaceInAir.get()) return false;
+		return original;
+	}
 
-		original.call(poseStack, vertexConsumer, voxelShape, d, e, f, i);
+	@ModifyExpressionValue(
+		method = "extractBlockOutline",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/state/BlockState;getShape(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/phys/shapes/CollisionContext;)Lnet/minecraft/world/phys/shapes/VoxelShape;"
+		)
+	)
+	private VoxelShape frozenLib$giveAirFullOutline(
+		VoxelShape original,
+		@Local BlockState state
+	) {
+		if (state.isAir()) return Shapes.block();
+		return original;
 	}
 
 }

@@ -4,14 +4,14 @@
   "package": "net.frozenblock.lib.spotting_icons.mixin",
   "compatibilityLevel": "JAVA_21",
   "injectors": {
-	"defaultRequire": 1
+    "defaultRequire": 1
   },
   "mixins": [
     "EntityMixin"
   ],
   "client": [
-	"client.EntityRenderDispatcherMixin",
-	"client.EntityRendererMixin",
-    "client.LevelRendererMixin"
+    "client.EntityRenderDispatcherMixin",
+    "client.EntityRendererMixin",
+    "client.EntityRenderStateInterface"
   ]
 }

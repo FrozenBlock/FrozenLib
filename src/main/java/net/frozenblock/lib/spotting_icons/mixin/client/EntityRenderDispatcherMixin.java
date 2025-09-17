@@ -18,55 +18,45 @@
 package net.frozenblock.lib.spotting_icons.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.frozenblock.lib.spotting_icons.impl.EntityRenderDispatcherWithIcon;
-import net.frozenblock.lib.spotting_icons.impl.EntityRendererWithIcon;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.frozenblock.lib.spotting_icons.impl.client.EntityRenderStateWithIcon;
+import net.frozenblock.lib.spotting_icons.impl.client.SpottingIconRenderState;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.client.renderer.state.CameraRenderState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import net.minecraft.CrashReport;
-import net.minecraft.CrashReportCategory;
-import net.minecraft.ReportedException;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+@Environment(EnvType.CLIENT)
 @Mixin(EntityRenderDispatcher.class)
-public class EntityRenderDispatcherMixin implements EntityRenderDispatcherWithIcon {
+public class EntityRenderDispatcherMixin {
 
-	@Unique
-	public <T extends Entity> void frozenLib$renderIcon(
-		T entity, double x, double y, double z, float rotationYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight
+	@Inject(
+		method = "submit",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+			shift = At.Shift.AFTER
+		)
+	)
+	public <S extends EntityRenderState> void frozenLib$submitSpottingIcon(
+		S renderState,
+		CameraRenderState cameraRenderState,
+		double x,
+		double y,
+		double z,
+		PoseStack poseStack,
+		SubmitNodeCollector submitNodeCollector,
+		CallbackInfo info
 	) {
-		EntityRenderer<Entity, EntityRenderState> entityRenderer = (EntityRenderer<Entity, EntityRenderState>) this.getRenderer(entity);
-		try {
-			Vec3 vec3 = entityRenderer.getRenderOffset(entityRenderer.createRenderState(entity, partialTicks));
-			double d = x + vec3.x();
-			double e = y + vec3.y();
-			double f = z + vec3.z();
-			matrixStack.pushPose();
-			matrixStack.translate(d, e, f);
-			((EntityRendererWithIcon) entityRenderer).frozenLib$renderIcon(entity, rotationYaw, partialTicks, matrixStack, buffer, packedLight);
-			matrixStack.popPose();
-		} catch (Throwable throwable) {
-			CrashReport crashReport = CrashReport.forThrowable(throwable, "Rendering entity icon in world");
-			CrashReportCategory crashReportCategory = crashReport.addCategory("Entity icon being rendered");
-			entity.fillCrashReportCategory(crashReportCategory);
-			CrashReportCategory crashReportCategory2 = crashReport.addCategory("Renderer details");
-			crashReportCategory2.setDetail("Assigned renderer", entityRenderer);
-			crashReportCategory2.setDetail("Location", CrashReportCategory.formatLocation(entity.level(), x, y, z));
-			crashReportCategory2.setDetail("Rotation", rotationYaw);
-			crashReportCategory2.setDetail("Delta", partialTicks);
-			throw new ReportedException(crashReport);
-		}
-	}
-
-	@Shadow
-	public <T extends Entity> EntityRenderer<? super T, ?> getRenderer(T entity) {
-		throw new AssertionError("Mixin injection failed - FrozenLib EntityRenderDispatcherMixin");
+		if (!(renderState instanceof EntityRenderStateWithIcon stateWithIcon)) return;
+		final SpottingIconRenderState iconRenderState = stateWithIcon.frozenLib$getIconRenderState();
+		if (iconRenderState == null) return;
+		iconRenderState.submit(poseStack, renderState, cameraRenderState.orientation, submitNodeCollector);
 	}
 
 }

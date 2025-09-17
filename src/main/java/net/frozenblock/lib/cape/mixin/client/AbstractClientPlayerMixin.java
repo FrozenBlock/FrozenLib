@@ -21,7 +21,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.cape.client.impl.AvatarCapeInterface;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.ClientAsset;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -30,15 +30,15 @@ import org.spongepowered.asm.mixin.Unique;
 public class AbstractClientPlayerMixin implements AvatarCapeInterface {
 
 	@Unique
-	private ResourceLocation frozenLib$cape;
+	private ClientAsset.Texture frozenLib$cape;
 
 	@Override
-	public void frozenLib$setCape(ResourceLocation cape) {
+	public void frozenLib$setCape(ClientAsset.Texture cape) {
 		frozenLib$cape = cape;
 	}
 
 	@Override
-	public ResourceLocation frozenLib$getCape() {
+	public ClientAsset.Texture frozenLib$getCape() {
 		return this.frozenLib$cape;
 	}
 }

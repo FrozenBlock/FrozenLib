@@ -26,16 +26,9 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public record SpottingIconRemovePacket(
-	int entityId
-) implements CustomPacketPayload {
-
-	public static final Type<SpottingIconRemovePacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("spotting_icon_remove_packet")
-	);
-	public static final StreamCodec<FriendlyByteBuf, SpottingIconRemovePacket> CODEC = ByteBufCodecs.VAR_INT
-		.map(SpottingIconRemovePacket::new, SpottingIconRemovePacket::entityId)
-		.cast();
+public record SpottingIconRemovePacket(int entityId) implements CustomPacketPayload {
+	public static final Type<SpottingIconRemovePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("spotting_icon_remove_packet"));
+	public static final StreamCodec<FriendlyByteBuf, SpottingIconRemovePacket> CODEC = ByteBufCodecs.VAR_INT.map(SpottingIconRemovePacket::new, SpottingIconRemovePacket::entityId).cast();
 
 	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.entityId());
