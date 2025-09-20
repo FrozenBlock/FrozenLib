@@ -37,6 +37,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockCollisions;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Contract;
@@ -150,7 +151,7 @@ public class WindParticle extends TextureSheetParticle {
 	private @NotNull Iterable<VoxelShape> getBlockCollisions(AABB box) {
 		return () -> new BlockCollisions<>(
 			this.level,
-			null,
+			CollisionContext.empty(),
 			box,
 			false,
 			(pos, shape) -> {
