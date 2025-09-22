@@ -29,6 +29,7 @@ public class FrozenLibParticleResources {
 	public static void init() {
 		ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
 
-		particleRegistry.register(FrozenLibParticleTypes.WIND, WindParticle.Factory::new);
+		particleRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Factory::new);
+		particleRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Factory::new);
 	}
 }

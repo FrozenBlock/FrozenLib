@@ -33,8 +33,11 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public class FrozenLibParticleTypes {
-	public static final ParticleType<WindParticleOptions> WIND = register(
-		"wind", false, particleType -> WindParticleOptions.CODEC, particleType -> WindParticleOptions.STREAM_CODEC
+	public static final ParticleType<WindParticleOptions> WIND_SMALL = register(
+		"wind_small", false, particleType -> WindParticleOptions.CODEC, particleType -> WindParticleOptions.STREAM_CODEC
+	);
+	public static final ParticleType<WindParticleOptions> WIND_MEDIUM = register(
+		"wind_medium", false, particleType -> WindParticleOptions.CODEC, particleType -> WindParticleOptions.STREAM_CODEC
 	);
 	public static void init() {}
 

@@ -49,8 +49,6 @@ import org.jetbrains.annotations.NotNull;
 public class WindParticle extends SingleQuadParticle {
 	protected final CustomRotationalParticleHelper rotationalHelper = new CustomRotationalParticleHelper();
 	private final SpriteSet spriteSet;
-	private final int spriteOffset;
-	private final int maxFrame;
 	private final double windMovementScale;
 	private final float rotationChangeAmount;
 
@@ -69,8 +67,6 @@ public class WindParticle extends SingleQuadParticle {
 		this.quadSize *= 3F * particleLength.getQuadSizeScale();
 		this.setSize(0.3F, 0.3F);
 		this.spriteSet = spriteSet;
-		this.spriteOffset = particleLength.getSpriteOffset() * 20;
-		this.maxFrame = 20 + this.spriteOffset;
 		this.windMovementScale = particleLength.getWindMovementScale();
 		this.rotationChangeAmount = particleLength.getRotationChangeAmount();
 
@@ -180,9 +176,8 @@ public class WindParticle extends SingleQuadParticle {
 	@Override
 	public void setSpriteFromAge(@NotNull SpriteSet spriteSet) {
 		if (this.removed) return;
-		int frame = this.age < 8 ? this.age : (this.age < this.ageBeforeDissipating ? 8 : this.age - (this.ageBeforeDissipating) + 9);
-		frame += this.spriteOffset;
-		this.setSprite(spriteSet.get(Math.clamp(frame, this.spriteOffset, this.maxFrame), 40));
+		final int frame = this.age < 8 ? this.age : (this.age < this.ageBeforeDissipating ? 8 : this.age - (this.ageBeforeDissipating) + 9);
+		this.setSprite(spriteSet.get(Math.min(frame, 20), 20));
 	}
 
 	@Override

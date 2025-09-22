@@ -79,7 +79,8 @@ public class WindParticleOptions implements ParticleOptions {
 	@NotNull
 	@Override
 	public ParticleType<?> getType() {
-		return FrozenLibParticleTypes.WIND;
+		if (this.length == ParticleLength.MEDIUM) return FrozenLibParticleTypes.WIND_MEDIUM;
+		return FrozenLibParticleTypes.WIND_SMALL;
 	}
 
 	public int getLifespan() {
@@ -95,8 +96,8 @@ public class WindParticleOptions implements ParticleOptions {
 	}
 
 	public enum ParticleLength implements StringRepresentable {
-		SMALL("small", 0, 1D, 0.25F, 1F),
-		MEDIUM("medium", 1, 1.2D, 0.1F, 3.2F);
+		SMALL("small", 1D, 0.25F, 1F),
+		MEDIUM("medium", 1.2D, 0.1F, 3.2F);
 		public static final Codec<ParticleLength> CODEC = StringRepresentable.fromEnum(ParticleLength::values);
 		public static final StreamCodec<ByteBuf, ParticleLength> STREAM_CODEC = new StreamCodec<>() {
 			@Override
@@ -111,21 +112,15 @@ public class WindParticleOptions implements ParticleOptions {
 		};
 
 		private final String name;
-		private final int spriteOffset;
 		private final double windMovementScale;
 		private final float rotationChangeAmount;
 		private final float quadSizeScale;
 
-		ParticleLength(String name, int spriteOffset, double windMovementScale, float rotationChangeAmount, float quadSizeScale) {
+		ParticleLength(String name, double windMovementScale, float rotationChangeAmount, float quadSizeScale) {
 			this.name = name;
-			this.spriteOffset = spriteOffset;
 			this.windMovementScale = windMovementScale;
 			this.rotationChangeAmount = rotationChangeAmount;
 			this.quadSizeScale = quadSizeScale;
-		}
-
-		public int getSpriteOffset() {
-			return this.spriteOffset;
 		}
 
 		public double getWindMovementScale() {
