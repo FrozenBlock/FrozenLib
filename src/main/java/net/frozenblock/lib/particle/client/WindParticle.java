@@ -32,6 +32,7 @@ import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.state.QuadParticleRenderState;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -62,19 +63,22 @@ public class WindParticle extends SingleQuadParticle {
 		@NotNull ClientLevel level,
 		@NotNull SpriteSet spriteSet,
 		@NotNull WindParticleOptions.ParticleLength particleLength,
+		int ageBeforeDissipating,
+		int spriteOffset,
+		int maxFrame,
 		double x, double y, double z,
 		double xd, double yd, double zd
 	) {
-		super(level, x, y, z, xd, yd, zd, spriteSet.first());
+		super(level, x, y, z, xd, yd, zd, getSpriteFromAge(spriteSet, 0, ageBeforeDissipating, spriteOffset, maxFrame));
 		this.quadSize *= 3F * particleLength.getQuadSizeScale();
 		this.setSize(0.3F, 0.3F);
 		this.spriteSet = spriteSet;
-		this.spriteOffset = particleLength.getSpriteOffset() * 20;
-		this.maxFrame = 20 + this.spriteOffset;
+		this.spriteOffset = spriteOffset;
+		this.maxFrame = maxFrame;
 		this.windMovementScale = particleLength.getWindMovementScale();
 		this.rotationChangeAmount = particleLength.getRotationChangeAmount();
 
-		this.lifetime = 19;
+		this.lifetime = 19 + ageBeforeDissipating;
 		this.hasPhysics = false;
 		this.friction = 0.95F;
 		this.gravity = 0F;
@@ -177,12 +181,16 @@ public class WindParticle extends SingleQuadParticle {
 		);
 	}
 
+	protected static @NotNull TextureAtlasSprite getSpriteFromAge(@NotNull SpriteSet spriteSet, int age, int ageBeforeDissipating, int spriteOffset, int maxFrame) {
+		int frame = age < 8 ? age : (age < ageBeforeDissipating ? 8 : age - (ageBeforeDissipating) + 9);
+		frame += spriteOffset;
+		return spriteSet.get(Math.clamp(frame, spriteOffset, maxFrame), 40);
+	}
+
 	@Override
 	public void setSpriteFromAge(@NotNull SpriteSet spriteSet) {
 		if (this.removed) return;
-		int frame = this.age < 8 ? this.age : (this.age < this.ageBeforeDissipating ? 8 : this.age - (this.ageBeforeDissipating) + 9);
-		frame += this.spriteOffset;
-		this.setSprite(spriteSet.get(Math.clamp(frame, this.spriteOffset, this.maxFrame), 40));
+		this.setSprite(getSpriteFromAge(spriteSet, this.age, this.ageBeforeDissipating, this.spriteOffset, this.maxFrame));
 	}
 
 	@Override
@@ -226,9 +234,21 @@ public class WindParticle extends SingleQuadParticle {
 			@NotNull RandomSource random
 		) {
 			Vec3 velocity = options.getVelocity();
-			WindParticle windParticle = new WindParticle(level, this.spriteProvider, options.length(), x, y, z, 0D, 0D, 0D);
-			windParticle.ageBeforeDissipating = options.getLifespan();
-			windParticle.lifetime += windParticle.ageBeforeDissipating;
+			final WindParticleOptions.ParticleLength length = options.length();
+
+			final int ageBeforeDissipating = options.getLifespan();
+			final int spriteOffset = length.getSpriteOffset() * 20;
+			final int maxFrame = 20 + spriteOffset;
+			WindParticle windParticle = new WindParticle(
+				level,
+				this.spriteProvider,
+				length,
+				ageBeforeDissipating,
+				spriteOffset,
+				maxFrame,
+				x, y, z,
+				0D, 0D, 0D
+			);
 
 			windParticle.xd = velocity.x;
 			windParticle.zd = velocity.z;
