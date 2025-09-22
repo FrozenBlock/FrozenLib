@@ -21,9 +21,10 @@ import com.google.common.collect.ImmutableList;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.particle.api.client.CustomRotationalParticleHelper;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
-import net.frozenblock.lib.particle.client.options.WindParticleOptions;
+import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -46,19 +47,33 @@ import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class WindParticle extends SingleQuadParticle {
-	private final CustomRotationalParticleHelper rotationalHelper = new CustomRotationalParticleHelper();
+	protected final CustomRotationalParticleHelper rotationalHelper = new CustomRotationalParticleHelper();
 	private final SpriteSet spriteSet;
+	private final int spriteOffset;
+	private final int maxFrame;
+	private final double windMovementScale;
+	private final float rotationChangeAmount;
 
-	private int ageBeforeDissipating;
-
+	protected int ageBeforeDissipating;
 	private boolean shouldDissipate;
 	private boolean chosenSide;
 
-	WindParticle(@NotNull ClientLevel level, @NotNull SpriteSet spriteSet, double x, double y, double z, double xd, double yd, double zd) {
+	WindParticle(
+		@NotNull ClientLevel level,
+		@NotNull SpriteSet spriteSet,
+		@NotNull WindParticleOptions.ParticleLength particleLength,
+		double x, double y, double z,
+		double xd, double yd, double zd
+	) {
 		super(level, x, y, z, xd, yd, zd, spriteSet.first());
-		this.quadSize *= 3F;
+		this.quadSize *= 3F * particleLength.getQuadSizeScale();
 		this.setSize(0.3F, 0.3F);
 		this.spriteSet = spriteSet;
+		this.spriteOffset = particleLength.getSpriteOffset() * 20;
+		this.maxFrame = 20 + this.spriteOffset;
+		this.windMovementScale = particleLength.getWindMovementScale();
+		this.rotationChangeAmount = particleLength.getRotationChangeAmount();
+
 		this.lifetime = 19;
 		this.hasPhysics = false;
 		this.friction = 0.95F;
@@ -76,12 +91,12 @@ public class WindParticle extends SingleQuadParticle {
 			double multXZ = 0.007D;
 			double multY = 0.0015D * 0.695;
 			Vec3 pos = new Vec3(this.x, this.y, this.z);
-			Vec3 wind = ClientWindManager.getWindMovement(this.level, pos, 1D, 7D, 5D);
+			Vec3 wind = ClientWindManager.getWindMovement(this.level, pos, this.windMovementScale, 7D, 5D);
 			this.xd += wind.x() * multXZ;
 			this.yd += wind.y() * multY;
 			this.zd += wind.z() * multXZ;
 
-			this.setRotationFromMovement(0.25F);
+			this.setRotationFromMovement(this.rotationChangeAmount);
 		} else {
 			this.friction = 0.2F;
 		}
@@ -165,12 +180,13 @@ public class WindParticle extends SingleQuadParticle {
 	@Override
 	public void setSpriteFromAge(@NotNull SpriteSet spriteSet) {
 		if (this.removed) return;
-		int i = this.age < 8 ? this.age : (this.age < this.ageBeforeDissipating ? 8 : this.age - (this.ageBeforeDissipating) + 9);
-		this.setSprite(spriteSet.get(Math.min(i, 20), 20));
+		int frame = this.age < 8 ? this.age : (this.age < this.ageBeforeDissipating ? 8 : this.age - (this.ageBeforeDissipating) + 9);
+		frame += this.spriteOffset;
+		this.setSprite(spriteSet.get(Math.clamp(frame, this.spriteOffset, this.maxFrame), 40));
 	}
 
 	@Override
-	public void extract(QuadParticleRenderState renderState, @NotNull Camera camera, float partialTicks) {
+	public void extract(@NotNull QuadParticleRenderState renderState, @NotNull Camera camera, float partialTicks) {
 		this.rotationalHelper.extract(
 			renderState,
 			camera,
@@ -210,7 +226,7 @@ public class WindParticle extends SingleQuadParticle {
 			@NotNull RandomSource random
 		) {
 			Vec3 velocity = options.getVelocity();
-			WindParticle windParticle = new WindParticle(level, this.spriteProvider, x, y, z, 0D, 0D, 0D);
+			WindParticle windParticle = new WindParticle(level, this.spriteProvider, options.length(), x, y, z, 0D, 0D, 0D);
 			windParticle.ageBeforeDissipating = options.getLifespan();
 			windParticle.lifetime += windParticle.ageBeforeDissipating;
 

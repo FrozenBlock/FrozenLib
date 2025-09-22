@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.particle.client;
+package net.frozenblock.lib.particle.api.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
