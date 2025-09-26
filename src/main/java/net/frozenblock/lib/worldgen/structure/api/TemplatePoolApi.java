@@ -67,7 +67,7 @@ public class TemplatePoolApi {
 
 	public static void addElement(
 		ResourceLocation pool,
-		@NotNull Function<StructureTemplatePool.Projection, StructurePoolElement> elementFunction,
+		@NotNull Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> elementFunction,
 		int weight,
 		StructureTemplatePool.Projection projection
 	) {
@@ -77,7 +77,7 @@ public class TemplatePoolApi {
 	public static void addElement(
 		Supplier<Boolean> condition,
 		ResourceLocation pool,
-		@NotNull Function<StructureTemplatePool.Projection, StructurePoolElement> elementFunction,
+		@NotNull Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> elementFunction,
 		int weight,
 		StructureTemplatePool.Projection projection
 	) {
