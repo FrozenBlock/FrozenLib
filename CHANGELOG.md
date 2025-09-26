@@ -25,9 +25,10 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - These tags define blocks that Wind Particles and blocks that create wind disturbances can blow through.
   - The `BlowingHelper` class contains a single method, used to unify the logic behind finding blocks that can be blown through.
 - Added `TemplatePoolApi,` which can be used for adding new `StructurePoolElement`s to `StructureTemplatePool`s.
-  - The `ADD_ADDITIONAL_TEMPLATE_POOLS` event must be used in order to utilize this API properly.
+  - The `ADD_ADDITIONAL_TEMPLATE_POOLS` event must be used in order to utilize this API.
   - A condition can be passed, preventing new `StructurePoolElement`s from being added unless the condition is met.
 - Added the `frozenlib:structure_place_schedules_tick` block tag, used to specify which blocks will schedule a block tick upon generating in a structure.
+- Potentially fixed a few issues FrozenLib could have when used with C2ME.
 - Removed two unused item textures.
 
 ### 1.21.5+

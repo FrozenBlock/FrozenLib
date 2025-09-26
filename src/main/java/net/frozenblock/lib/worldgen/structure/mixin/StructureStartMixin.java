@@ -123,13 +123,13 @@ public class StructureStartMixin implements StructureStartInterface {
 
 	@Unique
 	@Override
-	public ResourceLocation frozenLib$getId() {
+	public synchronized ResourceLocation frozenLib$getId() {
 		return this.frozenLib$id;
 	}
 
 	@Unique
 	@Override
-	public void frozenLib$setId(ResourceLocation id) {
+	public synchronized void frozenLib$setId(ResourceLocation id) {
 		this.frozenLib$id = id;
 	}
 }
