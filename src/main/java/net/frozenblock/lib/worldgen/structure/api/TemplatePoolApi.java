@@ -30,8 +30,8 @@ import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.worldgen.structure.impl.StructureTemplatePoolInterface;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
@@ -53,12 +53,23 @@ public class TemplatePoolApi {
 	public static final Event<AddAdditionalTemplatePools> ADD_ADDITIONAL_TEMPLATE_POOLS = FrozenEvents.createEnvironmentEvent(AddAdditionalTemplatePools.class,
 		callbacks -> (registry) -> {
 			for (var callback : callbacks) callback.addAdditionalTemplatePools(registry);
-		});
+	});
 
 	public static void init() {
-		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register((RegistryAccess registryAccess) -> {
+		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register(registryAccess -> {
+			POOL_TO_ELEMENTS.clear();
+
 			registryAccess.lookup(Registries.PROCESSOR_LIST).ifPresent(processorListRegistry -> {
 				ADD_ADDITIONAL_TEMPLATE_POOLS.invoker().addAdditionalTemplatePools(processorListRegistry);
+			});
+
+			registryAccess.lookup(Registries.TEMPLATE_POOL).ifPresent(templatePoolRegistry -> {
+				templatePoolRegistry.entrySet().forEach(templatePoolEntry -> {
+					if ((Object) (templatePoolEntry.getValue()) instanceof StructureTemplatePoolInterface templatePoolInterface) {
+						final List<Pair<StructurePoolElement, Integer>> additionalElements = getAdditionalElements(templatePoolEntry.getKey().location());
+						if (!additionalElements.isEmpty()) templatePoolInterface.frozenlib$addTemplatePools(additionalElements);
+					}
+				});
 			});
 		});
 
