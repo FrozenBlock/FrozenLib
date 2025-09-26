@@ -17,42 +17,39 @@
 
 package net.frozenblock.lib.worldgen.structure.mixin;
 
-import com.llamalad7.mixinextras.sugar.Local;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.datafixers.util.Pair;
-import net.frozenblock.lib.worldgen.structure.api.TemplatePoolApi;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceKey;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import net.frozenblock.lib.worldgen.structure.impl.StructureTemplatePoolInterface;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Mixin(StructureTemplatePool.class)
-public class StructureTemplatePoolMixin {
+public class StructureTemplatePoolMixin implements StructureTemplatePoolInterface {
 
-	@Inject(
-		method = "<init>(Lnet/minecraft/core/Holder;Ljava/util/List;)V",
-		at = @At(value = "CTOR_HEAD")
-	)
-	public void frozenLib$appendPoolElements(
-		Holder holder, List list, CallbackInfo info,
-		@Local(argsOnly = true) LocalRef<List<Pair<StructurePoolElement, Integer>>> elements
-	) {
-		final Optional<ResourceKey<?>> optionalKey = holder.unwrapKey();
-		if (optionalKey.isEmpty()) return;
+	@Shadow
+	@Final
+	@Mutable
+	private List<Pair<StructurePoolElement, Integer>> rawTemplates;
 
-		List<Pair<StructurePoolElement, Integer>> additionalElements = TemplatePoolApi.getAdditionalElements(optionalKey.get().location());
-		if (additionalElements.isEmpty()) return;
+	@Shadow
+	@Final
+	private ObjectArrayList<StructurePoolElement> templates;
 
-		final List<Pair<StructurePoolElement, Integer>> finalElements = new ArrayList<>(elements.get());
-		finalElements.addAll(additionalElements);
-		elements.set(finalElements);
+	@Override
+	public void frozenlib$addTemplatePools(List<Pair<StructurePoolElement, Integer>> elements) {
+		final List<Pair<StructurePoolElement, Integer>> finalRawTemplates = new ArrayList<>(this.rawTemplates);
+		finalRawTemplates.addAll(elements);
+		this.rawTemplates = finalRawTemplates;
+
+		for (Pair<StructurePoolElement, Integer> pair : elements) {
+			final StructurePoolElement structurePoolElement = pair.getFirst();
+			for (int i = 0; i < pair.getSecond(); i++) this.templates.add(structurePoolElement);
+		}
 	}
-
 }
