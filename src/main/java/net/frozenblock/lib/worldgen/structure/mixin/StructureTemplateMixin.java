@@ -19,10 +19,14 @@ package net.frozenblock.lib.worldgen.structure.mixin;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.frozenblock.lib.worldgen.structure.impl.StructureTemplateInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ServerLevelAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -57,5 +61,19 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 	@Override
 	public synchronized void frozenLib$addProcessors(List<StructureProcessor> processors) {
 		this.frozenLib$additionalProcessors.addAll(processors);
+	}
+
+	@WrapOperation(
+		method = "placeInWorld",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/ServerLevelAccessor;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z",
+			ordinal = 1
+		)
+	)
+	private static boolean frozenLib$scheduleTicksOnBlockPlace(ServerLevelAccessor instance, BlockPos pos, BlockState state, int i, Operation<Boolean> original) {
+		final boolean setBlock = original.call(instance, pos, state, i);
+		if (setBlock && state.is(FrozenBlockTags.STRUCTURE_PLACE_SCHEDULES_TICK)) instance.scheduleTick(pos, state.getBlock(), 1);
+		return setBlock;
 	}
 }
