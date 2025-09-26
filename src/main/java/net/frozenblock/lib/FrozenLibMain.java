@@ -52,6 +52,7 @@ import net.frozenblock.lib.worldgen.feature.api.block_predicate.FrozenLibBlockPr
 import net.frozenblock.lib.worldgen.feature.api.placementmodifier.FrozenPlacementModifiers;
 import net.frozenblock.lib.worldgen.structure.api.StructureGenerationConditionApi;
 import net.frozenblock.lib.worldgen.structure.api.StructurePlacementExclusionApi;
+import net.frozenblock.lib.worldgen.structure.api.TemplatePoolApi;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifiers;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructurePoolElementTypes;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
@@ -99,6 +100,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		DataPackReloadMarker.init();
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
+		TemplatePoolApi.init();
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC.codec());
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC.codec());
