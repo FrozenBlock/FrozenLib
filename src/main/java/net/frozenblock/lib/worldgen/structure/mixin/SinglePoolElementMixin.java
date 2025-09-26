@@ -36,7 +36,7 @@ public class SinglePoolElementMixin implements StructurePoolElementInterface {
 	private final List<StructureProcessor> frozenLib$additionalProcessors = new ArrayList<>();
 
 	@Override
-	public void frozenLib$addProcessors(List<StructureProcessor> processors) {
+	public synchronized void frozenLib$addProcessors(List<StructureProcessor> processors) {
 		this.frozenLib$additionalProcessors.addAll(processors);
 	}
 
