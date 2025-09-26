@@ -63,7 +63,7 @@ public class TemplatePoolApi {
 				ADD_ADDITIONAL_TEMPLATE_POOLS.invoker().addAdditionalTemplatePools(processorListRegistry);
 			});
 
-			registryAccess.lookup(Registries.TEMPLATE_POOL).ifPresent(templatePoolRegistry -> {
+			registryAccess.registry(Registries.TEMPLATE_POOL).ifPresent(templatePoolRegistry -> {
 				templatePoolRegistry.entrySet().forEach(templatePoolEntry -> {
 					if ((Object) (templatePoolEntry.getValue()) instanceof StructureTemplatePoolInterface templatePoolInterface) {
 						final List<Pair<StructurePoolElement, Integer>> additionalElements = getAdditionalElements(templatePoolEntry.getKey().location());
