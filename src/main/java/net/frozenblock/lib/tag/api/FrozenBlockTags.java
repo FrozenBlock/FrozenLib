@@ -29,6 +29,7 @@ public class FrozenBlockTags {
     public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
 	public static final TagKey<Block> BLOWING_CAN_PASS_THROUGH = bind("blowing_can_pass_through");
 	public static final TagKey<Block> BLOWING_CANNOT_PASS_THROUGH = bind("blowing_cannot_pass_through");
+	public static final TagKey<Block> STRUCTURE_PLACE_SCHEDULES_TICK = bind("structure_place_schedules_tick");
 
 	@NotNull
     private static TagKey<Block> bind(String path) {
