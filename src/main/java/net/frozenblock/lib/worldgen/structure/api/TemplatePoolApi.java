@@ -24,10 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.Event;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.frozenblock.lib.worldgen.structure.impl.StructureTemplatePoolInterface;
@@ -42,81 +40,59 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
 @UtilityClass
 public class TemplatePoolApi {
-	private static final Supplier<Boolean> ALWAYS_TRUE = () -> true;
-	private static final Map<ResourceLocation, List<Pair<Supplier<Boolean>, List<Pair<StructurePoolElement, Integer>>>>> POOL_TO_ELEMENTS = new Object2ObjectOpenHashMap<>();
-
 	/**
 	 * An event used to add new {@link StructurePoolElement}s to {@link StructureTemplatePool}s.
-	 * <p>
-	 * Use {@link TemplatePoolApi#addElement(ResourceLocation, Function, int, StructureTemplatePool.Projection)} or {@link TemplatePoolApi#addElement(Supplier, ResourceLocation, Function, int, StructureTemplatePool.Projection)} for this.
 	 */
 	public static final Event<AddAdditionalTemplatePools> ADD_ADDITIONAL_TEMPLATE_POOLS = FrozenEvents.createEnvironmentEvent(AddAdditionalTemplatePools.class,
-		callbacks -> (registry) -> {
-			for (var callback : callbacks) callback.addAdditionalTemplatePools(registry);
+		callbacks -> (registry, context) -> {
+			for (var callback : callbacks) callback.addAdditionalTemplatePools(registry, context);
 	});
 
 	public static void init() {
 		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register(registryAccess -> {
-			POOL_TO_ELEMENTS.clear();
+			final TemplatePoolAdditionHolder context = new TemplatePoolAdditionHolder();
 
 			registryAccess.lookup(Registries.PROCESSOR_LIST).ifPresent(processorListRegistry -> {
-				ADD_ADDITIONAL_TEMPLATE_POOLS.invoker().addAdditionalTemplatePools(processorListRegistry);
+				ADD_ADDITIONAL_TEMPLATE_POOLS.invoker().addAdditionalTemplatePools(processorListRegistry, context);
 			});
 
 			registryAccess.lookup(Registries.TEMPLATE_POOL).ifPresent(templatePoolRegistry -> {
 				templatePoolRegistry.entrySet().forEach(templatePoolEntry -> {
 					if ((Object) (templatePoolEntry.getValue()) instanceof StructureTemplatePoolInterface templatePoolInterface) {
-						final List<Pair<StructurePoolElement, Integer>> additionalElements = getAdditionalElements(templatePoolEntry.getKey().location());
+						final List<Pair<StructurePoolElement, Integer>> additionalElements = context.getAdditionalElements(templatePoolEntry.getKey().location());
 						if (!additionalElements.isEmpty()) templatePoolInterface.frozenlib$addTemplatePools(additionalElements);
 					}
 				});
 			});
 		});
-
-		ServerLifecycleEvents.SERVER_STOPPING.register((server) -> POOL_TO_ELEMENTS.clear());
 	}
 
-	public static void addElement(
-		ResourceLocation pool,
-		@NotNull Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> elementFunction,
-		int weight,
-		StructureTemplatePool.Projection projection
-	) {
-		addElement(ALWAYS_TRUE, pool, elementFunction, weight, projection);
-	}
+	public static class TemplatePoolAdditionHolder {
+		protected final Map<ResourceLocation, List<Pair<StructurePoolElement, Integer>>> poolToElements = new Object2ObjectOpenHashMap<>();
 
-	public static void addElement(
-		Supplier<Boolean> condition,
-		ResourceLocation pool,
-		@NotNull Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> elementFunction,
-		int weight,
-		StructureTemplatePool.Projection projection
-	) {
-		final StructurePoolElement element = elementFunction.apply(projection);
+		public void addElement(
+			ResourceLocation pool,
+			@NotNull Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> elementFunction,
+			int weight,
+			StructureTemplatePool.Projection projection
+		) {
+			final StructurePoolElement element = elementFunction.apply(projection);
 
-		final List<Pair<Supplier<Boolean>, List<Pair<StructurePoolElement, Integer>>>> list = POOL_TO_ELEMENTS.getOrDefault(pool, new ArrayList<>());
-		final List<Pair<StructurePoolElement, Integer>> elements = list
-			.stream()
-			.filter(pair -> pair.getFirst() == condition)
-			.findFirst().orElse(Pair.of(condition, new ArrayList<>()))
-			.getSecond();
+			final List<Pair<StructurePoolElement, Integer>> list = this.poolToElements.getOrDefault(pool, new ArrayList<>());
 
-		elements.add(Pair.of(element, weight));
+			list.add(Pair.of(element, weight));
 
-		POOL_TO_ELEMENTS.put(pool, list);
-	}
+			this.poolToElements.put(pool, list);
+		}
 
-	public static @NotNull List<Pair<StructurePoolElement, Integer>> getAdditionalElements(ResourceLocation pool) {
-		final ArrayList<Pair<StructurePoolElement, Integer>> elements = new ArrayList<>();
-		POOL_TO_ELEMENTS.getOrDefault(pool, ImmutableList.of()).forEach(entry -> {
-			if (entry.getFirst().get()) elements.addAll(entry.getSecond());
-		});
-		return elements;
+		public @NotNull List<Pair<StructurePoolElement, Integer>> getAdditionalElements(ResourceLocation pool) {
+			return new ArrayList<>(this.poolToElements.getOrDefault(pool, ImmutableList.of()));
+		}
 	}
 
 	@FunctionalInterface
 	public interface AddAdditionalTemplatePools extends CommonEventEntrypoint {
-		void addAdditionalTemplatePools(HolderLookup.RegistryLookup<StructureProcessorList> registry);
+		void addAdditionalTemplatePools(HolderLookup.RegistryLookup<StructureProcessorList> registry, TemplatePoolAdditionHolder context);
 	}
 
 }
