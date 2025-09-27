@@ -16,10 +16,6 @@
   ],
   "client": [
     "client.entity.SpecialModelRenderersMixin",
-    "client.model.AtlasConfigMixin",
-    "client.model.FaceBakeryMixin",
-    "client.model.ModelManagerMixin",
-    "client.model.SimpleUnbakedGeometryMixin",
     "tick.client.ClientLevelMixin"
   ]
 }

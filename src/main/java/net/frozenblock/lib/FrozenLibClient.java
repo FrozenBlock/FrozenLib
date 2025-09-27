@@ -23,7 +23,6 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.frozenblock.lib.block.client.render_type.impl.BlockRenderTypeOverwriteManager;
 import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
@@ -66,9 +65,8 @@ public final class FrozenLibClient implements ClientModInitializer {
 
 		FrozenLibModResourcePackApi.init();
 
-		var resourceLoader = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
+		final var resourceLoader = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
 		resourceLoader.registerReloadListener(BlockSoundTypeManager.INSTANCE);
-		resourceLoader.registerReloadListener(BlockRenderTypeOverwriteManager.INSTANCE);
 
 		FrozenClientEntrypoint.EVENT.invoker().init(); // also includes dev init
 	}

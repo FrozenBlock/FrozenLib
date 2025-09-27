@@ -59,17 +59,19 @@ public class CustomRotationalParticleHelper {
 
 	public void setRotationFromMovement(double xd, double yd, double zd, float rotationAmount) {
 		final double horizontalDistance = Math.sqrt((xd * xd) + (zd * zd));
-		double newYRot = (Mth.atan2(xd, zd)) * Mth.RAD_TO_DEG;
-		double newXRot = (Mth.atan2(horizontalDistance, yd)) * Mth.RAD_TO_DEG;
+		double newYRot = Mth.atan2(xd, zd) * Mth.RAD_TO_DEG;
+		double newXRot = Mth.atan2(horizontalDistance, yd) * Mth.RAD_TO_DEG;
 
-		if (Math.abs(newYRot - this.yRot) > 180D) newYRot += 360D;
-		if (Math.abs(newXRot - this.xRot) > 180D) newXRot += 360D;
-
-		double newYRotDifference = newYRot - this.yRot;
-		double newXRotDifference = newXRot - this.xRot;
+		double newYRotDifference = Mth.wrapDegrees(newYRot - this.yRot);
+		double newXRotDifference = Mth.wrapDegrees(newXRot - this.xRot);
 
 		this.yRot += (float)newYRotDifference * rotationAmount;
 		this.xRot += (float)newXRotDifference * rotationAmount;
+
+		while (this.yRot - this.prevYRot < -180F) this.prevYRot -= 360F;
+		while (this.yRot - this.prevYRot >= 180F) this.prevYRot += 360F;
+		while (this.xRot - this.prevXRot < -180F) this.prevXRot -= 360F;
+		while (this.xRot - this.prevXRot >= 180F) this.prevXRot += 360F;
 
 		this.setRotMultiplierFromXRot();
 	}
