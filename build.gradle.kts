@@ -1,6 +1,7 @@
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.kohsuke.github.GHReleaseBuilder
 import org.kohsuke.github.GitHub
@@ -20,7 +21,7 @@ buildscript {
 }
 
 plugins {
-	id("fabric-loom") version("1.11.+")
+	id("fabric-loom") version("+")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -342,6 +343,8 @@ tasks {
     withType(KotlinCompile::class) {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_21
+            apiVersion = KotlinVersion.KOTLIN_2_1
+            languageVersion = KotlinVersion.KOTLIN_2_1
         }
     }
 
