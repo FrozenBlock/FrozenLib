@@ -159,12 +159,12 @@ public class FrozenLibModResourcePackApi {
 	 * <p>
 	 * Downloads will not occur if {@link FrozenLibConfig#packDownloading} is set to {@link PackDownloadSetting#DISABLED}.
 	 * @param downloadGroup The Resource Packs to download, in {@link PackDownloadGroup} form.
-	 * @param hidePackdFromMenu Whether the Resource Packs should be hidden from the Resource Pack selection menu.
+	 * @param hidePacksFromMenu Whether the Resource Packs should be hidden from the Resource Pack selection menu.
 	 * @param skipVersionCheck Whether the Resource Packs will still be downloaded even if an identical version was already downloaded prior.
 	 */
-	public static void downloadResourcePacks(@NotNull PackDownloadGroup downloadGroup, boolean hidePackdFromMenu, boolean skipVersionCheck) {
+	public static void downloadResourcePacks(@NotNull PackDownloadGroup downloadGroup, boolean hidePacksFromMenu, boolean skipVersionCheck) {
 		downloadGroup.resetPackStatuses();
-		downloadGroup.packs().forEach(downloadInfo -> downloadResourcePack(downloadInfo, hidePackdFromMenu, skipVersionCheck));
+		downloadGroup.packs().forEach(downloadInfo -> downloadResourcePack(downloadInfo, hidePacksFromMenu, skipVersionCheck));
 	}
 
 	/**
@@ -274,14 +274,14 @@ public class FrozenLibModResourcePackApi {
 	 * @return Whether the Resource Pack with the specified id should be hidden from the Resource Pack selection menu.
 	 */
 	public static boolean isPackHiddenFromMenu(String packId) {
-		return HIDDEN_PACK_IDS.contains(packId);
+		return HIDDEN_PACK_IDS.stream().anyMatch(id -> id.equals(packId));
 	}
 
 	/**
 	 * @return Whether the Resource Pack with the specified id is currently registered by a mod.
 	 */
 	public static boolean isFrozenLibPackRegisteredByMod(String packId) {
-		return MOD_RESOURCE_PACK_IDS.contains(packId);
+		return MOD_RESOURCE_PACK_IDS.stream().anyMatch(id -> id.equals(packId));
 	}
 
 	/**

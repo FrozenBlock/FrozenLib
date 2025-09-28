@@ -11,6 +11,6 @@
     "client.FolderRepositorySourceMixin",
     "client.MinecraftMixin",
     "client.PackRepositoryMixin",
-    "client.PackSelectionScreenMixin"
+    "client.PackSelectionModelMixin"
   ]
 }
