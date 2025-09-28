@@ -30,6 +30,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `frozenlib:structure_place_schedules_tick` block tag, used to specify which blocks will schedule a block tick upon generating in a structure.
 - Potentially fixed a few issues FrozenLib could have when used with C2ME.
 - Removed two unused item textures.
+- Updated Kotlin to 2.2.20
 
 ### 1.21.5+
 - Added `FrozenLibConfiguredTreeFeature` and `FrozenLibPlacedTreeFeature,` designed to speed up the process of designing tree variants both with and without leaf litters.
@@ -40,3 +41,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Removed FrozenLib's `DebugRendererEvents` class.
 - Removed FrozenLIb's custom Debug menu.
 - FrozenLib's Wind and Wind Disturbance debug renderers are now enabled via the `MC_DEBUG_FROZENLIB_WIND` and `MC_DEBUG_FROZENLIB_WIND_DISTURBANCE` launch arguments.
+- Wind Particles now come in a short and medium length, which can be selected via `WindParticleOptions.`
