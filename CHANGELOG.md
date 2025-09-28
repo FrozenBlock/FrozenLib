@@ -41,3 +41,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Removed FrozenLib's `DebugRendererEvents` class.
 - Removed FrozenLIb's custom Debug menu.
 - FrozenLib's Wind and Wind Disturbance debug renderers are now enabled via the `MC_DEBUG_FROZENLIB_WIND` and `MC_DEBUG_FROZENLIB_WIND_DISTURBANCE` launch arguments.
+- Wind Particles now come in a short and medium length, which can be selected via `WindParticleOptions.`
