@@ -28,11 +28,21 @@ import net.minecraft.client.renderer.RenderPipelines;
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderPipelines {
 
+	public static final RenderPipeline ENTITY_CUTOUT_NO_SHADING = RenderPipelines.register(
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+			.withLocation(FrozenLibConstants.id("pipeline/entity_cutout_no_shading"))
+			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
+			.withShaderDefine("NO_CARDINAL_LIGHTING")
+			.withSampler("Sampler1")
+			.build()
+	);
+
 	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_FIXED = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_fixed"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
+			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withCull(false)
@@ -45,6 +55,7 @@ public final class FrozenLibRenderPipelines {
 			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_cull"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
+			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withCull(true)
@@ -57,6 +68,7 @@ public final class FrozenLibRenderPipelines {
 			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_fixed_cull"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
+			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withCull(true)
@@ -69,6 +81,7 @@ public final class FrozenLibRenderPipelines {
 			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_always_render"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
+			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
@@ -82,6 +95,7 @@ public final class FrozenLibRenderPipelines {
 			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_always_render_cull"))
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("EMISSIVE")
+			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
 			.withBlend(BlendFunction.TRANSLUCENT)
 			.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)

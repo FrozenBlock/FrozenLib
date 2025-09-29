@@ -18,6 +18,7 @@
 package net.frozenblock.lib.render;
 
 import java.util.function.BiFunction;
+import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
@@ -28,6 +29,21 @@ import net.minecraft.Util;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderTypes {
+
+	public static final Function<ResourceLocation, RenderType> ENTITY_CUTOUT_NO_SHADING = Util.memoize(
+		(resourceLocation) -> RenderType.create(
+			FrozenLibConstants.safeString("entity_cutout_no_lightmap"),
+			1536,
+			true,
+			false,
+			FrozenLibRenderPipelines.ENTITY_CUTOUT_NO_SHADING,
+			RenderType.CompositeState.builder()
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
+				.setLightmapState(RenderStateShard.LIGHTMAP)
+				.setOverlayState(RenderStateShard.OVERLAY)
+				.createCompositeState(true)
+		)
+	);
 
 	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize(
 		(resourceLocation, affectsOutline) -> RenderType.create(
@@ -112,6 +128,10 @@ public final class FrozenLibRenderTypes {
 				.createCompositeState(affectsOutline)
 		)
 	);
+
+	public static RenderType entityCutoutNoShading(ResourceLocation resourceLocation) {
+		return ENTITY_CUTOUT_NO_SHADING.apply(resourceLocation);
+	}
 
     public static RenderType entityTranslucentEmissiveFixed(ResourceLocation resourceLocation) {
         return ENTITY_TRANSLUCENT_EMISSIVE_FIXED.apply(resourceLocation, true);
