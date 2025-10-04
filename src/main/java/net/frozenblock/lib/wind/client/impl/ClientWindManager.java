@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.core.client.api.FrustumUtil;
 import net.frozenblock.lib.math.api.AdvancedMath;
@@ -325,7 +325,7 @@ public final class ClientWindManager {
 		double newWindY = Mth.lerp(disturbanceAmount, windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
 		double newWindZ = Mth.lerp(disturbanceAmount, windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 
-		if (FrozenBools.DEBUG_WIND) Debug.addAccessedPosition(pos);
+		if (FrozenLibConstants.DEBUG_WIND) Debug.addAccessedPosition(pos);
 
 		return new Vec3(
 			Mth.clamp(newWindX, -clamp, clamp),
@@ -435,8 +435,8 @@ public final class ClientWindManager {
 			DEBUG_NODES.clear();
 			DEBUG_DISTURBANCE_NODES.clear();
 
-			if (FrozenBools.DEBUG_WIND) DEBUG_NODES.addAll(createWindNodes(level));
-			if (FrozenBools.DEBUG_WIND_DISTURBANCES) {
+			if (FrozenLibConstants.DEBUG_WIND) DEBUG_NODES.addAll(createWindNodes(level));
+			if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) {
 				WIND_DISTURBANCES.addAll(getWindDisturbances());
 				DEBUG_DISTURBANCE_NODES.addAll(createWindDisturbanceNodes(level));
 			}

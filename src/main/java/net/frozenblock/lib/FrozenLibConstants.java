@@ -18,6 +18,7 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -40,7 +41,10 @@ public final class FrozenLibConstants {
 	 */
 	public static boolean UNSTABLE_LOGGING = FrozenLibLogUtils.UNSTABLE_LOGGING;
 	public static final Path FROZENLIB_GAME_DIRECTORY = FabricLoader.getInstance().getGameDir().resolve(MOD_ID);
-	public static final int DATA_VERSION = 2;
+
+	// DEBUG
+	public static final boolean DEBUG_WIND = SharedConstants.debugFlag("FROZENLIB_WIND");
+	public static final boolean DEBUG_WIND_DISTURBANCES = SharedConstants.debugFlag("FROZENLIB_WIND_DISTURBANCES");
 
 	@Contract("_ -> new")
 	@NotNull

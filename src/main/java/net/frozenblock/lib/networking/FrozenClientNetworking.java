@@ -26,7 +26,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
@@ -476,7 +475,7 @@ public final class FrozenClientNetworking {
 	// DEBUG
 	private static void receiveWindDebugPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(WindAccessPacket.PACKET_TYPE, (packet, ctx) -> {
-			if (!FrozenBools.DEBUG_WIND) return;
+			if (!FrozenLibConstants.DEBUG_WIND) return;
 			ClientWindManager.Debug.addAccessedPosition(packet.accessPos());
 		});
 	}

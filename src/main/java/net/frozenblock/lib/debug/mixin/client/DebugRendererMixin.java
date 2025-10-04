@@ -19,7 +19,7 @@ package net.frozenblock.lib.debug.mixin.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.debug.client.renderer.WindDebugRenderer;
 import net.frozenblock.lib.debug.client.renderer.WindDisturbanceDebugRenderer;
 import net.minecraft.client.renderer.debug.DebugRenderer;
@@ -45,8 +45,8 @@ public class DebugRendererMixin {
 
 	@Inject(method = "refreshRendererList", at = @At("TAIL"))
 	private void frozenLib$render(CallbackInfo info) {
-		if (FrozenBools.DEBUG_WIND) this.opaqueRenderers.add(new WindDebugRenderer());
-		if (FrozenBools.DEBUG_WIND_DISTURBANCES) this.translucentRenderers.add(new WindDisturbanceDebugRenderer());
+		if (FrozenLibConstants.DEBUG_WIND) this.opaqueRenderers.add(new WindDebugRenderer());
+		if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) this.translucentRenderers.add(new WindDisturbanceDebugRenderer());
 	}
 
 }

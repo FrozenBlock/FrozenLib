@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.FrozenBools;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.wind.impl.WindManagerInterface;
@@ -451,12 +451,7 @@ public class WindManager extends SavedData {
 		double windY = Mth.lerp(disturbanceAmount, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
 		double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 
-		if (FrozenBools.DEBUG_WIND) {
-			FrozenNetworking.sendPacketToAllPlayers(
-				this.level,
-				new WindAccessPacket(pos)
-			);
-		}
+		if (FrozenLibConstants.DEBUG_WIND) FrozenNetworking.sendPacketToAllPlayers(this.level, new WindAccessPacket(pos));
 
 		return new Vec3(
 			Mth.clamp(windX, -clamp, clamp),
