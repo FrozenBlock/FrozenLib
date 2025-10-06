@@ -23,7 +23,6 @@ import lombok.Setter;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenBools;
-import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigLoadEvent;
 import net.frozenblock.lib.config.api.registry.ConfigSaveEvent;
@@ -137,7 +136,7 @@ public abstract class Config<T> {
 
 	public final void save() {
 		String formatted = this.formattedName();
-        FrozenLibConstants.LOGGER.info("Saving {}", formatted);
+		FrozenLibLogUtils.LOGGER.info("Saving {}", formatted);
 		try {
 			this.onSave();
 
@@ -154,7 +153,7 @@ public abstract class Config<T> {
 
 	public final boolean load() {
 		String formatted = this.formattedName();
-		FrozenLibConstants.LOGGER.info("Loading {}", formatted);
+		FrozenLibLogUtils.LOGGER.info("Loading {}", formatted);
 		try {
 			boolean loadVal = this.onLoad();
 

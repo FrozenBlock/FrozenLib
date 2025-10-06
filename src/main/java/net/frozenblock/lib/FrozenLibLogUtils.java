@@ -20,9 +20,12 @@ package net.frozenblock.lib;
 import net.fabricmc.loader.api.FabricLoader;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @ApiStatus.Internal
 public final class FrozenLibLogUtils {
+	public static final Logger LOGGER = LoggerFactory.getLogger("FrozenLib");
 	/**
 	 * Used for features that may be unstable and crash in public builds.
 	 * <p>

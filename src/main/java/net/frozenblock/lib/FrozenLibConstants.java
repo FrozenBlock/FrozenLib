@@ -24,16 +24,12 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.slf4j.helpers.NOPLogger;
 import java.nio.file.Path;
 
 @ApiStatus.Internal
 public final class FrozenLibConstants {
-	public static final String PROJECT_ID = "FrozenLib";
 	public static final String MOD_ID = "frozenlib";
-	public static final Logger LOGGER = LoggerFactory.getLogger(PROJECT_ID);
-	public static final NOPLogger LOGGER4 = NOPLogger.NOP_LOGGER;
+	public static final Logger LOGGER = FrozenLibLogUtils.LOGGER;
 	/**
 	 * Used for features that may be unstable and crash in public builds.
 	 * <p>
