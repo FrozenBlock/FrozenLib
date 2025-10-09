@@ -49,7 +49,7 @@ public final class SpottingIconRenderState {
 		final SpottingIconManager.SpottingIcon icon = iconManager.icon;
 		if (icon == null) return;
 
-		double dist = Math.sqrt(entityRenderDispatcher.camera.getPosition().distanceToSqr(entity.getEyePosition(partialTick)));
+		double dist = Math.sqrt(entityRenderDispatcher.camera.position().distanceToSqr(entity.getEyePosition(partialTick)));
 		if (dist > icon.startFadeDist() && iconManager.clientHasIconResource) {
 			this.texture = icon.texture();
 			float endDist = icon.endFadeDist() - icon.startFadeDist();

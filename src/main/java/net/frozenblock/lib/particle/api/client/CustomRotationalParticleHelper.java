@@ -112,12 +112,12 @@ public class CustomRotationalParticleHelper {
 	) {
 		final float yRot = Mth.lerp(partialTicks, this.prevYRot, this.yRot) * Mth.DEG_TO_RAD;
 		final float xRot = Mth.lerp(partialTicks, this.prevXRot, this.xRot) * -Mth.DEG_TO_RAD;
-		final float cameraRotWhileVertical = ((-camera.getYRot()) * (1F - Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
-		float cameraXRot = camera.getXRot();
+		final float cameraRotWhileVertical = ((-camera.yRot()) * (1F - Mth.lerp(partialTicks, this.prevRotMultiplier, this.rotMultiplier))) * Mth.DEG_TO_RAD;
+		float cameraXRot = camera.xRot();
 
 		final Vec3 particlePos = new Vec3(x, y, z);
-		final Vec3 cameraPos = camera.getPosition();
-		double normalizedRelativeY = particlePos.subtract(cameraPos).normalize().subtract(new Vec3(xd, yd, zd).normalize()).normalize().y;
+		final Vec3 cameraPos = camera.position();
+		final double normalizedRelativeY = particlePos.subtract(cameraPos).normalize().subtract(new Vec3(xd, yd, zd).normalize()).normalize().y;
 
 		final double particleRotation = AdvancedMath.getAngleFromOriginXZ(new Vec3(xd, 0D, zd));
 		final double angleToParticle = AdvancedMath.getAngleBetweenXZ(particlePos, cameraPos);

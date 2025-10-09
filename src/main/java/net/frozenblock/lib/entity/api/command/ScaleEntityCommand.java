@@ -37,7 +37,8 @@ import org.jetbrains.annotations.NotNull;
 public class ScaleEntityCommand {
 
 	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal("scale").requires(source -> source.hasPermission(2))
+		dispatcher.register(Commands.literal("scale")
+			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 			.then(Commands.argument("targets", EntityArgument.entities())
 				.then(Commands.argument("scale", DoubleArgumentType.doubleArg())
 					.executes(context -> scale(context.getSource(), EntityArgument.getEntities(context, "targets"), DoubleArgumentType.getDouble(context, "scale")))

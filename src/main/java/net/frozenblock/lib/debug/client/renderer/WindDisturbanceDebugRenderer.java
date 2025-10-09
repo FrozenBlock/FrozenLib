@@ -17,69 +17,39 @@
 
 package net.frozenblock.lib.debug.client.renderer;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
+import net.minecraft.gizmos.GizmoStyle;
+import net.minecraft.gizmos.Gizmos;
+import net.minecraft.util.ARGB;
 import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
+	private static final GizmoStyle WIND_DISTURBANCE_AREA_STYLE = GizmoStyle.stroke(ARGB.colorFromFloat(0.5F, 1F, 0.5F, 0.35F));
+	private static final GizmoStyle WIND_DISTURBANCE_CORE_STYLE = GizmoStyle.stroke(ARGB.colorFromFloat(1F, 1F, 1F, 1F));
 
 	public WindDisturbanceDebugRenderer() {
 	}
 
 	@Override
-	public void render(PoseStack poseStack, MultiBufferSource bufferSource, double cameraX, double cameraY, double cameraZ, DebugValueAccess debugValueAccess, Frustum frustum) {
+	public void emitGizmos(
+		double cameraX, double cameraY, double cameraZ,
+		DebugValueAccess debugValueAccess,
+		Frustum frustum,
+		float unknown
+	) {
 		ClientWindManager.Debug.getWindDisturbances().forEach(
 			windDisturbance -> {
-				final VoxelShape shape = Shapes.create(windDisturbance.affectedArea);
-				if (frustum.isVisible(shape.bounds())) {
-					DebugRenderer.renderVoxelShape(
-						poseStack,
-						bufferSource.getBuffer(RenderType.lines()),
-						Shapes.create(windDisturbance.affectedArea),
-						-cameraX,
-						-cameraY,
-						-cameraZ,
-						0.5F,
-						1F,
-						0.5F,
-						0.35F,
-						true
-					);
-				}
-				renderFilledBox(
-					poseStack,
-					bufferSource,
-					AABB.ofSize(windDisturbance.origin, 0.2D, 0.2D, 0.2D),
-					cameraX, cameraY, cameraZ,
-					frustum
-				);
+				Gizmos.cuboid(windDisturbance.affectedArea, WIND_DISTURBANCE_AREA_STYLE);
+				Gizmos.cuboid(AABB.ofSize(windDisturbance.origin, 0.2D, 0.2D, 0.2D), WIND_DISTURBANCE_CORE_STYLE);
 			}
 		);
 
-		WindDebugRenderer.renderWindNodesFromList(poseStack, bufferSource, cameraX, cameraY, cameraZ, ClientWindManager.Debug.getDebugDisturbanceNodes(), frustum);
-	}
-
-	private static void renderFilledBox(
-		PoseStack poseStack,
-		MultiBufferSource bufferSource,
-		@NotNull AABB box,
-		double cameraX, double cameraY, double cameraZ,
-		@NotNull Frustum frustum
-	) {
-		if (!frustum.isVisible(box)) return;
-		Vec3 vec3 = new Vec3(-cameraX, -cameraY, -cameraZ);
-		DebugRenderer.renderFilledBox(poseStack, bufferSource, box.move(vec3), 1F, 1F, 1F, 1F);
+		WindDebugRenderer.emitWindNodesFromList(ClientWindManager.Debug.getDebugDisturbanceNodes());
 	}
 }

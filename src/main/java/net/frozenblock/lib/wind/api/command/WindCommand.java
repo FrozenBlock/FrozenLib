@@ -31,45 +31,44 @@ import org.jetbrains.annotations.NotNull;
 public class WindCommand {
 
 	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal("wind").requires(source -> source.hasPermission(2))
-				.then(
-					Commands.literal("override")
-						.then(
-							Commands.argument("x", DoubleArgumentType.doubleArg())
-								.then(
-									Commands.argument("y", DoubleArgumentType.doubleArg())
+		dispatcher.register(Commands.literal("wind")
+			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+			.then(
+				Commands.literal("override")
+					.then(
+						Commands.argument("x", DoubleArgumentType.doubleArg())
+							.then(
+								Commands.argument("y", DoubleArgumentType.doubleArg())
 									.then(
 										Commands.argument("z", DoubleArgumentType.doubleArg())
-										.executes(
-											context -> setAndEnableWindOverride(
+											.executes(
+												context -> setAndEnableWindOverride(
 												context.getSource(),
 												DoubleArgumentType.getDouble(context, "x"),
 												DoubleArgumentType.getDouble(context, "y"),
 												DoubleArgumentType.getDouble(context, "z")
+												)
 											)
-										)
 									)
+							)
+					)
+					.then(
+						Commands.argument("enabled", BoolArgumentType.bool())
+							.executes(
+								context -> toggleWindOverride(
+									context.getSource(),
+									BoolArgumentType.getBool(context, "enabled")
 								)
-						)
-						.then(
-							Commands.argument("enabled", BoolArgumentType.bool())
-								.executes(
-									context -> toggleWindOverride(
-										context.getSource(),
-										BoolArgumentType.getBool(context, "enabled")
-									)
-								)
-						)
-				)
+							)
+					)
+			)
 			.then(
 				Commands.literal("display")
 					.then(
-						Commands.literal("global")
-							.executes(context -> displayWindValue(context.getSource(), false))
+						Commands.literal("global").executes(context -> displayWindValue(context.getSource(), false))
 					)
 					.then(
-						Commands.literal("pos")
-							.executes(context -> displayWindValue(context.getSource(), true))
+						Commands.literal("pos").executes(context -> displayWindValue(context.getSource(), true))
 					)
 			)
 		);

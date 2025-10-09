@@ -40,6 +40,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -52,12 +53,7 @@ public record ConfigSyncPacket<T>(
 	String className,
 	T configData
 ) implements CustomPacketPayload {
-
-	public static final int PERMISSION_LEVEL = 2;
-
-	public static final Type<ConfigSyncPacket<?>> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("config_sync_packet")
-	);
+	public static final Type<ConfigSyncPacket<?>> PACKET_TYPE = new Type<>(FrozenLibConstants.id("config_sync_packet"));
 	public static final StreamCodec<FriendlyByteBuf, ConfigSyncPacket<?>> CODEC = StreamCodec.ofMember(ConfigSyncPacket::write, ConfigSyncPacket::create);
 
 	@Nullable
@@ -130,13 +126,13 @@ public record ConfigSyncPacket<T>(
 
 	public static boolean hasPermissionsToSendSync(@Nullable Player player, boolean serverSide) {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-			return player.hasPermissions(PERMISSION_LEVEL);
+			return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
 
 		if (FrozenClientNetworking.notConnected())
 			return false;
 
 		boolean isHost = serverSide && FrozenNetworking.isLocalPlayer(player);
-		return FrozenNetworking.connectedToIntegratedServer() || isHost || player.hasPermissions(PERMISSION_LEVEL);
+		return FrozenNetworking.connectedToIntegratedServer() || isHost || player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
 	}
 
 	@Environment(EnvType.CLIENT)

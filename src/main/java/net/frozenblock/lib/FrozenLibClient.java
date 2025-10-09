@@ -73,10 +73,11 @@ public final class FrozenLibClient implements ClientModInitializer {
 
 	private static void registerClientEvents() {
 		ClientTickEvents.START_WORLD_TICK.register(
-			world -> {
-				ClientWindManager.tick(world);
-				ScreenShaker.tick(world);
-				FlyBySoundHub.tick(Minecraft.getInstance(), Minecraft.getInstance().getCameraEntity(), true);
+			level -> {
+				final Minecraft minecraft = Minecraft.getInstance();
+				ClientWindManager.tick(level);
+				ScreenShaker.tick(minecraft, level);
+				FlyBySoundHub.tick(minecraft, minecraft.getCameraEntity(), true);
 			}
 		);
 		ClientTickEvents.START_CLIENT_TICK.register(client -> ClientWindManager.clearAndSwitchWindDisturbances());

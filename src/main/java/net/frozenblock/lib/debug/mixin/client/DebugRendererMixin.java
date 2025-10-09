@@ -37,16 +37,12 @@ public class DebugRendererMixin {
 
 	@Shadow
 	@Final
-	private List<DebugRenderer.SimpleDebugRenderer> opaqueRenderers;
-
-	@Shadow
-	@Final
-	private List<DebugRenderer.SimpleDebugRenderer> translucentRenderers;
+	private List<DebugRenderer.SimpleDebugRenderer> renderers;
 
 	@Inject(method = "refreshRendererList", at = @At("TAIL"))
 	private void frozenLib$render(CallbackInfo info) {
-		if (FrozenLibConstants.DEBUG_WIND) this.opaqueRenderers.add(new WindDebugRenderer());
-		if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) this.translucentRenderers.add(new WindDisturbanceDebugRenderer());
+		if (FrozenLibConstants.DEBUG_WIND) this.renderers.add(new WindDebugRenderer());
+		if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) this.renderers.add(new WindDisturbanceDebugRenderer());
 	}
 
 }

@@ -62,7 +62,7 @@ public abstract class WardenSpawnTrackerCommandMixin {
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
 			return dispatcher.register(
 				Commands.literal("warden_spawn_tracker")
-					.requires(player -> player.hasPermission(2))
+					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 					.then(
 						Commands.literal("clear")
 							.executes(context -> resetTracker(context.getSource(), List.of(context.getSource().getPlayerOrException())))

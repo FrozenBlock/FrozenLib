@@ -23,6 +23,7 @@ import com.mojang.math.Axis;
 import java.util.ArrayList;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.util.Mth;
@@ -45,42 +46,46 @@ public class ScreenShaker {
 	private static float zRot;
 
 	@ApiStatus.Internal
-	public static void tick(@NotNull ClientLevel level) {
-		if (level.tickRateManager().runsNormally()) {
-			Minecraft client = Minecraft.getInstance();
-			prevYRot = yRot;
-			prevXRot = xRot;
-			prevZRot = zRot;
-			if (!client.isMultiplayerServer() && client.isPaused()) {
-				yRot = 0F;
-				xRot = 0F;
-				zRot = 0F;
-				return;
-			}
-			Window window = client.getWindow();
-			int windowWidth = window.getWidth();
-			int windowHeight = window.getHeight();
-			RandomSource randomSource = level.getRandom();
+	public static void tick(Minecraft minecraft, @NotNull ClientLevel level) {
+		if (!level.tickRateManager().runsNormally()) return;
 
-			SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake.shouldRemove(level));
-			float highestIntensity = 0;
-			float totalIntensity = 0;
-			int amount = 0;
-			for (ClientScreenShake screenShake : SCREEN_SHAKES) {
-				screenShake.tick();
-				float shakeIntensity = screenShake.getIntensity(client.gameRenderer.getMainCamera().getPosition());
-				if (shakeIntensity > 0) {
-					totalIntensity += shakeIntensity;
-					highestIntensity = Math.max(shakeIntensity, highestIntensity);
-					amount += 1;
-				}
-				screenShake.ticks += 1;
-			}
-			float intensity = (amount > 0 && totalIntensity != 0 && highestIntensity != 0) ? (highestIntensity + ((totalIntensity / amount) * 0.5F)) : 0F;
-			yRot += (Mth.nextFloat(randomSource, -intensity, intensity) * ((float) windowWidth / (float) windowHeight) - yRot) * 0.65F;
-			xRot += (Mth.nextFloat(randomSource, -intensity, intensity) - xRot) * 0.65F;
-			zRot += (Mth.nextFloat(randomSource, -intensity, intensity) - zRot) * 0.65F;
+		prevYRot = yRot;
+		prevXRot = xRot;
+		prevZRot = zRot;
+		if (!minecraft.isMultiplayerServer() && minecraft.isPaused()) {
+			yRot = 0F;
+			xRot = 0F;
+			zRot = 0F;
+			return;
 		}
+
+		final Window window = minecraft.getWindow();
+		final int windowWidth = window.getWidth();
+		final int windowHeight = window.getHeight();
+
+		final RandomSource random = level.getRandom();
+
+		SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake.shouldRemove(level));
+		float highestIntensity = 0;
+		float totalIntensity = 0;
+		int amount = 0;
+
+		final Camera camera = minecraft.gameRenderer.getMainCamera();
+		for (ClientScreenShake screenShake : SCREEN_SHAKES) {
+			screenShake.tick();
+			float shakeIntensity = screenShake.getIntensity(camera.position());
+			if (shakeIntensity > 0) {
+				totalIntensity += shakeIntensity;
+				highestIntensity = Math.max(shakeIntensity, highestIntensity);
+				amount += 1;
+			}
+			screenShake.ticks += 1;
+		}
+
+		final float intensity = (amount > 0 && totalIntensity != 0 && highestIntensity != 0) ? (highestIntensity + ((totalIntensity / amount) * 0.5F)) : 0F;
+		yRot += (Mth.nextFloat(random, -intensity, intensity) * ((float) windowWidth / (float) windowHeight) - yRot) * 0.65F;
+		xRot += (Mth.nextFloat(random, -intensity, intensity) - xRot) * 0.65F;
+		zRot += (Mth.nextFloat(random, -intensity, intensity) - zRot) * 0.65F;
 	}
 
 	@ApiStatus.Internal

@@ -60,64 +60,66 @@ public final class FlyBySoundHub {
     public static final Map<Entity, Integer> ENTITY_COOLDOWNS = new Object2ObjectOpenHashMap<>();
 
     public static void tick(@NotNull Minecraft client, Entity cameraEntity, boolean autoSounds) {
-		if (client.level != null && cameraEntity != null && client.level.tickRateManager().runsNormally()) {
-			Vec3 cameraPos = cameraEntity.getEyePosition();
-			double cameraEntityWidth = cameraEntity.getBbWidth();
-			double detectionSize = cameraEntityWidth * 2D;
-			AABB playerHeadBox = new AABB(
-				cameraEntity.getEyePosition().add(-detectionSize, -detectionSize, -detectionSize),
-				cameraEntity.getEyePosition().add(detectionSize, detectionSize, detectionSize)
-			);
-
-			for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet()) {
-				if (entity != null) {
-					Vec3 entityVelocity = (entity.getPosition(1F).subtract(entity.getPosition(0F))).scale(OVERALL_SENSITIVITY);
-					entityVelocity = entityVelocity.multiply(HORIZONTAL_SENSITIVITY, VERTICAL_SENSITIVITY, HORIZONTAL_SENSITIVITY);
-					double entityVelocityLength = entityVelocity.length();
-					AABB entityBox = entity.getBoundingBox().inflate(BASE_ENTITY_BOUNDING_BOX_EXPANSION + (entityVelocityLength * BOUNDING_BOX_EXPANSION_PER_VELOCITY));
-
-					if (playerHeadBox.intersects(entityBox)) {
-						Vec3 entityPos = entity.getPosition(1F);
-						int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
-						ENTITY_COOLDOWNS.put(entity, cooldown);
-						Vec3 movedPos = entityPos.add(entityVelocity.scale(PREDICTION_TICKS));
-
-						if (hasPassed(cameraPos, cameraEntityWidth, entityPos, movedPos) && cooldown <= 0) {
-							double deltaDistance = Math.abs(entityPos.distanceTo(cameraPos) - movedPos.distanceTo(cameraPos));
-							FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
-							float volume = (float) (flyBy.volume + (deltaDistance));
-							client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.category, volume, flyBy.pitch, entity, client.level.random.nextLong()));
-							ENTITY_COOLDOWNS.put(entity, PLAY_COOLDOWN);
-						}
-					}
-				}
-			}
-
-			//Remove entities that aren't active
-			for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet().stream().toList()) {
-				if (entity == null || entity.isRemoved() || entity.isSilent() || (cameraPos.distanceTo(entity.position()) > MIN_DISTANCE_FOR_REMOVAL)) {
-					FLYBY_ENTITIES_AND_SOUNDS.remove(entity);
-				}
-			}
-
-			//Check for entities in the auto flyby list
-			if (!AUTO_ENTITIES_AND_SOUNDS.isEmpty()) {
-				//if (checkAroundCooldown > 0) {
-				//	--checkAroundCooldown;
-				//} else
-				if (autoSounds) {
-					//checkAroundCooldown = AUTO_ENTITY_COOLDOWN;
-					AABB box = new AABB(cameraPos.add(-AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE), cameraPos.add(AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE));
-					for (Entity entity : client.level.getEntities(cameraEntity, box)) {
-						EntityType<?> type = entity.getType();
-						if (AUTO_ENTITIES_AND_SOUNDS.containsKey(type)) {
-							addEntity(entity, AUTO_ENTITIES_AND_SOUNDS.get(type));
-						}
-					}
-				}
-			}
-		} else {
+		if (client.level == null || cameraEntity == null || !client.level.tickRateManager().runsNormally()) {
 			FLYBY_ENTITIES_AND_SOUNDS.clear();
+			return;
+		}
+
+		final Vec3 cameraPos = cameraEntity.getEyePosition();
+		final double cameraEntityWidth = cameraEntity.getBbWidth();
+		final double detectionSize = cameraEntityWidth * 2D;
+		final AABB playerHeadBox = new AABB(
+			cameraEntity.getEyePosition().add(-detectionSize, -detectionSize, -detectionSize),
+			cameraEntity.getEyePosition().add(detectionSize, detectionSize, detectionSize)
+		);
+
+		for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet()) {
+			if (entity != null) {
+				Vec3 entityVelocity = (entity.getPosition(1F).subtract(entity.getPosition(0F))).scale(OVERALL_SENSITIVITY);
+				entityVelocity = entityVelocity.multiply(HORIZONTAL_SENSITIVITY, VERTICAL_SENSITIVITY, HORIZONTAL_SENSITIVITY);
+				final double entityVelocityLength = entityVelocity.length();
+				final AABB entityBox = entity.getBoundingBox().inflate(BASE_ENTITY_BOUNDING_BOX_EXPANSION + (entityVelocityLength * BOUNDING_BOX_EXPANSION_PER_VELOCITY));
+
+				if (playerHeadBox.intersects(entityBox)) {
+					final Vec3 entityPos = entity.getPosition(1F);
+					final int cooldown = ENTITY_COOLDOWNS.getOrDefault(entity, 0) - 1;
+					ENTITY_COOLDOWNS.put(entity, cooldown);
+					final Vec3 movedPos = entityPos.add(entityVelocity.scale(PREDICTION_TICKS));
+
+					if (hasPassed(cameraPos, cameraEntityWidth, entityPos, movedPos) && cooldown <= 0) {
+						final 	double deltaDistance = Math.abs(entityPos.distanceTo(cameraPos) - movedPos.distanceTo(cameraPos));
+						final FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
+						final float volume = (float) (flyBy.volume + (deltaDistance));
+						client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.category, volume, flyBy.pitch, entity, client.level.random.nextLong()));
+						ENTITY_COOLDOWNS.put(entity, PLAY_COOLDOWN);
+					}
+				}
+			}
+		}
+
+		//Remove entities that aren't active
+		for (Entity entity : FLYBY_ENTITIES_AND_SOUNDS.keySet().stream().toList()) {
+			if (entity == null || entity.isRemoved() || entity.isSilent() || (cameraPos.distanceTo(entity.position()) > MIN_DISTANCE_FOR_REMOVAL)) {
+				FLYBY_ENTITIES_AND_SOUNDS.remove(entity);
+			}
+		}
+
+		//Check for entities in the auto flyby list
+		if (!AUTO_ENTITIES_AND_SOUNDS.isEmpty()) {
+			//if (checkAroundCooldown > 0) {
+			//	--checkAroundCooldown;
+			//} else
+			if (autoSounds) {
+				//checkAroundCooldown = AUTO_ENTITY_COOLDOWN;
+				final AABB box = new AABB(
+					cameraPos.add(-AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE, -AUTO_ENTITY_DISTANCE),
+					cameraPos.add(AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE, AUTO_ENTITY_DISTANCE)
+				);
+				for (Entity entity : client.level.getEntities(cameraEntity, box)) {
+					final EntityType<?> type = entity.getType();
+					if (AUTO_ENTITIES_AND_SOUNDS.containsKey(type)) addEntity(entity, AUTO_ENTITIES_AND_SOUNDS.get(type));
+				}
+			}
 		}
 	}
 

@@ -38,7 +38,7 @@ public final class FrozenLibRenderTypes {
 			false,
 			FrozenLibRenderPipelines.ENTITY_CUTOUT_NO_SHADING,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
 				.setLightmapState(RenderStateShard.LIGHTMAP)
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(true)
@@ -53,7 +53,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -67,7 +67,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_CULL,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -81,7 +81,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -95,7 +95,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -109,7 +109,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
@@ -123,7 +123,7 @@ public final class FrozenLibRenderTypes {
 			true,
 			FrozenLibRenderPipelines.APPARITION_OUTER,
 			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false))
+				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
 				.setOverlayState(RenderStateShard.OVERLAY)
 				.createCompositeState(affectsOutline)
 		)
