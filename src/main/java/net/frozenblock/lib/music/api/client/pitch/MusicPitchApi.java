@@ -98,15 +98,14 @@ public class MusicPitchApi {
 
 		for (MusicPitchInfo info : MUSIC_PITCH_INFO_LIST) {
 			if (info.type().isForStructure()) {
-				if (optionalStructureStatus.isPresent()) {
-					PlayerStructureStatus structureStatus = optionalStructureStatus.get();
-					ResourceLocation structureLocation = structureStatus.getStructure();
-					boolean isInsidePiece = structureStatus.isInsidePiece();
+				if (optionalStructureStatus.isEmpty()) continue;
+				final PlayerStructureStatus structureStatus = optionalStructureStatus.get();
+				final ResourceLocation structureLocation = structureStatus.getStructure();
+				boolean isInsidePiece = structureStatus.isInsidePiece();
 
-					if (info.type().isForStructureAndMatchesInside(isInsidePiece) && info.location().equals(structureLocation)) {
-						pitches.add(info.pitchFunction().apply(gameTime));
-						pitchContributors += 1;
-					}
+				if (info.type().isForStructureAndMatchesInside(isInsidePiece) && info.location().equals(structureLocation)) {
+					pitches.add(info.pitchFunction().apply(gameTime));
+					pitchContributors += 1;
 				}
 			}
 

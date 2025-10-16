@@ -17,18 +17,15 @@
 
 package net.frozenblock.lib.music.mixin.client;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.music.api.client.pitch.MusicPitchApi;
 import net.frozenblock.lib.music.impl.client.SoundEngineInterface;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.client.sounds.MusicInfo;
 import net.minecraft.client.sounds.MusicManager;
-import net.minecraft.client.sounds.SoundEngine;
-import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -53,43 +50,27 @@ public class MusicManagerMixin {
 	@Unique
 	private float frozenLib$currentPitch = 1F;
 
-	@Inject(
-		method = "tick",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/client/Minecraft;getSituationalMusic()Lnet/minecraft/client/sounds/MusicInfo;",
-			shift = At.Shift.AFTER
-		)
-	)
+	@Inject(method = "tick", at = @At("HEAD"))
 	public void frozenLib$tick(CallbackInfo info) {
-		float updatedPitch = MusicPitchApi.getCurrentPitch();
-		if (this.currentMusic != null && this.frozenLib$currentPitch != updatedPitch) {
-			this.frozenLib$pitchShift(updatedPitch);
-		}
+		if (this.minecraft.level != null) MusicPitchApi.updateTargetMusicPitch(minecraft.level, this.minecraft.level.getBiome(this.minecraft.gameRenderer.getMainCamera().blockPosition()));
+		final float targetPitch = MusicPitchApi.getCurrentPitch();
+		if (this.currentMusic != null && this.frozenLib$currentPitch != targetPitch) this.frozenLib$updateTargetPitchAndShift(targetPitch);
 	}
 
-	@WrapOperation(
+	@ModifyExpressionValue(
 		method = "startPlaying",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/sounds/SoundManager;play(Lnet/minecraft/client/resources/sounds/SoundInstance;)Lnet/minecraft/client/sounds/SoundEngine$PlayResult;"
+			target = "Lnet/minecraft/client/resources/sounds/SimpleSoundInstance;forMusic(Lnet/minecraft/sounds/SoundEvent;F)Lnet/minecraft/client/resources/sounds/SimpleSoundInstance;"
 		)
 	)
-	public SoundEngine.PlayResult frozenLib$startPlayingAtCorrectPitch(SoundManager instance, SoundInstance currentMusic, Operation<SoundEngine.PlayResult> original) {
-		SoundEngine.PlayResult playResult = original.call(instance, currentMusic);
-		if (instance.soundEngine instanceof SoundEngineInterface soundEngineInterface) {
-			soundEngineInterface.frozenLib$setPitch(currentMusic, MusicPitchApi.getCurrentPitch());
-		}
-		return playResult;
-	}
-
-	@Inject(method = "startPlaying", at = @At("TAIL"))
-	public void frozenLib$setCurrentPitchAtSongStart(MusicInfo musicInfo, CallbackInfo info) {
-		this.frozenLib$currentPitch = MusicPitchApi.getCurrentPitch();
+	public SimpleSoundInstance frozenLib$startPlayingAtCorrectPitch(SimpleSoundInstance original) {
+		original.pitch = this.frozenLib$currentPitch;
+		return original;
 	}
 
 	@Unique
-	private void frozenLib$pitchShift(float targetPitch) {
+	private void frozenLib$updateTargetPitchAndShift(float targetPitch) {
 		if (this.currentMusic != null && this.frozenLib$currentPitch != targetPitch) {
 			if (this.frozenLib$currentPitch < targetPitch) {
 				this.frozenLib$currentPitch = this.frozenLib$currentPitch + Mth.clamp(this.frozenLib$currentPitch, 5.0E-4F, 0.005F);

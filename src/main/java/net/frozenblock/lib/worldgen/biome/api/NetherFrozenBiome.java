@@ -19,7 +19,6 @@ package net.frozenblock.lib.worldgen.biome.api;
 
 import com.mojang.datafixers.util.Pair;
 import java.util.function.Consumer;
-import net.minecraft.data.worldgen.biome.OverworldBiomes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
@@ -44,18 +43,8 @@ public abstract class NetherFrozenBiome extends FrozenBiome {
 	}
 
 	@Override
-	public final int skyColor() {
-		return OverworldBiomes.calculateSkyColor(2F);
-	}
-
-	@Override
 	public final int waterColor() {
 		return 4159204;
-	}
-
-	@Override
-	public final int waterFogColor() {
-		return 329011;
 	}
 
 	@Contract(pure = true)

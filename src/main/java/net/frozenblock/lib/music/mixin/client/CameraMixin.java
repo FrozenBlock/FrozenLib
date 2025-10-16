@@ -15,19 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.music.api.client.structure;
+package net.frozenblock.lib.music.mixin.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.sounds.MusicInfo;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructurePiece;
+import net.frozenblock.lib.music.api.client.pitch.MusicPitchApi;
+import net.minecraft.client.Camera;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-/**
- * @param musicInfo The {@link MusicInfo} to play while in a {@link Structure}.
- * @param mustBeInsidePiece Whether this can play only while the {@link Player} is directly inside a {@link StructurePiece}.
- */
 @Environment(EnvType.CLIENT)
-public record StructureMusicInfo(MusicInfo musicInfo, boolean mustBeInsidePiece) {
+@Mixin(Camera.class)
+public class CameraMixin {
+
+	@Inject(method = "reset", at = @At("HEAD"))
+	public void frozenLib$resetPitch(CallbackInfo info) {
+		MusicPitchApi.resetCurrentPitch();
+	}
+
 }

@@ -22,16 +22,11 @@ import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
-import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.Music;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.level.biome.AmbientAdditionsSettings;
-import net.minecraft.world.level.biome.AmbientMoodSettings;
-import net.minecraft.world.level.biome.AmbientParticleSettings;
+import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
@@ -83,24 +78,9 @@ public abstract class FrozenBiome {
 	}
 
 	/**
-	 * @return the sky color to use for this biome.
-	 */
-	public abstract int skyColor();
-
-	/**
-	 * @return the fog color to use for this biome.
-	 */
-	public abstract int fogColor();
-
-	/**
 	 * @return the water color to use for this biome.
 	 */
 	public abstract int waterColor();
-
-	/**
-	 * @return the water fog color to use for this biome.
-	 */
-	public abstract int waterFogColor();
 
 	/**
 	 * @return the foliage color override to use for this biome.
@@ -128,34 +108,9 @@ public abstract class FrozenBiome {
 	}
 
 	/**
-	 * @return the {@link AmbientParticleSettings} of the biome.
+	 * Fills in the {@link EnvironmentAttributeMap} of the biome.
 	 */
-	@Nullable
-	public abstract AmbientParticleSettings ambientParticleSettings();
-
-	/**
-	 * @return the {@link Holder<SoundEvent>} of the biome used for looping ambience.
-	 */
-	@Nullable
-	public abstract Holder<SoundEvent> ambientLoopSound();
-
-	/**
-	 * @return the {@link AmbientMoodSettings} of the biome.
-	 */
-	@Nullable
-	public abstract AmbientMoodSettings ambientMoodSettings();
-
-	/**
-	 * @return the {@link AmbientAdditionsSettings} of the biome.
-	 */
-	@Nullable
-	public abstract AmbientAdditionsSettings ambientAdditionsSound();
-
-	/**
-	 * @return the {@link Music} of the biome.
-	 */
-	@Nullable
-	public abstract Music backgroundMusic();
+	public abstract void fillEnvironmentAttributes(EnvironmentAttributeMap.Builder attributes);
 
 	/**
 	 * Builds this biome.
@@ -164,7 +119,7 @@ public abstract class FrozenBiome {
 	 * @return the finalized {@link Biome}.
 	 */
 	public final @NotNull Biome create(@NotNull BootstrapContext<Biome> entries) {
-		Biome.BiomeBuilder biomeBuilder = new Biome.BiomeBuilder();
+		final Biome.BiomeBuilder biomeBuilder = new Biome.BiomeBuilder();
 		biomeBuilder.temperature(this.temperature())
 			.temperatureAdjustment(this.temperatureModifier())
 			.downfall(this.downfall())
@@ -172,33 +127,26 @@ public abstract class FrozenBiome {
 
 		var placedFeatures = entries.lookup(Registries.PLACED_FEATURE);
 		var worldCarvers = entries.lookup(Registries.CONFIGURED_CARVER);
-		BiomeGenerationSettings.Builder featureBuilder = new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers);
+		final BiomeGenerationSettings.Builder featureBuilder = new BiomeGenerationSettings.Builder(placedFeatures, worldCarvers);
 		this.addFeatures(featureBuilder);
 		biomeBuilder.generationSettings(featureBuilder.build());
 
-		MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
+		final MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
 		this.addSpawns(spawnBuilder);
 		biomeBuilder.mobSpawnSettings(spawnBuilder.build());
 
-		BiomeSpecialEffects.Builder specialEffectsBuilder = new BiomeSpecialEffects.Builder();
-		specialEffectsBuilder.skyColor(this.skyColor())
-			.fogColor(this.fogColor())
+		final BiomeSpecialEffects.Builder specialEffectsBuilder = new BiomeSpecialEffects.Builder()
 			.waterColor(this.waterColor())
-			.waterFogColor(this.waterFogColor())
 			.grassColorModifier(this.grassColorModifier());
-
 		if (this.foliageColorOverride() != null) specialEffectsBuilder.foliageColorOverride(this.foliageColorOverride());
 		if (this.dryFoliageColorOverride() != null) specialEffectsBuilder.dryFoliageColorOverride(this.dryFoliageColorOverride());
 		if (this.grassColorOverride() != null) specialEffectsBuilder.grassColorOverride(this.grassColorOverride());
-		if (this.ambientParticleSettings() != null) specialEffectsBuilder.ambientParticle(this.ambientParticleSettings());
-		if (this.ambientLoopSound() != null) specialEffectsBuilder.ambientLoopSound(this.ambientLoopSound());
-		if (this.ambientMoodSettings() != null) specialEffectsBuilder.ambientMoodSound(this.ambientMoodSettings());
-		if (this.ambientAdditionsSound() != null) specialEffectsBuilder.ambientAdditionsSound(this.ambientAdditionsSound());
-		if (this.backgroundMusic() != null) specialEffectsBuilder.backgroundMusic(this.backgroundMusic());
-
 		biomeBuilder.specialEffects(specialEffectsBuilder.build());
 
-		return biomeBuilder.build();
+		final EnvironmentAttributeMap.Builder attributes = EnvironmentAttributeMap.builder();
+		this.fillEnvironmentAttributes(attributes);
+
+		return biomeBuilder.putAttributes(attributes).build();
 	}
 
 	/**

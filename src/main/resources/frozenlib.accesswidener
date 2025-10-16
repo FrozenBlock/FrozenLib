@@ -210,6 +210,7 @@ transitive-accessible field net/minecraft/client/sounds/SoundEngine instanceToCh
 transitive-accessible field net/minecraft/client/sounds/SoundEngine channelAccess Lnet/minecraft/client/sounds/ChannelAccess;
 transitive-mutable field net/minecraft/client/resources/sounds/AbstractSoundInstance location Lnet/minecraft/resources/ResourceLocation;
 transitive-extendable method net/minecraft/client/resources/sounds/AbstractTickableSoundInstance stop ()V
+accessible field net/minecraft/client/resources/sounds/AbstractSoundInstance pitch F
 
 # Camera
 transitive-accessible method net/minecraft/client/Camera setRotation (FF)V

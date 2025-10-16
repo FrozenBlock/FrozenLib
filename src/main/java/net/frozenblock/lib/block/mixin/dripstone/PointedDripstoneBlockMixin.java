@@ -23,6 +23,7 @@ import net.frozenblock.lib.block.api.dripstone.DripstoneDripApi;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.attribute.EnvironmentAttributes;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.PointedDripstoneBlock;
@@ -52,7 +53,7 @@ public class PointedDripstoneBlockMixin {
 		@Local(ordinal = 1) BlockPos blockPos, @Local BlockState blockState
 	) {
 		if (blockPos != null && blockState != null) {
-			if (DripstoneDripApi.containsWaterDrip(blockState.getBlock()) && !level.dimensionType().ultraWarm()) {
+			if (DripstoneDripApi.containsWaterDrip(blockState.getBlock()) && !level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, blockPos)) {
 				info.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.WATER, blockState));
 			} else if (DripstoneDripApi.containsLavaDrip(blockState.getBlock())) {
 				info.setReturnValue(new PointedDripstoneBlock.FluidInfo(blockPos, Fluids.LAVA, blockState));

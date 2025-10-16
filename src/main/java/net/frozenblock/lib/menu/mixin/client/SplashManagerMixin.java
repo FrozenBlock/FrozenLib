@@ -20,6 +20,7 @@ package net.frozenblock.lib.menu.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -29,63 +30,47 @@ import net.minecraft.client.resources.SplashManager;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(SplashManager.class)
 public class SplashManagerMixin {
-
-	@Shadow
-	@Final
-	private List<String> splashes;
-
-	@Inject(
-		method = "apply(Ljava/util/List;Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)V",
-		at = @At("RETURN")
-	)
-	private void frozenLib$apply(List<String> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci) {
-		this.splashes.addAll(SplashTextAPI.getAdditions());
-
-		for (String removal : SplashTextAPI.getRemovals()) {
-			this.splashes.remove(removal);
-		}
-	}
 
 	@ModifyReturnValue(
 		method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;",
 		at = @At("RETURN")
 	)
 	public List<String> frozenLib$addSplashFiles(List<String> original, ResourceManager resourceManager, ProfilerFiller profiler) {
+		ArrayList<String> splashes = new ArrayList<>(original);
 		for (ResourceLocation splashLocation : SplashTextAPI.getSplashFiles()) {
 			try {
 				BufferedReader bufferedReader = Minecraft.getInstance().getResourceManager().openAsReader(splashLocation);
 
-				List<String> var4;
+				List<String> stringList;
 				try {
-					var4 = bufferedReader.lines().map(String::trim).filter(splashText -> splashText.hashCode() != 125780783).toList();
-				} catch (Throwable var7) {
+					stringList = bufferedReader.lines().map(String::trim).filter(splashText -> splashText.hashCode() != 125780783).toList();
+				} catch (Throwable throwable) {
                     try {
                         bufferedReader.close();
-                    } catch (Throwable var6) {
-                        var7.addSuppressed(var6);
+                    } catch (Throwable cantClose) {
+						throwable.addSuppressed(cantClose);
                     }
 
-                    throw var7;
+                    throw throwable;
 				}
 
 				bufferedReader.close();
 
-				original.addAll(var4);
+				splashes.addAll(stringList);
 			} catch (IOException ignored) {
-
 			}
 		}
-		return original;
+
+		splashes.addAll(SplashTextAPI.getAdditions());
+		for (String removal : SplashTextAPI.getRemovals()) splashes.remove(removal);
+
+		return splashes;
 	}
 
 }

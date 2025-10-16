@@ -29,7 +29,7 @@ import kotlin.jvm.optionals.getOrNull
  * @since 1.4.4
  */
 data class MutableMusic(
-    @JvmField var event: Holder<SoundEvent>?,
+    @JvmField var sound: Holder<SoundEvent>?,
     @JvmField var minDelay: Int?,
     @JvmField var maxDelay: Int?,
     @JvmField var replaceCurrentMusic: Boolean?
@@ -38,12 +38,12 @@ data class MutableMusic(
      * @since 1.6.1
      */
     constructor(
-        event: Optional<Holder<SoundEvent>>,
+        sound: Optional<Holder<SoundEvent>>,
         minDelay: Optional<Int>,
         maxDelay: Optional<Int>,
         replaceCurrentMusic: Optional<Boolean>
     ) : this(
-        event.getOrNull(),
+        sound.getOrNull(),
         minDelay.getOrNull(),
         maxDelay.getOrNull(),
         replaceCurrentMusic.getOrNull()
@@ -53,7 +53,7 @@ data class MutableMusic(
         @JvmField
         val CODEC: Codec<MutableMusic> = RecordCodecBuilder.create { instance ->
             instance.group(
-                SoundEvent.CODEC.optionalFieldOf("sound").forGetter { Optional.ofNullable(it.event) },
+                SoundEvent.CODEC.optionalFieldOf("sound").forGetter { Optional.ofNullable(it.sound) },
                 Codec.INT.optionalFieldOf("min_delay").forGetter { Optional.ofNullable(it.minDelay) },
                 Codec.INT.optionalFieldOf("max_delay").forGetter { Optional.ofNullable(it.maxDelay) },
                 Codec.BOOL.optionalFieldOf("replace_current_music").forGetter { Optional.ofNullable(it.replaceCurrentMusic) }
@@ -64,7 +64,7 @@ data class MutableMusic(
 
 inline val Music.asMutable: MutableMusic
     get() = MutableMusic(
-        this.event,
+        this.sound,
         this.minDelay,
         this.maxDelay,
         this.replaceCurrentMusic()
@@ -72,10 +72,10 @@ inline val Music.asMutable: MutableMusic
 
 inline val MutableMusic?.asImmutable: Music?
     get() {
-        val event = this?.event ?: return null
+        val sound = this?.sound ?: return null
         val minDelay = this.minDelay ?: return null
         val maxDelay = this.maxDelay ?: return null
         val replaceCurrentMusic = this.replaceCurrentMusic ?: return null
 
-        return Music(event, minDelay, maxDelay, replaceCurrentMusic)
+        return Music(sound, minDelay, maxDelay, replaceCurrentMusic)
     }

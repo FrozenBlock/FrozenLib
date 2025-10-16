@@ -27,9 +27,9 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.worldgen.structure.api.status.client.ClientStructureStatuses;
 import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatus;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.sounds.MusicInfo;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.Music;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.ApiStatus;
@@ -39,57 +39,53 @@ import net.minecraft.Util;
 
 @Environment(EnvType.CLIENT)
 public class StructureMusicApi {
-	private static final Map<ResourceLocation, List<StructureMusicInfo>> STRUCTURE_TO_MUSIC_INFO_MAP = new Object2ObjectLinkedOpenHashMap<>();
+	private static final Map<ResourceLocation, List<StructureMusic>> STRUCTURE_TO_MUSIC_MAP = new Object2ObjectLinkedOpenHashMap<>();
 
 	/**
-	 * Registers {@link StructureMusicInfo} to be played while in a {@link Structure}.
+	 * Registers {@link StructureMusic} to be played while in a {@link Structure}.
 	 *
-	 * @param structureLocation The {@link ResourceLocation} of the {@link Structure} to play {@link StructureMusicInfo} in.
-	 * @param musicInfo The {@link StructureMusicInfo} to play.
+	 * @param structureLocation The {@link ResourceLocation} of the {@link Structure} to play {@link StructureMusic} in.
+	 * @param music The {@link StructureMusic} to play.
 	 */
-	public static void registerMusicInfoForStructure(ResourceLocation structureLocation, StructureMusicInfo musicInfo) {
-		List<StructureMusicInfo> musicList = STRUCTURE_TO_MUSIC_INFO_MAP.computeIfAbsent(structureLocation, location -> new ArrayList<>());
-		musicList.add(musicInfo);
-		STRUCTURE_TO_MUSIC_INFO_MAP.put(structureLocation, musicList);
+	public static void registerMusicForStructure(ResourceLocation structureLocation, StructureMusic music) {
+		List<StructureMusic> musicList = STRUCTURE_TO_MUSIC_MAP.computeIfAbsent(structureLocation, location -> new ArrayList<>());
+		musicList.add(music);
+		STRUCTURE_TO_MUSIC_MAP.put(structureLocation, musicList);
 	}
 
 	/**
-	 * Registers {@link StructureMusicInfo} to be played while in a {@link Structure}.
+	 * Registers {@link StructureMusic} to be played while in a {@link Structure}.
 	 *
-	 * @param structureKey The {@link ResourceKey} of the {@link Structure} to play {@link StructureMusicInfo} in.
-	 * @param musicInfo The {@link StructureMusicInfo} to play.
+	 * @param structureKey The {@link ResourceKey} of the {@link Structure} to play {@link StructureMusic} in.
+	 * @param music The {@link StructureMusic} to play.
 	 */
-	public static void registerMusicInfoForStructure(@NotNull ResourceKey<Structure> structureKey, StructureMusicInfo musicInfo) {
-		registerMusicInfoForStructure(structureKey.location(), musicInfo);
+	public static void registerMusicForStructure(@NotNull ResourceKey<Structure> structureKey, StructureMusic music) {
+		registerMusicForStructure(structureKey.location(), music);
 	}
 
 	@ApiStatus.Internal
-	private static @NotNull Optional<MusicInfo> getCurrentStructureMusicInfo(RandomSource random) {
-		Optional<PlayerStructureStatus> optionalStructureStatus = ClientStructureStatuses.getProminentStructureStatus();
-		if (optionalStructureStatus.isPresent()) {
-			PlayerStructureStatus structureStatus = optionalStructureStatus.get();
-			boolean isInsidePiece = structureStatus.isInsidePiece();
+	private static @NotNull Optional<Music> getCurrentStructureMusic(RandomSource random) {
+		final Optional<PlayerStructureStatus> optionalStructureStatus = ClientStructureStatuses.getProminentStructureStatus();
+		if (optionalStructureStatus.isEmpty()) return Optional.empty();
 
-			List<StructureMusicInfo> structureMusicInfoList = STRUCTURE_TO_MUSIC_INFO_MAP.getOrDefault(structureStatus.getStructure(), List.of());
-			List<StructureMusicInfo> finalizedStructureMusicInfoList = new ArrayList<>();
+		final PlayerStructureStatus structureStatus = optionalStructureStatus.get();
+		final boolean isInsidePiece = structureStatus.isInsidePiece();
 
-			for (StructureMusicInfo structureMusicInfo : structureMusicInfoList) {
-				if (isInsidePiece || !structureMusicInfo.mustBeInsidePiece()) {
-					finalizedStructureMusicInfoList.add(structureMusicInfo);
-				}
-			}
+		final List<StructureMusic> structureMusicList = STRUCTURE_TO_MUSIC_MAP.getOrDefault(structureStatus.getStructure(), List.of());
+		final List<StructureMusic> finalizedStructureMusicList = new ArrayList<>();
 
-			if (!finalizedStructureMusicInfoList.isEmpty()) {
-				return Optional.of(Util.getRandom(finalizedStructureMusicInfoList, random).musicInfo());
-			}
+		for (StructureMusic structureMusic : structureMusicList) {
+			if (isInsidePiece || !structureMusic.mustBeInsidePiece()) finalizedStructureMusicList.add(structureMusic);
 		}
+
+		if (!finalizedStructureMusicList.isEmpty()) return Optional.of(Util.getRandom(finalizedStructureMusicList, random).music());
 
 		return Optional.empty();
 	}
 
 	@ApiStatus.Internal
-	public static @NotNull MusicInfo chooseMusicInfoOrStructureMusicInfo(@Nullable LocalPlayer player, MusicInfo musicInfo) {
-		if (player == null) return musicInfo;
-		return getCurrentStructureMusicInfo(player.getRandom()).orElse(musicInfo);
+	public static @NotNull Music chooseMusicOrStructureMusic(@Nullable LocalPlayer player, Music music) {
+		if (player == null) return music;
+		return getCurrentStructureMusic(player.getRandom()).orElse(music);
 	}
 }
