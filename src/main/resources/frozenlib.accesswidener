@@ -236,6 +236,9 @@ transitive-accessible field net/minecraft/client/particle/Particle z D
 # Minecraft Instance
 transitive-accessible method net/minecraft/client/Minecraft isMultiplayerServer ()Z
 
+# Splashes
+accessible method net/minecraft/client/resources/SplashManager literalSplash (Ljava/lang/String;)Lnet/minecraft/network/chat/Component;
+
 # Textures
 transitive-accessible field net/minecraft/client/resources/SkinManager skinTextureDownloader Lnet/minecraft/client/renderer/texture/SkinTextureDownloader;
 

@@ -25,8 +25,8 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.menu.api.SplashTextAPI;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SplashManager;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -41,34 +41,36 @@ public class SplashManagerMixin {
 		method = "prepare(Lnet/minecraft/server/packs/resources/ResourceManager;Lnet/minecraft/util/profiling/ProfilerFiller;)Ljava/util/List;",
 		at = @At("RETURN")
 	)
-	public List<String> frozenLib$addSplashFiles(List<String> original, ResourceManager resourceManager, ProfilerFiller profiler) {
-		ArrayList<String> splashes = new ArrayList<>(original);
+	public List<Component> frozenLib$addSplashFiles(List<Component> original, ResourceManager resourceManager, ProfilerFiller profiler) {
+		ArrayList<Component> splashes = new ArrayList<>(original);
+
+		splashes.addAll(
+			SplashTextAPI.getAdditions()
+				.stream()
+				.map(String::trim)
+				.map(SplashManager::literalSplash)
+				.toList()
+		);
+
+		splashes.removeAll(
+			SplashTextAPI.getRemovals()
+				.stream()
+				.map(String::trim)
+				.map(SplashManager::literalSplash)
+				.toList()
+		);
+
 		for (ResourceLocation splashLocation : SplashTextAPI.getSplashFiles()) {
-			try {
-				BufferedReader bufferedReader = Minecraft.getInstance().getResourceManager().openAsReader(splashLocation);
-
-				List<String> stringList;
-				try {
-					stringList = bufferedReader.lines().map(String::trim).filter(splashText -> splashText.hashCode() != 125780783).toList();
-				} catch (Throwable throwable) {
-                    try {
-                        bufferedReader.close();
-                    } catch (Throwable cantClose) {
-						throwable.addSuppressed(cantClose);
-                    }
-
-                    throw throwable;
-				}
-
-				bufferedReader.close();
-
-				splashes.addAll(stringList);
+			try (BufferedReader bufferedReader = resourceManager.openAsReader(splashLocation)) {
+				splashes.removeAll(
+					bufferedReader.lines()
+						.map(String::trim)
+						.map(SplashManager::literalSplash)
+						.toList()
+				);
 			} catch (IOException ignored) {
 			}
 		}
-
-		splashes.addAll(SplashTextAPI.getAdditions());
-		for (String removal : SplashTextAPI.getRemovals()) splashes.remove(removal);
 
 		return splashes;
 	}
