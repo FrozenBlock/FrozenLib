@@ -62,7 +62,7 @@ public class SplashManagerMixin {
 
 		for (ResourceLocation splashLocation : SplashTextAPI.getSplashFiles()) {
 			try (BufferedReader bufferedReader = resourceManager.openAsReader(splashLocation)) {
-				splashes.removeAll(
+				splashes.addAll(
 					bufferedReader.lines()
 						.map(String::trim)
 						.map(SplashManager::literalSplash)
