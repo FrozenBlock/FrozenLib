@@ -106,8 +106,7 @@ public final class FrozenNetworking {
 		registry.register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, ctx) -> {
-			if (ConfigSyncPacket.hasPermissionsToSendSync(ctx.player(), true))
-				ConfigSyncPacket.receive(packet, ctx.server());
+			if (ConfigSyncPacket.hasPermissionsToSendSync(ctx.player(), true)) ConfigSyncPacket.receive(packet, ctx.server());
 		}));
 
 		registry.register(LocalPlayerSoundPacket.PACKET_TYPE, LocalPlayerSoundPacket.CODEC);
