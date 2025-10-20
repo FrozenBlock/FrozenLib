@@ -58,41 +58,42 @@ public record ConfigSyncPacket<T>(
 
 	@Nullable
 	public static <T> ConfigSyncPacket<T> create(@NotNull FriendlyByteBuf buf) {
-		String modId = buf.readUtf();
-		String className = buf.readUtf();
+		final String modId = buf.readUtf();
+		if (!FabricLoader.getInstance().isModLoaded(modId)) return null;
+
+		final String className = buf.readUtf();
 		try {
 			T configData = ConfigByteBufUtil.readJankson(buf, modId, className);
 			return new ConfigSyncPacket<>(modId, className, configData);
-		} catch (SyntaxError | ClassNotFoundException e) {
+		} catch (SyntaxError e) {
 			FrozenLibLogUtils.logError("Failed to read config data from packet.", true, e);
 			return null;
 		}
 	}
 
 	public void write(@NotNull FriendlyByteBuf buf) {
-		buf.writeUtf(modId);
-		buf.writeUtf(className);
-		ConfigByteBufUtil.writeJankson(buf, modId, configData);
+		buf.writeUtf(this.modId);
+		buf.writeUtf(this.className);
+		ConfigByteBufUtil.writeJankson(buf, this.modId, this.configData);
 	}
 
 	public static <T> void receive(@NotNull ConfigSyncPacket<T> packet, @Nullable MinecraftServer server) {
-		String modId = packet.modId();
-		String className = packet.className();
+		final String modId = packet.modId();
+		final String className = packet.className();
+
         for (Config<?> raw : ConfigRegistry.getConfigsForMod(modId)) {
-			String configClassName = raw.configClass().getName();
+			final String configClassName = raw.configClass().getName();
             if (!configClassName.equals(className)) continue;
-			Config<T> config = (Config<T>) raw;
+
+			final Config<T> config = (Config<T>) raw;
 			if (server != null) {
 				// C2S logic
 				ConfigModification.copyInto(packet.configData(), config.instance());
-				if (!FrozenNetworking.connectedToIntegratedServer())
-					config.save();
-				for (ServerPlayer player : PlayerLookup.all(server)) {
-					sendS2C(player, List.of(config));
-				}
+				if (!FrozenNetworking.connectedToIntegratedServer()) config.save();
+				for (ServerPlayer player : PlayerLookup.all(server)) sendS2C(player, List.of(config));
 			} else {
 				// S2C logic
-				boolean shouldAddModification = !ConfigRegistry.containsSyncData(config);
+				final boolean shouldAddModification = !ConfigRegistry.containsSyncData(config);
 				ConfigRegistry.setSyncData(config, new ConfigSyncData<>(packet.configData()));
 				if (shouldAddModification) {
 					ConfigRegistry.register(
@@ -110,12 +111,11 @@ public record ConfigSyncPacket<T>(
     }
 
 	public static void sendS2C(ServerPlayer player, @NotNull Iterable<Config<?>> configs) {
-		if (FrozenNetworking.isLocalPlayer(player))
-			return;
+		if (FrozenNetworking.isLocalPlayer(player)) return;
 
 		for (Config<?> config : configs) {
 			if (!config.supportsSync()) continue;
-			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.config());
+			final ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.config());
 			ServerPlayNetworking.send(player, packet);
 		}
 	}
@@ -125,13 +125,11 @@ public record ConfigSyncPacket<T>(
 	}
 
 	public static boolean hasPermissionsToSendSync(@Nullable Player player, boolean serverSide) {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER)
-			return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+		if (player == null) return false;
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+		if (FrozenClientNetworking.notConnected()) return false;
 
-		if (FrozenClientNetworking.notConnected())
-			return false;
-
-		boolean isHost = serverSide && FrozenNetworking.isLocalPlayer(player);
+		final boolean isHost = serverSide && FrozenNetworking.isLocalPlayer(player);
 		return FrozenNetworking.connectedToIntegratedServer() || isHost || player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
 	}
 
@@ -141,7 +139,7 @@ public record ConfigSyncPacket<T>(
 
 		for (Config<?> config : configs) {
 			if (!config.supportsSync()) continue;
-			ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.instance());
+			final ConfigSyncPacket<?> packet = new ConfigSyncPacket<>(config.modId(), config.configClass().getName(), config.instance());
 			ClientPlayNetworking.send(packet);
 		}
 	}
@@ -153,8 +151,7 @@ public record ConfigSyncPacket<T>(
 
 	@Environment(EnvType.CLIENT)
 	public static <T> void trySendC2S(Config<T> config) {
-		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false))
-			sendC2S(List.of(config));
+		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false)) sendC2S(List.of(config));
 	}
 
 	@Override
