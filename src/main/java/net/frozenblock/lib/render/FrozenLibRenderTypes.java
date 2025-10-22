@@ -22,112 +22,89 @@ import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.client.renderer.RenderStateShard;
-import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderSetup;
+import net.minecraft.client.renderer.rendertype.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.Util;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderTypes {
 
-	public static final Function<ResourceLocation, RenderType> ENTITY_CUTOUT_NO_SHADING = Util.memoize(
-		(resourceLocation) -> RenderType.create(
-			FrozenLibConstants.safeString("entity_cutout_no_lightmap"),
-			1536,
-			true,
-			false,
-			FrozenLibRenderPipelines.ENTITY_CUTOUT_NO_SHADING,
-			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
-				.setLightmapState(RenderStateShard.LIGHTMAP)
-				.setOverlayState(RenderStateShard.OVERLAY)
-				.createCompositeState(true)
-		)
-	);
+	public static final Function<ResourceLocation, RenderType> ENTITY_CUTOUT_NO_SHADING = Util.memoize(resourceLocation -> {
+		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_CUTOUT_NO_SHADING)
+			.withTexture("Sampler0", resourceLocation)
+			.useLightmap()
+			.useOverlay()
+			.affectsCrumbling()
+			.setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("entity_cutout_no_lightmap"), renderSetup);
+	});
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize(
-		(resourceLocation, affectsOutline) -> RenderType.create(
-			FrozenLibConstants.safeString("entity_translucent_emissive_fixed"),
-			1536,
-			true,
-			true,
-			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED,
-			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
-				.setOverlayState(RenderStateShard.OVERLAY)
-				.createCompositeState(affectsOutline)
-		)
-	);
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize((resourceLocation, affectsOutline) -> {
+		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED)
+			.withTexture("Sampler0", resourceLocation)
+			.useOverlay()
+			.affectsCrumbling()
+			.sortOnUpload()
+			.setOutline(affectsOutline ? RenderSetup.OutlineProperty.AFFECTS_OUTLINE : RenderSetup.OutlineProperty.NONE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("entity_translucent_emissive_fixed"), renderSetup);
+	});
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_CULL = Util.memoize(
-		(resourceLocation, affectsOutline) -> RenderType.create(
-			FrozenLibConstants.safeString("entity_translucent_emissive_cull"),
-			1536,
-			true,
-			true,
-			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_CULL,
-			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
-				.setOverlayState(RenderStateShard.OVERLAY)
-				.createCompositeState(affectsOutline)
-		)
-	);
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_CULL = Util.memoize((resourceLocation, affectsOutline) -> {
+		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_CULL)
+			.withTexture("Sampler0", resourceLocation)
+			.useOverlay()
+			.affectsCrumbling()
+			.sortOnUpload()
+			.setOutline(affectsOutline ? RenderSetup.OutlineProperty.AFFECTS_OUTLINE : RenderSetup.OutlineProperty.NONE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("entity_translucent_emissive_cull"), renderSetup);
+	});
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL = Util.memoize(
-		(resourceLocation, affectsOutline) -> RenderType.create(
-			FrozenLibConstants.safeString("entity_translucent_emissive_fixed_cull"),
-			1536,
-			true,
-			true,
-			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL,
-			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
-				.setOverlayState(RenderStateShard.OVERLAY)
-				.createCompositeState(affectsOutline)
-		)
-	);
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL = Util.memoize((resourceLocation, affectsOutline) -> {
+		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_FIXED_CULL)
+			.withTexture("Sampler0", resourceLocation)
+			.useOverlay()
+			.affectsCrumbling()
+			.sortOnUpload()
+			.setOutline(affectsOutline ? RenderSetup.OutlineProperty.AFFECTS_OUTLINE : RenderSetup.OutlineProperty.NONE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("entity_translucent_emissive_fixed_cull"), renderSetup);
+	});
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize(
-		(resourceLocation, affectsOutline) -> RenderType.create(
-			FrozenLibConstants.safeString("entity_translucent_emissive_always_render"),
-			1536,
-			true,
-			true,
-			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER,
-			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
-				.setOverlayState(RenderStateShard.OVERLAY)
-				.createCompositeState(affectsOutline)
-		)
-	);
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER = Util.memoize((resourceLocation, affectsOutline) -> {
+		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER)
+			.withTexture("Sampler0", resourceLocation)
+			.useOverlay()
+			.affectsCrumbling()
+			.sortOnUpload()
+			.setOutline(affectsOutline ? RenderSetup.OutlineProperty.AFFECTS_OUTLINE : RenderSetup.OutlineProperty.NONE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("entity_translucent_emissive_always_render"), renderSetup);
+	});
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL = Util.memoize(
-		(resourceLocation, affectsOutline) -> RenderType.create(
-			FrozenLibConstants.safeString("entity_translucent_emissive_always_render_cull"),
-			1536,
-			true,
-			true,
-			FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL,
-			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
-				.setOverlayState(RenderStateShard.OVERLAY)
-				.createCompositeState(affectsOutline)
-		)
-	);
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL = Util.memoize((resourceLocation, affectsOutline) -> {
+		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_EMISSIVE_ALWAYS_RENDER_CULL)
+			.withTexture("Sampler0", resourceLocation)
+			.useOverlay()
+			.affectsCrumbling()
+			.sortOnUpload()
+			.setOutline(affectsOutline ? RenderSetup.OutlineProperty.AFFECTS_OUTLINE : RenderSetup.OutlineProperty.NONE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("entity_translucent_emissive_always_render_cull"), renderSetup);
+	});
 
-	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER = Util.memoize(
-		(resourceLocation, affectsOutline) -> RenderType.create(
-			FrozenLibConstants.safeString("apparition_outer"),
-			1536,
-			false,
-			true,
-			FrozenLibRenderPipelines.APPARITION_OUTER,
-			RenderType.CompositeState.builder()
-				.setTextureState(new RenderStateShard.TextureStateShard(resourceLocation))
-				.setOverlayState(RenderStateShard.OVERLAY)
-				.createCompositeState(affectsOutline)
-		)
-	);
+	public static final BiFunction<ResourceLocation, Boolean, RenderType> APPARITION_OUTER = Util.memoize((resourceLocation, affectsOutline) -> {
+		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.APPARITION_OUTER)
+			.withTexture("Sampler0", resourceLocation)
+			.useOverlay()
+			.sortOnUpload()
+			.setOutline(affectsOutline ? RenderSetup.OutlineProperty.AFFECTS_OUTLINE : RenderSetup.OutlineProperty.NONE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("apparition_outer"), renderSetup);
+	});
 
 	public static RenderType entityCutoutNoShading(ResourceLocation resourceLocation) {
 		return ENTITY_CUTOUT_NO_SHADING.apply(resourceLocation);

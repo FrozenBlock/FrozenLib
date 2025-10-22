@@ -26,11 +26,11 @@ import net.minecraft.client.model.geom.builders.CubeListBuilder;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.model.geom.builders.MeshDefinition;
 import net.minecraft.client.model.geom.builders.PartDefinition;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
@@ -78,7 +78,7 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 		submitNodeCollector.submitModelPart(
 			this.base,
 			poseStack,
-			RenderType.entityCutout(this.getTexture(renderState)),
+			RenderTypes.entityCutout(this.getTexture(renderState)),
 			renderState.lightCoords,
 			OverlayTexture.NO_OVERLAY,
 			null,

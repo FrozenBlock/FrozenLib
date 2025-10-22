@@ -119,17 +119,7 @@ transitive-accessible field net/minecraft/world/level/block/entity/DecoratedPotP
 transitive-mutable field net/minecraft/world/level/block/entity/DecoratedPotPatterns ITEM_TO_POT_TEXTURE Ljava/util/Map;
 
 # Render Types
-transitive-accessible class net/minecraft/client/renderer/RenderType$CompositeState
-transitive-accessible class net/minecraft/client/renderer/RenderStateShard$OutputStateShard
-transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeRenderType <init> (Ljava/lang/String;IZZLcom/mojang/blaze3d/pipeline/RenderPipeline;Lnet/minecraft/client/renderer/RenderType$CompositeState;)V
-transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setTextureState (Lnet/minecraft/client/renderer/RenderStateShard$EmptyTextureStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
-transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setLightmapState (Lnet/minecraft/client/renderer/RenderStateShard$LightmapStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
-transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setOverlayState (Lnet/minecraft/client/renderer/RenderStateShard$OverlayStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
-transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setLayeringState (Lnet/minecraft/client/renderer/RenderStateShard$LayeringStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
-transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setOutputState (Lnet/minecraft/client/renderer/RenderStateShard$OutputStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
-transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder setTexturingState (Lnet/minecraft/client/renderer/RenderStateShard$TexturingStateShard;)Lnet/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder;
-transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder createCompositeState (Z)Lnet/minecraft/client/renderer/RenderType$CompositeState;
-transitive-accessible method net/minecraft/client/renderer/RenderType$CompositeState$CompositeStateBuilder createCompositeState (Lnet/minecraft/client/renderer/RenderType$OutlineProperty;)Lnet/minecraft/client/renderer/RenderType$CompositeState;
+accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
 transitive-accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
 
 # Biomes
