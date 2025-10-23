@@ -29,13 +29,31 @@ import org.spongepowered.asm.mixin.injection.At;
 public class AbstractContainerMenuMixin {
 
 	@WrapOperation(
+		method = "doClick",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameComponents(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
+		)
+	)
+	private boolean frozenLib$fixIsSameItemSameComponents(
+		ItemStack stackA, ItemStack stackB, Operation<Boolean> original
+	) {
+		ItemStackExtension.class.cast(stackA).frozenLib$setCanRemoveTags(true);
+		ItemStackExtension.class.cast(stackB).frozenLib$setCanRemoveTags(true);
+		boolean retValue = original.call(stackA, stackB);
+		ItemStackExtension.class.cast(stackA).frozenLib$setCanRemoveTags(false);
+		ItemStackExtension.class.cast(stackB).frozenLib$setCanRemoveTags(false);
+		return retValue;
+	}
+
+	@WrapOperation(
 		method = "moveItemStackTo",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/item/ItemStack;isSameItemSameComponents(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;)Z"
 		)
 	)
-	private boolean frozenLib$moveItemStackTo(
+	private boolean frozenLib$fixMoveItemStackTo(
 		ItemStack stackA, ItemStack stackB, Operation<Boolean> original
 	) {
 		ItemStackExtension.class.cast(stackA).frozenLib$setCanRemoveTags(true);
