@@ -28,7 +28,8 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin {
 
-	@WrapWithCondition(method = "startUsingItem",
+	@WrapWithCondition(
+		method = "startUsingItem",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/entity/LivingEntity;gameEvent(Lnet/minecraft/core/Holder;)V"
