@@ -52,11 +52,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity, S extend
 		LivingEntityRenderer<?, ?, ?> instance, S renderState, Operation<ResourceLocation> original
 	) {
 		for (EntityTextureOverride<?> override : FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE) {
-			if (override.clazz() == LivingEntityRenderer.class.cast(this).getClass()) {
-				if (override.condition().test(renderState)) {
-					return override.texture();
-				}
-			}
+			if (override.clazz() != LivingEntityRenderer.class.cast(this).getClass()) continue;
+			if (override.condition().test(renderState)) return override.texture();
 		}
 		return original.call(instance, renderState);
 	}

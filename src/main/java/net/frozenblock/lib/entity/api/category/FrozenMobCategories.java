@@ -25,14 +25,13 @@ import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenMobCategories {
-
-	private static final Map<String, MobCategory> NEW_MOB_CATEROGIES = new LinkedHashMap<>();
+	private static final Map<String, MobCategory> NEW_MOB_CATEGORIES = new LinkedHashMap<>();
 
 	public static void addMobCategory(String id, MobCategory category) {
-		NEW_MOB_CATEROGIES.put(id, category);
+		NEW_MOB_CATEGORIES.put(id, category);
 	}
 
 	public static MobCategory getCategory(@NotNull String modId, @NotNull String name) {
-		return NEW_MOB_CATEROGIES.get(modId.toUpperCase() + name.toUpperCase());
+		return NEW_MOB_CATEGORIES.get(modId.toUpperCase() + name.toUpperCase());
 	}
 }

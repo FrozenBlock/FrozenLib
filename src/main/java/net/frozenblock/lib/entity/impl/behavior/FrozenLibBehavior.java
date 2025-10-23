@@ -18,6 +18,5 @@
 package net.frozenblock.lib.entity.impl.behavior;
 
 public interface FrozenLibBehavior {
-
 	int frozenLib$getDuration();
 }

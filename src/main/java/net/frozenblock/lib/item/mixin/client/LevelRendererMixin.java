@@ -47,7 +47,6 @@ public class LevelRendererMixin {
 	@Shadow
 	@Final
 	private Minecraft minecraft;
-
 	@Shadow
 	@Nullable
 	private ClientLevel level;
@@ -65,9 +64,9 @@ public class LevelRendererMixin {
 		@Share("frozenLib$canPlaceInAir") LocalBooleanRef canPlaceInAir
 	) {
 		if (this.minecraft.player != null && original == HitResult.Type.MISS) {
-			BlockPos pos = blockHitResult.getBlockPos();
+			final BlockPos pos = blockHitResult.getBlockPos();
 
-			ItemStack mainHandItem = this.minecraft.player.getMainHandItem();
+			final ItemStack mainHandItem = this.minecraft.player.getMainHandItem();
 			if (mainHandItem.getItem() instanceof PlaceInAirBlockItem placeInAirBlockItem) {
 				if (placeInAirBlockItem.checkIfPlayerCanPlaceBlock(this.minecraft.player, mainHandItem, this.level, pos)) {
 					canPlaceInAir.set(true);
@@ -75,7 +74,7 @@ public class LevelRendererMixin {
 				}
 			}
 
-			ItemStack offHandItem = this.minecraft.player.getOffhandItem();
+			final ItemStack offHandItem = this.minecraft.player.getOffhandItem();
 			if (offHandItem.getItem() instanceof PlaceInAirBlockItem placeInAirBlockItem) {
 				if (placeInAirBlockItem.checkIfPlayerCanPlaceBlock(this.minecraft.player, offHandItem, this.level, pos)) {
 					canPlaceInAir.set(true);

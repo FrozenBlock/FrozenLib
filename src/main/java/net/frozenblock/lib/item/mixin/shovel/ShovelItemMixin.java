@@ -57,7 +57,7 @@ public class ShovelItemMixin {
 		@Share("frozenLib$shovelBehavior") LocalRef<ShovelApi.ShovelBehavior> shovelBehavior
 	) {
 		direction.set(original);
-		ShovelApi.ShovelBehavior possibleBehavior = ShovelApi.get(blockState.getBlock());
+		final ShovelApi.ShovelBehavior possibleBehavior = ShovelApi.get(blockState.getBlock());
 		if (possibleBehavior != null && possibleBehavior.meetsRequirements(level, pos, original, blockState)) {
 			isCustomBehavior.set(true);
 			shovelBehavior.set(possibleBehavior);
@@ -115,12 +115,12 @@ public class ShovelItemMixin {
 		@Share("frozenLib$direction") LocalRef<Direction> direction,
 		@Share("frozenLib$shovelBehavior") LocalRef<ShovelApi.ShovelBehavior> shovelBehavior
 	) {
-		ShovelApi.ShovelBehavior runBehavior = shovelBehavior.get();
-		if (runBehavior != null) {
-			BlockState outputState = runBehavior.getOutputBlockState(blockState);
-			runBehavior.onSuccess(level, pos, direction.get(), outputState, blockState);
-			blockState3.set(outputState);
-		}
+		final ShovelApi.ShovelBehavior runBehavior = shovelBehavior.get();
+		if (runBehavior == null) return;
+
+		final BlockState outputState = runBehavior.getOutputBlockState(blockState);
+		runBehavior.onSuccess(level, pos, direction.get(), outputState, blockState);
+		blockState3.set(outputState);
 	}
 
 }

@@ -50,44 +50,42 @@ public class MobCategoryMixin {
 	private static MobCategory[] $VALUES;
 
 	@Inject(
-			method = "<clinit>",
-			at = @At(
-					value = "FIELD",
-					opcode = Opcodes.PUTSTATIC,
-					target = "Lnet/minecraft/world/entity/MobCategory;$VALUES:[Lnet/minecraft/world/entity/MobCategory;",
-					shift = At.Shift.AFTER
-			)
+		method = "<clinit>",
+		at = @At(
+			value = "FIELD",
+			opcode = Opcodes.PUTSTATIC,
+			target = "Lnet/minecraft/world/entity/MobCategory;$VALUES:[Lnet/minecraft/world/entity/MobCategory;",
+			shift = At.Shift.AFTER
+		)
 	)
 	private static void frozenLib$addCustomCategories(CallbackInfo info) {
-		var categories = new ArrayList<>(Arrays.asList($VALUES));
-		var last = categories.getLast();
+		final var categories = new ArrayList<>(Arrays.asList($VALUES));
+		final var last = categories.getLast();
 		int currentOrdinal = last.ordinal();
 
-		ArrayList<String> internalIds = new ArrayList<>();
-		for (MobCategory category : categories) {
-			internalIds.add(category.name());
-		}
+		final ArrayList<String> internalIds = new ArrayList<>();
+		for (MobCategory category : categories) internalIds.add(category.name());
 
-		ArrayList<FrozenMobCategory> newCategories = new ArrayList<>();
-		FabricLoader.getInstance().getEntrypointContainers("frozenlib:mob_categories", FrozenMobCategoryEntrypoint.class).forEach(entrypoint -> {
-			try {
-				FrozenMobCategoryEntrypoint mobCategoryEntrypoint = entrypoint.getEntrypoint();
-				mobCategoryEntrypoint.newCategories(newCategories);
-			} catch (Throwable ignored) {
-
-			}
-		});
+		final ArrayList<FrozenMobCategory> newCategories = new ArrayList<>();
+		FabricLoader.getInstance()
+			.getEntrypointContainers("frozenlib:mob_categories", FrozenMobCategoryEntrypoint.class)
+			.forEach(entrypoint -> {
+				try {
+					FrozenMobCategoryEntrypoint mobCategoryEntrypoint = entrypoint.getEntrypoint();
+					mobCategoryEntrypoint.newCategories(newCategories);
+				} catch (Throwable ignored) {
+				}
+			});
 
 		for (FrozenMobCategory category : newCategories) {
-			var namespace = category.key().getNamespace();
-			var path = category.key().getPath();
-			StringBuilder internalId = new StringBuilder(namespace.toUpperCase());
+			final var namespace = category.key().getNamespace();
+			final var path = category.key().getPath();
+			final StringBuilder internalId = new StringBuilder(namespace.toUpperCase());
 			internalId.append(path.toUpperCase());
-			if (internalIds.contains(internalId.toString())) {
-				throw new IllegalStateException("Cannot add duplicate MobCategory " + internalId + "!");
-			}
+			if (internalIds.contains(internalId.toString())) throw new IllegalStateException("Cannot add duplicate MobCategory " + internalId + "!");
+
 			currentOrdinal += 1;
-			var addedCategory = newType(internalId.toString(), currentOrdinal, namespace + path, category.max(), category.isFriendly(), category.isPersistent(), category.despawnDistance());
+			final var addedCategory = newType(internalId.toString(), currentOrdinal, namespace + path, category.max(), category.isFriendly(), category.isPersistent(), category.despawnDistance());
 			categories.add(addedCategory);
 			FrozenMobCategories.addMobCategory(internalId.toString(), addedCategory);
 		}

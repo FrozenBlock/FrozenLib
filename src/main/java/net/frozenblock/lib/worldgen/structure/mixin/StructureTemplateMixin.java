@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.worldgen.structure.mixin;
 
-import java.util.ArrayList;
-import java.util.List;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.frozenblock.lib.worldgen.structure.impl.StructureTemplateInterface;
 import net.minecraft.core.BlockPos;

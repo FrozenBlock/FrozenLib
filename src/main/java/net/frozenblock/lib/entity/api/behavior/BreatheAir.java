@@ -35,6 +35,7 @@ import org.jetbrains.annotations.NotNull;
  * {@link net.minecraft.world.entity.ai.goal.BreathAirGoal} as a behavior.
  */
 public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
+
 	public BreatheAir() {
 		super(ImmutableMap.of());
 	}
@@ -87,7 +88,7 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 	}
 
 	private boolean givesAir(@NotNull LevelReader level, @NotNull BlockPos pos) {
-		BlockState blockState = level.getBlockState(pos);
+		final BlockState blockState = level.getBlockState(pos);
 		return (level.getFluidState(pos).isEmpty() || blockState.is(Blocks.BUBBLE_COLUMN)) && blockState.isPathfindable(PathComputationType.LAND);
 	}
 }

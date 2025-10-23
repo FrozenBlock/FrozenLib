@@ -48,14 +48,14 @@ public class SmootherSwimmingMoveControl extends MoveControl {
 		}
 
 		if (this.operation == Operation.MOVE_TO && !this.mob.getNavigation().isDone()) {
-			double d = this.wantedX - this.mob.getX();
-			double e = this.wantedY - this.mob.getY();
-			double f = this.wantedZ - this.mob.getZ();
-			double g = d * d + e * e + f * f;
+			final double d = this.wantedX - this.mob.getX();
+			final double e = this.wantedY - this.mob.getY();
+			final double f = this.wantedZ - this.mob.getZ();
+			final double g = d * d + e * e + f * f;
 			if (g < 2.5000003E-7F) {
 				this.mob.setZza(0F);
 			} else {
-				float h = (float) (Mth.atan2(f, d) * Mth.RAD_TO_DEG) - 90F;
+				final float h = (float) (Mth.atan2(f, d) * Mth.RAD_TO_DEG) - 90F;
 				this.mob.setYRot(this.rotlerp(this.mob.getYRot(), h, this.maxTurnY));
 				this.mob.yBodyRot = this.mob.getYRot();
 				this.mob.yHeadRot = this.mob.getYRot();
@@ -69,8 +69,8 @@ public class SmootherSwimmingMoveControl extends MoveControl {
 						this.mob.setXRot(this.rotlerp(this.mob.getXRot(), k, 5F));
 					}
 
-					float k = Mth.cos(this.mob.getXRot() * Mth.DEG_TO_RAD);
-					float l = Mth.sin(this.mob.getXRot() * Mth.DEG_TO_RAD);
+					final float k = Mth.cos(this.mob.getXRot() * Mth.DEG_TO_RAD);
+					final float l = Mth.sin(this.mob.getXRot() * Mth.DEG_TO_RAD);
 					this.mob.zza = k * i;
 					this.mob.yya = -l * i;
 				} else {

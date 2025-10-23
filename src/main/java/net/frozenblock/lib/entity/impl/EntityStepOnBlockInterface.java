@@ -22,7 +22,5 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface EntityStepOnBlockInterface {
-
 	void frozenLib$onSteppedOnBlock(Level level, BlockPos blockPos, BlockState blockState);
-
 }

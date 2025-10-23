@@ -54,9 +54,7 @@ import org.jetbrains.annotations.Unmodifiable;
  */
 public record FileTransferPacket(String transferPath, String fileName, boolean request, FileTransferSnippet snippet, int totalPacketCount) implements CustomPacketPayload {
 	@ApiStatus.Internal
-	public static final Type<FileTransferPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("file_transfer")
-	);
+	public static final Type<FileTransferPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("file_transfer"));
 	@ApiStatus.Internal
 	public static final StreamCodec<FriendlyByteBuf, FileTransferPacket> STREAM_CODEC = StreamCodec.ofMember(FileTransferPacket::write, FileTransferPacket::create);
 	private static final int MAX_BYTES_PER_TRANSFER = 1835008; // 1.75MB
@@ -75,10 +73,10 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	 * @throws IOException
 	 */
 	public static @NotNull @Unmodifiable List<FileTransferPacket> create(String destPath, @NotNull File file) throws IOException {
-		Pair<Integer, List<FileTransferSnippet>> snippets = createSnippets(readFile(file));
-		int totalPacketCount = snippets.getFirst();
+		final Pair<Integer, List<FileTransferSnippet>> snippets = createSnippets(readFile(file));
+		final int totalPacketCount = snippets.getFirst();
 
-		ArrayList<FileTransferPacket> packets = new ArrayList<>();
+		final ArrayList<FileTransferPacket> packets = new ArrayList<>();
 		for (FileTransferSnippet snippet : snippets.getSecond()) {
 			packets.add(
 				new FileTransferPacket(
@@ -108,8 +106,8 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	@ApiStatus.Internal
 	private static byte @Nullable [] readFile(File file) {
 		try {
-			FileInputStream fileInputStream = new FileInputStream(file);
-			ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+			final FileInputStream fileInputStream = new FileInputStream(file);
+			final ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
 			fileInputStream.transferTo(byteArrayOutputStream);
 			fileInputStream.close();
 			return byteArrayOutputStream.toByteArray();
@@ -130,9 +128,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	 */
 	public static void sendToPlayer(File file, String destPath, ServerPlayer player) throws IOException {
 		if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
-		for (FileTransferPacket packet : create(destPath, file)) {
-			ServerPlayNetworking.send(player, packet);
-		}
+		for (FileTransferPacket packet : create(destPath, file)) ServerPlayNetworking.send(player, packet);
 	}
 
 	@ApiStatus.Internal
@@ -152,8 +148,8 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	}
 
 	private static @NotNull Pair<Integer, List<FileTransferSnippet>> createSnippets(byte[] bytes) {
-		AtomicInteger index = new AtomicInteger(0);
-		List<FileTransferSnippet> snippets = new ArrayList<>();
+		final AtomicInteger index = new AtomicInteger(0);
+		final List<FileTransferSnippet> snippets = new ArrayList<>();
 
 		Lists.partition(Arrays.asList(ArrayUtils.toObject(bytes)), MAX_BYTES_PER_TRANSFER).forEach(byteChunk -> {
 			snippets.add(

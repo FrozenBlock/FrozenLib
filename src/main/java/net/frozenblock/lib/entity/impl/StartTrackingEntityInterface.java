@@ -20,7 +20,5 @@ package net.frozenblock.lib.entity.impl;
 import net.minecraft.server.level.ServerPlayer;
 
 public interface StartTrackingEntityInterface {
-
 	void frozenLib$playerStartsTracking(ServerPlayer serverPlayer);
-
 }

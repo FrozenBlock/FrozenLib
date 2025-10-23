@@ -23,7 +23,6 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 
 @FunctionalInterface
 public interface FrozenClientEntrypoint extends ClientEventEntrypoint {
-
 	Event<FrozenClientEntrypoint> EVENT = FrozenEvents.createEnvironmentEvent(FrozenClientEntrypoint.class, callbacks -> () -> {
 		for (var callback : callbacks) {
 			callback.init();

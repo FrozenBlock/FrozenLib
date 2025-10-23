@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 
 public class SherdRegistry {
 	public static void register(Item sherd, ResourceLocation patternKey) {
-		Object2ObjectLinkedOpenHashMap<Item, ResourceKey<DecoratedPotPattern>> newMap = new Object2ObjectLinkedOpenHashMap<>();
+		final Object2ObjectLinkedOpenHashMap<Item, ResourceKey<DecoratedPotPattern>> newMap = new Object2ObjectLinkedOpenHashMap<>();
 		newMap.putAll(DecoratedPotPatterns.ITEM_TO_POT_TEXTURE);
 		newMap.put(sherd, ResourceKey.create(Registries.DECORATED_POT_PATTERN, patternKey));
 		DecoratedPotPatterns.ITEM_TO_POT_TEXTURE = Map.copyOf(newMap);

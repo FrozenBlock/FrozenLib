@@ -36,7 +36,7 @@ public abstract class AbstractBoatMixin implements EntityGravityInterface {
 		)
 	)
 	private void frozenLib$useGravity(AbstractBoat instance, double x, double y, double z, Operation<Void> original) {
-		Vec3 newVec = new Vec3(x, y + this.frozenLib$getGravity(), z).subtract(this.frozenLib$getEffectiveGravity());
+		final Vec3 newVec = new Vec3(x, y + this.frozenLib$getGravity(), z).subtract(this.frozenLib$getEffectiveGravity());
 		original.call(instance, newVec.x, newVec.y, newVec.z);
 	}
 }

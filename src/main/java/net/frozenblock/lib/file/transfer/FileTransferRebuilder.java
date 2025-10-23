@@ -37,11 +37,11 @@ public class FileTransferRebuilder {
 
 		try {
 			if (map.containsKey(destinationPath)) {
-				ArrayList<FileTransferPacket.FileTransferSnippet> snippets = map.get(destinationPath);
+				final ArrayList<FileTransferPacket.FileTransferSnippet> snippets = map.get(destinationPath);
 				snippets.add(snippet);
 
 				if (snippet.index() == totalPacketCount) {
-					List<Byte> finalBytes = new ArrayList<>();
+					final List<Byte> finalBytes = new ArrayList<>();
 					snippets.forEach(snippetInList -> finalBytes.addAll(List.of(ArrayUtils.toObject(snippetInList.bytes()))));
 
 					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(ArrayUtils.toPrimitive(finalBytes.toArray(new Byte[0]))), destinationPath.toFile());

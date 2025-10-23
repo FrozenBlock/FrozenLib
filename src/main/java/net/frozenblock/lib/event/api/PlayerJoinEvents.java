@@ -32,18 +32,14 @@ public class PlayerJoinEvents {
 	 * The event that is triggered when a player joins the server.
 	 */
 	public static final Event<PlayerJoin> ON_JOIN_SERVER = FrozenEvents.createEnvironmentEvent(PlayerJoin.class, (callbacks) -> (server, player) -> {
-		for (var callback : callbacks) {
-			callback.onPlayerJoin(server, player);
-		}
+		for (var callback : callbacks) callback.onPlayerJoin(server, player);
 	});
 
 	/**
 	 * The event that is triggered when a player joins a world.
 	 */
 	public static final Event<PlayerAddedToLevel> ON_PLAYER_ADDED_TO_LEVEL = FrozenEvents.createEnvironmentEvent(PlayerAddedToLevel.class, (callbacks) -> (server, serverLevel, player) -> {
-		for (var callback : callbacks) {
-			callback.onPlayerAddedToLevel(server, serverLevel, player);
-		}
+		for (var callback : callbacks) callback.onPlayerAddedToLevel(server, serverLevel, player);
 	});
 
 	/**

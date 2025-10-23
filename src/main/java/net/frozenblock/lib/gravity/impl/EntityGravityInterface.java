@@ -20,8 +20,6 @@ package net.frozenblock.lib.gravity.impl;
 import net.minecraft.world.phys.Vec3;
 
 public interface EntityGravityInterface {
-
 	double frozenLib$getGravity();
-
 	Vec3 frozenLib$getEffectiveGravity();
 }

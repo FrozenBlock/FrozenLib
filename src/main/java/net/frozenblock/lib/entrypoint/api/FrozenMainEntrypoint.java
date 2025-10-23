@@ -23,12 +23,10 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 
 @FunctionalInterface
 public interface FrozenMainEntrypoint {
-
 	Event<FrozenMainEntrypoint> EVENT = FrozenEvents.createEnvironmentEvent(FrozenMainEntrypoint.class, callbacks -> () -> {
 		for (var callback : callbacks) {
 			callback.init();
-			if (FabricLoader.getInstance().isDevelopmentEnvironment())
-				callback.initDevOnly();
+			if (FabricLoader.getInstance().isDevelopmentEnvironment()) callback.initDevOnly();
 		}
 	});
 

@@ -27,7 +27,6 @@ import net.minecraft.resources.ResourceLocation;
  * An edited version of {@link ModInitializer} that contains extra tools for ease of use.
  */
 public abstract class FrozenModInitializer implements ModInitializer {
-
 	private final String modId;
 	private final ModContainer container;
 

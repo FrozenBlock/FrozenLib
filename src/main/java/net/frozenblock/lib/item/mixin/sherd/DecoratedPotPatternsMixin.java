@@ -30,14 +30,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(DecoratedPotPatterns.class)
 public class DecoratedPotPatternsMixin {
 
-	@Inject(method = "bootstrap", at = @At(value = "RETURN", shift = At.Shift.BEFORE))
+	@Inject(
+		method = "bootstrap",
+		at = @At(
+			value = "RETURN",
+			shift = At.Shift.BEFORE
+		)
+	)
 	private static void frozenLib$bootstrap(Registry<DecoratedPotPattern> registry, CallbackInfoReturnable<DecoratedPotPattern> info) {
-		FabricLoader.getInstance().getEntrypointContainers("frozenlib:decorated_pot_patterns", DecoratedPotPatternRegistryEntrypoint.class).forEach(entrypoint -> {
-			try {
-				DecoratedPotPatternRegistryEntrypoint decoratedPotPatternRegistryEntrypoint = entrypoint.getEntrypoint();
-				decoratedPotPatternRegistryEntrypoint.bootstrap(registry);
-			} catch (Throwable ignored) {
-			}
-		});
+		FabricLoader.getInstance()
+			.getEntrypointContainers("frozenlib:decorated_pot_patterns", DecoratedPotPatternRegistryEntrypoint.class)
+			.forEach(entrypoint -> {
+				try {
+					entrypoint.getEntrypoint().bootstrap(registry);
+				} catch (Throwable ignored) {
+				}
+			});
 	}
 }

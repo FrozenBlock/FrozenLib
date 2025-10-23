@@ -17,14 +17,14 @@
 
 package net.frozenblock.lib;
 
+import java.nio.file.Path;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.SharedConstants;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
-import java.nio.file.Path;
+import net.minecraft.SharedConstants;
 
 @ApiStatus.Internal
 public final class FrozenLibConstants {

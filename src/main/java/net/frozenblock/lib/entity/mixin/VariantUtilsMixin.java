@@ -48,15 +48,15 @@ public class VariantUtilsMixin {
 		SpawnContext spawnContext, ResourceKey<Registry<T>> resourceKey, CallbackInfoReturnable<Optional<Holder.Reference<T>>> info
 	) {
 		if (!resourceKey.equals(Registries.WOLF_VARIANT)) return;
-		Registry<WolfVariant> registry = spawnContext.level().registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
-		Optional<ResourceKey<Biome>> optionalBiome = spawnContext.biome().unwrapKey();
-		if (optionalBiome.isPresent()) {
-			ResourceKey<Biome> biomeKey = optionalBiome.get();
-			Optional<ResourceKey<WolfVariant>> optionalVariant = WolfVariantBiomeRegistry.get(biomeKey);
-            optionalVariant.ifPresent(wolfVariantResourceKey -> info.setReturnValue(
-				(Optional<Holder.Reference<T>>) (Object) registry.get(wolfVariantResourceKey)
-			));
-		}
+		final Registry<WolfVariant> registry = spawnContext.level().registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
+		final Optional<ResourceKey<Biome>> optionalBiome = spawnContext.biome().unwrapKey();
+		if (optionalBiome.isEmpty()) return;
+
+		final ResourceKey<Biome> biomeKey = optionalBiome.get();
+		final Optional<ResourceKey<WolfVariant>> optionalVariant = WolfVariantBiomeRegistry.get(biomeKey);
+		optionalVariant.ifPresent(wolfVariantResourceKey -> info.setReturnValue(
+			(Optional<Holder.Reference<T>>) (Object) registry.get(wolfVariantResourceKey)
+		));
 	}
 
 }

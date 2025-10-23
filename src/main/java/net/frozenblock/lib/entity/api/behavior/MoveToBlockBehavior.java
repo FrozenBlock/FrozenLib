@@ -86,7 +86,7 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 
 	@Override
 	protected void tick(@NotNull ServerLevel level, @NotNull E owner, long gameTime) {
-		BlockPos blockPos = this.getMoveToTarget();
+		final BlockPos blockPos = this.getMoveToTarget();
 		if (!blockPos.closerToCenterThan(owner.position(), this.acceptedDistance())) {
 			this.reachedTarget = false;
 			++this.tryTicks;
@@ -113,8 +113,8 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 	 * Searches and sets new destination block and returns true if a suitable block (specified in {@link #isValidTarget(LevelReader, BlockPos)}) can be found.
 	 */
 	protected boolean findNearestBlock() {
-		BlockPos blockPos = this.mob.blockPosition();
-		BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+		final BlockPos blockPos = this.mob.blockPosition();
+		final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
 
 		for (int k = this.verticalSearchStart; k <= this.verticalSearchRange; k = k > 0 ? -k : 1 - k) {
 			for (int l = 0; l < this.searchRange; ++l) {

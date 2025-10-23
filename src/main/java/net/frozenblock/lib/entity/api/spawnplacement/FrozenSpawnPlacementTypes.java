@@ -36,36 +36,32 @@ public class FrozenSpawnPlacementTypes {
 	 */
 	public static final SpawnPlacementType ON_GROUND_OR_ON_LAVA_SURFACE = new SpawnPlacementType() {
 		@Override
-		public boolean isSpawnPositionOk(LevelReader levelReader, BlockPos blockPos, @Nullable EntityType<?> entityType) {
-			if (entityType != null && levelReader.getWorldBorder().isWithinBounds(blockPos)) {
-				BlockPos belowPos = blockPos.below();
-				BlockState belowState = levelReader.getBlockState(belowPos);
-				if (!belowState.isValidSpawn(levelReader, belowPos, entityType) && !this.isSurfaceLavaOrMagma(levelReader, blockPos, belowState)) {
-					return false;
-				} else {
-					return this.isValidEmptySpawnBlock(levelReader, blockPos, entityType);
-				}
-			}
-			return false;
+		public boolean isSpawnPositionOk(LevelReader level, BlockPos pos, @Nullable EntityType<?> entityType) {
+			if (entityType == null || !level.getWorldBorder().isWithinBounds(pos)) return false;
+
+			final BlockPos belowPos = pos.below();
+			final BlockState belowState = level.getBlockState(belowPos);
+			if (!belowState.isValidSpawn(level, belowPos, entityType) && !this.isSurfaceLavaOrMagma(level, pos, belowState)) return false;
+			return this.isValidEmptySpawnBlock(level, pos, entityType);
 		}
 
-		private boolean isSurfaceLavaOrMagma(@NotNull LevelReader levelReader, BlockPos blockPos, @NotNull BlockState belowState) {
-			BlockState blockState = levelReader.getBlockState(blockPos);
+		private boolean isSurfaceLavaOrMagma(@NotNull LevelReader level, BlockPos pos, @NotNull BlockState belowState) {
+			final BlockState blockState = level.getBlockState(pos);
 			return (belowState.getFluidState().is(FluidTags.LAVA) || belowState.is(Blocks.MAGMA_BLOCK))
 				&& !(blockState.getFluidState().is(FluidTags.LAVA) || blockState.is(Blocks.MAGMA_BLOCK));
 		}
 
-		private boolean isValidEmptySpawnBlock(@NotNull LevelReader levelReader, BlockPos blockPos, EntityType<?> entityType) {
-			BlockState blockState = levelReader.getBlockState(blockPos);
-			boolean isSafeBurning = blockState.is(BlockTags.FIRE);
-			return isSafeBurning || NaturalSpawner.isValidEmptySpawnBlock(levelReader, blockPos, blockState, blockState.getFluidState(), entityType);
+		private boolean isValidEmptySpawnBlock(@NotNull LevelReader level, BlockPos pos, EntityType<?> entityType) {
+			final BlockState blockState = level.getBlockState(pos);
+			final boolean isSafeBurning = blockState.is(BlockTags.FIRE);
+			return isSafeBurning || NaturalSpawner.isValidEmptySpawnBlock(level, pos, blockState, blockState.getFluidState(), entityType);
 		}
 
 		@NotNull
 		@Override
-		public BlockPos adjustSpawnPosition(@NotNull LevelReader levelReader, @NotNull BlockPos blockPos) {
-			BlockPos belowPos = blockPos.below();
-			return levelReader.getBlockState(belowPos).isPathfindable(PathComputationType.LAND) ? belowPos : blockPos;
+		public BlockPos adjustSpawnPosition(@NotNull LevelReader level, @NotNull BlockPos pos) {
+			final BlockPos belowPos = pos.below();
+			return level.getBlockState(belowPos).isPathfindable(PathComputationType.LAND) ? belowPos : pos;
 		}
 	};
 

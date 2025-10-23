@@ -49,20 +49,20 @@ public class ScaleEntityCommand {
 
 	private static int scale(CommandSourceStack source, @NotNull Collection<? extends Entity> entities, double scale) {
 		int entityAmount = 0;
-		List<Entity> affectedEntities = new ArrayList<>();
+		final List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
 			if (entity instanceof LivingEntity livingEntity) {
-				AttributeInstance attributeInstance = livingEntity.getAttribute(Attributes.SCALE);
-				if (attributeInstance != null) {
-					attributeInstance.setBaseValue(scale);
-					entityAmount += 1;
-					affectedEntities.add(livingEntity);
-				}
+				final AttributeInstance attributeInstance = livingEntity.getAttribute(Attributes.SCALE);
+				if (attributeInstance == null) continue;
+
+				attributeInstance.setBaseValue(scale);
+				entityAmount += 1;
+				affectedEntities.add(livingEntity);
 			}
 		}
 
-		int entityCount = affectedEntities.size();
-		boolean oneEntity = entityCount == 1;
+		final int entityCount = affectedEntities.size();
+		final boolean oneEntity = entityCount == 1;
 
 		if (entityAmount > 0) {
 			source.sendSuccess(() -> Component.translatable(oneEntity ? "commands.scale.entity.success" : "commands.scale.entity.success.multiple", entityCount, scale), true);

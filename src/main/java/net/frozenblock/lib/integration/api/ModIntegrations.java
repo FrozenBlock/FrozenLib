@@ -38,7 +38,11 @@ public class ModIntegrations {
      * @return A {@link ModIntegrationSupplier}.
      */
     public static ModIntegrationSupplier<? extends ModIntegration> register(Supplier<? extends ModIntegration> integration, String srcModID, String modID) {
-        return Registry.register(FrozenLibRegistries.MOD_INTEGRATION, ResourceLocation.fromNamespaceAndPath(srcModID, modID), new ModIntegrationSupplier<>(integration, modID));
+        return Registry.register(
+			FrozenLibRegistries.MOD_INTEGRATION,
+			ResourceLocation.fromNamespaceAndPath(srcModID, modID),
+			new ModIntegrationSupplier<>(integration, modID)
+		);
     }
 
 	/**
@@ -51,7 +55,11 @@ public class ModIntegrations {
 	 * @return A {@link ModIntegrationSupplier}.
 	 */
 	public static <T extends ModIntegration> ModIntegrationSupplier<T> register(Supplier<T> integration, Supplier<T> unloadedIntegration, String srcModID, String modID) {
-		return Registry.register(FrozenLibRegistries.MOD_INTEGRATION, ResourceLocation.fromNamespaceAndPath(srcModID, modID), new ModIntegrationSupplier<>(integration, unloadedIntegration, modID));
+		return Registry.register(
+			FrozenLibRegistries.MOD_INTEGRATION,
+			ResourceLocation.fromNamespaceAndPath(srcModID, modID),
+			new ModIntegrationSupplier<>(integration, unloadedIntegration, modID)
+		);
 	}
 
     public static List<ModIntegrationSupplier<?>> getIntegrationSuppliers() {
@@ -64,9 +72,8 @@ public class ModIntegrations {
 	public static void initializePreFreeze() {
 		for (var integration : FrozenLibRegistries.MOD_INTEGRATION) {
 			integration.getIntegration().initPreFreeze();
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-				integration.getIntegration().clientInitPreFreeze();
-			}
+			if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) continue;
+			integration.getIntegration().clientInitPreFreeze();
 		}
 	}
 
@@ -76,9 +83,8 @@ public class ModIntegrations {
     public static void initialize() {
         for (var integration : FrozenLibRegistries.MOD_INTEGRATION) {
             integration.getIntegration().init();
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-				integration.getIntegration().clientInit();
-			}
+			if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) continue;
+			integration.getIntegration().clientInit();
         }
     }
 

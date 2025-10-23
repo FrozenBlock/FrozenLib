@@ -34,7 +34,8 @@ public class BehaviorMixin<E extends LivingEntity> implements FrozenLibBehavior 
 	@Unique
 	private int frozenLib$duration;
 
-	@Inject(method = "tryStart",
+	@Inject(
+		method = "tryStart",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/world/entity/ai/behavior/Behavior;start(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/LivingEntity;J)V",

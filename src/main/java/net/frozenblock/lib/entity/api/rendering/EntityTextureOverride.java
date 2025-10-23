@@ -70,9 +70,9 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 
 		return register(key, clazz, texture, renderState -> {
 			if (renderState.nameTag == null) return false;
-			
-			String entityName = ChatFormatting.stripFormatting(renderState.nameTag.getString());
-			AtomicBoolean isNameCorrect = new AtomicBoolean(false);
+
+			final String entityName = ChatFormatting.stripFormatting(renderState.nameTag.getString());
+			final AtomicBoolean isNameCorrect = new AtomicBoolean(false);
 			if (names.length == 0) return true;
 
 			Arrays.stream(names).toList().forEach(name -> {

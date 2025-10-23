@@ -19,6 +19,8 @@ package net.frozenblock.lib.worldgen.structure.mixin;
 
 import com.mojang.datafixers.util.Pair;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.worldgen.structure.impl.StructureTemplatePoolInterface;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
@@ -27,8 +29,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Mutable;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import java.util.ArrayList;
-import java.util.List;
 
 @Mixin(StructureTemplatePool.class)
 public class StructureTemplatePoolMixin implements StructureTemplatePoolInterface {

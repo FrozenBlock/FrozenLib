@@ -20,6 +20,7 @@ package net.frozenblock.lib.worldgen.structure.api;
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Optional;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructurePoolElementTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -32,9 +33,12 @@ import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
-import net.minecraft.world.level.levelgen.structure.templatesystem.*;
+import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.NotNull;
-import java.util.Optional;
 
 /**
  * Be sure to mixin into {@link StructurePoolElement#handleDataMarker(LevelAccessor, StructureTemplate.StructureBlockInfo, BlockPos, Rotation, RandomSource, BoundingBox)}!

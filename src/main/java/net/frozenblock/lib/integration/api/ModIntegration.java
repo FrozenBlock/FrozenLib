@@ -34,7 +34,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 
 public abstract class ModIntegration {
-
     private final String modID;
 	private final String modRegistryID;
 	private final boolean isModLoaded;
@@ -70,21 +69,15 @@ public abstract class ModIntegration {
     }
 
     public TagKey<Block> getBlockTag(String path) {
-        var key = id(path);
-        var registry = BuiltInRegistries.BLOCK;
-        return getTag(registry, key);
+        return getTag(BuiltInRegistries.BLOCK, id(path));
     }
 
     public TagKey<Item> getItemTag(String path) {
-        var key = id(path);
-        var registry = BuiltInRegistries.ITEM;
-        return getTag(registry, key);
+        return getTag(BuiltInRegistries.ITEM, id(path));
     }
 
     public TagKey<Biome> getBiomeTag(String path) {
-        var key = id(path);
-        var registry = VanillaRegistries.createLookup().lookupOrThrow(Registries.BIOME);
-        return getTag(registry, key);
+        return getTag(VanillaRegistries.createLookup().lookupOrThrow(Registries.BIOME), id(path));
     }
 
     public <T> TagKey<T> getTag(Registry<T> registry, ResourceLocation key) {

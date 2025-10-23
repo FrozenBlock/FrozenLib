@@ -33,11 +33,9 @@ public class RegistryFreezeEvents {
 	 * The registry will not be frozen when this is invoked.
 	 */
 	public static final Event<StartRegistryFreeze> START_REGISTRY_FREEZE = FrozenEvents.createEnvironmentEvent(StartRegistryFreeze.class,
-			callbacks -> (registry, allRegistries) -> {
-				for (var callback : callbacks) {
-					callback.onStartRegistryFreeze(registry, allRegistries);
-				}
-			});
+		callbacks -> (registry, allRegistries) -> {
+		for (var callback : callbacks) callback.onStartRegistryFreeze(registry, allRegistries);
+	});
 
 	/**
 	 * An event indicating the end of a {@link Registry}'s freeze.
@@ -45,11 +43,9 @@ public class RegistryFreezeEvents {
 	 * The registry will be frozen when this is invoked.
 	 */
 	public static final Event<EndRegistryFreeze> END_REGISTRY_FREEZE = FrozenEvents.createEnvironmentEvent(EndRegistryFreeze.class,
-			callbacks -> (registry, allRegistries) -> {
-				for (var callback : callbacks) {
-					callback.onEndRegistryFreeze(registry, allRegistries);
-				}
-			});
+		callbacks -> (registry, allRegistries) -> {
+		for (var callback : callbacks) callback.onEndRegistryFreeze(registry, allRegistries);
+	});
 
 	@FunctionalInterface
 	public interface StartRegistryFreeze extends CommonEventEntrypoint {

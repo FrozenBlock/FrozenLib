@@ -35,11 +35,11 @@ public abstract class AbstractFishMixin extends WaterAnimal {
 	}
 
 	@Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
-	private void frozenLib$noFlop(CallbackInfo ci) {
-		AbstractFish fish = AbstractFish.class.cast(this);
-		if (fish instanceof NoFlopAbstractFish) {
-			super.aiStep();
-			ci.cancel();
-		}
+	private void frozenLib$noFlop(CallbackInfo info) {
+		final AbstractFish fish = AbstractFish.class.cast(this);
+		if (!(fish instanceof NoFlopAbstractFish)) return;
+
+		super.aiStep();
+		info.cancel();
 	}
 }

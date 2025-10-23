@@ -29,14 +29,13 @@ import org.jetbrains.annotations.NotNull;
 public class CooldownChange {
 
 	public static void changeCooldown(@NotNull Player player, ItemStack item, int additionalCooldown, int min) {
-		ItemCooldowns manager = player.getCooldowns();
-		ResourceLocation cooldownGroup = manager.getCooldownGroup(item);
-		ItemCooldowns.CooldownInstance entry = manager.cooldowns.get(cooldownGroup);
+		final ItemCooldowns manager = player.getCooldowns();
+		final ResourceLocation cooldownGroup = manager.getCooldownGroup(item);
+		final ItemCooldowns.CooldownInstance entry = manager.cooldowns.get(cooldownGroup);
 		if (entry != null) {
-			int between = entry.endTime - entry.startTime;
-			if ((between + additionalCooldown) > min) {
-				((CooldownInterface)player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additionalCooldown);
-			}
+			final int between = entry.endTime - entry.startTime;
+			if ((between + additionalCooldown) <= min) return;
+			((CooldownInterface)player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additionalCooldown);
 		}
 	}
 

@@ -45,7 +45,7 @@ public abstract class EntityMixin implements StartTrackingEntityInterface, Entit
 	@Unique
 	@Override
 	public void frozenLib$playerStartsTracking(ServerPlayer serverPlayer) {
-		Entity entity = Entity.class.cast(this);
+		final Entity entity = Entity.class.cast(this);
 		((EntityLoopingSoundInterface)entity).frozenLib$getSoundManager().syncWithPlayer(serverPlayer);
 		((EntityLoopingFadingDistanceSoundInterface)entity).frozenLib$getFadingSoundManager().syncWithPlayer(serverPlayer);
 		((EntitySpottingIconInterface)entity).getSpottingIconManager().sendIconPacket(serverPlayer);

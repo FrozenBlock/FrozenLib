@@ -44,16 +44,15 @@ public class DamageOnUseBlockItem extends BlockItem {
 
     @Override
 	@NotNull
-    public ItemStack finishUsingItem(@NotNull ItemStack itemStack, Level level, LivingEntity livingEntity) {
-		Consumable consumable = itemStack.get(DataComponents.CONSUMABLE);
-		if (consumable != null) {
-			livingEntity.hurt(livingEntity.damageSources().source(this.damageType),this.damage);
-            if (this.hurtSound != null && !livingEntity.isSilent()) {
-				livingEntity.playSound(this.hurtSound, 0.5F, 0.9F + (level.random.nextFloat() * 0.2F));
-            }
-			return consumable.onConsume(level, livingEntity, itemStack);
-        }
-        return itemStack;
+    public ItemStack finishUsingItem(@NotNull ItemStack stack, Level level, LivingEntity entity) {
+		Consumable consumable = stack.get(DataComponents.CONSUMABLE);
+		if (consumable == null) return stack;
+
+		entity.hurt(entity.damageSources().source(this.damageType),this.damage);
+		if (this.hurtSound != null && !entity.isSilent()) {
+			entity.playSound(this.hurtSound, 0.5F, 0.9F + (level.random.nextFloat() * 0.2F));
+		}
+		return consumable.onConsume(level, entity, stack);
     }
 
 }

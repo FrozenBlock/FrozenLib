@@ -26,7 +26,6 @@ import net.minecraft.world.level.ItemLike;
 
 @UtilityClass
 public class FuelRegistry {
-
 	public static final List<ItemFuelValue> ITEM_FUEL_VALUES = new ArrayList<>();
 	public static final List<TagFuelValue> TAG_FUEL_VALUES = new ArrayList<>();
 

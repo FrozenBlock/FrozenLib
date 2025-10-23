@@ -40,13 +40,8 @@ public class FrozenEvents {
 	 * @return A new Event of the specified type
 	 */
 	public static <T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
-		// Create an array-backed event
-		var event = EventFactory.createArrayBacked(type, invokerFactory);
-
-		// Register the event
+		final var event = EventFactory.createArrayBacked(type, invokerFactory);
 		register(event, type);
-
-		// Return the newly created event
 		return event;
 	}
 
@@ -59,13 +54,8 @@ public class FrozenEvents {
 	 * @return A new Event of the specified type
 	 */
 	public static <T> Event<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
-		// Create an array-backed event
-		var event = EventFactory.createArrayBacked(type, emptyInvoker, invokerFactory);
-
-		// Register the event
+		final var event = EventFactory.createArrayBacked(type, emptyInvoker, invokerFactory);
 		register(event, type);
-
-		// Return the newly created event
 		return event;
 	}
 
@@ -76,30 +66,25 @@ public class FrozenEvents {
 	 * @param type The type of the event to be registered
 	 */
 	public static <T> void register(Event<T> event, Class<? super T> type) {
-		// Check if the event is already registered
-		if (!REGISTERED_EVENTS.contains(event)) {
-			// Add the event to the list of registered events
-			REGISTERED_EVENTS.add(event);
+		if (REGISTERED_EVENTS.contains(event)) return;
 
-			// Loop through all event types
-			for (var eventType : EventType.VALUES) {
-				// Check if the listener type is assignable from the event type
-				if (eventType.listener().isAssignableFrom(type)) {
-					// Get the entrypoints for the specified listener type
-					List<?> entrypoints = FabricLoader.getInstance().getEntrypoints(eventType.entrypoint(), eventType.listener());
+		REGISTERED_EVENTS.add(event);
+		// Loop through all event types
+		for (var eventType : EventType.VALUES) {
+			// Check if the listener type is assignable from the event type
+			if (!eventType.listener().isAssignableFrom(type)) continue;
+			// Get the entrypoints for the specified listener type
+			final List<?> entrypoints = FabricLoader.getInstance().getEntrypoints(eventType.entrypoint(), eventType.listener());
 
-					// Loop through the entrypoints
-					for (Object entrypoint : entrypoints) {
-						// Check if the entrypoint is assignable from the event type
-						if (type.isAssignableFrom(entrypoint.getClass())) {
-							// Register the entrypoint to the event
-							event.register(Event.DEFAULT_PHASE, (T) entrypoint);
-						}
-					}
-					// Break the loop once a match is found
-					break;
-				}
+			// Loop through the entrypoints
+			for (Object entrypoint : entrypoints) {
+				// Check if the entrypoint is assignable from the event type
+				if (!type.isAssignableFrom(entrypoint.getClass())) continue;
+				// Register the entrypoint to the event
+				event.register(Event.DEFAULT_PHASE, (T) entrypoint);
 			}
+			// Break the loop once a match is found
+			break;
 		}
 	}
 }

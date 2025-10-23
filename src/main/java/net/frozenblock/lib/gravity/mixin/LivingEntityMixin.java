@@ -43,13 +43,13 @@ public abstract class LivingEntityMixin implements EntityGravityInterface {
 		)
 	)
 	private void frozenLib$newGravity(LivingEntity instance, double x, double y, double z, Operation<Void> original, @Local(ordinal = 0) double originalGravity) {
-		LivingEntity entity = LivingEntity.class.cast(this);
-		Vec3 gravityVec = GravityAPI.calculateGravity(entity);;
-		double gravity = this.getEffectiveGravity();
+		final LivingEntity entity = LivingEntity.class.cast(this);
+		final Vec3 gravityVec = GravityAPI.calculateGravity(entity);;
+		final double gravity = this.getEffectiveGravity();
 
-		double newX = x - gravityVec.x * gravity;
-		double newY = y + gravity - gravity * gravityVec.y;
-		double newZ = z - gravityVec.z * gravity;
+		final double newX = x - gravityVec.x * gravity;
+		final double newY = y + gravity - gravity * gravityVec.y;
+		final double newZ = z - gravityVec.z * gravity;
 
 		original.call(instance, newX, newY, newZ);
 	}

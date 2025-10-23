@@ -28,25 +28,21 @@ import org.jetbrains.annotations.NotNull;
 public class ItemBlockStateTagUtils {
 
 	public static <T extends Comparable<T>> T getProperty(@NotNull ItemStack stack, Property<T> property, T defaultValue) {
-		BlockItemStateProperties blockItemStateProperties = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
+		final BlockItemStateProperties blockItemStateProperties = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
 		if (!blockItemStateProperties.isEmpty()) {
-			var properties = blockItemStateProperties.properties();
-			String stringValue = property.getName();
-			if (properties.containsKey(stringValue)) {
-				return property.getValue(properties.get(stringValue)).orElse(defaultValue);
-			}
+			final var properties = blockItemStateProperties.properties();
+			final String stringValue = property.getName();
+			if (properties.containsKey(stringValue)) return property.getValue(properties.get(stringValue)).orElse(defaultValue);
 		}
 		return defaultValue;
 	}
 
 	public static boolean getBoolProperty(@NotNull ItemStack stack, BooleanProperty property, boolean orElse) {
-		BlockItemStateProperties blockItemStateProperties = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
+		final BlockItemStateProperties blockItemStateProperties = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
 		if (!blockItemStateProperties.isEmpty()) {
-			var properties = blockItemStateProperties.properties();
-			String stringValue = property.getName();
-			if (properties.containsKey(stringValue)) {
-				return properties.get(stringValue).equals("true");
-			}
+			final var properties = blockItemStateProperties.properties();
+			final String stringValue = property.getName();
+			if (properties.containsKey(stringValue)) return properties.get(stringValue).equals("true");
 		}
 		return orElse;
 	}

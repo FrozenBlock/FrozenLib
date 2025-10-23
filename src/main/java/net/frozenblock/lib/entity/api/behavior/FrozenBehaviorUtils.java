@@ -26,10 +26,7 @@ import net.minecraft.world.entity.ai.behavior.OneShot;
 public class FrozenBehaviorUtils {
 
 	public static <E extends LivingEntity> OneShot<E> getOneShot(BehaviorControl<E> control) {
-		if (!(control instanceof OneShot<E> oneShot)) {
-			throw new IllegalStateException("Behavior control is not a OneShot");
-		} else {
-			return oneShot;
-		}
+		if (!(control instanceof OneShot<E> oneShot)) throw new IllegalStateException("Behavior control is not a OneShot");
+		return oneShot;
 	}
 }

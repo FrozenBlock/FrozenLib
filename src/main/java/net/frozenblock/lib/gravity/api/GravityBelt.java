@@ -50,7 +50,7 @@ public record GravityBelt<T extends GravityFunction>(double minY, double maxY, b
 
 	@Nullable
 	public static <T extends SerializableGravityFunction<T>> Codec<GravityBelt<T>> codec(T gravityFunction) {
-		Codec<T> codec = gravityFunction.codec();
+		final Codec<T> codec = gravityFunction.codec();
 		if (codec == null) return null;
 		return codec(codec);
 	}

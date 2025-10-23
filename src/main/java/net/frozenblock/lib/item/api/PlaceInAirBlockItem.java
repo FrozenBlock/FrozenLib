@@ -46,18 +46,16 @@ public class PlaceInAirBlockItem extends BlockItem {
 	@Override
 	@NotNull
 	public InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-		ItemStack itemStack = player.getItemInHand(hand);
+		final ItemStack stack = player.getItemInHand(hand);
 
-		double blockInteractionRange = player.blockInteractionRange();
+		final double blockInteractionRange = player.blockInteractionRange();
 
-		Vec3 lookAngle = player.getLookAngle();
-		Vec3 playerPos = player.getEyePosition();
-		Vec3 placementPos = playerPos.add(
-			lookAngle.scale(blockInteractionRange)
-		);
+		final Vec3 lookAngle = player.getLookAngle();
+		final Vec3 playerPos = player.getEyePosition();
+		final Vec3 placementPos = playerPos.add(lookAngle.scale(blockInteractionRange));
 
-		AABB entityPickBox = player.getBoundingBox().expandTowards(lookAngle.scale(blockInteractionRange)).inflate(1D, 1D, 1D);
-		EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
+		final AABB entityPickBox = player.getBoundingBox().expandTowards(lookAngle.scale(blockInteractionRange)).inflate(1D, 1D, 1D);
+		final EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
 			player,
 			playerPos,
 			placementPos,
@@ -67,17 +65,15 @@ public class PlaceInAirBlockItem extends BlockItem {
 		);
 
 		if (entityHitResult == null) {
-			BlockPos pos = BlockPos.containing(placementPos);
+			final BlockPos pos = BlockPos.containing(placementPos);
 
-			if (!this.checkIfPlayerCanPlaceBlock(player, itemStack, level, pos)) return InteractionResult.PASS;
+			if (!this.checkIfPlayerCanPlaceBlock(player, stack, level, pos)) return InteractionResult.PASS;
 
 			if (level.isInWorldBounds(pos) && level.getWorldBorder().isWithinBounds(pos) && level.getBlockState(pos).canBeReplaced()) {
-				Direction reflectedFacingDirection = Direction.getApproximateNearest(lookAngle);
-				BlockPlaceContext context = new BlockPlaceContext(player, hand, itemStack, new BlockHitResult(pos.getCenter(), reflectedFacingDirection, pos, false));
-				InteractionResult result = this.useOn(context);
-				if (result.consumesAction()) {
-					return InteractionResult.SUCCESS;
-				}
+				final Direction reflectedFacingDirection = Direction.getApproximateNearest(lookAngle);
+				final BlockPlaceContext context = new BlockPlaceContext(player, hand, stack, new BlockHitResult(pos.getCenter(), reflectedFacingDirection, pos, false));
+				final InteractionResult result = this.useOn(context);
+				if (result.consumesAction()) return InteractionResult.SUCCESS;
 			}
 		}
 		return super.use(level, player, hand);

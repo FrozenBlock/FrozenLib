@@ -33,22 +33,18 @@ public class FileTransferFilter {
 	private static final List<String> WHITELISTED_CLIENT_REQUEST_PATHS = new ArrayList<>();
 
 	public static boolean isTransferAcceptable(String destPath, String fileName, @Nullable ServerPlayer player) {
-		boolean isServer = player != null;
-		boolean returnValue = WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName)) && isDestinationPathAcceptable(destPath, !isServer);
+		final boolean isServer = player != null;
+		final boolean returnValue = WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName)) && isDestinationPathAcceptable(destPath, !isServer);
 
-		if (!returnValue && isServer) {
-			player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file"));
-		}
+		if (!returnValue && isServer) player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file"));
 		return returnValue;
 	}
 
 	public static boolean isRequestAcceptable(String requestPath, String fileName, @Nullable ServerPlayer player) {
-		boolean isServer = player != null;
-		boolean returnValue = WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName)) && isRequestPathAcceptable(requestPath, !isServer);
+		final boolean isServer = player != null;
+		final boolean returnValue = WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName)) && isRequestPathAcceptable(requestPath, !isServer);
 
-		if (!returnValue && isServer) {
-			player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file_request"));
-		}
+		if (!returnValue && isServer) player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file_request"));
 		return returnValue;
 	}
 

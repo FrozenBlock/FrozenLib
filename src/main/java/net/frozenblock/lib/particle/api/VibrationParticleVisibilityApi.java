@@ -17,11 +17,11 @@
 
 package net.frozenblock.lib.particle.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
 import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 @UtilityClass
 public class VibrationParticleVisibilityApi {

@@ -88,7 +88,7 @@ public class WolfVariantBiomeRegistry {
 	private static ResourceKey<WolfVariant> getVariantOrNull(ResourceKey<Biome> biome) {
 		List<ResourceKey<WolfVariant>> variantList = WOLF_VARIANT_FROM_BIOME.getOrDefault(biome, null);
 		if (variantList != null && !variantList.isEmpty()) {
-			int size = variantList.size();
+			final int size = variantList.size();
 			return variantList.get(AdvancedMath.random().nextInt(size));
 		}
 		return null;

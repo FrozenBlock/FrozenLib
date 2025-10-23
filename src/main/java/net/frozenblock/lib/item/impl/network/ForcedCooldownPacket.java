@@ -24,11 +24,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record ForcedCooldownPacket(
-	ResourceLocation cooldownGroup,
-	int startTime,
-	int endTime
-) implements CustomPacketPayload {
+public record ForcedCooldownPacket(ResourceLocation cooldownGroup, int startTime, int endTime) implements CustomPacketPayload {
 	public static final Type<ForcedCooldownPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("forced_cooldown"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, ForcedCooldownPacket> CODEC = StreamCodec.ofMember(ForcedCooldownPacket::write, ForcedCooldownPacket::new);
 

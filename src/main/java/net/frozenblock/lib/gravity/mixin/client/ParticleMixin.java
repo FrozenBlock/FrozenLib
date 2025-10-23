@@ -39,20 +39,15 @@ public class ParticleMixin {
 
 	@Shadow
 	protected double xd;
-
 	@Shadow
 	protected double yd;
-
 	@Shadow
 	protected double zd;
-
 	@Shadow
 	@Final
 	protected ClientLevel level;
-
 	@Shadow
 	public double y;
-
 	@Shadow
 	protected float gravity;
 
@@ -82,7 +77,7 @@ public class ParticleMixin {
 		@Share("oldY") LocalDoubleRef oldY,
 		@Share("oldZ") LocalDoubleRef oldZ
 	) {
-		Vec3 gravity = GravityAPI.calculateGravity(this.level, this.y).scale(this.gravity).scale(BASE_GRAVITY);
+		final Vec3 gravity = GravityAPI.calculateGravity(this.level, this.y).scale(this.gravity).scale(BASE_GRAVITY);
 		this.xd = oldX.get() - gravity.x;
 		this.yd = oldY.get() - gravity.y;
 		this.zd = oldZ.get() - gravity.z;

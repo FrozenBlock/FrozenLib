@@ -45,7 +45,7 @@ public class FrozenCreativeTabs {
 		if (item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
-				var stack = new ItemStack(item);
+				final var stack = new ItemStack(item);
 				stack.setCount(1);
 				entries.accept(stack);
 			});
@@ -72,9 +72,9 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			var stack = new ItemStack(item);
+			final var stack = new ItemStack(item);
 			stack.setCount(1);
-			List<ItemStack> list = List.of(stack);
+			final List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> entries.addBefore(comparedItem, list, tabVisibility));
 		}
 	}
@@ -92,9 +92,9 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || item == null ) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			var stack = new ItemStack(item);
+			final var stack = new ItemStack(item);
 			stack.setCount(1);
-			List<ItemStack> list = List.of(stack);
+			final List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.addBefore(comparedItem, list, tabVisibility);
@@ -124,15 +124,11 @@ public class FrozenCreativeTabs {
 		CreativeModeTab.TabVisibility tabVisibility,
 		ResourceKey<CreativeModeTab> @NotNull ... tabs
 	) {
-		if (comparedItem == null || item == null) {
-			return;
-		} else {
-			item.asItem();
-		}
+		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			var stack = new ItemStack(item);
+			final var stack = new ItemStack(item);
 			stack.setCount(1);
-			List<ItemStack> list = List.of(stack);
+			final List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> entries.addAfter(comparedItem, list, tabVisibility));
 		}
 	}
@@ -148,15 +144,11 @@ public class FrozenCreativeTabs {
 		CreativeModeTab.TabVisibility tabVisibility,
 		ResourceKey<CreativeModeTab> @NotNull ... tabs
 	) {
-		if (comparedItem == null || item == null) {
-			return;
-		} else {
-			item.asItem();
-		}
+		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			var stack = new ItemStack(item);
+			final var stack = new ItemStack(item);
 			stack.setCount(1);
-			List<ItemStack> list = List.of(stack);
+			final List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
 				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.addAfter(comparedItem, list, tabVisibility);
@@ -197,7 +189,7 @@ public class FrozenCreativeTabs {
 		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
-				List<ItemStack> list = new ArrayList<>();
+				final List<ItemStack> list = new ArrayList<>();
 				entries.getContext().holders().lookupOrThrow(Registries.INSTRUMENT).get(tagKey)
 					.ifPresent(
 						named -> named.stream()
@@ -223,7 +215,7 @@ public class FrozenCreativeTabs {
 		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				List<ItemStack> list = new ArrayList<>();
+				final List<ItemStack> list = new ArrayList<>();
 				entries.getContext().holders().lookupOrThrow(Registries.INSTRUMENT).get(tagKey)
 					.ifPresent(
 						named -> named.stream()

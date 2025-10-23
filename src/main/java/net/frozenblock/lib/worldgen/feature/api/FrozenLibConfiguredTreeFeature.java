@@ -17,8 +17,9 @@
 
 package net.frozenblock.lib.worldgen.feature.api;
 
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.FrozenBools;
-import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.resources.ResourceKey;
@@ -34,8 +35,6 @@ import net.minecraft.world.level.levelgen.feature.treedecorators.PlaceOnGroundDe
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
-import java.util.ArrayList;
-import java.util.List;
 
 public class FrozenLibConfiguredTreeFeature {
 	private final FrozenLibConfiguredFeature<TreeConfiguration> feature;

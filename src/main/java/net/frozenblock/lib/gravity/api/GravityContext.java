@@ -25,19 +25,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class GravityContext {
-
     public final ResourceKey<Level> dimension;
-
     public final double y;
-
     /**
      * A mutable property that will determine the outputting gravity
      */
     public Vec3 gravity;
-
     @Nullable
     public final Entity entity;
-
 	@Nullable
 	public final BlockState state;
 

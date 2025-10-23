@@ -34,27 +34,29 @@ public class RemovableDataComponents {
 	private static final LinkedHashMap<Holder<DataComponentType<?>>, RemovableDataComponent> REMOVABLE_DATA_COMPONENTS = new LinkedHashMap<>();
 
 	public static void register(DataComponentType<?> component, RemovalPredicate removalPredicate, boolean removeOnStackMerge) {
-		ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
-		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
+		final ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
+		final Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
 
 		REMOVABLE_DATA_COMPONENTS.put(holder, new RemovableDataComponent(holder, removalPredicate, removeOnStackMerge));
 	}
 
 	public static boolean canRemoveComponent(DataComponentType<?> component, Level level, Entity entity, EquipmentSlot equipmentSlot) {
-		ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
-		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
-		RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
+		final ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
+		final Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
+		final RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
 		if (removableDataComponent != null) return removableDataComponent.shouldRemove(level, entity, equipmentSlot);
+
 		FrozenLibLogUtils.logError("Unable to find RemovableDataComponent for DataComponent " + key.location() + "!", true, null);
 		FrozenLibLogUtils.logError("Please make sure " + key.location() + " is registered in RemovableDataComponents.class!", true, null);
 		return false;
 	}
 
 	public static boolean shouldRemoveComponentOnStackMerge(DataComponentType<?> component) {
-		ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
-		Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
-		RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
+		final ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
+		final Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
+		final RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
 		if (removableDataComponent != null) return removableDataComponent.shouldRemoveOnStackMerge();
+
 		FrozenLibLogUtils.logError("Unable to find RemovableDataComponent data for DataComponent " + key.location() + "!", true, null);
 		FrozenLibLogUtils.logError("Please make sure " + key.location() + " is registered in RemovableDataComponents.class!", true, null);
 		return true;

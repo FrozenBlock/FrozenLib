@@ -17,10 +17,9 @@
 
 package net.frozenblock.lib.worldgen.structure.impl;
 
-import java.util.List;
 import com.mojang.datafixers.util.Pair;
+import java.util.List;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
 public interface StructureTemplatePoolInterface {
 	void frozenlib$addTemplatePools(List<Pair<StructurePoolElement, Integer>> elements);

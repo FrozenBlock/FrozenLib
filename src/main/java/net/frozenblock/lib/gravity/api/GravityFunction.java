@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 @FunctionalInterface
 public interface GravityFunction {
-	/***
+	/**
 	 * @param entity The optional entity being tracked
 	 * @param y The current y position
 	 * @param minY The minimum Y position of the gravity belt

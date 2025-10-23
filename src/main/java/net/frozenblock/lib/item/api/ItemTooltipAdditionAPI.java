@@ -37,7 +37,7 @@ public class ItemTooltipAdditionAPI {
 	 * @param condition The conditions under which the tooltip will render.
 	 */
 	public static void addTooltip(Component tooltip, TooltipCondition condition) {
-		List<Component> tooltips = List.of(tooltip);
+		final List<Component> tooltips = List.of(tooltip);
 		addTooltips(tooltips, condition);
 	}
 
@@ -47,13 +47,13 @@ public class ItemTooltipAdditionAPI {
 	 * @param condition The conditions under which the tooltips will render.
 	 */
 	public static void addTooltips(List<Component> tooltips, TooltipCondition condition) {
-		List<Component> tooltipList = ADDITIONAL_TOOLTIPS.getOrDefault(condition, new ArrayList<>());
+		final List<Component> tooltipList = ADDITIONAL_TOOLTIPS.getOrDefault(condition, new ArrayList<>());
 		tooltipList.addAll(tooltips);
 		ADDITIONAL_TOOLTIPS.put(condition, tooltipList);
 	}
 
 	public static @NotNull Optional<List<Component>> getTooltipsForItemStack(ItemStack stack) {
-		List<Component> tooltips = new ArrayList<>();
+		final List<Component> tooltips = new ArrayList<>();
 		ADDITIONAL_TOOLTIPS.forEach((condition, tooltipList) -> {
 			if (condition.test(stack)) tooltips.addAll(tooltipList);
 		});

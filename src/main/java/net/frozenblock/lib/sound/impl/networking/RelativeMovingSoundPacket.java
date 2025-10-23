@@ -27,7 +27,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public record RelativeMovingSoundPacket(BlockPos pos, Holder<SoundEvent> sound, SoundSource category, float volume, float pitch) implements CustomPacketPayload {
