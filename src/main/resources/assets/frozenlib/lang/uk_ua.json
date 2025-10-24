@@ -1,15 +1,138 @@
 {
-  "option.frozenlib.component.title": "FrozenLib Options",
+  "tooltip.frozenlib.locked_due_to_server": "Запис не можна змінити під час з’єднання з цим сервером.\nДля редагування потрібні дозволи оператора.\nВи можете залишити сервер, щоб змінити цей запис, а потім знову приєднатися.",
+  "tooltip.frozenlib.locked_due_to_sync": "Запис перевизначено цим сервером.\nДля зміни потрібні дозволи оператора.",
+  "tooltip.frozenlib.locked_due_to_server_lan": "Запис не можна змінити під час з’єднання з цим світом.\nПотрібно бути власником або мати дозволи оператора для зміни.\nВи можете залишити світ, щоб змінити цей запис, і знову приєднатися пізніше.",
+  "tooltip.frozenlib.locked_due_to_sync_lan": "Запис перевизначено цим світом.\nПотрібно бути власником або мати дозволи оператора для зміни.",
+  "tooltip.frozenlib.locked_due_to_unknown_reason": "Запис не можна змінити з невідомої причини.\nБудь ласка, надішліть звіт про проблему для цього мода.",
+  "tooltip.frozenlib.entry_sync_notice": "Запис буде синхронізовано з усіма клієнтами.",
 
-  "option.frozenlib.config": "FrozenLib Config",
+  "frozenlib.config.discard": "Відмінити зміни",
+  "frozenlib.config.save": "Зберегти зміни",
 
-  "option.frozenlib.use_wind_on_non_frozenlib_servers": "Wind On Non-FrozenLib Servers",
-  "option.frozenlib.use_wind_on_non_frozenlib_servers.false": "§cOFF",
-  "option.frozenlib.use_wind_on_non_frozenlib_servers.true": "§aON",
-  "tooltip.frozenlib.use_wind_on_non_frozenlib_servers": "When disabled, the client won't use wind on servers that\ndon't have FrozenLib installed.\nWhen enabled, the client will generate a random seed to use\nfor wind on servers that don't have FrozenLib installed.",
+  "option.frozenlib.component.title": "Налаштування FrozenLib",
+  "option.frozenlib.false": "§cВИМК.",
+  "option.frozenlib.true": "§aУВІМК.",
 
-  "option.frozenlib.save_item_cooldowns": "Save Item Cooldowns",
-  "option.frozenlib.save_item_cooldowns.false": "§cOFF",
-  "option.frozenlib.save_item_cooldowns.true": "§aON",
-  "tooltip.frozenlib.save_item_cooldowns": "Whether or not item cooldowns will save instead of being\ncleared upon switching dimensions or rejoining a world."
+  "option.frozenlib.config": "Налаштування FrozenLib",
+
+  "option.frozenlib.is_debug": "Режим налагодження",
+  "tooltip.frozenlib.is_debug": "Чи ввімкнено режим налагодження.\nЦе буде видно лише в середовищах розробки.",
+  "menu.frozenlib.debug": "Налаштувнаня налагодження",
+
+  "option.frozenlib.datafixer": "DataFixer",
+  "tooltip.frozenlib.datafixer": "Містить налаштування для DataFixer",
+
+  "option.frozenlib.disabled_datafix_types": "Вимкнені типи DataFix",
+  "tooltip.frozenlib.disabled_datafix_types": "Список типів DataFix, які не запускаються через\nмодифікований API DataFixerUpper проєктом Quilt\n\nНалаштування генерації світу усталено вимкнено, щоб\nзапобігти проблемі сумісности з Lithium + BCLib\n\nТипи DataFix — це…\n«level», «player», «chunk», «hotbar», «options», «structure», «stats»,\n«saved_data», «advancements», «poi_chunk», «entity_chunk»\nта «world_gen_settings».",
+
+  "option.frozenlib.use_wind_on_non_frozenlib_servers": "Вітер на серверах без FrozenLib",
+  "option.frozenlib.use_wind_on_non_frozenlib_servers.false": "§cВИМК.",
+  "option.frozenlib.use_wind_on_non_frozenlib_servers.true": "§aУВІМК.",
+  "tooltip.frozenlib.use_wind_on_non_frozenlib_servers": "Якщо вимкнено, клієнт не використовуватиме вітер на серверах, на яких\nне встановлено FrozenLib.\nЯкщо ввімкнено, клієнт генеруватиме випадкове початкове число для використання\nдля вітру на серверах, на яких не встановлено FrozenLib.",
+
+  "option.frozenlib.save_item_cooldowns": "Зберігати затримку предмета",
+  "option.frozenlib.save_item_cooldowns.false": "§cВИМК.",
+  "option.frozenlib.save_item_cooldowns.true": "§aУВІМК.",
+  "tooltip.frozenlib.save_item_cooldowns": "Чи зберігаються часи відновлення предметів, а не\nскасовуються під час зміни розмірів або повторного приєднання до світу.",
+
+  "option.frozenlib.remove_experimental_warning": "Видалити експериментальне попередження",
+  "option.frozenlib.remove_experimental_warning.false": "§cВИМК.",
+  "option.frozenlib.remove_experimental_warning.true": "§aУВІМК.",
+  "tooltip.frozenlib.remove_experimental_warning": "Чи може попередження про експериментальні функції бути видно під час створення світу.",
+
+  "option.frozenlib.warden_spawn_tracker_command": "Команда трекера появи боронителя",
+  "option.frozenlib.warden_spawn_tracker_command.false": "§cВИМК.",
+  "option.frozenlib.warden_spawn_tracker_command.true": "§aУВІМК.",
+  "tooltip.frozenlib.warden_spawn_tracker_command": "Умикає або вимикає команду трекера появи боронителя.",
+
+  "option.frozenlib.file_transfer_server": "Сервер отримує файли",
+  "tooltip.frozenlib.file_transfer_server": "Чи може сервер отримувати файли від клієнтів.",
+  "option.frozenlib.file_transfer_client": "Передача файлів клієнта",
+  "tooltip.frozenlib.file_transfer_client": "Чи може клієнт надсилати/отримувати файли на/з сервера.\nЦе призначено для використання для таких функцій, як обмін знімками екрана.\nЦе реалізовано з метою безпеки.",
+
+  "option.frozenlib.pack_downloading": "Завантаження пакета ресурсів",
+  "tooltip.frozenlib.pack_downloading": "§aУВІМК.§f: Пакети ресурсів будуть завантажені, і буде видно повідомлення, якщо це не вдасться або вдасться.\n§aБез повідомлень§f: Пакети ресурсів будуть завантажені, але повідомлень не буде.\n§cВИМК.§f: Пакети ресурсів не будуть завантажені.",
+  "enum.frozenlib.pack_downloading.enabled": "§aУВІМК.",
+  "enum.frozenlib.pack_downloading.enabled_no_toasts": "§aБез повідомлень",
+  "enum.frozenlib.pack_downloading.disabled": "§cВИМК.",
+
+  "option.frozenlib.cape": "Плащ",
+  "tooltip.frozenlib.cape": "Список плащів, доданих FrozenLib.\nНатисніть, щоб вибрати наступний плащ.",
+
+  "cape.frozenlib.invalid": "§cНЕДІЙСНИЙ",
+  "cape.frozenlib.dummy": "§cНічого",
+
+  "commands.wind.display.global.success": "Зараз глобальний вітер: %.6f, %.6f, %.6f",
+  "commands.wind.display.pos.success": "Вітер на %.6f, %.6f, %.6f зараз: %.6f, %.6f, %.6f",
+  "commands.wind.success": "Установлено вітер на %.6f, %.6f, %.6f",
+  "commands.wind.toggle.success": "Перевизначення вітру %s",
+  "commands.wind.toggle.failure": "Перевизначення вітру вже %s",
+
+  "commands.screenshake.success": "Створено тремтіння екрана на %s, %s, %s, інтенсивність %s, тривалість %s, початок спаду %s і відстань %s",
+  "commands.screenshake.player.success": "Надіслано тремтіння екрана %s на %s, %s, %s з інтенсивністю %s, тривалістю %s, початком спаду %s і відстанню %s",
+  "commands.screenshake.remove.player.success.multiple": "У %голених гравців усунено тремтіння екрана",
+  "commands.screenshake.remove.player.success": "Вилучено тремтіння екрана для %s",
+  "commands.screenshake.entity.success": "Створене тремтіння екрана додано до %s із інтенсивністю %s, тривалістю %s, початком спаду %s та відстанню %s",
+  "commands.screenshake.remove.entity.success.multiple": "У %s сутностей усунено тремтіння екрана",
+  "commands.screenshake.remove.entity.success": "Вилучено тремтіння екрана з сутности %s",
+  "commands.screenshake.remove.entity.failure": "Не вдалося знайти сутність з тремтінням екрана",
+
+  "commands.scale.entity.success.multiple": "%s сутностей масштабовано до розміру %s",
+  "commands.scale.entity.success": "Сутність %s масштабовано до розміру %s",
+  "commands.scale.entity.failure": "Помилка масштабування сутности",
+
+  "commands.frozenlib_config.reload.single": "Перезавантажено 1 налаштування з %s",
+  "commands.frozenlib_config.reload.multiple": "Перезавантажено %s налаштувань з %s",
+
+  "commands.frozenlib.taglist.footer": "Перераховані теґи %s у %s",
+  "commands.frozenlib.taglist.tag.invalid": "Недійсний теґ: %s",
+
+  "commands.structure_upgrade.success": "Оновлено та збережено %s предметів структури для %s",
+  "commands.structure_upgrade.failure": "Не знайдено частин структури для %s",
+
+  "commands.warden_spawn_tracker.clear.success.multiple": "Видалено попередження про появу боронителя від %s гравців",
+  "commands.warden_spawn_tracker.clear.success.single": "Очищено попередження про появу боронителя від %s",
+  "commands.warden_spawn_tracker.set.success.multiple": "Установлено попередження про появу боронителя %s для %s гравців",
+  "commands.warden_spawn_tracker.set.success.single": "Установлено попередження про появу боронителя %s на %s",
+
+  "debug.pathfinding": "Шукання шляху",
+  "debug.water_level": "Рівень води",
+  "debug.heightmap": "Мапа висот",
+  "debug.collision": "Колізія блока",
+  "debug.support_block": "Підтримувані блоки",
+  "debug.structure": "Структури",
+  "debug.sky_light": "Світло неба",
+  "debug.solid_face": "Сторона міцного блока",
+  "debug.chunk_status": "Статус чанка",
+  "debug.brain": "Созок",
+  "debug.goal": "Ціль",
+  "debug.village_sections": "Секції села",
+  "debug.bee": "Бджола",
+  "debug.raid": "Набіг",
+  "debug.light": "Світло",
+  "debug.breeze": "Вітрень",
+  "debug.wind": "Вітер",
+  "debug.wind_disturbance": "Поруха вітру",
+  "debug.neighbor_update": "Оновлення сусідів",
+  "debug.game_event": "Події гри",
+
+  "frozenlib.core.registry_sync.more": "%s більше…",
+  "frozenlib.core.registry_sync.and": " та ",
+  "frozenlib.core.registry_sync.unsupported_mod_protocol": "Непідтримувані версії протоколу мода для:\n%s",
+  "frozenlib.core.registry_sync.require_main_mod_protocol": "Для цього сервера потрібен %s із версією протоколу %s.",
+  "frozenlib.core.registry_sync.main_mod_protocol": "Ви на %s з версією протоколу %s.",
+
+  "frozenlib.file_transfer.unsupported_file": "Давайте спробуємо не надсилати випадкові файли!",
+  "frozenlib.file_transfer.unsupported_file_request": "Давайте спробуємо не запитувати випадкові файли!",
+
+  "frozenlib.resourcepack.download.success": "Завантажені пакети ресурсів:",
+  "frozenlib.resourcepack.download.success.update": "Оновлені пакети ресурсів:",
+  "frozenlib.resourcepack.download.press_f3": "Натисніть F3+T, щоб перезавантажити ресурси.",
+  "frozenlib.resourcepack.download.open_menu": "Відкрийте меню пакетів ресурсів, щоб перезавантажити ресурси.",
+  "frozenlib.resourcepack.download.failure": "Не вдалося завантажити пакети ресурсів:",
+  "frozenlib.resourcepack.download.failure.present": "(НАЛАШТУВАННЯ) Не вдалося перевірити, чи пакети ресурсів оновлені:",
+  "frozenlib.resourcepack.download.present": "Пакети ресурсів (НАЛАГОДЖЕННЯ) уже присутні:",
+  "frozenlib.resourcepack.download.group": "%s: (%s/%s)",
+
+  "modmenu.descriptionTranslation.frozenlib": "Бібліотека, яка містить багато інструментів для творців модів.\nУключає розширені математичні операції, вибірку шуму, розширені звуки, перевизначення текстур сутностей, заміни предметів пулу структури, зміна часу затримки предметів, виправлення даних, синхронізовані налаштування та багато іншого!\nЗабезпечує реалізацію Fabric API DataFixerUpper від QuiltMC"
 }
