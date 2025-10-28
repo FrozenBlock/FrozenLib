@@ -21,7 +21,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.client.renderer.texture.Tickable;
+import net.minecraft.client.renderer.texture.TickableTexture;
 
 /**
  * A texture that will use a .png file sent from the server.
@@ -29,7 +29,7 @@ import net.minecraft.client.renderer.texture.Tickable;
  * <p> Sends a file transfer request to the server if the needed texture file is not present on the client, unless the file transfer config is disabled.
  */
 @Environment(EnvType.CLIENT)
-public class ServerTexture extends DynamicTexture implements Tickable {
+public class ServerTexture extends DynamicTexture implements TickableTexture {
 	private final String destPath;
 	private final String fileName;
 	private boolean closed;
