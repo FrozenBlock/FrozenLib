@@ -19,7 +19,7 @@
 package org.quiltmc.qsl.frozenblock.core.registry.impl.event;
 
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEntryContext;
 
@@ -38,7 +38,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEntryContext;
 public class MutableRegistryEntryContextImpl<V> implements RegistryEntryContext<V> {
 	private final Registry<V> registry;
 	private V value;
-	private ResourceLocation resourceLocation;
+	private Identifier identifier;
 	private int raw = -1;
 
 	public MutableRegistryEntryContextImpl(Registry<V> registry) {
@@ -53,7 +53,7 @@ public class MutableRegistryEntryContextImpl<V> implements RegistryEntryContext<
 	 * @param id    the namespaced identifier of the new entry
 	 * @param entry the new entry's object
 	 */
-	public void set(ResourceLocation id, V entry) {
+	public void set(Identifier id, V entry) {
 		this.set(id, entry, -1);
 	}
 
@@ -64,8 +64,8 @@ public class MutableRegistryEntryContextImpl<V> implements RegistryEntryContext<
 	 * @param entry the new entry's object
 	 * @param rawId the raw int identifier of the new entry
 	 */
-	public void set(ResourceLocation id, V entry, int rawId) {
-		this.resourceLocation = id;
+	public void set(Identifier id, V entry, int rawId) {
+		this.identifier = id;
 		this.value = entry;
 		this.raw = rawId;
 	}
@@ -81,8 +81,8 @@ public class MutableRegistryEntryContextImpl<V> implements RegistryEntryContext<
 	}
 
 	@Override
-	public ResourceLocation resourceLocation() {
-		return this.resourceLocation;
+	public Identifier identifier() {
+		return this.identifier;
 	}
 
 	@Override

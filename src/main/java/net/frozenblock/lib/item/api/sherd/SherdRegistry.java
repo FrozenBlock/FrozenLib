@@ -21,13 +21,13 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.util.Map;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.DecoratedPotPattern;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 
 public class SherdRegistry {
-	public static void register(Item sherd, ResourceLocation patternKey) {
+	public static void register(Item sherd, Identifier patternKey) {
 		final Object2ObjectLinkedOpenHashMap<Item, ResourceKey<DecoratedPotPattern>> newMap = new Object2ObjectLinkedOpenHashMap<>();
 		newMap.putAll(DecoratedPotPatterns.ITEM_TO_POT_TEXTURE);
 		newMap.put(sherd, ResourceKey.create(Registries.DECORATED_POT_PATTERN, patternKey));

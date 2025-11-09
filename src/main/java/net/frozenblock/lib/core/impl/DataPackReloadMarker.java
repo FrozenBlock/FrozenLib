@@ -23,7 +23,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 
@@ -34,7 +34,7 @@ public class DataPackReloadMarker {
 	public static void init() {
 		ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
 			@Override
-			public ResourceLocation getFabricId() {
+			public Identifier getFabricId() {
 				return FrozenLibConstants.id("notify_reloads");
 			}
 

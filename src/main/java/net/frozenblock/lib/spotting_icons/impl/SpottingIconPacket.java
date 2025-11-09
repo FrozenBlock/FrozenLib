@@ -21,31 +21,31 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public record SpottingIconPacket(
 	int entityId,
-	ResourceLocation texture,
+	Identifier texture,
 	float startFade,
 	float endFade,
-	ResourceLocation restrictionID
+	Identifier restrictionID
 ) implements CustomPacketPayload {
 	public static final Type<SpottingIconPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("spotting_icon_packet"));
 	public static final StreamCodec<FriendlyByteBuf, SpottingIconPacket> CODEC = StreamCodec.ofMember(SpottingIconPacket::write, SpottingIconPacket::new);
 
 	public SpottingIconPacket(@NotNull FriendlyByteBuf buf) {
-		this(buf.readVarInt(), buf.readResourceLocation(), buf.readFloat(), buf.readFloat(), buf.readResourceLocation());
+		this(buf.readVarInt(), buf.readIdentifier(), buf.readFloat(), buf.readFloat(), buf.readIdentifier());
 	}
 
 	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeVarInt(this.entityId());
-		buf.writeResourceLocation(this.texture());
+		buf.writeIdentifier(this.texture());
 		buf.writeFloat(this.startFade());
 		buf.writeFloat(this.endFade());
-		buf.writeResourceLocation(this.restrictionID());
+		buf.writeIdentifier(this.restrictionID());
 	}
 
 	@Override

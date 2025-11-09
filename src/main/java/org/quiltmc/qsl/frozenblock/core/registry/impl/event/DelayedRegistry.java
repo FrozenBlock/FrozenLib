@@ -35,7 +35,7 @@ import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagLoader;
 import net.minecraft.util.RandomSource;
@@ -56,7 +56,7 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	public @Nullable ResourceLocation getKey(T entry) {
+	public @Nullable Identifier getKey(T entry) {
 		return this.wrapped.getKey(entry);
 	}
 
@@ -77,8 +77,8 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	public @Nullable T getValue(@Nullable ResourceLocation resourceLocation) {
-		return this.wrapped.getValue(resourceLocation);
+	public @Nullable T getValue(@Nullable Identifier identifier) {
+		return this.wrapped.getValue(identifier);
 	}
 
 	@Override
@@ -89,7 +89,7 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 
 	@Override
 	@NotNull
-	public Optional<Reference<T>> get(@Nullable ResourceLocation id) {
+	public Optional<Reference<T>> get(@Nullable Identifier id) {
 		return this.wrapped.get(id);
 	}
 
@@ -113,7 +113,7 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 
 	@Override
 	@NotNull
-	public Set<ResourceLocation> keySet() {
+	public Set<Identifier> keySet() {
 		return this.wrapped.keySet();
 	}
 
@@ -136,7 +136,7 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	public boolean containsKey(ResourceLocation id) {
+	public boolean containsKey(Identifier id) {
 		return this.wrapped.containsKey(id);
 	}
 

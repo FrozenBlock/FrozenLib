@@ -20,7 +20,7 @@ package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
 import java.util.function.Predicate;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.event.RegistryMonitorImpl;
 
@@ -59,7 +59,7 @@ public interface RegistryMonitor<V> {
 	 * <p>
 	 * Entries must also match the monitor's filters.
 	 * <p>
-	 * Registration to the registry being iterated must use the {@link RegistryEntryContext#register(ResourceLocation, Object)} method inside the callback,
+	 * Registration to the registry being iterated must use the {@link RegistryEntryContext#register(Identifier, Object)} method inside the callback,
 	 * or alternatively use the {@link RegistryEntryContext#registry()} method to get the registry instance,
 	 * for example: {@code context.register(id, block);}.
 	 *

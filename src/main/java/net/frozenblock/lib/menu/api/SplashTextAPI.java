@@ -22,18 +22,18 @@ import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Unmodifiable;
 
 @UtilityClass
 @Environment(EnvType.CLIENT)
 public final class SplashTextAPI {
-	private static final List<ResourceLocation> SPLASH_FILES = new ArrayList<>();
+	private static final List<Identifier> SPLASH_FILES = new ArrayList<>();
 	private static final List<String> ADDITIONS = new ArrayList<>();
 	private static final List<String> REMOVALS = new ArrayList<>();
 
-	public static void addSplashLocation(ResourceLocation location) {
+	public static void addSplashLocation(Identifier location) {
 		SPLASH_FILES.add(location);
 	}
 
@@ -46,7 +46,7 @@ public final class SplashTextAPI {
 	}
 
 	@Contract(pure = true)
-	public static @Unmodifiable List<ResourceLocation> getSplashFiles() {
+	public static @Unmodifiable List<Identifier> getSplashFiles() {
 		return List.copyOf(SPLASH_FILES);
 	}
 

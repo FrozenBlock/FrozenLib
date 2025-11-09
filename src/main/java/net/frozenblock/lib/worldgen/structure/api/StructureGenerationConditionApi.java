@@ -27,32 +27,32 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
 @UtilityClass
 public class StructureGenerationConditionApi {
-	private static final Map<ResourceLocation, List<Supplier<Boolean>>> STRUCTURE_SET_TO_SUPPLIER_MAP = new Object2ObjectOpenHashMap<>();
+	private static final Map<Identifier, List<Supplier<Boolean>>> STRUCTURE_SET_TO_SUPPLIER_MAP = new Object2ObjectOpenHashMap<>();
 
 	public static void init() {
 		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register((RegistryAccess registryAccess) -> {
 			registryAccess.lookup(Registries.STRUCTURE_SET).ifPresent(structureSetRegistry -> {
 				structureSetRegistry.entrySet().forEach(structureSetEntry -> {
 					if ((Object) (structureSetEntry.getValue()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
-						setAndPlacementInterface.frozenLib$addGenerationConditions(getGenerationConditions(structureSetEntry.getKey().location()));
+						setAndPlacementInterface.frozenLib$addGenerationConditions(getGenerationConditions(structureSetEntry.getKey().identifier()));
 					}
 				});
 			});
 		});
 	}
 
-	public static void addGenerationCondition(ResourceLocation structureSet, Supplier<Boolean> generationCondition) {
+	public static void addGenerationCondition(Identifier structureSet, Supplier<Boolean> generationCondition) {
 		List<Supplier<Boolean>> list = STRUCTURE_SET_TO_SUPPLIER_MAP.getOrDefault(structureSet, new ArrayList<>());
 		list.add(generationCondition);
 		STRUCTURE_SET_TO_SUPPLIER_MAP.put(structureSet, list);
 	}
 
-	public static List<Supplier<Boolean>> getGenerationConditions(ResourceLocation structureSet) {
+	public static List<Supplier<Boolean>> getGenerationConditions(Identifier structureSet) {
 		return STRUCTURE_SET_TO_SUPPLIER_MAP.getOrDefault(structureSet, ImmutableList.of());
 	}
 }

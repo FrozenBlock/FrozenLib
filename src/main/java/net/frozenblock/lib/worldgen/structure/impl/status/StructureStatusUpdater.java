@@ -24,7 +24,7 @@ import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
 import net.frozenblock.lib.worldgen.structure.impl.status.networking.PlayerStructureStatusPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.StructureManager;
@@ -54,7 +54,7 @@ public class StructureStatusUpdater {
 				StructureStart structureStart = structureManager.getStructureAt(pos, structure);
 				if (structureStart != StructureStart.INVALID_START) {
 					if ((Object) structureStart instanceof StructureStartInterface structureStartInterface) {
-						ResourceLocation structureLocation = structureStartInterface.frozenLib$getId();
+						Identifier structureLocation = structureStartInterface.frozenLib$getId();
 						if (structureLocation != null) {
 							boolean insidePiece = structureManager.structureHasPieceAt(pos, structureStart);
 							boolean addNewStructureStatus = true;

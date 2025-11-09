@@ -19,7 +19,7 @@
 package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Represents information about a registry entry.
@@ -44,7 +44,7 @@ public interface RegistryEntryContext<V> {
 	/**
 	 * {@return the entry's namespaced identifier}
 	 */
-	ResourceLocation resourceLocation();
+	Identifier identifier();
 
 	/**
 	 * {@return the entry's raw int identifier}
@@ -61,7 +61,7 @@ public interface RegistryEntryContext<V> {
 	 * @param <T>   the type of the value
 	 * @return the registered value
 	 */
-	default <T extends V> T register(ResourceLocation id, T value) {
+	default <T extends V> T register(Identifier id, T value) {
 		return Registry.register(this.registry(), id, value);
 	}
 }

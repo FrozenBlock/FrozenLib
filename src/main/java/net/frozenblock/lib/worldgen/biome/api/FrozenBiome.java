@@ -25,7 +25,7 @@ import java.util.function.Consumer;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.attribute.EnvironmentAttributeMap;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class FrozenBiome {
 	private static final List<FrozenBiome> BIOMES = new ArrayList<>();
-	private final ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, ResourceLocation.fromNamespaceAndPath(this.modID(), this.biomeID()));
+	private final ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(this.modID(), this.biomeID()));
 
 	private boolean enabled = true;
 

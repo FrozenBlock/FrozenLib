@@ -38,7 +38,7 @@ import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -60,7 +60,7 @@ public final class FrozenTestMain implements ModInitializer {
         LOGGER.info("The test toggle value is {}", TestConfig.get().testToggle);
         LOGGER.info("The test vec3 value is {}", TestConfig.get().typedVecList);
 		Holder<SoundEvent> sound = TestConfig.get().randomSound.value();
-        LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.unwrapKey().orElseThrow().location());
+        LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.unwrapKey().orElseThrow()net.minecraft.util.Util);
 
         BlockScheduledTicks.addToBlock(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,
                         Blocks.BEDROCK.defaultBlockState(), 3));
@@ -98,9 +98,9 @@ public final class FrozenTestMain implements ModInitializer {
 				default -> {}
 			}
 		});
-		//StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
-        //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
-        //StructurePoolElementIdReplacements.resourceLocationReplacements.put(new ResourceLocation("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
+		//StructurePoolElementIdReplacements.identifierReplacements.put(new Identifier("ancient_city/city_center/city_center_1"), id("ancient_city/city_center/city_center_2"));
+        //StructurePoolElementIdReplacements.identifierReplacements.put(new Identifier("ancient_city/city_center/city_center_2"), id("ancient_city/city_center/city_center_2"));
+        //StructurePoolElementIdReplacements.identifierReplacements.put(new Identifier("ancient_city/city_center/city_center_3"), id("ancient_city/city_center/city_center_2"));
     }
 
 	private static final int DATA_VERSION = 1;
@@ -117,7 +117,7 @@ public final class FrozenTestMain implements ModInitializer {
 		LOGGER.info("DataFixes for FrozenLib Testmod have been applied");
 	}
 
-	public static ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+	public static Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(MOD_ID, path);
 	}
 }

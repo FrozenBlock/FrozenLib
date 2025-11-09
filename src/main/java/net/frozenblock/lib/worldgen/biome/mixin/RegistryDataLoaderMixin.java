@@ -46,7 +46,7 @@ public class RegistryDataLoaderMixin {
 		WritableRegistry instance, ResourceKey resourceKey, Object object, RegistrationInfo registrationInfo, Operation<Holder.Reference> original
 	) {
 		if (object instanceof BiomeInterface biomeInterface) {
-			Optional<FrozenGrassColorModifier> optionalFrozenGrassColorModifier = FrozenGrassColorModifiers.getGrassColorModifier(resourceKey.location());
+			Optional<FrozenGrassColorModifier> optionalFrozenGrassColorModifier = FrozenGrassColorModifiers.getGrassColorModifier(resourceKey.identifier());
 			optionalFrozenGrassColorModifier.ifPresent(biomeInterface::frozenLib$setFrozenGrassColorModifier);
 		}
 		return original.call(instance, resourceKey, object, registrationInfo);

@@ -22,18 +22,18 @@ import java.util.Map;
 import java.util.Optional;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.worldgen.biome.impl.FrozenGrassColorModifier;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenGrassColorModifiers {
-	private static final Map<ResourceLocation, FrozenGrassColorModifier> NEW_GRASS_COLOR_MODIFIERS = new LinkedHashMap<>();
+	private static final Map<Identifier, FrozenGrassColorModifier> NEW_GRASS_COLOR_MODIFIERS = new LinkedHashMap<>();
 
-	public static void addGrassColorModifier(ResourceLocation id, FrozenGrassColorModifier grassColorModifier) {
+	public static void addGrassColorModifier(Identifier id, FrozenGrassColorModifier grassColorModifier) {
 		NEW_GRASS_COLOR_MODIFIERS.put(id, grassColorModifier);
 	}
 
-	public static Optional<FrozenGrassColorModifier> getGrassColorModifier(@NotNull ResourceLocation id) {
+	public static Optional<FrozenGrassColorModifier> getGrassColorModifier(@NotNull Identifier id) {
 		return Optional.ofNullable(NEW_GRASS_COLOR_MODIFIERS.get(id));
 	}
 }

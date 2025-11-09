@@ -22,7 +22,7 @@ import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -31,7 +31,7 @@ public record WindDisturbancePacket(
 	AABB affectedArea,
 	Vec3 origin,
 	WindDisturbanceLogic.SourceType disturbanceSourceType,
-	ResourceLocation id,
+	Identifier id,
 	long posOrID
 
 ) implements CustomPacketPayload {
@@ -45,7 +45,7 @@ public record WindDisturbancePacket(
 			new AABB(buf.readVec3(), buf.readVec3()),
 			buf.readVec3(),
 			buf.readEnum(WindDisturbanceLogic.SourceType.class),
-			buf.readResourceLocation(),
+			buf.readIdentifier(),
 			buf.readLong()
 		);
 	}
@@ -56,7 +56,7 @@ public record WindDisturbancePacket(
 		buf.writeVec3(new Vec3(affectedArea.maxX, affectedArea.maxY, affectedArea.maxZ));
 		buf.writeVec3(this.origin());
 		buf.writeEnum(this.disturbanceSourceType());
-		buf.writeResourceLocation(this.id());
+		buf.writeIdentifier(this.id());
 		buf.writeLong(this.posOrID());
 	}
 

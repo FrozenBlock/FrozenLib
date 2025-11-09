@@ -21,7 +21,7 @@ import com.mojang.datafixers.util.Pair;
 import java.util.List;
 import java.util.function.Supplier;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 
 public interface StructureSetAndPlacementInterface {
@@ -30,5 +30,5 @@ public interface StructureSetAndPlacementInterface {
 
 	List<Supplier<Boolean>> frozenLib$getGenerationConditions();
 
-	void frozenLib$addExclusions(List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup);
+	void frozenLib$addExclusions(List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup);
 }

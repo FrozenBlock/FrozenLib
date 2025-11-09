@@ -24,7 +24,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @UtilityClass
 public class ModIntegrations {
@@ -40,7 +40,7 @@ public class ModIntegrations {
     public static ModIntegrationSupplier<? extends ModIntegration> register(Supplier<? extends ModIntegration> integration, String srcModID, String modID) {
         return Registry.register(
 			FrozenLibRegistries.MOD_INTEGRATION,
-			ResourceLocation.fromNamespaceAndPath(srcModID, modID),
+			Identifier.fromNamespaceAndPath(srcModID, modID),
 			new ModIntegrationSupplier<>(integration, modID)
 		);
     }
@@ -57,7 +57,7 @@ public class ModIntegrations {
 	public static <T extends ModIntegration> ModIntegrationSupplier<T> register(Supplier<T> integration, Supplier<T> unloadedIntegration, String srcModID, String modID) {
 		return Registry.register(
 			FrozenLibRegistries.MOD_INTEGRATION,
-			ResourceLocation.fromNamespaceAndPath(srcModID, modID),
+			Identifier.fromNamespaceAndPath(srcModID, modID),
 			new ModIntegrationSupplier<>(integration, unloadedIntegration, modID)
 		);
 	}

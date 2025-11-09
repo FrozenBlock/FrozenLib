@@ -36,7 +36,7 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 
 public class TagKeyArgument<T> implements ArgumentType<TagKeyArgument.Result<T>> {
@@ -64,8 +64,8 @@ public class TagKeyArgument<T> implements ArgumentType<TagKeyArgument.Result<T>>
 
 		try {
 			reader.skip();
-			ResourceLocation resourceLocation = ResourceLocation.read(reader);
-			return new Result<>(TagKey.create(this.registryKey, resourceLocation));
+			Identifier identifier = Identifier.read(reader);
+			return new Result<>(TagKey.create(this.registryKey, identifier));
 		} catch (CommandSyntaxException var4) {
 			reader.setCursor(cursor);
 			throw var4;
@@ -87,16 +87,16 @@ public class TagKeyArgument<T> implements ArgumentType<TagKeyArgument.Result<T>>
 
 	public static class Info<T> implements ArgumentTypeInfo<TagKeyArgument<T>, TagKeyArgument.Info<T>.Template> {
 		public void serializeToNetwork(TagKeyArgument.Info<T>.Template template, FriendlyByteBuf buffer) {
-			buffer.writeResourceLocation(template.registryKey.location());
+			buffer.writeIdentifier(template.registryKey.identifier());
 		}
 
 		public TagKeyArgument.Info<T>.Template deserializeFromNetwork(FriendlyByteBuf buffer) {
-			ResourceLocation resourceLocation = buffer.readResourceLocation();
-			return new TagKeyArgument.Info.Template(ResourceKey.createRegistryKey(resourceLocation));
+			Identifier identifier = buffer.readIdentifier();
+			return new TagKeyArgument.Info.Template(ResourceKey.createRegistryKey(identifier));
 		}
 
 		public void serializeToJson(TagKeyArgument.Info<T>.Template template, JsonObject json) {
-			json.addProperty("registry", template.registryKey.location().toString());
+			json.addProperty("registry", template.registryKey.identifier().toString());
 		}
 
 		public TagKeyArgument.Info<T>.Template unpack(TagKeyArgument<T> argument) {

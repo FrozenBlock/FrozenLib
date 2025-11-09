@@ -43,12 +43,12 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 public class CapeUtil {
-	private static final Map<ResourceLocation, Cape> CAPES = new HashMap<>();
+	private static final Map<Identifier, Cape> CAPES = new HashMap<>();
 	private static final List<String> CAPE_REPOS = new ArrayList<>();
 
 	public static @NotNull @Unmodifiable List<String> getCapeRepos() {
@@ -63,11 +63,11 @@ public class CapeUtil {
 		return ImmutableList.copyOf(getCapes().stream().filter(cape -> canPlayerUserCape(uuid, cape)).toList());
 	}
 
-	public static Optional<Cape> getCape(ResourceLocation location) {
+	public static Optional<Cape> getCape(Identifier location) {
 		return Optional.ofNullable(CAPES.get(location));
 	}
 
-	public static boolean canPlayerUserCape(UUID uuid, ResourceLocation capeID) {
+	public static boolean canPlayerUserCape(UUID uuid, Identifier capeID) {
 		Optional<Cape> optionalCape = CapeUtil.getCape(capeID);
 		return optionalCape.map(cape -> canPlayerUserCape(uuid, cape)).orElse(true);
 	}
@@ -76,19 +76,19 @@ public class CapeUtil {
 		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
 	}
 
-	public static void registerCape(ResourceLocation id, ResourceLocation textureId, Component capeName) {
+	public static void registerCape(Identifier id, Identifier textureId, Component capeName) {
 		CAPES.put(id, new Cape(id, capeName, textureId, Optional.empty()));
 	}
 
-	public static void registerCape(ResourceLocation id, Component capeName) {
+	public static void registerCape(Identifier id, Component capeName) {
 		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.empty()));
 	}
 
-	public static void registerCapeWithWhitelist(ResourceLocation id, Component capeName, List<UUID> allowedPlayers) {
+	public static void registerCapeWithWhitelist(Identifier id, Component capeName, List<UUID> allowedPlayers) {
 		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.of(allowedPlayers)));
 	}
 
-	public static void registerCapeWithWhitelist(ResourceLocation id, Component capeName, UUID... uuids) {
+	public static void registerCapeWithWhitelist(Identifier id, Component capeName, UUID... uuids) {
 		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.of(ImmutableList.copyOf(uuids))));
 	}
 
@@ -131,9 +131,9 @@ public class CapeUtil {
 			JsonElement allowedUUIDElement = capeJson.get("allowed_uuids");
 			boolean whitelisted = allowedUUIDElement != null;
 
-			ResourceLocation capeLocation = ResourceLocation.tryParse(capeId);
+			Identifier capeLocation = Identifier.tryParse(capeId);
 			if (capeLocation != null) {
-				ResourceLocation capeTextureLocation = CapeUtil.buildCapeTextureLocation(capeLocation);
+				Identifier capeTextureLocation = CapeUtil.buildCapeTextureLocation(capeLocation);
 				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
 					ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
 				}
@@ -151,7 +151,7 @@ public class CapeUtil {
 		}
 	}
 
-	public static ResourceLocation buildCapeTextureLocation(@NotNull ResourceLocation cape) {
-		return ResourceLocation.tryBuild(cape.getNamespace(), "textures/cape/" + cape.getPath() + ".png");
+	public static Identifier buildCapeTextureLocation(@NotNull Identifier cape) {
+		return Identifier.tryBuild(cape.getNamespace(), "textures/cape/" + cape.getPath() + ".png");
 	}
 }

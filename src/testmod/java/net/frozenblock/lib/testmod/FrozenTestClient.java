@@ -23,7 +23,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.menu.api.SplashTextAPI;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.EntityType;
@@ -34,6 +34,6 @@ public final class FrozenTestClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         FlyBySoundHub.AUTO_ENTITIES_AND_SOUNDS.put(EntityType.ARROW, new FlyBySoundHub.FlyBySound(1.0F, 1.0F, SoundSource.NEUTRAL, SoundEvents.AXE_SCRAPE));
-		SplashTextAPI.addSplashLocation(ResourceLocation.fromNamespaceAndPath(FrozenLibConstants.MOD_ID, "texts/splashes.txt"));
+		SplashTextAPI.addSplashLocation(Identifier.fromNamespaceAndPath(FrozenLibConstants.MOD_ID, "texts/splashes.txt"));
     }
 }

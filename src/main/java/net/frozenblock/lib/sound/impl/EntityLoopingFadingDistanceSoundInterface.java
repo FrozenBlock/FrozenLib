@@ -18,7 +18,7 @@
 package net.frozenblock.lib.sound.impl;
 
 import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -30,12 +30,12 @@ public interface EntityLoopingFadingDistanceSoundInterface {
 	}
 
     default void frozenLib$addFadingDistanceSound(
-		ResourceLocation soundID,
-		ResourceLocation sound2ID,
+		Identifier soundID,
+		Identifier sound2ID,
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation restrictionId,
+		Identifier restrictionId,
 		boolean stopOnDeath,
 		float fadeDist, float maxDist
 	) {

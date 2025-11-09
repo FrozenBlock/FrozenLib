@@ -22,7 +22,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
@@ -38,9 +38,9 @@ import org.jetbrains.annotations.NotNull;
  * <p> For the sake of syncing with the client and working properly overall, it is highly recommended you use the register method here.
  */
 public final class WindDisturbanceLogic<T> {
-	public static final ResourceLocation DEFAULT_ID = FrozenLibConstants.id("default");
-	public static final ResourceLocation BREEZE = FrozenLibConstants.id("breeze");
-	public static final ResourceLocation WIND_CHARGE = FrozenLibConstants.id("wind_charge");
+	public static final Identifier DEFAULT_ID = FrozenLibConstants.id("default");
+	public static final Identifier BREEZE = FrozenLibConstants.id("breeze");
+	public static final Identifier WIND_CHARGE = FrozenLibConstants.id("wind_charge");
 	public static final WindDisturbanceLogic DUMMY_LOGIC = new WindDisturbanceLogic((source, level, windOrigin, affectedArea, windTarget) -> WindDisturbance.DUMMY_RESULT);
 	private final DisturbanceLogic<T> disturbanceLogic;
 
@@ -57,7 +57,7 @@ public final class WindDisturbanceLogic<T> {
 		WindDisturbance.DisturbanceResult calculateDisturbanceResult(Optional<T> source, Level level, Vec3 windOrigin, AABB affectedArea, Vec3 windTarget);
 	}
 
-	public static Optional<WindDisturbanceLogic> getWindDisturbanceLogic(ResourceLocation id) {
+	public static Optional<WindDisturbanceLogic> getWindDisturbanceLogic(Identifier id) {
         if (id != null) {
             if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.containsKey(id)) {
 				WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getValue(id);
@@ -83,11 +83,11 @@ public final class WindDisturbanceLogic<T> {
 		register(WIND_CHARGE, windCharge());
 	}
 
-	public static <T> void register(ResourceLocation id, DisturbanceLogic<T> predicate) {
+	public static <T> void register(Identifier id, DisturbanceLogic<T> predicate) {
 		Registry.register(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC, id, new WindDisturbanceLogic<>(predicate));
 	}
 
-	public static <T> void registerUnsynced(ResourceLocation id, DisturbanceLogic<T> predicate) {
+	public static <T> void registerUnsynced(Identifier id, DisturbanceLogic<T> predicate) {
 		Registry.register(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED, id, new WindDisturbanceLogic<>(predicate));
 	}
 

@@ -21,7 +21,7 @@ import net.frozenblock.lib.sound.api.MovingLoopingFadingDistanceSoundEntityManag
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
 import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -96,7 +96,7 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 
 	@Unique
     @Override
-    public void frozenLib$addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
+    public void frozenLib$addSound(Identifier soundID, SoundSource category, float volume, float pitch, Identifier restrictionId, boolean stopOnDeath) {
         this.frozenLib$loopingSoundManager.addSound(soundID, category, volume, pitch, restrictionId, stopOnDeath);
     }
 
@@ -109,12 +109,12 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 	@Unique
     @Override
     public void frozenLib$addFadingDistanceSound(
-		ResourceLocation soundID,
-		ResourceLocation sound2ID,
+		Identifier soundID,
+		Identifier sound2ID,
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation restrictionId,
+		Identifier restrictionId,
 		boolean stopOnDeath,
 		float fadeDist,
 		float maxDist

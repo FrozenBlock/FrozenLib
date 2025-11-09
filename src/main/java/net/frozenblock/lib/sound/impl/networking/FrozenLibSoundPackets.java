@@ -24,7 +24,7 @@ import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
 import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -120,7 +120,7 @@ public class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation predicate,
+		Identifier predicate,
 		boolean stopOnDeath
 	) {
 		if (level instanceof ServerLevel) {
@@ -164,7 +164,7 @@ public class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation predicate,
+		Identifier predicate,
 		boolean stopOnDeath
 	) {
 		if (level instanceof ServerLevel && entity instanceof EntityLoopingSoundInterface soundInterface) {
@@ -182,7 +182,7 @@ public class FrozenLibSoundPackets {
 						true
 					)
 				);
-				soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
+				soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath);
 			}
 			if (entity instanceof ServerPlayer player) {
 				ServerPlayNetworking.send(
@@ -209,7 +209,7 @@ public class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation id,
+		Identifier id,
 		boolean stopOnDeath
 	) {
 		ServerPlayNetworking.send(
@@ -235,7 +235,7 @@ public class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation predicate,
+		Identifier predicate,
 		boolean stopOnDeath,
 		float fadeDist,
 		float maxDist
@@ -278,8 +278,8 @@ public class FrozenLibSoundPackets {
 				);
 			}
 			soundInterface.frozenLib$addFadingDistanceSound(
-				sound.unwrapKey().orElseThrow().location(),
-				sound2.unwrapKey().orElseThrow().location(),
+				sound.unwrapKey().orElseThrow().identifier(),
+				sound2.unwrapKey().orElseThrow().identifier(),
 				category,
 				volume,
 				pitch,
@@ -299,7 +299,7 @@ public class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation predicate,
+		Identifier predicate,
 		boolean stopOnDeath,
 		float fadeDist,
 		float maxDist
@@ -330,7 +330,7 @@ public class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation predicate,
+		Identifier predicate,
 		boolean stopOnDeath,
 		float fadeDist,
 		float maxDist
@@ -391,7 +391,7 @@ public class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation predicate,
+		Identifier predicate,
 		boolean stopOnDeath
 	) {
 		if (level instanceof ServerLevel && entity instanceof EntityLoopingSoundInterface soundInterface) {
@@ -425,7 +425,7 @@ public class FrozenLibSoundPackets {
 					)
 				);
 			}
-			soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
+			soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath);
         }
     }
 
@@ -437,7 +437,7 @@ public class FrozenLibSoundPackets {
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation predicate,
+		Identifier predicate,
 		boolean stopOnDeath
 	) {
 		ServerPlayNetworking.send(

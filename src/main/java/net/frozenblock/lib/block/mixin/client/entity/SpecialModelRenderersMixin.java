@@ -27,7 +27,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.block.client.entity.SpecialModelRenderersEntrypoint;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Final;
@@ -43,7 +43,7 @@ public class SpecialModelRenderersMixin {
 
 	@Shadow
 	@Final
-	public static ExtraCodecs.LateBoundIdMapper<ResourceLocation, MapCodec<? extends SpecialModelRenderer.Unbaked>> ID_MAPPER;
+	public static ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends SpecialModelRenderer.Unbaked>> ID_MAPPER;
 
 	@WrapOperation(
 		method = "<clinit>",

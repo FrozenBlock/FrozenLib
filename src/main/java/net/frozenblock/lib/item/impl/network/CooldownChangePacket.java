@@ -21,19 +21,19 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
-public record CooldownChangePacket(ResourceLocation cooldownGroup, int additional) implements CustomPacketPayload {
+public record CooldownChangePacket(Identifier cooldownGroup, int additional) implements CustomPacketPayload {
 	public static final Type<CooldownChangePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cooldown_change"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, CooldownChangePacket> CODEC = StreamCodec.ofMember(CooldownChangePacket::write, CooldownChangePacket::new);
 
 	public CooldownChangePacket(@NotNull RegistryFriendlyByteBuf buf) {
-		this(buf.readResourceLocation(), buf.readVarInt());
+		this(buf.readIdentifier(), buf.readVarInt());
 	}
 
 	public void write(@NotNull RegistryFriendlyByteBuf buf) {
-		buf.writeResourceLocation(this.cooldownGroup);
+		buf.writeIdentifier(this.cooldownGroup);
 		buf.writeVarInt(this.additional());
 	}
 

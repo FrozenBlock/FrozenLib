@@ -65,7 +65,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -132,7 +132,7 @@ public final class FrozenNetworking {
 		ServerPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE,
 			(packet, ctx) -> {
 				UUID uuid = ctx.player().getUUID();
-				ResourceLocation capeId = packet.getCapeId();
+				Identifier capeId = packet.getCapeId();
 				if (capeId == null || CapeUtil.canPlayerUserCape(uuid, capeId)) {
 					CapeCustomizePacket.sendCapeToAll(ctx.server(), uuid, capeId);
 				}

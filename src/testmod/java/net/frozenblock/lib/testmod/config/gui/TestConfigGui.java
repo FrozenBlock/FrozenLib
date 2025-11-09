@@ -30,7 +30,7 @@ import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @Environment(EnvType.CLIENT)
 public class TestConfigGui {
@@ -40,7 +40,7 @@ public class TestConfigGui {
 		var config = TestConfig.get(true);
 		var defaultConfig = TestConfig.INSTANCE.defaultInstance();
 		var subMenu = config.subMenu;
-		category.setBackground(ResourceLocation.withDefaultNamespace("textures/block/packed_mud.png"));
+		category.setBackground(Identifier.withDefaultNamespace("textures/block/packed_mud.png"));
 
 		var test = category.addEntry(entryBuilder.startBooleanToggle(text("test_toggle"), config.testToggle)
 				.setDefaultValue(defaultConfig.testToggle)

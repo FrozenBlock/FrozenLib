@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-public record Cape(ResourceLocation registryId, Component capeName, ResourceLocation texture, Optional<List<UUID>> allowedPlayers) {
+public record Cape(Identifier registryId, Component capeName, Identifier texture, Optional<List<UUID>> allowedPlayers) {
 }

@@ -20,7 +20,7 @@ package net.frozenblock.lib.testmod.worldgen;
 import java.util.List;
 import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
 import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Noises;
@@ -83,7 +83,7 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
     @Override
     public void addGenericSurfaceRules(List<FrozenDimensionBoundRuleSource> context) {
 		context.add(new FrozenDimensionBoundRuleSource(
-			ResourceLocation.withDefaultNamespace("overworld"),
+			Identifier.withDefaultNamespace("overworld"),
 			SurfaceRules.sequence(
 				SurfaceRules.ifTrue(
 					SurfaceRules.isBiome(Biomes.BIRCH_FOREST),
@@ -92,7 +92,7 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 			)
 		));
 		context.add(new FrozenDimensionBoundRuleSource(
-			ResourceLocation.withDefaultNamespace("the_nether"),
+			Identifier.withDefaultNamespace("the_nether"),
 			SurfaceRules.sequence(
 				SurfaceRules.ifTrue(
 					SurfaceRules.isBiome(Biomes.WARPED_FOREST),

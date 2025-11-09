@@ -40,7 +40,7 @@ import net.frozenblock.lib.block.sound.impl.overwrite.BlockStateBlockSoundTypeOv
 import net.frozenblock.lib.block.sound.impl.overwrite.HolderSetBlockSoundTypeOverwrite;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.tags.TagKey;
@@ -113,8 +113,8 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		);
 	}
 
-	public void addBuiltInOverwrite(ResourceLocation resourceLocation, SoundType soundType, BooleanSupplier condition) {
-		Optional<Block> optionalBlock = BuiltInRegistries.BLOCK.getOptional(resourceLocation);
+	public void addBuiltInOverwrite(Identifier identifier, SoundType soundType, BooleanSupplier condition) {
+		Optional<Block> optionalBlock = BuiltInRegistries.BLOCK.getOptional(identifier);
 		optionalBlock.ifPresent(block -> this.builtInOverwrites.add(
 			new HolderSetBlockSoundTypeOverwrite(
 				HolderSet.direct(block.builtInRegistryHolder()),
@@ -137,8 +137,8 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		return Optional.empty();
 	}
 
-	public static @NotNull ResourceLocation getGeneratedPath(@NotNull ResourceLocation blockId) {
-		return ResourceLocation.fromNamespaceAndPath(blockId.getNamespace(), DIRECTORY + "/" + blockId.getPath() + ".json");
+	public static @NotNull Identifier getGeneratedPath(@NotNull Identifier blockId) {
+		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), DIRECTORY + "/" + blockId.getPath() + ".json");
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 	}
 
 	@NotNull
-	public ResourceLocation getFabricId() {
+	public Identifier getFabricId() {
 		return FrozenLibConstants.id("block_sound_type_overwrites");
 	}
 
@@ -172,14 +172,14 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		}
 
 		private void loadSoundOverwrites() {
-			Map<ResourceLocation, Resource> resources = manager.listResources(DIRECTORY, id -> id.getPath().endsWith(".json"));
+			Map<Identifier, Resource> resources = manager.listResources(DIRECTORY, id -> id.getPath().endsWith(".json"));
 			var entrySet = resources.entrySet();
-			for (Map.Entry<ResourceLocation, Resource> entry : entrySet) {
+			for (Map.Entry<Identifier, Resource> entry : entrySet) {
 				this.addOverwrite(entry.getKey(), entry.getValue());
 			}
 		}
 
-		private void addOverwrite(ResourceLocation location, @NotNull Resource resource) {
+		private void addOverwrite(Identifier location, @NotNull Resource resource) {
 			BufferedReader reader;
 			try {
 				reader = resource.openAsReader();

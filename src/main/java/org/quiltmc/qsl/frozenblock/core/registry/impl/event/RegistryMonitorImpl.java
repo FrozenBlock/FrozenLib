@@ -60,7 +60,7 @@ public class RegistryMonitorImpl<V> implements RegistryMonitor<V> {
 		var context = new MutableRegistryEntryContextImpl<>(delayed);
 
 		this.registry.listElements().forEach(entry -> {
-			context.set(entry.unwrapKey().orElseThrow().location(), entry.value());
+			context.set(entry.unwrapKey().orElseThrow().identifier(), entry.value());
 
 			if (this.testFilter(context)) {
 				callback.onAdded(context);

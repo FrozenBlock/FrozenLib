@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.networking.FrozenLibSoundPackets;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -57,12 +57,12 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
     }
 
     public void addSound(
-		ResourceLocation soundID,
-		ResourceLocation soundID2,
+		Identifier soundID,
+		Identifier soundID2,
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation restrictionId,
+		Identifier restrictionId,
 		boolean stopOnDeath,
 		float fadeDist,
 		float maxDist
@@ -108,38 +108,38 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 	}
 
     public record FadingDistanceSoundLoopNBT(
-		ResourceLocation soundEventID,
-		ResourceLocation soundEventID2,
+		Identifier soundEventID,
+		Identifier soundEventID2,
 		String category,
 		float volume,
 		float pitch,
 		float fadeDist,
 		float maxDist,
-		ResourceLocation restrictionID,
+		Identifier restrictionID,
 		boolean stopOnDeath
 	) {
 
 		public static final Codec<FadingDistanceSoundLoopNBT> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-			ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(FadingDistanceSoundLoopNBT::soundEventID),
-			ResourceLocation.CODEC.fieldOf("sound2EventID").forGetter(FadingDistanceSoundLoopNBT::soundEventID2),
+			Identifier.CODEC.fieldOf("soundEventID").forGetter(FadingDistanceSoundLoopNBT::soundEventID),
+			Identifier.CODEC.fieldOf("sound2EventID").forGetter(FadingDistanceSoundLoopNBT::soundEventID2),
 			Codec.STRING.fieldOf("categoryOrdinal").forGetter(FadingDistanceSoundLoopNBT::category),
 			Codec.FLOAT.fieldOf("volume").forGetter(FadingDistanceSoundLoopNBT::volume),
 			Codec.FLOAT.fieldOf("pitch").forGetter(FadingDistanceSoundLoopNBT::pitch),
 			Codec.FLOAT.fieldOf("fadeDist").forGetter(FadingDistanceSoundLoopNBT::fadeDist),
 			Codec.FLOAT.fieldOf("maxDist").forGetter(FadingDistanceSoundLoopNBT::maxDist),
-			ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(FadingDistanceSoundLoopNBT::restrictionID),
+			Identifier.CODEC.fieldOf("restrictionID").forGetter(FadingDistanceSoundLoopNBT::restrictionID),
 			Codec.BOOL.fieldOf("stopOnDeath").forGetter(FadingDistanceSoundLoopNBT::stopOnDeath)
 		).apply(instance, FadingDistanceSoundLoopNBT::new));
 
 		public FadingDistanceSoundLoopNBT(
-			ResourceLocation soundEventID,
-			ResourceLocation soundEventID2,
+			Identifier soundEventID,
+			Identifier soundEventID2,
 			@NotNull SoundSource category,
 			float volume,
 			float pitch,
 			float fadeDist,
 			float maxDist,
-			ResourceLocation restrictionID,
+			Identifier restrictionID,
 			boolean stopOnDeath
 		) {
 			this(soundEventID, soundEventID2, category.toString(), volume, pitch, fadeDist, maxDist, restrictionID, stopOnDeath);

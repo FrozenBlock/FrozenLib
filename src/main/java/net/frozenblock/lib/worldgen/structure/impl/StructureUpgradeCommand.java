@@ -33,7 +33,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtAccounter;
 import net.minecraft.nbt.NbtIo;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FastBufferedInputStream;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -59,19 +59,19 @@ public class StructureUpgradeCommand {
 	private static int upgradeAndExportPieces(@NotNull CommandSourceStack source, String namespace, boolean log) {
 		ResourceManager resourceManager = source.getServer().getResourceManager();
 
-		Set<ResourceLocation> foundPieces = resourceManager.listResources(
+		Set<Identifier> foundPieces = resourceManager.listResources(
 			"structure",
-			resourceLocation -> resourceLocation.getPath().endsWith(".nbt") && resourceLocation.getNamespace().equals(namespace)
+			identifier -> identifier.getPath().endsWith(".nbt") && identifier.getNamespace().equals(namespace)
 		).keySet();
 
-		if (log) foundPieces.forEach(resourceLocation -> System.out.println("Found piece: " + resourceLocation.toString()));
+		if (log) foundPieces.forEach(identifier -> System.out.println("Found piece: " + identifier.toString()));
 
 		StructureTemplateManager structureTemplateManager = source.getLevel().getStructureManager();
-		Map<ResourceLocation, CompoundTag> savedTemplates = new Object2ObjectLinkedOpenHashMap<>();
+		Map<Identifier, CompoundTag> savedTemplates = new Object2ObjectLinkedOpenHashMap<>();
 
-		foundPieces.forEach((resourceLocation) -> {
+		foundPieces.forEach((identifier) -> {
 			try {
-				InputStream inputStream = resourceManager.getResourceOrThrow(resourceLocation).open();
+				InputStream inputStream = resourceManager.getResourceOrThrow(identifier).open();
 				InputStream inputStream2 = new FastBufferedInputStream(inputStream);
 				CompoundTag compoundTag = NbtIo.readCompressed(inputStream2, NbtAccounter.unlimitedHeap());
 				StructureTemplate structureTemplate = structureTemplateManager.readStructure(compoundTag);
@@ -79,7 +79,7 @@ public class StructureUpgradeCommand {
 				inputStream2.close();
 				inputStream.close();
 
-				savedTemplates.put(resourceLocation, structureTemplate.save(new CompoundTag()));
+				savedTemplates.put(identifier, structureTemplate.save(new CompoundTag()));
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -88,11 +88,11 @@ public class StructureUpgradeCommand {
 		Path outputPath = source.getServer().getServerDirectory()
 			.resolve("upgraded_structure/data_version_" + SharedConstants.getCurrentVersion().dataVersion().version());
 
-		savedTemplates.forEach((resourceLocation, compoundTag) -> {
+		savedTemplates.forEach((identifier, compoundTag) -> {
 			NbtFileUtils.saveToFile(
 				compoundTag,
-				outputPath.resolve(resourceLocation.getNamespace()).toFile(),
-				resourceLocation.getPath().replace(".nbt", "")
+				outputPath.resolve(identifier.getNamespace()).toFile(),
+				identifier.getPath().replace(".nbt", "")
 			);
 		});
 

@@ -97,7 +97,7 @@
   "debug.game_event": "Sự kiện trò chơi",
 
   "frozenlib.loot_table_whacker.fail.no_name": "Loot Table Whacker chưa được đặt tên!",
-  "frozenlib.loot_table_whacker.fail.no_colon": "ResourceLocation không hợp lệ: Không có dấu :!",
+  "frozenlib.loot_table_whacker.fail.no_colon": "Identifier không hợp lệ: Không có dấu :!",
   "frozenlib.loot_table_whacker.fail.no_loot_table": "Loot table không tồn tại: %s",
   "frozenlib.loot_table_whacker.success": "Đã đặt loot table thành: %s",
 

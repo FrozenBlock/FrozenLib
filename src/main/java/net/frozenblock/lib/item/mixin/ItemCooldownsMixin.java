@@ -19,7 +19,7 @@ package net.frozenblock.lib.item.mixin;
 
 import java.util.Map;
 import net.frozenblock.lib.item.impl.CooldownInterface;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemCooldowns;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,11 +31,11 @@ public class ItemCooldownsMixin implements CooldownInterface {
 
     @Final
     @Shadow
-    public Map<ResourceLocation, ItemCooldowns.CooldownInstance> cooldowns;
+    public Map<Identifier, ItemCooldowns.CooldownInstance> cooldowns;
 
 	@Unique
 	@Override
-    public void frozenLib$changeCooldown(ResourceLocation cooldownGroup, int additional) {
+    public void frozenLib$changeCooldown(Identifier cooldownGroup, int additional) {
 		this.cooldowns.computeIfPresent(cooldownGroup, (foundCooldownGroup, cooldown) -> {
             this.frozenLib$onCooldownChanged(foundCooldownGroup, additional);
 			return new ItemCooldowns.CooldownInstance(cooldown.startTime, cooldown.endTime + additional);
@@ -44,7 +44,7 @@ public class ItemCooldownsMixin implements CooldownInterface {
 
 	@Unique
 	@Override
-    public void frozenLib$onCooldownChanged(ResourceLocation cooldownGroup, int additional) {
+    public void frozenLib$onCooldownChanged(Identifier cooldownGroup, int additional) {
     }
 
 }

@@ -27,7 +27,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.biome.Biome;
@@ -52,8 +52,8 @@ public abstract class ModIntegration {
         return this.modID;
     }
 
-    public ResourceLocation id(String path) {
-        return ResourceLocation.fromNamespaceAndPath(this.modRegistryID, path);
+    public Identifier id(String path) {
+        return Identifier.fromNamespaceAndPath(this.modRegistryID, path);
     }
 
     public Block getBlock(String path) {
@@ -80,7 +80,7 @@ public abstract class ModIntegration {
         return getTag(VanillaRegistries.createLookup().lookupOrThrow(Registries.BIOME), id(path));
     }
 
-    public <T> TagKey<T> getTag(Registry<T> registry, ResourceLocation key) {
+    public <T> TagKey<T> getTag(Registry<T> registry, Identifier key) {
         return registry.getTags().map(HolderSet.Named::key)
                 .filter(tag -> tag.location().equals(key))
                 .findAny()
@@ -88,7 +88,7 @@ public abstract class ModIntegration {
     }
 
     @SuppressWarnings("unchecked")
-    public <T> TagKey<T> getTag(HolderLookup.RegistryLookup<T> lookup, ResourceLocation key) {
+    public <T> TagKey<T> getTag(HolderLookup.RegistryLookup<T> lookup, Identifier key) {
         return lookup.listTagIds()
                 .filter(tag -> tag.location().equals(key))
                 .findAny()

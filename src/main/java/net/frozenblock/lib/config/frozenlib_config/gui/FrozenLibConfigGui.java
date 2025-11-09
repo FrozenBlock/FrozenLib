@@ -36,7 +36,7 @@ import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -166,11 +166,11 @@ public final class FrozenLibConfigGui {
 				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
 					.setDefaultValue(defaultConfig.cape)
 					.setNameProvider(o -> {
-						ResourceLocation capeId = ResourceLocation.parse(((String) o));
+						Identifier capeId = Identifier.parse(((String) o));
 						return CapeUtil.getCape(capeId).map(Cape::capeName).orElse(Component.translatable("cape.frozenlib.invalid"));
 					})
 					.setSaveConsumer(newValue -> {
-						ResourceLocation capeId = ResourceLocation.parse((String) newValue);
+						Identifier capeId = Identifier.parse((String) newValue);
 						config.cape = (String) newValue;
 						if (Minecraft.getInstance().getConnection() != null) {
 							ClientPlayNetworking.send(CapeCustomizePacket.createPacket(Minecraft.getInstance().getUser().getProfileId(), capeId));

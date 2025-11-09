@@ -24,19 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @UtilityClass
 public class RandomPoolAliasApi {
-	private static final Map<ResourceLocation, List<Pair<ResourceLocation, Integer>>> ALIAS_TO_TARGETS = new Object2ObjectOpenHashMap<>();
+	private static final Map<Identifier, List<Pair<Identifier, Integer>>> ALIAS_TO_TARGETS = new Object2ObjectOpenHashMap<>();
 
-	public static void addTarget(ResourceLocation alias, ResourceLocation target, int weight) {
-		List<Pair<ResourceLocation, Integer>> list = ALIAS_TO_TARGETS.getOrDefault(alias, new ArrayList<>());
+	public static void addTarget(Identifier alias, Identifier target, int weight) {
+		List<Pair<Identifier, Integer>> list = ALIAS_TO_TARGETS.getOrDefault(alias, new ArrayList<>());
 		list.add(Pair.of(target, weight));
 		ALIAS_TO_TARGETS.put(alias, list);
 	}
 
-	public static List<Pair<ResourceLocation, Integer>> getAdditionalTargets(ResourceLocation alias) {
+	public static List<Pair<Identifier, Integer>> getAdditionalTargets(Identifier alias) {
 		return ALIAS_TO_TARGETS.getOrDefault(alias, ImmutableList.of());
 	}
 

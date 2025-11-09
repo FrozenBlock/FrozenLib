@@ -28,8 +28,8 @@ import java.util.Objects;
 import static java.util.Objects.requireNonNull;
 import net.frozenblock.lib.datafix.api.BlockStateRenameFix;
 import net.frozenblock.lib.math.api.AdvancedMath;
-import net.minecraft.Util;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Util;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.util.datafix.fixes.BlockRenameFix;
 import net.minecraft.util.datafix.fixes.ItemRenameFix;
@@ -62,8 +62,8 @@ public final class SimpleFixes {
     public static void addBlockRenameFix(
 		@NotNull DataFixerBuilder builder,
 		@NotNull String name,
-		@NotNull ResourceLocation oldId,
-		@NotNull ResourceLocation newId,
+		@NotNull Identifier oldId,
+		@NotNull Identifier newId,
 		@NotNull Schema schema
 	) {
         requireNonNull(builder, "DataFixerBuilder cannot be null");
@@ -90,8 +90,8 @@ public final class SimpleFixes {
 	public static void addRandomBlockRenameFix(
 		@NotNull DataFixerBuilder builder,
 		@NotNull String name,
-		@NotNull ResourceLocation oldId,
-		List<ResourceLocation> newIds,
+		@NotNull Identifier oldId,
+		List<Identifier> newIds,
 		@NotNull Schema schema
 	) {
 		Objects.requireNonNull(builder, "DataFixerBuilder cannot be null");
@@ -122,8 +122,8 @@ public final class SimpleFixes {
 	public static void addEntityRenameFix(
 		@NotNull DataFixerBuilder builder,
 		@NotNull String name,
-		@NotNull ResourceLocation oldId,
-		@NotNull ResourceLocation newId,
+		@NotNull Identifier oldId,
+		@NotNull Identifier newId,
 		@NotNull Schema schema
 	) {
 		requireNonNull(builder, "DataFixerBuilder cannot be null");
@@ -154,8 +154,8 @@ public final class SimpleFixes {
     public static void addItemRenameFix(
 		@NotNull DataFixerBuilder builder,
 		@NotNull String name,
-		@NotNull ResourceLocation oldId,
-		@NotNull ResourceLocation newId,
+		@NotNull Identifier oldId,
+		@NotNull Identifier newId,
 		@NotNull Schema schema
 	) {
         requireNonNull(builder, "DataFixerBuilder cannot be null");
@@ -182,8 +182,8 @@ public final class SimpleFixes {
 	public static void addRandomItemRenameFix(
 		@NotNull DataFixerBuilder builder,
 		@NotNull String name,
-		@NotNull ResourceLocation oldId,
-		List<ResourceLocation> newIds,
+		@NotNull Identifier oldId,
+		List<Identifier> newIds,
 		@NotNull Schema schema
 	) {
 		Objects.requireNonNull(builder, "DataFixerBuilder cannot be null");
@@ -216,7 +216,7 @@ public final class SimpleFixes {
     public static void addBlockStateRenameFix(
 		@NotNull DataFixerBuilder builder,
 		@NotNull String name,
-		@NotNull ResourceLocation blockId,
+		@NotNull Identifier blockId,
 		@NotNull String oldState,
 		@NotNull String defaultValue,
 		@NotNull String newState,
@@ -246,8 +246,8 @@ public final class SimpleFixes {
     public static void addBiomeRenameFix(
 		@NotNull DataFixerBuilder builder,
 		@NotNull String name,
-		@NotNull Map<ResourceLocation,
-			ResourceLocation> changes,
+		@NotNull Map<Identifier,
+			Identifier> changes,
 		@NotNull Schema schema
 	) {
         requireNonNull(builder, "DataFixerBuilder cannot be null");

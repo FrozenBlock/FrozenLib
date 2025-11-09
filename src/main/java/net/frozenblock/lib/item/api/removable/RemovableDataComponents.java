@@ -46,8 +46,8 @@ public class RemovableDataComponents {
 		final RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
 		if (removableDataComponent != null) return removableDataComponent.shouldRemove(level, entity, equipmentSlot);
 
-		FrozenLibLogUtils.logError("Unable to find RemovableDataComponent for DataComponent " + key.location() + "!", true, null);
-		FrozenLibLogUtils.logError("Please make sure " + key.location() + " is registered in RemovableDataComponents.class!", true, null);
+		FrozenLibLogUtils.logError("Unable to find RemovableDataComponent for DataComponent " + key.identifier() + "!", true, null);
+		FrozenLibLogUtils.logError("Please make sure " + key.identifier() + " is registered in RemovableDataComponents.class!", true, null);
 		return false;
 	}
 
@@ -57,8 +57,8 @@ public class RemovableDataComponents {
 		final RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
 		if (removableDataComponent != null) return removableDataComponent.shouldRemoveOnStackMerge();
 
-		FrozenLibLogUtils.logError("Unable to find RemovableDataComponent data for DataComponent " + key.location() + "!", true, null);
-		FrozenLibLogUtils.logError("Please make sure " + key.location() + " is registered in RemovableDataComponents.class!", true, null);
+		FrozenLibLogUtils.logError("Unable to find RemovableDataComponent data for DataComponent " + key.identifier() + "!", true, null);
+		FrozenLibLogUtils.logError("Please make sure " + key.identifier() + " is registered in RemovableDataComponents.class!", true, null);
 		return true;
 	}
 

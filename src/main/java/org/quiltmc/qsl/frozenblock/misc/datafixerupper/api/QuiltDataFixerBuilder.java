@@ -24,7 +24,7 @@ import com.mojang.datafixers.DataFixerBuilder;
 import java.util.Set;
 import java.util.concurrent.Executor;
 import java.util.function.Supplier;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;

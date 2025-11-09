@@ -19,7 +19,7 @@ package net.frozenblock.lib.wind.mixin;
 
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindDisturbingEntity;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.monster.breeze.Breeze;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +31,7 @@ public abstract class BreezeMixin implements WindDisturbingEntity {
 	@Unique
 	@Nullable
 	@Override
-	public ResourceLocation frozenLib$getWindDisturbanceLogicID() {
+	public Identifier frozenLib$getWindDisturbanceLogicID() {
 		return WindDisturbanceLogic.BREEZE;
 	}
 

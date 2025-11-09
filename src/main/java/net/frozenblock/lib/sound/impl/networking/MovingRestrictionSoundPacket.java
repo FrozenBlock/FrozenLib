@@ -24,7 +24,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.NotNull;
@@ -35,7 +35,7 @@ public record MovingRestrictionSoundPacket(
 	SoundSource category,
 	float volume,
 	float pitch,
-	ResourceLocation predicateId,
+	Identifier predicateId,
 	boolean stopOnDeath,
 	boolean looping
 ) implements CustomPacketPayload {
@@ -51,7 +51,7 @@ public record MovingRestrictionSoundPacket(
 			buf.readEnum(SoundSource.class),
 			buf.readFloat(),
 			buf.readFloat(),
-			buf.readResourceLocation(),
+			buf.readIdentifier(),
 			buf.readBoolean(),
 			buf.readBoolean()
 		);
@@ -63,7 +63,7 @@ public record MovingRestrictionSoundPacket(
 		buf.writeEnum(this.category);
 		buf.writeFloat(this.volume);
 		buf.writeFloat(this.pitch);
-		buf.writeResourceLocation(predicateId);
+		buf.writeIdentifier(predicateId);
 		buf.writeBoolean(this.stopOnDeath);
 		buf.writeBoolean(this.looping);
 	}

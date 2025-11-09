@@ -17,14 +17,14 @@
 
 package net.frozenblock.lib.core.api
 
-import net.minecraft.resources.ResourceLocation
+import net.minecraft.resources.Identifier
 import java.net.URI
 
 fun String.uri(): URI = URI.create(this)
 
-fun vanillaId(path: String): ResourceLocation = ResourceLocation.withDefaultNamespace(path)
+fun vanillaId(path: String): Identifier = Identifier.withDefaultNamespace(path)
 
-val String.asResourceLocation: ResourceLocation
+val String.asIdentifier: Identifier
     get() {
-        return ResourceLocation.parse(this)
+        return Identifier.parse(this)
     }

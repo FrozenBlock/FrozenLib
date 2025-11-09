@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
@@ -38,7 +38,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
 @ApiStatus.Internal
 public final class ServerPackets {
 
-	private static ResourceLocation id(String path) {
+	private static Identifier id(String path) {
 		return FrozenLibConstants.id(path);
 	}
 

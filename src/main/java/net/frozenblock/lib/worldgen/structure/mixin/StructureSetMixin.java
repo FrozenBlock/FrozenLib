@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.function.Supplier;
 import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
 import org.spongepowered.asm.mixin.Mixin;
@@ -54,7 +54,7 @@ public abstract class StructureSetMixin implements StructureSetAndPlacementInter
 
 	@Unique
 	@Override
-	public synchronized void frozenLib$addExclusions(List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup) {
+	public synchronized void frozenLib$addExclusions(List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup) {
 		if (this.placement() instanceof StructureSetAndPlacementInterface structureSetAndPlacementInterface) {
 			structureSetAndPlacementInterface.frozenLib$addExclusions(exclusions, structureSetRegistryLookup);
 		}

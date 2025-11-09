@@ -31,7 +31,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.minecraft.client.Minecraft;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
 import org.jetbrains.annotations.NotNull;
@@ -40,16 +40,16 @@ import org.jetbrains.annotations.Unmodifiable;
 @Environment(EnvType.CLIENT)
 public class ClientCapeUtil {
 	public static final Path CAPE_CACHE_PATH = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("cape_cache");
-	private static final List<ResourceLocation> REGISTERED_CAPE_LISTENERS = new ArrayList<>();
+	private static final List<Identifier> REGISTERED_CAPE_LISTENERS = new ArrayList<>();
 	private static final List<Cape> USABLE_CAPES = new ArrayList<>();
 
 	public static void registerCapeTextureFromURL(
-		@NotNull ResourceLocation capeLocation, ResourceLocation capeTextureLocation, String textureURL
+		@NotNull Identifier capeLocation, Identifier capeTextureLocation, String textureURL
 	) throws JsonIOException {
 		if (!REGISTERED_CAPE_LISTENERS.contains(capeLocation)) {
 			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
 				@Override
-				public ResourceLocation getFabricId() {
+				public Identifier getFabricId() {
 					return capeLocation;
 				}
 

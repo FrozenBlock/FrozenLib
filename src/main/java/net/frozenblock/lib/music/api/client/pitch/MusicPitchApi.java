@@ -27,7 +27,7 @@ import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
 import net.frozenblock.lib.worldgen.structure.api.status.client.ClientStructureStatuses;
 import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatus;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
@@ -40,35 +40,35 @@ public class MusicPitchApi {
 	private static final List<MusicPitchInfo> MUSIC_PITCH_INFO_LIST = new ArrayList<>();
 	private static float CURRENT_PITCH = 1F;
 
-	public static void registerForBiome(ResourceLocation location, Function<Long, Float> pitchFunction) {
+	public static void registerForBiome(Identifier location, Function<Long, Float> pitchFunction) {
 		MUSIC_PITCH_INFO_LIST.add(new MusicPitchInfo(MusicPitchDetectionType.BIOME, location, pitchFunction));
 	}
 
-	public static void registerForBiome(ResourceLocation location, float pitch) {
+	public static void registerForBiome(Identifier location, float pitch) {
 		registerForBiome(location, (l) -> pitch);
 	}
 
-	public static void registerForStructure(ResourceLocation location, Function<Long, Float> pitchFunction) {
+	public static void registerForStructure(Identifier location, Function<Long, Float> pitchFunction) {
 		MUSIC_PITCH_INFO_LIST.add(new MusicPitchInfo(MusicPitchDetectionType.STRUCTURE, location, pitchFunction));
 	}
 
-	public static void registerForStructure(ResourceLocation location, float pitch) {
+	public static void registerForStructure(Identifier location, float pitch) {
 		registerForStructure(location, (l) -> pitch);
 	}
 
-	public static void registerForStructureInside(ResourceLocation location, Function<Long, Float> pitchFunction) {
+	public static void registerForStructureInside(Identifier location, Function<Long, Float> pitchFunction) {
 		MUSIC_PITCH_INFO_LIST.add(new MusicPitchInfo(MusicPitchDetectionType.STRUCTURE_INSIDE, location, pitchFunction));
 	}
 
-	public static void registerForStructureInside(ResourceLocation location, float pitch) {
+	public static void registerForStructureInside(Identifier location, float pitch) {
 		registerForStructureInside(location, (l) -> pitch);
 	}
 
-	public static void registerForDimension(ResourceLocation location, Function<Long, Float> pitchFunction) {
+	public static void registerForDimension(Identifier location, Function<Long, Float> pitchFunction) {
 		MUSIC_PITCH_INFO_LIST.add(new MusicPitchInfo(MusicPitchDetectionType.DIMENSION, location, pitchFunction));
 	}
 
-	public static void registerForDimension(ResourceLocation location, float pitch) {
+	public static void registerForDimension(Identifier location, float pitch) {
 		registerForDimension(location, (l) -> pitch);
 	}
 
@@ -100,7 +100,7 @@ public class MusicPitchApi {
 			if (info.type().isForStructure()) {
 				if (optionalStructureStatus.isEmpty()) continue;
 				final PlayerStructureStatus structureStatus = optionalStructureStatus.get();
-				final ResourceLocation structureLocation = structureStatus.getStructure();
+				final Identifier structureLocation = structureStatus.getStructure();
 				boolean isInsidePiece = structureStatus.isInsidePiece();
 
 				if (info.type().isForStructureAndMatchesInside(isInsidePiece) && info.location().equals(structureLocation)) {
@@ -114,7 +114,7 @@ public class MusicPitchApi {
 				pitchContributors += 1;
 			}
 
-			if (info.type().isForDimension() && level.dimension().location().equals(info.location())) {
+			if (info.type().isForDimension() && level.dimension().identifier().equals(info.location())) {
 				pitches.add(info.pitchFunction().apply(gameTime));
 				pitchContributors += 1;
 			}

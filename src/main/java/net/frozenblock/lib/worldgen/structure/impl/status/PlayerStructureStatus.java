@@ -19,7 +19,7 @@ package net.frozenblock.lib.worldgen.structure.impl.status;
 
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class PlayerStructureStatus {
@@ -27,25 +27,25 @@ public class PlayerStructureStatus {
 		@NotNull
 		@Override
 		public PlayerStructureStatus decode(@NotNull FriendlyByteBuf buf) {
-			return new PlayerStructureStatus(buf.readResourceLocation(), buf.readBoolean());
+			return new PlayerStructureStatus(buf.readIdentifier(), buf.readBoolean());
 		}
 
 		@Override
 		public void encode(@NotNull FriendlyByteBuf buf, @NotNull PlayerStructureStatus playerStructureStatus) {
-			buf.writeResourceLocation(playerStructureStatus.structure);
+			buf.writeIdentifier(playerStructureStatus.structure);
 			buf.writeBoolean(playerStructureStatus.insidePiece);
 		}
 	};
 
-	private final ResourceLocation structure;
+	private final Identifier structure;
 	private boolean insidePiece;
 
-	public PlayerStructureStatus(ResourceLocation structure, boolean insidePiece) {
+	public PlayerStructureStatus(Identifier structure, boolean insidePiece) {
 		this.structure = structure;
 		this.insidePiece = insidePiece;
 	}
 
-	public ResourceLocation getStructure() {
+	public Identifier getStructure() {
 		return this.structure;
 	}
 

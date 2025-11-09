@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.entity.impl.category;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
-public record FrozenMobCategory(ResourceLocation key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
+public record FrozenMobCategory(Identifier key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
 }

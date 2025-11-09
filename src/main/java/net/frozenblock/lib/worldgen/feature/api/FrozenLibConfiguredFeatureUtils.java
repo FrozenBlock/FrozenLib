@@ -26,7 +26,7 @@ import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
@@ -38,7 +38,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManage
 public class FrozenLibConfiguredFeatureUtils {
 
 	public static @NotNull ResourceKey<ConfiguredFeature<?, ?>> createKey(String namespace, String path) {
-		return ResourceKey.create(Registries.CONFIGURED_FEATURE, ResourceLocation.fromNamespaceAndPath(namespace, path));
+		return ResourceKey.create(Registries.CONFIGURED_FEATURE, Identifier.fromNamespaceAndPath(namespace, path));
 	}
 
 	public static Holder<? extends ConfiguredFeature<NoneFeatureConfiguration, ?>> register(
@@ -61,7 +61,7 @@ public class FrozenLibConfiguredFeatureUtils {
 	) {
 		var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
 		final ConfiguredFeature<FC, ?> configuredFeature = new ConfiguredFeature<>(feature, config);
-		Registry.register(configuredRegistry, ResourceLocation.fromNamespaceAndPath(namespace, id), configuredFeature);
+		Registry.register(configuredRegistry, Identifier.fromNamespaceAndPath(namespace, id), configuredFeature);
 		var featureEntry = getExact(registries, configuredFeature);
 		return (Holder.Reference<C>) featureEntry;
 	}
@@ -82,7 +82,7 @@ public class FrozenLibConfiguredFeatureUtils {
 		@NotNull DynamicRegistryManagerSetupContext entries, @NotNull ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
 		var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE));
-		var value = registry.register(Registries.CONFIGURED_FEATURE, registryKey.location(), new ConfiguredFeature<>(feature, featureConfiguration));
+		var value = registry.register(Registries.CONFIGURED_FEATURE, registryKey.identifier(), new ConfiguredFeature<>(feature, featureConfiguration));
 		return Holder.direct(value);
 	}
 

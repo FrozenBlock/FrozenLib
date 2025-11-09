@@ -24,7 +24,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 	float pitch,
 	float fadeDist,
 	float maxDist,
-	ResourceLocation predicateId,
+	Identifier predicateId,
 	boolean stopOnDeath,
 	boolean looping
 ) implements CustomPacketPayload {
@@ -57,7 +57,7 @@ public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 			buf.readFloat(),
 			buf.readFloat(),
 			buf.readFloat(),
-			buf.readResourceLocation(),
+			buf.readIdentifier(),
 			buf.readBoolean(),
 			buf.readBoolean()
 		);
@@ -72,7 +72,7 @@ public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 		buf.writeFloat(this.pitch());
 		buf.writeFloat(this.fadeDist());
 		buf.writeFloat(this.maxDist());
-		buf.writeResourceLocation(predicateId());
+		buf.writeIdentifier(predicateId());
 		buf.writeBoolean(this.stopOnDeath());
 		buf.writeBoolean(this.looping());
 	}

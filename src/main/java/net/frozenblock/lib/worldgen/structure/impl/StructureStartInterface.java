@@ -17,11 +17,11 @@
 
 package net.frozenblock.lib.worldgen.structure.impl;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface StructureStartInterface {
 
-	ResourceLocation frozenLib$getId();
+	Identifier frozenLib$getId();
 
-	void frozenLib$setId(ResourceLocation id);
+	void frozenLib$setId(Identifier id);
 }

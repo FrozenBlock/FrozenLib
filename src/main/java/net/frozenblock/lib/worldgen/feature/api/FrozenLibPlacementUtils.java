@@ -25,7 +25,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
@@ -36,7 +36,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManage
 public class FrozenLibPlacementUtils {
 
 	public static @NotNull ResourceKey<PlacedFeature> createKey(String namespace, String path) {
-		return ResourceKey.create(Registries.PLACED_FEATURE, ResourceLocation.fromNamespaceAndPath(namespace, path));
+		return ResourceKey.create(Registries.PLACED_FEATURE, Identifier.fromNamespaceAndPath(namespace, path));
 	}
 
 	public static @NotNull Holder<PlacedFeature> register(
@@ -65,7 +65,7 @@ public class FrozenLibPlacementUtils {
 	) {
 		var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE, Registries.PLACED_FEATURE));
 		var configured = entries.registryManager().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(configuredKey);
-		var value = registry.register(Registries.PLACED_FEATURE, registryKey.location(), new PlacedFeature(configured, List.copyOf(list)));
+		var value = registry.register(Registries.PLACED_FEATURE, registryKey.identifier(), new PlacedFeature(configured, List.copyOf(list)));
 		return Holder.direct(value);
 	}
 

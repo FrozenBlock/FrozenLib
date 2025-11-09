@@ -31,7 +31,7 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 import net.frozenblock.lib.worldgen.structure.impl.StructureTemplatePoolInterface;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
@@ -59,7 +59,7 @@ public class TemplatePoolApi {
 			registryAccess.lookup(Registries.TEMPLATE_POOL).ifPresent(templatePoolRegistry -> {
 				templatePoolRegistry.entrySet().forEach(templatePoolEntry -> {
 					if ((Object) (templatePoolEntry.getValue()) instanceof StructureTemplatePoolInterface templatePoolInterface) {
-						final List<Pair<StructurePoolElement, Integer>> additionalElements = context.getAdditionalElements(templatePoolEntry.getKey().location());
+						final List<Pair<StructurePoolElement, Integer>> additionalElements = context.getAdditionalElements(templatePoolEntry.getKey().identifier());
 						if (!additionalElements.isEmpty()) templatePoolInterface.frozenlib$addTemplatePools(additionalElements);
 					}
 				});
@@ -68,10 +68,10 @@ public class TemplatePoolApi {
 	}
 
 	public static class TemplatePoolAdditionHolder {
-		protected final Map<ResourceLocation, List<Pair<StructurePoolElement, Integer>>> poolToElements = new Object2ObjectOpenHashMap<>();
+		protected final Map<Identifier, List<Pair<StructurePoolElement, Integer>>> poolToElements = new Object2ObjectOpenHashMap<>();
 
 		public void addElement(
-			ResourceLocation pool,
+			Identifier pool,
 			@NotNull Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> elementFunction,
 			int weight,
 			StructureTemplatePool.Projection projection
@@ -85,7 +85,7 @@ public class TemplatePoolApi {
 			this.poolToElements.put(pool, list);
 		}
 
-		public @NotNull List<Pair<StructurePoolElement, Integer>> getAdditionalElements(ResourceLocation pool) {
+		public @NotNull List<Pair<StructurePoolElement, Integer>> getAdditionalElements(Identifier pool) {
 			return new ArrayList<>(this.poolToElements.getOrDefault(pool, ImmutableList.of()));
 		}
 	}

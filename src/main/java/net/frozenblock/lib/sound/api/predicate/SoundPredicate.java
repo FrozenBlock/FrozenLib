@@ -21,23 +21,23 @@ import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class SoundPredicate<T extends Entity> {
-	public static final ResourceLocation DEFAULT_ID = FrozenLibConstants.id("default");
-	public static final ResourceLocation NOT_SILENT_AND_ALIVE_ID = FrozenLibConstants.id("not_silent_and_alive");
+	public static final Identifier DEFAULT_ID = FrozenLibConstants.id("default");
+	public static final Identifier NOT_SILENT_AND_ALIVE_ID = FrozenLibConstants.id("not_silent_and_alive");
 
 	private final Supplier<LoopPredicate<T>> predicateSupplier;
 
-    public static <T extends Entity> void register(ResourceLocation id, Supplier<LoopPredicate<T>> predicateSupplier) {
+    public static <T extends Entity> void register(Identifier id, Supplier<LoopPredicate<T>> predicateSupplier) {
 		Registry.register(FrozenLibRegistries.SOUND_PREDICATE, id, new SoundPredicate<>(predicateSupplier));
     }
 
-	public static <T extends Entity> void registerUnsynced(ResourceLocation id, Supplier<LoopPredicate<T>> predicateSupplier) {
+	public static <T extends Entity> void registerUnsynced(Identifier id, Supplier<LoopPredicate<T>> predicateSupplier) {
 		Registry.register(FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED, id, new SoundPredicate<>(predicateSupplier));
 	}
 
@@ -46,7 +46,7 @@ public final class SoundPredicate<T extends Entity> {
 	}
 
 	@SuppressWarnings("unchecked")
-    public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable ResourceLocation id) {
+    public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable Identifier id) {
         if (id != null) {
             if (FrozenLibRegistries.SOUND_PREDICATE.containsKey(id)) {
 				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibRegistries.SOUND_PREDICATE.getValue(id);

@@ -17,15 +17,15 @@
 
 package net.frozenblock.lib.item.impl;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 public interface CooldownInterface {
 
-    default void frozenLib$changeCooldown(ResourceLocation cooldownGroup, int additional) {
+    default void frozenLib$changeCooldown(Identifier cooldownGroup, int additional) {
 		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
 
-    default void frozenLib$onCooldownChanged(ResourceLocation cooldownGroup, int additional) {
+    default void frozenLib$onCooldownChanged(Identifier cooldownGroup, int additional) {
 		throw new UnsupportedOperationException("IMPLEMENT ME");
 	}
 

@@ -31,8 +31,8 @@ public class FrozenLibPlacedTreeFeature {
 
 	public FrozenLibPlacedTreeFeature(FrozenLibConfiguredTreeFeature treeFeature) {
 		this.treeFeature = treeFeature;
-		this.placedFeature = new FrozenLibPlacedFeature(this.treeFeature.getKey().location().withSuffix("_checked"));
-		this.placedFeatureWithLitter = new FrozenLibPlacedFeature(this.treeFeature.getLitterVariantKey().location().withSuffix("_checked"));
+		this.placedFeature = new FrozenLibPlacedFeature(this.treeFeature.getKey().identifier().withSuffix("_checked"));
+		this.placedFeatureWithLitter = new FrozenLibPlacedFeature(this.treeFeature.getLitterVariantKey().identifier().withSuffix("_checked"));
 	}
 
 	public Holder<ConfiguredFeature<?, ?>> getConfiguredHolder() {

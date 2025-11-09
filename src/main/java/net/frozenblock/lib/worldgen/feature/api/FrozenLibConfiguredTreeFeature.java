@@ -23,7 +23,7 @@ import net.frozenblock.lib.FrozenBools;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeafLitterBlock;
@@ -42,7 +42,7 @@ public class FrozenLibConfiguredTreeFeature {
 	private final List<TreeDecorator> litterDecorators;
 
 	public FrozenLibConfiguredTreeFeature(
-		ResourceLocation key,
+		Identifier key,
 		Block leafLitterBlock,
 		int triesA, int radiusA, int heightA,
 		int triesB, int radiusB, int heightB

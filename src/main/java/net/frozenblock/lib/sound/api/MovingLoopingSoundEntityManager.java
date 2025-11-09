@@ -24,7 +24,7 @@ import java.util.List;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.impl.networking.FrozenLibSoundPackets;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -57,7 +57,7 @@ public class MovingLoopingSoundEntityManager {
 		}
     }
 
-    public void addSound(ResourceLocation soundID, SoundSource category, float volume, float pitch, ResourceLocation restrictionId, boolean stopOnDeath) {
+    public void addSound(Identifier soundID, SoundSource category, float volume, float pitch, Identifier restrictionId, boolean stopOnDeath) {
         this.sounds.add(new SoundLoopData(soundID, category, volume, pitch, restrictionId, stopOnDeath));
 		SoundPredicate.getPredicate(restrictionId).onStart(this.entity);
     }
@@ -96,19 +96,19 @@ public class MovingLoopingSoundEntityManager {
 	}
 
     public record SoundLoopData(
-		ResourceLocation soundEventID, String category, float volume, float pitch, ResourceLocation restrictionID, boolean stopOnDeath
+		Identifier soundEventID, String category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath
 	) {
         public static final Codec<SoundLoopData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                ResourceLocation.CODEC.fieldOf("soundEventID").forGetter(SoundLoopData::soundEventID),
+                Identifier.CODEC.fieldOf("soundEventID").forGetter(SoundLoopData::soundEventID),
                 Codec.STRING.fieldOf("categoryOrdinal").forGetter(SoundLoopData::category),
                 Codec.FLOAT.fieldOf("volume").forGetter(SoundLoopData::volume),
                 Codec.FLOAT.fieldOf("pitch").forGetter(SoundLoopData::pitch),
-                ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(SoundLoopData::restrictionID),
+                Identifier.CODEC.fieldOf("restrictionID").forGetter(SoundLoopData::restrictionID),
 				Codec.BOOL.fieldOf("stopOnDeath").forGetter(SoundLoopData::stopOnDeath)
         ).apply(instance, SoundLoopData::new));
 
         public SoundLoopData(
-			ResourceLocation soundEventID, @NotNull SoundSource category, float volume, float pitch, ResourceLocation restrictionID, boolean stopOnDeath
+			Identifier soundEventID, @NotNull SoundSource category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath
 		) {
 			this(soundEventID, category.toString(), volume, pitch, restrictionID, stopOnDeath);
         }

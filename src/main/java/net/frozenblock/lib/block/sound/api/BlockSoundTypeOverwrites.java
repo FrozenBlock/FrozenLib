@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
@@ -45,20 +45,20 @@ public class BlockSoundTypeOverwrites {
 	 * This will only work with vanilla blocks.
 	 */
 	public static void addBlock(String id, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.addBuiltInOverwrite(ResourceLocation.withDefaultNamespace(id), sounds, condition);
+		MANAGER.addBuiltInOverwrite(Identifier.withDefaultNamespace(id), sounds, condition);
 	}
 
 	/**
 	 * Adds a block with the specified namespace and id.
 	 */
 	public static void addBlock(String namespace, String path, SoundType sounds, BooleanSupplier condition) {
-		MANAGER.addBuiltInOverwrite(ResourceLocation.fromNamespaceAndPath(namespace, path), sounds, condition);
+		MANAGER.addBuiltInOverwrite(Identifier.fromNamespaceAndPath(namespace, path), sounds, condition);
 	}
 
 	/**
-	 * Adds a block with the specified {@link ResourceLocation}.
+	 * Adds a block with the specified {@link Identifier}.
 	 */
-	public static void addBlock(ResourceLocation location, SoundType sounds, BooleanSupplier condition) {
+	public static void addBlock(Identifier location, SoundType sounds, BooleanSupplier condition) {
 		MANAGER.addBuiltInOverwrite(location, sounds, condition);
 	}
 

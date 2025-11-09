@@ -21,7 +21,7 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * An edited version of {@link ModInitializer} that contains extra tools for ease of use.
@@ -57,10 +57,10 @@ public abstract class FrozenModInitializer implements ModInitializer {
 	}
 
 	/**
-	 * @return a {@link ResourceLocation} with this mod's id as the namespace.
+	 * @return a {@link Identifier} with this mod's id as the namespace.
 	 */
-	public ResourceLocation id(String path) {
-		return ResourceLocation.fromNamespaceAndPath(this.modId, path);
+	public Identifier id(String path) {
+		return Identifier.fromNamespaceAndPath(this.modId, path);
 	}
 
 	/**

@@ -21,13 +21,13 @@ import java.util.function.Function;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * @param type The in-game location type to check, in {@link MusicPitchDetectionType} form.
- * @param location The {@link ResourceLocation} of the in-game location that triggers the pitch change.
+ * @param location The {@link Identifier} of the in-game location that triggers the pitch change.
  * @param pitchFunction The target pitch to play music at. This is passed as a {@link Function} with a {@link Long} as the parameter, allowing pitch to continuously shift.
  */
 @Environment(EnvType.CLIENT)
-public record MusicPitchInfo(MusicPitchDetectionType type, ResourceLocation location, Function<Long, Float> pitchFunction) {
+public record MusicPitchInfo(MusicPitchDetectionType type, Identifier location, Function<Long, Float> pitchFunction) {
 }

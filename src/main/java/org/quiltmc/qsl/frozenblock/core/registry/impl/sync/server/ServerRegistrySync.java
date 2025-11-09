@@ -30,7 +30,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking.Conte
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.StrictJsonParser;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
@@ -109,7 +109,7 @@ public final class ServerRegistrySync {
 	}
 
 	public static boolean isNamespaceVanilla(String namespace) {
-		return namespace.equals(ResourceLocation.DEFAULT_NAMESPACE) || namespace.equals("brigadier");
+		return namespace.equals(Identifier.DEFAULT_NAMESPACE) || namespace.equals("brigadier");
 	}
 
 	public static boolean shouldSync() {

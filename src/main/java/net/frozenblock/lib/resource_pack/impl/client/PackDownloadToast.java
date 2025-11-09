@@ -34,13 +34,13 @@ import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
 import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class PackDownloadToast implements Toast {
-	private static final ResourceLocation BACKGROUND_SPRITE = FrozenLibConstants.id("toast/resource_pack");
+	private static final Identifier BACKGROUND_SPRITE = FrozenLibConstants.id("toast/resource_pack");
 	private static final int MAX_LINE_SIZE = 200;
 	private static final int LINE_SPACING = 12;
 	private static final int MARGIN = 10;

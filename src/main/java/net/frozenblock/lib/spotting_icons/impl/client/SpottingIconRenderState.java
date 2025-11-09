@@ -28,7 +28,7 @@ import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -38,7 +38,7 @@ import org.joml.Quaternionf;
 @Environment(EnvType.CLIENT)
 public final class SpottingIconRenderState {
 	public boolean render;
-	public ResourceLocation texture;
+	public Identifier texture;
 	public int alpha;
 	public float renderOffsetY;
 

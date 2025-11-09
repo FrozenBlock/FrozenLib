@@ -26,47 +26,47 @@ import net.frozenblock.lib.cape.impl.Cape;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class CapeCustomizePacket implements CustomPacketPayload {
-	private static final ResourceLocation DUMMY = FrozenLibConstants.id("dummy");
+	private static final Identifier DUMMY = FrozenLibConstants.id("dummy");
 	public static final Type<CapeCustomizePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cape_packet"));
 	public static final StreamCodec<FriendlyByteBuf, CapeCustomizePacket> CODEC = StreamCodec.ofMember(CapeCustomizePacket::write, CapeCustomizePacket::new);
 
 	private final UUID playerUUID;
 	private final boolean enabled;
-	private ResourceLocation capeId = null;
+	private Identifier capeId = null;
 
 	private CapeCustomizePacket(UUID uuid, boolean enabled) {
 		this.playerUUID = uuid;
 		this.enabled = enabled;
 	}
 
-	private CapeCustomizePacket(UUID uuid, boolean enabled, ResourceLocation capeId) {
+	private CapeCustomizePacket(UUID uuid, boolean enabled, Identifier capeId) {
 		this(uuid, enabled);
 		this.capeId = capeId;
 	}
 
 	public CapeCustomizePacket(@NotNull FriendlyByteBuf buf) {
 		this(buf.readUUID(), buf.readBoolean());
-		if (this.enabled) this.capeId = buf.readResourceLocation();
+		if (this.enabled) this.capeId = buf.readIdentifier();
 	}
 
 	public void write(@NotNull FriendlyByteBuf buf) {
 		buf.writeUUID(this.playerUUID);
 		buf.writeBoolean(this.enabled);
-		if (this.enabled) buf.writeResourceLocation(this.capeId);
+		if (this.enabled) buf.writeIdentifier(this.capeId);
 	}
 
 	public static @NotNull CapeCustomizePacket createDisablePacket(UUID uuid) {
 		return new CapeCustomizePacket(uuid, false);
 	}
 
-	public static @NotNull CapeCustomizePacket createPacket(UUID uuid, @Nullable ResourceLocation capeId) {
+	public static @NotNull CapeCustomizePacket createPacket(UUID uuid, @Nullable Identifier capeId) {
 		return new CapeCustomizePacket(uuid, !shouldDisable(CapeUtil.getCape(capeId).orElse(null)), capeId);
 	}
 
@@ -75,7 +75,7 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 		return new CapeCustomizePacket(uuid, !shouldDisable(cape), cape.registryId());
 	}
 
-	public static void sendCapeToAll(MinecraftServer server, UUID uuid, @Nullable ResourceLocation capeId) {
+	public static void sendCapeToAll(MinecraftServer server, UUID uuid, @Nullable Identifier capeId) {
 		CapeCustomizePacket frozenCapePacket = CapeCustomizePacket.createPacket(uuid, capeId);
 		PlayerLookup.all(server).forEach(player -> ServerPlayNetworking.send(player, frozenCapePacket));
 	}
@@ -84,7 +84,7 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 		return cape == null || shouldDisable(cape.registryId()) || cape.texture() == null;
 	}
 
-	public static boolean shouldDisable(ResourceLocation capeId) {
+	public static boolean shouldDisable(Identifier capeId) {
 		return capeId == null || capeId.equals(DUMMY);
 	}
 
@@ -97,7 +97,7 @@ public final class CapeCustomizePacket implements CustomPacketPayload {
 	}
 
 	@Nullable
-	public ResourceLocation getCapeId() {
+	public Identifier getCapeId() {
 		return this.capeId;
 	}
 

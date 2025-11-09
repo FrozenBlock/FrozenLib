@@ -22,7 +22,7 @@ import java.util.Map;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.ServerAdvancementManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class ServerAdvancementManagerMixin {
 
 	@Shadow
-	private Map<ResourceLocation, AdvancementHolder> advancements;
+	private Map<Identifier, AdvancementHolder> advancements;
 
 	@Shadow
 	@Final
@@ -50,7 +50,7 @@ public class ServerAdvancementManagerMixin {
 			target = "Ljava/util/Map;values()Ljava/util/Collection;"
 		)
 	)
-	private void modifyAdvancement(Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
+	private void modifyAdvancement(Map<Identifier, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
 		for (AdvancementHolder holder : advancements.values()) {
 			AdvancementEvents.INIT.invoker().onInit(holder, this.registries);
 		}

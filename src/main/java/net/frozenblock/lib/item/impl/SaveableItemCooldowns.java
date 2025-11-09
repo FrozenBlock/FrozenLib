@@ -28,7 +28,7 @@ import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
@@ -76,15 +76,15 @@ public class SaveableItemCooldowns {
 			final int cooldownLeft = saveableCooldownInstance.cooldownLeft();
 			final int startTime = tickCount - (saveableCooldownInstance.totalCooldownTime() - cooldownLeft);
 			final int endTime = tickCount + cooldownLeft;
-			final ResourceLocation cooldownGroup = saveableCooldownInstance.cooldownGroup();
+			final Identifier cooldownGroup = saveableCooldownInstance.cooldownGroup();
 			itemCooldowns.cooldowns.put(cooldownGroup, new ItemCooldowns.CooldownInstance(startTime, endTime));
 			ServerPlayNetworking.send(player, new ForcedCooldownPacket(cooldownGroup, startTime, endTime));
 		}
 	}
 
-	public record SaveableCooldownInstance(ResourceLocation cooldownGroup, int cooldownLeft, int totalCooldownTime) {
+	public record SaveableCooldownInstance(Identifier cooldownGroup, int cooldownLeft, int totalCooldownTime) {
 		public static final Codec<SaveableCooldownInstance> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			ResourceLocation.CODEC.fieldOf("CooldownGroup").forGetter(SaveableCooldownInstance::cooldownGroup),
+			Identifier.CODEC.fieldOf("CooldownGroup").forGetter(SaveableCooldownInstance::cooldownGroup),
 			Codec.INT.fieldOf("CooldownLeft").orElse(0).forGetter(SaveableCooldownInstance::cooldownLeft),
 			Codec.INT.fieldOf("TotalCooldownTime").orElse(0).forGetter(SaveableCooldownInstance::totalCooldownTime)
 		).apply(instance, SaveableCooldownInstance::new));
@@ -92,7 +92,7 @@ public class SaveableItemCooldowns {
 
 		@NotNull
 		public static SaveableCooldownInstance makeFromCooldownInstance(
-			@NotNull ResourceLocation cooldownGroup, @NotNull ItemCooldowns.CooldownInstance cooldownInstance, int tickCount
+			@NotNull Identifier cooldownGroup, @NotNull ItemCooldowns.CooldownInstance cooldownInstance, int tickCount
 		) {
 			int cooldownLeft = cooldownInstance.endTime - tickCount;
 			int totalCooldownTime = cooldownInstance.endTime - cooldownInstance.startTime;

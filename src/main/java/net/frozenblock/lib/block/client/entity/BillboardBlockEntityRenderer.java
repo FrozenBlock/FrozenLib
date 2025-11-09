@@ -33,7 +33,7 @@ import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import org.jetbrains.annotations.NotNull;
@@ -88,7 +88,7 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 		poseStack.popPose();
 	}
 
-	public abstract ResourceLocation getTexture(S renderState);
+	public abstract Identifier getTexture(S renderState);
 
 	public abstract ModelPart getRoot(Context ctx);
 }

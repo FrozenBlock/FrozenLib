@@ -20,7 +20,7 @@ package net.frozenblock.lib.spotting_icons.api;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 
 public final class SpottingIconPredicate<T extends Entity> {
 
-    public static <T extends Entity> void register(ResourceLocation id, IconPredicate<T> predicate) {
+    public static <T extends Entity> void register(Identifier id, IconPredicate<T> predicate) {
 		Registry.register(FrozenLibRegistries.SPOTTING_ICON_PREDICATE, id, new SpottingIconPredicate<>(predicate));
     }
 
@@ -39,7 +39,7 @@ public final class SpottingIconPredicate<T extends Entity> {
 	}
 
 	@SuppressWarnings("unchecked")
-    public static <T extends Entity> IconPredicate<T> getPredicate(@Nullable ResourceLocation id) {
+    public static <T extends Entity> IconPredicate<T> getPredicate(@Nullable Identifier id) {
         if (id != null) {
             if (FrozenLibRegistries.SPOTTING_ICON_PREDICATE.containsKey(id)) {
 				SpottingIconPredicate<T> predicate = (SpottingIconPredicate<T>) FrozenLibRegistries.SPOTTING_ICON_PREDICATE.getValue(id);
@@ -69,7 +69,7 @@ public final class SpottingIconPredicate<T extends Entity> {
 		return Entity::isAlive;
 	}
 
-    public static ResourceLocation DEFAULT_ID = FrozenLibConstants.id("default");
+    public static Identifier DEFAULT_ID = FrozenLibConstants.id("default");
 
     public static void init() {
         register(DEFAULT_ID, defaultPredicate());

@@ -61,7 +61,7 @@ public class MusicManagerMixin {
 		method = "startPlaying",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/resources/sounds/SimpleSoundInstance;forMusic(Lnet/minecraft/sounds/SoundEvent;F)Lnet/minecraft/client/resources/sounds/SimpleSoundInstance;"
+			target = "Lnet/minecraft/client/resources/sounds/SimpleSoundInstance;forMusic(Lnet/minecraft/sounds/SoundEvent;)Lnet/minecraft/client/resources/sounds/SimpleSoundInstance;"
 		)
 	)
 	public SimpleSoundInstance frozenLib$startPlayingAtCorrectPitch(SimpleSoundInstance original) {

@@ -30,7 +30,7 @@ import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.ValueInput;
@@ -65,7 +65,7 @@ public class SpottingIconManager {
 		}
 	}
 
-	public void setIcon(ResourceLocation texture, float startFade, float endFade, ResourceLocation restrictionID) {
+	public void setIcon(Identifier texture, float startFade, float endFade, Identifier restrictionID) {
 		this.icon = new SpottingIcon(texture, startFade, endFade, restrictionID);
 		if (!this.entity.level().isClientSide()) {
 			CustomPacketPayload packet = new SpottingIconPacket(this.entity.getId(), texture, startFade, endFade, restrictionID);
@@ -93,10 +93,10 @@ public class SpottingIconManager {
 		if (this.icon != null) {
 			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
 			byteBuf.writeVarInt(this.entity.getId());
-			byteBuf.writeResourceLocation(this.icon.texture);
+			byteBuf.writeIdentifier(this.icon.texture);
 			byteBuf.writeFloat(this.icon.startFadeDist);
 			byteBuf.writeFloat(this.icon.endFadeDist);
-			byteBuf.writeResourceLocation(this.icon.restrictionID);
+			byteBuf.writeIdentifier(this.icon.restrictionID);
 			ServerPlayNetworking.send(
 				player,
 				new SpottingIconPacket(
@@ -111,8 +111,8 @@ public class SpottingIconManager {
 	}
 
 	@Environment(EnvType.CLIENT)
-	private static boolean hasTexture(ResourceLocation resourceLocation) {
-		return Minecraft.getInstance().getResourceManager().getResource(resourceLocation).isPresent();
+	private static boolean hasTexture(Identifier identifier) {
+		return Minecraft.getInstance().getResourceManager().getResource(identifier).isPresent();
 	}
 
 	public void load(@NotNull ValueInput input) {
@@ -131,12 +131,12 @@ public class SpottingIconManager {
 		}
 	}
 
-	public record SpottingIcon(ResourceLocation texture, float startFadeDist, float endFadeDist, ResourceLocation restrictionID) {
+	public record SpottingIcon(Identifier texture, float startFadeDist, float endFadeDist, Identifier restrictionID) {
 			public static final Codec<SpottingIcon> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-				ResourceLocation.CODEC.fieldOf("texture").forGetter(SpottingIcon::texture),
+				Identifier.CODEC.fieldOf("texture").forGetter(SpottingIcon::texture),
 				Codec.FLOAT.fieldOf("startFadeDist").forGetter(SpottingIcon::startFadeDist),
 				Codec.FLOAT.fieldOf("endFadeDist").forGetter(SpottingIcon::endFadeDist),
-				ResourceLocation.CODEC.fieldOf("restrictionID").forGetter(SpottingIcon::restrictionID)
+				Identifier.CODEC.fieldOf("restrictionID").forGetter(SpottingIcon::restrictionID)
 			).apply(instance, SpottingIcon::new));
 	}
 }

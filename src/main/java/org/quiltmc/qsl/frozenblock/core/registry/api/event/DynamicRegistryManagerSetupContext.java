@@ -27,7 +27,7 @@ import java.util.function.Supplier;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
@@ -49,7 +49,7 @@ public interface DynamicRegistryManagerSetupContext {
 	/**
 	 * Attempts to safely register a game object into the given registry.
 	 * <p>
-	 * This method is preferred instead of {@link Registry#register(Registry, ResourceLocation, Object)}
+	 * This method is preferred instead of {@link Registry#register(Registry, Identifier, Object)}
 	 * as it makes sure to not overwrite data-pack-provided entries, it also makes sure the registry exists.
 	 *
 	 * @param registryKey        the key of the registry to register into
@@ -58,7 +58,7 @@ public interface DynamicRegistryManagerSetupContext {
 	 * @param <V>                the type of game object to register
 	 * @return the optional game object, if the registry is present then the optional is filled, or empty otherwise
 	 */
-	default <V> @NotNull Optional<V> register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull ResourceLocation id,
+	default <V> @NotNull Optional<V> register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull Identifier id,
 											  @NotNull Supplier<V> gameObjectSupplier) {
 		return this.registryManager().lookup(registryKey)
 			.map(registry -> registry.containsKey(id) ? registry.getValue(id) : Registry.register(registry, id, gameObjectSupplier.get()));
@@ -153,7 +153,7 @@ public interface DynamicRegistryManagerSetupContext {
 		 * @param <V>         the type of values held in the registry
 		 * @return the game object
 		 */
-		public <V> @NotNull V register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull ResourceLocation id,
+		public <V> @NotNull V register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull Identifier id,
 									   @NotNull V gameObject) {
 			return Registry.register(this.get(registryKey), id, gameObject);
 		}

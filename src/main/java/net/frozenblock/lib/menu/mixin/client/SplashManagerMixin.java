@@ -27,7 +27,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.menu.api.SplashTextAPI;
 import net.minecraft.client.resources.SplashManager;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.profiling.ProfilerFiller;
 import org.spongepowered.asm.mixin.Mixin;
@@ -60,7 +60,7 @@ public class SplashManagerMixin {
 				.toList()
 		);
 
-		for (ResourceLocation splashLocation : SplashTextAPI.getSplashFiles()) {
+		for (Identifier splashLocation : SplashTextAPI.getSplashFiles()) {
 			try (BufferedReader bufferedReader = resourceManager.openAsReader(splashLocation)) {
 				splashes.addAll(
 					bufferedReader.lines()

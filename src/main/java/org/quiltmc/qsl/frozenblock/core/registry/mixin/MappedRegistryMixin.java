@@ -89,7 +89,7 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 		locals = LocalCapture.CAPTURE_FAILEXCEPTION
 	)
 	private void frozenLib_quilt$$invokeEntryAddEvent(ResourceKey<V> key, V entry, RegistrationInfo registrationInfo, CallbackInfoReturnable<Holder<V>> cir, Holder.Reference reference, int i) {
-		this.frozenLib_quilt$entryContext.set(key.location(), entry, i);
+		this.frozenLib_quilt$entryContext.set(key.identifier(), entry, i);
 		RegistryEventStorage.as((MappedRegistry<V>) (Object) this).frozenLib_quilt$getEntryAddedEvent().invoker().onAdded(this.frozenLib_quilt$entryContext);
 	}
 

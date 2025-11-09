@@ -40,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
 public class TagUtils {
 
 	public static <T> @NotNull List<T> getAllEntries(@NotNull TagKey<T> tag) {
-		Optional<? extends Registry<?>> maybeRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().location());
+		Optional<? extends Registry<?>> maybeRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().identifier());
 
 		if (maybeRegistry.isPresent()) {
 			Registry<T> registry = (Registry<T>) maybeRegistry.get();
@@ -70,7 +70,7 @@ public class TagUtils {
     @SuppressWarnings("unchecked")
     @Nullable
     public static <T> T getRandomEntry(RandomSource random, TagKey<T> tag) {
-        Optional<? extends Registry<?>> maybeRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().location());
+        Optional<? extends Registry<?>> maybeRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().identifier());
         Objects.requireNonNull(random);
         Objects.requireNonNull(tag);
 

@@ -23,7 +23,7 @@ import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
@@ -39,7 +39,7 @@ public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration> {
 
 	private final ResourceKey<ConfiguredFeature<?, ?>> key;
 
-	public FrozenLibConfiguredFeature(ResourceLocation key) {
+	public FrozenLibConfiguredFeature(Identifier key) {
 		this.key = ResourceKey.create(Registries.CONFIGURED_FEATURE, key);
 		FEATURES.add(this);
 	}
@@ -63,12 +63,12 @@ public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration> {
 
 	@SuppressWarnings("unchecked")
 	public <F extends Feature<FC>> FrozenLibConfiguredFeature<FC> makeAndSetHolder(F feature, FC config) {
-		FrozenLibLogUtils.log("Registering configured feature: " + this.getKey().location(), FrozenLibLogUtils.UNSTABLE_LOGGING);
+		FrozenLibLogUtils.log("Registering configured feature: " + this.getKey().identifier(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 
-		assert FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().location();
+		assert FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().identifier();
 
-		assert feature != null : "Feature is null whilst registering " + this.getKey().location();
-		assert config != null : "Feature configuration is null whilst registering " + this.getKey().location();
+		assert feature != null : "Feature is null whilst registering " + this.getKey().identifier();
+		assert config != null : "Feature configuration is null whilst registering " + this.getKey().identifier();
 
 		FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), new ConfiguredFeature<>(feature, config));
 		return this;

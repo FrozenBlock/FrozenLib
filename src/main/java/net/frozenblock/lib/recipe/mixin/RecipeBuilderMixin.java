@@ -19,7 +19,7 @@ package net.frozenblock.lib.recipe.mixin;
 
 import net.frozenblock.lib.recipe.api.RecipeExportNamespaceFix;
 import net.minecraft.data.recipes.RecipeBuilder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -35,8 +35,8 @@ public interface RecipeBuilderMixin {
 	)
 	default String frozenLib$save(String original) {
 		if (RecipeExportNamespaceFix.getCurrentGeneratingModId().isPresent()) {
-			ResourceLocation originalLocation = ResourceLocation.tryParse(original);
-			ResourceLocation newLocation = ResourceLocation.fromNamespaceAndPath(RecipeExportNamespaceFix.getCurrentGeneratingModId().get(), originalLocation.getPath());
+			Identifier originalLocation = Identifier.tryParse(original);
+			Identifier newLocation = Identifier.fromNamespaceAndPath(RecipeExportNamespaceFix.getCurrentGeneratingModId().get(), originalLocation.getPath());
 			return newLocation.toString();
 		}
 		return original;

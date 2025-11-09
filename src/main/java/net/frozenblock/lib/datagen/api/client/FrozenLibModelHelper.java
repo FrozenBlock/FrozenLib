@@ -33,7 +33,7 @@ import net.minecraft.client.data.models.model.TextureSlot;
 import net.minecraft.client.data.models.model.TexturedModel;
 import net.minecraft.client.renderer.block.model.VariantMutator;
 import net.minecraft.core.Direction;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -69,7 +69,7 @@ public class FrozenLibModelHelper {
 	);
 
 	public static void createTintedFlowerBed(@NotNull BlockModelGenerators generator, @NotNull Block block) {
-		ResourceLocation itemModel = generator.createFlatItemModel(block.asItem());
+		Identifier itemModel = generator.createFlatItemModel(block.asItem());
 		generator.registerSimpleTintedItemModel(block, itemModel, new GrassColorSource());
 
 		MultiVariant multiVariant1 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_1.create(block, generator.modelOutput));

@@ -27,7 +27,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
 import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
@@ -61,7 +61,7 @@ public class StructurePlacementMixin implements StructureSetAndPlacementInterfac
 
 	@Unique
 	@Override
-	public synchronized void frozenLib$addExclusions(@NotNull List<Pair<ResourceLocation, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup) {
+	public synchronized void frozenLib$addExclusions(@NotNull List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup) {
 		this.frozenLib$addedExclusions.clear();
 		exclusions.forEach(pair -> {
 			structureSetRegistryLookup.get(ResourceKey.create(Registries.STRUCTURE_SET, pair.getFirst())).ifPresent(structureSet -> {

@@ -24,7 +24,7 @@ import net.frozenblock.lib.cape.client.impl.AvatarCapeInterface;
 import net.minecraft.client.renderer.entity.layers.WingsLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.core.ClientAsset;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -43,7 +43,7 @@ public class WingsLayerMixin {
 		cancellable = true
 	)
 	private static void frozenLib$useFrozenLibCapeAsElytra(
-		CallbackInfoReturnable<ResourceLocation> info,
+		CallbackInfoReturnable<Identifier> info,
 		@Local(ordinal = 0) AvatarRenderState avatarRenderState
 	) {
 		if (!(avatarRenderState instanceof AvatarCapeInterface capeInterface) || !avatarRenderState.showCape) return;

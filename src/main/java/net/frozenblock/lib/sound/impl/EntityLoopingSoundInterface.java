@@ -18,7 +18,7 @@
 package net.frozenblock.lib.sound.impl;
 
 import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -30,11 +30,11 @@ public interface EntityLoopingSoundInterface {
 	}
 
     default void frozenLib$addSound(
-		ResourceLocation soundID,
+		Identifier soundID,
 		SoundSource category,
 		float volume,
 		float pitch,
-		ResourceLocation restrictionId,
+		Identifier restrictionId,
 		boolean stopOnDeath
 	) {
 		throw new UnsupportedOperationException("IMPLEMENT ME");

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.wind.api;
 
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 /**
  * Used to append a wind disturbance to an entity, such as the Breeze.
@@ -25,9 +25,9 @@ import net.minecraft.resources.ResourceLocation;
 public interface WindDisturbingEntity {
 
 	/**
-	 * @return the {@link ResourceLocation} of the registered {@link WindDisturbanceLogic} to use for this entity.
+	 * @return the {@link Identifier} of the registered {@link WindDisturbanceLogic} to use for this entity.
 	 */
-	ResourceLocation frozenLib$getWindDisturbanceLogicID();
+	Identifier frozenLib$getWindDisturbanceLogicID();
 
 	/**
 	 * @return the width of the wind disturbance.

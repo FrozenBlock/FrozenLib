@@ -23,7 +23,7 @@ import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ChunkTrackingView;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
@@ -80,16 +80,16 @@ public class WindDisturbance<T> {
 	}
 
 	public Optional<WindDisturbancePacket> toPacket() {
-		ResourceLocation resourceLocation = Optional.ofNullable(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getKey(this.disturbanceLogic))
+		Identifier identifier = Optional.ofNullable(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getKey(this.disturbanceLogic))
 			.orElseGet(() -> FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.getKey(this.disturbanceLogic));
 
-		if (resourceLocation != null) {
+		if (identifier != null) {
 			return Optional.of(
 				new WindDisturbancePacket(
 					this.affectedArea,
 					this.origin,
 					this.getSourceTypeFromSource(),
-					resourceLocation,
+					identifier,
 					this.encodePosOrID(this.origin)
 				)
 			);

@@ -27,18 +27,18 @@ import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
 import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 
 @UtilityClass
 public class StructurePlacementExclusionApi {
-	private static final Map<ResourceLocation, List<Pair<ResourceLocation, Integer>>> STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS = new Object2ObjectOpenHashMap<>();
+	private static final Map<Identifier, List<Pair<Identifier, Integer>>> STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS = new Object2ObjectOpenHashMap<>();
 
 	public static void init() {
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().forEach(structureSetReference -> {
 				if (structureSetReference.isBound() && (Object) (structureSetReference.value()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
 					setAndPlacementInterface.frozenLib$addExclusions(
-						getAdditionalExcludedStructureSets(structureSetReference.key().location()),
+						getAdditionalExcludedStructureSets(structureSetReference.key().identifier()),
 						level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET)
 					);
 				}
@@ -46,13 +46,13 @@ public class StructurePlacementExclusionApi {
 		});
 	}
 
-	public static void addExclusion(ResourceLocation structureSet, ResourceLocation excludedFrom, int chunkCount) {
-		List<Pair<ResourceLocation, Integer>> list = STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.getOrDefault(structureSet, new ArrayList<>());
+	public static void addExclusion(Identifier structureSet, Identifier excludedFrom, int chunkCount) {
+		List<Pair<Identifier, Integer>> list = STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.getOrDefault(structureSet, new ArrayList<>());
 		list.add(Pair.of(excludedFrom, chunkCount));
 		STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.put(structureSet, list);
 	}
 
-	public static List<Pair<ResourceLocation, Integer>> getAdditionalExcludedStructureSets(ResourceLocation structureSet) {
+	public static List<Pair<Identifier, Integer>> getAdditionalExcludedStructureSets(Identifier structureSet) {
 		return STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.getOrDefault(structureSet, ImmutableList.of());
 	}
 }

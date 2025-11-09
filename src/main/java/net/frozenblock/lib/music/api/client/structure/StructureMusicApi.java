@@ -28,26 +28,26 @@ import net.frozenblock.lib.worldgen.structure.api.status.client.ClientStructureS
 import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatus;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.Music;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import net.minecraft.Util;
+import net.minecraft.util.Util;
 
 @Environment(EnvType.CLIENT)
 public class StructureMusicApi {
-	private static final Map<ResourceLocation, List<StructureMusic>> STRUCTURE_TO_MUSIC_MAP = new Object2ObjectLinkedOpenHashMap<>();
+	private static final Map<Identifier, List<StructureMusic>> STRUCTURE_TO_MUSIC_MAP = new Object2ObjectLinkedOpenHashMap<>();
 
 	/**
 	 * Registers {@link StructureMusic} to be played while in a {@link Structure}.
 	 *
-	 * @param structureLocation The {@link ResourceLocation} of the {@link Structure} to play {@link StructureMusic} in.
+	 * @param structureLocation The {@link Identifier} of the {@link Structure} to play {@link StructureMusic} in.
 	 * @param music The {@link StructureMusic} to play.
 	 */
-	public static void registerMusicForStructure(ResourceLocation structureLocation, StructureMusic music) {
+	public static void registerMusicForStructure(Identifier structureLocation, StructureMusic music) {
 		List<StructureMusic> musicList = STRUCTURE_TO_MUSIC_MAP.computeIfAbsent(structureLocation, location -> new ArrayList<>());
 		musicList.add(music);
 		STRUCTURE_TO_MUSIC_MAP.put(structureLocation, musicList);
@@ -60,7 +60,7 @@ public class StructureMusicApi {
 	 * @param music The {@link StructureMusic} to play.
 	 */
 	public static void registerMusicForStructure(@NotNull ResourceKey<Structure> structureKey, StructureMusic music) {
-		registerMusicForStructure(structureKey.location(), music);
+		registerMusicForStructure(structureKey.identifier(), music);
 	}
 
 	@ApiStatus.Internal

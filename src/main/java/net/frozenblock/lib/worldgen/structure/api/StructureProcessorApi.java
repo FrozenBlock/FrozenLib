@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,15 +31,15 @@ import org.jetbrains.annotations.NotNull;
 public class StructureProcessorApi {
 	private static final List<StructureProcessor> EMPTY = ImmutableList.of();
 
-	private static final Map<ResourceLocation, List<StructureProcessor>> STRUCTURE_TO_PROCESSORS = new Object2ObjectOpenHashMap<>();
+	private static final Map<Identifier, List<StructureProcessor>> STRUCTURE_TO_PROCESSORS = new Object2ObjectOpenHashMap<>();
 
-	public static void addProcessor(ResourceLocation structureId, StructureProcessor processor) {
+	public static void addProcessor(Identifier structureId, StructureProcessor processor) {
 		List<StructureProcessor> processorList = STRUCTURE_TO_PROCESSORS.getOrDefault(structureId, new ArrayList<>());
 		processorList.add(processor);
 		STRUCTURE_TO_PROCESSORS.put(structureId, processorList);
 	}
 
-	public static @NotNull List<StructureProcessor> getAdditionalProcessors(ResourceLocation structureId) {
+	public static @NotNull List<StructureProcessor> getAdditionalProcessors(Identifier structureId) {
 		List<StructureProcessor> locationToProcessors = STRUCTURE_TO_PROCESSORS.getOrDefault(structureId, EMPTY);
 		return new ArrayList<>(locationToProcessors);
 	}

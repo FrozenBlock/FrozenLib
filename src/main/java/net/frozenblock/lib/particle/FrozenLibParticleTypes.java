@@ -29,7 +29,7 @@ import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.NotNull;
 
 public class FrozenLibParticleTypes {
@@ -63,12 +63,12 @@ public class FrozenLibParticleTypes {
 
 	@NotNull
 	private static <T extends ParticleOptions> ParticleType<T> register(
-		ResourceLocation resourceLocation,
+		Identifier identifier,
 		boolean alwaysShow,
 		Function<ParticleType<T>, MapCodec<T>> function,
 		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> function2
 	) {
-		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, resourceLocation, new ParticleType<T>(alwaysShow) {
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, identifier, new ParticleType<T>(alwaysShow) {
 			@Override
 			public @NotNull MapCodec<T> codec() {
 				return function.apply(this);

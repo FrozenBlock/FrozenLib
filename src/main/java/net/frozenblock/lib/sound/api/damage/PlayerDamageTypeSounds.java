@@ -21,25 +21,25 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageType;
 
 @UtilityClass
 public class PlayerDamageTypeSounds {
-	private static final Map<DamageType, ResourceLocation> DAMAGE_TYPE_RESOURCE_LOCATION_MAP = new Object2ObjectOpenHashMap<>();
-	private static final Map<ResourceLocation, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new Object2ObjectOpenHashMap<>();
-	private static final ResourceLocation DEFAULT_ID = FrozenLibConstants.id("default_damage_source");
+	private static final Map<DamageType, Identifier> DAMAGE_TYPE_RESOURCE_LOCATION_MAP = new Object2ObjectOpenHashMap<>();
+	private static final Map<Identifier, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new Object2ObjectOpenHashMap<>();
+	private static final Identifier DEFAULT_ID = FrozenLibConstants.id("default_damage_source");
 
 	/**
 	 * Adds a custom sound to be played upon a player getting damaged by a specific {@link DamageType}.
 	 *
 	 * @param type The {@link DamageType} to register the sound for.
 	 * @param sound The {@link SoundEvent} to register.
-	 * @param registry The {@link ResourceLocation} to register the sound override under.
+	 * @param registry The {@link Identifier} to register the sound override under.
 	 */
-	public static void addDamageSound(DamageType type, SoundEvent sound, ResourceLocation registry) {
+	public static void addDamageSound(DamageType type, SoundEvent sound, Identifier registry) {
 		DAMAGE_TYPE_RESOURCE_LOCATION_MAP.put(type, registry);
 		RESOURCE_LOCATION_SOUND_EVENT_MAP.put(registry, sound);
 	}
@@ -48,11 +48,11 @@ public class PlayerDamageTypeSounds {
 		return DAMAGE_TYPE_RESOURCE_LOCATION_MAP.containsKey(type) ? getDamageSound(DAMAGE_TYPE_RESOURCE_LOCATION_MAP.get(type)) : SoundEvents.PLAYER_HURT;
 	}
 
-	public static SoundEvent getDamageSound(ResourceLocation location) {
+	public static SoundEvent getDamageSound(Identifier location) {
 		return RESOURCE_LOCATION_SOUND_EVENT_MAP.getOrDefault(location, SoundEvents.PLAYER_HURT);
 	}
 
-	public static ResourceLocation getDamageID(DamageType type) {
+	public static Identifier getDamageID(DamageType type) {
 		return DAMAGE_TYPE_RESOURCE_LOCATION_MAP.getOrDefault(type, DEFAULT_ID);
 	}
 
@@ -60,7 +60,7 @@ public class PlayerDamageTypeSounds {
 		return DAMAGE_TYPE_RESOURCE_LOCATION_MAP.containsKey(type);
 	}
 
-	public static boolean containsSource(ResourceLocation location) {
+	public static boolean containsSource(Identifier location) {
 		return RESOURCE_LOCATION_SOUND_EVENT_MAP.containsKey(location);
 	}
 }

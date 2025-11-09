@@ -24,7 +24,7 @@ import java.util.Optional;
 import net.frozenblock.lib.worldgen.structure.impl.FrozenStructurePoolElementTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Rotation;
@@ -50,7 +50,7 @@ public class DataMarkerProcessableLegacySinglePoolElement extends SinglePoolElem
 	);
 
 	public DataMarkerProcessableLegacySinglePoolElement(
-		Either<ResourceLocation, StructureTemplate> either,
+		Either<Identifier, StructureTemplate> either,
 		Holder<StructureProcessorList> holder,
 		StructureTemplatePool.Projection projection,
 		Optional<LiquidSettings> optional

@@ -23,7 +23,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.special.SpecialModelRenderer;
 import net.minecraft.client.renderer.special.SpecialModelRenderers;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.ExtraCodecs;
 
 /**
@@ -35,7 +35,7 @@ public interface SpecialModelRenderersEntrypoint {
 	/**
 	 * Runs when {@link SpecialModelRenderers#bootstrap()} is called.
 	 */
-	void registerSpecialModelRenderers(ExtraCodecs.LateBoundIdMapper<ResourceLocation, MapCodec<? extends SpecialModelRenderer.Unbaked>> mapper);
+	void registerSpecialModelRenderers(ExtraCodecs.LateBoundIdMapper<Identifier, MapCodec<? extends SpecialModelRenderer.Unbaked>> mapper);
 
 	/**
 	 * Runs when {@link net.minecraft.client.renderer.special.SpecialModelRenderers#STATIC_BLOCK_MAPPING} is initialized and first calls `put.`

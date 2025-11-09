@@ -24,7 +24,7 @@ import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
@@ -42,13 +42,13 @@ public class FrozenLibPlacedFeature {
 
 	private Holder<ConfiguredFeature<?, ?>> configuredHolder;
 
-	public FrozenLibPlacedFeature(ResourceLocation key) {
+	public FrozenLibPlacedFeature(Identifier key) {
 		this.key = ResourceKey.create(Registries.PLACED_FEATURE, key);
 		FEATURES.add(this);
 	}
 
 	public Holder<ConfiguredFeature<?, ?>> getConfiguredHolder() {
-		assert this.configuredHolder.value() != null : "Trying get null holder from placed feature " + this.getKey().location();
+		assert this.configuredHolder.value() != null : "Trying get null holder from placed feature " + this.getKey().identifier();
 		return this.configuredHolder;
 	}
 
@@ -65,11 +65,11 @@ public class FrozenLibPlacedFeature {
 	public FrozenLibPlacedFeature makeAndSetHolder(Holder<ConfiguredFeature<?, ?>> configuredHolder, List<PlacementModifier> modifiers) {
 		this.setConfiguredHolder(configuredHolder);
 
-		FrozenLibLogUtils.log("Registering placed feature " + this.getKey().location(), true);
+		FrozenLibLogUtils.log("Registering placed feature " + this.getKey().identifier(), true);
 
-		assert FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT != null : "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().location();
-		assert configuredHolder != null : "Configured feature holder for FrozenPlacedFeature " + this.getKey().location() + " null";
-		assert modifiers != null : "Placement modifiers for FrozenPlacedFeature " + this.getKey().location() + " null";
+		assert FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT != null : "Boostrap context is null when writing FrozenPlacedFeature " + this.getKey().identifier();
+		assert configuredHolder != null : "Configured feature holder for FrozenPlacedFeature " + this.getKey().identifier() + " null";
+		assert modifiers != null : "Placement modifiers for FrozenPlacedFeature " + this.getKey().identifier() + " null";
 
 		FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), new PlacedFeature(configuredHolder, modifiers));
 

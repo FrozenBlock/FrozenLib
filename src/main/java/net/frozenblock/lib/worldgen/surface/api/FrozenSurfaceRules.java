@@ -94,14 +94,14 @@ public final class FrozenSurfaceRules {
 	public static SurfaceRules.RuleSource getSurfaceRules(ResourceKey<DimensionType> dimension) {
 		if (dimension == null) return null;
 
-		var location = dimension.location();
+		var location = dimension.identifier();
 		SurfaceRules.RuleSource returnValue = null;
 
-		if (location.equals(BuiltinDimensionTypes.OVERWORLD.location()) || location.equals(BuiltinDimensionTypes.OVERWORLD_CAVES.location())) {
+		if (location.equals(BuiltinDimensionTypes.OVERWORLD.identifier()) || location.equals(BuiltinDimensionTypes.OVERWORLD_CAVES.identifier())) {
 			returnValue = getOverworldSurfaceRules();
-		} else if (location.equals(BuiltinDimensionTypes.NETHER.location())) {
+		} else if (location.equals(BuiltinDimensionTypes.NETHER.identifier())) {
 			returnValue = getNetherSurfaceRules();
-		} else if (location.equals(BuiltinDimensionTypes.END.location())) {
+		} else if (location.equals(BuiltinDimensionTypes.END.identifier())) {
 			returnValue = getEndSurfaceRules();
 		}
 
@@ -179,7 +179,7 @@ public final class FrozenSurfaceRules {
 		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(sourceHolders);
 		List<SurfaceRules.RuleSource> sourceHoldersForDimension = sourceHolders
 			.stream()
-			.filter(dimRuleSource -> dimRuleSource.dimension().equals(dimension.location()))
+			.filter(dimRuleSource -> dimRuleSource.dimension().equals(dimension.identifier()))
 			.map(FrozenDimensionBoundRuleSource::ruleSource)
 			.toList();
 

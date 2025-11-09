@@ -22,7 +22,7 @@ import java.util.List;
 import net.frozenblock.lib.worldgen.structure.api.RandomPoolAliasApi;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.random.Weighted;
 import net.minecraft.util.random.WeightedList;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
@@ -48,8 +48,8 @@ public class RandomPoolAliasMixin {
     public void frozenLib$addRandomPoolAliasTargets(
 		ResourceKey<StructureTemplatePool> alias, WeightedList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info
 	) {
-        ResourceLocation aliasLocation = alias.location();
-		List<Pair<ResourceLocation, Integer>> additions = RandomPoolAliasApi.getAdditionalTargets(aliasLocation);
+        Identifier aliasLocation = alias.identifier();
+		List<Pair<Identifier, Integer>> additions = RandomPoolAliasApi.getAdditionalTargets(aliasLocation);
 
 		WeightedList.Builder<ResourceKey<StructureTemplatePool>> builder = WeightedList.builder();
 
@@ -57,7 +57,7 @@ public class RandomPoolAliasMixin {
 			builder.add(wrapper.value(), wrapper.weight());
 		}
 
-		for (Pair<ResourceLocation, Integer> additionalTargets : additions) {
+		for (Pair<Identifier, Integer> additionalTargets : additions) {
 			builder.add(ResourceKey.create(Registries.TEMPLATE_POOL, additionalTargets.getFirst()), additionalTargets.getSecond());
 		}
 

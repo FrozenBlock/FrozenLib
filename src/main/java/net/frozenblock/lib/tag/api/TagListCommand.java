@@ -143,7 +143,7 @@ public class TagListCommand {
 		for (Holder<T> value : holderSet) {
 			if (!holderSet.contains(value)) continue;
 			source.sendSuccess(
-				() -> Component.literal(value.unwrapKey().orElseThrow().location().toString()),
+				() -> Component.literal(value.unwrapKey().orElseThrow().identifier().toString()),
 				true
 			);
 		}

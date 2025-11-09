@@ -23,7 +23,7 @@ import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindDisturbingEntity;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.impl.WindDisturbingEntityImpl;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -65,7 +65,7 @@ public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbin
 	@Unique
 	@Nullable
 	@Override
-	public ResourceLocation frozenLib$getWindDisturbanceLogicID() {
+	public Identifier frozenLib$getWindDisturbanceLogicID() {
 		return null;
 	}
 
@@ -90,7 +90,7 @@ public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbin
 	@Nullable
 	@Override
 	public WindDisturbance frozenLib$makeWindDisturbance() {
-		ResourceLocation disturbanceLogicID = this.frozenLib$getWindDisturbanceLogicID();
+		Identifier disturbanceLogicID = this.frozenLib$getWindDisturbanceLogicID();
 		if (disturbanceLogicID != null) {
 			Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(disturbanceLogicID);
 			if (disturbanceLogic.isPresent()) {

@@ -38,7 +38,7 @@ public class BeaconEffectRegistry {
 	 */
 	public static void register(Holder<MobEffect> effect, int tier) {
 		if (tier <= 0 || tier >= 4) {
-			throw new IllegalArgumentException("Attempted to register Beacon effect " + effect.unwrapKey().get().location() + " at tier " + tier + ". Tier must be between 1 and 4.");
+			throw new IllegalArgumentException("Attempted to register Beacon effect " + effect.unwrapKey().get().identifier() + " at tier " + tier + ". Tier must be between 1 and 4.");
 		}
 
 		if (BeaconBlockEntity.BEACON_EFFECTS.get(tier - 1) instanceof ArrayList<Holder<MobEffect>> arrayList) {
@@ -47,7 +47,7 @@ public class BeaconEffectRegistry {
 				.flatMap(Collection::stream)
 				.collect(Collectors.toSet());
 		} else {
-			FrozenLibConstants.LOGGER.error("Attempted to register Beacon effect " + effect.unwrapKey().get().location() + " at tier " + tier + ". Tier list is not an instance of ArrayList!");
+			FrozenLibConstants.LOGGER.error("Attempted to register Beacon effect " + effect.unwrapKey().get().identifier() + " at tier " + tier + ". Tier list is not an instance of ArrayList!");
 		}
 	}
 }

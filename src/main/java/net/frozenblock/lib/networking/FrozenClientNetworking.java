@@ -85,7 +85,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemCooldowns;
@@ -251,7 +251,7 @@ public final class FrozenClientNetworking {
 	private static void receiveCooldownChangePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = ctx.player();
-			ResourceLocation cooldownGroup = packet.cooldownGroup();
+			Identifier cooldownGroup = packet.cooldownGroup();
 			int additional = packet.additional();
 			((CooldownInterface) player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additional);
 		});
@@ -261,7 +261,7 @@ public final class FrozenClientNetworking {
 	private static void receiveForcedCooldownPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, ctx) -> {
 			LocalPlayer player = ctx.player();
-			ResourceLocation cooldownGroup = packet.cooldownGroup();
+			Identifier cooldownGroup = packet.cooldownGroup();
 			int startTime = packet.startTime();
 			int endTime = packet.endTime();
 			player.getCooldowns().cooldowns.put(cooldownGroup, new ItemCooldowns.CooldownInstance(startTime, endTime));
@@ -337,10 +337,10 @@ public final class FrozenClientNetworking {
 	private static void receiveIconPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(SpottingIconPacket.PACKET_TYPE, (packet, ctx) -> {
 			int id = packet.entityId();
-			ResourceLocation texture = packet.texture();
+			Identifier texture = packet.texture();
 			float startFade = packet.startFade();
 			float endFade = packet.endFade();
-			ResourceLocation predicate = packet.restrictionID();
+			Identifier predicate = packet.restrictionID();
 
 			ClientLevel level = ctx.client().level;
             Entity entity = level.getEntity(id);
@@ -441,11 +441,11 @@ public final class FrozenClientNetworking {
 				try {
 					Path path = ctx.client().gameDirectory.toPath().resolve(destPath).resolve(fileName);
 					if (FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), true)) {
-						ResourceLocation resourceLocation = ServerTextureDownloader.WAITING_TEXTURES.get(
+						Identifier identifier = ServerTextureDownloader.WAITING_TEXTURES.get(
 							ServerTextureDownloader.makePathFromRootAndDest(packet.transferPath(), packet.fileName())
 						);
-						if (resourceLocation != null) {
-							ServerTextureDownloader.downloadAndRegisterServerTexture(resourceLocation, packet.transferPath(), packet.fileName());
+						if (identifier != null) {
+							ServerTextureDownloader.downloadAndRegisterServerTexture(identifier, packet.transferPath(), packet.fileName());
 						}
 					}
 				} catch (IOException ignored) {

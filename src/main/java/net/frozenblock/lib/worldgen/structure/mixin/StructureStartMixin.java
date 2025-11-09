@@ -27,7 +27,7 @@ import net.frozenblock.lib.worldgen.structure.api.StructureProcessorApi;
 import net.frozenblock.lib.worldgen.structure.impl.InitialPieceProcessorInjectionInterface;
 import net.frozenblock.lib.worldgen.structure.impl.StructureStartInterface;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
@@ -49,20 +49,20 @@ public class StructureStartMixin implements StructureStartInterface {
 
 	@Unique
 	@Nullable
-	private ResourceLocation frozenLib$id;
+	private Identifier frozenLib$id;
 
 	@ModifyExpressionValue(
 		method = "loadStaticStart",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/resources/ResourceLocation;parse(Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;"
+			target = "Lnet/minecraft/resources/Identifier;parse(Ljava/lang/String;)Lnet/minecraft/resources/Identifier;"
 		)
 	)
-	private static ResourceLocation frozenLib$loadStaticStartA(
-		ResourceLocation original,
-		@Share("frozenLib$resourceLocation") LocalRef<ResourceLocation> resourceLocationRef
+	private static Identifier frozenLib$loadStaticStartA(
+		Identifier original,
+		@Share("frozenLib$identifier") LocalRef<Identifier> identifierRef
 	) {
-		resourceLocationRef.set(original);
+		identifierRef.set(original);
 		return original;
 	}
 
@@ -74,9 +74,9 @@ public class StructureStartMixin implements StructureStartInterface {
 		)
 	)
 	private static StructureStart frozenLib$loadStaticStartB(
-		StructureStart structureStart, @Share("frozenLib$resourceLocation") LocalRef<ResourceLocation> resourceLocationRef
+		StructureStart structureStart, @Share("frozenLib$identifier") LocalRef<Identifier> identifierRef
 	) {
-		StructureStartInterface.class.cast(structureStart).frozenLib$setId(resourceLocationRef.get());
+		StructureStartInterface.class.cast(structureStart).frozenLib$setId(identifierRef.get());
 		return structureStart;
 	}
 
@@ -123,13 +123,13 @@ public class StructureStartMixin implements StructureStartInterface {
 
 	@Unique
 	@Override
-	public synchronized ResourceLocation frozenLib$getId() {
+	public synchronized Identifier frozenLib$getId() {
 		return this.frozenLib$id;
 	}
 
 	@Unique
 	@Override
-	public synchronized void frozenLib$setId(ResourceLocation id) {
+	public synchronized void frozenLib$setId(Identifier id) {
 		this.frozenLib$id = id;
 	}
 }

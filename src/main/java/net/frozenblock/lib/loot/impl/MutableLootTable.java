@@ -24,7 +24,7 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.resources.Identifier;
 import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -39,7 +39,7 @@ public class MutableLootTable {
 	private final ArrayList<MutableLootPool> pools;
 	private final ArrayList<LootItemFunction> functions = new ArrayList<>();
 	private final ContextKeySet paramSet;
-	private final ResourceLocation randomSequence;
+	private final Identifier randomSequence;
 
 	public MutableLootTable(@NotNull LootTable table) {
 		pools = createLootPools(table.pools);
