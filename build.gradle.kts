@@ -21,7 +21,7 @@ buildscript {
 }
 
 plugins {
-	id("fabric-loom") version("1.11-SNAPSHOT")
+	id("fabric-loom") version("1.13-SNAPSHOT")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -31,7 +31,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.2.20")
+    kotlin("jvm") version("2.2.21")
 }
 
 val minecraft_version: String by project
