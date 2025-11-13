@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.item.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -25,10 +26,12 @@ import net.frozenblock.lib.item.api.ItemTooltipAdditionAPI;
 import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
 import net.frozenblock.lib.item.api.removable.RemovableItemTags;
 import net.frozenblock.lib.item.impl.ItemStackExtension;
+import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.Item;
@@ -47,6 +50,20 @@ public abstract class ItemStackMixin implements ItemStackExtension {
 
 	@Shadow
 	public abstract Item getItem();
+
+	@Shadow
+	public abstract boolean is(TagKey<Item> tagKey);
+
+	@ModifyExpressionValue(
+		method = "causeUseVibration",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/item/component/UseEffects;interactVibrations()Z"
+		)
+	)
+	private boolean preventStartingGameEvent(boolean original) {
+		return original && !this.is(FrozenItemTags.NO_USE_GAME_EVENTS);
+	}
 
 	@Unique
 	private boolean frozenLib$canRemoveTags = false;
