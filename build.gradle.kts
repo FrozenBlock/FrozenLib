@@ -259,7 +259,7 @@ dependencies {
     relocModApi("org.exjson:xjs-data:0.6-infinity-compat-SNAPSHOT")
     relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
     relocModApi("com.personthecat:fresult:$fresult_version")
-    compileOnly("org.projectlombok:lombok:1.18.34")?.let { annotationProcessor(it) }
+    compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
 }
