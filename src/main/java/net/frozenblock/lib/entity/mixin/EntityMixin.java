@@ -21,9 +21,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.entity.impl.EntityStepOnBlockInterface;
 import net.frozenblock.lib.entity.impl.StartTrackingEntityInterface;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
-import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
-import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -48,9 +45,9 @@ public abstract class EntityMixin implements StartTrackingEntityInterface, Entit
 	@Override
 	public void frozenLib$playerStartsTracking(ServerPlayer serverPlayer) {
 		Entity entity = Entity.class.cast(this);
-		((EntityLoopingSoundInterface)entity).frozenLib$getSoundManager().syncWithPlayer(serverPlayer);
-		((EntityLoopingFadingDistanceSoundInterface)entity).frozenLib$getFadingSoundManager().syncWithPlayer(serverPlayer);
-		((EntitySpottingIconInterface)entity).getSpottingIconManager().sendIconPacket(serverPlayer);
+		entity.frozenLib$getSoundManager().syncWithPlayer(serverPlayer);
+		entity.frozenLib$getFadingSoundManager().syncWithPlayer(serverPlayer);
+		entity.getSpottingIconManager().sendIconPacket(serverPlayer);
 		((EntityScreenShakeInterface)entity).frozenLib$getScreenShakeManager().syncWithPlayer(serverPlayer);
 	}
 

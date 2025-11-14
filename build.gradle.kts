@@ -105,7 +105,7 @@ loom {
         }
     }
 
-    accessWidenerPath = file("src/main/resources/frozenlib.accesswidener")
+    accessWidenerPath = file("src/main/resources/frozenlib.classtweaker")
 	interfaceInjection {
 		// When enabled, injected interfaces from dependecies will be applied.
 		enableDependencyInterfaceInjection = true

@@ -20,8 +20,6 @@ package net.frozenblock.lib.sound.impl.networking;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.sound.impl.EntityLoopingFadingDistanceSoundInterface;
-import net.frozenblock.lib.sound.impl.EntityLoopingSoundInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
@@ -167,7 +165,7 @@ public class FrozenLibSoundPackets {
 		ResourceLocation predicate,
 		boolean stopOnDeath
 	) {
-		if (level instanceof ServerLevel && entity instanceof EntityLoopingSoundInterface soundInterface) {
+		if (level instanceof ServerLevel) {
 			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
 				ServerPlayNetworking.send(
 					player,
@@ -182,7 +180,7 @@ public class FrozenLibSoundPackets {
 						true
 					)
 				);
-				soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
+				entity.frozenLib$addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
 			}
 			if (entity instanceof ServerPlayer player) {
 				ServerPlayNetworking.send(
@@ -240,7 +238,7 @@ public class FrozenLibSoundPackets {
 		float fadeDist,
 		float maxDist
 	) {
-		if (level instanceof ServerLevel && entity instanceof EntityLoopingFadingDistanceSoundInterface soundInterface) {
+		if (level instanceof ServerLevel) {
 			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
 				ServerPlayNetworking.send(
 					player,
@@ -277,7 +275,7 @@ public class FrozenLibSoundPackets {
 					)
 				);
 			}
-			soundInterface.frozenLib$addFadingDistanceSound(
+			entity.frozenLib$addFadingDistanceSound(
 				sound.unwrapKey().orElseThrow().location(),
 				sound2.unwrapKey().orElseThrow().location(),
 				category,
@@ -394,7 +392,7 @@ public class FrozenLibSoundPackets {
 		ResourceLocation predicate,
 		boolean stopOnDeath
 	) {
-		if (level instanceof ServerLevel && entity instanceof EntityLoopingSoundInterface soundInterface) {
+		if (level instanceof ServerLevel) {
 			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
 				ServerPlayNetworking.send(
 					player,
@@ -425,7 +423,7 @@ public class FrozenLibSoundPackets {
 					)
 				);
 			}
-			soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
+			entity.frozenLib$addSound(sound.unwrapKey().orElseThrow().location(), category, volume, pitch, predicate, stopOnDeath);
         }
     }
 
