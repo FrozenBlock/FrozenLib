@@ -21,17 +21,16 @@ import java.util.function.BooleanSupplier;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public class BlockStateBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<BlockState> {
 
-	public BlockStateBlockSoundTypeOverwrite(BlockState value, SoundType soundType, BooleanSupplier soundCondition) {
-		super(value, soundType, soundCondition);
+	public BlockStateBlockSoundTypeOverwrite(BlockState value, SoundType soundType, BooleanSupplier condition) {
+		super(value, soundType, condition);
 	}
 
 	@Override
-	public boolean matches(@NotNull BlockState blockState) {
-		return blockState.equals(this.getValue());
+	public boolean matches(BlockState state) {
+		return state.equals(this.getValue());
 	}
 }

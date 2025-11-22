@@ -32,6 +32,12 @@ plugins {
     `java-library`
     java
     kotlin("jvm") version("2.2.21")
+    checkstyle
+}
+
+checkstyle {
+    configFile = rootProject.file("checkstyle.xml")
+    toolVersion = "10.20.2"
 }
 
 val minecraft_version: String by project

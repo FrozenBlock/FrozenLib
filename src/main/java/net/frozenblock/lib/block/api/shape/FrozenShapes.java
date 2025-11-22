@@ -30,7 +30,6 @@ import net.minecraft.util.Util;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 /**
@@ -54,21 +53,14 @@ public class FrozenShapes {
 		shapes.put(Direction.DOWN, DOWN_PLANE);
 	});
 
-	/**
-	 * Returns a {@link VoxelShape} covering the entire face of the given {@link Direction}, with a custom width.
-	 *
-	 * @param direction The face to cover.
-	 * @param width     The width of the plane.
-	 * @return a {@link VoxelShape} covering the entire face of the given {@link Direction}, with a custom width.
-	 */
-	@NotNull
-	public static VoxelShape makePlaneFromDirection(@NotNull Direction direction, float width) {
-		double minX = direction.equals(Direction.EAST) ? 16F - width : 0F;
-		double minY = direction.equals(Direction.UP) ? 16F - width : 0F;
-		double minZ = direction.equals(Direction.SOUTH) ? 16F - width : 0F;
-		double maxX = direction.equals(Direction.WEST) ? 0F + width : 16F;
-		double maxY = direction.equals(Direction.DOWN) ? 0F + width : 16F;
-		double maxZ = direction.equals(Direction.NORTH) ? 0F + width : 16F;
+
+	public static VoxelShape makePlaneFromDirection(Direction direction, float width) {
+		final double minX = direction.equals(Direction.EAST) ? 16F - width : 0F;
+		final double minY = direction.equals(Direction.UP) ? 16F - width : 0F;
+		final double minZ = direction.equals(Direction.SOUTH) ? 16F - width : 0F;
+		final double maxX = direction.equals(Direction.WEST) ? 0F + width : 16F;
+		final double maxY = direction.equals(Direction.DOWN) ? 0F + width : 16F;
+		final double maxZ = direction.equals(Direction.NORTH) ? 0F + width : 16F;
 		return Block.box(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
@@ -78,10 +70,11 @@ public class FrozenShapes {
 	 * @param width The width of each plane.
 	 * @return an {@link ImmutableMap} of planes, with {@link Direction}s as keys.
 	 */
-	public static @NotNull @Unmodifiable ImmutableMap<Direction, VoxelShape> createPlanesForDirection(float width) {
-		Map<Direction, VoxelShape> map = new Object2ObjectLinkedOpenHashMap<>();
-		for (Direction direction : Direction.values()) map.put(direction, makePlaneFromDirection(direction, width));
-		return Maps.immutableEnumMap(map);
+	@Unmodifiable
+	public static ImmutableMap<Direction, VoxelShape> createPlanesForDirection(float width) {
+		final Map<Direction, VoxelShape> planes = new Object2ObjectLinkedOpenHashMap<>();
+		for (Direction direction : Direction.values()) planes.put(direction, makePlaneFromDirection(direction, width));
+		return Maps.immutableEnumMap(planes);
 	}
 
 	/**
@@ -92,19 +85,18 @@ public class FrozenShapes {
 	 * @param point       The position to calculate from.
 	 * @return the closest point of a shape to a given position.
 	 */
-	public static Optional<Vec3> closestPointTo(BlockPos originalPos, @NotNull VoxelShape blockShape, Vec3 point) {
+	public static Optional<Vec3> closestPointTo(BlockPos originalPos, VoxelShape blockShape, Vec3 point) {
 		if (blockShape.isEmpty()) return Optional.empty();
-		double x = originalPos.getX();
-		double y = originalPos.getY();
-		double z = originalPos.getZ();
+		final double x = originalPos.getX();
+		final double y = originalPos.getY();
+		final double z = originalPos.getZ();
+
 		Vec3[] vec3s = new Vec3[1];
 		blockShape.forAllBoxes((minX, minY, minZ, maxX, maxY, maxZ) -> {
-			double d = Mth.clamp(point.x(), minX + x, maxX + x);
-			double e = Mth.clamp(point.y(), minY + y, maxY + y);
-			double f = Mth.clamp(point.z(), minZ + z, maxZ + z);
-			if (vec3s[0] == null || point.distanceToSqr(d, e, f) < point.distanceToSqr(vec3s[0])) {
-				vec3s[0] = new Vec3(d, e, f);
-			}
+			final double clampedX = Mth.clamp(point.x(), minX + x, maxX + x);
+			final double clampedY = Mth.clamp(point.y(), minY + y, maxY + y);
+			final double clampedZ = Mth.clamp(point.z(), minZ + z, maxZ + z);
+			if (vec3s[0] == null || point.distanceToSqr(clampedX, clampedY, clampedZ) < point.distanceToSqr(vec3s[0])) vec3s[0] = new Vec3(clampedX, clampedY, clampedZ);
 		});
 		return Optional.of(vec3s[0]);
 	}

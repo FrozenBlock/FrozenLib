@@ -42,9 +42,9 @@ public class ClientLevelMixin {
 			target = "Lnet/minecraft/world/level/block/Block;animateTick(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V"
 		)
 	)
-	public void frozenLib$doAnimateTick(Block instance, BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource, Operation<Void> original) {
-		BlockAnimateTicks.onAnimateTick(blockState, level, blockPos, randomSource);
-		original.call(instance, blockState, level, blockPos, randomSource);
+	public void frozenLib$doAnimateTick(Block instance, BlockState state, Level level, BlockPos pos, RandomSource random, Operation<Void> original) {
+		BlockAnimateTicks.onAnimateTick(state, level, pos, random);
+		original.call(instance, state, level, pos, random);
 	}
 
 }

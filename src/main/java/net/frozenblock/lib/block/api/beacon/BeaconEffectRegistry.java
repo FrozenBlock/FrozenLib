@@ -20,6 +20,7 @@ package net.frozenblock.lib.block.api.beacon;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.block.entity.BeaconBlockEntity;
 /**
  * A helper class for adding new {@link MobEffect}s to the Beacon.
  */
+@UtilityClass
 public class BeaconEffectRegistry {
 
 	/**

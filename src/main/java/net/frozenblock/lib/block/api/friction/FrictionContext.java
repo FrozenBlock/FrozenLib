@@ -38,4 +38,41 @@ public class FrictionContext {
 
 		this.friction = friction;
 	}
+
+	public void setFriction(float friction) {
+		this.friction = friction;
+	}
+
+	public float getFriction() {
+		return this.friction;
+	}
+
+	public void addFriction(float friction) {
+		this.friction += friction;
+	}
+
+	public void subtractFriction(float friction) {
+		this.friction -= friction;
+	}
+
+	public void multiplyFriction(float friction) {
+		this.friction *= friction;
+	}
+
+	public void divideFriction(float friction) {
+		this.friction /= friction;
+	}
+
+	public BlockState getState() {
+		return this.state;
+	}
+
+	public Level getLevel() {
+		return this.level;
+	}
+
+	public LivingEntity getEntity() {
+		return this.entity;
+	}
+
 }

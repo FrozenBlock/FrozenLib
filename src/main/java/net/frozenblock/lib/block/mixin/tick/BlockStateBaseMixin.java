@@ -40,9 +40,9 @@ public class BlockStateBaseMixin {
 			target = "Lnet/minecraft/world/level/block/Block;tick(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V"
 		)
 	)
-	public void frozenLib$runCustomTick(Block instance, BlockState state, ServerLevel serverLevel, BlockPos pos, RandomSource randomSource, Operation<Void> original) {
-		BlockScheduledTicks.runTickIfPresent(state, serverLevel, pos, randomSource);
-		original.call(instance, state, serverLevel, pos, randomSource);
+	public void frozenLib$runCustomTick(Block instance, BlockState state, ServerLevel level, BlockPos pos, RandomSource random, Operation<Void> original) {
+		BlockScheduledTicks.runTickIfPresent(state, level, pos, random);
+		original.call(instance, state, level, pos, random);
 	}
 
 	@WrapOperation(
@@ -52,9 +52,9 @@ public class BlockStateBaseMixin {
 			target = "Lnet/minecraft/world/level/block/Block;randomTick(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/core/BlockPos;Lnet/minecraft/util/RandomSource;)V"
 		)
 	)
-	public void frozenLib$runCustomRandomTick(Block instance, BlockState state, ServerLevel serverLevel, BlockPos pos, RandomSource randomSource, Operation<Void> original) {
-		BlockRandomTicks.runRandomTickIfPresent(state, serverLevel, pos, randomSource);
-		original.call(instance, state, serverLevel, pos, randomSource);
+	public void frozenLib$runCustomRandomTick(Block instance, BlockState state, ServerLevel level, BlockPos pos, RandomSource random, Operation<Void> original) {
+		BlockRandomTicks.runRandomTickIfPresent(state, level, pos, random);
+		original.call(instance, state, level, pos, random);
 	}
 
 }

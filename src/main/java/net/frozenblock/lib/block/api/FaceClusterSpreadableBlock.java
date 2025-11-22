@@ -26,17 +26,15 @@ import net.minecraft.world.level.block.state.BlockState;
  * A {@link MultifaceClusterSpreadableBlock}, but only one face is permitted.
  */
 public abstract class FaceClusterSpreadableBlock extends MultifaceClusterSpreadableBlock {
+
 	public FaceClusterSpreadableBlock(int height, int xzOffset, Properties properties) {
 		super(height, xzOffset, properties);
 	}
 
 	@Override
 	public boolean isValidStateForPlacement(BlockGetter level, BlockState state, BlockPos pos, Direction direction) {
-		if (this.isFaceSupported(direction) && !state.is(this)) {
-			BlockPos blockPos = pos.relative(direction);
-			return canAttachTo(level, direction, blockPos, level.getBlockState(blockPos));
-		} else {
-			return false;
-		}
+		if (!this.isFaceSupported(direction) || state.is(this)) return false;
+		final BlockPos connectPos = pos.relative(direction);
+		return canAttachTo(level, direction, connectPos, level.getBlockState(connectPos));
 	}
 }

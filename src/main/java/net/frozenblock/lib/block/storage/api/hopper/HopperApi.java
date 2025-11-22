@@ -44,18 +44,12 @@ public class HopperApi {
 	 * @return whether the {@link Container} is blacklisted from interacting with Hoppers.
 	 */
     public static boolean isContainerBlacklisted(Container container) {
-        if (container instanceof BlockEntity block) {
-			return BLACKLISTED_TYPES.contains(block.getType());
-        } else if (container instanceof CompoundContainer doubleInventory) {
-            if (doubleInventory.container1 instanceof BlockEntity block) {
-                if (BLACKLISTED_TYPES.contains(block.getType())) {
-                    return true;
-                }
-            }
-            if (doubleInventory.container2 instanceof BlockEntity block) {
-				return BLACKLISTED_TYPES.contains(block.getType());
-            }
-        }
+        if (container instanceof BlockEntity block) return BLACKLISTED_TYPES.contains(block.getType());
+        if (!(container instanceof CompoundContainer doubleInventory)) return false;
+		if (doubleInventory.container1 instanceof BlockEntity block) {
+			if (BLACKLISTED_TYPES.contains(block.getType())) return true;
+		}
+		if (doubleInventory.container2 instanceof BlockEntity block) return BLACKLISTED_TYPES.contains(block.getType());
         return false;
     }
 

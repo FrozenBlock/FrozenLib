@@ -21,6 +21,7 @@ import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
@@ -46,9 +47,9 @@ public class DripstoneDripApi {
 	 * @return the fluid dripping from Dripstone, if present, at this position.
 	 */
 	public static Fluid getDripstoneFluid(ServerLevel level, BlockPos pos) {
-		BlockPos blockPos = PointedDripstoneBlock.findStalactiteTipAboveCauldron(level, pos);
-		if (blockPos == null) return Fluids.EMPTY;
-		return PointedDripstoneBlock.getCauldronFillFluidType(level, blockPos);
+		final BlockPos stalacticPos = PointedDripstoneBlock.findStalactiteTipAboveCauldron(level, pos);
+		if (stalacticPos == null) return Fluids.EMPTY;
+		return PointedDripstoneBlock.getCauldronFillFluidType(level, stalacticPos);
 	}
 
 	/**
@@ -73,12 +74,10 @@ public class DripstoneDripApi {
 	}
 
 	@ApiStatus.Internal
-	public static void runWaterDripsIfPresent(
-		Block block, ServerLevel world, BlockPos pos, PointedDripstoneBlock.FluidInfo fluidInfo
-	) {
-		if (WATER_DRIP_METHODS.containsKey(block)) {
-			WATER_DRIP_METHODS.get(block).forEach(injectedDrip -> injectedDrip.onDrip(world, pos, fluidInfo));
-		}
+	public static void runWaterDripsIfPresent(Block block, ServerLevel level, BlockPos pos, PointedDripstoneBlock.FluidInfo fluidInfo) {
+		Optional.ofNullable(WATER_DRIP_METHODS.getOrDefault(block, null)).ifPresent(drips -> {
+			drips.forEach(injectedDrip -> injectedDrip.onDrip(level, pos, fluidInfo));
+		});
 	}
 
 	/**
@@ -103,12 +102,10 @@ public class DripstoneDripApi {
 	}
 
 	@ApiStatus.Internal
-	public static void runLavaDripsIfPresent(
-		Block block, ServerLevel world, BlockPos pos, PointedDripstoneBlock.FluidInfo fluidInfo
-	) {
-		if (LAVA_DRIP_METHODS.containsKey(block)) {
-			LAVA_DRIP_METHODS.get(block).forEach(injectedDrip -> injectedDrip.onDrip(world, pos, fluidInfo));
-		}
+	public static void runLavaDripsIfPresent(Block block, ServerLevel level, BlockPos pos, PointedDripstoneBlock.FluidInfo fluidInfo) {
+		Optional.ofNullable(LAVA_DRIP_METHODS.getOrDefault(block, null)).ifPresent(drips -> {
+			drips.forEach(injectedDrip -> injectedDrip.onDrip(level, pos, fluidInfo));
+		});
 	}
 
 	@FunctionalInterface

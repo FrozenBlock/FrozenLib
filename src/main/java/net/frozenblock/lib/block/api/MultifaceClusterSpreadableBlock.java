@@ -24,6 +24,7 @@ import java.util.function.Function;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.ScheduledTickAccess;
@@ -39,8 +40,6 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
-import net.minecraft.util.Util;
 
 /**
  * A block that combines an amethyst cluster-type block with a multiface spreadable block.
@@ -49,79 +48,72 @@ public abstract class MultifaceClusterSpreadableBlock extends MultifaceSpreadeab
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final BooleanProperty UP = BlockStateProperties.UP;
 
-    protected final VoxelShape northAabb;
-    protected final VoxelShape southAabb;
-    protected final VoxelShape eastAabb;
-    protected final VoxelShape westAabb;
-    protected final VoxelShape upAabb;
-    protected final VoxelShape downAabb;
-
+    protected final VoxelShape northShape;
+    protected final VoxelShape southShape;
+    protected final VoxelShape eastShape;
+    protected final VoxelShape westShape;
+    protected final VoxelShape upShape;
+    protected final VoxelShape downShape;
     private final Map<Direction, VoxelShape> shapeByDirection;
     private final Function<BlockState, VoxelShape> shapesCache;
 
-    public MultifaceClusterSpreadableBlock(int height, int xzOffset, @NotNull Properties properties) {
+    public MultifaceClusterSpreadableBlock(int height, int xzOffset, Properties properties) {
         super(properties.pushReaction(PushReaction.DESTROY));
         this.registerDefaultState(this.defaultBlockState().setValue(WATERLOGGED, false));
-        this.upAabb = Block.box(xzOffset, 0.0, xzOffset, 16 - xzOffset, height, (16 - xzOffset));
-        this.downAabb = Block.box(xzOffset, (16 - height), xzOffset, (16 - xzOffset), 16.0, (16 - xzOffset));
-        this.northAabb = Block.box(xzOffset, xzOffset, (16 - height), (16 - xzOffset), (16 - xzOffset), 16.0);
-        this.southAabb = Block.box(xzOffset, xzOffset, 0.0, (16 - xzOffset), (16 - xzOffset), height);
-        this.eastAabb = Block.box(0.0, xzOffset, xzOffset, height, (16 - xzOffset), (16 - xzOffset));
-        this.westAabb = Block.box((16 - height), xzOffset, xzOffset, 16.0, (16 - xzOffset), (16 - xzOffset));
+        this.upShape = Block.box(xzOffset, 0D, xzOffset, 16D - xzOffset, height, (16D - xzOffset));
+        this.downShape = Block.box(xzOffset, (16D - height), xzOffset, (16D - xzOffset), 16D, (16D - xzOffset));
+        this.northShape = Block.box(xzOffset, xzOffset, (16D - height), (16D - xzOffset), (16D - xzOffset), 16D);
+        this.southShape = Block.box(xzOffset, xzOffset, 0D, (16D - xzOffset), (16D - xzOffset), height);
+        this.eastShape = Block.box(0D, xzOffset, xzOffset, height, (16D - xzOffset), (16D - xzOffset));
+        this.westShape = Block.box((16D - height), xzOffset, xzOffset, 16D, (16D - xzOffset), (16D - xzOffset));
         this.shapeByDirection = Util.make(Maps.newEnumMap(Direction.class), shapes -> {
-            shapes.put(Direction.NORTH, this.southAabb);
-            shapes.put(Direction.EAST, this.westAabb);
-            shapes.put(Direction.SOUTH, this.northAabb);
-            shapes.put(Direction.WEST, this.eastAabb);
-            shapes.put(Direction.UP, this.downAabb);
-            shapes.put(Direction.DOWN, this.upAabb);
+            shapes.put(Direction.NORTH, this.southShape);
+            shapes.put(Direction.EAST, this.westShape);
+            shapes.put(Direction.SOUTH, this.northShape);
+            shapes.put(Direction.WEST, this.eastShape);
+            shapes.put(Direction.UP, this.downShape);
+            shapes.put(Direction.DOWN, this.upShape);
         });
         this.shapesCache = this.getShapeForEachState(this::calculateMultifaceShape);
     }
 
     @Override
-	@NotNull
-    public VoxelShape getShape(@NotNull BlockState state, @NotNull BlockGetter world, @NotNull BlockPos pos, @NotNull CollisionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return Objects.requireNonNull(this.shapesCache.apply(state));
     }
 
     public VoxelShape calculateMultifaceShape(BlockState state) {
-        VoxelShape voxelShape = Shapes.empty();
+        VoxelShape shape = Shapes.empty();
 
         for(Direction direction : DIRECTIONS) {
-            if (hasFace(state, direction)) {
-                voxelShape = Shapes.or(voxelShape, this.shapeByDirection.get(direction));
-            }
+            if (hasFace(state, direction)) shape = Shapes.or(shape, this.shapeByDirection.get(direction));
         }
 
-        return voxelShape.isEmpty() ? Shapes.block() : voxelShape;
+        return shape.isEmpty() ? Shapes.block() : shape;
     }
 
 	@Override
-	protected @NotNull BlockState updateShape(
-		@NotNull BlockState blockState,
-		LevelReader levelReader,
-		ScheduledTickAccess scheduledTickAccess,
-		BlockPos blockPos,
+	protected BlockState updateShape(
+		BlockState state,
+		LevelReader level,
+		ScheduledTickAccess tickAccess,
+		BlockPos pos,
 		Direction direction,
 		BlockPos neighborPos,
 		BlockState neighborState,
-		RandomSource randomSource
+		RandomSource random
 	) {
-		if (blockState.getValue(WATERLOGGED)) {
-			scheduledTickAccess.scheduleTick(blockPos, Fluids.WATER, Fluids.WATER.getTickDelay(levelReader));
-		}
-		return super.updateShape(blockState, levelReader, scheduledTickAccess, blockPos, direction, neighborPos, neighborState, randomSource);
+		if (state.getValue(WATERLOGGED)) tickAccess.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+		return super.updateShape(state, level, tickAccess, pos, direction, neighborPos, neighborState, random);
 	}
 
     @Override
-	@NotNull
-    public FluidState getFluidState(@NotNull BlockState state) {
+    public FluidState getFluidState(BlockState state) {
         return state.getValue(WATERLOGGED) ? Fluids.WATER.getSource(false) : super.getFluidState(state);
     }
 
 	@Override
-	protected boolean propagatesSkylightDown(@NotNull BlockState blockState) {
-		return blockState.getFluidState().isEmpty();
+	protected boolean propagatesSkylightDown(BlockState state) {
+		return state.getFluidState().isEmpty();
 	}
 }

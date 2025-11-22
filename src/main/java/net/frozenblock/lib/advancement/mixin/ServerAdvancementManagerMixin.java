@@ -51,8 +51,6 @@ public class ServerAdvancementManagerMixin {
 		)
 	)
 	private void modifyAdvancement(Map<Identifier, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo info) {
-		for (AdvancementHolder holder : advancements.values()) {
-			AdvancementEvents.INIT.invoker().onInit(holder, this.registries);
-		}
+		for (AdvancementHolder holder : advancements.values()) AdvancementEvents.INIT.invoker().onInit(holder, this.registries);
 	}
 }

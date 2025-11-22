@@ -56,25 +56,29 @@ public class SpecialModelRenderersMixin {
 	private static ImmutableMap.Builder<Block, SpecialModelRenderer.Unbaked> put(
 		ImmutableMap.Builder instance, Object key, Object value, Operation<ImmutableMap.Builder<Block, SpecialModelRenderer.Unbaked>> original
 	) {
-		FabricLoader.getInstance().getEntrypointContainers("frozenlib:special_model_renderers", SpecialModelRenderersEntrypoint.class).forEach(entrypoint -> {
-			try {
-				SpecialModelRenderersEntrypoint specialModelRenderersEntrypoint = entrypoint.getEntrypoint();
-				specialModelRenderersEntrypoint.onMapInit(instance);
-			} catch (Throwable ignored) {
-			}
-		});
+		FabricLoader.getInstance()
+			.getEntrypointContainers("frozenlib:special_model_renderers", SpecialModelRenderersEntrypoint.class)
+			.forEach(entrypoint -> {
+				try {
+					final SpecialModelRenderersEntrypoint specialModelRenderersEntrypoint = entrypoint.getEntrypoint();
+					specialModelRenderersEntrypoint.onMapInit(instance);
+				} catch (Throwable ignored) {
+				}
+			});
 		return original.call(instance, key, value);
 	}
 
 	@Inject(method = "bootstrap", at = @At("TAIL"))
 	private static void frozenLib$bootstrap(CallbackInfo info) {
-		FabricLoader.getInstance().getEntrypointContainers("frozenlib:special_model_renderers", SpecialModelRenderersEntrypoint.class).forEach(entrypoint -> {
-			try {
-				SpecialModelRenderersEntrypoint specialModelRenderersEntrypoint = entrypoint.getEntrypoint();
-				specialModelRenderersEntrypoint.registerSpecialModelRenderers(ID_MAPPER);
-			} catch (Throwable ignored) {
-			}
-		});
+		FabricLoader.getInstance()
+			.getEntrypointContainers("frozenlib:special_model_renderers", SpecialModelRenderersEntrypoint.class)
+			.forEach(entrypoint -> {
+				try {
+					final SpecialModelRenderersEntrypoint specialModelRenderersEntrypoint = entrypoint.getEntrypoint();
+					specialModelRenderersEntrypoint.registerSpecialModelRenderers(ID_MAPPER);
+				} catch (Throwable ignored) {
+				}
+			});
 	}
 
 }

@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.block.api.tick;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.List;
@@ -27,7 +28,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Lets you add custom behavior to be run upon a block being ticked.
@@ -35,11 +35,13 @@ import org.jetbrains.annotations.NotNull;
 public class BlockRandomTicks {
 	@ApiStatus.Internal
 	private static final Map<Block, List<InjectedRandomTick>> RANDOM_TICKS = new Object2ObjectOpenHashMap<>();
+	@ApiStatus.Internal
+	private static final List<InjectedRandomTick> EMPTY = ImmutableList.of();
 
 	/**
 	 * Adds custom random tick behavior to a {@link Block}.
 	 *
-	 * @param block                 The {@link Block} to add custom random tick behavior to.
+	 * @param block The {@link Block} to add custom random tick behavior to.
 	 * @param injectedRandomTick The behavior to run upon the {@link Block} being random ticked.
 	 */
 	public static void addToBlock(Block block, InjectedRandomTick injectedRandomTick) {
@@ -51,15 +53,13 @@ public class BlockRandomTicks {
 	}
 
 	@ApiStatus.Internal
-	public static void runRandomTickIfPresent(@NotNull BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-		Block block = state.getBlock();
-		if (RANDOM_TICKS.containsKey(block)) {
-			RANDOM_TICKS.get(block).forEach(injectedRandomTick -> injectedRandomTick.randomTick(state, world, pos, random));
-		}
+	public static void runRandomTickIfPresent(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+		final Block block = state.getBlock();
+		RANDOM_TICKS.getOrDefault(block, EMPTY).forEach(randomTick -> randomTick.randomTick(state, level, pos, random));
 	}
 
 	@FunctionalInterface
 	public interface InjectedRandomTick {
-		void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random);
+		void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random);
 	}
 }

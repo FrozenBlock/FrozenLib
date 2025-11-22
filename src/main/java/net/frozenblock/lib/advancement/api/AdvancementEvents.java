@@ -24,17 +24,20 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.core.HolderLookup;
 
 public final class AdvancementEvents {
-	private AdvancementEvents() {}
+
+	private AdvancementEvents() {
+		throw new UnsupportedOperationException("AdvancementEvents contains only static declarations.");
+	}
 
 	/**
 	 * Invoked for each AdvancementHolder registered on the server.
 	 * Allows modifications to them
 	 * */
-	public static final Event<AdvancementInit> INIT = FrozenEvents.createEnvironmentEvent(AdvancementInit.class, callbacks -> (holder, registries) -> {
-		for (AdvancementInit callback : callbacks) {
-			callback.onInit(holder, registries);
-		}
-	});
+	public static final Event<AdvancementInit> INIT = FrozenEvents.createEnvironmentEvent(
+		AdvancementInit.class,
+		callbacks -> (holder, registries) -> {
+			for (AdvancementInit callback : callbacks) callback.onInit(holder, registries);
+		});
 
 	@FunctionalInterface
 	public interface AdvancementInit extends CommonEventEntrypoint {

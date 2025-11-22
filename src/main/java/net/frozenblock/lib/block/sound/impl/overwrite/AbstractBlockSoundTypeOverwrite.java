@@ -28,10 +28,10 @@ public abstract class AbstractBlockSoundTypeOverwrite<T> {
 	private final SoundType soundType;
 	private final BooleanSupplier soundCondition;
 
-	public AbstractBlockSoundTypeOverwrite(T value, SoundType soundType, BooleanSupplier soundCondition) {
+	public AbstractBlockSoundTypeOverwrite(T value, SoundType soundType, BooleanSupplier condition) {
 		this.value = value;
 		this.soundType = soundType;
-		this.soundCondition = soundCondition;
+		this.soundCondition = condition;
 	}
 
 	public T getValue() {
@@ -46,5 +46,5 @@ public abstract class AbstractBlockSoundTypeOverwrite<T> {
 		return this.soundCondition;
 	}
 
-	public abstract boolean matches(BlockState blockState);
+	public abstract boolean matches(BlockState state);
 }

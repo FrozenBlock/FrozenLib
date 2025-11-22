@@ -49,7 +49,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,17 +62,17 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 	private final List<AbstractBlockSoundTypeOverwrite<?>> builtInOverwrites = new ArrayList<>();
 	private final List<AbstractBlockSoundTypeOverwrite<?>> overwrites = new ArrayList<>();
 
-	public void addBuiltInOverwrite(@NotNull BlockState blockState, SoundType soundType, BooleanSupplier condition) {
+	public void addBuiltInOverwrite(BlockState state, SoundType soundType, BooleanSupplier condition) {
 		this.builtInOverwrites.add(
 			new BlockStateBlockSoundTypeOverwrite(
-				blockState,
+				state,
 				soundType,
 				condition
 			)
 		);
 	}
 
-	public void addBuiltInOverwrite(@NotNull Block block, SoundType soundType, BooleanSupplier condition) {
+	public void addBuiltInOverwrite(Block block, SoundType soundType, BooleanSupplier condition) {
 		this.builtInOverwrites.add(
 			new HolderSetBlockSoundTypeOverwrite(
 				HolderSet.direct(block.builtInRegistryHolder()),
@@ -84,20 +83,19 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 	}
 
 	public void addBuiltInOverwrite(Block[] blocks, SoundType soundType, BooleanSupplier condition) {
-		List<Block> blockList = Arrays.stream(blocks).toList();
+		final List<Block> blockList = Arrays.stream(blocks).toList();
+		if (blockList.isEmpty()) return;
 
-		if (!blockList.isEmpty()) {
-			this.builtInOverwrites.add(
-				new HolderSetBlockSoundTypeOverwrite(
-					HolderSet.direct(
-						Block::builtInRegistryHolder,
-						Arrays.stream(blocks).toList()
-					),
-					soundType,
-					condition
-				)
-			);
-		}
+		this.builtInOverwrites.add(
+			new HolderSetBlockSoundTypeOverwrite(
+				HolderSet.direct(
+					Block::builtInRegistryHolder,
+					Arrays.stream(blocks).toList()
+				),
+				soundType,
+				condition
+			)
+		);
 	}
 
 	public void addBuiltInOverwrite(TagKey<Block> tagKey, SoundType soundType, BooleanSupplier condition) {
@@ -114,7 +112,7 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 	}
 
 	public void addBuiltInOverwrite(Identifier identifier, SoundType soundType, BooleanSupplier condition) {
-		Optional<Block> optionalBlock = BuiltInRegistries.BLOCK.getOptional(identifier);
+		final Optional<Block> optionalBlock = BuiltInRegistries.BLOCK.getOptional(identifier);
 		optionalBlock.ifPresent(block -> this.builtInOverwrites.add(
 			new HolderSetBlockSoundTypeOverwrite(
 				HolderSet.direct(block.builtInRegistryHolder()),
@@ -128,16 +126,14 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		this.overwrites.add(overwrite);
 	}
 
-	public Optional<SoundType> getSoundType(@NotNull BlockState state) {
+	public Optional<SoundType> getSoundType(BlockState state) {
 		for (AbstractBlockSoundTypeOverwrite<?> overwrite : this.overwrites) {
-			if (overwrite.getSoundCondition().getAsBoolean() && overwrite.matches(state)) {
-				return Optional.of(overwrite.getSoundType());
-			}
+			if (overwrite.getSoundCondition().getAsBoolean() && overwrite.matches(state)) return Optional.of(overwrite.getSoundType());
 		}
 		return Optional.empty();
 	}
 
-	public static @NotNull Identifier getGeneratedPath(@NotNull Identifier blockId) {
+	public static Identifier getGeneratedPath(Identifier blockId) {
 		return Identifier.fromNamespaceAndPath(blockId.getNamespace(), DIRECTORY + "/" + blockId.getPath() + ".json");
 	}
 
@@ -147,7 +143,7 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 	}
 
 	@Override
-	public CompletableFuture<Void> apply(@NotNull SoundTypeLoader prepared, ResourceManager manager, Executor executor) {
+	public CompletableFuture<Void> apply(SoundTypeLoader prepared, ResourceManager manager, Executor executor) {
 		this.overwrites.clear();
 		// Load data-driven sounds first for player satisfaction.
 		prepared.getOverwrites().forEach(this::addFinalizedOverwrite);
@@ -157,7 +153,7 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		});
 	}
 
-	@NotNull
+	@Override
 	public Identifier getFabricId() {
 		return FrozenLibConstants.id("block_sound_type_overwrites");
 	}
@@ -172,14 +168,12 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		}
 
 		private void loadSoundOverwrites() {
-			Map<Identifier, Resource> resources = manager.listResources(DIRECTORY, id -> id.getPath().endsWith(".json"));
-			var entrySet = resources.entrySet();
-			for (Map.Entry<Identifier, Resource> entry : entrySet) {
-				this.addOverwrite(entry.getKey(), entry.getValue());
-			}
+			final Map<Identifier, Resource> resources = manager.listResources(DIRECTORY, id -> id.getPath().endsWith(".json"));
+			final var entrySet = resources.entrySet();
+			for (Map.Entry<Identifier, Resource> entry : entrySet) this.addOverwrite(entry.getKey(), entry.getValue());
 		}
 
-		private void addOverwrite(Identifier location, @NotNull Resource resource) {
+		private void addOverwrite(Identifier location, Resource resource) {
 			BufferedReader reader;
 			try {
 				reader = resource.openAsReader();
@@ -188,8 +182,8 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 				return;
 			}
 
-			JsonObject json = GsonHelper.parse(reader);
-			DataResult<? extends Pair<? extends AbstractBlockSoundTypeOverwrite<?>, JsonElement>> dataResult
+			final JsonObject json = GsonHelper.parse(reader);
+			final DataResult<? extends Pair<? extends AbstractBlockSoundTypeOverwrite<?>, JsonElement>> dataResult
 				= SoundTypeCodecs.HOLDER_SET_BLOCK_SOUND_TYPE_OVERWRITE_CODEC.decode(JsonOps.INSTANCE, json);
 
 			dataResult.resultOrPartial((string) -> LOGGER.error("Failed to parse sound override for file: '{}'", location))

@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.block.api.tick;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.List;
@@ -27,7 +28,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Lets you add custom behavior to be run upon a block being ticked.
@@ -35,6 +35,8 @@ import org.jetbrains.annotations.NotNull;
 public class BlockScheduledTicks {
 	@ApiStatus.Internal
 	private static final Map<Block, List<InjectedScheduledTick>> TICKS = new Object2ObjectOpenHashMap<>();
+	@ApiStatus.Internal
+	private static final List<InjectedScheduledTick> EMPTY = ImmutableList.of();
 
 	/**
 	 * Adds custom tick behavior to a {@link Block}.
@@ -51,15 +53,13 @@ public class BlockScheduledTicks {
 	}
 
 	@ApiStatus.Internal
-	public static void runTickIfPresent(@NotNull BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-		Block block = state.getBlock();
-		if (TICKS.containsKey(block)) {
-			TICKS.get(block).forEach(injectedScheduledTick -> injectedScheduledTick.tick(state, world, pos, random));
-		}
+	public static void runTickIfPresent(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+		final Block block = state.getBlock();
+		TICKS.getOrDefault(block, EMPTY).forEach(scheduledTick -> scheduledTick.tick(state, level, pos, random));
 	}
 
 	@FunctionalInterface
 	public interface InjectedScheduledTick {
-		void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random);
+		void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random);
 	}
 }

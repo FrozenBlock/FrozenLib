@@ -36,7 +36,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -48,16 +47,15 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 	private static final Vector3f Y_AXIS_NEGATIVE = new Vector3f(0F, -1F, 0F);
 	private final ModelPart base;
 
-	public BillboardBlockEntityRenderer(Context ctx) {
-		ModelPart root = this.getRoot(ctx);
+	public BillboardBlockEntityRenderer(Context context) {
+		final ModelPart root = this.getRoot(context);
 		this.base = root.getChild("base");
 	}
 
-	@NotNull
 	public static LayerDefinition getTexturedModelData() {
-		MeshDefinition modelData = new MeshDefinition();
-		PartDefinition modelPartData = modelData.getRoot();
-		modelPartData.addOrReplaceChild("base", CubeListBuilder.create()
+		final MeshDefinition modelData = new MeshDefinition();
+		final PartDefinition root = modelData.getRoot();
+		root.addOrReplaceChild("base", CubeListBuilder.create()
 				.texOffs(0, 0)
 				.addBox(-8F, -16F, 0F, 16F, 16F, 0.0F),
 			PartPose.offsetAndRotation(0F, 0F, 0F, Mth.PI, 0F, 0F)
@@ -67,15 +65,15 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 
 	@Override
 	public void submit(
-		@NotNull S renderState,
-		@NotNull PoseStack poseStack,
-		@NotNull SubmitNodeCollector submitNodeCollector,
-		@NotNull CameraRenderState cameraRenderState
+		S renderState,
+		PoseStack poseStack,
+		SubmitNodeCollector collector,
+		CameraRenderState cameraState
 	) {
 		poseStack.translate(0.5F, 0F, 0.5F);
 		poseStack.pushPose();
-		poseStack.mulPose(Mth.rotationAroundAxis(Y_AXIS_NEGATIVE, cameraRenderState.orientation, new Quaternionf()));
-		submitNodeCollector.submitModelPart(
+		poseStack.mulPose(Mth.rotationAroundAxis(Y_AXIS_NEGATIVE, cameraState.orientation, new Quaternionf()));
+		collector.submitModelPart(
 			this.base,
 			poseStack,
 			RenderTypes.entityCutout(this.getTexture(renderState)),
@@ -90,5 +88,5 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 
 	public abstract Identifier getTexture(S renderState);
 
-	public abstract ModelPart getRoot(Context ctx);
+	public abstract ModelPart getRoot(Context context);
 }

@@ -64,16 +64,14 @@ public class BlockAnimateTicks {
 	}
 
 	@ApiStatus.Internal
-	public static void onAnimateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource) {
+	public static void onAnimateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
 		ANIMATE_TICKS.forEach(pair -> {
-			if (pair.getFirst().test(blockState)) {
-				pair.getSecond().animateTick(blockState, level, blockPos, randomSource);
-			}
+			if (pair.getFirst().test(state)) pair.getSecond().animateTick(state, level, pos, random);
 		});
 	}
 
 	@FunctionalInterface
 	public interface InjectedAnimateTick {
-		void animateTick(BlockState blockState, Level level, BlockPos blockPos, RandomSource randomSource);
+		void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random);
 	}
 }

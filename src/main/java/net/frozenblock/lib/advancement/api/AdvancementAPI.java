@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
@@ -30,8 +31,8 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.storage.loot.LootTable;
 
+@UtilityClass
 public final class AdvancementAPI {
-	private AdvancementAPI() {}
 
 	/**
 	 * Makes a copy of {@link AdvancementRewards#EMPTY} for use in the Advancement API
@@ -39,9 +40,7 @@ public final class AdvancementAPI {
 	 * Use only when needed, as this will increase memory usage
 	 */
 	public static void setupRewards(Advancement advancement) {
-		if (advancement.rewards == AdvancementRewards.EMPTY) {
-			advancement.rewards = new AdvancementRewards(0, List.of(), List.of(), Optional.empty());
-		}
+		if (advancement.rewards == AdvancementRewards.EMPTY) advancement.rewards = new AdvancementRewards(0, List.of(), List.of(), Optional.empty());
 	}
 
 	/**
@@ -50,15 +49,11 @@ public final class AdvancementAPI {
 	 * Use only when needed, as this will increase memory usage
 	 */
 	public static void setupRequirements(Advancement advancement) {
-		if (advancement.requirements == AdvancementRequirements.EMPTY) {
-			advancement.requirements = new AdvancementRequirements(List.of());
-		}
+		if (advancement.requirements == AdvancementRequirements.EMPTY) advancement.requirements = new AdvancementRequirements(List.of());
 	}
 
 	public static void setupCriteria(Advancement advancement) {
-		if (!(advancement.criteria instanceof HashMap<String, Criterion<?>>)) {
-			advancement.criteria = new HashMap<>(advancement.criteria);
-		}
+		if (!(advancement.criteria instanceof HashMap<String, Criterion<?>>)) advancement.criteria = new HashMap<>(advancement.criteria);
 	}
 
 	public static void addCriteria(Advancement advancement, String key, Criterion<?> criterion) {
@@ -70,40 +65,46 @@ public final class AdvancementAPI {
 	public static void addRequirementsAsNewList(Advancement advancement, AdvancementRequirements requirements) {
 		if (requirements == null || requirements.isEmpty()) return;
 		setupRequirements(advancement);
-		List<List<String>> list = new ArrayList<>(advancement.requirements().requirements);
-		list.addAll(requirements.requirements);
-		advancement.requirements().requirements = Collections.unmodifiableList(list);
+
+		final List<List<String>> requirementsList = new ArrayList<>(advancement.requirements().requirements);
+		requirementsList.addAll(requirements.requirements);
+		advancement.requirements().requirements = Collections.unmodifiableList(requirementsList);
 	}
 
-	public static void addRequirementsToList(Advancement advancement, List<String> requirements) {
-		if (requirements == null || requirements.isEmpty()) return;
+	public static void addRequirementsToList(Advancement advancement, List<String> newRequirements) {
+		if (newRequirements == null || newRequirements.isEmpty()) return;
 		setupRequirements(advancement);
-		List<List<String>> list = new ArrayList<>(advancement.requirements().requirements);
-		if (list.isEmpty()) {
-			list.add(requirements);
+
+		final List<List<String>> requirementsList = new ArrayList<>(advancement.requirements().requirements);
+		if (requirementsList.isEmpty()) {
+			requirementsList.add(newRequirements);
 		} else {
-			List<String> existingList = list.getFirst();
-			List<String> finalList = new ArrayList<>(existingList);
-			finalList.addAll(requirements);
-			list.add(Collections.unmodifiableList(finalList));
-			list.remove(existingList);
+			final List<String> existingList = requirementsList.getFirst();
+			final List<String> finalList = new ArrayList<>(existingList);
+			finalList.addAll(newRequirements);
+			requirementsList.add(Collections.unmodifiableList(finalList));
+			requirementsList.remove(existingList);
 		}
-		advancement.requirements().requirements = Collections.unmodifiableList(list);
+		advancement.requirements().requirements = Collections.unmodifiableList(requirementsList);
 	}
 
-	public static void addLootTables(Advancement advancement, List<ResourceKey<LootTable>> lootTables) {
-		if (lootTables.isEmpty()) return;
+	public static void addLootTables(Advancement advancement, List<ResourceKey<LootTable>> newLootTables) {
+		if (newLootTables.isEmpty()) return;
 		setupRewards(advancement);
-		AdvancementRewards rewards = advancement.rewards();
-		List<ResourceKey<LootTable>> newLoot = new ArrayList<>(rewards.loot);
-		newLoot.addAll(lootTables);
-		rewards.loot = Collections.unmodifiableList(newLoot);
+
+		final AdvancementRewards rewards = advancement.rewards();
+		final List<ResourceKey<LootTable>> finalLootTables = new ArrayList<>(rewards.loot);
+		finalLootTables.addAll(newLootTables);
+		rewards.loot = Collections.unmodifiableList(finalLootTables);
 	}
 
-	public static void addRecipes(Advancement advancement, List<ResourceKey<Recipe<?>>> recipes) {
-		AdvancementRewards rewards = advancement.rewards();
-		List<ResourceKey<Recipe<?>>> newLoot = new ArrayList<>(rewards.recipes);
-		newLoot.addAll(recipes);
-		rewards.recipes = Collections.unmodifiableList(newLoot);
+	public static void addRecipes(Advancement advancement, List<ResourceKey<Recipe<?>>> newRecipes) {
+		if (newRecipes.isEmpty()) return;
+		setupRewards(advancement);
+
+		final AdvancementRewards rewards = advancement.rewards();
+		final List<ResourceKey<Recipe<?>>> finalRecipes = new ArrayList<>(rewards.recipes);
+		finalRecipes.addAll(newRecipes);
+		rewards.recipes = Collections.unmodifiableList(finalRecipes);
 	}
 }

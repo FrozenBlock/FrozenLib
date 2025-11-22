@@ -23,17 +23,16 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public class HolderSetBlockSoundTypeOverwrite extends AbstractBlockSoundTypeOverwrite<HolderSet<Block>> {
 
-	public HolderSetBlockSoundTypeOverwrite(HolderSet<Block> value, SoundType soundType, BooleanSupplier soundCondition) {
-		super(value, soundType, soundCondition);
+	public HolderSetBlockSoundTypeOverwrite(HolderSet<Block> value, SoundType soundType, BooleanSupplier condition) {
+		super(value, soundType, condition);
 	}
 
 	@Override
-	public boolean matches(@NotNull BlockState blockState) {
-		return blockState.is(this.getValue());
+	public boolean matches(BlockState state) {
+		return state.is(this.getValue());
 	}
 }

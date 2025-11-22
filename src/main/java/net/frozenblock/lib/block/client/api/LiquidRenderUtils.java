@@ -24,7 +24,6 @@ import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,7 +31,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class LiquidRenderUtils {
@@ -40,232 +38,184 @@ public class LiquidRenderUtils {
 	/**
 	 * Renders a block as a fluid, with a single texture.
 	 *
-	 * @param level              The current level.
-	 * @param pos                The position of the block being rendered.
-	 * @param vertexConsumer     The {@link VertexConsumer} to render with.
-	 * @param blockState         The {@link BlockState} being rendered.
-	 * @param fluidState         The {@link FluidState} to render as.
-	 * @param textureAtlasSprite The texture to render.
+	 * @param level The current level.
+	 * @param pos The position of the block being rendered.
+	 * @param vertexConsumer The {@link VertexConsumer} to render with.
+	 * @param state The {@link BlockState} being rendered.
+	 * @param fluidState The {@link FluidState} to render as.
+	 * @param sprite The texture to render.
 	 */
 	public static void tesselateWithSingleTexture(
-		@NotNull BlockAndTintGetter level,
-		@NotNull BlockPos pos,
+		BlockAndTintGetter level,
+		BlockPos pos,
 		VertexConsumer vertexConsumer,
-		BlockState blockState,
+		BlockState state,
 		FluidState fluidState,
-		TextureAtlasSprite textureAtlasSprite
+		TextureAtlasSprite sprite
 	) {
-		float ap;
-		float ao;
-		float ag;
-		float af;
-		float ae;
-		float ad;
-		float ac;
-		float ab;
-		float z;
-		float y;
+		final BlockState downState = level.getBlockState(pos.relative(Direction.DOWN));
+		final FluidState downFluidState = downState.getFluidState();
+		final BlockState upState = level.getBlockState(pos.relative(Direction.UP));
+		final FluidState upFluidState = upState.getFluidState();
+		final BlockState northState = level.getBlockState(pos.relative(Direction.NORTH));
+		final FluidState northFluidState = northState.getFluidState();
+		final BlockState southState = level.getBlockState(pos.relative(Direction.SOUTH));
+		final FluidState southFluidState = southState.getFluidState();
+		final BlockState westState = level.getBlockState(pos.relative(Direction.WEST));
+		final FluidState westFluidState = westState.getFluidState();
+		final BlockState eastState = level.getBlockState(pos.relative(Direction.EAST));
+		final FluidState eastFluidState = eastState.getFluidState();
+
+		final boolean renderUp = !isNeighborSameFluidAndBlock(fluidState, upFluidState, state, upState);
+		final boolean renderDown = shouldRenderFace(level, pos, fluidState, state, Direction.DOWN, downFluidState, downState) && !isFaceOccludedByNeighbor(level, pos, Direction.DOWN, 0.8888889F, downState, state);
+		final boolean renderNorth = shouldRenderFace(level, pos, fluidState, state, Direction.NORTH, northFluidState, northState);
+		final boolean renderSouth = shouldRenderFace(level, pos, fluidState, state, Direction.SOUTH, southFluidState, southState);
+		final boolean renderEast = shouldRenderFace(level, pos, fluidState, state, Direction.EAST, eastFluidState, eastState);
+		final boolean renderWest = shouldRenderFace(level, pos, fluidState, state, Direction.WEST, westFluidState, westState);
+
+		if (!(renderUp || renderDown || renderEast || renderWest || renderNorth || renderSouth)) return;
+
+		float downShade = level.getShade(Direction.DOWN, true);
+		float upShade = level.getShade(Direction.UP, true);
+		float northShade = level.getShade(Direction.NORTH, true);
+		float westShade = level.getShade(Direction.WEST, true);
+
 		float southWestHeight;
 		float southEastHeight;
 		float northWestHeight;
 		float northEastHeight;
-		float f = (0xFFFFFF >> 16 & 0xFF) / 255F;
-		float g = (0xFFFFFF >> 8 & 0xFF) / 255F;
-		float h = (0xFFFFFF & 0xFF) / 255F;
-		BlockState downBlockState = level.getBlockState(pos.relative(Direction.DOWN));
-		FluidState downFluidState = downBlockState.getFluidState();
-		BlockState upBlockState = level.getBlockState(pos.relative(Direction.UP));
-		FluidState upFluidState = upBlockState.getFluidState();
-		BlockState northBlockState = level.getBlockState(pos.relative(Direction.NORTH));
-		FluidState northFluidState = northBlockState.getFluidState();
-		BlockState southBlockState = level.getBlockState(pos.relative(Direction.SOUTH));
-		FluidState southFluidState = southBlockState.getFluidState();
-		BlockState westBlockState = level.getBlockState(pos.relative(Direction.WEST));
-		FluidState westFluidState = westBlockState.getFluidState();
-		BlockState eastBlockState = level.getBlockState(pos.relative(Direction.EAST));
-		FluidState eastFluidState = eastBlockState.getFluidState();
-		boolean shouldRenderUp = !isNeighborSameFluidAndBlock(fluidState, upFluidState, blockState, upBlockState);
-		boolean shouldRenderDown = shouldRenderFace(level, pos, fluidState, blockState, Direction.DOWN, downFluidState, downBlockState) && !isFaceOccludedByNeighbor(level, pos, Direction.DOWN, 0.8888889f, downBlockState, blockState);
-		boolean shouldRenderNorth = shouldRenderFace(level, pos, fluidState, blockState, Direction.NORTH, northFluidState, northBlockState);
-		boolean bl5 = shouldRenderFace(level, pos, fluidState, blockState, Direction.SOUTH, southFluidState, southBlockState);
-		boolean bl6 = shouldRenderFace(level, pos, fluidState, blockState, Direction.WEST, westFluidState, westBlockState);
-		boolean bl7 = shouldRenderFace(level, pos, fluidState, blockState, Direction.EAST, eastFluidState, eastBlockState);
-		if (!(shouldRenderUp || shouldRenderDown || bl7 || bl6 || shouldRenderNorth || bl5)) {
-			return;
-		}
-		float j = level.getShade(Direction.DOWN, true);
-		float k = level.getShade(Direction.UP, true);
-		float l = level.getShade(Direction.NORTH, true);
-		float m = level.getShade(Direction.WEST, true);
-		Fluid fluid = fluidState.getType();
-		float n = getHeight(level, fluid, pos, blockState, fluidState);
-		if (n >= 1F) {
+		final Fluid fluid = fluidState.getType();
+		final float fluidHeight = getHeight(level, fluid, pos, state, fluidState);
+		if (fluidHeight >= 1F) {
 			northEastHeight = 1F;
 			northWestHeight = 1F;
 			southEastHeight = 1F;
 			southWestHeight = 1F;
 		} else {
-			float s = getHeight(level, fluid, pos.north(), northBlockState, northFluidState);
-			float t = getHeight(level, fluid, pos.south(), southBlockState, southFluidState);
-			float u = getHeight(level, fluid, pos.east(), eastBlockState, eastFluidState);
-			float v = getHeight(level, fluid, pos.west(), westBlockState, westFluidState);
-			northEastHeight = calculateAverageHeight(level, fluid, n, s, u, pos.relative(Direction.NORTH).relative(Direction.EAST));
-			northWestHeight = calculateAverageHeight(level, fluid, n, s, v, pos.relative(Direction.NORTH).relative(Direction.WEST));
-			southEastHeight = calculateAverageHeight(level, fluid, n, t, u, pos.relative(Direction.SOUTH).relative(Direction.EAST));
-			southWestHeight = calculateAverageHeight(level, fluid, n, t, v, pos.relative(Direction.SOUTH).relative(Direction.WEST));
+			final float northHeight = getHeight(level, fluid, pos.north(), northState, northFluidState);
+			final float southHeight = getHeight(level, fluid, pos.south(), southState, southFluidState);
+			final float eastHeight = getHeight(level, fluid, pos.east(), eastState, eastFluidState);
+			final float westHeight = getHeight(level, fluid, pos.west(), westState, westFluidState);
+			northEastHeight = calculateAverageHeight(level, fluid, fluidHeight, northHeight, eastHeight, pos.relative(Direction.NORTH).relative(Direction.EAST));
+			northWestHeight = calculateAverageHeight(level, fluid, fluidHeight, northHeight, westHeight, pos.relative(Direction.NORTH).relative(Direction.WEST));
+			southEastHeight = calculateAverageHeight(level, fluid, fluidHeight, southHeight, eastHeight, pos.relative(Direction.SOUTH).relative(Direction.EAST));
+			southWestHeight = calculateAverageHeight(level, fluid, fluidHeight, southHeight, westHeight, pos.relative(Direction.SOUTH).relative(Direction.WEST));
 		}
-		float d = pos.getX() & 0xF;
-		float e = pos.getY() & 0xF;
-		float w = pos.getZ() & 0xF;
-		y = shouldRenderDown ? 0.001f : 0F;
-		if (shouldRenderUp && !isFaceOccludedByNeighbor(level, pos, Direction.UP, Math.min(Math.min(northWestHeight, southWestHeight), Math.min(southEastHeight, northEastHeight)), upBlockState, blockState)) {
-			float ak;
-			float aj;
-			float ai;
-			float ah;
-			float aa;
+
+		final float renderX = pos.getX() & 0xF;
+		final float renderY = pos.getY() & 0xF;
+		final float renderZ = pos.getZ() & 0xF;
+		final float renderYOffset = renderDown ? 0.001F : 0F;
+
+		final float u0 = sprite.getU0();
+		final float u1 = sprite.getU1();
+		final float v0 = sprite.getV0();
+		final float v1 = sprite.getV1();
+
+		if (renderUp && !isFaceOccludedByNeighbor(level, pos, Direction.UP, Math.min(Math.min(northWestHeight, southWestHeight), Math.min(southEastHeight, northEastHeight)), upState, state)) {
 			northWestHeight -= 0.001F;
 			southWestHeight -= 0.001F;
 			southEastHeight -= 0.001F;
 			northEastHeight -= 0.001F;
-			z = textureAtlasSprite.getU(0F);
-			aa = textureAtlasSprite.getV(0F);
-			ab = z;
-			ac = textureAtlasSprite.getV(1F);
-			ad = textureAtlasSprite.getU(1F);
-			ae = ac;
-			af = ad;
-			ag = aa;
-			float al = (z + ab + ad + af) / 4F;
-			ah = (aa + ac + ae + ag) / 4F;
-			ai = textureAtlasSprite.contents().width() / (textureAtlasSprite.getU1() - textureAtlasSprite.getU0());
-			aj = textureAtlasSprite.contents().height() / (textureAtlasSprite.getV1() - textureAtlasSprite.getV0());
-			ak = 4F / Math.max(aj, ai);
-			z = Mth.lerp(ak, z, al);
-			ab = Mth.lerp(ak, ab, al);
-			ad = Mth.lerp(ak, ad, al);
-			af = Mth.lerp(ak, af, al);
-			aa = Mth.lerp(ak, aa, ah);
-			ac = Mth.lerp(ak, ac, ah);
-			ae = Mth.lerp(ak, ae, ah);
-			ag = Mth.lerp(ak, ag, ah);
-			int am = getLightColor(level, pos);
-			float an = k * f;
-			ao = k * g;
-			ap = k * h;
-			vertex(vertexConsumer, d + 0F, e + northWestHeight, w + 0F, an, ao, ap, z, aa, am);
-			vertex(vertexConsumer, d + 0F, e + southWestHeight, w + 1F, an, ao, ap, ab, ac, am);
-			vertex(vertexConsumer, d + 1F, e + southEastHeight, w + 1F, an, ao, ap, ad, ae, am);
-			vertex(vertexConsumer, d + 1F, e + northEastHeight, w + 0F, an, ao, ap, af, ag, am);
-			if (fluidState.shouldRenderBackwardUpFace(level, pos.above()) || !blockState.equals(downBlockState)) {
-				vertex(vertexConsumer, d + 0F, e + northWestHeight, w + 0F, an, ao, ap, z, aa, am);
-				vertex(vertexConsumer, d + 1F, e + northEastHeight, w + 0F, an, ao, ap, af, ag, am);
-				vertex(vertexConsumer, d + 1F, e + southEastHeight, w + 1F, an, ao, ap, ad, ae, am);
-				vertex(vertexConsumer, d + 0F, e + southWestHeight, w + 1F, an, ao, ap, ab, ac, am);
+
+			final int color = getLightColor(level, pos);
+			vertex(vertexConsumer, renderX + 0F, renderY + northWestHeight, renderZ + 0F, upShade, upShade, upShade, u0, v0, color);
+			vertex(vertexConsumer, renderX + 0F, renderY + southWestHeight, renderZ + 1F, upShade, upShade, upShade, u0, v1, color);
+			vertex(vertexConsumer, renderX + 1F, renderY + southEastHeight, renderZ + 1F, upShade, upShade, upShade, u1, v1, color);
+			vertex(vertexConsumer, renderX + 1F, renderY + northEastHeight, renderZ + 0F, upShade, upShade, upShade, u1, v0, color);
+			if (fluidState.shouldRenderBackwardUpFace(level, pos.above()) || !state.equals(downState)) {
+				vertex(vertexConsumer, renderX + 0F, renderY + northWestHeight, renderZ + 0F, upShade, upShade, upShade, u0, v0, color);
+				vertex(vertexConsumer, renderX + 1F, renderY + northEastHeight, renderZ + 0F, upShade, upShade, upShade, u1, v0, color);
+				vertex(vertexConsumer, renderX + 1F, renderY + southEastHeight, renderZ + 1F, upShade, upShade, upShade, u1, v1, color);
+				vertex(vertexConsumer, renderX + 0F, renderY + southWestHeight, renderZ + 1F, upShade, upShade, upShade, u0, v1, color);
 			}
 		}
-		if (shouldRenderDown) {
-			z = textureAtlasSprite.getU0();
-			ab = textureAtlasSprite.getU1();
-			ad = textureAtlasSprite.getV0();
-			af = textureAtlasSprite.getV1();
-			int aq = getLightColor(level, pos.below());
-			ac = j * f;
-			ae = j * g;
-			ag = j * h;
-			vertex(vertexConsumer, d, e + y, w + 1F, ac, ae, ag, z, af, aq);
-			vertex(vertexConsumer, d, e + y, w, ac, ae, ag, z, ad, aq);
-			vertex(vertexConsumer, d + 1F, e + y, w, ac, ae, ag, ab, ad, aq);
-			vertex(vertexConsumer, d + 1F, e + y, w + 1F, ac, ae, ag, ab, af, aq);
-			if (downBlockState.getBlock() != blockState.getBlock() && !downBlockState.canOcclude()) {
-				vertex(vertexConsumer, d, e + y, w + 1F, ac, ae, ag, z, af, aq);
-				vertex(vertexConsumer, d + 1F, e + y, w + 1F, ac, ae, ag, z, ad, aq);
-				vertex(vertexConsumer, d + 1F, e + y, w, ac, ae, ag, ab, ad, aq);
-				vertex(vertexConsumer, d, e + y, w, ac, ae, ag, ab, af, aq);
+
+		if (renderDown) {
+			final int belowColor = getLightColor(level, pos.below());
+			vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ + 1F, downShade, downShade, downShade, u0, v1, belowColor);
+			vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u0, v0, belowColor);
+			vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u1, v0, belowColor);
+			vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ + 1F, downShade, downShade, downShade, u1, v1, belowColor);
+			if (downState.getBlock() != state.getBlock() && !downState.canOcclude()) {
+				vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ + 1F, downShade, downShade, downShade, u0, v1, belowColor);
+				vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ + 1F, downShade, downShade, downShade, u0, v0, belowColor);
+				vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u1, v0, belowColor);
+				vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u1, v1, belowColor);
 			}
 		}
-		int ar = getLightColor(level, pos);
+
+		final int color = getLightColor(level, pos);
 		for (Direction direction : Direction.Plane.HORIZONTAL) {
-			float av;
-			float au;
-			float at;
-			float as;
-			float aa;
+			float firstY;
+			float secondY;
+			float firstX;
+			float secondX;
+			float firstZ;
+			float lastZ;
+
 			if (!(switch (direction) {
 				case NORTH -> {
-					af = northWestHeight;
-					aa = northEastHeight;
-					as = d;
-					at = d + 1F;
-					au = w + 0.001F;
-					av = w + 0.001F;
-					yield shouldRenderNorth;
+					firstY = northWestHeight;
+					secondY = northEastHeight;
+					firstX = renderX;
+					secondX = renderX + 1F;
+					lastZ = firstZ = renderZ + 0.001F;
+					yield renderNorth;
 				}
 				case SOUTH -> {
-					af = southEastHeight;
-					aa = southWestHeight;
-					as = d + 1F;
-					at = d;
-					au = w + 1F - 0.001F;
-					av = w + 1F - 0.001F;
-					yield bl5;
+					firstY = southEastHeight;
+					secondY = southWestHeight;
+					firstX = renderX + 1F;
+					secondX = renderX;
+					firstZ = lastZ = renderZ + 1F - 0.001F;
+					yield renderSouth;
 				}
 				case WEST -> {
-					af = southWestHeight;
-					aa = northWestHeight;
-					as = d + 0.001F;
-					at = d + 0.001F;
-					au = w + 1F;
-					av = w;
-					yield bl6;
+					firstY = southWestHeight;
+					secondY = northWestHeight;
+					secondX = firstX = renderX + 0.001F;
+					firstZ = renderZ + 1F;
+					lastZ = renderZ;
+					yield renderWest;
 				}
 				default -> {
-					af = northEastHeight;
-					aa = southEastHeight;
-					as = d + 1F - 0.001F;
-					at = d + 1F - 0.001F;
-					au = w;
-					av = w + 1F;
-					yield bl7;
+					firstY = northEastHeight;
+					secondY = southEastHeight;
+					secondX = firstX = renderX + 1F - 0.001F;
+					firstZ = renderZ;
+					lastZ = renderZ + 1F;
+					yield renderEast;
 				}
-			}) || isFaceOccludedByNeighbor(level, pos, direction, Math.max(af, aa), level.getBlockState(pos.relative(direction)), level.getBlockState(pos.relative(direction))))
+			}) || isFaceOccludedByNeighbor(level, pos, direction, Math.max(firstY, secondY), level.getBlockState(pos.relative(direction)), level.getBlockState(pos.relative(direction))))
 				continue;
-			ao = textureAtlasSprite.getU(0F);
-			ap = textureAtlasSprite.getU(1F);
-			float aw = textureAtlasSprite.getV(0F);
-			float ax = textureAtlasSprite.getV(0F);
-			float ay = textureAtlasSprite.getV(1F);
-			float az = direction.getAxis() == Direction.Axis.Z ? l : m;
-			float ba = k * az * f;
-			float bb = k * az * g;
-			float bc = k * az * h;
-			vertex(vertexConsumer, as, e + af, au, ba, bb, bc, ao, aw, ar);
-			vertex(vertexConsumer, at, e + aa, av, ba, bb, bc, ap, ax, ar);
-			vertex(vertexConsumer, at, e + y, av, ba, bb, bc, ap, ay, ar);
-			vertex(vertexConsumer, as, e + y, au, ba, bb, bc, ao, ay, ar);
-			vertex(vertexConsumer, as, e + y, au, ba, bb, bc, ao, ay, ar);
-			vertex(vertexConsumer, at, e + y, av, ba, bb, bc, ap, ay, ar);
-			vertex(vertexConsumer, at, e + aa, av, ba, bb, bc, ap, ax, ar);
-			vertex(vertexConsumer, as, e + af, au, ba, bb, bc, ao, aw, ar);
+
+			final float sideShade = upShade * (direction.getAxis() == Direction.Axis.Z ? northShade : westShade);
+			vertex(vertexConsumer, firstX, renderY + firstY, firstZ, sideShade, sideShade, sideShade, u0, v0, color);
+			vertex(vertexConsumer, secondX, renderY + secondY, lastZ, sideShade, sideShade, sideShade, u1, v0, color);
+			vertex(vertexConsumer, secondX, renderY + renderYOffset, lastZ, sideShade, sideShade, sideShade, u1, v1, color);
+			vertex(vertexConsumer, firstX, renderY + renderYOffset, firstZ, sideShade, sideShade, sideShade, u0, v1, color);
+			vertex(vertexConsumer, firstX, renderY + renderYOffset, firstZ, sideShade, sideShade, sideShade, u0, v1, color);
+			vertex(vertexConsumer, secondX, renderY + renderYOffset, lastZ, sideShade, sideShade, sideShade, u1, v1, color);
+			vertex(vertexConsumer, secondX, renderY + secondY, lastZ, sideShade, sideShade, sideShade, u1, v0, color);
+			vertex(vertexConsumer, firstX, renderY + firstY, firstZ, sideShade, sideShade, sideShade, u0, v0, color);
 		}
 	}
 
-	private static float calculateAverageHeight(BlockAndTintGetter world, Fluid fluid, float height, float adjacentHeightA, float adjacentHeightB, BlockPos fluidPos) {
-		if (adjacentHeightB >= 1F || adjacentHeightA >= 1F) {
-			return 1F;
-		}
-		float[] fs = new float[2];
+	private static float calculateAverageHeight(BlockAndTintGetter level, Fluid fluid, float height, float adjacentHeightA, float adjacentHeightB, BlockPos fluidPos) {
+		if (adjacentHeightB >= 1F || adjacentHeightA >= 1F) return 1F;
+
+		float[] heightAndCount = new float[2];
 		if (adjacentHeightB > 0F || adjacentHeightA > 0F) {
-			float f = getHeight(world, fluid, fluidPos);
-			if (f >= 1F) {
-				return 1F;
-			}
-			addWeightedHeight(fs, f);
+			final float fluidHeight = getHeight(level, fluid, fluidPos);
+			if (fluidHeight >= 1F) return 1F;
+			addWeightedHeight(heightAndCount, fluidHeight);
 		}
-		addWeightedHeight(fs, height);
-		addWeightedHeight(fs, adjacentHeightB);
-		addWeightedHeight(fs, adjacentHeightA);
-		return fs[0] / fs[1];
+
+		addWeightedHeight(heightAndCount, height);
+		addWeightedHeight(heightAndCount, adjacentHeightB);
+		addWeightedHeight(heightAndCount, adjacentHeightA);
+		return heightAndCount[0] / heightAndCount[1];
 	}
 
 	public static void addWeightedHeight(float[] weights, float height) {
@@ -278,61 +228,64 @@ public class LiquidRenderUtils {
 		}
 	}
 
-	public static float getHeight(@NotNull BlockAndTintGetter world, Fluid fluid, BlockPos blockState) {
-		BlockState blockState2 = world.getBlockState(blockState);
-		return getHeight(world, fluid, blockState, blockState2, blockState2.getFluidState());
+	public static float getHeight(BlockAndTintGetter level, Fluid fluid, BlockPos pos) {
+		final BlockState state = level.getBlockState(pos);
+		return getHeight(level, fluid, pos, state, state.getFluidState());
 	}
 
-	public static float getHeight(BlockAndTintGetter world, @NotNull Fluid fluid, BlockPos pos, BlockState blockState, @NotNull FluidState state) {
-		if (fluid.isSame(state.getType())) {
-			BlockState blockState2 = world.getBlockState(pos.above());
-			if (fluid.isSame(blockState2.getFluidState().getType())) {
-				return 1F;
-			}
-			return state.getOwnHeight();
+	public static float getHeight(BlockAndTintGetter level, Fluid fluid, BlockPos pos, BlockState state, FluidState fluidState) {
+		if (fluid.isSame(fluidState.getType())) {
+			final BlockState aboveState = level.getBlockState(pos.above());
+			if (fluid.isSame(aboveState.getFluidState().getType())) return 1F;
+			return fluidState.getOwnHeight();
 		}
-		if (!blockState.isSolid()) {
-			return 0F;
-		}
+
+		if (!state.isSolid()) return 0F;
 		return -1F;
 	}
 
-	public static void vertex(@NotNull VertexConsumer consumer, float x, float y, float z, float red, float green, float blue, float u, float v, int packedLight) {
+	public static void vertex(VertexConsumer consumer, float x, float y, float z, float red, float green, float blue, float u, float v, int packedLight) {
 		consumer.addVertex(x, y, z).setColor(red, green, blue, 1F).setUv(u, v).setLight(packedLight).setNormal(0F, 1F, 0F);
 	}
 
 	public static int getLightColor(BlockAndTintGetter level, BlockPos pos) {
-		int i = LevelRenderer.getLightColor(level, pos);
-		int j = LevelRenderer.getLightColor(level, pos.above());
-		int k = i & 0xFF;
-		int l = j & 0xFF;
-		int m = i >> 16 & 0xFF;
-		int n = j >> 16 & 0xFF;
+		final int color = LevelRenderer.getLightColor(level, pos);
+		final int aboveColor = LevelRenderer.getLightColor(level, pos.above());
+		final int k = color & 0xFF;
+		final int l = aboveColor & 0xFF;
+		final int m = color >> 16 & 0xFF;
+		final int n = aboveColor >> 16 & 0xFF;
 		return (Math.max(k, l)) | (Math.max(m, n)) << 16;
 	}
 
-	private static boolean isNeighborSameFluidAndBlock(@NotNull FluidState firstState, @NotNull FluidState secondState, BlockState firstBlock, BlockState secondBlock) {
+	private static boolean isNeighborSameFluidAndBlock(FluidState firstState, FluidState secondState, BlockState firstBlock, BlockState secondBlock) {
 		return secondState.getType().isSame(firstState.getType()) && firstBlock.getBlock() == secondBlock.getBlock();
 	}
 
-	private static boolean isFaceOccludedByState(BlockGetter level, Direction face, float height, BlockPos pos, @NotNull BlockState state, @NotNull BlockState neighborState) {
-		if (neighborState.getBlock() == state.getBlock() && state.canOcclude()) {
-			VoxelShape voxelShape = Shapes.box(0D, 0D, 0D, 1D, height, 1D);
-			VoxelShape voxelShape2 = state.getOcclusionShape();
-			return Shapes.blockOccludes(voxelShape, voxelShape2, face);
-		}
-		return false;
+	private static boolean isFaceOccludedByState(BlockGetter level, Direction face, float height, BlockPos pos, BlockState state, BlockState neighborState) {
+		if (neighborState.getBlock() != state.getBlock() || !state.canOcclude()) return false;
+		final VoxelShape planeShape = Shapes.box(0D, 0D, 0D, 1D, height, 1D);
+		final VoxelShape occlusionShape = state.getOcclusionShape();
+		return Shapes.blockOccludes(planeShape, occlusionShape, face);
 	}
 
-	private static boolean isFaceOccludedByNeighbor(BlockGetter level, @NotNull BlockPos pos, Direction side, float height, BlockState blockState, BlockState neighborState) {
-		return isFaceOccludedByState(level, side, height, pos.relative(side), blockState, neighborState);
+	private static boolean isFaceOccludedByNeighbor(BlockGetter level, BlockPos pos, Direction side, float height, BlockState state, BlockState neighborState) {
+		return isFaceOccludedByState(level, side, height, pos.relative(side), state, neighborState);
 	}
 
-	private static boolean isFaceOccludedBySelf(BlockGetter level, BlockPos pos, BlockState state, @NotNull Direction face, BlockState neighborState) {
+	private static boolean isFaceOccludedBySelf(BlockGetter level, BlockPos pos, BlockState state, Direction face, BlockState neighborState) {
 		return isFaceOccludedByState(level, face.getOpposite(), 1F, pos, state, neighborState);
 	}
 
-	public static boolean shouldRenderFace(BlockAndTintGetter level, BlockPos pos, FluidState fluidState, BlockState blockState, Direction side, FluidState neighborFluid, BlockState neighborState) {
-		return !isFaceOccludedBySelf(level, pos, blockState, side, neighborState) && !isNeighborSameFluidAndBlock(fluidState, neighborFluid, blockState, neighborState);
+	public static boolean shouldRenderFace(
+		BlockAndTintGetter level,
+		BlockPos pos,
+		FluidState fluidState,
+		BlockState state,
+		Direction side,
+		FluidState neighborFluid,
+		BlockState neighborState
+	) {
+		return !isFaceOccludedBySelf(level, pos, state, side, neighborState) && !isNeighborSameFluidAndBlock(fluidState, neighborFluid, state, neighborState);
 	}
 }

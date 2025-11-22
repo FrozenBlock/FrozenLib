@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.SculkBehaviour;
 import net.minecraft.world.level.block.SculkSpreader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -41,49 +40,41 @@ public record BooleanPropertySculkBehavior(BooleanProperty changingProperty, boo
 
 	@Override
 	public int attemptUseCharge(
-		SculkSpreader.@NotNull ChargeCursor cursor,
-		@NotNull LevelAccessor level,
-		@NotNull BlockPos catalystPos,
-		@NotNull RandomSource random,
-		@NotNull SculkSpreader spreadManager,
+		SculkSpreader.ChargeCursor cursor,
+		LevelAccessor level,
+		BlockPos catalystPos,
+		RandomSource random,
+		SculkSpreader spreadManager,
 		boolean shouldConvertToBlock
 	) {
 		BlockState placementState = null;
-		BlockPos cursorPos = cursor.getPos();
-		BlockState currentState = level.getBlockState(cursorPos);
-		if (currentState.hasProperty(this.changingProperty)) {
-			if (currentState.getValue(this.changingProperty) != this.propertySetValue) {
-				placementState = currentState.setValue(this.changingProperty, this.propertySetValue);
-			}
+		final BlockPos cursorPos = cursor.getPos();
+		final BlockState currentState = level.getBlockState(cursorPos);
+		if (currentState.getValueOrElse(this.changingProperty, this.propertySetValue) != this.propertySetValue) {
+			placementState = currentState.setValue(this.changingProperty, this.propertySetValue);
 		}
 
-		if (placementState != null) {
-			level.setBlock(cursorPos, placementState, Block.UPDATE_ALL);
-			return cursor.getCharge() - 1;
-		}
-		return random.nextInt(spreadManager.chargeDecayRate()) == 0 ? Mth.floor((float) cursor.getCharge() * 0.5F) : cursor.getCharge();
+		if (placementState == null) return random.nextInt(spreadManager.chargeDecayRate()) == 0 ? Mth.floor((float) cursor.getCharge() * 0.5F) : cursor.getCharge();
+		level.setBlock(cursorPos, placementState, Block.UPDATE_ALL);
+		return cursor.getCharge() - 1;
 	}
 
 	@Override
 	public boolean attemptSpreadVein(
-		@NotNull LevelAccessor level,
-		@NotNull BlockPos pos,
-		@NotNull BlockState state,
+		LevelAccessor level,
+		BlockPos pos,
+		BlockState state,
 		@Nullable Collection<Direction> directions,
 		boolean markForPostProcessing
 	) {
 		BlockState placementState = null;
-		BlockState currentState = level.getBlockState(pos);
-		if (currentState.hasProperty(this.changingProperty)) {
-			if (currentState.getValue(this.changingProperty) != this.propertySetValue) {
-				placementState = currentState.setValue(this.changingProperty, this.propertySetValue);
-			}
+		final BlockState currentState = level.getBlockState(pos);
+		if (currentState.getValueOrElse(this.changingProperty, this.propertySetValue) != this.propertySetValue) {
+			placementState = currentState.setValue(this.changingProperty, this.propertySetValue);
 		}
 
-		if (placementState != null) {
-			level.setBlock(pos, placementState, Block.UPDATE_ALL);
-			return true;
-		}
-		return false;
+		if (placementState == null) return false;
+		level.setBlock(pos, placementState, Block.UPDATE_ALL);
+		return true;
 	}
 }
