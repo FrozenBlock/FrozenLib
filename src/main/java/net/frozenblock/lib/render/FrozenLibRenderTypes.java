@@ -29,7 +29,6 @@ import net.minecraft.util.Util;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderTypes {
-
 	public static final Function<Identifier, RenderType> ENTITY_CUTOUT_NO_SHADING = Util.memoize(identifier -> {
 		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_CUTOUT_NO_SHADING)
 			.withTexture("Sampler0", identifier)

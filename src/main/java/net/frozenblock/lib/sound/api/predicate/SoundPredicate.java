@@ -24,7 +24,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class SoundPredicate<T extends Entity> {
@@ -47,29 +46,26 @@ public final class SoundPredicate<T extends Entity> {
 
 	@SuppressWarnings("unchecked")
     public static <T extends Entity> LoopPredicate<T> getPredicate(@Nullable Identifier id) {
-        if (id != null) {
-            if (FrozenLibRegistries.SOUND_PREDICATE.containsKey(id)) {
-				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibRegistries.SOUND_PREDICATE.getValue(id);
-				if (predicate != null) {
-					return predicate.predicateSupplier.get();
-				}
-			} else if (FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED.containsKey(id)) {
-				SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED.getValue(id);
-				if (predicate != null) {
-					return predicate.predicateSupplier.get();
-				}
-			}
-			FrozenLibConstants.LOGGER.error("Unable to find sound predicate {}! Using default sound predicate instead!", id);
-        }
+        if (id == null) return defaultPredicate();
+
+		if (FrozenLibRegistries.SOUND_PREDICATE.containsKey(id)) {
+			final SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibRegistries.SOUND_PREDICATE.getValue(id);
+			if (predicate != null) return predicate.predicateSupplier.get();
+		} else if (FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED.containsKey(id)) {
+			final SoundPredicate<T> predicate = (SoundPredicate<T>) FrozenLibRegistries.SOUND_PREDICATE_UNSYNCED.getValue(id);
+			if (predicate != null) return predicate.predicateSupplier.get();
+		}
+
+		FrozenLibConstants.LOGGER.error("Unable to find sound predicate {}! Using default sound predicate instead!", id);
         return defaultPredicate();
     }
 
 	@Contract(pure = true)
-	public static <T extends Entity> @NotNull LoopPredicate<T> defaultPredicate() {
+	public static <T extends Entity> LoopPredicate<T> defaultPredicate() {
 		return entity -> !entity.isSilent();
 	}
 	@Contract(pure = true)
-	public static <T extends Entity> @NotNull LoopPredicate<T> notSilentAndAlive() {
+	public static <T extends Entity> LoopPredicate<T> notSilentAndAlive() {
 		return entity -> !entity.isSilent();
 	}
 

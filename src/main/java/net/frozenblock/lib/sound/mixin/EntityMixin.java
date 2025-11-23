@@ -58,12 +58,8 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 		)
 	)
     public void frozenLib$saveLoopingSoundData(ValueOutput output, CallbackInfo info) {
-        if (this.frozenLib$loopingSoundManager != null) {
-            this.frozenLib$loopingSoundManager.save(output);
-        }
-        if (this.frozenLib$loopingFadingDistanceSoundManager != null) {
-            this.frozenLib$loopingFadingDistanceSoundManager.save(output);
-        }
+        if (this.frozenLib$loopingSoundManager != null) this.frozenLib$loopingSoundManager.save(output);
+        if (this.frozenLib$loopingFadingDistanceSoundManager != null) this.frozenLib$loopingFadingDistanceSoundManager.save(output);
     }
 
 	@Inject(
@@ -81,11 +77,10 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void frozenLib$tickSounds(CallbackInfo info) {
-		Entity entity = Entity.class.cast(this);
-        if (!entity.level().isClientSide()) {
-            this.frozenLib$loopingSoundManager.tick();
-            this.frozenLib$loopingFadingDistanceSoundManager.tick();
-        }
+		final Entity entity = Entity.class.cast(this);
+        if (entity.level().isClientSide()) return;
+		this.frozenLib$loopingSoundManager.tick();
+		this.frozenLib$loopingFadingDistanceSoundManager.tick();
     }
 
 	@Unique
@@ -96,8 +91,8 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 
 	@Unique
     @Override
-    public void frozenLib$addSound(Identifier soundID, SoundSource category, float volume, float pitch, Identifier restrictionId, boolean stopOnDeath) {
-        this.frozenLib$loopingSoundManager.addSound(soundID, category, volume, pitch, restrictionId, stopOnDeath);
+    public void frozenLib$addSound(Identifier soundID, SoundSource source, float volume, float pitch, Identifier restrictionId, boolean stopOnDeath) {
+        this.frozenLib$loopingSoundManager.addSound(soundID, source, volume, pitch, restrictionId, stopOnDeath);
     }
 
 	@Unique
@@ -109,9 +104,9 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 	@Unique
     @Override
     public void frozenLib$addFadingDistanceSound(
-		Identifier soundID,
-		Identifier sound2ID,
-		SoundSource category,
+		Identifier closeSound,
+		Identifier farSound,
+		SoundSource source,
 		float volume,
 		float pitch,
 		Identifier restrictionId,
@@ -119,7 +114,7 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
 		float fadeDist,
 		float maxDist
 	) {
-        this.frozenLib$loopingFadingDistanceSoundManager.addSound(soundID, sound2ID, category, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist);
+        this.frozenLib$loopingFadingDistanceSoundManager.addSound(closeSound, farSound, source, volume, pitch, restrictionId, stopOnDeath, fadeDist, maxDist);
     }
 
 }

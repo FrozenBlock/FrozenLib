@@ -27,24 +27,21 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public record FadingDistanceSwitchingSoundPacket(
 	Vec3 pos,
 	Holder<SoundEvent> closeSound,
 	Holder<SoundEvent> farSound,
-	SoundSource category,
+	SoundSource source,
 	float volume,
 	float pitch,
 	float fadeDist,
 	float maxDist
 ) implements CustomPacketPayload {
-	public static final Type<FadingDistanceSwitchingSoundPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("fading_distance_sound")
-	);
+	public static final Type<FadingDistanceSwitchingSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("fading_distance_sound"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, FadingDistanceSwitchingSoundPacket> CODEC = StreamCodec.ofMember(FadingDistanceSwitchingSoundPacket::write, FadingDistanceSwitchingSoundPacket::new);
 
-	public FadingDistanceSwitchingSoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public FadingDistanceSwitchingSoundPacket(RegistryFriendlyByteBuf buf) {
 		this(
 			buf.readVec3(),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
@@ -57,11 +54,11 @@ public record FadingDistanceSwitchingSoundPacket(
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	public void write(RegistryFriendlyByteBuf buf) {
 		buf.writeVec3(this.pos());
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.closeSound());
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.farSound());
-		buf.writeEnum(this.category());
+		buf.writeEnum(this.source());
 		buf.writeFloat(this.volume());
 		buf.writeFloat(this.pitch());
 		buf.writeFloat(this.fadeDist());
@@ -69,7 +66,6 @@ public record FadingDistanceSwitchingSoundPacket(
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

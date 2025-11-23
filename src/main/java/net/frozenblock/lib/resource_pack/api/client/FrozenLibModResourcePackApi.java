@@ -57,7 +57,6 @@ import net.minecraft.util.StringRepresentable;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibModResourcePackApi {
@@ -80,76 +79,75 @@ public class FrozenLibModResourcePackApi {
 	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then copies them to FrozenLib's Resource Pack directory.
 	 * <p>
 	 * These Resource Packs will be force-enabled.
-	 * @param container The {@link ModContainer} of the mod.
+	 * @param mod The {@link ModContainer} of the mod.
 	 * @param packName The name of the zip file, without the ".zip" extension.
 	 * @param isDoubleZip Whether the Resource Pack is double-zipped.
 	 * @param hidePackFromMenu Whether the Resource Pack should be hidden from the Resource Pack selection menu.
 	 * @param skipHashCheck Whether the Resource Pack will still be extracted even if an identical version was already extracted prior.
 	 * @throws IOException
 	 */
-	public static void findAndPrepareResourcePack(
-		@NotNull ModContainer container, String packName, boolean isDoubleZip, boolean hidePackFromMenu, boolean skipHashCheck
-	) throws IOException {
-		String zipPackName = packName + ".zip";
-		String packId = "frozenlib:mod/file/" + zipPackName;
-		String subPath = "frozenlib_resourcepacks/" + zipPackName;
+	public static void findAndPrepareResourcePack(ModContainer mod, String packName, boolean isDoubleZip, boolean hidePackFromMenu, boolean skipHashCheck) throws IOException {
+		final String zipPackName = packName + ".zip";
+		final String packId = "frozenlib:mod/file/" + zipPackName;
+		final String subPath = "frozenlib_resourcepacks/" + zipPackName;
 
 		// Mark the pack as registered by a mod
 		MOD_RESOURCE_PACK_IDS.add(packId);
 		// Mark the pack as hidden if needed
 		if (hidePackFromMenu) registerHiddenPackId(packId);
 
-		Optional<Path> resourcePack = container.findPath(subPath);
-		if (resourcePack.isPresent()) {
-			Path jarPackPath = resourcePack.get();
+		final Optional<Path> resourcePack = mod.findPath(subPath);
+		if (resourcePack.isEmpty()) {
+			FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
+			return;
+		}
 
-			// Calculate SHA256 hash of the jar's zip file
-			String currentHash = calculateSHA256(jarPackPath);
-			// Check if the hash has changed
-			boolean hasHashChanged = skipHashCheck || hasHashChanged(packName, currentHash);
+		final Path jarPackPath = resourcePack.get();
 
-			// Hash has changed or this is a new pack, proceed with extraction
-			File destFile = new File(MOD_RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
-			if (hasHashChanged || !destFile.exists()) {
-				if (destFile.exists()) {
-					if (!hasHashChanged) return;
-					destFile.delete();
-				}
+		// Calculate SHA256 hash of the jar's zip file
+		final String currentHash = calculateSHA256(jarPackPath);
+		// Check if the hash has changed
+		final boolean hasHashChanged = skipHashCheck || hasHashChanged(packName, currentHash);
 
-				InputStream inputFromJar = Files.newInputStream(jarPackPath);
-				if (isDoubleZip) {
-					File extractionFile = new File(MOD_RESOURCE_PACK_PENDING_EXTRACTION_DIRECTORY.toString(), zipPackName);
-					FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
-					inputFromJar.close();
-
-					AtomicBoolean extracted = new AtomicBoolean(false);
-					ZipFile zipFile = new ZipFile(extractionFile);
-					zipFile.entries().asIterator().forEachRemaining(entry -> {
-						if (entry.getName().equals(zipPackName) && !extracted.get()) {
-							try {
-								InputStream zipInputStream = zipFile.getInputStream(entry);
-								FileUtils.copyInputStreamToFile(zipInputStream, destFile);
-								zipInputStream.close();
-								extracted.set(true);
-							} catch (IOException e) {
-								throw new RuntimeException(e);
-							}
-						}
-					});
-
-					extractionFile.delete();
-					if (!extracted.get()) FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
-				} else {
-					FileUtils.copyInputStreamToFile(inputFromJar, destFile);
-					inputFromJar.close();
-				}
+		// Hash has changed or this is a new pack, proceed with extraction
+		final File destFile = new File(MOD_RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
+		if (hasHashChanged || !destFile.exists()) {
+			if (destFile.exists()) {
+				if (!hasHashChanged) return;
+				destFile.delete();
 			}
 
-			// Update the hash record after successful extraction
-			updateHashRecord(packName, currentHash);
-		} else {
-			FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
+			final InputStream inputFromJar = Files.newInputStream(jarPackPath);
+			if (isDoubleZip) {
+				final File extractionFile = new File(MOD_RESOURCE_PACK_PENDING_EXTRACTION_DIRECTORY.toString(), zipPackName);
+				FileUtils.copyInputStreamToFile(inputFromJar, extractionFile);
+				inputFromJar.close();
+
+				final AtomicBoolean extracted = new AtomicBoolean(false);
+				final ZipFile zipFile = new ZipFile(extractionFile);
+				zipFile.entries().asIterator().forEachRemaining(entry -> {
+					if (entry.getName().equals(zipPackName) && !extracted.get()) {
+						try {
+							InputStream zipInputStream = zipFile.getInputStream(entry);
+							FileUtils.copyInputStreamToFile(zipInputStream, destFile);
+							zipInputStream.close();
+							extracted.set(true);
+						} catch (IOException e) {
+							throw new RuntimeException(e);
+						}
+					}
+				});
+
+				extractionFile.delete();
+				if (!extracted.get()) FrozenLibLogUtils.logWarning("Could not find internal Resource Pack of name " + zipPackName + "!");
+			} else {
+				FileUtils.copyInputStreamToFile(inputFromJar, destFile);
+				inputFromJar.close();
+			}
 		}
+
+		// Update the hash record after successful extraction
+		updateHashRecord(packName, currentHash);
 	}
 
 	/**
@@ -162,7 +160,7 @@ public class FrozenLibModResourcePackApi {
 	 * @param hidePacksFromMenu Whether the Resource Packs should be hidden from the Resource Pack selection menu.
 	 * @param skipVersionCheck Whether the Resource Packs will still be downloaded even if an identical version was already downloaded prior.
 	 */
-	public static void downloadResourcePacks(@NotNull PackDownloadGroup downloadGroup, boolean hidePacksFromMenu, boolean skipVersionCheck) {
+	public static void downloadResourcePacks(PackDownloadGroup downloadGroup, boolean hidePacksFromMenu, boolean skipVersionCheck) {
 		downloadGroup.resetPackStatuses();
 		downloadGroup.packs().forEach(downloadInfo -> downloadResourcePack(downloadInfo, hidePacksFromMenu, skipVersionCheck));
 	}
@@ -177,10 +175,10 @@ public class FrozenLibModResourcePackApi {
 	 * @param hidePackFromMenu Whether the Resource Pack should be hidden from the Resource Pack selection menu.
 	 * @param skipVersionCheck Whether the Resource Pack will still be downloaded even if an identical version was already downloaded prior.
 	 */
-	public static void downloadResourcePack(@NotNull PackDownloadInfo downloadInfo, boolean hidePackFromMenu, boolean skipVersionCheck) {
-		String packName = downloadInfo.getPackName();
-		String zipPackName = packName + ".zip";
-		String packId = "frozenlib:mod/downloaded/file/" + zipPackName;
+	public static void downloadResourcePack(PackDownloadInfo downloadInfo, boolean hidePackFromMenu, boolean skipVersionCheck) {
+		final String packName = downloadInfo.getPackName();
+		final String zipPackName = packName + ".zip";
+		final String packId = "frozenlib:mod/downloaded/file/" + zipPackName;
 
 		// Mark the pack as registered by a mod
 		MOD_RESOURCE_PACK_IDS.add(packId);
@@ -193,23 +191,23 @@ public class FrozenLibModResourcePackApi {
 			() -> {
 				Optional<ToastInfo> failToast = Optional.empty();
 				try {
-					File destFile = new File(DOWNLOADED_RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
+					final File destFile = new File(DOWNLOADED_RESOURCE_PACK_DIRECTORY.toString(), zipPackName);
 					// Check if the pack already exists
-					boolean isPackPresent = destFile.exists();
+					final boolean isPackPresent = destFile.exists();
 					// Select proper failure toast accordingly
 					failToast = isPackPresent
 						? SHOW_DEBUG_TOASTS ? Optional.of(new ToastInfo(downloadInfo, ToastType.FAILURE_PRESENT)) : Optional.empty()
 						: Optional.of(new ToastInfo(downloadInfo, ToastType.FAILURE));
 
 					// Connect online to attempt pack download
-					URL url = URI.create(downloadInfo.getURL()).toURL();
-					URLConnection request = url.openConnection();
+					final URL url = URI.create(downloadInfo.getURL()).toURL();
+					final URLConnection request = url.openConnection();
 					request.connect();
 
 					// Parse JSON
-					JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent()));
-					JsonObject packDir = parsedJson.getAsJsonObject();
-					String packURL = packDir.get("pack").getAsString();
+					final JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent()));
+					final JsonObject packDir = parsedJson.getAsJsonObject();
+					final String packURL = packDir.get("pack").getAsString();
 					int packVersion = packDir.get("version").getAsInt();
 
 					// Check if the version has changed
@@ -220,7 +218,7 @@ public class FrozenLibModResourcePackApi {
 						? Optional.of(new ToastInfo(downloadInfo, ToastType.PRESENT))
 						: Optional.empty();
 
-					Optional<File> downloadedPack = downloadPackFromURL(packURL, packName, destFile, packVersion);
+					final Optional<File> downloadedPack = downloadPackFromURL(packURL, packName, destFile, packVersion);
 					return downloadedPack.isPresent()
 						? Optional.of(new ToastInfo(downloadInfo, isPackPresent ? ToastType.SUCCESS_UPDATE : ToastType.SUCCESS_DOWNLOAD))
 						: failToast;
@@ -245,11 +243,11 @@ public class FrozenLibModResourcePackApi {
 		try {
 			if (destFile.exists()) destFile.delete();
 
-			URL url = URI.create(urlString).toURL();
-			URLConnection request = url.openConnection();
+			final URL url = URI.create(urlString).toURL();
+			final URLConnection request = url.openConnection();
 			request.connect();
 
-			InputStream input = (InputStream) request.getContent();
+			final InputStream input = (InputStream) request.getContent();
 			FileUtils.copyInputStreamToFile(input, destFile);
 			input.close();
 
@@ -292,18 +290,17 @@ public class FrozenLibModResourcePackApi {
 	 */
 	private static String calculateSHA256(Path path) throws IOException {
 		try {
-			MessageDigest digest = MessageDigest.getInstance("SHA-256");
-			byte[] fileBytes = Files.readAllBytes(path);
-			byte[] hashBytes = digest.digest(fileBytes);
+			final MessageDigest digest = MessageDigest.getInstance("SHA-256");
+			final byte[] fileBytes = Files.readAllBytes(path);
+			final byte[] hashBytes = digest.digest(fileBytes);
 
-			StringBuilder hexString = new StringBuilder();
+			final StringBuilder hexString = new StringBuilder();
 			for (byte b : hashBytes) {
-				String hex = Integer.toHexString(0xff & b);
-				if (hex.length() == 1) {
-					hexString.append('0');
-				}
+				final String hex = Integer.toHexString(0xff & b);
+				if (hex.length() == 1) hexString.append('0');
 				hexString.append(hex);
 			}
+
 			return hexString.toString();
 		} catch (NoSuchAlgorithmException e) {
 			throw new RuntimeException("SHA-256 algorithm not available", e);
@@ -316,18 +313,17 @@ public class FrozenLibModResourcePackApi {
 	 */
 	private static Map<String, String> readHashRecords() {
 		Map<String, String> hashes = new HashMap<>();
-		if (Files.exists(HASH_FILE)) {
-			try {
-				Files.lines(HASH_FILE).forEach(line -> {
-					String[] parts = line.split("=", 2);
-					if (parts.length == 2) {
-						hashes.put(parts[0], parts[1]);
-					}
-				});
-			} catch (IOException e) {
-				// If we can't read the hash file, we'll treat it as empty
-			}
+		if (!Files.exists(HASH_FILE)) return hashes;
+
+		try {
+			Files.lines(HASH_FILE).forEach(line -> {
+				final String[] parts = line.split("=", 2);
+				if (parts.length == 2) hashes.put(parts[0], parts[1]);
+			});
+		} catch (IOException e) {
+			// If we can't read the hash file, we'll treat it as empty
 		}
+
 		return hashes;
 	}
 
@@ -338,9 +334,9 @@ public class FrozenLibModResourcePackApi {
 	private static void writeHashRecords(Map<String, String> hashes) {
 		try {
 			Files.createDirectories(FrozenLibConstants.FROZENLIB_GAME_DIRECTORY);
-			StringBuilder content = new StringBuilder();
+			final StringBuilder content = new StringBuilder();
 			for (Map.Entry<String, String> entry : hashes.entrySet()) {
-				String packName = entry.getKey();
+				final String packName = entry.getKey();
 				if (!new File(MOD_RESOURCE_PACK_DIRECTORY.toString(), packName + ".zip").exists()) continue;
 				content.append(packName).append("=").append(entry.getValue()).append("\n");
 			}
@@ -357,8 +353,8 @@ public class FrozenLibModResourcePackApi {
 	 * @return true if the hash has changed or if this is a new pack, false otherwise.
 	 */
 	private static boolean hasHashChanged(String packName, String currentHash) {
-		Map<String, String> existingHashes = readHashRecords();
-		String existingHash = existingHashes.get(packName);
+		final Map<String, String> existingHashes = readHashRecords();
+		final String existingHash = existingHashes.get(packName);
 		return existingHash == null || !existingHash.equals(currentHash);
 	}
 
@@ -368,7 +364,7 @@ public class FrozenLibModResourcePackApi {
 	 * @param newHash The new SHA256 hash of the Resource Pack.
 	 */
 	private static void updateHashRecord(String packName, String newHash) {
-		Map<String, String> hashes = readHashRecords();
+		final Map<String, String> hashes = readHashRecords();
 		hashes.put(packName, newHash);
 		writeHashRecords(hashes);
 	}
@@ -378,19 +374,18 @@ public class FrozenLibModResourcePackApi {
 	 * @return A map of pack names to their versions.
 	 */
 	private static Map<String, Integer> readDownloadRecords() {
-		Map<String, Integer> hashes = new HashMap<>();
-		if (Files.exists(DOWNLOADED_PACK_LOG_FILE)) {
-			try {
-				Files.lines(DOWNLOADED_PACK_LOG_FILE).forEach(line -> {
-					String[] parts = line.split("=", 2);
-					if (parts.length == 2) {
-						hashes.put(parts[0], Integer.valueOf(parts[1]));
-					}
-				});
-			} catch (IOException e) {
-				// If we can't read the hash file, we'll treat it as empty
-			}
+		final Map<String, Integer> hashes = new HashMap<>();
+		if (!Files.exists(DOWNLOADED_PACK_LOG_FILE)) return hashes;
+
+		try {
+			Files.lines(DOWNLOADED_PACK_LOG_FILE).forEach(line -> {
+				final String[] parts = line.split("=", 2);
+				if (parts.length == 2) hashes.put(parts[0], Integer.valueOf(parts[1]));
+			});
+		} catch (IOException e) {
+			// If we can't read the hash file, we'll treat it as empty
 		}
+
 		return hashes;
 	}
 
@@ -401,9 +396,9 @@ public class FrozenLibModResourcePackApi {
 	private static void writeDownloadRecords(Map<String, Integer> versions) {
 		try {
 			Files.createDirectories(FrozenLibConstants.FROZENLIB_GAME_DIRECTORY);
-			StringBuilder content = new StringBuilder();
+			final StringBuilder content = new StringBuilder();
 			for (Map.Entry<String, Integer> entry : versions.entrySet()) {
-				String packName = entry.getKey();
+				final String packName = entry.getKey();
 				if (!new File(DOWNLOADED_RESOURCE_PACK_DIRECTORY.toString(), packName + ".zip").exists()) continue;
 				content.append(packName).append("=").append(entry.getValue()).append("\n");
 			}
@@ -420,8 +415,8 @@ public class FrozenLibModResourcePackApi {
 	 * @return true if the version has changed or if this is a new pack, false otherwise.
 	 */
 	private static boolean hasDownloadVersionChanged(String packName, int currentVersion) {
-		Map<String, Integer> existingDownloads = readDownloadRecords();
-		Integer existingVersion = existingDownloads.get(packName);
+		final Map<String, Integer> existingDownloads = readDownloadRecords();
+		final Integer existingVersion = existingDownloads.get(packName);
 		return existingVersion == null || !existingVersion.equals(currentVersion);
 	}
 
@@ -445,11 +440,13 @@ public class FrozenLibModResourcePackApi {
 	private record ToastInfo(PackDownloadInfo downloadInfo, ToastType toastType) {
 		public boolean addToast() {
 			if (FrozenLibConfig.get().packDownloading != PackDownloadSetting.ENABLED) return false;
-			Minecraft minecraft = Minecraft.getInstance();
+
+			final Minecraft minecraft = Minecraft.getInstance();
 			if (minecraft == null || minecraft.getToastManager() == null || minecraft.getResourceManager() == null) {
 				if (!QUEUED_TOASTS.contains(this)) QUEUED_TOASTS.add(this);
 				return false;
 			}
+
 			this.toastType.displayToast(this.downloadInfo);
 			return true;
 		}
@@ -472,7 +469,7 @@ public class FrozenLibModResourcePackApi {
 			this.toastMaker.accept(downloadInfo);
 		}
 
-		private static void displayOrUpdateToast(PackDownloadToast.PackDownloadToastId id, @NotNull PackDownloadInfo downloadInfo) {
+		private static void displayOrUpdateToast(PackDownloadToast.PackDownloadToastId id, PackDownloadInfo downloadInfo) {
 			downloadInfo.setGroupStatus(id);
 			PackDownloadToast.addOrAppendIfNotPresent(Minecraft.getInstance().getToastManager(), id, downloadInfo);
 		}
@@ -495,7 +492,7 @@ public class FrozenLibModResourcePackApi {
 		}
 
 		@Override
-		public @NotNull String getSerializedName() {
+		public String getSerializedName() {
 			return this.name;
 		}
 	}
@@ -510,7 +507,7 @@ public class FrozenLibModResourcePackApi {
 		}
 
 		@Contract("_ -> new")
-		public static @NotNull PackDownloadGroup create(String packGroup) {
+		public static PackDownloadGroup create(String packGroup) {
 			return new PackDownloadGroup(packGroup);
 		}
 
@@ -572,12 +569,12 @@ public class FrozenLibModResourcePackApi {
 		}
 
 		@Contract("_, _, _ -> new")
-		public static @NotNull PackDownloadInfo of(String url, String packName, PackDownloadGroup packGroup) {
+		public static PackDownloadInfo of(String url, String packName, PackDownloadGroup packGroup) {
 			return new PackDownloadInfo(url, packName, Optional.ofNullable(packGroup));
 		}
 
 		@Contract("_, _ -> new")
-		public static @NotNull PackDownloadInfo of(String url, String packName) {
+		public static PackDownloadInfo of(String url, String packName) {
 			return new PackDownloadInfo(url, packName, Optional.empty());
 		}
 

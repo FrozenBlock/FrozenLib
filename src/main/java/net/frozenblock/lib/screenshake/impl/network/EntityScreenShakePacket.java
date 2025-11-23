@@ -21,26 +21,16 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import org.jetbrains.annotations.NotNull;
 
-public record EntityScreenShakePacket(
-	int entityId,
-	float intensity,
-	int duration,
-	int falloffStart,
-	float maxDistance,
-	int ticks
-) implements CustomPacketPayload {
-	public static final Type<EntityScreenShakePacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("screen_shake_entity")
-	);
+public record EntityScreenShakePacket(int entityId, float intensity, int duration, int falloffStart, float maxDistance, int ticks) implements CustomPacketPayload {
+	public static final Type<EntityScreenShakePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("screen_shake_entity"));
 	public static final StreamCodec<FriendlyByteBuf, EntityScreenShakePacket> CODEC = StreamCodec.ofMember(EntityScreenShakePacket::write, EntityScreenShakePacket::new);
 
-	public EntityScreenShakePacket(@NotNull FriendlyByteBuf buf) {
+	public EntityScreenShakePacket(FriendlyByteBuf buf) {
 		this(buf.readVarInt(), buf.readFloat(), buf.readInt(), buf.readInt(), buf.readFloat(), buf.readInt());
 	}
 
-	public void write(@NotNull FriendlyByteBuf buf) {
+	public void write(FriendlyByteBuf buf) {
 		buf.writeVarInt(this.entityId());
 		buf.writeFloat(this.intensity());
 		buf.writeInt(this.duration());
@@ -50,7 +40,6 @@ public record EntityScreenShakePacket(
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

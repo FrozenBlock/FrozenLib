@@ -37,9 +37,7 @@ public abstract class ServerLevelMixin implements ScreenShakeManagerInterface {
 	@Unique
 	@Override
 	public ScreenShakeManager frozenLib$getOrCreateScreenShakeManager() {
-		if (this.frozenLib$screenShakeManager == null) {
-			this.frozenLib$screenShakeManager = this.getDataStorage().computeIfAbsent(ScreenShakeManager.TYPE);
-		}
+		if (this.frozenLib$screenShakeManager == null) this.frozenLib$screenShakeManager = this.getDataStorage().computeIfAbsent(ScreenShakeManager.TYPE);
 		return this.frozenLib$screenShakeManager;
 	}
 

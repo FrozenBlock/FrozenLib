@@ -39,7 +39,7 @@ public class PolygonMixin implements ModelPartInvertInterface {
 
 	@Override
 	public void frozenLib$setInverted() {
-		List<ModelPart.Vertex> newVertices = new ArrayList<>();
+		final List<ModelPart.Vertex> newVertices = new ArrayList<>();
 		for (int i = 0; i < this.vertices.length; ++i) {
 			newVertices.add(this.vertices[(this.vertices.length - 1) - i]);
 		}

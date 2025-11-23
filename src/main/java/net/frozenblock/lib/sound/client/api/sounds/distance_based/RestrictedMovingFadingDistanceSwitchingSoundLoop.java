@@ -29,7 +29,6 @@ import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
 public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> extends RestrictedSoundInstance<T> {
-
     private final boolean isFarSound;
     private final double maxDist;
     private final double fadeDist;
@@ -38,7 +37,7 @@ public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> 
     public RestrictedMovingFadingDistanceSwitchingSoundLoop(
 		T entity,
 		SoundEvent sound,
-		SoundSource category,
+		SoundSource source,
 		float volume,
 		float pitch,
 		SoundPredicate.LoopPredicate<T> predicate,
@@ -48,7 +47,7 @@ public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> 
 		float maxVol,
 		boolean isFarSound
 	) {
-        super(sound, category, SoundInstance.createUnseededRandom(), entity, predicate);
+        super(sound, source, SoundInstance.createUnseededRandom(), entity, predicate);
         this.looping = true;
         this.delay = 0;
         this.volume = volume;
@@ -65,30 +64,33 @@ public class RestrictedMovingFadingDistanceSwitchingSoundLoop<T extends Entity> 
 
     @Override
     public void tick() {
-        Minecraft client = Minecraft.getInstance();
         if (this.entity.isRemoved()) {
             this.stop();
-        } else {
-            if (!this.test()) {
-                this.stop();
-            } else {
-                this.x = (float) this.entity.getX();
-                this.y = (float) this.entity.getY();
-                this.z = (float) this.entity.getZ();
-                if (client.player != null) {
-                    float distance = client.player.distanceTo(this.entity);
-                    if (distance < this.fadeDist) {
-                        this.volume = !this.isFarSound ? this.maxVol : 0.001F;
-                    } else if (distance > this.maxDist) {
-                        this.volume = this.isFarSound ? this.maxVol : 0.001F;
-                    } else {
-                        //Gets lower as you move farther
-                        float fadeProgress = (float) ((this.maxDist - distance) / (this.maxDist - this.fadeDist));
-                        this.volume = this.isFarSound ? (1F - fadeProgress) * this.maxVol : fadeProgress * this.maxVol;
-                    }
-                }
-            }
+			return;
         }
+
+		if (!this.test()) {
+			this.stop();
+			return;
+		}
+
+		this.x = (float) this.entity.getX();
+		this.y = (float) this.entity.getY();
+		this.z = (float) this.entity.getZ();
+
+		final Minecraft client = Minecraft.getInstance();
+		if (client.player == null) return;
+
+		final float distance = client.player.distanceTo(this.entity);
+		if (distance < this.fadeDist) {
+			this.volume = !this.isFarSound ? this.maxVol : 0.001F;
+		} else if (distance > this.maxDist) {
+			this.volume = this.isFarSound ? this.maxVol : 0.001F;
+		} else {
+			//Gets lower as you move farther
+			final float fadeProgress = (float) ((this.maxDist - distance) / (this.maxDist - this.fadeDist));
+			this.volume = this.isFarSound ? (1F - fadeProgress) * this.maxVol : fadeProgress * this.maxVol;
+		}
     }
 
 }

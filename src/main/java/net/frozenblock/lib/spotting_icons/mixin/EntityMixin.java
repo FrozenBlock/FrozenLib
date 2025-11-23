@@ -38,25 +38,37 @@ public class EntityMixin implements EntitySpottingIconInterface {
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void frozenLib$setIconManager(EntityType<?> entityType, Level level, CallbackInfo info) {
-        Entity entity = Entity.class.cast(this);
+		final Entity entity = Entity.class.cast(this);
 		this.frozenLib$SpottingIconManager = new SpottingIconManager(entity);
     }
 
-    @Inject(method = "saveWithoutId", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueOutput;)V", shift = At.Shift.AFTER))
+    @Inject(
+		method = "saveWithoutId",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;addAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueOutput;)V",
+			shift = At.Shift.AFTER
+		)
+	)
     public void frozenLib$saveIconManager(ValueOutput output, CallbackInfo info) {
-		if (this.frozenLib$SpottingIconManager != null) {
-			this.frozenLib$SpottingIconManager.save(output);
-		}
+		if (this.frozenLib$SpottingIconManager != null) this.frozenLib$SpottingIconManager.save(output);
     }
 
-    @Inject(method = "load", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueInput;)V", shift = At.Shift.AFTER))
+    @Inject(
+		method = "load",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/Entity;readAdditionalSaveData(Lnet/minecraft/world/level/storage/ValueInput;)V",
+			shift = At.Shift.AFTER
+		)
+	)
     public void frozenLib$loadIconManager(ValueInput input, CallbackInfo info) {
 		this.frozenLib$SpottingIconManager.load(input);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
     public void frozenLib$tickIcon(CallbackInfo info) {
-		Entity entity = Entity.class.cast(this);
+		final Entity entity = Entity.class.cast(this);
         if (!entity.level().isClientSide()) this.frozenLib$SpottingIconManager.tick();
     }
 

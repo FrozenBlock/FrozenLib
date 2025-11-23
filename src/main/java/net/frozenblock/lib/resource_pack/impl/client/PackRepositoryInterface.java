@@ -29,5 +29,5 @@ import net.minecraft.server.packs.repository.RepositorySource;
  */
 @Environment(EnvType.CLIENT)
 public interface PackRepositoryInterface {
-	void frozenLib$addRepositorySource(RepositorySource repositorySource);
+	void frozenLib$addRepositorySource(RepositorySource source);
 }

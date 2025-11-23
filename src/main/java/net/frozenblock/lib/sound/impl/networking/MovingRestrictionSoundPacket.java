@@ -27,24 +27,21 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import org.jetbrains.annotations.NotNull;
 
 public record MovingRestrictionSoundPacket(
 	int id,
 	Holder<SoundEvent> sound,
-	SoundSource category,
+	SoundSource source,
 	float volume,
 	float pitch,
 	Identifier predicateId,
 	boolean stopOnDeath,
 	boolean looping
 ) implements CustomPacketPayload {
-	public static final Type<MovingRestrictionSoundPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("moving_restriction_sound")
-	);
+	public static final Type<MovingRestrictionSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("moving_restriction_sound"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, MovingRestrictionSoundPacket> CODEC = StreamCodec.ofMember(MovingRestrictionSoundPacket::write, MovingRestrictionSoundPacket::new);
 
-	public MovingRestrictionSoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public MovingRestrictionSoundPacket(RegistryFriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
@@ -57,10 +54,10 @@ public record MovingRestrictionSoundPacket(
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	public void write(RegistryFriendlyByteBuf buf) {
 		buf.writeVarInt(this.id);
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.category);
+		buf.writeEnum(this.source);
 		buf.writeFloat(this.volume);
 		buf.writeFloat(this.pitch);
 		buf.writeIdentifier(predicateId);
@@ -69,7 +66,6 @@ public record MovingRestrictionSoundPacket(
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

@@ -36,7 +36,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public class SpottingIconManager {
@@ -52,26 +51,21 @@ public class SpottingIconManager {
 	public void tick() {
 		if (this.ticksToCheck > 0) {
 			--this.ticksToCheck;
-		} else {
-			this.ticksToCheck = 20;
-			if (this.icon != null) {
-				if (this.entity.level().isClientSide()) {
-					this.clientHasIconResource = hasTexture(this.icon.texture());
-				}
-				if (!SpottingIconPredicate.getPredicate(this.icon.restrictionID).test(this.entity)) {
-					this.removeIcon();
-				}
-			}
+			return;
 		}
+
+		this.ticksToCheck = 20;
+		if (this.icon == null) return;
+
+		if (this.entity.level().isClientSide()) this.clientHasIconResource = hasTexture(this.icon.texture());
+		if (!SpottingIconPredicate.getPredicate(this.icon.restrictionID).test(this.entity)) this.removeIcon();
 	}
 
 	public void setIcon(Identifier texture, float startFade, float endFade, Identifier restrictionID) {
 		this.icon = new SpottingIcon(texture, startFade, endFade, restrictionID);
 		if (!this.entity.level().isClientSide()) {
-			CustomPacketPayload packet = new SpottingIconPacket(this.entity.getId(), texture, startFade, endFade, restrictionID);
-			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
-				ServerPlayNetworking.send(player, packet);
-			}
+			final CustomPacketPayload packet = new SpottingIconPacket(this.entity.getId(), texture, startFade, endFade, restrictionID);
+			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) ServerPlayNetworking.send(player, packet);
 		} else {
 			this.clientHasIconResource = hasTexture(this.icon.texture());
 		}
@@ -81,48 +75,45 @@ public class SpottingIconManager {
 	public void removeIcon() {
 		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onRemoved(this.entity);
 		this.icon = null;
-		if (!this.entity.level().isClientSide()) {
-			CustomPacketPayload packet = new SpottingIconRemovePacket(this.entity.getId());
-			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) {
-				ServerPlayNetworking.send(player, packet);
-			}
-		}
+		if (this.entity.level().isClientSide()) return;
+
+		final CustomPacketPayload packet = new SpottingIconRemovePacket(this.entity.getId());
+		for (ServerPlayer player : PlayerLookup.tracking(this.entity)) ServerPlayNetworking.send(player, packet);
 	}
 
 	public void sendIconPacket(ServerPlayer player) {
-		if (this.icon != null) {
-			FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
-			byteBuf.writeVarInt(this.entity.getId());
-			byteBuf.writeIdentifier(this.icon.texture);
-			byteBuf.writeFloat(this.icon.startFadeDist);
-			byteBuf.writeFloat(this.icon.endFadeDist);
-			byteBuf.writeIdentifier(this.icon.restrictionID);
-			ServerPlayNetworking.send(
-				player,
-				new SpottingIconPacket(
-					this.entity.getId(),
-					this.icon.texture,
-					this.icon.startFadeDist(),
-					this.icon.endFadeDist(),
-					this.icon.restrictionID()
-				)
-			);
-		}
+		if (this.icon == null) return;
+		final FriendlyByteBuf byteBuf = new FriendlyByteBuf(Unpooled.buffer());
+		byteBuf.writeVarInt(this.entity.getId());
+		byteBuf.writeIdentifier(this.icon.texture);
+		byteBuf.writeFloat(this.icon.startFadeDist);
+		byteBuf.writeFloat(this.icon.endFadeDist);
+		byteBuf.writeIdentifier(this.icon.restrictionID);
+		ServerPlayNetworking.send(
+			player,
+			new SpottingIconPacket(
+				this.entity.getId(),
+				this.icon.texture,
+				this.icon.startFadeDist(),
+				this.icon.endFadeDist(),
+				this.icon.restrictionID()
+			)
+		);
 	}
 
 	@Environment(EnvType.CLIENT)
-	private static boolean hasTexture(Identifier identifier) {
-		return Minecraft.getInstance().getResourceManager().getResource(identifier).isPresent();
+	private static boolean hasTexture(Identifier texture) {
+		return Minecraft.getInstance().getResourceManager().getResource(texture).isPresent();
 	}
 
-	public void load(@NotNull ValueInput input) {
+	public void load(ValueInput input) {
 		this.ticksToCheck = input.getIntOr("frozenlib_spotting_icon_predicate_cooldown", 0);
 		this.icon = null;
-		Optional<SpottingIcon> icon = input.read("frozenlib_spotting_icons", SpottingIcon.CODEC);
+		final Optional<SpottingIcon> icon = input.read("frozenlib_spotting_icons", SpottingIcon.CODEC);
 		icon.ifPresent(spottingIcon -> this.icon = spottingIcon);
 	}
 
-	public void save(@NotNull ValueOutput output) {
+	public void save(ValueOutput output) {
 		output.putInt("frozenlib_spotting_icon_predicate_cooldown", this.ticksToCheck);
 		if (this.icon != null) {
 			output.store("frozenlib_spotting_icons", SpottingIcon.CODEC, this.icon);
@@ -132,11 +123,11 @@ public class SpottingIconManager {
 	}
 
 	public record SpottingIcon(Identifier texture, float startFadeDist, float endFadeDist, Identifier restrictionID) {
-			public static final Codec<SpottingIcon> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-				Identifier.CODEC.fieldOf("texture").forGetter(SpottingIcon::texture),
-				Codec.FLOAT.fieldOf("startFadeDist").forGetter(SpottingIcon::startFadeDist),
-				Codec.FLOAT.fieldOf("endFadeDist").forGetter(SpottingIcon::endFadeDist),
-				Identifier.CODEC.fieldOf("restrictionID").forGetter(SpottingIcon::restrictionID)
-			).apply(instance, SpottingIcon::new));
+		public static final Codec<SpottingIcon> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Identifier.CODEC.fieldOf("texture").forGetter(SpottingIcon::texture),
+			Codec.FLOAT.fieldOf("startFadeDist").forGetter(SpottingIcon::startFadeDist),
+			Codec.FLOAT.fieldOf("endFadeDist").forGetter(SpottingIcon::endFadeDist),
+			Identifier.CODEC.fieldOf("restrictionID").forGetter(SpottingIcon::restrictionID)
+		).apply(instance, SpottingIcon::new));
 	}
 }

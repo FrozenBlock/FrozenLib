@@ -34,14 +34,14 @@ public class PackSelectionModelMixin {
 
 	@ModifyReturnValue(method = "getUnselected", at = @At("RETURN"))
 	public Stream<PackSelectionModel.Entry> frozenLib$hideUnselectedPacks(Stream<PackSelectionModel.Entry> selected) {
-		List<PackSelectionModel.Entry> entries = new ArrayList<>(selected.toList());
+		final List<PackSelectionModel.Entry> entries = new ArrayList<>(selected.toList());
 		entries.removeIf(entry -> FrozenLibModResourcePackApi.isPackHiddenFromMenu(entry.getId()));
 		return entries.stream();
 	}
 
 	@ModifyReturnValue(method = "getSelected", at = @At("RETURN"))
 	public Stream<PackSelectionModel.Entry> frozenLib$hideSelectedPacks(Stream<PackSelectionModel.Entry> selected) {
-		List<PackSelectionModel.Entry> entries = new ArrayList<>(selected.toList());
+		final List<PackSelectionModel.Entry> entries = new ArrayList<>(selected.toList());
 		entries.removeIf(entry -> FrozenLibModResourcePackApi.isPackHiddenFromMenu(entry.getId()));
 		return entries.stream();
 	}

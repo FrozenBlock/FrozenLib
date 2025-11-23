@@ -31,10 +31,8 @@ public abstract class PlayerMixin {
 
 	@ModifyReturnValue(method = "getHurtSound", at = @At("RETURN"))
 	private SoundEvent frozenLib$playHurtSound(SoundEvent original, DamageSource source) {
-		DamageType type = source.type();
-		if (PlayerDamageTypeSounds.containsSource(type)) {
-			return PlayerDamageTypeSounds.getDamageSound(type);
-		}
+		final DamageType type = source.type();
+		if (PlayerDamageTypeSounds.containsSource(type)) return PlayerDamageTypeSounds.getDamageSound(type);
 		return original;
 	}
 

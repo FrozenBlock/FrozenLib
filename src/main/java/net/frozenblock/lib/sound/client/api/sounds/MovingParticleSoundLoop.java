@@ -24,7 +24,6 @@ import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class MovingParticleSoundLoop<T extends Particle> extends AbstractTickableSoundInstance {
@@ -35,9 +34,9 @@ public class MovingParticleSoundLoop<T extends Particle> extends AbstractTickabl
 	private final boolean stopOnDeath;
 
 	public MovingParticleSoundLoop(
-		@NotNull T particle, SoundEvent sound, SoundSource category, float volume, float pitch, int fadeInTicks, boolean stopOnDeath
+		T particle, SoundEvent sound, SoundSource source, float volume, float pitch, int fadeInTicks, boolean stopOnDeath
 	) {
-		super(sound, category, SoundInstance.createUnseededRandom());
+		super(sound, source, SoundInstance.createUnseededRandom());
 		this.particle = particle;
 		this.looping = true;
 		this.delay = 0;
@@ -70,13 +69,15 @@ public class MovingParticleSoundLoop<T extends Particle> extends AbstractTickabl
 			this.volume += this.increaseVolumeBy;
 			this.ticks += 1;
 		}
+
 		if (this.particle == null || (this.stopOnDeath && !this.particle.isAlive())) {
 			this.stop();
-		} else {
-			this.x = this.particle.x;
-			this.y = this.particle.y;
-			this.z = this.particle.z;
+			return;
 		}
+
+		this.x = this.particle.x;
+		this.y = this.particle.y;
+		this.z = this.particle.z;
 	}
 
 }

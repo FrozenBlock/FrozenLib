@@ -32,7 +32,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class ScreenShaker {
@@ -46,7 +45,7 @@ public class ScreenShaker {
 	private static float zRot;
 
 	@ApiStatus.Internal
-	public static void tick(Minecraft minecraft, @NotNull ClientLevel level) {
+	public static void tick(Minecraft minecraft, ClientLevel level) {
 		if (!level.tickRateManager().runsNormally()) return;
 
 		prevYRot = yRot;
@@ -73,7 +72,7 @@ public class ScreenShaker {
 		final Camera camera = minecraft.gameRenderer.getMainCamera();
 		for (ClientScreenShake screenShake : SCREEN_SHAKES) {
 			screenShake.tick();
-			float shakeIntensity = screenShake.getIntensity(camera.position());
+			final float shakeIntensity = screenShake.getIntensity(camera.position());
 			if (shakeIntensity > 0) {
 				totalIntensity += shakeIntensity;
 				highestIntensity = Math.max(shakeIntensity, highestIntensity);
@@ -101,7 +100,7 @@ public class ScreenShaker {
 	}
 
 	@ApiStatus.Internal
-	public static void shake(@NotNull PoseStack poseStack, float partialTicks) {
+	public static void shake(PoseStack poseStack, float partialTicks) {
 		poseStack.mulPose(Axis.XP.rotationDegrees(Mth.lerp(partialTicks, prevYRot, yRot)));
 		poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTicks, prevXRot, xRot)));
 		poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTicks, prevZRot, zRot)));
@@ -142,7 +141,7 @@ public class ScreenShaker {
 			this.ticks = ticks;
 		}
 
-		public float getIntensity(@NotNull Vec3 playerPos) {
+		public float getIntensity(Vec3 playerPos) {
 			float distanceBasedIntensity = Math.max((float) (1F - (playerPos.distanceTo(this.pos) / this.maxDistance)), 0);
 			if (distanceBasedIntensity > 0) {
 				float timeFromFalloffStart = Math.max(this.ticks - this.durationFalloffStart, 0); //Starts counting up once it reaches falloff start
@@ -167,18 +166,16 @@ public class ScreenShaker {
 	public static class ClientEntityScreenShake extends ClientScreenShake {
 		private final Entity entity;
 
-		public ClientEntityScreenShake(@NotNull Entity entity, float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
+		public ClientEntityScreenShake(Entity entity, float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
 			super(entity.level(), intensity, duration, durationFalloffStart, entity.position(), maxDistance, ticks);
 			this.entity = entity;
 		}
 
 		@Override
-		public float getIntensity(@NotNull Vec3 playerPos) {
-			if (this.entity != null && !this.entity.isRemoved()) {
-				this.pos = this.entity.position();
-				return super.getIntensity(playerPos);
-			}
-			return 0F;
+		public float getIntensity(Vec3 playerPos) {
+			if (this.entity == null || this.entity.isRemoved()) return 0F;
+			this.pos = this.entity.position();
+			return super.getIntensity(playerPos);
 		}
 
 		public Entity getEntity() {

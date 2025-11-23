@@ -51,9 +51,7 @@ public class EntityMixin implements EntityScreenShakeInterface {
 		)
 	)
 	public void frozenLib$saveScreenShakeData(ValueOutput output, CallbackInfo ci) {
-		if (this.frozenLib$entityScreenShakeManager != null) {
-			this.frozenLib$entityScreenShakeManager.save(output);
-		}
+		if (this.frozenLib$entityScreenShakeManager != null) this.frozenLib$entityScreenShakeManager.save(output);
 	}
 
 	@Inject(
@@ -70,10 +68,8 @@ public class EntityMixin implements EntityScreenShakeInterface {
 
 	@Inject(method = "tick", at = @At("TAIL"))
 	public void frozenLib$tickScreenShake(CallbackInfo info) {
-		Entity entity = Entity.class.cast(this);
-		if (!entity.level().isClientSide()) {
-			this.frozenLib$entityScreenShakeManager.tick();
-		}
+		final Entity entity = Entity.class.cast(this);
+		if (!entity.level().isClientSide()) this.frozenLib$entityScreenShakeManager.tick();
 	}
 
 	@Unique

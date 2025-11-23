@@ -26,21 +26,12 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import org.jetbrains.annotations.NotNull;
 
-public record FlyBySoundPacket(
-	int id,
-	Holder<SoundEvent> sound,
-	SoundSource category,
-	float volume,
-	float pitch
-) implements CustomPacketPayload {
-	public static final Type<FlyBySoundPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("flyby_sound")
-	);
+public record FlyBySoundPacket(int id, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) implements CustomPacketPayload {
+	public static final Type<FlyBySoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("flyby_sound"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, FlyBySoundPacket> CODEC = StreamCodec.ofMember(FlyBySoundPacket::write, FlyBySoundPacket::new);
 
-	public FlyBySoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public FlyBySoundPacket(RegistryFriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
@@ -50,16 +41,15 @@ public record FlyBySoundPacket(
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	public void write(RegistryFriendlyByteBuf buf) {
 		buf.writeVarInt(this.id);
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.category);
+		buf.writeEnum(this.source);
 		buf.writeFloat(this.volume);
 		buf.writeFloat(this.pitch);
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

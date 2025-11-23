@@ -30,9 +30,9 @@ public interface EntityLoopingFadingDistanceSoundInterface {
 	}
 
     default void frozenLib$addFadingDistanceSound(
-		Identifier soundID,
-		Identifier sound2ID,
-		SoundSource category,
+		Identifier closeSound,
+		Identifier farSound,
+		SoundSource source,
 		float volume,
 		float pitch,
 		Identifier restrictionId,

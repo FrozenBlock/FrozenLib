@@ -37,19 +37,19 @@ public class PlayerDamageTypeSounds {
 	 *
 	 * @param type The {@link DamageType} to register the sound for.
 	 * @param sound The {@link SoundEvent} to register.
-	 * @param registry The {@link Identifier} to register the sound override under.
+	 * @param id The {@link Identifier} to register the sound override under.
 	 */
-	public static void addDamageSound(DamageType type, SoundEvent sound, Identifier registry) {
-		DAMAGE_TYPE_RESOURCE_LOCATION_MAP.put(type, registry);
-		RESOURCE_LOCATION_SOUND_EVENT_MAP.put(registry, sound);
+	public static void addDamageSound(DamageType type, SoundEvent sound, Identifier id) {
+		DAMAGE_TYPE_RESOURCE_LOCATION_MAP.put(type, id);
+		RESOURCE_LOCATION_SOUND_EVENT_MAP.put(id, sound);
 	}
 
 	public static SoundEvent getDamageSound(DamageType type) {
 		return DAMAGE_TYPE_RESOURCE_LOCATION_MAP.containsKey(type) ? getDamageSound(DAMAGE_TYPE_RESOURCE_LOCATION_MAP.get(type)) : SoundEvents.PLAYER_HURT;
 	}
 
-	public static SoundEvent getDamageSound(Identifier location) {
-		return RESOURCE_LOCATION_SOUND_EVENT_MAP.getOrDefault(location, SoundEvents.PLAYER_HURT);
+	public static SoundEvent getDamageSound(Identifier id) {
+		return RESOURCE_LOCATION_SOUND_EVENT_MAP.getOrDefault(id, SoundEvents.PLAYER_HURT);
 	}
 
 	public static Identifier getDamageID(DamageType type) {

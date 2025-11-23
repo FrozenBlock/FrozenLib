@@ -31,7 +31,7 @@ public interface EntityLoopingSoundInterface {
 
     default void frozenLib$addSound(
 		Identifier soundID,
-		SoundSource category,
+		SoundSource source,
 		float volume,
 		float pitch,
 		Identifier restrictionId,

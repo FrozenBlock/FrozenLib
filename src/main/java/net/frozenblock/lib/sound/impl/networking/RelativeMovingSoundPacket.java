@@ -27,15 +27,12 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import org.jetbrains.annotations.NotNull;
 
-public record RelativeMovingSoundPacket(BlockPos pos, Holder<SoundEvent> sound, SoundSource category, float volume, float pitch) implements CustomPacketPayload {
-	public static final Type<RelativeMovingSoundPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("relative_moving_sound")
-	);
+public record RelativeMovingSoundPacket(BlockPos pos, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch) implements CustomPacketPayload {
+	public static final Type<RelativeMovingSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("relative_moving_sound"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, RelativeMovingSoundPacket> CODEC = StreamCodec.ofMember(RelativeMovingSoundPacket::write, RelativeMovingSoundPacket::new);
 
-	public RelativeMovingSoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public RelativeMovingSoundPacket(RegistryFriendlyByteBuf buf) {
 		this(
 			buf.readBlockPos(),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
@@ -45,16 +42,15 @@ public record RelativeMovingSoundPacket(BlockPos pos, Holder<SoundEvent> sound, 
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	public void write(RegistryFriendlyByteBuf buf) {
 		buf.writeBlockPos(this.pos());
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.category());
+		buf.writeEnum(this.source());
 		buf.writeFloat(this.volume());
 		buf.writeFloat(this.pitch());
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

@@ -26,21 +26,15 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
-public record SpottingIconPacket(
-	int entityId,
-	Identifier texture,
-	float startFade,
-	float endFade,
-	Identifier restrictionID
-) implements CustomPacketPayload {
+public record SpottingIconPacket(int entityId, Identifier texture, float startFade, float endFade, Identifier restrictionID) implements CustomPacketPayload {
 	public static final Type<SpottingIconPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("spotting_icon_packet"));
 	public static final StreamCodec<FriendlyByteBuf, SpottingIconPacket> CODEC = StreamCodec.ofMember(SpottingIconPacket::write, SpottingIconPacket::new);
 
-	public SpottingIconPacket(@NotNull FriendlyByteBuf buf) {
+	public SpottingIconPacket(FriendlyByteBuf buf) {
 		this(buf.readVarInt(), buf.readIdentifier(), buf.readFloat(), buf.readFloat(), buf.readIdentifier());
 	}
 
-	public void write(@NotNull FriendlyByteBuf buf) {
+	public void write(FriendlyByteBuf buf) {
 		buf.writeVarInt(this.entityId());
 		buf.writeIdentifier(this.texture());
 		buf.writeFloat(this.startFade());
@@ -49,7 +43,6 @@ public record SpottingIconPacket(
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

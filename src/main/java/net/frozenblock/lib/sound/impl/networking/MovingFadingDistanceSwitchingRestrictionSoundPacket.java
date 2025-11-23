@@ -27,13 +27,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import org.jetbrains.annotations.NotNull;
 
 public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 	int id,
 	Holder<SoundEvent> closeSound,
 	Holder<SoundEvent> farSound,
-	SoundSource category,
+	SoundSource source,
 	float volume,
 	float pitch,
 	float fadeDist,
@@ -42,12 +41,10 @@ public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 	boolean stopOnDeath,
 	boolean looping
 ) implements CustomPacketPayload {
-	public static final Type<MovingFadingDistanceSwitchingRestrictionSoundPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("moving_fading_restriction_sound")
-	);
+	public static final Type<MovingFadingDistanceSwitchingRestrictionSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("moving_fading_restriction_sound"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, MovingFadingDistanceSwitchingRestrictionSoundPacket> CODEC = StreamCodec.ofMember(MovingFadingDistanceSwitchingRestrictionSoundPacket::write, MovingFadingDistanceSwitchingRestrictionSoundPacket::new);
 
-	public MovingFadingDistanceSwitchingRestrictionSoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public MovingFadingDistanceSwitchingRestrictionSoundPacket(RegistryFriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
@@ -63,11 +60,11 @@ public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	public void write(RegistryFriendlyByteBuf buf) {
 		buf.writeVarInt(this.id());
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.closeSound());
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.farSound());
-		buf.writeEnum(this.category());
+		buf.writeEnum(this.source());
 		buf.writeFloat(this.volume());
 		buf.writeFloat(this.pitch());
 		buf.writeFloat(this.fadeDist());
@@ -78,7 +75,6 @@ public record MovingFadingDistanceSwitchingRestrictionSoundPacket(
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

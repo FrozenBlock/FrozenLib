@@ -21,12 +21,9 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import org.jetbrains.annotations.NotNull;
 
 public record RemoveScreenShakePacket() implements CustomPacketPayload {
-	public static final Type<RemoveScreenShakePacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("remove_screen_shakes")
-	);
+	public static final Type<RemoveScreenShakePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("remove_screen_shakes"));
 	public static final StreamCodec<FriendlyByteBuf, RemoveScreenShakePacket> CODEC = StreamCodec.ofMember(RemoveScreenShakePacket::write, RemoveScreenShakePacket::new);
 
 	public RemoveScreenShakePacket(FriendlyByteBuf buf) {
@@ -37,7 +34,6 @@ public record RemoveScreenShakePacket() implements CustomPacketPayload {
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

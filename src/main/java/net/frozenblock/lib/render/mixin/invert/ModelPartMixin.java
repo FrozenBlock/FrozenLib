@@ -37,9 +37,8 @@ public class ModelPartMixin implements ModelPartInvertInterface {
 	@Override
 	public void frozenLib$setInverted() {
 		for (ModelPart.Cube cube : cubes) {
-			if (cube instanceof ModelPartInvertInterface invertInterface) {
-				invertInterface.frozenLib$setInverted();
-			}
+			if (!(cube instanceof ModelPartInvertInterface invertInterface)) continue;
+			invertInterface.frozenLib$setInverted();
 		}
 	}
 }

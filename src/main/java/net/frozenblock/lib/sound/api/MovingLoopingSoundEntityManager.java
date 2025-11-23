@@ -30,7 +30,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 
 public class MovingLoopingSoundEntityManager {
     private final ArrayList<SoundLoopData> sounds = new ArrayList<>();
@@ -40,21 +39,17 @@ public class MovingLoopingSoundEntityManager {
         this.entity = entity;
     }
 
-    public void load(@NotNull ValueInput input) {
+    public void load(ValueInput input) {
 		this.sounds.clear();
-		ValueInput.TypedInputList<SoundLoopData> list = input.listOrEmpty("frozenlib_looping_sounds", SoundLoopData.CODEC);
-		for (SoundLoopData sound : list) {
-			this.sounds.add(sound);
-		}
+		final ValueInput.TypedInputList<SoundLoopData> list = input.listOrEmpty("frozenlib_looping_sounds", SoundLoopData.CODEC);
+		for (SoundLoopData sound : list) this.sounds.add(sound);
     }
 
     public void save(ValueOutput output) {
-		if (!this.sounds.isEmpty()) {
-			ValueOutput.TypedOutputList<SoundLoopData> list = output.list("frozenlib_looping_sounds", SoundLoopData.CODEC);
-			for (SoundLoopData sound : this.sounds) {
-				list.add(sound);
-			}
-		}
+		if (this.sounds.isEmpty()) return;
+
+		final ValueOutput.TypedOutputList<SoundLoopData> list = output.list("frozenlib_looping_sounds", SoundLoopData.CODEC);
+		for (SoundLoopData sound : this.sounds) list.add(sound);
     }
 
     public void addSound(Identifier soundID, SoundSource category, float volume, float pitch, Identifier restrictionId, boolean stopOnDeath) {
@@ -67,25 +62,26 @@ public class MovingLoopingSoundEntityManager {
     }
 
     public void tick() {
-		if (!this.sounds.isEmpty()) {
-			ArrayList<SoundLoopData> soundsToRemove = new ArrayList<>();
-			for (SoundLoopData nbt : this.sounds) {
-				SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
-				if (!predicate.test(this.entity)) {
-					soundsToRemove.add(nbt);
-					predicate.onStop(this.entity);
-				}
-			}
-			this.sounds.removeAll(soundsToRemove);
+		if (this.sounds.isEmpty()) return;
+
+		final ArrayList<SoundLoopData> soundsToRemove = new ArrayList<>();
+		for (SoundLoopData nbt : this.sounds) {
+			final SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
+			if (predicate.test(this.entity)) continue;
+
+			soundsToRemove.add(nbt);
+			predicate.onStop(this.entity);
 		}
+
+		this.sounds.removeAll(soundsToRemove);
     }
 
-	public void syncWithPlayer(ServerPlayer serverPlayer) {
+	public void syncWithPlayer(ServerPlayer player) {
 		for (SoundLoopData nbt : this.getSounds()) {
 			FrozenLibSoundPackets.createAndSendMovingRestrictionLoopingSound(
-				serverPlayer,
+				player,
 				this.entity,
-				BuiltInRegistries.SOUND_EVENT.get(nbt.soundEventID()).orElseThrow(),
+				BuiltInRegistries.SOUND_EVENT.get(nbt.sound()).orElseThrow(),
 				SoundSource.valueOf(SoundSource.class, nbt.category()),
 				nbt.volume,
 				nbt.pitch,
@@ -95,22 +91,18 @@ public class MovingLoopingSoundEntityManager {
 		}
 	}
 
-    public record SoundLoopData(
-		Identifier soundEventID, String category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath
-	) {
+    public record SoundLoopData(Identifier sound, String category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath) {
         public static final Codec<SoundLoopData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-                Identifier.CODEC.fieldOf("soundEventID").forGetter(SoundLoopData::soundEventID),
-                Codec.STRING.fieldOf("categoryOrdinal").forGetter(SoundLoopData::category),
-                Codec.FLOAT.fieldOf("volume").forGetter(SoundLoopData::volume),
-                Codec.FLOAT.fieldOf("pitch").forGetter(SoundLoopData::pitch),
-                Identifier.CODEC.fieldOf("restrictionID").forGetter(SoundLoopData::restrictionID),
-				Codec.BOOL.fieldOf("stopOnDeath").forGetter(SoundLoopData::stopOnDeath)
+			Identifier.CODEC.fieldOf("sound").forGetter(SoundLoopData::sound),
+			Codec.STRING.fieldOf("categoryOrdinal").forGetter(SoundLoopData::category),
+			Codec.FLOAT.fieldOf("volume").forGetter(SoundLoopData::volume),
+			Codec.FLOAT.fieldOf("pitch").forGetter(SoundLoopData::pitch),
+			Identifier.CODEC.fieldOf("restrictionID").forGetter(SoundLoopData::restrictionID),
+			Codec.BOOL.fieldOf("stopOnDeath").forGetter(SoundLoopData::stopOnDeath)
         ).apply(instance, SoundLoopData::new));
 
-        public SoundLoopData(
-			Identifier soundEventID, @NotNull SoundSource category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath
-		) {
-			this(soundEventID, category.toString(), volume, pitch, restrictionID, stopOnDeath);
+        public SoundLoopData(Identifier sound, SoundSource category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath) {
+			this(sound, category.toString(), volume, pitch, restrictionID, stopOnDeath);
         }
     }
 }

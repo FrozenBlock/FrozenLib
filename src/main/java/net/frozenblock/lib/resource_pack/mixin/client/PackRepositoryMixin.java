@@ -41,7 +41,7 @@ public class PackRepositoryMixin implements PackRepositoryInterface {
 
 	@Unique
 	@Override
-	public void frozenLib$addRepositorySource(RepositorySource repositorySource) {
-		this.sources = ImmutableSet.<RepositorySource>builder().addAll(this.sources).add(repositorySource).build();
+	public void frozenLib$addRepositorySource(RepositorySource source) {
+		this.sources = ImmutableSet.<RepositorySource>builder().addAll(this.sources).add(source).build();
 	}
 }

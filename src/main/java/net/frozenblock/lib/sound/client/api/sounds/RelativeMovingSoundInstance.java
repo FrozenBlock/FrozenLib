@@ -25,7 +25,6 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class RelativeMovingSoundInstance extends AbstractTickableSoundInstance {
@@ -34,8 +33,8 @@ public class RelativeMovingSoundInstance extends AbstractTickableSoundInstance {
 	private final double yOffset;
 	private final double zOffset;
 
-	public RelativeMovingSoundInstance(SoundEvent soundEvent, SoundSource soundSource, float f, float g, @NotNull Entity entity, @NotNull BlockPos pos, long l) {
-		super(soundEvent, soundSource, RandomSource.create(l));
+	public RelativeMovingSoundInstance(SoundEvent sound, SoundSource source, float f, float g, Entity entity, BlockPos pos, long l) {
+		super(sound, source, RandomSource.create(l));
 		this.volume = f;
 		this.pitch = g;
 		this.entity = entity;

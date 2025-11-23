@@ -22,22 +22,12 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
-public record ScreenShakePacket(
-	float intensity,
-	int duration,
-	int falloffStart,
-	Vec3 pos,
-	float maxDistance,
-	int ticks
-) implements CustomPacketPayload {
-	public static final Type<ScreenShakePacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("screen_shake")
-	);
+public record ScreenShakePacket(float intensity, int duration, int falloffStart, Vec3 pos, float maxDistance, int ticks) implements CustomPacketPayload {
+	public static final Type<ScreenShakePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("screen_shake"));
 	public static final StreamCodec<FriendlyByteBuf, ScreenShakePacket> CODEC = StreamCodec.ofMember(ScreenShakePacket::write, ScreenShakePacket::new);
 
-	public ScreenShakePacket(@NotNull FriendlyByteBuf buf) {
+	public ScreenShakePacket(FriendlyByteBuf buf) {
 		this(
 			buf.readFloat(),
 			buf.readInt(),
@@ -48,7 +38,7 @@ public record ScreenShakePacket(
 		);
 	}
 
-	public void write(@NotNull FriendlyByteBuf buf) {
+	public void write(FriendlyByteBuf buf) {
 		buf.writeFloat(this.intensity());
 		buf.writeInt(this.duration());
 		buf.writeInt(this.falloffStart());
@@ -58,7 +48,6 @@ public record ScreenShakePacket(
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

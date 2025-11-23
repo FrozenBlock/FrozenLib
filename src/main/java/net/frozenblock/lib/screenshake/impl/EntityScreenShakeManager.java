@@ -25,7 +25,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 
 public class EntityScreenShakeManager {
 	private final ArrayList<EntityScreenShake> shakes = new ArrayList<>();
@@ -35,21 +34,17 @@ public class EntityScreenShakeManager {
 		this.entity = entity;
 	}
 
-	public void load(@NotNull ValueInput input) {
+	public void load(ValueInput input) {
 		this.shakes.clear();
-		ValueInput.TypedInputList<EntityScreenShake> list = input.listOrEmpty("frozenlib_screen_shakes", EntityScreenShake.CODEC);
-		for (EntityScreenShake shake : list) {
-			this.shakes.add(shake);
-		}
+		final ValueInput.TypedInputList<EntityScreenShake> list = input.listOrEmpty("frozenlib_screen_shakes", EntityScreenShake.CODEC);
+		for (EntityScreenShake shake : list) this.shakes.add(shake);
 	}
 
 	public void save(ValueOutput nbt) {
-		if (!this.shakes.isEmpty()) {
-			ValueOutput.TypedOutputList<EntityScreenShake> list = nbt.list("frozenlib_screen_shakes", EntityScreenShake.CODEC);
-			for (EntityScreenShake shake : this.shakes) {
-				list.add(shake);
-			}
-		}
+		if (this.shakes.isEmpty()) return;
+
+		final ValueOutput.TypedOutputList<EntityScreenShake> list = nbt.list("frozenlib_screen_shakes", EntityScreenShake.CODEC);
+		for (EntityScreenShake shake : this.shakes) list.add(shake);
 	}
 
 	public void addShake(float intensity, int duration, int durationFalloffStart, float maxDistance, int ticks) {
@@ -58,9 +53,7 @@ public class EntityScreenShakeManager {
 
 	public void tick() {
 		this.shakes.removeIf(EntityScreenShake::hasDurationExpired);
-		for (EntityScreenShake entityScreenShake : this.shakes) {
-			entityScreenShake.tick();
-		}
+		for (EntityScreenShake entityScreenShake : this.shakes) entityScreenShake.tick();
 	}
 
 	public void syncWithPlayer(ServerPlayer serverPlayer) {

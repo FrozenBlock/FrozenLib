@@ -40,11 +40,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class ScreenShakeCommand {
 
-	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("screenshake")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
 
@@ -69,10 +68,10 @@ public class ScreenShakeCommand {
 		dispatcher.register(builder);
 	}
 
-	private static int shake(@NotNull CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance) {
+	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
 		ScreenShakeManager.addScreenShake(source.getLevel(), intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance);
-		Vec3 finalVec = vec3;
+		final Vec3 finalVec = vec3;
 		source.sendSuccess(() -> Component.translatable(
 				"commands.screenshake.success",
 				finalVec.x(),
@@ -88,16 +87,14 @@ public class ScreenShakeCommand {
 		return 1;
 	}
 
-	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance, @NotNull Collection<? extends ServerPlayer> entities) {
+	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance, Collection<? extends ServerPlayer> entities) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
-		ScreenShakePacket packet = new ScreenShakePacket(intensity, duration, durationFalloffStart, vec3, maxDistance, 0);
-		for (ServerPlayer serverPlayer : entities) {
-			ServerPlayNetworking.send(serverPlayer, packet);
-		}
+		final ScreenShakePacket packet = new ScreenShakePacket(intensity, duration, durationFalloffStart, vec3, maxDistance, 0);
+		for (ServerPlayer serverPlayer : entities) ServerPlayNetworking.send(serverPlayer, packet);
 
-		int playerCount = entities.size();
-		boolean onePlayer = entities.size() == 1;
-		Vec3 finalVec = vec3;
+		final int playerCount = entities.size();
+		final boolean onePlayer = entities.size() == 1;
+		final Vec3 finalVec = vec3;
 		source.sendSuccess(() ->
 				Component.translatable(
 					onePlayer ? "commands.screenshake.player.success" : "commands.screenshake.player.success.multiple",
@@ -115,12 +112,10 @@ public class ScreenShakeCommand {
 		return 1;
 	}
 
-	private static int shake(CommandSourceStack source, @NotNull Collection<? extends Entity> entities, float intensity, int duration, int durationFalloffStart, float maxDistance) {
-		for (Entity entity : entities) {
-			ScreenShakeManager.addEntityScreenShake(entity, intensity, duration, durationFalloffStart, maxDistance);
-		}
-		int entityCount = entities.size();
-		boolean oneEntity = entities.size() == 1;
+	private static int shake(CommandSourceStack source, Collection<? extends Entity> entities, float intensity, int duration, int durationFalloffStart, float maxDistance) {
+		for (Entity entity : entities) ScreenShakeManager.addEntityScreenShake(entity, intensity, duration, durationFalloffStart, maxDistance);
+		final int entityCount = entities.size();
+		final boolean oneEntity = entities.size() == 1;
 
 		source.sendSuccess(() ->
 				Component.translatable(
@@ -136,14 +131,12 @@ public class ScreenShakeCommand {
 		return 1;
 	}
 
-	private static int removeShakesFor(CommandSourceStack source, @NotNull Collection<? extends ServerPlayer> entities) {
-		CustomPacketPayload packet = new RemoveScreenShakePacket();
-		for (ServerPlayer serverPlayer : entities) {
-			ServerPlayNetworking.send(serverPlayer, packet);
-		}
+	private static int removeShakesFor(CommandSourceStack source, Collection<? extends ServerPlayer> entities) {
+		final CustomPacketPayload packet = new RemoveScreenShakePacket();
+		for (ServerPlayer serverPlayer : entities) ServerPlayNetworking.send(serverPlayer, packet);
 
-		int playerCount = entities.size();
-		boolean onePlayer = entities.size() == 1;
+		final int playerCount = entities.size();
+		final boolean onePlayer = entities.size() == 1;
 		source.sendSuccess(() ->
 				Component.translatable(
 					onePlayer ? "commands.screenshake.remove.player.success" : "commands.screenshake.remove.player.success.multiple",
@@ -154,24 +147,21 @@ public class ScreenShakeCommand {
 		return 1;
 	}
 
-	private static int removeShakesFrom(CommandSourceStack source, @NotNull Collection<? extends Entity> entities) {
+	private static int removeShakesFrom(CommandSourceStack source, Collection<? extends Entity> entities) {
 		int entityAmount = 0;
 		List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
-			if (entity instanceof EntityScreenShakeInterface screenShakeInterface) {
-				if (!screenShakeInterface.frozenLib$getScreenShakeManager().getShakes().isEmpty()) {
-					CustomPacketPayload packet = new RemoveEntityScreenShakePacket(entity.getId());
-					affectedEntities.add(entity);
-					screenShakeInterface.frozenLib$getScreenShakeManager().getShakes().clear();
-					for (ServerPlayer serverPlayer : PlayerLookup.tracking(entity)) {
-						ServerPlayNetworking.send(serverPlayer, packet);
-					}
-					if (entity instanceof ServerPlayer serverPlayer) {
-						ServerPlayNetworking.send(serverPlayer, packet);
-					}
-					entityAmount += 1;
-				}
-			}
+			if (!(entity instanceof EntityScreenShakeInterface screenShakeInterface)) continue;
+			if (screenShakeInterface.frozenLib$getScreenShakeManager().getShakes().isEmpty()) continue;
+
+			affectedEntities.add(entity);
+			screenShakeInterface.frozenLib$getScreenShakeManager().getShakes().clear();
+
+			final CustomPacketPayload packet = new RemoveEntityScreenShakePacket(entity.getId());
+			for (ServerPlayer serverPlayer : PlayerLookup.tracking(entity)) ServerPlayNetworking.send(serverPlayer, packet);
+			if (entity instanceof ServerPlayer serverPlayer) ServerPlayNetworking.send(serverPlayer, packet);
+
+			entityAmount += 1;
 		}
 
 		int entityCount = affectedEntities.size();
@@ -179,17 +169,16 @@ public class ScreenShakeCommand {
 
 		if (entityAmount > 0) {
 			source.sendSuccess(() ->
-					Component.translatable(
-						oneEntity ? "commands.screenshake.remove.entity.success" : "commands.screenshake.remove.entity.success.multiple",
-						entityCount
-					),
+				Component.translatable(
+					oneEntity ? "commands.screenshake.remove.entity.success" : "commands.screenshake.remove.entity.success.multiple",
+					entityCount
+				),
 				true
 			);
 			return 1;
-		} else {
-			source.sendFailure(Component.translatable("commands.screenshake.remove.entity.failure"));
-			return 0;
 		}
+		source.sendFailure(Component.translatable("commands.screenshake.remove.entity.failure"));
+		return 0;
 	}
 
 }

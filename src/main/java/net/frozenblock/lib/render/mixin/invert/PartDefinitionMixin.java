@@ -36,11 +36,8 @@ public class PartDefinitionMixin implements ModelPartInvertInterface {
 
 	@ModifyReturnValue(method = "bake", at = @At("RETURN"))
 	public ModelPart frozenLib$invertModelParts(ModelPart modelPart) {
-		if (this.frozenLib$inverted) {
-			if ((Object)modelPart instanceof ModelPartInvertInterface invertInterface) {
-				invertInterface.frozenLib$setInverted();
-			}
-		}
+		if (!this.frozenLib$inverted) return modelPart;
+		if ((Object)modelPart instanceof ModelPartInvertInterface invertInterface) invertInterface.frozenLib$setInverted();
 		return modelPart;
 	}
 

@@ -36,9 +36,8 @@ public class ModelPartCubeMixin implements ModelPartInvertInterface {
 	@Override
 	public void frozenLib$setInverted() {
 		for (ModelPart.Polygon polygon : polygons) {
-			if (((Object)polygon) instanceof ModelPartInvertInterface invertInterface) {
-				invertInterface.frozenLib$setInverted();
-			}
+			if (!(((Object)polygon) instanceof ModelPartInvertInterface invertInterface)) continue;
+			invertInterface.frozenLib$setInverted();
 		}
 	}
 }

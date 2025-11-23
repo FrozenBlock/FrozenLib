@@ -32,14 +32,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenLibSoundPackets {
 
 	public static void createAndSendLocalSound(
-		@NotNull Level level,
-		@NotNull BlockPos pos,
+		Level level,
+		BlockPos pos,
 		Holder<SoundEvent> sound,
 		SoundSource source,
 		float volume,
@@ -50,7 +49,7 @@ public class FrozenLibSoundPackets {
 	}
 
 	public static void createAndSendLocalSound(
-		@NotNull Level level,
+		Level level,
 		double x,
 		double y,
 		double z,
@@ -60,61 +59,60 @@ public class FrozenLibSoundPackets {
 		float pitch,
 		boolean distanceDelay
 	) {
-		if (level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer player : PlayerLookup.tracking(serverLevel, BlockPos.containing(x, y, z))) {
-				ServerPlayNetworking.send(
-					player,
-					new LocalSoundPacket(new Vec3(x, y, z), sound, source, volume, pitch, distanceDelay)
-				);
-			}
+		if (!(level instanceof ServerLevel serverLevel)) return;
+		for (ServerPlayer player : PlayerLookup.tracking(serverLevel, BlockPos.containing(x, y, z))) {
+			ServerPlayNetworking.send(
+				player,
+				new LocalSoundPacket(new Vec3(x, y, z), sound, source, volume, pitch, distanceDelay)
+			);
 		}
 	}
 
 
 	public static void createAndSendRelativeMovingSound(
-		@NotNull Level level,
-		@NotNull BlockPos pos,
+		Level level,
+		BlockPos pos,
 		Holder<SoundEvent> sound,
 		SoundSource source,
 		float volume,
 		float pitch
 	) {
-		if (level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer player : PlayerLookup.tracking(serverLevel, pos)) {
-				ServerPlayNetworking.send(
-					player,
-					new RelativeMovingSoundPacket(pos, sound, source, volume, pitch)
-				);
-			}
+		if (!(level instanceof ServerLevel serverLevel)) return;
+		for (ServerPlayer player : PlayerLookup.tracking(serverLevel, pos)) {
+			ServerPlayNetworking.send(
+				player,
+				new RelativeMovingSoundPacket(pos, sound, source, volume, pitch)
+			);
 		}
 	}
 
 	public static void createAndSendFlybySound(
-		@NotNull Level level,
+		Level level,
 		Entity entity,
 		Holder<SoundEvent> sound,
 		SoundSource category,
 		float volume,
 		float pitch
 	) {
-		if (level instanceof ServerLevel) {
-			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-				ServerPlayNetworking.send(
-					player,
-					new FlyBySoundPacket(entity.getId(), sound, category, volume, pitch)
-				);
-			}
-			if (entity instanceof ServerPlayer player) {
-				ServerPlayNetworking.send(
-					player,
-					new FlyBySoundPacket(entity.getId(), sound, category, volume, pitch)
-				);
-			}
+		if (!(level instanceof ServerLevel)) return;
+
+		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
+			ServerPlayNetworking.send(
+				player,
+				new FlyBySoundPacket(entity.getId(), sound, category, volume, pitch)
+			);
+		}
+
+		if (entity instanceof ServerPlayer player) {
+			ServerPlayNetworking.send(
+				player,
+				new FlyBySoundPacket(entity.getId(), sound, category, volume, pitch)
+			);
 		}
 	}
 
     public static void createAndSendMovingRestrictionSound(
-		@NotNull Level level,
+		Level level,
 		Entity entity,
 		Holder<SoundEvent> sound,
 		SoundSource category,
@@ -123,42 +121,43 @@ public class FrozenLibSoundPackets {
 		Identifier predicate,
 		boolean stopOnDeath
 	) {
-		if (level instanceof ServerLevel) {
-			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-				ServerPlayNetworking.send(
-					player,
-					new MovingRestrictionSoundPacket(
-						entity.getId(),
-						sound,
-						category,
-						volume,
-						pitch,
-						predicate,
-						stopOnDeath,
-						false
-					)
-				);
-			}
-			if (entity instanceof ServerPlayer player) {
-				ServerPlayNetworking.send(
-					player,
-					new MovingRestrictionSoundPacket(
-						entity.getId(),
-						sound,
-						category,
-						volume,
-						pitch,
-						predicate,
-						stopOnDeath,
-						false
-					)
-				);
-			}
+		if (!(level instanceof ServerLevel)) return;
+
+		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
+			ServerPlayNetworking.send(
+				player,
+				new MovingRestrictionSoundPacket(
+					entity.getId(),
+					sound,
+					category,
+					volume,
+					pitch,
+					predicate,
+					stopOnDeath,
+					false
+				)
+			);
+		}
+
+		if (entity instanceof ServerPlayer player) {
+			ServerPlayNetworking.send(
+				player,
+				new MovingRestrictionSoundPacket(
+					entity.getId(),
+					sound,
+					category,
+					volume,
+					pitch,
+					predicate,
+					stopOnDeath,
+					false
+				)
+			);
 		}
     }
 
     public static void createAndSendMovingRestrictionLoopingSound(
-		@NotNull Level level,
+		Level level,
 		Entity entity,
 		Holder<SoundEvent> sound,
 		SoundSource category,
@@ -167,44 +166,45 @@ public class FrozenLibSoundPackets {
 		Identifier predicate,
 		boolean stopOnDeath
 	) {
-		if (level instanceof ServerLevel && entity instanceof EntityLoopingSoundInterface soundInterface) {
-			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-				ServerPlayNetworking.send(
-					player,
-					new MovingRestrictionSoundPacket(
-						entity.getId(),
-						sound,
-						category,
-						volume,
-						pitch,
-						predicate,
-						stopOnDeath,
-						true
-					)
-				);
-				soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath);
-			}
-			if (entity instanceof ServerPlayer player) {
-				ServerPlayNetworking.send(
-					player,
-					new MovingRestrictionSoundPacket(
-						entity.getId(),
-						sound,
-						category,
-						volume,
-						pitch,
-						predicate,
-						stopOnDeath,
-						true
-					)
-				);
-			}
+		if (!(level instanceof ServerLevel) || !(entity instanceof EntityLoopingSoundInterface soundInterface)) return;
+
+		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
+			ServerPlayNetworking.send(
+				player,
+				new MovingRestrictionSoundPacket(
+					entity.getId(),
+					sound,
+					category,
+					volume,
+					pitch,
+					predicate,
+					stopOnDeath,
+					true
+				)
+			);
+			soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath);
+		}
+
+		if (entity instanceof ServerPlayer player) {
+			ServerPlayNetworking.send(
+				player,
+				new MovingRestrictionSoundPacket(
+					entity.getId(),
+					sound,
+					category,
+					volume,
+					pitch,
+					predicate,
+					stopOnDeath,
+					true
+				)
+			);
 		}
     }
 
     public static void createAndSendMovingRestrictionLoopingSound(
 		ServerPlayer player,
-		@NotNull Entity entity,
+		Entity entity,
 		Holder<SoundEvent> sound,
 		SoundSource category,
 		float volume,
@@ -228,7 +228,7 @@ public class FrozenLibSoundPackets {
     }
 
     public static void createAndSendMovingRestrictionLoopingFadingDistanceSound(
-		@NotNull Level level,
+		Level level,
 		Entity entity,
 		Holder<SoundEvent> sound,
 		Holder<SoundEvent> sound2,
@@ -240,60 +240,62 @@ public class FrozenLibSoundPackets {
 		float fadeDist,
 		float maxDist
 	) {
-		if (level instanceof ServerLevel && entity instanceof EntityLoopingFadingDistanceSoundInterface soundInterface) {
-			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-				ServerPlayNetworking.send(
-					player,
-					new MovingFadingDistanceSwitchingRestrictionSoundPacket(
-						entity.getId(),
-						sound,
-						sound2,
-						category,
-						volume,
-						pitch,
-						fadeDist,
-						maxDist,
-						predicate,
-						stopOnDeath,
-						true
-					)
-				);
-			}
-			if (entity instanceof ServerPlayer player) {
-				ServerPlayNetworking.send(
-					player,
-					new MovingFadingDistanceSwitchingRestrictionSoundPacket(
-						entity.getId(),
-						sound,
-						sound2,
-						category,
-						volume,
-						pitch,
-						fadeDist,
-						maxDist,
-						predicate,
-						stopOnDeath,
-						true
-					)
-				);
-			}
-			soundInterface.frozenLib$addFadingDistanceSound(
-				sound.unwrapKey().orElseThrow().identifier(),
-				sound2.unwrapKey().orElseThrow().identifier(),
-				category,
-				volume,
-				pitch,
-				predicate,
-				stopOnDeath,
-				fadeDist,
-				maxDist
+		if (!(level instanceof ServerLevel) || !(entity instanceof EntityLoopingFadingDistanceSoundInterface soundInterface)) return;
+
+		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
+			ServerPlayNetworking.send(
+				player,
+				new MovingFadingDistanceSwitchingRestrictionSoundPacket(
+					entity.getId(),
+					sound,
+					sound2,
+					category,
+					volume,
+					pitch,
+					fadeDist,
+					maxDist,
+					predicate,
+					stopOnDeath,
+					true
+				)
 			);
-        }
+		}
+
+		if (entity instanceof ServerPlayer player) {
+			ServerPlayNetworking.send(
+				player,
+				new MovingFadingDistanceSwitchingRestrictionSoundPacket(
+					entity.getId(),
+					sound,
+					sound2,
+					category,
+					volume,
+					pitch,
+					fadeDist,
+					maxDist,
+					predicate,
+					stopOnDeath,
+					true
+				)
+			);
+		}
+
+		soundInterface.frozenLib$addFadingDistanceSound(
+			sound.unwrapKey().orElseThrow().identifier(),
+			sound2.unwrapKey().orElseThrow().identifier(),
+			category,
+			volume,
+			pitch,
+			predicate,
+			stopOnDeath,
+			fadeDist,
+			maxDist
+		);
     }
 
     public static void createAndSendMovingRestrictionLoopingFadingDistanceSound(
 		ServerPlayer player,
-		@NotNull Entity entity,
+		Entity entity,
 		Holder<SoundEvent> sound,
 		Holder<SoundEvent> sound2,
 		SoundSource category,
@@ -324,7 +326,7 @@ public class FrozenLibSoundPackets {
 
     public static void createAndSendMovingRestrictionFadingDistanceSound(
 		ServerPlayer player,
-		@NotNull Entity entity,
+		Entity entity,
 		Holder<SoundEvent> sound,
 		Holder<SoundEvent> sound2,
 		SoundSource category,
@@ -354,7 +356,7 @@ public class FrozenLibSoundPackets {
     }
 
     public static void createAndSendFadingDistanceSound(
-		@NotNull Level level,
+		Level level,
 		Vec3 pos,
 		Holder<SoundEvent> sound,
 		Holder<SoundEvent> sound2,
@@ -364,27 +366,26 @@ public class FrozenLibSoundPackets {
 		float fadeDist,
 		float maxDist
 	) {
-		if (level instanceof ServerLevel serverLevel) {
-			for (ServerPlayer player : PlayerLookup.tracking(serverLevel, BlockPos.containing(pos))) {
-				ServerPlayNetworking.send(
-					player,
-					new FadingDistanceSwitchingSoundPacket(
-						pos,
-						sound,
-						sound2,
-						category,
-						volume,
-						pitch,
-						fadeDist,
-						maxDist
-					)
-				);
-			}
-        }
+		if (!(level instanceof ServerLevel serverLevel)) return;
+		for (ServerPlayer player : PlayerLookup.tracking(serverLevel, BlockPos.containing(pos))) {
+			ServerPlayNetworking.send(
+				player,
+				new FadingDistanceSwitchingSoundPacket(
+					pos,
+					sound,
+					sound2,
+					category,
+					volume,
+					pitch,
+					fadeDist,
+					maxDist
+				)
+			);
+		}
     }
 
     public static void createAndSendStartingMovingRestrictionLoopingSound(
-		@NotNull Level level,
+		Level level,
 		Entity entity,
 		Holder<SoundEvent> startingSound,
 		Holder<SoundEvent> sound,
@@ -394,44 +395,46 @@ public class FrozenLibSoundPackets {
 		Identifier predicate,
 		boolean stopOnDeath
 	) {
-		if (level instanceof ServerLevel && entity instanceof EntityLoopingSoundInterface soundInterface) {
-			for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-				ServerPlayNetworking.send(
-					player,
-					new StartingMovingRestrictionSoundLoopPacket(
-						entity.getId(),
-						startingSound,
-						sound,
-						category,
-						volume,
-						pitch,
-						predicate,
-						stopOnDeath
-					)
-				);
-			}
-			if (entity instanceof ServerPlayer player) {
-				ServerPlayNetworking.send(
-					player,
-					new StartingMovingRestrictionSoundLoopPacket(
-						entity.getId(),
-						startingSound,
-						sound,
-						category,
-						volume,
-						pitch,
-						predicate,
-						stopOnDeath
-					)
-				);
-			}
-			soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath);
-        }
+		if (!(level instanceof ServerLevel) || !(entity instanceof EntityLoopingSoundInterface soundInterface)) return;
+
+		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
+			ServerPlayNetworking.send(
+				player,
+				new StartingMovingRestrictionSoundLoopPacket(
+					entity.getId(),
+					startingSound,
+					sound,
+					category,
+					volume,
+					pitch,
+					predicate,
+					stopOnDeath
+				)
+			);
+		}
+
+		if (entity instanceof ServerPlayer player) {
+			ServerPlayNetworking.send(
+				player,
+				new StartingMovingRestrictionSoundLoopPacket(
+					entity.getId(),
+					startingSound,
+					sound,
+					category,
+					volume,
+					pitch,
+					predicate,
+					stopOnDeath
+				)
+			);
+		}
+
+		soundInterface.frozenLib$addSound(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath);
     }
 
     public static void createAndSendStartingMovingRestrictionLoopingSound(
 		ServerPlayer player,
-		@NotNull Entity entity,
+		Entity entity,
 		Holder<SoundEvent> startingSound,
 		Holder<SoundEvent> sound,
 		SoundSource category,

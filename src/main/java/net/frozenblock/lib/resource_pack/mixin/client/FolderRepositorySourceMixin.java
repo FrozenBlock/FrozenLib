@@ -46,7 +46,7 @@ public class FolderRepositorySourceMixin {
 			target = "(Ljava/lang/String;Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/packs/repository/PackSource;Ljava/util/Optional;)Lnet/minecraft/server/packs/PackLocationInfo;"
 		)
 	)
-	private PackLocationInfo frozenLib$modifyPackLocationInfo(String string, Component component, PackSource packSource, Optional optional, Operation<PackLocationInfo> original) {
+	private PackLocationInfo frozenLib$modifyPackLocationInfo(String string, Component component, PackSource source, Optional optional, Operation<PackLocationInfo> original) {
 		if (FolderRepositorySource.class.cast(this) instanceof FrozenLibFolderRepositorySource frozenLibFolderRepositorySource) {
 			String componentString = string;
 			if (componentString.endsWith(".zip")) componentString = componentString.substring(0, componentString.length() - 4);
@@ -55,7 +55,7 @@ public class FolderRepositorySourceMixin {
 
 			string = frozenLibFolderRepositorySource.getSuffix() + string;
 		}
-		return original.call(string, component, packSource, optional);
+		return original.call(string, component, source, optional);
 	}
 
 	@ModifyExpressionValue(
@@ -69,16 +69,14 @@ public class FolderRepositorySourceMixin {
 		Pack original,
 		@Local(argsOnly = true) Path path
 	) {
-		if (FolderRepositorySource.class.cast(this) instanceof FrozenLibFolderRepositorySource frozenLibFolderRepositorySource && original != null) {
-			if (frozenLibFolderRepositorySource.getSuffix().startsWith("frozenlib:mod/")) {
-				String packId = original.getId();
-				if (!FrozenLibModResourcePackApi.isFrozenLibPackRegisteredByMod(packId)) {
-					path.toFile().delete();
-					return null;
-				}
-			}
-		}
-		return original;
+		if (!(FolderRepositorySource.class.cast(this) instanceof FrozenLibFolderRepositorySource frozenLibFolderRepositorySource) || original == null) return original;
+		if (!frozenLibFolderRepositorySource.getSuffix().startsWith("frozenlib:mod/")) return original;
+
+		final String packId = original.getId();
+		if (FrozenLibModResourcePackApi.isFrozenLibPackRegisteredByMod(packId)) return original;
+
+		path.toFile().delete();
+		return null;
 	}
 
 }

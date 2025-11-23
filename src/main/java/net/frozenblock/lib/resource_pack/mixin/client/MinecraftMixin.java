@@ -50,37 +50,41 @@ public class MinecraftMixin {
 		)
 	)
 	public PackRepository frozenLib$addFrozenLibRepositorySource(PackRepository original) {
-		if (original instanceof PackRepositoryInterface packRepositoryInterface) {
-			packRepositoryInterface.frozenLib$addRepositorySource(
-				new FrozenLibFolderRepositorySource(
-					FrozenLibModResourcePackApi.RESOURCE_PACK_DIRECTORY,
-					PackType.CLIENT_RESOURCES,
-					PackSource.BUILT_IN,
-					this.directoryValidator,
-					"frozenlib:"
-				)
-			);
-			packRepositoryInterface.frozenLib$addRepositorySource(
-				new FrozenLibFolderRepositorySource(
-					FrozenLibModResourcePackApi.MOD_RESOURCE_PACK_DIRECTORY,
-					PackType.CLIENT_RESOURCES,
-					PackSource.BUILT_IN,
-					this.directoryValidator,
-					"frozenlib:mod/"
-				)
-			);
-			packRepositoryInterface.frozenLib$addRepositorySource(
-				new FrozenLibFolderRepositorySource(
-					FrozenLibModResourcePackApi.DOWNLOADED_RESOURCE_PACK_DIRECTORY,
-					PackType.CLIENT_RESOURCES,
-					PackSource.BUILT_IN,
-					this.directoryValidator,
-					"frozenlib:mod/downloaded/"
-				)
-			);
-		} else if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
-			throw new AssertionError("BRUHHHH ITS NOT A FROZENLIB PACK REPOSITORY SOURCEEE BURHHHHHHGHGTY");
+		if (!(original instanceof PackRepositoryInterface packRepositoryInterface)) {
+			if (FabricLoader.getInstance().isDevelopmentEnvironment()) {
+				throw new AssertionError("BRUHHHH ITS NOT A FROZENLIB PACK REPOSITORY SOURCEEE BURHHHHHHGHGTY");
+			}
+			return original;
 		}
+
+		packRepositoryInterface.frozenLib$addRepositorySource(
+			new FrozenLibFolderRepositorySource(
+				FrozenLibModResourcePackApi.RESOURCE_PACK_DIRECTORY,
+				PackType.CLIENT_RESOURCES,
+				PackSource.BUILT_IN,
+				this.directoryValidator,
+				"frozenlib:"
+			)
+		);
+		packRepositoryInterface.frozenLib$addRepositorySource(
+			new FrozenLibFolderRepositorySource(
+				FrozenLibModResourcePackApi.MOD_RESOURCE_PACK_DIRECTORY,
+				PackType.CLIENT_RESOURCES,
+				PackSource.BUILT_IN,
+				this.directoryValidator,
+				"frozenlib:mod/"
+			)
+		);
+		packRepositoryInterface.frozenLib$addRepositorySource(
+			new FrozenLibFolderRepositorySource(
+				FrozenLibModResourcePackApi.DOWNLOADED_RESOURCE_PACK_DIRECTORY,
+				PackType.CLIENT_RESOURCES,
+				PackSource.BUILT_IN,
+				this.directoryValidator,
+				"frozenlib:mod/downloaded/"
+			)
+		);
+
 		return original;
 	}
 

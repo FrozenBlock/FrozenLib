@@ -27,24 +27,21 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
-import org.jetbrains.annotations.NotNull;
 
 public record StartingMovingRestrictionSoundLoopPacket(
 	int id,
 	Holder<SoundEvent> startingSound,
 	Holder<SoundEvent> sound,
-	SoundSource category,
+	SoundSource source,
 	float volume,
 	float pitch,
 	Identifier predicateId,
 	boolean stopOnDeath
 ) implements CustomPacketPayload {
-	public static final Type<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("starting_moving_restriction_looping_sound")
-	);
+	public static final Type<StartingMovingRestrictionSoundLoopPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("starting_moving_restriction_looping_sound"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, StartingMovingRestrictionSoundLoopPacket> CODEC = StreamCodec.ofMember(StartingMovingRestrictionSoundLoopPacket::write, StartingMovingRestrictionSoundLoopPacket::new);
 
-	public StartingMovingRestrictionSoundLoopPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public StartingMovingRestrictionSoundLoopPacket(RegistryFriendlyByteBuf buf) {
 		this(
 			buf.readVarInt(),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
@@ -57,11 +54,11 @@ public record StartingMovingRestrictionSoundLoopPacket(
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	public void write(RegistryFriendlyByteBuf buf) {
 		buf.writeVarInt(this.id);
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.startingSound);
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.category);
+		buf.writeEnum(this.source);
 		buf.writeFloat(this.volume);
 		buf.writeFloat(this.pitch);
 		buf.writeIdentifier(predicateId);
@@ -69,7 +66,6 @@ public record StartingMovingRestrictionSoundLoopPacket(
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

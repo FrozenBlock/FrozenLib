@@ -58,39 +58,46 @@ public class ServerPlayerMixin {
 
 	@Inject(method = "tick", at = @At(value = "TAIL"))
 	public void frozenLib$syncScreenShakes(CallbackInfo info) {
-		EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
-		if (!this.frozenLib$hasSyncedScreenShakes && this.connection != null && this.connection.isAcceptingMessages() && !this.isChangingDimension) {
-			entityScreenShakeManager.syncWithPlayer(ServerPlayer.class.cast(this));
-			this.frozenLib$hasSyncedScreenShakes = true;
-		}
+		if (this.frozenLib$hasSyncedScreenShakes || this.connection == null || !this.connection.isAcceptingMessages() || this.isChangingDimension) return;
+
+		final EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
+		entityScreenShakeManager.syncWithPlayer(ServerPlayer.class.cast(this));
+		this.frozenLib$hasSyncedScreenShakes = true;
 	}
 
-	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At(value = "HEAD"))
-	public void frozenLib$changeDimensionSaveScreenShakes(TeleportTransition transition, CallbackInfoReturnable<Entity> cir) {
-		ServerPlayer player = ServerPlayer.class.cast(this);
+	@Inject(
+		method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;",
+		at = @At(value = "HEAD")
+	)
+	public void frozenLib$changeDimensionSaveScreenShakes(TeleportTransition transition, CallbackInfoReturnable<Entity> entityCallbackInfoReturnable) {
 		CompoundTag tempTag;
-		try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
-			TagValueOutput output = TagValueOutput.createWithContext(scopedCollector, player.registryAccess());
-			EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
-			entityScreenShakeManager.save(output);
 
+		final ServerPlayer player = ServerPlayer.class.cast(this);
+		try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
+			final TagValueOutput output = TagValueOutput.createWithContext(scopedCollector, player.registryAccess());
+			final EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
+			entityScreenShakeManager.save(output);
 			tempTag = output.buildResult();
 		} catch (Exception e) {
 			tempTag = new CompoundTag();
 		}
+
 		this.frozenLib$savedScreenShakesTag = tempTag;
 	}
 
-	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At(value = "RETURN"))
-	public void frozenLib$changeDimensionLoadScreenShakes(TeleportTransition transition, CallbackInfoReturnable<Entity> cir) {
-		ServerPlayer player = ServerPlayer.class.cast(this);
-		if (this.frozenLib$savedScreenShakesTag != null) {
-			try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
-				ValueInput input = TagValueInput.create(scopedCollector, player.registryAccess(), this.frozenLib$savedScreenShakesTag);
-				EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
-				entityScreenShakeManager.load(input);
-				this.frozenLib$hasSyncedScreenShakes = false;
-			}
+	@Inject(
+		method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;",
+		at = @At(value = "RETURN")
+	)
+	public void frozenLib$changeDimensionLoadScreenShakes(TeleportTransition transition, CallbackInfoReturnable<Entity> info) {
+		if (this.frozenLib$savedScreenShakesTag == null) return;
+
+		final ServerPlayer player = ServerPlayer.class.cast(this);
+		try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
+			ValueInput input = TagValueInput.create(scopedCollector, player.registryAccess(), this.frozenLib$savedScreenShakesTag);
+			EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
+			entityScreenShakeManager.load(input);
+			this.frozenLib$hasSyncedScreenShakes = false;
 		}
 	}
 }

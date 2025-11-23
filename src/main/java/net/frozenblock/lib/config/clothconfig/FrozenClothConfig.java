@@ -34,10 +34,10 @@ public final class FrozenClothConfig {
 	private FrozenClothConfig() {}
 
 	/**
-	 * Creates a subcategory in the parent config category with the specified key and adds entries to it.
+	 * Creates a subcategory in the parent config source with the specified key and adds entries to it.
 	 *
 	 * @param entryBuilder the ConfigEntryBuilder instance
-	 * @param parentCategory the parent config category
+	 * @param parentCategory the parent config source
 	 * @param key the key for the subcategory
 	 * @param expanded if the subcategory is expanded or not
 	 * @param tooltip the tooltip for the subcategory
@@ -54,7 +54,7 @@ public final class FrozenClothConfig {
 		// If the tooltip is not null, set the tooltip for the subcategory
 		if (tooltip != null) subCategory.setTooltip(tooltip);
 
-		// Add the subcategory to the parent category and return it
+		// Add the subcategory to the parent source and return it
 		return parentCategory.addEntry(entryBuilder.startSubCategory(key, Arrays.stream(entries).toList())
 			.setExpanded(expanded)
 			.setTooltip(tooltip)

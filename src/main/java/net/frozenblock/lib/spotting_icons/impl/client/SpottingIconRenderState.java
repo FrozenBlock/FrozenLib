@@ -31,7 +31,6 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 
 @ApiStatus.Internal
@@ -50,14 +49,14 @@ public final class SpottingIconRenderState {
 		if (icon == null) return;
 
 		double dist = Math.sqrt(entityRenderDispatcher.camera.position().distanceToSqr(entity.getEyePosition(partialTick)));
-		if (dist > icon.startFadeDist() && iconManager.clientHasIconResource) {
-			this.texture = icon.texture();
-			float endDist = icon.endFadeDist() - icon.startFadeDist();
-			dist -= icon.startFadeDist();
-			this.alpha = (int) ((dist > endDist ? 1F : (float) Math.min(1F, dist / endDist)) * 255F);
-			this.renderOffsetY = entity.getBbHeight() + 1F;
-			this.render = true;
-		}
+		if (dist <= icon.startFadeDist() || !iconManager.clientHasIconResource) return;
+
+		this.texture = icon.texture();
+		float endDist = icon.endFadeDist() - icon.startFadeDist();
+		dist -= icon.startFadeDist();
+		this.alpha = (int) ((dist > endDist ? 1F : (float) Math.min(1F, dist / endDist)) * 255F);
+		this.renderOffsetY = entity.getBbHeight() + 1F;
+		this.render = true;
 	}
 
 	public void submit(PoseStack poseStack, EntityRenderState renderState, Quaternionf rotation, SubmitNodeCollector submitNodeCollector) {
@@ -78,7 +77,7 @@ public final class SpottingIconRenderState {
 		poseStack.popPose();
 	}
 
-	private static void renderIcon(PoseStack.Pose pose, @NotNull VertexConsumer vertexConsumer, int packedLight, int alpha) {
+	private static void renderIcon(PoseStack.Pose pose, VertexConsumer vertexConsumer, int packedLight, int alpha) {
 		vertexConsumer
 			.addVertex(pose, -0.5F, -0.5F, 0F)
 			.setColor(255, 255, 255, alpha)

@@ -27,22 +27,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
-public record LocalSoundPacket(
-	Vec3 pos,
-	Holder<SoundEvent> sound,
-	SoundSource category,
-	float volume,
-	float pitch,
-	boolean distanceDelay
-) implements CustomPacketPayload {
-	public static final Type<LocalSoundPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("local_sound")
-	);
+public record LocalSoundPacket(Vec3 pos, Holder<SoundEvent> sound, SoundSource source, float volume, float pitch, boolean distanceDelay) implements CustomPacketPayload {
+	public static final Type<LocalSoundPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("local_sound"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, LocalSoundPacket> CODEC = StreamCodec.ofMember(LocalSoundPacket::write, LocalSoundPacket::new);
 
-	public LocalSoundPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public LocalSoundPacket(RegistryFriendlyByteBuf buf) {
 		this(
 			buf.readVec3(),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
@@ -53,17 +43,16 @@ public record LocalSoundPacket(
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	public void write(RegistryFriendlyByteBuf buf) {
 		buf.writeVec3(this.pos);
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.category);
+		buf.writeEnum(this.source);
 		buf.writeFloat(this.volume);
 		buf.writeFloat(this.pitch);
 		buf.writeBoolean(this.distanceDelay);
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

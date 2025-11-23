@@ -39,7 +39,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class ScreenShakeManager extends SavedData {
@@ -47,7 +46,7 @@ public class ScreenShakeManager extends SavedData {
 	public static final Codec<ScreenShakeManager> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
 			ScreenShake.LIST_CODEC.fieldOf("ScreenShakes").forGetter(screenshakeManager -> screenshakeManager.shakes)
-			).apply(instance, ScreenShakeManager::createFromCodec)
+		).apply(instance, ScreenShakeManager::createFromCodec)
 	);
 	public static final SavedDataType<ScreenShakeManager> TYPE = new SavedDataType<>(SCREENSHAKE_MANAGER_FILE_ID, ScreenShakeManager::new, CODEC, DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES);
 
@@ -56,8 +55,8 @@ public class ScreenShakeManager extends SavedData {
 	public ScreenShakeManager() {
 	}
 
-	public static @NotNull ScreenShakeManager createFromCodec(List<ScreenShake> shakes) {
-		ScreenShakeManager screenShakeManager = new ScreenShakeManager();
+	public static ScreenShakeManager createFromCodec(List<ScreenShake> shakes) {
+		final ScreenShakeManager screenShakeManager = new ScreenShakeManager();
 		screenShakeManager.shakes.addAll(shakes);
 		return screenShakeManager;
 	}
@@ -67,22 +66,21 @@ public class ScreenShakeManager extends SavedData {
 		return true;
 	}
 
-	public void tick(@NotNull ServerLevel level) {
-		if (level.tickRateManager().runsNormally()) {
-			this.getShakes().removeIf(ScreenShake::shouldRemove);
-			for (ScreenShake shake : this.getShakes()) {
-				if (level.getChunkSource().hasChunk(shake.chunkPos.x, shake.chunkPos.z)) {
-					shake.ticks += 1;
-					Collection<ServerPlayer> playersTrackingChunk = PlayerLookup.tracking(level, shake.chunkPos);
-					for (ServerPlayer serverPlayer : playersTrackingChunk) {
-						if (!shake.trackingPlayers.contains(serverPlayer)) {
-							ScreenShakeManager.sendScreenShakePacketTo(serverPlayer, shake.getIntensity(), shake.getDuration(), shake.getDurationFalloffStart(), shake.getPos(), shake.getMaxDistance(), shake.getTicks());
-						}
-					}
-					shake.trackingPlayers.clear();
-					shake.trackingPlayers.addAll(playersTrackingChunk);
-				}
+	public void tick(ServerLevel level) {
+		if (!level.tickRateManager().runsNormally()) return;
+
+		this.getShakes().removeIf(ScreenShake::shouldRemove);
+		for (ScreenShake shake : this.getShakes()) {
+			if (!level.getChunkSource().hasChunk(shake.chunkPos.x, shake.chunkPos.z)) continue;
+			shake.ticks += 1;
+
+			final Collection<ServerPlayer> playersTrackingChunk = PlayerLookup.tracking(level, shake.chunkPos);
+			for (ServerPlayer serverPlayer : playersTrackingChunk) {
+				if (shake.trackingPlayers.contains(serverPlayer)) continue;
+				ScreenShakeManager.sendScreenShakePacketTo(serverPlayer, shake.getIntensity(), shake.getDuration(), shake.getDurationFalloffStart(), shake.getPos(), shake.getMaxDistance(), shake.getTicks());
 			}
+			shake.trackingPlayers.clear();
+			shake.trackingPlayers.addAll(playersTrackingChunk);
 		}
 	}
 
@@ -106,7 +104,7 @@ public class ScreenShakeManager extends SavedData {
 		addScreenShake(level, intensity, duration, falloffStart, x, y, z, maxDistance, 0);
 	}
 
-	public static void addScreenShake(@NotNull Level level, float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
+	public static void addScreenShake(Level level, float intensity, int duration, int falloffStart, double x, double y, double z, float maxDistance, int ticks) {
 		if (level instanceof ServerLevel serverLevel) {
 			ScreenShakeManager.getOrCreateScreenShakeManager(serverLevel).addShake(intensity, duration, falloffStart, new Vec3(x, y, z), maxDistance, ticks);
 		}
@@ -129,22 +127,20 @@ public class ScreenShakeManager extends SavedData {
 		addEntityScreenShake(entity, intensity, duration, falloffStart, maxDistance, 0);
 	}
 
-	public static void addEntityScreenShake(@NotNull Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
-		if (entity.level() instanceof ServerLevel serverLevel) {
-			EntityScreenShakePacket packet = new EntityScreenShakePacket(entity.getId(), intensity, duration, falloffStart, maxDistance, ticks);
-			for (ServerPlayer player : PlayerLookup.world(serverLevel)) {
-				ServerPlayNetworking.send(player, packet);
-			}
-			((EntityScreenShakeInterface) entity).frozenLib$addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
-		}
+	public static void addEntityScreenShake(Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
+		if (!(entity.level() instanceof ServerLevel serverLevel)) return;
+
+		final EntityScreenShakePacket packet = new EntityScreenShakePacket(entity.getId(), intensity, duration, falloffStart, maxDistance, ticks);
+		for (ServerPlayer player : PlayerLookup.world(serverLevel)) ServerPlayNetworking.send(player, packet);
+		((EntityScreenShakeInterface) entity).frozenLib$addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
 	}
 
-	public static void sendEntityScreenShakeTo(ServerPlayer player, @NotNull Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
+	public static void sendEntityScreenShakeTo(ServerPlayer player, Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {
 		ServerPlayNetworking.send(player, new EntityScreenShakePacket(entity.getId(), intensity, duration, falloffStart, maxDistance, ticks));
 	}
 
 	public static class ScreenShake {
-		public static final Codec<ScreenShake> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+		public static final Codec<ScreenShake> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 			Codec.FLOAT.fieldOf("Intensity").forGetter(ScreenShake::getIntensity),
 			Codec.INT.fieldOf("Duration").forGetter(ScreenShake::getDuration),
 			Codec.INT.fieldOf("FalloffStart").forGetter(ScreenShake::getDurationFalloffStart),

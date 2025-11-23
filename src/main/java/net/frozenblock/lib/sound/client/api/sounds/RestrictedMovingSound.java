@@ -27,13 +27,12 @@ import net.minecraft.world.entity.Entity;
 
 @Environment(EnvType.CLIENT)
 public class RestrictedMovingSound<T extends Entity> extends RestrictedSoundInstance<T> {
-
 	private final boolean stopOnDeath;
 
     public RestrictedMovingSound(
-		T entity, SoundEvent sound, SoundSource category, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, boolean stopOnDeath
+		T entity, SoundEvent sound, SoundSource source, float volume, float pitch, SoundPredicate.LoopPredicate<T> predicate, boolean stopOnDeath
 	) {
-        super(sound, category, SoundInstance.createUnseededRandom(), entity, predicate);
+        super(sound, source, SoundInstance.createUnseededRandom(), entity, predicate);
         this.looping = false;
         this.volume = volume;
         this.pitch = pitch;
@@ -49,14 +48,15 @@ public class RestrictedMovingSound<T extends Entity> extends RestrictedSoundInst
     public void tick() {
         if (this.stopOnDeath && this.entity.isRemoved()) {
             this.stop();
-        } else {
-            if (!this.test()) {
-                this.stop();
-            } else {
-                this.x = this.entity.getX();
-                this.y = this.entity.getY();
-                this.z = this.entity.getZ();
-            }
+			return;
         }
+
+		if (!this.test()) {
+			this.stop();
+			return;
+		}
+		this.x = this.entity.getX();
+		this.y = this.entity.getY();
+		this.z = this.entity.getZ();
     }
 }

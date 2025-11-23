@@ -23,7 +23,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class SpottingIconPredicate<T extends Entity> {
@@ -40,15 +39,14 @@ public final class SpottingIconPredicate<T extends Entity> {
 
 	@SuppressWarnings("unchecked")
     public static <T extends Entity> IconPredicate<T> getPredicate(@Nullable Identifier id) {
-        if (id != null) {
-            if (FrozenLibRegistries.SPOTTING_ICON_PREDICATE.containsKey(id)) {
-				SpottingIconPredicate<T> predicate = (SpottingIconPredicate<T>) FrozenLibRegistries.SPOTTING_ICON_PREDICATE.getValue(id);
-				if (predicate != null) {
-					return predicate.predicate;
-				}
-			}
-			FrozenLibConstants.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
-        }
+        if (id == null) return defaultPredicate();
+
+		if (FrozenLibRegistries.SPOTTING_ICON_PREDICATE.containsKey(id)) {
+			final SpottingIconPredicate<T> predicate = (SpottingIconPredicate<T>) FrozenLibRegistries.SPOTTING_ICON_PREDICATE.getValue(id);
+			if (predicate != null) return predicate.predicate;
+		}
+
+		FrozenLibConstants.LOGGER.error("Unable to find spotting icon predicate " + id + "! Using default spotting icon predicate instead!");
         return defaultPredicate();
     }
 
@@ -63,7 +61,6 @@ public final class SpottingIconPredicate<T extends Entity> {
 		}
     }
 
-	@NotNull
 	@Contract(pure = true)
 	public static <T extends Entity> IconPredicate<T> defaultPredicate() {
 		return Entity::isAlive;

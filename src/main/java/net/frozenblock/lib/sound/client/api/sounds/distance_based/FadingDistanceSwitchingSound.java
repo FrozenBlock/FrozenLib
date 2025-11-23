@@ -25,20 +25,18 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class FadingDistanceSwitchingSound extends AbstractTickableSoundInstance {
-
     private final boolean isFarSound;
     private final double maxDist;
     private final double fadeDist;
     private final float maxVol;
 
     public FadingDistanceSwitchingSound(
-		SoundEvent sound, SoundSource category, float volume, float pitch, double fadeDist, double maxDist, float maxVol, boolean isFarSound, @NotNull Vec3 pos
+		SoundEvent sound, SoundSource source, float volume, float pitch, double fadeDist, double maxDist, float maxVol, boolean isFarSound, Vec3 pos
 	) {
-        super(sound, category, SoundInstance.createUnseededRandom());
+        super(sound, source, SoundInstance.createUnseededRandom());
         this.delay = 0;
         this.volume = volume;
         this.pitch = pitch;
@@ -54,19 +52,19 @@ public class FadingDistanceSwitchingSound extends AbstractTickableSoundInstance 
 
     @Override
     public void tick() {
-        Minecraft client = Minecraft.getInstance();
-        if (client.player != null) {
-            double distance = Math.sqrt(client.player.distanceToSqr(this.x, this.y, this.z));
-            if (distance < this.fadeDist) {
-                this.volume = !this.isFarSound ? this.maxVol : 0.001F;
-            } else if (distance > this.maxDist) {
-                this.volume = this.isFarSound ? this.maxVol : 0.001F;
-            } else {
-                //Gets lower as you move farther
-                float fadeProgress = (float) ((this.maxDist - distance) / (this.maxDist - this.fadeDist));
-                this.volume = this.isFarSound ? (1F - fadeProgress) * this.maxVol : fadeProgress * this.maxVol;
-            }
-        }
+		final Minecraft client = Minecraft.getInstance();
+        if (client.player == null) return;
+
+		final double distance = Math.sqrt(client.player.distanceToSqr(this.x, this.y, this.z));
+		if (distance < this.fadeDist) {
+			this.volume = !this.isFarSound ? this.maxVol : 0.001F;
+		} else if (distance > this.maxDist) {
+			this.volume = this.isFarSound ? this.maxVol : 0.001F;
+		} else {
+			//Gets lower as you move farther
+			final float fadeProgress = (float) ((this.maxDist - distance) / (this.maxDist - this.fadeDist));
+			this.volume = this.isFarSound ? (1F - fadeProgress) * this.maxVol : fadeProgress * this.maxVol;
+		}
     }
 
 }

@@ -27,7 +27,6 @@ import net.minecraft.client.renderer.RenderPipelines;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderPipelines {
-
 	public static final RenderPipeline ENTITY_CUTOUT_NO_SHADING = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/entity_cutout_no_shading"))
@@ -116,6 +115,5 @@ public final class FrozenLibRenderPipelines {
 			.withDepthWrite(false)
 			.build()
 	);
-
 
 }

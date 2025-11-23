@@ -45,18 +45,18 @@ public class EntityRenderDispatcherMixin {
 	)
 	public <S extends EntityRenderState> void frozenLib$submitSpottingIcon(
 		S renderState,
-		CameraRenderState cameraRenderState,
+		CameraRenderState cameraState,
 		double x,
 		double y,
 		double z,
 		PoseStack poseStack,
-		SubmitNodeCollector submitNodeCollector,
+		SubmitNodeCollector collector,
 		CallbackInfo info
 	) {
 		if (!(renderState instanceof EntityRenderStateWithIcon stateWithIcon)) return;
 		final SpottingIconRenderState iconRenderState = stateWithIcon.frozenLib$getIconRenderState();
 		if (iconRenderState == null) return;
-		iconRenderState.submit(poseStack, renderState, cameraRenderState.orientation, submitNodeCollector);
+		iconRenderState.submit(poseStack, renderState, cameraState.orientation, collector);
 	}
 
 }

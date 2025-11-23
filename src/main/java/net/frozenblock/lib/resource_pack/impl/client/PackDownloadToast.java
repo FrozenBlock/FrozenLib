@@ -36,7 +36,6 @@ import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.FormattedCharSequence;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class PackDownloadToast implements Toast {
@@ -57,17 +56,17 @@ public class PackDownloadToast implements Toast {
 	private boolean forceHide;
 	private Toast.Visibility wantedVisibility;
 
-	public static @NotNull PackDownloadToast create(
+	public static PackDownloadToast create(
 		PackDownloadToast.PackDownloadToastId id,
 		FrozenLibModResourcePackApi.PackDownloadStatusProvider statusProvider
 	) {
-		PackDownloadToast toast = new PackDownloadToast(id);
+		final PackDownloadToast toast = new PackDownloadToast(id);
 		toast.messageProviders.add(statusProvider);
 		toast.updateTextAndWidth();
 		return toast;
 	}
 
-	private PackDownloadToast(PackDownloadToast.@NotNull PackDownloadToastId id) {
+	private PackDownloadToast(PackDownloadToast.PackDownloadToastId id) {
 		this.id = id;
 		this.title = id.title;
 		this.bottomText = id.bottomDisplay;
@@ -75,15 +74,15 @@ public class PackDownloadToast implements Toast {
 	}
 
 	private void updateTextAndWidth() {
-		Stream<FormattedCharSequence> stream = this.messageProviders.stream()
+		final Stream<FormattedCharSequence> messages = this.messageProviders.stream()
 			.map(provider -> provider.getComponent(this.id).getVisualOrderText());
 
 		this.messageLines.clear();
-		this.messageLines.addAll(stream.toList());
+		this.messageLines.addAll(messages.toList());
 		this.bottomText.ifPresent(supplier -> this.messageLines.add(supplier.get().getVisualOrderText()));
 
-		Font font = Minecraft.getInstance().font;
-		List<Integer> allLines = new ArrayList<>();
+		final Font font = Minecraft.getInstance().font;
+		final List<Integer> allLines = new ArrayList<>();
 		allLines.add(WIDTH_BUFFER + font.width(this.title));
 		this.bottomText.ifPresent(supplier -> allLines.add(WIDTH_BUFFER + font.width(supplier.get())));
 		this.messageLines.forEach(line -> allLines.add(font.width(line)));
@@ -113,12 +112,12 @@ public class PackDownloadToast implements Toast {
 	}
 
 	@Override
-	public Toast.@NotNull Visibility getWantedVisibility() {
+	public Toast.Visibility getWantedVisibility() {
 		return this.wantedVisibility;
 	}
 
 	@Override
-	public void update(@NotNull ToastManager toastManager, long time) {
+	public void update(ToastManager toastManager, long time) {
 		if ((time % 100) == 0) this.updateTextAndWidth();
 
 		if (this.changed) {
@@ -126,21 +125,22 @@ public class PackDownloadToast implements Toast {
 			this.changed = false;
 		}
 
-		double displayTime = this.id.displayTime * toastManager.getNotificationDisplayTimeMultiplier();
-		long timeSinceLastChanged = time - this.lastChanged;
+		final double displayTime = this.id.displayTime * toastManager.getNotificationDisplayTimeMultiplier();
+		final long timeSinceLastChanged = time - this.lastChanged;
 		this.wantedVisibility = !this.forceHide && timeSinceLastChanged < displayTime ? Toast.Visibility.SHOW : Toast.Visibility.HIDE;
 	}
 
 	@Override
-	public void render(@NotNull GuiGraphics guiGraphics, @NotNull Font font, long l) {
+	public void render(GuiGraphics guiGraphics, Font font, long l) {
 		guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		if (this.messageLines.isEmpty()) {
 			guiGraphics.drawString(font, this.title, 15, 12, -256, false);
-		} else {
-			guiGraphics.drawString(font, this.title, 15, 7, -256, false);
-			for (int i = 0; i < this.messageLines.size(); ++i) {
-				guiGraphics.drawString(font, this.messageLines.get(i), 18, 18 + i * LINE_SPACING, -1, false);
-			}
+			return;
+		}
+
+		guiGraphics.drawString(font, this.title, 15, 7, -256, false);
+		for (int i = 0; i < this.messageLines.size(); ++i) {
+			guiGraphics.drawString(font, this.messageLines.get(i), 18, 18 + i * LINE_SPACING, -1, false);
 		}
 	}
 
@@ -149,7 +149,7 @@ public class PackDownloadToast implements Toast {
 	}
 
 	@Override
-	public PackDownloadToast.@NotNull PackDownloadToastId getToken() {
+	public PackDownloadToast.PackDownloadToastId getToken() {
 		return this.id;
 	}
 
@@ -166,8 +166,8 @@ public class PackDownloadToast implements Toast {
 		PackDownloadToast.PackDownloadToastId id,
 		FrozenLibModResourcePackApi.PackDownloadStatusProvider statusProvider
 	) {
-		FrozenLibModResourcePackApi.PackDownloadStatusProvider directProvider = statusProvider.getDirectProvider();
-		PackDownloadToast packToast = toastManager.getToast(PackDownloadToast.class, id);
+		final FrozenLibModResourcePackApi.PackDownloadStatusProvider directProvider = statusProvider.getDirectProvider();
+		final PackDownloadToast packToast = toastManager.getToast(PackDownloadToast.class, id);
 		if (packToast == null) {
 			add(toastManager, id, directProvider);
 			return;
@@ -177,11 +177,10 @@ public class PackDownloadToast implements Toast {
 	}
 
 	public static void forceHide(ToastManager toastManager, PackDownloadToast.PackDownloadToastId id) {
-		PackDownloadToast PackDownloadToast = toastManager.getToast(PackDownloadToast.class, id);
+		final PackDownloadToast PackDownloadToast = toastManager.getToast(PackDownloadToast.class, id);
 		if (PackDownloadToast != null) PackDownloadToast.forceHide();
 	}
 
-	@Environment(EnvType.CLIENT)
 	public static class PackDownloadToastId {
 		public static final PackDownloadToastId PACK_DOWNLOAD_SUCCESS = new PackDownloadToastId(
 			"download.success",
@@ -202,8 +201,8 @@ public class PackDownloadToast implements Toast {
 		private final Component title;
 		private final Optional<Supplier<Component>> bottomDisplay;
 
-		public PackDownloadToastId(long l, String title, Optional<Supplier<Component>> bottomDisplay) {
-			this.displayTime = l;
+		public PackDownloadToastId(long displayTime, String title, Optional<Supplier<Component>> bottomDisplay) {
+			this.displayTime = displayTime;
 			this.title = Component.translatable("frozenlib.resourcepack." + title);
 			this.bottomDisplay = bottomDisplay;
 		}

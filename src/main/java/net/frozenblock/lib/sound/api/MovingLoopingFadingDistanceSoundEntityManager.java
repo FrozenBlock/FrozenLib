@@ -29,7 +29,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 
 public class MovingLoopingFadingDistanceSoundEntityManager {
     private final ArrayList<FadingDistanceSoundLoopNBT> sounds = new ArrayList<>();
@@ -39,21 +38,17 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
         this.entity = entity;
     }
 
-    public void load(@NotNull ValueInput input) {
+    public void load(ValueInput input) {
 		this.sounds.clear();
-		ValueInput.TypedInputList<FadingDistanceSoundLoopNBT> list = input.listOrEmpty("frozenlib_looping_fading_distance_sounds", FadingDistanceSoundLoopNBT.CODEC);
-		for (FadingDistanceSoundLoopNBT sound : list) {
-			this.sounds.add(sound);
-		}
+		final ValueInput.TypedInputList<FadingDistanceSoundLoopNBT> list = input.listOrEmpty("frozenlib_looping_fading_distance_sounds", FadingDistanceSoundLoopNBT.CODEC);
+		for (FadingDistanceSoundLoopNBT sound : list) this.sounds.add(sound);
     }
 
     public void save(ValueOutput nbt) {
-		if (!this.sounds.isEmpty()) {
-			ValueOutput.TypedOutputList<FadingDistanceSoundLoopNBT> list = nbt.list("frozenlib_looping_fading_distance_sounds", FadingDistanceSoundLoopNBT.CODEC);
-			for (FadingDistanceSoundLoopNBT sound : this.sounds) {
-				list.add(sound);
-			}
-		}
+		if (this.sounds.isEmpty()) return;
+
+		final ValueOutput.TypedOutputList<FadingDistanceSoundLoopNBT> list = nbt.list("frozenlib_looping_fading_distance_sounds", FadingDistanceSoundLoopNBT.CODEC);
+		for (FadingDistanceSoundLoopNBT sound : this.sounds) list.add(sound);
     }
 
     public void addSound(
@@ -76,26 +71,27 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
     }
 
 	public void tick() {
-		if (!this.sounds.isEmpty()) {
-			ArrayList<FadingDistanceSoundLoopNBT> soundsToRemove = new ArrayList<>();
-			for (FadingDistanceSoundLoopNBT nbt : this.sounds) {
-				SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
-				if (!predicate.test(this.entity)) {
-					soundsToRemove.add(nbt);
-					predicate.onStop(this.entity);
-				}
-			}
-			this.sounds.removeAll(soundsToRemove);
+		if (this.sounds.isEmpty()) return;
+
+		final ArrayList<FadingDistanceSoundLoopNBT> soundsToRemove = new ArrayList<>();
+		for (FadingDistanceSoundLoopNBT nbt : this.sounds) {
+			final SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(nbt.restrictionID);
+			if (predicate.test(this.entity)) continue;
+
+			soundsToRemove.add(nbt);
+			predicate.onStop(this.entity);
 		}
+
+		this.sounds.removeAll(soundsToRemove);
 	}
 
-	public void syncWithPlayer(ServerPlayer serverPlayer) {
+	public void syncWithPlayer(ServerPlayer player) {
 		for (FadingDistanceSoundLoopNBT nbt : this.getSounds()) {
 			FrozenLibSoundPackets.createAndSendMovingRestrictionLoopingFadingDistanceSound(
-				serverPlayer,
+				player,
 				this.entity,
-				BuiltInRegistries.SOUND_EVENT.get(nbt.soundEventID()).orElseThrow(),
-				BuiltInRegistries.SOUND_EVENT.get(nbt.soundEventID2()).orElseThrow(),
+				BuiltInRegistries.SOUND_EVENT.get(nbt.closeSound()).orElseThrow(),
+				BuiltInRegistries.SOUND_EVENT.get(nbt.farSound()).orElseThrow(),
 				SoundSource.valueOf(SoundSource.class, nbt.category),
 				nbt.volume,
 				nbt.pitch,
@@ -108,8 +104,8 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 	}
 
     public record FadingDistanceSoundLoopNBT(
-		Identifier soundEventID,
-		Identifier soundEventID2,
+		Identifier closeSound,
+		Identifier farSound,
 		String category,
 		float volume,
 		float pitch,
@@ -118,10 +114,9 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 		Identifier restrictionID,
 		boolean stopOnDeath
 	) {
-
 		public static final Codec<FadingDistanceSoundLoopNBT> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-			Identifier.CODEC.fieldOf("soundEventID").forGetter(FadingDistanceSoundLoopNBT::soundEventID),
-			Identifier.CODEC.fieldOf("sound2EventID").forGetter(FadingDistanceSoundLoopNBT::soundEventID2),
+			Identifier.CODEC.fieldOf("closeSound").forGetter(FadingDistanceSoundLoopNBT::closeSound),
+			Identifier.CODEC.fieldOf("farSound").forGetter(FadingDistanceSoundLoopNBT::farSound),
 			Codec.STRING.fieldOf("categoryOrdinal").forGetter(FadingDistanceSoundLoopNBT::category),
 			Codec.FLOAT.fieldOf("volume").forGetter(FadingDistanceSoundLoopNBT::volume),
 			Codec.FLOAT.fieldOf("pitch").forGetter(FadingDistanceSoundLoopNBT::pitch),
@@ -132,9 +127,9 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 		).apply(instance, FadingDistanceSoundLoopNBT::new));
 
 		public FadingDistanceSoundLoopNBT(
-			Identifier soundEventID,
-			Identifier soundEventID2,
-			@NotNull SoundSource category,
+			Identifier closeSound,
+			Identifier farSound,
+			SoundSource category,
 			float volume,
 			float pitch,
 			float fadeDist,
@@ -142,7 +137,7 @@ public class MovingLoopingFadingDistanceSoundEntityManager {
 			Identifier restrictionID,
 			boolean stopOnDeath
 		) {
-			this(soundEventID, soundEventID2, category.toString(), volume, pitch, fadeDist, maxDist, restrictionID, stopOnDeath);
+			this(closeSound, farSound, category.toString(), volume, pitch, fadeDist, maxDist, restrictionID, stopOnDeath);
 		}
 	}
 }

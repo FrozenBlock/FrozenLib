@@ -36,8 +36,8 @@ import net.minecraft.world.level.validation.DirectoryValidator;
 public class FrozenLibFolderRepositorySource extends FolderRepositorySource {
 	private final String suffix;
 
-	public FrozenLibFolderRepositorySource(Path path, PackType packType, PackSource packSource, DirectoryValidator directoryValidator, String suffix) {
-		super(path, packType, packSource, directoryValidator);
+	public FrozenLibFolderRepositorySource(Path path, PackType type, PackSource source, DirectoryValidator validator, String suffix) {
+		super(path, type, source, validator);
 		this.suffix = suffix;
 	}
 
