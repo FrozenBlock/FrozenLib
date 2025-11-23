@@ -29,7 +29,7 @@ public class LootTableModificationApi {
 	public static void editTable(ResourceKey<LootTable> targetLootTable, boolean requiresBuiltIn, Edit listener) {
 		LootTableEvents.Replace modification = (id, lootTable, source, registries) -> {
 			if ((requiresBuiltIn && !source.isBuiltin()) || !targetLootTable.equals(id)) return null;
-			MutableLootTable mutableLootTable = new MutableLootTable(lootTable);
+			final MutableLootTable mutableLootTable = new MutableLootTable(lootTable);
 			listener.editLootTable(id, mutableLootTable);
 			return mutableLootTable.build();
 		};

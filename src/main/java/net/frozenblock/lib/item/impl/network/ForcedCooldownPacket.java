@@ -22,24 +22,22 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public record ForcedCooldownPacket(Identifier cooldownGroup, int startTime, int endTime) implements CustomPacketPayload {
 	public static final Type<ForcedCooldownPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("forced_cooldown"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, ForcedCooldownPacket> CODEC = StreamCodec.ofMember(ForcedCooldownPacket::write, ForcedCooldownPacket::new);
 
-	public ForcedCooldownPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public ForcedCooldownPacket(RegistryFriendlyByteBuf buf) {
 		this(buf.readIdentifier(), buf.readVarInt(), buf.readVarInt());
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	public void write(RegistryFriendlyByteBuf buf) {
 		buf.writeIdentifier(this.cooldownGroup);
 		buf.writeVarInt(this.startTime());
 		buf.writeVarInt(this.endTime());
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

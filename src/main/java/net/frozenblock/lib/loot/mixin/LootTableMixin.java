@@ -37,8 +37,8 @@ public class LootTableMixin {
 			ordinal = 1
 		)
 	)
-	public void frozenLib$triggerItemGeneratedInContainer(Container instance, int i, ItemStack itemStack, Operation<Void> original) {
-		FrozenLibLootTableEvents.ON_ITEM_GENERATED_IN_CONTAINER.invoker().onItemGeneratedInContainer(instance, itemStack);
-		original.call(instance, i, itemStack);
+	public void frozenLib$triggerItemGeneratedInContainer(Container instance, int i, ItemStack stack, Operation<Void> original) {
+		FrozenLibLootTableEvents.ON_ITEM_GENERATED_IN_CONTAINER.invoker().onItemGeneratedInContainer(instance, stack);
+		original.call(instance, i, stack);
 	}
 }

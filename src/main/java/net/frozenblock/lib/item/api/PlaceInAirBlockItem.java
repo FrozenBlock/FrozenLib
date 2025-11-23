@@ -25,7 +25,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
@@ -35,17 +34,15 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class PlaceInAirBlockItem extends BlockItem {
 
-	public PlaceInAirBlockItem(Block block, Item.Properties properties) {
+	public PlaceInAirBlockItem(Block block, Properties properties) {
 		super(block, properties);
 	}
 
 	@Override
-	@NotNull
-	public InteractionResult use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
+	public InteractionResult use(Level level, Player player, InteractionHand hand) {
 		final ItemStack stack = player.getItemInHand(hand);
 
 		final double blockInteractionRange = player.blockInteractionRange();
@@ -64,24 +61,35 @@ public class PlaceInAirBlockItem extends BlockItem {
 			Mth.square(blockInteractionRange)
 		);
 
-		if (entityHitResult == null) {
-			final BlockPos pos = BlockPos.containing(placementPos);
+		place: {
+			if (entityHitResult != null) break place;
 
+			final BlockPos pos = BlockPos.containing(placementPos);
 			if (!this.checkIfPlayerCanPlaceBlock(player, stack, level, pos)) return InteractionResult.PASS;
 
-			if (level.isInWorldBounds(pos) && level.getWorldBorder().isWithinBounds(pos) && level.getBlockState(pos).canBeReplaced()) {
-				final Direction reflectedFacingDirection = Direction.getApproximateNearest(lookAngle);
-				final BlockPlaceContext context = new BlockPlaceContext(player, hand, stack, new BlockHitResult(pos.getCenter(), reflectedFacingDirection, pos, false));
-				final InteractionResult result = this.useOn(context);
-				if (result.consumesAction()) return InteractionResult.SUCCESS;
-			}
+			if (!level.isInWorldBounds(pos) || !level.getWorldBorder().isWithinBounds(pos) || !level.getBlockState(pos).canBeReplaced()) break place;
+
+			final Direction reflectedFacingDirection = Direction.getApproximateNearest(lookAngle);
+			final BlockPlaceContext context = new BlockPlaceContext(player, hand, stack, new BlockHitResult(pos.getCenter(), reflectedFacingDirection, pos, false));
+			final InteractionResult result = this.useOn(context);
+			if (result.consumesAction()) return InteractionResult.SUCCESS;
 		}
+
 		return super.use(level, player, hand);
 	}
 
-	public boolean checkIfPlayerCanPlaceBlock(@NotNull Player player, ItemStack itemStack, Level level, BlockPos pos) {
+	public boolean checkIfPlayerCanPlaceBlock(Player player, ItemStack stack, Level level, BlockPos pos) {
 		if (player.isSpectator()) return false;
-		if (!player.getAbilities().mayBuild && !itemStack.canPlaceOnBlockInAdventureMode(new BlockInWorld(level, pos, false))) return false;
+		if (!player.getAbilities().mayBuild && !stack.canPlaceOnBlockInAdventureMode(new BlockInWorld(level, pos, false))) return false;
 		return true;
+	}
+
+	public static boolean checkIfPlayerCanPlaceBlock(ItemStack stack, Player player, Level level, BlockPos pos) {
+		if (!(stack.getItem() instanceof PlaceInAirBlockItem placeInAirBlockItem)) return false;
+		return placeInAirBlockItem.checkIfPlayerCanPlaceBlock(player, stack, level, pos);
+	}
+
+	public static boolean checkIfPlayerCanPlaceBlock(Player player, Level level, BlockPos pos) {
+		return checkIfPlayerCanPlaceBlock(player.getMainHandItem(), player, level, pos) ||checkIfPlayerCanPlaceBlock(player.getOffhandItem(), player, level, pos);
 	}
 }

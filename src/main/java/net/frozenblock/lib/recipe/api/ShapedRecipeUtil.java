@@ -17,11 +17,12 @@
 
 package net.frozenblock.lib.recipe.api;
 
+import lombok.experimental.UtilityClass;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 
+@UtilityClass
 public final class ShapedRecipeUtil {
-	private ShapedRecipeUtil() {}
 
 	public static ShapedRecipeBuilder withResultPatch(ShapedRecipeBuilder builder, DataComponentPatch patch) {
 		return ((ShapedRecipeBuilderExtension) builder).frozenLib$patch(patch);

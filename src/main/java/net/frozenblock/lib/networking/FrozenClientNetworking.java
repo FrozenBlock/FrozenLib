@@ -123,9 +123,7 @@ public final class FrozenClientNetworking {
 			ConfigSyncPacket.receive(packet, null)
 		);
 		ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
-			for (Config<?> config : ConfigRegistry.getAllConfigs()) {
-				ConfigSyncModification.clearSyncData(config);
-			}
+			for (Config<?> config : ConfigRegistry.getAllConfigs()) ConfigSyncModification.clearSyncData(config);
 		}));
 
 		// DEBUG
@@ -135,7 +133,7 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static void receiveLocalPlayerSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(LocalPlayerSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			LocalPlayer player = ctx.player();
+			final LocalPlayer player = ctx.player();
 			Minecraft.getInstance().getSoundManager().play(
 				new EntityBoundSoundInstance(
 					packet.sound().value(),
@@ -152,8 +150,8 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static void receiveLocalSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(LocalSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = ctx.client().level;
-			Vec3 pos = packet.pos();
+			final ClientLevel level = ctx.client().level;
+			final Vec3 pos = packet.pos();
 			level.playLocalSound(pos.x, pos.y, pos.z, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), packet.distanceDelay());
 		});
 	}
@@ -161,7 +159,7 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static void receiveRelativeMovingSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(RelativeMovingSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			LocalPlayer player = ctx.player();
+			final LocalPlayer player = ctx.player();
 			if (player == null) return;
 			ctx.client().getSoundManager().play(
 				new RelativeMovingSoundInstance(
@@ -180,31 +178,32 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static <T extends Entity> void receiveStartingMovingRestrictionSoundLoopPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(StartingMovingRestrictionSoundLoopPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = ctx.client().level;
-			T entity = (T) level.getEntity(packet.id());
-			if (entity != null) {
-				SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
-				Minecraft.getInstance().getSoundManager().play(new RestrictedStartingSound<>(
-					entity, packet.startingSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(),
-					new RestrictedMovingSoundLoop<>(
-						entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()
-					)
-				));
-			}
+			final ClientLevel level = ctx.client().level;
+			final T entity = (T) level.getEntity(packet.id());
+			if (entity == null) return;
+
+			final SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
+			Minecraft.getInstance().getSoundManager().play(new RestrictedStartingSound<>(
+				entity, packet.startingSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(),
+				new RestrictedMovingSoundLoop<>(
+					entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()
+				)
+			));
 		});
 	}
 
 	@ApiStatus.Internal
 	private static <T extends Entity> void receiveMovingRestrictionSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(MovingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = ctx.client().level;
-			T entity = (T) level.getEntity(packet.id());
-			if (entity != null) {
-				SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
-				if (packet.looping())
-					Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
-				else
-					Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSound<>(entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
+			final ClientLevel level = ctx.client().level;
+			final T entity = (T) level.getEntity(packet.id());
+			if (entity == null) return;
+
+			final SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
+			if (packet.looping()) {
+				Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSoundLoop<>(entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
+			} else {
+				Minecraft.getInstance().getSoundManager().play(new RestrictedMovingSound<>(entity, packet.sound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath()));
 			}
 		});
 	}
@@ -219,18 +218,18 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static <T extends Entity> void receiveMovingFadingDistanceSwitchingSoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(MovingFadingDistanceSwitchingRestrictionSoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			SoundManager soundManager = ctx.client().getSoundManager();
-			ClientLevel level = ctx.client().level;
-			T entity = (T) level.getEntity(packet.id());
-			if (entity != null) {
-				SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
-				if (packet.looping()) {
-					soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.closeSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), false));
-					soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.farSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), true));
-				} else {
-					soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.closeSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), false));
-					soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.farSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), true));
-				}
+			final SoundManager soundManager = ctx.client().getSoundManager();
+			final ClientLevel level = ctx.client().level;
+			final T entity = (T) level.getEntity(packet.id());
+			if (entity == null) return;
+
+			final SoundPredicate.LoopPredicate<T> predicate = SoundPredicate.getPredicate(packet.predicateId());
+			if (packet.looping()) {
+				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.closeSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), false));
+				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSoundLoop<>(entity, packet.farSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), true));
+			} else {
+				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.closeSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), false));
+				soundManager.play(new RestrictedMovingFadingDistanceSwitchingSound<>(entity, packet.farSound().value(), packet.category(), packet.volume(), packet.pitch(), predicate, packet.stopOnDeath(), packet.fadeDist(), packet.maxDist(), packet.volume(), true));
 			}
 		});
 	}
@@ -238,21 +237,21 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	public static void onReceiveFlyBySoundPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FlyBySoundPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = (ClientLevel) ctx.player().level();
-			Entity entity = level.getEntity(packet.id());
-			if (entity != null) {
-				FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(packet.pitch(), packet.volume(), packet.category(), packet.sound().value());
-				FlyBySoundHub.addEntity(entity, flyBySound);
-			}
+			final ClientLevel level = (ClientLevel) ctx.player().level();
+			final Entity entity = level.getEntity(packet.id());
+			if (entity == null) return;
+
+			final FlyBySoundHub.FlyBySound flyBySound = new FlyBySoundHub.FlyBySound(packet.pitch(), packet.volume(), packet.category(), packet.sound().value());
+			FlyBySoundHub.addEntity(entity, flyBySound);
 		});
 	}
 
 	@ApiStatus.Internal
 	private static void receiveCooldownChangePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(CooldownChangePacket.PACKET_TYPE, (packet, ctx) -> {
-			LocalPlayer player = ctx.player();
-			Identifier cooldownGroup = packet.cooldownGroup();
-			int additional = packet.additional();
+			final LocalPlayer player = ctx.player();
+			final Identifier cooldownGroup = packet.cooldownGroup();
+			final int additional = packet.additional();
 			((CooldownInterface) player.getCooldowns()).frozenLib$changeCooldown(cooldownGroup, additional);
 		});
 	}
@@ -260,10 +259,10 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static void receiveForcedCooldownPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(ForcedCooldownPacket.PACKET_TYPE, (packet, ctx) -> {
-			LocalPlayer player = ctx.player();
-			Identifier cooldownGroup = packet.cooldownGroup();
-			int startTime = packet.startTime();
-			int endTime = packet.endTime();
+			final LocalPlayer player = ctx.player();
+			final Identifier cooldownGroup = packet.cooldownGroup();
+			final int startTime = packet.startTime();
+			final int endTime = packet.endTime();
 			player.getCooldowns().cooldowns.put(cooldownGroup, new ItemCooldowns.CooldownInstance(startTime, endTime));
 		});
 	}
@@ -271,24 +270,21 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static void receiveCooldownTickCountPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(CooldownTickCountPacket.PACKET_TYPE, (packet, ctx) -> {
-			LocalPlayer player = ctx.player();
-			if (player != null) {
-				player.getCooldowns().tickCount = packet.count();
-			}
+			final LocalPlayer player = ctx.player();
+			if (player != null) player.getCooldowns().tickCount = packet.count();
 		});
 	}
 
 	@ApiStatus.Internal
 	private static void receiveScreenShakePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(ScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
-			float intensity = packet.intensity();
-			int duration = packet.duration();
-			int fallOffStart = packet.falloffStart();
-			Vec3 pos = packet.pos();
-			float maxDistance = packet.maxDistance();
-			int ticks = packet.ticks();
-
-			ClientLevel level = ctx.client().level;
+			final float intensity = packet.intensity();
+			final int duration = packet.duration();
+			final int fallOffStart = packet.falloffStart();
+			final Vec3 pos = packet.pos();
+			final float maxDistance = packet.maxDistance();
+			final int ticks = packet.ticks();
+			final ClientLevel level = ctx.client().level;
             ScreenShaker.addShake(level, intensity, duration, fallOffStart, pos, maxDistance, ticks);
         });
 	}
@@ -296,18 +292,15 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static void receiveScreenShakeFromEntityPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(EntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
-			int id = packet.entityId();
-			float intensity = packet.intensity();
-			int duration = packet.duration();
-			int fallOffStart = packet.falloffStart();
-			float maxDistance = packet.maxDistance();
-			int ticks = packet.ticks();
-
-			ClientLevel level = ctx.client().level;
-            Entity entity = level.getEntity(id);
-            if (entity != null) {
-                ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
-            }
+			final int id = packet.entityId();
+			final float intensity = packet.intensity();
+			final int duration = packet.duration();
+			final int fallOffStart = packet.falloffStart();
+			final float maxDistance = packet.maxDistance();
+			final int ticks = packet.ticks();
+			final ClientLevel level = ctx.client().level;
+			final Entity entity = level.getEntity(id);
+            if (entity != null) ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
 		});
 	}
 
@@ -323,43 +316,34 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static void receiveRemoveScreenShakeFromEntityPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(RemoveEntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
-			int id = packet.entityId();
-
-			ClientLevel level = ctx.client().level;
-            Entity entity = level.getEntity(id);
-            if (entity != null) {
-                ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
-            }
+			final int id = packet.entityId();
+			final ClientLevel level = ctx.client().level;
+			final Entity entity = level.getEntity(id);
+            if (entity != null) ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
 		});
 	}
 
 	@ApiStatus.Internal
 	private static void receiveIconPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(SpottingIconPacket.PACKET_TYPE, (packet, ctx) -> {
-			int id = packet.entityId();
-			Identifier texture = packet.texture();
-			float startFade = packet.startFade();
-			float endFade = packet.endFade();
-			Identifier predicate = packet.restrictionID();
-
-			ClientLevel level = ctx.client().level;
-            Entity entity = level.getEntity(id);
-            if (entity instanceof EntitySpottingIconInterface livingEntity) {
-                livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
-            }
+			final int id = packet.entityId();
+			final Identifier texture = packet.texture();
+			final float startFade = packet.startFade();
+			final float endFade = packet.endFade();
+			final Identifier predicate = packet.restrictionID();
+			final ClientLevel level = ctx.client().level;
+			final  Entity entity = level.getEntity(id);
+            if (entity instanceof EntitySpottingIconInterface livingEntity) livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
 		});
 	}
 
 	@ApiStatus.Internal
 	private static void receiveIconRemovePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(SpottingIconRemovePacket.PACKET_TYPE, (packet, ctx) -> {
-			int id = packet.entityId();
-
-			ClientLevel level = ctx.client().level;
-            Entity entity = level.getEntity(id);
-            if (entity instanceof EntitySpottingIconInterface livingEntity) {
-                livingEntity.getSpottingIconManager().icon = null;
-            }
+			final int id = packet.entityId();
+			final ClientLevel level = ctx.client().level;
+			final Entity entity = level.getEntity(id);
+            if (entity instanceof EntitySpottingIconInterface livingEntity) livingEntity.getSpottingIconManager().icon = null;
 		});
 	}
 
@@ -377,31 +361,31 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static void receiveWindDisturbancePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(WindDisturbancePacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientLevel level = ctx.client().level;
+			final ClientLevel level = ctx.client().level;
 			if (level == null) return;
 
-			long posOrID = packet.posOrID();
-			Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(packet.id());
-			if (disturbanceLogic.isPresent()) {
-				WindDisturbanceLogic.SourceType sourceType = packet.disturbanceSourceType();
-				Optional source = Optional.empty();
-				if (sourceType == WindDisturbanceLogic.SourceType.ENTITY) {
-					source = Optional.ofNullable(level.getEntity((int) posOrID));
-				} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK_ENTITY) {
-					source = Optional.ofNullable(level.getBlockEntity(BlockPos.of(posOrID)));
-				} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK) {
-					source = Optional.of(level.getBlockState(BlockPos.of(posOrID)).getBlock());
-				}
+			final long posOrID = packet.posOrID();
+			final Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(packet.id());
+			if (disturbanceLogic.isEmpty()) return;
 
-				ClientWindManager.addWindDisturbance(
-					new WindDisturbance(
-						source,
-						packet.origin(),
-						packet.affectedArea(),
-						disturbanceLogic.get()
-					)
-				);
+			final WindDisturbanceLogic.SourceType sourceType = packet.disturbanceSourceType();
+			Optional source = Optional.empty();
+			if (sourceType == WindDisturbanceLogic.SourceType.ENTITY) {
+				source = Optional.ofNullable(level.getEntity((int) posOrID));
+			} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK_ENTITY) {
+				source = Optional.ofNullable(level.getBlockEntity(BlockPos.of(posOrID)));
+			} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK) {
+				source = Optional.of(level.getBlockState(BlockPos.of(posOrID)).getBlock());
 			}
+
+			ClientWindManager.addWindDisturbance(
+				new WindDisturbance(
+					source,
+					packet.origin(),
+					packet.affectedArea(),
+					disturbanceLogic.get()
+				)
+			);
 		});
 	}
 
@@ -417,15 +401,15 @@ public final class FrozenClientNetworking {
 			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT) return;
 
 			if (packet.request()) {
-				String requestPath = packet.transferPath();
-				String fileName = packet.fileName();
+				final String requestPath = packet.transferPath();
+				final String fileName = packet.fileName();
 				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, null)) return;
 
-				Path requestedPath = ctx.client().gameDirectory.toPath().resolve(requestPath);
-				File file = requestedPath.resolve(fileName).toFile();
-				File localFile = requestedPath.resolve(ServerTextureDownloader.LOCAL_TEXTURE_SOURCE).resolve(fileName).toFile();
+				final Path requestedPath = ctx.client().gameDirectory.toPath().resolve(requestPath);
+				final File file = requestedPath.resolve(fileName).toFile();
+				final File localFile = requestedPath.resolve(ServerTextureDownloader.LOCAL_TEXTURE_SOURCE).resolve(fileName).toFile();
 
-				File sendingFile = file.exists() ? file : localFile;
+				final File sendingFile = file.exists() ? file : localFile;
 				try {
 					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, sendingFile)) {
 						ClientPlayNetworking.send(fileTransferPacket);
@@ -434,19 +418,17 @@ public final class FrozenClientNetworking {
 					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
 				}
 			} else {
-				String destPath = packet.transferPath();
-				String fileName = packet.fileName();
+				final String destPath = packet.transferPath();
+				final String fileName = packet.fileName();
 				if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, null)) return;
 
 				try {
-					Path path = ctx.client().gameDirectory.toPath().resolve(destPath).resolve(fileName);
+					final Path path = ctx.client().gameDirectory.toPath().resolve(destPath).resolve(fileName);
 					if (FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), true)) {
-						Identifier identifier = ServerTextureDownloader.WAITING_TEXTURES.get(
+						final Identifier identifier = ServerTextureDownloader.WAITING_TEXTURES.get(
 							ServerTextureDownloader.makePathFromRootAndDest(packet.transferPath(), packet.fileName())
 						);
-						if (identifier != null) {
-							ServerTextureDownloader.downloadAndRegisterServerTexture(identifier, packet.transferPath(), packet.fileName());
-						}
+						if (identifier != null) ServerTextureDownloader.downloadAndRegisterServerTexture(identifier, packet.transferPath(), packet.fileName());
 					}
 				} catch (IOException ignored) {
 					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
@@ -457,7 +439,7 @@ public final class FrozenClientNetworking {
 
 	private static void receiveCapePacket() {
 		ClientPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE, (packet, ctx) -> {
-			UUID uuid = packet.getPlayerUUID();
+			final UUID uuid = packet.getPlayerUUID();
 			if (packet.isEnabled()) {
 				ClientCapeData.setCapeForUUID(uuid, packet.getCapeId());
 			} else {
@@ -481,17 +463,17 @@ public final class FrozenClientNetworking {
 	}
 
 	public static boolean notConnected() {
-		Minecraft minecraft = Minecraft.getInstance();
-		ClientPacketListener listener = minecraft.getConnection();
+		final Minecraft minecraft = Minecraft.getInstance();
+		final ClientPacketListener listener = minecraft.getConnection();
 		if (listener == null) return true;
 
-		LocalPlayer player = Minecraft.getInstance().player;
+		final LocalPlayer player = Minecraft.getInstance().player;
 		return player == null;
 	}
 
 	public static boolean connectedToLan() {
 		if (notConnected()) return false;
-		ServerData serverData = Minecraft.getInstance().getCurrentServer();
+		final ServerData serverData = Minecraft.getInstance().getCurrentServer();
 		if (serverData == null) return false;
 		return serverData.isLan();
 	}

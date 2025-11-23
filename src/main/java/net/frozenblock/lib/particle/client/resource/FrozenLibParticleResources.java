@@ -27,7 +27,7 @@ import net.frozenblock.lib.particle.client.WindParticle;
 public class FrozenLibParticleResources {
 
 	public static void init() {
-		ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
+		final ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
 
 		particleRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Factory::new);
 		particleRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Factory::new);

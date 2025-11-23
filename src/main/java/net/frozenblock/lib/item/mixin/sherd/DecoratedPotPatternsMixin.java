@@ -43,8 +43,7 @@ public class DecoratedPotPatternsMixin {
 			.forEach(entrypoint -> {
 				try {
 					entrypoint.getEntrypoint().bootstrap(registry);
-				} catch (Throwable ignored) {
-				}
+				} catch (Throwable ignored) {}
 			});
 	}
 }

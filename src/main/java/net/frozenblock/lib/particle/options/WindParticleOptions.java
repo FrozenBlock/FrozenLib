@@ -31,68 +31,38 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
-public class WindParticleOptions implements ParticleOptions {
+public record WindParticleOptions(int lifespan, Vec3 velocity, ParticleLength length) implements ParticleOptions {
 	public static final MapCodec<WindParticleOptions> CODEC = RecordCodecBuilder.mapCodec(instance ->
 		instance.group(
-			Codec.INT.fieldOf("lifespan").forGetter(WindParticleOptions::getLifespan),
-			Vec3.CODEC.fieldOf("velocity").forGetter(WindParticleOptions::getVelocity),
+			Codec.INT.fieldOf("lifespan").forGetter(WindParticleOptions::lifespan),
+			Vec3.CODEC.fieldOf("velocity").forGetter(WindParticleOptions::velocity),
 			ParticleLength.CODEC.fieldOf("length").forGetter(WindParticleOptions::length)
 		).apply(instance, WindParticleOptions::new)
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, WindParticleOptions> STREAM_CODEC = StreamCodec.composite(
-		ByteBufCodecs.VAR_INT, WindParticleOptions::getLifespan,
-		FrozenByteBufCodecs.VEC3, WindParticleOptions::getVelocity,
+		ByteBufCodecs.VAR_INT, WindParticleOptions::lifespan,
+		FrozenByteBufCodecs.VEC3, WindParticleOptions::velocity,
 		ParticleLength.STREAM_CODEC, WindParticleOptions::length,
 		WindParticleOptions::new
 	);
 
-	private final int lifespan;
-	private final Vec3 velocity;
-	private final ParticleLength length;
-
-	public WindParticleOptions(int lifespan, Vec3 velocity, ParticleLength length) {
-		this.lifespan = lifespan;
-		this.velocity = velocity;
-		this.length = length;
-	}
-
 	public WindParticleOptions(int lifespan, Vec3 velocity) {
-		this.lifespan = lifespan;
-		this.velocity = velocity;
-		this.length = ParticleLength.SMALL;
+		this(lifespan, velocity, ParticleLength.SMALL);
 	}
 
 	public WindParticleOptions(int lifespan, double xVel, double yVel, double zVel, ParticleLength length) {
-		this.lifespan = lifespan;
-		this.velocity = new Vec3(xVel, yVel, zVel);
-		this.length = length;
+		this(lifespan, new Vec3(xVel, yVel, zVel), length);
 	}
 
 	public WindParticleOptions(int lifespan, double xVel, double yVel, double zVel) {
-		this.lifespan = lifespan;
-		this.velocity = new Vec3(xVel, yVel, zVel);
-		this.length = ParticleLength.SMALL;
+		this(lifespan, new Vec3(xVel, yVel, zVel), ParticleLength.SMALL);
 	}
 
-	@NotNull
 	@Override
 	public ParticleType<?> getType() {
 		if (this.length == ParticleLength.MEDIUM) return FrozenLibParticleTypes.WIND_MEDIUM;
 		return FrozenLibParticleTypes.WIND_SMALL;
-	}
-
-	public int getLifespan() {
-		return this.lifespan;
-	}
-
-	public Vec3 getVelocity() {
-		return this.velocity;
-	}
-
-	public ParticleLength length() {
-		return this.length;
 	}
 
 	public enum ParticleLength implements StringRepresentable {
@@ -101,12 +71,12 @@ public class WindParticleOptions implements ParticleOptions {
 		public static final Codec<ParticleLength> CODEC = StringRepresentable.fromEnum(ParticleLength::values);
 		public static final StreamCodec<ByteBuf, ParticleLength> STREAM_CODEC = new StreamCodec<>() {
 			@Override
-			public @NotNull ParticleLength decode(@NotNull ByteBuf byteBuf) {
+			public ParticleLength decode(ByteBuf byteBuf) {
 				return ParticleLength.valueOf(ByteBufCodecs.STRING_UTF8.decode(byteBuf));
 			}
 
 			@Override
-			public void encode(@NotNull ByteBuf byteBuf, @NotNull ParticleLength particleLength) {
+			public void encode(ByteBuf byteBuf, ParticleLength particleLength) {
 				ByteBufCodecs.STRING_UTF8.encode(byteBuf, particleLength.name());
 			}
 		};
@@ -137,7 +107,7 @@ public class WindParticleOptions implements ParticleOptions {
 
 		@Contract(pure = true)
 		@Override
-		public @NotNull String getSerializedName() {
+		public String getSerializedName() {
 			return this.name;
 		}
 	}

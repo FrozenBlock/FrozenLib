@@ -31,6 +31,7 @@ import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(ServerItemCooldowns.class)
 public class ServerItemCooldownsMixin extends ItemCooldowns implements CooldownInterface {
+
     @Shadow
 	@Final
     private ServerPlayer player;

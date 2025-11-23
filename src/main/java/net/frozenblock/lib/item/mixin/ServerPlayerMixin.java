@@ -58,12 +58,12 @@ public class ServerPlayerMixin {
 	private CompoundTag frozenLib$savedCooldownTag;
 
 	@Inject(method = "readAdditionalSaveData", at = @At(value = "TAIL"))
-	public void frozenLib$readAdditionalSaveData(ValueInput input, CallbackInfo ci) {
+	public void frozenLib$readAdditionalSaveData(ValueInput input, CallbackInfo info) {
 		this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(input));
 	}
 
 	@Inject(method = "addAdditionalSaveData", at = @At(value = "TAIL"))
-	public void frozenLib$addAdditionalSaveData(ValueOutput output, CallbackInfo ci) {
+	public void frozenLib$addAdditionalSaveData(ValueOutput output, CallbackInfo info) {
 		SaveableItemCooldowns.saveCooldowns(output, ServerPlayer.class.cast(this));
 	}
 

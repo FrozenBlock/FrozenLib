@@ -71,24 +71,20 @@ public class MusicManagerMixin {
 
 	@Unique
 	private void frozenLib$updateTargetPitchAndShift(float targetPitch) {
-		if (this.currentMusic != null && this.frozenLib$currentPitch != targetPitch) {
-			if (this.frozenLib$currentPitch < targetPitch) {
-				this.frozenLib$currentPitch = this.frozenLib$currentPitch + Mth.clamp(this.frozenLib$currentPitch, 5.0E-4F, 0.005F);
-				if (this.frozenLib$currentPitch > targetPitch) {
-					this.frozenLib$currentPitch = targetPitch;
-				}
-			} else {
-				this.frozenLib$currentPitch = 0.03F * targetPitch + 0.97F * this.frozenLib$currentPitch;
-				if (Math.abs(this.frozenLib$currentPitch - targetPitch) < 1.0E-4F || this.frozenLib$currentPitch < targetPitch) {
-					this.frozenLib$currentPitch = targetPitch;
-				}
-			}
+		if (this.currentMusic == null || this.frozenLib$currentPitch == targetPitch) return;
 
-			this.frozenLib$currentPitch = Mth.clamp(this.frozenLib$currentPitch, 0F, 5F);
-			if (this.frozenLib$currentPitch > 1.0E-4F) {
-				if (this.minecraft.getSoundManager().soundEngine instanceof SoundEngineInterface soundEngineInterface) {
-					soundEngineInterface.frozenLib$setPitch(this.currentMusic, this.frozenLib$currentPitch);
-				}
+		if (this.frozenLib$currentPitch < targetPitch) {
+			this.frozenLib$currentPitch = this.frozenLib$currentPitch + Mth.clamp(this.frozenLib$currentPitch, 5.0E-4F, 0.005F);
+			if (this.frozenLib$currentPitch > targetPitch) this.frozenLib$currentPitch = targetPitch;
+		} else {
+			this.frozenLib$currentPitch = 0.03F * targetPitch + 0.97F * this.frozenLib$currentPitch;
+			if (Math.abs(this.frozenLib$currentPitch - targetPitch) < 1.0E-4F || this.frozenLib$currentPitch < targetPitch) this.frozenLib$currentPitch = targetPitch;
+		}
+
+		this.frozenLib$currentPitch = Mth.clamp(this.frozenLib$currentPitch, 0F, 5F);
+		if (this.frozenLib$currentPitch > 1.0E-4F) {
+			if (this.minecraft.getSoundManager().soundEngine instanceof SoundEngineInterface soundEngineInterface) {
+				soundEngineInterface.frozenLib$setPitch(this.currentMusic, this.frozenLib$currentPitch);
 			}
 		}
 	}

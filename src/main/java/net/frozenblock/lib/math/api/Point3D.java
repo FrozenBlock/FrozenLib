@@ -78,11 +78,9 @@ public abstract class Point3D implements Cloneable {
 	}
 
 	public static class Double extends Point3D implements Serializable {
-
 		public double x;
 		public double y;
 		public double z;
-
 
 		public Double() {
 		}
@@ -167,7 +165,6 @@ public abstract class Point3D implements Cloneable {
 		return Math.sqrt(px * px + py * py + pz * pz);
 	}
 
-
 	public double distance(Point3D pt) {
 		double px = pt.getX() - this.getX();
 		double py = pt.getY() - this.getY();
@@ -175,7 +172,7 @@ public abstract class Point3D implements Cloneable {
 		return Math.sqrt(px * px + py * py + pz * pz);
 	}
 
-
+	@Override
 	public Object clone() {
 		try {
 			return super.clone();
@@ -185,18 +182,16 @@ public abstract class Point3D implements Cloneable {
 		}
 	}
 
-
+	@Override
 	public int hashCode() {
 		long bits = java.lang.Double.doubleToLongBits(getX());
 		bits ^= java.lang.Double.doubleToLongBits(getY()) * 31;
 		return (((int) bits) ^ ((int) (bits >> 32)));
 	}
 
-
+	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof Point3D p2d) {
-			return (getX() == p2d.getX()) && (getY() == p2d.getY()) && (getZ() == p2d.getZ());
-		}
+		if (obj instanceof Point3D p3d) return (getX() == p3d.getX()) && (getY() == p3d.getY()) && (getZ() == p3d.getZ());
 		return super.equals(obj);
 	}
 }

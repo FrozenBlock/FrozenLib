@@ -29,7 +29,6 @@ import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Adds easy-to-use noise sampling and random number generators
@@ -38,22 +37,22 @@ import org.jetbrains.annotations.NotNull;
 public class EasyNoiseSampler {
 
 	@Contract("_ -> new")
-	public static @NotNull ImprovedNoise createCheckedNoise(long seed) {
+	public static ImprovedNoise createCheckedNoise(long seed) {
 		return new ImprovedNoise(new LegacyRandomSource(seed));
 	}
 
 	@Contract("_ -> new")
-	public static @NotNull ImprovedNoise createLegacyThreadSafeNoise(long seed) {
+	public static ImprovedNoise createLegacyThreadSafeNoise(long seed) {
 		return new ImprovedNoise(new ThreadSafeLegacyRandomSource(seed));
 	}
 
 	@Contract("_ -> new")
-	public static @NotNull ImprovedNoise createLocalNoise(long seed) {
+	public static ImprovedNoise createLocalNoise(long seed) {
 		return new ImprovedNoise(new SingleThreadedRandomSource(seed));
 	}
 
 	@Contract("_ -> new")
-	public static @NotNull ImprovedNoise createXoroNoise(long seed) {
+	public static ImprovedNoise createXoroNoise(long seed) {
 		return new ImprovedNoise(new XoroshiroRandomSource(seed));
 	}
 
@@ -97,7 +96,7 @@ public class EasyNoiseSampler {
 		}
 
 		@Override
-		public @NotNull String getSerializedName() {
+		public String getSerializedName() {
 			return this.serializationKey;
 		}
 	}

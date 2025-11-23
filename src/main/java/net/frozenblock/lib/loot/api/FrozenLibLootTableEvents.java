@@ -33,11 +33,8 @@ public class FrozenLibLootTableEvents {
 	 */
 	public static final Event<ItemGeneratedInContainer> ON_ITEM_GENERATED_IN_CONTAINER = FrozenEvents.createEnvironmentEvent(
 		ItemGeneratedInContainer.class,
-		(callbacks) ->
-			(server, player) -> {
-			for (var callback : callbacks) {
-				callback.onItemGeneratedInContainer(server, player);
-			}
+		callbacks -> (server, player) -> {
+			for (var callback : callbacks) callback.onItemGeneratedInContainer(server, player);
 		});
 
 	/**
@@ -48,8 +45,8 @@ public class FrozenLibLootTableEvents {
 		/**
 		 * Triggers the event when an item is generated in a {@link Container}.
 		 * @param container The {@link Container} the {@link net.minecraft.world.level.storage.loot.LootTable} is placing an item into.
-		 * @param itemStack The {@link ItemStack} being placed into the {@link Container}.
+		 * @param stack The {@link ItemStack} being placed into the {@link Container}.
 		 */
-		void onItemGeneratedInContainer(Container container, ItemStack itemStack);
+		void onItemGeneratedInContainer(Container container, ItemStack stack);
 	}
 }

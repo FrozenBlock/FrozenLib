@@ -23,5 +23,5 @@ import net.minecraft.client.resources.sounds.SoundInstance;
 
 @Environment(EnvType.CLIENT)
 public interface SoundEngineInterface {
-	void frozenLib$setPitch(SoundInstance soundInstance, float pitch);
+	void frozenLib$setPitch(SoundInstance sound, float pitch);
 }

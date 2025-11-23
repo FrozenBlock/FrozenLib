@@ -43,7 +43,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class WindParticle extends SingleQuadParticle {
@@ -57,9 +56,9 @@ public class WindParticle extends SingleQuadParticle {
 	private boolean chosenSide;
 
 	WindParticle(
-		@NotNull ClientLevel level,
-		@NotNull SpriteSet spriteSet,
-		@NotNull WindParticleOptions.ParticleLength particleLength,
+		ClientLevel level,
+		SpriteSet spriteSet,
+		WindParticleOptions.ParticleLength particleLength,
 		double x, double y, double z,
 		double xd, double yd, double zd
 	) {
@@ -84,22 +83,20 @@ public class WindParticle extends SingleQuadParticle {
 		this.rotationalHelper.setPrevRotationFromCurrent();
 
 		if (!this.shouldDissipate) {
-			double multXZ = 0.007D;
-			double multY = 0.0015D * 0.695;
-			Vec3 pos = new Vec3(this.x, this.y, this.z);
-			Vec3 wind = ClientWindManager.getWindMovement(this.level, pos, this.windMovementScale, 7D, 5D);
-			this.xd += wind.x() * multXZ;
-			this.yd += wind.y() * multY;
-			this.zd += wind.z() * multXZ;
+			final double horizontalScale = 0.007D;
+			final double verticalScale = 0.0015D * 0.695;
+			final Vec3 pos = new Vec3(this.x, this.y, this.z);
+			final Vec3 wind = ClientWindManager.getWindMovement(this.level, pos, this.windMovementScale, 7D, 5D);
+			this.xd += wind.x() * horizontalScale;
+			this.yd += wind.y() * verticalScale;
+			this.zd += wind.z() * horizontalScale;
 
 			this.setRotationFromMovement(this.rotationChangeAmount);
 		} else {
 			this.friction = 0.2F;
 		}
 
-        if (this.shouldDissipate && this.age > 7 && this.age < this.ageBeforeDissipating) {
-			this.age = this.ageBeforeDissipating;
-		}
+        if (this.shouldDissipate && this.age > 7 && this.age < this.ageBeforeDissipating) this.age = this.ageBeforeDissipating;
 
 		if (this.age >= this.ageBeforeDissipating && !this.chosenSide) {
 			this.chosenSide = true;
@@ -122,12 +119,12 @@ public class WindParticle extends SingleQuadParticle {
 		final double f = z;
 
 		if ((x != 0D || y != 0D || z != 0D) && x * x + y * y + z * z < Mth.square(100D)) {
-			Vec3 vec3 = this.collideBoundingBox(new Vec3(x, y, z));
+			final Vec3 vec3 = this.collideBoundingBox(new Vec3(x, y, z));
 			x = vec3.x;
 			y = vec3.y;
 			z = vec3.z;
 		}
-		Vec3 vec3 = new Vec3(d, e, f);
+		final Vec3 vec3 = new Vec3(d, e, f);
 		final boolean canDissipate = this.age > 7;
 
 		if (canDissipate && vec3.length() < 0.0065D) this.shouldDissipate = true;
@@ -153,14 +150,14 @@ public class WindParticle extends SingleQuadParticle {
 		}
 	}
 
-	private @NotNull Vec3 collideBoundingBox(Vec3 vec3) {
+	private Vec3 collideBoundingBox(Vec3 vec3) {
 		final AABB box = this.getBoundingBox();
 		final List<VoxelShape> shapes = ImmutableList.copyOf(this.getBlockCollisions(box.expandTowards(vec3)));
 		return Entity.collideWithShapes(vec3, box, shapes);
 	}
 
 	@Contract(pure = true)
-	private @NotNull Iterable<VoxelShape> getBlockCollisions(AABB box) {
+	private Iterable<VoxelShape> getBlockCollisions(AABB box) {
 		return () -> new BlockCollisions<>(
 			this.level,
 			CollisionContext.empty(),
@@ -174,14 +171,14 @@ public class WindParticle extends SingleQuadParticle {
 	}
 
 	@Override
-	public void setSpriteFromAge(@NotNull SpriteSet spriteSet) {
+	public void setSpriteFromAge(SpriteSet spriteSet) {
 		if (this.removed) return;
 		final int frame = this.age < 8 ? this.age : (this.age < this.ageBeforeDissipating ? 8 : this.age - (this.ageBeforeDissipating) + 9);
 		this.setSprite(spriteSet.get(Math.min(frame, 20), 20));
 	}
 
 	@Override
-	public void extract(@NotNull QuadParticleRenderState renderState, @NotNull Camera camera, float partialTicks) {
+	public void extract(QuadParticleRenderState renderState, Camera camera, float partialTicks) {
 		this.rotationalHelper.extract(
 			renderState,
 			camera,
@@ -204,25 +201,22 @@ public class WindParticle extends SingleQuadParticle {
 	}
 
 	@Override
-	protected @NotNull Layer getLayer() {
+	protected Layer getLayer() {
 		return Layer.TRANSLUCENT;
 	}
 
-	@Environment(EnvType.CLIENT)
-	public record Factory(@NotNull SpriteSet spriteProvider) implements ParticleProvider<WindParticleOptions> {
-
+	public record Factory(SpriteSet spriteSet) implements ParticleProvider<WindParticleOptions> {
 		@Override
-		@NotNull
 		public Particle createParticle(
-			@NotNull WindParticleOptions options,
-			@NotNull ClientLevel level,
+			WindParticleOptions options,
+			ClientLevel level,
 			double x, double y, double z,
 			double xSpeed, double ySpeed, double zSpeed,
-			@NotNull RandomSource random
+			RandomSource random
 		) {
-			Vec3 velocity = options.getVelocity();
-			WindParticle windParticle = new WindParticle(level, this.spriteProvider, options.length(), x, y, z, 0D, 0D, 0D);
-			windParticle.ageBeforeDissipating = options.getLifespan();
+			final Vec3 velocity = options.velocity();
+			final WindParticle windParticle = new WindParticle(level, this.spriteSet, options.length(), x, y, z, 0D, 0D, 0D);
+			windParticle.ageBeforeDissipating = options.lifespan();
 			windParticle.lifetime += windParticle.ageBeforeDissipating;
 
 			windParticle.xd = velocity.x;

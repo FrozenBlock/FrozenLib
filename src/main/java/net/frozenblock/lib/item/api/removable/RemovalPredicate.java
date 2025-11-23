@@ -23,5 +23,5 @@ import net.minecraft.world.level.Level;
 
 @FunctionalInterface
 public interface RemovalPredicate {
-	boolean shouldRemove(Level level, Entity entity, EquipmentSlot equipmentSlot);
+	boolean shouldRemove(Level level, Entity entity, EquipmentSlot slot);
 }

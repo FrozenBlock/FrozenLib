@@ -25,7 +25,6 @@ import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
-import org.jetbrains.annotations.NotNull;
 
 @UnstableApi
 public class MutableLootItem {
@@ -51,7 +50,7 @@ public class MutableLootItem {
 		this.functions = functions;
 	}
 
-	public MutableLootItem(@NotNull ItemLike item, int weight, int quality, List<LootItemCondition> conditions, List<LootItemFunction> functions) {
+	public MutableLootItem(ItemLike item, int weight, int quality, List<LootItemCondition> conditions, List<LootItemFunction> functions) {
 		this.item = item.asItem().builtInRegistryHolder();
 		this.conditions = conditions;
 		this.weight = weight;
@@ -91,7 +90,7 @@ public class MutableLootItem {
 		this.item = item;
 	}
 
-	public void setItem(@NotNull ItemLike item) {
+	public void setItem(ItemLike item) {
 		this.item = item.asItem().builtInRegistryHolder();
 	}
 }

@@ -28,7 +28,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -60,30 +59,18 @@ public class LevelRendererMixin {
 	)
 	public HitResult.Type frozenLib$useBlockTypeIfPlaceableInAir(
 		HitResult.Type original,
-		@Local BlockHitResult blockHitResult,
+		@Local BlockHitResult hitResult,
 		@Share("frozenLib$canPlaceInAir") LocalBooleanRef canPlaceInAir
 	) {
-		if (this.minecraft.player != null && original == HitResult.Type.MISS) {
-			final BlockPos pos = blockHitResult.getBlockPos();
+		canPlaceInAir.set(false);
+		if (this.minecraft.player == null || original != HitResult.Type.MISS) return original;
 
-			final ItemStack mainHandItem = this.minecraft.player.getMainHandItem();
-			if (mainHandItem.getItem() instanceof PlaceInAirBlockItem placeInAirBlockItem) {
-				if (placeInAirBlockItem.checkIfPlayerCanPlaceBlock(this.minecraft.player, mainHandItem, this.level, pos)) {
-					canPlaceInAir.set(true);
-					return HitResult.Type.BLOCK;
-				}
-			}
-
-			final ItemStack offHandItem = this.minecraft.player.getOffhandItem();
-			if (offHandItem.getItem() instanceof PlaceInAirBlockItem placeInAirBlockItem) {
-				if (placeInAirBlockItem.checkIfPlayerCanPlaceBlock(this.minecraft.player, offHandItem, this.level, pos)) {
-					canPlaceInAir.set(true);
-					return HitResult.Type.BLOCK;
-				}
-			}
+		final BlockPos pos = hitResult.getBlockPos();
+		if (PlaceInAirBlockItem.checkIfPlayerCanPlaceBlock(this.minecraft.player, this.level, pos)) {
+			canPlaceInAir.set(true);
+			return HitResult.Type.BLOCK;
 		}
 
-		canPlaceInAir.set(false);
 		return original;
 	}
 
@@ -110,8 +97,8 @@ public class LevelRendererMixin {
 	)
 	private boolean frozenLib$fixAirCrash(
 		boolean original,
-		@Share("frozenLib$canPlaceInAir") LocalBooleanRef canPlaceInAir,
-		@Local BlockState state
+		@Local BlockState state,
+		@Share("frozenLib$canPlaceInAir") LocalBooleanRef canPlaceInAir
 	) {
 		if (state.isAir() && canPlaceInAir.get()) return false;
 		return original;

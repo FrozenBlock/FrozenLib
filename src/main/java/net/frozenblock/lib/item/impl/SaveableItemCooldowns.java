@@ -34,38 +34,34 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import org.jetbrains.annotations.NotNull;
 
 public class SaveableItemCooldowns {
 
-	@NotNull
-	public static List<SaveableCooldownInstance> makeSaveableCooldownInstanceList(@NotNull ServerPlayer player) {
+	public static List<SaveableCooldownInstance> makeSaveableCooldownInstanceList(ServerPlayer player) {
 		final ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		final int tickCount = player.getCooldowns().tickCount;
 		player.getCooldowns().cooldowns.forEach((cooldownGroup, cooldownInstance) -> {
 			final Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(cooldownGroup);
 			final boolean alwaysSave = optionalItem.isPresent() && optionalItem.get().builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS);
-			if (alwaysSave || FrozenLibConfig.get().saveItemCooldowns) {
-				saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(cooldownGroup, cooldownInstance, tickCount));
-			}
+			if (!alwaysSave && !FrozenLibConfig.get().saveItemCooldowns) return;
+			saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(cooldownGroup, cooldownInstance, tickCount));
 		});
 		return saveableCooldownInstances;
 	}
 
-	public static void saveCooldowns(@NotNull ValueOutput output, @NotNull ServerPlayer player) {
+	public static void saveCooldowns(ValueOutput output, ServerPlayer player) {
 		final ValueOutput.TypedOutputList<SaveableCooldownInstance> list = output.list("FrozenLibSavedItemCooldowns", SaveableCooldownInstance.CODEC);
 		for (SaveableCooldownInstance cooldown : makeSaveableCooldownInstanceList(player)) list.add(cooldown);
 	}
 
-	@NotNull
-	public static List<SaveableCooldownInstance> readCooldowns(@NotNull ValueInput input) {
+	public static List<SaveableCooldownInstance> readCooldowns(ValueInput input) {
 		final ArrayList<SaveableCooldownInstance> saveableCooldownInstances = new ArrayList<>();
 		final ValueInput.TypedInputList<SaveableCooldownInstance> list = input.listOrEmpty("FrozenLibSavedItemCooldowns", SaveableCooldownInstance.CODEC);
 		for (SaveableCooldownInstance cooldown : list) saveableCooldownInstances.add(cooldown);
 		return saveableCooldownInstances;
 	}
 
-	public static void setCooldowns(@NotNull List<SaveableCooldownInstance> saveableCooldownInstances, @NotNull ServerPlayer player) {
+	public static void setCooldowns(List<SaveableCooldownInstance> saveableCooldownInstances, ServerPlayer player) {
 		if (player.level().isClientSide()) return;
 
 		final ItemCooldowns itemCooldowns = player.getCooldowns();
@@ -89,11 +85,7 @@ public class SaveableItemCooldowns {
 			Codec.INT.fieldOf("TotalCooldownTime").orElse(0).forGetter(SaveableCooldownInstance::totalCooldownTime)
 		).apply(instance, SaveableCooldownInstance::new));
 
-
-		@NotNull
-		public static SaveableCooldownInstance makeFromCooldownInstance(
-			@NotNull Identifier cooldownGroup, @NotNull ItemCooldowns.CooldownInstance cooldownInstance, int tickCount
-		) {
+		public static SaveableCooldownInstance makeFromCooldownInstance(Identifier cooldownGroup, ItemCooldowns.CooldownInstance cooldownInstance, int tickCount) {
 			int cooldownLeft = cooldownInstance.endTime - tickCount;
 			int totalCooldownTime = cooldownInstance.endTime - cooldownInstance.startTime;
 			return new SaveableCooldownInstance(cooldownGroup, cooldownLeft, totalCooldownTime);

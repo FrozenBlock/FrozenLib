@@ -25,7 +25,6 @@ import java.util.Optional;
 import lombok.experimental.UtilityClass;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class ItemTooltipAdditionAPI {
@@ -52,7 +51,7 @@ public class ItemTooltipAdditionAPI {
 		ADDITIONAL_TOOLTIPS.put(condition, tooltipList);
 	}
 
-	public static @NotNull Optional<List<Component>> getTooltipsForItemStack(ItemStack stack) {
+	public static Optional<List<Component>> getTooltipsForItemStack(ItemStack stack) {
 		final List<Component> tooltips = new ArrayList<>();
 		ADDITIONAL_TOOLTIPS.forEach((condition, tooltipList) -> {
 			if (condition.test(stack)) tooltips.addAll(tooltipList);

@@ -22,21 +22,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.worldgen.structure.api.status.client.ClientStructureStatuses;
 import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatus;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.Music;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import net.minecraft.util.Util;
 
+@UtilityClass
 @Environment(EnvType.CLIENT)
 public class StructureMusicApi {
 	private static final Map<Identifier, List<StructureMusic>> STRUCTURE_TO_MUSIC_MAP = new Object2ObjectLinkedOpenHashMap<>();
@@ -44,13 +45,13 @@ public class StructureMusicApi {
 	/**
 	 * Registers {@link StructureMusic} to be played while in a {@link Structure}.
 	 *
-	 * @param structureLocation The {@link Identifier} of the {@link Structure} to play {@link StructureMusic} in.
+	 * @param id The {@link Identifier} of the {@link Structure} to play {@link StructureMusic} in.
 	 * @param music The {@link StructureMusic} to play.
 	 */
-	public static void registerMusicForStructure(Identifier structureLocation, StructureMusic music) {
-		List<StructureMusic> musicList = STRUCTURE_TO_MUSIC_MAP.computeIfAbsent(structureLocation, location -> new ArrayList<>());
+	public static void registerMusicForStructure(Identifier id, StructureMusic music) {
+		final List<StructureMusic> musicList = STRUCTURE_TO_MUSIC_MAP.computeIfAbsent(id, location -> new ArrayList<>());
 		musicList.add(music);
-		STRUCTURE_TO_MUSIC_MAP.put(structureLocation, musicList);
+		STRUCTURE_TO_MUSIC_MAP.put(id, musicList);
 	}
 
 	/**
@@ -59,12 +60,12 @@ public class StructureMusicApi {
 	 * @param structureKey The {@link ResourceKey} of the {@link Structure} to play {@link StructureMusic} in.
 	 * @param music The {@link StructureMusic} to play.
 	 */
-	public static void registerMusicForStructure(@NotNull ResourceKey<Structure> structureKey, StructureMusic music) {
+	public static void registerMusicForStructure(ResourceKey<Structure> structureKey, StructureMusic music) {
 		registerMusicForStructure(structureKey.identifier(), music);
 	}
 
 	@ApiStatus.Internal
-	private static @NotNull Optional<Music> getCurrentStructureMusic(RandomSource random) {
+	private static Optional<Music> getCurrentStructureMusic(RandomSource random) {
 		final Optional<PlayerStructureStatus> optionalStructureStatus = ClientStructureStatuses.getProminentStructureStatus();
 		if (optionalStructureStatus.isEmpty()) return Optional.empty();
 
@@ -84,7 +85,7 @@ public class StructureMusicApi {
 	}
 
 	@ApiStatus.Internal
-	public static @NotNull Music chooseMusicOrStructureMusic(@Nullable LocalPlayer player, Music music) {
+	public static Music chooseMusicOrStructureMusic(@Nullable LocalPlayer player, Music music) {
 		if (player == null) return music;
 		return getCurrentStructureMusic(player.getRandom()).orElse(music);
 	}

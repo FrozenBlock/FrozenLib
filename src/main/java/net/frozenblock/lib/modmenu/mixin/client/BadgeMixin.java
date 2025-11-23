@@ -66,39 +66,37 @@ public class BadgeMixin {
 		require = 0
 	)
 	private static void frozenLib$addCustomBadges(CallbackInfo info) {
-		var badges = new ArrayList<>(Arrays.asList($VALUES));
-		var last = badges.get(badges.size() - 1);
+		final var badges = new ArrayList<>(Arrays.asList($VALUES));
+		final var last = badges.get(badges.size() - 1);
 		int currentOrdinal = last.ordinal() + 1;
 
-		var frozenblock = frozenLib$newBadge("FROZENBLOCK", currentOrdinal, "FrozenBlock", 0xFF84A0FE, 0xFF000D5B, "frozenblock");
+		final var frozenblock = frozenLib$newBadge("FROZENBLOCK", currentOrdinal, "FrozenBlock", 0xFF84A0FE, 0xFF000D5B, "frozenblock");
 		currentOrdinal += 1;
-		var indev = frozenLib$newBadge("FROZENBLOCK_INDEV", currentOrdinal, "Indev", 0xFF71BC00, 0xFF1C5400, "indev");
+		final var indev = frozenLib$newBadge("FROZENBLOCK_INDEV", currentOrdinal, "Indev", 0xFF71BC00, 0xFF1C5400, "indev");
 		badges.add(frozenblock);
 		badges.add(indev);
 
-		ArrayList<String> internalIds = new ArrayList<>();
-		for (Mod.Badge badge : badges) {
-			internalIds.add(badge.name());
-		}
+		final ArrayList<String> internalIds = new ArrayList<>();
+		for (Mod.Badge badge : badges) internalIds.add(badge.name());
 
-		ArrayList<FrozenModMenuBadge> newBadges = new ArrayList<>();
-		FabricLoader.getInstance().getEntrypointContainers("frozenlib:modmenu_badges", FrozenModMenuEntrypoint.class).forEach(entrypoint -> {
-			try {
-				FrozenModMenuEntrypoint frozenModMenuEntrypoint = entrypoint.getEntrypoint();
-				newBadges.addAll(frozenModMenuEntrypoint.newBadges());
-			} catch (Throwable ignored) {
-
-			}
+		final ArrayList<FrozenModMenuBadge> newBadges = new ArrayList<>();
+		FabricLoader.getInstance()
+			.getEntrypointContainers("frozenlib:modmenu_badges", FrozenModMenuEntrypoint.class)
+			.forEach(entrypoint -> {
+				try {
+					FrozenModMenuEntrypoint frozenModMenuEntrypoint = entrypoint.getEntrypoint();
+					newBadges.addAll(frozenModMenuEntrypoint.newBadges());
+				} catch (Throwable ignored) {}
 		});
 
 		for (FrozenModMenuBadge newBadge : newBadges) {
 			currentOrdinal += 1;
-			StringBuilder internalId = new StringBuilder(newBadge.key.toUpperCase());
+			final StringBuilder internalId = new StringBuilder(newBadge.key().toUpperCase());
 			if (internalIds.contains(internalId.toString())) {
-				FrozenLibLogUtils.logError("ModMenu Badge " + newBadge.key + " already exists!");
+				FrozenLibLogUtils.logError("ModMenu Badge " + newBadge.key() + " already exists!");
 				continue;
 			}
-			var addedBadge = frozenLib$newBadge(internalId.toString(), currentOrdinal, newBadge.translationKey, newBadge.outlineColor, newBadge.fillColor, newBadge.key);
+			final var addedBadge = frozenLib$newBadge(internalId.toString(), currentOrdinal, newBadge.translationKey(), newBadge.outlineColor(), newBadge.fillColor(), newBadge.key());
 			badges.add(addedBadge);
 		}
 

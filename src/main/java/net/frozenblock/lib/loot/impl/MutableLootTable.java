@@ -23,15 +23,14 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import net.fabricmc.fabric.api.loot.v3.LootTableSource;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.context.ContextKeySet;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @UnstableApi
@@ -41,31 +40,29 @@ public class MutableLootTable {
 	private final ContextKeySet paramSet;
 	private final Identifier randomSequence;
 
-	public MutableLootTable(@NotNull LootTable table) {
-		pools = createLootPools(table.pools);
-		functions.addAll(table.functions);
-		paramSet = table.getParamSet();
-		randomSequence = table.randomSequence.orElse(null);
+	public MutableLootTable(LootTable table) {
+		this.pools = createLootPools(table.pools);
+		this.functions.addAll(table.functions);
+		this.paramSet = table.getParamSet();
+		this.randomSequence = table.randomSequence.orElse(null);
 	}
 
-	public static @Nullable MutableLootTable getMutable(@NotNull ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable) {
-		if (lootTableKey.equals(id)) {
-			return new MutableLootTable(lootTable);
-		} else return null;
+	public static @Nullable MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable) {
+		if (lootTableKey.equals(id)) return new MutableLootTable(lootTable);
+		return null;
 	}
 
-	public static @Nullable MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable, @NotNull LootTableSource source) {
-		if (source.isBuiltin()) {
-			return getMutable(lootTableKey, id, lootTable);
-		} else return null;
+	public static @Nullable MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable, LootTableSource source) {
+		if (source.isBuiltin()) return getMutable(lootTableKey, id, lootTable);
+		return null;
 	}
 
 	public LootTable build() {
-		LootTable.Builder builder = LootTable.lootTable();
-		builder.setParamSet(paramSet);
-		builder.setRandomSequence(randomSequence);
-		pools.forEach(mPool -> builder.pools.add(mPool.build()));
-		functions.forEach(builder.functions::add);
+		final LootTable.Builder builder = LootTable.lootTable();
+		builder.setParamSet(this.paramSet);
+		builder.setRandomSequence(this.randomSequence);
+		this.pools.forEach(mPool -> builder.pools.add(mPool.build()));
+		this.functions.forEach(builder.functions::add);
 		return builder.build();
 	}
 
@@ -76,7 +73,7 @@ public class MutableLootTable {
 	 * @return This.
 	 */
 	public MutableLootTable modifyPools(Consumer<MutableLootPool> consumer) {
-		pools.forEach(consumer);
+		this.pools.forEach(consumer);
 		return this;
 	}
 
@@ -86,10 +83,8 @@ public class MutableLootTable {
 	 * @return This.
 	 */
 	public MutableLootTable modifyPools(Predicate<MutableLootPool> condition, Consumer<MutableLootPool> consumer) {
-		pools.forEach(pool -> {
-			if (condition.test(pool)) {
-				consumer.accept(pool);
-			}
+		this.pools.forEach(pool -> {
+			if (condition.test(pool)) consumer.accept(pool);
 		});
 		return this;
 	}
@@ -100,8 +95,8 @@ public class MutableLootTable {
 	 * @param lootPoolList A list of {@link LootPool}s to copy.
 	 * @return An array list of converted loot pools from input.
 	 */
-	private static @NotNull ArrayList<MutableLootPool> createLootPools(@NotNull List<LootPool> lootPoolList) {
-		ArrayList<MutableLootPool> lootPools = new ArrayList<>();
+	private static ArrayList<MutableLootPool> createLootPools(List<LootPool> lootPoolList) {
+		final ArrayList<MutableLootPool> lootPools = new ArrayList<>();
 		lootPoolList.forEach(pool -> lootPools.add(new MutableLootPool(pool)));
 		return lootPools;
 	}
@@ -113,7 +108,7 @@ public class MutableLootTable {
 	 * @return A predicate that checks if the pool has the given item.
 	 */
 	@Contract(pure = true)
-	public static @NotNull Predicate<MutableLootPool> has(Item item) {
+	public static Predicate<MutableLootPool> has(Item item) {
 		return lootPool -> lootPool.hasItem(item);
 	}
 
@@ -124,7 +119,7 @@ public class MutableLootTable {
 	 * @return A predicate that checks if the pool has any of the given items.
 	 */
 	@Contract(pure = true)
-	public static @NotNull Predicate<MutableLootPool> hasAny(Item... items) {
+	public static Predicate<MutableLootPool> hasAny(Item... items) {
 		return lootPool -> lootPool.hasAnyItems(items);
 	}
 
@@ -135,7 +130,7 @@ public class MutableLootTable {
 	 * @return A predicate that checks if the pool has all the given items.
 	 */
 	@Contract(pure = true)
-	public static @NotNull Predicate<MutableLootPool> hasAll(Item... items) {
+	public static Predicate<MutableLootPool> hasAll(Item... items) {
 		return lootPool -> lootPool.hasAllItems(items);
 	}
 }

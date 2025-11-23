@@ -33,7 +33,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.resources.ResourceKey;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenLibRegistries {
@@ -73,7 +72,6 @@ public class FrozenLibRegistries {
 		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new WindDisturbanceLogic(WindDisturbanceLogic.defaultPredicate()))
 	);
 
-	@NotNull
 	public static HolderLookup.Provider vanillaRegistries() {
 		return VanillaRegistries.createLookup();
 	}
@@ -90,18 +88,13 @@ public class FrozenLibRegistries {
 	}
 
 	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute, BuiltInRegistries.RegistryBootstrap<T> bootstrap) {
-		var registry = new MappedRegistry<>(key, lifecycle, false);
-		var fabricRegistryBuilder = FabricRegistryBuilder.from(registry);
+		final var registry = new MappedRegistry<>(key, lifecycle, false);
 
-		if (attribute != null) {
-			fabricRegistryBuilder.attribute(attribute);
-		}
+		final var fabricRegistryBuilder = FabricRegistryBuilder.from(registry);
+		if (attribute != null) fabricRegistryBuilder.attribute(attribute);
 
-		var registeredRegistry = fabricRegistryBuilder.buildAndRegister();
-
-		if (bootstrap != null) {
-			bootstrap.run(registeredRegistry);
-		}
+		final var registeredRegistry = fabricRegistryBuilder.buildAndRegister();
+		if (bootstrap != null) bootstrap.run(registeredRegistry);
 
 		return registeredRegistry;
 	}

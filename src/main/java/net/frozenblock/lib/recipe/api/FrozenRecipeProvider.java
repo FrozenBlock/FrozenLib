@@ -28,7 +28,6 @@ import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 public final class FrozenRecipeProvider {
-	private FrozenRecipeProvider() {}
 
 	public static void woodenButton(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike button, ItemLike material) {
 		recipeProvider.buttonBuilder(button, Ingredient.of(material))
@@ -53,7 +52,6 @@ public final class FrozenRecipeProvider {
 			.unlockedBy("has_planks", recipeProvider.has(material))
 			.group("wooden_fence_gate").save(recipeOutput);
 	}
-
 
 	public static void woodenPressurePlace(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike pressurePlate, ItemLike material) {
 		recipeProvider.pressurePlateBuilder(RecipeCategory.REDSTONE, pressurePlate, Ingredient.of(material))
@@ -86,13 +84,11 @@ public final class FrozenRecipeProvider {
 	}
 
 	public static void colorWithDyes(RecipeProvider recipeProvider, RecipeOutput recipeOutput, List<Item> list, List<Item> list2, @Nullable Item item, String group, RecipeCategory recipeCategory) {
-		for(int i = 0; i < list.size(); ++i) {
-			Item item2 = list.get(i);
-			Item item3 = list2.get(i);
+		for (int i = 0; i < list.size(); ++i) {
+			final Item item2 = list.get(i);
+			final Item item3 = list2.get(i);
 			Stream<Item> stream = list2.stream().filter((item2x) -> !item2x.equals(item3));
-			if (item != null) {
-				stream = Stream.concat(stream, Stream.of(item));
-			}
+			if (item != null) stream = Stream.concat(stream, Stream.of(item));
 
 			recipeProvider.shapeless(recipeCategory, item3)
 				.requires(item2)

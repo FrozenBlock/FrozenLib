@@ -43,26 +43,24 @@ public class AxeItemMixin {
 		)
 	)
 	public Optional<BlockState> frozenlib$runAxeBehavior(
-		AxeItem instance,
-		Level world,
-		BlockPos pos,
-		Player player,
-		BlockState state,
-		Operation<Optional<BlockState>> original,
+		AxeItem instance, Level level, BlockPos pos, Player player, BlockState state, Operation<Optional<BlockState>> original,
 		UseOnContext context
 	) {
-		BlockState blockState = world.getBlockState(pos);
-		Direction direction = context.getClickedFace();
-		AxeApi.AxeBehavior axeBehavior = AxeApi.get(blockState.getBlock());
-		if (axeBehavior != null && axeBehavior.meetsRequirements(world, pos, direction, state)) {
-			BlockState outputState = axeBehavior.getOutputBlockState(state);
-			if (outputState != null) {
-				axeBehavior.onSuccess(world, pos, direction, outputState, state);
-				return Optional.of(outputState);
-			}
+		final BlockState currentState = level.getBlockState(pos);
+		final Direction direction = context.getClickedFace();
+		final AxeApi.AxeBehavior axeBehavior = AxeApi.get(currentState.getBlock());
+
+		useAxeBehavior:{
+			if (axeBehavior == null || !axeBehavior.meetsRequirements(level, pos, direction, state)) break useAxeBehavior;
+
+			final BlockState outputState = axeBehavior.getOutputBlockState(state);
+			if (outputState == null) break useAxeBehavior;
+
+			axeBehavior.onSuccess(level, pos, direction, outputState, state);
+			return Optional.of(outputState);
 		}
 
-		return original.call(instance, world, pos, player, state);
+		return original.call(instance, level, pos, player, state);
 	}
 
 }

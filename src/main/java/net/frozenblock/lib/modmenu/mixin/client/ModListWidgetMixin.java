@@ -50,9 +50,7 @@ public class ModListWidgetMixin {
 		Set instance, Object object, Operation<Boolean> original,
 		@Local(ordinal = 1) String modId
 	) {
-		if (FrozenBools.HAS_CLOTH_CONFIG && modId.equals(FrozenLibConstants.MOD_ID) && ClientCapeUtil.hasUsableCapes(true)) {
-			return false;
-		}
+		if (FrozenBools.HAS_CLOTH_CONFIG && modId.equals(FrozenLibConstants.MOD_ID) && ClientCapeUtil.hasUsableCapes(true)) return false;
 		return original.call(instance, object);
 	}
 }

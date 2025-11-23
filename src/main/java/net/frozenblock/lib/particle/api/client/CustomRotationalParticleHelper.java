@@ -25,7 +25,6 @@ import net.minecraft.client.particle.SingleQuadParticle;
 import net.minecraft.client.renderer.state.QuadParticleRenderState;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -100,7 +99,7 @@ public class CustomRotationalParticleHelper {
 
 	public void extract(
 		QuadParticleRenderState renderState,
-		@NotNull Camera camera,
+		Camera camera,
 		SingleQuadParticle.Layer layer,
 		double x, double y, double z,
 		double xd, double yd, double zd,
@@ -165,10 +164,10 @@ public class CustomRotationalParticleHelper {
 	}
 
 	private static void submit(
-		@NotNull QuadParticleRenderState renderState,
+		QuadParticleRenderState renderState,
 		SingleQuadParticle.Layer layer,
 		float x, float y, float z,
-		@NotNull Quaternionf quatA, @NotNull Quaternionf quatB,
+		Quaternionf quatA, Quaternionf quatB,
 		float quadSize,
 		float uA, float uB, float vA, float vB,
 		int color,

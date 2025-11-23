@@ -46,9 +46,9 @@ public class AnimationAPI {
 	 **/
 	@Deprecated
 	public static double rawSeed(double seed) {
-		double f = Math.pow(Math.PI, 3);
-		double linear = (seed + f) * f;
-		double flat =  Math.floor(linear);
+		final double f = Math.pow(Math.PI, 3D);
+		final double linear = (seed + f) * f;
+		final double flat =  Math.floor(linear);
 		return linear - flat;
 	}
 
@@ -67,14 +67,12 @@ public class AnimationAPI {
 	}
 
 	public static double legAnimation(double base, double range, double frequency, double limbAngle, double limbDistance, boolean inverted) {
-		double baseRange = 1.4;
-		double baseFrequency = 0.6662;
-		double wave = Math.sin(limbAngle * (baseFrequency * frequency)) * (baseRange * range) * limbDistance;
-		if (inverted) {
-			return base + wave;
-		} else {
-			return base - wave;
-		}
+		final double baseRange = 1.4;
+		final double baseFrequency = 0.6662;
+		final double wave = Math.sin(limbAngle * (baseFrequency * frequency)) * (baseRange * range) * limbDistance;
+
+		if (inverted) return base + wave;
+		return base - wave;
 	}
 
 	public static double legAnimation(double base, double range, double frequency, double limbAngle, double limbDistance) {
@@ -89,38 +87,25 @@ public class AnimationAPI {
 		return legAnimation(base, limbAngle, limbDistance, false);
 	}
 
-
 	/**
 	 * SINE EASING - Generated using Math.sin()
 	 */
 	public static double sineEaseIn(Point2D a, Point2D b, double x) {
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (1 - Math.cos(Math.PI * (relativeX(a, b, x) / 2)));
-		}
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (1 - Math.cos(Math.PI * (relativeX(a, b, x) / 2)));
 	}
 
 	public static double sineEaseOut(Point2D a, Point2D b, double x) {
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (Math.sin(Math.PI * (relativeX(a, b, x) / 2)));
-		}
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (Math.sin(Math.PI * (relativeX(a, b, x) / 2)));
 	}
 
 	public static double sineEaseInOut(Point2D a, Point2D b, double x) {
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (0.5F - (Math.cos(Math.PI * relativeX(a, b, x)) / 2));
-		}
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (0.5F - (Math.cos(Math.PI * relativeX(a, b, x)) / 2));
 	}
 	// -------------------------------------------------------
 
@@ -132,13 +117,10 @@ public class AnimationAPI {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (Math.pow(relativeX(a, b, x), c));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (Math.pow(relativeX(a, b, x), c));
 	}
 
 	public static double polyEaseOut(Point2D a, Point2D b, double x, double c) {
@@ -146,13 +128,10 @@ public class AnimationAPI {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (1 - Math.pow(-(relativeX(a, b, x) - 1), c));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (1 - Math.pow(-(relativeX(a, b, x) - 1), c));
 	}
 
 	public static double polyEaseInOut(Point2D a, Point2D b, double x, double c) {
@@ -160,17 +139,11 @@ public class AnimationAPI {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			if (x < (b.getX() - a.getX()) / 2) {
-				return b.getY() * (Math.pow(2, c - 1) * Math.pow(relativeX(a, b, x), c));
-			} else {
-				return b.getY() * (1 - Math.pow(2 - 2 * relativeX(a, b, x), c) / 2);
-			}
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		if (x < (b.getX() - a.getX()) / 2) return b.getY() * (Math.pow(2, c - 1) * Math.pow(relativeX(a, b, x), c));
+		return b.getY() * (1 - Math.pow(2 - 2 * relativeX(a, b, x), c) / 2);
 	}
 	// -------------------------------------------------------
 
@@ -242,37 +215,23 @@ public class AnimationAPI {
 	 * EXPONENTIAL EASING - Generated by 2^x
 	 */
 	public static double expoEaseIn(Point2D a, Point2D b, double x) {
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * Math.pow(2, (10 * relativeX(a, b, x)) - 10);
-		}
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * Math.pow(2, (10 * relativeX(a, b, x)) - 10);
 	}
 
 	public static double expoEaseOut(Point2D a, Point2D b, double x) {
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (1 - Math.pow(2, -10 * relativeX(a, b, x)));
-		}
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (1 - Math.pow(2, -10 * relativeX(a, b, x)));
 	}
 
 	public static double expoEaseInOut(Point2D a, Point2D b, double x) {
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			if (x < (b.getX() - a.getX()) / 2) {
-				return b.getY() * Math.pow(2, (20 * relativeX(a, b, x)) - 10) / 2;
-			} else {
-				return b.getY() * (2 - Math.pow(2, 10 - (20 * relativeX(a, b, x)))) / 2;
-			}
-		}
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+
+		if (x < (b.getX() - a.getX()) / 2) return b.getY() * Math.pow(2, (20 * relativeX(a, b, x)) - 10) / 2;
+		return b.getY() * (2 - Math.pow(2, 10 - (20 * relativeX(a, b, x)))) / 2;
 	}
 	// -------------------------------------------------------
 
@@ -284,13 +243,10 @@ public class AnimationAPI {
 			System.out.println("Animation API error - roundness must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (1 - Math.pow(1 - Math.pow(relativeX(a, b, x), roundness), 1 / roundness));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (1 - Math.pow(1 - Math.pow(relativeX(a, b, x), roundness), 1 / roundness));
 	}
 
 	public static double circEaseOut(Point2D a, Point2D b, double x, int roundness) {
@@ -298,13 +254,10 @@ public class AnimationAPI {
 			System.out.println("Animation API error - roundness must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * Math.pow(1 - Math.pow(relativeX(a, b, x) - 1, roundness), 1 / roundness);
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * Math.pow(1 - Math.pow(relativeX(a, b, x) - 1, roundness), 1 / roundness);
 	}
 
 	public static double circEaseInOut(Point2D a, Point2D b, double x, int roundness) {
@@ -312,17 +265,11 @@ public class AnimationAPI {
 			System.out.println("Animation API error - roundness must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			if (x < (b.getX() - a.getX()) / 2) {
-				return b.getY() * (1 - Math.pow(1 - Math.pow(2 * relativeX(a, b, x), roundness), 1 / roundness)) / 2;
-			} else {
-				return b.getY() * (Math.pow(1 - Math.pow(-2 * relativeX(a, b, x) + 2, roundness), 1 / roundness) + 1) / 2;
-			}
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		if (x < (b.getX() - a.getX()) / 2) return b.getY() * (1 - Math.pow(1 - Math.pow(2 * relativeX(a, b, x), roundness), 1 / roundness)) / 2;
+		return b.getY() * (Math.pow(1 - Math.pow(-2 * relativeX(a, b, x) + 2, roundness), 1 / roundness) + 1) / 2;
 	}
 
 	public static double circEaseIn(Point2D a, Point2D b, double x) {
@@ -346,13 +293,10 @@ public class AnimationAPI {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * relativeX(a, b, x));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * relativeX(a, b, x));
 	}
 
 	public static double elasticEaseOut(Point2D a, Point2D b, double x, int c) {
@@ -360,13 +304,10 @@ public class AnimationAPI {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (1 - (Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * (1 - relativeX(a, b, x))));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (1 - (Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * (1 - relativeX(a, b, x))));
 	}
 
 	public static double elasticEaseInOut(Point2D a, Point2D b, double x, int c) {
@@ -374,28 +315,25 @@ public class AnimationAPI {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (relativeX(a, b, x) + (Math.sin(2 * Math.PI * c * relativeX(a, b, x)) * Math.sin(Math.PI * relativeX(a, b, x))));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (relativeX(a, b, x) + (Math.sin(2 * Math.PI * c * relativeX(a, b, x)) * Math.sin(Math.PI * relativeX(a, b, x))));
 	}
 
 	// Same Equations but automaticly defines
 	public static double elasticEaseIn(Point2D a, Point2D b, double x) {
-		int c = (int) (b.getX() - a.getX());
+		final int c = (int) (b.getX() - a.getX());
 		return elasticEaseIn(a, b, x, c);
 	}
 
 	public static double elasticEaseOut(Point2D a, Point2D b, double x) {
-		int c = (int) (b.getX() - a.getX());
+		final int c = (int) (b.getX() - a.getX());
 		return elasticEaseOut(a, b, x, c);
 	}
 
 	public static double elasticEaseInOut(Point2D a, Point2D b, double x) {
-		int c = (int) (b.getX() - a.getX());
+		final int c = (int) (b.getX() - a.getX());
 		return elasticEaseInOut(a, b, x, c);
 	}
 	// -------------------------------------------------------
@@ -408,13 +346,10 @@ public class AnimationAPI {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * Math.abs(Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * relativeX(a, b, x));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * Math.abs(Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * relativeX(a, b, x));
 	}
 
 	public static double bounceEaseOut(Point2D a, Point2D b, double x, int c) {
@@ -422,13 +357,10 @@ public class AnimationAPI {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (1 - Math.abs(Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * (1 - relativeX(a, b, x))));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (1 - Math.abs(Math.cos(2 * Math.PI * c * relativeX(a, b, x)) * (1 - relativeX(a, b, x))));
 	}
 
 	public static double bounceEaseInOut(Point2D a, Point2D b, double x, int c) {
@@ -436,28 +368,25 @@ public class AnimationAPI {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (relativeX(a, b, x) + Math.abs(Math.sin(2 * Math.PI * c * relativeX(a, b, x)) * Math.sin(Math.PI * relativeX(a, b, x))));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (relativeX(a, b, x) + Math.abs(Math.sin(2 * Math.PI * c * relativeX(a, b, x)) * Math.sin(Math.PI * relativeX(a, b, x))));
 	}
 
 	// Same Equations but automatically defines c
 	public static double bounceEaseIn(Point2D a, Point2D b, double x) {
-		int c = (int) (b.getX() - a.getX());
+		final int c = (int) (b.getX() - a.getX());
 		return elasticEaseIn(a, b, x, c);
 	}
 
 	public static double bounceEaseOut(Point2D a, Point2D b, double x) {
-		int c = (int) (b.getX() - a.getX());
+		final int c = (int) (b.getX() - a.getX());
 		return elasticEaseOut(a, b, x, c);
 	}
 
 	public static double bounceEaseInOut(Point2D a, Point2D b, double x) {
-		int c = (int) (b.getX() - a.getX());
+		final int c = (int) (b.getX() - a.getX());
 		return elasticEaseInOut(a, b, x, c);
 	}
 	// -------------------------------------------------------
@@ -466,53 +395,40 @@ public class AnimationAPI {
 	 * BACK EASING - Generates a curve that comes back a little at the end (defined by an amount a >= 0)
 	 */
 	public static double backEaseIn(Point2D a, Point2D b, double x, double c1) {
-		double c2 = c1 + 1;
+		final double c2 = c1 + 1;
 		if (c1 < 0) {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (c2 * Math.pow(relativeX(a, b, x), 3) - c1 * Math.pow(relativeX(a, b, x) - 1, 2));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (c2 * Math.pow(relativeX(a, b, x), 3) - c1 * Math.pow(relativeX(a, b, x) - 1, 2));
 	}
 
 	public static double backEaseOut(Point2D a, Point2D b, double x, double c1) {
-		double c2 = c1 + 1;
+		final double c2 = c1 + 1;
 		if (c1 < 0) {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			return b.getY() * (1 + c2 * Math.pow(relativeX(a, b, x) - 1, 3) + c1 * Math.pow(relativeX(a, b, x) - 1, 2));
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		return b.getY() * (1 + c2 * Math.pow(relativeX(a, b, x) - 1, 3) + c1 * Math.pow(relativeX(a, b, x) - 1, 2));
 	}
 
 	public static double backEaseInOut(Point2D a, Point2D b, double x, double c1) {
-		double c2 = c1 + 1;
-		double c3 = c1 * 1.525F;
+		final double c3 = c1 * 1.525F;
 		if (c1 < 0) {
 			System.out.println("Animation API error - c must be >= 0");
 			return Math.random();
 		}
-		if (x < a.getX()) {
-			return 0; // before animation defining the eq as 0
-		} else if (x > b.getX()) {
-			return b.getY(); // after animation defining the eq as b's Y
-		} else {
-			if (x < (b.getX() - a.getX()) / 2) {
-				return b.getY() * (Math.pow(2 * relativeX(a, b, x), 2) * ((c3 + 1) * 2 * relativeX(a, b, x) - c3)) / 2;
-			} else {
-				return b.getY() * (Math.pow(2 * relativeX(a, b, x) - 2, 2) * ((c3 + 1) * (2 * relativeX(a, b, x) - 2) + c3) + 2) / 2;
-			}
-		}
+
+		if (x < a.getX()) return 0; // before animation defining the eq as 0
+		if (x > b.getX()) return b.getY(); // after animation defining the eq as b's Y
+		if (x < (b.getX() - a.getX()) / 2) return b.getY() * (Math.pow(2 * relativeX(a, b, x), 2) * ((c3 + 1) * 2 * relativeX(a, b, x) - c3)) / 2;
+		return b.getY() * (Math.pow(2 * relativeX(a, b, x) - 2, 2) * ((c3 + 1) * (2 * relativeX(a, b, x) - 2) + c3) + 2) / 2;
 	}
 
 	// Same method but automatically defines c1

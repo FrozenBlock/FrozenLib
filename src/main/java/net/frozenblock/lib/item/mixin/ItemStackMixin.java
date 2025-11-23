@@ -69,22 +69,20 @@ public abstract class ItemStackMixin implements ItemStackExtension {
 	private boolean frozenLib$canRemoveTags = false;
 
 	@Inject(at = @At("TAIL"), method = "inventoryTick")
-	public void frozenLib$removeTags(Level level, Entity entity, EquipmentSlot equipmentSlot, CallbackInfo info) {
+	public void frozenLib$removeTags(Level level, Entity entity, EquipmentSlot slot, CallbackInfo info) {
 		final ItemStack stack = ItemStack.class.cast(this);
 
 		// Removable Item Tags
-
 		CustomData.update(DataComponents.CUSTOM_DATA, stack, compound -> {
 			for (String key : RemovableItemTags.keys()) {
-				if (RemovableItemTags.canRemoveTag(key, level, entity, equipmentSlot)) compound.remove(key);
+				if (RemovableItemTags.canRemoveTag(key, level, entity, slot)) compound.remove(key);
 			}
 		});
 
 		// Removable Data Components
-
 		for (Holder<DataComponentType<?>> component : RemovableDataComponents.keys()) {
 			final DataComponentType<?> value = component.value();
-			if (RemovableDataComponents.canRemoveComponent(value, level, entity, equipmentSlot)) stack.remove(value);
+			if (RemovableDataComponents.canRemoveComponent(value, level, entity, slot)) stack.remove(value);
 		}
 	}
 

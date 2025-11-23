@@ -69,18 +69,16 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
 public final class FrozenNetworking {
-	private FrozenNetworking() {}
 
 	public static void registerNetworking() {
-		PayloadTypeRegistry<RegistryFriendlyByteBuf> registry = PayloadTypeRegistry.playS2C();
-		PayloadTypeRegistry<RegistryFriendlyByteBuf> c2sRegistry = PayloadTypeRegistry.playC2S();
+		final PayloadTypeRegistry<RegistryFriendlyByteBuf> registry = PayloadTypeRegistry.playS2C();
+		final PayloadTypeRegistry<RegistryFriendlyByteBuf> c2sRegistry = PayloadTypeRegistry.playC2S();
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
-			WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
+			final WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
 			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
 			ServerCapeData.sendAllCapesToPlayer(player);
 		}));
@@ -92,9 +90,7 @@ public final class FrozenNetworking {
 
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
 			if (error != null || server == null) return;
-			for (ServerPlayer player : PlayerLookup.all(server)) {
-				ConfigSyncPacket.sendS2C(player);
-			}
+			for (ServerPlayer player : PlayerLookup.all(server)) ConfigSyncPacket.sendS2C(player);
 		});
 
 		c2sRegistry.register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
@@ -129,70 +125,63 @@ public final class FrozenNetworking {
 		registry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
 		registry.register(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.STREAM_CODEC);
 		c2sRegistry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
-		ServerPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE,
-			(packet, ctx) -> {
-				UUID uuid = ctx.player().getUUID();
-				Identifier capeId = packet.getCapeId();
-				if (capeId == null || CapeUtil.canPlayerUserCape(uuid, capeId)) {
-					CapeCustomizePacket.sendCapeToAll(ctx.server(), uuid, capeId);
-				}
-			}
-		);
+		ServerPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE, (packet, ctx) -> {
+			final UUID uuid = ctx.player().getUUID();
+			final Identifier capeId = packet.getCapeId();
+			if (capeId != null && !CapeUtil.canPlayerUserCape(uuid, capeId)) return;
+			CapeCustomizePacket.sendCapeToAll(ctx.server(), uuid, capeId);
+		});
 
 		// FILE TRANSFER
 		registry.register(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC);
 		c2sRegistry.register(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC);
-		ServerPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE,
-			(packet, ctx) -> {
-				if (packet.request()) {
-					String requestPath = packet.transferPath();
-					String fileName = packet.fileName();
-					if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, ctx.player())) return;
+		ServerPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
+			if (packet.request()) {
+				final String requestPath = packet.transferPath();
+				final String fileName = packet.fileName();
+				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, ctx.player())) return;
 
-					File file = ctx.server().getServerDirectory().resolve(requestPath).resolve(fileName).toFile();
-					try {
-						for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
-							ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
-						}
-					} catch (IOException ignored) {
-						FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on server!", fileName);
+				final File file = ctx.server().getServerDirectory().resolve(requestPath).resolve(fileName).toFile();
+				try {
+					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
+						ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
 					}
-				} else {
-					if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
+				} catch (IOException ignored) {
+					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on server!", fileName);
+				}
+			} else {
+				if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
 
-					String destPath = packet.transferPath().replace("/.local", "");
-					String fileName = packet.fileName();
-					if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, ctx.player())) return;
+				final String destPath = packet.transferPath().replace("/.local", "");
+				final String fileName = packet.fileName();
+				if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, ctx.player())) return;
 
-					try {
-						Path path = ctx.server().getServerDirectory().resolve(destPath).resolve(packet.fileName());
-						FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), false);
-					} catch (IOException ignored) {
-						FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on server!", packet.fileName());
-					}
+				try {
+					final Path path = ctx.server().getServerDirectory().resolve(destPath).resolve(packet.fileName());
+					FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), false);
+				} catch (IOException ignored) {
+					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on server!", packet.fileName());
 				}
 			}
-		);
+		});
 
 		// DEBUG
 		registry.register(WindAccessPacket.PACKET_TYPE, WindAccessPacket.STREAM_CODEC);
 	}
 
-	public static void sendPacketToAllPlayers(@NotNull ServerLevel world, CustomPacketPayload payload) {
-		Packet<?> packet = new ClientboundCustomPayloadPacket(payload);
-		for (ServerPlayer serverPlayer : world.players()) serverPlayer.connection.send(packet);
+	public static void sendPacketToAllPlayers(ServerLevel level, CustomPacketPayload payload) {
+		final Packet<?> packet = new ClientboundCustomPayloadPacket(payload);
+		for (ServerPlayer serverPlayer : level.players()) serverPlayer.connection.send(packet);
 	}
 
 	public static boolean isLocalPlayer(Player player) {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return false;
-
 		return Minecraft.getInstance().isLocalPlayer(player.getGameProfile().id());
 	}
 
 	public static boolean connectedToIntegratedServer() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return false;
-
-		Minecraft minecraft = Minecraft.getInstance();
+		final Minecraft minecraft = Minecraft.getInstance();
 		return minecraft.hasSingleplayerServer();
 	}
 
@@ -202,8 +191,8 @@ public final class FrozenNetworking {
 	public static boolean connectedToServer() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return false;
 
-		Minecraft minecraft = Minecraft.getInstance();
-		ClientPacketListener listener = minecraft.getConnection();
+		final Minecraft minecraft = Minecraft.getInstance();
+		final ClientPacketListener listener = minecraft.getConnection();
 		if (listener == null) return false;
 
 		return listener.getConnection().isConnected();

@@ -21,17 +21,16 @@ import java.util.ArrayList;
 import java.util.List;
 import lombok.experimental.UtilityClass;
 import net.minecraft.world.level.gameevent.vibrations.VibrationSystem;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class VibrationParticleVisibilityApi {
 	private static final List<VibrationParticleVisibilityTest> VISIBILITY_TESTS = new ArrayList<>();
 
-	public static void registerVisibilityTest(@NotNull VibrationParticleVisibilityTest test) {
+	public static void registerVisibilityTest(VibrationParticleVisibilityTest test) {
 		VISIBILITY_TESTS.add(test);
 	}
 
-	public static boolean isVisible(@NotNull VibrationSystem.Data data, @NotNull VibrationSystem.User user) {
+	public static boolean isVisible(VibrationSystem.Data data, VibrationSystem.User user) {
 		for (VibrationParticleVisibilityTest test : VISIBILITY_TESTS) {
 			if (!test.test(data, user)) return false;
 		}

@@ -289,7 +289,7 @@ public class XjsUtils {
 	 *
 	 * @param json The JSON object containing this path.
 	 * @param path The JSON path.
-	 * @return The value at this location, or else {@link Optional#empty}.
+	 * @return The value at this id, or else {@link Optional#empty}.
 	 */
 	public static Optional<JsonValue> getValueFromPath(final JsonObject json, final JsonPath path) {
 		if (path.isEmpty()) return empty();
@@ -310,12 +310,12 @@ public class XjsUtils {
 	 *   will return <code>object3</code> when passed into this method.
 	 * </p>
 	 * <p>
-	 *   If no object or array exists at this location, a new container will be created at this
-	 *   location and returned by the method.
+	 *   If no object or array exists at this id, a new container will be created at this
+	 *   id and returned by the method.
 	 * </p>
 	 * @param json The JSON object containing this path.
 	 * @param path The JSON path.
-	 * @return The value at this location, the original <code>json</code>, or else a new container.
+	 * @return The value at this id, the original <code>json</code>, or else a new container.
 	 */
 	public static JsonContainer getLastContainer(final JsonObject json, final JsonPath path) {
 		if (path.isEmpty()) return json;
@@ -585,8 +585,8 @@ public class XjsUtils {
 	 * Retrieves a list of paths in the given container.
 	 *
 	 * @param dir The path to this container, as a string.
-	 * @param container The {@link JsonObject} or {@link JsonArray} at this location.
-	 * @return A formatted list of all members at this location.
+	 * @param container The {@link JsonObject} or {@link JsonArray} at this id.
+	 * @return A formatted list of all members at this id.
 	 */
 	private static List<String> getNeighbors(final String dir, final JsonValue container) {
 		final List<String> neighbors = new ArrayList<>();
@@ -610,7 +610,7 @@ public class XjsUtils {
 	 * @param array The JSON array containing the researched data.
 	 * @param index The index of the data in the array.
 	 * @param type The path element at this index, indicating either a key or an index.
-	 * @return Either a JSON object or array, whichever is at this location.
+	 * @return Either a JSON object or array, whichever is at this id.
 	 */
 	private static JsonContainer getOrTryNew(final JsonArray array, final int index, final Either<String, Integer> type) {
 		if (index == array.size()) { // The value must be added.
@@ -627,7 +627,7 @@ public class XjsUtils {
 	 *   number, it will be treated as an index.
 	 * </p>
 	 * @param container Either a JSON object or array
-	 * @param either The accessor for the value at this location.
+	 * @param either The accessor for the value at this id.
 	 */
 	private static Optional<JsonValue> getEither(final JsonValue container, final Either<String, Integer> either) {
 		if (either.left().isPresent()) return nullable(container.asObject().get(either.left().get()));
@@ -644,7 +644,7 @@ public class XjsUtils {
 	 *
 	 * @param container Either a JSON object or array.
 	 * @param either The accessor for this value, either a key or an index.
-	 * @param value The value to set at this location.
+	 * @param value The value to set at this id.
 	 */
 	private static void setEither(final JsonValue container, final Either<String, Integer> either, @Nullable final JsonValue value) {
 		if (either.left().isPresent()) {
@@ -782,7 +782,7 @@ public class XjsUtils {
 	 * </pre>
 	 * @param json The JSON object containing the array.
 	 * @param field The key where this array is stored.
-	 * @return A list of all {@link JsonObject}s at this location.
+	 * @return A list of all {@link JsonObject}s at this id.
 	 */
 	public static List<JsonObject> getRegularObjects(final JsonObject json, final String field) {
 		final List<JsonObject> list = new ArrayList<>();

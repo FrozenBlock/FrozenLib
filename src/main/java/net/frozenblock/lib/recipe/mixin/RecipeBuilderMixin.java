@@ -34,12 +34,11 @@ public interface RecipeBuilderMixin {
 		ordinal = 0
 	)
 	default String frozenLib$save(String original) {
-		if (RecipeExportNamespaceFix.getCurrentGeneratingModId().isPresent()) {
-			Identifier originalLocation = Identifier.tryParse(original);
-			Identifier newLocation = Identifier.fromNamespaceAndPath(RecipeExportNamespaceFix.getCurrentGeneratingModId().get(), originalLocation.getPath());
-			return newLocation.toString();
-		}
-		return original;
+		if (RecipeExportNamespaceFix.getCurrentGeneratingModId().isEmpty()) return original;
+
+		final Identifier originalLocation = Identifier.tryParse(original);
+		final Identifier newLocation = Identifier.fromNamespaceAndPath(RecipeExportNamespaceFix.getCurrentGeneratingModId().get(), originalLocation.getPath());
+		return newLocation.toString();
 	}
 
 }

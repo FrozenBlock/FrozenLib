@@ -20,19 +20,16 @@ package net.frozenblock.lib.networking;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class FrozenByteBufCodecs {
-
 	public static final StreamCodec<FriendlyByteBuf, Vec3> VEC3 = new StreamCodec<>() {
-		@NotNull
         @Override
-        public Vec3 decode(@NotNull FriendlyByteBuf buf) {
+        public Vec3 decode(FriendlyByteBuf buf) {
             return buf.readVec3();
         }
 
         @Override
-        public void encode(@NotNull FriendlyByteBuf buf, Vec3 vec) {
+        public void encode(FriendlyByteBuf buf, Vec3 vec) {
             buf.writeVec3(vec);
         }
     };

@@ -46,17 +46,20 @@ public final class SplashTextAPI {
 	}
 
 	@Contract(pure = true)
-	public static @Unmodifiable List<Identifier> getSplashFiles() {
+	@Unmodifiable
+	public static List<Identifier> getSplashFiles() {
 		return List.copyOf(SPLASH_FILES);
 	}
 
 	@Contract(pure = true)
-	public static @Unmodifiable List<String> getAdditions() {
+	@Unmodifiable
+	public static List<String> getAdditions() {
 		return List.copyOf(ADDITIONS);
 	}
 
 	@Contract(pure = true)
-	public static @Unmodifiable List<String> getRemovals() {
+	@Unmodifiable
+	public static List<String> getRemovals() {
 		return List.copyOf(REMOVALS);
 	}
 }

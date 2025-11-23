@@ -25,7 +25,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Targets {@link DataComponents#CUSTOM_DATA }
@@ -37,9 +36,9 @@ public class RemovableItemTags {
 		REMOVABLE_ITEM_TAGS.put(tagKey, new RemovableItemTag(tagKey, removalPredicate, removeOnStackMerge));
 	}
 
-	public static boolean canRemoveTag(String tagKey, Level level, Entity entity, EquipmentSlot equipmentSlot) {
+	public static boolean canRemoveTag(String tagKey, Level level, Entity entity, EquipmentSlot slot) {
 		final RemovableItemTag removableItemTag = REMOVABLE_ITEM_TAGS.get(tagKey);
-		if (removableItemTag != null) return removableItemTag.shouldRemove(level, entity, equipmentSlot);
+		if (removableItemTag != null) return removableItemTag.shouldRemove(level, entity, slot);
 
 		FrozenLibLogUtils.logError("Unable to find RemovableItemTag data for TagKey " + tagKey + "!", true, null);
 		FrozenLibLogUtils.logError("Please make sure " + tagKey + " is registered in RemovableItemTags.class!", true, null);
@@ -56,7 +55,7 @@ public class RemovableItemTags {
 	}
 
 	@Contract(pure = true)
-	public static @NotNull Set<String> keys() {
+	public static Set<String> keys() {
 		return REMOVABLE_ITEM_TAGS.keySet();
 	}
 
@@ -76,8 +75,8 @@ public class RemovableItemTags {
 		}
 
 		@Override
-		public boolean shouldRemove(Level level, Entity entity, EquipmentSlot equipmentSlot) {
-			return this.predicate.shouldRemove(level, entity, equipmentSlot);
+		public boolean shouldRemove(Level level, Entity entity, EquipmentSlot slot) {
+			return this.predicate.shouldRemove(level, entity, slot);
 		}
 
 		public boolean shouldRemoveOnStackMerge() {

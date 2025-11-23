@@ -19,6 +19,8 @@ package net.frozenblock.lib.loot.impl;
 
 import io.netty.util.internal.UnstableApi;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Predicate;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -29,7 +31,6 @@ import net.minecraft.world.level.storage.loot.entries.LootPoolEntryContainer;
 import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import org.jetbrains.annotations.NotNull;
 
 @UnstableApi
 public class MutableLootPool {
@@ -39,19 +40,19 @@ public class MutableLootPool {
 	public NumberProvider rolls;
 	public NumberProvider bonusRolls;
 
-	public MutableLootPool(@NotNull LootPool lootPool) {
-		entries.addAll(lootPool.entries);
-		conditions.addAll(lootPool.conditions);
-		functions.addAll(lootPool.functions);
-		rolls = lootPool.rolls;
-		bonusRolls = lootPool.bonusRolls;
+	public MutableLootPool(LootPool lootPool) {
+		this.entries.addAll(lootPool.entries);
+		this.conditions.addAll(lootPool.conditions);
+		this.functions.addAll(lootPool.functions);
+		this.rolls = lootPool.rolls;
+		this.bonusRolls = lootPool.bonusRolls;
 	}
 
 	public LootPool build() {
-		LootPool.Builder builder = LootPool.lootPool();
-		entries.forEach(builder.entries::add);
-		conditions.forEach(builder.conditions::add);
-		functions.forEach(builder.functions::add);
+		final LootPool.Builder builder = LootPool.lootPool();
+		this.entries.forEach(builder.entries::add);
+		this.conditions.forEach(builder.conditions::add);
+		this.functions.forEach(builder.functions::add);
 		builder.setRolls(rolls);
 		builder.setBonusRolls(bonusRolls);
 		return builder.build();
@@ -66,7 +67,7 @@ public class MutableLootPool {
 	 * @return this
 	 */
 	public MutableLootPool add(ItemLike item, int weight, LootItemFunction.Builder builder) {
-		entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(builder).build());
+		this.entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(builder).build());
 		return this;
 	}
 
@@ -78,83 +79,73 @@ public class MutableLootPool {
 	 * @param builder idk lol
 	 * @return this
 	 */
-	public MutableLootPool addAll(int weight, LootItemFunction.Builder builder, ItemLike @NotNull ... items) {
+	public MutableLootPool addAll(int weight, LootItemFunction.Builder builder, ItemLike ... items) {
 		for (ItemLike item : items) {
-			entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(builder).build());
+			this.entries.add(LootItem.lootTableItem(item).setWeight(weight).apply(builder).build());
 		}
 		return this;
 	}
 
 	public MutableLootPool remove(ItemLike item) {
-		for (LootPoolEntryContainer entryContainer : entries) {
-			if (entryContainer instanceof LootItem lootItem) {
-				if (item.equals(lootItem.item.value())) {
-					entries.remove(entryContainer);
-					return this;
-				}
-			}
+		for (LootPoolEntryContainer entryContainer : this.entries) {
+			if (!(entryContainer instanceof LootItem lootItem)) continue;
+			if (!item.equals(lootItem.item.value())) continue;
+
+			this.entries.remove(entryContainer);
+			return this;
 		}
 		// Failed to remove item from the loot pool.
 		return this;
 	}
 
 	public MutableLootPool remove(ItemLike... items) {
-		ArrayList<LootPoolEntryContainer> toRemove = new ArrayList<>();
-		for (LootPoolEntryContainer entryContainer : entries) {
-			if (entryContainer instanceof LootItem lootItem) {
-				for (ItemLike item : items) {
-					if (item.equals(lootItem.item.value())) {
-						toRemove.add(entryContainer);
-					}
-				}
+		final ArrayList<LootPoolEntryContainer> toRemove = new ArrayList<>();
+		for (LootPoolEntryContainer entryContainer : this.entries) {
+			if (!(entryContainer instanceof LootItem lootItem)) continue;
+
+			for (ItemLike item : items) {
+				if (!item.equals(lootItem.item.value())) continue;
+				toRemove.add(entryContainer);
 			}
 		}
-		for (LootPoolEntryContainer entryContainer : toRemove) {
-			entries.remove(entryContainer);
-		}
+
+		for (LootPoolEntryContainer entryContainer : toRemove) this.entries.remove(entryContainer);
 		return this;
 	}
 
 	public MutableLootPool remove(TagKey<Item> tag) {
-		ArrayList<LootPoolEntryContainer> toRemove = new ArrayList<>();
-		for (LootPoolEntryContainer entryContainer : entries) {
-			if (entryContainer instanceof LootItem lootItem) {
-				if (lootItem.item.value().builtInRegistryHolder().is(tag)) {
-					toRemove.add(entryContainer);
-				}
-			}
+		final ArrayList<LootPoolEntryContainer> toRemove = new ArrayList<>();
+		for (LootPoolEntryContainer entryContainer : this.entries) {
+			if (!(entryContainer instanceof LootItem lootItem)) continue;
+			if (!lootItem.item.value().builtInRegistryHolder().is(tag)) continue;
+			toRemove.add(entryContainer);
 		}
-		for (LootPoolEntryContainer entryContainer : toRemove) {
-			entries.remove(entryContainer);
-		}
+
+		for (LootPoolEntryContainer entryContainer : toRemove) this.entries.remove(entryContainer);
 		return this;
 	}
 
 	public MutableLootPool remove(Predicate<Item> predicate) {
-		ArrayList<LootPoolEntryContainer> toRemove = new ArrayList<>();
-		for (LootPoolEntryContainer entryContainer : entries) {
-			if (entryContainer instanceof LootItem lootItem) {
-				if (predicate.test(lootItem.item.value())) {
-					toRemove.add(entryContainer);
-				}
-			}
+		final ArrayList<LootPoolEntryContainer> toRemove = new ArrayList<>();
+		for (LootPoolEntryContainer entryContainer : this.entries) {
+			if (!(entryContainer instanceof LootItem lootItem)) continue;
+			if (!predicate.test(lootItem.item.value())) continue;
+			toRemove.add(entryContainer);
 		}
-		for (LootPoolEntryContainer entryContainer : toRemove) {
-			entries.remove(entryContainer);
-		}
+
+		for (LootPoolEntryContainer entryContainer : toRemove) this.entries.remove(entryContainer);
 		return this;
 	}
 
 	public MutableLootPool replace(ItemLike original, ItemLike replacement) {
-		for (int i = 0; i < entries.size(); i++) {
-			LootPoolEntryContainer entryContainer = entries.get(i);
-			if (entryContainer instanceof LootItem lootItem) {
-				if (original.equals(lootItem.item.value())) {
-					MutableLootItem mutableLootItem = new MutableLootItem(lootItem);
-					mutableLootItem.setItem(replacement);
-					entries.set(i, mutableLootItem.build());
-				}
-			}
+		for (int i = 0; i < this.entries.size(); i++) {
+			final LootPoolEntryContainer entryContainer = this.entries.get(i);
+			if (!(entryContainer instanceof LootItem lootItem)) return this;
+			if (!original.equals(lootItem.item.value())) continue;
+
+			final MutableLootItem mutableLootItem = new MutableLootItem(lootItem);
+			mutableLootItem.setItem(replacement);
+			this.entries.set(i, mutableLootItem.build());
 		}
 		return this;
 	}
@@ -166,10 +157,9 @@ public class MutableLootPool {
 	 * @return if item was found
 	 */
 	public boolean hasItem(Item item) {
-		for (LootPoolEntryContainer entryContainer : entries) {
-			if (entryContainer instanceof LootItem lootItem) {
-				if (item.equals(lootItem.item.value())) return true;
-			}
+		for (LootPoolEntryContainer entryContainer : this.entries) {
+			if (!(entryContainer instanceof LootItem lootItem)) continue;
+			if (item.equals(lootItem.item.value())) return true;
 		}
 		return false;
 	}
@@ -181,10 +171,9 @@ public class MutableLootPool {
 	 * @return if item was found
 	 */
 	public boolean hasItem(Predicate<Item> predicate) {
-		for (LootPoolEntryContainer entryContainer : entries) {
-			if (entryContainer instanceof LootItem lootItem) {
-				if (predicate.test(lootItem.item.value())) return true;
-			}
+		for (LootPoolEntryContainer entryContainer : this.entries) {
+			if (!(entryContainer instanceof LootItem lootItem)) continue;
+			if (predicate.test(lootItem.item.value())) return true;
 		}
 		return false;
 	}
@@ -196,10 +185,9 @@ public class MutableLootPool {
 	 * @return if item was found
 	 */
 	public boolean hasItem(TagKey<Item> itemTagKey) {
-		for (LootPoolEntryContainer entryContainer : entries) {
-			if (entryContainer instanceof LootItem lootItem) {
-				if (lootItem.item.value().builtInRegistryHolder().is(itemTagKey)) return true;
-			}
+		for (LootPoolEntryContainer entryContainer : this.entries) {
+			if (!(entryContainer instanceof LootItem lootItem)) continue;
+			if (lootItem.item.value().builtInRegistryHolder().is(itemTagKey)) return true;
 		}
 		return false;
 	}
@@ -211,11 +199,11 @@ public class MutableLootPool {
 	 * @return if any of the items were found
 	 */
 	public boolean hasAnyItems(Item... items) {
-		for (LootPoolEntryContainer entryContainer : entries) {
-			if (entryContainer instanceof LootItem lootItem) {
-				for (Item item : items) {
-					if (item.equals(lootItem.item.value())) return true;
-				}
+		for (LootPoolEntryContainer entryContainer : this.entries) {
+			if (!(entryContainer instanceof LootItem lootItem)) continue;
+
+			for (Item item : items) {
+				if (item.equals(lootItem.item.value())) return true;
 			}
 		}
 		return false;
@@ -227,19 +215,18 @@ public class MutableLootPool {
 	 * @param items items to check for
 	 * @return if all of the items were found
 	 */
-	public boolean hasAllItems(Item @NotNull ... items) {
+	public boolean hasAllItems(Item ... items) {
+		final Map<Item, Boolean> foundMap = new HashMap<>();
 		for (Item item : items) {
-			boolean found = false;
-			for (LootPoolEntryContainer entryContainer : entries) {
-				if (entryContainer instanceof LootItem lootItem) {
-					if (item.equals(lootItem.item.value())) {
-						found = true;
-						break;
-					}
-				}
+			if (foundMap.getOrDefault(item, false)) continue;
+
+			foundMap.put(item, false);
+			for (LootPoolEntryContainer entryContainer : this.entries) {
+				if (!(entryContainer instanceof LootItem lootItem)) continue;
+				if (!item.equals(lootItem.item.value())) continue;
+				foundMap.put(item, true);
 			}
-			if (!found) return false;
 		}
-		return true;
+		return !foundMap.containsValue(false);
 	}
 }

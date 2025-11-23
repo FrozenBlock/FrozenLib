@@ -47,18 +47,18 @@ public class BoneMealItemMixin {
 	)
 	private static void frozenLib$runBonemeal(
 		ItemStack stack, Level level, BlockPos pos, CallbackInfoReturnable<Boolean> info,
-		@Local(ordinal = 0) BlockState blockState
+		@Local(ordinal = 0) BlockState state
 	) {
-		final BoneMealApi.BoneMealBehavior bonemealBehavior = BoneMealApi.get(blockState.getBlock());
-		if (bonemealBehavior != null && bonemealBehavior.meetsRequirements(level, pos, blockState)) {
-			if (level instanceof ServerLevel serverLevel) {
-				if (bonemealBehavior.isBoneMealSuccess(level, level.random, pos, blockState)) {
-					bonemealBehavior.performBoneMeal(serverLevel, level.random, pos, blockState);
-				}
-				stack.shrink(1);
+		final BoneMealApi.BoneMealBehavior bonemealBehavior = BoneMealApi.get(state.getBlock());
+		if (bonemealBehavior == null || !bonemealBehavior.meetsRequirements(level, pos, state)) return;
+
+		if (level instanceof ServerLevel serverLevel) {
+			if (bonemealBehavior.isBoneMealSuccess(level, level.random, pos, state)) {
+				bonemealBehavior.performBoneMeal(serverLevel, level.random, pos, state);
 			}
-			info.setReturnValue(true);
+			stack.shrink(1);
 		}
+		info.setReturnValue(true);
 	}
 
 	@Inject(
@@ -70,7 +70,8 @@ public class BoneMealItemMixin {
 		cancellable = true
 	)
 	private static void frozenLib$addGrowthParticles(
-		LevelAccessor level, BlockPos pos, int count, CallbackInfo info, @Local(ordinal = 0) BlockState state
+		LevelAccessor level, BlockPos pos, int count, CallbackInfo info,
+		@Local(ordinal = 0) BlockState state
 	) {
 		final BoneMealApi.BoneMealBehavior bonemealBehavior = BoneMealApi.get(state.getBlock());
 		if (bonemealBehavior == null) return;

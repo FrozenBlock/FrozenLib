@@ -32,28 +32,28 @@ import lombok.experimental.UtilityClass;
 public class Conics {
 
 	public static boolean isCircle(Point2D center, double radius, Point2D actual) {
-		double curvex = Math.pow(actual.getX() - center.getX(), 2);
-		double curvey = Math.pow(actual.getY() - center.getY(), 2);
+		final double curvex = Math.pow(actual.getX() - center.getX(), 2);
+		final double curvey = Math.pow(actual.getY() - center.getY(), 2);
 		return curvex + curvey == Math.pow(radius, 2);
 	}
 
 	public static boolean isInsideCircle(Point2D center, double radius, Point2D actual) {
-		double curvex = Math.pow(actual.getX() - center.getX(), 2);
-		double curvey = Math.pow(actual.getY() - center.getY(), 2);
+		final double curvex = Math.pow(actual.getX() - center.getX(), 2);
+		final double curvey = Math.pow(actual.getY() - center.getY(), 2);
 		return curvex + curvey <= Math.pow(radius, 2);
 	}
 
 	public static boolean isEllipsoid(Point3D center, double a, double b, double c, Point3D actual) {
-		double curvex = Math.pow(actual.getX() - center.getX(), 2) / Math.pow(a, 2);
-		double curvey = Math.pow(actual.getY() - center.getY(), 2) / Math.pow(b, 2);
-		double curvez = Math.pow(actual.getZ() - center.getZ(), 2) / Math.pow(c, 2);
+		final double curvex = Math.pow(actual.getX() - center.getX(), 2) / Math.pow(a, 2);
+		final double curvey = Math.pow(actual.getY() - center.getY(), 2) / Math.pow(b, 2);
+		final double curvez = Math.pow(actual.getZ() - center.getZ(), 2) / Math.pow(c, 2);
 		return curvex + curvey + curvez == 1;
 	}
 
 	public static boolean isInsideEllipsoid(Point3D center, double a, double b, double c, Point3D actual) {
-		double curvex = Math.pow(actual.getX() - center.getX(), 2) / (Math.pow(a, 2));
-		double curvey = Math.pow(actual.getY() - center.getY(), 2) / (Math.pow(b, 2));
-		double curvez = Math.pow(actual.getZ() - center.getZ(), 2) / (Math.pow(c, 2));
+		final double curvex = Math.pow(actual.getX() - center.getX(), 2) / (Math.pow(a, 2));
+		final double curvey = Math.pow(actual.getY() - center.getY(), 2) / (Math.pow(b, 2));
+		final double curvez = Math.pow(actual.getZ() - center.getZ(), 2) / (Math.pow(c, 2));
 		return curvex + curvey + curvez <= 1;
 	}
 }

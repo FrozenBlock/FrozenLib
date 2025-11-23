@@ -51,20 +51,20 @@ public class ShovelItemMixin {
 	)
 	public Direction frozenlib$startShovelBehavior(
 		Direction original,
-		@Local Level level, @Local BlockPos pos, @Local BlockState blockState,
+		@Local Level level, @Local BlockPos pos, @Local BlockState state,
 		@Share("frozenLib$isCustomBehavior") LocalBooleanRef isCustomBehavior,
 		@Share("frozenLib$direction") LocalRef<Direction> direction,
 		@Share("frozenLib$shovelBehavior") LocalRef<ShovelApi.ShovelBehavior> shovelBehavior
 	) {
 		direction.set(original);
-		final ShovelApi.ShovelBehavior possibleBehavior = ShovelApi.get(blockState.getBlock());
-		if (possibleBehavior != null && possibleBehavior.meetsRequirements(level, pos, original, blockState)) {
-			isCustomBehavior.set(true);
-			shovelBehavior.set(possibleBehavior);
-			return Direction.UP;
-		}
 		isCustomBehavior.set(false);
-		return original;
+
+		final ShovelApi.ShovelBehavior possibleBehavior = ShovelApi.get(state.getBlock());
+		if (possibleBehavior == null || !possibleBehavior.meetsRequirements(level, pos, original, state)) return original;
+
+		isCustomBehavior.set(true);
+		shovelBehavior.set(possibleBehavior);
+		return Direction.UP;
 	}
 
 	@ModifyExpressionValue(
@@ -110,17 +110,17 @@ public class ShovelItemMixin {
 		UseOnContext context, CallbackInfoReturnable<InteractionResult> info,
 		@Local Level level,
 		@Local BlockPos pos,
-		@Local(ordinal = 0) BlockState blockState,
-		@Local(ordinal = 2) LocalRef<BlockState> blockState3,
+		@Local(ordinal = 0) BlockState state,
+		@Local(ordinal = 2) LocalRef<BlockState> state3,
 		@Share("frozenLib$direction") LocalRef<Direction> direction,
 		@Share("frozenLib$shovelBehavior") LocalRef<ShovelApi.ShovelBehavior> shovelBehavior
 	) {
 		final ShovelApi.ShovelBehavior runBehavior = shovelBehavior.get();
 		if (runBehavior == null) return;
 
-		final BlockState outputState = runBehavior.getOutputBlockState(blockState);
-		runBehavior.onSuccess(level, pos, direction.get(), outputState, blockState);
-		blockState3.set(outputState);
+		final BlockState outputState = runBehavior.getOutputBlockState(state);
+		runBehavior.onSuccess(level, pos, direction.get(), outputState, state);
+		state3.set(outputState);
 	}
 
 }

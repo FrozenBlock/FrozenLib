@@ -24,82 +24,64 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public class AdvancedMath {
 
 	@Contract(" -> new")
-	@NotNull
 	public static RandomSource random() {
 		return RandomSource.create();
 	}
 
-    public static float range(final float min, final float max,
-                              final float number) {
+    public static float range(final float min, final float max, final float number) {
         return (number * max) + min;
     }
 
     public static double randomPosNeg() {
-        return random().nextDouble() * (random().nextDouble() >= 0.5 ? 1 : -1);
+		final RandomSource random = random();
+        return random.nextDouble() * (random.nextBoolean() ? 1D : -1D);
     }
 
-
-    public static boolean squareBetween(
-            final int x,
-            final int z,
-            final int between1,
-            final int between2
-    ) {
-        boolean cond1 = x > between1 && x < between2;
-        boolean cond2 = z > between1 && z < between2;
+    public static boolean squareBetween(final int x, final int z, final int between1, final int between2) {
+		final boolean cond1 = x > between1 && x < between2;
+		final boolean cond2 = z > between1 && z < between2;
         return cond1 && cond2;
     }
 
     public static double cutCos(double value, double offset, boolean inverse) {
-        double equation = Math.cos(value);
-        if (!inverse) {
-            return Math.max(equation, offset);
-        } else {
-            return Math.max(-equation, offset);
-        }
+		final double equation = Math.cos(value);
+        if (!inverse) return Math.max(equation, offset);
+		return Math.max(-equation, offset);
     }
 
 	public static int factorial(int n) {
-		if (n < 0) {
-			throw new IllegalArgumentException("Factorial of negative numbers is undefined");
-		}
+		if (n < 0) throw new IllegalArgumentException("Factorial of negative numbers is undefined");
+
 		int result = 1;
-		for (int i = 2; i <= n; i++) {
-			result *= i;
-		}
+		for (int i = 2; i <= n; i++) result *= i;
+
 		return result;
 	}
 
 	public static int permutations(int n, int r) {
-		if (n < 0 || r < 0 || r > n) {
-			throw new IllegalArgumentException("Invalid input: n must be non-negative, r must be non-negative and not greater than n");
-		}
+		if (n < 0 || r < 0 || r > n) throw new IllegalArgumentException("Invalid input: n must be non-negative, r must be non-negative and not greater than n");
+
 		int result = 1;
-		for (int i = n; i > n - r; i--) {
-			result *= i;
-		}
+		for (int i = n; i > n - r; i--) result *= i;
+
 		return result;
 	}
 
 	public static int combinations(int n, int r) {
-		if (n < 0 || r < 0 || r > n) {
-			throw new IllegalArgumentException("Invalid input: n must be non-negative, r must be non-negative and not greater than n");
-		}
+		if (n < 0 || r < 0 || r > n) throw new IllegalArgumentException("Invalid input: n must be non-negative, r must be non-negative and not greater than n");
+
 		int numerator = 1;
-		for (int i = n; i > n - r; i--) {
-			numerator *= i;
-		}
+		for (int i = n; i > n - r; i--) numerator *= i;
+
 		int denominator = 1;
-		for (int i = r; i > 0; i--) {
-			denominator *= i;
-		}
+		for (int i = r; i > 0; i--) denominator *= i;
+
 		return numerator / denominator;
 	}
 
@@ -113,20 +95,19 @@ public class AdvancedMath {
 	 * @throws IllegalArgumentException if a is zero
 	 */
 	public static double @Nullable [] solveQuadraticEquation(double a, double b, double c) {
-		if (a == 0) {
-			throw new IllegalArgumentException("a cannot be zero");
-		}
+		if (a == 0) throw new IllegalArgumentException("a cannot be zero");
+
 		double discriminant = b * b - 4 * a * c;
-		if (discriminant < 0) {
-			return null;
-		} else if (discriminant == 0) {
-			double root = -b / (2 * a);
+		if (discriminant < 0) return null;
+
+		if (discriminant == 0) {
+			final double root = -b / (2 * a);
 			return new double[]{root};
-		} else {
-			double root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
-			double root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
-			return new double[]{root1, root2};
 		}
+
+		final double root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+		final double root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+		return new double[]{root1, root2};
 	}
 
 	/**
@@ -154,65 +135,66 @@ public class AdvancedMath {
 	 * @param axis The axis that should be used to determine a random direction.
 	 * @return A random {@linkplain Direction} on a specific {@linkplain Direction.Axis}.
 	 */
-	@NotNull
-    public static Direction randomDir(@NotNull final Direction.Axis axis) {
-        double random = random().nextDouble();
+    public static Direction randomDir(final Direction.Axis axis) {
+        final boolean random = random().nextBoolean();
 		switch (axis) {
 			case X -> {
-				return random > 0.5D ? Direction.EAST : Direction.WEST;
+				return random ? Direction.EAST : Direction.WEST;
 			}
 			case Y -> {
-				return random > 0.5D ? Direction.UP : Direction.DOWN;
+				return random ? Direction.UP : Direction.DOWN;
 			}
 			default -> {
-				return random > 0.5D ? Direction.NORTH : Direction.SOUTH;
+				return random ? Direction.NORTH : Direction.SOUTH;
 			}
 		}
     }
 
-	public static double distanceBetween(@NotNull BlockPos center, @NotNull BlockPos currentPos, boolean includeY) {
-		double xSquared = Mth.square(center.getX() - currentPos.getX());
-		double ySquared = includeY ? Mth.square(center.getY() - currentPos.getY()) : 0D;
-		double zSquared = Mth.square(center.getZ() - currentPos.getZ());
+	public static double distanceBetween(BlockPos center, BlockPos currentPos, boolean includeY) {
+		final double xSquared = Mth.square(center.getX() - currentPos.getX());
+		final double ySquared = includeY ? Mth.square(center.getY() - currentPos.getY()) : 0D;
+		final double zSquared = Mth.square(center.getZ() - currentPos.getZ());
 		return Math.sqrt(xSquared + ySquared + zSquared);
 	}
 
-	@NotNull
-	public static Vec3 rotateAboutXZ(@NotNull Vec3 original, double distanceFrom, double angle) {
-		double calcAngle = angle * (Math.PI / 180D);
-		Vec3 offsetVec = original.add(distanceFrom, 0, distanceFrom);
-		double originX = original.x;
-		double originZ = original.z;
-		double distancedX = offsetVec.x;
-		double distancedZ = offsetVec.z;
-		double x = originX + (distancedX - originX) * Math.cos(calcAngle) - (distancedZ - originZ) * Math.sin(calcAngle);
-		double z = originZ + (distancedX - originX) * Math.sin(calcAngle) + (distancedZ - originZ) * Math.cos(calcAngle);
+	public static Vec3 rotateAboutXZ(Vec3 original, double distanceFrom, double angle) {
+		final double calcAngle = angle * (Math.PI / 180D);
+		final Vec3 offsetVec = original.add(distanceFrom, 0, distanceFrom);
+
+		final double originX = original.x;
+		final double originZ = original.z;
+		final double distancedX = offsetVec.x;
+		final double distancedZ = offsetVec.z;
+
+		final double x = originX + (distancedX - originX) * Math.cos(calcAngle) - (distancedZ - originZ) * Math.sin(calcAngle);
+		final double z = originZ + (distancedX - originX) * Math.sin(calcAngle) + (distancedZ - originZ) * Math.cos(calcAngle);
 		return new Vec3(x, original.y, z);
 	}
 
-	@NotNull
-	public static Vec3 rotateAboutX(@NotNull Vec3 original, double distanceFrom, double angle) {
-		double calcAngle = angle * (Math.PI / 180D);
-		Vec3 offsetVec = original.add(distanceFrom, 0, 0);
-		double originX = original.x;
-		double originZ = original.z;
-		double distancedX = offsetVec.x;
-		double distancedZ = offsetVec.z;
-		double x = originX + (distancedX - originX) * Math.cos(calcAngle) - (distancedZ - originZ) * Math.sin(calcAngle);
-		double z = originZ + (distancedX - originX) * Math.sin(calcAngle) + (distancedZ - originZ) * Math.cos(calcAngle);
+	public static Vec3 rotateAboutX(Vec3 original, double distanceFrom, double angle) {
+		final double calcAngle = angle * (Math.PI / 180D);
+		final Vec3 offsetVec = original.add(distanceFrom, 0, 0);
+
+		final double originX = original.x;
+		final double originZ = original.z;
+		final double distancedX = offsetVec.x;
+		final double distancedZ = offsetVec.z;
+
+		final double x = originX + (distancedX - originX) * Math.cos(calcAngle) - (distancedZ - originZ) * Math.sin(calcAngle);
+		final double z = originZ + (distancedX - originX) * Math.sin(calcAngle) + (distancedZ - originZ) * Math.cos(calcAngle);
 		return new Vec3(x, original.y, z);
 	}
 
 	@Contract(pure = true)
-	public static double getAngleFromOriginXZ(@NotNull Vec3 pos) { // https://stackoverflow.com/questions/35271222/getting-the-angle-from-a-direction-vector
-		double angleRad = Math.atan2(pos.x, pos.z);
-		double degrees = angleRad * Mth.RAD_TO_DEG;
+	public static double getAngleFromOriginXZ(Vec3 pos) { // https://stackoverflow.com/questions/35271222/getting-the-angle-from-a-direction-vector
+		final double angleRad = Math.atan2(pos.x, pos.z);
+		final double degrees = angleRad * Mth.RAD_TO_DEG;
 		return (360D + Math.round(degrees)) % 360D;
 	}
 
 
-	public static double getAngleBetweenXZ(@NotNull Vec3 posA, @NotNull Vec3 posB) {
-	    double angle = Math.atan2(posA.x - posB.x, posA.z - posB.z);
+	public static double getAngleBetweenXZ(Vec3 posA, Vec3 posB) {
+		final double angle = Math.atan2(posA.x - posB.x, posA.z - posB.z);
 		return (360D + (angle * Mth.RAD_TO_DEG)) % 360D;
 	}
 }

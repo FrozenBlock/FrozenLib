@@ -27,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Consumable;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class DamageOnUseBlockItem extends BlockItem {
@@ -43,9 +42,8 @@ public class DamageOnUseBlockItem extends BlockItem {
     }
 
     @Override
-	@NotNull
-    public ItemStack finishUsingItem(@NotNull ItemStack stack, Level level, LivingEntity entity) {
-		Consumable consumable = stack.get(DataComponents.CONSUMABLE);
+    public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity entity) {
+		final Consumable consumable = stack.get(DataComponents.CONSUMABLE);
 		if (consumable == null) return stack;
 
 		entity.hurt(entity.damageSources().source(this.damageType),this.damage);

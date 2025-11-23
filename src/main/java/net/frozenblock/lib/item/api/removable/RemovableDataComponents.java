@@ -28,7 +28,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class RemovableDataComponents {
 	private static final LinkedHashMap<Holder<DataComponentType<?>>, RemovableDataComponent> REMOVABLE_DATA_COMPONENTS = new LinkedHashMap<>();
@@ -40,11 +39,11 @@ public class RemovableDataComponents {
 		REMOVABLE_DATA_COMPONENTS.put(holder, new RemovableDataComponent(holder, removalPredicate, removeOnStackMerge));
 	}
 
-	public static boolean canRemoveComponent(DataComponentType<?> component, Level level, Entity entity, EquipmentSlot equipmentSlot) {
+	public static boolean canRemoveComponent(DataComponentType<?> component, Level level, Entity entity, EquipmentSlot slot) {
 		final ResourceKey<DataComponentType<?>> key = BuiltInRegistries.DATA_COMPONENT_TYPE.getResourceKey(component).orElseThrow();
 		final Holder<DataComponentType<?>> holder = BuiltInRegistries.DATA_COMPONENT_TYPE.getOrThrow(key);
 		final RemovableDataComponent removableDataComponent = REMOVABLE_DATA_COMPONENTS.get(holder);
-		if (removableDataComponent != null) return removableDataComponent.shouldRemove(level, entity, equipmentSlot);
+		if (removableDataComponent != null) return removableDataComponent.shouldRemove(level, entity, slot);
 
 		FrozenLibLogUtils.logError("Unable to find RemovableDataComponent for DataComponent " + key.identifier() + "!", true, null);
 		FrozenLibLogUtils.logError("Please make sure " + key.identifier() + " is registered in RemovableDataComponents.class!", true, null);
@@ -63,7 +62,7 @@ public class RemovableDataComponents {
 	}
 
 	@Contract(pure = true)
-	public static @NotNull Set<Holder<DataComponentType<?>>> keys() {
+	public static Set<Holder<DataComponentType<?>>> keys() {
 		return REMOVABLE_DATA_COMPONENTS.keySet();
 	}
 
@@ -83,8 +82,8 @@ public class RemovableDataComponents {
 		}
 
 		@Override
-		public boolean shouldRemove(Level level, Entity entity, EquipmentSlot equipmentSlot) {
-			return this.predicate.shouldRemove(level, entity, equipmentSlot);
+		public boolean shouldRemove(Level level, Entity entity, EquipmentSlot slot) {
+			return this.predicate.shouldRemove(level, entity, slot);
 		}
 
 		public boolean shouldRemoveOnStackMerge() {

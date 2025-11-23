@@ -30,7 +30,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public class FrozenLibParticleTypes {
 	public static final ParticleType<WindParticleOptions> WIND_SMALL = register(
@@ -41,17 +40,14 @@ public class FrozenLibParticleTypes {
 	);
 	public static void init() {}
 
-	@NotNull
-	private static SimpleParticleType register(@NotNull String name, boolean alwaysShow) {
+	private static SimpleParticleType register(String name, boolean alwaysShow) {
 		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, FrozenLibConstants.id(name), FabricParticleTypes.simple(alwaysShow));
 	}
 
-	@NotNull
-	private static SimpleParticleType register(@NotNull String name) {
+	private static SimpleParticleType register(String name) {
 		return register(name, false);
 	}
 
-	@NotNull
 	private static <T extends ParticleOptions> ParticleType<T> register(
 		String string,
 		boolean alwaysShow,
@@ -61,7 +57,6 @@ public class FrozenLibParticleTypes {
 		return register(FrozenLibConstants.id(string), alwaysShow, function, function2);
 	}
 
-	@NotNull
 	private static <T extends ParticleOptions> ParticleType<T> register(
 		Identifier identifier,
 		boolean alwaysShow,
@@ -70,11 +65,10 @@ public class FrozenLibParticleTypes {
 	) {
 		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, identifier, new ParticleType<T>(alwaysShow) {
 			@Override
-			public @NotNull MapCodec<T> codec() {
+			public MapCodec<T> codec() {
 				return function.apply(this);
 			}
 
-			@NotNull
 			@Override
 			public StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
 				return function2.apply(this);

@@ -42,7 +42,7 @@ public class SplashManagerMixin {
 		at = @At("RETURN")
 	)
 	public List<Component> frozenLib$addSplashFiles(List<Component> original, ResourceManager resourceManager, ProfilerFiller profiler) {
-		ArrayList<Component> splashes = new ArrayList<>(original);
+		final ArrayList<Component> splashes = new ArrayList<>(original);
 
 		splashes.addAll(
 			SplashTextAPI.getAdditions()

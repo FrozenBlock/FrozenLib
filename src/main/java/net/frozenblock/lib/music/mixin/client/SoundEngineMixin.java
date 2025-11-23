@@ -42,12 +42,10 @@ public class SoundEngineMixin implements SoundEngineInterface {
 
 	@Unique
 	@Override
-	public void frozenLib$setPitch(SoundInstance soundInstance, float pitch) {
-		if (this.loaded) {
-			ChannelAccess.ChannelHandle channelHandle = this.instanceToChannel.get(soundInstance);
-			if (channelHandle != null) {
-				channelHandle.execute(channel -> channel.setPitch(pitch));
-			}
-		}
+	public void frozenLib$setPitch(SoundInstance sound, float pitch) {
+		if (!this.loaded) return;
+
+		final ChannelAccess.ChannelHandle channelHandle = this.instanceToChannel.get(sound);
+		if (channelHandle != null) channelHandle.execute(channel -> channel.setPitch(pitch));
 	}
 }

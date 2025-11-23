@@ -31,7 +31,6 @@ import net.minecraft.world.item.InstrumentItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A class used for adding items to {@link CreativeModeTab}s.
@@ -41,11 +40,14 @@ import org.jetbrains.annotations.NotNull;
 @UtilityClass
 public class FrozenCreativeTabs {
 
-	public static void add(ItemLike item, ResourceKey<CreativeModeTab> @NotNull ... tabs) {
+	public static void add(
+		ItemLike item,
+		ResourceKey<CreativeModeTab> ... tabs
+	) {
 		if (item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
-				final var stack = new ItemStack(item);
+				final ItemStack stack = new ItemStack(item);
 				stack.setCount(1);
 				entries.accept(stack);
 			});
@@ -68,11 +70,11 @@ public class FrozenCreativeTabs {
 		ItemLike comparedItem,
 		ItemLike item,
 		CreativeModeTab.TabVisibility tabVisibility,
-		ResourceKey<CreativeModeTab> @NotNull ... tabs
+		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			final var stack = new ItemStack(item);
+			final ItemStack stack = new ItemStack(item);
 			stack.setCount(1);
 			final List<ItemStack> list = List.of(stack);
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> entries.addBefore(comparedItem, list, tabVisibility));
@@ -88,14 +90,14 @@ public class FrozenCreativeTabs {
 		ItemLike item,
 		String path,
 		CreativeModeTab.TabVisibility tabVisibility,
-		ResourceKey<CreativeModeTab> @NotNull ... tabs
+		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || item == null ) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			final var stack = new ItemStack(item);
+			final ItemStack stack = new ItemStack(item);
 			stack.setCount(1);
 			final List<ItemStack> list = List.of(stack);
-			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
+			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.addBefore(comparedItem, list, tabVisibility);
 			});
@@ -122,14 +124,14 @@ public class FrozenCreativeTabs {
 		ItemLike comparedItem,
 		ItemLike item,
 		CreativeModeTab.TabVisibility tabVisibility,
-		ResourceKey<CreativeModeTab> @NotNull ... tabs
+		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			final var stack = new ItemStack(item);
+			final ItemStack stack = new ItemStack(item);
 			stack.setCount(1);
 			final List<ItemStack> list = List.of(stack);
-			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> entries.addAfter(comparedItem, list, tabVisibility));
+			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> entries.addAfter(comparedItem, list, tabVisibility));
 		}
 	}
 
@@ -142,14 +144,14 @@ public class FrozenCreativeTabs {
 		ItemLike item,
 		String path,
 		CreativeModeTab.TabVisibility tabVisibility,
-		ResourceKey<CreativeModeTab> @NotNull ... tabs
+		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			final var stack = new ItemStack(item);
+			final ItemStack stack = new ItemStack(item);
 			stack.setCount(1);
 			final List<ItemStack> list = List.of(stack);
-			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
+			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.addAfter(comparedItem, list, tabVisibility);
 			});
@@ -160,16 +162,19 @@ public class FrozenCreativeTabs {
 		Item instrument,
 		TagKey<Instrument> tagKey,
 		CreativeModeTab.TabVisibility tabVisibility,
-		ResourceKey<CreativeModeTab> @NotNull ... tabs
+		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
-				entries.getContext().holders().lookupOrThrow(Registries.INSTRUMENT).get(tagKey)
+			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
+				entries.getContext()
+					.holders()
+					.lookupOrThrow(Registries.INSTRUMENT)
+					.get(tagKey)
 					.ifPresent(
 						named -> named.stream()
-							.map(holder -> InstrumentItem.create(instrument, holder))
-							.forEach(itemStack -> entries.accept(itemStack, tabVisibility))
+						.map(holder -> InstrumentItem.create(instrument, holder))
+						.forEach(stack -> entries.accept(stack, tabVisibility))
 					);
 			});
 		}
@@ -184,17 +189,20 @@ public class FrozenCreativeTabs {
 		Item instrument,
 		TagKey<Instrument> tagKey,
 		CreativeModeTab.TabVisibility tabVisibility,
-		ResourceKey<CreativeModeTab> @NotNull ... tabs
+		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
 			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				final List<ItemStack> list = new ArrayList<>();
-				entries.getContext().holders().lookupOrThrow(Registries.INSTRUMENT).get(tagKey)
+				entries.getContext()
+					.holders()
+					.lookupOrThrow(Registries.INSTRUMENT)
+					.get(tagKey)
 					.ifPresent(
 						named -> named.stream()
-							.map(holder -> InstrumentItem.create(instrument, holder))
-							.forEach(list::add)
+						.map(holder -> InstrumentItem.create(instrument, holder))
+						.forEach(list::add)
 					);
 				entries.addBefore(comparedItem, list, tabVisibility);
 			});
@@ -210,17 +218,20 @@ public class FrozenCreativeTabs {
 		Item instrument,
 		TagKey<Instrument> tagKey,
 		CreativeModeTab.TabVisibility tabVisibility,
-		ResourceKey<CreativeModeTab> @NotNull ... tabs
+		ResourceKey<CreativeModeTab> ... tabs
 	) {
 		if (comparedItem == null || instrument == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			ItemGroupEvents.modifyEntriesEvent(tab).register((entries) -> {
+			ItemGroupEvents.modifyEntriesEvent(tab).register(entries -> {
 				final List<ItemStack> list = new ArrayList<>();
-				entries.getContext().holders().lookupOrThrow(Registries.INSTRUMENT).get(tagKey)
+				entries.getContext()
+					.holders()
+					.lookupOrThrow(Registries.INSTRUMENT)
+					.get(tagKey)
 					.ifPresent(
 						named -> named.stream()
-							.map(holder -> InstrumentItem.create(instrument, holder))
-							.forEach(list::add)
+						.map(holder -> InstrumentItem.create(instrument, holder))
+						.forEach(list::add)
 					);
 				entries.addAfter(comparedItem, list, tabVisibility);
 			});

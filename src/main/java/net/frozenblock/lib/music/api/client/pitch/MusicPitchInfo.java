@@ -24,10 +24,10 @@ import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
 import net.minecraft.resources.Identifier;
 
 /**
- * @param type The in-game location type to check, in {@link MusicPitchDetectionType} form.
- * @param location The {@link Identifier} of the in-game location that triggers the pitch change.
+ * @param type The in-game id type to check, in {@link MusicPitchDetectionType} form.
+ * @param id The {@link Identifier} of the in-game id that triggers the pitch change.
  * @param pitchFunction The target pitch to play music at. This is passed as a {@link Function} with a {@link Long} as the parameter, allowing pitch to continuously shift.
  */
 @Environment(EnvType.CLIENT)
-public record MusicPitchInfo(MusicPitchDetectionType type, Identifier location, Function<Long, Float> pitchFunction) {
+public record MusicPitchInfo(MusicPitchDetectionType type, Identifier id, Function<Long, Float> pitchFunction) {
 }
