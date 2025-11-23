@@ -27,10 +27,10 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenClothConfig {
+
 	private FrozenClothConfig() {}
 
 	/**
@@ -45,22 +45,20 @@ public final class FrozenClothConfig {
 	 * @return the newly created subcategory
 	 */
 	@SuppressWarnings("rawtypes")
-	public static ConfigCategory createSubCategory(@NotNull ConfigEntryBuilder entryBuilder, @NotNull ConfigCategory parentCategory, @NotNull Component key, boolean expanded, Component tooltip, @NotNull AbstractConfigListEntry... entries) {
+	public static ConfigCategory createSubCategory(ConfigEntryBuilder entryBuilder, ConfigCategory parentCategory, Component key, boolean expanded, Component tooltip, AbstractConfigListEntry... entries) {
 		// Create the subcategory
-		var subCategory = entryBuilder.startSubCategory(key, Arrays.stream(entries).toList());
+		final var subCategory = entryBuilder.startSubCategory(key, Arrays.stream(entries).toList());
 
 		// Set the expanded status
 		subCategory.setExpanded(expanded);
 		// If the tooltip is not null, set the tooltip for the subcategory
-		if (tooltip != null) {
-			subCategory.setTooltip(tooltip);
-		}
+		if (tooltip != null) subCategory.setTooltip(tooltip);
 
 		// Add the subcategory to the parent category and return it
 		return parentCategory.addEntry(entryBuilder.startSubCategory(key, Arrays.stream(entries).toList())
-				.setExpanded(expanded)
-				.setTooltip(tooltip)
-				.build()
+			.setExpanded(expanded)
+			.setTooltip(tooltip)
+			.build()
 		);
 	}
 

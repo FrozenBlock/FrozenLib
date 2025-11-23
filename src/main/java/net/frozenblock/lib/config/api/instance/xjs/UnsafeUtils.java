@@ -37,35 +37,31 @@ public class UnsafeUtils {
 
 	@SuppressWarnings("unchecked")
 	public static <V> V getUnsafely(Field field, Object obj) {
-		if (obj == null) {
-			return null;
-		} else {
-			try {
-				field.setAccessible(true);
-				return (V) field.get(obj);
-			} catch (ReflectiveOperationException var3) {
-				throw new RuntimeException(var3);
-			}
+		if (obj == null) return null;
+
+		try {
+			field.setAccessible(true);
+			return (V) field.get(obj);
+		} catch (ReflectiveOperationException var3) {
+			throw new RuntimeException(var3);
 		}
 	}
 
 	public static <V> V getUnsafely(Field field, Object obj, V defaultValue) {
 		V ret = getUnsafely(field, obj);
-		if (ret == null) {
-			ret = defaultValue;
-		}
+		if (ret == null) ret = defaultValue;
 
 		return ret;
 	}
 
 	public static void setUnsafely(Field field, Object obj, Object newValue) {
-		if (obj != null) {
-			try {
-				field.setAccessible(true);
-				field.set(obj, newValue);
-			} catch (ReflectiveOperationException var4) {
-				throw new RuntimeException(var4);
-			}
+		if (obj == null) return;
+
+		try {
+			field.setAccessible(true);
+			field.set(obj, newValue);
+		} catch (ReflectiveOperationException var4) {
+			throw new RuntimeException(var4);
 		}
 	}
 }

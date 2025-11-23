@@ -27,12 +27,8 @@ import net.frozenblock.lib.config.api.instance.ConfigModification;
  */
 @Environment(EnvType.CLIENT)
 public interface DisableableWidgetInterface {
-
 	void frozenLib$addSyncData(Class<?> clazz, String identifier, Config<?> configInstance);
-
 	boolean frozenLib$isSyncable();
-
 	boolean frozenLib$hasValidData();
-
 	ConfigModification.EntryPermissionType frozenLib$getEntryPermissionType();
 }

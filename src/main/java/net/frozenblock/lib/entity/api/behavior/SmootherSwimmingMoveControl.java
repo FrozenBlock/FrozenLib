@@ -43,28 +43,26 @@ public class SmootherSwimmingMoveControl extends MoveControl {
 
 	@Override
 	public void tick() {
-		if (this.applyGravity && this.mob.isInWater()) {
-			this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(0D, 0.005D, 0D));
-		}
+		if (this.applyGravity && this.mob.isInWater()) this.mob.setDeltaMovement(this.mob.getDeltaMovement().add(0D, 0.005D, 0D));
 
 		if (this.operation == Operation.MOVE_TO && !this.mob.getNavigation().isDone()) {
-			final double d = this.wantedX - this.mob.getX();
-			final double e = this.wantedY - this.mob.getY();
-			final double f = this.wantedZ - this.mob.getZ();
-			final double g = d * d + e * e + f * f;
-			if (g < 2.5000003E-7F) {
+			final double xDifference = this.wantedX - this.mob.getX();
+			final double yDifference = this.wantedY - this.mob.getY();
+			final double zDifference = this.wantedZ - this.mob.getZ();
+			final double differenceSqr = xDifference * xDifference + yDifference * yDifference + zDifference * zDifference;
+			if (differenceSqr < 2.5000003E-7F) {
 				this.mob.setZza(0F);
 			} else {
-				final float h = (float) (Mth.atan2(f, d) * Mth.RAD_TO_DEG) - 90F;
+				final float h = (float) (Mth.atan2(zDifference, xDifference) * Mth.RAD_TO_DEG) - 90F;
 				this.mob.setYRot(this.rotlerp(this.mob.getYRot(), h, this.maxTurnY));
 				this.mob.yBodyRot = this.mob.getYRot();
 				this.mob.yHeadRot = this.mob.getYRot();
 				float i = (float) (this.speedModifier * this.mob.getAttributeValue(Attributes.MOVEMENT_SPEED));
 				if (this.mob.isInWater()) {
 					this.mob.setSpeed(i * this.inWaterSpeedModifier);
-					double j = Math.sqrt(d * d + f * f);
-					if (Math.abs(e) > 1.0E-5F || Math.abs(j) > 1.0E-5F) {
-						float k = -((float) (Mth.atan2(e, j) * Mth.RAD_TO_DEG));
+					double j = Math.sqrt(xDifference * xDifference + zDifference * zDifference);
+					if (Math.abs(yDifference) > 1.0E-5F || Math.abs(j) > 1.0E-5F) {
+						float k = -((float) (Mth.atan2(yDifference, j) * Mth.RAD_TO_DEG));
 						k = Mth.clamp(Mth.wrapDegrees(k), -this.maxTurnX, this.maxTurnX);
 						this.mob.setXRot(this.rotlerp(this.mob.getXRot(), k, 5F));
 					}

@@ -32,8 +32,6 @@ public class AbstractConfigEntryMixin {
 
 	@Inject(method = "save", at = @At("HEAD"), cancellable = true, remap = false)
 	public void frozenLib$save(CallbackInfo info) {
-		if (!((DisableableWidgetInterface) this).frozenLib$getEntryPermissionType().canModify) {
-			info.cancel();
-		}
+		if (!((DisableableWidgetInterface) this).frozenLib$getEntryPermissionType().canModify) info.cancel();
 	}
 }

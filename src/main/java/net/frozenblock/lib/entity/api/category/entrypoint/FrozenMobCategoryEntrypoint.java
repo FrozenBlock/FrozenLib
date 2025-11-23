@@ -21,14 +21,13 @@ import java.util.ArrayList;
 import net.frozenblock.lib.entity.impl.category.FrozenMobCategory;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public interface FrozenMobCategoryEntrypoint {
 
 	void newCategories(ArrayList<FrozenMobCategory> context);
 
 	@Contract("_, _, _, _, _ -> new")
-	static @NotNull FrozenMobCategory createCategory(Identifier key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
+	static FrozenMobCategory createCategory(Identifier key, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
 		return new FrozenMobCategory(key, max, isFriendly, isPersistent, despawnDistance);
 	}
 

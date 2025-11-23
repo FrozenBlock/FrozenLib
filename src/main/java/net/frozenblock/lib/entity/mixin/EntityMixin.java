@@ -44,12 +44,12 @@ public abstract class EntityMixin implements StartTrackingEntityInterface, Entit
 
 	@Unique
 	@Override
-	public void frozenLib$playerStartsTracking(ServerPlayer serverPlayer) {
+	public void frozenLib$playerStartsTracking(ServerPlayer player) {
 		final Entity entity = Entity.class.cast(this);
-		((EntityLoopingSoundInterface)entity).frozenLib$getSoundManager().syncWithPlayer(serverPlayer);
-		((EntityLoopingFadingDistanceSoundInterface)entity).frozenLib$getFadingSoundManager().syncWithPlayer(serverPlayer);
-		((EntitySpottingIconInterface)entity).getSpottingIconManager().sendIconPacket(serverPlayer);
-		((EntityScreenShakeInterface)entity).frozenLib$getScreenShakeManager().syncWithPlayer(serverPlayer);
+		((EntityLoopingSoundInterface)entity).frozenLib$getSoundManager().syncWithPlayer(player);
+		((EntityLoopingFadingDistanceSoundInterface)entity).frozenLib$getFadingSoundManager().syncWithPlayer(player);
+		((EntitySpottingIconInterface)entity).getSpottingIconManager().sendIconPacket(player);
+		((EntityScreenShakeInterface)entity).frozenLib$getScreenShakeManager().syncWithPlayer(player);
 	}
 
 	@Inject(
@@ -60,11 +60,14 @@ public abstract class EntityMixin implements StartTrackingEntityInterface, Entit
 			shift = At.Shift.AFTER
 		)
 	)
-	public void frozenLib$runSteppedOn(CallbackInfo info, @Local BlockPos blockPos, @Local BlockState blockState) {
-		this.frozenLib$onSteppedOnBlock(this.level(), blockPos, blockState);
+	public void frozenLib$runSteppedOn(
+		CallbackInfo info,
+		@Local BlockPos pos, @Local BlockState state
+	) {
+		this.frozenLib$onSteppedOnBlock(this.level(), pos, state);
 	}
 
 	@Override
-	public void frozenLib$onSteppedOnBlock(Level level, BlockPos blockPos, BlockState blockState) {
+	public void frozenLib$onSteppedOnBlock(Level level, BlockPos pos, BlockState state) {
 	}
 }

@@ -129,8 +129,9 @@ public record TrackedPosition<T>(PositionType type, T pos, T opposite) {
 			helper.assertBlockPresent(block, BlockPos.containing(vec3f.x(), vec3f.y(), vec3f.z()));
 		} else if (relative instanceof Vector3dc vec3d) {
 			helper.assertBlockPresent(block, BlockPos.containing(vec3d.x(), vec3d.y(), vec3d.z()));
-		} else
+		} else {
 			throw new IllegalStateException("Invalid position type: " + relative.getClass().getName());
+		}
 		return this;
 	}
 }

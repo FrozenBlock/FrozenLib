@@ -39,7 +39,6 @@ import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -60,7 +59,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	private static final int MAX_BYTES_PER_TRANSFER = 1835008; // 1.75MB
 
 	@ApiStatus.Internal
-	public static @NotNull FileTransferPacket create(@NotNull FriendlyByteBuf buf) {
+	public static FileTransferPacket create(FriendlyByteBuf buf) {
 		return new FileTransferPacket(buf.readUtf(), buf.readUtf(), buf.readBoolean(), FileTransferSnippet.read(buf), buf.readVarInt());
 	}
 
@@ -72,7 +71,8 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	 * @return A {@link List} of new file transfer packets.
 	 * @throws IOException
 	 */
-	public static @NotNull @Unmodifiable List<FileTransferPacket> create(String destPath, @NotNull File file) throws IOException {
+	@Unmodifiable
+	public static List<FileTransferPacket> create(String destPath, File file) throws IOException {
 		final Pair<Integer, List<FileTransferSnippet>> snippets = createSnippets(readFile(file));
 		final int totalPacketCount = snippets.getFirst();
 
@@ -99,7 +99,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	 * @param fileName    The requested file's name, including the file extension.
 	 * @return The new file request packet.
 	 */
-	public static @NotNull FileTransferPacket createRequest(String requestPath, String fileName) {
+	public static FileTransferPacket createRequest(String requestPath, String fileName) {
 		return new FileTransferPacket(requestPath, fileName, true, FileTransferSnippet.EMPTY, 0);
 	}
 
@@ -132,7 +132,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	}
 
 	@ApiStatus.Internal
-	private void write(@NotNull FriendlyByteBuf buf) {
+	private void write(FriendlyByteBuf buf) {
 		buf.writeUtf(this.transferPath);
 		buf.writeUtf(this.fileName);
 		buf.writeBoolean(this.request);
@@ -142,12 +142,11 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 
 	@ApiStatus.Internal
 	@Override
-	@NotNull
 	public Type<? extends CustomPacketPayload> type() {
 		return PACKET_TYPE;
 	}
 
-	private static @NotNull Pair<Integer, List<FileTransferSnippet>> createSnippets(byte[] bytes) {
+	private static Pair<Integer, List<FileTransferSnippet>> createSnippets(byte[] bytes) {
 		final AtomicInteger index = new AtomicInteger(0);
 		final List<FileTransferSnippet> snippets = new ArrayList<>();
 
@@ -167,12 +166,12 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 		public static final FileTransferSnippet EMPTY = new FileTransferSnippet(new byte[0], 0);
 
 		@Contract("_ -> new")
-		public static @NotNull FileTransferSnippet read(@NotNull FriendlyByteBuf byteBuf) {
+		public static FileTransferSnippet read(FriendlyByteBuf byteBuf) {
 			return new FileTransferSnippet(byteBuf.readByteArray(), byteBuf.readVarInt());
 		}
 
 		@Contract("_ -> param1")
-		public @NotNull ByteBuf write(@NotNull FriendlyByteBuf byteBuf) {
+		public ByteBuf write(FriendlyByteBuf byteBuf) {
 			byteBuf.writeByteArray(this.bytes);
 			byteBuf.writeVarInt(this.index);
 			return byteBuf;

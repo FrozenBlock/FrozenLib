@@ -31,7 +31,6 @@ public record AbsoluteGravityFunction(Vec3 gravity) implements SerializableGravi
 			Vec3.CODEC.fieldOf("gravity").forGetter(AbsoluteGravityFunction::gravity)
 		).apply(instance, AbsoluteGravityFunction::new)
 	);
-
 	public static final Codec<GravityBelt<AbsoluteGravityFunction>> BELT_CODEC = GravityBelt.codec(CODEC);
 
 	@Override

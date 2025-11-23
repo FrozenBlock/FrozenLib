@@ -36,11 +36,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class ClientCapeData {
+	@ApiStatus.Internal
 	private static final Map<UUID, Cape> CAPES_IN_WORLD = new HashMap<>();
 
 	public static Optional<Identifier> getCapeTexture(UUID uuid) {
@@ -55,9 +56,9 @@ public class ClientCapeData {
 		setPlayerCape(uuid, Optional.empty());
 	}
 
-	private static void setPlayerCape(UUID uuid, @NotNull Optional<Cape> optionalCape) {
+	private static void setPlayerCape(UUID uuid, Optional<Cape> optionalCape) {
 		optionalCape.ifPresentOrElse(cape -> CAPES_IN_WORLD.put(uuid, cape), () -> CAPES_IN_WORLD.remove(uuid));
-		ClientLevel level = Minecraft.getInstance().level;
+		final ClientLevel level = Minecraft.getInstance().level;
 		if (level == null) return;
 		setCape(level.getPlayerByUUID(uuid), optionalCape.map(Cape::texture).orElse(null));
 	}
@@ -72,12 +73,12 @@ public class ClientCapeData {
 
 		capeInterface.frozenLib$setCape(new ClientAsset.Texture() {
 			@Override
-			public @NotNull Identifier texturePath() {
+			public Identifier texturePath() {
 				return capeTexture;
 			}
 
 			@Override
-			public @NotNull Identifier id() {
+			public Identifier id() {
 				return capeTexture;
 			}
 		});
@@ -86,8 +87,9 @@ public class ClientCapeData {
 	public static void init() {
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> CAPES_IN_WORLD.clear());
 		ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> CAPES_IN_WORLD.clear());
-		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) ->
-			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), Identifier.parse(FrozenLibConfig.get().cape))));
+		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) -> {
+			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), Identifier.parse(FrozenLibConfig.get().cape)));
+		});
 		ClientEntityEvents.ENTITY_LOAD.register((entity, clientLevel) -> {
 			getCapeTexture(entity.getUUID()).ifPresent(capeTexture -> setCape(entity, capeTexture));
 		});

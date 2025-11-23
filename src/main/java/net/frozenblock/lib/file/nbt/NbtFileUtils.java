@@ -24,7 +24,6 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtIo;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -51,9 +50,9 @@ public class NbtFileUtils {
 	 * @param file The directory to save to.
 	 * @param fileName The file name to save to, excluding the file extension.
 	 */
-	public static void saveToFile(CompoundTag compoundTag, @NotNull File file, String fileName) {
+	public static void saveToFile(CompoundTag compoundTag, File file, String fileName) {
 		file.mkdirs();
-		File destFile = new File(file, withNBTExtension(fileName));
+		final File destFile = new File(file, withNBTExtension(fileName));
 		saveToFile(compoundTag, destFile);
 	}
 
@@ -63,7 +62,7 @@ public class NbtFileUtils {
 	 * @param compoundTag The {@link CompoundTag} to save.
 	 * @param file The file to save to.
 	 */
-	public static void saveToFile(CompoundTag compoundTag, @NotNull File file) {
+	public static void saveToFile(CompoundTag compoundTag, File file) {
 		file.getParentFile().mkdirs();
 		try {
 			NbtIo.writeCompressed(compoundTag, file.toPath());
@@ -102,7 +101,7 @@ public class NbtFileUtils {
 	 * @return a {@link CompoundTag} containing the NBT file's data.
 	 */
 	@Nullable
-	public static CompoundTag readFromFile(@NotNull File file) {
+	public static CompoundTag readFromFile(File file) {
 		CompoundTag compoundTag = null;
 		try {
 			compoundTag = NbtIo.read(file.toPath());
@@ -119,7 +118,7 @@ public class NbtFileUtils {
 	 * @return The provided {@link String}, with ".nbt" appended at the end.
 	 */
 	@Contract(pure = true)
-	public static @NotNull String withNBTExtension(String string) {
+	public static String withNBTExtension(String string) {
 		return string + ".nbt";
 	}
 }

@@ -19,13 +19,13 @@ package net.frozenblock.lib.entity.api;
 
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.AbstractFish;
+import net.minecraft.world.entity.animal.fish.AbstractFish;
 import net.minecraft.world.level.Level;
 
 /**
  * This is the same as {@link AbstractFish} but the entity will not flop while on land.
  */
-public abstract class NoFlopAbstractFish extends AbstractFish {
+public abstract class NoFlopAbstractFish extends net.minecraft.world.entity.animal.fish.AbstractFish {
 
 	public NoFlopAbstractFish(EntityType<? extends NoFlopAbstractFish> entityType, Level level) {
 		super(entityType, level);

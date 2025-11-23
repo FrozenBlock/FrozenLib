@@ -27,22 +27,16 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 
 @FunctionalInterface
 public interface ConfigLoadEvent extends CommonEventEntrypoint {
-
 	Event<ConfigLoadEvent> EVENT = FrozenEvents.createEnvironmentEvent(ConfigLoadEvent.class, callbacks -> config -> {
-		for (var callback : callbacks) {
-			callback.onLoad(config);
-		}
+		for (var callback : callbacks) callback.onLoad(config);
 	});
 
 	void onLoad(Config<?> config) throws Exception;
 
 	@Environment(EnvType.CLIENT)
 	interface Client extends ClientEventEntrypoint {
-
 		Event<Client> EVENT = FrozenEvents.createEnvironmentEvent(Client.class, callbacks -> config -> {
-			for (var callback : callbacks) {
-				callback.onLoad(config);
-			}
+			for (var callback : callbacks) callback.onLoad(config);
 		});
 
 		void onLoad(Config<?> config) throws Exception;

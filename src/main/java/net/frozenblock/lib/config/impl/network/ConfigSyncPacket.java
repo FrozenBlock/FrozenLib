@@ -42,28 +42,23 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.permissions.Permissions;
 import net.minecraft.world.entity.player.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * @since 1.5
  */
-public record ConfigSyncPacket<T>(
-	String modId,
-	String className,
-	T configData
-) implements CustomPacketPayload {
+public record ConfigSyncPacket<T>(String modId, String className, T configData) implements CustomPacketPayload {
 	public static final Type<ConfigSyncPacket<?>> PACKET_TYPE = new Type<>(FrozenLibConstants.id("config_sync_packet"));
 	public static final StreamCodec<FriendlyByteBuf, ConfigSyncPacket<?>> CODEC = StreamCodec.ofMember(ConfigSyncPacket::write, ConfigSyncPacket::create);
 
 	@Nullable
-	public static <T> ConfigSyncPacket<T> create(@NotNull FriendlyByteBuf buf) {
+	public static <T> ConfigSyncPacket<T> create(FriendlyByteBuf buf) {
 		final String modId = buf.readUtf();
 		if (!FabricLoader.getInstance().isModLoaded(modId)) return null;
 
 		final String className = buf.readUtf();
 		try {
-			T configData = ConfigByteBufUtil.readJankson(buf, modId, className);
+			final T configData = ConfigByteBufUtil.readJankson(buf, modId, className);
 			return new ConfigSyncPacket<>(modId, className, configData);
 		} catch (SyntaxError e) {
 			FrozenLibLogUtils.logError("Failed to read config data from packet.", true, e);
@@ -71,13 +66,13 @@ public record ConfigSyncPacket<T>(
 		}
 	}
 
-	public void write(@NotNull FriendlyByteBuf buf) {
+	public void write(FriendlyByteBuf buf) {
 		buf.writeUtf(this.modId);
 		buf.writeUtf(this.className);
 		ConfigByteBufUtil.writeJankson(buf, this.modId, this.configData);
 	}
 
-	public static <T> void receive(@NotNull ConfigSyncPacket<T> packet, @Nullable MinecraftServer server) {
+	public static <T> void receive(ConfigSyncPacket<T> packet, @Nullable MinecraftServer server) {
 		final String modId = packet.modId();
 		final String className = packet.className();
 
@@ -110,7 +105,7 @@ public record ConfigSyncPacket<T>(
         }
     }
 
-	public static void sendS2C(ServerPlayer player, @NotNull Iterable<Config<?>> configs) {
+	public static void sendS2C(ServerPlayer player, Iterable<Config<?>> configs) {
 		if (FrozenNetworking.isLocalPlayer(player)) return;
 
 		for (Config<?> config : configs) {
@@ -134,7 +129,7 @@ public record ConfigSyncPacket<T>(
 	}
 
 	@Environment(EnvType.CLIENT)
-	public static void sendC2S(@NotNull Iterable<Config<?>> configs) {
+	public static void sendC2S(Iterable<Config<?>> configs) {
 		if (!ClientPlayNetworking.canSend(PACKET_TYPE)) return;
 
 		for (Config<?> config : configs) {
@@ -155,7 +150,6 @@ public record ConfigSyncPacket<T>(
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

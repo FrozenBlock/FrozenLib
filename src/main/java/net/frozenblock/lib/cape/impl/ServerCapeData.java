@@ -32,14 +32,18 @@ import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.ApiStatus;
 
 public class ServerCapeData {
+	@ApiStatus.Internal
 	private static final Map<UUID, Cape> CAPES_IN_SERVER = new HashMap<>();
 
+	@ApiStatus.Internal
 	public static void sendAllCapesToPlayer(ServerPlayer recipient) {
 		CAPES_IN_SERVER.forEach((uuid, cape) -> ServerPlayNetworking.send(recipient, CapeCustomizePacket.createPacket(uuid, cape)));
 	}
 
+	@ApiStatus.Internal
 	public static void sendCapeReposToPlayer(ServerPlayer recipient) {
 		CapeUtil.getCapeRepos().forEach(repoURL -> ServerPlayNetworking.send(recipient, new LoadCapeRepoPacket(repoURL)));
 	}

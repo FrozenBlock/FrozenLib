@@ -29,7 +29,6 @@ import net.frozenblock.lib.config.api.registry.ConfigSaveEvent;
 import net.frozenblock.lib.config.api.sync.annotation.UnsyncableConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class Config<T> {
 	private final String modId;
@@ -54,7 +53,6 @@ public abstract class Config<T> {
 		}
 	}
 
-	@NotNull
 	@Contract(pure = true)
 	public static Path makePath(String modId, String extension) {
 		return Path.of("./config/" + modId + "." + extension);
@@ -141,9 +139,7 @@ public abstract class Config<T> {
 			this.onSave();
 
 			if (FrozenBools.isInitialized) {
-				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT)
-					ConfigSyncPacket.trySendC2S(this);
-
+				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ConfigSyncPacket.trySendC2S(this);
 				invokeSaveEvents();
 			}
 		} catch (Exception e) {
@@ -155,11 +151,8 @@ public abstract class Config<T> {
 		String formatted = this.formattedName();
 		FrozenLibLogUtils.LOGGER.info("Loading {}", formatted);
 		try {
-			boolean loadVal = this.onLoad();
-
-			if (FrozenBools.isInitialized) {
-				invokeLoadEvents();
-			}
+			final boolean loadVal = this.onLoad();
+			if (FrozenBools.isInitialized) invokeLoadEvents();
 			return loadVal;
 		} catch (Exception e) {
 			FrozenLibLogUtils.logError("Error while loading " + formatted, e);
@@ -171,10 +164,7 @@ public abstract class Config<T> {
 		String formatted = this.formattedName();
 		try {
 			ConfigSaveEvent.EVENT.invoker().onSave(this);
-
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-				ConfigSaveEvent.Client.EVENT.invoker().onSave(this);
-			}
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ConfigSaveEvent.Client.EVENT.invoker().onSave(this);
 		} catch (Exception e) {
 			FrozenLibLogUtils.logError("Error in config save events for " + formatted, e);
 		}
@@ -184,10 +174,7 @@ public abstract class Config<T> {
 		String formatted = this.formattedName();
 		try {
 			ConfigLoadEvent.EVENT.invoker().onLoad(this);
-
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-				ConfigLoadEvent.Client.EVENT.invoker().onLoad(this);
-			}
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ConfigLoadEvent.Client.EVENT.invoker().onLoad(this);
 		} catch (Exception e) {
 			FrozenLibLogUtils.logError("Error in config load events for " + formatted, e);
 		}

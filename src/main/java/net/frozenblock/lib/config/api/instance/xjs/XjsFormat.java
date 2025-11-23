@@ -21,7 +21,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.function.Function;
 import net.minecraft.util.StringRepresentable;
-import org.jetbrains.annotations.NotNull;
 import xjs.compat.serialization.util.UBTyping;
 import xjs.compat.serialization.writer.HjsonWriter;
 import xjs.compat.serialization.writer.TxtWriter;
@@ -119,24 +118,20 @@ public enum XjsFormat implements StringRepresentable {
 		}
 	});
 
-	@NotNull
 	private final String name;
 
-	@NotNull
 	private final Function<File, ValueWriter> writer;
 
-	XjsFormat(@NotNull String name, @NotNull Function<File, ValueWriter> writer) {
+	XjsFormat(String name, Function<File, ValueWriter> writer) {
 		this.name = name;
 		this.writer = writer;
 	}
 
 	@Override
-	@NotNull
 	public String getSerializedName() {
 		return this.name;
 	}
 
-	@NotNull
 	public ValueWriter createWriter(File writer) {
 		return this.writer.apply(writer);
 	}

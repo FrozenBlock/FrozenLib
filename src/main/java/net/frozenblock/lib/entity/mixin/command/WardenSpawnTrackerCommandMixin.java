@@ -59,33 +59,34 @@ public abstract class WardenSpawnTrackerCommandMixin {
 		)
 	)
 	private static LiteralCommandNode<CommandSourceStack> frozenLib$register(CommandDispatcher<CommandSourceStack> dispatcher, LiteralArgumentBuilder<CommandSourceStack> builder, Operation<LiteralCommandNode<CommandSourceStack>> operation) {
-		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
-			return dispatcher.register(
-				Commands.literal("warden_spawn_tracker")
-					.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
-					.then(
-						Commands.literal("clear")
-							.executes(context -> resetTracker(context.getSource(), List.of(context.getSource().getPlayerOrException())))
-							.then(
-								Commands.argument("targets", EntityArgument.players()).executes(context -> resetTracker(context.getSource(), EntityArgument.getPlayers(context, "targets")))
-							)
-					)
-					.then(
-						Commands.literal("set")
-							.then(
-								Commands.argument("targets", EntityArgument.players())
-									.then(
-										Commands.argument("warning_level", IntegerArgumentType.integer(0, 4))
-											.executes(
-												context -> setWarningLevel(
-													context.getSource(), EntityArgument.getPlayers(context, "targets"), IntegerArgumentType.getInteger(context, "warning_level")
-												)
+		if (!FrozenLibConfig.get().wardenSpawnTrackerCommand) return operation.call(dispatcher, builder);
+
+		return dispatcher.register(
+			Commands.literal("warden_spawn_tracker")
+				.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+				.then(
+					Commands.literal("clear")
+						.executes(context -> resetTracker(context.getSource(), List.of(context.getSource().getPlayerOrException())))
+						.then(
+							Commands.argument("targets", EntityArgument.players())
+								.executes(context -> resetTracker(context.getSource(), EntityArgument.getPlayers(context, "targets")))
+						)
+				)
+				.then(
+					Commands.literal("set")
+						.then(
+							Commands.argument("targets", EntityArgument.players())
+								.then(
+									Commands.argument("warning_level", IntegerArgumentType.integer(0, 4))
+										.executes(
+											context -> setWarningLevel(
+												context.getSource(), EntityArgument.getPlayers(context, "targets"), IntegerArgumentType.getInteger(context, "warning_level")
 											)
-									)
-							)
-					)
-			);
-		} else return operation.call(dispatcher, builder);
+										)
+								)
+						)
+				)
+		);
 	}
 
 	@WrapOperation(
@@ -98,10 +99,10 @@ public abstract class WardenSpawnTrackerCommandMixin {
 	)
 	private static void frozenLib$modifySetWarningLevel(CommandSourceStack source, Supplier<Component> supplier, boolean broadcastToOps, Operation<Void> operation, CommandSourceStack source1, Collection<? extends Player> targets, int warningLevel) {
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
-			source.sendSuccess(
-				() -> Component.translatable("commands.warden_spawn_tracker.set.success.single", warningLevel, targets.iterator().next().getDisplayName()), true
-			);
-		} else operation.call(source, supplier, broadcastToOps);
+			source.sendSuccess(() -> Component.translatable("commands.warden_spawn_tracker.set.success.single", warningLevel, targets.iterator().next().getDisplayName()), true);
+			return;
+		}
+		operation.call(source, supplier, broadcastToOps);
 	}
 
 	@WrapOperation(
@@ -114,9 +115,9 @@ public abstract class WardenSpawnTrackerCommandMixin {
 	)
 	private static void frozenLib$modifySetWarningLevelMultiple(CommandSourceStack source, Supplier<Component> supplier, boolean broadcastToOps, Operation<Void> operation, CommandSourceStack source1, Collection<? extends Player> targets, int warningLevel) {
 		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
-			source.sendSuccess(
-				() -> Component.translatable("commands.warden_spawn_tracker.set.success.multiple", warningLevel, targets.size()), true
-			);
-		} else operation.call(source, supplier, broadcastToOps);
+			source.sendSuccess(() -> Component.translatable("commands.warden_spawn_tracker.set.success.multiple", warningLevel, targets.size()), true);
+			return;
+		}
+		operation.call(source, supplier, broadcastToOps);
 	}
 }

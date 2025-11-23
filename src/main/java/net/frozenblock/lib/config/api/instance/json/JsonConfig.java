@@ -29,9 +29,7 @@ import net.frozenblock.lib.config.api.instance.ConfigSerialization;
  * Serializes and deserializes config data with Jankson.
  */
 public class JsonConfig<T> extends Config<T> {
-
 	private final Jankson jankson;
-
 	private final JsonType type;
 
 	public JsonConfig(String modId, Class<T> config) {
@@ -56,14 +54,12 @@ public class JsonConfig<T> extends Config<T> {
 
 	public JsonConfig(String modId, Class<T> config, Path path, JsonType type, boolean supportsModification) {
 		super(modId, config, path, supportsModification);
-		var janksonBuilder = Jankson.builder();
 
+		final var janksonBuilder = Jankson.builder();
 		this.jankson = ConfigSerialization.createJankson(janksonBuilder, modId);
 		this.type = type;
 
-		if (this.load()) {
-			this.save();
-		}
+		if (this.load()) this.save();
 	}
 
 	@Override
@@ -76,9 +72,8 @@ public class JsonConfig<T> extends Config<T> {
 
 	@Override
 	public boolean onLoad() throws Exception {
-		if (Files.exists(this.path())) {
-			this.setConfig(this.jankson.fromJson(this.jankson.load(this.path().toFile()), this.configClass()));
-		}
+		if (!Files.exists(this.path())) return true;
+		this.setConfig(this.jankson.fromJson(this.jankson.load(this.path().toFile()), this.configClass()));
 		return true;
 	}
 }

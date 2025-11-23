@@ -38,12 +38,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibConfigGui {
 
-	private static void setupEntries(@NotNull ConfigCategory category, @NotNull ConfigEntryBuilder entryBuilder) {
+	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
 		var config = FrozenLibConfig.get(true);
 		var modifiedConfig = FrozenLibConfig.getWithSync();
 		Config<?> configInstance = FrozenLibConfig.INSTANCE;
@@ -160,14 +159,14 @@ public final class FrozenLibConfigGui {
 			disabledDataFixTypes
 		);
 
-		List<String> usableCapes = ClientCapeUtil.getUsableCapes(true).stream().map(cape -> cape.registryId().toString()).toList();
+		List<String> usableCapes = ClientCapeUtil.getUsableCapes(true).stream().map(cape -> cape.id().toString()).toList();
 		if (usableCapes.size() > 1) {
 			var capeEntry = category.addEntry(
 				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
 					.setDefaultValue(defaultConfig.cape)
 					.setNameProvider(o -> {
 						Identifier capeId = Identifier.parse(((String) o));
-						return CapeUtil.getCape(capeId).map(Cape::capeName).orElse(Component.translatable("cape.frozenlib.invalid"));
+						return CapeUtil.getCape(capeId).map(Cape::name).orElse(Component.translatable("cape.frozenlib.invalid"));
 					})
 					.setSaveConsumer(newValue -> {
 						Identifier capeId = Identifier.parse((String) newValue);
@@ -192,17 +191,17 @@ public final class FrozenLibConfigGui {
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull Component text(String key) {
+	public static Component text(String key) {
 		return Component.translatable("option." + FrozenLibConstants.MOD_ID + "." + key);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull Component tooltip(String key) {
+	public static Component tooltip(String key) {
 		return Component.translatable("tooltip." + FrozenLibConstants.MOD_ID + "." + key);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull Component enumNameProvider(String key) {
+	public static Component enumNameProvider(String key) {
 		return Component.translatable("enum." + FrozenLibConstants.MOD_ID + "." + key);
 	}
 }

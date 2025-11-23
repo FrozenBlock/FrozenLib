@@ -53,27 +53,29 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 			new Exception("Cannot process sync value with empty identifier!").printStackTrace();
 			return;
 		}
+
 		Field field = null;
 		for (Field fieldToCheck : clazz.getDeclaredFields()) {
-			EntrySyncData entrySyncData = fieldToCheck.getAnnotation(EntrySyncData.class);
-			if (entrySyncData != null && !entrySyncData.value().isEmpty() && entrySyncData.value().equals(identifier)) {
-				if (field != null) FrozenLibLogUtils.logError("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
-				field = fieldToCheck;
-			}
+			final EntrySyncData entrySyncData = fieldToCheck.getAnnotation(EntrySyncData.class);
+			if (entrySyncData == null || entrySyncData.value().isEmpty() || !entrySyncData.value().equals(identifier)) continue;
+
+			if (field != null) FrozenLibLogUtils.logError("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
+			field = fieldToCheck;
 		}
 		final Field finalField = field;
 		if (finalField == null) {
 			new Exception("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!").printStackTrace();
 			return;
 		}
-		Requirement nonSyncRequirement = () -> {
+
+		final Requirement nonSyncRequirement = () -> {
 			this.frozenLib$entryPermissionType = ConfigSyncModification.canModifyField(finalField, configInstance);
 			this.frozenLib$isSyncable = ConfigSyncModification.isSyncable(finalField);
 			return this.frozenLib$entryPermissionType.canModify;
 		};
+
 		if (this.getRequirement() != null) {
 			this.setRequirement(Requirement.all(this.getRequirement(), nonSyncRequirement));
-
 		} else {
 			this.setRequirement(nonSyncRequirement);
 		}

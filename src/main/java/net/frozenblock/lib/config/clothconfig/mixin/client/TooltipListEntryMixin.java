@@ -40,27 +40,26 @@ public class TooltipListEntryMixin {
 
 	@ModifyReturnValue(method = "getTooltip()Ljava/util/Optional;", at = @At("RETURN"), remap = false)
 	public Optional<Component[]> frozenLib$getTooltip(Optional<Component[]> list) {
-		DisableableWidgetInterface disableableWidgetInterface = (DisableableWidgetInterface) this;
-		if (!disableableWidgetInterface.frozenLib$getEntryPermissionType().canModify) {
-			Optional<Component> optionalComponent = FrozenClientNetworking.connectedToLan() ?
-					disableableWidgetInterface.frozenLib$getEntryPermissionType().lanTooltip
-					: disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip;
+		final DisableableWidgetInterface disableableWidgetInterface = (DisableableWidgetInterface) this;
 
-			return optionalComponent.isPresent() ?
-					Optional.of(optionalComponent.orElseThrow().toFlatList().toArray(new Component[0]))
-					:
-					Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]));
+		if (!disableableWidgetInterface.frozenLib$getEntryPermissionType().canModify) {
+			final Optional<Component> optionalComponent = FrozenClientNetworking.connectedToLan()
+				? disableableWidgetInterface.frozenLib$getEntryPermissionType().lanTooltip
+				: disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip;
+
+			return optionalComponent.isPresent()
+				? Optional.of(optionalComponent.orElseThrow().toFlatList().toArray(new Component[0]))
+				: Optional.of(ConfigModification.EntryPermissionType.LOCKED_FOR_UNKNOWN_REASON.tooltip.orElseThrow().toFlatList().toArray(new Component[0]));
 		} else if (
-				disableableWidgetInterface.frozenLib$hasValidData()
-				&& disableableWidgetInterface.frozenLib$isSyncable()
-				&& FrozenNetworking.isMultiplayer()
-				&& ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false)
+			disableableWidgetInterface.frozenLib$hasValidData()
+			&& disableableWidgetInterface.frozenLib$isSyncable()
+			&& FrozenNetworking.isMultiplayer()
+			&& ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false)
 		) {
-			Component entrySyncNotice = Component.translatable("tooltip.frozenlib.entry_sync_notice");
-			return list.isEmpty() ?
-					Optional.of(entrySyncNotice.toFlatList().toArray(new Component[0]))
-					:
-					Optional.of(Stream.concat(Arrays.stream(list.get()), Stream.of(entrySyncNotice)).toArray(Component[]::new));
+			final Component entrySyncNotice = Component.translatable("tooltip.frozenlib.entry_sync_notice");
+			return list.isEmpty()
+				? Optional.of(entrySyncNotice.toFlatList().toArray(new Component[0]))
+				: Optional.of(Stream.concat(Arrays.stream(list.get()), Stream.of(entrySyncNotice)).toArray(Component[]::new));
 		}
 		return list;
 	}

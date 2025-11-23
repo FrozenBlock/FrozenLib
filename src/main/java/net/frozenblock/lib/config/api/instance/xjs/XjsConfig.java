@@ -28,7 +28,6 @@ import xjs.data.serialization.writer.ValueWriter;
  * @since 1.7
  */
 public class XjsConfig<T> extends Config<T> {
-
 	private final XjsFormat format;
 
 	public XjsConfig(String modId, Class<T> config) {
@@ -53,30 +52,23 @@ public class XjsConfig<T> extends Config<T> {
 
 	public XjsConfig(String modId, Class<T> config, Path path, XjsFormat type, boolean supportsModification) {
 		super(modId, config, path, supportsModification);
-
 		this.format = type;
-
-		if (this.load()) {
-			this.save();
-		}
+		if (this.load()) this.save();
 	}
 
 	@Override
 	public void onSave() throws Exception {
 		Files.createDirectories(this.path().getParent());
-		JsonValue value = XjsObjectMapper.toJsonObject(this.instance());
-		try (
-			ValueWriter writer = this.format.createWriter(this.path().toFile())
-		) {
+		final JsonValue value = XjsObjectMapper.toJsonObject(this.instance());
+		try (ValueWriter writer = this.format.createWriter(this.path().toFile())) {
 			writer.write(value);
 		}
 	}
 
 	@Override
 	public boolean onLoad() throws Exception {
-		if (Files.exists(this.path())) {
-			this.setConfig(XjsObjectMapper.deserializeObject(this.modId(), this.path(), this.configClass()));
-		}
+		if (!Files.exists(this.path())) return true;
+		this.setConfig(XjsObjectMapper.deserializeObject(this.modId(), this.path(), this.configClass()));
 		return true;
 	}
 }

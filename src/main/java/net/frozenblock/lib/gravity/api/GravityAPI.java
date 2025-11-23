@@ -28,7 +28,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.ApiStatus;
 
 public final class GravityAPI {
     public static final Vec3 DEFAULT_GRAVITY = new Vec3(0D, 1D, 0D);
@@ -36,13 +36,13 @@ public final class GravityAPI {
 		GravityModification.class, callbacks -> context -> {
 			for (GravityModification callback : callbacks) callback.modifyGravity(context);
 		});
+	@ApiStatus.Internal
     private static final Map<ResourceKey<Level>, List<GravityBelt<?>>> GRAVITY_BELTS = new HashMap<>();
 
     public static void register(ResourceKey<Level> dimension, GravityBelt<?> gravityBelt) {
 		getAllBelts(dimension).add(gravityBelt);
     }
 
-	@NotNull
     public static List<GravityBelt<?>> getAllBelts(ResourceKey<Level> dimension) {
         return GRAVITY_BELTS.computeIfAbsent(dimension, dimension1 -> new ArrayList<>());
     }

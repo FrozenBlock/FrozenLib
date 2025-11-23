@@ -22,25 +22,21 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public record LoadCapeRepoPacket(String capeRepo) implements CustomPacketPayload {
-	public static final Type<LoadCapeRepoPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("load_cape_repo")
-	);
+	public static final Type<LoadCapeRepoPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("load_cape_repo"));
 	public static final StreamCodec<FriendlyByteBuf, LoadCapeRepoPacket> STREAM_CODEC = StreamCodec.ofMember(LoadCapeRepoPacket::write, LoadCapeRepoPacket::create);
 
 	@Contract("_ -> new")
-	public static @NotNull LoadCapeRepoPacket create(@NotNull FriendlyByteBuf buf) {
+	public static LoadCapeRepoPacket create(FriendlyByteBuf buf) {
 		return new LoadCapeRepoPacket(buf.readUtf());
 	}
 
-	public void write(@NotNull FriendlyByteBuf buf) {
+	public void write(FriendlyByteBuf buf) {
 		buf.writeUtf(this.capeRepo());
 	}
 
 	@Override
-	@NotNull
 	public Type<? extends CustomPacketPayload> type() {
 		return PACKET_TYPE;
 	}

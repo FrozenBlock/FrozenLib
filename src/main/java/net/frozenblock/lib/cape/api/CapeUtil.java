@@ -44,52 +44,57 @@ import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 
 public class CapeUtil {
+	@ApiStatus.Internal
 	private static final Map<Identifier, Cape> CAPES = new HashMap<>();
+	@ApiStatus.Internal
 	private static final List<String> CAPE_REPOS = new ArrayList<>();
 
-	public static @NotNull @Unmodifiable List<String> getCapeRepos() {
+	@Unmodifiable
+	public static List<String> getCapeRepos() {
 		return ImmutableList.copyOf(CAPE_REPOS);
 	}
 
-	public static @NotNull @Unmodifiable Collection<Cape> getCapes() {
+	@Unmodifiable
+	public static Collection<Cape> getCapes() {
 		return CAPES.values();
 	}
 
-	public static @NotNull @Unmodifiable List<Cape> getUsableCapes(UUID uuid) {
+	@Unmodifiable
+	public static List<Cape> getUsableCapes(UUID uuid) {
 		return ImmutableList.copyOf(getCapes().stream().filter(cape -> canPlayerUserCape(uuid, cape)).toList());
 	}
 
-	public static Optional<Cape> getCape(Identifier location) {
-		return Optional.ofNullable(CAPES.get(location));
+	public static Optional<Cape> getCape(Identifier capeID) {
+		return Optional.ofNullable(CAPES.get(capeID));
 	}
 
 	public static boolean canPlayerUserCape(UUID uuid, Identifier capeID) {
-		Optional<Cape> optionalCape = CapeUtil.getCape(capeID);
+		final Optional<Cape> optionalCape = CapeUtil.getCape(capeID);
 		return optionalCape.map(cape -> canPlayerUserCape(uuid, cape)).orElse(true);
 	}
 
-	public static boolean canPlayerUserCape(UUID uuid, @NotNull Cape cape) {
+	public static boolean canPlayerUserCape(UUID uuid, Cape cape) {
 		return cape.allowedPlayers().map(uuids -> uuids.contains(uuid)).orElse(true);
 	}
 
-	public static void registerCape(Identifier id, Identifier textureId, Component capeName) {
-		CAPES.put(id, new Cape(id, capeName, textureId, Optional.empty()));
+	public static void registerCape(Identifier id, Identifier texture, Component name) {
+		CAPES.put(id, new Cape(id, name, texture, Optional.empty()));
 	}
 
-	public static void registerCape(Identifier id, Component capeName) {
-		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.empty()));
+	public static void registerCape(Identifier id, Component name) {
+		CAPES.put(id, new Cape(id, name, buildCapeTextureLocation(id), Optional.empty()));
 	}
 
-	public static void registerCapeWithWhitelist(Identifier id, Component capeName, List<UUID> allowedPlayers) {
-		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.of(allowedPlayers)));
+	public static void registerCapeWithWhitelist(Identifier id, Component name, List<UUID> allowedPlayers) {
+		CAPES.put(id, new Cape(id, name, buildCapeTextureLocation(id), Optional.of(allowedPlayers)));
 	}
 
-	public static void registerCapeWithWhitelist(Identifier id, Component capeName, UUID... uuids) {
-		CAPES.put(id, new Cape(id, capeName, buildCapeTextureLocation(id), Optional.of(ImmutableList.copyOf(uuids))));
+	public static void registerCapeWithWhitelist(Identifier id, Component name, UUID... uuids) {
+		CAPES.put(id, new Cape(id, name, buildCapeTextureLocation(id), Optional.of(ImmutableList.copyOf(uuids))));
 	}
 
 	public static void registerCapesFromURL(String urlString) {
@@ -98,13 +103,13 @@ public class CapeUtil {
 		CompletableFuture.supplyAsync(
 			() -> {
 				try {
-					URL url = URI.create(urlString).toURL();
-					URLConnection request = url.openConnection();
+					final URL url = URI.create(urlString).toURL();
+					final URLConnection request = url.openConnection();
 					request.connect();
 
-					JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent()));
-					JsonObject capeDir = parsedJson.getAsJsonObject();
-					JsonArray capeArray = capeDir.get("capes").getAsJsonArray();
+					final JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent()));
+					final JsonObject capeDir = parsedJson.getAsJsonObject();
+					final JsonArray capeArray = capeDir.get("capes").getAsJsonArray();
 
 					capeArray.forEach(jsonElement -> registerCapeFromURL(jsonElement.getAsString()));
 					return Optional.of(urlString);
@@ -119,39 +124,37 @@ public class CapeUtil {
 
 	private static void registerCapeFromURL(String urlString) {
 		try {
-			URL url = URI.create(urlString).toURL();
-			URLConnection request = url.openConnection();
+			final URL url = URI.create(urlString).toURL();
+			final URLConnection request = url.openConnection();
 			request.connect();
 
-			JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
-			JsonObject capeJson = parsedJson.getAsJsonObject();
-			String capeId = capeJson.get("id").getAsString();
-			Component capeName = Component.literal(capeJson.get("name").getAsString());
-			String capeTexture = capeJson.get("texture").getAsString();
-			JsonElement allowedUUIDElement = capeJson.get("allowed_uuids");
-			boolean whitelisted = allowedUUIDElement != null;
+			final JsonElement parsedJson = JsonParser.parseReader(new InputStreamReader((InputStream) request.getContent())); //Convert the input stream to a json element
+			final JsonObject capeJson = parsedJson.getAsJsonObject();
+			final String capeId = capeJson.get("id").getAsString();
+			final Component capeName = Component.literal(capeJson.get("name").getAsString());
+			final String capeTexture = capeJson.get("texture").getAsString();
+			final JsonElement allowedUUIDElement = capeJson.get("allowed_uuids");
+			final boolean whitelisted = allowedUUIDElement != null;
 
-			Identifier capeLocation = Identifier.tryParse(capeId);
-			if (capeLocation != null) {
-				Identifier capeTextureLocation = CapeUtil.buildCapeTextureLocation(capeLocation);
-				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-					ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
-				}
+			final Identifier capeLocation = Identifier.tryParse(capeId);
+			if (capeLocation == null) return;
 
-				if (!whitelisted) {
-					registerCape(capeLocation, capeName);
-				} else {
-					List<UUID> uuidList = new ArrayList<>();
-					allowedUUIDElement.getAsJsonArray().asList().forEach(jsonElement -> uuidList.add(UUID.fromString(jsonElement.getAsString())));
-					registerCapeWithWhitelist(capeLocation, capeName, ImmutableList.copyOf(uuidList));
-				}
+			final Identifier capeTextureLocation = CapeUtil.buildCapeTextureLocation(capeLocation);
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
+
+			if (!whitelisted) {
+				registerCape(capeLocation, capeName);
+			} else {
+				final List<UUID> uuidList = new ArrayList<>();
+				allowedUUIDElement.getAsJsonArray().asList().forEach(jsonElement -> uuidList.add(UUID.fromString(jsonElement.getAsString())));
+				registerCapeWithWhitelist(capeLocation, capeName, ImmutableList.copyOf(uuidList));
 			}
 		} catch (IOException ignored) {
 			FrozenLibConstants.LOGGER.error("Failed to parse Cape from URL: {}", urlString);
 		}
 	}
 
-	public static Identifier buildCapeTextureLocation(@NotNull Identifier cape) {
+	public static Identifier buildCapeTextureLocation(Identifier cape) {
 		return Identifier.tryBuild(cape.getNamespace(), "textures/cape/" + cape.getPath() + ".png");
 	}
 }

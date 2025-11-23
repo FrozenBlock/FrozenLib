@@ -34,10 +34,9 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.AnyOfCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemEntityPropertyCondition;
-import org.jetbrains.annotations.NotNull;
 
 public class EntityLootHelper {
-	public static AnyOfCondition.@NotNull Builder shouldSmeltLoot(HolderLookup.@NotNull Provider registries) {
+	public static AnyOfCondition.Builder shouldSmeltLoot(HolderLookup.Provider registries) {
 		HolderLookup.RegistryLookup<Enchantment> registryLookup = registries.lookupOrThrow(Registries.ENCHANTMENT);
 		return AnyOfCondition.anyOf(
 			LootItemEntityPropertyCondition.hasProperties(

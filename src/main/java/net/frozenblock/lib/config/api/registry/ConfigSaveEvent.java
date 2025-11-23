@@ -27,22 +27,16 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 
 @FunctionalInterface
 public interface ConfigSaveEvent extends CommonEventEntrypoint {
-
 	Event<ConfigSaveEvent> EVENT = FrozenEvents.createEnvironmentEvent(ConfigSaveEvent.class, callbacks -> config -> {
-		for (var callback : callbacks) {
-			callback.onSave(config);
-		}
+		for (var callback : callbacks) callback.onSave(config);
 	});
 
 	void onSave(Config<?> config) throws Exception;
 
 	@Environment(EnvType.CLIENT)
 	interface Client extends ClientEventEntrypoint {
-
 		Event<Client> EVENT = FrozenEvents.createEnvironmentEvent(Client.class, callbacks -> config -> {
-			for (var callback : callbacks) {
-				callback.onSave(config);
-			}
+			for (var callback : callbacks) callback.onSave(config);
 		});
 
 		void onSave(Config<?> config) throws Exception;

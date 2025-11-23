@@ -18,13 +18,13 @@
 package net.frozenblock.lib.config.api.instance.xjs;
 
 import java.util.Arrays;
-import org.jetbrains.annotations.NotNull;
 
 /*
  Source: https://github.com/PersonTheCat/CatLib
  License: GNU GPL-3.0
  */
 public class InvalidEnumConstantException extends RuntimeException {
+
 	public InvalidEnumConstantException(final String name, final Class<? extends Enum<?>> clazz) {
 		super(createMessage(name, clazz));
 	}
@@ -41,7 +41,6 @@ public class InvalidEnumConstantException extends RuntimeException {
 	 * @param args A list of arguments to interpolate into this string.
 	 * @return A formatted, interpolated string.
 	 */
-	@NotNull
 	static String f(final String s, final Object... args) {
 		int begin = 0, si = 0, oi = 0;
 		final StringBuilder sb = new StringBuilder();

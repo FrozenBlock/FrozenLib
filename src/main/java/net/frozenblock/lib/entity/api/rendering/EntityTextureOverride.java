@@ -27,7 +27,6 @@ import net.minecraft.client.renderer.entity.state.LivingEntityRenderState;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 import net.minecraft.ChatFormatting;
 
 /**
@@ -47,7 +46,7 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 	 * @param names Names that will cause the {@link EntityTextureOverride} to trigger.
 	 * @return The created {@link EntityTextureOverride}.
 	 */
-	public static <T extends LivingEntity> @NotNull EntityTextureOverride<T> register(
+	public static <T extends LivingEntity> EntityTextureOverride<T> register(
 		Identifier key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, String... names
 	) {
 		return register(key, clazz, texture, false, names);
@@ -63,7 +62,7 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 	 * @param names Names that will cause the {@link EntityTextureOverride} to trigger.
 	 * @return The created {@link EntityTextureOverride}.
 	 */
-	public static <T extends LivingEntity> @NotNull EntityTextureOverride<T> register(
+	public static <T extends LivingEntity> EntityTextureOverride<T> register(
 		Identifier key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, boolean caseSensitive, String... names
 	) {
 		if (texture == null) throw new IllegalArgumentException("Texture cannot be null!");
@@ -95,7 +94,7 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 	 * @param condition The conditions to be met in order to override the entity's texture.
 	 * @return The created {@link EntityTextureOverride}.
 	 */
-	public static <T extends LivingEntity> @NotNull EntityTextureOverride<T> register(
+	public static <T extends LivingEntity> EntityTextureOverride<T> register(
 		Identifier key, Class<? extends LivingEntityRenderer<?, ?, ?>> clazz, Identifier texture, Condition condition
 	) {
 		return Registry.register(FrozenLibClientRegistries.ENTITY_TEXTURE_OVERRIDE, key, new EntityTextureOverride<>(clazz, texture, condition));
@@ -104,6 +103,6 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 	@Environment(EnvType.CLIENT)
 	@FunctionalInterface
 	public interface Condition {
-		boolean test(LivingEntityRenderState entityRenderState);
+		boolean test(LivingEntityRenderState renderState);
 	}
 }

@@ -25,7 +25,6 @@ import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.behavior.Behavior;
 import net.minecraft.world.entity.ai.goal.MoveToBlockGoal;
 import net.minecraft.world.level.LevelReader;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * {@link MoveToBlockGoal} as a behavior.
@@ -55,17 +54,17 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 	}
 
 	@Override
-	public boolean checkExtraStartConditions(@NotNull ServerLevel level, @NotNull E owner) {
+	public boolean checkExtraStartConditions(ServerLevel level, E entity) {
 		return this.findNearestBlock();
 	}
 
 	@Override
-	public boolean canStillUse(@NotNull ServerLevel level, @NotNull E entity, long gameTime) {
+	public boolean canStillUse(ServerLevel level, E entity, long gameTime) {
 		return this.tryTicks >= -((FrozenLibBehavior) this).frozenLib$getDuration() && this.tryTicks <= DURATION && this.isValidTarget(level, this.blockPos);
 	}
 
 	@Override
-	public void start(@NotNull ServerLevel level, @NotNull E entity, long gameTime) {
+	public void start(ServerLevel level, E entity, long gameTime) {
 		this.moveMobToBlock();
 		this.tryTicks = 0;
 	}
@@ -85,15 +84,15 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 	}
 
 	@Override
-	protected void tick(@NotNull ServerLevel level, @NotNull E owner, long gameTime) {
-		final BlockPos blockPos = this.getMoveToTarget();
-		if (!blockPos.closerToCenterThan(owner.position(), this.acceptedDistance())) {
+	protected void tick(ServerLevel level, E entity, long gameTime) {
+		final BlockPos pos = this.getMoveToTarget();
+		if (!pos.closerToCenterThan(entity.position(), this.acceptedDistance())) {
 			this.reachedTarget = false;
 			++this.tryTicks;
 			if (this.shouldRecalculatePath()) {
 				this.mob
 					.getNavigation()
-					.moveTo(blockPos.getX() + 0.5, blockPos.getY(), blockPos.getZ() + 0.5, this.speedModifier);
+					.moveTo(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5, this.speedModifier);
 			}
 		} else {
 			this.reachedTarget = true;
@@ -113,18 +112,17 @@ public abstract class MoveToBlockBehavior<E extends PathfinderMob> extends Behav
 	 * Searches and sets new destination block and returns true if a suitable block (specified in {@link #isValidTarget(LevelReader, BlockPos)}) can be found.
 	 */
 	protected boolean findNearestBlock() {
-		final BlockPos blockPos = this.mob.blockPosition();
-		final BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+		final BlockPos pos = this.mob.blockPosition();
+		final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
 
 		for (int k = this.verticalSearchStart; k <= this.verticalSearchRange; k = k > 0 ? -k : 1 - k) {
 			for (int l = 0; l < this.searchRange; ++l) {
 				for (int m = 0; m <= l; m = m > 0 ? -m : 1 - m) {
 					for (int n = m < l && m > -l ? l : 0; n <= l; n = n > 0 ? -n : 1 - n) {
-						mutableBlockPos.setWithOffset(blockPos, m, k - 1, n);
-						if (this.mob.isWithinHome(mutableBlockPos) && this.isValidTarget(this.mob.level(), mutableBlockPos)) {
-							this.blockPos = mutableBlockPos;
-							return true;
-						}
+						mutable.setWithOffset(pos, m, k - 1, n);
+						if (!this.mob.isWithinHome(mutable) || !this.isValidTarget(this.mob.level(), mutable)) continue;
+						this.blockPos = mutable;
+						return true;
 					}
 				}
 			}

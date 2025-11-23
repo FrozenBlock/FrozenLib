@@ -30,7 +30,6 @@ import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 
 public class FrozenLibConfig {
-
 	public static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
 		new JsonConfig<>(
 			FrozenLibConstants.MOD_ID,

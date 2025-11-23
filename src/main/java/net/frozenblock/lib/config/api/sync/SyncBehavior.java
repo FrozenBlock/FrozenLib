@@ -25,7 +25,6 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
  * @since 1.5.2
  */
 public enum SyncBehavior {
-
 	/**
 	 * The default behavior for all entries.
 	 * Operators of the server and LAN hosts will be able to set the config values, and all others will see that value update on their client.

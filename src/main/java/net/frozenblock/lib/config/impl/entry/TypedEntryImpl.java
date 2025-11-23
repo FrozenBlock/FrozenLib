@@ -24,7 +24,6 @@ import net.frozenblock.lib.config.api.entry.TypedEntryType;
  * @since 1.7
  */
 public class TypedEntryImpl<T> implements TypedEntry<T> {
-
     private final TypedEntryType<T> type;
     private T value;
 

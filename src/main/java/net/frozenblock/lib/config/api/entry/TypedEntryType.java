@@ -20,17 +20,15 @@ package net.frozenblock.lib.config.api.entry;
 import com.mojang.serialization.Codec;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public record TypedEntryType<T>(String modId, Codec<T> codec) {
 
-	@NotNull
 	public TypedEntryType<T> register() {
 		return register(this);
 	}
 
 	@Contract("_ -> param1")
-	public static <T> @NotNull TypedEntryType<T> register(TypedEntryType<T> type) {
+	public static <T> TypedEntryType<T> register(TypedEntryType<T> type) {
 		return ConfigRegistry.register(type);
 	}
 }

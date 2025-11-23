@@ -25,7 +25,6 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import net.frozenblock.lib.config.api.instance.Config;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Serializes and deserializes config data with TOML4J.
@@ -33,11 +32,9 @@ import org.jetbrains.annotations.NotNull;
  */
 @ApiStatus.Experimental
 public class TomlConfig<T> extends Config<T> {
-
 	public static final String EXTENSION = "toml";
 
 	private final TomlWriter tomlWriter;
-
 
 	public TomlConfig(String modId, Class<T> config) {
 		this(modId, config, new TomlWriter.Builder());
@@ -47,37 +44,34 @@ public class TomlConfig<T> extends Config<T> {
 		this(modId, config, makePath(modId, EXTENSION), builder);
 	}
 
-	public TomlConfig(String modId, Class<T> config, Path path, TomlWriter.@NotNull Builder builder) {
+	public TomlConfig(String modId, Class<T> config, Path path, TomlWriter.Builder builder) {
 		super(modId, config, path, true);
 		this.tomlWriter = builder.build();
-
-		if (this.load()) {
-			this.save();
-		}
+		if (this.load()) this.save();
 	}
 
 	@Override
 	public void onSave() throws Exception {
 		Files.createDirectories(this.path().getParent());
-		BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+		final BufferedWriter writer = Files.newBufferedWriter(this.path(), StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
 		this.tomlWriter.write(this.instance(), writer);
 		writer.close();
 	}
 
 	@Override
 	public boolean onLoad() throws Exception {
-		if (Files.exists(this.path())) {
-			var tomlReader = getDefaultToml();
-			try (var reader = Files.newBufferedReader(this.path())) {
-				this.setConfig(tomlReader.read(reader).to(this.configClass()));
-			}
+		if (!Files.exists(this.path())) return true;
+
+		final var tomlReader = getDefaultToml();
+		try (var reader = Files.newBufferedReader(this.path())) {
+			this.setConfig(tomlReader.read(reader).to(this.configClass()));
 		}
+
 		return true;
 	}
 
-	@NotNull
 	private Toml getDefaultToml() {
-		Toml toml = new Toml();
+		final Toml toml = new Toml();
 		return new Toml(toml.read(tomlWriter.write(defaultInstance())));
 	}
 }

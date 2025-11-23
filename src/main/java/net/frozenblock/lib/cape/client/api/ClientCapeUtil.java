@@ -34,46 +34,47 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 
 @Environment(EnvType.CLIENT)
 public class ClientCapeUtil {
+	@ApiStatus.Internal
 	public static final Path CAPE_CACHE_PATH = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("cape_cache");
+	@ApiStatus.Internal
 	private static final List<Identifier> REGISTERED_CAPE_LISTENERS = new ArrayList<>();
+	@ApiStatus.Internal
 	private static final List<Cape> USABLE_CAPES = new ArrayList<>();
 
-	public static void registerCapeTextureFromURL(
-		@NotNull Identifier capeLocation, Identifier capeTextureLocation, String textureURL
-	) throws JsonIOException {
-		if (!REGISTERED_CAPE_LISTENERS.contains(capeLocation)) {
-			ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-				@Override
-				public Identifier getFabricId() {
-					return capeLocation;
-				}
+	public static void registerCapeTextureFromURL(Identifier capeID, Identifier texture, String textureURL) throws JsonIOException {
+		if (REGISTERED_CAPE_LISTENERS.contains(capeID)) return;
 
-				@Override
-				public void onResourceManagerReload(@NotNull ResourceManager resourceManager) {
-					Minecraft.getInstance().getSkinManager().skinTextureDownloader.downloadAndRegisterSkin(
-						capeTextureLocation,
-						CAPE_CACHE_PATH.resolve(capeLocation.getNamespace()).resolve(capeLocation.getPath() + ".png"),
-						textureURL,
-						false
-					);
-				}
-			});
-			REGISTERED_CAPE_LISTENERS.add(capeLocation);
-		}
+		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
+			@Override
+			public Identifier getFabricId() {
+				return capeID;
+			}
+
+			@Override
+			public void onResourceManagerReload(ResourceManager resourceManager) {
+				Minecraft.getInstance().getSkinManager().skinTextureDownloader.downloadAndRegisterSkin(
+					texture,
+					CAPE_CACHE_PATH.resolve(capeID.getNamespace()).resolve(capeID.getPath() + ".png"),
+					textureURL,
+					false
+				);
+			}
+		});
+		REGISTERED_CAPE_LISTENERS.add(capeID);
 	}
 
 	public static void refreshUsableCapes() {
 		USABLE_CAPES.clear();
-		UUID playerUUID = Minecraft.getInstance().getUser().getProfileId();
+		final UUID playerUUID = Minecraft.getInstance().getUser().getProfileId();
 		USABLE_CAPES.addAll(CapeUtil.getUsableCapes(playerUUID));
 	}
 
-	public static @NotNull @Unmodifiable List<Cape> getUsableCapes(boolean refresh) {
+	public static @Unmodifiable List<Cape> getUsableCapes(boolean refresh) {
 		if (refresh) refreshUsableCapes();
 		return ImmutableList.copyOf(USABLE_CAPES);
 	}

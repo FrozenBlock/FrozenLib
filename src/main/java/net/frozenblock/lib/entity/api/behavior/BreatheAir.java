@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * {@link net.minecraft.world.entity.ai.goal.BreathAirGoal} as a behavior.
@@ -41,54 +40,50 @@ public class BreatheAir<E extends PathfinderMob> extends Behavior<E> {
 	}
 
 	@Override
-	public boolean checkExtraStartConditions(@NotNull ServerLevel level, @NotNull E owner) {
-		return super.checkExtraStartConditions(level, owner) && owner.getAirSupply() < 140;
+	public boolean checkExtraStartConditions(ServerLevel level, E entity) {
+		return super.checkExtraStartConditions(level, entity) && entity.getAirSupply() < 140;
 	}
 
 	@Override
-	public boolean canStillUse(@NotNull ServerLevel level, @NotNull E owner, long gameTime) {
-		return this.checkExtraStartConditions(level, owner);
+	public boolean canStillUse(ServerLevel level, E entity, long gameTime) {
+		return this.checkExtraStartConditions(level, entity);
 	}
 
 	@Override
-	public void start(@NotNull ServerLevel level, @NotNull E entity, long gameTime) {
+	public void start(ServerLevel level, E entity, long gameTime) {
 		this.findAirPosition(entity);
 	}
 
-	private void findAirPosition(@NotNull E entity) {
-		Iterable<BlockPos> iterable = BlockPos.betweenClosed(
-			Mth.floor(entity.getX() - 1.0),
+	private void findAirPosition(E entity) {
+		final Iterable<BlockPos> poses = BlockPos.betweenClosed(
+			Mth.floor(entity.getX() - 1),
 			entity.getBlockY(),
-			Mth.floor(entity.getZ() - 1.0),
-			Mth.floor(entity.getX() + 1.0),
-			Mth.floor(entity.getY() + 8.0),
-			Mth.floor(entity.getZ() + 1.0)
+			Mth.floor(entity.getZ() - 1),
+			Mth.floor(entity.getX() + 1),
+			Mth.floor(entity.getY() + 8),
+			Mth.floor(entity.getZ() + 1)
 		);
-		BlockPos blockPos = null;
+		BlockPos pos = null;
 
-		for (BlockPos blockPos2 : iterable) {
-			if (this.givesAir(entity.level(), blockPos2)) {
-				blockPos = blockPos2;
-				break;
-			}
+		for (BlockPos searchingPos : poses) {
+			if (!this.givesAir(entity.level(), searchingPos)) continue;
+			pos = searchingPos;
+			break;
 		}
 
-		if (blockPos == null) {
-			blockPos = BlockPos.containing(entity.getX(), entity.getY() + 8.0, entity.getZ());
-		}
-
-		entity.getNavigation().moveTo(blockPos.getX(), blockPos.getY() + 1, blockPos.getZ(), 1.0);
+		if (pos == null) pos = BlockPos.containing(entity.getX(), entity.getY() + 8, entity.getZ());
+		entity.getNavigation().moveTo(pos.getX(), pos.getY() + 1, pos.getZ(), 1);
 	}
 
 	@Override
-	public void tick(@NotNull ServerLevel level, @NotNull E entity, long gameTime) {
+	public void tick(ServerLevel level, E entity, long gameTime) {
 		this.findAirPosition(entity);
 		entity.moveRelative(0.02F, new Vec3(entity.xxa, entity.yya, entity.zza));
 		entity.move(MoverType.SELF, entity.getDeltaMovement());
 	}
 
-	private boolean givesAir(@NotNull LevelReader level, @NotNull BlockPos pos) {
-		final BlockState blockState = level.getBlockState(pos);
-		return (level.getFluidState(pos).isEmpty() || blockState.is(Blocks.BUBBLE_COLUMN)) && blockState.isPathfindable(PathComputationType.LAND);
+	private boolean givesAir(LevelReader level, BlockPos pos) {
+		final BlockState state = level.getBlockState(pos);
+		return (state.getFluidState().isEmpty() || state.is(Blocks.BUBBLE_COLUMN)) && state.isPathfindable(PathComputationType.LAND);
 	}
 }

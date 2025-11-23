@@ -27,12 +27,12 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class PanoramaCommand {
+	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
 
-	public static void register(@NotNull CommandDispatcher<FabricClientCommandSource> dispatcher) {
+	public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
 		dispatcher.register(
 			ClientCommandManager.literal("panorama")
 				.executes(
@@ -49,10 +49,8 @@ public class PanoramaCommand {
 		);
 	}
 
-	private static final DateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd_HH.mm.ss");
-
-	private static @NotNull File getPanoramaFolderName(File directory) {
-		String string = DATE_FORMAT.format(new Date());
+	private static File getPanoramaFolderName(File directory) {
+		final String string = DATE_FORMAT.format(new Date());
 		int fileIndex = 1;
 		while (true) {
 			File file = new File(directory, string + (fileIndex == 1 ? "" : "_" + fileIndex));

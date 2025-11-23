@@ -25,7 +25,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public record InterpolatedGravityFunction(Vec3 bottomGravity, Vec3 topGravity) implements SerializableGravityFunction<InterpolatedGravityFunction> {
@@ -35,13 +34,12 @@ public record InterpolatedGravityFunction(Vec3 bottomGravity, Vec3 topGravity) i
 			Vec3.CODEC.fieldOf("top_gravity").forGetter(InterpolatedGravityFunction::topGravity)
 		).apply(instance, InterpolatedGravityFunction::new)
 	);
-
 	public static final Codec<GravityBelt<InterpolatedGravityFunction>> BELT_CODEC = GravityBelt.codec(CODEC);
 
 	@Contract("_, _, _, _ -> new")
 	@Override
-	public @NotNull Vec3 get(@Nullable Entity entity, double y, double minY, double maxY) {
-		double normalizedY = (y - minY) / (maxY - minY);
+	public Vec3 get(@Nullable Entity entity, double y, double minY, double maxY) {
+		final double normalizedY = (y - minY) / (maxY - minY);
 		return new Vec3(
 			Mth.lerp(normalizedY, this.bottomGravity().x(), this.topGravity().x()),
 			Mth.lerp(normalizedY, this.bottomGravity().y(), this.topGravity().y()),

@@ -26,8 +26,7 @@ public interface FrozenClientEntrypoint extends ClientEventEntrypoint {
 	Event<FrozenClientEntrypoint> EVENT = FrozenEvents.createEnvironmentEvent(FrozenClientEntrypoint.class, callbacks -> () -> {
 		for (var callback : callbacks) {
 			callback.init();
-			if (FabricLoader.getInstance().isDevelopmentEnvironment())
-				callback.initDevOnly();
+			if (FabricLoader.getInstance().isDevelopmentEnvironment()) callback.initDevOnly();
 		}
 	});
 

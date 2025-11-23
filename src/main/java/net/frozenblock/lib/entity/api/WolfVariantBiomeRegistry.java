@@ -29,7 +29,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.animal.wolf.WolfVariant;
 import net.minecraft.world.level.biome.Biome;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -45,7 +44,7 @@ public class WolfVariantBiomeRegistry {
 	 * @param biome The biome to register the {@link WolfVariant} to.
 	 * @param wolfVariant the {@link WolfVariant} to be added.
 	 */
-	public static void register(@NotNull ResourceKey<Biome> biome, @NotNull ResourceKey<WolfVariant> wolfVariant) {
+	public static void register(ResourceKey<Biome> biome, ResourceKey<WolfVariant> wolfVariant) {
 		List<ResourceKey<WolfVariant>> variantList = WOLF_VARIANT_FROM_BIOME.getOrDefault(biome, null);
 		if (variantList == null) {
 			variantList = new ArrayList<>();
@@ -61,7 +60,6 @@ public class WolfVariantBiomeRegistry {
 	 * @param biome The biome to check for a registered {@link WolfVariant} in.
 	 * @return the found {@link WolfVariant}, if possible, in {@link ResourceKey} form.
 	 */
-	@NotNull
 	public static Optional<ResourceKey<WolfVariant>> get(ResourceKey<Biome> biome) {
 		return Optional.ofNullable(getVariantOrNull(biome));
 	}
@@ -72,9 +70,8 @@ public class WolfVariantBiomeRegistry {
 	 * @param biome The biome to check for a registered {@link WolfVariant} in.
 	 * @return the found {@link WolfVariant}, if possible.
 	 */
-	@NotNull
-	public static Optional<WolfVariant> get(@NotNull RegistryAccess registryManager, ResourceKey<Biome> biome) {
-		Registry<WolfVariant> registry = registryManager.lookupOrThrow(Registries.WOLF_VARIANT);
+	public static Optional<WolfVariant> get(RegistryAccess registryManager, ResourceKey<Biome> biome) {
+		final Registry<WolfVariant> registry = registryManager.lookupOrThrow(Registries.WOLF_VARIANT);
 		return registry.getOptional(getVariantOrNull(biome));
 	}
 
@@ -86,7 +83,7 @@ public class WolfVariantBiomeRegistry {
 	 */
 	@Nullable
 	private static ResourceKey<WolfVariant> getVariantOrNull(ResourceKey<Biome> biome) {
-		List<ResourceKey<WolfVariant>> variantList = WOLF_VARIANT_FROM_BIOME.getOrDefault(biome, null);
+		final List<ResourceKey<WolfVariant>> variantList = WOLF_VARIANT_FROM_BIOME.getOrDefault(biome, null);
 		if (variantList != null && !variantList.isEmpty()) {
 			final int size = variantList.size();
 			return variantList.get(AdvancedMath.random().nextInt(size));

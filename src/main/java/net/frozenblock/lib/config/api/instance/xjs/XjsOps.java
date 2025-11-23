@@ -39,7 +39,6 @@ import xjs.data.JsonValue;
  */
 @SuppressWarnings("unused")
 public class XjsOps implements DynamicOps<JsonValue> {
-
 	public static final XjsOps INSTANCE = new XjsOps(false);
 	public static final XjsOps COMPRESSED = new XjsOps(true);
 
@@ -58,44 +57,28 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public <U> U convertTo(final DynamicOps<U> outOps, final JsonValue input) {
-		if (input == null || input.isNull()) {
-			return outOps.empty();
-		} else if (input.isObject()) {
-			return this.convertMap(outOps, input);
-		} else if (input.isArray()) {
-			return this.convertList(outOps, input);
-		} else if (input.isString()) {
-			return outOps.createString(input.asString());
-		} else if (input.isBoolean()) {
-			return outOps.createBoolean(input.asBoolean());
-		} else if (input.isNumber()) {
-			return this.toNumber(outOps, input.asDouble());
-		}
+		if (input == null || input.isNull()) return outOps.empty();
+		if (input.isObject()) return this.convertMap(outOps, input);
+		if (input.isArray()) return this.convertList(outOps, input);
+		if (input.isString()) return outOps.createString(input.asString());
+		if (input.isBoolean()) return outOps.createBoolean(input.asBoolean());
+		if (input.isNumber()) return this.toNumber(outOps, input.asDouble());
 		return null;
 	}
 
 	private <U> U toNumber(final DynamicOps<U> outOps, final double number) {
-		if ((byte) number == number) {
-			return outOps.createByte((byte) number);
-		} else if ((short) number == number) {
-			return outOps.createShort((short) number);
-		} else if ((int) number == number) {
-			return outOps.createInt((int) number);
-		} else if ((float) number == number) {
-			return outOps.createFloat((float) number);
-		}
+		if ((byte) number == number) return outOps.createByte((byte) number);
+		if ((short) number == number) return outOps.createShort((short) number);
+		if ((int) number == number) return outOps.createInt((int) number);
+		if ((float) number == number) return outOps.createFloat((float) number);
 		return outOps.createDouble(number);
 	}
 
 	@Override
 	public DataResult<Number> getNumberValue(final JsonValue input) {
-		if (input == null || input.isNull()) {
-			return DataResult.error(() -> "Not a number: null");
-		} else if (input.isNumber()) {
-			return DataResult.success(input.asDouble());
-		} else if (input.isBoolean()) {
-			return DataResult.success(input.asBoolean() ? 1 : 0);
-		}
+		if (input == null || input.isNull()) return DataResult.error(() -> "Not a number: null");
+		if (input.isNumber()) return DataResult.success(input.asDouble());
+		if (input.isBoolean()) return DataResult.success(input.asBoolean() ? 1 : 0);
 		if (this.compressed && input.isString()) {
 			try {
 				return DataResult.success(Integer.parseInt(input.asString()));
@@ -113,13 +96,9 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public DataResult<Boolean> getBooleanValue(final JsonValue input) {
-		if (input == null || input.isNull()) {
-			return DataResult.error(() -> "Not a boolean: null");
-		} else if (input.isBoolean()) {
-			return DataResult.success(input.asBoolean());
-		} else if (input.isNumber()) {
-			return DataResult.success(input.asDouble() != 0);
-		}
+		if (input == null || input.isNull()) return DataResult.error(() -> "Not a boolean: null");
+		if (input.isBoolean()) return DataResult.success(input.asBoolean());
+		if (input.isNumber()) return DataResult.success(input.asDouble() != 0);
 		return DataResult.error(() -> "Not a boolean: " + input);
 	}
 
@@ -130,13 +109,9 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public DataResult<String> getStringValue(final JsonValue input) {
-		if (input == null || input.isNull()) {
-			return DataResult.error(() -> "Not a string: null");
-		} else if (input.isString()) {
-			return DataResult.success(input.asString());
-		} else if (this.compressed && input.isNumber()) {
-			return DataResult.success(String.valueOf(input.asDouble()));
-		}
+		if (input == null || input.isNull()) return DataResult.error(() -> "Not a string: null");
+		if (input.isString()) return DataResult.success(input.asString());
+		if (this.compressed && input.isNumber()) return DataResult.success(String.valueOf(input.asDouble()));
 		return DataResult.error(() -> "Not a string: " + input);
 	}
 
@@ -147,11 +122,8 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public DataResult<JsonValue> mergeToList(final JsonValue list, final JsonValue value) {
-		if (list == null || list.isNull()) {
-			return DataResult.success(new JsonArray().add(value));
-		} else if (list.isArray()) {
-			return DataResult.success(new JsonArray().addAll(list.asArray()).add(value));
-		}
+		if (list == null || list.isNull()) return DataResult.success(new JsonArray().add(value));
+		if (list.isArray()) return DataResult.success(new JsonArray().addAll(list.asArray()).add(value));
 		return DataResult.error(() -> "mergeToList called with not a list: " + list, list);
 	}
 
@@ -171,27 +143,24 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public DataResult<JsonValue> mergeToMap(final JsonValue map, final JsonValue key, final JsonValue value) {
-		if (!(map == null || map.isObject() || map.isNull())) {
-			return DataResult.error(() -> "mergeToMap called with not a map: " + map, map);
-		} else if (!(key.isString() || (this.compressed && isPrimitiveLike(key)))) {
+		if (!(map == null || map.isObject() || map.isNull())) return DataResult.error(() -> "mergeToMap called with not a map: " + map, map);
+
+		if (!(key.isString() || (this.compressed && isPrimitiveLike(key)))) {
 			final String msg = "key is not a string: " + key;
 			return map != null ? DataResult.error(() -> msg, map) : DataResult.error(() -> msg);
 		}
-		if (map == null || map.isNull()) {
-			return DataResult.success(new JsonObject().add(asPrimitiveString(key), value));
-		}
+
+		if (map == null || map.isNull()) return DataResult.success(new JsonObject().add(asPrimitiveString(key), value));
 		return DataResult.success(new JsonObject().addAll(map.asObject()).add(asPrimitiveString(key), value));
 	}
 
 	@Override
 	public DataResult<JsonValue> mergeToMap(final JsonValue map, MapLike<JsonValue> values) {
-		if (!(map == null || map.isObject() || map.isNull())) {
-			return DataResult.error(() -> "mergeToMap called with not a map: " + map, map);
-		}
+		if (!(map == null || map.isObject() || map.isNull())) return DataResult.error(() -> "mergeToMap called with not a map: " + map, map);
+
 		final JsonObject output = new JsonObject();
-		if (map != null && map.isObject()) {
-			output.addAll(map.asObject());
-		}
+		if (map != null && map.isObject()) output.addAll(map.asObject());
+
 		final List<JsonValue> missed = new ArrayList<>();
 		values.entries().forEach(entry -> {
 			final JsonValue key = entry.getFirst();
@@ -201,17 +170,14 @@ public class XjsOps implements DynamicOps<JsonValue> {
 				missed.add(key);
 			}
 		});
-		if (!missed.isEmpty()) {
-			return DataResult.error(() -> "some keys are not strings: " + missed, output);
-		}
+		if (!missed.isEmpty()) return DataResult.error(() -> "some keys are not strings: " + missed, output);
 		return DataResult.success(output);
 	}
 
 	@Override
 	public DataResult<Stream<Pair<JsonValue, JsonValue>>> getMapValues(final JsonValue input) {
-		if (input == null || !input.isObject()) {
-			return DataResult.error(() -> "Not an XJS object: " + input);
-		}
+		if (input == null || !input.isObject()) return DataResult.error(() -> "Not an XJS object: " + input);
+
 		final Stream.Builder<Pair<JsonValue, JsonValue>> builder = Stream.builder();
 		for (final JsonObject.Member member : input.asObject()) {
 			final JsonValue value = member.getValue();
@@ -222,9 +188,8 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public DataResult<Consumer<BiConsumer<JsonValue, JsonValue>>> getMapEntries(final JsonValue input) {
-		if (input == null || !input.isObject()) {
-			return DataResult.error(() -> "Not an XJS object: " + input);
-		}
+		if (input == null || !input.isObject()) return DataResult.error(() -> "Not an XJS object: " + input);
+
 		return DataResult.success(c -> {
 			for (final JsonObject.Member member : input.asObject()) {
 				final JsonValue value = member.getValue();
@@ -235,9 +200,7 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public DataResult<MapLike<JsonValue>> getMap(final JsonValue input) {
-		if (input == null || !input.isObject()) {
-			return DataResult.error(() -> "Not an XJS object: " + input);
-		}
+		if (input == null || !input.isObject()) return DataResult.error(() -> "Not an XJS object: " + input);
 		return DataResult.success(new XJSMapLike(input.asObject()));
 	}
 
@@ -253,9 +216,8 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public DataResult<Stream<JsonValue>> getStream(final JsonValue input) {
-		if (input == null || !input.isArray()) {
-			return DataResult.error(() -> "Not an XJS array: " + input);
-		}
+		if (input == null || !input.isArray()) return DataResult.error(() -> "Not an XJS array: " + input);
+
 		final Stream.Builder<JsonValue> builder = Stream.builder();
 		for (final JsonValue value : input.asArray()) {
 			builder.add(value.isNull() ? null : value);
@@ -265,9 +227,8 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public DataResult<Consumer<Consumer<JsonValue>>> getList(final JsonValue input) {
-		if (input == null || !input.isArray()) {
-			return DataResult.error(() -> "Not an XJS array: + " + input);
-		}
+		if (input == null || !input.isArray()) return DataResult.error(() -> "Not an XJS array: + " + input);
+
 		return DataResult.success(c -> {
 			for (final JsonValue value : input.asArray()) {
 				c.accept(value.isNull() ? null : value);
@@ -284,16 +245,14 @@ public class XjsOps implements DynamicOps<JsonValue> {
 
 	@Override
 	public JsonValue remove(final JsonValue input, final String key) {
-		if (input != null && input.isObject()) {
-			final JsonObject result = new JsonObject();
-			for (final JsonObject.Member member : input.asObject()) {
-				if (!member.getKey().equals(key)) {
-					result.add(member.getKey(), member.getValue());
-				}
-			}
-			return result;
+		if (input == null || !input.isObject()) return input;
+
+		final JsonObject result = new JsonObject();
+		for (final JsonObject.Member member : input.asObject()) {
+			if (member.getKey().equals(key)) continue;
+			result.add(member.getKey(), member.getValue());
 		}
-		return input;
+		return result;
 	}
 
 	@Override

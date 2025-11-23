@@ -21,7 +21,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.cape.client.impl.AvatarCapeInterface;
 import net.minecraft.client.entity.ClientAvatarEntity;
-import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.player.PlayerModel;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
@@ -41,11 +41,9 @@ public abstract class AvatarRendererMixin<AvatarlikeEntity extends Avatar & Clie
 	}
 
 	@Inject(method = "extractCapeState", at = @At("TAIL"))
-	private void frozenLib$extractCapeState(
-		AvatarlikeEntity avatarlikeEntity, AvatarRenderState avatarRenderState, float f, CallbackInfo info
-	) {
-		if (!(avatarRenderState instanceof AvatarCapeInterface stateInterface)) return;
-		if (!(avatarlikeEntity instanceof AvatarCapeInterface entityInterface)) return;
+	private void frozenLib$extractCapeState(AvatarlikeEntity entity, AvatarRenderState renderState, float f, CallbackInfo info) {
+		if (!(renderState instanceof AvatarCapeInterface stateInterface)) return;
+		if (!(entity instanceof AvatarCapeInterface entityInterface)) return;
 		stateInterface.frozenLib$setCape(entityInterface.frozenLib$getCape());
 	}
 }

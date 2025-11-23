@@ -27,7 +27,6 @@ import net.minecraft.world.level.NaturalSpawner;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class FrozenSpawnPlacementTypes {
@@ -45,21 +44,20 @@ public class FrozenSpawnPlacementTypes {
 			return this.isValidEmptySpawnBlock(level, pos, entityType);
 		}
 
-		private boolean isSurfaceLavaOrMagma(@NotNull LevelReader level, BlockPos pos, @NotNull BlockState belowState) {
-			final BlockState blockState = level.getBlockState(pos);
+		private boolean isSurfaceLavaOrMagma(LevelReader level, BlockPos pos, BlockState belowState) {
+			final BlockState state = level.getBlockState(pos);
 			return (belowState.getFluidState().is(FluidTags.LAVA) || belowState.is(Blocks.MAGMA_BLOCK))
-				&& !(blockState.getFluidState().is(FluidTags.LAVA) || blockState.is(Blocks.MAGMA_BLOCK));
+				&& !(state.getFluidState().is(FluidTags.LAVA) || state.is(Blocks.MAGMA_BLOCK));
 		}
 
-		private boolean isValidEmptySpawnBlock(@NotNull LevelReader level, BlockPos pos, EntityType<?> entityType) {
-			final BlockState blockState = level.getBlockState(pos);
-			final boolean isSafeBurning = blockState.is(BlockTags.FIRE);
-			return isSafeBurning || NaturalSpawner.isValidEmptySpawnBlock(level, pos, blockState, blockState.getFluidState(), entityType);
+		private boolean isValidEmptySpawnBlock(LevelReader level, BlockPos pos, EntityType<?> entityType) {
+			final BlockState state = level.getBlockState(pos);
+			final boolean isSafeBurning = state.is(BlockTags.FIRE);
+			return isSafeBurning || NaturalSpawner.isValidEmptySpawnBlock(level, pos, state, state.getFluidState(), entityType);
 		}
 
-		@NotNull
 		@Override
-		public BlockPos adjustSpawnPosition(@NotNull LevelReader level, @NotNull BlockPos pos) {
+		public BlockPos adjustSpawnPosition(LevelReader level, BlockPos pos) {
 			final BlockPos belowPos = pos.below();
 			return level.getBlockState(belowPos).isPathfindable(PathComputationType.LAND) ? belowPos : pos;
 		}

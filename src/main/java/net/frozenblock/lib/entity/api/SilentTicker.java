@@ -24,7 +24,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class SilentTicker extends Marker {
 	private int ticks;
@@ -40,13 +39,13 @@ public abstract class SilentTicker extends Marker {
 	}
 
 	@Override
-	protected void readAdditionalSaveData(@NotNull ValueInput input) {
+	protected void readAdditionalSaveData(ValueInput input) {
 		super.readAdditionalSaveData(input);
 		this.ticks = input.getIntOr("frozenlib_ticks", 0);
 	}
 
 	@Override
-	protected void addAdditionalSaveData(@NotNull ValueOutput output) {
+	protected void addAdditionalSaveData(ValueOutput output) {
 		super.addAdditionalSaveData(output);
 		output.putInt("frozenlib_ticks", this.ticks);
 	}

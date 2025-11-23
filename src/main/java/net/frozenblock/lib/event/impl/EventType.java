@@ -28,7 +28,6 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @ApiStatus.Internal
 public enum EventType {
-
 	/**
 	 * Represents a client-sided event.
 	 */

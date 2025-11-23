@@ -38,7 +38,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 @Environment(EnvType.CLIENT)
@@ -68,14 +67,14 @@ public class FrozenLibModelHelper {
 		createModelTemplate("tinted_flowerbed_4", "_4", TextureSlot.FLOWERBED, TextureSlot.STEM)
 	);
 
-	public static void createTintedFlowerBed(@NotNull BlockModelGenerators generator, @NotNull Block block) {
-		Identifier itemModel = generator.createFlatItemModel(block.asItem());
+	public static void createTintedFlowerBed(BlockModelGenerators generator, Block block) {
+		final Identifier itemModel = generator.createFlatItemModel(block.asItem());
 		generator.registerSimpleTintedItemModel(block, itemModel, new GrassColorSource());
 
-		MultiVariant multiVariant1 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_1.create(block, generator.modelOutput));
-		MultiVariant multiVariant2 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_2.create(block, generator.modelOutput));
-		MultiVariant multiVariant3 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_3.create(block, generator.modelOutput));
-		MultiVariant multiVariant4 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_4.create(block, generator.modelOutput));
+		final MultiVariant multiVariant1 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_1.create(block, generator.modelOutput));
+		final MultiVariant multiVariant2 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_2.create(block, generator.modelOutput));
+		final MultiVariant multiVariant3 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_3.create(block, generator.modelOutput));
+		final MultiVariant multiVariant4 = BlockModelGenerators.plainVariant(TINTED_FLOWERBED_4.create(block, generator.modelOutput));
 		generator.createSegmentedBlock(
 			block,
 			multiVariant1,
@@ -89,11 +88,9 @@ public class FrozenLibModelHelper {
 		);
 	}
 
-	public static <T extends Property<?>> @Unmodifiable @NotNull Map<T, VariantMutator> selectMultifaceNoUvLockProperties(
-		StateHolder<?, ?> stateHolder,
-		Function<Direction, T> function
-	) {
-		ImmutableMap.Builder<T, VariantMutator> builder = ImmutableMap.builderWithExpectedSize(MULTIFACE_GENERATOR_NO_UV_LOCK.size());
+	@Unmodifiable
+	public static <T extends Property<?>> Map<T, VariantMutator> selectMultifaceNoUvLockProperties(StateHolder<?, ?> stateHolder, Function<Direction, T> function) {
+		final ImmutableMap.Builder<T, VariantMutator> builder = ImmutableMap.builderWithExpectedSize(MULTIFACE_GENERATOR_NO_UV_LOCK.size());
 		MULTIFACE_GENERATOR_NO_UV_LOCK.forEach((direction, variantMutator) -> {
 			T property = function.apply(direction);
 			if (stateHolder.hasProperty(property)) {
@@ -104,7 +101,7 @@ public class FrozenLibModelHelper {
 	}
 
 	@Contract("_, _, _ -> new")
-	private static @NotNull ModelTemplate createModelTemplate(String string, String string2, TextureSlot... textureSlots) {
+	private static ModelTemplate createModelTemplate(String string, String string2, TextureSlot... textureSlots) {
 		return new ModelTemplate(Optional.of(FrozenLibConstants.id("block/" + string)), Optional.of(string2), textureSlots);
 	}
 }

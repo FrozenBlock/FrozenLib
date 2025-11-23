@@ -35,7 +35,6 @@ import lombok.extern.slf4j.Slf4j;
 import static net.frozenblock.lib.config.api.instance.xjs.InvalidEnumConstantException.f;
 import org.apache.commons.lang3.mutable.MutableObject;
 import org.jetbrains.annotations.CheckReturnValue;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import personthecat.fresult.Result;
 import personthecat.fresult.Void;
@@ -257,9 +256,8 @@ public class XjsUtils {
 	 * @param value The updated value to set at this path.
 	 */
 	public static void setValueFromPath(final JsonObject json, final JsonPath path, @Nullable final JsonValue value) {
-		if (path.isEmpty()) {
-			return;
-		}
+		if (path.isEmpty()) return;
+
 		final Either<String, Integer> lastVal = path.get(path.size() - 1);
 		final JsonContainer parent = getLastContainer(json, path);
 		// This will ideally be handled by XJS in the future.
@@ -277,14 +275,11 @@ public class XjsUtils {
 	 * @return <code>true</code>, if the value should be condensed.
 	 */
 	private static boolean condenseNewValue(final JsonPath path, final JsonContainer container) {
-		if (container.isEmpty()) {
-			return true;
-		}
+		if (container.isEmpty()) return true;
+
 		final int s = path.size() == 1 && container.isObject() ? 1 : 0;
 		for (int i = s; i < container.size(); i++) {
-			if (container.getReference(i).getOnly().getLinesAbove() == 0) {
-				return true;
-			}
+			if (container.getReference(i).getOnly().getLinesAbove() == 0) return true;
 		}
 		return false;
 	}
@@ -297,9 +292,8 @@ public class XjsUtils {
 	 * @return The value at this location, or else {@link Optional#empty}.
 	 */
 	public static Optional<JsonValue> getValueFromPath(final JsonObject json, final JsonPath path) {
-		if (path.isEmpty()) {
-			return empty();
-		}
+		if (path.isEmpty()) return empty();
+
 		final Either<String, Integer> lastVal = path.get(path.size() - 1);
 		return getEither(getLastContainer(json, path), lastVal);
 	}
@@ -324,9 +318,8 @@ public class XjsUtils {
 	 * @return The value at this location, the original <code>json</code>, or else a new container.
 	 */
 	public static JsonContainer getLastContainer(final JsonObject json, final JsonPath path) {
-		if (path.isEmpty()) {
-			return json;
-		}
+		if (path.isEmpty()) return json;
+
 		JsonContainer current = json;
 		for (int i = 0; i < path.size() - 1; i++) {
 			final Either<String, Integer> val = path.get(i);
@@ -384,9 +377,7 @@ public class XjsUtils {
 					current.setValue(null);
 				}
 			});
-			if (current.getValue() == null) {
-				return index;
-			}
+			if (current.getValue() == null) return index;
 			index++;
 		}
 		return index;
@@ -639,9 +630,8 @@ public class XjsUtils {
 	 * @param either The accessor for the value at this location.
 	 */
 	private static Optional<JsonValue> getEither(final JsonValue container, final Either<String, Integer> either) {
-		if (either.left().isPresent()) {
-			return nullable(container.asObject().get(either.left().get()));
-		} else if (either.right().isPresent()) {
+		if (either.left().isPresent()) return nullable(container.asObject().get(either.left().get()));
+		if (either.right().isPresent()) {
 			final JsonArray array = container.asArray();
 			final int index = either.right().get();
 			return index < array.size() ? Optional.of(array.get(index)) : empty();
@@ -725,9 +715,7 @@ public class XjsUtils {
 	 * @throws IndexOutOfBoundsException If <code>index &lt; 0 || index &gt; size</code>
 	 */
 	public static JsonArray setOrAdd(final JsonArray array, final int index, final JsonValue value) {
-		if (index == array.size()) {
-			return array.add(value);
-		}
+		if (index == array.size()) return array.add(value);
 		return array.set(index, value);
 	}
 
@@ -829,9 +817,7 @@ public class XjsUtils {
 	 * @return The existing or new array.
 	 */
 	public static JsonArray getOrCreateArray(final JsonObject json, final String field) {
-		if (json.get(field) instanceof JsonArray array) {
-			return array;
-		}
+		if (json.get(field) instanceof JsonArray array) return array;
 		final JsonArray array = Json.array();
 		json.set(field, array);
 		return array;
@@ -845,9 +831,7 @@ public class XjsUtils {
 	 * @return The existing or new object.
 	 */
 	public static JsonObject getOrCreateObject(final JsonObject json, final String field) {
-		if (json.get(field) instanceof JsonObject object) {
-			return object;
-		}
+		if (json.get(field) instanceof JsonObject object) return object;
 		final JsonObject object = Json.object();
 		json.set(field, object);
 		return object;
@@ -860,7 +844,6 @@ public class XjsUtils {
 	 * @param <T> The type of value being wrapped.
 	 * @return <code>val</code>, wrapped in {@link Optional}.
 	 */
-	@NotNull
 	private static <T> Optional<T> nullable(final @Nullable T val) {
 		return Optional.ofNullable(val);
 	}

@@ -25,16 +25,15 @@ import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
-import org.jetbrains.annotations.NotNull;
 
 public final class FrozenLibBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
-	public FrozenLibBlockTagProvider(@NotNull FabricDataOutput output, @NotNull CompletableFuture<HolderLookup.Provider> registries) {
+	public FrozenLibBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, registries);
 	}
 
 	@Override
-	protected void addTags(@NotNull HolderLookup.Provider arg) {
+	protected void addTags(HolderLookup.Provider arg) {
 		this.valueLookupBuilder(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH)
 			.addOptionalTag(BlockTags.FENCES)
 			.addOptionalTag(BlockTags.FENCE_GATES)

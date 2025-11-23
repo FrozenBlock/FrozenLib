@@ -20,7 +20,7 @@ package net.frozenblock.lib.gravity.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.frozenblock.lib.gravity.impl.EntityGravityInterface;
-import net.minecraft.world.entity.vehicle.AbstractBoat;
+import net.minecraft.world.entity.vehicle.boat.AbstractBoat;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -31,7 +31,7 @@ public abstract class AbstractBoatMixin implements EntityGravityInterface {
 	@WrapOperation(method = "floatBoat",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/entity/vehicle/AbstractBoat;setDeltaMovement(DDD)V",
+			target = "Lnet/minecraft/world/entity/vehicle/boat/AbstractBoat;setDeltaMovement(DDD)V",
 			ordinal = 0
 		)
 	)

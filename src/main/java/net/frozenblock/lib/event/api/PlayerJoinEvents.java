@@ -27,7 +27,6 @@ import net.minecraft.server.level.ServerPlayer;
  * A class representing the player join event.
  */
 public class PlayerJoinEvents {
-
 	/**
 	 * The event that is triggered when a player joins the server.
 	 */
@@ -38,8 +37,8 @@ public class PlayerJoinEvents {
 	/**
 	 * The event that is triggered when a player joins a world.
 	 */
-	public static final Event<PlayerAddedToLevel> ON_PLAYER_ADDED_TO_LEVEL = FrozenEvents.createEnvironmentEvent(PlayerAddedToLevel.class, (callbacks) -> (server, serverLevel, player) -> {
-		for (var callback : callbacks) callback.onPlayerAddedToLevel(server, serverLevel, player);
+	public static final Event<PlayerAddedToLevel> ON_PLAYER_ADDED_TO_LEVEL = FrozenEvents.createEnvironmentEvent(PlayerAddedToLevel.class, (callbacks) -> (server, level, player) -> {
+		for (var callback : callbacks) callback.onPlayerAddedToLevel(server, level, player);
 	});
 
 	/**
@@ -63,9 +62,9 @@ public class PlayerJoinEvents {
 		/**
 		 * Triggers the event when a player is added to a level.
 		 * @param server the Minecraft server instance
-		 * @param serverLevel the server level the player has been added to
+		 * @param level the server level the player has been added to
 		 * @param player the player added to the level
 		 */
-		void onPlayerAddedToLevel(MinecraftServer server, ServerLevel serverLevel, ServerPlayer player);
+		void onPlayerAddedToLevel(MinecraftServer server, ServerLevel level, ServerPlayer player);
 	}
 }

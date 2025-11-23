@@ -31,12 +31,11 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public class ScaleEntityCommand {
 
-	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("scale")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 			.then(Commands.argument("targets", EntityArgument.entities())
@@ -47,7 +46,7 @@ public class ScaleEntityCommand {
 		);
 	}
 
-	private static int scale(CommandSourceStack source, @NotNull Collection<? extends Entity> entities, double scale) {
+	private static int scale(CommandSourceStack source, Collection<? extends Entity> entities, double scale) {
 		int entityAmount = 0;
 		final List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {

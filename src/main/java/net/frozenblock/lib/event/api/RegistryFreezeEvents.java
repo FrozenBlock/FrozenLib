@@ -26,7 +26,6 @@ import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 public class RegistryFreezeEvents {
-
 	/**
 	 * An event indicating the start of a {@link Registry}'s freeze.
 	 * <p>

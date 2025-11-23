@@ -44,9 +44,9 @@ public class WingsLayerMixin {
 	)
 	private static void frozenLib$useFrozenLibCapeAsElytra(
 		CallbackInfoReturnable<Identifier> info,
-		@Local(ordinal = 0) AvatarRenderState avatarRenderState
+		@Local(ordinal = 0) AvatarRenderState renderState
 	) {
-		if (!(avatarRenderState instanceof AvatarCapeInterface capeInterface) || !avatarRenderState.showCape) return;
+		if (!(renderState instanceof AvatarCapeInterface capeInterface) || !renderState.showCape) return;
 		final ClientAsset.Texture capeAsset = capeInterface.frozenLib$getCape();
 		if (capeAsset != null) info.setReturnValue(capeAsset.texturePath());
 	}

@@ -29,7 +29,6 @@ import net.minecraft.util.datafix.fixes.References;
  * A {@link DataFix} specialized for fixing the name of a BlockState Property.
  */
 public class BlockStateRenameFix extends DataFix {
-
     private final String name;
     private final String blockId;
     private final String oldState;
@@ -46,9 +45,9 @@ public class BlockStateRenameFix extends DataFix {
     }
 
     private Dynamic<?> fix(Dynamic<?> dynamic) {
-        Optional<String> optional = dynamic.get("Name").asString().result();
+		final Optional<String> optional = dynamic.get("Name").asString().result();
         return optional.equals(Optional.of(this.blockId)) ? dynamic.update("Properties", dynamicx -> {
-            String string = dynamicx.get(this.oldState).asString(this.defaultValue);
+			final String string = dynamicx.get(this.oldState).asString(this.defaultValue);
             return dynamicx.remove(this.oldState).set(this.newState, dynamicx.createString(string));
         }) : dynamic;
     }

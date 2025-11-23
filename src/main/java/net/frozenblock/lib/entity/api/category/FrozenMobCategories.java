@@ -21,7 +21,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
 import net.minecraft.world.entity.MobCategory;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenMobCategories {
@@ -31,7 +30,7 @@ public class FrozenMobCategories {
 		NEW_MOB_CATEGORIES.put(id, category);
 	}
 
-	public static MobCategory getCategory(@NotNull String modId, @NotNull String name) {
+	public static MobCategory getCategory(String modId, String name) {
 		return NEW_MOB_CATEGORIES.get(modId.toUpperCase() + name.toUpperCase());
 	}
 }

@@ -26,7 +26,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.event.impl.EventType;
 
 public class FrozenEvents {
-
 	/**
 	 * A list to store all the registered events
 	 */

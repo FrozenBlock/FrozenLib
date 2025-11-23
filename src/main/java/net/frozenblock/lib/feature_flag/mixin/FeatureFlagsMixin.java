@@ -37,7 +37,10 @@ public class FeatureFlagsMixin {
 			ordinal = 0
 		)
 	)
-	private static void frozenLib$save(CallbackInfo info, @Local FeatureFlagRegistry.Builder builder) {
+	private static void frozenLib$save(
+		CallbackInfo info,
+		@Local FeatureFlagRegistry.Builder builder
+	) {
 		FeatureFlagApi.builder = builder;
 	}
 }

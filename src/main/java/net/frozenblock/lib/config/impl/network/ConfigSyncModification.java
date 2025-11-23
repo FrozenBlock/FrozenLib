@@ -30,7 +30,6 @@ import net.frozenblock.lib.config.api.sync.network.ConfigSyncData;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -41,12 +40,12 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 	@Override
 	public void accept(T destination) {
 		try {
-			ConfigSyncData<T> syncData = dataSupplier.get(config);
+			final ConfigSyncData<T> syncData = dataSupplier.get(config);
 			if (syncData == null || !FrozenNetworking.connectedToServer()) {
 				new Exception("Attempted to sync config " + config.path() + " for mod " + config.modId() + " outside a server!").printStackTrace();
 				return;
 			}
-			T source = syncData.instance();
+			final T source = syncData.instance();
 			config.setSynced(true);
 			ConfigModification.copyInto(source, destination, true);
 		} catch (NullPointerException ignored) {}
@@ -65,28 +64,24 @@ public record ConfigSyncModification<T>(Config<T> config, DataSupplier<T> dataSu
 		ConfigSyncData<T> get(Config<T> config);
 	}
 
-	public static boolean isSyncable(@NotNull Field field) {
+	public static boolean isSyncable(Field field) {
 		EntrySyncData entrySyncData = field.getAnnotation(EntrySyncData.class);
 		return entrySyncData == null || entrySyncData.behavior().canSync();
 	}
 
-	public static boolean isLockedWhenSynced(@NotNull Field field) {
+	public static boolean isLockedWhenSynced(Field field) {
 		EntrySyncData entrySyncData = field.getAnnotation(EntrySyncData.class);
 		return entrySyncData != null && entrySyncData.behavior() == SyncBehavior.LOCK_WHEN_SYNCED;
 	}
 
 	@Environment(EnvType.CLIENT)
 	public static ConfigModification.EntryPermissionType canModifyField(@Nullable Field field, @Nullable Config<?> config) {
-		if (config != null && field != null && config.supportsSync()) {
-			boolean isOperator = ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false);
-			if (!config.isSynced() || isOperator) {
-				return ConfigModification.EntryPermissionType.CAN_MODIFY;
-			} else if (isSyncable(field)) {
-				return ConfigModification.EntryPermissionType.LOCKED_DUE_TO_SYNC;
-			} else if (isLockedWhenSynced(field)) {
-				return ConfigModification.EntryPermissionType.LOCKED_DUE_TO_SERVER;
-			}
-		}
+		if (config == null || field == null || !config.supportsSync()) return ConfigModification.EntryPermissionType.CAN_MODIFY;
+
+		final boolean isOperator = ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false);
+		if (!config.isSynced() || isOperator) return ConfigModification.EntryPermissionType.CAN_MODIFY;
+		if (isSyncable(field)) return ConfigModification.EntryPermissionType.LOCKED_DUE_TO_SYNC;
+		if (isLockedWhenSynced(field)) return ConfigModification.EntryPermissionType.LOCKED_DUE_TO_SERVER;
 		return ConfigModification.EntryPermissionType.CAN_MODIFY;
 	}
 

@@ -28,12 +28,12 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
-import org.jetbrains.annotations.NotNull;
 
 public final class ConfigCommand {
+
 	private ConfigCommand() {}
 
-	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("frozenlib_config")
 			.then(Commands.literal("reload")
 				.then(Commands.argument("modId", StringArgumentType.string())
@@ -44,18 +44,15 @@ public final class ConfigCommand {
 	}
 
 	private static int reloadConfigs(CommandSourceStack source, String modId) {
-		Collection<Config<?>> configs = ConfigRegistry.getConfigsForMod(modId);
-		for (Config<?> config : configs) {
-			config.load();
-		}
-		for (ServerPlayer player : PlayerLookup.all(source.getServer())) {
-			ConfigSyncPacket.sendS2C(player, configs);
-		}
+		final Collection<Config<?>> configs = ConfigRegistry.getConfigsForMod(modId);
+		for (Config<?> config : configs) config.load();
+		for (ServerPlayer player : PlayerLookup.all(source.getServer())) ConfigSyncPacket.sendS2C(player, configs);
 
-		if (configs.size() == 1)
+		if (configs.size() == 1) {
 			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.single", modId), true);
-		else
+		} else {
 			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.multiple", configs.size(), modId), true);
+		}
 		return configs.size();
 	}
 }

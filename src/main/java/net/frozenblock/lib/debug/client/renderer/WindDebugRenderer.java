@@ -27,7 +27,6 @@ import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.debug.DebugValueAccess;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 @Environment(EnvType.CLIENT)
 public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
@@ -45,11 +44,11 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		emitWindNodesFromList(ClientWindManager.Debug.getDebugNodes());
 	}
 
-	protected static void emitWindNodesFromList(@NotNull List<List<Pair<Vec3, Integer>>> windNodes) {
+	protected static void emitWindNodesFromList(List<List<Pair<Vec3, Integer>>> windNodes) {
 		windNodes.forEach(WindDebugRenderer::emitWindNodes);
 	}
 
-	protected static void emitWindNodes(@NotNull List<Pair<Vec3, Integer>> windNodes) {
+	protected static void emitWindNodes(List<Pair<Vec3, Integer>> windNodes) {
 		final int size = windNodes.size();
 		if (size <= 1) return;
 

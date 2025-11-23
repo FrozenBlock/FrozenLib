@@ -34,7 +34,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
 import net.frozenblock.lib.config.api.entry.TypedEntry;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import xjs.data.Json;
 import xjs.data.JsonArray;
@@ -60,6 +59,7 @@ public class XjsObjectMapper {
 
 		final Optional<JsonObject> read = XjsUtils.readJson(p.toFile());
 		if (read.isEmpty()) return t;
+
 		final JsonObject json = read.get();
 		if (json.isEmpty()) return t;
 
@@ -69,27 +69,16 @@ public class XjsObjectMapper {
 	}
 
 	public static JsonValue toJsonValue(final Object o) throws NonSerializableObjectException {
-		if (o.getClass().isArray()) {
-			return toJsonArray((Object[]) o);
-		} else if (o.getClass().isEnum()) {
-			return Json.value(((Enum<?>) o).name());
-		} else if (o instanceof String) {
-			return Json.value((String) o);
-		} else if (o instanceof Integer) {
-			return Json.value((Integer) o);
-		} else if (o instanceof Long) {
-			return Json.value((Long) o);
-		} else if (o instanceof Float || o instanceof Double) {
-			return Json.value(((Number) o).doubleValue());
-		} else if (o instanceof Boolean) {
-			return Json.value((Boolean) o);
-		} else if (o instanceof Collection) {
-			return toJsonArray((Collection<?>) o);
-		} else if (o instanceof Map) {
-			return toJsonObject((Map<?, ?>) o);
-		} else if (o instanceof TypedEntry) {
-			return XjsTypedEntrySerializer.toJsonValue((TypedEntry<?>) o);
-		}
+		if (o.getClass().isArray()) return toJsonArray((Object[]) o);
+		if (o.getClass().isEnum()) return Json.value(((Enum<?>) o).name());
+		if (o instanceof String) return Json.value((String) o);
+		if (o instanceof Integer) return Json.value((Integer) o);
+		if (o instanceof Long) return Json.value((Long) o);
+		if (o instanceof Float || o instanceof Double) return Json.value(((Number) o).doubleValue());
+		if (o instanceof Boolean) return Json.value((Boolean) o);
+		if (o instanceof Collection) return toJsonArray((Collection<?>) o);
+		if (o instanceof Map) return toJsonObject((Map<?, ?>) o);
+		if (o instanceof TypedEntry) return XjsTypedEntrySerializer.toJsonValue((TypedEntry<?>) o);
 		return toJsonObject(o);
 	}
 
@@ -98,16 +87,13 @@ public class XjsObjectMapper {
 
 		final Class<?> c = o.getClass();
 		for (final Field f : c.getDeclaredFields()) {
-			if (!Modifier.isStatic(f.getModifiers()) && !Modifier.isTransient(f.getModifiers())) {
-				final JsonValue value = toJsonValue(UnsafeUtils.getUnsafely(f, o));
+			if (Modifier.isStatic(f.getModifiers()) || Modifier.isTransient(f.getModifiers())) continue;
+			final JsonValue value = toJsonValue(UnsafeUtils.getUnsafely(f, o));
 
-				final String comment = getComment(f);
-				if (comment != null) value.setComment(comment);
+			final String comment = getComment(f);
+			if (comment != null) value.setComment(comment);
 
-				if (getSaveToggle(f)) {
-					json.add(f.getName(), value);
-				}
-			}
+			if (getSaveToggle(f)) json.add(f.getName(), value);
 		}
 		return json;
 	}
@@ -175,33 +161,20 @@ public class XjsObjectMapper {
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
 	private static Object getValueByType(final @Nullable String modId, final Class<?> type, final Object def, final JsonValue value) throws NonSerializableObjectException {
-		if (type.isAssignableFrom(TypedEntry.class)) {
-			return XjsTypedEntrySerializer.fromJsonValue(modId, value);
-		} else if (type.isArray()) {
-			return toArray(modId, type, def, value);
-		} else if (type.isEnum()) {
-			return assertEnumConstant(value.asString(), (Class) type);
-		} else if (type.isAssignableFrom(String.class)) {
-			return value.asString();
-		} else if (type.isAssignableFrom(Integer.class) || type.isAssignableFrom(int.class)) {
-			return value.asInt();
-		} else if (type.isAssignableFrom(Long.class) || type.isAssignableFrom(long.class)) {
-			return value.asLong();
-		} else if (type.isAssignableFrom(Float.class) || type.isAssignableFrom(float.class)) {
-			return value.asFloat();
-		} else if (type.isAssignableFrom(Double.class) || type.isAssignableFrom(double.class)) {
-			return value.asDouble();
-		} else if (type.isAssignableFrom(Boolean.class) || type.isAssignableFrom(boolean.class)) {
-			return value.asBoolean();
-		} else if (type.isAssignableFrom(List.class)) {
-			return toList(modId, value, def);
-		} else if (type.isAssignableFrom(Set.class)) {
-			return new HashSet<>(toList(modId, value, def));
-		} else if (type.equals(Collection.class)) {
-			return toList(modId, value, def);
-		} else if (type.isAssignableFrom(Map.class)) {
-			return toMap(modId, value, def);
-		}
+		if (type.isAssignableFrom(TypedEntry.class)) return XjsTypedEntrySerializer.fromJsonValue(modId, value);
+		if(type.isArray()) return toArray(modId, type, def, value);
+		if(type.isEnum()) return assertEnumConstant(value.asString(), (Class) type);
+		if(type.isAssignableFrom(String.class)) return value.asString();
+		if(type.isAssignableFrom(Integer.class) || type.isAssignableFrom(int.class)) return value.asInt();
+		if(type.isAssignableFrom(Long.class) || type.isAssignableFrom(long.class)) return value.asLong();
+		if(type.isAssignableFrom(Float.class) || type.isAssignableFrom(float.class)) return value.asFloat();
+		if(type.isAssignableFrom(Double.class) || type.isAssignableFrom(double.class)) return value.asDouble();
+		if(type.isAssignableFrom(Boolean.class) || type.isAssignableFrom(boolean.class)) return value.asBoolean();
+		if(type.isAssignableFrom(List.class)) return toList(modId, value, def);
+		if(type.isAssignableFrom(Set.class)) return new HashSet<>(toList(modId, value, def));
+		if(type.equals(Collection.class)) return toList(modId, value, def);
+		if(type.isAssignableFrom(Map.class)) return toMap(modId, value, def);
+
 		final Object o = UnsafeUtils.constructUnsafely(type);
 		writeObjectInto(modId, o, value.asObject());
 		return o;
@@ -268,7 +241,6 @@ public class XjsObjectMapper {
 	 * @param by A predicate which determines which value to return.
 	 * @return The value, or else {@link Optional#empty}.
 	 */
-	@NotNull
 	private static <T> Optional<T> find(final T[] values, final Predicate<T> by) {
 		for (final T val : values) {
 			if (by.test(val)) {
@@ -287,7 +259,6 @@ public class XjsObjectMapper {
 	 * @param <T> The type of constant being researched.
 	 * @return The expected constant.
 	 */
-	@NotNull
 	private static <T extends Enum<T>> T assertEnumConstant(final String s, final Class<T> clazz) {
 		return getEnumConstant(s, clazz).orElseThrow(() -> new InvalidEnumConstantException(s, clazz));
 	}

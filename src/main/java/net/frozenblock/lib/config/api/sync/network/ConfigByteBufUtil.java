@@ -24,7 +24,6 @@ import blue.endless.jankson.api.SyntaxError;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.config.api.instance.ConfigSerialization;
 import net.minecraft.network.FriendlyByteBuf;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -34,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public final class ConfigByteBufUtil {
 
 	@Nullable
-	public static <T> T readJankson(@NotNull FriendlyByteBuf buf, String modId, String className) throws SyntaxError {
+	public static <T> T readJankson(FriendlyByteBuf buf, String modId, String className) throws SyntaxError {
 		try {
 			final Class<T> clazz = (Class<T>) Class.forName(className);
 			final Jankson jankson = ConfigSerialization.createJankson(modId);
@@ -45,7 +44,7 @@ public final class ConfigByteBufUtil {
 		return null;
 	}
 
-	public static <T> void writeJankson(@NotNull FriendlyByteBuf buf, String modId, T data) {
+	public static <T> void writeJankson(FriendlyByteBuf buf, String modId, T data) {
 		final Jankson jankson = ConfigSerialization.createJankson(modId);
 		final JsonElement element = jankson.toJson(data);
 		buf.writeUtf(element.toJson());

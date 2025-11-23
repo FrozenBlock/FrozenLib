@@ -45,10 +45,10 @@ public class CapeLayerMixin {
 		)
 	)
 	private static void frozenLib$captureFrozenLibCape(
-		PoseStack poseStack, SubmitNodeCollector submitNodeCollector, int i, AvatarRenderState avatarRenderState, float f, float g, CallbackInfo info,
+		PoseStack poseStack, SubmitNodeCollector collector, int i, AvatarRenderState renderState, float f, float g, CallbackInfo info,
 		@Share("frozenLib$newCapeTexture") LocalRef<ClientAsset.Texture> newCapeAssetRef
 	) {
-		if (!(avatarRenderState instanceof AvatarCapeInterface capeInterface)) return;
+		if (!(renderState instanceof AvatarCapeInterface capeInterface)) return;
 		newCapeAssetRef.set(capeInterface.frozenLib$getCape());
 	}
 

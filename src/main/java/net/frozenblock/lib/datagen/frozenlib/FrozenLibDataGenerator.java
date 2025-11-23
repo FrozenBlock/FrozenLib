@@ -22,23 +22,22 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.datagen.frozenlib.tag.FrozenLibBlockTagProvider;
 import net.minecraft.core.RegistrySetBuilder;
-import org.jetbrains.annotations.NotNull;
 
 public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 
 	@Override
-	public void onInitializeDataGenerator(@NotNull FabricDataGenerator dataGenerator) {
+	public void onInitializeDataGenerator(FabricDataGenerator dataGenerator) {
 		final FabricDataGenerator.Pack pack = dataGenerator.createPack();
 
 		pack.addProvider(FrozenLibBlockTagProvider::new);
 	}
 
 	@Override
-	public void buildRegistry(@NotNull RegistrySetBuilder registryBuilder) {
+	public void buildRegistry(RegistrySetBuilder registryBuilder) {
 	}
 
 	@Override
-	public @NotNull String getEffectiveModId() {
+	public String getEffectiveModId() {
 		return FrozenLibConstants.MOD_ID;
 	}
 }

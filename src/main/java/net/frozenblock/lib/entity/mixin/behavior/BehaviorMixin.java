@@ -42,7 +42,10 @@ public class BehaviorMixin<E extends LivingEntity> implements FrozenLibBehavior 
 			shift = At.Shift.BEFORE
 		)
 	)
-	private void frozenLib$tryStart(ServerLevel level, E owner, long gameTime, CallbackInfoReturnable<Boolean> info, @Local int i) {
+	private void frozenLib$tryStart(
+		ServerLevel level, E entity, long gameTime, CallbackInfoReturnable<Boolean> info,
+		@Local int i
+	) {
 		this.frozenLib$duration = i;
 	}
 

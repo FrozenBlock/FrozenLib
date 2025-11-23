@@ -30,7 +30,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import personthecat.fresult.Result;
 import xjs.data.JsonContainer;
@@ -330,7 +329,6 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 		return this.toBuilder().append(path, startInclusive, endExclusive).build();
 	}
 
-	@NotNull
 	@Override
 	public Iterator<Either<String, Integer>> iterator() {
 		return this.path.iterator();
@@ -338,9 +336,7 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 
 	@Override
 	public boolean equals(final Object o) {
-		if (o instanceof JsonPath) {
-			return this.path.equals(((JsonPath) o).path);
-		}
+		if (o instanceof JsonPath) return this.path.equals(((JsonPath) o).path);
 		return false;
 	}
 
@@ -358,7 +354,6 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 	 * A builder used for manually constructing JSON paths in-code.
 	 */
 	public static class JsonPathBuilder {
-
 		private final List<Either<String, Integer>> path;
 		private final StringBuilder raw;
 
@@ -373,9 +368,7 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 
 		public JsonPathBuilder key(final String key) {
 			this.path.add(Either.left(key));
-			if (this.raw.length() > 0) {
-				this.raw.append('.');
-			}
+			if (this.raw.length() > 0) this.raw.append('.');
 			this.raw.append(key);
 			return this;
 		}
@@ -395,11 +388,9 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 		}
 
 		public JsonPathBuilder up() {
-			if (this.path.isEmpty()) {
-				return this;
-			} else if (this.path.size() == 1) {
-				return new JsonPathBuilder();
-			}
+			if (this.path.isEmpty()) return this;
+			if (this.path.size() == 1) return new JsonPathBuilder();
+
 			this.path.remove(this.path.size() - 1);
 			final int dot = this.raw.lastIndexOf(".");
 			final int bracket = this.raw.lastIndexOf("[");
@@ -425,9 +416,7 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 
 		@Override
 		public boolean equals(final Object o) {
-			if (o instanceof JsonPathBuilder) {
-				return this.path.equals(((JsonPathBuilder) o).path);
-			}
+			if (o instanceof JsonPathBuilder) return this.path.equals(((JsonPathBuilder) o).path);
 			return false;
 		}
 	}
@@ -437,7 +426,6 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 	 * the more expensive {@link JsonPath} is typically unneeded.
 	 */
 	public static class Stub {
-
 		private static final Stub EMPTY = new Stub("");
 
 		private final String path;
@@ -447,9 +435,7 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 		}
 
 		public Stub key(final String key) {
-			if (this.path.isEmpty()) {
-				return new Stub(key);
-			}
+			if (this.path.isEmpty()) return new Stub(key);
 			return new Stub(this.path + "." + key);
 		}
 
@@ -472,9 +458,7 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 
 		@Override
 		public boolean equals(final Object o) {
-			if (o instanceof Stub) {
-				return this.path.equals(((Stub) o).path);
-			}
+			if (o instanceof Stub) return this.path.equals(((Stub) o).path);
 			return false;
 		}
 	}

@@ -28,7 +28,6 @@ import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.minecraft.network.chat.Component;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Wrapper class for modifying configs.
@@ -40,11 +39,11 @@ public record ConfigModification<T>(Consumer<T> modification) {
     public static <T> T modifyConfig(Config<T> config, T original, boolean excludeNonSync) {
         try {
 			// clone
-			T instance = config.configClass().getConstructor().newInstance();
+			final T instance = config.configClass().getConstructor().newInstance();
 			copyInto(original, instance);
 
 			// modify
-			var list = ConfigRegistry.getModificationsForConfig(config)
+			final var list = ConfigRegistry.getModificationsForConfig(config)
 				.entrySet()
 				.stream()
 				.sorted(Map.Entry.comparingByValue())
@@ -52,7 +51,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 
 			config.setSynced(false);
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
-				var consumer = modification.getKey().modification;
+				final var consumer = modification.getKey().modification;
 				if (consumer instanceof ConfigSyncModification || !excludeNonSync) {
 					modification.getKey().modification.accept(instance);
 				}
@@ -65,7 +64,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
 		}
     }
 
-    public static <T> void copyInto(@NotNull T source, T destination, boolean isSyncModification) {
+    public static <T> void copyInto(T source, T destination, boolean isSyncModification) {
         Class<?> clazz = source.getClass();
         while (!clazz.equals(Object.class)) {
             for (Field field : clazz.getDeclaredFields()) {
@@ -82,7 +81,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
         }
     }
 
-	public static <T> void copyInto(@NotNull T source, T destination) {
+	public static <T> void copyInto(T source, T destination) {
 		copyInto(source, destination, false);
 	}
 
