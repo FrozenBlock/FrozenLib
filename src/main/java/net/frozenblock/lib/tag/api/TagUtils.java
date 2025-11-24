@@ -30,7 +30,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -39,26 +38,23 @@ import org.jetbrains.annotations.Nullable;
 @UtilityClass
 public class TagUtils {
 
-	public static <T> @NotNull List<T> getAllEntries(@NotNull TagKey<T> tag) {
-		Optional<? extends Registry<?>> maybeRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().identifier());
+	public static <T> List<T> getAllEntries(TagKey<T> tag) {
+		final Optional<? extends Registry<?>> optionalRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().identifier());
+		if (optionalRegistry.isEmpty()) return List.of();
 
-		if (maybeRegistry.isPresent()) {
-			Registry<T> registry = (Registry<T>) maybeRegistry.get();
-			if (tag.isFor(registry.key())) {
-				ArrayList<T> entries = new ArrayList<>();
-				for (Holder<T> entry : registry.getTagOrEmpty(tag)) {
-					var optionalKey = entry.unwrapKey();
-					if (optionalKey.isPresent()) {
-						var key = optionalKey.get();
-						registry.getOptional(key).ifPresent(entries::add);
-					}
-				}
-				if (!entries.isEmpty()) {
-					return entries;
-				}
-			}
+		final Registry<T> registry = (Registry<T>) optionalRegistry.get();
+		if (!tag.isFor(registry.key())) return List.of();
+
+		final ArrayList<T> entries = new ArrayList<>();
+		for (Holder<T> entry : registry.getTagOrEmpty(tag)) {
+			final var optionalKey = entry.unwrapKey();
+			if (optionalKey.isEmpty()) continue;
+
+			final var key = optionalKey.get();
+			registry.getOptional(key).ifPresent(entries::add);
 		}
 
+		if (!entries.isEmpty()) return entries;
 		return List.of();
 	}
 
@@ -70,26 +66,25 @@ public class TagUtils {
     @SuppressWarnings("unchecked")
     @Nullable
     public static <T> T getRandomEntry(RandomSource random, TagKey<T> tag) {
-        Optional<? extends Registry<?>> maybeRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().identifier());
+		final Optional<? extends Registry<?>> optionalRegistry = BuiltInRegistries.REGISTRY.getOptional(tag.registry().identifier());
         Objects.requireNonNull(random);
         Objects.requireNonNull(tag);
 
-        if (maybeRegistry.isPresent()) {
-            Registry<T> registry = (Registry<T>) maybeRegistry.get();
-            if (tag.isFor(registry.key())) {
-                ArrayList<T> entries = new ArrayList<>();
-                for (Holder<T> entry : registry.getTagOrEmpty(tag)) {
-                    var optionalKey = entry.unwrapKey();
-                    if (optionalKey.isPresent()) {
-                        var key = optionalKey.get();
-                        registry.getOptional(key).ifPresent(entries::add);
-                    }
-                }
-                if (!entries.isEmpty()) {
-                    return entries.get(random.nextInt(entries.size()));
-                }
-            }
-        }
+        if (optionalRegistry.isEmpty()) return null;
+
+		final Registry<T> registry = (Registry<T>) optionalRegistry.get();
+		if (!tag.isFor(registry.key())) return null;
+
+		final ArrayList<T> entries = new ArrayList<>();
+		for (Holder<T> entry : registry.getTagOrEmpty(tag)) {
+			final var optionalKey = entry.unwrapKey();
+			if (optionalKey.isEmpty()) continue;
+
+			final var key = optionalKey.get();
+			registry.getOptional(key).ifPresent(entries::add);
+		}
+
+		if (!entries.isEmpty()) return entries.get(random.nextInt(entries.size()));
         return null;
     }
 

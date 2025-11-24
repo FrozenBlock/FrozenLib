@@ -22,7 +22,6 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenBlockTags {
@@ -31,7 +30,6 @@ public class FrozenBlockTags {
 	public static final TagKey<Block> BLOWING_CANNOT_PASS_THROUGH = bind("blowing_cannot_pass_through");
 	public static final TagKey<Block> STRUCTURE_PLACE_SCHEDULES_TICK = bind("structure_place_schedules_tick");
 
-	@NotNull
     private static TagKey<Block> bind(String path) {
         return TagKey.create(Registries.BLOCK, FrozenLibConstants.id(path));
     }

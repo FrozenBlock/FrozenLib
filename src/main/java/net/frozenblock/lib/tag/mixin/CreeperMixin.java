@@ -20,7 +20,6 @@ package net.frozenblock.lib.tag.mixin;
 import net.frozenblock.lib.tag.api.FrozenEntityTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Creeper;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -30,9 +29,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CreeperMixin {
 
     @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
-    public void frozenLib$ignoreTag(@Nullable LivingEntity livingEntity, CallbackInfo info) {
-        if (livingEntity == null) return;
-		if (livingEntity.getType().is(FrozenEntityTags.CREEPER_IGNORES)) info.cancel();
+    public void frozenLib$ignoreTag(LivingEntity entity, CallbackInfo info) {
+		if (entity != null && entity.getType().is(FrozenEntityTags.CREEPER_IGNORES)) info.cancel();
     }
 
 }

@@ -36,11 +36,10 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
-import net.minecraft.util.Util;
 
 @Environment(EnvType.CLIENT)
 public class ServerTextureDownloader {
@@ -50,66 +49,62 @@ public class ServerTextureDownloader {
 	public static final String LOCAL_TEXTURE_SOURCE = ".local";
 
 	public static Identifier getOrLoadServerTexture(
-		Identifier identifier, String destPath, String string,
+		Identifier texture, String destPath, String string,
 		Identifier fallback
 	) {
-		downloadAndRegisterServerTexture(identifier, destPath, string);
-		if (LOADED_TEXTURES.contains(identifier)) {
-			return identifier;
-		} else {
-			return fallback;
-		}
+		downloadAndRegisterServerTexture(texture, destPath, string);
+		if (LOADED_TEXTURES.contains(texture)) return texture;
+		return fallback;
 	}
 
-	public static void downloadAndRegisterServerTexture(
-		Identifier identifier, String destPath, String fileName
-	) {
-		if (LOADED_TEXTURES.contains(identifier)) return;
-		CompletableFuture.supplyAsync(() -> {
-			NativeImage nativeImage;
-			try {
-				nativeImage = downloadServerTexture(identifier, destPath, fileName);
-			} catch (IOException var5) {
-				throw new UncheckedIOException(var5);
-			}
+	public static void downloadAndRegisterServerTexture(Identifier texture, String destPath, String fileName) {
+		if (LOADED_TEXTURES.contains(texture)) return;
 
-			return nativeImage;
-		}, Util.nonCriticalIoPool().forName("downloadServerTexture"))
-			.thenCompose((nativeImage) -> registerTimedTextureInManager(identifier, nativeImage, destPath, fileName));
+		CompletableFuture.supplyAsync(
+			() -> {
+				NativeImage image;
+				try {
+					image = downloadServerTexture(texture, destPath, fileName);
+				} catch (IOException exception) {
+					throw new UncheckedIOException(exception);
+				}
+				return image;
+			},
+			Util.nonCriticalIoPool().forName("downloadServerTexture")
+		).thenCompose(image -> registerTimedTextureInManager(texture, image, destPath, fileName));
 	}
 
-	public static @Nullable NativeImage downloadServerTexture(
-		@Nullable Identifier identifier, String destPath, String fileName
-	) throws IOException {
-		Path path = Minecraft.getInstance().gameDirectory.toPath().resolve(destPath);
-		Path possibleLocalPath = path.resolve(LOCAL_TEXTURE_SOURCE).resolve(fileName);
+	@Nullable
+	public static NativeImage downloadServerTexture(@Nullable Identifier texture, String destPath, String fileName) throws IOException {
+		final Path path = Minecraft.getInstance().gameDirectory.toPath().resolve(destPath);
+		final Path possibleLocalPath = path.resolve(LOCAL_TEXTURE_SOURCE).resolve(fileName);
 
 		if (Files.isRegularFile(possibleLocalPath)) {
 			LOGGER.debug("Loading server texture from local cache ({})", destPath);
-			InputStream inputStream = Files.newInputStream(possibleLocalPath);
+			final InputStream inputStream = Files.newInputStream(possibleLocalPath);
 
-			NativeImage nativeImage;
+			NativeImage image;
 			try {
-				nativeImage = NativeImage.read(inputStream);
-			} catch (Throwable throwable) {
+				image = NativeImage.read(inputStream);
+			} catch (Throwable cannotRead) {
 				try {
 					inputStream.close();
-				} catch (Throwable throwable2) {
-					throwable.addSuppressed(throwable2);
+				} catch (Throwable cannotClose) {
+					cannotRead.addSuppressed(cannotClose);
 				}
-				throw throwable;
+				throw cannotRead;
 			}
 
 			inputStream.close();
 
-			if (identifier != null) LOADED_TEXTURES.add(identifier);
+			if (texture != null) LOADED_TEXTURES.add(texture);
 			WAITING_TEXTURES.remove(makePathFromRootAndDest(destPath, fileName));
 
-			return nativeImage;
+			return image;
 		} else {
-			if (FrozenLibConfig.FILE_TRANSFER_CLIENT && identifier != null) {
+			if (FrozenLibConfig.FILE_TRANSFER_CLIENT && texture != null) {
 				ClientPlayNetworking.send(FileTransferPacket.createRequest(destPath, fileName));
-				WAITING_TEXTURES.put(makePathFromRootAndDest(destPath, fileName), identifier);
+				WAITING_TEXTURES.put(makePathFromRootAndDest(destPath, fileName), texture);
 				LOGGER.debug("Requesting server texture from {}", path);
 			}
 			return null;
@@ -117,20 +112,15 @@ public class ServerTextureDownloader {
 	}
 
 	@Contract(pure = true)
-	public static @NotNull String makePathFromRootAndDest(String path, String dest) {
+	public static String makePathFromRootAndDest(String path, String dest) {
 		return path + "/" + dest;
 	}
 
-	private static @NotNull CompletableFuture<Identifier> registerTimedTextureInManager(
-		Identifier identifier,
-		NativeImage nativeImage,
-		String destPath,
-		String fileName
-	) {
-		Minecraft minecraft = Minecraft.getInstance();
+	private static CompletableFuture<Identifier> registerTimedTextureInManager(Identifier texture, NativeImage image, String destPath, String fileName) {
+		final Minecraft minecraft = Minecraft.getInstance();
 		return CompletableFuture.supplyAsync(() -> {
-			minecraft.getTextureManager().register(identifier, new ServerTexture(nativeImage, destPath, fileName));
-			return identifier;
+			minecraft.getTextureManager().register(texture, new ServerTexture(image, destPath, fileName));
+			return texture;
 		}, minecraft);
 	}
 }

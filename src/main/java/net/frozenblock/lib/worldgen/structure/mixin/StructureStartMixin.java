@@ -88,12 +88,10 @@ public class StructureStartMixin implements StructureStartInterface {
 		)
 	)
 	public void frozenLib$placeInChunkA(
-		WorldGenLevel world, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox boundingBox, ChunkPos chunkPos, CallbackInfo info,
+		WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox boundingBox, ChunkPos chunkPos, CallbackInfo info,
 		@Share("frozenLib$additionalProcessors") LocalRef<List<StructureProcessor>> additionalProcessors
 	) {
-		additionalProcessors.set(
-			StructureProcessorApi.getAdditionalProcessors(this.frozenLib$id)
-		);
+		additionalProcessors.set(StructureProcessorApi.getAdditionalProcessors(this.frozenLib$id));
 	}
 
 	@WrapOperation(
@@ -105,20 +103,20 @@ public class StructureStartMixin implements StructureStartInterface {
 	)
 	public void frozenLib$placeInChunkB(
 		StructurePiece instance,
-		WorldGenLevel worldGenLevel,
+		WorldGenLevel level,
 		StructureManager structureManager,
 		ChunkGenerator chunkGenerator,
-		RandomSource randomSource,
+		RandomSource random,
 		BoundingBox boundingBox,
 		ChunkPos chunkPos,
-		BlockPos blockPos,
+		BlockPos pos,
 		Operation<Void> original,
 		@Share("frozenLib$additionalProcessors") LocalRef<List<StructureProcessor>> additionalProcessors
 	) {
 		if (instance instanceof InitialPieceProcessorInjectionInterface initialPieceProcessorInjectionInterface) {
 			initialPieceProcessorInjectionInterface.frozenLib$addProcessors(additionalProcessors.get());
 		}
-		original.call(instance, worldGenLevel, structureManager, chunkGenerator, randomSource, boundingBox, chunkPos, blockPos);
+		original.call(instance, level, structureManager, chunkGenerator, random, boundingBox, chunkPos, pos);
 	}
 
 	@Unique

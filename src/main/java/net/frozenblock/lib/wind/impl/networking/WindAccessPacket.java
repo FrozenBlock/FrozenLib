@@ -23,28 +23,21 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public record WindAccessPacket(Vec3 accessPos) implements CustomPacketPayload {
-
-	public static final Type<WindAccessPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("wind_access")
-	);
+	public static final Type<WindAccessPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("wind_access"));
 	public static final StreamCodec<FriendlyByteBuf, WindAccessPacket> STREAM_CODEC = StreamCodec.ofMember(WindAccessPacket::write, WindAccessPacket::create);
 
 	@Contract("_ -> new")
-	public static @NotNull WindAccessPacket create(@NotNull FriendlyByteBuf buf) {
-        return new WindAccessPacket(
-			buf.readVec3()
-		);
+	public static WindAccessPacket create(FriendlyByteBuf buf) {
+        return new WindAccessPacket(buf.readVec3());
 	}
 
-	public void write(@NotNull FriendlyByteBuf buf) {
+	public void write(FriendlyByteBuf buf) {
 		buf.writeVec3(this.accessPos());
 	}
 
 	@Override
-	@NotNull
 	public Type<? extends CustomPacketPayload> type() {
 		return PACKET_TYPE;
 	}

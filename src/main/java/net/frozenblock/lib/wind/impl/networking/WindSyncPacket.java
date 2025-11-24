@@ -24,19 +24,11 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public record WindSyncPacket(
-	long windTime,
-	long seed,
-	boolean override,
-	Vec3 commandWind
-) implements CustomPacketPayload {
-
-	public static final Type<WindSyncPacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("wind_sync_packet")
-	);
+public record WindSyncPacket(long windTime, long seed, boolean override, Vec3 commandWind) implements CustomPacketPayload {
+	public static final Type<WindSyncPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("wind_sync_packet"));
 	public static final StreamCodec<FriendlyByteBuf, WindSyncPacket> CODEC = StreamCodec.ofMember(WindSyncPacket::write, WindSyncPacket::create);
 
-	public static WindSyncPacket create(@NotNull FriendlyByteBuf buf) {
+	public static WindSyncPacket create(FriendlyByteBuf buf) {
         return new WindSyncPacket(
 			buf.readLong(),
 			buf.readLong(),
@@ -45,7 +37,7 @@ public record WindSyncPacket(
 		);
 	}
 
-	public void write(@NotNull FriendlyByteBuf buf) {
+	public void write(FriendlyByteBuf buf) {
 		buf.writeLong(this.windTime());
 		buf.writeLong(this.seed());
 		buf.writeBoolean(this.override());
@@ -53,7 +45,6 @@ public record WindSyncPacket(
 	}
 
 	@Override
-	@NotNull
 	public Type<? extends CustomPacketPayload> type() {
 		return PACKET_TYPE;
 	}

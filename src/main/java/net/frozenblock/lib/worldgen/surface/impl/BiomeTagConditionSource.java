@@ -23,7 +23,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.SurfaceRules;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * A {@link SurfaceRules.ConditionSource} that uses a tag to control which biomes it generates in.
@@ -44,13 +43,12 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 	}
 
 	@Override
-	public @NotNull KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
+	public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
 		return CODEC;
 	}
 
 	@Override
-	@NotNull
-	public SurfaceRules.Condition apply(@NotNull SurfaceRules.Context context) {
+	public SurfaceRules.Condition apply(SurfaceRules.Context context) {
 		class BiomeTagCondition extends SurfaceRules.LazyYCondition {
 			BiomeTagCondition(SurfaceRules.Context context) {
 				super(context);
@@ -77,12 +75,11 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 	}
 
 	@Override
-	@NotNull
 	public String toString() {
 		return "BiomeConditionSource[biomeTagKey=" + this.biomeTagKey + "]";
 	}
 
-	private static TagKey<Biome> getBiomeTagKey(@NotNull Object o) {
+	private static TagKey<Biome> getBiomeTagKey(Object o) {
 		return ((BiomeTagConditionSource) o).biomeTagKey;
 	}
 }

@@ -36,9 +36,6 @@ public final class OverworldBiomeData {
 	private static final Set<ResourceKey<Biome>> OVERWORLD_BIOMES = new ObjectOpenHashSet<>();
 	private static final Map<ResourceKey<Biome>, Climate.ParameterPoint> OVERWORLD_BIOME_NOISE_POINTS = new Object2ObjectOpenHashMap<>();
 
-	private OverworldBiomeData() {
-	}
-
 	public static void addOverworldBiome(ResourceKey<Biome> biome, Climate.ParameterPoint spawnNoisePoint) {
 		Preconditions.checkArgument(biome != null, "Biome is null");
 		Preconditions.checkArgument(spawnNoisePoint != null, "Climate.ParameterPoint is null");
@@ -61,7 +58,7 @@ public final class OverworldBiomeData {
 	public static <T> Climate.ParameterList<T> withModdedBiomeEntries(Climate.ParameterList<T> entries, Function<ResourceKey<Biome>, T> biomes) {
 		if (OVERWORLD_BIOME_NOISE_POINTS.isEmpty()) return entries;
 
-		ArrayList<Pair<Climate.ParameterPoint, T>> entryList = new ArrayList<>(entries.values());
+		final ArrayList<Pair<Climate.ParameterPoint, T>> entryList = new ArrayList<>(entries.values());
 		for (Map.Entry<ResourceKey<Biome>, Climate.ParameterPoint> entry : OVERWORLD_BIOME_NOISE_POINTS.entrySet()) {
 			entryList.add(Pair.of(entry.getValue(), biomes.apply(entry.getKey())));
 		}

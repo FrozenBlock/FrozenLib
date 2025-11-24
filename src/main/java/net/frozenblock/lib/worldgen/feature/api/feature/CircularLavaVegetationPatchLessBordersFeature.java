@@ -35,7 +35,6 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 public class CircularLavaVegetationPatchLessBordersFeature extends VegetationPatchFeature {
 
@@ -44,48 +43,49 @@ public class CircularLavaVegetationPatchLessBordersFeature extends VegetationPat
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<VegetationPatchConfiguration> context) {
-		WorldGenLevel worldGenLevel = context.level();
-		VegetationPatchConfiguration vegetationPatchConfiguration = context.config();
-		RandomSource randomSource = context.random();
-		BlockPos blockPos = context.origin();
-		Predicate<BlockState> predicate = (state) -> state.is(vegetationPatchConfiguration.replaceable);
-		int radius = vegetationPatchConfiguration.xzRadius.sample(randomSource) + 1;
-		Set<BlockPos> set = this.placeGroundPatch(worldGenLevel, vegetationPatchConfiguration, randomSource, blockPos, predicate, radius, radius);
-		this.distributeVegetation(context, worldGenLevel, vegetationPatchConfiguration, randomSource, set, radius, radius);
+	public boolean place(FeaturePlaceContext<VegetationPatchConfiguration> context) {
+		final WorldGenLevel level = context.level();
+		final VegetationPatchConfiguration config = context.config();
+		final RandomSource random = context.random();
+		final BlockPos pos = context.origin();
+		final Predicate<BlockState> predicate = state -> state.is(config.replaceable);
+		final int radius = config.xzRadius.sample(random) + 1;
+		final Set<BlockPos> set = this.placeGroundPatch(level, config, random, pos, predicate, radius, radius);
+
+		this.distributeVegetation(context, level, config, random, set, radius, radius);
 		return !set.isEmpty();
 	}
 
-	public Set<BlockPos> placeCircularGroundPatch(WorldGenLevel level, @NotNull VegetationPatchConfiguration config, RandomSource random, @NotNull BlockPos pos, Predicate<BlockState> state, int xRadius, int zRadius) {
-		MutableBlockPos mutableBlockPos = pos.mutable();
-		MutableBlockPos mutableBlockPos2 = mutableBlockPos.mutable();
-		Direction direction = config.surface.getDirection();
-		Direction direction2 = direction.getOpposite();
-		Set<BlockPos> set = new HashSet<>();
+	public Set<BlockPos> placeCircularGroundPatch(
+		WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos pos, Predicate<BlockState> predicate, int xRadius, int zRadius
+	) {
+		final MutableBlockPos airMutable = pos.mutable();
+		final MutableBlockPos groundMutable = airMutable.mutable();
+		final Direction surfaceDirection = config.surface.getDirection();
+		final Direction oppositeSurfaceDirection = surfaceDirection.getOpposite();
+		final Set<BlockPos> set = new HashSet<>();
 
-		for (int i = -xRadius; i <= xRadius; ++i) {
-			for (int j = -zRadius; j <= zRadius; ++j) {
-				mutableBlockPos.setWithOffset(pos, i, 0, j);
+		for (int x = -xRadius; x <= xRadius; ++x) {
+			for (int z = -zRadius; z <= zRadius; ++z) {
+				airMutable.setWithOffset(pos, x, 0, z);
+				if (Math.sqrt(airMutable.distSqr(pos)) > xRadius) continue;
 
-				if (Math.sqrt(mutableBlockPos.distSqr(pos)) <= xRadius) {
-					int k;
-					for (k = 0; level.isStateAtPosition(mutableBlockPos, BlockBehaviour.BlockStateBase::isAir) && k < config.verticalRange; ++k) {
-						mutableBlockPos.move(direction);
-					}
-
-					for (k = 0; level.isStateAtPosition(mutableBlockPos, (statex) -> !statex.isAir()) && k < config.verticalRange; ++k) {
-						mutableBlockPos.move(direction2);
-					}
-
-					mutableBlockPos2.setWithOffset(mutableBlockPos, config.surface.getDirection());
-					BlockState blockState = level.getBlockState(mutableBlockPos2);
-					if (level.isEmptyBlock(mutableBlockPos) && blockState.isFaceSturdy(level, mutableBlockPos2, config.surface.getDirection().getOpposite())) {
-						int depth = config.depth.sample(random) + (config.extraBottomBlockChance > 0F && random.nextFloat() < config.extraBottomBlockChance ? 1 : 0);
-						BlockPos blockPos = mutableBlockPos2.immutable();
-						boolean placedGround = this.placeGround(level, config, state, random, mutableBlockPos2, depth);
-						if (placedGround) set.add(blockPos);
-					}
+				for (int i = 0; level.isStateAtPosition(airMutable, BlockBehaviour.BlockStateBase::isAir) && i < config.verticalRange; ++i) {
+					airMutable.move(surfaceDirection);
 				}
+
+				for (int i = 0; level.isStateAtPosition(airMutable, (statex) -> !statex.isAir()) && i < config.verticalRange; ++i) {
+					airMutable.move(oppositeSurfaceDirection);
+				}
+
+				groundMutable.setWithOffset(airMutable, config.surface.getDirection());
+				final BlockState state = level.getBlockState(groundMutable);
+				if (!level.isEmptyBlock(airMutable) || !state.isFaceSturdy(level, groundMutable, config.surface.getDirection().getOpposite())) continue;
+
+				final int depth = config.depth.sample(random) + (config.extraBottomBlockChance > 0F && random.nextFloat() < config.extraBottomBlockChance ? 1 : 0);
+				final BlockPos groundPos = groundMutable.immutable();
+				final boolean placedGround = this.placeGround(level, config, predicate, random, groundMutable, depth);
+				if (placedGround) set.add(groundPos);
 			}
 		}
 
@@ -93,53 +93,55 @@ public class CircularLavaVegetationPatchLessBordersFeature extends VegetationPat
 	}
 
 	@Override
-	protected Set<BlockPos> placeGroundPatch(WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos pos, Predicate<BlockState> state, int xRadius, int zRadius) {
-		Set<BlockPos> set = this.placeCircularGroundPatch(level, config, random, pos, state, xRadius, zRadius);
-		Set<BlockPos> set2 = new HashSet<>();
-		MutableBlockPos mutableBlockPos = new MutableBlockPos();
-		Iterator<BlockPos> var11 = set.iterator();
+	protected Set<BlockPos> placeGroundPatch(
+		WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos pos, Predicate<BlockState> predicate, int xRadius, int zRadius
+	) {
+		final Set<BlockPos> set = this.placeCircularGroundPatch(level, config, random, pos, predicate, xRadius, zRadius);
+		final Set<BlockPos> set2 = new HashSet<>();
+		final MutableBlockPos mutable = new MutableBlockPos();
 
-		BlockPos blockPos;
-		while (var11.hasNext()) {
-			blockPos = var11.next();
-			if (!isExposed(level, blockPos, mutableBlockPos)) set2.add(blockPos);
+		Iterator<BlockPos> poses = set.iterator();
+		while (poses.hasNext()) {
+			BlockPos nextPos = poses.next();
+			if (!isExposed(level, nextPos, mutable)) set2.add(nextPos);
 		}
 
-		var11 = set2.iterator();
-
-		while (var11.hasNext()) {
-			blockPos = var11.next();
-			level.setBlock(blockPos, Blocks.LAVA.defaultBlockState(), Block.UPDATE_CLIENTS);
+		poses = set2.iterator();
+		while (poses.hasNext()) {
+			BlockPos nextPos = poses.next();
+			level.setBlock(nextPos, Blocks.LAVA.defaultBlockState(), Block.UPDATE_CLIENTS);
 		}
 
 		return set2;
 	}
 
-	private static boolean isExposed(WorldGenLevel level, BlockPos pos, MutableBlockPos mutablePos) {
-		return isExposedDirection(level, pos, mutablePos, Direction.NORTH)
-			|| isExposedDirection(level, pos, mutablePos, Direction.EAST)
-			|| isExposedDirection(level, pos, mutablePos, Direction.SOUTH)
-			|| isExposedDirection(level, pos, mutablePos, Direction.WEST)
-			|| isExposedDirection(level, pos, mutablePos, Direction.DOWN);
+	private static boolean isExposed(WorldGenLevel level, BlockPos pos, MutableBlockPos mutable) {
+		return isExposedDirection(level, pos, mutable, Direction.NORTH)
+			|| isExposedDirection(level, pos, mutable, Direction.EAST)
+			|| isExposedDirection(level, pos, mutable, Direction.SOUTH)
+			|| isExposedDirection(level, pos, mutable, Direction.WEST)
+			|| isExposedDirection(level, pos, mutable, Direction.DOWN);
 	}
 
-	private static boolean isExposedDirection(@NotNull WorldGenLevel level, BlockPos pos, @NotNull MutableBlockPos mutablePos, Direction direction) {
-		mutablePos.setWithOffset(pos, direction);
-		BlockState state = level.getBlockState(mutablePos);
-		return !state.isFaceSturdy(level, mutablePos, direction.getOpposite()) && !state.is(Blocks.LAVA);
+	private static boolean isExposedDirection(WorldGenLevel level, BlockPos pos, MutableBlockPos mutable, Direction direction) {
+		mutable.setWithOffset(pos, direction);
+		final BlockState state = level.getBlockState(mutable);
+		return !state.isFaceSturdy(level, mutable, direction.getOpposite()) && !state.is(Blocks.LAVA);
 	}
 
 	@Override
-	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, @NotNull BlockPos pos) {
+	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, BlockPos pos) {
 		return super.placeVegetation(level, config, chunkGenerator, random, pos.below());
 	}
 
 	@Override
-	protected boolean placeGround(WorldGenLevel level, VegetationPatchConfiguration config, Predicate<BlockState> replaceableblocks, RandomSource random, MutableBlockPos mutablePos, int maxDistance) {
+	protected boolean placeGround(
+		WorldGenLevel level, VegetationPatchConfiguration config, Predicate<BlockState> replaceable, RandomSource random, MutableBlockPos mutable, int maxDistance
+	) {
 		for (int i = 0; i < maxDistance; ++i) {
-			BlockState blockState2 = level.getBlockState(mutablePos);
-			if (!replaceableblocks.test(blockState2)) return i != 0;
-			mutablePos.move(config.surface.getDirection());
+			final BlockState state = level.getBlockState(mutable);
+			if (!replaceable.test(state)) return i != 0;
+			mutable.move(config.surface.getDirection());
 		}
 		return true;
 	}

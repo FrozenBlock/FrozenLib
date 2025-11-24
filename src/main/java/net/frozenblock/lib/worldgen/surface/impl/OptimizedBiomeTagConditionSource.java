@@ -32,16 +32,13 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.SurfaceRules;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class OptimizedBiomeTagConditionSource implements SurfaceRules.ConditionSource {
 	public static final KeyDispatchDataCodec<OptimizedBiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(
-		RecordCodecBuilder.mapCodec(instance ->
-			instance.group(
-				TagKey.codec(Registries.BIOME).fieldOf("biome_tag").forGetter(OptimizedBiomeTagConditionSource::getBiomeTagKey)
-			).apply(instance, OptimizedBiomeTagConditionSource::new)
-		)
+		RecordCodecBuilder.mapCodec(instance -> instance.group(
+			TagKey.codec(Registries.BIOME).fieldOf("biome_tag").forGetter(OptimizedBiomeTagConditionSource::getBiomeTagKey)
+		).apply(instance, OptimizedBiomeTagConditionSource::new))
 	);
 
 	public final TagKey<Biome> biomeTagKey;
@@ -52,19 +49,20 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 
 	public static final List<OptimizedBiomeTagConditionSource> INSTANCES = new ArrayList<>();
 
-	public static void optimizeAll(@NotNull Registry<Biome> biomeRegistry) {
+	public static void optimizeAll(Registry<Biome> biomeRegistry) {
 		INSTANCES.forEach(optimizedBiomeTagConditionSource -> optimizedBiomeTagConditionSource.optimize(biomeRegistry));
 	}
 
-	public void optimize(@NotNull Registry<Biome> biomeRegistry) {
+	public void optimize(Registry<Biome> biomeRegistry) {
 		this.biomes = null;
 		this.biomeNameTest = null;
-		ArrayList<ResourceKey<Biome>> biomeList = new ArrayList<>();
+		final ArrayList<ResourceKey<Biome>> biomeList = new ArrayList<>();
 
 		biomeRegistry.get(this.biomeTagKey).ifPresent((biomes -> {
 			for (Holder<Biome> biomeHolder : biomes) biomeHolder.unwrapKey().ifPresent(biomeList::add);
 			this.biomes = biomeList;
 		}));
+
 		if (this.biomes != null) {
 			this.biomeNameTest = Set.copyOf(this.biomes)::contains;
 			FrozenLibLogUtils.log("OPTIMIZED A SOURCE :D", FrozenLibConstants.UNSTABLE_LOGGING);
@@ -79,22 +77,19 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 	}
 
 	@Override
-	public @NotNull KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
+	public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
 		return CODEC;
 	}
 
 	@Override
-	@NotNull
-	public SurfaceRules.Condition apply(@NotNull SurfaceRules.Context context) {
+	public SurfaceRules.Condition apply(SurfaceRules.Context context) {
 		class BiomeTagCondition extends SurfaceRules.LazyYCondition {
 			BiomeTagCondition(SurfaceRules.Context context) {
 				super(context);
 			}
 
 			protected boolean compute() {
-				if (OptimizedBiomeTagConditionSource.this.biomeNameTest != null) {
-					return this.context.biome.get().is(OptimizedBiomeTagConditionSource.this.biomeNameTest);
-				}
+				if (OptimizedBiomeTagConditionSource.this.biomeNameTest != null) return this.context.biome.get().is(OptimizedBiomeTagConditionSource.this.biomeNameTest);
 				return this.context.biome.get().is(OptimizedBiomeTagConditionSource.this.biomeTagKey);
 			}
 		}
@@ -115,12 +110,11 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 	}
 
 	@Override
-	@NotNull
 	public String toString() {
 		return "BiomeConditionSource[biomeTagKey=" + this.biomeTagKey + ", optimized]";
 	}
 
-	private static TagKey<Biome> getBiomeTagKey(@NotNull Object o) {
+	private static TagKey<Biome> getBiomeTagKey(Object o) {
 		return ((OptimizedBiomeTagConditionSource) o).biomeTagKey;
 	}
 }

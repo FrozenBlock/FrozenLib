@@ -45,14 +45,11 @@ public class RandomPoolAliasMixin {
 
 	// TODO: Other classes?
     @Inject(method = "<init>", at = @At("TAIL"))
-    public void frozenLib$addRandomPoolAliasTargets(
-		ResourceKey<StructureTemplatePool> alias, WeightedList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info
-	) {
-        Identifier aliasLocation = alias.identifier();
-		List<Pair<Identifier, Integer>> additions = RandomPoolAliasApi.getAdditionalTargets(aliasLocation);
+    public void frozenLib$addRandomPoolAliasTargets(ResourceKey<StructureTemplatePool> alias, WeightedList<ResourceKey<StructureTemplatePool>> targets, CallbackInfo info) {
+		final Identifier aliasID = alias.identifier();
+		final List<Pair<Identifier, Integer>> additions = RandomPoolAliasApi.getAdditionalTargets(aliasID);
 
-		WeightedList.Builder<ResourceKey<StructureTemplatePool>> builder = WeightedList.builder();
-
+		final WeightedList.Builder<ResourceKey<StructureTemplatePool>> builder = WeightedList.builder();
 		for (Weighted<ResourceKey<StructureTemplatePool>> wrapper : this.targets.unwrap()) {
 			builder.add(wrapper.value(), wrapper.weight());
 		}

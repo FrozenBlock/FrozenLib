@@ -22,14 +22,12 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenEntityTags {
     public static final TagKey<EntityType<?>> CREEPER_IGNORES = bind("creeper_ignores");
 	public static final TagKey<EntityType<?>> WARDEN_CANNOT_TARGET = bind("warden_cannot_target");
 
-	@NotNull
     private static TagKey<EntityType<?>> bind(String path) {
         return TagKey.create(Registries.ENTITY_TYPE, FrozenLibConstants.id(path));
     }

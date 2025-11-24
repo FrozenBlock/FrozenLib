@@ -25,19 +25,17 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatus;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 @Environment(EnvType.CLIENT)
 public class ClientStructureStatuses {
 	private static final List<PlayerStructureStatus> STRUCTURE_STATUSES = new ArrayList<>();
 
-	public static @NotNull Optional<PlayerStructureStatus> getProminentStructureStatus() {
+	public static Optional<PlayerStructureStatus> getProminentStructureStatus() {
 		PlayerStructureStatus chosenStatus = null;
 		for (PlayerStructureStatus structureStatus : STRUCTURE_STATUSES) {
-			if (chosenStatus == null || (!chosenStatus.isInsidePiece() && structureStatus.isInsidePiece())) {
-				chosenStatus = structureStatus;
-			}
+			if (chosenStatus != null && !(!chosenStatus.isInsidePiece() && structureStatus.isInsidePiece())) continue;
+			chosenStatus = structureStatus;
 		}
 		return Optional.ofNullable(chosenStatus);
 	}

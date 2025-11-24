@@ -25,22 +25,12 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
-public record WindDisturbancePacket(
-	AABB affectedArea,
-	Vec3 origin,
-	WindDisturbanceLogic.SourceType disturbanceSourceType,
-	Identifier id,
-	long posOrID
-
-) implements CustomPacketPayload {
-	public static final Type<WindDisturbancePacket> PACKET_TYPE = new Type<>(
-		FrozenLibConstants.id("wind_disturbance_packet")
-	);
+public record WindDisturbancePacket(AABB affectedArea, Vec3 origin, WindDisturbanceLogic.SourceType sourceType, Identifier id, long posOrID) implements CustomPacketPayload {
+	public static final Type<WindDisturbancePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("wind_disturbance_packet"));
 	public static final StreamCodec<RegistryFriendlyByteBuf, WindDisturbancePacket> CODEC = StreamCodec.ofMember(WindDisturbancePacket::write, WindDisturbancePacket::new);
 
-	public WindDisturbancePacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public WindDisturbancePacket(RegistryFriendlyByteBuf buf) {
 		this(
 			new AABB(buf.readVec3(), buf.readVec3()),
 			buf.readVec3(),
@@ -50,18 +40,17 @@ public record WindDisturbancePacket(
 		);
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
+	public void write(RegistryFriendlyByteBuf buf) {
 		AABB affectedArea = this.affectedArea();
 		buf.writeVec3(new Vec3(affectedArea.minX, affectedArea.minY, affectedArea.minZ));
 		buf.writeVec3(new Vec3(affectedArea.maxX, affectedArea.maxY, affectedArea.maxZ));
 		buf.writeVec3(this.origin());
-		buf.writeEnum(this.disturbanceSourceType());
+		buf.writeEnum(this.sourceType());
 		buf.writeIdentifier(this.id());
 		buf.writeLong(this.posOrID());
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

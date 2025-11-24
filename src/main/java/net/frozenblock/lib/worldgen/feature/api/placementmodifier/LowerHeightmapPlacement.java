@@ -27,7 +27,6 @@ import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class LowerHeightmapPlacement extends PlacementModifier {
 	public static final MapCodec<LowerHeightmapPlacement> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -41,23 +40,21 @@ public class LowerHeightmapPlacement extends PlacementModifier {
 	}
 
 	@Contract("_ -> new")
-	public static @NotNull LowerHeightmapPlacement onHeightmap(Heightmap.Types heightmap) {
+	public static LowerHeightmapPlacement onHeightmap(Heightmap.Types heightmap) {
 		return new LowerHeightmapPlacement(heightmap);
 	}
 
 	@Override
-	public @NotNull Stream<BlockPos> getPositions(@NotNull PlacementContext context, RandomSource random, @NotNull BlockPos pos) {
-		int x = pos.getX();
-		int z = pos.getZ();
-		int y = context.getHeight(this.heightmap, x, z) - 1;
-		if (y > context.getMinY()) {
-			return Stream.of(new BlockPos(x, y, z));
-		}
+	public Stream<BlockPos> getPositions(PlacementContext context, RandomSource random, BlockPos pos) {
+		final int x = pos.getX();
+		final int z = pos.getZ();
+		final int y = context.getHeight(this.heightmap, x, z) - 1;
+		if (y > context.getMinY()) return Stream.of(new BlockPos(x, y, z));
 		return Stream.of(new BlockPos[0]);
 	}
 
 	@Override
-	public @NotNull PlacementModifierType<?> type() {
+	public PlacementModifierType<?> type() {
 		return FrozenPlacementModifiers.ACCURATE_HEIGHTMAP;
 	}
 

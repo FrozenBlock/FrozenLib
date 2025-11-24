@@ -21,6 +21,5 @@ import java.util.List;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
 public interface InitialPieceProcessorInjectionInterface {
-
 	void frozenLib$addProcessors(List<StructureProcessor> processors);
 }

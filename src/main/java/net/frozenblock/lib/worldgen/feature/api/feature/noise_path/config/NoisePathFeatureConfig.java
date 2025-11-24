@@ -21,10 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public record NoisePathFeatureConfig(
-	NoiseBandPlacement noiseBandPlacement,
-	int placementRadius
-) implements FeatureConfiguration {
+public record NoisePathFeatureConfig(NoiseBandPlacement noiseBandPlacement, int placementRadius) implements FeatureConfiguration {
 	public static final Codec<NoisePathFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		NoiseBandPlacement.CODEC.fieldOf("noise_band_placement").forGetter(config -> config.noiseBandPlacement),
 		Codec.intRange(1, 16).fieldOf("placement_radius").orElse(10).forGetter(config -> config.placementRadius)

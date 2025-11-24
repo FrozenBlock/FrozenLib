@@ -46,94 +46,91 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 		super(codec);
 	}
 
-	@NotNull
 	private static LargeSpireFeature.LargeSpire make(
-		@NotNull BlockPos root,
+		BlockPos root,
 		boolean pointingUp,
-		@NotNull RandomSource random,
+		RandomSource random,
 		int radius,
-		@NotNull FloatProvider bluntnessBase,
-		@NotNull FloatProvider scaleBase
+		FloatProvider bluntnessBase,
+		FloatProvider scaleBase
 	) {
 		return new LargeSpire(root, pointingUp, radius, bluntnessBase.sample(random), scaleBase.sample(random));
 	}
 
-	protected static boolean isCircleMostlyEmbeddedInStone(@NotNull WorldGenLevel level, @NotNull BlockPos pos, int radius) {
+	protected static boolean isCircleMostlyEmbeddedInStone(WorldGenLevel level, BlockPos pos, int radius) {
 		if (isEmptyOrWaterOrLava(level, pos)) return false;
-		float g = 6F / (float) radius;
-		for (float h = 0F; h < 6.2831855F; h += g) {
-			int i = (int) (Mth.cos(h) * (float) radius);
-			int j = (int) (Mth.sin(h) * (float) radius);
-			if (isEmptyOrWaterOrLava(level, pos.offset(i, 0, j))) return false;
+
+		final float increment = 6F / (float) radius;
+		for (float f = 0F; f < 6.2831855F; f += increment) {
+			final int xOffset = (int) (Mth.cos(f) * (float) radius);
+			final int zOffset = (int) (Mth.sin(f) * (float) radius);
+			if (isEmptyOrWaterOrLava(level, pos.offset(xOffset, 0, zOffset))) return false;
 		}
+
 		return true;
 	}
 
-	protected static boolean isEmptyOrWaterOrLava(@NotNull LevelAccessor level, @NotNull BlockPos pos) {
+	protected static boolean isEmptyOrWaterOrLava(LevelAccessor level, BlockPos pos) {
 		return level.isStateAtPosition(pos, LargeSpireFeature::isEmptyOrWaterOrLava);
 	}
 
-	public static boolean isEmptyOrWaterOrLava(@NotNull BlockState state) {
+	public static boolean isEmptyOrWaterOrLava(BlockState state) {
 		return state.isAir() || state.is(Blocks.WATER) || state.is(Blocks.LAVA);
 	}
 
 	protected static double getHeight(double radius, double maxRadius, double scale, double minRadius) {
 		if (radius < minRadius) radius = minRadius;
-
-		double e = radius / maxRadius * 0.384D;
-		double f = 0.75D * Math.pow(e, 1.3333333333333333D);
-		double g = Math.pow(e, 0.6666666666666666D);
-		double h = 0.3333333333333333D * Math.log(e);
-		double i = scale * (f - g - h);
-		i = Math.max(i, 0D);
+		final double e = radius / maxRadius * 0.384D;
+		final double f = 0.75D * Math.pow(e, 1.3333333333333333D);
+		final double g = Math.pow(e, 0.6666666666666666D);
+		final double h = 0.3333333333333333D * Math.log(e);
+		double i = Math.max(scale * (f - g - h), 0D);
 		return i / 0.384D * maxRadius;
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<LargeSpireConfig> context) {
-		WorldGenLevel worldGenLevel = context.level();
-		BlockPos blockPos = context.origin();
-		LargeSpireConfig largeSpireConfig = context.config();
-		RandomSource randomSource = context.random();
-		if (!LargeSpireFeature.isEmptyOrWaterOrLava(worldGenLevel, blockPos)) return false;
-		Optional<Column> optional = Column.scan(
-			worldGenLevel, blockPos,
-			largeSpireConfig.floorToCeilingSearchRange,
+	public boolean place(FeaturePlaceContext<LargeSpireConfig> context) {
+		final WorldGenLevel level = context.level();
+		final BlockPos pos = context.origin();
+		final LargeSpireConfig config = context.config();
+		final RandomSource random = context.random();
+
+		if (!LargeSpireFeature.isEmptyOrWaterOrLava(level, pos)) return false;
+
+		final Optional<Column> optionalColumn = Column.scan(
+			level,
+			pos,
+			config.floorToCeilingSearchRange(),
 			DripstoneUtils::isEmptyOrWaterOrLava,
-			blockState -> LargeSpireFeature.isBaseOrLava(largeSpireConfig, blockState)
+			state -> LargeSpireFeature.isBaseOrLava(config, state)
 		);
-		if (optional.isPresent() && optional.get() instanceof Column.Range range) {
-			if (range.height() < 4) return false;
-			int i = (int) ((float) range.height() * largeSpireConfig.maxColumnRadiusToCaveHeightRatio);
-			int j = Mth.clamp(i, largeSpireConfig.columnRadius.getMinValue(), largeSpireConfig.columnRadius.getMaxValue());
-			int k = Mth.randomBetweenInclusive(randomSource, largeSpireConfig.columnRadius.getMinValue(), j);
-			LargeSpire largeSpire = make(blockPos.atY(range.ceiling() - 1), false, randomSource, k, largeSpireConfig.stalactiteBluntness, largeSpireConfig.heightScale);
-			LargeSpire largeSpire2 = make(blockPos.atY(range.floor() + 1), true, randomSource, k, largeSpireConfig.stalagmiteBluntness, largeSpireConfig.heightScale);
-			WindOffsetter windOffsetter;
-			if (largeSpire.isSuitableForWind(largeSpireConfig) && largeSpire2.isSuitableForWind(largeSpireConfig)) {
-				windOffsetter = new WindOffsetter(blockPos.getY(), randomSource, largeSpireConfig.windSpeed);
-			} else {
-				windOffsetter = WindOffsetter.noWind();
-			}
 
-			if (largeSpire.moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(worldGenLevel, windOffsetter)) {
-				largeSpire.placeBlocks(worldGenLevel, randomSource, windOffsetter, largeSpireConfig);
-			}
+		if (optionalColumn.isEmpty() || !(optionalColumn.get() instanceof Column.Range range)) return false;
+		if (range.height() < 4) return false;
 
-			if (largeSpire2.moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(worldGenLevel, windOffsetter)) {
-				largeSpire2.placeBlocks(worldGenLevel, randomSource, windOffsetter, largeSpireConfig);
-			}
-			return true;
-		}
-		return false;
+		final int radiusByHeight = (int) ((float) range.height() * config.maxColumnRadiusToCaveHeightRatio());
+		final int clampedRadius = Mth.clamp(radiusByHeight, config.columnRadius().getMinValue(), config.columnRadius().getMaxValue());
+		final int radius = Mth.randomBetweenInclusive(random, config.columnRadius().getMinValue(), clampedRadius);
+
+		final LargeSpire ceilingSpire = make(pos.atY(range.ceiling() - 1), false, random, radius, config.stalactiteBluntness(), config.heightScale());
+		final LargeSpire floorSpire = make(pos.atY(range.floor() + 1), true, random, radius, config.stalagmiteBluntness(), config.heightScale());
+
+		final WindOffsetter windOffsetter = ceilingSpire.isSuitableForWind(config) && floorSpire.isSuitableForWind(config)
+			? new WindOffsetter(pos.getY(), random, config.windSpeed())
+			: WindOffsetter.noWind();
+
+		if (ceilingSpire.moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(level, windOffsetter)) ceilingSpire.placeBlocks(level, random, windOffsetter, config);
+		if (floorSpire.moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(level, windOffsetter)) floorSpire.placeBlocks(level, random, windOffsetter, config);
+
+		return true;
 	}
 
-	public static boolean isBaseOrLava(LargeSpireConfig config, BlockState blockState) {
-		return isBase(config, blockState) || blockState.is(Blocks.LAVA);
+	public static boolean isBaseOrLava(LargeSpireConfig config, BlockState state) {
+		return isBase(config, state) || state.is(Blocks.LAVA);
 	}
 
-	public static boolean isBase(@NotNull LargeSpireConfig config, @NotNull BlockState blockState) {
-		return blockState.is(config.baseBlocks) || blockState.is(config.replaceable);
+	public static boolean isBase(LargeSpireConfig config, BlockState state) {
+		return state.is(config.baseBlocks()) || state.is(config.replaceable());
 	}
 
 	static final class LargeSpire {
@@ -143,7 +140,7 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 		private BlockPos root;
 		private int radius;
 
-		LargeSpire(@NotNull BlockPos root, boolean pointingUp, int radius, double bluntness, double scale) {
+		LargeSpire(BlockPos root, boolean pointingUp, int radius, double bluntness, double scale) {
 			this.root = root;
 			this.pointingUp = pointingUp;
 			this.radius = radius;
@@ -155,17 +152,17 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 			return this.getHeightAtRadius(0F);
 		}
 
-		boolean moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(@NotNull WorldGenLevel level, @NotNull WindOffsetter windOffsetter) {
+		boolean moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(WorldGenLevel level, WindOffsetter windOffsetter) {
 			while (this.radius > 1) {
-				BlockPos.MutableBlockPos mutableBlockPos = this.root.mutable();
-				int i = Math.min(10, this.getHeight());
+				final BlockPos.MutableBlockPos mutable = this.root.mutable();
+				int searchRange = Math.min(10, this.getHeight());
 
-				for (int j = 0; j < i; ++j) {
-					if (LargeSpireFeature.isCircleMostlyEmbeddedInStone(level, windOffsetter.offset(mutableBlockPos), this.radius)) {
-						this.root = mutableBlockPos;
+				for (int j = 0; j < searchRange; ++j) {
+					if (LargeSpireFeature.isCircleMostlyEmbeddedInStone(level, windOffsetter.offset(mutable), this.radius)) {
+						this.root = mutable;
 						return true;
 					}
-					mutableBlockPos.move(this.pointingUp ? Direction.DOWN : Direction.UP);
+					mutable.move(this.pointingUp ? Direction.DOWN : Direction.UP);
 				}
 
 				this.radius /= 2;
@@ -178,40 +175,38 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 			return (int) LargeSpireFeature.getHeight(radius, this.radius, this.scale, this.bluntness);
 		}
 
-		void placeBlocks(@NotNull WorldGenLevel level, @NotNull RandomSource random, @NotNull WindOffsetter windOffsetter, @NotNull LargeSpireConfig config) {
-			for (int i = -this.radius; i <= this.radius; ++i) {
-				for (int j = -this.radius; j <= this.radius; ++j) {
-					float f = Mth.sqrt((float) (i * i + j * j));
-					if (!(f > (float) this.radius)) {
-						int k = this.getHeightAtRadius(f);
-						if (k > 0) {
-							if ((double) random.nextFloat() < 0.2) {
-								k = (int) ((float) k * Mth.randomBetween(random, 0.8F, 1.0F));
-							}
+		void placeBlocks(WorldGenLevel level, RandomSource random, WindOffsetter windOffsetter, LargeSpireConfig config) {
+			for (int x = -this.radius; x <= this.radius; ++x) {
+				for (int z = -this.radius; z <= this.radius; ++z) {
+					final float distance = Mth.sqrt((float) (x * x + z * z));
+					if (distance > (float) this.radius) continue;
 
-							BlockPos.MutableBlockPos mutableBlockPos = this.root.offset(i, 0, j).mutable();
-							boolean bl = false;
-							int l = this.pointingUp ? level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, mutableBlockPos.getX(), mutableBlockPos.getZ()) : Integer.MAX_VALUE;
+					int heightAtRadius = this.getHeightAtRadius(distance);
+					if (heightAtRadius <= 0) continue;
 
-							for (int m = 0; m < k && mutableBlockPos.getY() < l; ++m) {
-								BlockPos blockPos = windOffsetter.offset(mutableBlockPos);
-								if (isEmptyOrWaterOrLava(level, blockPos)) {
-									bl = true;
-									level.setBlock(blockPos, config.pathBlock.getState(random, mutableBlockPos), Block.UPDATE_ALL);
-								} else if (bl && level.getBlockState(blockPos).is(BlockTags.BASE_STONE_NETHER)) {
-									break;
-								}
+					if (random.nextFloat() < 0.2F) heightAtRadius = (int) ((float) heightAtRadius * Mth.randomBetween(random, 0.8F, 1F));
 
-								mutableBlockPos.move(this.pointingUp ? Direction.UP : Direction.DOWN);
-							}
+					final BlockPos.MutableBlockPos mutable = this.root.offset(x, 0, z).mutable();
+					boolean bl = false;
+					int searchAttempts = this.pointingUp ? level.getHeight(Heightmap.Types.WORLD_SURFACE_WG, mutable.getX(), mutable.getZ()) : Integer.MAX_VALUE;
+
+					for (int i = 0; i < heightAtRadius && mutable.getY() < searchAttempts; ++i) {
+						final BlockPos pos = windOffsetter.offset(mutable);
+						if (isEmptyOrWaterOrLava(level, pos)) {
+							bl = true;
+							level.setBlock(pos, config.pathBlock().getState(random, mutable), Block.UPDATE_ALL);
+						} else if (bl && level.getBlockState(pos).is(BlockTags.BASE_STONE_NETHER)) {
+							break;
 						}
+
+						mutable.move(this.pointingUp ? Direction.UP : Direction.DOWN);
 					}
 				}
 			}
 		}
 
-		boolean isSuitableForWind(@NotNull LargeSpireConfig config) {
-			return this.radius >= config.minRadiusForWind && this.bluntness >= (double) config.minBluntnessForWind;
+		boolean isSuitableForWind(LargeSpireConfig config) {
+			return this.radius >= config.minRadiusForWind() && this.bluntness >= (double) config.minBluntnessForWind();
 		}
 	}
 
@@ -220,11 +215,11 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 		@Nullable
 		private final Vec3 windSpeed;
 
-		WindOffsetter(int originY, @NotNull RandomSource random, @NotNull FloatProvider magnitude) {
+		WindOffsetter(int originY, RandomSource random, FloatProvider magnitude) {
 			this.originY = originY;
-			float f = magnitude.sample(random);
-			float g = Mth.randomBetween(random, 0F, 3.1415927F);
-			this.windSpeed = new Vec3(Mth.cos(g) * f, 0D, Mth.sin(g) * f);
+			final float magnitudeSample = magnitude.sample(random);
+			final float circleSample = Mth.randomBetween(random, 0F, 3.1415927F);
+			this.windSpeed = new Vec3(Mth.cos(circleSample) * magnitudeSample, 0D, Mth.sin(circleSample) * magnitudeSample);
 		}
 
 		private WindOffsetter() {
@@ -238,9 +233,9 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 		}
 
 		@NotNull
-		BlockPos offset(@NotNull BlockPos pos) {
+		BlockPos offset(BlockPos pos) {
 			if (this.windSpeed == null) return pos;
-			Vec3 vec3 = this.windSpeed.scale(this.originY - pos.getY());
+			final Vec3 vec3 = this.windSpeed.scale(this.originY - pos.getY());
 			return pos.offset(BlockPos.containing(vec3.x, 0D, vec3.z));
 		}
 	}

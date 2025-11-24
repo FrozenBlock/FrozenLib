@@ -24,15 +24,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class BlowingHelper {
 
-	public static boolean canBlowingPassThrough(LevelReader level, BlockPos pos, @NotNull BlockState state, @NotNull Direction direction) {
-		return !((state.isFaceSturdy(level, pos, direction.getOpposite(), SupportType.CENTER)
-			&& !state.is(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH))
-			|| state.is(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH));
+	public static boolean canBlowingPassThrough(LevelReader level, BlockPos pos, BlockState state, Direction direction) {
+		return !(
+			(state.isFaceSturdy(level, pos, direction.getOpposite(), SupportType.CENTER) && !state.is(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH))
+			|| state.is(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH)
+		);
 	}
 
 }

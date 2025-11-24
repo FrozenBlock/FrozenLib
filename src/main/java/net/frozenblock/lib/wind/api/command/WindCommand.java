@@ -26,11 +26,10 @@ import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class WindCommand {
 
-	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("wind")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 			.then(
@@ -74,22 +73,23 @@ public class WindCommand {
 		);
 	}
 
-	private static int toggleWindOverride(@NotNull CommandSourceStack source, boolean bl) {
-		ServerLevel level = source.getLevel();
-		WindManager windManager = WindManager.getOrCreateWindManager(level);
+	private static int toggleWindOverride(CommandSourceStack source, boolean bl) {
+		final ServerLevel level = source.getLevel();
+		final WindManager windManager = WindManager.getOrCreateWindManager(level);
 		if (windManager.overrideWind == bl) {
 			source.sendSuccess(() -> Component.translatable("commands.wind.toggle.failure", bl ? "enabled" : "disabled"), true);
 			return 0;
 		}
+
 		windManager.overrideWind = bl;
 		windManager.sendSync(level);
 		source.sendSuccess(() -> Component.translatable("commands.wind.toggle.success", bl ? "Enabled" : "Disabled"), true);
 		return 1;
 	}
 
-	private static int setAndEnableWindOverride(@NotNull CommandSourceStack source, double x, double y, double z) {
-		ServerLevel level = source.getLevel();
-		WindManager windManager = WindManager.getOrCreateWindManager(level);
+	private static int setAndEnableWindOverride(CommandSourceStack source, double x, double y, double z) {
+		final ServerLevel level = source.getLevel();
+		final WindManager windManager = WindManager.getOrCreateWindManager(level);
 		windManager.overrideWind = true;
 		windManager.windX = x;
 		windManager.windY = y;
@@ -100,9 +100,9 @@ public class WindCommand {
 		return 1;
 	}
 
-	private static int displayWindValue(@NotNull CommandSourceStack source, boolean atPos) {
-		ServerLevel level = source.getLevel();
-		WindManager windManager = WindManager.getOrCreateWindManager(level);
+	private static int displayWindValue(CommandSourceStack source, boolean atPos) {
+		final ServerLevel level = source.getLevel();
+		final WindManager windManager = WindManager.getOrCreateWindManager(level);
 		if (!atPos) {
 			source.sendSuccess(
 				() -> Component.translatable(

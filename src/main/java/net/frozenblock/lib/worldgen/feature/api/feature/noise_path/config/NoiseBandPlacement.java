@@ -27,7 +27,14 @@ import java.util.Optional;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.minecraft.world.level.levelgen.Heightmap;
 
-public class NoiseBandPlacement {
+public record NoiseBandPlacement(
+	EasyNoiseSampler.NoiseType noiseType,
+	double noiseScale,
+	boolean calculateNoiseWithY,
+	boolean scaleYNoise,
+	Optional<Heightmap.Types> heightmapType,
+	List<NoiseBandBlockPlacement> blockPlacements
+) {
 	public static final MapCodec<NoiseBandPlacement> CODEC = RecordCodecBuilder.mapCodec(
 		instance -> instance.group(
 			EasyNoiseSampler.NoiseType.CODEC.fieldOf("noise_type").forGetter(config -> config.noiseType),
@@ -39,52 +46,6 @@ public class NoiseBandPlacement {
 		).apply(instance, NoiseBandPlacement::new)
 	);
 
-	private final EasyNoiseSampler.NoiseType noiseType;
-	private final double noiseScale;
-	private final boolean calculateNoiseWithY;
-	private final boolean scaleYNoise;
-	private final Optional<Heightmap.Types> heightmapType;
-	private final List<NoiseBandBlockPlacement> blockPlacements;
-
-	public NoiseBandPlacement(
-		EasyNoiseSampler.NoiseType noiseType,
-		double noiseScale,
-		boolean calculateNoiseWithY,
-		boolean scaleYNoise,
-		Optional<Heightmap.Types> heightmapType,
-		List<NoiseBandBlockPlacement> blockPlacements
-	) {
-		this.noiseType = noiseType;
-		this.noiseScale = noiseScale;
-		this.calculateNoiseWithY = calculateNoiseWithY;
-		this.scaleYNoise = scaleYNoise;
-		this.heightmapType = heightmapType;
-		this.blockPlacements = blockPlacements;
-	}
-
-	public EasyNoiseSampler.NoiseType getNoiseType() {
-		return this.noiseType;
-	}
-
-	public double getNoiseScale() {
-		return this.noiseScale;
-	}
-
-	public boolean calculateNoiseWithY() {
-		return this.calculateNoiseWithY;
-	}
-
-	public boolean scaleYNoise() {
-		return this.scaleYNoise;
-	}
-
-	public Optional<Heightmap.Types> getHeightmapType() {
-		return this.heightmapType;
-	}
-
-	public List<NoiseBandBlockPlacement> getBlockPlacements() {
-		return this.blockPlacements;
-	}
 
 	public static class Builder {
 		private final EasyNoiseSampler.NoiseType noiseType;
@@ -113,8 +74,8 @@ public class NoiseBandPlacement {
 			return this;
 		}
 
-		public Builder heightmapType(Heightmap.Types heightmapType) {
-			this.heightmapType = Optional.ofNullable(heightmapType);
+		public Builder heightmapType(Heightmap.Types type) {
+			this.heightmapType = Optional.ofNullable(type);
 			return this;
 		}
 

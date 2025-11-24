@@ -38,14 +38,11 @@ import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FastBufferedInputStream;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import org.jetbrains.annotations.NotNull;
 import net.minecraft.SharedConstants;
 
 public class StructureUpgradeCommand {
-	private StructureUpgradeCommand() {
-	}
 
-	public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("structure_upgrade")
 			.then(Commands.argument("namespace", StringArgumentType.string())
 				.executes(context -> upgradeAndExportPieces(context.getSource(), StringArgumentType.getString(context, "namespace"), false))
@@ -56,18 +53,18 @@ public class StructureUpgradeCommand {
 		);
 	}
 
-	private static int upgradeAndExportPieces(@NotNull CommandSourceStack source, String namespace, boolean log) {
-		ResourceManager resourceManager = source.getServer().getResourceManager();
+	private static int upgradeAndExportPieces(CommandSourceStack source, String namespace, boolean log) {
+		final ResourceManager resourceManager = source.getServer().getResourceManager();
 
-		Set<Identifier> foundPieces = resourceManager.listResources(
+		final Set<Identifier> foundPieces = resourceManager.listResources(
 			"structure",
 			identifier -> identifier.getPath().endsWith(".nbt") && identifier.getNamespace().equals(namespace)
 		).keySet();
 
 		if (log) foundPieces.forEach(identifier -> System.out.println("Found piece: " + identifier.toString()));
 
-		StructureTemplateManager structureTemplateManager = source.getLevel().getStructureManager();
-		Map<Identifier, CompoundTag> savedTemplates = new Object2ObjectLinkedOpenHashMap<>();
+		final StructureTemplateManager structureTemplateManager = source.getLevel().getStructureManager();
+		final Map<Identifier, CompoundTag> savedTemplates = new Object2ObjectLinkedOpenHashMap<>();
 
 		foundPieces.forEach((identifier) -> {
 			try {
@@ -85,7 +82,7 @@ public class StructureUpgradeCommand {
 			}
 		});
 
-		Path outputPath = source.getServer().getServerDirectory()
+		final Path outputPath = source.getServer().getServerDirectory()
 			.resolve("upgraded_structure/data_version_" + SharedConstants.getCurrentVersion().dataVersion().version());
 
 		savedTemplates.forEach((identifier, compoundTag) -> {
@@ -96,7 +93,7 @@ public class StructureUpgradeCommand {
 			);
 		});
 
-		int templateCount = savedTemplates.size();
+		final int templateCount = savedTemplates.size();
 		if (templateCount > 0) {
 			source.sendSuccess(() -> Component.translatable("commands.structure_upgrade.success", templateCount, namespace), true);
 		} else {

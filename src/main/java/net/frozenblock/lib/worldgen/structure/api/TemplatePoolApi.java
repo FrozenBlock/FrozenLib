@@ -35,7 +35,6 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
-import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
 @UtilityClass
@@ -58,10 +57,9 @@ public class TemplatePoolApi {
 
 			registryAccess.lookup(Registries.TEMPLATE_POOL).ifPresent(templatePoolRegistry -> {
 				templatePoolRegistry.entrySet().forEach(templatePoolEntry -> {
-					if ((Object) (templatePoolEntry.getValue()) instanceof StructureTemplatePoolInterface templatePoolInterface) {
-						final List<Pair<StructurePoolElement, Integer>> additionalElements = context.getAdditionalElements(templatePoolEntry.getKey().identifier());
-						if (!additionalElements.isEmpty()) templatePoolInterface.frozenlib$addTemplatePools(additionalElements);
-					}
+					if (!((Object) (templatePoolEntry.getValue()) instanceof StructureTemplatePoolInterface templatePoolInterface)) return;
+					final List<Pair<StructurePoolElement, Integer>> additionalElements = context.getAdditionalElements(templatePoolEntry.getKey().identifier());
+					if (!additionalElements.isEmpty()) templatePoolInterface.frozenlib$addTemplatePools(additionalElements);
 				});
 			});
 		});
@@ -72,20 +70,17 @@ public class TemplatePoolApi {
 
 		public void addElement(
 			Identifier pool,
-			@NotNull Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> elementFunction,
+			Function<StructureTemplatePool.Projection, ? extends StructurePoolElement> elementFunction,
 			int weight,
 			StructureTemplatePool.Projection projection
 		) {
 			final StructurePoolElement element = elementFunction.apply(projection);
-
 			final List<Pair<StructurePoolElement, Integer>> list = this.poolToElements.getOrDefault(pool, new ArrayList<>());
-
 			list.add(Pair.of(element, weight));
-
 			this.poolToElements.put(pool, list);
 		}
 
-		public @NotNull List<Pair<StructurePoolElement, Integer>> getAdditionalElements(Identifier pool) {
+		public List<Pair<StructurePoolElement, Integer>> getAdditionalElements(Identifier pool) {
 			return new ArrayList<>(this.poolToElements.getOrDefault(pool, ImmutableList.of()));
 		}
 	}

@@ -31,56 +31,50 @@ import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public class StructureStatusUpdater {
 
-	@ApiStatus.Internal
-	public static void updatePlayerStructureStatusesForLevel(@NotNull ServerLevel level) {
+	public static void updatePlayerStructureStatusesForLevel(ServerLevel level) {
 		StructureManager structureManager = level.structureManager();
 		level.players().forEach(player -> updatePlayerStructureStatus(structureManager, player));
 	}
 
-	@ApiStatus.Internal
-	private static void updatePlayerStructureStatus(@NotNull StructureManager structureManager, @NotNull ServerPlayer player) {
-		if (player instanceof PlayerStructureStatusInterface structureStatusInterface) {
-			BlockPos pos = player.blockPosition();
+	private static void updatePlayerStructureStatus(StructureManager structureManager, ServerPlayer player) {
+		if (!(player instanceof PlayerStructureStatusInterface structureStatusInterface)) return;
 
-			List<PlayerStructureStatus> newStructureStatuses = new ArrayList<>();
-			List<PlayerStructureStatus> currentStructureStatuses = structureStatusInterface.frozenLib$getStructureStatuses();
+		final BlockPos pos = player.blockPosition();
+		final List<PlayerStructureStatus> newStructureStatuses = new ArrayList<>();
+		final List<PlayerStructureStatus> currentStructureStatuses = structureStatusInterface.frozenLib$getStructureStatuses();
 
-			for (Structure structure : structureManager.getAllStructuresAt(pos).keySet()) {
-				StructureStart structureStart = structureManager.getStructureAt(pos, structure);
-				if (structureStart != StructureStart.INVALID_START) {
-					if ((Object) structureStart instanceof StructureStartInterface structureStartInterface) {
-						Identifier structureLocation = structureStartInterface.frozenLib$getId();
-						if (structureLocation != null) {
-							boolean insidePiece = structureManager.structureHasPieceAt(pos, structureStart);
-							boolean addNewStructureStatus = true;
-							for (PlayerStructureStatus existingStatus : newStructureStatuses) {
-								if (existingStatus.getStructure().equals(structureLocation)) {
-									addNewStructureStatus = false;
-									if (!existingStatus.isInsidePiece() && insidePiece) existingStatus.setInsidePiece(true);
-								}
-							}
-							if (addNewStructureStatus) newStructureStatuses.add(new PlayerStructureStatus(structureLocation, insidePiece));
-						} else if (FrozenLibConstants.UNSTABLE_LOGGING) {
-							throw new AssertionError("Structure piece doesn't contain an id!");
-						}
-					}
+		for (Structure structure : structureManager.getAllStructuresAt(pos).keySet()) {
+			final StructureStart structureStart = structureManager.getStructureAt(pos, structure);
+			if (structureStart == StructureStart.INVALID_START) continue;
+
+			if (!((Object) structureStart instanceof StructureStartInterface structureStartInterface)) continue;
+
+			final Identifier structureLocation = structureStartInterface.frozenLib$getId();
+			if (structureLocation != null) {
+				boolean insidePiece = structureManager.structureHasPieceAt(pos, structureStart);
+				boolean addNewStructureStatus = true;
+				for (PlayerStructureStatus existingStatus : newStructureStatuses) {
+					if (!existingStatus.getStructure().equals(structureLocation)) continue;
+					addNewStructureStatus = false;
+					if (!existingStatus.isInsidePiece() && insidePiece) existingStatus.setInsidePiece(true);
 				}
+				if (addNewStructureStatus) newStructureStatuses.add(new PlayerStructureStatus(structureLocation, insidePiece));
+			} else if (FrozenLibConstants.UNSTABLE_LOGGING) {
+				throw new AssertionError("Structure piece doesn't contain an id!");
 			}
+		}
 
-			if (!newStructureStatuses.equals(currentStructureStatuses)) {
-				structureStatusInterface.frozenLib$setStructureStatuses(newStructureStatuses);
-				sendStructureStatusPacket(player, newStructureStatuses);
-			}
+		if (!newStructureStatuses.equals(currentStructureStatuses)) {
+			structureStatusInterface.frozenLib$setStructureStatuses(newStructureStatuses);
+			sendStructureStatusPacket(player, newStructureStatuses);
 		}
 	}
 
-	@ApiStatus.Internal
-	private static void sendStructureStatusPacket(@NotNull ServerPlayer player, @NotNull List<PlayerStructureStatus> structureStatuses) {
-		player.connection.send(new ClientboundCustomPayloadPacket(new PlayerStructureStatusPacket(structureStatuses)));
+	private static void sendStructureStatusPacket(ServerPlayer player, List<PlayerStructureStatus> statuses) {
+		player.connection.send(new ClientboundCustomPayloadPacket(new PlayerStructureStatusPacket(statuses)));
 	}
 }

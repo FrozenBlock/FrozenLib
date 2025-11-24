@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class SearchInAreaBlockPredicate implements BlockPredicate {
 	public static final MapCodec<SearchInAreaBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(
@@ -40,56 +39,53 @@ public class SearchInAreaBlockPredicate implements BlockPredicate {
 	private final BlockPredicate blockPredicate;
 	private final int searchArea;
 
-	public SearchInAreaBlockPredicate(
-		@NotNull BlockPredicate blockPredicate,
-		int searchArea
-	) {
+	public SearchInAreaBlockPredicate(BlockPredicate blockPredicate, int searchArea) {
 		this.blockPredicate = blockPredicate;
 		this.searchArea = searchArea;
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull SearchInAreaBlockPredicate hasAirWithin(int searchArea) {
+	public static SearchInAreaBlockPredicate hasAirWithin(int searchArea) {
 		return new SearchInAreaBlockPredicate(BlockPredicate.ONLY_IN_AIR_PREDICATE, searchArea);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull SearchInAreaBlockPredicate hasAirOrWaterWithin(int searchArea) {
+	public static SearchInAreaBlockPredicate hasAirOrWaterWithin(int searchArea) {
 		return new SearchInAreaBlockPredicate(BlockPredicate.ONLY_IN_AIR_OR_WATER_PREDICATE, searchArea);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull SearchInAreaBlockPredicate hasAirOrLavaWithin(int searchArea) {
+	public static SearchInAreaBlockPredicate hasAirOrLavaWithin(int searchArea) {
 		return new SearchInAreaBlockPredicate(BlockPredicate.matchesBlocks(Blocks.AIR, Blocks.LAVA), searchArea);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull SearchInAreaBlockPredicate hasAirOrWaterOrLavaWithin(int searchArea) {
+	public static SearchInAreaBlockPredicate hasAirOrWaterOrLavaWithin(int searchArea) {
 		return new SearchInAreaBlockPredicate(BlockPredicate.matchesBlocks(Blocks.AIR, Blocks.WATER, Blocks.LAVA), searchArea);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull SearchInAreaBlockPredicate hasWaterWithin(int searchArea) {
+	public static SearchInAreaBlockPredicate hasWaterWithin(int searchArea) {
 		return new SearchInAreaBlockPredicate(BlockPredicate.matchesBlocks(Blocks.WATER), searchArea);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull SearchInAreaBlockPredicate hasLavaWithin(int searchArea) {
+	public static SearchInAreaBlockPredicate hasLavaWithin(int searchArea) {
 		return new SearchInAreaBlockPredicate(BlockPredicate.matchesBlocks(Blocks.LAVA), searchArea);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull SearchInAreaBlockPredicate hasWaterOrLavaWithin(int searchArea) {
+	public static SearchInAreaBlockPredicate hasWaterOrLavaWithin(int searchArea) {
 		return new SearchInAreaBlockPredicate(BlockPredicate.matchesBlocks(Blocks.WATER, Blocks.LAVA), searchArea);
 	}
 
 	@Override
-	public @NotNull BlockPredicateType<?> type() {
+	public BlockPredicateType<?> type() {
 		return FrozenLibBlockPredicateTypes.SEARCH_IN_AREA;
 	}
 
 	@Override
-	public boolean test(WorldGenLevel level, @NotNull BlockPos pos) {
+	public boolean test(WorldGenLevel level, BlockPos pos) {
 		return FrozenLibFeatureUtils.matchesConditionNearby(level, pos, this.searchArea, this.blockPredicate);
 	}
 

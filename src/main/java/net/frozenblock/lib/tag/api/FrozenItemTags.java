@@ -22,14 +22,12 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class FrozenItemTags {
 	public static final TagKey<Item> NO_USE_GAME_EVENTS = bind("dont_emit_use_game_events");
 	public static final TagKey<Item> ALWAYS_SAVE_COOLDOWNS = bind("always_save_cooldowns");
 
-	@NotNull
 	private static TagKey<Item> bind(String path) {
 		return TagKey.create(Registries.ITEM, FrozenLibConstants.id(path));
 	}

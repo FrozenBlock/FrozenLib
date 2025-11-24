@@ -42,7 +42,7 @@ public class StructureMixin {
 	public StructureStart frozenLib$generate(
 		StructureStart original,
 		Holder<Structure> holder,
-		ResourceKey<Level> resourceKey,
+		ResourceKey<Level> key,
 		RegistryAccess registryAccess
 	) {
 		StructureStartInterface.class.cast(original).frozenLib$setId(registryAccess.lookupOrThrow(Registries.STRUCTURE).getKey(Structure.class.cast(this)));

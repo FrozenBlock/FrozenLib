@@ -52,11 +52,11 @@ public class TagKeyArgument<T> implements ArgumentType<TagKeyArgument.Result<T>>
 	}
 
 	public static <T> TagKeyArgument.Result<T> getTagKey(
-		CommandContext<CommandSourceStack> context, String argument, ResourceKey<Registry<T>> registryKey, DynamicCommandExceptionType dynamicCommandExceptionType
+		CommandContext<CommandSourceStack> context, String argument, ResourceKey<Registry<T>> key, DynamicCommandExceptionType exceptionType
 	) throws CommandSyntaxException {
-		TagKeyArgument.Result<?> result = context.getArgument(argument, TagKeyArgument.Result.class);
-		Optional<TagKeyArgument.Result<T>> optional = result.cast(registryKey);
-		return optional.orElseThrow(() -> dynamicCommandExceptionType.create(result));
+		final TagKeyArgument.Result<?> result = context.getArgument(argument, TagKeyArgument.Result.class);
+		final Optional<TagKeyArgument.Result<T>> optional = result.cast(key);
+		return optional.orElseThrow(() -> exceptionType.create(result));
 	}
 
 	public TagKeyArgument.Result<T> parse(StringReader reader) throws CommandSyntaxException {
@@ -73,11 +73,11 @@ public class TagKeyArgument<T> implements ArgumentType<TagKeyArgument.Result<T>>
 	}
 
 	@Override
-	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> commandContext, SuggestionsBuilder suggestionsBuilder) {
-		Object var4 = commandContext.getSource();
-		return var4 instanceof SharedSuggestionProvider sharedSuggestionProvider
-			? sharedSuggestionProvider.suggestRegistryElements(this.registryKey, SharedSuggestionProvider.ElementSuggestionType.TAGS, suggestionsBuilder, commandContext)
-			: suggestionsBuilder.buildFuture();
+	public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder suggestions) {
+		final Object source = context.getSource();
+		return source instanceof SharedSuggestionProvider sharedSuggestionProvider
+			? sharedSuggestionProvider.suggestRegistryElements(this.registryKey, SharedSuggestionProvider.ElementSuggestionType.TAGS, suggestions, context)
+			: suggestions.buildFuture();
 	}
 
 	@Override
@@ -86,19 +86,24 @@ public class TagKeyArgument<T> implements ArgumentType<TagKeyArgument.Result<T>>
 	}
 
 	public static class Info<T> implements ArgumentTypeInfo<TagKeyArgument<T>, TagKeyArgument.Info<T>.Template> {
+
+		@Override
 		public void serializeToNetwork(TagKeyArgument.Info<T>.Template template, FriendlyByteBuf buffer) {
 			buffer.writeIdentifier(template.registryKey.identifier());
 		}
 
+		@Override
 		public TagKeyArgument.Info<T>.Template deserializeFromNetwork(FriendlyByteBuf buffer) {
 			Identifier identifier = buffer.readIdentifier();
 			return new TagKeyArgument.Info.Template(ResourceKey.createRegistryKey(identifier));
 		}
 
+		@Override
 		public void serializeToJson(TagKeyArgument.Info<T>.Template template, JsonObject json) {
 			json.addProperty("registry", template.registryKey.identifier().toString());
 		}
 
+		@Override
 		public TagKeyArgument.Info<T>.Template unpack(TagKeyArgument<T> argument) {
 			return new TagKeyArgument.Info.Template(argument.registryKey);
 		}

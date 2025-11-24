@@ -37,11 +37,12 @@ public record ColumnWithDiskFeatureConfig(
 ) implements FeatureConfiguration {
 	public static final Codec<ColumnWithDiskFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
 		instance.group(
-			BlockState.CODEC.fieldOf("state").forGetter((config) -> config.state),
-			IntProvider.NON_NEGATIVE_CODEC.fieldOf("radius").forGetter((config) -> config.radius),
-			IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter((config) -> config.height),
-			Codec.FLOAT.fieldOf("surrounding_pillar_chance").forGetter((config) -> config.surroundingPillarChance),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter((config) -> config.replaceableBlocks),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("disk_blocks").forGetter((config) -> config.diskBlocks)
-		).apply(instance, ColumnWithDiskFeatureConfig::new));
+			BlockState.CODEC.fieldOf("state").forGetter(config -> config.state),
+			IntProvider.NON_NEGATIVE_CODEC.fieldOf("radius").forGetter(config -> config.radius),
+			IntProvider.NON_NEGATIVE_CODEC.fieldOf("height").forGetter(config -> config.height),
+			Codec.FLOAT.fieldOf("surrounding_pillar_chance").forGetter(config -> config.surroundingPillarChance),
+			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter(config -> config.replaceableBlocks),
+			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("disk_blocks").forGetter(config -> config.diskBlocks)
+		).apply(instance, ColumnWithDiskFeatureConfig::new)
+	);
 }

@@ -37,10 +37,7 @@ public abstract class ServerLevelMixin implements WindManagerInterface {
 	@Unique
 	@Override
 	public WindManager frozenLib$getOrCreateWindManager() {
-		if (this.frozenLib$windManager == null) {
-			this.frozenLib$windManager = this.getDataStorage().computeIfAbsent(WindManager.TYPE);
-		}
-
+		if (this.frozenLib$windManager == null) this.frozenLib$windManager = this.getDataStorage().computeIfAbsent(WindManager.TYPE);
 		return this.frozenLib$windManager;
 	}
 

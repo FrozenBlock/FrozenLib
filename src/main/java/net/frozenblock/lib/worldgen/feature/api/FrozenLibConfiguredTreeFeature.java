@@ -22,8 +22,8 @@ import java.util.List;
 import net.frozenblock.lib.FrozenBools;
 import net.minecraft.core.Holder;
 import net.minecraft.data.worldgen.features.VegetationFeatures;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeafLitterBlock;
@@ -34,7 +34,6 @@ import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStatePr
 import net.minecraft.world.level.levelgen.feature.treedecorators.PlaceOnGroundDecorator;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class FrozenLibConfiguredTreeFeature {
 	private final FrozenLibConfiguredFeature<TreeConfiguration> feature;
@@ -56,7 +55,7 @@ public class FrozenLibConfiguredTreeFeature {
 	}
 
 	@Contract("_, _, _, _, _ -> new")
-	private static @NotNull PlaceOnGroundDecorator makeLeafLitterDecorator(Block leafLitterBlock, int tries, int radius, int height, int maxSegments) {
+	private static PlaceOnGroundDecorator makeLeafLitterDecorator(Block leafLitterBlock, int tries, int radius, int height, int maxSegments) {
 		return new PlaceOnGroundDecorator(
 			tries,
 			radius,
@@ -104,7 +103,7 @@ public class FrozenLibConfiguredTreeFeature {
 	public <F extends Feature<TreeConfiguration>> FrozenLibConfiguredTreeFeature makeAndSetHolders(F feature, TreeConfiguration config) {
 		this.feature.makeAndSetHolder(feature, config);
 
-		List<TreeDecorator> decorators = new ArrayList<>(config.decorators);
+		final List<TreeDecorator> decorators = new ArrayList<>(config.decorators);
 		decorators.addAll(this.litterDecorators);
 		TreeConfiguration withLitterConfig = new TreeConfiguration(
 			config.trunkProvider,

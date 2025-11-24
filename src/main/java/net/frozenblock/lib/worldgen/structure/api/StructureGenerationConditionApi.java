@@ -38,16 +38,15 @@ public class StructureGenerationConditionApi {
 		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register((RegistryAccess registryAccess) -> {
 			registryAccess.lookup(Registries.STRUCTURE_SET).ifPresent(structureSetRegistry -> {
 				structureSetRegistry.entrySet().forEach(structureSetEntry -> {
-					if ((Object) (structureSetEntry.getValue()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
-						setAndPlacementInterface.frozenLib$addGenerationConditions(getGenerationConditions(structureSetEntry.getKey().identifier()));
-					}
+					if (!((Object) (structureSetEntry.getValue()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface)) return;
+					setAndPlacementInterface.frozenLib$addGenerationConditions(getGenerationConditions(structureSetEntry.getKey().identifier()));
 				});
 			});
 		});
 	}
 
 	public static void addGenerationCondition(Identifier structureSet, Supplier<Boolean> generationCondition) {
-		List<Supplier<Boolean>> list = STRUCTURE_SET_TO_SUPPLIER_MAP.getOrDefault(structureSet, new ArrayList<>());
+		final List<Supplier<Boolean>> list = STRUCTURE_SET_TO_SUPPLIER_MAP.getOrDefault(structureSet, new ArrayList<>());
 		list.add(generationCondition);
 		STRUCTURE_SET_TO_SUPPLIER_MAP.put(structureSet, list);
 	}

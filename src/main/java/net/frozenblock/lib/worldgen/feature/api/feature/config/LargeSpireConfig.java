@@ -28,12 +28,25 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class LargeSpireConfig implements FeatureConfiguration {
+public record LargeSpireConfig(
+	int floorToCeilingSearchRange,
+	IntProvider columnRadius,
+	BlockStateProvider pathBlock,
+	FloatProvider heightScale,
+	float maxColumnRadiusToCaveHeightRatio,
+	FloatProvider stalactiteBluntness,
+	FloatProvider stalagmiteBluntness,
+	FloatProvider windSpeed,
+	int minRadiusForWind,
+	float minBluntnessForWind,
+	HolderSet<Block> baseBlocks,
+	HolderSet<Block> replaceable
+) implements FeatureConfiguration {
 	public static final Codec<LargeSpireConfig> CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
 			Codec.intRange(1, 512).fieldOf("floor_to_ceiling_search_range").orElse(30).forGetter(config -> config.floorToCeilingSearchRange),
 			IntProvider.codec(1, 60).fieldOf("column_radius").forGetter(config -> config.columnRadius),
-			BlockStateProvider.CODEC.fieldOf("block").forGetter(config-> config.pathBlock),
+			BlockStateProvider.CODEC.fieldOf("block").forGetter(config -> config.pathBlock),
 			FloatProvider.codec(0F, 20F).fieldOf("height_scale").forGetter(config -> config.heightScale),
 			Codec.floatRange(0.1F, 1F).fieldOf("max_column_radius_to_cave_height_ratio").forGetter(config -> config.maxColumnRadiusToCaveHeightRatio),
 			FloatProvider.codec(0.1F, 10F).fieldOf("stalactite_bluntness").forGetter(config -> config.stalactiteBluntness),
@@ -46,45 +59,5 @@ public class LargeSpireConfig implements FeatureConfiguration {
 		).apply(instance, LargeSpireConfig::new)
 	);
 
-	public final int floorToCeilingSearchRange;
-	public final IntProvider columnRadius;
-	public final BlockStateProvider pathBlock;
-	public final FloatProvider heightScale;
-	public final float maxColumnRadiusToCaveHeightRatio;
-	public final FloatProvider stalactiteBluntness;
-	public final FloatProvider stalagmiteBluntness;
-	public final FloatProvider windSpeed;
-	public final int minRadiusForWind;
-	public final float minBluntnessForWind;
-	public final HolderSet<Block> baseBlocks;
-	public final HolderSet<Block> replaceable;
-
-	public LargeSpireConfig(
-		int floorToCeilingSearchRange,
-		IntProvider columnRadius,
-		BlockStateProvider pathBlock,
-		FloatProvider heightScale,
-		float maxColumnRadiusToCaveHeightRatio,
-		FloatProvider stalactiteBluntness,
-		FloatProvider stalagmiteBluntness,
-		FloatProvider windSpeed,
-		int minRadiusForWind,
-		float minBluntnessForWind,
-		HolderSet<Block> baseBlocks,
-		HolderSet<Block> replaceable
-	) {
-		this.floorToCeilingSearchRange = floorToCeilingSearchRange;
-		this.columnRadius = columnRadius;
-		this.pathBlock = pathBlock;
-		this.heightScale = heightScale;
-		this.maxColumnRadiusToCaveHeightRatio = maxColumnRadiusToCaveHeightRatio;
-		this.stalactiteBluntness = stalactiteBluntness;
-		this.stalagmiteBluntness = stalagmiteBluntness;
-		this.windSpeed = windSpeed;
-		this.minRadiusForWind = minRadiusForWind;
-		this.minBluntnessForWind = minBluntnessForWind;
-		this.baseBlocks = baseBlocks;
-		this.replaceable = replaceable;
-	}
 }
 

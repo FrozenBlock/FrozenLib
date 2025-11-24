@@ -28,10 +28,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import org.jetbrains.annotations.NotNull;
 
 public class FrozenLibPlacedFeature {
-
 	/**
 	 * Can be used for setting all bootstrap contexts on 1.19.3
 	 */
@@ -77,7 +75,7 @@ public class FrozenLibPlacedFeature {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public FrozenLibPlacedFeature makeAndSetHolder(@NotNull FrozenLibConfiguredFeature configuredFeature, List<PlacementModifier> modifiers) {
+	public FrozenLibPlacedFeature makeAndSetHolder(FrozenLibConfiguredFeature configuredFeature, List<PlacementModifier> modifiers) {
 		return this.makeAndSetHolder(configuredFeature.getHolder(), modifiers);
 	}
 
@@ -86,7 +84,7 @@ public class FrozenLibPlacedFeature {
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})
-	public FrozenLibPlacedFeature makeAndSetHolder(@NotNull FrozenLibConfiguredFeature configuredFeature, PlacementModifier... modifiers) {
+	public FrozenLibPlacedFeature makeAndSetHolder(FrozenLibConfiguredFeature configuredFeature, PlacementModifier... modifiers) {
 		return this.makeAndSetHolder(configuredFeature.getHolder(), List.of(modifiers));
 	}
 }

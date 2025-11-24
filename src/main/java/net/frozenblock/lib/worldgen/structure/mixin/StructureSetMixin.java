@@ -54,9 +54,9 @@ public abstract class StructureSetMixin implements StructureSetAndPlacementInter
 
 	@Unique
 	@Override
-	public synchronized void frozenLib$addExclusions(List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSetRegistryLookup) {
+	public synchronized void frozenLib$addExclusions(List<Pair<Identifier, Integer>> exclusions, HolderLookup.RegistryLookup<StructureSet> structureSets) {
 		if (this.placement() instanceof StructureSetAndPlacementInterface structureSetAndPlacementInterface) {
-			structureSetAndPlacementInterface.frozenLib$addExclusions(exclusions, structureSetRegistryLookup);
+			structureSetAndPlacementInterface.frozenLib$addExclusions(exclusions, structureSets);
 		}
 	}
 }

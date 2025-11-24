@@ -20,7 +20,5 @@ package net.frozenblock.lib.worldgen.surface.impl;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
 public interface NoiseGeneratorInterface {
-
-	void frozenLib$writeSurfaceRules(SurfaceRules.RuleSource surfaceRule);
-
+	void frozenLib$writeSurfaceRules(SurfaceRules.RuleSource ruleSource);
 }

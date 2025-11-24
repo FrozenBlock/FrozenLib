@@ -28,7 +28,6 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import org.jetbrains.annotations.NotNull;
 
 public class ColumnFeature extends Feature<ColumnFeatureConfig> {
 
@@ -37,20 +36,20 @@ public class ColumnFeature extends Feature<ColumnFeatureConfig> {
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<ColumnFeatureConfig> context) {
+	public boolean place(FeaturePlaceContext<ColumnFeatureConfig> context) {
+		final BlockPos blockPos = context.origin();
+		final WorldGenLevel level = context.level();
+		final RandomSource random = level.getRandom();
+		final ColumnFeatureConfig config = context.config();
+
+		final int length = config.length().sample(random);
+		final BlockPredicate replaceable = config.replaceable();
+		final BlockStateProvider blockStateProvider = config.stateProvider();
+		final Direction direction = config.direction();
+		final boolean stopWhenEncounteringUnreplaceableBlock = config.stopWhenEncounteringUnreplaceableBlock();
+
 		boolean generated = false;
-		BlockPos blockPos = context.origin();
-		WorldGenLevel level = context.level();
-		RandomSource random = level.getRandom();
-
-		ColumnFeatureConfig config = context.config();
-		int length = config.length().sample(random);
-		BlockPredicate replaceable = config.replaceable();
-		BlockStateProvider blockStateProvider = config.blockStateProvider();
-		Direction direction = config.direction();
-		boolean stopWhenEncounteringUnreplaceableBlock = config.stopWhenEncounteringUnreplaceableBlock();
-
-		BlockPos.MutableBlockPos mutable = blockPos.mutable();
+		final BlockPos.MutableBlockPos mutable = blockPos.mutable();
 		for (int step = 0; step < length; step++) {
 			if (replaceable.test(level, mutable)) {
 				generated = true;

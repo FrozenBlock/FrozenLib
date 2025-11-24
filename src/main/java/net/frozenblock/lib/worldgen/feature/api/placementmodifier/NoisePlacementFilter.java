@@ -28,18 +28,17 @@ import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
-import org.jetbrains.annotations.NotNull;
 
 public class NoisePlacementFilter extends PlacementFilter {
-	public static final MapCodec<NoisePlacementFilter> CODEC = RecordCodecBuilder.mapCodec((instance) -> instance.group(
+	public static final MapCodec<NoisePlacementFilter> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 		EasyNoiseSampler.NoiseType.CODEC.fieldOf("noise_type").forGetter(config -> config.noiseType),
-		Codec.doubleRange(0.0001D, 128D).fieldOf("noise_scale").orElse(0.05).forGetter((config) -> config.noiseScale),
-		Codec.doubleRange(-1D, 1D).fieldOf("min_threshold").orElse(0.2).forGetter((config) -> config.minThreshold),
-		Codec.doubleRange(-1D, 1D).fieldOf("maxThresh").orElse(1D).forGetter((config) -> config.maxThreshold),
-		Codec.doubleRange(0D, 1D).fieldOf("fade_distance").orElse(0D).forGetter((config) -> config.fadeDistance),
-		Codec.BOOL.fieldOf("use_y").orElse(false).forGetter((config) -> config.useY),
-		Codec.BOOL.fieldOf("scale_y").orElse(false).forGetter((config) -> config.scaleY),
-		Codec.BOOL.fieldOf("must_be_inside").orElse(false).forGetter((config) -> config.mustBeInside)
+		Codec.doubleRange(0.0001D, 128D).fieldOf("noise_scale").orElse(0.05).forGetter(config -> config.noiseScale),
+		Codec.doubleRange(-1D, 1D).fieldOf("min_threshold").orElse(0.2).forGetter(config -> config.minThreshold),
+		Codec.doubleRange(-1D, 1D).fieldOf("maxThresh").orElse(1D).forGetter(config -> config.maxThreshold),
+		Codec.doubleRange(0D, 1D).fieldOf("fade_distance").orElse(0D).forGetter(config -> config.fadeDistance),
+		Codec.BOOL.fieldOf("use_y").orElse(false).forGetter(config -> config.useY),
+		Codec.BOOL.fieldOf("scale_y").orElse(false).forGetter(config -> config.scaleY),
+		Codec.BOOL.fieldOf("must_be_inside").orElse(false).forGetter(config -> config.mustBeInside)
 	).apply(instance, NoisePlacementFilter::new));
 
 	private final EasyNoiseSampler.NoiseType noiseType;
@@ -78,12 +77,12 @@ public class NoisePlacementFilter extends PlacementFilter {
 	}
 
 	@Override
-	protected boolean shouldPlace(@NotNull PlacementContext context, RandomSource random, BlockPos pos) {
-		WorldGenLevel level = context.level;
-		boolean isInside = false;
-		ImprovedNoise sampler = this.noiseType.createNoise(level.getSeed());
-		double sample = EasyNoiseSampler.sample(sampler, pos, this.noiseScale, this.scaleY, this.useY);
+	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
+		final WorldGenLevel level = context.level;
+		final ImprovedNoise sampler = this.noiseType.createNoise(level.getSeed());
+		final double sample = EasyNoiseSampler.sample(sampler, pos, this.noiseScale, this.scaleY, this.useY);
 
+		boolean isInside = false;
 		if (sample > this.minThreshold && sample < this.maxThreshold) isInside = true;
 		if (this.fadeDistance > 0) {
 			if (sample > this.minFadeThreshold && sample < this.minThreshold) {
@@ -97,7 +96,6 @@ public class NoisePlacementFilter extends PlacementFilter {
 	}
 
 	@Override
-	@NotNull
 	public PlacementModifierType<?> type() {
 		return FrozenPlacementModifiers.NOISE_FILTER;
 	}

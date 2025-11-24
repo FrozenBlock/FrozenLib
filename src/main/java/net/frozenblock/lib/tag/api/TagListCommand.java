@@ -30,7 +30,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 
 public class TagListCommand {
-	private TagListCommand() {}
 
 	private static final DynamicCommandExceptionType ERROR_TAG_INVALID = new DynamicCommandExceptionType(
 		type -> Component.translatable("commands.frozenlib.taglist.tag.invalid", type)
@@ -136,9 +135,7 @@ public class TagListCommand {
 	private static <T> int list(CommandSourceStack source, ResourceKey<Registry<T>> registryKey, TagKeyArgument.Result<T> tag) throws CommandSyntaxException {
 		final Registry<T> registry = source.getLevel().registryAccess().lookupOrThrow(registryKey);
 		final String printable = tag.asPrintable();
-		final HolderSet.Named<T> holderSet = registry.get(tag.key()).orElseThrow(
-			() -> ERROR_TAG_INVALID.create(printable)
-		);
+		final HolderSet.Named<T> holderSet = registry.get(tag.key()).orElseThrow(() -> ERROR_TAG_INVALID.create(printable));
 
 		for (Holder<T> value : holderSet) {
 			if (!holderSet.contains(value)) continue;

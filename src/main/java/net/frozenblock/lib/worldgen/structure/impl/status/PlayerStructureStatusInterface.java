@@ -20,8 +20,6 @@ package net.frozenblock.lib.worldgen.structure.impl.status;
 import java.util.List;
 
 public interface PlayerStructureStatusInterface {
-
 	List<PlayerStructureStatus> frozenLib$getStructureStatuses();
-
 	void frozenLib$setStructureStatuses(List<PlayerStructureStatus> structureStatuses);
 }

@@ -44,7 +44,6 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -53,7 +52,7 @@ import org.jetbrains.annotations.Unmodifiable;
  */
 @Environment(EnvType.CLIENT)
 public final class ClientWindManager {
-	public static final List<ClientWindManagerExtension> EXTENSIONS = new ObjectArrayList<>();
+	private static final List<ClientWindManagerExtension> EXTENSIONS = new ObjectArrayList<>();
 	private static final List<WindDisturbance<?>> WIND_DISTURBANCES_A = new ArrayList<>();
 	private static final List<WindDisturbance<?>> WIND_DISTURBANCES_B = new ArrayList<>();
 	private static boolean isSwitched;
@@ -80,7 +79,7 @@ public final class ClientWindManager {
 		isSwitched = !isSwitched;
 	}
 
-	public synchronized static void addWindDisturbance(@NotNull WindDisturbance<?> windDisturbance) {
+	public synchronized static void addWindDisturbance(WindDisturbance<?> windDisturbance) {
 		getWindDisturbanceStash().add(windDisturbance);
 	}
 
@@ -156,19 +155,19 @@ public final class ClientWindManager {
 	}
 
 	@ApiStatus.Internal
-	public static void tick(@NotNull ClientLevel level) {
+	public static void tick(ClientLevel level) {
 		Debug.tick(level);
-
 		if (!level.tickRateManager().runsNormally()) return;
-		float thunderLevel = level.getThunderLevel(1F) * 0.03F;
+
+		final float thunderLevel = level.getThunderLevel(1F) * 0.03F;
 		//WIND
 		prevWindX = windX;
 		prevWindY = windY;
 		prevWindZ = windZ;
 		time += 1;
-		double calcTime = time * 0.0005D;
-		double calcTimeY = time * 0.00035D;
-		Vec3 vec3 = sampleVec3(noise, calcTime, calcTimeY, calcTime);
+		final double calcTime = time * 0.0005D;
+		final double calcTimeY = time * 0.00035D;
+		final Vec3 vec3 = sampleVec3(noise, calcTime, calcTimeY, calcTime);
 		windX = vec3.x + (vec3.x * thunderLevel);
 		windY = vec3.y + (vec3.y * thunderLevel);
 		windZ = vec3.z + (vec3.z * thunderLevel);
@@ -177,9 +176,9 @@ public final class ClientWindManager {
 		prevLaggedWindX = laggedWindX;
 		prevLaggedWindY = laggedWindY;
 		prevLaggedWindZ = laggedWindZ;
-		double calcLaggedTime = (time - 40D) * 0.0005D;
-		double calcLaggedTimeY = (time - 60D) * 0.00035D;
-		Vec3 laggedVec = sampleVec3(noise, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
+		final double calcLaggedTime = (time - 40D) * 0.0005D;
+		final double calcLaggedTimeY = (time - 60D) * 0.00035D;
+		final Vec3 laggedVec = sampleVec3(noise, calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
 		laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
 		laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
 		laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
@@ -192,9 +191,9 @@ public final class ClientWindManager {
 
 		if (!hasInitialized && FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS) {
 			hasInitialized = true;
-			RandomSource randomSource = AdvancedMath.random();
-			noise = EasyNoiseSampler.createXoroNoise(randomSource.nextLong());
-			time = randomSource.nextLong();
+			final RandomSource random = AdvancedMath.random();
+			noise = EasyNoiseSampler.createXoroNoise(random.nextLong());
+			time = random.nextLong();
 		}
 	}
 
@@ -231,8 +230,7 @@ public final class ClientWindManager {
 	 * @param pos The {@link BlockPos} to check.
 	 * @return the wind movement at the bottom center of the specified {@link BlockPos}.
 	 */
-	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos) {
+	public static Vec3 getWindMovement(Level level, BlockPos pos) {
 		return getWindMovement(level, Vec3.atBottomCenterOf(pos));
 	}
 
@@ -244,8 +242,7 @@ public final class ClientWindManager {
 	 * @param scale Multiplies the returned value.
 	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied.
 	 */
-	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos, double scale) {
+	public static Vec3 getWindMovement(Level level, BlockPos pos, double scale) {
 		return getWindMovement(level, Vec3.atBottomCenterOf(pos), scale);
 	}
 
@@ -258,8 +255,7 @@ public final class ClientWindManager {
 	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
 	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied and clamped.
 	 */
-	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull BlockPos pos, double scale, double clamp) {
+	public static Vec3 getWindMovement(Level level, BlockPos pos, double scale, double clamp) {
 		return getWindMovement(level, Vec3.atBottomCenterOf(pos), scale, clamp);
 	}
 
@@ -270,8 +266,7 @@ public final class ClientWindManager {
 	 * @param pos The {@link Vec3} to check.
 	 * @return the wind movement at the specified {@link Vec3}.
 	 */
-	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos) {
+	public static Vec3 getWindMovement(Level level, Vec3 pos) {
 		return getWindMovement(level, pos, 1D);
 	}
 
@@ -283,8 +278,7 @@ public final class ClientWindManager {
 	 * @param scale Multiplies the returned value.
 	 * @return the wind movement at the specified {@link Vec3}, multiplied.
 	 */
-	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale) {
+	public static Vec3 getWindMovement(Level level, Vec3 pos, double scale) {
 		return getWindMovement(level, pos, scale, Double.MAX_VALUE);
 	}
 
@@ -297,8 +291,7 @@ public final class ClientWindManager {
 	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
 	 * @return the wind movement at the specified {@link Vec3}, multiplied and clamped.
 	 */
-	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale, double clamp) {
+	public static Vec3 getWindMovement(Level level, Vec3 pos, double scale, double clamp) {
 		return getWindMovement(level, pos, scale, clamp, 1D);
 	}
 
@@ -312,18 +305,17 @@ public final class ClientWindManager {
 	 * @param windDisturbanceScale Multiplies the wind disturbance value.
 	 * @return the wind movement at the specified {@link Vec3}, multiplied, clamped, and with a separately multiplied wind disturbance value.
 	 */
-	@NotNull
-	public static Vec3 getWindMovement(@NotNull Level level, @NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
+	public static Vec3 getWindMovement(Level level, Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
 		if (!shouldUseWind()) return Vec3.ZERO;
 
-		double brightness = level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
-		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
-		Pair<Double, Vec3> disturbance = WindManager.calculateWindDisturbance(getWindDisturbances(), level, pos);
-		double disturbanceAmount = disturbance.getFirst();
-		Vec3 windDisturbance = disturbance.getSecond();
-		double newWindX = Mth.lerp(disturbanceAmount, windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
-		double newWindY = Mth.lerp(disturbanceAmount, windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
-		double newWindZ = Mth.lerp(disturbanceAmount, windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
+		final double brightness = level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
+		final double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
+		final Pair<Double, Vec3> disturbance = WindManager.calculateWindDisturbance(getWindDisturbances(), level, pos);
+		final double disturbanceAmount = disturbance.getFirst();
+		final Vec3 windDisturbance = disturbance.getSecond();
+		final double newWindX = Mth.lerp(disturbanceAmount, windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
+		final double newWindY = Mth.lerp(disturbanceAmount, windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
+		final double newWindZ = Mth.lerp(disturbanceAmount, windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 
 		if (FrozenLibConstants.DEBUG_WIND) Debug.addAccessedPosition(pos);
 
@@ -341,85 +333,68 @@ public final class ClientWindManager {
 	 * @param pos The {@link BlockPos} to check.
 	 * @return the wind disturbance at the specified {@link Vec3}.
 	 */
-	@NotNull
-	public static Vec3 getRawDisturbanceMovement(@NotNull Level level, @NotNull Vec3 pos) {
-		Pair<Double, Vec3> disturbance = WindManager.calculateWindDisturbance(getWindDisturbances(), level, pos);
-		double disturbanceAmount = disturbance.getFirst();
-		Vec3 windDisturbance = disturbance.getSecond();
-		double newWindX = Mth.lerp(disturbanceAmount, 0D, windDisturbance.x);
-		double newWindY = Mth.lerp(disturbanceAmount, 0D, windDisturbance.y);
-		double newWindZ = Mth.lerp(disturbanceAmount, 0D, windDisturbance.z);
-		return new Vec3(
-			newWindX,
-			newWindY,
-			newWindZ
-		);
+	public static Vec3 getRawDisturbanceMovement(Level level, Vec3 pos) {
+		final Pair<Double, Vec3> disturbance = WindManager.calculateWindDisturbance(getWindDisturbances(), level, pos);
+		final double disturbanceAmount = disturbance.getFirst();
+		final Vec3 windDisturbance = disturbance.getSecond();
+		final double newWindX = Mth.lerp(disturbanceAmount, 0D, windDisturbance.x);
+		final double newWindY = Mth.lerp(disturbanceAmount, 0D, windDisturbance.y);
+		final double newWindZ = Mth.lerp(disturbanceAmount, 0D, windDisturbance.z);
+		return new Vec3(newWindX, newWindY, newWindZ);
 	}
 
 	@Deprecated
-	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double stretch) {
+	public static Vec3 getWindMovement3D(BlockPos pos, double stretch) {
 		return getWindMovement3D(Vec3.atBottomCenterOf(pos), stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double stretch) {
+	public static Vec3 getWindMovement3D(BlockPos pos, double scale, double stretch) {
 		return getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double clamp, double stretch) {
+	public static Vec3 getWindMovement3D(BlockPos pos, double scale, double clamp, double stretch) {
 		return getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, clamp, stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double stretch) {
+	public static Vec3 getWindMovement3D(Vec3 pos, double stretch) {
 		return getWindMovement3D(pos, 1D, stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double stretch) {
+	public static Vec3 getWindMovement3D(Vec3 pos, double scale, double stretch) {
 		return getWindMovement3D(pos, scale, Double.MAX_VALUE, stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public static Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double clamp, double stretch) {
-		Vec3 wind = sample3D(pos, stretch);
+	public static Vec3 getWindMovement3D(Vec3 pos, double scale, double clamp, double stretch) {
+		final Vec3 wind = sample3D(pos, stretch);
 		return new Vec3(Mth.clamp((wind.x()) * scale, -clamp, clamp),
 			Mth.clamp((wind.y()) * scale, -clamp, clamp),
 			Mth.clamp((wind.z()) * scale, -clamp, clamp));
 	}
 
-	@NotNull
-	public static Vec3 sampleVec3(@NotNull ImprovedNoise sampler, double x, double y, double z) {
-		if (shouldUseWind()) {
-			if (!overrideWind) {
-				double windX = sampler.noise(x, 0D, 0D);
-				double windY = sampler.noise(0D, y, 0D);
-				double windZ = sampler.noise(0D, 0D, z);
-				return new Vec3(windX, windY, windZ);
-			}
-			return commandWind;
-		} else {
-			return Vec3.ZERO;
-		}
+	public static Vec3 sampleVec3(ImprovedNoise sampler, double x, double y, double z) {
+		if (!shouldUseWind()) return Vec3.ZERO;
+		if (overrideWind) return commandWind;
+
+		final double windX = sampler.noise(x, 0D, 0D);
+		final double windY = sampler.noise(0D, y, 0D);
+		final double windZ = sampler.noise(0D, 0D, z);
+		return new Vec3(windX, windY, windZ);
 	}
 
 	@Deprecated
-	@NotNull
-	public static Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
+	public static Vec3 sample3D(Vec3 pos, double stretch) {
 		if (!shouldUseWind()) return Vec3.ZERO;
 
-		double sampledTime = time * 0.1D;
-		double xyz = pos.x() + pos.y() + pos.z();
-		double windX = noise.noise((xyz + sampledTime) * stretch, 0D, 0D);
-		double windY = noise.noise(0D, (xyz + sampledTime) * stretch, 0D);
-		double windZ = noise.noise(0D, 0D, (xyz + sampledTime) * stretch);
+		final double sampledTime = time * 0.1D;
+		final double xyz = pos.x() + pos.y() + pos.z();
+		final double windX = noise.noise((xyz + sampledTime) * stretch, 0D, 0D);
+		final double windY = noise.noise(0D, (xyz + sampledTime) * stretch, 0D);
+		final double windZ = noise.noise(0D, 0D, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
 	}
 
@@ -458,12 +433,12 @@ public final class ClientWindManager {
 		}
 
 		@VisibleForDebug
-		public static @NotNull List<List<Pair<Vec3, Integer>>> getDebugNodes() {
+		public static List<List<Pair<Vec3, Integer>>> getDebugNodes() {
 			return DEBUG_NODES;
 		}
 
-		private static @NotNull List<List<Pair<Vec3, Integer>>> createWindNodes(ClientLevel level) {
-			List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
+		private static List<List<Pair<Vec3, Integer>>> createWindNodes(ClientLevel level) {
+			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
 			ACCESSED_POSITIONS.forEach(
 				vec3 -> {
 					if (!FrustumUtil.isVisible(vec3, 0.5D)) return;
@@ -475,67 +450,67 @@ public final class ClientWindManager {
 		}
 
 		@VisibleForDebug
-		public static @NotNull @Unmodifiable List<WindDisturbance<?>> getWindDisturbances() {
+		public static @Unmodifiable List<WindDisturbance<?>> getWindDisturbances() {
 			return ImmutableList.copyOf(WIND_DISTURBANCES);
 		}
 
 		@VisibleForDebug
-		public static @NotNull List<List<Pair<Vec3, Integer>>> getDebugDisturbanceNodes() {
+		public static List<List<Pair<Vec3, Integer>>> getDebugDisturbanceNodes() {
 			return DEBUG_DISTURBANCE_NODES;
 		}
 
-		private static @NotNull List<List<Pair<Vec3, Integer>>> createWindDisturbanceNodes(ClientLevel level) {
-			List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
+		private static List<List<Pair<Vec3, Integer>>> createWindDisturbanceNodes(ClientLevel level) {
+			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
 			WIND_DISTURBANCES.forEach(
 				windDisturbance -> {
-					if (FrustumUtil.isVisible(windDisturbance.affectedArea)) {
-						BlockPos.betweenClosed(
-							BlockPos.containing(windDisturbance.affectedArea.getMinPosition()),
-							BlockPos.containing(windDisturbance.affectedArea.getMaxPosition())
-						).forEach(
-							blockPos -> {
-								Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
-								windNodes.add(createWindNodes(level, blockPosCenter, 1D, true));
-							}
-						);
-					}
+					if (!FrustumUtil.isVisible(windDisturbance.affectedArea)) return;
+
+					BlockPos.betweenClosed(
+						BlockPos.containing(windDisturbance.affectedArea.getMinPosition()),
+						BlockPos.containing(windDisturbance.affectedArea.getMaxPosition())
+					).forEach(
+						blockPos -> {
+							final Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
+							windNodes.add(createWindNodes(level, blockPosCenter, 1D, true));
+						}
+					);
 				}
 			);
 			return windNodes;
 		}
 
-		private static @NotNull List<Pair<Vec3, Integer>> createWindNodes(Level level, Vec3 origin, double stretch, boolean disturbanceOnly) {
-			List<Pair<Vec3, Integer>> windNodes = new ArrayList<>();
+		private static List<Pair<Vec3, Integer>> createWindNodes(Level level, Vec3 origin, double stretch, boolean disturbanceOnly) {
+			final List<Pair<Vec3, Integer>> windNodes = new ArrayList<>();
 			Vec3 wind = disturbanceOnly ?
 				ClientWindManager.getRawDisturbanceMovement(level, origin)
 				: ClientWindManager.getWindMovement(level, origin);
 
-			final double windlength = wind.length();
-			if (windlength != 0D) {
-				int increments = 3;
-				Vec3 lineStart = origin;
-				double windLineScale = (1D / increments) * stretch;
+			final double windLength = wind.length();
+			if (windLength == 0D) return windNodes;
+
+			int increments = 3;
+			Vec3 lineStart = origin;
+			double windLineScale = (1D / increments) * stretch;
+			windNodes.add(
+				Pair.of(
+					lineStart,
+					calculateNodeColor(Math.min(1D, windLength), disturbanceOnly)
+				)
+			);
+
+			for (int i = 0; i < increments; ++i) {
+				final Vec3 lineEnd = lineStart.add(wind.scale(windLineScale));
 				windNodes.add(
 					Pair.of(
-						lineStart,
-						calculateNodeColor(Math.min(1D, windlength), disturbanceOnly)
+						lineEnd,
+						calculateNodeColor(Math.min(1D, windLength), disturbanceOnly)
 					)
 				);
-
-				for (int i = 0; i < increments; ++i) {
-					Vec3 lineEnd = lineStart.add(wind.scale(windLineScale));
-					windNodes.add(
-						Pair.of(
-							lineEnd,
-							calculateNodeColor(Math.min(1D, windlength), disturbanceOnly)
-						)
-					);
-					lineStart = lineEnd;
-					wind = disturbanceOnly ?
-						ClientWindManager.getRawDisturbanceMovement(level, lineStart)
-						: ClientWindManager.getWindMovement(level, lineStart);
+				lineStart = lineEnd;
+				wind = disturbanceOnly ?
+					ClientWindManager.getRawDisturbanceMovement(level, lineStart)
+					: ClientWindManager.getWindMovement(level, lineStart);
 				}
-			}
 
 			return windNodes;
 		}

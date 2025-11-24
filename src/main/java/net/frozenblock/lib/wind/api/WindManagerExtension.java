@@ -22,7 +22,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.saveddata.SavedData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -32,7 +31,7 @@ public abstract class WindManagerExtension extends SavedData {
 	@Nullable
 	private WindManager windManager;
 
-	public void setWindManager(@NotNull WindManager windManager) {
+	public void setWindManager(WindManager windManager) {
 		this.windManager = windManager;
 	}
 
@@ -45,7 +44,7 @@ public abstract class WindManagerExtension extends SavedData {
 		return true;
 	}
 
-	public static @NotNull String createSaveId(@NotNull Identifier id) {
+	public static String createSaveId(Identifier id) {
 		return WindManager.WIND_FILE_PATH + "_" + id.getNamespace() + "_" + id.getPath();
 	}
 

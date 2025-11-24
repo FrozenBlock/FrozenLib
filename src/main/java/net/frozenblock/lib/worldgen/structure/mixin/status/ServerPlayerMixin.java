@@ -41,7 +41,7 @@ public class ServerPlayerMixin implements PlayerStructureStatusInterface {
 
 	@Unique
 	@Override
-	public void frozenLib$setStructureStatuses(List<PlayerStructureStatus> structureStatuses) {
-		this.frozenLib$structureStatuses = structureStatuses;
+	public void frozenLib$setStructureStatuses(List<PlayerStructureStatus> statuses) {
+		this.frozenLib$structureStatuses = statuses;
 	}
 }

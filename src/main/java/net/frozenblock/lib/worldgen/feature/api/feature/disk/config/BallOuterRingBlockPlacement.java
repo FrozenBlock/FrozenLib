@@ -26,47 +26,46 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import org.jetbrains.annotations.NotNull;
 
 public class BallOuterRingBlockPlacement {
 	public static final Codec<BallOuterRingBlockPlacement> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
-			BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.blockStateProvider),
+			BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.stateProvider),
 			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
 			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("outer_ring_start_percentage", 0F).forGetter(config -> config.outerRingStartPercentage),
 			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("chance_to_choose_in_inner_ring", 0F).forGetter(config -> config.chanceToChooseInInnerRing),
-			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementBlockPredicate),
-			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingBlockPredicate),
+			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementPredicate),
+			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingPredicate),
 			Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
 			Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset)
 		).apply(instance, BallOuterRingBlockPlacement::new)
 	);
 
-	private final BlockStateProvider blockStateProvider;
+	private final BlockStateProvider stateProvider;
 	private final float placementChance;
 	private final float outerRingStartPercentage;
 	private final float chanceToChooseInInnerRing;
-	private final BlockPredicate replacementBlockPredicate;
-	private final BlockPredicate searchingBlockPredicate;
+	private final BlockPredicate replacementPredicate;
+	private final BlockPredicate searchingPredicate;
 	private final boolean scheduleTickOnPlacement;
 	private final int verticalPlacementOffset;
 
 	public BallOuterRingBlockPlacement(
-		BlockStateProvider blockStateProvider,
+		BlockStateProvider stateProvider,
 		float placementChance,
 		float outerRingStartPercentage,
 		float chanceToChooseInInnerRing,
-		BlockPredicate replacementBlockPredicate,
-		BlockPredicate searchingBlockPredicate,
+		BlockPredicate replacementPredicate,
+		BlockPredicate searchingPredicate,
 		boolean scheduleTickOnPlacement,
 		int verticalPlacementOffset
 	) {
-		this.blockStateProvider = blockStateProvider;
+		this.stateProvider = stateProvider;
 		this.placementChance = placementChance;
 		this.outerRingStartPercentage = outerRingStartPercentage;
 		this.chanceToChooseInInnerRing = chanceToChooseInInnerRing;
-		this.replacementBlockPredicate = replacementBlockPredicate;
-		this.searchingBlockPredicate = searchingBlockPredicate;
+		this.replacementPredicate = replacementPredicate;
+		this.searchingPredicate = searchingPredicate;
 		this.scheduleTickOnPlacement = scheduleTickOnPlacement;
 		this.verticalPlacementOffset = verticalPlacementOffset;
 	}
@@ -91,21 +90,19 @@ public class BallOuterRingBlockPlacement {
 	public boolean generate(
 		WorldGenLevel level,
 		BlockPos.MutableBlockPos pos,
-		@NotNull RandomSource random,
+		RandomSource random,
 		boolean isWithinOppositeRing
 	) {
-		if (isWithinOppositeRing || random.nextFloat() <= this.placementChance) {
-			pos.move(0, this.verticalPlacementOffset, 0);
-			if (this.replacementBlockPredicate.test(level, pos)) {
-				if (this.searchingBlockPredicate.test(level, pos)) {
-					BlockState state = this .blockStateProvider.getState(random, pos);
-					level.setBlock(pos, state, Block.UPDATE_CLIENTS);
-					if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
-					return true;
-				}
-			}
-		}
-		return false;
+		if (!isWithinOppositeRing && random.nextFloat() > this.placementChance) return false;
+
+		pos.move(0, this.verticalPlacementOffset, 0);
+		if (!this.replacementPredicate.test(level, pos)) return false;
+		if (!this.searchingPredicate.test(level, pos)) return false;
+
+		final BlockState state = this .stateProvider.getState(random, pos);
+		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
+		if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
+		return true;
 	}
 
 	public enum OuterRingSelectionType {
@@ -115,17 +112,17 @@ public class BallOuterRingBlockPlacement {
 	}
 
 	public static class Builder {
-		private final BlockStateProvider blockStateProvider;
+		private final BlockStateProvider stateProvider;
 		private float placementChance = 1F;
 		private float outerRingStartPercentage = 0F;
 		private float chanceToChooseInInnerRing = 0F;
-		private BlockPredicate replacementBlockPredicate = BlockPredicate.replaceable();
-		private BlockPredicate searchingBlockPredicate = BlockPredicate.alwaysTrue();
+		private BlockPredicate replacementPredicate = BlockPredicate.replaceable();
+		private BlockPredicate searchingPredicate = BlockPredicate.alwaysTrue();
 		private boolean scheduleTickOnPlacement = false;
 		private int verticalPlacementOffset = 0;
 
-		public Builder(BlockStateProvider blockStateProvider) {
-			this.blockStateProvider = blockStateProvider;
+		public Builder(BlockStateProvider stateProvider) {
+			this.stateProvider = stateProvider;
 		}
 
 		public Builder placementChance(float chance) {
@@ -143,13 +140,13 @@ public class BallOuterRingBlockPlacement {
 			return this;
 		}
 
-		public Builder replacementBlockPredicate(BlockPredicate replacementBlockPredicate) {
-			this.replacementBlockPredicate = replacementBlockPredicate;
+		public Builder replacementPredicate(BlockPredicate replacementPredicate) {
+			this.replacementPredicate = replacementPredicate;
 			return this;
 		}
 
-		public Builder searchingBlockPredicate(BlockPredicate searchingBlockPredicate) {
-			this.searchingBlockPredicate = searchingBlockPredicate;
+		public Builder searchingPredicate(BlockPredicate searchingPredicate) {
+			this.searchingPredicate = searchingPredicate;
 			return this;
 		}
 
@@ -165,12 +162,12 @@ public class BallOuterRingBlockPlacement {
 
 		public BallOuterRingBlockPlacement build() {
 			return new BallOuterRingBlockPlacement(
-				this.blockStateProvider,
+				this.stateProvider,
 				this.placementChance,
 				this.outerRingStartPercentage,
 				this.chanceToChooseInInnerRing,
-				this.replacementBlockPredicate,
-				this.searchingBlockPredicate,
+				this.replacementPredicate,
+				this.searchingPredicate,
 				this.scheduleTickOnPlacement,
 				this.verticalPlacementOffset
 			);

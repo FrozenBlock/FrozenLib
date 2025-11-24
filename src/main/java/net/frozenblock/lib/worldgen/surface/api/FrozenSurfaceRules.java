@@ -30,7 +30,6 @@ import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class FrozenSurfaceRules {
@@ -70,23 +69,23 @@ public final class FrozenSurfaceRules {
 	public static final SurfaceRules.RuleSource CRIMSON_NYLIUM = makeStateRule(Blocks.CRIMSON_NYLIUM);
 	public static final SurfaceRules.RuleSource ENDSTONE = makeStateRule(Blocks.END_STONE);
 
-	public static SurfaceRules.SequenceRuleSource sequence(@NotNull List<SurfaceRules.RuleSource> list) {
+	public static SurfaceRules.SequenceRuleSource sequence(List<SurfaceRules.RuleSource> list) {
 		return new SurfaceRules.SequenceRuleSource(list);
 	}
 
-	public static SurfaceRules.ConditionSource isBiome(@NotNull List<ResourceKey<Biome>> biomes) {
+	public static SurfaceRules.ConditionSource isBiome(List<ResourceKey<Biome>> biomes) {
 		return SurfaceRules.isBiome(biomes);
 	}
 
-	public static SurfaceRules.ConditionSource isBiomeTag(@NotNull TagKey<Biome> biomeTagKey) {
+	public static SurfaceRules.ConditionSource isBiomeTag(TagKey<Biome> biomeTagKey) {
 		return new BiomeTagConditionSource(biomeTagKey);
 	}
 
-	public static SurfaceRules.ConditionSource isBiomeTagOptimized(@NotNull TagKey<Biome> biomeTagKey) {
+	public static SurfaceRules.ConditionSource isBiomeTagOptimized(TagKey<Biome> biomeTagKey) {
 		return new OptimizedBiomeTagConditionSource(biomeTagKey);
 	}
 
-	public static SurfaceRules.RuleSource makeStateRule(@NotNull Block block) {
+	public static SurfaceRules.RuleSource makeStateRule(Block block) {
 		return SurfaceRules.state(block.defaultBlockState());
 	}
 
@@ -94,7 +93,7 @@ public final class FrozenSurfaceRules {
 	public static SurfaceRules.RuleSource getSurfaceRules(ResourceKey<DimensionType> dimension) {
 		if (dimension == null) return null;
 
-		var location = dimension.identifier();
+		final var location = dimension.identifier();
 		SurfaceRules.RuleSource returnValue = null;
 
 		if (location.equals(BuiltinDimensionTypes.OVERWORLD.identifier()) || location.equals(BuiltinDimensionTypes.OVERWORLD_CAVES.identifier())) {
@@ -105,12 +104,9 @@ public final class FrozenSurfaceRules {
 			returnValue = getEndSurfaceRules();
 		}
 
-		// get generic dimension surface rules
-		SurfaceRules.RuleSource generic = getGenericSurfaceRules(dimension);
-
-		if (generic != null) {
-			returnValue = returnValue == null ? generic : SurfaceRules.sequence(returnValue, generic);
-		}
+		// Get generic dimension surface rules
+		final SurfaceRules.RuleSource generic = getGenericSurfaceRules(dimension);
+		if (generic != null) returnValue = returnValue == null ? generic : SurfaceRules.sequence(returnValue, generic);
 
 		return returnValue;
 	}
@@ -119,22 +115,21 @@ public final class FrozenSurfaceRules {
 	public static SurfaceRules.RuleSource getOverworldSurfaceRules() {
 		SurfaceRules.RuleSource newRule = null;
 
-		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
+		final ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldSurfaceRules(sourceHolders);
 
 		if (!sourceHolders.isEmpty()) {
 			SurfaceRules.RuleSource newSource = sequence(sourceHolders);
-
 			newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
 			newRule = newSource;
 		}
 
 		// NO PRELIMINARY SURFACE
-		ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
+		final ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
 		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimSurfaceRules(noPrelimSourceHolders);
 
 		if (!noPrelimSourceHolders.isEmpty()) {
-			SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
+			final SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
 			newRule = newRule == null ? noPrelimSource : SurfaceRules.sequence(noPrelimSource, newRule);
 		}
 
@@ -145,7 +140,7 @@ public final class FrozenSurfaceRules {
 	public static SurfaceRules.RuleSource getNetherSurfaceRules() {
 		SurfaceRules.RuleSource newSource = null;
 
-		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
+		final ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 		SurfaceRuleEvents.MODIFY_NETHER.invoker().addNetherSurfaceRules(sourceHolders);
 
 		if (!sourceHolders.isEmpty()) {
@@ -163,7 +158,7 @@ public final class FrozenSurfaceRules {
 	public static SurfaceRules.RuleSource getEndSurfaceRules() {
 		SurfaceRules.RuleSource newSource = null;
 
-		ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
+		final ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
 		SurfaceRuleEvents.MODIFY_END.invoker().addEndSurfaceRules(sourceHolders);
 
 		if (!sourceHolders.isEmpty()) newSource = sequence(sourceHolders);
@@ -174,10 +169,10 @@ public final class FrozenSurfaceRules {
 	@Nullable
 	public static SurfaceRules.RuleSource getGenericSurfaceRules(ResourceKey<DimensionType> dimension) {
 		SurfaceRules.RuleSource newSource = null;
-		ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
+		final ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
 
 		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(sourceHolders);
-		List<SurfaceRules.RuleSource> sourceHoldersForDimension = sourceHolders
+		final List<SurfaceRules.RuleSource> sourceHoldersForDimension = sourceHolders
 			.stream()
 			.filter(dimRuleSource -> dimRuleSource.dimension().equals(dimension.identifier()))
 			.map(FrozenDimensionBoundRuleSource::ruleSource)

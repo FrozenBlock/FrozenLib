@@ -30,11 +30,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import net.minecraft.util.Util;
 
-public class AppendSherds implements RuleBlockEntityModifier {
+public record AppendSherds(List<Item> sherds, float chancePerSlot, boolean defaultToBrick) implements RuleBlockEntityModifier {
 	public static final MapCodec<AppendSherds> CODEC = RecordCodecBuilder.mapCodec(
 		instance -> instance.group(
 			BuiltInRegistries.ITEM.byNameCodec().listOf().fieldOf("sherds").forGetter(modifier -> modifier.sherds),
@@ -42,9 +41,6 @@ public class AppendSherds implements RuleBlockEntityModifier {
 			Codec.BOOL.fieldOf("default_to_brick").orElse(true).forGetter(modifier -> modifier.defaultToBrick)
 		).apply(instance, AppendSherds::new)
 	);
-	private final List<Item> sherds;
-	private final float chancePerSlot;
-	private final boolean defaultToBrick;
 
 	public AppendSherds(float chancePerSlot, boolean defaultToBrick, Item... sherd) {
 		this(List.of(sherd), chancePerSlot, defaultToBrick);
@@ -58,10 +54,10 @@ public class AppendSherds implements RuleBlockEntityModifier {
 	}
 
 	@Override
-	public CompoundTag apply(@NotNull RandomSource random, @Nullable CompoundTag nbt) {
-		CompoundTag compoundTag = nbt == null ? new CompoundTag() : nbt.copy();
-		Item[] chosenSherds = new Item[4];
-		List<Item> orderedDecorations = compoundTag.read("sherds", PotDecorations.CODEC).orElse(PotDecorations.EMPTY).ordered();
+	public CompoundTag apply(RandomSource random, @Nullable CompoundTag nbt) {
+		final CompoundTag compoundTag = nbt == null ? new CompoundTag() : nbt.copy();
+		final Item[] chosenSherds = new Item[4];
+		final List<Item> orderedDecorations = compoundTag.read("sherds", PotDecorations.CODEC).orElse(PotDecorations.EMPTY).ordered();
 		for (int i = 0; i < chosenSherds.length; i++) {
 			if (random.nextFloat() <= this.chancePerSlot) {
 				chosenSherds[i] = this.getRandomSherd(random);
@@ -69,7 +65,7 @@ public class AppendSherds implements RuleBlockEntityModifier {
 				chosenSherds[i] = this.defaultToBrick ? Items.BRICK : orderedDecorations.get(i);
 			}
 		}
-		PotDecorations processedDecorations = new PotDecorations(
+		final PotDecorations processedDecorations = new PotDecorations(
 			chosenSherds[0],
 			chosenSherds[1],
 			chosenSherds[2],
@@ -79,12 +75,12 @@ public class AppendSherds implements RuleBlockEntityModifier {
 		return compoundTag;
 	}
 
-	public Item getRandomSherd(@NotNull RandomSource random) {
+	public Item getRandomSherd(RandomSource random) {
 		return Util.getRandom(this.sherds, random);
 	}
 
 	@Override
-	public @NotNull RuleBlockEntityModifierType<?> getType() {
+	public RuleBlockEntityModifierType<?> getType() {
 		return FrozenRuleBlockEntityModifiers.APPEND_SHERDS;
 	}
 }

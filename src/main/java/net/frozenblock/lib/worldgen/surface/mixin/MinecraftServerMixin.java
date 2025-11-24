@@ -41,21 +41,19 @@ public abstract class MinecraftServerMixin {
 
 	@Inject(method = "createLevels", at = @At("HEAD"))
 	private void frozenLib$addSurfaceRules(CallbackInfo info) {
-		var server = MinecraftServer.class.cast(this);
-		var registryAccess = server.registryAccess();
-		var levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
-
+		final var server = MinecraftServer.class.cast(this);
+		final var registryAccess = server.registryAccess();
+		final var levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
 		OptimizedBiomeTagConditionSource.INSTANCES.clear();
+
 		for (var entry : levelStems.entrySet()) {
-			LevelStem stem = entry.getValue();
-			ChunkGenerator chunkGenerator = stem.generator();
+			final LevelStem stem = entry.getValue();
+			final ChunkGenerator chunkGenerator = stem.generator();
+			if (!(chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator)) continue;
 
-			if (chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator) {
-				var noiseSettings = noiseGenerator.generatorSettings().value();
-				var dimension = stem.type().unwrapKey().orElseThrow();
-
-				SurfaceRuleUtil.injectSurfaceRules(noiseSettings, dimension);
-			}
+			final var noiseSettings = noiseGenerator.generatorSettings().value();
+			final var dimension = stem.type().unwrapKey().orElseThrow();
+			SurfaceRuleUtil.injectSurfaceRules(noiseSettings, dimension);
 		}
 
 		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().lookupOrThrow(Registries.BIOME));

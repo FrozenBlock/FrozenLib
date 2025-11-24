@@ -36,18 +36,17 @@ public class StructurePlacementExclusionApi {
 	public static void init() {
 		ServerWorldEvents.LOAD.register((server, level) -> {
 			level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().forEach(structureSetReference -> {
-				if (structureSetReference.isBound() && (Object) (structureSetReference.value()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface) {
-					setAndPlacementInterface.frozenLib$addExclusions(
-						getAdditionalExcludedStructureSets(structureSetReference.key().identifier()),
-						level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET)
-					);
-				}
+				if (!structureSetReference.isBound() || !((Object) (structureSetReference.value()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface)) return;
+				setAndPlacementInterface.frozenLib$addExclusions(
+					getAdditionalExcludedStructureSets(structureSetReference.key().identifier()),
+					level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET)
+				);
 			});
 		});
 	}
 
 	public static void addExclusion(Identifier structureSet, Identifier excludedFrom, int chunkCount) {
-		List<Pair<Identifier, Integer>> list = STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.getOrDefault(structureSet, new ArrayList<>());
+		final List<Pair<Identifier, Integer>> list = STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.getOrDefault(structureSet, new ArrayList<>());
 		list.add(Pair.of(excludedFrom, chunkCount));
 		STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS.put(structureSet, list);
 	}

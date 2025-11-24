@@ -48,9 +48,7 @@ public class SinglePoolElementMixin implements StructurePoolElementInterface {
 		)
 	)
 	public StructureTemplate frozenLib$place(StructureTemplate original) {
-		if (original instanceof StructureTemplateInterface structureTemplateInterface) {
-			structureTemplateInterface.frozenLib$addProcessors(this.frozenLib$additionalProcessors);
-		}
+		if (original instanceof StructureTemplateInterface structureTemplateInterface) structureTemplateInterface.frozenLib$addProcessors(this.frozenLib$additionalProcessors);
 		return original;
 	}
 

@@ -38,7 +38,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSetting
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Be sure to mixin into {@link StructurePoolElement#handleDataMarker(LevelAccessor, StructureTemplate.StructureBlockInfo, BlockPos, Rotation, RandomSource, BoundingBox)}!
@@ -59,7 +58,7 @@ public class DataMarkerProcessableLegacySinglePoolElement extends SinglePoolElem
 	}
 
 	@Override
-	protected @NotNull StructurePlaceSettings getSettings(Rotation rotation, BoundingBox boundingBox, LiquidSettings liquidSettings, boolean offset) {
+	protected StructurePlaceSettings getSettings(Rotation rotation, BoundingBox boundingBox, LiquidSettings liquidSettings, boolean offset) {
 		StructurePlaceSettings structurePlaceSettings = super.getSettings(rotation, boundingBox, liquidSettings, offset);
 		structurePlaceSettings.popProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
 		structurePlaceSettings.addProcessor(BlockIgnoreProcessor.AIR);
@@ -67,12 +66,12 @@ public class DataMarkerProcessableLegacySinglePoolElement extends SinglePoolElem
 	}
 
 	@Override
-	public @NotNull StructurePoolElementType<?> getType() {
+	public StructurePoolElementType<?> getType() {
 		return FrozenStructurePoolElementTypes.DATA_MARKER_PROCESSABLE_LEGACY_SINGLE;
 	}
 
 	@Override
-	public @NotNull String toString() {
+	public String toString() {
 		return "DataMarkerProcessableLegacySingle[" + this.template + "]";
 	}
 }

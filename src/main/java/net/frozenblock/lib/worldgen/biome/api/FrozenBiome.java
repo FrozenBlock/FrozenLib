@@ -32,7 +32,6 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MobSpawnSettings;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class FrozenBiome {
@@ -118,7 +117,7 @@ public abstract class FrozenBiome {
 	 * @param entries The boostrap context used for generating biomes.
 	 * @return the finalized {@link Biome}.
 	 */
-	public final @NotNull Biome create(@NotNull BootstrapContext<Biome> entries) {
+	public final Biome create(BootstrapContext<Biome> entries) {
 		final Biome.BiomeBuilder biomeBuilder = new Biome.BiomeBuilder();
 		biomeBuilder.temperature(this.temperature())
 			.temperatureAdjustment(this.temperatureModifier())
@@ -199,7 +198,7 @@ public abstract class FrozenBiome {
 	 *
 	 * <p>This matches the depth of most other Vanilla surface biomes.
 	 */
-	public final void addSurfaceBiome(@NotNull Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
+	public final void addSurfaceBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
 		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(0.0F), weirdness, offset), this.getKey()));
 		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.point(1.0F), weirdness, offset), this.getKey()));
 	}
@@ -209,7 +208,7 @@ public abstract class FrozenBiome {
 	 *
 	 * <p>This is between Vanilla's Lush Caves/Dripstone Caves and Deep Dark depth.
 	 */
-	public final void addSemiDeepBiome(@NotNull Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
+	public final void addSemiDeepBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> parameters, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
 		parameters.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.4F, 1.0F), weirdness, offset), this.getKey()));
 	}
 
@@ -218,7 +217,7 @@ public abstract class FrozenBiome {
 	 *
 	 * <p>This matches Vanilla's Lush Caves/Dripstone Caves depth.
 	 */
-	public final void addUndergroundBiome(@NotNull Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
+	public final void addUndergroundBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temperature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
 		consumer.accept(Pair.of(Climate.parameters(temperature, humidity, continentalness, erosion, Climate.Parameter.span(0.2F, 0.9F), weirdness, offset), this.getKey()));
 	}
 
@@ -227,14 +226,13 @@ public abstract class FrozenBiome {
 	 *
 	 * <p>This matches Vanilla's Deep Dark depth.
 	 */
-	public final void addBottomBiome(@NotNull Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temerature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
+	public final void addBottomBiome(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, Climate.Parameter temerature, Climate.Parameter humidity, Climate.Parameter continentalness, Climate.Parameter erosion, Climate.Parameter weirdness, float offset) {
 		consumer.accept(Pair.of(Climate.parameters(temerature, humidity, continentalness, erosion, Climate.Parameter.point(1.1F), weirdness, offset), this.getKey()));
 	}
 
 	/**
 	 * @return the list of all FrozenBiomes.
 	 */
-	@NotNull
 	public static ImmutableList<FrozenBiome> getFrozenBiomes() {
 		return ImmutableList.copyOf(BIOMES);
 	}

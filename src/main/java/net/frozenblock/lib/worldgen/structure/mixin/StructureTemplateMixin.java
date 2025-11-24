@@ -51,7 +51,7 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 		)
 	)
 	public synchronized void frozenLib$placeInWorld(
-		ServerLevelAccessor serverLevel, BlockPos offset, BlockPos pos, StructurePlaceSettings settings, RandomSource random, int flags,
+		ServerLevelAccessor level, BlockPos offset, BlockPos pos, StructurePlaceSettings settings, RandomSource random, int flags,
 		CallbackInfoReturnable<Boolean> info
 	) {
 		this.frozenLib$additionalProcessors.forEach(settings::addProcessor);

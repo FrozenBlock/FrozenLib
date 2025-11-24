@@ -368,7 +368,7 @@ public final class FrozenClientNetworking {
 			final Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(packet.id());
 			if (disturbanceLogic.isEmpty()) return;
 
-			final WindDisturbanceLogic.SourceType sourceType = packet.disturbanceSourceType();
+			final WindDisturbanceLogic.SourceType sourceType = packet.sourceType();
 			Optional source = Optional.empty();
 			if (sourceType == WindDisturbanceLogic.SourceType.ENTITY) {
 				source = Optional.ofNullable(level.getEntity((int) posOrID));
@@ -392,7 +392,7 @@ public final class FrozenClientNetworking {
 	@ApiStatus.Internal
 	private static void receiveStructureStatusPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(PlayerStructureStatusPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientStructureStatuses.setStructureStatuses(packet.structureStatuses());
+			ClientStructureStatuses.setStructureStatuses(packet.statuses());
 		});
 	}
 

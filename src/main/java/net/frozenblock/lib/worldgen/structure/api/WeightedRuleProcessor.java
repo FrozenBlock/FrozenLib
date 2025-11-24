@@ -30,7 +30,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class WeightedRuleProcessor extends StructureProcessor {
@@ -45,31 +44,30 @@ public class WeightedRuleProcessor extends StructureProcessor {
 	@Nullable
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(
-		@NotNull LevelReader world,
-		@NotNull BlockPos pos,
-		@NotNull BlockPos pivot,
-		StructureTemplate.@NotNull StructureBlockInfo localBlockInfo,
-		StructureTemplate.@NotNull StructureBlockInfo absoluteBlockInfo,
-		@NotNull StructurePlaceSettings placementData
+		LevelReader level,
+		BlockPos pos,
+		BlockPos pivot,
+		StructureTemplate.StructureBlockInfo localBlockInfo,
+		StructureTemplate.StructureBlockInfo absoluteBlockInfo,
+		StructurePlaceSettings placementData
 	) {
-		BlockPos posInfo = absoluteBlockInfo.pos();
-		RandomSource randomSource = RandomSource.create(Mth.getSeed(posInfo));
-		BlockState blockState = world.getBlockState(posInfo);
-		BlockState inputState = absoluteBlockInfo.state();
+		final BlockPos posInfo = absoluteBlockInfo.pos();
+		final RandomSource source = RandomSource.create(Mth.getSeed(posInfo));
+		final BlockState state = level.getBlockState(posInfo);
+		final BlockState inputState = absoluteBlockInfo.state();
 
 		for (WeightedProcessorRule processorRule : this.rules) {
-			if (processorRule.test(inputState, blockState, localBlockInfo.pos(), absoluteBlockInfo.pos(), pivot, randomSource)) {
-				return new StructureTemplate.StructureBlockInfo(
-					absoluteBlockInfo.pos(), processorRule.getOutputState(randomSource), absoluteBlockInfo.nbt()
-				);
-			}
+			if (!processorRule.test(inputState, state, localBlockInfo.pos(), absoluteBlockInfo.pos(), pivot, source)) continue;
+			return new StructureTemplate.StructureBlockInfo(
+				absoluteBlockInfo.pos(), processorRule.getOutputState(source), absoluteBlockInfo.nbt()
+			);
 		}
 
 		return absoluteBlockInfo;
 	}
 
 	@Override
-	protected @NotNull StructureProcessorType<?> getType() {
+	protected StructureProcessorType<?> getType() {
 		return FrozenStructureProcessorTypes.WEIGHTED_RULE_PROCESSOR;
 	}
 }

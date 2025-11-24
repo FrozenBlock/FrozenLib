@@ -23,7 +23,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
-import org.jetbrains.annotations.NotNull;
 
 public class FrozenLibBlockPredicateTypes {
 	public static final BlockPredicateType<SearchInDirectionBlockPredicate> SEARCH_IN_DIRECTION = register("search_in_direction", SearchInDirectionBlockPredicate.CODEC);
@@ -33,7 +32,7 @@ public class FrozenLibBlockPredicateTypes {
 	public static void init() {
 	}
 
-	private static <P extends BlockPredicate> @NotNull BlockPredicateType<P> register(String path, MapCodec<P> mapCodec) {
+	private static <P extends BlockPredicate> BlockPredicateType<P> register(String path, MapCodec<P> mapCodec) {
 		return Registry.register(BuiltInRegistries.BLOCK_PREDICATE_TYPE, FrozenLibConstants.id(path), () -> mapCodec);
 	}
 }

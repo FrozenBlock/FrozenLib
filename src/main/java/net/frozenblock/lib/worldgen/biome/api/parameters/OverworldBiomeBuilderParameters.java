@@ -32,7 +32,6 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class OverworldBiomeBuilderParameters {
@@ -47,46 +46,42 @@ public class OverworldBiomeBuilderParameters {
 	}
 
 	private static void runBiomes() {
-		if (!hasRun) {
-			hasRun = true;
-			addBiomes(pair -> addParameters(pair.getFirst(), pair.getSecond()));
-		}
+		if (hasRun) return;
+		hasRun = true;
+		addBiomes(pair -> addParameters(pair.getFirst(), pair.getSecond()));
 	}
 
-	public static BiomeParameters getParameters(@NotNull ResourceKey<Biome> key) {
+	public static BiomeParameters getParameters(ResourceKey<Biome> key) {
 		return getParameters(key.identifier());
 	}
 
-	private static void addParameters(Identifier location, Climate.ParameterPoint parameters) {
-		BiomeParameters biomeParameters = getOrCreateParameters(location);
+	private static void addParameters(Identifier biome, Climate.ParameterPoint parameters) {
+		final BiomeParameters biomeParameters = getOrCreateParameters(biome);
 		biomeParameters.add(parameters);
 	}
 
-	private static BiomeParameters getOrCreateParameters(Identifier location) {
-		if (BIOMES.containsKey(location)) {
-			return BIOMES.get(location);
-		} else {
-			BiomeParameters parameters = new BiomeParameters();
-			BIOMES.put(location, parameters);
-			return parameters;
-		}
+	private static BiomeParameters getOrCreateParameters(Identifier biome) {
+		if (BIOMES.containsKey(biome)) return BIOMES.get(biome);
+		final BiomeParameters parameters = new BiomeParameters();
+		BIOMES.put(biome, parameters);
+		return parameters;
 	}
 
 	@Contract(pure = true)
-	public static List<Climate.ParameterPoint> points(@NotNull BiomeParameters parameters) {
+	public static List<Climate.ParameterPoint> points(BiomeParameters parameters) {
 		return parameters.points;
 	}
 
-	public static List<Climate.ParameterPoint> points(@NotNull ResourceKey<Biome> key) {
+	public static List<Climate.ParameterPoint> points(ResourceKey<Biome> key) {
 		return points(key.identifier());
 	}
 
-	public static List<Climate.ParameterPoint> points(Identifier location) {
-		return points(OverworldBiomeBuilderParameters.getParameters(location));
+	public static List<Climate.ParameterPoint> points(Identifier biome) {
+		return points(OverworldBiomeBuilderParameters.getParameters(biome));
 	}
 
 	private static void addBiomes(Consumer<Pair<Identifier, Climate.ParameterPoint>> key) {
-		ImmutableList.Builder<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> builder = new ImmutableList.Builder<>();
+		final ImmutableList.Builder<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> builder = new ImmutableList.Builder<>();
 		new OverworldBiomeBuilder().addBiomes(parameterPointResourceKeyPair -> builder.add(parameterPointResourceKeyPair));
 		builder.build().forEach(parameterPointResourceKeyPair -> key.accept(new Pair<>(parameterPointResourceKeyPair.getSecond().identifier(), parameterPointResourceKeyPair.getFirst())));
 	}

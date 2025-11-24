@@ -29,7 +29,6 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class MarkForPostProcessingProcessor extends StructureProcessor {
@@ -52,21 +51,17 @@ public class MarkForPostProcessingProcessor extends StructureProcessor {
 		BlockPos offset,
 		BlockPos pos,
 		StructureTemplate.StructureBlockInfo blockInfo,
-		StructureTemplate.@NotNull StructureBlockInfo relativeBlockInfo,
+		StructureTemplate.StructureBlockInfo relativeBlockInfo,
 		StructurePlaceSettings settings
 	) {
-		BlockPos currentPos = relativeBlockInfo.pos();
-		RandomSource random = RandomSource.create(Mth.getSeed(currentPos));
-
-		if (this.inputPredicate.test(relativeBlockInfo.state(), random)) {
-			level.getChunk(currentPos).markPosForPostprocessing(currentPos);
-		}
-
+		final BlockPos currentPos = relativeBlockInfo.pos();
+		final RandomSource random = RandomSource.create(Mth.getSeed(currentPos));
+		if (this.inputPredicate.test(relativeBlockInfo.state(), random)) level.getChunk(currentPos).markPosForPostprocessing(currentPos);
 		return relativeBlockInfo;
 	}
 
 	@Override
-	protected @NotNull StructureProcessorType<?> getType() {
+	protected StructureProcessorType<?> getType() {
 		return FrozenStructureProcessorTypes.MARK_FOR_POST_PROCESSING;
 	}
 }

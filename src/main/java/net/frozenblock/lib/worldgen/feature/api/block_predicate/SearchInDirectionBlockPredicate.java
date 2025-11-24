@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class SearchInDirectionBlockPredicate implements BlockPredicate {
 	public static final MapCodec<SearchInDirectionBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(
@@ -45,9 +44,9 @@ public class SearchInDirectionBlockPredicate implements BlockPredicate {
 	private final boolean allMustMatch;
 
 	public SearchInDirectionBlockPredicate(
-		@NotNull BlockPredicate blockPredicate,
+		BlockPredicate blockPredicate,
 		int searchSteps,
-		@NotNull Direction searchDirection,
+		Direction searchDirection,
 		boolean allMustMatch
 	) {
 		this.blockPredicate = blockPredicate;
@@ -56,42 +55,42 @@ public class SearchInDirectionBlockPredicate implements BlockPredicate {
 		this.allMustMatch = allMustMatch;
 	}
 
-	public static @NotNull SearchInDirectionBlockPredicate anyAboveMatch(BlockPredicate blockPredicate, int searchSteps) {
+	public static SearchInDirectionBlockPredicate anyAboveMatch(BlockPredicate blockPredicate, int searchSteps) {
 		return new SearchInDirectionBlockPredicate(blockPredicate, searchSteps, Direction.UP, false);
 	}
 
-	public static @NotNull SearchInDirectionBlockPredicate allAboveMatch(BlockPredicate blockPredicate, int searchSteps) {
+	public static SearchInDirectionBlockPredicate allAboveMatch(BlockPredicate blockPredicate, int searchSteps) {
 		return new SearchInDirectionBlockPredicate(blockPredicate, searchSteps, Direction.UP, true);
 	}
 
-	public static @NotNull SearchInDirectionBlockPredicate anyBelowMatch(BlockPredicate blockPredicate, int searchSteps) {
+	public static SearchInDirectionBlockPredicate anyBelowMatch(BlockPredicate blockPredicate, int searchSteps) {
 		return new SearchInDirectionBlockPredicate(blockPredicate, searchSteps, Direction.UP, false);
 	}
 
-	public static @NotNull SearchInDirectionBlockPredicate allBelowMatch(BlockPredicate blockPredicate, int searchSteps) {
+	public static SearchInDirectionBlockPredicate allBelowMatch(BlockPredicate blockPredicate, int searchSteps) {
 		return new SearchInDirectionBlockPredicate(blockPredicate, searchSteps, Direction.UP, true);
 	}
 
 	@Contract("_ -> new")
-	public static @NotNull SearchInDirectionBlockPredicate hasWaterAbove(int searchSteps) {
+	public static SearchInDirectionBlockPredicate hasWaterAbove(int searchSteps) {
 		return anyAboveMatch(BlockPredicate.matchesBlocks(Blocks.WATER), searchSteps);
 	}
 
 	@Contract("_ -> new")
-	public static @NotNull SearchInDirectionBlockPredicate hasLavaAbove(int searchSteps) {
+	public static SearchInDirectionBlockPredicate hasLavaAbove(int searchSteps) {
 		return anyAboveMatch(BlockPredicate.matchesBlocks(Blocks.LAVA), searchSteps);
 	}
 
 	@Override
-	public @NotNull BlockPredicateType<?> type() {
+	public BlockPredicateType<?> type() {
 		return FrozenLibBlockPredicateTypes.SEARCH_IN_DIRECTION;
 	}
 
 	@Override
-	public boolean test(WorldGenLevel level, @NotNull BlockPos pos) {
-		BlockPos.MutableBlockPos mutablePos = pos.mutable();
+	public boolean test(WorldGenLevel level, BlockPos pos) {
+		final BlockPos.MutableBlockPos mutable = pos.mutable();
 		for (int step = 1; step <= this.searchSteps; step++) {
-			if (this.blockPredicate.test(level, mutablePos.move(this.searchDirection, step))) {
+			if (this.blockPredicate.test(level, mutable.move(this.searchDirection, step))) {
 				if (!this.allMustMatch) return true;
 			} else if (this.allMustMatch) {
 				return false;

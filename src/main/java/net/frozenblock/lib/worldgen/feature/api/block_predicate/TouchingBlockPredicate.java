@@ -27,7 +27,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 public class TouchingBlockPredicate implements BlockPredicate {
 	public static final MapCodec<TouchingBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(
@@ -40,50 +39,47 @@ public class TouchingBlockPredicate implements BlockPredicate {
 	private final BlockPredicate blockPredicate;
 	private final boolean allMustMatch;
 
-	public TouchingBlockPredicate(
-		@NotNull BlockPredicate blockPredicate,
-		boolean allMustMatch
-	) {
+	public TouchingBlockPredicate(BlockPredicate blockPredicate, boolean allMustMatch) {
 		this.blockPredicate = blockPredicate;
 		this.allMustMatch = allMustMatch;
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull TouchingBlockPredicate exposedTo(BlockPredicate blockPredicate) {
+	public static TouchingBlockPredicate exposedTo(BlockPredicate blockPredicate) {
 		return new TouchingBlockPredicate(blockPredicate, false);
 	}
 
 	@Contract(value = "_ -> new", pure = true)
-	public static @NotNull TouchingBlockPredicate surroundedBy(BlockPredicate blockPredicate) {
+	public static TouchingBlockPredicate surroundedBy(BlockPredicate blockPredicate) {
 		return new TouchingBlockPredicate(blockPredicate, true);
 	}
 
-	public static @NotNull TouchingBlockPredicate exposed() {
+	public static TouchingBlockPredicate exposed() {
 		return exposedTo(BlockPredicate.replaceable());
 	}
 
 	@Contract(" -> new")
-	public static @NotNull TouchingBlockPredicate exposedToWater() {
+	public static TouchingBlockPredicate exposedToWater() {
 		return exposedTo(BlockPredicate.matchesBlocks(Blocks.WATER));
 	}
 
 	@Contract(" -> new")
-	public static @NotNull TouchingBlockPredicate exposedToLava() {
+	public static TouchingBlockPredicate exposedToLava() {
 		return exposedTo(BlockPredicate.matchesBlocks(Blocks.LAVA));
 	}
 
 	@Contract(" -> new")
-	public static @NotNull TouchingBlockPredicate exposedToAir() {
+	public static TouchingBlockPredicate exposedToAir() {
 		return exposedTo(BlockPredicate.matchesBlocks(Blocks.AIR));
 	}
 
 	@Override
-	public @NotNull BlockPredicateType<?> type() {
+	public BlockPredicateType<?> type() {
 		return FrozenLibBlockPredicateTypes.TOUCHING;
 	}
 
 	@Override
-	public boolean test(WorldGenLevel level, @NotNull BlockPos pos) {
+	public boolean test(WorldGenLevel level, BlockPos pos) {
 		return FrozenLibFeatureUtils.matchesConditionsTouching(level, pos, this.allMustMatch, this.blockPredicate);
 	}
 

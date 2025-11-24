@@ -20,8 +20,6 @@ package net.frozenblock.lib.worldgen.structure.impl;
 import net.minecraft.resources.Identifier;
 
 public interface StructureStartInterface {
-
 	Identifier frozenLib$getId();
-
 	void frozenLib$setId(Identifier id);
 }

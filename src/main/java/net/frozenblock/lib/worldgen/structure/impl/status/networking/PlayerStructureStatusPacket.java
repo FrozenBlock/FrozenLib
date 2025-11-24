@@ -23,24 +23,22 @@ import net.frozenblock.lib.worldgen.structure.impl.status.PlayerStructureStatus;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import org.jetbrains.annotations.NotNull;
 
-public record PlayerStructureStatusPacket(List<PlayerStructureStatus> structureStatuses) implements CustomPacketPayload {
+public record PlayerStructureStatusPacket(List<PlayerStructureStatus> statuses) implements CustomPacketPayload {
 	public static final StreamCodec<RegistryFriendlyByteBuf, PlayerStructureStatusPacket> CODEC = StreamCodec.ofMember(PlayerStructureStatusPacket::write, PlayerStructureStatusPacket::new);
 
 	public static final Type<PlayerStructureStatusPacket> PACKET_TYPE = new Type<>(
 		FrozenLibConstants.id("player_structure_status")
 	);
-	public PlayerStructureStatusPacket(@NotNull RegistryFriendlyByteBuf buf) {
+	public PlayerStructureStatusPacket(RegistryFriendlyByteBuf buf) {
 		this(buf.readList(PlayerStructureStatus.STREAM_CODEC));
 	}
 
-	public void write(@NotNull RegistryFriendlyByteBuf buf) {
-		buf.writeCollection(this.structureStatuses, PlayerStructureStatus.STREAM_CODEC);
+	public void write(RegistryFriendlyByteBuf buf) {
+		buf.writeCollection(this.statuses, PlayerStructureStatus.STREAM_CODEC);
 	}
 
 	@Override
-	@NotNull
 	public Type<?> type() {
 		return PACKET_TYPE;
 	}

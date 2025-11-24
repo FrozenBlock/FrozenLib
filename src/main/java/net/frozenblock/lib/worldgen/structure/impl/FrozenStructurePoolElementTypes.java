@@ -25,7 +25,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
-import org.jetbrains.annotations.NotNull;
 
 public final class FrozenStructurePoolElementTypes {
 	public static final StructurePoolElementType<DataMarkerProcessableLegacySinglePoolElement> DATA_MARKER_PROCESSABLE_LEGACY_SINGLE = register(
@@ -40,8 +39,7 @@ public final class FrozenStructurePoolElementTypes {
 	public static void init() {
 	}
 
-	@NotNull
-	private static <P extends StructurePoolElement> StructurePoolElementType<P> register(@NotNull String path, MapCodec<P> codec) {
+	private static <P extends StructurePoolElement> StructurePoolElementType<P> register(String path, MapCodec<P> codec) {
 		return Registry.register(BuiltInRegistries.STRUCTURE_POOL_ELEMENT, FrozenLibConstants.id(path), () -> codec);
 	}
 

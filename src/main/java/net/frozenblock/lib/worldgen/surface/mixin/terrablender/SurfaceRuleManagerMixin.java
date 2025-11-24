@@ -36,14 +36,13 @@ public class SurfaceRuleManagerMixin {
 	private static SurfaceRules.RuleSource frozenLib$getDefaultSurfaceRules(
 		SurfaceRules.RuleSource original, SurfaceRuleManager.RuleCategory category, SurfaceRules.RuleSource fallback
 	) {
-		SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(
+		final SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(
 			category == SurfaceRuleManager.RuleCategory.OVERWORLD ? BuiltinDimensionTypes.OVERWORLD : BuiltinDimensionTypes.NETHER
 		);
 
-		if (newRules != null) {
-			FrozenLibLogUtils.log("Applying FrozenLib's surface rules to TerraBlender", FrozenLibConstants.UNSTABLE_LOGGING);
-			return SurfaceRules.sequence(newRules, original, newRules);
-		}
-		return original;
+		if (newRules == null) return original
+
+	FrozenLibLogUtils.log("Applying FrozenLib's surface rules to TerraBlender", FrozenLibConstants.UNSTABLE_LOGGING);
+		return SurfaceRules.sequence(newRules, original, newRules);
 	}
 }

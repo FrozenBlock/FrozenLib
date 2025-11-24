@@ -41,16 +41,16 @@ public class ChunkGeneratorStructureStateMixin {
 
 	@Inject(method = "getPlacementsForStructure", at = @At("HEAD"), cancellable = true)
 	public void frozenLib$optimizeRemovedStructureSearch(Holder<Structure> holder, CallbackInfoReturnable<List<StructurePlacement>> info) {
-		List<StructurePlacement> placements = this.placementsForStructure.get(holder.value());
-
+		final List<StructurePlacement> placements = this.placementsForStructure.get(holder.value());
 		if (placements == null) return;
+
 		for (StructurePlacement placement : placements) {
-			if (placement instanceof StructureSetAndPlacementInterface structureSetAndPlacementInterface) {
-				List<Supplier<Boolean>> supplierList = structureSetAndPlacementInterface.frozenLib$getGenerationConditions();
-				if (supplierList != null && !supplierList.isEmpty()) {
-					if (supplierList.stream().anyMatch(supplier -> !supplier.get())) info.setReturnValue(List.of());
-				}
-			}
+			if (!(placement instanceof StructureSetAndPlacementInterface structureSetAndPlacementInterface)) continue;
+
+			final List<Supplier<Boolean>> supplierList = structureSetAndPlacementInterface.frozenLib$getGenerationConditions();
+			if (supplierList == null || supplierList.isEmpty()) continue;
+
+			if (supplierList.stream().anyMatch(supplier -> !supplier.get())) info.setReturnValue(List.of());
 		}
 	}
 

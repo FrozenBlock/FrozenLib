@@ -27,6 +27,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Biome.class)
 public class BiomeMixin implements BiomeInterface {
+
 	@Unique
 	private FrozenGrassColorModifier frozenLib$frozenGrassColorModifier;
 

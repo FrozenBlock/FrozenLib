@@ -29,7 +29,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 
@@ -38,67 +37,49 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 	}
 
 	@Override
-	public @NotNull Set<BlockPos> placeGroundPatch(
-		@NotNull WorldGenLevel worldGenLevel,
-		@NotNull VegetationPatchConfiguration vegetationPatchConfiguration,
-		@NotNull RandomSource randomSource,
-		@NotNull BlockPos blockPos,
-		@NotNull Predicate<BlockState> canReplace,
-		int i,
-		int j
+	public Set<BlockPos> placeGroundPatch(
+		WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos blockPos, Predicate<BlockState> replaceable, int xRadius, int zRadius
 	) {
-		BlockPos.MutableBlockPos mutableBlockPos = blockPos.mutable();
-		BlockPos.MutableBlockPos mutableBlockPos2 = mutableBlockPos.mutable();
-		Direction surfaceDirection = vegetationPatchConfiguration.surface.getDirection();
-		Direction oppositeDirection = surfaceDirection.getOpposite();
-		Set<BlockPos> set = new HashSet<>();
+		final BlockPos.MutableBlockPos airMutable = blockPos.mutable();
+		final BlockPos.MutableBlockPos groundMutable = airMutable.mutable();
+		final Direction surfaceDirection = config.surface.getDirection();
+		final Direction oppositeSurfaceDirection = surfaceDirection.getOpposite();
+		final Set<BlockPos> set = new HashSet<>();
 
-		for (int k = -i; k <= i; k++) {
-			boolean bl = k == -i || k == i;
+		for (int x = -xRadius; x <= xRadius; x++) {
+			boolean onEdgeX = x == -xRadius || x == xRadius;
+			for (int z = -zRadius; z <= zRadius; z++) {
+				boolean onEdgeZ = z == -zRadius || z == zRadius;
+				boolean onAnyEdge = onEdgeX || onEdgeZ;
+				boolean onBothEdges = onEdgeX && onEdgeZ;
+				boolean onOneEdge = onAnyEdge && !onBothEdges;
 
-			for (int l = -j; l <= j; l++) {
-				boolean bl2 = l == -j || l == j;
-				boolean bl3 = bl || bl2;
-				boolean bl4 = bl && bl2;
-				boolean bl5 = bl3 && !bl4;
-				if (!bl4 && (!bl5 || vegetationPatchConfiguration.extraEdgeColumnChance != 0F && !(randomSource.nextFloat() > vegetationPatchConfiguration.extraEdgeColumnChance))) {
-					mutableBlockPos.setWithOffset(blockPos, k, 0, l);
+				if (onBothEdges || !(!onOneEdge || config.extraEdgeColumnChance != 0F && !(random.nextFloat() > config.extraEdgeColumnChance))) continue;
 
-					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, this::isWaterAt)
-							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
-						 verticalSteps++
-					) {
-						mutableBlockPos.move(surfaceDirection);
-					}
-
-					for (int verticalSteps = 0;
-						 worldGenLevel.isStateAtPosition(mutableBlockPos, blockStatex -> !this.isWaterAt(blockStatex))
-							 && verticalSteps < vegetationPatchConfiguration.verticalRange;
-						 verticalSteps++
-					) {
-						mutableBlockPos.move(oppositeDirection);
-					}
-
-					mutableBlockPos2.setWithOffset(mutableBlockPos, vegetationPatchConfiguration.surface.getDirection());
-					BlockState blockState = worldGenLevel.getBlockState(mutableBlockPos2);
-					if (this.isWaterAt(worldGenLevel.getBlockState(mutableBlockPos))
-						&& blockState.isFaceSturdy(worldGenLevel, mutableBlockPos2, vegetationPatchConfiguration.surface.getDirection().getOpposite())
-					) {
-						int depth = vegetationPatchConfiguration.depth.sample(randomSource)
-							+ (vegetationPatchConfiguration.extraBottomBlockChance > 0F && randomSource.nextFloat() < vegetationPatchConfiguration.extraBottomBlockChance ? 1 : 0);
-						BlockPos blockPos2 = mutableBlockPos2.immutable();
-						boolean placedGround = this.placeGround(worldGenLevel, vegetationPatchConfiguration, canReplace, randomSource, mutableBlockPos2, depth);
-						if (placedGround) set.add(blockPos2);
-					}
+				airMutable.setWithOffset(blockPos, x, 0, z);
+				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, this::isWaterAt) && verticalSteps < config.verticalRange; verticalSteps++) {
+					airMutable.move(surfaceDirection);
 				}
+
+				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, state -> !this.isWaterAt(state)) && verticalSteps < config.verticalRange; verticalSteps++) {
+					airMutable.move(oppositeSurfaceDirection);
+				}
+
+				groundMutable.setWithOffset(airMutable, config.surface.getDirection());
+				final BlockState state = level.getBlockState(groundMutable);
+				if (!this.isWaterAt(level.getBlockState(airMutable)) || !state.isFaceSturdy(level, groundMutable, config.surface.getDirection().getOpposite())) continue;
+
+				final int depth = config.depth.sample(random) + (config.extraBottomBlockChance > 0F && random.nextFloat() < config.extraBottomBlockChance ? 1 : 0);
+				final BlockPos groundPos = groundMutable.immutable();
+				final boolean placedGround = this.placeGround(level, config, replaceable, random, groundMutable, depth);
+				if (placedGround) set.add(groundPos);
 			}
 		}
 
 		return set;
 	}
 
-	public boolean isWaterAt(@NotNull BlockState blockState) {
-		return blockState.is(Blocks.WATER);
+	public boolean isWaterAt(BlockState state) {
+		return state.is(Blocks.WATER);
 	}
 }

@@ -43,12 +43,12 @@ public class RegistryDataLoaderMixin {
 		require = 2
 	)
 	private static Holder.Reference frozenLib$appendBiomeIDFromNetwork(
-		WritableRegistry instance, ResourceKey resourceKey, Object object, RegistrationInfo registrationInfo, Operation<Holder.Reference> original
+		WritableRegistry instance, ResourceKey key, Object object, RegistrationInfo registrationInfo, Operation<Holder.Reference> original
 	) {
 		if (object instanceof BiomeInterface biomeInterface) {
-			Optional<FrozenGrassColorModifier> optionalFrozenGrassColorModifier = FrozenGrassColorModifiers.getGrassColorModifier(resourceKey.identifier());
+			Optional<FrozenGrassColorModifier> optionalFrozenGrassColorModifier = FrozenGrassColorModifiers.getGrassColorModifier(key.identifier());
 			optionalFrozenGrassColorModifier.ifPresent(biomeInterface::frozenLib$setFrozenGrassColorModifier);
 		}
-		return original.call(instance, resourceKey, object, registrationInfo);
+		return original.call(instance, key, object, registrationInfo);
 	}
 }

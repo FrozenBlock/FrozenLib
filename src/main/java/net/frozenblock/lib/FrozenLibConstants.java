@@ -22,7 +22,6 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import net.minecraft.SharedConstants;
 
@@ -43,17 +42,14 @@ public final class FrozenLibConstants {
 	public static final boolean DEBUG_WIND_DISTURBANCES = SharedConstants.debugFlag("FROZENLIB_WIND_DISTURBANCES");
 
 	@Contract("_ -> new")
-	@NotNull
 	public static Identifier id(String path) {
 		return Identifier.fromNamespaceAndPath(FrozenLibConstants.MOD_ID, path);
 	}
 
-	@NotNull
 	public static String string(String path) {
 		return id(path).toString();
 	}
 
-	@NotNull
 	public static String safeString(String path) {
 		return id(path).toString().replace(":", "_");
 	}

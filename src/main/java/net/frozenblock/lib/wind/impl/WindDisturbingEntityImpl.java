@@ -20,7 +20,5 @@ package net.frozenblock.lib.wind.impl;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 
 public interface WindDisturbingEntityImpl {
-
 	WindDisturbance frozenLib$makeWindDisturbance();
-
 }

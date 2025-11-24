@@ -26,7 +26,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
-import org.jetbrains.annotations.NotNull;
 
 public class SimpleBlockScheduleTickFeature extends Feature<SimpleBlockConfiguration> {
 
@@ -35,25 +34,24 @@ public class SimpleBlockScheduleTickFeature extends Feature<SimpleBlockConfigura
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<SimpleBlockConfiguration> featurePlaceContext) {
-		SimpleBlockConfiguration simpleBlockConfiguration = featurePlaceContext.config();
-		WorldGenLevel worldGenLevel = featurePlaceContext.level();
-		BlockPos blockPos = featurePlaceContext.origin();
-		BlockState blockState = simpleBlockConfiguration.toPlace().getState(featurePlaceContext.random(), blockPos);
-		if (blockState.canSurvive(worldGenLevel, blockPos)) {
-			if (blockState.getBlock() instanceof DoublePlantBlock) {
-				if (!worldGenLevel.isEmptyBlock(blockPos.above())) return false;
-				DoublePlantBlock.placeAt(worldGenLevel, blockState, blockPos, Block.UPDATE_CLIENTS);
-				worldGenLevel.scheduleTick(blockPos, blockState.getBlock(), 1);
-			} else {
-				worldGenLevel.setBlock(blockPos, blockState, Block.UPDATE_CLIENTS);
-				worldGenLevel.scheduleTick(blockPos, blockState.getBlock(), 1);
-			}
+	public boolean place(FeaturePlaceContext<SimpleBlockConfiguration> featurePlaceContext) {
+		final SimpleBlockConfiguration config = featurePlaceContext.config();
+		final WorldGenLevel level = featurePlaceContext.level();
+		final BlockPos pos = featurePlaceContext.origin();
+		final BlockState state = config.toPlace().getState(featurePlaceContext.random(), pos);
 
-			return true;
+		if (!state.canSurvive(level, pos)) return false;
+
+		if (state.getBlock() instanceof DoublePlantBlock) {
+			if (!level.isEmptyBlock(pos.above())) return false;
+			DoublePlantBlock.placeAt(level, state, pos, Block.UPDATE_CLIENTS);
+			level.scheduleTick(pos, state.getBlock(), 1);
 		} else {
-			return false;
+			level.setBlock(pos, state, Block.UPDATE_CLIENTS);
+			level.scheduleTick(pos, state.getBlock(), 1);
 		}
+
+		return true;
 	}
 
 }

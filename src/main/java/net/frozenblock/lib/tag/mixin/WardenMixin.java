@@ -30,8 +30,7 @@ public class WardenMixin {
 
     @Inject(method = "canTargetEntity", at = @At("HEAD"), cancellable = true)
     public void frozenLib$ignoreTag(Entity entity, CallbackInfoReturnable<Boolean> info) {
-        if (entity == null) return;
-		if (entity.getType().is(FrozenEntityTags.WARDEN_CANNOT_TARGET)) info.setReturnValue(false);
+		if (entity != null && entity.getType().is(FrozenEntityTags.WARDEN_CANNOT_TARGET)) info.setReturnValue(false);
     }
 
 }

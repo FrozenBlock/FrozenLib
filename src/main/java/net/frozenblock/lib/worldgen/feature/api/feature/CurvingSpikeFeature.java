@@ -28,7 +28,6 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class CurvingSpikeFeature extends Feature<CurvingSpikeConfig> {
 	private static final int BELOW_HEIGHT = -4;
@@ -38,28 +37,28 @@ public class CurvingSpikeFeature extends Feature<CurvingSpikeConfig> {
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<CurvingSpikeConfig> context) {
-		WorldGenLevel level = context.level();
-		BlockPos pos = context.origin();
-		RandomSource random = context.random();
-		CurvingSpikeConfig config = context.config();
+	public boolean place(FeaturePlaceContext<CurvingSpikeConfig> context) {
+		final WorldGenLevel level = context.level();
+		final BlockPos pos = context.origin();
+		final RandomSource random = context.random();
+		final CurvingSpikeConfig config = context.config();
 
-		int height = config.height().sample(random);
-		double curveDistance = config.curveDistance().sample(random);
-		double curveFactorX = random.nextGaussian();
-		int xWidth = config.xWidth().sample(random);
-		double curveFactorZ = random.nextGaussian();
-		int zWidth = config.zWidth().sample(random);
-		BlockStateProvider blockStateProvider = config.stateProvider();
-		BlockPredicate replaceable = config.replaceable();
+		final int height = config.height().sample(random);
+		final double curveDistance = config.curveDistance().sample(random);
+		final double curveFactorX = random.nextGaussian();
+		final int xWidth = config.xWidth().sample(random);
+		final double curveFactorZ = random.nextGaussian();
+		final int zWidth = config.zWidth().sample(random);
+		final BlockStateProvider stateProvider = config.stateProvider();
+		final BlockPredicate replaceable = config.replaceable();
 
-		BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+		final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
 		for (int i = 0; i < height; i++) {
 			mutable.setWithOffset(pos, 0, i, 0);
 			placeInSquare(
 				level,
 				mutable,
-				blockStateProvider,
+				stateProvider,
 				replaceable,
 				(double) i / height,
 				curveDistance,
@@ -76,7 +75,7 @@ public class CurvingSpikeFeature extends Feature<CurvingSpikeConfig> {
 			placeInSquare(
 				level,
 				mutable,
-				blockStateProvider,
+				stateProvider,
 				replaceable,
 				(double) i / BELOW_HEIGHT,
 				curveDistance,
@@ -93,8 +92,8 @@ public class CurvingSpikeFeature extends Feature<CurvingSpikeConfig> {
 
 	protected static void placeInSquare(
 		WorldGenLevel level,
-		@NotNull BlockPos pos,
-		BlockStateProvider blockStateProvider,
+		BlockPos pos,
+		BlockStateProvider stateProvider,
 		BlockPredicate replaceable,
 		double heightProgress,
 		double curveDistance,
@@ -104,14 +103,14 @@ public class CurvingSpikeFeature extends Feature<CurvingSpikeConfig> {
 		int zWidth,
 		RandomSource random
 	) {
-		double heightBasedCurveDistance = curveDistance * heightProgress;
-		double xCurve = curveFactorX * heightBasedCurveDistance;
-		double zCurve = curveFactorZ * heightBasedCurveDistance;
-		double inverseHeightProgress = 1D - heightProgress;
-		double xWidthDistance = xWidth * inverseHeightProgress;
-		double zWidthDistance = zWidth * inverseHeightProgress;
+		final double heightBasedCurveDistance = curveDistance * heightProgress;
+		final double xCurve = curveFactorX * heightBasedCurveDistance;
+		final double zCurve = curveFactorZ * heightBasedCurveDistance;
+		final double inverseHeightProgress = 1D - heightProgress;
+		final double xWidthDistance = xWidth * inverseHeightProgress;
+		final double zWidthDistance = zWidth * inverseHeightProgress;
 
-		Vec3 centerPos = pos.getCenter().add(xCurve, 0D, zCurve);
+		final Vec3 centerPos = pos.getCenter().add(xCurve, 0D, zCurve);
 		for (double xOffset = -(xWidth + 0.5D); xOffset <= xWidth + 0.5D; xOffset += 0.1D) {
 			for (double zOffset = -(zWidth + 0.5D); zOffset <= zWidth + 0.5D; zOffset += 0.1D) {
 				Vec3 offsetPos = new Vec3(
@@ -123,9 +122,9 @@ public class CurvingSpikeFeature extends Feature<CurvingSpikeConfig> {
 				if (!centerPos.closerThan(offsetPos, xWidthDistance)) continue;
 				if (!centerPos.closerThan(offsetPos, zWidthDistance)) continue;
 
-				BlockPos placementPos = BlockPos.containing(offsetPos);
+				final BlockPos placementPos = BlockPos.containing(offsetPos);
 				if (!replaceable.test(level, placementPos)) continue;
-				level.setBlock(placementPos, blockStateProvider.getState(random, placementPos), Block.UPDATE_CLIENTS);
+				level.setBlock(placementPos, stateProvider.getState(random, placementPos), Block.UPDATE_CLIENTS);
 			}
 		}
 	}

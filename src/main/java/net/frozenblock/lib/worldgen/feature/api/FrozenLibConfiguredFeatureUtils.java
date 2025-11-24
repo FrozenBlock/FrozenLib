@@ -25,19 +25,18 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.data.worldgen.features.FeatureUtils;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
-import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
 @UtilityClass
 public class FrozenLibConfiguredFeatureUtils {
 
-	public static @NotNull ResourceKey<ConfiguredFeature<?, ?>> createKey(String namespace, String path) {
+	public static ResourceKey<ConfiguredFeature<?, ?>> createKey(String namespace, String path) {
 		return ResourceKey.create(Registries.CONFIGURED_FEATURE, Identifier.fromNamespaceAndPath(namespace, path));
 	}
 
@@ -53,16 +52,16 @@ public class FrozenLibConfiguredFeatureUtils {
 
 	public static <FC extends FeatureConfiguration, F extends Feature<FC>, C extends ConfiguredFeature<FC, ?>> Holder.Reference<C> register(
 		DynamicRegistryManagerSetupContext context,
-		DynamicRegistryManagerSetupContext.@NotNull RegistryMap registries,
-		@NotNull String namespace,
-		@NotNull String id,
+		DynamicRegistryManagerSetupContext.RegistryMap registries,
+		String namespace,
+		String id,
 		F feature,
-		@NotNull FC config
+		FC config
 	) {
-		var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
+		final var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
 		final ConfiguredFeature<FC, ?> configuredFeature = new ConfiguredFeature<>(feature, config);
 		Registry.register(configuredRegistry, Identifier.fromNamespaceAndPath(namespace, id), configuredFeature);
-		var featureEntry = getExact(registries, configuredFeature);
+		final var featureEntry = getExact(registries, configuredFeature);
 		return (Holder.Reference<C>) featureEntry;
 	}
 
@@ -72,26 +71,26 @@ public class FrozenLibConfiguredFeatureUtils {
 		FeatureUtils.register(BootstrapContext, registryKey, feature, FeatureConfiguration.NONE);
 	}
 
-	public static <FC extends FeatureConfiguration, F extends Feature<FC>> @NotNull Holder<ConfiguredFeature<?, ?>> register(
-		@NotNull BootstrapContext<ConfiguredFeature<?, ?>> entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
+	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
+		BootstrapContext<ConfiguredFeature<?, ?>> entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
 		return entries.register(registryKey, new ConfiguredFeature<>(feature, featureConfiguration));
 	}
 
-	public static <FC extends FeatureConfiguration, F extends Feature<FC>> @NotNull Holder<ConfiguredFeature<?, ?>> register(
-		@NotNull DynamicRegistryManagerSetupContext entries, @NotNull ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
+	public static <FC extends FeatureConfiguration, F extends Feature<FC>> Holder<ConfiguredFeature<?, ?>> register(
+		DynamicRegistryManagerSetupContext entries, ResourceKey<ConfiguredFeature<?, ?>> registryKey, F feature, FC featureConfiguration
 	) {
-		var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE));
-		var value = registry.register(Registries.CONFIGURED_FEATURE, registryKey.identifier(), new ConfiguredFeature<>(feature, featureConfiguration));
+		final var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE));
+		final var value = registry.register(Registries.CONFIGURED_FEATURE, registryKey.identifier(), new ConfiguredFeature<>(feature, featureConfiguration));
 		return Holder.direct(value);
 	}
 
 	public static <FC extends FeatureConfiguration, V extends T, T extends ConfiguredFeature<FC, ?>> Holder.Reference<ConfiguredFeature<FeatureConfiguration, ?>> getExact(
-		DynamicRegistryManagerSetupContext.@NotNull RegistryMap registries,
+		DynamicRegistryManagerSetupContext.RegistryMap registries,
 		V value
 	) {
-		var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
-		var holder = configuredRegistry.getOrThrow(configuredRegistry.getResourceKey(value).orElseThrow());
+		final var configuredRegistry = registries.get(Registries.CONFIGURED_FEATURE);
+		final var holder = configuredRegistry.getOrThrow(configuredRegistry.getResourceKey(value).orElseThrow());
 		var exactHolder = getExactReference(holder);
 		return exactHolder;
 	}
@@ -102,7 +101,7 @@ public class FrozenLibConfiguredFeatureUtils {
 		return (Holder.Reference<V>) reference;
 	}
 
-	public static @NotNull Holder<ConfiguredFeature<?, ?>> getHolder(ResourceKey<ConfiguredFeature<?, ?>> resourceKey) {
+	public static Holder<ConfiguredFeature<?, ?>> getHolder(ResourceKey<ConfiguredFeature<?, ?>> resourceKey) {
 		return VanillaRegistries.createLookup().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(resourceKey);
 	}
 }

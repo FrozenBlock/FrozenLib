@@ -35,8 +35,8 @@ public class NoiseBandBlockPlacement {
 			Codec.doubleRange(-1D, 1D).lenientOptionalFieldOf("maximum_noise_threshold", 1D).forGetter(config -> config.maxNoiseThreshold),
 			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
 			Codec.BOOL.lenientOptionalFieldOf("schedule_tick_on_placement", false).forGetter(config -> config.scheduleTickOnPlacement),
-			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementBlockPredicate),
-			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingBlockPredicate),
+			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replacementPredicate),
+			BlockPredicate.CODEC.fieldOf("searching_block_predicate").forGetter(config -> config.searchingPredicate),
 			Codec.INT.lenientOptionalFieldOf("vertical_placement_offset", 0).forGetter(config -> config.verticalPlacementOffset)
 		).apply(instance, NoiseBandBlockPlacement::new)
 	);
@@ -46,27 +46,27 @@ public class NoiseBandBlockPlacement {
 	private final double maxNoiseThreshold;
 	private final float placementChance;
 	private final boolean scheduleTickOnPlacement;
-	private final BlockPredicate replacementBlockPredicate;
-	private final BlockPredicate searchingBlockPredicate;
+	private final BlockPredicate replacementPredicate;
+	private final BlockPredicate searchingPredicate;
 	private final int verticalPlacementOffset;
 
 	public NoiseBandBlockPlacement(
-		BlockStateProvider blockStateProvider,
+		BlockStateProvider stateProvider,
 		double minNoiseThreshold,
 		double maxNoiseThreshold,
 		float placementChance,
 		boolean scheduleTickOnPlacement,
-		BlockPredicate replacementBlockPredicate,
-		BlockPredicate searchingBlockPredicate,
+		BlockPredicate replacementPredicate,
+		BlockPredicate searchingPredicate,
 		int verticalPlacementOffset
 	) {
-		this.blockStateProvider = blockStateProvider;
+		this.blockStateProvider = stateProvider;
 		this.minNoiseThreshold = minNoiseThreshold;
 		this.maxNoiseThreshold = maxNoiseThreshold;
 		this.placementChance = placementChance;
 		this.scheduleTickOnPlacement = scheduleTickOnPlacement;
-		this.replacementBlockPredicate = replacementBlockPredicate;
-		this.searchingBlockPredicate = searchingBlockPredicate;
+		this.replacementPredicate = replacementPredicate;
+		this.searchingPredicate = searchingPredicate;
 		this.verticalPlacementOffset = verticalPlacementOffset;
 	}
 
@@ -76,34 +76,31 @@ public class NoiseBandBlockPlacement {
 		RandomSource random,
 		double sampleOutput
 	) {
-		if (sampleOutput >= this.minNoiseThreshold && sampleOutput <= this.maxNoiseThreshold) {
-			if (random.nextFloat() <= this.placementChance) {
-				pos.move(0, this.verticalPlacementOffset, 0);
-				if (this.replacementBlockPredicate.test(level, pos)) {
-					if (this.searchingBlockPredicate.test(level, pos)) {
-						BlockState state = this .blockStateProvider.getState(random, pos);
-						level.setBlock(pos, state, Block.UPDATE_CLIENTS);
-						if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
-						return true;
-					}
-				}
-			}
-		}
-		return false;
+		if (sampleOutput < this.minNoiseThreshold || sampleOutput > this.maxNoiseThreshold) return false;
+		if (random.nextFloat() > this.placementChance) return false;
+
+		pos.move(0, this.verticalPlacementOffset, 0);
+		if (!this.replacementPredicate.test(level, pos)) return false;
+		if (!this.searchingPredicate.test(level, pos)) return false;
+
+		final BlockState state = this .blockStateProvider.getState(random, pos);
+		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
+		if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
+		return true;
 	}
 
 	public static class Builder {
-		private final BlockStateProvider blockStateProvider;
+		private final BlockStateProvider stateProvider;
 		private double minNoiseThreshold = -1D;
 		private double maxNoiseThreshold = 1D;
 		private float placementChance = 1F;
 		private boolean scheduleTickOnPlacement = false;
-		private BlockPredicate replacementBlockPredicate;
-		private BlockPredicate searchingBlockPredicate;
+		private BlockPredicate replacementPredicate;
+		private BlockPredicate searchingPredicate;
 		private int verticalPlacementOffset = 0;
 
-		public Builder(BlockStateProvider blockStateProvider) {
-			this.blockStateProvider = blockStateProvider;
+		public Builder(BlockStateProvider stateProvider) {
+			this.stateProvider = stateProvider;
 		}
 
 		public Builder minNoiseThreshold(double minNoiseThreshold) {
@@ -132,13 +129,13 @@ public class NoiseBandBlockPlacement {
 			return this;
 		}
 
-		public Builder replacementBlockPredicate(BlockPredicate replacementBlockPredicate) {
-			this.replacementBlockPredicate = replacementBlockPredicate;
+		public Builder replacementPredicate(BlockPredicate replacementPredicate) {
+			this.replacementPredicate = replacementPredicate;
 			return this;
 		}
 
-		public Builder searchingBlockPredicate(BlockPredicate searchingBlockPredicate) {
-			this.searchingBlockPredicate = searchingBlockPredicate;
+		public Builder searchingPredicate(BlockPredicate searchingPredicate) {
+			this.searchingPredicate = searchingPredicate;
 			return this;
 		}
 
@@ -148,16 +145,16 @@ public class NoiseBandBlockPlacement {
 		}
 
 		public NoiseBandBlockPlacement build() {
-			if (this.searchingBlockPredicate == null) throw new IllegalArgumentException("searchingBlockPredicate cannot be null for NoiseBandBlockPlacement!");
-			if (this.replacementBlockPredicate == null) throw new IllegalArgumentException("replacementBlockPredicate cannot be null for NoiseBandBlockPlacement!");
+			if (this.searchingPredicate == null) throw new IllegalArgumentException("searchingPredicate cannot be null for NoiseBandBlockPlacement!");
+			if (this.replacementPredicate == null) throw new IllegalArgumentException("replacementPredicate cannot be null for NoiseBandBlockPlacement!");
 			return new NoiseBandBlockPlacement(
-				this.blockStateProvider,
+				this.stateProvider,
 				this.minNoiseThreshold,
 				this.maxNoiseThreshold,
 				this.placementChance,
 				this.scheduleTickOnPlacement,
-				this.replacementBlockPredicate,
-				this.searchingBlockPredicate,
+				this.replacementPredicate,
+				this.searchingPredicate,
 				this.verticalPlacementOffset
 			);
 		}

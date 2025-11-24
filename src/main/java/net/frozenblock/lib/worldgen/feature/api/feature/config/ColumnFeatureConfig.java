@@ -26,7 +26,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfigur
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
 public record ColumnFeatureConfig(
-	BlockStateProvider blockStateProvider,
+	BlockStateProvider stateProvider,
 	BlockPredicate replaceable,
 	IntProvider length,
 	Direction direction,
@@ -34,10 +34,11 @@ public record ColumnFeatureConfig(
 ) implements FeatureConfiguration {
 	public static final Codec<ColumnFeatureConfig> CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
-			BlockStateProvider.CODEC.fieldOf("block_state_provider").forGetter(config -> config.blockStateProvider),
+			BlockStateProvider.CODEC.fieldOf("block_state_provider").forGetter(config -> config.stateProvider),
 			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replaceable),
 			IntProvider.NON_NEGATIVE_CODEC.fieldOf("length").forGetter((config) -> config.length),
 			Direction.CODEC.fieldOf("direction").forGetter(config -> config.direction),
 			Codec.BOOL.lenientOptionalFieldOf("stop_when_encountering_unreplaceable_block", false).forGetter(config -> config.stopWhenEncounteringUnreplaceableBlock)
-		).apply(instance, ColumnFeatureConfig::new));
+		).apply(instance, ColumnFeatureConfig::new)
+	);
 }

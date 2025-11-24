@@ -27,7 +27,6 @@ import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
-import org.jetbrains.annotations.NotNull;
 
 public class ComboFeature extends Feature<ComboFeatureConfig> {
 
@@ -36,21 +35,22 @@ public class ComboFeature extends Feature<ComboFeatureConfig> {
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<ComboFeatureConfig> context) {
-		WorldGenLevel worldGenLevel = context.level();
-		ComboFeatureConfig config = context.config();
-		RandomSource randomSource = context.random();
-		BlockPos blockPos = context.origin();
-		ChunkGenerator chunkGenerator = context.chunkGenerator();
-		boolean placedAny = false;
+	public boolean place(FeaturePlaceContext<ComboFeatureConfig> context) {
+		final WorldGenLevel level = context.level();
+		final ComboFeatureConfig config = context.config();
+		final RandomSource random = context.random();
+		final BlockPos pos = context.origin();
+		final ChunkGenerator chunkGenerator = context.chunkGenerator();
+
+		boolean generated = false;
 		for (Holder<PlacedFeature> feature : config.features()) {
-			if (this.place(worldGenLevel, feature, chunkGenerator, randomSource, blockPos)) placedAny = true;
+			if (this.place(level, feature, chunkGenerator, random, pos)) generated = true;
 		}
-		return placedAny;
+		return generated;
 	}
 
-	public boolean place(WorldGenLevel worldGenLevel, @NotNull Holder<PlacedFeature> holder, ChunkGenerator chunkGenerator, RandomSource randomSource, BlockPos blockPos) {
-		return holder.value().place(worldGenLevel, chunkGenerator, randomSource, blockPos);
+	public boolean place(WorldGenLevel level, Holder<PlacedFeature> placedFeature, ChunkGenerator chunkGenerator, RandomSource random, BlockPos pos) {
+		return placedFeature.value().place(level, chunkGenerator, random, pos);
 	}
 
 }

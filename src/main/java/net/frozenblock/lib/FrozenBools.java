@@ -21,7 +21,6 @@ import java.util.Arrays;
 import net.fabricmc.loader.api.FabricLoader;
 
 public class FrozenBools {
-
 	/**
 	 * This is set to true when Bootstrap.bootStrap() is finished.
 	 */
@@ -34,9 +33,10 @@ public class FrozenBools {
 	public static final boolean IS_DATAGEN = isDatagen();
 
 	private static boolean isDatagen() {
-		return Arrays.stream(
-			FabricLoader.getInstance().getLaunchArguments(true)
-		).toList().stream().anyMatch(string -> string.contains("datagen"));
+		return Arrays.stream(FabricLoader.getInstance().getLaunchArguments(true))
+			.toList()
+			.stream()
+			.anyMatch(string -> string.contains("datagen"));
 	}
 
 	// MOD LOADERS

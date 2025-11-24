@@ -48,7 +48,6 @@ import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
 import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Handles wind on the server side.
@@ -60,17 +59,16 @@ public class WindManager extends SavedData {
 	public static final String WIND_MANAGER_FILE_ID = WIND_FILE_PATH + "main";
 	public static final Codec<WindManager> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
-				Codec.LONG.fieldOf("time").forGetter(windManager -> windManager.time),
-				Codec.BOOL.fieldOf("overrideWind").forGetter(windManager -> windManager.overrideWind),
-				Vec3.CODEC.fieldOf("commandWind").forGetter(windManager -> windManager.commandWind),
-				Codec.DOUBLE.fieldOf("windX").forGetter(windManager -> windManager.windX),
-				Codec.DOUBLE.fieldOf("windY").forGetter(windManager -> windManager.windY),
-				Codec.DOUBLE.fieldOf("windZ").forGetter(windManager -> windManager.windZ),
-				Codec.DOUBLE.fieldOf("laggedWindX").forGetter(windManager -> windManager.laggedWindX),
-				Codec.DOUBLE.fieldOf("laggedWindY").forGetter(windManager -> windManager.laggedWindY),
-				Codec.DOUBLE.fieldOf("laggedWindZ").forGetter(windManager -> windManager.laggedWindZ)
-			)
-			.apply(instance, WindManager::createFromCodec)
+			Codec.LONG.fieldOf("time").forGetter(windManager -> windManager.time),
+			Codec.BOOL.fieldOf("overrideWind").forGetter(windManager -> windManager.overrideWind),
+			Vec3.CODEC.fieldOf("commandWind").forGetter(windManager -> windManager.commandWind),
+			Codec.DOUBLE.fieldOf("windX").forGetter(windManager -> windManager.windX),
+			Codec.DOUBLE.fieldOf("windY").forGetter(windManager -> windManager.windY),
+			Codec.DOUBLE.fieldOf("windZ").forGetter(windManager -> windManager.windZ),
+			Codec.DOUBLE.fieldOf("laggedWindX").forGetter(windManager -> windManager.laggedWindX),
+			Codec.DOUBLE.fieldOf("laggedWindY").forGetter(windManager -> windManager.laggedWindY),
+			Codec.DOUBLE.fieldOf("laggedWindZ").forGetter(windManager -> windManager.laggedWindZ)
+		).apply(instance, WindManager::createFromCodec)
 	);
 	public static final SavedDataType<WindManager> TYPE = new SavedDataType<>(WIND_MANAGER_FILE_ID, WindManager::new, CODEC, DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES);
 
@@ -99,7 +97,7 @@ public class WindManager extends SavedData {
 	public WindManager() {
 	}
 
-	public static @NotNull WindManager createFromCodec(
+	public static WindManager createFromCodec(
 		long time,
 		boolean overrideWind,
 		Vec3 commandWind,
@@ -110,7 +108,7 @@ public class WindManager extends SavedData {
 		double laggedWindY,
 		double laggedWindZ
 	) {
-		WindManager windManager = new WindManager();
+		final WindManager windManager = new WindManager();
 		windManager.time = time;
 		windManager.overrideWind = overrideWind;
 		windManager.commandWind = commandWind;
@@ -129,7 +127,7 @@ public class WindManager extends SavedData {
 		return true;
 	}
 
-	public void setLevel(@NotNull ServerLevel level) {
+	public void setLevel(ServerLevel level) {
 		this.level = level;
 	}
 
@@ -139,10 +137,7 @@ public class WindManager extends SavedData {
 	 * @param savedDataType The {@link SavedDataType} of the added {@link WindManagerExtension}.
 	 * @param priority The priority of the added {@link WindManagerExtension}. The lower the value, the earlier it will run.
 	 */
-	public static void addExtension(
-		@NotNull SavedDataType<? extends WindManagerExtension> savedDataType,
-		int priority
-	) {
+	public static void addExtension(SavedDataType<? extends WindManagerExtension> savedDataType, int priority) {
 		EXTENSION_PROVIDERS.put(savedDataType, priority);
 	}
 
@@ -151,27 +146,25 @@ public class WindManager extends SavedData {
 	 *
 	 * @param savedDataType The {@link SavedDataType} of the added {@link WindManagerExtension}.
 	 */
-	public static void addExtension(
-		@NotNull SavedDataType<? extends WindManagerExtension> savedDataType
-	) {
+	public static void addExtension(SavedDataType<? extends WindManagerExtension> savedDataType) {
 		addExtension(savedDataType, 1000);
 	}
 
-	public void loadExtensionsIfNotLoaded(@NotNull ServerLevel serverLevel) {
+	public void loadExtensionsIfNotLoaded(ServerLevel level) {
 		if (this.loadedExtensions) return;
 
-		DimensionDataStorage storage = serverLevel.getDataStorage();
-
-		List<WindManagerExtension> extensions = new ObjectArrayList<>();
-		Map.Entry<SavedDataType<? extends WindManagerExtension>, Integer>[] extensionProviders = EXTENSION_PROVIDERS.entrySet().toArray(new Map.Entry[0]);
+		final Map.Entry<SavedDataType<? extends WindManagerExtension>, Integer>[] extensionProviders = EXTENSION_PROVIDERS.entrySet().toArray(new Map.Entry[0]);
 		Arrays.sort(extensionProviders, Map.Entry.comparingByValue());
 
+		final DimensionDataStorage storage = level.getDataStorage();
+		final List<WindManagerExtension> extensions = new ObjectArrayList<>();
 		for (Map.Entry<SavedDataType<? extends WindManagerExtension>, Integer> extensionByPriority : extensionProviders) {
 			SavedDataType<? extends WindManagerExtension> type = extensionByPriority.getKey();
 			WindManagerExtension extension = storage.computeIfAbsent(type);
 			extension.setWindManager(this);
 			extensions.add(extension);
 		}
+
 		this.attachedExtensions = extensions;
 		this.loadedExtensions = true;
 	}
@@ -181,13 +174,12 @@ public class WindManager extends SavedData {
 	 *
 	 * @param windDisturbance The {@link WindDisturbance} to add to the world and send to the client.
 	 */
-	public void addWindDisturbanceAndSync(@NotNull WindDisturbance<?> windDisturbance, ServerLevel serverLevel) {
-		Optional<WindDisturbancePacket> optionalPacket = windDisturbance.toPacket();
+	public void addWindDisturbanceAndSync(WindDisturbance<?> windDisturbance, ServerLevel level) {
+		final Optional<WindDisturbancePacket> optionalPacket = windDisturbance.toPacket();
 		if (optionalPacket.isPresent()) {
-			for (ServerPlayer player : PlayerLookup.world(serverLevel)) {
-				if (windDisturbance.isWithinViewDistance(player.getChunkTrackingView())) {
-					ServerPlayNetworking.send(player, optionalPacket.get());
-				}
+			for (ServerPlayer player : PlayerLookup.world(level)) {
+				if (!windDisturbance.isWithinViewDistance(player.getChunkTrackingView())) continue;
+				ServerPlayNetworking.send(player, optionalPacket.get());
 			}
 		}
 		this.addWindDisturbance(windDisturbance);
@@ -198,7 +190,7 @@ public class WindManager extends SavedData {
 	 *
 	 * @param windDisturbance The {@link WindDisturbance} to add.
 	 */
-	public void addWindDisturbance(@NotNull WindDisturbance<?> windDisturbance) {
+	public void addWindDisturbance(WindDisturbance<?> windDisturbance) {
 		this.getWindDisturbanceStash().add(windDisturbance);
 	}
 
@@ -239,51 +231,49 @@ public class WindManager extends SavedData {
 	 * @param level The {@link ServerLevel} to obtain the {@link WindManager} for.
 	 * @return the {@link WindManager} used for the given {@link ServerLevel}.
 	 */
-	@NotNull
-	public static WindManager getOrCreateWindManager(@NotNull ServerLevel level) {
-		WindManager windManager = ((WindManagerInterface)level).frozenLib$getOrCreateWindManager();
+	public static WindManager getOrCreateWindManager(ServerLevel level) {
+		final WindManager windManager = ((WindManagerInterface)level).frozenLib$getOrCreateWindManager();
 		windManager.loadExtensionsIfNotLoaded(level);
 		windManager.setLevel(level);
 		return windManager;
 	}
 
-	public void tick(@NotNull ServerLevel level) {
+	public void tick(ServerLevel level) {
 		if (!this.seedSet) {
 			this.seedSet = true;
 			this.seed = level.getSeed();
 			this.noise = EasyNoiseSampler.createXoroNoise(this.seed);
 		}
-		if (level.tickRateManager().runsNormally()) {
-			this.runResetsIfNeeded(level);
 
-			this.time += 1;
-			//WIND
-			float thunderLevel = level.getThunderLevel(1F) * 0.03F;
-			double calcTime = this.time * 0.0005;
-			double calcTimeY = this.time * 0.00035;
-			Vec3 vec3 = sampleVec3(calcTime, calcTimeY, calcTime);
-			this.windX = vec3.x + (vec3.x * thunderLevel);
-			this.windY = vec3.y + (vec3.y * thunderLevel);
-			this.windZ = vec3.z + (vec3.z * thunderLevel);
-			//LAGGED WIND
-			double calcLaggedTime = (this.time - 40) * 0.0005;
-			double calcLaggedTimeY = (this.time - 60) * 0.00035;
-			Vec3 laggedVec = sampleVec3(calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
-			this.laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
-			this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
-			this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+		if (!level.tickRateManager().runsNormally()) return;
 
-			//EXTENSIONS
-			for (WindManagerExtension extension : this.attachedExtensions) {
-				extension.baseTick(level);
-				extension.tick(level);
-			}
+		this.runResetsIfNeeded(level);
 
-			//SYNC WITH CLIENTS IN CASE OF DESYNC
-			if (this.time % 20 == 0) {
-				this.sendSync(level);
-			}
+		this.time += 1;
+		//WIND
+		final float thunderLevel = level.getThunderLevel(1F) * 0.03F;
+		final double calcTime = this.time * 0.0005;
+		final double calcTimeY = this.time * 0.00035;
+		final Vec3 vec3 = sampleVec3(calcTime, calcTimeY, calcTime);
+		this.windX = vec3.x + (vec3.x * thunderLevel);
+		this.windY = vec3.y + (vec3.y * thunderLevel);
+		this.windZ = vec3.z + (vec3.z * thunderLevel);
+		//LAGGED WIND
+		final double calcLaggedTime = (this.time - 40) * 0.0005;
+		final double calcLaggedTimeY = (this.time - 60) * 0.00035;
+		final Vec3 laggedVec = sampleVec3(calcLaggedTime, calcLaggedTimeY, calcLaggedTime);
+		this.laggedWindX = laggedVec.x + (laggedVec.x * thunderLevel);
+		this.laggedWindY = laggedVec.y + (laggedVec.y * thunderLevel);
+		this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
+
+		//EXTENSIONS
+		for (WindManagerExtension extension : this.attachedExtensions) {
+			extension.baseTick(level);
+			extension.tick(level);
 		}
+
+		//SYNC WITH CLIENTS IN CASE OF DESYNC
+		if (this.time % 20 == 0) this.sendSync(level);
 	}
 
 	/**
@@ -324,18 +314,13 @@ public class WindManager extends SavedData {
 
 		//EXTENSIONS
 		for (WindManagerExtension extension : this.attachedExtensions) {
-			if (extension.runResetsIfNeeded()) {
-				needsReset = true;
-			}
+			if (extension.runResetsIfNeeded()) needsReset = true;
 		}
 
-		if (needsReset) {
-			this.sendSync(serverLevel);
-		}
+		if (needsReset) this.sendSync(serverLevel);
 		return needsReset;
 	}
 
-	@NotNull
 	public WindSyncPacket createSyncPacket() {
 		return new WindSyncPacket(
 			this.time,
@@ -345,18 +330,14 @@ public class WindManager extends SavedData {
 		);
 	}
 
-	public void sendSync(@NotNull ServerLevel level) {
-		WindSyncPacket packet = this.createSyncPacket();
-		for (ServerPlayer player : PlayerLookup.world(level)) {
-			this.sendSyncToPlayer(packet, player);
-		}
+	public void sendSync(ServerLevel level) {
+		final WindSyncPacket packet = this.createSyncPacket();
+		for (ServerPlayer player : PlayerLookup.world(level)) this.sendSyncToPlayer(packet, player);
 	}
 
-	public void sendSyncToPlayer(@NotNull WindSyncPacket packet, @NotNull ServerPlayer player) {
+	public void sendSyncToPlayer(WindSyncPacket packet, ServerPlayer player) {
 		ServerPlayNetworking.send(player, packet);
-		for (WindManagerExtension extension : this.attachedExtensions) {
-			ServerPlayNetworking.send(player, extension.syncPacket(packet));
-		}
+		for (WindManagerExtension extension : this.attachedExtensions) ServerPlayNetworking.send(player, extension.syncPacket(packet));
 	}
 
 	/**
@@ -365,8 +346,7 @@ public class WindManager extends SavedData {
 	 * @param pos The {@link BlockPos} to check.
 	 * @return the wind movement at the center of the specified {@link BlockPos}.
 	 */
-	@NotNull
-	public Vec3 getWindMovement(@NotNull BlockPos pos) {
+	public Vec3 getWindMovement(BlockPos pos) {
 		return this.getWindMovement(Vec3.atBottomCenterOf(pos));
 	}
 
@@ -377,8 +357,7 @@ public class WindManager extends SavedData {
 	 * @param scale Multiplies the returned value.
 	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied.
 	 */
-	@NotNull
-	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale) {
+	public Vec3 getWindMovement(BlockPos pos, double scale) {
 		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale);
 	}
 
@@ -390,8 +369,7 @@ public class WindManager extends SavedData {
 	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
 	 * @return the wind movement at the bottom center of the specified {@link BlockPos}, multiplied and clamped.
 	 */
-	@NotNull
-	public Vec3 getWindMovement(@NotNull BlockPos pos, double scale, double clamp) {
+	public Vec3 getWindMovement(BlockPos pos, double scale, double clamp) {
 		return this.getWindMovement(Vec3.atBottomCenterOf(pos), scale, clamp);
 	}
 
@@ -401,8 +379,7 @@ public class WindManager extends SavedData {
 	 * @param pos The {@link Vec3} to check.
 	 * @return the wind movement at the specified {@link Vec3}.
 	 */
-	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos) {
+	public Vec3 getWindMovement(Vec3 pos) {
 		return this.getWindMovement(pos, 1D);
 	}
 
@@ -413,8 +390,7 @@ public class WindManager extends SavedData {
 	 * @param scale Multiplies the returned value.
 	 * @return the wind movement at the specified {@link Vec3}, multiplied.
 	 */
-	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale) {
+	public Vec3 getWindMovement(Vec3 pos, double scale) {
 		return this.getWindMovement(pos, scale, Double.MAX_VALUE);
 	}
 
@@ -426,8 +402,7 @@ public class WindManager extends SavedData {
 	 * @param clamp Clamps the returned value between the negative and positive versions of this value.
 	 * @return the wind movement at the specified {@link Vec3}, multiplied and clamped.
 	 */
-	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp) {
+	public Vec3 getWindMovement(Vec3 pos, double scale, double clamp) {
 		return this.getWindMovement(pos, scale, clamp, 1D);
 	}
 
@@ -440,16 +415,15 @@ public class WindManager extends SavedData {
 	 * @param windDisturbanceScale Multiplies the wind disturbance value.
 	 * @return the wind movement at the specified {@link Vec3}, multiplied, clamped, and with a separately multiplied wind disturbance value.
 	 */
-	@NotNull
-	public Vec3 getWindMovement(@NotNull Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
-		double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
-		double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
-		Pair<Double, Vec3> disturbance = this.calculateWindDisturbance(pos);
-		double disturbanceAmount = disturbance.getFirst();
-		Vec3 windDisturbance = disturbance.getSecond();
-		double windX = Mth.lerp(disturbanceAmount, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
-		double windY = Mth.lerp(disturbanceAmount, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
-		double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
+	public Vec3 getWindMovement(Vec3 pos, double scale, double clamp, double windDisturbanceScale) {
+		final double brightness = this.level.getBrightness(LightLayer.SKY, BlockPos.containing(pos));
+		final double windScale = (Math.max((brightness - (Math.max(15 - brightness, 0))), 0) * 0.0667D);
+		final Pair<Double, Vec3> disturbance = this.calculateWindDisturbance(pos);
+		final double disturbanceAmount = disturbance.getFirst();
+		final Vec3 windDisturbance = disturbance.getSecond();
+		final double windX = Mth.lerp(disturbanceAmount, this.windX * windScale, windDisturbance.x * windDisturbanceScale) * scale;
+		final double windY = Mth.lerp(disturbanceAmount, this.windY * windScale, windDisturbance.y * windDisturbanceScale) * scale;
+		final double windZ = Mth.lerp(disturbanceAmount, this.windZ * windScale, windDisturbance.z * windDisturbanceScale) * scale;
 
 		if (FrozenLibConstants.DEBUG_WIND) FrozenNetworking.sendPacketToAllPlayers(this.level, new WindAccessPacket(pos));
 
@@ -461,63 +435,53 @@ public class WindManager extends SavedData {
 	}
 
 	@Deprecated
-	@NotNull
-	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double stretch) {
+	public Vec3 getWindMovement3D(BlockPos pos, double stretch) {
 		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double stretch) {
+	public Vec3 getWindMovement3D(BlockPos pos, double scale, double stretch) {
 		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public Vec3 getWindMovement3D(@NotNull BlockPos pos, double scale, double clamp, double stretch) {
+	public Vec3 getWindMovement3D(BlockPos pos, double scale, double clamp, double stretch) {
 		return this.getWindMovement3D(Vec3.atBottomCenterOf(pos), scale, clamp, stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double stretch) {
+	public Vec3 getWindMovement3D(Vec3 pos, double stretch) {
 		return this.getWindMovement3D(pos, 1D, stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double stretch) {
+	public Vec3 getWindMovement3D(Vec3 pos, double scale, double stretch) {
 		return this.getWindMovement3D(pos, scale, Double.MAX_VALUE, stretch);
 	}
 
 	@Deprecated
-	@NotNull
-	public Vec3 getWindMovement3D(@NotNull Vec3 pos, double scale, double clamp, double stretch) {
-		Vec3 wind = this.sample3D(pos, stretch);
+	public Vec3 getWindMovement3D(Vec3 pos, double scale, double clamp, double stretch) {
+		final Vec3 wind = this.sample3D(pos, stretch);
 		return new Vec3(Mth.clamp((wind.x()) * scale, -clamp, clamp),
 				Mth.clamp((wind.y()) * scale, -clamp, clamp),
 				Mth.clamp((wind.z()) * scale, -clamp, clamp));
 	}
 
-	@NotNull
 	private Vec3 sampleVec3(double x, double y, double z) {
-		if (!this.overrideWind) {
-			double windX = this.noise.noise(x, 0D, 0D);
-			double windY = this.noise.noise(0D, y, 0D);
-			double windZ = this.noise.noise(0D, 0D, z);
-			return new Vec3(windX, windY, windZ);
-		}
-		return this.commandWind;
+		if (this.overrideWind) return this.commandWind;
+		final double windX = this.noise.noise(x, 0D, 0D);
+		final double windY = this.noise.noise(0D, y, 0D);
+		final double windZ = this.noise.noise(0D, 0D, z);
+		return new Vec3(windX, windY, windZ);
 	}
 
 	@Deprecated
-	@NotNull
-	private Vec3 sample3D(@NotNull Vec3 pos, double stretch) {
-		double sampledTime = this.time * 0.1D;
-		double xyz = pos.x() + pos.y() + pos.z();
-		double windX = this.noise.noise((xyz + sampledTime) * stretch, 0D, 0D);
-		double windY = this.noise.noise(0D, (xyz + sampledTime) * stretch, 0D);
-		double windZ = this.noise.noise(0D, 0D, (xyz + sampledTime) * stretch);
+	private Vec3 sample3D(Vec3 pos, double stretch) {
+		final double sampledTime = this.time * 0.1D;
+		final double xyz = pos.x() + pos.y() + pos.z();
+		final double windX = this.noise.noise((xyz + sampledTime) * stretch, 0D, 0D);
+		final double windY = this.noise.noise(0D, (xyz + sampledTime) * stretch, 0D);
+		final double windZ = this.noise.noise(0D, 0D, (xyz + sampledTime) * stretch);
 		return new Vec3(windX, windY, windZ);
 	}
 
@@ -527,8 +491,7 @@ public class WindManager extends SavedData {
 	 * @param pos The {@link Vec3} being checked.
 	 * @return the strength and movement of the current {@link WindDisturbance}s at a given position.
 	 */
-	@NotNull
-	private Pair<Double, Vec3> calculateWindDisturbance(@NotNull Vec3 pos) {
+	private Pair<Double, Vec3> calculateWindDisturbance(Vec3 pos) {
 		return calculateWindDisturbance(this.getWindDisturbances(), this.level, pos);
 	}
 
@@ -540,16 +503,15 @@ public class WindManager extends SavedData {
 	 * @param pos The {@link Vec3} being checked.
 	 * @return the strength and movement out of a provided list of {@link WindDisturbance}s at a given position.
 	 */
-	@NotNull
-	public static Pair<Double, Vec3> calculateWindDisturbance(@NotNull List<WindDisturbance<?>> windDisturbances, @NotNull Level level, @NotNull Vec3 pos) {
-		ArrayList<Pair<Double, Vec3>> winds = new ArrayList<>();
+	public static Pair<Double, Vec3> calculateWindDisturbance(List<WindDisturbance<?>> windDisturbances, Level level, Vec3 pos) {
+		final ArrayList<Pair<Double, Vec3>> winds = new ArrayList<>();
 		double strength = 0D;
 		for (WindDisturbance<?> windDisturbance : windDisturbances) {
-			WindDisturbance.DisturbanceResult disturbanceResult = windDisturbance.calculateDisturbanceResult(level, pos);
-			if (disturbanceResult.strength() != 0D && disturbanceResult.weight() != 0D) {
-				strength = Math.max(strength, disturbanceResult.strength());
-				winds.add(Pair.of(disturbanceResult.weight(), disturbanceResult.wind()));
-			}
+			final WindDisturbance.DisturbanceResult disturbanceResult = windDisturbance.calculateDisturbanceResult(level, pos);
+			if (disturbanceResult.strength() <= 0D || disturbanceResult.weight() <= 0D) continue;
+
+			strength = Math.max(strength, disturbanceResult.strength());
+			winds.add(Pair.of(disturbanceResult.weight(), disturbanceResult.wind()));
 		}
 
 		double finalX = 0D;
@@ -561,9 +523,9 @@ public class WindManager extends SavedData {
 			double z = 0D;
 			double sumOfWeights = 0D;
 			for (Pair<Double, Vec3> pair : winds) {
-				double weight = pair.getFirst();
+				final double weight = pair.getFirst();
 				sumOfWeights += weight;
-				Vec3 windVec = pair.getSecond();
+				final Vec3 windVec = pair.getSecond();
 				x += weight * windVec.x;
 				y += weight * windVec.y;
 				z += weight * windVec.z;

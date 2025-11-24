@@ -141,9 +141,11 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
 		}));
 
-		if (FrozenLibConfig.get().wardenSpawnTrackerCommand)
-			CommandRegistrationCallback.EVENT.register(((dispatcher, registryAccess, environment) -> WardenSpawnTrackerCommand.register(dispatcher)));
-
+		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
+			CommandRegistrationCallback.EVENT.register(
+				((dispatcher, registryAccess, environment) -> WardenSpawnTrackerCommand.register(dispatcher))
+			);
+		}
 		FrozenNetworking.registerNetworking();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
@@ -155,7 +157,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			for (Config<?> config : ConfigRegistry.getAllConfigs()) config.save();
 		});
 
-		var resourceLoader = ResourceManagerHelper.get(PackType.SERVER_DATA);
+		final var resourceLoader = ResourceManagerHelper.get(PackType.SERVER_DATA);
 		resourceLoader.registerReloadListener(BlockSoundTypeManager.INSTANCE);
 	}
 }

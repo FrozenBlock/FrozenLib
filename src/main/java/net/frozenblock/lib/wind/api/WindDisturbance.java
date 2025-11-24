@@ -32,7 +32,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Used to create areas with custom, differing wind patterns.
@@ -69,10 +68,10 @@ public class WindDisturbance<T> {
 		return DUMMY_RESULT;
 	}
 
-	public boolean isWithinViewDistance(@NotNull ChunkTrackingView chunkTrackingView) {
+	public boolean isWithinViewDistance(ChunkTrackingView chunkTrackingView) {
 		for (double xCorner : ImmutableList.of(this.affectedArea.minX, this.affectedArea.maxX)) {
 			for (double zCorner : ImmutableList.of(this.affectedArea.minZ, this.affectedArea.maxZ)) {
-				ChunkPos chunkPos = new ChunkPos(BlockPos.containing(xCorner, 0, zCorner));
+				final ChunkPos chunkPos = new ChunkPos(BlockPos.containing(xCorner, 0, zCorner));
 				if (chunkTrackingView.isInViewDistance(chunkPos.x, chunkPos.z)) return true;
 			}
 		}
@@ -80,22 +79,19 @@ public class WindDisturbance<T> {
 	}
 
 	public Optional<WindDisturbancePacket> toPacket() {
-		Identifier identifier = Optional.ofNullable(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getKey(this.disturbanceLogic))
+		final Identifier identifier = Optional.ofNullable(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getKey(this.disturbanceLogic))
 			.orElseGet(() -> FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.getKey(this.disturbanceLogic));
+		if (identifier == null) return Optional.empty();
 
-		if (identifier != null) {
-			return Optional.of(
-				new WindDisturbancePacket(
-					this.affectedArea,
-					this.origin,
-					this.getSourceTypeFromSource(),
-					identifier,
-					this.encodePosOrID(this.origin)
-				)
-			);
-		}
-
-		return Optional.empty();
+		return Optional.of(
+			new WindDisturbancePacket(
+				this.affectedArea,
+				this.origin,
+				this.getSourceTypeFromSource(),
+				identifier,
+				this.encodePosOrID(this.origin)
+			)
+		);
 	}
 
 	private WindDisturbanceLogic.SourceType getSourceTypeFromSource() {

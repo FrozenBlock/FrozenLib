@@ -25,12 +25,11 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.monster.breeze.Breeze;
-import net.minecraft.world.entity.projectile.windcharge.AbstractWindCharge;
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * The logic to be used while calculating the strength and movement of a {@link WindDisturbance}.
@@ -58,20 +57,20 @@ public final class WindDisturbanceLogic<T> {
 	}
 
 	public static Optional<WindDisturbanceLogic> getWindDisturbanceLogic(Identifier id) {
-        if (id != null) {
-            if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.containsKey(id)) {
-				WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getValue(id);
-				if (disturbanceLogic != null) return Optional.of(disturbanceLogic);
-			} else if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.containsKey(id)) {
-				WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.getValue(id);
-				if (disturbanceLogic != null) return Optional.of(disturbanceLogic);
-			}
-			FrozenLibConstants.LOGGER.error("Unable to find wind disturbance logic {}!", id);
-        }
+        if (id == null) return Optional.empty();
+
+		if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.containsKey(id)) {
+			WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getValue(id);
+			if (disturbanceLogic != null) return Optional.of(disturbanceLogic);
+		} else if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.containsKey(id)) {
+			WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.getValue(id);
+			if (disturbanceLogic != null) return Optional.of(disturbanceLogic);
+		}
+
+		FrozenLibConstants.LOGGER.error("Unable to find wind disturbance logic {}!", id);
         return Optional.empty();
     }
 
-	@NotNull
 	@Contract(pure = true)
 	public static DisturbanceLogic<?> defaultPredicate() {
 		return (source, level, windOrigin, affectedArea, windTarget) -> WindDisturbance.DUMMY_RESULT;
@@ -101,54 +100,50 @@ public final class WindDisturbanceLogic<T> {
 	private static final double WIND_RANGE_BREEZE = 6D;
 	private static final double WIND_RANGE_WIND_CHARGE = 5D;
 
-	@NotNull
 	@Contract(pure = true)
 	private static DisturbanceLogic<Breeze> breeze() {
 		return (source, level, windOrigin, affectedArea, windTarget) -> {
 			if (source.isEmpty()) return null;
 
-			double distance = windOrigin.distanceTo(windTarget);
-			if (distance <= WIND_RANGE_BREEZE) {
-				Vec3 breezeLookVec = source.get().getForward();
-				Vec3 differenceInPoses = windOrigin.subtract(windTarget);
-				double scaledDistance = (WIND_RANGE_BREEZE - distance) / WIND_RANGE_BREEZE;
-				double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE * 0.75D), 0D, 1D);
-				double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses);
+			final double distance = windOrigin.distanceTo(windTarget);
+			if (distance > WIND_RANGE_BREEZE) return null;
 
-				double x = Math.cos((angleBetween * Math.PI) / 180D);
-				double z = -Math.sin((angleBetween * Math.PI) / 180D);
-				x = -Mth.lerp(scaledDistance, (x - (differenceInPoses.x * 0.45D)) * 0.5D, x);
-				z = -Mth.lerp(scaledDistance, (z - (differenceInPoses.z * 0.45D)) * 0.5D, z);
+			final Vec3 breezeLookVec = source.get().getForward();
+			final Vec3 differenceInPoses = windOrigin.subtract(windTarget);
+			final double scaledDistance = (WIND_RANGE_BREEZE - distance) / WIND_RANGE_BREEZE;
+			final double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE * 0.75D), 0D, 1D);
+			final double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses);
 
-				Vec3 windVec = new Vec3(x, strengthFromDistance, z).scale(1D);
-				return new WindDisturbance.DisturbanceResult(
-					strengthFromDistance,
-					WIND_RANGE_BREEZE - distance,
-					windVec
-				);
-			}
-			return null;
+			double x = Math.cos((angleBetween * Math.PI) / 180D);
+			double z = -Math.sin((angleBetween * Math.PI) / 180D);
+			x = -Mth.lerp(scaledDistance, (x - (differenceInPoses.x * 0.45D)) * 0.5D, x);
+			z = -Mth.lerp(scaledDistance, (z - (differenceInPoses.z * 0.45D)) * 0.5D, z);
+
+			final Vec3 windVec = new Vec3(x, strengthFromDistance, z).scale(1D);
+			return new WindDisturbance.DisturbanceResult(
+				strengthFromDistance,
+				WIND_RANGE_BREEZE - distance,
+				windVec
+			);
 		};
 	}
 
-	@NotNull
 	@Contract(pure = true)
 	private static DisturbanceLogic<AbstractWindCharge> windCharge() {
 		return (source, level, windOrigin, affectedArea, windTarget) -> {
 			if (source.isEmpty()) return null;
 
-			double distance = windOrigin.distanceTo(windTarget);
-			if (distance <= WIND_RANGE_WIND_CHARGE) {
-				Vec3 chargeMovement = source.get().getDeltaMovement();
-				double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE * 0.5D), 0D, 1D);
-				Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(3D * strengthFromDistance);
-				return new WindDisturbance.DisturbanceResult(
-					strengthFromDistance,
-					(WIND_RANGE_WIND_CHARGE - distance) * 2D,
-					windVec
-				);
-			}
-			return null;
+			final double distance = windOrigin.distanceTo(windTarget);
+			if (distance > WIND_RANGE_WIND_CHARGE) return null;
+
+			final Vec3 chargeMovement = source.get().getDeltaMovement();
+			final double strengthFromDistance = Mth.clamp((WIND_RANGE_WIND_CHARGE - distance) / (WIND_RANGE_WIND_CHARGE * 0.5D), 0D, 1D);
+			final Vec3 windVec = new Vec3(chargeMovement.x, chargeMovement.y, chargeMovement.z).scale(3D * strengthFromDistance);
+			return new WindDisturbance.DisturbanceResult(
+				strengthFromDistance,
+				(WIND_RANGE_WIND_CHARGE - distance) * 2D,
+				windVec
+			);
 		};
 	}
 }

@@ -26,7 +26,6 @@ import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
-import org.jetbrains.annotations.NotNull;
 
 public class BallFeature extends Feature<BallFeatureConfig> {
 
@@ -35,32 +34,32 @@ public class BallFeature extends Feature<BallFeatureConfig> {
 	}
 
 	@Override
-	public boolean place(@NotNull FeaturePlaceContext<BallFeatureConfig> context) {
+	public boolean place(FeaturePlaceContext<BallFeatureConfig> context) {
+		final BallFeatureConfig config = context.config();
+		final BlockPos pos = context.origin();
+		final WorldGenLevel level = context.level();
+		final RandomSource random = level.getRandom();
+
+		final int radius = config.placementRadius().sample(random);
+		final BallBlockPlacement blockPlacement = config.ballBlockPlacement();
+		final Heightmap.Types heightmapType = config.heightmapType().orElse(null);
+		final boolean missingHeightmap = heightmapType == null;
+
+		final BlockPos.MutableBlockPos mutable = pos.mutable();
+		final int startX = pos.getX();
+		final int startY = pos.getY();
+		final int startZ = pos.getZ();
+
 		boolean generated = false;
-		BallFeatureConfig config = context.config();
-		BlockPos blockPos = context.origin();
-		WorldGenLevel level = context.level();
-		RandomSource random = level.getRandom();
-
-		int radius = config.placementRadius().sample(random);
-		BallBlockPlacement blockPlacement = config.ballBlockPlacement();
-		Heightmap.Types heightmapType = config.heightmapType().orElse(null);
-		boolean missingHeightmap = heightmapType == null;
-
-		BlockPos.MutableBlockPos mutable = blockPos.mutable();
-		int startX = blockPos.getX();
-		int startY = blockPos.getY();
-		int startZ = blockPos.getZ();
-
 		for (int x = startX - radius; x <= startX + radius; x++) {
 			for (int z = startZ - radius; z <= startZ + radius; z++) {
 				if (!missingHeightmap) {
 					mutable.set(x, level.getHeight(heightmapType, x, z) - 1, z);
-					generated = blockPlacement.generate(level, blockPos, mutable, true, radius, random) || generated;
+					generated = blockPlacement.generate(level, pos, mutable, true, radius, random) || generated;
 				} else {
 					for (int y = startY - radius; y <= startY + radius; y++) {
 						mutable.set(x, y, z);
-						generated = blockPlacement.generate(level, blockPos, mutable, false, radius, random) || generated;
+						generated = blockPlacement.generate(level, pos, mutable, false, radius, random) || generated;
 					}
 				}
 			}

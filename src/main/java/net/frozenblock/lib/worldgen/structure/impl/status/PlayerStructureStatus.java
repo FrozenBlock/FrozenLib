@@ -20,18 +20,16 @@ package net.frozenblock.lib.worldgen.structure.impl.status;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.NotNull;
 
 public class PlayerStructureStatus {
 	public static final StreamCodec<FriendlyByteBuf, PlayerStructureStatus> STREAM_CODEC = new StreamCodec<>() {
-		@NotNull
 		@Override
-		public PlayerStructureStatus decode(@NotNull FriendlyByteBuf buf) {
+		public PlayerStructureStatus decode(FriendlyByteBuf buf) {
 			return new PlayerStructureStatus(buf.readIdentifier(), buf.readBoolean());
 		}
 
 		@Override
-		public void encode(@NotNull FriendlyByteBuf buf, @NotNull PlayerStructureStatus playerStructureStatus) {
+		public void encode(FriendlyByteBuf buf, PlayerStructureStatus playerStructureStatus) {
 			buf.writeIdentifier(playerStructureStatus.structure);
 			buf.writeBoolean(playerStructureStatus.insidePiece);
 		}
@@ -59,9 +57,7 @@ public class PlayerStructureStatus {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj instanceof PlayerStructureStatus other) {
-			return this.structure.equals(other.structure) && this.insidePiece == other.insidePiece;
-		}
+		if (obj instanceof PlayerStructureStatus other) return this.structure.equals(other.structure) && this.insidePiece == other.insidePiece;
 		return false;
 	}
 

@@ -32,12 +32,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
-import org.jetbrains.annotations.NotNull;
 
 public class BallBlockPlacement {
 	public static final Codec<BallBlockPlacement> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
-			BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.blockStateProvider),
+			BlockStateProvider.CODEC.fieldOf("state_provider").forGetter(config -> config.stateProvider),
 			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("placement_chance", 1F).forGetter(config -> config.placementChance),
 			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("chance_to_choose_inner_block_in_outer_ring", 0F).forGetter(config -> config.chanceToChooseInnerBlockInOuterRing),
 			Codec.floatRange(0F, 1F).lenientOptionalFieldOf("fade_start_percentage", 1F).forGetter(config -> config.fadeStartPercentage),
@@ -50,7 +49,7 @@ public class BallBlockPlacement {
 		).apply(instance, BallBlockPlacement::new)
 	);
 
-	private final BlockStateProvider blockStateProvider;
+	private final BlockStateProvider stateProvider;
 	private final float placementChance;
 	private final float chanceToChooseInnerBlockInOuterRing;
 	private final float fadeStartPercentage;
@@ -62,23 +61,23 @@ public class BallBlockPlacement {
 	private final Optional<BallOuterRingBlockPlacement> outerRingBlockPlacement;
 
 	public BallBlockPlacement(
-		BlockStateProvider blockStateProvider,
+		BlockStateProvider stateProvider,
 		float placementChance,
 		float chanceToChooseInnerBlockInOuterRing,
 		float fadeStartPercentage,
-		BlockPredicate replacementBlockPredicate,
-		BlockPredicate searchingBlockPredicate,
+		BlockPredicate replacementPredicate,
+		BlockPredicate searchingPredicate,
 		boolean scheduleTickOnPlacement,
 		int verticalPlacementOffset,
 		Optional<HolderSet<Biome>> excludedBiomes,
 		Optional<BallOuterRingBlockPlacement> outerRingBlockPlacement
 	) {
-		this.blockStateProvider = blockStateProvider;
+		this.stateProvider = stateProvider;
 		this.placementChance = placementChance;
 		this.chanceToChooseInnerBlockInOuterRing = chanceToChooseInnerBlockInOuterRing;
 		this.fadeStartPercentage = fadeStartPercentage;
-		this.replacementBlockPredicate = replacementBlockPredicate;
-		this.searchingBlockPredicate = searchingBlockPredicate;
+		this.replacementBlockPredicate = replacementPredicate;
+		this.searchingBlockPredicate = searchingPredicate;
 		this.scheduleTickOnPlacement = scheduleTickOnPlacement;
 		this.verticalPlacementOffset = verticalPlacementOffset;
 		this.excludedBiomes = excludedBiomes;
@@ -91,61 +90,57 @@ public class BallBlockPlacement {
 		BlockPos.MutableBlockPos pos,
 		boolean usingHeightmap,
 		int placementRadius,
-		@NotNull RandomSource random
+		RandomSource random
 	) {
-		double distance = AdvancedMath.distanceBetween(center, pos, !usingHeightmap);
+		final double distance = AdvancedMath.distanceBetween(center, pos, !usingHeightmap);
 		if (distance > placementRadius) return false;
 
-		boolean fading = distance >= placementRadius * this.fadeStartPercentage;
-		if (!fading || random.nextBoolean()) {
-			if (this.excludedBiomes.isPresent() && this.excludedBiomes.get().contains(level.getBiome(pos))) return false;
-			if (this.outerRingBlockPlacement.isPresent()) {
-				BallOuterRingBlockPlacement outerRingBlockPlacement = this.outerRingBlockPlacement.get();
-				BallOuterRingBlockPlacement.OuterRingSelectionType selectionType = outerRingBlockPlacement.chooseSelectionType(
-					distance, placementRadius, this.chanceToChooseInnerBlockInOuterRing, random
-				);
+		final boolean fading = distance >= placementRadius * this.fadeStartPercentage;
+		if (fading && random.nextBoolean()) return false;
 
-				if (selectionType == BallOuterRingBlockPlacement.OuterRingSelectionType.OUTER_IN_INNER) {
-					if (random.nextFloat() <= outerRingBlockPlacement.getPlacementChance()) {
-						return outerRingBlockPlacement.generate(level, pos, random, true);
-					}
-				} else if (selectionType == BallOuterRingBlockPlacement.OuterRingSelectionType.SUCCESS) {
-					return outerRingBlockPlacement.generate(level, pos, random, false);
-				}
+		if (this.excludedBiomes.isPresent() && this.excludedBiomes.get().contains(level.getBiome(pos))) return false;
+		if (this.outerRingBlockPlacement.isPresent()) {
+			final BallOuterRingBlockPlacement outerRingBlockPlacement = this.outerRingBlockPlacement.get();
+			final BallOuterRingBlockPlacement.OuterRingSelectionType selectionType = outerRingBlockPlacement.chooseSelectionType(
+				distance, placementRadius, this.chanceToChooseInnerBlockInOuterRing, random
+			);
+
+			if (selectionType == BallOuterRingBlockPlacement.OuterRingSelectionType.OUTER_IN_INNER) {
+				if (random.nextFloat() <= outerRingBlockPlacement.getPlacementChance()) return outerRingBlockPlacement.generate(level, pos, random, true);
+			} else if (selectionType == BallOuterRingBlockPlacement.OuterRingSelectionType.SUCCESS) {
+				return outerRingBlockPlacement.generate(level, pos, random, false);
 			}
-
-			if (random.nextFloat() <= this.placementChance) return this.generateBlock(level, pos, random);
 		}
+
+		if (random.nextFloat() <= this.placementChance) return this.generateBlock(level, pos, random);
 		return false;
 	}
 
-	public boolean generateBlock(WorldGenLevel level, BlockPos.@NotNull MutableBlockPos pos, RandomSource random) {
+	public boolean generateBlock(WorldGenLevel level, BlockPos.MutableBlockPos pos, RandomSource random) {
 		pos.move(0, this.verticalPlacementOffset, 0);
-		if (this.replacementBlockPredicate.test(level, pos)) {
-			if (this.searchingBlockPredicate.test(level, pos)) {
-				BlockState state = this.blockStateProvider.getState(random, pos);
-				level.setBlock(pos, state, Block.UPDATE_CLIENTS);
-				if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
-				return true;
-			}
-		}
-		return false;
+		if (!this.replacementBlockPredicate.test(level, pos)) return false;
+		if (!this.searchingBlockPredicate.test(level, pos)) return false;
+
+		final BlockState state = this.stateProvider.getState(random, pos);
+		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
+		if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
+		return true;
 	}
 
 	public static class Builder {
-		private final BlockStateProvider blockStateProvider;
+		private final BlockStateProvider stateProvider;
 		private float placementChance = 1F;
 		private float chanceToChooseInnerBlockInOuterRing = 0F;
 		private float fadeStartPercentage = 1F;
-		private BlockPredicate replacementBlockPredicate = BlockPredicate.replaceable();
-		private BlockPredicate searchingBlockPredicate = BlockPredicate.alwaysTrue();
+		private BlockPredicate replacementPredicate = BlockPredicate.replaceable();
+		private BlockPredicate searchingPredicate = BlockPredicate.alwaysTrue();
 		private boolean scheduleTickOnPlacement = false;
 		private int verticalPlacementOffset = 0;
 		private Optional<HolderSet<Biome>> excludedBiomes = Optional.empty();
 		private Optional<BallOuterRingBlockPlacement> outerRingBlockPlacement = Optional.empty();
 
-		public Builder(BlockStateProvider blockStateProvider) {
-			this.blockStateProvider = blockStateProvider;
+		public Builder(BlockStateProvider stateProvider) {
+			this.stateProvider = stateProvider;
 		}
 
 		public Builder placementChance(float chance) {
@@ -163,13 +158,13 @@ public class BallBlockPlacement {
 			return this;
 		}
 
-		public Builder replacementBlockPredicate(BlockPredicate replacementBlockPredicate) {
-			this.replacementBlockPredicate = replacementBlockPredicate;
+		public Builder replacementBlockPredicate(BlockPredicate replacementPredicate) {
+			this.replacementPredicate = replacementPredicate;
 			return this;
 		}
 
-		public Builder searchingBlockPredicate(BlockPredicate searchingBlockPredicate) {
-			this.searchingBlockPredicate = searchingBlockPredicate;
+		public Builder searchingBlockPredicate(BlockPredicate searchingPredicate) {
+			this.searchingPredicate = searchingPredicate;
 			return this;
 		}
 
@@ -195,12 +190,12 @@ public class BallBlockPlacement {
 
 		public BallBlockPlacement build() {
 			return new BallBlockPlacement(
-				this.blockStateProvider,
+				this.stateProvider,
 				this.placementChance,
 				this.chanceToChooseInnerBlockInOuterRing,
 				this.fadeStartPercentage,
-				this.replacementBlockPredicate,
-				this.searchingBlockPredicate,
+				this.replacementPredicate,
+				this.searchingPredicate,
 				this.scheduleTickOnPlacement,
 				this.verticalPlacementOffset,
 				this.excludedBiomes,

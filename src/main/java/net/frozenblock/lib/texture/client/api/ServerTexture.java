@@ -41,15 +41,15 @@ public class ServerTexture extends DynamicTexture implements TickableTexture {
 	private long timeSinceLastReference;
 
 	// TODO: Look into GpuTexture.getLabel(); usage
-	public ServerTexture(NativeImage nativeImage, String destPath, String fileName) {
-		super(() -> fileName, nativeImage);
+	public ServerTexture(NativeImage image, String destPath, String fileName) {
+		super(() -> fileName, image);
 		this.timeInMilisBeforeClose = 5000L;
 		this.destPath = destPath;
 		this.fileName = fileName;
 	}
 
-	public ServerTexture(NativeImage nativeImage, long timeInMilisBeforeClose, String destPath, String fileName) {
-		super(() -> fileName, nativeImage);
+	public ServerTexture(NativeImage image, long timeInMilisBeforeClose, String destPath, String fileName) {
+		super(() -> fileName, image);
 		this.timeInMilisBeforeClose = timeInMilisBeforeClose;
 		this.destPath = destPath;
 		this.fileName = fileName;
@@ -57,22 +57,20 @@ public class ServerTexture extends DynamicTexture implements TickableTexture {
 
 	public void updateReferenceTime() {
 		this.timeSinceLastReference = System.currentTimeMillis();
-		if (this.closed) {
-			this.closed = false;
-			try {
-				this.setPixels(
-					ServerTextureDownloader.downloadServerTexture(null, this.destPath, this.fileName)
-				);
-			} catch (Exception ignored) {}
-		}
+		if (!this.closed) return;
+
+		this.closed = false;
+		try {
+			this.setPixels(ServerTextureDownloader.downloadServerTexture(null, this.destPath, this.fileName));
+		} catch (Exception ignored) {}
 	}
 
 	@Override
 	public void tick() {
-		if (!this.closed && System.currentTimeMillis() - this.timeSinceLastReference > this.timeInMilisBeforeClose) {
-			NativeImage nativeImage = this.getPixels();
-			if (nativeImage != null) nativeImage.close();
-			this.closed = true;
-		}
+		if (this.closed || (System.currentTimeMillis() - this.timeSinceLastReference) <= this.timeInMilisBeforeClose) return;
+
+		final NativeImage image = this.getPixels();
+		if (image != null) image.close();
+		this.closed = true;
 	}
 }

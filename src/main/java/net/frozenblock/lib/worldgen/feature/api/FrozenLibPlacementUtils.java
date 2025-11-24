@@ -29,18 +29,17 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
-import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
 @UtilityClass
 public class FrozenLibPlacementUtils {
 
-	public static @NotNull ResourceKey<PlacedFeature> createKey(String namespace, String path) {
+	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
 		return ResourceKey.create(Registries.PLACED_FEATURE, Identifier.fromNamespaceAndPath(namespace, path));
 	}
 
-	public static @NotNull Holder<PlacedFeature> register(
-		@NotNull BootstrapContext<PlacedFeature> entries,
+	public static Holder<PlacedFeature> register(
+		BootstrapContext<PlacedFeature> entries,
 		ResourceKey<PlacedFeature> registryKey,
 		Holder<ConfiguredFeature<?, ?>> holder,
 		List<PlacementModifier> list
@@ -48,7 +47,7 @@ public class FrozenLibPlacementUtils {
 		return entries.register(registryKey, new PlacedFeature(holder, List.copyOf(list)));
 	}
 
-	public static @NotNull Holder<PlacedFeature> register(
+	public static Holder<PlacedFeature> register(
 		BootstrapContext<PlacedFeature> entries,
 		ResourceKey<PlacedFeature> registryKey,
 		Holder<ConfiguredFeature<?, ?>> holder,
@@ -57,19 +56,19 @@ public class FrozenLibPlacementUtils {
 		return register(entries, registryKey, holder, List.of(placementModifiers));
 	}
 
-	public static @NotNull Holder<PlacedFeature> register(
-		@NotNull DynamicRegistryManagerSetupContext entries,
-		@NotNull ResourceKey<PlacedFeature> registryKey,
+	public static Holder<PlacedFeature> register(
+		DynamicRegistryManagerSetupContext entries,
+		ResourceKey<PlacedFeature> registryKey,
 		ResourceKey<ConfiguredFeature<?, ?>> configuredKey,
 		List<PlacementModifier> list
 	) {
-		var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE, Registries.PLACED_FEATURE));
-		var configured = entries.registryManager().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(configuredKey);
-		var value = registry.register(Registries.PLACED_FEATURE, registryKey.identifier(), new PlacedFeature(configured, List.copyOf(list)));
+		final var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE, Registries.PLACED_FEATURE));
+		final var configured = entries.registryManager().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(configuredKey);
+		final var value = registry.register(Registries.PLACED_FEATURE, registryKey.identifier(), new PlacedFeature(configured, List.copyOf(list)));
 		return Holder.direct(value);
 	}
 
-	public static @NotNull Holder<PlacedFeature> register(
+	public static Holder<PlacedFeature> register(
 		DynamicRegistryManagerSetupContext entries,
 		ResourceKey<PlacedFeature> registryKey,
 		ResourceKey<ConfiguredFeature<?, ?>> resourceKey,
@@ -78,7 +77,7 @@ public class FrozenLibPlacementUtils {
 		return register(entries, registryKey, resourceKey, List.of(placementModifiers));
 	}
 
-	public static @NotNull Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {
+	public static Holder<PlacedFeature> getHolder(ResourceKey<PlacedFeature> resourceKey) {
 		return VanillaRegistries.createLookup().lookupOrThrow(Registries.PLACED_FEATURE).getOrThrow(resourceKey);
 	}
 }

@@ -24,7 +24,6 @@ import net.frozenblock.lib.worldgen.biome.impl.OverworldBiomeData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * API that exposes the internals of Minecraft's overworld biome code.
@@ -35,11 +34,11 @@ public class FrozenOverworldBiomes {
 	/**
 	 * Adds a biome to the Overworld generator.
 	 *
-	 * @param biome       The biome to add. Must not be null.
+	 * @param biome The biome to add. Must not be null.
 	 * @param targetPoint data about the given {@link Biome}'s spawning information in the Overworld.
 	 * @see Climate.TargetPoint
 	 */
-	public static void addOverworldBiome(ResourceKey<Biome> biome, Climate.@NotNull TargetPoint targetPoint) {
+	public static void addOverworldBiome(ResourceKey<Biome> biome, Climate.TargetPoint targetPoint) {
 		OverworldBiomeData.addOverworldBiome(biome, Climate.parameters(
 			targetPoint.temperature(),
 			targetPoint.humidity(),
@@ -54,7 +53,7 @@ public class FrozenOverworldBiomes {
 	/**
 	 * Adds a biome to the Overworld generator.
 	 *
-	 * @param biome          The {@link Biome} to add. Must not be null.
+	 * @param biome The {@link Biome} to add. Must not be null.
 	 * @param parameterPoint data about the given {@link Biome}'s spawning information in the Overworld.
 	 * @see Climate.ParameterPoint
 	 */
@@ -65,7 +64,7 @@ public class FrozenOverworldBiomes {
 	/**
 	 * Adds a biome to the Overworld generator.
 	 *
-	 * @param biome       The {@link Biome} to add. Must not be null.
+	 * @param biome The {@link Biome} to add. Must not be null.
 	 * @param weirdnesses The specific weirdnesses the biome should be added to.
 	 */
 	public static void addOverworldBiome(
@@ -83,7 +82,7 @@ public class FrozenOverworldBiomes {
 	/**
 	 * Adds a biome to the Overworld generator.
 	 *
-	 * @param biome       The {@link Biome} to add. Must not be null.
+	 * @param biome The {@link Biome} to add. Must not be null.
 	 * @param weirdnesses The specific weirdnesses the biome should be added to.
 	 */
 	public static void addOverworldBiome(
@@ -102,7 +101,7 @@ public class FrozenOverworldBiomes {
 	/**
 	 * Adds a biome to the Overworld generator.
 	 *
-	 * @param biome       The {@link Biome} to add. Must not be null.
+	 * @param biome The {@link Biome} to add. Must not be null.
 	 * @param weirdnesses The specific weirdnesses the biome should be added to.
 	 */
 	public static void addOverworldBiome(
@@ -121,7 +120,7 @@ public class FrozenOverworldBiomes {
 	/**
 	 * Adds a biome to the Overworld generator.
 	 *
-	 * @param biome       The {@link Biome} to add. Must not be null.
+	 * @param biome The {@link Biome} to add. Must not be null.
 	 * @param weirdnesses The specific weirdnesses the biome should be added to.
 	 */
 	public static void addOverworldBiome(
@@ -135,7 +134,8 @@ public class FrozenOverworldBiomes {
 		List<Climate.Parameter> weirdnesses
 	) {
 		FrozenBiomeParameters.addWeirdness(weirdness -> OverworldBiomeData.addOverworldBiome(
-			biome, Climate.parameters(
+			biome,
+			Climate.parameters(
 				temperature,
 				humidity,
 				continentalness,

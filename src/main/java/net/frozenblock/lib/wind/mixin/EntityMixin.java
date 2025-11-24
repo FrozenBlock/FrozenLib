@@ -49,16 +49,16 @@ public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbin
 		)
 	)
 	public void frozenLib$addWindDisturbanceServer(CallbackInfo info) {
-		if (this.level() instanceof ServerLevel serverLevel) {
-			WindDisturbance windDisturbance = this.frozenLib$makeWindDisturbance();
-			if (windDisturbance != null) {
-				WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
-				if (this.frozenLib$useSyncPacket()) {
-					windManager.addWindDisturbanceAndSync(windDisturbance, serverLevel);
-				} else {
-					windManager.addWindDisturbance(windDisturbance);
-				}
-			}
+		if (!(this.level() instanceof ServerLevel serverLevel)) return;
+
+		final WindDisturbance windDisturbance = this.frozenLib$makeWindDisturbance();
+		if (windDisturbance == null) return;
+
+		final WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
+		if (this.frozenLib$useSyncPacket()) {
+			windManager.addWindDisturbanceAndSync(windDisturbance, serverLevel);
+		} else {
+			windManager.addWindDisturbance(windDisturbance);
 		}
 	}
 
@@ -90,31 +90,30 @@ public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbin
 	@Nullable
 	@Override
 	public WindDisturbance frozenLib$makeWindDisturbance() {
-		Identifier disturbanceLogicID = this.frozenLib$getWindDisturbanceLogicID();
-		if (disturbanceLogicID != null) {
-			Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(disturbanceLogicID);
-			if (disturbanceLogic.isPresent()) {
-				Entity entity = Entity.class.cast(this);
-				double scale = entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1D;
-				Vec3 position = entity.getBoundingBox().getCenter();
-				return new WindDisturbance(
-					Optional.of(entity),
-					position,
-					AABB.ofSize(
-						position,
-						this.frozenLib$getWindWidth() * scale,
-						this.frozenLib$getWindHeight() * scale,
-						this.frozenLib$getWindWidth() * scale
-					).move(
-						0D,
-						this.frozenLib$getWindAreaYOffset() * scale,
-						0D
-					),
-					disturbanceLogic.get()
-				);
-			}
-		}
-		return null;
+		final Identifier disturbanceLogicID = this.frozenLib$getWindDisturbanceLogicID();
+		if (disturbanceLogicID == null) return null;
+
+		Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(disturbanceLogicID);
+		if (disturbanceLogic.isEmpty())  return null;
+
+		final Entity entity = Entity.class.cast(this);
+		final double scale = entity instanceof LivingEntity livingEntity ? livingEntity.getScale() : 1D;
+		final Vec3 position = entity.getBoundingBox().getCenter();
+		return new WindDisturbance(
+			Optional.of(entity),
+			position,
+			AABB.ofSize(
+				position,
+				this.frozenLib$getWindWidth() * scale,
+				this.frozenLib$getWindHeight() * scale,
+				this.frozenLib$getWindWidth() * scale
+			).move(
+				0D,
+				this.frozenLib$getWindAreaYOffset() * scale,
+				0D
+			),
+			disturbanceLogic.get()
+		);
 	}
 
 	@Unique
