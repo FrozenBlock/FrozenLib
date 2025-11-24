@@ -48,7 +48,7 @@ public class RegistryDataLoaderMixin {
 		RegistryDataLoader.LoadingFunction loadingFunction,
 		List<HolderLookup.RegistryLookup<?>> list,
 		List<RegistryDataLoader.RegistryData<?>> decodingData,
-		CallbackInfoReturnable<RegistryAccess.Frozen> cir,
+		CallbackInfoReturnable<RegistryAccess.Frozen> info,
 		@Local(ordinal = 2) List<RegistryDataLoader.Loader<?>> registries
 	) {
 		RegistryEvents.DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(
@@ -65,7 +65,15 @@ public class RegistryDataLoaderMixin {
 			shift = At.Shift.AFTER
 		)
 	)
-	private static void onDynamicLoaded(RegistryDataLoader.LoadingFunction loadingFunction, List<HolderLookup.RegistryLookup<?>> list, List<RegistryDataLoader.RegistryData<?>> decodingData, CallbackInfoReturnable<RegistryAccess.Frozen> cir, @Local(ordinal = 2) List<RegistryDataLoader.Loader<?>> list2) {
-		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(new DynamicRegistryManagerSetupContextImpl(list2.stream().map(RegistryDataLoader.Loader::registry)));
+	private static void onDynamicLoaded(
+		RegistryDataLoader.LoadingFunction loadingFunction,
+		List<HolderLookup.RegistryLookup<?>> list,
+		List<RegistryDataLoader.RegistryData<?>> decodingData,
+		CallbackInfoReturnable<RegistryAccess.Frozen> info,
+		@Local(ordinal = 2) List<RegistryDataLoader.Loader<?>> list2
+	) {
+		RegistryEvents.DYNAMIC_REGISTRY_LOADED.invoker().onDynamicRegistryLoaded(
+			new DynamicRegistryManagerSetupContextImpl(list2.stream().map(RegistryDataLoader.Loader::registry))
+		);
 	}
 }

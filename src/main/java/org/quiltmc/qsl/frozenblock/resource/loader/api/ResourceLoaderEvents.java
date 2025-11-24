@@ -70,8 +70,8 @@ public class ResourceLoaderEvents {
 		/**
 		 * Called before data packs on a Minecraft server have been reloaded.
 		 *
-		 * @param server             the server, may be {@code null} for the first reload
-		 * @param oldResourceManager the old resource manager, to be replaced, may be {@code null} for the first reload
+		 * @param server The server, may be {@code null} for the first reload
+		 * @param oldResourceManager The old resource manager, to be replaced, may be {@code null} for the first reload
 		 */
 		void onStartDataPackReload(@Nullable MinecraftServer server, @Nullable ResourceManager oldResourceManager);
 	}
@@ -88,9 +88,9 @@ public class ResourceLoaderEvents {
 		 * <p>
 		 * If the reload was not successful, the old data packs will be kept.
 		 *
-		 * @param server          the server, may be {@code null} for the first reload
-		 * @param resourceManager the resource manager, may be {@code null} if the data pack reload failed
-		 * @param error           present if the data pack reload failed, or {@code null} otherwise
+		 * @param server The server, may be {@code null} for the first reload
+		 * @param resourceManager The resource manager, may be {@code null} if the data pack reload failed
+		 * @param error Present if the data pack reload failed, or {@code null} otherwise
 		 */
 		void onEndDataPackReload(@Nullable MinecraftServer server, @Nullable ResourceManager resourceManager, @Nullable Throwable error);
 	}

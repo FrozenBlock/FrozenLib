@@ -47,29 +47,27 @@ public class ServerStatusVersionMixin implements ModProtocolContainer {
 
 	@ModifyReturnValue(method = "current", at = @At("RETURN"))
 	private static ServerStatus.Version quilt$addProtocolVersions(ServerStatus.Version original) {
-		if (ModProtocol.disableQuery) {
-			return null;
-		}
+		if (ModProtocol.disableQuery) return null;
 
-		var map = new HashMap<String, IntList>();
-		for (var protocol : ModProtocol.REQUIRED) {
-			map.put(protocol.id(), protocol.versions());
-		}
+		final Map<String, IntList> map = new HashMap<>();
+		for (var protocol : ModProtocol.REQUIRED) map.put(protocol.id(), protocol.versions());
 
 		((ModProtocolContainer) (Object) original).frozenLib$setModProtocol(map);
 		return original;
 	}
 
 	@Inject(method = "<clinit>", at = @At("TAIL"))
-	private static void quilt$extendCodec(CallbackInfo ci) {
+	private static void quilt$extendCodec(CallbackInfo info) {
 		CODEC = ModProtocolContainer.createCodec(CODEC);
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$setModProtocol(Map<String, IntList> map) {
 		this.frozenLib$modProtocol = map;
 	}
 
+	@Unique
 	@Override
 	public Map<String, IntList> frozenLib$getModProtocol() {
 		return this.frozenLib$modProtocol;

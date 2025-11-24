@@ -34,7 +34,7 @@ public interface RegistryEventStorage<V> {
 	}
 
 	/**
-	 * {@return the entry added event}
+	 * {@return The entry added event}
 	 */
 	Event<RegistryEvents.EntryAdded<V>> frozenLib_quilt$getEntryAddedEvent();
 }

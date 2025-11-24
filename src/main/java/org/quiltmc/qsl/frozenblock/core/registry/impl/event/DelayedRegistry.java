@@ -40,7 +40,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.tags.TagLoader;
 import net.minecraft.util.RandomSource;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -56,12 +55,12 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	public @Nullable Identifier getKey(T entry) {
+	@Nullable
+	public Identifier getKey(T entry) {
 		return this.wrapped.getKey(entry);
 	}
 
 	@Override
-	@NotNull
 	public Optional<ResourceKey<T>> getResourceKey(T entry) {
 		return this.wrapped.getResourceKey(entry);
 	}
@@ -72,65 +71,58 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	public @Nullable T getValue(@Nullable ResourceKey<T> resourceKey) {
-		return this.wrapped.getValue(resourceKey);
+	@Nullable
+	public T getValue(@Nullable ResourceKey<T> key) {
+		return this.wrapped.getValue(key);
 	}
 
 	@Override
-	public @Nullable T getValue(@Nullable Identifier identifier) {
-		return this.wrapped.getValue(identifier);
+	@Nullable
+	public T getValue(@Nullable Identifier id) {
+		return this.wrapped.getValue(id);
 	}
 
 	@Override
-	@NotNull
 	public Optional<Reference<T>> get(@Nullable ResourceKey<T> entry) {
 		return this.wrapped.get(entry);
 	}
 
 	@Override
-	@NotNull
 	public Optional<Reference<T>> get(@Nullable Identifier id) {
 		return this.wrapped.get(id);
 	}
 
-	@NotNull
 	@Override
 	public Optional<RegistrationInfo> registrationInfo(ResourceKey<T> key) {
 		return this.wrapped.registrationInfo(key);
 	}
 
 	@Override
-	@NotNull
 	public Lifecycle registryLifecycle() {
 		return this.wrapped.registryLifecycle();
 	}
 
 	@Override
-	@NotNull
 	public Optional<Reference<T>> getAny() {
 		return this.wrapped.getAny();
 	}
 
 	@Override
-	@NotNull
 	public Set<Identifier> keySet() {
 		return this.wrapped.keySet();
 	}
 
 	@Override
-	@NotNull
 	public Set<Map.Entry<ResourceKey<T>, T>> entrySet() {
 		return this.wrapped.entrySet();
 	}
 
 	@Override
-	@NotNull
 	public Set<ResourceKey<T>> registryKeySet() {
 		return this.wrapped.registryKeySet();
 	}
 
 	@Override
-	@NotNull
 	public Optional<Reference<T>> getRandom(RandomSource random) {
 		return this.wrapped.getRandom(random);
 	}
@@ -146,32 +138,27 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	@NotNull
 	public Registry<T> freeze() {
 		// Refuse freezing.
 		return this;
 	}
 
 	@Override
-	@NotNull
 	public Reference<T> createIntrusiveHolder(T holder) {
 		return this.wrapped.createIntrusiveHolder(holder);
 	}
 
 	@Override
-	@NotNull
 	public Optional<Reference<T>> get(int index) {
 		return this.wrapped.get(index);
 	}
 
 	@Override
-	@NotNull
 	public Holder<T> wrapAsHolder(T object) {
 		return this.wrapped.wrapAsHolder(object);
 	}
 
 	@Override
-	@NotNull
 	public Stream<Reference<T>> listElements() {
 		return this.wrapped.listElements();
 	}
@@ -182,36 +169,32 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	@NotNull
 	public Optional<Named<T>> get(TagKey<T> tag) {
 		return this.wrapped.get(tag);
 	}
 
 	@Override
-	@NotNull
 	public Stream<Named<T>> getTags() {
 		return this.wrapped.getTags();
 	}
 
 	@Override
-	@NotNull
 	public PendingTags<T> prepareTagReload(TagLoader.LoadResult<T> loadResult) {
 		return this.wrapped.prepareTagReload(loadResult);
 	}
 
 	@Override
-	@NotNull
 	public Iterator<T> iterator() {
 		return this.wrapped.iterator();
 	}
 
 	@Override
-	public @Nullable T byId(int index) {
+	@Nullable
+	public T byId(int index) {
 		return this.wrapped.byId(index);
 	}
 
 	@Override
-	@NotNull
 	public ResourceKey<? extends Registry<T>> key() {
 		return this.wrapped.key();
 	}
@@ -221,7 +204,6 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 		return this.wrapped.size();
 	}
 
-	@NotNull
 	@Override
 	public Reference<T> register(ResourceKey<T> key, T entry, RegistrationInfo registrationInfo) {
 		this.delayedEntries.add(new DelayedEntry<>(key, entry, registrationInfo));
@@ -239,17 +221,13 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	@NotNull
 	public HolderGetter<T> createRegistrationLookup() {
 		return this.wrapped.createRegistrationLookup();
 	}
 
 	void applyDelayed() {
 		DelayedEntry<T> entry;
-
-		while ((entry = this.delayedEntries.poll()) != null) {
-			this.wrapped.register(entry.key(), entry.entry(), entry.registrationInfo);
-		}
+		while ((entry = this.delayedEntries.poll()) != null) this.wrapped.register(entry.key(), entry.entry(), entry.registrationInfo);
 	}
 
 	record DelayedEntry<T>(ResourceKey<T> key, T entry, RegistrationInfo registrationInfo) {

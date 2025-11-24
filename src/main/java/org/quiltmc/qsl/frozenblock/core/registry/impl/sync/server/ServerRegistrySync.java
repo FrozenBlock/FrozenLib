@@ -53,16 +53,16 @@ public final class ServerRegistrySync {
 	public static void registerHandlers() {
 		ServerConfigurationConnectionEvents.CONFIGURE.register(((handler, server) -> {
 			// You must check to see if the client can handle your config task
-			if (
-				ServerConfigurationNetworking.canSend(handler, ServerPackets.Handshake.PACKET_TYPE)
-					&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ErrorStyle.PACKET_TYPE)
-					&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ModProtocol.PACKET_TYPE)
-					&& ServerConfigurationNetworking.canSend(handler, ServerPackets.End.PACKET_TYPE)
+			if (ServerConfigurationNetworking.canSend(handler, ServerPackets.Handshake.PACKET_TYPE)
+				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ErrorStyle.PACKET_TYPE)
+				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.ModProtocol.PACKET_TYPE)
+				&& ServerConfigurationNetworking.canSend(handler, ServerPackets.End.PACKET_TYPE)
 			) {
 				handler.addTask(new QuiltSyncTask(handler, handler.connection));
 			}
 		}));
-		var registryClient = PayloadTypeRegistry.configurationC2S();
+
+		final var registryClient = PayloadTypeRegistry.configurationC2S();
 		registryClient.register(ClientPackets.Handshake.PACKET_TYPE, ClientPackets.Handshake.CODEC);
 		registryClient.register(ClientPackets.ModProtocol.PACKET_TYPE, ClientPackets.ModProtocol.CODEC);
 		registryClient.register(ClientPackets.End.PACKET_TYPE, ClientPackets.End.CODEC);
@@ -71,39 +71,36 @@ public final class ServerRegistrySync {
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE, ServerRegistrySync::handleModProtocol);
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE, ServerRegistrySync::handleEnd);
 
-		var registry = PayloadTypeRegistry.configurationS2C();
+		final var registry = PayloadTypeRegistry.configurationS2C();
 		registry.register(ServerPackets.Handshake.PACKET_TYPE, ServerPackets.Handshake.CODEC);
 		registry.register(ServerPackets.ModProtocol.PACKET_TYPE, ServerPackets.ModProtocol.CODEC);
 		registry.register(ServerPackets.End.PACKET_TYPE, ServerPackets.End.CODEC);
 		registry.register(ServerPackets.ErrorStyle.PACKET_TYPE, ServerPackets.ErrorStyle.CODEC);
 	}
 
-	public static void handleHandshake(ClientPackets.Handshake handshake, Context ctx) {
-		((QuiltSyncTask) ctx.networkHandler().currentTask).handleHandshake(handshake);
+	public static void handleHandshake(ClientPackets.Handshake handshake, Context context) {
+		((QuiltSyncTask) context.networkHandler().currentTask).handleHandshake(handshake);
 	}
 
-	public static void handleModProtocol(ClientPackets.ModProtocol modProtocol, Context ctx) {
-		((QuiltSyncTask) ctx.networkHandler().currentTask).handleModProtocol(modProtocol, ctx.responseSender());
+	public static void handleModProtocol(ClientPackets.ModProtocol modProtocol, Context context) {
+		((QuiltSyncTask) context.networkHandler().currentTask).handleModProtocol(modProtocol, context.responseSender());
 	}
 
-	public static void handleEnd(ClientPackets.End end, Context ctx) {
-		((QuiltSyncTask) ctx.networkHandler().currentTask).handleEnd(end);
+	public static void handleEnd(ClientPackets.End end, Context context) {
+		((QuiltSyncTask) context.networkHandler().currentTask).handleEnd(end);
 	}
 
 	public static Component text(String string) {
-		if (string == null || string.isEmpty()) {
-			return Component.empty();
-		}
+		if (string == null || string.isEmpty()) return Component.empty();
 
 		Component text = null;
 		try {
-			JsonElement json = StrictJsonParser.parse(string);
+			final JsonElement json = StrictJsonParser.parse(string);
 			text = ComponentSerialization.CODEC
 				.parse(RegistryAccess.EMPTY.createSerializationContext(JsonOps.INSTANCE), json)
 				.resultOrPartial()
 				.orElseThrow();
-		} catch (Exception ignored) {
-		}
+		} catch (Exception ignored) {}
 
 		return text != null ? text : Component.literal(string);
 	}
@@ -113,28 +110,18 @@ public final class ServerRegistrySync {
 	}
 
 	public static boolean shouldSync() {
-		if (forceDisable) {
-			return false;
-		}
-
+		if (forceDisable) return false;
 		return ModProtocol.enabled;
 	}
 
 	public static boolean requiresSync() {
-		if (forceDisable) {
-			return false;
-		}
-
+		if (forceDisable) return false;
 		return !ModProtocol.REQUIRED.isEmpty();
 	}
 
 	public static void sendSyncPackets(PacketSender sender, int syncVersion) {
 		sendErrorStylePacket(sender);
-
-		if (ModProtocol.enabled) {
-			sendModProtocol(sender);
-		}
-
+		if (ModProtocol.enabled) sendModProtocol(sender);
 		sender.sendPacket(new ServerPackets.End());
 	}
 

@@ -33,12 +33,13 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryMonitor;
  * <p>
  * Modified to work on Fabric
  *
- * @param <V> the entry type of the monitored {@link Registry}
+ * @param <V> The entry type of the monitored {@link Registry}
  */
 @ApiStatus.Internal
 public class RegistryMonitorImpl<V> implements RegistryMonitor<V> {
 	private final Registry<V> registry;
-	private @Nullable Predicate<RegistryEntryContext<V>> filter = null;
+	@Nullable
+	private Predicate<RegistryEntryContext<V>> filter = null;
 
 	public RegistryMonitorImpl(Registry<V> registry) {
 		this.registry = registry;
@@ -52,32 +53,23 @@ public class RegistryMonitorImpl<V> implements RegistryMonitor<V> {
 
 	@Override
 	public void forAll(RegistryEvents.EntryAdded<V> callback) {
-		if (!(this.registry instanceof WritableRegistry<V>)) {
-			throw new UnsupportedOperationException("Registry " + this.registry + " is not supported!");
-		}
+		if (!(this.registry instanceof WritableRegistry<V>)) throw new UnsupportedOperationException("Registry " + this.registry + " is not supported!");
 
-		var delayed = new DelayedRegistry<>((MappedRegistry<V>) this.registry);
-		var context = new MutableRegistryEntryContextImpl<>(delayed);
-
+		final var delayed = new DelayedRegistry<>((MappedRegistry<V>) this.registry);
+		final var context = new MutableRegistryEntryContextImpl<>(delayed);
 		this.registry.listElements().forEach(entry -> {
 			context.set(entry.unwrapKey().orElseThrow().identifier(), entry.value());
-
-			if (this.testFilter(context)) {
-				callback.onAdded(context);
-			}
+			if (this.testFilter(context)) callback.onAdded(context);
 		});
 
 		this.forUpcoming(callback);
-
 		delayed.applyDelayed();
 	}
 
 	@Override
 	public void forUpcoming(RegistryEvents.EntryAdded<V> callback) {
 		RegistryEvents.getEntryAddEvent(this.registry).register(context -> {
-			if (this.testFilter(context)) {
-				callback.onAdded(context);
-			}
+			if (this.testFilter(context)) callback.onAdded(context);
 		});
 	}
 
@@ -87,10 +79,7 @@ public class RegistryMonitorImpl<V> implements RegistryMonitor<V> {
 	 * Accounts for the filter being {@code null} by treating it as always {@code true}.
 	 */
 	private boolean testFilter(RegistryEntryContext<V> context) {
-		if (this.filter == null) {
-			return true;
-		}
-
+		if (this.filter == null) return true;
 		return this.filter.test(context);
 	}
 }

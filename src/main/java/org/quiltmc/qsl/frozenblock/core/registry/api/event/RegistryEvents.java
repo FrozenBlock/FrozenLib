@@ -26,7 +26,6 @@ import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Events for listening to the manipulation of Minecraft's content registries.
@@ -41,7 +40,6 @@ import org.jetbrains.annotations.NotNull;
  */
 @UtilityClass
 public class RegistryEvents {
-
 	/**
 	 * This event gets triggered when a new {@link RegistryAccess} gets created,
 	 * but before it gets filled.
@@ -55,9 +53,7 @@ public class RegistryEvents {
 	 */
 	public static final Event<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = FrozenEvents.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
 		callbacks -> context -> {
-			for (var callback : callbacks) {
-				callback.onDynamicRegistrySetup(context);
-			}
+			for (var callback : callbacks) callback.onDynamicRegistrySetup(context);
 		}
 	);
 	/**
@@ -73,9 +69,7 @@ public class RegistryEvents {
 	 */
 	public static final Event<DynamicRegistryLoadedCallback> DYNAMIC_REGISTRY_LOADED = FrozenEvents.createEnvironmentEvent(DynamicRegistryLoadedCallback.class,
 		callbacks -> registryManager -> {
-			for (var callback : callbacks) {
-				callback.onDynamicRegistryLoaded(registryManager);
-			}
+			for (var callback : callbacks) callback.onDynamicRegistryLoaded(registryManager);
 		}
 	);
 
@@ -84,10 +78,10 @@ public class RegistryEvents {
 	 * <p>
 	 * The event is invoked upon the addition or assignment of an entry in the specified registry.
 	 *
-	 * @param registry the {@link Registry} for this event to listen for. Must be an instance of {@link MappedRegistry}.
-	 * @param <V>      the entry type of the {@link Registry} to listen for
-	 * @return the entry added event for the specified registry, which can have callbacks registered to it
-	 * @throws ClassCastException if the registry is not a {@link MappedRegistry}
+	 * @param registry The {@link Registry} for this event to listen for. Must be an instance of {@link MappedRegistry}.
+	 * @param <V> The entry type of the {@link Registry} to listen for
+	 * @return The entry added event for the specified registry, which can have callbacks registered to it
+	 * @throws ClassCastException If the registry is not a {@link MappedRegistry}
 	 */
 	public static <V> Event<EntryAdded<V>> getEntryAddEvent(Registry<V> registry) {
 		return RegistryEventStorage.as((MappedRegistry<V>) registry).frozenLib_quilt$getEntryAddedEvent();
@@ -96,7 +90,7 @@ public class RegistryEvents {
 	/**
 	 * Functional interface to be implemented on callbacks for {@link #getEntryAddEvent(Registry)}.
 	 *
-	 * @param <V> the entry type of the {@link Registry} being listened for
+	 * @param <V> The entry type of the {@link Registry} being listened for
 	 * @see #getEntryAddEvent(Registry)
 	 */
 	@FunctionalInterface
@@ -123,7 +117,7 @@ public class RegistryEvents {
 		 *
 		 * @param context the dynamic registry manager setup context
 		 */
-		void onDynamicRegistrySetup(@NotNull DynamicRegistryManagerSetupContext context);
+		void onDynamicRegistrySetup(DynamicRegistryManagerSetupContext context);
 	}
 
 	@FunctionalInterface
@@ -137,8 +131,8 @@ public class RegistryEvents {
 		 * the combined registry manager, and each layer holds different registries.
 		 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 		 *
-		 * @param registryManager the registry manager
+		 * @param registryAccess the registry manager
 		 */
-		void onDynamicRegistryLoaded(@NotNull RegistryAccess registryManager);
+		void onDynamicRegistryLoaded(RegistryAccess registryAccess);
 	}
 }

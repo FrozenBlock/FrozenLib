@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Range;
 public class FirstSchema extends Schema {
     /**
      * Creates a schema.
-     * @param versionKey the data version key
+     * @param versionKey Rhe data version key
      */
     public FirstSchema(@Range(from = 0, to = Integer.MAX_VALUE) int versionKey) {
         super(versionKey, null);
@@ -40,8 +40,8 @@ public class FirstSchema extends Schema {
 
     // all of these methods refer to this.parent without checking if its null
     @Override
-    public void registerTypes(Schema schema, Map<String, Supplier<TypeTemplate>> entityTypes,
-                              Map<String, Supplier<TypeTemplate>> blockEntityTypes) {}
+    public void registerTypes(Schema schema, Map<String, Supplier<TypeTemplate>> entityTypes, Map<String, Supplier<TypeTemplate>> blockEntityTypes) {
+	}
 
     @Override
     public Map<String, Supplier<TypeTemplate>> registerEntities(Schema schema) {

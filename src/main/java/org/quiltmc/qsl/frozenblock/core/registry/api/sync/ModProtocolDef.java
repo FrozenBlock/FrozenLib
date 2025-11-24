@@ -32,10 +32,10 @@ public record ModProtocolDef(String id, String displayName, IntList versions, bo
 	}
 
 	public static ModProtocolDef read(FriendlyByteBuf buf) {
-		var id = buf.readUtf();
-		var name = buf.readUtf();
-		var versions = buf.readIntIdList();
-		var optional = buf.readBoolean();
+		final String id = buf.readUtf();
+		final String name = buf.readUtf();
+		final IntList versions = buf.readIntIdList();
+		final boolean optional = buf.readBoolean();
 		return new ModProtocolDef(id, name, versions, optional);
 	}
 

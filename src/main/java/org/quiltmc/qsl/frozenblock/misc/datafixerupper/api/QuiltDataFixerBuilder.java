@@ -26,7 +26,6 @@ import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 import net.minecraft.util.Util;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Range;
 
 /**
@@ -40,7 +39,7 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
     /**
      * Creates a new {@code QuiltDataFixerBuilder}.
      *
-     * @param dataVersion the current data version
+     * @param dataVersion The current data version
      */
     public QuiltDataFixerBuilder(@Range(from = 0, to = Integer.MAX_VALUE) int dataVersion) {
         super(dataVersion);
@@ -48,7 +47,7 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
     }
 
     /**
-     * {@return the current data version}
+     * {@return Rhe current data version}
      */
     @Range(from = 0, to = Integer.MAX_VALUE)
     public int getDataVersion() {
@@ -61,13 +60,13 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
      * This will build either an {@linkplain #build() unoptimized fixer} or an
      * {@linkplain #build(Set, Supplier) optimized fixer}, depending on the vanilla game's settings.
      *
-     * @param executorGetter the executor supplier, only invoked if the game is using optimized data fixers
-     * @return the newly built data fixer
+     * @param executorGetter The executor supplier, only invoked if the game is using optimized data fixers
+     * @return The newly built data fixer
      */
     @Contract(value = "_, _ -> new")
-    public @NotNull DataFixer build(Set<DSL.TypeReference> types, @NotNull Supplier<Executor> executorGetter) {
+    public DataFixer build(Set<DSL.TypeReference> types, Supplier<Executor> executorGetter) {
 		return types.isEmpty() ? this.build().fixer() : Util.make(() -> {
-			var result = this.build();
+			final var result = this.build();
 			result.optimize(types, executorGetter.get()).join();
 			return result.fixer();
 		});

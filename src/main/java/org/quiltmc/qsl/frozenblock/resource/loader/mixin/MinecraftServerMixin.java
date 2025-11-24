@@ -35,22 +35,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
  */
 @Mixin(MinecraftServer.class)
 public abstract class MinecraftServerMixin {
+
 	@Shadow
 	public abstract ResourceManager getResourceManager();
 
 	@Inject(method = "reloadResources", at = @At("HEAD"))
-	private void onReloadResourcesStart(Collection<String> collection, CallbackInfoReturnable<CompletableFuture<Void>> cir) {
+	private void onReloadResourcesStart(Collection<String> collection, CallbackInfoReturnable<CompletableFuture<Void>> info) {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload((MinecraftServer) (Object) this,
 			this.getResourceManager());
 	}
 
 	@ModifyReturnValue(method = "reloadResources", at = @At("RETURN"))
 	private CompletableFuture<Void> onReloadResourcesEnd(CompletableFuture<Void> original) {
-		original.handleAsync((value, throwable) -> {
-			ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload((MinecraftServer) (Object) this,
-				this.getResourceManager(), throwable);
-			return value;
-		}, (MinecraftServer) (Object) this);
+		original.handleAsync(
+			(value, throwable) -> {
+				ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload((MinecraftServer) (Object) this, this.getResourceManager(), throwable);
+				return value;
+				},
+			(MinecraftServer) (Object) this
+		);
 		return original;
 	}
 }

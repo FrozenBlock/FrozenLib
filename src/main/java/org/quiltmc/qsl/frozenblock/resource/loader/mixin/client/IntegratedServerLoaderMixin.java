@@ -35,10 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(WorldOpenFlows.class)
 public abstract class IntegratedServerLoaderMixin {
 
-	@Inject(
-		method = "loadWorldDataBlocking",
-		at = @At("HEAD")
-	)
+	@Inject(method = "loadWorldDataBlocking", at = @At("HEAD"))
 	private <D, R> void onStartDataPackLoad(
 		WorldLoader.PackConfig dataPackConfig,
 		WorldLoader.WorldDataSupplier<D> savePropertiesSupplier,
@@ -48,10 +45,7 @@ public abstract class IntegratedServerLoaderMixin {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
 	}
 
-	@ModifyReturnValue(
-		method = "loadWorldDataBlocking",
-		at = @At("RETURN")
-	)
+	@ModifyReturnValue(method = "loadWorldDataBlocking", at = @At("RETURN"))
 	private <D, R> R onEndDataPackLoad(
 		R original,
 		WorldLoader.PackConfig dataPackConfig,
@@ -66,7 +60,11 @@ public abstract class IntegratedServerLoaderMixin {
 
 	@ModifyArg(
 		method = {"createFreshLevel", "openWorldLoadLevelStem"},
-		at = @At(value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V", remap = false),
+		at = @At(
+			value = "INVOKE",
+			target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",
+			remap = false
+		),
 		index = 1
 	)
 	private Throwable onFailedDataPackLoad(Throwable throwable) {

@@ -25,7 +25,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * Identifiers of packets sent by server.
@@ -46,7 +45,6 @@ public final class ClientPackets {
 		public static final StreamCodec<FriendlyByteBuf, Handshake> CODEC = ByteBufCodecs.VAR_INT.map(Handshake::new, Handshake::version).cast();
 
 		@Override
-		@NotNull
 		public Type<Handshake> type() {
 			return PACKET_TYPE;
 		}
@@ -74,19 +72,16 @@ public final class ClientPackets {
 			this(read(buf));
 		}
 
-		private static @NotNull Object2IntOpenHashMap<String> read(@NotNull FriendlyByteBuf buf) {
-			Object2IntOpenHashMap<String> protocols = new Object2IntOpenHashMap<>();
+		private static Object2IntOpenHashMap<String> read(FriendlyByteBuf buf) {
+			final Object2IntOpenHashMap<String> protocols = new Object2IntOpenHashMap<>();
 
 			int count = buf.readVarInt();
-
-			while (count-- > 0) {
-				protocols.put(buf.readUtf(), buf.readVarInt());
-			}
+			while (count-- > 0) protocols.put(buf.readUtf(), buf.readVarInt());
 
 			return protocols;
 		}
 
-		public void write(@NotNull FriendlyByteBuf buf) {
+		public void write(FriendlyByteBuf buf) {
 			buf.writeVarInt(this.protocols.size());
 			for (var entry : this.protocols.object2IntEntrySet()) {
 				buf.writeUtf(entry.getKey());
@@ -95,7 +90,6 @@ public final class ClientPackets {
 		}
 
 		@Override
-		@NotNull
 		public Type<ModProtocol> type() {
 			return PACKET_TYPE;
 		}
@@ -116,7 +110,6 @@ public final class ClientPackets {
 		}
 
 		@Override
-		@NotNull
 		public Type<?> type() {
 			return PACKET_TYPE;
 		}

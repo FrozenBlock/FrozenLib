@@ -27,7 +27,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking.Context;
 import net.fabricmc.fabric.api.networking.v1.PacketSender;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.contents.PlainTextContents;
@@ -40,6 +39,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.RegistrySyncText;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ServerPackets;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.slf4j.Logger;
+import net.minecraft.ChatFormatting;
 
 
 @ApiStatus.Internal
@@ -70,7 +70,7 @@ public final class ClientRegistrySync {
 		ClientConfigurationNetworking.registerGlobalReceiver(ServerPackets.ModProtocol.PACKET_TYPE, ClientRegistrySync::handleModProtocol);
 	}
 
-	private static void handleModProtocol(ServerPackets.ModProtocol modProtocol, Context ctx) {
+	private static void handleModProtocol(ServerPackets.ModProtocol modProtocol, Context context) {
 		var prioritizedId = modProtocol.prioritizedId();
 		var protocols = modProtocol.protocols();
 
@@ -81,105 +81,96 @@ public final class ClientRegistrySync {
 		boolean disconnect = false;
 
 		for (var protocol : protocols) {
-			var local = ModProtocol.getVersion(protocol.id());
-			var latest = protocol.latestMatchingVersion(local);
+			final var local = ModProtocol.getVersion(protocol.id());
+			final var latest = protocol.latestMatchingVersion(local);
 			LOGGER.info(String.valueOf(latest));
 			if (latest != ProtocolVersions.NO_PROTOCOL) {
 				values.put(protocol.id(), latest);
 			} else if (!protocol.optional()) {
 				unsupportedList.add(protocol);
 				disconnect = true;
-				if (prioritizedId.equals(protocol.id())) {
-					missingPrioritized = protocol;
-				}
+				if (prioritizedId.equals(protocol.id())) missingPrioritized = protocol;
 			}
 		}
 
 		if (disconnect) {
 			markDisconnected(RegistrySyncText.unsupportedModVersion(unsupportedList, missingPrioritized));
-
 			builder.pushT("unsupported_protocol", "Unsupported Mod Protocol");
-
 			for (var entry : unsupportedList) {
-				builder.textEntry(Component.literal(entry.displayName()).append(Component.literal(" (" + entry.id() + ")").withStyle(ChatFormatting.DARK_GRAY)).append(" | Server: ").append(stringifyVersions(entry.versions())).append(", Client: ").append(stringifyVersions(ModProtocol.getVersion(entry.id()))));
+				builder.textEntry(Component.literal(entry.displayName())
+					.append(Component.literal(" (" + entry.id() + ")").withStyle(ChatFormatting.DARK_GRAY))
+					.append(" | Server: ")
+					.append(stringifyVersions(entry.versions()))
+					.append(", Client: ")
+					.append(stringifyVersions(ModProtocol.getVersion(entry.id()))));
 			}
 		} else {
-			sendSupportedModProtocol(ctx.responseSender(), values);
+			sendSupportedModProtocol(context.responseSender(), values);
 		}
 	}
 
-	private static void handleEndPacket(ServerPackets.End end, Context ctx) {
+	private static void handleEndPacket(ServerPackets.End end, Context context) {
 		syncVersion = -1;
 
-		if (mustDisconnect) {
-			var entry = Component.empty();
-			entry.append(errorStyleHeader);
-
-			if (disconnectMainReason != null && showErrorDetails && !isTextEmpty(disconnectMainReason)) {
-				entry.append("\n");
-				entry.append(disconnectMainReason);
-			}
-
-			if (!isTextEmpty(errorStyleFooter)) {
-				entry.append("\n");
-				entry.append(errorStyleFooter);
-			}
-
-			ctx.responseSender().disconnect(entry);
-
-			LOGGER.warn(builder.asString());
-		} else {
-			ctx.responseSender().sendPacket(new ClientPackets.End());
+		if (!mustDisconnect) {
+			context.responseSender().sendPacket(new ClientPackets.End());
+			return;
 		}
+
+		final var entry = Component.empty();
+		entry.append(errorStyleHeader);
+
+		if (disconnectMainReason != null && showErrorDetails && !isTextEmpty(disconnectMainReason)) {
+			entry.append("\n");
+			entry.append(disconnectMainReason);
+		}
+
+		if (!isTextEmpty(errorStyleFooter)) {
+			entry.append("\n");
+			entry.append(errorStyleFooter);
+		}
+
+		context.responseSender().disconnect(entry);
+		LOGGER.warn(builder.asString());
 	}
 
 	private static String stringifyVersions(IntList versions) {
-		if (versions == null || versions.isEmpty()) {
-			return "Missing!";
+		if (versions == null || versions.isEmpty()) return "Missing!";
+
+		var builder = new StringBuilder().append('[');
+		var versionIterator = versions.iterator();
+		while (versionIterator.hasNext()) {
+			builder.append(versionIterator.nextInt());
+			if (versionIterator.hasNext()) builder.append(", ");
 		}
 
-		var b = new StringBuilder().append('[');
-
-		var iter = versions.iterator();
-
-		while (iter.hasNext()) {
-			b.append(iter.nextInt());
-
-			if (iter.hasNext()) {
-				b.append(", ");
-			}
-		}
-
-		return b.append(']').toString();
+		return builder.append(']').toString();
 	}
 
 	private static void sendSupportedModProtocol(PacketSender sender, Object2IntOpenHashMap<String> values) {
 		sender.sendPacket(new ClientPackets.ModProtocol(values));
 	}
 
-	private static void handleErrorStylePacket(ServerPackets.ErrorStyle errorStyle, Context ctx) {
+	private static void handleErrorStylePacket(ServerPackets.ErrorStyle errorStyle, Context context) {
 		errorStyleHeader = errorStyle.errorHeader();
 		errorStyleFooter = errorStyle.errorFooter();
 		showErrorDetails = errorStyle.showError();
 	}
 
-	private static void handleHelloPacket(ServerPackets.Handshake handshake, Context ctx) {
+	private static void handleHelloPacket(ServerPackets.Handshake handshake, Context context) {
 		syncVersion = ProtocolVersions.getHighestSupportedLocal(handshake.supportedVersions());
-
-		ctx.responseSender().sendPacket(new ClientPackets.Handshake(syncVersion));
+		context.responseSender().sendPacket(new ClientPackets.Handshake(syncVersion));
 		builder.clear();
 	}
 
 	private static void markDisconnected(Component reason) {
-		if (disconnectMainReason == null) {
-			disconnectMainReason = reason;
-		}
-
+		if (disconnectMainReason == null) disconnectMainReason = reason;
 		mustDisconnect = true;
 	}
 
 	private static boolean isTextEmpty(Component text) {
-		return (text.getContents().equals(PlainTextContents.EMPTY) || (text.getContents() instanceof PlainTextContents literalContents && literalContents.text().isEmpty())) && text.getSiblings().isEmpty();
+		return (text.getContents().equals(PlainTextContents.EMPTY) || (text.getContents() instanceof PlainTextContents literalContents && literalContents.text().isEmpty()))
+			&& text.getSiblings().isEmpty();
 	}
 
 	public static void disconnectCleanup(Minecraft client) {

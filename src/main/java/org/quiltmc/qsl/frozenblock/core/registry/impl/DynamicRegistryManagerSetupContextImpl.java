@@ -27,7 +27,6 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.WritableRegistry;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 
@@ -44,25 +43,22 @@ public class DynamicRegistryManagerSetupContextImpl implements DynamicRegistryMa
 
 	public DynamicRegistryManagerSetupContextImpl(Stream<WritableRegistry<?>> registries) {
 		this.registries = new Object2ObjectOpenHashMap<>();
-
 		registries.forEach(registry -> this.registries.put(registry.key(), registry));
 	}
 
 	@Override
-	public @NotNull RegistryAccess registryManager() {
+	public RegistryAccess registryManager() {
 		return this;
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	@NotNull
 	public <E> Optional<Registry<E>> lookup(ResourceKey<? extends Registry<? extends E>> key) {
 		return Optional.ofNullable((Registry) this.registries.get(key)).map(registry -> registry);
 	}
 
 	@SuppressWarnings({"rawtypes", "unchecked"})
 	@Override
-	@NotNull
 	public Stream<RegistryEntry<?>> registries() {
 		return this.registries.entrySet().stream().map(entry -> new RegistryEntry<>((ResourceKey) entry.getKey(), entry.getValue()));
 	}

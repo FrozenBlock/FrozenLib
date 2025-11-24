@@ -29,7 +29,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocolDef;
 
 /**
@@ -55,11 +54,11 @@ public final class ServerPackets {
 		public static final Type<Handshake> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/handshake"));
 		public static final StreamCodec<FriendlyByteBuf, Handshake> CODEC = StreamCodec.ofMember(Handshake::write, Handshake::new);
 
-		public Handshake(@NotNull FriendlyByteBuf buf) {
+		public Handshake(FriendlyByteBuf buf) {
 			this(buf.readIntIdList());
 		}
 
-		public void write(@NotNull FriendlyByteBuf buf) {
+		public void write(FriendlyByteBuf buf) {
 			buf.writeIntIdList(this.supportedVersions);
 		}
 
@@ -84,7 +83,6 @@ public final class ServerPackets {
 		}
 
 		@Override
-		@NotNull
 		public Type<?> type() {
 			return PACKET_TYPE;
 		}
@@ -99,27 +97,24 @@ public final class ServerPackets {
 	 *   Text Header: Text (String)
 	 *   Text Footer: Text (String)
 	 *   Show Details: bool
-	 *
 	 * }
 	 * </code></pre>
 	 */
-	public record ErrorStyle(Component errorHeader, Component errorFooter,
-							 boolean showError) implements CustomPacketPayload {
+	public record ErrorStyle(Component errorHeader, Component errorFooter, boolean showError) implements CustomPacketPayload {
 		public static final Type<ErrorStyle> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/error_style"));
 		public static final StreamCodec<FriendlyByteBuf, ErrorStyle> CODEC = StreamCodec.ofMember(ErrorStyle::write, ErrorStyle::new);
 
-		public ErrorStyle(@NotNull FriendlyByteBuf buf) {
+		public ErrorStyle(FriendlyByteBuf buf) {
 			this(ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf), ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.decode(buf), buf.readBoolean());
 		}
 
-		public void write(@NotNull FriendlyByteBuf buf) {
+		public void write(FriendlyByteBuf buf) {
 			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorHeader);
 			ComponentSerialization.TRUSTED_CONTEXT_FREE_STREAM_CODEC.encode(buf, this.errorFooter);
 			buf.writeBoolean(this.showError);
 		}
 
 		@Override
-		@NotNull
 		public Type<?> type() {
 			return PACKET_TYPE;
 		}
@@ -141,22 +136,19 @@ public final class ServerPackets {
 	 * }
 	 * </code></pre>
 	 */
-	public record ModProtocol(String prioritizedId,
-							  Collection<ModProtocolDef> protocols) implements CustomPacketPayload {
+	public record ModProtocol(String prioritizedId, Collection<ModProtocolDef> protocols) implements CustomPacketPayload {
 		public static final Type<ModProtocol> PACKET_TYPE = new Type<>(ServerPackets.id("registry_sync/mod_protocol"));
 		public static final StreamCodec<FriendlyByteBuf, ModProtocol> CODEC = StreamCodec.ofMember(ModProtocol::write, ModProtocol::new);
 
-		public ModProtocol(@NotNull FriendlyByteBuf buf) {
+		public ModProtocol(FriendlyByteBuf buf) {
 			this(buf.readUtf(), buf.readList(ModProtocolDef::read));
 		}
 
-		public void write(@NotNull FriendlyByteBuf buf) {
+		public void write(FriendlyByteBuf buf) {
 			buf.writeUtf(this.prioritizedId);
 			buf.writeCollection(this.protocols, ModProtocolDef::write);
 		}
 
-		@Override
-		@NotNull
 		public Type<?> type() {
 			return PACKET_TYPE;
 		}

@@ -40,11 +40,13 @@ public class ConnectionMixin implements ExtendedConnection {
 		this.frozenLib$modProtocol.defaultReturnValue(ProtocolVersions.NO_PROTOCOL);
 	}
 
+	@Unique
 	@Override
 	public void frozenLib$setModProtocol(String id, int version) {
 		this.frozenLib$modProtocol.put(id, version);
 	}
 
+	@Unique
 	@Override
 	public int frozenLib$getModProtocol(String id) {
 		return this.frozenLib$modProtocol.getInt(id);

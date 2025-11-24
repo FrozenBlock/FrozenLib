@@ -26,7 +26,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.network.ConfigurationTask;
 import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
-import org.jetbrains.annotations.NotNull;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ClientPackets;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.ProtocolVersions;
 
@@ -56,13 +55,13 @@ public class QuiltSyncTask implements ConfigurationTask {
 		ServerRegistrySync.sendSyncPackets(sender, this.syncVersion);
 	}
 
-	public void handleHandshake(ClientPackets.@NotNull Handshake handshake) {
+	public void handleHandshake(ClientPackets.Handshake handshake) {
 		this.syncVersion = handshake.version();
 		this.sendSyncPackets(ServerConfigurationNetworking.getSender(this.packetHandler));
 	}
 
-	public void handleModProtocol(ClientPackets.@NotNull ModProtocol modProtocol, PacketSender sender) {
-		modProtocol.protocols().forEach(this.extendedConnection::frozenLib$setModProtocol);
+	public void handleModProtocol(ClientPackets.ModProtocol protocol, PacketSender sender) {
+		protocol.protocols().forEach(this.extendedConnection::frozenLib$setModProtocol);
 	}
 
 	public void handleEnd(ClientPackets.End end) {

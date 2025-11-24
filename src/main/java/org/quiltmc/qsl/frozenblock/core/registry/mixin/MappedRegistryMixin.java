@@ -19,6 +19,7 @@
 package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Lifecycle;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
@@ -36,7 +37,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 /**
  * Stores and invokes registry events.
@@ -53,19 +53,16 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 
 	// HACK TODO for some reason initializing this like normal doesnt work. i dont care to figure out why - glitch
 	@Inject(method = "<init>(Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Z)V", at = @At("TAIL"))
-	private void frozenLib_quilt$hackBecauseMixinHatesMe(ResourceKey<? extends Registry<V>> key, Lifecycle lifecycle, boolean useIntrusiveHolders, CallbackInfo ci) {
+	private void frozenLib_quilt$hackBecauseMixinHatesMe(ResourceKey<? extends Registry<V>> key, Lifecycle lifecycle, boolean useIntrusiveHolders, CallbackInfo info) {
 		this.frozenLib_quilt$entryContext = new MutableRegistryEntryContextImpl<>(this);
-		this.frozenLib_quilt$entryAddedEvent = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class,
-			callbacks -> context -> {
-				for (var callback : callbacks) {
-					callback.onAdded(context);
-				}
-			});
+		this.frozenLib_quilt$entryAddedEvent = FrozenEvents.createEnvironmentEvent(RegistryEvents.EntryAdded.class, callbacks -> context -> {
+			for (var callback : callbacks) callback.onAdded(context);
+		});
 	}
 
 
 	@ModifyExpressionValue(
-		method = "Lnet/minecraft/core/MappedRegistry;register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;",
+		method = "register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;",
 		at = @At(
 			value = "INVOKE",
 			target = "Ljava/util/Map;computeIfAbsent(Ljava/lang/Object;Ljava/util/function/Function;)Ljava/lang/Object;",
@@ -73,9 +70,7 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 		)
 	)
 	private V frozenLib_quilt$$eagerFillReference(V object, ResourceKey<V> key, V value, RegistrationInfo registrationInfo) {
-		if (object instanceof Holder.Reference reference) {
-			reference.bindValue(value);
-		}
+		if (object instanceof Holder.Reference reference) reference.bindValue(value);
 		return object;
 	}
 
@@ -84,11 +79,13 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 	 */
 	@SuppressWarnings({"ConstantConditions", "unchecked"})
 	@Inject(
-		method = "Lnet/minecraft/core/MappedRegistry;register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;",
-		at = @At("RETURN"),
-		locals = LocalCapture.CAPTURE_FAILEXCEPTION
+		method = "register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;",
+		at = @At("RETURN")
 	)
-	private void frozenLib_quilt$$invokeEntryAddEvent(ResourceKey<V> key, V entry, RegistrationInfo registrationInfo, CallbackInfoReturnable<Holder<V>> cir, Holder.Reference reference, int i) {
+	private void frozenLib_quilt$$invokeEntryAddEvent(
+		ResourceKey<V> key, V entry, RegistrationInfo registrationInfo, CallbackInfoReturnable<Holder<V>> info,
+		@Local int i
+	) {
 		this.frozenLib_quilt$entryContext.set(key.identifier(), entry, i);
 		RegistryEventStorage.as((MappedRegistry<V>) (Object) this).frozenLib_quilt$getEntryAddedEvent().invoker().onAdded(this.frozenLib_quilt$entryContext);
 	}

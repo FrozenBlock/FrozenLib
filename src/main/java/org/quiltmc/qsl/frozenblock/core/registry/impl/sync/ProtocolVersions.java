@@ -39,11 +39,8 @@ public class ProtocolVersions {
 		int highestSupported = NO_PROTOCOL;
 
 		for (var i = 0; i < supportedRemote.size(); i++) {
-			int version = supportedRemote.getInt(i);
-
-			if (version > highestSupported && supportedLocal.contains(version)) {
-				highestSupported = version;
-			}
+			final int version = supportedRemote.getInt(i);
+			if (version > highestSupported && supportedLocal.contains(version)) highestSupported = version;
 		}
 
 		return highestSupported;

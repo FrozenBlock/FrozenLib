@@ -32,22 +32,22 @@ import net.minecraft.resources.Identifier;
  */
 public interface RegistryEntryContext<V> {
 	/**
-	 * {@return the relevant registry for this entry}
+	 * {@return The relevant registry for this entry}
 	 */
 	Registry<V> registry();
 
 	/**
-	 * {@return the entry's object}
+	 * {@return The entry's object}
 	 */
 	V value();
 
 	/**
-	 * {@return the entry's namespaced identifier}
+	 * {@return The entry's namespaced identifier}
 	 */
 	Identifier identifier();
 
 	/**
-	 * {@return the entry's raw int identifier}
+	 * {@return The entry's raw int identifier}
 	 */
 	int rawId();
 
@@ -56,10 +56,10 @@ public interface RegistryEntryContext<V> {
 	 * <p>
 	 * Registration may be delayed when called from {@link RegistryMonitor#forAll(RegistryEvents.EntryAdded)}.
 	 *
-	 * @param id    the identifier of the entry
-	 * @param value the value to register
-	 * @param <T>   the type of the value
-	 * @return the registered value
+	 * @param id The identifier of the entry
+	 * @param value The value to register
+	 * @param <T> The type of the value
+	 * @return The registered value
 	 */
 	default <T extends V> T register(Identifier id, T value) {
 		return Registry.register(this.registry(), id, value);

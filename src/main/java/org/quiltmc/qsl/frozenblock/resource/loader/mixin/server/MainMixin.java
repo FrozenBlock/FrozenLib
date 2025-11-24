@@ -49,7 +49,7 @@ public class MainMixin {
 		),
 		remap = false
 	)
-	private static void onStartReloadResources(String[] strings, CallbackInfo ci) {
+	private static void onStartReloadResources(String[] strings, CallbackInfo info) {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null); // First reload
 	}
 

@@ -33,11 +33,13 @@ public class ServerDataMixin implements ModProtocolContainer {
 	@Unique
 	private Map<String, IntList> frozenLib$modProtocol;
 
+	@Unique
 	@Override
 	public void frozenLib$setModProtocol(Map<String, IntList> map) {
 		this.frozenLib$modProtocol = map;
 	}
 
+	@Unique
 	@Override
 	public Map<String, IntList> frozenLib$getModProtocol() {
 		return this.frozenLib$modProtocol;

@@ -43,17 +43,16 @@ public class DataFixTypesMixin {
 	private DSL.TypeReference type;
 
 	@ModifyReturnValue(
-            method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
-            at = @At("RETURN")
+		method = "update(Lcom/mojang/datafixers/DataFixer;Lcom/mojang/serialization/Dynamic;II)Lcom/mojang/serialization/Dynamic;",
+		at = @At("RETURN")
     )
     private <T> Dynamic<T> updateDataWithFixers(Dynamic<T> original, DataFixer fixer, Dynamic<T> dynamic, int oldVersion, int targetVersion) {
-		var type = DataFixTypes.class.cast(this);
-		var value = original.getValue();
+		final var type = DataFixTypes.class.cast(this);
+		final var value = original.getValue();
 
-		if (value instanceof Tag && !FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(this.type.typeName())) {
-			//noinspection unchecked
-			return (Dynamic<T>) QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) original);
-		}
-		return original;
+		if (!(value instanceof Tag) || FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(this.type.typeName())) return original;
+
+		//noinspection unchecked
+		return (Dynamic<T>) QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) original);
 	}
 }

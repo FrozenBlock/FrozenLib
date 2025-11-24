@@ -32,7 +32,7 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEntryContext;
  * <p>
  * Modified to work on Fabric
  *
- * @param <V> the type of the relevant {@link Registry}'s entries
+ * @param <V> The type of the relevant {@link Registry}'s entries
  */
 @ApiStatus.Internal
 public class MutableRegistryEntryContextImpl<V> implements RegistryEntryContext<V> {
@@ -87,10 +87,7 @@ public class MutableRegistryEntryContextImpl<V> implements RegistryEntryContext<
 
 	@Override
 	public int rawId() {
-		if (this.raw < 0) {
-			this.raw = this.registry.getId(this.value);
-		}
-
+		if (this.raw < 0) this.raw = this.registry.getId(this.value);
 		return this.raw;
 	}
 }

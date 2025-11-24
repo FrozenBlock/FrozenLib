@@ -23,18 +23,17 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
-import net.minecraft.SharedConstants;
+import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.util.datafix.DataFixers;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.slf4j.Logger;
-import java.util.Optional;
+import net.minecraft.SharedConstants;
 
 /**
  * Modified to work on Fabric
@@ -47,59 +46,61 @@ public abstract class QuiltDataFixesInternals {
 
     @Contract(pure = true)
     @Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional by FrozenBlock
-    public static Optional<Integer> getModDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
-		String key = modId + "_DataVersion";
-        return compound.contains(key) ? compound.getInt(modId + "_DataVersion") : Optional.empty();
+    public static Optional<Integer> getModDataVersion(CompoundTag tag, String modId) {
+		final String key = modId + "_DataVersion";
+        return tag.contains(key) ? tag.getInt(modId + "_DataVersion") : Optional.empty();
     }
 
 	@Contract(pure = true)
 	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional by FrozenBlock
-	public static Optional<Integer> getModMinecraftDataVersion(@NotNull CompoundTag compound, @NotNull String modId) {
-		String key = modId + "_DataVersion_Minecraft";
-		return compound.contains(key) ? compound.getInt(modId + "_DataVersion_Minecraft") : Optional.empty();
+	public static Optional<Integer> getModMinecraftDataVersion(CompoundTag tag, String modId) {
+		final String key = modId + "_DataVersion_Minecraft";
+		return tag.contains(key) ? tag.getInt(modId + "_DataVersion_Minecraft") : Optional.empty();
 	}
 
     private static QuiltDataFixesInternals instance;
 
-    public static @NotNull QuiltDataFixesInternals get() {
-        if (instance == null) {
-            Schema latestVanillaSchema;
-            try {
-                latestVanillaSchema = DataFixers.getDataFixer()
-                        .getSchema(DataFixUtils.makeKey(SharedConstants.getCurrentVersion().dataVersion().version()));
-            } catch (Exception e) {
-                latestVanillaSchema = null;
-            }
+    public static QuiltDataFixesInternals get() {
+        if (instance != null) return  instance;
 
-            if (latestVanillaSchema == null) {
-                LOGGER.warn("[Quilt DFU API] Failed to initialize! Either someone stopped DFU from initializing,");
-                LOGGER.warn("[Quilt DFU API]  or this Minecraft build is hosed.");
-                LOGGER.warn("[Quilt DFU API] Using no-op implementation.");
-                instance = new NoOpQuiltDataFixesInternals();
-            } else {
-                instance = new QuiltDataFixesInternalsImpl(latestVanillaSchema);
-            }
-        }
+		Schema latestVanillaSchema;
+		try {
+			latestVanillaSchema = DataFixers.getDataFixer()
+				.getSchema(DataFixUtils.makeKey(SharedConstants.getCurrentVersion().dataVersion().version()));
+		} catch (Exception e) {
+			latestVanillaSchema = null;
+		}
+
+		if (latestVanillaSchema == null) {
+			LOGGER.warn("[Quilt DFU API] Failed to initialize! Either someone stopped DFU from initializing,");
+			LOGGER.warn("[Quilt DFU API]  or this Minecraft build is hosed.");
+			LOGGER.warn("[Quilt DFU API] Using no-op implementation.");
+			instance = new NoOpQuiltDataFixesInternals();
+		} else {
+			instance = new QuiltDataFixesInternalsImpl(latestVanillaSchema);
+		}
 
         return instance;
     }
 
-    public abstract void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer);
+    public abstract void registerFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer);
 
 	public abstract boolean isEmpty();
 
-    public abstract @Nullable DataFixerEntry getFixerEntry(@NotNull String modId);
+	@Nullable
+    public abstract DataFixerEntry getFixerEntry(String modId);
 
-	public abstract void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer);
+	public abstract void registerMinecraftFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer);
 
-	public abstract @Nullable DataFixerEntry getMinecraftFixerEntry(@NotNull String modId);
+	@Nullable
+	public abstract DataFixerEntry getMinecraftFixerEntry(String modId);
 
     @Contract(value = "-> new", pure = true)
-    public abstract @NotNull Schema createBaseSchema();
+    public abstract Schema createBaseSchema();
 
-    public abstract @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic);
+    public abstract Dynamic<Tag> updateWithAllFixers(DataFixTypes dataFixTypes, Dynamic<Tag> dynamic);
 
-    public abstract @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound);
+    public abstract CompoundTag addModDataVersions(CompoundTag tag);
 
     public abstract void freeze();
 

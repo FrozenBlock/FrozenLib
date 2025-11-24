@@ -27,22 +27,20 @@ import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.ArrayList;
 import java.util.Map;
 import net.frozenblock.lib.FrozenLibConstants;
-import org.jetbrains.annotations.NotNull;
 
 public interface ModProtocolContainer {
 	Codec<Map<String, IntList>> MAP_CODEC = Codec.unboundedMap(Codec.STRING, Codec.list(Codec.INT).xmap(IntArrayList::new, ArrayList::new));
 
-	@NotNull
 	static <E> Codec<E> createCodec(Codec<E> codec) {
 		final String modProtocol = FrozenLibConstants.string("mod_protocol");
 
 		return new Codec<>() {
 			@Override
 			public <T> DataResult<Pair<E, T>> decode(DynamicOps<T> ops, T input) {
-				var value = codec.decode(ops, input);
+				final var value = codec.decode(ops, input);
 
 				ops.get(input, modProtocol).ifSuccess((x) -> {
-					var versionData = MAP_CODEC.decode(ops, x);
+					final var versionData = MAP_CODEC.decode(ops, x);
 					versionData.ifSuccess(y ->
 						((ModProtocolContainer) value.result().orElseThrow().getFirst()).frozenLib$setModProtocol(y.getFirst())
 					);
@@ -53,15 +51,12 @@ public interface ModProtocolContainer {
 
 			@Override
 			public <T> DataResult<T> encode(E input, DynamicOps<T> ops, T prefix) {
-				var value = codec.encode(input, ops, prefix);
-				var modProto = ModProtocolContainer.of(input).frozenLib$getModProtocol();
+				final var value = codec.encode(input, ops, prefix);
+				final var protocol = ModProtocolContainer.of(input).frozenLib$getModProtocol();
 
-				if (value.isSuccess() && modProto != null) {
-					var x = MAP_CODEC.encodeStart(ops, modProto);
-
-					if (x.isSuccess()) {
-						return DataResult.success(ops.set(value.result().orElseThrow(), modProtocol, x.result().orElseThrow()));
-					}
+				if (value.isSuccess() && protocol != null) {
+					final var x = MAP_CODEC.encodeStart(ops, protocol);
+					if (x.isSuccess()) return DataResult.success(ops.set(value.result().orElseThrow(), modProtocol, x.result().orElseThrow()));
 				}
 
 				return value;

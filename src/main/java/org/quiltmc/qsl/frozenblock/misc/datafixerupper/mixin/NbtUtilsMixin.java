@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(NbtUtils.class)
 public class NbtUtilsMixin {
 
-	@ModifyReturnValue(method = "addDataVersion", at = @At("RETURN"))
+	@ModifyReturnValue(method = "addDataVersion*", at = @At("RETURN"))
 	private static CompoundTag addDataVersion(CompoundTag original) {
 		return QuiltDataFixesInternals.get().addModDataVersions(original);
 	}

@@ -25,7 +25,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.api.EmptySchema;
@@ -46,7 +45,7 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     }
 
     @Override
-    public void registerFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {}
+    public void registerFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer) {}
 
 	@Override
 	public boolean isEmpty() {
@@ -54,31 +53,33 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
 	}
 
 	@Override
-    public @Nullable DataFixerEntry getFixerEntry(@NotNull String modId) {
+	@Nullable
+    public DataFixerEntry getFixerEntry(String modId) {
         return null;
     }
 
 	@Override
-	public void registerMinecraftFixer(@NotNull String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, @NotNull DataFixer dataFixer) {}
+	public void registerMinecraftFixer(String modId, @Range(from = 0, to = Integer.MAX_VALUE) int currentVersion, DataFixer dataFixer) {}
 
 	@Override
-	public @Nullable DataFixerEntry getMinecraftFixerEntry(@NotNull String modId) {
+	@Nullable
+	public DataFixerEntry getMinecraftFixerEntry(String modId) {
 		return null;
 	}
 
 	@Override
-    public @NotNull Schema createBaseSchema() {
+    public Schema createBaseSchema() {
         return this.schema;
     }
 
     @Override
-    public @NotNull Dynamic<Tag> updateWithAllFixers(@NotNull DataFixTypes dataFixTypes, @NotNull Dynamic<Tag> dynamic) {
+    public Dynamic<Tag> updateWithAllFixers(DataFixTypes dataFixTypes, Dynamic<Tag> dynamic) {
         return new Dynamic<>(dynamic.getOps(), dynamic.getValue().copy());
     }
 
     @Override
-    public @NotNull CompoundTag addModDataVersions(@NotNull CompoundTag compound) {
-        return compound;
+    public CompoundTag addModDataVersions(CompoundTag tag) {
+        return tag;
     }
 
 	@Override

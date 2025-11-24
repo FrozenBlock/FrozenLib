@@ -26,11 +26,10 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -44,7 +43,7 @@ public interface DynamicRegistryManagerSetupContext {
 	 * {@return the registry access that is being currently setup}
 	 */
 	@Contract(pure = true)
-	@NotNull RegistryAccess registryManager();
+	RegistryAccess registryManager();
 
 	/**
 	 * Attempts to safely register a game object into the given registry.
@@ -52,15 +51,14 @@ public interface DynamicRegistryManagerSetupContext {
 	 * This method is preferred instead of {@link Registry#register(Registry, Identifier, Object)}
 	 * as it makes sure to not overwrite data-pack-provided entries, it also makes sure the registry exists.
 	 *
-	 * @param registryKey        the key of the registry to register into
-	 * @param id                 the identifier of the game object to register
-	 * @param gameObjectSupplier the supplier of the game object to register
-	 * @param <V>                the type of game object to register
+	 * @param key The key of the registry to register into
+	 * @param id The identifier of the game object to register
+	 * @param gameObjectSupplier The supplier of the game object to register
+	 * @param <V> The type of game object to register
 	 * @return the optional game object, if the registry is present then the optional is filled, or empty otherwise
 	 */
-	default <V> @NotNull Optional<V> register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull Identifier id,
-											  @NotNull Supplier<V> gameObjectSupplier) {
-		return this.registryManager().lookup(registryKey)
+	default <V> Optional<V> register(ResourceKey<? extends Registry<V>> key, Identifier id, Supplier<V> gameObjectSupplier) {
+		return this.registryManager().lookup(key)
 			.map(registry -> registry.containsKey(id) ? registry.getValue(id) : Registry.register(registry, id, gameObjectSupplier.get()));
 	}
 
@@ -69,60 +67,48 @@ public interface DynamicRegistryManagerSetupContext {
 	 * <p>
 	 * If one of the queried registries isn't found, then this method will return {@code null}.
 	 *
-	 * @param registryKeys the keys of the registries to get
-	 * @return the registry map if all the queried registries have been found, or {@code null} otherwise
+	 * @param keys The keys of the registries to get
+	 * @return The registry map if all the queried registries have been found, or {@code null} otherwise
 	 */
 	@Contract(pure = true)
-	default @Nullable RegistryMap getRegistries(@NotNull Set<ResourceKey<? extends Registry<?>>> registryKeys) {
-		if (registryKeys.isEmpty())
-			throw new IllegalArgumentException("Please provide at least one registry to gather.");
+	@Nullable
+	default RegistryMap getRegistries(Set<ResourceKey<? extends Registry<?>>> keys) {
+		if (keys.isEmpty()) throw new IllegalArgumentException("Please provide at least one registry to gather.");
 
 		Map<ResourceKey<? extends Registry<?>>, Registry<?>> foundRegistries = null;
+		for (var key : keys) {
+			final var possibleRegistry = this.registryManager().lookup(key);
 
-		for (var key : registryKeys) {
-			var maybe = this.registryManager().lookup(key);
+			if (possibleRegistry.isEmpty()) continue;
 
-			if (maybe.isPresent()) {
-				if (foundRegistries == null) {
-					foundRegistries = new Reference2ObjectOpenHashMap<>();
-				}
-
-				foundRegistries.put(key, maybe.get());
-			}
+			if (foundRegistries == null) foundRegistries = new Reference2ObjectOpenHashMap<>();
+			foundRegistries.put(key, possibleRegistry.get());
 		}
 
-		if (foundRegistries == null || foundRegistries.size() != registryKeys.size()) {
-			return null;
-		}
-
+		if (foundRegistries == null || foundRegistries.size() != keys.size()) return null;
 		return new RegistryMap(foundRegistries);
 	}
 
 	/**
 	 * Executes the given action if all the provided registry keys are present in the {@link RegistryAccess}.
 	 *
-	 * @param action       the action
-	 * @param registryKeys the registry keys to check
+	 * @param action The action
+	 * @param keys The registry keys to check
 	 */
-	default void withRegistries(@NotNull Consumer<RegistryMap> action, @NotNull Set<ResourceKey<? extends Registry<?>>> registryKeys) {
-		var registries = this.getRegistries(registryKeys);
-
-		if (registries != null) {
-			action.accept(registries);
-		}
+	default void withRegistries(Consumer<RegistryMap> action, Set<ResourceKey<? extends Registry<?>>> keys) {
+		final var registries = this.getRegistries(keys);
+		if (registries != null) action.accept(registries);
 	}
 
 	/**
 	 * Attempts to create a new registry monitor for the given registry.
 	 *
-	 * @param registryKey the key of the registry to monitor
-	 * @param action      the monitor callback
-	 * @param <V>         the type of values held in the registry
+	 * @param key The key of the registry to monitor
+	 * @param action The monitor callback
+	 * @param <V> The type of values held in the registry
 	 */
-	default <V> void monitor(ResourceKey<? extends Registry<V>> registryKey, Consumer<RegistryMonitor<V>> action) {
-		this.registryManager().lookup(registryKey).ifPresent(registry -> {
-			action.accept(RegistryMonitor.create(registry));
-		});
+	default <V> void monitor(ResourceKey<? extends Registry<V>> key, Consumer<RegistryMonitor<V>> action) {
+		this.registryManager().lookup(key).ifPresent(registry -> action.accept(RegistryMonitor.create(registry)));
 	}
 
 	/**
@@ -134,28 +120,27 @@ public interface DynamicRegistryManagerSetupContext {
 		/**
 		 * Gets the registry from its key in this map.
 		 *
-		 * @param registryKey the key of the registry
-		 * @param <V>         the type of values held in the registry
-		 * @return the registry if present, or {@code null} otherwise
+		 * @param key The key of the registry
+		 * @param <V> The type of values held in the registry
+		 * @return The registry if present, or {@code null} otherwise
 		 */
 		@Contract(pure = true)
 		@SuppressWarnings("unchecked")
-		public <V> Registry<V> get(ResourceKey<? extends Registry<V>> registryKey) {
-			return (Registry<V>) this.registries.get(registryKey);
+		public <V> Registry<V> get(ResourceKey<? extends Registry<V>> key) {
+			return (Registry<V>) this.registries.get(key);
 		}
 
 		/**
 		 * Registers the given game object into the given registry.
 		 *
-		 * @param registryKey the key of the registry to register into
-		 * @param id          the identifier of the game object to register
-		 * @param gameObject  the game object to register
-		 * @param <V>         the type of values held in the registry
+		 * @param key The key of the registry to register into
+		 * @param id The identifier of the game object to register
+		 * @param gameObject The game object to register
+		 * @param <V> The type of values held in the registry
 		 * @return the game object
 		 */
-		public <V> @NotNull V register(@NotNull ResourceKey<? extends Registry<V>> registryKey, @NotNull Identifier id,
-									   @NotNull V gameObject) {
-			return Registry.register(this.get(registryKey), id, gameObject);
+		public <V> V register(ResourceKey<? extends Registry<V>> key, Identifier id, V gameObject) {
+			return Registry.register(this.get(key), id, gameObject);
 		}
 	}
 }
