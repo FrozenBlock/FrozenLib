@@ -40,7 +40,7 @@ public class SurfaceRuleManagerMixin {
 			category == SurfaceRuleManager.RuleCategory.OVERWORLD ? BuiltinDimensionTypes.OVERWORLD : BuiltinDimensionTypes.NETHER
 		);
 
-		if (newRules == null) return original
+		if (newRules == null) return original;
 
 	FrozenLibLogUtils.log("Applying FrozenLib's surface rules to TerraBlender", FrozenLibConstants.UNSTABLE_LOGGING);
 		return SurfaceRules.sequence(newRules, original, newRules);

@@ -28,6 +28,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.util.datafix.DataFixers;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
@@ -101,6 +102,8 @@ public abstract class QuiltDataFixesInternals {
     public abstract Dynamic<Tag> updateWithAllFixers(DataFixTypes dataFixTypes, Dynamic<Tag> dynamic);
 
     public abstract CompoundTag addModDataVersions(CompoundTag tag);
+
+	public abstract void addModDataVersions(ValueOutput output);
 
     public abstract void freeze();
 

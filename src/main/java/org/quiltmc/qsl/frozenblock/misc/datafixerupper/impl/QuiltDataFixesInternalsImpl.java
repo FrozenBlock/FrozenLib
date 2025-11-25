@@ -28,6 +28,7 @@ import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -135,6 +136,16 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 		}
         return tag;
     }
+
+	@Override
+	public void addModDataVersions(ValueOutput output) {
+		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
+			output.putInt(entry.getKey() + "_DataVersion", entry.getValue().currentVersion());
+		}
+		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
+			output.putInt(entry.getKey() + "_DataVersion_Minecraft", entry.getValue().currentVersion());
+		}
+	}
 
 	@Override
     public void freeze() {

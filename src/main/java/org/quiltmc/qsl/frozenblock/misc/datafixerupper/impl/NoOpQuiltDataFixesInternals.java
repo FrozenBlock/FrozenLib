@@ -24,6 +24,7 @@ import com.mojang.serialization.Dynamic;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
+import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
@@ -81,6 +82,9 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     public CompoundTag addModDataVersions(CompoundTag tag) {
         return tag;
     }
+
+	@Override
+	public void addModDataVersions(ValueOutput output) {}
 
 	@Override
     public void freeze() {

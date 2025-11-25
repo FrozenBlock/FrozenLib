@@ -33,7 +33,6 @@ public class OverworldBiomePresetMixin {
 
 	@ModifyReturnValue(method = "apply", at = @At("RETURN"))
 	private <T> Climate.ParameterList<T> apply(Climate.ParameterList<T> original, Function<ResourceKey<Biome>, T> function) {
-		MultiNoiseBiomeSourceParameterList
 		return OverworldBiomeData.withModdedBiomeEntries(original, function);
 	}
 }
