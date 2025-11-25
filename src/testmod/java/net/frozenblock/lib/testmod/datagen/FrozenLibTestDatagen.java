@@ -30,7 +30,7 @@ import net.frozenblock.lib.recipe.api.ShapedRecipeUtil;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.frozenblock.lib.testmod.FrozenTestMain;
-import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
