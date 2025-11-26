@@ -37,7 +37,6 @@ import net.minecraft.world.level.levelgen.feature.DripstoneUtils;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class LargeSpireFeature extends Feature<LargeSpireConfig> {
@@ -84,7 +83,7 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 		final double f = 0.75D * Math.pow(e, 1.3333333333333333D);
 		final double g = Math.pow(e, 0.6666666666666666D);
 		final double h = 0.3333333333333333D * Math.log(e);
-		double i = Math.max(scale * (f - g - h), 0D);
+		final double i = Math.max(scale * (f - g - h), 0D);
 		return i / 0.384D * maxRadius;
 	}
 
@@ -227,12 +226,10 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 			this.windSpeed = null;
 		}
 
-		@NotNull
 		static WindOffsetter noWind() {
 			return new WindOffsetter();
 		}
 
-		@NotNull
 		BlockPos offset(BlockPos pos) {
 			if (this.windSpeed == null) return pos;
 			final Vec3 vec3 = this.windSpeed.scale(this.originY - pos.getY());

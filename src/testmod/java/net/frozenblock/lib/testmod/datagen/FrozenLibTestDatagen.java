@@ -28,18 +28,15 @@ import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider
 import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider;
 import net.frozenblock.lib.recipe.api.ShapedRecipeUtil;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
-import net.frozenblock.lib.tag.api.FrozenItemTags;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.world.item.Instruments;
@@ -52,7 +49,6 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import org.jetbrains.annotations.NotNull;
 
 public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 
@@ -72,7 +68,6 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		@Override
-		@NotNull
 		protected RecipeProvider createRecipeProvider(HolderLookup.Provider provider, RecipeOutput recipeOutput) {
 			return new RecipeProvider(provider, recipeOutput) {
 				@Override
@@ -96,7 +91,6 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		@Override
-		@NotNull
 		public String getName() {
 			return "Test Recipes";
 		}

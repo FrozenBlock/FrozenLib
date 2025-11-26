@@ -41,7 +41,6 @@ import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistry
 import org.slf4j.Logger;
 import net.minecraft.ChatFormatting;
 
-
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 public final class ClientRegistrySync {

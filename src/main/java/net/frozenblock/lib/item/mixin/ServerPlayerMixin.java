@@ -54,27 +54,28 @@ public class ServerPlayerMixin {
 
 	@Unique
 	public Optional<List<SaveableItemCooldowns.SaveableCooldownInstance>> frozenLib$savedItemCooldowns = Optional.empty();
-	@Unique @Nullable
+	@Unique
+	@Nullable
 	private CompoundTag frozenLib$savedCooldownTag;
 
-	@Inject(method = "readAdditionalSaveData", at = @At(value = "TAIL"))
+	@Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
 	public void frozenLib$readAdditionalSaveData(ValueInput input, CallbackInfo info) {
 		this.frozenLib$savedItemCooldowns = Optional.of(SaveableItemCooldowns.readCooldowns(input));
 	}
 
-	@Inject(method = "addAdditionalSaveData", at = @At(value = "TAIL"))
+	@Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
 	public void frozenLib$addAdditionalSaveData(ValueOutput output, CallbackInfo info) {
 		SaveableItemCooldowns.saveCooldowns(output, ServerPlayer.class.cast(this));
 	}
 
-	@Inject(method = "tick", at = @At(value = "TAIL"))
+	@Inject(method = "tick", at = @At("TAIL"))
 	public void tick(CallbackInfo info) {
 		if (this.frozenLib$savedItemCooldowns.isEmpty() || this.connection == null || !this.connection.isAcceptingMessages() || this.isChangingDimension) return;
 		SaveableItemCooldowns.setCooldowns(this.frozenLib$savedItemCooldowns.get(), ServerPlayer.class.cast(this));
 		this.frozenLib$savedItemCooldowns = Optional.empty();
 	}
 
-	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At(value = "HEAD"))
+	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At("HEAD"))
 	public void frozenLib$changeDimensionSaveCooldowns(TeleportTransition transition, CallbackInfoReturnable<Entity> cir) {
 		final ServerPlayer player = ServerPlayer.class.cast(this);
 		CompoundTag tempTag;
@@ -88,8 +89,8 @@ public class ServerPlayerMixin {
 		this.frozenLib$savedCooldownTag = tempTag;
 	}
 
-	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At(value = "RETURN"))
-	public void frozenLib$changeDimensionLoadCooldowns(TeleportTransition transition, CallbackInfoReturnable<Entity> cir) {
+	@Inject(method = "teleport(Lnet/minecraft/world/level/portal/TeleportTransition;)Lnet/minecraft/server/level/ServerPlayer;", at = @At("RETURN"))
+	public void frozenLib$changeDimensionLoadCooldowns(TeleportTransition transition, CallbackInfoReturnable<Entity> info) {
 		final ServerPlayer player = ServerPlayer.class.cast(this);
 		if (this.frozenLib$savedCooldownTag == null) return;
 

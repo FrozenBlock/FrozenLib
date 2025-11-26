@@ -84,25 +84,25 @@ public abstract class EntityMixin implements EntityLoopingSoundInterface, Entity
     }
 
 	@Unique
-    @Override
+	@Override
     public MovingLoopingSoundEntityManager frozenLib$getSoundManager() {
         return this.frozenLib$loopingSoundManager;
     }
 
 	@Unique
-    @Override
+	@Override
     public void frozenLib$addSound(Identifier soundID, SoundSource source, float volume, float pitch, Identifier restrictionId, boolean stopOnDeath) {
         this.frozenLib$loopingSoundManager.addSound(soundID, source, volume, pitch, restrictionId, stopOnDeath);
     }
 
 	@Unique
-    @Override
+	@Override
     public MovingLoopingFadingDistanceSoundEntityManager frozenLib$getFadingSoundManager() {
         return this.frozenLib$loopingFadingDistanceSoundManager;
     }
 
 	@Unique
-    @Override
+	@Override
     public void frozenLib$addFadingDistanceSound(
 		Identifier closeSound,
 		Identifier farSound,

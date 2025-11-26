@@ -71,16 +71,13 @@ public class SurfaceRuleEvents {
 		void addOverworldSurfaceRules(List<SurfaceRules.RuleSource> context);
 	}
 
-
 	public interface OverworldSurfaceRuleNoPrelimSurfaceCallback extends CommonEventEntrypoint {
 		void addOverworldNoPrelimSurfaceRules(List<SurfaceRules.RuleSource> context);
 	}
 
-
 	public interface NetherSurfaceRuleCallback extends CommonEventEntrypoint {
 		void addNetherSurfaceRules(List<SurfaceRules.RuleSource> context);
 	}
-
 
 	public interface EndSurfaceRuleCallback extends CommonEventEntrypoint {
 		void addEndSurfaceRules(List<SurfaceRules.RuleSource> context);

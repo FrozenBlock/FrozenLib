@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib;
 
-import net.minecraft.SharedConstants;
 import net.minecraft.server.Bootstrap;
+import net.minecraft.SharedConstants;
 
 public class TestUtil {
 

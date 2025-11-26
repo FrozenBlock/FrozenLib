@@ -46,7 +46,6 @@ public record NoiseBandPlacement(
 		).apply(instance, NoiseBandPlacement::new)
 	);
 
-
 	public static class Builder {
 		private final EasyNoiseSampler.NoiseType noiseType;
 		private double noiseScale = 0.2D;

@@ -33,11 +33,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PlayerList.class)
 public class PlayerListMixin {
 
-	@Shadow @Final
+	@Shadow
+	@Final
 	private MinecraftServer server;
 
 	@Inject(method = "placeNewPlayer", at = @At("TAIL"))
-	public void frozenLib$onPlayerJoined(Connection connection, ServerPlayer player, CommonListenerCookie commonListenerCookie, CallbackInfo info) {
+	public void frozenLib$onPlayerJoined(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo info) {
 		PlayerJoinEvents.ON_JOIN_SERVER.invoker().onPlayerJoin(this.server, player);
 	}
 }

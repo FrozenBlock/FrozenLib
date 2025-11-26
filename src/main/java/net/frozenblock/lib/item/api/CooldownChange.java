@@ -23,12 +23,11 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 @UtilityClass
 public class CooldownChange {
 
-	public static void changeCooldown(@NotNull Player player, ItemStack item, int additionalCooldown, int min) {
+	public static void changeCooldown(Player player, ItemStack item, int additionalCooldown, int min) {
 		final ItemCooldowns manager = player.getCooldowns();
 		final Identifier cooldownGroup = manager.getCooldownGroup(item);
 		final ItemCooldowns.CooldownInstance entry = manager.cooldowns.get(cooldownGroup);
