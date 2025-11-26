@@ -29,7 +29,6 @@ import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -48,7 +47,7 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 
 	@Unique
 	@Override
-    public void frozenLib$addSyncData(@NotNull Class<?> clazz, @NotNull String identifier, Config<?> configInstance) {
+    public void frozenLib$addSyncData(Class<?> clazz, String identifier, Config<?> configInstance) {
 		if (identifier.isEmpty()) {
 			new Exception("Cannot process sync value with empty identifier!").printStackTrace();
 			return;

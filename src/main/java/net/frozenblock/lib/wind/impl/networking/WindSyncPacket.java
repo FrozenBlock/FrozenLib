@@ -22,7 +22,6 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public record WindSyncPacket(long windTime, long seed, boolean override, Vec3 commandWind) implements CustomPacketPayload {
 	public static final Type<WindSyncPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("wind_sync_packet"));

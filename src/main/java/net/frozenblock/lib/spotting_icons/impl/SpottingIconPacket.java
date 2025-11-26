@@ -23,7 +23,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 public record SpottingIconPacket(int entityId, Identifier texture, float startFade, float endFade, Identifier restrictionID) implements CustomPacketPayload {

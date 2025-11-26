@@ -67,7 +67,7 @@ public class FrozenLibSoundPackets {
 			);
 		}
 	}
-	
+
 	public static void createAndSendRelativeMovingSound(
 		Level level,
 		BlockPos pos,

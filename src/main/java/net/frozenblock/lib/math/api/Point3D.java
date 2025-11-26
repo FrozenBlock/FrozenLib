@@ -59,7 +59,6 @@ public abstract class Point3D implements Cloneable {
 			return z;
 		}
 
-
 		public void setLocation(double x, double y, double z) {
 			this.x = (float) x;
 			this.y = (float) y;
@@ -122,7 +121,6 @@ public abstract class Point3D implements Cloneable {
 	public abstract double getY();
 
 	public abstract double getZ();
-
 
 	public abstract void setLocation(double x, double y, double z);
 

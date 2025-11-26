@@ -53,7 +53,6 @@ public class FrozenShapes {
 		shapes.put(Direction.DOWN, DOWN_PLANE);
 	});
 
-
 	public static VoxelShape makePlaneFromDirection(Direction direction, float width) {
 		final double minX = direction.equals(Direction.EAST) ? 16F - width : 0F;
 		final double minY = direction.equals(Direction.UP) ? 16F - width : 0F;

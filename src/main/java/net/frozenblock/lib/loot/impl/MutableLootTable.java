@@ -47,12 +47,14 @@ public class MutableLootTable {
 		this.randomSequence = table.randomSequence.orElse(null);
 	}
 
-	public static @Nullable MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable) {
+	@Nullable
+	public static MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable) {
 		if (lootTableKey.equals(id)) return new MutableLootTable(lootTable);
 		return null;
 	}
 
-	public static @Nullable MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable, LootTableSource source) {
+	@Nullable
+	public static MutableLootTable getMutable(ResourceKey<LootTable> lootTableKey, ResourceKey<LootTable> id, LootTable lootTable, LootTableSource source) {
 		if (source.isBuiltin()) return getMutable(lootTableKey, id, lootTable);
 		return null;
 	}
@@ -65,7 +67,6 @@ public class MutableLootTable {
 		this.functions.forEach(builder.functions::add);
 		return builder.build();
 	}
-
 
 	/**
 	 * Runs the consumer on each pool.

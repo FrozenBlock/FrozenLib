@@ -8,8 +8,6 @@
 	<property name="localeCountry" value="US"/>
 	<property name="tabWidth" value="4"/>
 
-	<module name="NewlineAtEndOfFile"/>
-
 	<!-- disallow trailing whitespace -->
 	<module name="RegexpSingleline">
 		<property name="format" value="\s+$"/>

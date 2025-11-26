@@ -143,7 +143,6 @@ public class FrozenBiomeParameters {
 			)
 		);
 
-
 		return borders;
 	}
 
@@ -221,17 +220,9 @@ public class FrozenBiomeParameters {
 		final long refMin = referenceParameter.min();
 		final long refMax = referenceParameter.max();
 
-		if (min < refMin) {
-			splitParameters.add(new Climate.Parameter(min, refMin));
-		}
-
-		if (max > refMax) {
-			splitParameters.add(new Climate.Parameter(refMax, max));
-		}
-
-		if (min <= refMin && max >= refMax) {
-			splitParameters.add(new Climate.Parameter(refMin, refMax));
-		}
+		if (min < refMin) splitParameters.add(new Climate.Parameter(min, refMin));
+		if (max > refMax) splitParameters.add(new Climate.Parameter(refMax, max));
+		if (min <= refMin && max >= refMax) splitParameters.add(new Climate.Parameter(refMin, refMax));
 
 		return splitParameters;
 	}
