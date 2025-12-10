@@ -114,7 +114,7 @@ data class TestConfig(
             XjsConfig(
                 FrozenTestMain.MOD_ID,
                 TestConfig::class.java,
-                XjsFormat.DJS_FORMATTED
+                XjsFormat.DJS
             )
         )
 
