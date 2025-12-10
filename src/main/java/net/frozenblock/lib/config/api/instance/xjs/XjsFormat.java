@@ -18,46 +18,38 @@
 package net.frozenblock.lib.config.api.instance.xjs;
 
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.function.Function;
 import net.minecraft.util.StringRepresentable;
 import xjs.compat.serialization.util.UBTyping;
 import xjs.compat.serialization.writer.HjsonWriter;
+import xjs.compat.serialization.writer.JsoncWriter;
 import xjs.compat.serialization.writer.TxtWriter;
 import xjs.compat.serialization.writer.UbjsonWriter;
+import xjs.data.serialization.JsonContext;
 import xjs.data.serialization.writer.DjsWriter;
 import xjs.data.serialization.writer.JsonWriter;
 import xjs.data.serialization.writer.ValueWriter;
 
 public enum XjsFormat implements StringRepresentable {
 	/**
-	 * Prints unformatted, regular JSON with no whitespace.
-	 */
-	JSON("json", writer -> {
-		try {
-			return new JsonWriter(writer, false);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}),
-
-	/**
 	 * Pretty prints regular JSON with whitespace.
 	 */
-	JSON_FORMATTED(JSON.getSerializedName(), writer -> {
+	JSON("json", file -> {
 		try {
-			return new JsonWriter(writer, true);
+			return new JsonWriter(new FileWriter(file), JsonContext.getDefaultFormatting());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
 	}),
 
 	/**
-	 * Prints unformatted HJSON with no whitespace.
+	 * Pretty prints JSONC with whitespace.
 	 */
-	HJSON("hjson", writer -> {
+	JSONC("jsonc", file -> {
 		try {
-			return new HjsonWriter(writer, false);
+			return new JsoncWriter(new FileWriter(file), JsonContext.getDefaultFormatting());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -66,20 +58,9 @@ public enum XjsFormat implements StringRepresentable {
 	/**
 	 * Pretty prints HJSON with whitespace.
 	 */
-	HJSON_FORMATTED(HJSON.getSerializedName(), writer -> {
+	HJSON("hjson", file -> {
 		try {
-			return new HjsonWriter(writer, true);
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-	}),
-
-	/**
-	 * Prints unformatted DJS with no whitespace.
-	 */
-	DJS("djs", writer -> {
-		try {
-			return new DjsWriter(writer, false);
+			return new HjsonWriter(new FileWriter(file), JsonContext.getDefaultFormatting());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -88,9 +69,9 @@ public enum XjsFormat implements StringRepresentable {
 	/**
 	 * Pretty prints DJS with whitespace.
 	 */
-	DJS_FORMATTED(DJS.getSerializedName(), writer -> {
+	DJS("djs", file -> {
 		try {
-			return new DjsWriter(writer, true);
+			return new DjsWriter(new FileWriter(file), JsonContext.getDefaultFormatting());
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}

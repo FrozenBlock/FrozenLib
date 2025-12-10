@@ -24,6 +24,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -80,7 +81,7 @@ public class XjsUtils {
 		return Result
 			.define(FileNotFoundException.class, Result::WARN)
 			.define(SyntaxException.class, e -> { throw new JsonFormatException(f(file.getPath(), e)); })
-			.suppress(() -> Json.parse(file).asObject())
+			.suppress(() -> Json.parse(file.toPath()).asObject())
 			.get();
 	}
 
@@ -105,12 +106,12 @@ public class XjsUtils {
 	 * @param file The file containing the serialized JSON object.
 	 * @return The deserialized object, or else {@link Optional#empty}.
 	 */
-	public static Optional<JsonObject> readSuppressing(final File file) {
+	public static Optional<JsonObject> readSuppressing(final Path file) {
 		return Result.suppress(() -> Json.parse(file).asObject()).get(Result::WARN);
 	}
 
 	/**
-	 * Variant of {@link #readSuppressing(File)} which reads directly
+	 * Variant of {@link #readSuppressing(Path)} which reads directly
 	 * from an {@link InputStream}.
 	 *
 	 * @param is The data containing the serialized JSON object.
@@ -176,7 +177,8 @@ public class XjsUtils {
 	 * @return A result which potentially contains an error.
 	 */
 	public static Result<Void, IOException> writeJson(final JsonObject json, final File file) {
-		return Result.with(() -> new FileWriter(file), writer -> { json.write(file); })
+		return Result.with(() -> new FileWriter(file), writer -> { json.write(writer); })
+			.ifErr((a) -> {})
 			.ifErr(e -> log.error("Writing file", e));
 	}
 
