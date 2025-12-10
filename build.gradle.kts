@@ -21,7 +21,7 @@ buildscript {
 }
 
 plugins {
-	id("fabric-loom") version("1.13-SNAPSHOT")
+	id("fabric-loom") version("1.14-SNAPSHOT")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -256,7 +256,7 @@ dependencies {
 
     // ExJson
     //relocModApi("org.exjson:xjs-data:$xjs_data_version")
-    relocModApi("org.exjson:xjs-data:0.6-infinity-compat-SNAPSHOT")
+    relocModApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
     relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
     relocModApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.34")?.let { annotationProcessor(it) }
