@@ -44,7 +44,7 @@ public class MainMixin {
 		method = "main",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/Util;blockUntilDone(Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;",
+			target = "Lnet/minecraft/util/Util;blockUntilDone(Ljava/util/function/Function;)Ljava/util/concurrent/CompletableFuture;",
 			remap = true
 		),
 		remap = false
