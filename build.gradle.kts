@@ -252,7 +252,7 @@ dependencies {
     modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    relocModImplementation("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
+    relocModApi("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
 
     // ExJson
     //relocModApi("org.exjson:xjs-data:$xjs_data_version")
