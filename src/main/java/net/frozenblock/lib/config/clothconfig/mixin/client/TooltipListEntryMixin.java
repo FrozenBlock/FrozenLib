@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.config.clothconfig.mixin.client;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+/*import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import java.util.Arrays;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -65,3 +65,4 @@ public class TooltipListEntryMixin {
 	}
 
 }
+*/

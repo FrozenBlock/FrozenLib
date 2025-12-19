@@ -91,7 +91,7 @@ public final class FlyBySoundHub {
 			final double deltaDistance = Math.abs(entityPos.distanceTo(cameraPos) - movedPos.distanceTo(cameraPos));
 			final FlyBySound flyBy = FLYBY_ENTITIES_AND_SOUNDS.get(entity);
 			final float volume = (float) (flyBy.volume + (deltaDistance));
-			client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.source, volume, flyBy.pitch, entity, client.level.random.nextLong()));
+			client.getSoundManager().play(new EntityBoundSoundInstance(flyBy.sound, flyBy.source, volume, flyBy.pitch, entity, client.level.getRandom().nextLong()));
 			ENTITY_COOLDOWNS.put(entity, PLAY_COOLDOWN);
 		}
 

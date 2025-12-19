@@ -118,7 +118,7 @@ public class LiquidRenderUtils {
 			southEastHeight -= 0.001F;
 			northEastHeight -= 0.001F;
 
-			final int color = getLightColor(level, pos);
+			final int color = getLightCoords(level, pos);
 			vertex(vertexConsumer, renderX + 0F, renderY + northWestHeight, renderZ + 0F, upShade, upShade, upShade, u0, v0, color);
 			vertex(vertexConsumer, renderX + 0F, renderY + southWestHeight, renderZ + 1F, upShade, upShade, upShade, u0, v1, color);
 			vertex(vertexConsumer, renderX + 1F, renderY + southEastHeight, renderZ + 1F, upShade, upShade, upShade, u1, v1, color);
@@ -132,7 +132,7 @@ public class LiquidRenderUtils {
 		}
 
 		if (renderDown) {
-			final int belowColor = getLightColor(level, pos.below());
+			final int belowColor = getLightCoords(level, pos.below());
 			vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ + 1F, downShade, downShade, downShade, u0, v1, belowColor);
 			vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u0, v0, belowColor);
 			vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u1, v0, belowColor);
@@ -145,7 +145,7 @@ public class LiquidRenderUtils {
 			}
 		}
 
-		final int color = getLightColor(level, pos);
+		final int color = getLightCoords(level, pos);
 		for (Direction direction : Direction.Plane.HORIZONTAL) {
 			float firstY;
 			float secondY;
@@ -248,9 +248,9 @@ public class LiquidRenderUtils {
 		consumer.addVertex(x, y, z).setColor(red, green, blue, 1F).setUv(u, v).setLight(packedLight).setNormal(0F, 1F, 0F);
 	}
 
-	public static int getLightColor(BlockAndTintGetter level, BlockPos pos) {
-		final int color = LevelRenderer.getLightColor(level, pos);
-		final int aboveColor = LevelRenderer.getLightColor(level, pos.above());
+	public static int getLightCoords(BlockAndTintGetter level, BlockPos pos) {
+		final int color = LevelRenderer.getLightCoords(level, pos);
+		final int aboveColor = LevelRenderer.getLightCoords(level, pos.above());
 		final int k = color & 0xFF;
 		final int l = aboveColor & 0xFF;
 		final int m = color >> 16 & 0xFF;

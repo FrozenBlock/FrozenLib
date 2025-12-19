@@ -20,7 +20,11 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
-import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+
+// TODO re-enable when clothconfig is unobfuscated
+/*import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
 import me.shedaniel.clothconfig2.gui.entries.MultiElementListEntry
@@ -153,3 +157,4 @@ fun <T> multiElementEntry(
         this.isRequiresRestart = requiresRestart
         this.requirement = requirement
     }
+*/

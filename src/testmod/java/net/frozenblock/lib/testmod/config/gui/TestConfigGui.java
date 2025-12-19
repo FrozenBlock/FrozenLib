@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.testmod.config.gui;
 
-import me.shedaniel.clothconfig2.api.ConfigBuilder;
+//TODO re-enable when clothconfig is unobfuscated
+/*import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import net.fabricmc.api.EnvType;
@@ -87,3 +88,4 @@ public class TestConfigGui {
 		return Component.translatable("tooltip." + FrozenTestMain.MOD_ID + "." + key);
 	}
 }
+*/

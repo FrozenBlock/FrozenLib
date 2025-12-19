@@ -73,7 +73,7 @@ public class WindParticle extends SingleQuadParticle {
 		this.hasPhysics = false;
 		this.friction = 0.95F;
 		this.gravity = 0F;
-		this.rotationalHelper.setFlipped(level.random.nextBoolean());
+		this.rotationalHelper.setFlipped(level.getRandom().nextBoolean());
 	}
 
 	@Override
@@ -100,7 +100,7 @@ public class WindParticle extends SingleQuadParticle {
 
 		if (this.age >= this.ageBeforeDissipating && !this.chosenSide) {
 			this.chosenSide = true;
-			this.rotationalHelper.setFlipped(this.level.random.nextBoolean());
+			this.rotationalHelper.setFlipped(this.level.getRandom().nextBoolean());
 			this.lifetime = this.ageBeforeDissipating + 11;
 		}
 		this.setSpriteFromAge(this.spriteSet);
@@ -195,7 +195,7 @@ public class WindParticle extends SingleQuadParticle {
 			this.getV1(),
 			this.getQuadSize(partialTicks),
 			ARGB.colorFromFloat(this.alpha, this.rCol, this.gCol, this.bCol),
-			this.getLightColor(partialTicks),
+			this.getLightCoords(partialTicks),
 			partialTicks
 		);
 	}

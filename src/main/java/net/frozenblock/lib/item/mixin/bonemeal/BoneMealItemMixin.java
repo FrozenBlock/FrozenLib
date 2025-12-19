@@ -53,8 +53,8 @@ public class BoneMealItemMixin {
 		if (bonemealBehavior == null || !bonemealBehavior.meetsRequirements(level, pos, state)) return;
 
 		if (level instanceof ServerLevel serverLevel) {
-			if (bonemealBehavior.isBoneMealSuccess(level, level.random, pos, state)) {
-				bonemealBehavior.performBoneMeal(serverLevel, level.random, pos, state);
+			if (bonemealBehavior.isBoneMealSuccess(level, level.getRandom(), pos, state)) {
+				bonemealBehavior.performBoneMeal(serverLevel, level.getRandom(), pos, state);
 			}
 			stack.shrink(1);
 		}

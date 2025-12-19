@@ -48,7 +48,7 @@ public class DamageOnUseBlockItem extends BlockItem {
 
 		entity.hurt(entity.damageSources().source(this.damageType),this.damage);
 		if (this.hurtSound != null && !entity.isSilent()) {
-			entity.playSound(this.hurtSound, 0.5F, 0.9F + (level.random.nextFloat() * 0.2F));
+			entity.playSound(this.hurtSound, 0.5F, 0.9F + (level.getRandom().nextFloat() * 0.2F));
 		}
 		return consumable.onConsume(level, entity, stack);
     }

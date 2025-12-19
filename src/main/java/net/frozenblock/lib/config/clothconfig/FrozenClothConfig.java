@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.config.clothconfig;
 
-import java.util.Arrays;
+// TODO re-enable when clothconfig is unobfuscated
+/*import java.util.Arrays;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -44,7 +45,7 @@ public final class FrozenClothConfig {
 	 * @param entries the entries to be added to the subcategory
 	 * @return the newly created subcategory
 	 */
-	@SuppressWarnings("rawtypes")
+/*	@SuppressWarnings("rawtypes")
 	public static ConfigCategory createSubCategory(ConfigEntryBuilder entryBuilder, ConfigCategory parentCategory, Component key, boolean expanded, Component tooltip, AbstractConfigListEntry... entries) {
 		// Create the subcategory
 		final var subCategory = entryBuilder.startSubCategory(key, Arrays.stream(entries).toList());
@@ -71,8 +72,9 @@ public final class FrozenClothConfig {
 	 * @param configInstance The main instance of the config (See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig#INSTANCE} for an example)
 	 * @since 1.5
 	 */
-	public static <T extends DynamicEntryListWidget.Entry<?>> T syncedEntry(T entry, Class<?> clazz, String identifier, Config<?> configInstance) {
+// TODO re-enable when clothconfig is unobfuscated
+	/*public static <T extends DynamicEntryListWidget.Entry<?>> T syncedEntry(T entry, Class<?> clazz, String identifier, Config<?> configInstance) {
 		((DisableableWidgetInterface) entry).frozenLib$addSyncData(clazz, identifier, configInstance);
 		return entry;
 	}
-}
+}*/

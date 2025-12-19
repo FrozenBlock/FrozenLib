@@ -30,7 +30,7 @@ public class CreeperMixin {
 
     @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
     public void frozenLib$ignoreTag(LivingEntity entity, CallbackInfo info) {
-		if (entity != null && entity.getType().is(FrozenEntityTags.CREEPER_IGNORES)) info.cancel();
+		if (entity != null && entity.is(FrozenEntityTags.CREEPER_IGNORES)) info.cancel();
     }
 
 }

@@ -17,26 +17,23 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.world.level.chunk.storage.SimpleRegionStorage;
-import net.minecraft.world.level.storage.DataVersion;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(SimpleRegionStorage.class)
-public class SimpleRegionsStorageMixin {
+public class SimpleRegionStorageMixin {
 
-	@WrapOperation(
-		method = "upgradeChunkTag(Lnet/minecraft/nbt/CompoundTag;ILnet/minecraft/nbt/CompoundTag;)Lnet/minecraft/nbt/CompoundTag;",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/storage/DataVersion;version()I"
-		)
+	@ModifyVariable(
+		method = "upgradeChunkTag(Lnet/minecraft/nbt/CompoundTag;ILnet/minecraft/nbt/CompoundTag;I)Lnet/minecraft/nbt/CompoundTag;",
+		at = @At("HEAD"),
+		ordinal = 1,
+		argsOnly = true
 	)
-	private int bypassCheck(DataVersion instance, Operation<Integer> original) {
+	private int bypassCheck(int targetVersion) {
 		if (!QuiltDataFixesInternals.get().isEmpty()) return -1;
-		return original.call(instance);
+		return targetVersion;
 	}
 }

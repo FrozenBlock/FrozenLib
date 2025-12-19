@@ -1,4 +1,4 @@
-accessWidener v2 named
+accessWidener v2 official
 
 # Advancement
 transitive-accessible field net/minecraft/advancements/Advancement parent Ljava/util/Optional;
@@ -175,8 +175,9 @@ transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootP
 transitive-accessible field net/minecraft/world/level/storage/loot/entries/LootPoolSingletonContainer compositeFunction Ljava/util/function/BiFunction;
 
 # QuiltMC Resource Reloaders
-transitive-accessible class net/minecraft/resources/RegistryDataLoader$LoadingFunction
-transitive-accessible field net/minecraft/resources/RegistryDataLoader$Loader registry Lnet/minecraft/core/WritableRegistry;
+transitive-accessible class net/minecraft/resources/RegistryDataLoader$LoaderFactory
+transitive-accessible class net/minecraft/resources/RegistryDataLoader$RegistryLoadTask
+transitive-accessible field net/minecraft/resources/RegistryDataLoader$RegistryLoadTask registry Lnet/minecraft/core/WritableRegistry;
 
 # QuiltMC Surface Rules
 transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$SurfaceRule

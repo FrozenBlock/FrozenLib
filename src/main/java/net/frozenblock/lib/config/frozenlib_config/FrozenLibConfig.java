@@ -19,7 +19,6 @@ package net.frozenblock.lib.config.frozenlib_config;
 
 import blue.endless.jankson.Comment;
 import java.util.List;
-import me.shedaniel.autoconfig.annotation.ConfigEntry;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.json.JsonConfig;
@@ -83,7 +82,6 @@ public class FrozenLibConfig {
 	@EntrySyncData(value = "cape", behavior = SyncBehavior.UNSYNCABLE)
 	public String cape = FrozenLibConstants.string("dummy");
 
-	@ConfigEntry.Gui.CollapsibleObject
 	public final DataFixerConfig dataFixer = new DataFixerConfig();
 
 	public static class DataFixerConfig {

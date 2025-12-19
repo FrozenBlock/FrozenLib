@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.config.clothconfig.mixin.client;
 
-import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
+// TODO re-enable when clothconfig is unobfuscated
+/*import me.shedaniel.clothconfig2.api.AbstractConfigEntry;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
@@ -35,3 +36,4 @@ public class AbstractConfigEntryMixin {
 		if (!((DisableableWidgetInterface) this).frozenLib$getEntryPermissionType().canModify) info.cancel();
 	}
 }
+*/

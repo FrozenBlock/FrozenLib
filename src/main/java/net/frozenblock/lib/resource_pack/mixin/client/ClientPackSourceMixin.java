@@ -38,7 +38,7 @@ public class ClientPackSourceMixin {
 	private static final PackSelectionConfig FROZENLIB$FROZENLIB_PACK_SELECTION_CONFIG = new PackSelectionConfig(true, Pack.Position.BOTTOM, false);
 
 	@WrapOperation(
-		method = "method_45272",
+		method = "lambda$loadPacks$0",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/server/packs/repository/Pack;readMetaAndCreate(Lnet/minecraft/server/packs/PackLocationInfo;Lnet/minecraft/server/packs/repository/Pack$ResourcesSupplier;Lnet/minecraft/server/packs/PackType;Lnet/minecraft/server/packs/PackSelectionConfig;)Lnet/minecraft/server/packs/repository/Pack;"

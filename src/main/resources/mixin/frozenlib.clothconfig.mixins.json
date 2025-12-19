@@ -8,8 +8,5 @@
     "defaultRequire": 1
   },
   "client": [
-    "client.AbstractConfigEntryMixin",
-    "client.DynamicEntryListWidgetEntryMixin",
-    "client.TooltipListEntryMixin"
   ]
 }

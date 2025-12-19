@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.testmod.config.gui;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+// TODO re-enable when modmenu is unobfuscated
+/*import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.frozenblock.lib.FrozenBools;
 import net.minecraft.client.gui.screens.Screen;
@@ -32,3 +33,4 @@ public class ModMenuInit implements ModMenuApi {
 		return TestConfigGui::buildScreen;
 	}
 }
+*/

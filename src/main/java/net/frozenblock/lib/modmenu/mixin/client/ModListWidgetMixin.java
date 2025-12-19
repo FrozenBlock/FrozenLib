@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.modmenu.mixin.client;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+// TODO re-enable when modmenu is unobfuscated
+/*import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
@@ -54,3 +55,4 @@ public class ModListWidgetMixin {
 		return original.call(instance, object);
 	}
 }
+*/

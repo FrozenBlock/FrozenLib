@@ -59,7 +59,7 @@ public class FolderRepositorySourceMixin {
 	}
 
 	@ModifyExpressionValue(
-		method = "method_45272",
+		method = "lambda$loadPacks$0",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/server/packs/repository/Pack;readMetaAndCreate(Lnet/minecraft/server/packs/PackLocationInfo;Lnet/minecraft/server/packs/repository/Pack$ResourcesSupplier;Lnet/minecraft/server/packs/PackType;Lnet/minecraft/server/packs/PackSelectionConfig;)Lnet/minecraft/server/packs/repository/Pack;"

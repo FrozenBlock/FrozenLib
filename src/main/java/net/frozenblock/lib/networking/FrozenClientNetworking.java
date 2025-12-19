@@ -141,7 +141,7 @@ public final class FrozenClientNetworking {
 					packet.volume(),
 					packet.pitch(),
 					player,
-					ctx.client().level.random.nextLong()
+					ctx.client().level.getRandom().nextLong()
 				)
 			);
 		});
@@ -169,7 +169,7 @@ public final class FrozenClientNetworking {
 					packet.pitch(),
 					player,
 					packet.pos(),
-					ctx.client().level.random.nextLong()
+					ctx.client().level.getRandom().nextLong()
 				)
 			);
 		});

@@ -36,7 +36,6 @@
       "net.frozenblock.lib.FrozenLibServer"
     ],
     "modmenu": [
-      "net.frozenblock.lib.config.frozenlib_config.gui.ModMenuIntegration"
     ],
     "fabric-datagen": [
       "net.frozenblock.lib.datagen.frozenlib.FrozenLibDataGenerator"

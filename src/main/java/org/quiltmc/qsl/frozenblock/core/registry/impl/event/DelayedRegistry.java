@@ -211,8 +211,8 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	}
 
 	@Override
-	public void bindTag(TagKey<T> tagKey, List<Holder<T>> list) {
-		this.wrapped.bindTag(tagKey, list);
+	public void bindTags(Map<TagKey<T>, List<Holder<T>>> pendingTags) {
+		this.wrapped.bindTags(pendingTags);
 	}
 
 	@Override

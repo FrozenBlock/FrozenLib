@@ -38,10 +38,8 @@ import net.minecraft.world.level.WorldDataConfiguration;
 import net.minecraft.world.level.levelgen.WorldGenSettings;
 import net.minecraft.world.level.levelgen.presets.WorldPreset;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
-import org.spongepowered.asm.mixin.Dynamic;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Coerce;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -52,37 +50,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 @Mixin(CreateWorldScreen.class)
 public abstract class CreateWorldScreenMixin {
-
-	@Dynamic
-	@Inject(
-		method = {"method_45681", "method_64245"},
-		at = @At("HEAD"),
-		require = 1
-	)
-	private static void onEndDataPackLoadOnOpen(
-		CloseableResourceManager resourceManager,
-		ReloadableServerResources resources,
-		LayeredRegistryAccess<?> layeredRegistryAccess,
-		@Coerce Object object,
-		CallbackInfoReturnable<WorldCreationContext> info
-	) {
-		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
-	}
-
-	@Inject(
-		method = "method_64245",
-		at = @At("HEAD")
-	)
-	private static void onEndDataPackLoadOnOpen(
-		WorldCreationContextMapper worldCreationContextMapper,
-		CloseableResourceManager resourceManager,
-		ReloadableServerResources reloadableServerResources,
-		LayeredRegistryAccess<?> layeredRegistryAccess,
-		DataPackReloadCookie dataPackReloadCookie,
-		CallbackInfoReturnable<WorldCreationContext> info
-	) {
-		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
-	}
 
 	@Inject(
 		method = "openCreateWorldScreen",
@@ -103,18 +70,31 @@ public abstract class CreateWorldScreenMixin {
 		ResourceLoaderEvents.START_DATA_PACK_RELOAD.invoker().onStartDataPackReload(null, null);
 	}
 
-	@Dynamic
 	@Inject(
-		method = {"m_spzhhpkv", "method_45681", "lambda$applyNewPackConfig$13"},
-		at = @At("HEAD"),
-		require = 1
+		method = "lambda$openCreateWorldScreen$1",
+		at = @At("HEAD")
 	)
 	private static void onCreateDataPackLoadEnd(
+		WorldCreationContextMapper worldCreationContextMapper,
 		CloseableResourceManager resourceManager,
 		ReloadableServerResources resources,
 		LayeredRegistryAccess<?> layeredRegistryAccess,
-		@Coerce Object object,
+		DataPackReloadCookie dataPackReloadCookie,
 		CallbackInfoReturnable<WorldCreationContext> info
+	) {
+		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
+	}
+
+	@Inject(
+		method = "lambda$applyNewPackConfig$3",
+		at = @At("HEAD")
+	)
+	private static void onCreateDataPackLoadEnd(
+		CloseableResourceManager resourceManager,
+		ReloadableServerResources managers,
+		LayeredRegistryAccess<?> registries,
+		DataPackReloadCookie cookie,
+		CallbackInfoReturnable<WorldCreationContext> cir
 	) {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.invoker().onEndDataPackReload(null, resourceManager, null);
 	}
@@ -136,7 +116,7 @@ public abstract class CreateWorldScreenMixin {
 	}
 
 	@Inject(
-		method = "method_49629(Ljava/util/function/Consumer;Ljava/lang/Void;Ljava/lang/Throwable;)Ljava/lang/Object;",
+		method = "lambda$applyNewPackConfig$5",
 		at = @At(
 			value = "INVOKE",
 			target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Throwable;)V",

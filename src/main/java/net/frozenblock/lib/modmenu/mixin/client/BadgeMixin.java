@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.modmenu.mixin.client;
 
-import com.terraformersmc.modmenu.util.mod.Mod;
+// TODO re-enable when modmenu is unobfuscated
+/*import com.terraformersmc.modmenu.util.mod.Mod;
 import java.util.ArrayList;
 import java.util.Arrays;
 import net.fabricmc.api.EnvType;
@@ -104,3 +105,4 @@ public class BadgeMixin {
 	}
 
 }
+*/

@@ -20,7 +20,11 @@
 
 package net.frozenblock.lib.config.clothconfig
 
-import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget
+import net.fabricmc.api.EnvType
+import net.fabricmc.api.Environment
+
+// TODO re-enable when clothconfig is unobfuscated
+/*import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.api.instance.Config
@@ -29,3 +33,4 @@ import kotlin.reflect.KClass
 fun <T : DynamicEntryListWidget.Entry<*>> T.synced(clazz: KClass<*>, identifier: String, config: Config<*>): T = this.apply {
     FrozenClothConfig.syncedEntry(this, clazz.java, identifier, config)
 }
+*/

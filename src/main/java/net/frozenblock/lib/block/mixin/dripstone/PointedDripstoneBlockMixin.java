@@ -39,12 +39,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(PointedDripstoneBlock.class)
 public class PointedDripstoneBlockMixin {
 
+	// FIXME: Use mixinextras stuff
 	@Inject(
-		method = "method_33279",
+		method = "lambda$getFluidAboveStalactite$0",
 		at = @At(
-			value = "INVOKE_ASSIGN",
-			target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z",
-			shift = At.Shift.BEFORE
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z"
 		),
 		cancellable = true
 	)
@@ -64,8 +64,7 @@ public class PointedDripstoneBlockMixin {
 		method = "maybeTransferFluid",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/world/level/block/Block;)Z",
-			shift = At.Shift.BEFORE
+			target = "Lnet/minecraft/world/level/block/state/BlockState;is(Ljava/lang/Object;)Z"
 		),
 		cancellable = true
 	)
@@ -86,7 +85,7 @@ public class PointedDripstoneBlockMixin {
 		}
 	}
 
-	@Inject(method = "method_33274", at = @At(value = "HEAD"), cancellable = true)
+	@Inject(method = "lambda$findFillableCauldronBelowStalactiteTip$0", at = @At(value = "HEAD"), cancellable = true)
 	private static void frozenLib$dripOnNewAllowedBlocks(Fluid fluid, BlockState state, CallbackInfoReturnable<Boolean> info) {
 		if (state.is(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON)) info.setReturnValue(true);
 	}

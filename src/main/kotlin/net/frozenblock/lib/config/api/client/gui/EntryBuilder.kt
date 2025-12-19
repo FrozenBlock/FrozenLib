@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
-import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
+// TODO re-enable when clothconfig is unobfuscated
+/*import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
 import net.fabricmc.api.EnvType
@@ -227,3 +228,4 @@ data class EntryBuilder<T>(
         }
     }
 }
+*/

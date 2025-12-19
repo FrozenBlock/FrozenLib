@@ -21,7 +21,7 @@ buildscript {
 }
 
 plugins {
-	id("fabric-loom") version("1.14-SNAPSHOT")
+	id("net.fabricmc.fabric-loom") version("1.14-SNAPSHOT")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -31,7 +31,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.2.21")
+    kotlin("jvm") version("2.3.0")
     checkstyle
 }
 
@@ -41,8 +41,6 @@ checkstyle {
 }
 
 val minecraft_version: String by project
-val quilt_mappings: String by project
-val parchment_mappings: String by project
 val loader_version: String by project
 val min_loader_version: String by project
 
@@ -150,19 +148,14 @@ loom {
     }
 }
 
-val includeModImplementation: Configuration by configurations.creating
 val includeImplementation: Configuration by configurations.creating
 
 configurations {
     include {
         extendsFrom(includeImplementation)
-        extendsFrom(includeModImplementation)
     }
     implementation {
         extendsFrom(includeImplementation)
-    }
-    modImplementation {
-        extendsFrom(includeModImplementation)
     }
 }
 
@@ -172,12 +165,12 @@ val api by sourceSets.registering {
     }
 }
 
-val relocModImplementation: Configuration by configurations.creating {
-    configurations.modImplementation.get().extendsFrom(this)
+val relocImplementation: Configuration by configurations.creating {
+    configurations.implementation.get().extendsFrom(this)
 }
 
-val relocModApi: Configuration by configurations.creating {
-    configurations.modApi.get().extendsFrom(this)
+val relocApi: Configuration by configurations.creating {
+    configurations.api.get().extendsFrom(this)
 }
 
 sourceSets {
@@ -225,46 +218,38 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:$minecraft_version")
-	mappings(loom.layered {
-		// please annoy treetrain if this doesn't work
-        // mappings("org.quiltmc:quilt-mappings:$quilt_mappings:intermediary-v2")
-        // parchment("org.parchmentmc.data:parchment-$parchment_mappings@zip")
-		officialMojangMappings {
-			nameSyntheticMembers = false
-		}
-	})
-    modImplementation("net.fabricmc:fabric-loader:$loader_version")
+    implementation("net.fabricmc:fabric-loader:$loader_version")
 	testImplementation("net.fabricmc:fabric-loader-junit:$loader_version")
 
     // Fabric API. This is technically optional, but you probably want it anyway.
-    modImplementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
+    implementation("net.fabricmc.fabric-api:fabric-api:$fabric_api_version")
 
     // Fabric Language Kotlin. Required to use the Kotlin language.
-    modImplementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
+    implementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // Mod Menu
-    modCompileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
+    //compileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    modImplementation("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
-        exclude(group = "net.fabricmc.fabric-api")
-        exclude(group = "com.terraformersmc")
-    }
+    //implementation("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
+    //    exclude(group = "net.fabricmc.fabric-api")
+    //    exclude(group = "com.terraformersmc")
+    //}
 
 	// TerraBlender
-    modCompileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
+    //compileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
 
     // Toml
-    modApi("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
+    api("com.moandjiezana.toml:toml4j:$toml4j_version")//?.let { include(it) }
 
     // Jankson
-    relocModApi("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
+    relocApi("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
 
     // ExJson
     //relocModApi("org.exjson:xjs-data:$xjs_data_version")
-    relocModApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
-    relocModApi("org.exjson:xjs-compat:$xjs_compat_version")
-    relocModApi("com.personthecat:fresult:$fresult_version")
+    relocApi("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
+    relocApi("org.exjson:xjs-compat:$xjs_compat_version")
+    relocApi("com.personthecat:fresult:$fresult_version")
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 
     "testmodImplementation"(sourceSets.main.get().output)
@@ -274,7 +259,7 @@ tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = "~1.21-"//minecraft_version
+        properties["minecraft_version"] = "~26.1-"//minecraft_version
 
         properties["fabric_loader_version"] = ">=$min_loader_version"
         properties["fabric_api_version"] = ">=$fabric_api_version"
@@ -302,7 +287,7 @@ tasks {
     }
 
     shadowJar {
-        configurations = listOf(relocModImplementation, relocModApi)
+        configurations = listOf(relocImplementation, relocApi)
         enableAutoRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
         dependencies {
@@ -334,21 +319,20 @@ tasks {
         from(sourceSets.main.get().allSource)
     }
 
-    remapJar {
+    jar {
         dependsOn(shadowJar)
-        input = shadowJar.get().archiveFile
     }
 
     withType(JavaCompile::class) {
         options.encoding = "UTF-8"
-        options.release = 21
+        options.release = 25
         options.isFork = true
         options.isIncremental = true
     }
 
     withType(KotlinCompile::class) {
         compilerOptions {
-            jvmTarget = JvmTarget.JVM_21
+            jvmTarget = JvmTarget.JVM_25
             apiVersion = KotlinVersion.KOTLIN_2_1
             languageVersion = KotlinVersion.KOTLIN_2_1
         }
@@ -364,13 +348,13 @@ val applyLicenses: Task by tasks
 val test: Task by tasks
 val runClient: Task by tasks
 
-val remapJar: Task by tasks
-val sourcesJar: Task by tasks
-val javadocJar: Task by tasks
+val jar: Jar by tasks
+val sourcesJar: Jar by tasks
+val javadocJar: Jar by tasks
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_21
-    targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
+    targetCompatibility = JavaVersion.VERSION_25
 
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
@@ -408,7 +392,7 @@ val dev by configurations.creating {
 
 tasks {
     artifacts {
-        archives(remapJar)
+        archives(jar)
         archives(sourcesJar)
         add("dev", jar)
     }
@@ -545,7 +529,7 @@ modrinth {
     versionName = display_name
     versionType = release_type
     changelog = changelog_text
-    uploadFile = remapJar
+    uploadFile = tasks.jar.get()
     gameVersions = listOf(minecraft_version)
     loaders = listOf("fabric", "quilt")
     /*
@@ -563,7 +547,7 @@ modrinth {
 }
 
 val github by tasks.register("github") {
-    dependsOn(remapJar)
+    dependsOn(tasks.jar)
     dependsOn(sourcesJar)
     dependsOn(javadocJar)
 
@@ -585,8 +569,8 @@ val github by tasks.register("github") {
         releaseBuilder.prerelease(release_type != "release")
 
         val ghRelease = releaseBuilder.create()
-        ghRelease.uploadAsset(tasks.remapJar.get().archiveFile.get().asFile, "application/java-archive")
-        ghRelease.uploadAsset(tasks.remapSourcesJar.get().archiveFile.get().asFile, "application/java-archive")
+        ghRelease.uploadAsset(tasks.jar.get().archiveFile.get().asFile, "application/java-archive")
+        ghRelease.uploadAsset(sourcesJar.archiveFile.get().asFile, "application/java-archive")
         ghRelease.uploadAsset(javadocJar.outputs.files.singleFile, "application/java-archive")
     }
 }

@@ -31,16 +31,15 @@ import net.minecraft.resources.ResourceKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(value = RegistryDataLoader.class, priority = 50)
-public class RegistryDataLoaderMixin {
+@Mixin(value = RegistryDataLoader.RegistryLoadTask.class, priority = 50)
+public class RegistryLoadTaskMixin {
 
 	@WrapOperation(
-		method = {"loadContentsFromNetwork", "loadElementFromResource"},
+		method = "lambda$registerElements$1",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/core/WritableRegistry;register(Lnet/minecraft/resources/ResourceKey;Ljava/lang/Object;Lnet/minecraft/core/RegistrationInfo;)Lnet/minecraft/core/Holder$Reference;"
-		),
-		require = 2
+		)
 	)
 	private static Holder.Reference frozenLib$appendBiomeIDFromNetwork(
 		WritableRegistry instance, ResourceKey key, Object object, RegistrationInfo registrationInfo, Operation<Holder.Reference> original
