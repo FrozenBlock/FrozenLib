@@ -23,9 +23,10 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import net.frozenblock.lib.config.api.sync.SyncBehavior;
 
+// TODO: fix javadoc when clothconfig is unobfuscated
 /**
  * Provides the attributes of a syncable config entry.
- * See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig} and {@link net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui} for an example.
+ * See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig} and net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui for an example.
  * @since 1.5.2
  */
 @Retention(RetentionPolicy.RUNTIME)

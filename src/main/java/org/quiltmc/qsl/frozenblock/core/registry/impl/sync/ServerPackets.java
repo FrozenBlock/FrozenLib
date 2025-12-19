@@ -20,7 +20,6 @@ package org.quiltmc.qsl.frozenblock.core.registry.impl.sync;
 
 import it.unimi.dsi.fastutil.ints.IntList;
 import java.util.Collection;
-
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;

@@ -34,6 +34,7 @@ target/
 
 # fabric
 
+.fabric/
 run/
 runclient/
 runserver/

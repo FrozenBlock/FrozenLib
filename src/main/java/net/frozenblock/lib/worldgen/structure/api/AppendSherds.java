@@ -25,13 +25,13 @@ import net.frozenblock.lib.worldgen.structure.impl.FrozenRuleBlockEntityModifier
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
 import org.jetbrains.annotations.Nullable;
-import net.minecraft.util.Util;
 
 public record AppendSherds(List<Item> sherds, float chancePerSlot, boolean defaultToBrick) implements RuleBlockEntityModifier {
 	public static final MapCodec<AppendSherds> CODEC = RecordCodecBuilder.mapCodec(
