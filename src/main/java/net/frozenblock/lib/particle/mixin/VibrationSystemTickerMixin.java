@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public interface VibrationSystemTickerMixin {
 
 	@WrapOperation(
-		method = "method_51408",
+		method = "lambda$trySelectAndScheduleVibration$0",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"
