@@ -64,6 +64,18 @@ transitive-accessible field net/minecraft/world/item/ItemStack components Lnet/m
 transitive-accessible class net/minecraft/world/item/CreativeModeTab$ItemDisplayBuilder
 transitive-accessible method net/minecraft/world/item/CreativeModeTabs generateInstrumentTypes (Lnet/minecraft/world/item/CreativeModeTab$Output;Lnet/minecraft/core/HolderLookup;Lnet/minecraft/world/item/Item;Lnet/minecraft/tags/TagKey;Lnet/minecraft/world/item/CreativeModeTab$TabVisibility;)V
 transitive-accessible class net/minecraft/world/item/CreativeModeTab$TabVisibility
+transitive-accessible method net/minecraft/world/item/Items createBlockItemWithCustomItemName (Lnet/minecraft/world/level/block/Block;)Ljava/util/function/Function;
+transitive-accessible method net/minecraft/world/item/Items blockIdToItemId (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/resources/ResourceKey;
+transitive-accessible method net/minecraft/world/item/Items registerSpawnEgg (Lnet/minecraft/world/entity/EntityType;)Lnet/minecraft/world/item/Item;
+transitive-accessible method net/minecraft/world/item/Items registerBlock (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/world/item/Item;
+transitive-accessible method net/minecraft/world/item/Items registerBlock (Lnet/minecraft/world/level/block/Block;Lnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/Item;
+transitive-accessible method net/minecraft/world/item/Items registerBlock (Lnet/minecraft/world/level/block/Block;Ljava/util/function/UnaryOperator;)Lnet/minecraft/world/item/Item;
+transitive-accessible method net/minecraft/world/item/Items registerBlock (Lnet/minecraft/world/level/block/Block;[Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/world/item/Item;
+transitive-accessible method net/minecraft/world/item/Items registerBlock (Lnet/minecraft/world/level/block/Block;Ljava/util/function/BiFunction;)Lnet/minecraft/world/item/Item;
+transitive-accessible method net/minecraft/world/item/Items registerBlock (Lnet/minecraft/world/level/block/Block;Ljava/util/function/BiFunction;Lnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/Item;
+transitive-accessible method net/minecraft/world/item/Items registerItem (Lnet/minecraft/resources/ResourceKey;Ljava/util/function/Function;Lnet/minecraft/world/item/Item$Properties;)Lnet/minecraft/world/item/Item;
+transitive-accessible method net/minecraft/world/item/Items registerItem (Lnet/minecraft/resources/ResourceKey;Ljava/util/function/Function;)Lnet/minecraft/world/item/Item;
+
 transitive-inject-interface net/minecraft/world/item/ItemCooldowns net/frozenblock/lib/item/impl/CooldownInterface
 transitive-inject-interface net/minecraft/world/item/ServerItemCooldowns net/frozenblock/lib/item/impl/CooldownInterface
 
@@ -115,6 +127,7 @@ transitive-accessible method net/minecraft/world/level/block/AbstractCauldronBlo
 transitive-accessible method net/minecraft/world/level/block/PointedDripstoneBlock$FluidInfo <init> (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/world/level/block/state/BlockState;)V
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader config Lnet/minecraft/world/level/block/MultifaceSpreader$SpreadConfig;
 transitive-accessible method net/minecraft/data/BlockFamilies familyBuilder (Lnet/minecraft/world/level/block/Block;)Lnet/minecraft/data/BlockFamily$Builder;
+transitive-accessible method net/minecraft/world/level/block/Blocks wallVariant (Lnet/minecraft/world/level/block/Block;Z)Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;
 
 # Block Entities
 transitive-accessible field net/minecraft/world/level/block/entity/RandomizableContainerBlockEntity lootTable Lnet/minecraft/resources/ResourceKey;
