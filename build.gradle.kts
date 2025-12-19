@@ -290,6 +290,7 @@ tasks {
         configurations = listOf(relocImplementation, relocApi)
         enableAutoRelocation = true
         relocationPrefix = "net.frozenblock.lib.shadow"
+        archiveClassifier = ""
         dependencies {
             exclude {
                 it.moduleGroup.contains("fabric")
@@ -317,10 +318,6 @@ tasks {
         dependsOn(classes)
         archiveClassifier = "sources"
         from(sourceSets.main.get().allSource)
-    }
-
-    jar {
-        dependsOn(shadowJar)
     }
 
     withType(JavaCompile::class) {
