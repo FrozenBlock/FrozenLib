@@ -10,12 +10,17 @@
     "beacon.BeaconBlockEntityMixin",
     "dripstone.PointedDripstoneBlockMixin",
     "friction.LivingEntityMixin",
+    "piston.PistonBaseBlockMixin",
+    "piston.PistonMovingBlockEntityMixin",
+    "piston.PistonStructureResolverDoubleChestStickingMixin",
     "sound.BlockBehaviourMixin",
     "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin"
   ],
   "client": [
     "client.entity.SpecialModelRenderersMixin",
+    "client.piston.MovingBlockRenderStateMixin",
+    "client.piston.PistonHeadRendererMixin",
     "tick.client.ClientLevelMixin"
   ]
 }
