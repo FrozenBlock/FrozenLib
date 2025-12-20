@@ -12,7 +12,7 @@
     "friction.LivingEntityMixin",
     "piston.PistonBaseBlockMixin",
     "piston.PistonMovingBlockEntityMixin",
-    "piston.PistonStructureResolverDoubleChestStickingMixin",
+    "piston.structure_resolver.DoubleChestStickingMixin",
     "sound.BlockBehaviourMixin",
     "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin"
