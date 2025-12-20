@@ -74,7 +74,7 @@ public class DoubleChestStickingMixin {
 		BlockState state1, BlockState state2, Operation<Boolean> original,
 		@Local Direction direction
 	) {
-		return original.call(state1, state2) || PushableBlockEntityUtil.canChestsStick(state1, state2, direction);
+		return original.call(state1, state2) || PushableBlockEntityUtil.canChestsStick(state2, state1, direction);
 	}
 
 }
