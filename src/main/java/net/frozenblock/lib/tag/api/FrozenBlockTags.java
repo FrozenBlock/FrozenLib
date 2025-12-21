@@ -29,6 +29,7 @@ public class FrozenBlockTags {
 	public static final TagKey<Block> BLOWING_CAN_PASS_THROUGH = bind("blowing_can_pass_through");
 	public static final TagKey<Block> BLOWING_CANNOT_PASS_THROUGH = bind("blowing_cannot_pass_through");
 	public static final TagKey<Block> STRUCTURE_PLACE_SCHEDULES_TICK = bind("structure_place_schedules_tick");
+	public static final TagKey<Block> HAS_PUSHABLE_BLOCK_ENTITY = bind("has_pushable_block_entity");
 
     private static TagKey<Block> bind(String path) {
         return TagKey.create(Registries.BLOCK, FrozenLibConstants.id(path));
