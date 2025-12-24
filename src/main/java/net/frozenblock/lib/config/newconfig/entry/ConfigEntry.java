@@ -19,26 +19,34 @@ package net.frozenblock.lib.config.newconfig.entry;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.frozenblock.lib.config.newconfig.tooltip.ConfigEntryValueNameProvider;
+import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
-public abstract class ConfigEntry<T> {
+public class ConfigEntry<T> {
 	private final Identifier id;
+	private final EntryType<T> type;
 	private final T defaultValue;
-	private final boolean syncable;
-	private final boolean isModifiable;
-	private final ConfigEntryValueNameProvider<T> valueNameProvider;
-	private final boolean showTooltip;
 
-	public ConfigEntry(Identifier id, T defaultValue, boolean syncable, boolean isModifiable, ConfigEntryValueNameProvider valueNameProvider, boolean showTooltip) {
+	private T value;
+
+	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue) {
 		this.id = id;
+		this.type = type;
 		this.defaultValue = defaultValue;
-		this.syncable = syncable;
-		this.isModifiable = isModifiable;
-		this.valueNameProvider = valueNameProvider;
-		this.showTooltip = showTooltip;
+		this.value = defaultValue;
+		Registry.register(FrozenLibRegistries.CONFIG_ENTRY, id, this);
+	}
+
+	public T getValue() {
+		return this.value;
+	}
+
+	public void setValue(T value) {
+		this.value = value;
 	}
 
 	protected Component getDisplayName() {
@@ -57,24 +65,12 @@ public abstract class ConfigEntry<T> {
 		return this.defaultValue;
 	}
 
-	public boolean isSyncable() {
-		return this.syncable;
+	public Codec<T> getCodec() {
+		return this.type.getCodec();
 	}
 
-	public boolean isModifiable() {
-		return this.isModifiable;
+	public StreamCodec<ByteBuf, T> getStreamCodec() {
+		return this.type.getStreamCodec();
 	}
-
-	public boolean canShowTooltip() {
-		return this.showTooltip;
-	}
-
-	public ConfigEntryValueNameProvider<T> getValueNameProvider() {
-		return this.valueNameProvider;
-	}
-
-	public abstract Codec<T> getCodec();
-
-	public abstract StreamCodec<ByteBuf, T> getStreamCodec();
 
 }
