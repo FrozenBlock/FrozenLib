@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig;
+package net.frozenblock.lib.config.newconfig.entry;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
@@ -24,7 +24,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
-public abstract class AbstractConfigEntry<T> {
+public abstract class ConfigEntry<T> {
 	private final Identifier id;
 	private final T defaultValue;
 	private final boolean syncable;
@@ -32,7 +32,7 @@ public abstract class AbstractConfigEntry<T> {
 	private final ConfigEntryValueNameProvider<T> valueNameProvider;
 	private final boolean showTooltip;
 
-	public AbstractConfigEntry(Identifier id, T defaultValue, boolean syncable, boolean isModifiable, ConfigEntryValueNameProvider valueNameProvider, boolean showTooltip) {
+	public ConfigEntry(Identifier id, T defaultValue, boolean syncable, boolean isModifiable, ConfigEntryValueNameProvider valueNameProvider, boolean showTooltip) {
 		this.id = id;
 		this.defaultValue = defaultValue;
 		this.syncable = syncable;
