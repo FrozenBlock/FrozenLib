@@ -19,14 +19,10 @@ package net.frozenblock.lib.config.newconfig.test;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.config.newconfig.entry.BooleanConfigEntry;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.core.Registry;
+import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
+import net.minecraft.resources.Identifier;
 
 public class TestConfig {
-	public static final BooleanConfigEntry TEST = BooleanConfigEntry.createSimple(FrozenLibConstants.id("test"), true);
-
-	public static ConfigEntry<?> register(ConfigEntry<?> entry) {
-		return Registry.register(FrozenLibRegistries.CONFIG_ENTRY, entry.getId(), entry);
-	}
+	public static final ConfigEntry<Boolean> TEST = new ConfigEntry<>(FrozenLibConstants.id("test"), EntryType.BOOL, true);
+	public static final ConfigEntry<Identifier> TEST_ID = new ConfigEntry<>(FrozenLibConstants.id("test_id"), EntryType.IDENTIFIER, FrozenLibConstants.id("test_id"));
 }
