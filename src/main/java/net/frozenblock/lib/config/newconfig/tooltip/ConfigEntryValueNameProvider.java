@@ -20,6 +20,12 @@ package net.frozenblock.lib.config.newconfig.tooltip;
 import net.minecraft.network.chat.Component;
 
 public abstract class ConfigEntryValueNameProvider<T> {
+	public static final ConfigEntryValueNameProvider<Boolean> BOOL = new ConfigEntryValueNameProvider<>() {
+		@Override
+		public Component getValueName(Boolean value) {
+			return value ? Component.literal("TRUE") : Component.literal("FALSE");
+		}
+	};
 
 	public abstract Component getValueName(T value);
 
