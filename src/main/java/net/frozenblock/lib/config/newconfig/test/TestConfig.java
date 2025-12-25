@@ -26,7 +26,6 @@ import net.frozenblock.lib.config.newconfig.serialize.ConfigSaver;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
-import java.io.IOException;
 
 public class TestConfig {
 	public static final ConfigEntry<Boolean> TEST = new ConfigEntry<>(id("test"), EntryType.BOOL, true);
@@ -52,7 +51,7 @@ public class TestConfig {
 			ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
 				try {
 					ConfigSaver.saveConfigs();
-				} catch (IOException e) {
+				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
 			});
