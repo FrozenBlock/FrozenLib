@@ -34,6 +34,7 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.config.api.instance.json.JanksonOps;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -156,7 +157,7 @@ public class ConfigSaver {
 			if (i == length) {
 				final Codec valueCodec = entry.getCodec();
 				System.out.println(entryMap.get(string));
-				final DataResult decoded = valueCodec.decode(JavaOps.INSTANCE, entryMap.get(string));
+				final DataResult decoded = valueCodec.parse(JanksonOps.INSTANCE, entryMap.get(string));
 				if (decoded == null || decoded.isError()) {
 					FrozenLibLogUtils.logError("Unable to load config entry " + entryId + "!");
 					break;

@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.config.newconfig.test;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
@@ -25,6 +26,7 @@ import net.frozenblock.lib.config.newconfig.serialize.ConfigSaver;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
+import java.io.IOException;
 
 public class TestConfig {
 	public static final ConfigEntry<Boolean> TEST = new ConfigEntry<>(id("test"), EntryType.BOOL, true);
@@ -46,7 +48,14 @@ public class TestConfig {
 		try {
 			ConfigSaver.loadConfigs();
 			TEST2_EMBEDDED.setValue(900, true);
-			ConfigSaver.saveConfigs();
+
+			ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
+				try {
+					ConfigSaver.saveConfigs();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			});
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
