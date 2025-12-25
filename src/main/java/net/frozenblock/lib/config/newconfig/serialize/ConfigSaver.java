@@ -239,6 +239,8 @@ public class ConfigSaver {
 		}
 
 		public void saveConfig() throws Exception {
+			if (this.isLoad()) throw new IllegalStateException("Cannot save config from loading context!");
+
 			final Map<String, Object> configMap = this.configMap().get();
 			if (configMap == null) return;
 
