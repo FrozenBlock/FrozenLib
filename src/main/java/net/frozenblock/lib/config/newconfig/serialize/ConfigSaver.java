@@ -168,13 +168,13 @@ public class ConfigSaver {
 
 		public void logNoPathError(String entry) {
 			FrozenLibLogUtils.logError(
-				"Config entry " + entry + " has no field name to" + (this.isSave() ? "isSave to" : "read from") + "!\nSeparate config ids from fields using '/'."
+				"Config entry " + entry + " has no field name to" + (this.isSave() ? "save to" : "read from") + "!\nSeparate config ids from fields using '/'."
 			);
 		}
 
 		public void logUnableToUseError(String entry) {
 			FrozenLibLogUtils.logError(
-				"Unable to " + (this.isSave() ? "isSave" : "read") + " config entry " + entry + "!"
+				"Unable to " + (this.isSave() ? "save" : "read") + " config entry " + entry + "!"
 			);
 		}
 
@@ -209,7 +209,7 @@ public class ConfigSaver {
 		}
 
 		public void loadEntries(List<ConfigEntry<?>> entries) throws Exception {
-			if (this.isSave()) throw new IllegalStateException("Cannot load config from saving context!");
+			if (this.isSave()) throw new IllegalStateException("Cannot load config entry from saving context!");
 
 			for (ConfigEntry configEntry : entries) {
 				final Optional optionalValue = findOrBuildEntry(this.configId.toString(), configEntry, this);
