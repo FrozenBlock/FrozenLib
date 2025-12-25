@@ -155,7 +155,8 @@ public class ConfigSaver {
 			final String string = paths.get(i - 1);
 			if (i == length) {
 				final Codec valueCodec = entry.getCodec();
-				final DataResult decoded = valueCodec.decode(JavaOps.INSTANCE, entry.getValue());
+				System.out.println(entryMap.get(string));
+				final DataResult decoded = valueCodec.decode(JavaOps.INSTANCE, entryMap.get(string));
 				if (decoded == null || decoded.isError()) {
 					FrozenLibLogUtils.logError("Unable to load config entry " + entryId + "!");
 					break;
