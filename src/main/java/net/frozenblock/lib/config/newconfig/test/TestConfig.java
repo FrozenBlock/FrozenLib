@@ -43,7 +43,7 @@ public class TestConfig {
 	}
 
 	static {
-		Registry.register(FrozenLibRegistries.CONFIG_SETTINGS, FrozenLibConstants.id("test_config"), ConfigSettings.DJS);
+		Registry.register(FrozenLibRegistries.CONFIG_SETTINGS, FrozenLibConstants.id("test_config"), ConfigSettings.JSON5);
 		try {
 			ConfigSaver.saveConfigs();
 		} catch (IOException e) {
