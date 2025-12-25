@@ -35,7 +35,7 @@ public class ConfigEntry<T> {
 	private final Optional<String> comment;
 
 	private T value;
-	private boolean isValueUnsaved;
+	private boolean dirty;
 
 	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue, Optional<String> comment) {
 		this.id = id;
@@ -54,24 +54,25 @@ public class ConfigEntry<T> {
 		return this.value;
 	}
 
-	public void setValue(T value) {
+	public void setValue(T value, boolean markDirty) {
 		this.value = value;
+		if (markDirty) this.markDirty();
 	}
 
 	public boolean isUnsaved() {
-		return this.isValueUnsaved;
+		return this.dirty;
 	}
 
 	public boolean isSaved() {
-		return !this.isValueUnsaved;
+		return !this.dirty;
 	}
 
-	public void markUnsaved() {
-		this.isValueUnsaved = true;
+	public void markDirty() {
+		this.dirty = true;
 	}
 
-	public void markSaved() {
-		this.isValueUnsaved = false;
+	public void unmarkDirty() {
+		this.dirty = false;
 	}
 
 	protected Component getDisplayName() {
