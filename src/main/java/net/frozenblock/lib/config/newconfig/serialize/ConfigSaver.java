@@ -245,13 +245,6 @@ public class ConfigSaver {
 			if (configMap == null) return;
 
 			Files.createDirectories(this.path.getParent());
-
-			try {
-				this.settings.save(this.path, configMap);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-
 			this.settings.save(this.path, configMap);
 		}
 	}
