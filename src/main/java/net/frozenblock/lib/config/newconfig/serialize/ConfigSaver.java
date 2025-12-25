@@ -73,15 +73,10 @@ public class ConfigSaver {
 
 		for (ConfigEntry<?> entry : entries) {
 			final String entryId = entry.getId().toString().replace(configIdString + "/", "");
-
-			if (configIdString.equals(entryId)) {
-				ENTRY_HAS_NO_PATH_ON_SAVE_ERROR.accept(entryId);
-				continue;
-			}
-
 			final List<String> paths = Arrays.stream(entryId.split("/")).toList();
 			final int length = paths.size();
-			if (length <= 0) {
+
+			if (configIdString.equals(entryId) || length <= 0) {
 				ENTRY_HAS_NO_PATH_ON_SAVE_ERROR.accept(entryId);
 				continue;
 			}
