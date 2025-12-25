@@ -43,8 +43,8 @@ import net.minecraft.resources.Identifier;
 public class ConfigSerializer {
 	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir();
 
-	public static void saveConfigs() throws Exception {
-		final Map<Identifier, List<ConfigEntry<?>>> configsToSave = collectUnsavedConfigs();
+	public static void saveConfigs(boolean collectAll) throws Exception {
+		final Map<Identifier, List<ConfigEntry<?>>> configsToSave = collectAll ? collectConfigs() : collectUnsavedConfigs();
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToSave.entrySet()) {
 			final SerializationContext<?> context = SerializationContext.createForSaving(entry.getKey(), entry.getValue());
