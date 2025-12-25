@@ -17,16 +17,15 @@
 
 package net.frozenblock.lib.config.newconfig.serialize;
 
-import blue.endless.jankson.Jankson;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JavaOps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import java.io.BufferedWriter;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -42,24 +41,26 @@ import net.minecraft.resources.Identifier;
 
 public class ConfigSaver {
 	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir();
-	private static final Jankson JANKSON = Jankson.builder().build();
 	private static final Consumer<String> ENTRY_HAS_NO_PATH_ON_SAVE_ERROR = string -> FrozenLibLogUtils.logError(
 		"Config entry " + string + " has no field name to save to!\nSeparate config ids from fields using '/'."
 	);
+	private static final Consumer<String> ENTRY_HAS_NO_PATH_ON_LOAD_ERROR = string -> FrozenLibLogUtils.logError(
+		"Config entry " + string + " has no field name to read from!\nSeparate config ids from fields using '/'."
+	);
 
 	public static void saveConfigs() throws IOException {
-		final Map<Identifier, List<ConfigEntry<?>>> configsToSave = collectModifiedConfigs();
+		final Map<Identifier, List<ConfigEntry<?>>> configsToSave = collectUnsavedConfigs();
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToSave.entrySet()) {
 			final Identifier configId = entry.getKey();
 			final ConfigSettings<?> settings = FrozenLibRegistries.CONFIG_SETTINGS.get(configId).orElseThrow().value();
-			final List<ConfigEntry<?>> configEntries = entry.getValue();
+			final SerializationContext<?> context = SerializationContext.create(configId, settings, false);
 
-
-			final Map<String, Object> configMap = buildConfigMapToSave(configId, configEntries);
+			final List<ConfigEntry<?>> entries = entry.getValue();
+			final Map<String, Object> configMap = buildConfigMap(configId, entries, context);
 			if (configMap.isEmpty()) continue;
 
-			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + settings.fileExtension());
+			final Path path = context.path();
 			Files.createDirectories(path.getParent());
 
 			try {
@@ -70,8 +71,31 @@ public class ConfigSaver {
 		}
 	}
 
-	public static Map<String, Object> buildConfigMapToSave(Identifier configId, List<ConfigEntry<?>> entries) {
+	public static void loadConfigs() throws IOException {
+		final Map<Identifier, List<ConfigEntry<?>>> configsToLoad = collectConfigs();
+
+		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToLoad.entrySet()) {
+			final Identifier configId = entry.getKey();
+			final ConfigSettings<?> settings = FrozenLibRegistries.CONFIG_SETTINGS.get(configId).orElseThrow().value();
+			final SerializationContext<?> context = SerializationContext.create(configId, settings, false);
+
+			if (!Files.exists(context.path())) continue;
+
+			final List<ConfigEntry<?>> entries = entry.getValue();
+			final Map<String, Object> configMap = buildConfigMap(configId, entries, context);
+			if (configMap.isEmpty()) continue;
+
+			try {
+				//settings.save(path, configMap);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		}
+	}
+
+	public static Map<String, Object> buildConfigMap(Identifier configId, List<ConfigEntry<?>> entries, SerializationContext<?> context) {
 		final String configIdString = configId.toString();
+		final File configFile = context.asFile();
 		final Map<String, Object> organizedEntries = new Object2ObjectOpenHashMap<>();
 
 		for (ConfigEntry<?> entry : entries) {
@@ -110,27 +134,61 @@ public class ConfigSaver {
 		return organizedEntries;
 	}
 
-	public static Map<Identifier, List<ConfigEntry<?>>> collectModifiedConfigs() {
-		final List<Identifier> modifiedConfigs = new ArrayList<>();
+	public static Map<Identifier, List<ConfigEntry<?>>> collectUnsavedConfigs() {
+		final List<Identifier> unsavedConfigIds = new ArrayList<>();
 		FrozenLibRegistries.CONFIG_ENTRY.forEach(entry -> {
 			if (entry.isSaved()) return;
 			final Identifier configId = getBaseConfigIdFromEntry(entry);
-			if (!modifiedConfigs.contains(configId)) modifiedConfigs.add(configId);
+			if (!unsavedConfigIds.contains(configId)) unsavedConfigIds.add(configId);
 		});
 
+		final Map<Identifier, List<ConfigEntry<?>>> configsAndEntries = collectConfigs();
+		configsAndEntries.keySet().removeIf(id -> !unsavedConfigIds.contains(id));
+
+		return configsAndEntries;
+	}
+
+	public static Map<Identifier, List<ConfigEntry<?>>> collectConfigs() {
 		final Map<Identifier, List<ConfigEntry<?>>> configsAndEntries = new Object2ObjectOpenHashMap<>();
 		FrozenLibRegistries.CONFIG_ENTRY.forEach(entry -> {
 			final Identifier configId = getBaseConfigIdFromEntry(entry);
-			final List<ConfigEntry<?>> configs = configsAndEntries.getOrDefault(configId, new ArrayList<>());
-			configs.add(entry);
-			configsAndEntries.put(configId, configs);
+			final List<ConfigEntry<?>> entries = configsAndEntries.getOrDefault(configId, new ArrayList<>());
+			entries.add(entry);
+			configsAndEntries.put(configId, entries);
 		});
-
 		return configsAndEntries;
 	}
 
 	public static Identifier getBaseConfigIdFromEntry(ConfigEntry<?> entry) {
 		return entry.getId().withPath(path -> path.split("/")[0]);
+	}
+
+	public record SerializationContext<T>(Identifier configId, ConfigSettings<T> settings, boolean save, Path path) {
+
+		public static <T> SerializationContext<T> create(Identifier configId, ConfigSettings<T> settings, boolean save) {
+			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + settings.fileExtension());
+			return new SerializationContext<>(configId, settings, save, path);
+		}
+
+		public String fileExtension() {
+			return this.settings.fileExtension();
+		}
+
+		public DynamicOps<T> dynamicOps() {
+			return this.settings.dynamicOps();
+		}
+
+		public boolean isLoad() {
+			return !this.save;
+		}
+
+		public File asFile() {
+			return this.path.toFile();
+		}
+
+		public void save(Path path, Map<String, Object> configMap) throws Exception {
+			this.settings.save(path, configMap);
+		}
 	}
 
 }

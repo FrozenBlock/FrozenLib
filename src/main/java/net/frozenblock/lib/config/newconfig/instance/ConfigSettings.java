@@ -20,6 +20,11 @@ package net.frozenblock.lib.config.newconfig.instance;
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonElement;
 import com.mojang.serialization.DynamicOps;
+import java.io.BufferedWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.Map;
 import net.frozenblock.lib.config.api.instance.json.JanksonOps;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.instance.xjs.XjsFormat;
@@ -27,14 +32,8 @@ import net.frozenblock.lib.config.api.instance.xjs.XjsObjectMapper;
 import net.frozenblock.lib.config.api.instance.xjs.XjsOps;
 import xjs.data.JsonValue;
 import xjs.data.serialization.writer.ValueWriter;
-import java.io.BufferedWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
-import java.util.Map;
 
 public class ConfigSettings<T> {
-
 	private static final Jankson JANKSON = Jankson.builder().build();
 
 	public static final ConfigSettings<JsonElement> JSON = new ConfigSettings<>(
