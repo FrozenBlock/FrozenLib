@@ -35,8 +35,8 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
+import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.resources.Identifier;
 
@@ -52,17 +52,20 @@ public class ConfigSaver {
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToSave.entrySet()) {
 			final Identifier configId = entry.getKey();
+			final ConfigSettings<?> settings = FrozenLibRegistries.CONFIG_SETTINGS.get(configId).orElseThrow().value();
 			final List<ConfigEntry<?>> configEntries = entry.getValue();
 
 
 			final Map<String, Object> configMap = buildConfigMapToSave(configId, configEntries);
 			if (configMap.isEmpty()) continue;
 
-			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + ".json");
+			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + settings.fileExtension());
 			Files.createDirectories(path.getParent());
 
-			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-				writer.write(JANKSON.toJson(configMap).toJson(JsonType.JSON.getGrammar()));
+			try {
+				settings.save(path, configMap);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
 			}
 		}
 	}
