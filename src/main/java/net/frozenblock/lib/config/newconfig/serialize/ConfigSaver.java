@@ -19,6 +19,7 @@ package net.frozenblock.lib.config.newconfig.serialize;
 
 import blue.endless.jankson.Jankson;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -30,6 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.instance.json.JanksonOps;
@@ -41,6 +43,9 @@ import net.minecraft.resources.Identifier;
 public class ConfigSaver {
 	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir();
 	private static final Jankson JANKSON = Jankson.builder().build();
+	private static final Consumer<String> ENTRY_HAS_NO_PATH_ON_SAVE_ERROR = string -> FrozenLibLogUtils.logError(
+		"Config entry " + string + " has no field name to save to!\nSeparate config ids from fields using '/'."
+	);
 
 	public static void saveConfigs() throws IOException {
 		final Map<Identifier, List<ConfigEntry<?>>> configsToSave = collectModifiedConfigs();
@@ -70,14 +75,14 @@ public class ConfigSaver {
 			final String entryId = entry.getId().toString().replace(configIdString + "/", "");
 
 			if (configIdString.equals(entryId)) {
-				FrozenLibLogUtils.logError("Config entry " + entryId + " has the same ID as an existing config!");
+				ENTRY_HAS_NO_PATH_ON_SAVE_ERROR.accept(entryId);
 				continue;
 			}
 
 			final List<String> paths = Arrays.stream(entryId.split("/")).toList();
 			final int length = paths.size();
 			if (length <= 0) {
-				FrozenLibLogUtils.logError("Config entry " + entryId + " has no field name to save to!");
+				ENTRY_HAS_NO_PATH_ON_SAVE_ERROR.accept(entryId);
 				continue;
 			}
 
@@ -86,7 +91,7 @@ public class ConfigSaver {
 				final String string = paths.get(i - 1);
 				if (i == length) {
 					final Codec valueCodec = entry.getCodec();
-					final var encoded = valueCodec.encodeStart(JanksonOps.INSTANCE, entry.getValue());
+					final DataResult encoded = valueCodec.encodeStart(JanksonOps.INSTANCE, entry.getValue());
 					if (encoded == null || encoded.isError()) {
 						FrozenLibLogUtils.logError("Unable to save config entry " + entryId + "!");
 						break;
