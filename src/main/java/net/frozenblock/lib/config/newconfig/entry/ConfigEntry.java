@@ -18,6 +18,7 @@
 package net.frozenblock.lib.config.newconfig.entry;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import java.util.Optional;
 import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
@@ -26,6 +27,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
+import net.minecraft.util.ExtraCodecs;
 
 public class ConfigEntry<T> {
 	private final Identifier id;
@@ -59,6 +61,10 @@ public class ConfigEntry<T> {
 		if (markDirty) this.markDirty();
 	}
 
+	public ValueWithComment<T> getValueWithComment() {
+		return new ValueWithComment<>(this.getValue(), this.getComment());
+	}
+
 	public boolean isUnsaved() {
 		return this.dirty;
 	}
@@ -83,12 +89,20 @@ public class ConfigEntry<T> {
 		return Component.translatable("tooltip." + this.id.getNamespace() + "." + this.id.getPath().replace("/", "."));
 	}
 
+	public boolean hasComment() {
+		return this.comment != null && this.comment.isPresent() && !this.comment.get().isEmpty();
+	}
+
 	public Identifier getId() {
 		return this.id;
 	}
 
 	public T getDefaultValue() {
 		return this.defaultValue;
+	}
+
+	public Optional<String> getComment() {
+		return this.comment;
 	}
 
 	public Codec<T> getCodec() {
@@ -99,4 +113,15 @@ public class ConfigEntry<T> {
 		return this.type.getStreamCodec();
 	}
 
+	public Codec<ValueWithComment<T>> getCodecWithComment() {
+		return RecordCodecBuilder.create(
+			instance -> instance.group(
+				this.getCodec().fieldOf("value").forGetter(ValueWithComment::value),
+				ExtraCodecs.NON_EMPTY_STRING.optionalFieldOf("comment").forGetter(ValueWithComment::comment)
+			).apply(instance, ValueWithComment::new)
+		);
+	}
+
+	public record ValueWithComment<T>(T value, Optional<String> comment) {
+	}
 }
