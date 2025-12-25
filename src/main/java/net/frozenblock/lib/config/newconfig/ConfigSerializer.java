@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.config.newconfig;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JavaOps;
@@ -86,8 +85,7 @@ public class ConfigSerializer {
 			final String string = paths.get(i - 1);
 			if (i == length) {
 				final Map<String, Object> finalEntryMap = entryMap;
-				final Codec valueCodec = entry.getCodec();
-				final DataResult result = context.encodeOrParse(valueCodec, entry::getValue, () -> finalEntryMap.get(string));
+				final DataResult result = context.encodeOrParse(entry, () -> finalEntryMap.get(string));
 				if (result == null || result.isError()) {
 					context.logUnableToUseError(entryId);
 					break;
@@ -191,8 +189,24 @@ public class ConfigSerializer {
 			return this.path.toFile();
 		}
 
-		public DataResult<?> encodeOrParse(Codec codec, Supplier<?> saveInput, Supplier<?> parseInput) {
-			return this.isSave() ? codec.encodeStart(JavaOps.INSTANCE, saveInput.get()) : codec.parse(JanksonOps.INSTANCE, parseInput.get());
+		public DataResult<?> encodeOrParse(ConfigEntry entry, Supplier<?> parseInput) {
+			if (this.isSave()) {
+				if (!entry.hasComment()) return entry.getCodec().encodeStart(JavaOps.INSTANCE, entry.getValue());
+				final ConfigEntry.ValueWithComment valueWithComment = entry.getValueWithComment();
+				return entry.getCodecWithComment().encodeStart(JanksonOps.INSTANCE, valueWithComment);
+			}
+
+			final Object input = parseInput.get();
+			DataResult result = entry.getCodec().parse(JanksonOps.INSTANCE, input);
+			if (result.isError()) {
+				final DataResult<ConfigEntry.ValueWithComment> resultWithComment = entry.getCodecWithComment().parse(JanksonOps.INSTANCE, input);
+				if (!resultWithComment.isError()) {
+					final Object value = resultWithComment.getOrThrow().value();
+					return DataResult.success(value);
+				}
+			}
+
+			return result;
 		}
 
 		public void saveConfig() throws Exception {
