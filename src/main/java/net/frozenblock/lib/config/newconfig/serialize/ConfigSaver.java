@@ -54,6 +54,7 @@ public class ConfigSaver {
 			final Identifier configId = entry.getKey();
 			final List<ConfigEntry<?>> configEntries = entry.getValue();
 
+
 			final Map<String, Object> configMap = buildConfigMapToSave(configId, configEntries);
 			if (configMap.isEmpty()) continue;
 
