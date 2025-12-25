@@ -20,6 +20,7 @@ package net.frozenblock.lib.config.newconfig.serialize;
 import blue.endless.jankson.Jankson;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
+import com.mojang.serialization.JavaOps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -34,7 +35,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.config.api.instance.json.JanksonOps;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -86,7 +86,7 @@ public class ConfigSaver {
 				final String string = paths.get(i - 1);
 				if (i == length) {
 					final Codec valueCodec = entry.getCodec();
-					final DataResult encoded = valueCodec.encodeStart(JanksonOps.INSTANCE, entry.getValue());
+					final DataResult encoded = valueCodec.encodeStart(JavaOps.INSTANCE, entry.getValue());
 					if (encoded == null || encoded.isError()) {
 						FrozenLibLogUtils.logError("Unable to save config entry " + entryId + "!");
 						break;
