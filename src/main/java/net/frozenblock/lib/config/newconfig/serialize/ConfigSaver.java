@@ -21,7 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JavaOps;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -71,32 +71,37 @@ public class ConfigSaver {
 		}
 	}
 
-	public static void loadConfigs() throws IOException {
+	public static void loadConfigs() throws Exception {
 		final Map<Identifier, List<ConfigEntry<?>>> configsToLoad = collectConfigs();
+		final Map<Identifier, Map<String, Object>> configMaps = new Object2ObjectLinkedOpenHashMap<>();
+
+		for (Identifier configId : configsToLoad.keySet()) {
+			final ConfigSettings<?> settings = FrozenLibRegistries.CONFIG_SETTINGS.get(configId).orElseThrow().value();
+			final SerializationContext<?> context = SerializationContext.create(configId, settings, false);
+			if (!Files.exists(context.path())) continue;
+
+
+			final Map<String, Object> configMap = settings.load(context.path());
+			if (configMap.isEmpty()) throw new AssertionError("MAP SHOULDNT BE EMPTY BRUHHHHHHHHHHHHHH");
+
+			configMaps.put(configId, configMap);
+		}
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToLoad.entrySet()) {
 			final Identifier configId = entry.getKey();
-			final ConfigSettings<?> settings = FrozenLibRegistries.CONFIG_SETTINGS.get(configId).orElseThrow().value();
-			final SerializationContext<?> context = SerializationContext.create(configId, settings, false);
+			if (!configMaps.containsKey(configId)) continue;
 
-			if (!Files.exists(context.path())) continue;
-
-			final List<ConfigEntry<?>> entries = entry.getValue();
-			final Map<String, Object> configMap = buildConfigMap(configId, entries, context);
-			if (configMap.isEmpty()) continue;
-
-			try {
-				//settings.save(path, configMap);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
+			final Map<String, Object> configMap = configMaps.get(configId);
+			for (ConfigEntry configEntry : entry.getValue()) {
+				Optional optionalValue = readFromConfigMap(configId, configEntry, configMap);
+				if (optionalValue.isPresent()) configEntry.setValue(optionalValue.get(), false);
 			}
 		}
 	}
 
 	public static Map<String, Object> buildConfigMap(Identifier configId, List<ConfigEntry<?>> entries, SerializationContext<?> context) {
 		final String configIdString = configId.toString();
-		final File configFile = context.asFile();
-		final Map<String, Object> organizedEntries = new Object2ObjectOpenHashMap<>();
+		final Map<String, Object> organizedEntries = new Object2ObjectLinkedOpenHashMap<>();
 
 		for (ConfigEntry<?> entry : entries) {
 			final String entryId = entry.getId().toString().replace(configIdString + "/", "");
@@ -124,7 +129,7 @@ public class ConfigSaver {
 
 					entryMap.put(string, encodedResult.get());
 				} else {
-					final Map<String, Object> foundMap = (Map<String, Object>) entryMap.getOrDefault(string, new Object2ObjectOpenHashMap<>());
+					final Map<String, Object> foundMap = (Map<String, Object>) entryMap.getOrDefault(string, new Object2ObjectLinkedOpenHashMap<>());
 					entryMap.put(string, foundMap);
 					entryMap = foundMap;
 				}
@@ -132,6 +137,43 @@ public class ConfigSaver {
 		}
 
 		return organizedEntries;
+	}
+
+	public static Optional<Object> readFromConfigMap(Identifier configId, ConfigEntry<?> entry, Map<String, Object> configMap) {
+		final String configIdString = configId.toString();
+		final String entryId = entry.getId().toString().replace(configIdString + "/", "");
+		final List<String> paths = Arrays.stream(entryId.split("/")).toList();
+		final int length = paths.size();
+
+		if (configIdString.equals(entryId) || length <= 0) {
+			ENTRY_HAS_NO_PATH_ON_SAVE_ERROR.accept(entryId);
+			return Optional.empty();
+		}
+
+		Map<String, Object> entryMap = configMap;
+		for (int i = 1; i <= length; i++) {
+			final String string = paths.get(i - 1);
+			if (i == length) {
+				final Codec valueCodec = entry.getCodec();
+				final DataResult decoded = valueCodec.decode(JavaOps.INSTANCE, entry.getValue());
+				if (decoded == null || decoded.isError()) {
+					FrozenLibLogUtils.logError("Unable to load config entry " + entryId + "!");
+					break;
+				}
+
+				final Optional decodedResult = decoded.resultOrPartial();
+				if (decodedResult.isEmpty()) break;
+
+				return Optional.of(decodedResult.get());
+			} else {
+				final Map<String, Object> foundMap = (Map<String, Object>) entryMap.get(string);
+				if (foundMap == null) throw new AssertionError("NO MAP FOUND OMG HOG!!!!");
+				entryMap.put(string, foundMap);
+				entryMap = foundMap;
+			}
+		}
+
+		return Optional.empty();
 	}
 
 	public static Map<Identifier, List<ConfigEntry<?>>> collectUnsavedConfigs() {
@@ -149,7 +191,7 @@ public class ConfigSaver {
 	}
 
 	public static Map<Identifier, List<ConfigEntry<?>>> collectConfigs() {
-		final Map<Identifier, List<ConfigEntry<?>>> configsAndEntries = new Object2ObjectOpenHashMap<>();
+		final Map<Identifier, List<ConfigEntry<?>>> configsAndEntries = new Object2ObjectLinkedOpenHashMap<>();
 		FrozenLibRegistries.CONFIG_ENTRY.forEach(entry -> {
 			final Identifier configId = getBaseConfigIdFromEntry(entry);
 			final List<ConfigEntry<?>> entries = configsAndEntries.getOrDefault(configId, new ArrayList<>());
