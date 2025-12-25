@@ -46,11 +46,10 @@ public class TestConfig {
 		Registry.register(FrozenLibRegistries.CONFIG_SETTINGS, FrozenLibConstants.id("test_config"), ConfigSettings.JSON5);
 		try {
 			ConfigSerializer.loadConfigs();
-			TEST2_EMBEDDED.setValue(900, true);
 
 			ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
 				try {
-					ConfigSerializer.saveConfigs();
+					ConfigSerializer.saveConfigs(true);
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
