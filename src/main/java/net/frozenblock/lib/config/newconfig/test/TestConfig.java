@@ -20,7 +20,10 @@ package net.frozenblock.lib.config.newconfig.test;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
+import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
 import net.frozenblock.lib.config.newconfig.serialize.ConfigSaver;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import java.io.IOException;
 
@@ -40,6 +43,7 @@ public class TestConfig {
 	}
 
 	static {
+		Registry.register(FrozenLibRegistries.CONFIG_SETTINGS, FrozenLibConstants.id("test_config"), ConfigSettings.DJS);
 		try {
 			ConfigSaver.saveConfigs();
 		} catch (IOException e) {
