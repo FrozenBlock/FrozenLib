@@ -25,6 +25,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Map;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.frozenblock.lib.config.api.instance.json.JanksonOps;
 import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.instance.xjs.XjsFormat;
@@ -43,6 +44,10 @@ public class ConfigSettings<T> {
 			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 				writer.write(JANKSON.toJson(configMap).toJson(JsonType.JSON.getGrammar()));
 			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			return new Object2ObjectLinkedOpenHashMap<String, Object>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
 		}
 	);
 	public static final ConfigSettings<JsonElement> JSON5 = new ConfigSettings<>(
@@ -52,6 +57,10 @@ public class ConfigSettings<T> {
 			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 				writer.write(JANKSON.toJson(configMap).toJson(JsonType.JSON5.getGrammar()));
 			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			return new Object2ObjectLinkedOpenHashMap<String, Object>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
 		}
 	);
 	public static final ConfigSettings<JsonElement> JSON5_UNQUOTED_KEYS = new ConfigSettings<>(
@@ -61,6 +70,10 @@ public class ConfigSettings<T> {
 			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 				writer.write(JANKSON.toJson(configMap).toJson(JsonType.JSON5_UNQUOTED_KEYS.getGrammar()));
 			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			return new Object2ObjectLinkedOpenHashMap<String, Object>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
 		}
 	);
 	public static final ConfigSettings<JsonValue> DJS = new ConfigSettings<>(
@@ -127,15 +140,26 @@ public class ConfigSettings<T> {
 	private final String fileExtension;
 	private final DynamicOps<T> dynamicOps;
 	private final SaveFunction saveFunction;
+	private final LoadFunction loadFunction;
+
+	public ConfigSettings(
+		String fileExtension,
+		DynamicOps<T> dynamicOps,
+		SaveFunction saveFunction,
+		LoadFunction loadFunction
+	) {
+		this.fileExtension = fileExtension;
+		this.dynamicOps = dynamicOps;
+		this.saveFunction = saveFunction;
+		this.loadFunction = loadFunction;
+	}
 
 	public ConfigSettings(
 		String fileExtension,
 		DynamicOps<T> dynamicOps,
 		SaveFunction saveFunction
 	) {
-		this.fileExtension = fileExtension;
-		this.dynamicOps = dynamicOps;
-		this.saveFunction = saveFunction;
+		this(fileExtension, dynamicOps, saveFunction, null);
 	}
 
 	public String fileExtension() {
@@ -150,8 +174,17 @@ public class ConfigSettings<T> {
 		this.saveFunction.save(path, configMap);
 	}
 
+	public Map<String, Object> load(Path path) throws Exception {
+		return this.loadFunction.load(path);
+	}
+
 	@FunctionalInterface
 	public interface SaveFunction {
 		void save(Path path, Map<String, Object> configMap) throws Exception;
+	}
+
+	@FunctionalInterface
+	public interface LoadFunction {
+		Map<String, Object> load(Path path) throws Exception;
 	}
 }
