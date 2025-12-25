@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.serialize;
+package net.frozenblock.lib.config.newconfig;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -40,7 +40,7 @@ import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.resources.Identifier;
 
-public class ConfigSaver {
+public class ConfigSerializer {
 	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir();
 
 	public static void saveConfigs() throws Exception {

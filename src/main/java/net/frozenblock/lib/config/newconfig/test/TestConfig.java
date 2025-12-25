@@ -22,7 +22,7 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
 import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
-import net.frozenblock.lib.config.newconfig.serialize.ConfigSaver;
+import net.frozenblock.lib.config.newconfig.ConfigSerializer;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
@@ -45,12 +45,12 @@ public class TestConfig {
 	static {
 		Registry.register(FrozenLibRegistries.CONFIG_SETTINGS, FrozenLibConstants.id("test_config"), ConfigSettings.JSON5);
 		try {
-			ConfigSaver.loadConfigs();
+			ConfigSerializer.loadConfigs();
 			TEST2_EMBEDDED.setValue(900, true);
 
 			ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
 				try {
-					ConfigSaver.saveConfigs();
+					ConfigSerializer.saveConfigs();
 				} catch (Exception e) {
 					throw new RuntimeException(e);
 				}
