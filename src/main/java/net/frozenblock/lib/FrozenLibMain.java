@@ -28,6 +28,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
+import net.frozenblock.lib.config.newconfig.test.TestConfig;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
@@ -78,6 +79,8 @@ public final class FrozenLibMain extends FrozenModInitializer {
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
 		FrozenLibRegistries.initRegistry();
+
+		TestConfig.init();
 
 		// QUILT INIT
 

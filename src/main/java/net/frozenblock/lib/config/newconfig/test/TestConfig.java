@@ -20,9 +20,30 @@ package net.frozenblock.lib.config.newconfig.test;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
+import net.frozenblock.lib.config.newconfig.serialize.ConfigSaver;
 import net.minecraft.resources.Identifier;
+import java.io.IOException;
 
 public class TestConfig {
-	public static final ConfigEntry<Boolean> TEST = new ConfigEntry<>(FrozenLibConstants.id("test"), EntryType.BOOL, true);
-	public static final ConfigEntry<Identifier> TEST_ID = new ConfigEntry<>(FrozenLibConstants.id("test_id"), EntryType.IDENTIFIER, FrozenLibConstants.id("test_id"));
+	public static final ConfigEntry<Boolean> TEST = new ConfigEntry<>(id("test"), EntryType.BOOL, true);
+	public static final ConfigEntry<Identifier> TEST_ID = new ConfigEntry<>(id("test_id"), EntryType.IDENTIFIER, FrozenLibConstants.id("test_id"));
+
+	public static final ConfigEntry<Boolean> TEST1_EMBEDDED = new ConfigEntry<>(id("embedded/test1"), EntryType.BOOL, true);
+	public static final ConfigEntry<Integer> TEST2_EMBEDDED = new ConfigEntry<>(id("embedded/test2"), EntryType.INT, 67);
+
+	public static void init() {
+
+	}
+
+	private static Identifier id(String path) {
+		return FrozenLibConstants.id("test_config/" + path);
+	}
+
+	static {
+		try {
+			ConfigSaver.saveConfigs();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+	}
 }
