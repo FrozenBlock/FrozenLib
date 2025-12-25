@@ -19,6 +19,7 @@ package net.frozenblock.lib.config.newconfig.entry;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import java.util.Optional;
 import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
@@ -30,15 +31,23 @@ public class ConfigEntry<T> {
 	private final Identifier id;
 	private final EntryType<T> type;
 	private final T defaultValue;
+	// TODO: Figure out how to save comments!!
+	private final Optional<String> comment;
 
 	private T value;
+	private boolean isValueUnsaved;
 
-	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue) {
+	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue, Optional<String> comment) {
 		this.id = id;
 		this.type = type;
 		this.defaultValue = defaultValue;
 		this.value = defaultValue;
+		this.comment = comment;
 		Registry.register(FrozenLibRegistries.CONFIG_ENTRY, id, this);
+	}
+
+	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue) {
+		this(id, type, defaultValue, Optional.empty());
 	}
 
 	public T getValue() {
@@ -47,6 +56,22 @@ public class ConfigEntry<T> {
 
 	public void setValue(T value) {
 		this.value = value;
+	}
+
+	public boolean isUnsaved() {
+		return this.isValueUnsaved;
+	}
+
+	public boolean isSaved() {
+		return !this.isValueUnsaved;
+	}
+
+	public void markUnsaved() {
+		this.isValueUnsaved = true;
+	}
+
+	public void markSaved() {
+		this.isValueUnsaved = false;
 	}
 
 	protected Component getDisplayName() {
