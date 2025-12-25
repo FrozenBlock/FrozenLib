@@ -161,7 +161,7 @@ public class ConfigSerializer {
 			final Map<String, Object> configMap = settings.load(path);
 			if (configMap.isEmpty()) throw new AssertionError("MAP SHOULDNT BE EMPTY BRUHHHHHHHHHHHHHH");
 
-			final SerializationContext<?> loadContext = new SerializationContext<>(configId, settings, false, path, new AtomicReference<>());
+			final SerializationContext<?> loadContext = new SerializationContext<>(configId, settings, false, path, new AtomicReference<>(configMap));
 
 			return Optional.of(loadContext);
 		}
