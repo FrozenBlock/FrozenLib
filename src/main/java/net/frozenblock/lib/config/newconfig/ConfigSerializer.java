@@ -192,8 +192,11 @@ public class ConfigSerializer {
 		public DataResult<?> encodeOrParse(ConfigEntry entry, Supplier<?> parseInput) {
 			if (this.isSave()) {
 				if (!entry.hasComment()) return entry.getCodec().encodeStart(JavaOps.INSTANCE, entry.getValue());
-				final ConfigEntry.ValueWithComment valueWithComment = entry.getValueWithComment();
-				return entry.getCodecWithComment().encodeStart(JanksonOps.INSTANCE, valueWithComment);
+
+				final Map<String, Object> valueWithCommentMap = new Object2ObjectLinkedOpenHashMap<>();
+				valueWithCommentMap.put("value", entry.getValue());
+				valueWithCommentMap.put("comment", entry.getComment().get());
+				return DataResult.success(valueWithCommentMap);
 			}
 
 			final Object input = parseInput.get();
