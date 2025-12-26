@@ -56,13 +56,10 @@ public class FrozenLibConfig {
 	public static final ConfigEntry<String> CAPE = new ConfigEntry<>(id("cape"), EntryType.STRING, FrozenLibConstants.string("dummy"));
 
 	// datafixer config
-	public static final ConfigEntry<List<String>> DISABLED_DATA_FIX_TYPES = new ConfigEntry<>(
-		id("datafixer/disabled_data_fix_types"),
-		EntryType.STRING.asList(),
-		List.of(
-			"world_gen_settings"
-		)
-	);
+	public static final ConfigEntry<List<String>> DISABLED_DATA_FIX_TYPES = ConfigEntry.builder(
+		id("datafixer/disabled_data_fix_types"), EntryType.STRING.asList(),
+		List.of("world_gen_settings")
+	).comment("Mods can only add to this list. User settings will always apply.").build();
 
 	public static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
 		new JsonConfig<>(
