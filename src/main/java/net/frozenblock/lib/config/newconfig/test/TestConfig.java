@@ -20,10 +20,8 @@ package net.frozenblock.lib.config.newconfig.test;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.config.newconfig.ConfigSerializer;
 import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.config.ConfigSettings;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
@@ -33,6 +31,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
 public class TestConfig {
+
+	static {
+		ConfigData.createAndRegister(FrozenLibConstants.id("test_config"), ConfigSettings.JSON5);
+	}
+
 	public record PoopCrap(int poop, String crap) {
 		public static final Codec<PoopCrap> CODEC = RecordCodecBuilder.create(instance ->
 			instance.group(
@@ -63,29 +66,10 @@ public class TestConfig {
 	//public static final ConfigEntry<String> POOPCRAP_BREAKER = new ConfigEntry<>(id("poopcrap/poop"), EntryType.STRING, "67");
 
 	public static void init() {
-
+		FrozenLibLogUtils.log("Skibidi " + "bop " + "yes" + "! " + TEST2_EMBEDDEDX2.get());
 	}
 
 	private static Identifier id(String path) {
 		return FrozenLibConstants.id("test_config/" + path);
-	}
-
-	static {
-		ConfigData.createAndRegister(FrozenLibConstants.id("test_config"), ConfigSettings.JSON5);
-		try {
-			ConfigSerializer.loadConfigs();
-
-			ClientLifecycleEvents.CLIENT_STOPPING.register((client) -> {
-				try {
-					ConfigSerializer.saveConfigs(true);
-				} catch (Exception e) {
-					throw new RuntimeException(e);
-				}
-			});
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-
-		FrozenLibLogUtils.log("Skibidi " + "bop " + "yes" + "! " + TEST2_EMBEDDEDX2.getValue());
 	}
 }

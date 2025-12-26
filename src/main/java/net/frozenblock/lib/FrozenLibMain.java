@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib;
 
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
@@ -28,6 +29,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
+import net.frozenblock.lib.config.newconfig.ConfigSerializer;
 import net.frozenblock.lib.config.newconfig.test.TestConfig;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
@@ -81,6 +83,13 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		FrozenLibRegistries.initRegistry();
 
 		TestConfig.init();
+		ClientLifecycleEvents.CLIENT_STARTED.register((_) -> {
+			try {
+				ConfigSerializer.saveConfigs(true);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		});
 
 		// QUILT INIT
 

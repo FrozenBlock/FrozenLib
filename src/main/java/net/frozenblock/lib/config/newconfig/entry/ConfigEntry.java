@@ -73,8 +73,8 @@ public class ConfigEntry<T> {
 
 	public void ensureIsLoaded() {
 		if (this.hasCheckedLoad) return;
-		ConfigSerializer.loadConfigFromEntry(this);
 		this.hasCheckedLoad = true;
+		ConfigSerializer.loadConfigFromEntry(this);
 	}
 
 	public void setSyncedValue(T value) {
