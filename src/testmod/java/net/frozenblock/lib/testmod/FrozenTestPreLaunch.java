@@ -27,6 +27,10 @@ public class FrozenTestPreLaunch implements PreLaunchEntrypoint {
     @Override
     public void onPreLaunch() {
 		ConfigRegistry.register(FrozenLibConfig.INSTANCE, new ConfigModification<>(config -> {
+			FrozenLibConfig.SAVE_ITEM_COOLDOWNS.setSyncedValue(true);
+			FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS_ENTRY.setSyncedValue(true);
+			FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.setSyncedValue(true);
+			FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.setSyncedValue(true);
 			config.saveItemCooldowns = true;
 			config.useWindOnNonFrozenServers = true;
 			config.removeExperimentalWarning = true;
