@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.config.newconfig;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JavaOps;
@@ -47,7 +48,11 @@ public class ConfigSerializer {
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToSave.entrySet()) {
 			final SerializationContext<?> context = SerializationContext.createForSaving(entry.getKey(), entry.getValue());
-			context.saveConfig();
+			try {
+				context.saveConfig();
+			} catch (Exception e) {
+				FrozenLibLogUtils.logError("Could not save config " + context.configId().toString(), e);
+			}
 		}
 	}
 
@@ -56,11 +61,15 @@ public class ConfigSerializer {
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToLoad.entrySet()) {
 			final Identifier configId = entry.getKey();
-			final Optional<SerializationContext<?>> optionalContext = SerializationContext.createForLoading(configId);
-			if (optionalContext.isEmpty()) continue;
+			try {
+				final Optional<SerializationContext<?>> optionalContext = SerializationContext.createForLoading(configId);
+				if (optionalContext.isEmpty()) continue;
 
-			final SerializationContext<?> context = optionalContext.get();
-			context.loadEntries(entry.getValue());
+				final SerializationContext<?> context = optionalContext.get();
+				context.loadEntries(entry.getValue());
+			} catch (Exception e) {
+				FrozenLibLogUtils.logError("Could not load config " + configId.toString(), e);
+			}
 		}
 	}
 
@@ -169,7 +178,7 @@ public class ConfigSerializer {
 
 		public void logUnableToUseError(String entry) {
 			FrozenLibLogUtils.logError(
-				"Unable to " + (this.isSave() ? "save" : "read") + " config entry " + entry + "!"
+				"Unable to " + (this.isSave() ? "save" : "read") + " config entry " + entry
 			);
 		}
 
@@ -190,6 +199,8 @@ public class ConfigSerializer {
 		}
 
 		public DataResult<?> encodeOrParse(ConfigEntry entry, Supplier<?> parseInput) {
+			final Codec codec = entry.getCodec();
+
 			if (this.isSave()) {
 				if (!entry.hasComment()) return entry.getCodec().encodeStart(JavaOps.INSTANCE, entry.getValue());
 
@@ -200,14 +211,11 @@ public class ConfigSerializer {
 			}
 
 			final Object input = parseInput.get();
-			DataResult result = entry.getCodec().parse(JanksonOps.INSTANCE, input);
-			if (result.isError()) {
-				final DataResult<ConfigEntry.ValueWithComment> resultWithComment = entry.getCodecWithComment().parse(JanksonOps.INSTANCE, input);
-				if (!resultWithComment.isError()) {
-					final Object value = resultWithComment.getOrThrow().value();
-					return DataResult.success(value);
-				}
-			}
+			DataResult result = codec.parse(JanksonOps.INSTANCE, input);
+			if (!result.isError() || !(input instanceof Map<?,?> map) || !(map.get("value") instanceof Object value)) return result;
+
+			final DataResult valueWithCommentResult = codec.parse(JanksonOps.INSTANCE, value);
+			if (!valueWithCommentResult.isError()) return valueWithCommentResult;
 
 			return result;
 		}

@@ -18,7 +18,6 @@
 package net.frozenblock.lib.config.newconfig.entry;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import java.util.Optional;
 import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
@@ -27,7 +26,6 @@ import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.ExtraCodecs;
 
 public class ConfigEntry<T> {
 	private final Identifier id;
@@ -59,10 +57,6 @@ public class ConfigEntry<T> {
 	public void setValue(T value, boolean markDirty) {
 		this.value = value;
 		if (markDirty) this.markDirty();
-	}
-
-	public ValueWithComment<T> getValueWithComment() {
-		return new ValueWithComment<>(this.getValue(), this.getComment());
 	}
 
 	public boolean isUnsaved() {
@@ -111,17 +105,5 @@ public class ConfigEntry<T> {
 
 	public StreamCodec<ByteBuf, T> getStreamCodec() {
 		return this.type.getStreamCodec();
-	}
-
-	public Codec<ValueWithComment<T>> getCodecWithComment() {
-		return RecordCodecBuilder.create(
-			instance -> instance.group(
-				this.getCodec().fieldOf("value").forGetter(ValueWithComment::value),
-				ExtraCodecs.NON_EMPTY_STRING.optionalFieldOf("comment").forGetter(ValueWithComment::comment)
-			).apply(instance, ValueWithComment::new)
-		);
-	}
-
-	public record ValueWithComment<T>(T value, Optional<String> comment) {
 	}
 }
