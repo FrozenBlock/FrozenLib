@@ -42,20 +42,21 @@ import net.minecraft.resources.Identifier;
 public class ConfigSerializer {
 	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir();
 
-	public static void saveConfigs(boolean collectAll) throws Exception {
+	public static void saveConfigs(boolean collectAll) {
 		final Map<Identifier, List<ConfigEntry<?>>> configsToSave = collectAll ? collectConfigs() : collectUnsavedConfigs();
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToSave.entrySet()) {
-			final SerializationContext<?> context = SerializationContext.createForSaving(entry.getKey(), entry.getValue());
+			final Identifier configId = entry.getKey();
+			final SerializationContext<?> context = SerializationContext.createForSaving(configId, entry.getValue());
 			try {
 				context.saveConfig();
 			} catch (Exception e) {
-				FrozenLibLogUtils.logError("Could not save config " + context.configId().toString(), e);
+				FrozenLibLogUtils.logError("Error saving config " + configId, e);
 			}
 		}
 	}
 
-	public static void loadConfigs() throws Exception {
+	public static void loadConfigs() {
 		final Map<Identifier, List<ConfigEntry<?>>> configsToLoad = collectConfigs();
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToLoad.entrySet()) {
@@ -67,7 +68,7 @@ public class ConfigSerializer {
 				final SerializationContext<?> context = optionalContext.get();
 				context.loadEntries(entry.getValue());
 			} catch (Exception e) {
-				FrozenLibLogUtils.logError("Could not load config " + configId, e);
+				FrozenLibLogUtils.logError("Error loading config " + configId, e);
 			}
 		}
 	}
@@ -111,8 +112,10 @@ public class ConfigSerializer {
 				}
 			} else {
 				final Map<String, Object> foundMap = (Map<String, Object>) entryMap.getOrDefault(string, context.isSave() ? new Object2ObjectLinkedOpenHashMap<>() : null);
-				if (foundMap == null)
-					throw new AssertionError("NO MAP FOUND OMG HOG!!!!");
+				if (foundMap == null) {
+					FrozenLibLogUtils.logError("Could not find entry " + entryId, FrozenLibLogUtils.UNSTABLE_LOGGING);
+					return Optional.empty();
+				}
 				entryMap.put(string, foundMap);
 				entryMap = foundMap;
 			}
