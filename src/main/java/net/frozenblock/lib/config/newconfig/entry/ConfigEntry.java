@@ -21,6 +21,8 @@ import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import java.util.Optional;
 import net.frozenblock.lib.config.newconfig.ConfigSerializer;
+import net.frozenblock.lib.config.newconfig.entry.property.EntryProperties;
+import net.frozenblock.lib.config.newconfig.entry.property.VisibilityPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -31,25 +33,56 @@ public class ConfigEntry<T> {
 	private final Identifier id;
 	private final EntryType<T> type;
 	private final T defaultValue;
-	// TODO: Figure out how to save comments!!
-	private final Optional<String> comment;
+	private final EntryProperties properties;
 
 	private T value;
 	private Optional<T> syncedValue = Optional.empty();
 	private boolean dirty;
 	private boolean hasCheckedLoad;
 
-	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue, Optional<String> comment) {
+	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue, EntryProperties properties) {
 		this.id = id;
 		this.type = type;
 		this.defaultValue = defaultValue;
 		this.value = defaultValue;
-		this.comment = comment;
+		this.properties = properties;
 		Registry.register(FrozenLibRegistries.CONFIG_ENTRY, id, this);
 	}
 
 	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue) {
-		this(id, type, defaultValue, Optional.empty());
+		this(id, type, defaultValue, EntryProperties.ofDefault());
+	}
+
+	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue, boolean syncable, boolean modifiable) {
+		this(id, type, defaultValue, EntryProperties.of(syncable, modifiable));
+	}
+
+	public static <T> ConfigEntry<T> unsyncable(Identifier id, EntryType<T> type, T defaultValue) {
+		return new ConfigEntry<>(id, type, defaultValue, false, true);
+	}
+
+	public static <T> ConfigEntry<T> unmodifiable(Identifier id, EntryType<T> type, T defaultValue) {
+		return new ConfigEntry<>(id, type, defaultValue, true, false);
+	}
+
+	public static <T> ConfigEntry<T> unsyncableAndUnmodifiable(Identifier id, EntryType<T> type, T defaultValue) {
+		return new ConfigEntry<>(id, type, defaultValue, false, false);
+	}
+
+	public static <T> Builder<T> builder(Identifier id, EntryType<T> type, T defaultValue) {
+		return builder(id, type, defaultValue, true, true);
+	}
+
+	public static <T> Builder<T> unsyncableBuilder(Identifier id, EntryType<T> type, T defaultValue) {
+		return builder(id, type, defaultValue, false, true);
+	}
+
+	public static <T> Builder<T> unmodifiableBuilder(Identifier id, EntryType<T> type, T defaultValue) {
+		return builder(id, type, defaultValue, true, false);
+	}
+
+	public static <T> Builder<T> builder(Identifier id, EntryType<T> type, T defaultValue, boolean syncable, boolean modifiable) {
+		return new Builder<T>().id(id).type(type).defaultValue(defaultValue).properties(EntryProperties.builderOf(true, false));
 	}
 
 	public T get() {
@@ -78,6 +111,7 @@ public class ConfigEntry<T> {
 	}
 
 	public void setSyncedValue(T value) {
+		if (!this.properties.isSyncable()) return;
 		this.syncedValue = Optional.of(value);
 	}
 
@@ -110,7 +144,7 @@ public class ConfigEntry<T> {
 	}
 
 	public boolean hasComment() {
-		return this.comment != null && this.comment.isPresent() && !this.comment.get().isEmpty();
+		return this.properties.hasComment();
 	}
 
 	public Identifier getId() {
@@ -122,7 +156,7 @@ public class ConfigEntry<T> {
 	}
 
 	public Optional<String> getComment() {
-		return this.comment;
+		return this.properties.getComment();
 	}
 
 	public Codec<T> getCodec() {
@@ -131,5 +165,64 @@ public class ConfigEntry<T> {
 
 	public StreamCodec<? extends ByteBuf, T> getStreamCodec() {
 		return this.type.getStreamCodec();
+	}
+
+	public static class Builder<T> {
+		Identifier id = null;
+		EntryType<T> type = null;
+		T defaultValue = null;
+		EntryProperties.Builder properties = EntryProperties.builder();
+
+		private Builder() {
+		}
+
+		public Builder<T> id(Identifier id) {
+			this.id = id;
+			return this;
+		}
+
+		public Builder<T> type(EntryType<T> type) {
+			this.type = type;
+			return this;
+		}
+
+		public Builder<T> defaultValue(T defaultValue) {
+			this.defaultValue = defaultValue;
+			return this;
+		}
+
+		public Builder<T> properties(EntryProperties.Builder properties) {
+			this.properties = properties;
+			return this;
+		}
+
+		public Builder<T> syncable(boolean syncable) {
+			this.properties.syncable(syncable);
+			return this;
+		}
+
+		public Builder<T> modifiable(boolean modifiable) {
+			this.properties.modifiable(modifiable);
+			return this;
+		}
+
+		public Builder<T> comment(String comment) {
+			this.properties.comment(comment);
+			return this;
+		}
+
+		public Builder<T> visibilityPredicate(VisibilityPredicate predicate) {
+			this.properties.visibilityPredicate(predicate);
+			return this;
+		}
+
+		public ConfigEntry<T> build() {
+			if (this.id == null) throw new IllegalStateException("Entry ID cannot be null!");
+			if (this.type == null) throw new IllegalStateException("Entry type cannot be null!");
+			if (this.defaultValue == null) throw new IllegalStateException("Entry Default value cannot be null!");
+			if (this.properties == null) throw new IllegalStateException("Entry Properties cannot be null!");
+
+			return new ConfigEntry<>(this.id, this.type, this.defaultValue, this.properties.build());
+		}
 	}
 }
