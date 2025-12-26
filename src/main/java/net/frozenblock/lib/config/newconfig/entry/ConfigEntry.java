@@ -20,7 +20,7 @@ package net.frozenblock.lib.config.newconfig.entry;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import java.util.Optional;
-import net.frozenblock.lib.config.newconfig.ConfigSerializer;
+import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.entry.property.EntryProperties;
 import net.frozenblock.lib.config.newconfig.entry.property.VisibilityPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -30,6 +30,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
 public class ConfigEntry<T> {
+	private final ConfigData configData;
 	private final Identifier id;
 	private final EntryType<T> type;
 	private final T defaultValue;
@@ -40,8 +41,9 @@ public class ConfigEntry<T> {
 	private boolean dirty;
 	private boolean hasCheckedLoad;
 
-	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue, EntryProperties properties) {
-		this.id = id;
+	public ConfigEntry(ConfigData data, String id, EntryType<T> type, T defaultValue, EntryProperties properties) {
+		this.configData = data;
+		this.id = data.id().withSuffix("/" + id);
 		this.type = type;
 		this.defaultValue = defaultValue;
 		this.value = defaultValue;
@@ -49,40 +51,8 @@ public class ConfigEntry<T> {
 		Registry.register(FrozenLibRegistries.CONFIG_ENTRY, id, this);
 	}
 
-	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue) {
-		this(id, type, defaultValue, EntryProperties.ofDefault());
-	}
-
-	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue, boolean syncable, boolean modifiable) {
-		this(id, type, defaultValue, EntryProperties.of(syncable, modifiable));
-	}
-
-	public static <T> ConfigEntry<T> unsyncable(Identifier id, EntryType<T> type, T defaultValue) {
-		return new ConfigEntry<>(id, type, defaultValue, false, true);
-	}
-
-	public static <T> ConfigEntry<T> unmodifiable(Identifier id, EntryType<T> type, T defaultValue) {
-		return new ConfigEntry<>(id, type, defaultValue, true, false);
-	}
-
-	public static <T> ConfigEntry<T> unsyncableAndUnmodifiable(Identifier id, EntryType<T> type, T defaultValue) {
-		return new ConfigEntry<>(id, type, defaultValue, false, false);
-	}
-
-	public static <T> Builder<T> builder(Identifier id, EntryType<T> type, T defaultValue) {
-		return builder(id, type, defaultValue, true, true);
-	}
-
-	public static <T> Builder<T> unsyncableBuilder(Identifier id, EntryType<T> type, T defaultValue) {
-		return builder(id, type, defaultValue, false, true);
-	}
-
-	public static <T> Builder<T> unmodifiableBuilder(Identifier id, EntryType<T> type, T defaultValue) {
-		return builder(id, type, defaultValue, true, false);
-	}
-
-	public static <T> Builder<T> builder(Identifier id, EntryType<T> type, T defaultValue, boolean syncable, boolean modifiable) {
-		return new Builder<T>().id(id).type(type).defaultValue(defaultValue).properties(EntryProperties.builderOf(true, false));
+	public ConfigEntry(ConfigData data, String id, EntryType<T> type, T defaultValue, boolean syncable, boolean modifiable) {
+		this(data, id, type, defaultValue, EntryProperties.of(syncable, modifiable));
 	}
 
 	public T get() {
@@ -107,7 +77,7 @@ public class ConfigEntry<T> {
 	public void ensureIsLoaded() {
 		if (this.hasCheckedLoad) return;
 		this.hasCheckedLoad = true;
-		ConfigSerializer.loadConfigFromEntry(this);
+		this.configData.loadEntry(this, true);
 	}
 
 	public void setSyncedValue(T value) {
@@ -147,6 +117,10 @@ public class ConfigEntry<T> {
 		return this.properties.hasComment();
 	}
 
+	public ConfigData getConfigData() {
+		return this.configData;
+	}
+
 	public Identifier getId() {
 		return this.id;
 	}
@@ -168,15 +142,17 @@ public class ConfigEntry<T> {
 	}
 
 	public static class Builder<T> {
-		Identifier id = null;
+		final ConfigData data;
+		String id = null;
 		EntryType<T> type = null;
 		T defaultValue = null;
 		EntryProperties.Builder properties = EntryProperties.builder();
 
-		private Builder() {
+		public Builder(ConfigData data) {
+			this.data = data;
 		}
 
-		public Builder<T> id(Identifier id) {
+		public Builder<T> id(String id) {
 			this.id = id;
 			return this;
 		}
@@ -222,7 +198,7 @@ public class ConfigEntry<T> {
 			if (this.defaultValue == null) throw new IllegalStateException("Entry Default value cannot be null!");
 			if (this.properties == null) throw new IllegalStateException("Entry Properties cannot be null!");
 
-			return new ConfigEntry<>(this.id, this.type, this.defaultValue, this.properties.build());
+			return new ConfigEntry<>(this.data, this.id, this.type, this.defaultValue, this.properties.build());
 		}
 	}
 }
