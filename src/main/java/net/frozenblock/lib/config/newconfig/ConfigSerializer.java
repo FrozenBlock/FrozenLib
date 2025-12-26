@@ -34,7 +34,6 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.config.api.instance.json.JanksonOps;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -61,26 +60,25 @@ public class ConfigSerializer {
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToLoad.entrySet()) {
 			final Identifier configId = entry.getKey();
-			final ConfigSettings settings = FrozenLibRegistries.CONFIG_SETTINGS.get(configId).orElseThrow().value();
 			try {
 				final Optional<SerializationContext<?>> optionalContext = SerializationContext.createForLoading(configId);
 				if (optionalContext.isEmpty()) continue;
 
 				final SerializationContext<?> context = optionalContext.get();
-				context.loadEntries(settings, entry.getValue());
+				context.loadEntries(entry.getValue());
 			} catch (Exception e) {
-				FrozenLibLogUtils.logError("Could not load config " + configId.toString(), e);
+				FrozenLibLogUtils.logError("Could not load config " + configId, e);
 			}
 		}
 	}
 
-	public static Map<String, Object> buildConfigMapForSaving(Identifier configId, ConfigSettings settings, List<ConfigEntry<?>> entries, SerializationContext<?> context) {
+	public static Map<String, Object> buildConfigMapForSaving(Identifier configId, List<ConfigEntry<?>> entries, SerializationContext<?> context) {
 		final String configIdString = configId.toString();
-		for (ConfigEntry<?> entry : entries) findOrBuildEntry(configIdString, settings, entry, context);
+		for (ConfigEntry<?> entry : entries) findOrBuildEntry(configIdString, entry, context);
 		return context.configMap().get();
 	}
 
-	public static Optional<?> findOrBuildEntry(String configId, ConfigSettings settings, ConfigEntry<?> entry, SerializationContext<?> context) {
+	public static Optional<?> findOrBuildEntry(String configId, ConfigEntry<?> entry, SerializationContext<?> context) {
 		final String entryId = entry.getId().toString().replace(configId + "/", "");
 		final List<String> paths = Arrays.stream(entryId.split("/")).toList();
 		final int length = paths.size();
@@ -95,7 +93,7 @@ public class ConfigSerializer {
 			final String string = paths.get(i - 1);
 			if (i == length) {
 				final Map<String, Object> finalEntryMap = entryMap;
-				final DataResult result = context.encodeOrParse(settings, entry, () -> finalEntryMap.get(string));
+				final DataResult result = context.encodeOrParse(entry, () -> finalEntryMap.get(string));
 				if (result == null || result.isError()) {
 					context.logUnableToUseError(entryId);
 					break;
@@ -152,7 +150,7 @@ public class ConfigSerializer {
 			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + settings.fileExtension());
 			final SerializationContext<T> saveContext = new SerializationContext<>(configId, settings, true, path, new AtomicReference<>(new Object2ObjectLinkedOpenHashMap<>()));
 
-			final Map<String, Object> configMap = buildConfigMapForSaving(configId, settings, entries, saveContext);
+			final Map<String, Object> configMap = buildConfigMapForSaving(configId, entries, saveContext);
 			saveContext.configMap.set(configMap);
 
 			return saveContext;
@@ -199,14 +197,14 @@ public class ConfigSerializer {
 			return this.path.toFile();
 		}
 
-		public DataResult<?> encodeOrParse(ConfigSettings settings, ConfigEntry entry, Supplier<?> parseInput) {
+		public DataResult<?> encodeOrParse(ConfigEntry entry, Supplier<?> parseInput) {
 			final Codec codec = entry.getCodec();
 
 			if (this.isSave()) {
 				if (!entry.hasComment()) return entry.getCodec().encodeStart(JavaOps.INSTANCE, entry.getActualValue());
 
 				final Map<String, Object> valueWithCommentMap = new Object2ObjectLinkedOpenHashMap<>();
-				if (settings.fileExtension().equals("json")) {
+				if (this.settings.fileExtension().equals("json")) {
 					valueWithCommentMap.put("comment", entry.getComment().get());
 				}
 				valueWithCommentMap.put("value", entry.getActualValue());
@@ -214,10 +212,10 @@ public class ConfigSerializer {
 			}
 
 			final Object input = parseInput.get();
-			DataResult result = codec.parse(settings.dynamicOps(), input);
+			DataResult result = codec.parse(this.settings.dynamicOps(), input);
 			if (!result.isError() || !(input instanceof Map<?,?> map) || !(map.get("value") instanceof Object value)) return result;
 
-			final DataResult valueWithCommentResult = codec.parse(settings.dynamicOps(), value);
+			final DataResult valueWithCommentResult = codec.parse(this.settings.dynamicOps(), value);
 			if (!valueWithCommentResult.isError()) return valueWithCommentResult;
 
 			return result;
@@ -233,11 +231,11 @@ public class ConfigSerializer {
 			this.settings.save(this.path, configMap);
 		}
 
-		public void loadEntries(ConfigSettings settings, List<ConfigEntry<?>> entries) throws Exception {
+		public void loadEntries(List<ConfigEntry<?>> entries) throws Exception {
 			if (this.isSave()) throw new IllegalStateException("Cannot load config entry from saving context!");
 
 			for (ConfigEntry configEntry : entries) {
-				final Optional optionalValue = findOrBuildEntry(this.configId.toString(), settings, configEntry, this);
+				final Optional optionalValue = findOrBuildEntry(this.configId.toString(), configEntry, this);
 				if (optionalValue.isPresent()) configEntry.setValue(optionalValue.get(), false);
 			}
 		}
