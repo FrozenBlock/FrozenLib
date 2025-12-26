@@ -40,7 +40,7 @@ public class ConfigSettings<T> {
 	public static final ConfigSettings<JsonElement> JSON = new ConfigSettings<>(
 		"json",
 		JanksonOps.INSTANCE,
-		(path, configMap) -> {
+		(path, configMap, commentMap) -> {
 			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
 				writer.write(JANKSON.toJson(configMap).toJson(JsonType.JSON.getGrammar()));
 			}
@@ -53,9 +53,14 @@ public class ConfigSettings<T> {
 	public static final ConfigSettings<JsonElement> JSON5 = new ConfigSettings<>(
 		"json5",
 		JanksonOps.INSTANCE,
-		(path, configMap) -> {
+		(path, configMap, commentMap) -> {
 			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-				writer.write(JANKSON.toJson(configMap).toJson(JsonType.JSON5.getGrammar()));
+				final blue.endless.jankson.JsonObject jsonObject = (blue.endless.jankson.JsonObject) JANKSON.toJson(configMap);
+				// Apply comments if provided
+				if (commentMap != null && !commentMap.isEmpty()) {
+					applyJanksonComments(jsonObject, commentMap, "");
+				}
+				writer.write(jsonObject.toJson(JsonType.JSON5.getGrammar()));
 			}
 		},
 		(path) -> {
@@ -66,9 +71,14 @@ public class ConfigSettings<T> {
 	public static final ConfigSettings<JsonElement> JSON5_UNQUOTED_KEYS = new ConfigSettings<>(
 		"json5",
 		JanksonOps.INSTANCE,
-		(path, configMap) -> {
+		(path, configMap, commentMap) -> {
 			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-				writer.write(JANKSON.toJson(configMap).toJson(JsonType.JSON5_UNQUOTED_KEYS.getGrammar()));
+				final blue.endless.jankson.JsonObject jsonObject = (blue.endless.jankson.JsonObject) JANKSON.toJson(configMap);
+				// Apply comments if provided
+				if (commentMap != null && !commentMap.isEmpty()) {
+					applyJanksonComments(jsonObject, commentMap, "");
+				}
+				writer.write(jsonObject.toJson(JsonType.JSON5_UNQUOTED_KEYS.getGrammar()));
 			}
 		},
 		(path) -> {
@@ -79,8 +89,12 @@ public class ConfigSettings<T> {
 	public static final ConfigSettings<JsonValue> DJS = new ConfigSettings<>(
 		"djs",
 		XjsOps.INSTANCE,
-		(path, configMap) -> {
+		(path, configMap, commentMap) -> {
 			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
+			// Apply comments if provided
+			if (commentMap != null && !commentMap.isEmpty()) {
+				applyXjsComments(value, commentMap, "");
+			}
 			try (ValueWriter writer = XjsFormat.DJS.createWriter(path.toFile())) {
 				writer.write(value);
 			}
@@ -89,8 +103,12 @@ public class ConfigSettings<T> {
 	public static final ConfigSettings<JsonValue> XJS_JSON = new ConfigSettings<>(
 		"json",
 		XjsOps.INSTANCE,
-		(path, configMap) -> {
+		(path, configMap, commentMap) -> {
 			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
+			// Apply comments if provided
+			if (commentMap != null && !commentMap.isEmpty()) {
+				applyXjsComments(value, commentMap, "");
+			}
 			try (ValueWriter writer = XjsFormat.JSON.createWriter(path.toFile())) {
 				writer.write(value);
 			}
@@ -99,8 +117,12 @@ public class ConfigSettings<T> {
 	public static final ConfigSettings<JsonValue> JSONC = new ConfigSettings<>(
 		"jsonc",
 		XjsOps.INSTANCE,
-		(path, configMap) -> {
+		(path, configMap, commentMap) -> {
 			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
+			// Apply comments if provided
+			if (commentMap != null && !commentMap.isEmpty()) {
+				applyXjsComments(value, commentMap, "");
+			}
 			try (ValueWriter writer = XjsFormat.JSONC.createWriter(path.toFile())) {
 				writer.write(value);
 			}
@@ -109,8 +131,12 @@ public class ConfigSettings<T> {
 	public static final ConfigSettings<JsonValue> HJSON = new ConfigSettings<>(
 		"hjson",
 		XjsOps.INSTANCE,
-		(path, configMap) -> {
+		(path, configMap, commentMap) -> {
 			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
+			// Apply comments if provided
+			if (commentMap != null && !commentMap.isEmpty()) {
+				applyXjsComments(value, commentMap, "");
+			}
 			try (ValueWriter writer = XjsFormat.HJSON.createWriter(path.toFile())) {
 				writer.write(value);
 			}
@@ -119,8 +145,12 @@ public class ConfigSettings<T> {
 	public static final ConfigSettings<JsonValue> TXT = new ConfigSettings<>(
 		"txt",
 		XjsOps.INSTANCE,
-		(path, configMap) -> {
+		(path, configMap, commentMap) -> {
 			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
+			// Apply comments if provided
+			if (commentMap != null && !commentMap.isEmpty()) {
+				applyXjsComments(value, commentMap, "");
+			}
 			try (ValueWriter writer = XjsFormat.TXT.createWriter(path.toFile())) {
 				writer.write(value);
 			}
@@ -129,8 +159,12 @@ public class ConfigSettings<T> {
 	public static final ConfigSettings<JsonValue> UBJSON = new ConfigSettings<>(
 		"ubjson",
 		XjsOps.INSTANCE,
-		(path, configMap) -> {
+		(path, configMap, commentMap) -> {
 			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
+			// Apply comments if provided
+			if (commentMap != null && !commentMap.isEmpty()) {
+				applyXjsComments(value, commentMap, "");
+			}
 			try (ValueWriter writer = XjsFormat.UBJSON.createWriter(path.toFile())) {
 				writer.write(value);
 			}
@@ -171,7 +205,11 @@ public class ConfigSettings<T> {
 	}
 
 	public void save(Path path, Map<String, Object> configMap) throws Exception {
-		this.saveFunction.save(path, configMap);
+		this.saveFunction.save(path, configMap, null);
+	}
+
+	public void save(Path path, Map<String, Object> configMap, Map<String, String> commentMap) throws Exception {
+		this.saveFunction.save(path, configMap, commentMap);
 	}
 
 	public Map<String, Object> load(Path path) throws Exception {
@@ -180,11 +218,63 @@ public class ConfigSettings<T> {
 
 	@FunctionalInterface
 	public interface SaveFunction {
-		void save(Path path, Map<String, Object> configMap) throws Exception;
+		void save(Path path, Map<String, Object> configMap, Map<String, String> commentMap) throws Exception;
 	}
 
 	@FunctionalInterface
 	public interface LoadFunction {
 		Map<String, Object> load(Path path) throws Exception;
+	}
+
+	// Helper method to apply comments to Jankson JsonObject
+	private static void applyJanksonComments(blue.endless.jankson.JsonElement element, Map<String, String> commentMap, String currentPath) {
+		if (element instanceof blue.endless.jankson.JsonObject jsonObject) {
+			for (Map.Entry<String, blue.endless.jankson.JsonElement> entry : jsonObject.entrySet()) {
+				final String key = entry.getKey();
+				final String path = currentPath.isEmpty() ? key : currentPath + "/" + key;
+				final blue.endless.jankson.JsonElement value = entry.getValue();
+
+				// Check if this path has a comment
+				if (commentMap.containsKey(path)) {
+					jsonObject.setComment(key, commentMap.get(path));
+				}
+
+				// Recursively apply comments to nested objects
+				applyJanksonComments(value, commentMap, path);
+			}
+		} else if (element instanceof blue.endless.jankson.JsonArray jsonArray) {
+			int index = 0;
+			for (blue.endless.jankson.JsonElement item : jsonArray) {
+				final String path = currentPath + "[" + index + "]";
+				applyJanksonComments(item, commentMap, path);
+				index++;
+			}
+		}
+	}
+
+	// Helper method to apply comments to XJS JsonValue
+	private static void applyXjsComments(JsonValue element, Map<String, String> commentMap, String currentPath) {
+		if (element instanceof xjs.data.JsonObject jsonObject) {
+			for (xjs.data.JsonObject.Member member : jsonObject) {
+				final String key = member.getKey();
+				final String path = currentPath.isEmpty() ? key : currentPath + "/" + key;
+				final JsonValue value = member.getOnly();
+
+				// Check if this path has a comment
+				if (commentMap.containsKey(path)) {
+					value.setComment(commentMap.get(path));
+				}
+
+				// Recursively apply comments to nested objects
+				applyXjsComments(value, commentMap, path);
+			}
+		} else if (element instanceof xjs.data.JsonArray jsonArray) {
+			int index = 0;
+			for (JsonValue item : jsonArray) {
+				final String path = currentPath + "[" + index + "]";
+				applyXjsComments(item, commentMap, path);
+				index++;
+			}
+		}
 	}
 }
