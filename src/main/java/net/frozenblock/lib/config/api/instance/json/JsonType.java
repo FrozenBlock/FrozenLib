@@ -27,7 +27,11 @@ public enum JsonType implements StringRepresentable {
 	/**
 	 * Like JSON5 but it supports not having quotes on keys
 	 */
-	JSON5_UNQUOTED_KEYS("json5", ConfigSerialization.JSON5_UNQUOTED_KEYS);
+	JSON5_UNQUOTED_KEYS("json5", ConfigSerialization.JSON5_UNQUOTED_KEYS),
+	/**
+	 * Like JSON5 but it supports not having quotes on keys and has no root {}
+	 */
+	JSON5_UNQUOTED_KEYS_NO_ROOT("json5", ConfigSerialization.JSON5_UNQUOTED_KEYS_NO_ROOT);
 
 	private final String name;
 	private final JsonGrammar grammar;
