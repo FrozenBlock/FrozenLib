@@ -22,8 +22,8 @@ import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
@@ -44,7 +44,7 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<SpottingIconPredicate<?>>> SPOTTING_ICON_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("spotting_icon_predicate"));
 	public static final ResourceKey<Registry<WindDisturbanceLogic<?>>> WIND_DISTURBANCE_LOGIC_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("wind_disturbance_logic"));
 	public static final ResourceKey<Registry<WindDisturbanceLogic<?>>> WIND_DISTURBANCE_LOGIC_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("wind_disturbance_logic_unsynced"));
-	public static final ResourceKey<Registry<ConfigSettings<?>>> CONFIG_SETTINGS_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_settings"));
+	public static final ResourceKey<Registry<ConfigData<?>>> CONFIG_DATA_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_data"));
 	public static final ResourceKey<Registry<ConfigEntry<?>>> CONFIG_ENTRY_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_entry"));
 
 	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = createSimple(MOD_INTEGRATION_REGISTRY, Lifecycle.stable(), null,
@@ -76,7 +76,7 @@ public class FrozenLibRegistries {
 		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new WindDisturbanceLogic(WindDisturbanceLogic.defaultPredicate()))
 	);
 
-	public static final MappedRegistry<ConfigSettings<?>> CONFIG_SETTINGS = createSimple(CONFIG_SETTINGS_REGISTRY, Lifecycle.stable(), RegistryAttribute.OPTIONAL);
+	public static final MappedRegistry<ConfigData<?>> CONFIG_DATA = createSimple(CONFIG_DATA_REGISTRY, Lifecycle.stable(), RegistryAttribute.OPTIONAL);
 
 	public static final MappedRegistry<ConfigEntry<?>> CONFIG_ENTRY = createSimple(CONFIG_ENTRY_REGISTRY, Lifecycle.stable(), RegistryAttribute.OPTIONAL);
 

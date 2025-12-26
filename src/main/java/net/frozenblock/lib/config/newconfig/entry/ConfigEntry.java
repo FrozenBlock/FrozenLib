@@ -20,7 +20,7 @@ package net.frozenblock.lib.config.newconfig.entry;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import java.util.Optional;
-import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
+import net.frozenblock.lib.config.newconfig.ConfigSerializer;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
@@ -37,6 +37,7 @@ public class ConfigEntry<T> {
 	private T value;
 	private Optional<T> syncedValue = Optional.empty();
 	private boolean dirty;
+	private boolean hasCheckedLoad;
 
 	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue, Optional<String> comment) {
 		this.id = id;
@@ -51,20 +52,29 @@ public class ConfigEntry<T> {
 		this(id, type, defaultValue, Optional.empty());
 	}
 
-	public T getValue() {
-		return this.syncedValue.orElseGet(() -> this.value);
+	public T get() {
+		return this.syncedValue.orElseGet(this::getActual);
 	}
 
-	public T getActualValue() {
+	public T getActual() {
+		this.ensureIsLoaded();
 		return this.value;
 	}
+
 	public void setValue(T value) {
-		this.value = value;
+		this.setValue(value, true);
 	}
 
 	public void setValue(T value, boolean markDirty) {
+		this.ensureIsLoaded();
 		this.value = value;
 		if (markDirty) this.markDirty();
+	}
+
+	public void ensureIsLoaded() {
+		if (this.hasCheckedLoad) return;
+		ConfigSerializer.loadConfigFromEntry(this);
+		this.hasCheckedLoad = true;
 	}
 
 	public void setSyncedValue(T value) {

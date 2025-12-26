@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.entry.type;
+package net.frozenblock.lib.config.newconfig.entry;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
