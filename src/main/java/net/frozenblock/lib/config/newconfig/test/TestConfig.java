@@ -30,10 +30,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
 public class TestConfig {
-
-	static {
-		ConfigData.createAndRegister(FrozenLibConstants.id("test_config"), ConfigSettings.JSON5);
-	}
+	public static final ConfigData<?> TEST_CONFIG = ConfigData.createAndRegister(FrozenLibConstants.id("test_config"), ConfigSettings.JSON5);
 
 	public record PoopCrap(int poop, String crap) {
 		public static final Codec<PoopCrap> CODEC = RecordCodecBuilder.create(instance ->
@@ -53,16 +50,16 @@ public class TestConfig {
 	}
 	public static final EntryType<PoopCrap> POOPCRAP_TYPE = EntryType.create(PoopCrap.CODEC, PoopCrap.STREAM_CODEC);
 
-	public static final ConfigEntry<Boolean> TEST = new ConfigEntry<>(id("test"), EntryType.BOOL, true);
-	public static final ConfigEntry<Identifier> TEST_ID = new ConfigEntry<>(id("test_id"), EntryType.IDENTIFIER, FrozenLibConstants.id("test_id"));
+	public static final ConfigEntry<Boolean> TEST = TEST_CONFIG.entry("test", EntryType.BOOL, true);
+	public static final ConfigEntry<Identifier> TEST_ID = TEST_CONFIG.entry("test_id", EntryType.IDENTIFIER, FrozenLibConstants.id("test_id"));
 
-	public static final ConfigEntry<Boolean> TEST1_EMBEDDED = ConfigEntry.builder(id("embedded/test1"), EntryType.BOOL, true).comment("whoa awesome").build();
-	public static final ConfigEntry<Integer> TEST2_EMBEDDED = new ConfigEntry<>(id("embedded/test2"), EntryType.INT, 67);
-	public static final ConfigEntry<Integer> TEST2_EMBEDDEDX2 = new ConfigEntry<>(id("embedded/embedded/test2"), EntryType.INT, 41);
-	public static final ConfigEntry<String> EXTREME_EMBEDDING = new ConfigEntry<>(id("embedded/embedded/diarrhea/diarrhea/extreme_shit"), EntryType.STRING, "gtfsvew6e7atysdfwy ^FYDTGSG EXTREME LIQUID FIRE ");
+	public static final ConfigEntry<Boolean> TEST1_EMBEDDED = TEST_CONFIG.entryBuilder("embedded/test1", EntryType.BOOL, true).comment("whoa awesome").build();
+	public static final ConfigEntry<Integer> TEST2_EMBEDDED = TEST_CONFIG.entry("embedded/test2", EntryType.INT, 67);
+	public static final ConfigEntry<Integer> TEST2_EMBEDDEDX2 = TEST_CONFIG.entry("embedded/embedded/test2", EntryType.INT, 41);
+	public static final ConfigEntry<String> EXTREME_EMBEDDING = TEST_CONFIG.entry("embedded/embedded/diarrhea/diarrhea/extreme_shit", EntryType.STRING, "gtfsvew6e7atysdfwy ^FYDTGSG EXTREME LIQUID FIRE ");
 
-	public static final ConfigEntry<PoopCrap> POOPCRAP = new ConfigEntry<>(id("poopcrap"), POOPCRAP_TYPE, new PoopCrap(67, "41"));
-	//public static final ConfigEntry<String> POOPCRAP_BREAKER = new ConfigEntry<>(id("poopcrap/poop"), EntryType.STRING, "67");
+	public static final ConfigEntry<PoopCrap> POOPCRAP = TEST_CONFIG.entry("poopcrap", POOPCRAP_TYPE, new PoopCrap(67, "41"));
+	//public static final ConfigEntry<String> POOPCRAP_BREAKER = TEST_CONFIG.entry("poopcrap/poop", EntryType.STRING, "67");
 
 	public static void init() {
 		FrozenLibLogUtils.log("Skibidi " + "bop " + "yes" + "! " + TEST2_EMBEDDEDX2.get());
