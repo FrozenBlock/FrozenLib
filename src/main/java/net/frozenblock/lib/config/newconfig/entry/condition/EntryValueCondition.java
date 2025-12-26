@@ -31,6 +31,6 @@ public class EntryValueCondition<T> extends AbstractCondition {
 
 	@Override
 	public boolean test() {
-		return this.predicate.test(this.entry.getValue());
+		return this.predicate.test(this.entry.get());
 	}
 }
