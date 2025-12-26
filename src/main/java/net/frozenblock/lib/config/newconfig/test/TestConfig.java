@@ -19,19 +19,18 @@ package net.frozenblock.lib.config.newconfig.test;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Optional;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
-import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
 import net.frozenblock.lib.config.newconfig.ConfigSerializer;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.core.Registry;
+import net.frozenblock.lib.config.newconfig.config.ConfigData;
+import net.frozenblock.lib.config.newconfig.config.ConfigSettings;
+import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
+import net.frozenblock.lib.config.newconfig.entry.EntryType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import java.util.Optional;
 
 public class TestConfig {
 	public record PoopCrap(int poop, String crap) {
@@ -72,7 +71,7 @@ public class TestConfig {
 	}
 
 	static {
-		Registry.register(FrozenLibRegistries.CONFIG_SETTINGS, FrozenLibConstants.id("test_config"), ConfigSettings.JSON5);
+		ConfigData.createAndRegister(FrozenLibConstants.id("test_config"), ConfigSettings.JSON5);
 		try {
 			ConfigSerializer.loadConfigs();
 
