@@ -35,6 +35,7 @@ public class ConfigEntry<T> {
 	private final Optional<String> comment;
 
 	private T value;
+	private Optional<T> syncedValue = Optional.empty();
 	private boolean dirty;
 
 	public ConfigEntry(Identifier id, EntryType<T> type, T defaultValue, Optional<String> comment) {
@@ -51,12 +52,27 @@ public class ConfigEntry<T> {
 	}
 
 	public T getValue() {
+		return this.syncedValue.orElseGet(() -> this.value);
+	}
+
+	public T getActualValue() {
 		return this.value;
+	}
+	public void setValue(T value) {
+		this.value = value;
 	}
 
 	public void setValue(T value, boolean markDirty) {
 		this.value = value;
 		if (markDirty) this.markDirty();
+	}
+
+	public void setSyncedValue(T value) {
+		this.syncedValue = Optional.of(value);
+	}
+
+	public void removeSync() {
+		this.syncedValue = Optional.empty();
 	}
 
 	public boolean isUnsaved() {

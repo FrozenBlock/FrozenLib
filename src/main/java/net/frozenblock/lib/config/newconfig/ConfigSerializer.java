@@ -202,10 +202,10 @@ public class ConfigSerializer {
 			final Codec codec = entry.getCodec();
 
 			if (this.isSave()) {
-				if (!entry.hasComment()) return entry.getCodec().encodeStart(JavaOps.INSTANCE, entry.getValue());
+				if (!entry.hasComment()) return entry.getCodec().encodeStart(JavaOps.INSTANCE, entry.getActualValue());
 
 				final Map<String, Object> valueWithCommentMap = new Object2ObjectLinkedOpenHashMap<>();
-				valueWithCommentMap.put("value", entry.getValue());
+				valueWithCommentMap.put("value", entry.getActualValue());
 				valueWithCommentMap.put("comment", entry.getComment().get());
 				return DataResult.success(valueWithCommentMap);
 			}
