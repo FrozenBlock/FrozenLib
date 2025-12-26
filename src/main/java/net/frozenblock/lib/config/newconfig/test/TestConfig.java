@@ -21,6 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.entry.type.EntryType;
 import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
@@ -56,10 +57,11 @@ public class TestConfig {
 
 	public static final ConfigEntry<Boolean> TEST1_EMBEDDED = new ConfigEntry<>(id("embedded/test1"), EntryType.BOOL, true, Optional.of("whoa awesome"));
 	public static final ConfigEntry<Integer> TEST2_EMBEDDED = new ConfigEntry<>(id("embedded/test2"), EntryType.INT, 67);
-	public static final ConfigEntry<Integer> TEST2_EMBEDDEDX2 = new ConfigEntry<>(id("embedded/embedded/test2"), EntryType.INT, 67);
+	public static final ConfigEntry<Integer> TEST2_EMBEDDEDX2 = new ConfigEntry<>(id("embedded/embedded/test2"), EntryType.INT, 41);
 	public static final ConfigEntry<String> EXTREME_EMBEDDING = new ConfigEntry<>(id("embedded/embedded/diarrhea/diarrhea/extreme_shit"), EntryType.STRING, "gtfsvew6e7atysdfwy ^FYDTGSG EXTREME LIQUID FIRE ");
 
 	public static final ConfigEntry<PoopCrap> POOPCRAP = new ConfigEntry<>(id("poopcrap"), POOPCRAP_TYPE, new PoopCrap(67, "41"));
+	//public static final ConfigEntry<String> POOPCRAP_BREAKER = new ConfigEntry<>(id("poopcrap/poop"), EntryType.STRING, "67");
 
 	public static void init() {
 
@@ -84,5 +86,7 @@ public class TestConfig {
 		} catch (Exception e) {
 			throw new RuntimeException(e);
 		}
+
+		FrozenLibLogUtils.log("Skibidi " + "bop " + "yes" + "! " + TEST2_EMBEDDEDX2.getValue());
 	}
 }
