@@ -31,6 +31,14 @@ public class ConfigSerialization {
 		.printUnquotedKeys(true)
 		.build();
 
+	public static final JsonGrammar JSON5_UNQUOTED_KEYS_NO_ROOT = JsonGrammar.builder()
+		.withComments(true)
+		.printTrailingCommas(true)
+		.bareSpecialNumerics(true)
+		.printUnquotedKeys(true)
+		.bareRootObject(true)
+		.build();
+
 	private ConfigSerialization() {}
 
 	public static Jankson createJankson(Jankson.Builder builder, String modId) {

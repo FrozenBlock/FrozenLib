@@ -86,6 +86,24 @@ public class ConfigSettings<T> {
 			return new Object2ObjectLinkedOpenHashMap<String, Object>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
 		}
 	);
+	public static final ConfigSettings<JsonElement> JSON5_UNQUOTED_KEYS_NO_ROOT = new ConfigSettings<>(
+		"json5",
+		JanksonOps.INSTANCE,
+		(path, configMap, commentMap) -> {
+			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+				final blue.endless.jankson.JsonObject jsonObject = (blue.endless.jankson.JsonObject) JANKSON.toJson(configMap);
+				// Apply comments if provided
+				if (commentMap != null && !commentMap.isEmpty()) {
+					applyJanksonComments(jsonObject, commentMap, "");
+				}
+				writer.write(jsonObject.toJson(JsonType.JSON5_UNQUOTED_KEYS_NO_ROOT.getGrammar()));
+			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			return new Object2ObjectLinkedOpenHashMap<String, Object>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
+		}
+	);
 	public static final ConfigSettings<JsonValue> DJS = new ConfigSettings<>(
 		"djs",
 		XjsOps.INSTANCE,
