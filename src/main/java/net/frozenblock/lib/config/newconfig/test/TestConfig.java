@@ -56,6 +56,7 @@ public class TestConfig {
 
 	public static final ConfigEntry<Boolean> TEST1_EMBEDDED = new ConfigEntry<>(id("embedded/test1"), EntryType.BOOL, true, Optional.of("whoa awesome"));
 	public static final ConfigEntry<Integer> TEST2_EMBEDDED = new ConfigEntry<>(id("embedded/test2"), EntryType.INT, 67);
+	//public static final ConfigEntry<Integer> TEST2_EMBEDDEDX2 = new ConfigEntry<>(id("embedded/embedded/test2"), EntryType.INT, 67);
 
 	public static final ConfigEntry<PoopCrap> POOPCRAP = new ConfigEntry<>(id("poopcrap"), POOPCRAP_TYPE, new PoopCrap(67, "41"));
 
