@@ -111,7 +111,8 @@ public class ConfigSerializer {
 				}
 			} else {
 				final Map<String, Object> foundMap = (Map<String, Object>) entryMap.getOrDefault(string, context.isSave() ? new Object2ObjectLinkedOpenHashMap<>() : null);
-				if (foundMap == null) throw new AssertionError("NO MAP FOUND OMG HOG!!!!");
+				if (foundMap == null)
+					throw new AssertionError("NO MAP FOUND OMG HOG!!!!");
 				entryMap.put(string, foundMap);
 				entryMap = foundMap;
 			}
