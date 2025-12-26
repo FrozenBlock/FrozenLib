@@ -119,7 +119,7 @@ public class ConfigEntry<T> {
 		return this.type.getCodec();
 	}
 
-	public StreamCodec<ByteBuf, T> getStreamCodec() {
+	public StreamCodec<? extends ByteBuf, T> getStreamCodec() {
 		return this.type.getStreamCodec();
 	}
 }
