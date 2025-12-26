@@ -39,7 +39,7 @@ public abstract class EntryType<T> {
 	public static final EntryType<BlockPos> BLOCKPOS = create(BlockPos.CODEC, BlockPos.STREAM_CODEC);
 	public static final EntryType<ChunkPos> CHUNKPOS = create(ChunkPos.CODEC, ChunkPos.STREAM_CODEC);
 
-	public static <T> EntryType<T> create(Codec<T> codec, StreamCodec<ByteBuf, T> streamCodec) {
+	public static <T> EntryType<T> create(Codec<T> codec, StreamCodec<? extends ByteBuf, T> streamCodec) {
 		return new EntryType<>() {
 			@Override
 			public Codec<T> getCodec() {
@@ -47,7 +47,7 @@ public abstract class EntryType<T> {
 			}
 
 			@Override
-			public StreamCodec<ByteBuf, T> getStreamCodec() {
+			public StreamCodec<? extends ByteBuf, T> getStreamCodec() {
 				return streamCodec;
 			}
 		};
@@ -65,7 +65,7 @@ public abstract class EntryType<T> {
 			}
 
 			@Override
-			public StreamCodec<ByteBuf, List<T>> getStreamCodec() {
+			public StreamCodec<? extends ByteBuf, List<T>> getStreamCodec() {
 				return EntryType.this.getStreamCodec().apply(ByteBufCodecs.list());
 			}
 		};
@@ -74,5 +74,5 @@ public abstract class EntryType<T> {
 	}
 
 	public abstract Codec<T> getCodec();
-	public abstract StreamCodec<ByteBuf, T> getStreamCodec();
+	public abstract StreamCodec<? extends ByteBuf, T> getStreamCodec();
 }
