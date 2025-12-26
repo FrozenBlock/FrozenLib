@@ -22,7 +22,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.JavaOps;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
-import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -34,8 +33,9 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
+import net.frozenblock.lib.config.newconfig.config.ConfigData;
+import net.frozenblock.lib.config.newconfig.config.ConfigSettings;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.config.newconfig.instance.ConfigSettings;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.resources.Identifier;
 
@@ -60,17 +60,28 @@ public class ConfigSerializer {
 		final Map<Identifier, List<ConfigEntry<?>>> configsToLoad = collectConfigs();
 
 		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToLoad.entrySet()) {
-			final Identifier configId = entry.getKey();
-			try {
-				final Optional<SerializationContext<?>> optionalContext = SerializationContext.createForLoading(configId);
-				if (optionalContext.isEmpty()) continue;
-
-				final SerializationContext<?> context = optionalContext.get();
-				context.loadEntries(entry.getValue());
-			} catch (Exception e) {
-				FrozenLibLogUtils.logError("Error loading config " + configId, e);
-			}
+			loadConfig(entry.getKey(), Optional.of(entry.getValue()));
 		}
+	}
+
+	public static void loadConfig(Identifier configId, Optional<List<ConfigEntry<?>>> optionalEntries) {
+		final List<ConfigEntry<?>> entries = optionalEntries.orElseGet(() -> collectConfigs().getOrDefault(configId, new ArrayList<>()));
+		try {
+			final Optional<SerializationContext<?>> optionalContext = SerializationContext.createForLoading(configId);
+			if (optionalContext.isEmpty()) return;
+
+			final SerializationContext<?> context = optionalContext.get();
+			context.loadEntries(entries);
+		} catch (Exception e) {
+			FrozenLibLogUtils.logError("Error loading config " + configId, e);
+		}
+	}
+
+	public static void loadConfigFromEntry(ConfigEntry<?> entry) {
+		final Identifier configId = getBaseConfigIdFromEntry(entry);
+		final ConfigData<?> configData = FrozenLibRegistries.CONFIG_DATA.get(configId).orElseThrow().value();
+		if (configData.isLoaded()) return;
+		configData.load(true);
 	}
 
 	public static Map<String, Object> buildConfigMapForSaving(Identifier configId, List<ConfigEntry<?>> entries, SerializationContext<?> context) {
@@ -102,16 +113,16 @@ public class ConfigSerializer {
 
 				final Optional<?> finalResult = result.resultOrPartial();
 				if (finalResult.isEmpty()) break;
-				if (context.isLoad()) return finalResult;
+				if (context.isForLoading()) return finalResult;
 
 				finalEntryMap.put(string, finalResult.get());
 
 				// Track comment if present and not using wrapper
-				if (context.isSave() && entry.hasComment() && !context.useCommentWrapper()) {
+				if (context.isForSaving() && entry.hasComment() && !context.useCommentWrapper()) {
 					context.commentMap().put(entryId, entry.getComment().get());
 				}
 			} else {
-				final Map<String, Object> foundMap = (Map<String, Object>) entryMap.getOrDefault(string, context.isSave() ? new Object2ObjectLinkedOpenHashMap<>() : null);
+				final Map<String, Object> foundMap = (Map<String, Object>) entryMap.getOrDefault(string, context.isForSaving() ? new Object2ObjectLinkedOpenHashMap<>() : null);
 				if (foundMap == null) {
 					FrozenLibLogUtils.logError("Could not find entry " + entryId, FrozenLibLogUtils.UNSTABLE_LOGGING);
 					return Optional.empty();
@@ -153,11 +164,11 @@ public class ConfigSerializer {
 		return entry.getId().withPath(path -> path.split("/")[0]);
 	}
 
-	public record SerializationContext<T>(Identifier configId, ConfigSettings<T> settings, boolean isSave, Path path, AtomicReference<Map<String, Object>> configMap, Map<String, String> commentMap) {
+	public record SerializationContext<T>(ConfigData configData, boolean isForSaving, Path path, AtomicReference<Map<String, Object>> configMap, Map<String, String> commentMap) {
 		public static <T> SerializationContext<T> createForSaving(Identifier configId, List<ConfigEntry<?>> entries) {
-			final ConfigSettings<T> settings = (ConfigSettings<T>) FrozenLibRegistries.CONFIG_SETTINGS.get(configId).orElseThrow().value();
-			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + settings.fileExtension());
-			final SerializationContext<T> saveContext = new SerializationContext<>(configId, settings, true, path, new AtomicReference<>(new Object2ObjectLinkedOpenHashMap<>()), new Object2ObjectLinkedOpenHashMap<>());
+			final ConfigData<T> data = (ConfigData<T>) FrozenLibRegistries.CONFIG_DATA.get(configId).orElseThrow().value();
+			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + data.settings().fileExtension());
+			final SerializationContext<T> saveContext = new SerializationContext<>(data, true, path, new AtomicReference<>(new Object2ObjectLinkedOpenHashMap<>()), new Object2ObjectLinkedOpenHashMap<>());
 
 			final Map<String, Object> configMap = buildConfigMapForSaving(configId, entries, saveContext);
 			saveContext.configMap.set(configMap);
@@ -166,27 +177,27 @@ public class ConfigSerializer {
 		}
 
 		public static Optional<SerializationContext<?>> createForLoading(Identifier configId) throws Exception {
-			final ConfigSettings<?> settings = FrozenLibRegistries.CONFIG_SETTINGS.get(configId).orElseThrow().value();
-			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + settings.fileExtension());
+			final ConfigData<?> data = FrozenLibRegistries.CONFIG_DATA.get(configId).orElseThrow().value();
+			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + data.settings().fileExtension());
 			if (!Files.exists(path)) return Optional.empty();
 
-			final Map<String, Object> configMap = settings.load(path);
+			final Map<String, Object> configMap = data.settings().load(path);
 			if (configMap.isEmpty()) throw new AssertionError("MAP SHOULDNT BE EMPTY BRUHHHHHHHHHHHHHH");
 
-			final SerializationContext<?> loadContext = new SerializationContext<>(configId, settings, false, path, new AtomicReference<>(configMap), new Object2ObjectLinkedOpenHashMap<>());
+			final SerializationContext<?> loadContext = new SerializationContext<>(data, false, path, new AtomicReference<>(configMap), new Object2ObjectLinkedOpenHashMap<>());
 
 			return Optional.of(loadContext);
 		}
 
 		public void logNoPathError(String entry) {
 			FrozenLibLogUtils.logError(
-				"Config entry " + entry + " has no field name to" + (this.isSave() ? "save to" : "read from") + "!\nSeparate config ids from fields using '/'."
+				"Config entry " + entry + " has no field name to" + (this.isForSaving() ? "save to" : "read from") + "!\nSeparate config ids from fields using '/'."
 			);
 		}
 
 		public void logUnableToUseError(String entry) {
 			FrozenLibLogUtils.logError(
-				"Unable to " + (this.isSave() ? "save" : "read") + " config entry " + entry
+				"Unable to " + (this.isForSaving() ? "save" : "read") + " config entry " + entry
 			);
 		}
 
@@ -194,28 +205,24 @@ public class ConfigSerializer {
 			return this.fileExtension().equals("json");
 		}
 
+		public ConfigSettings<T> settings() {
+			return this.configData.settings();
+		}
+
 		public String fileExtension() {
-			return this.settings.fileExtension();
+			return this.settings().fileExtension();
 		}
 
-		public DynamicOps<T> dynamicOps() {
-			return this.settings.dynamicOps();
-		}
-
-		public boolean isLoad() {
-			return !this.isSave;
-		}
-
-		public File asFile() {
-			return this.path.toFile();
+		public boolean isForLoading() {
+			return !this.isForSaving;
 		}
 
 		public DataResult<?> encodeOrParse(ConfigEntry entry, Supplier<?> parseInput) {
 			final Codec codec = entry.getCodec();
 
-			if (this.isSave()) {
+			if (this.isForSaving()) {
 				// Encode the value
-				final DataResult<?> encodedResult = codec.encodeStart(JavaOps.INSTANCE, entry.getActualValue());
+				final DataResult<?> encodedResult = codec.encodeStart(JavaOps.INSTANCE, entry.getActual());
 				if (encodedResult.isError()) return encodedResult;
 
 				final Object encodedValue = encodedResult.resultOrPartial().orElse(null);
@@ -233,31 +240,32 @@ public class ConfigSerializer {
 				return encodedResult;
 			}
 
+			final DynamicOps<T> dynamicOps = this.settings().dynamicOps();
 			final Object input = parseInput.get();
-			DataResult result = codec.parse(this.settings.dynamicOps(), input);
+			DataResult result = codec.parse(dynamicOps, input);
 			if (!result.isError() || !(input instanceof Map<?,?> map) || !(map.get("value") instanceof Object value)) return result;
 
-			final DataResult valueWithCommentResult = codec.parse(this.settings.dynamicOps(), value);
+			final DataResult valueWithCommentResult = codec.parse(dynamicOps, value);
 			if (!valueWithCommentResult.isError()) return valueWithCommentResult;
 
 			return result;
 		}
 
 		public void saveConfig() throws Exception {
-			if (this.isLoad()) throw new IllegalStateException("Cannot save config from loading context!");
+			if (this.isForLoading()) throw new IllegalStateException("Cannot save config from loading context!");
 
 			final Map<String, Object> configMap = this.configMap().get();
 			if (configMap == null) return;
 
 			Files.createDirectories(this.path.getParent());
-			this.settings.save(this.path, configMap, this.commentMap);
+			this.settings().save(this.path, configMap, this.commentMap);
 		}
 
-		public void loadEntries(List<ConfigEntry<?>> entries) throws Exception {
-			if (this.isSave()) throw new IllegalStateException("Cannot load config entry from saving context!");
+		public void loadEntries(List<ConfigEntry<?>> entries) {
+			if (this.isForSaving()) throw new IllegalStateException("Cannot load config entry from saving context!");
 
 			for (ConfigEntry configEntry : entries) {
-				final Optional optionalValue = findOrBuildEntry(this.configId.toString(), configEntry, this);
+				final Optional optionalValue = findOrBuildEntry(this.configData.id().toString(), configEntry, this);
 				if (optionalValue.isPresent()) configEntry.setValue(optionalValue.get(), false);
 			}
 		}
