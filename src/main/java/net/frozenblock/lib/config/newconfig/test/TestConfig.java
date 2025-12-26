@@ -19,7 +19,6 @@ package net.frozenblock.lib.config.newconfig.test;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.newconfig.config.ConfigData;
@@ -57,7 +56,7 @@ public class TestConfig {
 	public static final ConfigEntry<Boolean> TEST = new ConfigEntry<>(id("test"), EntryType.BOOL, true);
 	public static final ConfigEntry<Identifier> TEST_ID = new ConfigEntry<>(id("test_id"), EntryType.IDENTIFIER, FrozenLibConstants.id("test_id"));
 
-	public static final ConfigEntry<Boolean> TEST1_EMBEDDED = new ConfigEntry<>(id("embedded/test1"), EntryType.BOOL, true, Optional.of("whoa awesome"));
+	public static final ConfigEntry<Boolean> TEST1_EMBEDDED = ConfigEntry.builder(id("embedded/test1"), EntryType.BOOL, true).comment("whoa awesome").build();
 	public static final ConfigEntry<Integer> TEST2_EMBEDDED = new ConfigEntry<>(id("embedded/test2"), EntryType.INT, 67);
 	public static final ConfigEntry<Integer> TEST2_EMBEDDEDX2 = new ConfigEntry<>(id("embedded/embedded/test2"), EntryType.INT, 41);
 	public static final ConfigEntry<String> EXTREME_EMBEDDING = new ConfigEntry<>(id("embedded/embedded/diarrhea/diarrhea/extreme_shit"), EntryType.STRING, "gtfsvew6e7atysdfwy ^FYDTGSG EXTREME LIQUID FIRE ");
