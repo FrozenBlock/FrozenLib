@@ -104,6 +104,11 @@ public class ConfigSerializer {
 				if (context.isLoad()) return finalResult;
 
 				finalEntryMap.put(string, finalResult.get());
+
+				// Track comment if present and not using wrapper
+				if (context.isSave() && entry.hasComment() && !context.useCommentWrapper()) {
+					context.commentMap().put(entryId, entry.getComment().get());
+				}
 			} else {
 				final Map<String, Object> foundMap = (Map<String, Object>) entryMap.getOrDefault(string, context.isSave() ? new Object2ObjectLinkedOpenHashMap<>() : null);
 				if (foundMap == null) throw new AssertionError("NO MAP FOUND OMG HOG!!!!");
@@ -144,11 +149,11 @@ public class ConfigSerializer {
 		return entry.getId().withPath(path -> path.split("/")[0]);
 	}
 
-	public record SerializationContext<T>(Identifier configId, ConfigSettings<T> settings, boolean isSave, Path path, AtomicReference<Map<String, Object>> configMap) {
+	public record SerializationContext<T>(Identifier configId, ConfigSettings<T> settings, boolean isSave, Path path, AtomicReference<Map<String, Object>> configMap, Map<String, String> commentMap) {
 		public static <T> SerializationContext<T> createForSaving(Identifier configId, List<ConfigEntry<?>> entries) {
 			final ConfigSettings<T> settings = (ConfigSettings<T>) FrozenLibRegistries.CONFIG_SETTINGS.get(configId).orElseThrow().value();
 			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + settings.fileExtension());
-			final SerializationContext<T> saveContext = new SerializationContext<>(configId, settings, true, path, new AtomicReference<>(new Object2ObjectLinkedOpenHashMap<>()));
+			final SerializationContext<T> saveContext = new SerializationContext<>(configId, settings, true, path, new AtomicReference<>(new Object2ObjectLinkedOpenHashMap<>()), new Object2ObjectLinkedOpenHashMap<>());
 
 			final Map<String, Object> configMap = buildConfigMapForSaving(configId, entries, saveContext);
 			saveContext.configMap.set(configMap);
@@ -164,7 +169,7 @@ public class ConfigSerializer {
 			final Map<String, Object> configMap = settings.load(path);
 			if (configMap.isEmpty()) throw new AssertionError("MAP SHOULDNT BE EMPTY BRUHHHHHHHHHHHHHH");
 
-			final SerializationContext<?> loadContext = new SerializationContext<>(configId, settings, false, path, new AtomicReference<>(configMap));
+			final SerializationContext<?> loadContext = new SerializationContext<>(configId, settings, false, path, new AtomicReference<>(configMap), new Object2ObjectLinkedOpenHashMap<>());
 
 			return Optional.of(loadContext);
 		}
@@ -179,6 +184,10 @@ public class ConfigSerializer {
 			FrozenLibLogUtils.logError(
 				"Unable to " + (this.isSave() ? "save" : "read") + " config entry " + entry
 			);
+		}
+
+		private boolean useCommentWrapper() {
+			return this.fileExtension().equals("json");
 		}
 
 		public String fileExtension() {
@@ -201,14 +210,23 @@ public class ConfigSerializer {
 			final Codec codec = entry.getCodec();
 
 			if (this.isSave()) {
-				if (!entry.hasComment()) return entry.getCodec().encodeStart(JavaOps.INSTANCE, entry.getActualValue());
+				// Encode the value
+				final DataResult<?> encodedResult = codec.encodeStart(JavaOps.INSTANCE, entry.getActualValue());
+				if (encodedResult.isError()) return encodedResult;
 
-				final Map<String, Object> valueWithCommentMap = new Object2ObjectLinkedOpenHashMap<>();
-				if (this.settings.fileExtension().equals("json")) {
+				final Object encodedValue = encodedResult.resultOrPartial().orElse(null);
+				if (encodedValue == null) return encodedResult;
+
+				// Handle comments for plain JSON files using wrapper
+				if (entry.hasComment() && this.useCommentWrapper()) {
+					final Map<String, Object> valueWithCommentMap = new Object2ObjectLinkedOpenHashMap<>();
 					valueWithCommentMap.put("comment", entry.getComment().get());
+					valueWithCommentMap.put("value", encodedValue);
+					return DataResult.success(valueWithCommentMap);
 				}
-				valueWithCommentMap.put("value", entry.getActualValue());
-				return DataResult.success(valueWithCommentMap);
+
+				// Return the encoded value as-is (comments will be applied during save)
+				return encodedResult;
 			}
 
 			final Object input = parseInput.get();
@@ -228,7 +246,7 @@ public class ConfigSerializer {
 			if (configMap == null) return;
 
 			Files.createDirectories(this.path.getParent());
-			this.settings.save(this.path, configMap);
+			this.settings.save(this.path, configMap, this.commentMap);
 		}
 
 		public void loadEntries(List<ConfigEntry<?>> entries) throws Exception {
