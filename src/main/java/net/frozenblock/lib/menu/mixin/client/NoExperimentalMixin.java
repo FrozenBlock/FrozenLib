@@ -41,7 +41,7 @@ public class NoExperimentalMixin {
 	private void frozenLib$preventBackupScreenAndProceed(
 		LevelStorageSource.LevelStorageAccess levelStorageAccess, boolean customizedWorld, Runnable runnable, Runnable runnable2, CallbackInfo info
 	) {
-		if (!FrozenLibConfig.get().removeExperimentalWarning) return;
+		if (!FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.get()) return;
 		info.cancel();
 		runnable.run();
 	}
@@ -54,7 +54,7 @@ public class NoExperimentalMixin {
 		require = 0
 	)
 	private static boolean frozenLib$skipCreationWarning(boolean original) {
-		if (FrozenLibConfig.get().removeExperimentalWarning) return true;
+		if (FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.get()) return true;
 		return original;
 	}
 

@@ -26,9 +26,44 @@ import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.api.sync.SyncBehavior;
 import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
+import net.frozenblock.lib.config.newconfig.config.ConfigData;
+import net.frozenblock.lib.config.newconfig.config.ConfigSettings;
+import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
+import net.frozenblock.lib.config.newconfig.entry.EntryType;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
+import net.minecraft.resources.Identifier;
 
 public class FrozenLibConfig {
+
+	static {
+		ConfigData.createAndRegister(FrozenLibConstants.id("frozenlib"), ConfigSettings.JSON5_UNQUOTED_KEYS);
+	}
+
+	public static final ConfigEntry<Boolean> USE_WIND_ON_NON_FROZEN_SERVERS_ENTRY = new ConfigEntry<>(id("use_wind_on_non_frozen_servers"), EntryType.BOOL, true);
+
+	public static final ConfigEntry<Boolean> SAVE_ITEM_COOLDOWNS = new ConfigEntry<>(id("save_item_cooldowns"), EntryType.BOOL, false);
+
+	public static final ConfigEntry<Boolean> REMOVE_EXPERIMENTAL_WARNING = new ConfigEntry<>(id("remove_experimental_warning"), EntryType.BOOL, false);
+
+	public static final ConfigEntry<Boolean> WARDEN_SPAWN_TRACKER_COMMAND = new ConfigEntry<>(id("warden_spawn_tracker_command"), EntryType.BOOL, false);
+
+	public static final ConfigEntry<Boolean> FILE_TRANSFER_SERVER_ENTRY = new ConfigEntry<>(id("file_transfer_server"), EntryType.BOOL, true);
+
+	public static final ConfigEntry<Boolean> FILE_TRANSFER_CLIENT_ENTRY = new ConfigEntry<>(id("file_transfer_client"), EntryType.BOOL, true);
+
+	// TODO packDownloads
+
+	public static final ConfigEntry<String> CAPE = new ConfigEntry<>(id("cape"), EntryType.STRING, FrozenLibConstants.string("dummy"));
+
+	// datafixer config
+	public static final ConfigEntry<List<String>> DISABLED_DATA_FIX_TYPES = new ConfigEntry<>(
+		id("datafixer/disabled_data_fix_types"),
+		EntryType.STRING.asList(),
+		List.of(
+			"world_gen_settings"
+		)
+	);
+
 	public static final Config<FrozenLibConfig> INSTANCE = ConfigRegistry.register(
 		new JsonConfig<>(
 			FrozenLibConstants.MOD_ID,
@@ -45,7 +80,7 @@ public class FrozenLibConfig {
 			@Override
 			public void onSync(FrozenLibConfig syncInstance) {
 				var config = this.config();
-				USE_WIND_ON_NON_FROZEN_SERVERS = config.useWindOnNonFrozenServers;
+				USE_WIND_ON_NON_FROZEN_SERVERS = USE_WIND_ON_NON_FROZEN_SERVERS_ENTRY.get();
 				FILE_TRANSFER_SERVER = config.fileTransferServer;
 				FILE_TRANSFER_CLIENT = config.fileTransferClient;
 			}
@@ -103,5 +138,9 @@ public class FrozenLibConfig {
 
 	public static FrozenLibConfig getWithSync() {
 		return INSTANCE.configWithSync();
+	}
+
+	private static Identifier id(String path) {
+		return FrozenLibConstants.id("frozenlib/" + path);
 	}
 }
