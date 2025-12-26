@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.config.clothconfig.mixin.client;
 
-// TODO re-enable when clothconfig is unobfuscated
-/*import java.lang.reflect.Field;
+import java.lang.reflect.Field;
 import me.shedaniel.clothconfig2.api.DisableableWidget;
 import me.shedaniel.clothconfig2.api.Requirement;
 import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
@@ -100,4 +99,3 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 		return this.frozenLib$entryPermissionType;
 	}
 }
-*/

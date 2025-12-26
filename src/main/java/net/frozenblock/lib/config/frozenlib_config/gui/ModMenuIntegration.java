@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.config.frozenlib_config.gui;
 
-// TODO re-enable when modmenu is unobfuscated
-/*import com.terraformersmc.modmenu.api.ConfigScreenFactory;
+import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -35,4 +34,4 @@ public final class ModMenuIntegration implements ModMenuApi {
     }
 
 }
-*/
+
