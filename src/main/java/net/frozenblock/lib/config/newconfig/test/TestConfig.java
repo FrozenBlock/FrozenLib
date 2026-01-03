@@ -25,7 +25,6 @@ import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.config.ConfigSettings;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.entry.EntryType;
-import net.frozenblock.lib.config.newconfig.entry.GameEntryTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
@@ -52,7 +51,7 @@ public class TestConfig {
 	public static final EntryType<PoopCrap> POOPCRAP_TYPE = EntryType.create(PoopCrap.CODEC, PoopCrap.STREAM_CODEC);
 
 	public static final ConfigEntry<Boolean> TEST = TEST_CONFIG.entry("test", EntryType.BOOL, true);
-	public static final ConfigEntry<Identifier> TEST_ID = TEST_CONFIG.entry("testID", GameEntryTypes.IDENTIFIER, FrozenLibConstants.id("test_id"));
+	public static final ConfigEntry<Identifier> TEST_ID = TEST_CONFIG.entry("testID", EntryType.IDENTIFIER, FrozenLibConstants.id("test_id"));
 
 	public static final ConfigEntry<Boolean> TEST1_EMBEDDED = TEST_CONFIG.entryBuilder("embedded/test1", EntryType.BOOL, true).comment("whoa awesome").build();
 	public static final ConfigEntry<Integer> TEST2_EMBEDDED = TEST_CONFIG.entry("embedded/test2", EntryType.INT, 67);

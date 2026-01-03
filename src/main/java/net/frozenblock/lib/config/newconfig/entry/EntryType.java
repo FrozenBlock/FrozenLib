@@ -22,8 +22,12 @@ import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.phys.Vec3;
 
 public abstract class EntryType<T> {
 	public static final EntryType<Boolean> BOOL = create(Codec.BOOL, ByteBufCodecs.BOOL);
@@ -32,6 +36,10 @@ public abstract class EntryType<T> {
 	public static final EntryType<Float> FLOAT = create(Codec.FLOAT, ByteBufCodecs.FLOAT);
 	public static final EntryType<Long> LONG = create(Codec.LONG, ByteBufCodecs.LONG);
 	public static final EntryType<String> STRING = create(Codec.STRING, ByteBufCodecs.STRING_UTF8);
+	public static final EntryType<Identifier> IDENTIFIER = EntryType.create(Identifier.CODEC, Identifier.STREAM_CODEC);
+	public static final EntryType<BlockPos> BLOCKPOS = EntryType.create(BlockPos.CODEC, BlockPos.STREAM_CODEC);
+	public static final EntryType<ChunkPos> CHUNKPOS = EntryType.create(ChunkPos.CODEC, ChunkPos.STREAM_CODEC);
+	public static final EntryType<Vec3> VEC3 = EntryType.create(Vec3.CODEC, Vec3.STREAM_CODEC);
 
 	public static <T> EntryType<T> create(Codec<T> codec, StreamCodec<? extends ByteBuf, T> streamCodec) {
 		return new EntryType<>() {
