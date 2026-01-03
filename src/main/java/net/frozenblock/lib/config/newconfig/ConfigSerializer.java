@@ -26,6 +26,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -37,17 +38,33 @@ import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.config.ConfigSettings;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.resources.Identifier;
+import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
+import net.frozenblock.lib.config.newconfig.registry.ID;
 
 public class ConfigSerializer {
 	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir();
 
-	public static void saveConfigs(boolean collectAll) {
-		final Map<Identifier, List<ConfigEntry<?>>> configsToSave = collectAll ? collectConfigs() : collectUnsavedConfigs();
+	public static void saveConfig(ConfigData<?> data) {
+		final ID configId = data.id();
+		final List<ConfigEntry<?>> entries = data.entries().values().stream().toList();
+		if (entries == null) {
+			FrozenLibLogUtils.logError("No config entries found for " + configId);
+			return;
+		}
 
-		for (Map.Entry<Identifier, List<ConfigEntry<?>>> entry : configsToSave.entrySet()) {
-			final Identifier configId = entry.getKey();
+		final SerializationContext<?> context = SerializationContext.createForSaving(configId, entries);
+		try {
+			context.saveConfig();
+		} catch (Exception e) {
+			FrozenLibLogUtils.logError("Error saving config " + configId, e);
+		}
+	}
+
+	public static void saveConfigs(boolean collectAll) {
+		final Map<ID, List<ConfigEntry<?>>> configsToSave = collectAll ? collectConfigs() : collectUnsavedConfigs();
+
+		for (Map.Entry<ID, List<ConfigEntry<?>>> entry : configsToSave.entrySet()) {
+			final ID configId = entry.getKey();
 			final SerializationContext<?> context = SerializationContext.createForSaving(configId, entry.getValue());
 			try {
 				context.saveConfig();
@@ -57,7 +74,7 @@ public class ConfigSerializer {
 		}
 	}
 
-	public static Map<String, Object> loadConfigAsMap(Identifier configId) {
+	public static Map<String, Object> loadConfigAsMap(ID configId) {
 		try {
 			final Optional<SerializationContext<?>> optionalContext = SerializationContext.createForLoading(configId);
 			if (optionalContext.isEmpty()) return Map.of();
@@ -71,8 +88,8 @@ public class ConfigSerializer {
 		return Map.of();
 	}
 
-	public static Map<Identifier, Object> convertToOptimizedConfigMap(ConfigData data, Map<String, Object> configMap) {
-		final Identifier configId = data.id();
+	public static Map<ID, Object> convertToOptimizedConfigMap(ConfigData data, Map<String, Object> configMap) {
+		final ID configId = data.id();
 		final List<ConfigEntry<?>> entries = collectConfigs().get(configId);
 		if (entries == null) {
 			FrozenLibLogUtils.logError("No config entries found for " + configId);
@@ -81,7 +98,7 @@ public class ConfigSerializer {
 
 		final String configIdString = configId.toString();
 		final SerializationContext context = SerializationContext.createFromLoadedData(data, configMap);
-		final Map<Identifier, Object> optimizedMap = new Object2ObjectLinkedOpenHashMap<>();
+		final Map<ID, Object> optimizedMap = new Object2ObjectLinkedOpenHashMap<>();
 		for (ConfigEntry entry : entries) {
 			Optional optional = findOrBuildEntry(configIdString, entry, context);
 			if (optional.isPresent()) optimizedMap.put(entry.getId(), optional.get());
@@ -90,7 +107,7 @@ public class ConfigSerializer {
 		return optimizedMap;
 	}
 
-	public static Map<String, Object> buildConfigMapForSaving(Identifier configId, List<ConfigEntry<?>> entries, SerializationContext<?> context) {
+	public static Map<String, Object> buildConfigMapForSaving(ID configId, List<ConfigEntry<?>> entries, SerializationContext<?> context) {
 		final String configIdString = configId.toString();
 		for (ConfigEntry<?> entry : entries) findOrBuildEntry(configIdString, entry, context);
 		return context.configMap().get();
@@ -146,24 +163,24 @@ public class ConfigSerializer {
 		return Optional.empty();
 	}
 
-	public static Map<Identifier, List<ConfigEntry<?>>> collectUnsavedConfigs() {
-		final List<Identifier> unsavedConfigIds = new ArrayList<>();
-		FrozenLibRegistries.CONFIG_ENTRY.forEach(entry -> {
+	public static Map<ID, List<ConfigEntry<?>>> collectUnsavedConfigs() {
+		final List<ID> unsavedConfigIds = new ArrayList<>();
+		ConfigV2Registry.CONFIG_ENTRY.values().forEach(entry -> {
 			if (entry.isSaved()) return;
-			final Identifier configId = entry.getConfigData().id();
+			final ID configId = entry.getConfigData().id();
 			if (!unsavedConfigIds.contains(configId)) unsavedConfigIds.add(configId);
 		});
 
-		final Map<Identifier, List<ConfigEntry<?>>> configsAndEntries = collectConfigs();
+		final Map<ID, List<ConfigEntry<?>>> configsAndEntries = collectConfigs();
 		configsAndEntries.keySet().removeIf(id -> !unsavedConfigIds.contains(id));
 
 		return configsAndEntries;
 	}
 
-	public static Map<Identifier, List<ConfigEntry<?>>> collectConfigs() {
-		final Map<Identifier, List<ConfigEntry<?>>> configsAndEntries = new Object2ObjectLinkedOpenHashMap<>();
-		FrozenLibRegistries.CONFIG_ENTRY.forEach(entry -> {
-			final Identifier configId = entry.getConfigData().id();
+	public static Map<ID, List<ConfigEntry<?>>> collectConfigs() {
+		final Map<ID, List<ConfigEntry<?>>> configsAndEntries = new Object2ObjectLinkedOpenHashMap<>();
+		ConfigV2Registry.CONFIG_ENTRY.values().forEach(entry -> {
+			final ID configId = entry.getConfigData().id();
 			final List<ConfigEntry<?>> entries = configsAndEntries.getOrDefault(configId, new ArrayList<>());
 			entries.add(entry);
 			configsAndEntries.put(configId, entries);
@@ -172,8 +189,8 @@ public class ConfigSerializer {
 	}
 
 	public record SerializationContext<T>(ConfigData configData, boolean isForSaving, Path path, AtomicReference<Map<String, Object>> configMap, Map<String, String> commentMap) {
-		public static <T> SerializationContext<T> createForSaving(Identifier configId, List<ConfigEntry<?>> entries) {
-			final ConfigData<T> data = (ConfigData<T>) FrozenLibRegistries.CONFIG_DATA.get(configId).orElseThrow().value();
+		public static <T> SerializationContext<T> createForSaving(ID configId, List<ConfigEntry<?>> entries) {
+			final ConfigData<T> data = (ConfigData<T>) ConfigV2Registry.CONFIG_DATA.get(configId);
 			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + data.settings().fileExtension());
 			final SerializationContext<T> saveContext = new SerializationContext<>(data, true, path, new AtomicReference<>(new Object2ObjectLinkedOpenHashMap<>()), new Object2ObjectLinkedOpenHashMap<>());
 
@@ -183,8 +200,8 @@ public class ConfigSerializer {
 			return saveContext;
 		}
 
-		public static Optional<SerializationContext<?>> createForLoading(Identifier configId) throws Exception {
-			final ConfigData<?> data = FrozenLibRegistries.CONFIG_DATA.get(configId).orElseThrow().value();
+		public static Optional<SerializationContext<?>> createForLoading(ID configId) throws Exception {
+			final ConfigData<?> data = ConfigV2Registry.CONFIG_DATA.get(configId);
 			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + data.settings().fileExtension());
 			if (!Files.exists(path)) return Optional.empty();
 

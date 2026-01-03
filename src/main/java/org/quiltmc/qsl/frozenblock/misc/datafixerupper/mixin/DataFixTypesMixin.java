@@ -50,7 +50,7 @@ public class DataFixTypesMixin {
 		final var type = DataFixTypes.class.cast(this);
 		final var value = original.getValue();
 
-		if (!(value instanceof Tag) || FrozenLibConfig.get().dataFixer.disabledDataFixTypes.contains(this.type.typeName())) return original;
+		if (!(value instanceof Tag) || FrozenLibConfig.DISABLED_DATA_FIX_TYPES.get().contains(this.type.typeName())) return original;
 
 		//noinspection unchecked
 		return (Dynamic<T>) QuiltDataFixesInternals.get().updateWithAllFixers(type, (Dynamic<Tag>) original);

@@ -36,6 +36,7 @@ import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.config.newconfig.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.file.transfer.FileTransferRebuilder;
@@ -121,6 +122,9 @@ public final class FrozenClientNetworking {
 		receiveCapeRepoPacket();
 		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
 			ConfigSyncPacket.receive(packet, null)
+		);
+		ClientPlayNetworking.registerGlobalReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, ctx) ->
+			ConfigEntrySyncPacket.receive(packet, null)
 		);
 		ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
 			for (Config<?> config : ConfigRegistry.getAllConfigs()) ConfigSyncModification.clearSyncData(config);

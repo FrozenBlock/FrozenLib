@@ -20,6 +20,8 @@ package net.frozenblock.lib.resource_pack.api.client;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.io.File;
 import java.io.IOException;
@@ -50,9 +52,13 @@ import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.config.newconfig.entry.EntryType;
 import net.frozenblock.lib.resource_pack.impl.client.PackDownloadToast;
 import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.StringRepresentable;
 import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
@@ -155,7 +161,7 @@ public class FrozenLibModResourcePackApi {
 	 * <p>
 	 * These Resource Packs will be force-enabled, but may require resources to be reloaded depending on when they finish downloading.
 	 * <p>
-	 * Downloads will not occur if {@link FrozenLibConfig#packDownloading} is set to {@link PackDownloadSetting#DISABLED}.
+	 * Downloads will not occur if {@link FrozenLibConfig#PACK_DOWNLOADING} is set to {@link PackDownloadSetting#DISABLED}.
 	 * @param downloadGroup The Resource Packs to download, in {@link PackDownloadGroup} form.
 	 * @param hidePacksFromMenu Whether the Resource Packs should be hidden from the Resource Pack selection menu.
 	 * @param skipVersionCheck Whether the Resource Packs will still be downloaded even if an identical version was already downloaded prior.
@@ -170,7 +176,7 @@ public class FrozenLibModResourcePackApi {
 	 * <p>
 	 * The Resource Packs will be force-enabled, but may require resources to be reloaded depending on when it finishes downloading.
 	 * <p>
-	 * Downloads will not occur if {@link FrozenLibConfig#packDownloading} is set to {@link PackDownloadSetting#DISABLED}.
+	 * Downloads will not occur if {@link FrozenLibConfig#PACK_DOWNLOADING} is set to {@link PackDownloadSetting#DISABLED}.
 	 * @param downloadInfo The {@link PackDownloadInfo} to pull the URL and pack name from.
 	 * @param hidePackFromMenu Whether the Resource Pack should be hidden from the Resource Pack selection menu.
 	 * @param skipVersionCheck Whether the Resource Pack will still be downloaded even if an identical version was already downloaded prior.
@@ -185,7 +191,7 @@ public class FrozenLibModResourcePackApi {
 		// Mark the pack as hidden if needed
 		if (hidePackFromMenu) registerHiddenPackId(packId);
 
-		if (FrozenLibConfig.get().packDownloading == PackDownloadSetting.DISABLED) return;
+		if (FrozenLibConfig.PACK_DOWNLOADING.get() == PackDownloadSetting.DISABLED) return;
 
 		CompletableFuture.supplyAsync(
 			() -> {
@@ -439,7 +445,7 @@ public class FrozenLibModResourcePackApi {
 	@ApiStatus.Internal
 	private record ToastInfo(PackDownloadInfo downloadInfo, ToastType toastType) {
 		public boolean addToast() {
-			if (FrozenLibConfig.get().packDownloading != PackDownloadSetting.ENABLED) return false;
+			if (FrozenLibConfig.PACK_DOWNLOADING.get() != PackDownloadSetting.ENABLED) return false;
 
 			final Minecraft minecraft = Minecraft.getInstance();
 			if (minecraft == null || minecraft.getToastManager() == null || minecraft.getResourceManager() == null) {
@@ -480,6 +486,10 @@ public class FrozenLibModResourcePackApi {
 		ENABLED("pack_downloading.enabled"),
 		ENABLED_NO_TOASTS("pack_downloading.enabled_no_toasts"),
 		DISABLED("pack_downloading.disabled");
+
+		public static final Codec<PackDownloadSetting> CODEC = StringRepresentable.fromEnum(PackDownloadSetting::values);
+		public static final StreamCodec<ByteBuf, PackDownloadSetting> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+		public static final EntryType<PackDownloadSetting> ENTRY_TYPE = EntryType.create(CODEC, STREAM_CODEC);
 		private final String name;
 
 		PackDownloadSetting(String name) {
