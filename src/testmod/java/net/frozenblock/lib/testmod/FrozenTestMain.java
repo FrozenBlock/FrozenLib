@@ -24,6 +24,9 @@ import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.advancement.api.AdvancementAPI;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
 import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
+import net.frozenblock.lib.config.api.instance.ConfigModification;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
@@ -54,6 +57,19 @@ public final class FrozenTestMain implements ModInitializer {
     @Override
     public void onInitialize() {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
+
+		ConfigRegistry.register(FrozenLibConfig.INSTANCE, new ConfigModification<>(config -> {
+			config.saveItemCooldowns = true;
+			config.useWindOnNonFrozenServers = true;
+			config.removeExperimentalWarning = true;
+			config.wardenSpawnTrackerCommand = true;
+		}));
+
+		FrozenLibConfig.SAVE_ITEM_COOLDOWNS.modify(entry -> entry.value = true);
+		FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS_ENTRY.modify(entry -> entry.value = true);
+		FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.modify(entry -> entry.value = true);
+		FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.modify(entry -> entry.value = true);
+
         LOGGER.info("The test toggle value is {}", TestConfig.testToggle.get());
         LOGGER.info("The test vec3 value is {}", TestConfig.typedVecList.get());
 		Holder<SoundEvent> sound = TestConfig.randomSound.get();

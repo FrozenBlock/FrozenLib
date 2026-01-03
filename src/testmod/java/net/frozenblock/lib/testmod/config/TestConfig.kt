@@ -26,9 +26,7 @@ import net.frozenblock.lib.config.newconfig.config.ConfigData
 import net.frozenblock.lib.config.newconfig.config.ConfigSettings
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry
 import net.frozenblock.lib.config.newconfig.entry.EntryType
-import net.frozenblock.lib.config.newconfig.entry.GameEntryTypes
 import net.frozenblock.lib.config.newconfig.entry.property.VisibilityPredicate
-import net.frozenblock.lib.testmod.config.TestConfig.SubMenu
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
@@ -84,7 +82,7 @@ object TestConfig {
     @Comment("This is a Vec3 list typed entry.")
     var typedVecList: ConfigEntry<List<Vec3>> = CONFIG.entry(
         "typedVecList",
-        GameEntryTypes.VEC3.asList(),
+        EntryType.VEC3.asList(),
         listOf(
             Vec3(0.0, 0.0, 0.0),
             Vec3(1.0, 1.0, 1.0)
