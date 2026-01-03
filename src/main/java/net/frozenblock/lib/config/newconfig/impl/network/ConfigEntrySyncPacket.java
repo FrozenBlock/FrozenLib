@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @since 2.4
  */
-public record ConfigEntrySyncPacket<T>(ID entryId, T entryData) implements CustomPacketPayload {
+public record ConfigEntrySyncPacket<T>(ID entryId, String className, T entryData) implements CustomPacketPayload {
 	public static final Type<ConfigEntrySyncPacket<?>> PACKET_TYPE = new Type<>(FrozenLibConstants.id("config_entry_sync_packet"));
 	// TODO: fix the codec to use entry stream codec
 	public static final StreamCodec<FriendlyByteBuf, ConfigEntrySyncPacket<?>> CODEC = StreamCodec.ofMember(ConfigEntrySyncPacket::write, ConfigEntrySyncPacket::create);
@@ -52,7 +52,7 @@ public record ConfigEntrySyncPacket<T>(ID entryId, T entryData) implements Custo
 		try {
 			String className = buf.readUtf();
 			final T entryData = ConfigEntryByteBufUtil.readUbjson(buf, entryId, className);
-			return new ConfigEntrySyncPacket<>(entryId, entryData);
+			return new ConfigEntrySyncPacket<>(entryId, className, entryData);
 		} catch (Exception e) {
 			throw new RuntimeException("Failed to read config data from packet.", e);
 		}
@@ -60,6 +60,7 @@ public record ConfigEntrySyncPacket<T>(ID entryId, T entryData) implements Custo
 
 	public void write(FriendlyByteBuf buf) {
 		buf.writeUtf(this.entryId.toString());
+		buf.writeUtf(this.className);
 		try {
 			ConfigEntryByteBufUtil.writeUbjson(buf, this.entryId, this.entryData);
 		} catch (Exception e) {
@@ -90,7 +91,7 @@ public record ConfigEntrySyncPacket<T>(ID entryId, T entryData) implements Custo
 
 		for (ConfigEntry<?> entry : entries) {
 			if (!entry.isSyncable()) continue;
-			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry.getId(), entry.get());
+			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry.getId(), entry.entryClass().getName(), entry.get());
 			ServerPlayNetworking.send(player, packet);
 		}
 	}
@@ -105,7 +106,7 @@ public record ConfigEntrySyncPacket<T>(ID entryId, T entryData) implements Custo
 
 		for (ConfigEntry<?> entry : entries) {
 			if (!entry.isSyncable()) continue;
-			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry.getId(), entry.getActual());
+			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry.getId(), entry.entryClass().getName(), entry.getActual());
 			ClientPlayNetworking.send(packet);
 		}
 	}
