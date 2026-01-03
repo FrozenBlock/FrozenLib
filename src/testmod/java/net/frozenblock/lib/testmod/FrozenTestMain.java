@@ -54,9 +54,9 @@ public final class FrozenTestMain implements ModInitializer {
     @Override
     public void onInitialize() {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
-        LOGGER.info("The test toggle value is {}", TestConfig.get().testToggle);
-        LOGGER.info("The test vec3 value is {}", TestConfig.get().typedVecList);
-		Holder<SoundEvent> sound = TestConfig.get().randomSound.value();
+        LOGGER.info("The test toggle value is {}", TestConfig.testToggle.get());
+        LOGGER.info("The test vec3 value is {}", TestConfig.typedVecList.get());
+		Holder<SoundEvent> sound = TestConfig.randomSound.get();
         LOGGER.info("The test soundevent value is {} and its ID is {}", sound, sound.unwrapKey().orElseThrow());
 
         BlockScheduledTicks.addToBlock(Blocks.DIAMOND_BLOCK, (state, world, pos, random) -> world.setBlock(pos,

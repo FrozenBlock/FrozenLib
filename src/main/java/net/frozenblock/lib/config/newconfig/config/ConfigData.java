@@ -18,25 +18,26 @@
 package net.frozenblock.lib.config.newconfig.config;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.List;
 import java.util.Map;
 import net.frozenblock.lib.config.newconfig.ConfigSerializer;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.entry.EntryType;
 import net.frozenblock.lib.config.newconfig.entry.property.EntryProperties;
+import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
+import net.frozenblock.lib.config.newconfig.registry.ID;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.Identifier;
 
 public class ConfigData<T> {
-	private final Identifier id;
+	private final ID id;
 	private final ConfigSettings<T> settings;
+	private final Map<String, ConfigEntry<?>> entries = new Object2ObjectOpenHashMap<>();
 	private final Map<String, Object> unoptimizedConfigMap = new Object2ObjectOpenHashMap<>();
-	private final Map<Identifier, Object> optimizedConfigMap = new Object2ObjectOpenHashMap<>();
+	private final Map<ID, Object> optimizedConfigMap = new Object2ObjectOpenHashMap<>();
 	public boolean loaded;
 	public boolean optimizedMap;
 
-	public ConfigData(Identifier id, ConfigSettings<T> settings) {
+	public ConfigData(ID id, ConfigSettings<T> settings) {
 		this.id = id;
 		this.settings = settings;
 	}
@@ -44,20 +45,22 @@ public class ConfigData<T> {
 	static {
 		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (!allRegistries) return;
-			FrozenLibRegistries.CONFIG_DATA.forEach(ConfigData::optimizeConfigMap);
+			ConfigV2Registry.CONFIG_DATA.values().forEach(ConfigData::optimizeConfigMap);
 		});
 	}
 
-	public static <T> ConfigData<T> createAndRegister(Identifier id, ConfigSettings<T> settings) {
-		return Registry.register(FrozenLibRegistries.CONFIG_DATA, id, new ConfigData<>(id, settings));
+	public static <T> ConfigData<T> createAndRegister(ID id, ConfigSettings<T> settings) {
+		final ConfigData<T> configData = new ConfigData<>(id, settings);
+		ConfigV2Registry.CONFIG_DATA.put(id, configData);
+		return configData;
 	}
 
 	public <B> ConfigEntry<B> entry(String id, EntryType<B> type, B defaultValue) {
-		return new ConfigEntry<>(this, id, type, defaultValue, true, true);
+		return (ConfigEntry<B>) this.entries.computeIfAbsent(id, id1 -> new ConfigEntry<>(this, id1, type, defaultValue, true, true));
 	}
 
 	public <B> ConfigEntry<B> unsyncableEntry(String id, EntryType<B> type, B defaultValue) {
-		return new ConfigEntry<>(this, id, type, defaultValue, false, true);
+		return (ConfigEntry<B>) this.entries.computeIfAbsent(id, id1 -> new ConfigEntry<>(this, id1, type, defaultValue, false, true));
 	}
 
 	public <B> ConfigEntry.Builder<B> entryBuilder(String id, EntryType<B> type, B defaultValue) {
@@ -72,12 +75,16 @@ public class ConfigData<T> {
 		return new ConfigEntry.Builder<B>(this).id(id).type(type).defaultValue(defaultValue).properties(EntryProperties.builderOf(syncable, modifiable));
 	}
 
-	public Identifier id() {
+	public ID id() {
 		return this.id;
 	}
 
 	public ConfigSettings<T> settings() {
 		return this.settings;
+	}
+
+	public Map<String, ConfigEntry<?>> entries() {
+		return this.entries;
 	}
 
 	public boolean isLoaded() {
@@ -108,4 +115,7 @@ public class ConfigData<T> {
 		if (this.optimizedMap) this.optimizeConfigMap();
 	}
 
+	public void save() {
+		ConfigSerializer.saveConfig(this);
+	}
 }

@@ -33,21 +33,24 @@ import net.frozenblock.lib.config.newconfig.entry.EntryType;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 
 public class FrozenLibConfig {
-	public static final ConfigData<?> CONFIG = ConfigData.createAndRegister(FrozenLibConstants.id("frozenlib"), ConfigSettings.JSON5_UNQUOTED_KEYS);
+	public static final ConfigData<?> CONFIG = ConfigData.createAndRegister(FrozenLibConstants.config("frozenlib"), ConfigSettings.JSON5_UNQUOTED_KEYS);
 
-	public static final ConfigEntry<Boolean> USE_WIND_ON_NON_FROZEN_SERVERS_ENTRY = CONFIG.entry("use_wind_on_non_frozen_servers", EntryType.BOOL, true);
-	public static final ConfigEntry<Boolean> SAVE_ITEM_COOLDOWNS = CONFIG.entry("save_item_cooldowns", EntryType.BOOL, false);
-	public static final ConfigEntry<Boolean> REMOVE_EXPERIMENTAL_WARNING = CONFIG.entry("remove_experimental_warning", EntryType.BOOL, false);
-	public static final ConfigEntry<Boolean> WARDEN_SPAWN_TRACKER_COMMAND = CONFIG.entry("warden_spawn_tracker_command", EntryType.BOOL, false);
-	public static final ConfigEntry<Boolean> FILE_TRANSFER_SERVER_ENTRY = CONFIG.entry("file_transfer_server", EntryType.BOOL, true);
-	public static final ConfigEntry<Boolean> FILE_TRANSFER_CLIENT_ENTRY = CONFIG.entry("file_transfer_client", EntryType.BOOL, true);
-
-	// TODO packDownloads
+	public static final ConfigEntry<Boolean> USE_WIND_ON_NON_FROZEN_SERVERS_ENTRY = CONFIG.entry("useWindOnNonFrozenServers", EntryType.BOOL, true);
+	public static final ConfigEntry<Boolean> SAVE_ITEM_COOLDOWNS = CONFIG.entry("saveItemCooldowns", EntryType.BOOL, false);
+	public static final ConfigEntry<Boolean> REMOVE_EXPERIMENTAL_WARNING = CONFIG.entry("removeExperimentalWarning", EntryType.BOOL, false);
+	public static final ConfigEntry<Boolean> WARDEN_SPAWN_TRACKER_COMMAND = CONFIG.entry("wardenSpawnTrackerCommand", EntryType.BOOL, false);
+	public static final ConfigEntry<Boolean> FILE_TRANSFER_SERVER_ENTRY = CONFIG.entry("fileTransferServer", EntryType.BOOL, true);
+	public static final ConfigEntry<Boolean> FILE_TRANSFER_CLIENT_ENTRY = CONFIG.entry("fileTransferClient", EntryType.BOOL, true);
+	public static final ConfigEntry<FrozenLibModResourcePackApi.PackDownloadSetting> PACK_DOWNLOADING = CONFIG.entry(
+		"packDownloading",
+		FrozenLibModResourcePackApi.PackDownloadSetting.ENTRY_TYPE,
+		FrozenLibModResourcePackApi.PackDownloadSetting.ENABLED
+	);
 	public static final ConfigEntry<String> CAPE = CONFIG.unsyncableEntry("cape", EntryType.STRING, FrozenLibConstants.string("dummy"));
 
 	// datafixer config
 	public static final ConfigEntry<List<String>> DISABLED_DATA_FIX_TYPES = CONFIG.entryBuilder(
-		"datafixer/disabled_data_fix_types",
+		"dataFixer/disabledDataFixTypes",
 		EntryType.STRING.asList(),
 		List.of("world_gen_settings")
 	).comment("Mods can only add to this list. User settings will always apply.").build();
