@@ -31,7 +31,10 @@ import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.instance.xjs.XjsFormat;
 import net.frozenblock.lib.config.api.instance.xjs.XjsObjectMapper;
 import net.frozenblock.lib.config.api.instance.xjs.XjsOps;
+import xjs.data.Json;
+import xjs.data.JsonObject;
 import xjs.data.JsonValue;
+import xjs.data.serialization.JsonContext;
 import xjs.data.serialization.writer.ValueWriter;
 
 public class ConfigSettings<T> {
@@ -116,6 +119,11 @@ public class ConfigSettings<T> {
 			try (ValueWriter writer = XjsFormat.DJS.createWriter(path.toFile())) {
 				writer.write(value);
 			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
+			return new Object2ObjectLinkedOpenHashMap<>(value.toMap(value1 -> value1));
 		}
 	);
 	public static final ConfigSettings<JsonValue> XJS_JSON = new ConfigSettings<>(
@@ -130,6 +138,11 @@ public class ConfigSettings<T> {
 			try (ValueWriter writer = XjsFormat.JSON.createWriter(path.toFile())) {
 				writer.write(value);
 			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
+			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
 		}
 	);
 	public static final ConfigSettings<JsonValue> JSONC = new ConfigSettings<>(
@@ -144,6 +157,11 @@ public class ConfigSettings<T> {
 			try (ValueWriter writer = XjsFormat.JSONC.createWriter(path.toFile())) {
 				writer.write(value);
 			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
+			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
 		}
 	);
 	public static final ConfigSettings<JsonValue> HJSON = new ConfigSettings<>(
@@ -158,6 +176,11 @@ public class ConfigSettings<T> {
 			try (ValueWriter writer = XjsFormat.HJSON.createWriter(path.toFile())) {
 				writer.write(value);
 			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
+			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
 		}
 	);
 	public static final ConfigSettings<JsonValue> TXT = new ConfigSettings<>(
@@ -172,6 +195,11 @@ public class ConfigSettings<T> {
 			try (ValueWriter writer = XjsFormat.TXT.createWriter(path.toFile())) {
 				writer.write(value);
 			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
+			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
 		}
 	);
 	public static final ConfigSettings<JsonValue> UBJSON = new ConfigSettings<>(
@@ -186,6 +214,11 @@ public class ConfigSettings<T> {
 			try (ValueWriter writer = XjsFormat.UBJSON.createWriter(path.toFile())) {
 				writer.write(value);
 			}
+		},
+		(path) -> {
+			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
+			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
 		}
 	);
 
@@ -204,14 +237,6 @@ public class ConfigSettings<T> {
 		this.dynamicOps = dynamicOps;
 		this.saveFunction = saveFunction;
 		this.loadFunction = loadFunction;
-	}
-
-	public ConfigSettings(
-		String fileExtension,
-		DynamicOps<T> dynamicOps,
-		SaveFunction saveFunction
-	) {
-		this(fileExtension, dynamicOps, saveFunction, null);
 	}
 
 	public String fileExtension() {

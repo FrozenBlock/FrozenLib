@@ -19,49 +19,65 @@ package net.frozenblock.lib.config.newconfig.entry;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.entry.property.EntryProperties;
 import net.frozenblock.lib.config.newconfig.entry.property.VisibilityPredicate;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.core.Registry;
+import net.frozenblock.lib.config.newconfig.modification.ConfigEntryModification;
+import net.frozenblock.lib.config.newconfig.modification.EntryValueHolder;
+import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
+import net.frozenblock.lib.config.newconfig.registry.ID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.Identifier;
 
 public class ConfigEntry<T> {
-	private final ConfigData configData;
-	private final Identifier id;
+	private final ConfigData<?> configData;
+	private final ID id;
 	private final EntryType<T> type;
 	private final T defaultValue;
 	private final EntryProperties properties;
 
+	private final List<ConfigEntryModification<T>> modifications = new ArrayList<>();
+
 	private T value;
+	private Optional<T> modifiedValue = Optional.empty();
 	private Optional<T> syncedValue = Optional.empty();
 	private boolean dirty;
 	private boolean hasCheckedLoad;
 
-	public ConfigEntry(ConfigData data, String id, EntryType<T> type, T defaultValue, EntryProperties properties) {
+	public ConfigEntry(ConfigData<?> data, String id, EntryType<T> type, T defaultValue, EntryProperties properties) {
 		this.configData = data;
 		this.id = data.id().withSuffix("/" + id);
 		this.type = type;
 		this.defaultValue = defaultValue;
 		this.value = defaultValue;
 		this.properties = properties;
-		Registry.register(FrozenLibRegistries.CONFIG_ENTRY, id, this);
+		ConfigV2Registry.CONFIG_ENTRY.put(this.id, this);
 	}
 
-	public ConfigEntry(ConfigData data, String id, EntryType<T> type, T defaultValue, boolean syncable, boolean modifiable) {
+	public ConfigEntry(ConfigData<?> data, String id, EntryType<T> type, T defaultValue, boolean syncable, boolean modifiable) {
 		this(data, id, type, defaultValue, EntryProperties.of(syncable, modifiable));
 	}
 
 	public T get() {
-		return this.syncedValue.orElseGet(this::getActual);
+		return this.syncedValue.orElse(this.modifiedValue.orElseGet(this::getActual));
 	}
 
 	public T getActual() {
 		this.ensureIsLoaded();
 		return this.value;
+	}
+
+	public T getWithSync() {
+		this.ensureIsLoaded();
+		return this.syncedValue.orElse(this.value);
+	}
+
+	public boolean isSyncable() {
+		return this.properties.isSyncable();
 	}
 
 	public void setValue(T value) {
@@ -89,6 +105,19 @@ public class ConfigEntry<T> {
 		this.syncedValue = Optional.empty();
 	}
 
+	public void modify(Consumer<EntryValueHolder<T>> modification) {
+		this.modifications.add(new ConfigEntryModification<>(modification));
+		this.invalidateModifications();
+	}
+
+	public void invalidateModifications() {
+		this.modifiedValue = Optional.ofNullable(ConfigEntryModification.modifyEntry(this, this.getActual()));
+	}
+
+	public List<ConfigEntryModification<T>> modifications() {
+		return this.modifications;
+	}
+
 	public boolean isUnsaved() {
 		return this.dirty;
 	}
@@ -105,23 +134,27 @@ public class ConfigEntry<T> {
 		this.dirty = false;
 	}
 
+	public Class<T> entryClass() {
+		return (Class<T>) this.defaultValue.getClass();
+	}
+
 	protected Component getDisplayName() {
-		return Component.translatable("option." + this.id.getNamespace() + "." + this.id.getPath().replace("/", "."));
+		return Component.translatable("option." + this.id.namespace() + "." + this.id.path().replace("/", "."));
 	}
 
 	protected Component getTooltip() {
-		return Component.translatable("tooltip." + this.id.getNamespace() + "." + this.id.getPath().replace("/", "."));
+		return Component.translatable("tooltip." + this.id.namespace() + "." + this.id.path().replace("/", "."));
 	}
 
 	public boolean hasComment() {
 		return this.properties.hasComment();
 	}
 
-	public ConfigData getConfigData() {
+	public ConfigData<?> getConfigData() {
 		return this.configData;
 	}
 
-	public Identifier getId() {
+	public ID getId() {
 		return this.id;
 	}
 
@@ -142,13 +175,13 @@ public class ConfigEntry<T> {
 	}
 
 	public static class Builder<T> {
-		final ConfigData data;
+		final ConfigData<?> data;
 		String id = null;
 		EntryType<T> type = null;
 		T defaultValue = null;
 		EntryProperties.Builder properties = EntryProperties.builder();
 
-		public Builder(ConfigData data) {
+		public Builder(ConfigData<?> data) {
 			this.data = data;
 		}
 
@@ -173,21 +206,33 @@ public class ConfigEntry<T> {
 		}
 
 		public Builder<T> syncable(boolean syncable) {
+			if (this.properties == null) {
+				this.properties = EntryProperties.builder();
+			}
 			this.properties.syncable(syncable);
 			return this;
 		}
 
 		public Builder<T> modifiable(boolean modifiable) {
+			if (this.properties == null) {
+				this.properties = EntryProperties.builder();
+			}
 			this.properties.modifiable(modifiable);
 			return this;
 		}
 
 		public Builder<T> comment(String comment) {
+			if (this.properties == null) {
+				this.properties = EntryProperties.builder();
+			}
 			this.properties.comment(comment);
 			return this;
 		}
 
 		public Builder<T> visibilityPredicate(VisibilityPredicate predicate) {
+			if (this.properties == null) {
+				this.properties = EntryProperties.builder();
+			}
 			this.properties.visibilityPredicate(predicate);
 			return this;
 		}

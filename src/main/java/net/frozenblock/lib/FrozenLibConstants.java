@@ -19,6 +19,7 @@ package net.frozenblock.lib;
 
 import java.nio.file.Path;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.config.newconfig.registry.ID;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;
@@ -44,6 +45,11 @@ public final class FrozenLibConstants {
 	@Contract("_ -> new")
 	public static Identifier id(String path) {
 		return Identifier.fromNamespaceAndPath(FrozenLibConstants.MOD_ID, path);
+	}
+
+	@Contract("_ -> new")
+	public static ID config(String path) {
+		return new ID(FrozenLibConstants.MOD_ID, path);
 	}
 
 	public static String string(String path) {

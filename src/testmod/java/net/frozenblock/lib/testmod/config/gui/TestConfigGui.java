@@ -26,6 +26,7 @@ import net.frozenblock.lib.config.api.client.gui.EntryBuilder;
 import net.frozenblock.lib.config.api.client.gui.Slider;
 import net.frozenblock.lib.config.api.client.gui.SliderType;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
+import net.frozenblock.lib.config.newconfig.ConfigSerializer;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,28 +38,26 @@ public class TestConfigGui {
 
 	@Environment(EnvType.CLIENT)
 	public static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
-		var config = TestConfig.get(true);
-		var defaultConfig = TestConfig.INSTANCE.defaultInstance();
-		var subMenu = config.subMenu;
+		var subMenu = TestConfig.subMenu.getActual();
 		category.setBackground(Identifier.withDefaultNamespace("textures/block/packed_mud.png"));
 
-		var test = category.addEntry(entryBuilder.startBooleanToggle(text("test_toggle"), config.testToggle)
-				.setDefaultValue(defaultConfig.testToggle)
-				.setSaveConsumer(newValue -> config.testToggle = newValue)
+		var test = category.addEntry(entryBuilder.startBooleanToggle(text("test_toggle"), TestConfig.testToggle.getActual())
+				.setDefaultValue(TestConfig.testToggle.getDefaultValue())
+				.setSaveConsumer(TestConfig.testToggle::setValue)
 				.setTooltip(tooltip("test_toggle"))
 				.build()
 		);
 
-		var sliderTest = new EntryBuilder<>(Component.literal("This is wild"), new Slider<>(config.testInt, 0, 100, SliderType.INT.INSTANCE),
-			new Slider<>(defaultConfig.testInt, 0, 100, SliderType.INT.INSTANCE),
-			newValue -> config.testInt = newValue.getValue().intValue(),
+		var sliderTest = new EntryBuilder<>(Component.literal("This is wild"), new Slider<>(TestConfig.testInt.getActual(), 0, 100, SliderType.INT.INSTANCE),
+			new Slider<>(TestConfig.testInt.getDefaultValue(), 0, 100, SliderType.INT.INSTANCE),
+			newValue -> TestConfig.testInt.setValue(newValue.getValue().intValue()),
 			null,
 			false,
 			null
 		).build(entryBuilder);
 
 		var testSubMenuBoolean = entryBuilder.startBooleanToggle(text("sub_option"), subMenu.subOption)
-				.setDefaultValue(defaultConfig.subMenu.subOption)
+				.setDefaultValue(TestConfig.subMenu.getDefaultValue().subOption)
 				.setSaveConsumer(newValue -> subMenu.subOption = newValue)
 				.setTooltip(tooltip("sub_option"))
 				.build();
@@ -72,7 +71,7 @@ public class TestConfigGui {
 
 	public static Screen buildScreen(Screen parent) {
 		var configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(text("component.title"));
-		configBuilder.setSavingRunnable(TestConfig.INSTANCE::save);
+		configBuilder.setSavingRunnable(TestConfig.CONFIG::save);
 		var config = configBuilder.getOrCreateCategory(text("config"));
 		ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();
 		setupEntries(config, entryBuilder);
