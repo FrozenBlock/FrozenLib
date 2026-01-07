@@ -88,7 +88,7 @@ public class ClientCapeData {
 		ClientLifecycleEvents.CLIENT_STOPPING.register(client -> CAPES_IN_WORLD.clear());
 		ClientPlayConnectionEvents.DISCONNECT.register((clientPacketListener, minecraft) -> CAPES_IN_WORLD.clear());
 		ClientPlayConnectionEvents.JOIN.register((clientPacketListener, packetSender, minecraft) -> {
-			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), Identifier.parse(FrozenLibConfig.get().cape)));
+			ClientPlayNetworking.send(CapeCustomizePacket.createPacket(minecraft.getUser().getProfileId(), Identifier.parse(FrozenLibConfig.CAPE.get())));
 		});
 		ClientEntityEvents.ENTITY_LOAD.register((entity, clientLevel) -> {
 			getCapeTexture(entity.getUUID()).ifPresent(capeTexture -> setCape(entity, capeTexture));

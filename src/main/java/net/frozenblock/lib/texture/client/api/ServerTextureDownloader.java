@@ -102,7 +102,7 @@ public class ServerTextureDownloader {
 
 			return image;
 		} else {
-			if (FrozenLibConfig.FILE_TRANSFER_CLIENT && texture != null) {
+			if (FrozenLibConfig.FILE_TRANSFER_CLIENT.get() && texture != null) {
 				ClientPlayNetworking.send(FileTransferPacket.createRequest(destPath, fileName));
 				WAITING_TEXTURES.put(makePathFromRootAndDest(destPath, fileName), texture);
 				LOGGER.debug("Requesting server texture from {}", path);

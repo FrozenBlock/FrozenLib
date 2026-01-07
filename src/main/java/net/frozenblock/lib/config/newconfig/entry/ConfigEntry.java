@@ -81,6 +81,10 @@ public class ConfigEntry<T> {
 		return this.properties.isSyncable();
 	}
 
+	public boolean isSynced() {
+		return this.syncedValue.isPresent();
+	}
+
 	public void setValue(T value) {
 		this.setValue(value, true);
 	}

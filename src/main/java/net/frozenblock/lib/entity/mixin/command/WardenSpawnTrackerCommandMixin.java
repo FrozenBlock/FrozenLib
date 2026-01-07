@@ -59,7 +59,7 @@ public abstract class WardenSpawnTrackerCommandMixin {
 		)
 	)
 	private static LiteralCommandNode<CommandSourceStack> frozenLib$register(CommandDispatcher<CommandSourceStack> dispatcher, LiteralArgumentBuilder<CommandSourceStack> builder, Operation<LiteralCommandNode<CommandSourceStack>> operation) {
-		if (!FrozenLibConfig.get().wardenSpawnTrackerCommand) return operation.call(dispatcher, builder);
+		if (!FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.get()) return operation.call(dispatcher, builder);
 
 		return dispatcher.register(
 			Commands.literal("warden_spawn_tracker")
@@ -98,7 +98,7 @@ public abstract class WardenSpawnTrackerCommandMixin {
 		)
 	)
 	private static void frozenLib$modifySetWarningLevel(CommandSourceStack source, Supplier<Component> supplier, boolean broadcastToOps, Operation<Void> operation, CommandSourceStack source1, Collection<? extends Player> targets, int warningLevel) {
-		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
+		if (FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.get()) {
 			source.sendSuccess(() -> Component.translatable("commands.warden_spawn_tracker.set.success.single", warningLevel, targets.iterator().next().getDisplayName()), true);
 			return;
 		}
@@ -114,7 +114,7 @@ public abstract class WardenSpawnTrackerCommandMixin {
 		)
 	)
 	private static void frozenLib$modifySetWarningLevelMultiple(CommandSourceStack source, Supplier<Component> supplier, boolean broadcastToOps, Operation<Void> operation, CommandSourceStack source1, Collection<? extends Player> targets, int warningLevel) {
-		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
+		if (FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.get()) {
 			source.sendSuccess(() -> Component.translatable("commands.warden_spawn_tracker.set.success.multiple", warningLevel, targets.size()), true);
 			return;
 		}

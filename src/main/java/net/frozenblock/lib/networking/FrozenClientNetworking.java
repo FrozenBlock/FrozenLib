@@ -35,8 +35,9 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
-import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.impl.network.ConfigEntrySyncPacket;
+import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.file.transfer.FileTransferRebuilder;
@@ -120,14 +121,11 @@ public final class FrozenClientNetworking {
 		receiveFileTransferPacket();
 		receiveCapePacket();
 		receiveCapeRepoPacket();
-		ClientPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, (packet, ctx) ->
-			ConfigSyncPacket.receive(packet, null)
-		);
 		ClientPlayNetworking.registerGlobalReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, ctx) ->
 			ConfigEntrySyncPacket.receive(packet, null)
 		);
 		ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
-			for (Config<?> config : ConfigRegistry.getAllConfigs()) ConfigSyncModification.clearSyncData(config);
+			for (ConfigEntry<?> config : ConfigV2Registry.CONFIG_ENTRY.values()) ConfigSyncModification.clearSyncData(config);
 		}));
 
 		// DEBUG
@@ -402,7 +400,7 @@ public final class FrozenClientNetworking {
 
 	private static void receiveFileTransferPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
-			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT) return;
+			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT.get()) return;
 
 			if (packet.request()) {
 				final String requestPath = packet.transferPath();

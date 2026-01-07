@@ -26,7 +26,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
-import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.config.newconfig.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
@@ -54,7 +54,7 @@ public class TooltipListEntryMixin {
 			disableableWidgetInterface.frozenLib$hasValidData()
 			&& disableableWidgetInterface.frozenLib$isSyncable()
 			&& FrozenNetworking.isMultiplayer()
-			&& ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false)
+			&& ConfigEntrySyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false)
 		) {
 			final Component entrySyncNotice = Component.translatable("tooltip.frozenlib.entry_sync_notice");
 			return list.isEmpty()

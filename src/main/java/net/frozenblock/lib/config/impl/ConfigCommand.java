@@ -20,10 +20,15 @@ package net.frozenblock.lib.config.impl;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import java.util.Collection;
+import java.util.Map;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.config.newconfig.config.ConfigData;
+import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
+import net.frozenblock.lib.config.newconfig.impl.network.ConfigEntrySyncPacket;
+import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
+import net.frozenblock.lib.config.newconfig.registry.ID;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -44,9 +49,9 @@ public final class ConfigCommand {
 	}
 
 	private static int reloadConfigs(CommandSourceStack source, String modId) {
-		final Collection<Config<?>> configs = ConfigRegistry.getConfigsForMod(modId);
-		for (Config<?> config : configs) config.load();
-		for (ServerPlayer player : PlayerLookup.all(source.getServer())) ConfigSyncPacket.sendS2C(player, configs);
+		final Map<ID, ConfigData<?>> configs = ConfigV2Registry.CONFIG_DATA;
+		for (ConfigData<?> config : configs.values()) config.load(false);
+		for (ServerPlayer player : PlayerLookup.all(source.getServer())) ConfigEntrySyncPacket.sendS2C(player, configs.values());
 
 		if (configs.size() == 1) {
 			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.single", modId), true);

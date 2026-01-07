@@ -26,9 +26,9 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.api.sync.annotation.EntrySyncData;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
+import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
@@ -47,29 +47,10 @@ public abstract class DynamicEntryListWidgetEntryMixin implements DisableableWid
 
 	@Unique
 	@Override
-    public void frozenLib$addSyncData(Class<?> clazz, String identifier, Config<?> configInstance) {
-		if (identifier.isEmpty()) {
-			new Exception("Cannot process sync value with empty identifier!").printStackTrace();
-			return;
-		}
-
-		Field field = null;
-		for (Field fieldToCheck : clazz.getDeclaredFields()) {
-			final EntrySyncData entrySyncData = fieldToCheck.getAnnotation(EntrySyncData.class);
-			if (entrySyncData == null || entrySyncData.value().isEmpty() || !entrySyncData.value().equals(identifier)) continue;
-
-			if (field != null) FrozenLibLogUtils.logError("Multiple fields in " + clazz.getName() + " contain identifier " + identifier + "!", true, null);
-			field = fieldToCheck;
-		}
-		final Field finalField = field;
-		if (finalField == null) {
-			new Exception("No such field with identifier " + identifier + " exists in " + clazz.getName() + "!").printStackTrace();
-			return;
-		}
-
+    public void frozenLib$addSyncData(ConfigEntry<?> configInstance) {
 		final Requirement nonSyncRequirement = () -> {
-			this.frozenLib$entryPermissionType = ConfigSyncModification.canModifyField(finalField, configInstance);
-			this.frozenLib$isSyncable = ConfigSyncModification.isSyncable(finalField);
+			this.frozenLib$entryPermissionType = ConfigSyncModification.canModify(configInstance);
+			this.frozenLib$isSyncable = configInstance.isSyncable();
 			return this.frozenLib$entryPermissionType.canModify;
 		};
 

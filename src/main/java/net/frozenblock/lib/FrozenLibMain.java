@@ -153,7 +153,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
 		}));
 
-		if (FrozenLibConfig.get().wardenSpawnTrackerCommand) {
+		if (FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.get()) {
 			CommandRegistrationCallback.EVENT.register(
 				((dispatcher, registryAccess, environment) -> WardenSpawnTrackerCommand.register(dispatcher))
 			);

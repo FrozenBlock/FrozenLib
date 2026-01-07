@@ -20,13 +20,18 @@
 
 package net.frozenblock.lib.config.clothconfig
 
+import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget
+import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
-import net.frozenblock.lib.config.api.instance.Config
-import kotlin.reflect.KClass
+import net.frozenblock.lib.config.newconfig.entry.ConfigEntry
 
-fun <T : DynamicEntryListWidget.Entry<*>> T.synced(clazz: KClass<*>, identifier: String, config: Config<*>): T = this.apply {
-    FrozenClothConfig.syncedEntry(this, clazz.java, identifier, config)
+fun <T, A : AbstractConfigListEntry<T>, B : AbstractFieldBuilder<T, A, B>> B.entry(entry: ConfigEntry<T>): B = this.apply {
+    FrozenClothConfig.entry(this, entry)
+}
+
+fun <T, A : AbstractConfigListEntry<T>, B : AbstractFieldBuilder<T, A, B>> B.synced(entry: ConfigEntry<T>): B = this.apply {
+    FrozenClothConfig.syncedEntry(this, entry)
 }
 

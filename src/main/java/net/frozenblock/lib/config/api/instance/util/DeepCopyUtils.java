@@ -34,18 +34,18 @@ public final class DeepCopyUtils {
     public static <T> T deepCopy(T source) {
         if (source == null) return null;
         Map<Object, Object> seen = new IdentityHashMap<>();
-        return (T) deepCopyInternal(source, seen, false);
+        return (T) deepCopyInternal(source, seen);
     }
 
-    public static <T> void deepCopyInto(T source, T destination, boolean isSyncModification) {
+    public static <T> void deepCopyInto(T source, T destination) {
         if (source == null || destination == null) return;
         Map<Object, Object> seen = new IdentityHashMap<>();
         // Register destination for source root so cycles to root are preserved
         seen.put(source, destination);
-        deepCopyIntoInternal(source, destination, seen, isSyncModification);
+        deepCopyIntoInternal(source, destination, seen);
     }
 
-    private static Object deepCopyInternal(Object source, Map<Object, Object> seen, boolean isSyncModification) {
+    private static Object deepCopyInternal(Object source, Map<Object, Object> seen) {
         if (source == null) return null;
 
         // Handle previously seen instances (cycles / shared refs)
@@ -72,7 +72,7 @@ public final class DeepCopyUtils {
                 } else {
                     for (int i = 0; i < length; i++) {
                         Object elem = Array.get(source, i);
-                        Object copied = deepCopyInternal(elem, seen, isSyncModification);
+                        Object copied = deepCopyInternal(elem, seen);
                         Array.set(newArray, i, copied);
                     }
                 }
@@ -85,7 +85,7 @@ public final class DeepCopyUtils {
                 Collection<Object> newCol = instantiateCollection(col);
                 seen.put(source, newCol);
                 for (Object elem : col) {
-                    Object copied = deepCopyInternal(elem, seen, isSyncModification);
+                    Object copied = deepCopyInternal(elem, seen);
                     newCol.add(copied);
                 }
                 return newCol;
@@ -97,8 +97,8 @@ public final class DeepCopyUtils {
                 Map<Object, Object> newMap = instantiateMap(map);
                 seen.put(source, newMap);
                 for (Map.Entry<?, ?> e : map.entrySet()) {
-                    Object k = deepCopyInternal(e.getKey(), seen, isSyncModification);
-                    Object v = deepCopyInternal(e.getValue(), seen, isSyncModification);
+                    Object k = deepCopyInternal(e.getKey(), seen);
+                    Object v = deepCopyInternal(e.getValue(), seen);
                     newMap.put(k, v);
                 }
                 return newMap;
@@ -112,11 +112,10 @@ public final class DeepCopyUtils {
             while (curr != null && !curr.equals(Object.class)) {
                 for (Field field : curr.getDeclaredFields()) {
                     if (Modifier.isStatic(field.getModifiers())) continue;
-                    if (isSyncModification && !ConfigSyncModification.isSyncable(field)) continue;
 
                     field.setAccessible(true);
                     Object value = field.get(source);
-                    Object copied = deepCopyInternal(value, seen, isSyncModification);
+                    Object copied = deepCopyInternal(value, seen);
                     try {
                         field.set(newObj, copied);
                     } catch (IllegalAccessException iae) {
@@ -133,7 +132,7 @@ public final class DeepCopyUtils {
         }
     }
 
-    private static void deepCopyIntoInternal(Object source, Object destination, Map<Object, Object> seen, boolean isSyncModification) {
+    private static void deepCopyIntoInternal(Object source, Object destination, Map<Object, Object> seen) {
         if (source == null || destination == null) return;
         Class<?> cls = source.getClass();
 
@@ -149,7 +148,6 @@ public final class DeepCopyUtils {
             while (curr != null && !curr.equals(Object.class)) {
                 for (Field field : curr.getDeclaredFields()) {
                     if (Modifier.isStatic(field.getModifiers())) continue;
-                    if (isSyncModification && !ConfigSyncModification.isSyncable(field)) continue;
 
                     field.setAccessible(true);
                     Object value = field.get(source);
@@ -159,7 +157,7 @@ public final class DeepCopyUtils {
                     } else if (seen.containsKey(value)) {
                         copied = seen.get(value);
                     } else {
-                        copied = deepCopyInternal(value, seen, isSyncModification);
+                        copied = deepCopyInternal(value, seen);
                     }
 
                     try {

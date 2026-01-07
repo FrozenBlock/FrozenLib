@@ -17,18 +17,21 @@
 
 package net.frozenblock.lib.config.newconfig.impl.network;
 
+import java.util.Collection;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
+import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
+import net.frozenblock.lib.config.newconfig.modification.ConfigEntryModification;
 import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.newconfig.registry.ID;
+import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -36,6 +39,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.permissions.Permissions;
+import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -58,6 +63,15 @@ public record ConfigEntrySyncPacket<T>(ID entryId, String className, T entryData
 		}
 	}
 
+	public static boolean hasPermissionsToSendSync(@Nullable Player player, boolean serverSide) {
+		if (player == null) return false;
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+		if (FrozenClientNetworking.notConnected()) return false;
+
+		final boolean isHost = serverSide && FrozenNetworking.isLocalPlayer(player);
+		return FrozenNetworking.connectedToIntegratedServer() || isHost || player.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER);
+	}
+
 	public void write(FriendlyByteBuf buf) {
 		buf.writeUtf(this.entryId.toString());
 		buf.writeUtf(this.className);
@@ -76,7 +90,7 @@ public record ConfigEntrySyncPacket<T>(ID entryId, String className, T entryData
 		final ConfigEntry<T> entry = (ConfigEntry<T>) raw;
 		if (server != null) {
 			// C2S logic
-			ConfigModification.copyInto(packet.entryData(), entry.getActual());
+			ConfigEntryModification.copyInto(packet.entryData(), entry.getActual());
 			if (!FrozenNetworking.connectedToIntegratedServer()) entry.getConfigData().save();
 			for (ServerPlayer player : PlayerLookup.all(server)) sendS2C(player, List.of(entry));
 		} else {
@@ -85,6 +99,14 @@ public record ConfigEntrySyncPacket<T>(ID entryId, String className, T entryData
 		}
 		//entry.onSync(packet.entryData());
     }
+
+	public static void sendS2C(ServerPlayer player, Collection<ConfigData<?>> entries) {
+		if (FrozenNetworking.isLocalPlayer(player)) return;
+
+		for (ConfigData<?> entry : entries) {
+			sendS2C(player, entry.entries().values());
+		}
+	}
 
 	public static void sendS2C(ServerPlayer player, Iterable<ConfigEntry<?>> entries) {
 		if (FrozenNetworking.isLocalPlayer(player)) return;
@@ -118,7 +140,7 @@ public record ConfigEntrySyncPacket<T>(ID entryId, String className, T entryData
 
 	@Environment(EnvType.CLIENT)
 	public static <T> void trySendC2S(ConfigEntry<T> config) {
-		if (ConfigSyncPacket.hasPermissionsToSendSync(Minecraft.getInstance().player, false))
+		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false))
 			sendC2S(List.of(config));
 	}
 

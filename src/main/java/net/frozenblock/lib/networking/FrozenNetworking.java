@@ -32,7 +32,6 @@ import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import net.frozenblock.lib.config.newconfig.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
@@ -85,7 +84,6 @@ public final class FrozenNetworking {
 		}));
 
 		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {
-			ConfigSyncPacket.sendS2C(player);
 			ConfigEntrySyncPacket.sendS2C(player);
 			ServerCapeData.sendCapeReposToPlayer(player);
 		});
@@ -93,24 +91,15 @@ public final class FrozenNetworking {
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
 			if (error != null || server == null) return;
 			for (ServerPlayer player : PlayerLookup.all(server)) {
-				ConfigSyncPacket.sendS2C(player);
 				ConfigEntrySyncPacket.sendS2C(player);
 			}
 		});
-
-		c2sRegistry.register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
-		registry.register(ConfigSyncPacket.PACKET_TYPE, ConfigSyncPacket.CODEC);
-
-		ServerPlayNetworking.registerGlobalReceiver(ConfigSyncPacket.PACKET_TYPE, ((packet, ctx) -> {
-			if (ConfigSyncPacket.hasPermissionsToSendSync(ctx.player(), true))
-				ConfigSyncPacket.receive(packet, ctx.server());
-		}));
 
 		c2sRegistry.register(ConfigEntrySyncPacket.PACKET_TYPE, ConfigEntrySyncPacket.CODEC);
 		registry.register(ConfigEntrySyncPacket.PACKET_TYPE, ConfigEntrySyncPacket.CODEC);
 
 		ServerPlayNetworking.registerGlobalReceiver(ConfigEntrySyncPacket.PACKET_TYPE, ((packet, ctx) -> {
-			if (ConfigSyncPacket.hasPermissionsToSendSync(ctx.player(), true))
+			if (ConfigEntrySyncPacket.hasPermissionsToSendSync(ctx.player(), true))
 				ConfigEntrySyncPacket.receive(packet, ctx.server());
 		}));
 
@@ -164,7 +153,7 @@ public final class FrozenNetworking {
 					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on server!", fileName);
 				}
 			} else {
-				if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
+				if (!FrozenLibConfig.FILE_TRANSFER_SERVER.get()) return;
 
 				final String destPath = packet.transferPath().replace("/.local", "");
 				final String fileName = packet.fileName();

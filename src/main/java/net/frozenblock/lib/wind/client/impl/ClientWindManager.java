@@ -151,7 +151,7 @@ public final class ClientWindManager {
 	 * @return whether wind is currently enabled.
 	 */
 	public static boolean shouldUseWind() {
-		return hasInitialized || FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS;
+		return hasInitialized || FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS.get();
 	}
 
 	@ApiStatus.Internal
@@ -189,7 +189,7 @@ public final class ClientWindManager {
 			extension.clientTick();
 		}
 
-		if (!hasInitialized && FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS) {
+		if (!hasInitialized && FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS.get()) {
 			hasInitialized = true;
 			final RandomSource random = AdvancedMath.random();
 			noise = EasyNoiseSampler.createXoroNoise(random.nextLong());
