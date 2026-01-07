@@ -26,8 +26,6 @@ import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigLoadEvent;
 import net.frozenblock.lib.config.api.registry.ConfigSaveEvent;
-import net.frozenblock.lib.config.api.sync.annotation.UnsyncableConfig;
-import net.frozenblock.lib.config.impl.network.ConfigSyncPacket;
 import org.jetbrains.annotations.Contract;
 
 public abstract class Config<T> {
@@ -37,9 +35,6 @@ public abstract class Config<T> {
 	private final Class<T> configClass;
 	private T configInstance;
 	private final T defaultInstance;
-	@Getter
-	@Setter
-	private boolean synced = false;
 
 	protected Config(String modId, Class<T> configClass, Path path, boolean supportsModification) {
 		this.modId = modId;
@@ -79,28 +74,6 @@ public abstract class Config<T> {
 	}
 
 	/**
-	 * @return The current config instance with config sync modifications.
-	 * @since 1.5
-	 */
-	public T configWithSync() {
-		if (!this.supportsSync()) {
-			//TODO: Possibly remove before release? This causes log spam. Up to you, Tree. Might be best with JavaDoc instead.
-			String formatted = String.format("Config %s from %s", this.configClass().getSimpleName(), this.modId());
-			FrozenLibLogUtils.logWarning(formatted + " does not support modification, returning unmodified instance.", FrozenLibLogUtils.UNSTABLE_LOGGING);
-			return this.instance();
-		}
-		return ConfigModification.modifyConfig(this, this.instance(), true);
-	}
-
-	/**
-	 * @return If the current config supports modification and does not have the {@link UnsyncableConfig} annotation.
-	 * @since 1.5
-	 */
-	public boolean supportsSync() {
-		return this.supportsModification() && !this.configClass().isAnnotationPresent(UnsyncableConfig.class);
-	}
-
-	/**
 	 * @return The unmodified current config instance.
 	 */
 	public T instance() {
@@ -118,8 +91,6 @@ public abstract class Config<T> {
 	public Class<T> configClass() {
 		return this.configClass;
 	}
-
-	public void onSync(T syncInstance) {}
 
 	/**
 	 * @since 1.5
@@ -139,7 +110,6 @@ public abstract class Config<T> {
 			this.onSave();
 
 			if (FrozenBools.isInitialized) {
-				if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ConfigSyncPacket.trySendC2S(this);
 				invokeSaveEvents();
 			}
 		} catch (Exception e) {

@@ -127,7 +127,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	 * @throws IOException
 	 */
 	public static void sendToPlayer(File file, String destPath, ServerPlayer player) throws IOException {
-		if (!FrozenLibConfig.FILE_TRANSFER_SERVER) return;
+		if (!FrozenLibConfig.FILE_TRANSFER_SERVER.get()) return;
 		for (FileTransferPacket packet : create(destPath, file)) ServerPlayNetworking.send(player, packet);
 	}
 

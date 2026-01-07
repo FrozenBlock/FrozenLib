@@ -1,6 +1,5 @@
 package net.frozenblock.lib.config.newconfig.modification;
 
-import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.api.instance.util.DeepCopyUtils;
 
@@ -17,7 +16,7 @@ public record ConfigEntryModification<T>(Consumer<EntryValueHolder<T>> modifier)
             throw new RuntimeException("Failed to copy config entry value", e);
         }
 
-        ConfigModification.copyInto(original, copy);
+        copyInto(original, copy);
         final EntryValueHolder<T> holder = new EntryValueHolder<>(original);
 
         for (ConfigEntryModification<T> modifications : entry.modifications()) {
@@ -25,4 +24,8 @@ public record ConfigEntryModification<T>(Consumer<EntryValueHolder<T>> modifier)
         }
         return holder.value;
     }
+
+	public static <T> void copyInto(T source, T destination) {
+		DeepCopyUtils.deepCopyInto(source, destination);
+	}
 }
