@@ -21,13 +21,14 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
+import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 
 /**
  * Used to integrate config syncing with Cloth Config.
  */
 @Environment(EnvType.CLIENT)
 public interface DisableableWidgetInterface {
-	void frozenLib$addSyncData(Class<?> clazz, String identifier, Config<?> configInstance);
+	void frozenLib$addSyncData(ConfigEntry<?> configInstance);
 	boolean frozenLib$isSyncable();
 	boolean frozenLib$hasValidData();
 	ConfigModification.EntryPermissionType frozenLib$getEntryPermissionType();

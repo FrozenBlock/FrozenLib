@@ -22,10 +22,11 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
+import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
+import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
@@ -65,14 +66,28 @@ public final class FrozenClothConfig {
 	/**
 	 * Creates an entry that will interact with config syncing
 	 *
-	 * @param entry The config entry to be used
-	 * @param clazz The class of the config file being accessed
-	 * @param identifier The identifier of the field used for the config (Use {@link net.frozenblock.lib.config.api.sync.annotation.EntrySyncData} for this)
-	 * @param configInstance The main instance of the config (See {@link net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig#INSTANCE} for an example)
-	 * @since 1.5
+	 * @param builder The config entry builder to be used
+	 * @param configEntry The FrozenLib {@link ConfigEntry}
+	 * @since 2.4
 	 */
-	public static <T extends DynamicEntryListWidget.Entry<?>> T syncedEntry(T entry, Class<?> clazz, String identifier, Config<?> configInstance) {
-		((DisableableWidgetInterface) entry).frozenLib$addSyncData(clazz, identifier, configInstance);
+	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A entry(B builder, ConfigEntry<T> configEntry) {
+		builder.setDefaultValue(configEntry.getDefaultValue());
+		builder.setSaveConsumer(configEntry::setValue);
+		return builder.build();
+	}
+
+	/**
+	 * Creates an entry that will interact with config syncing
+	 *
+	 * @param builder The config entry builder to be used
+	 * @param configEntry The FrozenLib {@link ConfigEntry}
+	 * @since 2.4
+	 */
+	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A syncedEntry(B builder, ConfigEntry<T> configEntry) {
+		builder.setDefaultValue(configEntry.getDefaultValue());
+		builder.setSaveConsumer(configEntry::setValue);
+		final A entry = builder.build();
+		((DisableableWidgetInterface) entry).frozenLib$addSyncData(configEntry);
 		return entry;
 	}
 }

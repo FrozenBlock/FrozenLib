@@ -29,7 +29,6 @@ import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
-import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
@@ -43,114 +42,68 @@ import org.jetbrains.annotations.Contract;
 public final class FrozenLibConfigGui {
 
 	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
-		var config = FrozenLibConfig.get(true);
-		var modifiedConfig = FrozenLibConfig.getWithSync();
-		Config<?> configInstance = FrozenLibConfig.INSTANCE;
-		var defaultConfig = FrozenLibConfig.INSTANCE.defaultInstance();
-		var dataFixer = config.dataFixer;
-
 		var useWindOnNonFrozenServers = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), modifiedConfig.useWindOnNonFrozenServers)
-					.setDefaultValue(defaultConfig.useWindOnNonFrozenServers)
-					.setSaveConsumer(newValue -> config.useWindOnNonFrozenServers = newValue)
-					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers"))
-					.build(),
-					config.getClass(),
-					"useWindOnNonFrozenServers",
-					configInstance
+				entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS.getWithSync())
+					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers")),
+					FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS
 				)
 		);
 
 		var saveItemCooldowns = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startBooleanToggle(text("save_item_cooldowns"), modifiedConfig.saveItemCooldowns)
-					.setDefaultValue(defaultConfig.saveItemCooldowns)
-					.setSaveConsumer(newValue -> config.saveItemCooldowns = newValue)
-					.setTooltip(tooltip("save_item_cooldowns"))
-					.build(),
-					config.getClass(),
-					"saveItemCooldowns",
-					configInstance
+				entryBuilder.startBooleanToggle(text("save_item_cooldowns"), FrozenLibConfig.SAVE_ITEM_COOLDOWNS.getWithSync())
+					.setTooltip(tooltip("save_item_cooldowns")),
+					FrozenLibConfig.SAVE_ITEM_COOLDOWNS
 				)
 		);
 
 		var removeExperimentalWarning = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startBooleanToggle(text("remove_experimental_warning"), modifiedConfig.removeExperimentalWarning)
-					.setDefaultValue(defaultConfig.removeExperimentalWarning)
-					.setSaveConsumer(newValue -> config.removeExperimentalWarning = newValue)
-					.setTooltip(tooltip("remove_experimental_warning"))
-					.build(),
-					config.getClass(),
-					"removeExperimentalWarning",
-					configInstance
+				entryBuilder.startBooleanToggle(text("remove_experimental_warning"), FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.getWithSync())
+					.setTooltip(tooltip("remove_experimental_warning")),
+					FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING
 				)
 		);
 
 		var wardenSpawnTrackerCommand = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), modifiedConfig.wardenSpawnTrackerCommand)
-					.setDefaultValue(defaultConfig.wardenSpawnTrackerCommand)
-					.setSaveConsumer(newValue -> config.wardenSpawnTrackerCommand = newValue)
-					.setTooltip(tooltip("warden_spawn_tracker_command"))
-					.build(),
-					config.getClass(),
-					"wardenSpawnTrackerCommand",
-					configInstance
+				entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.getWithSync())
+					.setTooltip(tooltip("warden_spawn_tracker_command")),
+					FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND
 				)
 		);
 
 		var fileTransferServer = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startBooleanToggle(text("file_transfer_server"), modifiedConfig.fileTransferServer)
-					.setDefaultValue(defaultConfig.fileTransferServer)
-					.setSaveConsumer(newValue -> config.fileTransferServer = newValue)
-					.setTooltip(tooltip("file_transfer_server"))
-					.build(),
-				config.getClass(),
-				"fileTransferServer",
-				configInstance
+				entryBuilder.startBooleanToggle(text("file_transfer_server"), FrozenLibConfig.FILE_TRANSFER_SERVER.get())
+					.setTooltip(tooltip("file_transfer_server")),
+				FrozenLibConfig.FILE_TRANSFER_SERVER
 			)
 		);
 
 		var fileTransferClient = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startBooleanToggle(text("file_transfer_client"), modifiedConfig.fileTransferClient)
-					.setDefaultValue(defaultConfig.fileTransferClient)
-					.setSaveConsumer(newValue -> config.fileTransferClient = newValue)
-					.setTooltip(tooltip("file_transfer_client"))
-					.build(),
-				config.getClass(),
-				"fileTransferClient",
-				configInstance
+				entryBuilder.startBooleanToggle(text("file_transfer_client"), FrozenLibConfig.FILE_TRANSFER_CLIENT.get())
+					.setTooltip(tooltip("file_transfer_client")),
+				FrozenLibConfig.FILE_TRANSFER_CLIENT
 			)
 		);
 
 		var packDownloading = category.addEntry(
 			FrozenClothConfig.syncedEntry(
-				entryBuilder.startEnumSelector(text("pack_downloading"), FrozenLibModResourcePackApi.PackDownloadSetting.class, modifiedConfig.packDownloading)
-					.setDefaultValue(defaultConfig.packDownloading)
-					.setSaveConsumer(newValue -> config.packDownloading = newValue)
+				entryBuilder.startEnumSelector(text("pack_downloading"), FrozenLibModResourcePackApi.PackDownloadSetting.class, FrozenLibConfig.PACK_DOWNLOADING.get())
 					.setEnumNameProvider(downloadSetting -> enumNameProvider(downloadSetting.toString()))
-					.setTooltip(tooltip("pack_downloading"))
-					.build(),
-				config.getClass(),
-				"packDownloading",
-				configInstance
+					.setTooltip(tooltip("pack_downloading")),
+				FrozenLibConfig.PACK_DOWNLOADING
 			)
 		);
 
 		var disabledDataFixTypes = FrozenClothConfig.syncedEntry(
-			entryBuilder.startStrList(text("disabled_datafix_types"), modifiedConfig.dataFixer.disabledDataFixTypes)
-				.setDefaultValue(defaultConfig.dataFixer.disabledDataFixTypes)
-				.setSaveConsumer(newValue -> dataFixer.disabledDataFixTypes = newValue)
+			entryBuilder.startStrList(text("disabled_datafix_types"), FrozenLibConfig.DISABLED_DATA_FIX_TYPES.get())
 				.setTooltip(tooltip("disabled_datafix_types"))
-				.requireRestart()
-				.build(),
-			dataFixer.getClass(),
-			"disabledDataFixTypes",
-			configInstance
+				.requireRestart(),
+			FrozenLibConfig.DISABLED_DATA_FIX_TYPES
 		);
 
 		var datafixerCategory = FrozenClothConfig.createSubCategory(entryBuilder, category, text("datafixer"),
@@ -162,15 +115,15 @@ public final class FrozenLibConfigGui {
 		List<String> usableCapes = ClientCapeUtil.getUsableCapes(true).stream().map(cape -> cape.id().toString()).toList();
 		if (usableCapes.size() > 1) {
 			var capeEntry = category.addEntry(
-				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), modifiedConfig.cape)
-					.setDefaultValue(defaultConfig.cape)
+				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), FrozenLibConfig.CAPE.getWithSync())
+					.setDefaultValue(FrozenLibConfig.CAPE.getDefaultValue())
 					.setNameProvider(o -> {
 						Identifier capeId = Identifier.parse(((String) o));
 						return CapeUtil.getCape(capeId).map(Cape::name).orElse(Component.translatable("cape.frozenlib.invalid"));
 					})
 					.setSaveConsumer(newValue -> {
 						Identifier capeId = Identifier.parse((String) newValue);
-						config.cape = (String) newValue;
+						FrozenLibConfig.CAPE.setValue((String) newValue);
 						if (Minecraft.getInstance().getConnection() != null) {
 							ClientPlayNetworking.send(CapeCustomizePacket.createPacket(Minecraft.getInstance().getUser().getProfileId(), capeId));
 						}
@@ -183,7 +136,7 @@ public final class FrozenLibConfigGui {
 
 	public static Screen buildScreen(Screen parent) {
 		var configBuilder = ConfigBuilder.create().setParentScreen(parent).setTitle(text("component.title"));
-		configBuilder.setSavingRunnable(FrozenLibConfig.INSTANCE::save);
+		configBuilder.setSavingRunnable(FrozenLibConfig.CONFIG::save);
 		var config = configBuilder.getOrCreateCategory(text("config"));
 		ConfigEntryBuilder entryBuilder = configBuilder.entryBuilder();
 		setupEntries(config, entryBuilder);

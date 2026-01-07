@@ -43,7 +43,7 @@ public class SaveableItemCooldowns {
 		player.getCooldowns().cooldowns.forEach((cooldownGroup, cooldownInstance) -> {
 			final Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(cooldownGroup);
 			final boolean alwaysSave = optionalItem.isPresent() && optionalItem.get().builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS);
-			if (!alwaysSave && !FrozenLibConfig.get().saveItemCooldowns) return;
+			if (!alwaysSave && !FrozenLibConfig.SAVE_ITEM_COOLDOWNS.get()) return;
 			saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(cooldownGroup, cooldownInstance, tickCount));
 		});
 		return saveableCooldownInstances;

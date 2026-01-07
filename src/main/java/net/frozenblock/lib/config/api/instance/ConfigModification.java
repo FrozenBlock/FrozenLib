@@ -23,9 +23,9 @@ import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.config.api.instance.util.DeepCopyUtils;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
+import net.frozenblock.lib.config.newconfig.modification.ConfigEntryModification;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -39,7 +39,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
         try {
 			// clone
 			final T instance = config.configClass().getConstructor().newInstance();
-			copyInto(original, instance);
+			ConfigEntryModification.copyInto(original, instance);
 
 			// modify
 			final var list = ConfigRegistry.getModificationsForConfig(config)
@@ -48,7 +48,6 @@ public record ConfigModification<T>(Consumer<T> modification) {
 				.sorted(Map.Entry.comparingByValue())
 				.toList();
 
-			config.setSynced(false);
 			for (Map.Entry<ConfigModification<T>, Integer> modification : list) {
 				final var consumer = modification.getKey().modification;
 				if (consumer instanceof ConfigSyncModification || !excludeNonSync) {
@@ -62,14 +61,6 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			return original;
 		}
     }
-
-    public static <T> void copyInto(T source, T destination, boolean isSyncModification) {
-		DeepCopyUtils.deepCopyInto(source, destination, isSyncModification);
-    }
-
-	public static <T> void copyInto(T source, T destination) {
-		copyInto(source, destination, false);
-	}
 
 	@Environment(EnvType.CLIENT)
 	public enum EntryPermissionType {
