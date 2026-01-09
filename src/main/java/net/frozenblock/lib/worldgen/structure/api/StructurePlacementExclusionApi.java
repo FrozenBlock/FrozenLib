@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.frozenblock.lib.worldgen.structure.impl.StructureSetAndPlacementInterface;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
@@ -34,7 +34,7 @@ public class StructurePlacementExclusionApi {
 	private static final Map<Identifier, List<Pair<Identifier, Integer>>> STRUCTURE_SET_TO_EXCLUDED_STRUCTURE_SETS = new Object2ObjectOpenHashMap<>();
 
 	public static void init() {
-		ServerWorldEvents.LOAD.register((server, level) -> {
+		ServerLevelEvents.LOAD.register((server, level) -> {
 			level.registryAccess().lookupOrThrow(Registries.STRUCTURE_SET).listElements().forEach(structureSetReference -> {
 				if (!structureSetReference.isBound() || !((Object) (structureSetReference.value()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface)) return;
 				setAndPlacementInterface.frozenLib$addExclusions(

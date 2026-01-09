@@ -21,10 +21,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
-import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvider;
 import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider;
 import net.frozenblock.lib.recipe.api.ShapedRecipeUtil;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
@@ -63,7 +63,7 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 
 	private static class TestRecipeProvider extends FabricRecipeProvider {
 
-		public TestRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+		public TestRecipeProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
 			super(output, registriesFuture);
 		}
 
@@ -98,7 +98,7 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 
 	private static class TestBiomeTagProvider extends FrozenBiomeTagProvider {
 
-		public TestBiomeTagProvider(FabricDataOutput output, CompletableFuture registriesFuture) {
+		public TestBiomeTagProvider(FabricPackOutput output, CompletableFuture registriesFuture) {
 			super(output, registriesFuture);
 		}
 
@@ -113,9 +113,9 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 	}
 
-	private static class TestBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+	private static class TestBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
 
-		public TestBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+		public TestBlockTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
 			super(output, registriesFuture);
 		}
 
@@ -130,8 +130,8 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 	}
 
-	private static class TestAdvancementLootTableProvider extends SimpleFabricLootTableProvider {
-		public TestAdvancementLootTableProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+	private static class TestAdvancementLootTableProvider extends SimpleFabricLootTableSubProvider {
+		public TestAdvancementLootTableProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
 			super(output, registriesFuture, LootContextParamSets.ADVANCEMENT_REWARD);
 		}
 

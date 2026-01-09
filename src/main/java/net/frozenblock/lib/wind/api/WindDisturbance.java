@@ -71,8 +71,8 @@ public class WindDisturbance<T> {
 	public boolean isWithinViewDistance(ChunkTrackingView chunkTrackingView) {
 		for (double xCorner : ImmutableList.of(this.affectedArea.minX, this.affectedArea.maxX)) {
 			for (double zCorner : ImmutableList.of(this.affectedArea.minZ, this.affectedArea.maxZ)) {
-				final ChunkPos chunkPos = new ChunkPos(BlockPos.containing(xCorner, 0, zCorner));
-				if (chunkTrackingView.isInViewDistance(chunkPos.x, chunkPos.z)) return true;
+				final ChunkPos chunkPos = ChunkPos.containing(BlockPos.containing(xCorner, 0, zCorner));
+				if (chunkTrackingView.isInViewDistance(chunkPos.x(), chunkPos.z())) return true;
 			}
 		}
 		return false;

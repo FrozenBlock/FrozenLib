@@ -19,7 +19,7 @@ package net.frozenblock.lib.particle.client.resource;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.particle.client.WindParticle;
 
@@ -27,7 +27,7 @@ import net.frozenblock.lib.particle.client.WindParticle;
 public class FrozenLibParticleResources {
 
 	public static void init() {
-		final ParticleFactoryRegistry particleRegistry = ParticleFactoryRegistry.getInstance();
+		final ParticleProviderRegistry particleRegistry = ParticleProviderRegistry.getInstance();
 
 		particleRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Factory::new);
 		particleRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Factory::new);

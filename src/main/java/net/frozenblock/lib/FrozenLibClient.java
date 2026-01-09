@@ -20,7 +20,7 @@ package net.frozenblock.lib;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
@@ -72,7 +72,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 	}
 
 	private static void registerClientEvents() {
-		ClientTickEvents.START_WORLD_TICK.register(
+		ClientTickEvents.START_LEVEL_TICK.register(
 			level -> {
 				final Minecraft minecraft = Minecraft.getInstance();
 				ClientWindManager.tick(level);
@@ -82,7 +82,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 		);
 		ClientTickEvents.START_CLIENT_TICK.register(client -> ClientWindManager.clearAndSwitchWindDisturbances());
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clearClientListHolders());
-		ClientWorldEvents.AFTER_CLIENT_WORLD_CHANGE.register((minecraft, clientLevel) -> clearClientListHolders());
+		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((minecraft, clientLevel) -> clearClientListHolders());
 	}
 
 	private static void clearClientListHolders() {

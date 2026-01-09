@@ -177,7 +177,7 @@ public class WindManager extends SavedData {
 	public void addWindDisturbanceAndSync(WindDisturbance<?> windDisturbance, ServerLevel level) {
 		final Optional<WindDisturbancePacket> optionalPacket = windDisturbance.toPacket();
 		if (optionalPacket.isPresent()) {
-			for (ServerPlayer player : PlayerLookup.world(level)) {
+			for (ServerPlayer player : PlayerLookup.level(level)) {
 				if (!windDisturbance.isWithinViewDistance(player.getChunkTrackingView())) continue;
 				ServerPlayNetworking.send(player, optionalPacket.get());
 			}
@@ -332,7 +332,7 @@ public class WindManager extends SavedData {
 
 	public void sendSync(ServerLevel level) {
 		final WindSyncPacket packet = this.createSyncPacket();
-		for (ServerPlayer player : PlayerLookup.world(level)) this.sendSyncToPlayer(packet, player);
+		for (ServerPlayer player : PlayerLookup.level(level)) this.sendSyncToPlayer(packet, player);
 	}
 
 	public void sendSyncToPlayer(WindSyncPacket packet, ServerPlayer player) {

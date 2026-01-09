@@ -19,7 +19,7 @@ package net.frozenblock.lib;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerWorldEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
@@ -125,11 +125,11 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			StructureUpgradeCommand.register(dispatcher);
 		});
 
-		ServerWorldEvents.UNLOAD.register((server, serverLevel) -> {
+		ServerLevelEvents.UNLOAD.register((server, serverLevel) -> {
 			WindManager.getOrCreateWindManager(serverLevel).clearAllWindDisturbances();
 		});
 
-		ServerTickEvents.START_WORLD_TICK.register(serverLevel -> {
+		ServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
 			WindManager.getOrCreateWindManager(serverLevel).clearAndSwitchWindDisturbances();
 			WindManager.getOrCreateWindManager(serverLevel).tick(serverLevel);
 			ScreenShakeManager.getOrCreateScreenShakeManager(serverLevel).tick(serverLevel);

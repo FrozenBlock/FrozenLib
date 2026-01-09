@@ -62,7 +62,7 @@ public final class ServerRegistrySync {
 			}
 		}));
 
-		final var registryClient = PayloadTypeRegistry.configurationC2S();
+		final var registryClient = PayloadTypeRegistry.serverboundConfiguration();
 		registryClient.register(ClientPackets.Handshake.PACKET_TYPE, ClientPackets.Handshake.CODEC);
 		registryClient.register(ClientPackets.ModProtocol.PACKET_TYPE, ClientPackets.ModProtocol.CODEC);
 		registryClient.register(ClientPackets.End.PACKET_TYPE, ClientPackets.End.CODEC);
@@ -71,7 +71,7 @@ public final class ServerRegistrySync {
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.ModProtocol.PACKET_TYPE, ServerRegistrySync::handleModProtocol);
 		ServerConfigurationNetworking.registerGlobalReceiver(ClientPackets.End.PACKET_TYPE, ServerRegistrySync::handleEnd);
 
-		final var registry = PayloadTypeRegistry.configurationS2C();
+		final var registry = PayloadTypeRegistry.clientboundConfiguration();
 		registry.register(ServerPackets.Handshake.PACKET_TYPE, ServerPackets.Handshake.CODEC);
 		registry.register(ServerPackets.ModProtocol.PACKET_TYPE, ServerPackets.ModProtocol.CODEC);
 		registry.register(ServerPackets.End.PACKET_TYPE, ServerPackets.End.CODEC);
@@ -79,15 +79,15 @@ public final class ServerRegistrySync {
 	}
 
 	public static void handleHandshake(ClientPackets.Handshake handshake, Context context) {
-		((QuiltSyncTask) context.networkHandler().currentTask).handleHandshake(handshake);
+		((QuiltSyncTask) context.packetListener().currentTask).handleHandshake(handshake);
 	}
 
 	public static void handleModProtocol(ClientPackets.ModProtocol modProtocol, Context context) {
-		((QuiltSyncTask) context.networkHandler().currentTask).handleModProtocol(modProtocol, context.responseSender());
+		((QuiltSyncTask) context.packetListener().currentTask).handleModProtocol(modProtocol, context.responseSender());
 	}
 
 	public static void handleEnd(ClientPackets.End end, Context context) {
-		((QuiltSyncTask) context.networkHandler().currentTask).handleEnd(end);
+		((QuiltSyncTask) context.packetListener().currentTask).handleEnd(end);
 	}
 
 	public static Component text(String string) {

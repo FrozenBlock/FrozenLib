@@ -18,17 +18,17 @@
 package net.frozenblock.lib.datagen.frozenlib.tag;
 
 import java.util.concurrent.CompletableFuture;
-import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 
-public final class FrozenLibBlockTagProvider extends FabricTagProvider.BlockTagProvider {
+public final class FrozenLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
 
-	public FrozenLibBlockTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+	public FrozenLibBlockTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, registries);
 	}
 

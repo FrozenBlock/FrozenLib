@@ -28,7 +28,7 @@ import net.minecraft.core.MappedRegistry;
 public class FrozenLibClientRegistries {
 
 	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder
-		.createSimple(
+		.create(
 			EntityTextureOverride.class,
 			FrozenLibConstants.id("entity_texture_override")
 		).buildAndRegister();

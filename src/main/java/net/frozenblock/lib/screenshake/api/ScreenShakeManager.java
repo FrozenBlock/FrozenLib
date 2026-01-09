@@ -71,7 +71,7 @@ public class ScreenShakeManager extends SavedData {
 
 		this.getShakes().removeIf(ScreenShake::shouldRemove);
 		for (ScreenShake shake : this.getShakes()) {
-			if (!level.getChunkSource().hasChunk(shake.chunkPos.x, shake.chunkPos.z)) continue;
+			if (!level.getChunkSource().hasChunk(shake.chunkPos.x(), shake.chunkPos.z())) continue;
 			shake.ticks += 1;
 
 			final Collection<ServerPlayer> playersTrackingChunk = PlayerLookup.tracking(level, shake.chunkPos);
@@ -131,7 +131,7 @@ public class ScreenShakeManager extends SavedData {
 		if (!(entity.level() instanceof ServerLevel serverLevel)) return;
 
 		final EntityScreenShakePacket packet = new EntityScreenShakePacket(entity.getId(), intensity, duration, falloffStart, maxDistance, ticks);
-		for (ServerPlayer player : PlayerLookup.world(serverLevel)) ServerPlayNetworking.send(player, packet);
+		for (ServerPlayer player : PlayerLookup.level(serverLevel)) ServerPlayNetworking.send(player, packet);
 		((EntityScreenShakeInterface) entity).frozenLib$addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
 	}
 
@@ -171,7 +171,7 @@ public class ScreenShakeManager extends SavedData {
 			this.pos = pos;
 			this.maxDistance = maxDistance;
 			this.ticks = ticks;
-			this.chunkPos = new ChunkPos(BlockPos.containing(pos));
+			this.chunkPos = ChunkPos.containing(BlockPos.containing(pos));
 		}
 
 		public boolean shouldRemove() {
