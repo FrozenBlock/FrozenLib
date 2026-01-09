@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.config.frozenlib_config.gui;
 
-// TODO re-enable when clothconfig is unobfuscated
-/*import java.util.List;
+import java.util.List;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
@@ -206,4 +205,3 @@ public final class FrozenLibConfigGui {
 		return Component.translatable("enum." + FrozenLibConstants.MOD_ID + "." + key);
 	}
 }
-*/

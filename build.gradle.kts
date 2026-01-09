@@ -228,13 +228,13 @@ dependencies {
     implementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // Mod Menu
-    //compileOnlyApi("com.terraformersmc:modmenu:${modmenu_version}")
+    api("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    //implementation("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
-    //    exclude(group = "net.fabricmc.fabric-api")
-    //    exclude(group = "com.terraformersmc")
-    //}
+    api("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
+        exclude(group = "net.fabricmc.fabric-api")
+        exclude(group = "com.terraformersmc")
+    }
 
 	// TerraBlender
     //compileOnlyApi("com.github.glitchfiend:TerraBlender-fabric:${terrablender_version}")
