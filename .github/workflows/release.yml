@@ -24,6 +24,11 @@ jobs:
     steps:
       - name: Checking Out the Repository
         uses: actions/checkout@v4
+      - name: Checking out cloth-config
+        uses: actions/checkout@v4
+        with:
+          repository: EthanRStokes/cloth-config
+          path: cloth-config
       - name: Validating the Gradle Wrapper
         uses: gradle/wrapper-validation-action@v1
       - name: Setting up Java ${{ matrix.java }}
