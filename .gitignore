@@ -43,6 +43,10 @@ runserver/
 /src/testmod/generated/.cache
 /config/
 
+# github actions
+
+cloth-config/
+
 # java
 
 hs_err_*.log
