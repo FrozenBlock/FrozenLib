@@ -21,7 +21,6 @@ import java.util.Arrays;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import me.shedaniel.clothconfig2.gui.widget.DynamicEntryListWidget;
 import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -71,7 +70,7 @@ public final class FrozenClothConfig {
 	 * @since 2.4
 	 */
 	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A entry(B builder, ConfigEntry<T> configEntry) {
-		builder.setDefaultValue(configEntry.getDefaultValue());
+		builder.setDefaultValue(configEntry.defaultValue());
 		builder.setSaveConsumer(configEntry::setValue);
 		return builder.build();
 	}
@@ -84,7 +83,7 @@ public final class FrozenClothConfig {
 	 * @since 2.4
 	 */
 	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A syncedEntry(B builder, ConfigEntry<T> configEntry) {
-		builder.setDefaultValue(configEntry.getDefaultValue());
+		builder.setDefaultValue(configEntry.defaultValue());
 		builder.setSaveConsumer(configEntry::setValue);
 		final A entry = builder.build();
 		((DisableableWidgetInterface) entry).frozenLib$addSyncData(configEntry);

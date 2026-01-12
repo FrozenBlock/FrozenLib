@@ -31,8 +31,6 @@ import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
-import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
@@ -125,7 +123,7 @@ public final class FrozenClientNetworking {
 			ConfigEntrySyncPacket.receive(packet, null)
 		);
 		ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
-			for (ConfigEntry<?> config : ConfigV2Registry.CONFIG_ENTRY.values()) ConfigSyncModification.clearSyncData(config);
+			for (ConfigEntry<?> config : ConfigV2Registry.allConfigEntries()) ConfigSyncModification.clearSyncData(config);
 		}));
 
 		// DEBUG

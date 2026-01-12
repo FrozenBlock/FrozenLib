@@ -18,7 +18,6 @@
 package net.frozenblock.lib.config.newconfig.config;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import java.util.List;
 import java.util.Map;
 import net.frozenblock.lib.config.newconfig.ConfigSerializer;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
@@ -45,13 +44,13 @@ public class ConfigData<T> {
 	static {
 		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (!allRegistries) return;
-			ConfigV2Registry.CONFIG_DATA.values().forEach(ConfigData::optimizeConfigMap);
+			ConfigV2Registry.allConfigData().forEach(ConfigData::optimizeConfigMap);
 		});
 	}
 
 	public static <T> ConfigData<T> createAndRegister(ID id, ConfigSettings<T> settings) {
 		final ConfigData<T> configData = new ConfigData<>(id, settings);
-		ConfigV2Registry.CONFIG_DATA.put(id, configData);
+		ConfigV2Registry.register(configData, id);
 		return configData;
 	}
 
@@ -94,7 +93,7 @@ public class ConfigData<T> {
 	public void loadEntry(ConfigEntry entry, boolean checkIfCurrentlyLoaded) {
 		this.load(checkIfCurrentlyLoaded);
 		final Object value = this.optimizedMap
-			? this.optimizedConfigMap.get(entry.getId())
+			? this.optimizedConfigMap.get(entry.id())
 			: ConfigSerializer.getFromUnoptimizedDataMap(this, entry, this.unoptimizedConfigMap);
 		if (value != null) entry.setValue(value);
 	}

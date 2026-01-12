@@ -55,7 +55,7 @@ public class ConfigEntry<T> {
 		this.defaultValue = defaultValue;
 		this.value = defaultValue;
 		this.properties = properties;
-		ConfigV2Registry.CONFIG_ENTRY.put(this.id, this);
+		ConfigV2Registry.register(this, this.id);
 	}
 
 	public ConfigEntry(ConfigData<?> data, String id, EntryType<T> type, T defaultValue, boolean syncable, boolean modifiable) {
@@ -142,11 +142,11 @@ public class ConfigEntry<T> {
 		return (Class<T>) this.defaultValue.getClass();
 	}
 
-	protected Component getDisplayName() {
+	protected Component displayName() {
 		return Component.translatable("option." + this.id.namespace() + "." + this.id.path().replace("/", "."));
 	}
 
-	protected Component getTooltip() {
+	protected Component tooltip() {
 		return Component.translatable("tooltip." + this.id.namespace() + "." + this.id.path().replace("/", "."));
 	}
 
@@ -154,27 +154,27 @@ public class ConfigEntry<T> {
 		return this.properties.hasComment();
 	}
 
-	public ConfigData<?> getConfigData() {
+	public ConfigData<?> configData() {
 		return this.configData;
 	}
 
-	public ID getId() {
+	public ID id() {
 		return this.id;
 	}
 
-	public T getDefaultValue() {
+	public T defaultValue() {
 		return this.defaultValue;
 	}
 
-	public Optional<String> getComment() {
+	public Optional<String> comment() {
 		return this.properties.getComment();
 	}
 
-	public Codec<T> getCodec() {
+	public Codec<T> codec() {
 		return this.type.getCodec();
 	}
 
-	public StreamCodec<? extends ByteBuf, T> getStreamCodec() {
+	public StreamCodec<? extends ByteBuf, T> streamCodec() {
 		return this.type.getStreamCodec();
 	}
 

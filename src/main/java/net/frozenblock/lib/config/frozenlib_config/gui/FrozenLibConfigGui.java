@@ -116,7 +116,7 @@ public final class FrozenLibConfigGui {
 		if (usableCapes.size() > 1) {
 			var capeEntry = category.addEntry(
 				entryBuilder.startSelector(text("cape"), usableCapes.toArray(), FrozenLibConfig.CAPE.getWithSync())
-					.setDefaultValue(FrozenLibConfig.CAPE.getDefaultValue())
+					.setDefaultValue(FrozenLibConfig.CAPE.defaultValue())
 					.setNameProvider(o -> {
 						Identifier capeId = Identifier.parse(((String) o));
 						return CapeUtil.getCape(capeId).map(Cape::name).orElse(Component.translatable("cape.frozenlib.invalid"));
