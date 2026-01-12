@@ -20,12 +20,8 @@ public record ID(String namespace, String path) {
 	 * Both values must be non-null and non-empty.
 	 */
 	public ID {
-		if (namespace == null || namespace.isEmpty()) {
-			throw new IllegalArgumentException("namespace must be non-null and non-empty");
-		}
-		if (path == null || path.isEmpty()) {
-			throw new IllegalArgumentException("path must be non-null and non-empty");
-		}
+		if (namespace == null || namespace.isEmpty()) throw new IllegalArgumentException("Namespace must be non-null and non-empty");
+		if (path == null || path.isEmpty()) throw new IllegalArgumentException("Path must be non-null and non-empty");
 	}
 
 	public ID(Identifier identifier) {
@@ -48,14 +44,13 @@ public record ID(String namespace, String path) {
 	 */
 	public static ID parse(String combined) {
 		if (combined == null) throw new IllegalArgumentException("combined must not be null");
-		int idx = combined.indexOf(NAMESPACE_SEPARATOR);
-		if (idx < 0) {
-			throw new IllegalArgumentException("No namespace specified in ID: " + combined);
-		} else {
-			String ns = combined.substring(0, idx);
-			String p = combined.substring(idx + 1);
-			return new ID(ns, p);
-		}
+
+		final int namespaceSeparatorIndex = combined.indexOf(NAMESPACE_SEPARATOR);
+		if (namespaceSeparatorIndex < 0) throw new IllegalArgumentException("No namespace specified in ID: " + combined);
+
+		final String namespace = combined.substring(0, namespaceSeparatorIndex);
+		final String path = combined.substring(namespaceSeparatorIndex + 1);
+		return new ID(namespace, path);
 	}
 
 	public ID withSuffix(String suffix) {

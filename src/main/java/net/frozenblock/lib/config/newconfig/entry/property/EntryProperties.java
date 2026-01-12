@@ -64,7 +64,6 @@ public class EntryProperties {
 		return this.hasVisibilityPredicate;
 	}
 
-	@Nullable
 	public boolean isVisible() {
 		if (!this.hasVisibilityPredicate) return true;
 		return this.visibilityPredicate.test();
