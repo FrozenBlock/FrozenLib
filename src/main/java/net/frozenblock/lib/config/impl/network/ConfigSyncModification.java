@@ -17,20 +17,12 @@
 
 package net.frozenblock.lib.config.impl.network;
 
-import java.lang.reflect.Field;
-import java.util.function.Consumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
-import net.frozenblock.lib.config.api.sync.SyncBehavior;
-import net.frozenblock.lib.config.api.sync.network.ConfigSyncData;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.impl.network.ConfigEntrySyncPacket;
-import net.frozenblock.lib.config.newconfig.modification.ConfigEntryModification;
 import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
-import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;

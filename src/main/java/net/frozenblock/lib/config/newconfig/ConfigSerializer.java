@@ -26,7 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -101,7 +100,7 @@ public class ConfigSerializer {
 		final Map<ID, Object> optimizedMap = new Object2ObjectLinkedOpenHashMap<>();
 		for (ConfigEntry entry : entries) {
 			Optional optional = findOrBuildEntry(configIdString, entry, context);
-			if (optional.isPresent()) optimizedMap.put(entry.getId(), optional.get());
+			if (optional.isPresent()) optimizedMap.put(entry.id(), optional.get());
 		}
 
 		return optimizedMap;
@@ -119,7 +118,7 @@ public class ConfigSerializer {
 	}
 
 	public static Optional<?> findOrBuildEntry(String configId, ConfigEntry<?> entry, SerializationContext<?> context) {
-		final String entryId = entry.getId().toString().replace(configId + "/", "");
+		final String entryId = entry.id().toString().replace(configId + "/", "");
 		final List<String> paths = Arrays.stream(entryId.split("/")).toList();
 		final int length = paths.size();
 
@@ -147,7 +146,7 @@ public class ConfigSerializer {
 
 				// Track comment if present and not using wrapper
 				if (context.isForSaving() && entry.hasComment() && !context.useCommentWrapper()) {
-					context.commentMap().put(entryId, entry.getComment().get());
+					context.commentMap().put(entryId, entry.comment().get());
 				}
 			} else {
 				final Map<String, Object> foundMap = (Map<String, Object>) entryMap.getOrDefault(string, context.isForSaving() ? new Object2ObjectLinkedOpenHashMap<>() : null);
@@ -165,9 +164,9 @@ public class ConfigSerializer {
 
 	public static Map<ID, List<ConfigEntry<?>>> collectUnsavedConfigs() {
 		final List<ID> unsavedConfigIds = new ArrayList<>();
-		ConfigV2Registry.CONFIG_ENTRY.values().forEach(entry -> {
+		ConfigV2Registry.allConfigEntries().forEach(entry -> {
 			if (entry.isSaved()) return;
-			final ID configId = entry.getConfigData().id();
+			final ID configId = entry.configData().id();
 			if (!unsavedConfigIds.contains(configId)) unsavedConfigIds.add(configId);
 		});
 
@@ -179,8 +178,8 @@ public class ConfigSerializer {
 
 	public static Map<ID, List<ConfigEntry<?>>> collectConfigs() {
 		final Map<ID, List<ConfigEntry<?>>> configsAndEntries = new Object2ObjectLinkedOpenHashMap<>();
-		ConfigV2Registry.CONFIG_ENTRY.values().forEach(entry -> {
-			final ID configId = entry.getConfigData().id();
+		ConfigV2Registry.allConfigEntries().forEach(entry -> {
+			final ID configId = entry.configData().id();
 			final List<ConfigEntry<?>> entries = configsAndEntries.getOrDefault(configId, new ArrayList<>());
 			entries.add(entry);
 			configsAndEntries.put(configId, entries);
@@ -190,7 +189,7 @@ public class ConfigSerializer {
 
 	public record SerializationContext<T>(ConfigData configData, boolean isForSaving, Path path, AtomicReference<Map<String, Object>> configMap, Map<String, String> commentMap) {
 		public static <T> SerializationContext<T> createForSaving(ID configId, List<ConfigEntry<?>> entries) {
-			final ConfigData<T> data = (ConfigData<T>) ConfigV2Registry.CONFIG_DATA.get(configId);
+			final ConfigData<T> data = (ConfigData<T>) ConfigV2Registry.getData(configId);
 			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + data.settings().fileExtension());
 			final SerializationContext<T> saveContext = new SerializationContext<>(data, true, path, new AtomicReference<>(new Object2ObjectLinkedOpenHashMap<>()), new Object2ObjectLinkedOpenHashMap<>());
 
@@ -201,7 +200,7 @@ public class ConfigSerializer {
 		}
 
 		public static Optional<SerializationContext<?>> createForLoading(ID configId) throws Exception {
-			final ConfigData<?> data = ConfigV2Registry.CONFIG_DATA.get(configId);
+			final ConfigData<?> data = ConfigV2Registry.getData(configId);
 			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + data.settings().fileExtension());
 			if (!Files.exists(path)) return Optional.empty();
 
@@ -247,7 +246,7 @@ public class ConfigSerializer {
 		}
 
 		public DataResult<?> encodeOrParse(ConfigEntry entry, Supplier<?> parseInput) {
-			final Codec codec = entry.getCodec();
+			final Codec codec = entry.codec();
 
 			if (this.isForSaving()) {
 				// Encode the value
@@ -260,7 +259,7 @@ public class ConfigSerializer {
 				// Handle comments for plain JSON files using wrapper
 				if (entry.hasComment() && this.useCommentWrapper()) {
 					final Map<String, Object> valueWithCommentMap = new Object2ObjectLinkedOpenHashMap<>();
-					valueWithCommentMap.put("comment", entry.getComment().get());
+					valueWithCommentMap.put("comment", entry.comment().get());
 					valueWithCommentMap.put("value", encodedValue);
 					return DataResult.success(valueWithCommentMap);
 				}

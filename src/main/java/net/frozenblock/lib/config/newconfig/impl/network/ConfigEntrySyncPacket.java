@@ -54,14 +54,14 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 	public static ConfigEntrySyncPacket create(FriendlyByteBuf buf) {
 		final ID entryId = ID.parse(buf.readUtf());
-		final ConfigEntry entry = ConfigV2Registry.CONFIG_ENTRY.get(entryId);
+		final ConfigEntry entry = ConfigV2Registry.getEntry(entryId);
 		if (entry == null) {
 			FrozenLibLogUtils.logError("Unable to find config entry with id: " + entryId);
 			return DUMMY_PACKET;
 		}
 
 		try {
-			final StreamCodec streamCodec = entry.getStreamCodec();
+			final StreamCodec streamCodec = entry.streamCodec();
 			final Object value = streamCodec.decode(buf);
 			return new ConfigEntrySyncPacket<>(entry, value);
 		} catch (Exception e) {
@@ -80,8 +80,8 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 	}
 
 	public void write(FriendlyByteBuf buf) {
-		buf.writeUtf(this.entry.getId().toString());
-		this.entry.getStreamCodec().encode(buf, this.entry.getActual());
+		buf.writeUtf(this.entry.id().toString());
+		this.entry.streamCodec().encode(buf, this.entry.getActual());
 	}
 
 	public static void receive(ConfigEntrySyncPacket packet, @Nullable MinecraftServer server) {
@@ -93,7 +93,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 			// TODO: explain to LunadeMusic what this line does lol
 			ConfigEntryModification.copyInto(packet.value(), entry.getActual());
-			if (!FrozenNetworking.connectedToIntegratedServer()) entry.getConfigData().save();
+			if (!FrozenNetworking.connectedToIntegratedServer()) entry.configData().save();
 			for (ServerPlayer player : PlayerLookup.all(server)) sendEntryS2C(player, List.of(entry));
 		} else {
 			// S2C logic
@@ -121,7 +121,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 	}
 
 	public static void sendS2C(ServerPlayer player) {
-		sendEntryS2C(player, ConfigV2Registry.CONFIG_ENTRY.values());
+		sendEntryS2C(player, ConfigV2Registry.allConfigEntries());
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -137,7 +137,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 	@Environment(EnvType.CLIENT)
 	public static void sendC2S() {
-		sendC2S(ConfigV2Registry.CONFIG_ENTRY.values());
+		sendC2S(ConfigV2Registry.allConfigEntries());
 	}
 
 	@Environment(EnvType.CLIENT)
