@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import net.frozenblock.lib.FrozenBools;
 import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.entry.property.EntryProperties;
 import net.frozenblock.lib.config.newconfig.entry.property.VisibilityPredicate;

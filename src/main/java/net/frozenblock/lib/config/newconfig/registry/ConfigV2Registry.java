@@ -7,6 +7,5 @@ import java.util.Map;
 
 public class ConfigV2Registry {
 	public static final Map<ID, ConfigData<?>> CONFIG_DATA = new Object2ObjectOpenHashMap<>();
-
 	public static final Map<ID, ConfigEntry<?>> CONFIG_ENTRY = new Object2ObjectOpenHashMap<>();
 }

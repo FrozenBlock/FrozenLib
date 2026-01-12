@@ -26,6 +26,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.modification.ConfigEntryModification;
@@ -46,20 +47,26 @@ import org.jetbrains.annotations.Nullable;
 /**
  * @since 2.4
  */
-public record ConfigEntrySyncPacket<T>(ID entryId, String className, T entryData) implements CustomPacketPayload {
+public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements CustomPacketPayload {
+	private static final ConfigEntrySyncPacket DUMMY_PACKET = new ConfigEntrySyncPacket(null, null);
 	public static final Type<ConfigEntrySyncPacket<?>> PACKET_TYPE = new Type<>(FrozenLibConstants.id("config_entry_sync_packet"));
-	// TODO: fix the codec to use entry stream codec
 	public static final StreamCodec<FriendlyByteBuf, ConfigEntrySyncPacket<?>> CODEC = StreamCodec.ofMember(ConfigEntrySyncPacket::write, ConfigEntrySyncPacket::create);
 
-	public static <T> ConfigEntrySyncPacket<T> create(FriendlyByteBuf buf) {
+	public static ConfigEntrySyncPacket create(FriendlyByteBuf buf) {
 		final ID entryId = ID.parse(buf.readUtf());
+		final ConfigEntry entry = ConfigV2Registry.CONFIG_ENTRY.get(entryId);
+		if (entry == null) {
+			FrozenLibLogUtils.logError("Unable to find config entry with id: " + entryId);
+			return DUMMY_PACKET;
+		}
 
 		try {
-			String className = buf.readUtf();
-			final T entryData = ConfigEntryByteBufUtil.readUbjson(buf, entryId, className);
-			return new ConfigEntrySyncPacket<>(entryId, className, entryData);
+			final StreamCodec streamCodec = entry.getStreamCodec();
+			final Object value = streamCodec.decode(buf);
+			return new ConfigEntrySyncPacket<>(entry, value);
 		} catch (Exception e) {
-			throw new RuntimeException("Failed to read config data from packet.", e);
+			FrozenLibLogUtils.logError("Failed to read config data from packet.", e);
+			return DUMMY_PACKET;
 		}
 	}
 
@@ -73,53 +80,48 @@ public record ConfigEntrySyncPacket<T>(ID entryId, String className, T entryData
 	}
 
 	public void write(FriendlyByteBuf buf) {
-		buf.writeUtf(this.entryId.toString());
-		buf.writeUtf(this.className);
-		try {
-			ConfigEntryByteBufUtil.writeUbjson(buf, this.entryId, this.entryData);
-		} catch (Exception e) {
-			throw new RuntimeException("Failed to write config data to packet.", e);
-		}
+		buf.writeUtf(this.entry.getId().toString());
+		this.entry.getStreamCodec().encode(buf, this.entry.getActual());
 	}
 
-	public static <T> void receive(ConfigEntrySyncPacket<T> packet, @Nullable MinecraftServer server) {
-		final ID entryId = packet.entryId();
+	public static void receive(ConfigEntrySyncPacket packet, @Nullable MinecraftServer server) {
+		if (packet == DUMMY_PACKET) return;
 
-		final ConfigEntry<?> raw = ConfigV2Registry.CONFIG_ENTRY.get(entryId);
-
-		final ConfigEntry<T> entry = (ConfigEntry<T>) raw;
+		final ConfigEntry entry = packet.entry();
 		if (server != null) {
 			// C2S logic
-			ConfigEntryModification.copyInto(packet.entryData(), entry.getActual());
+
+			// TODO: explain to LunadeMusic what this line does lol
+			ConfigEntryModification.copyInto(packet.value(), entry.getActual());
 			if (!FrozenNetworking.connectedToIntegratedServer()) entry.getConfigData().save();
-			for (ServerPlayer player : PlayerLookup.all(server)) sendS2C(player, List.of(entry));
+			for (ServerPlayer player : PlayerLookup.all(server)) sendEntryS2C(player, List.of(entry));
 		} else {
 			// S2C logic
-			entry.setSyncedValue(packet.entryData());
+			entry.setSyncedValue(packet.value());
 		}
-		//entry.onSync(packet.entryData());
+		//entry.onSync(packet.value());
     }
 
-	public static void sendS2C(ServerPlayer player, Collection<ConfigData<?>> entries) {
+	public static void sendDataS2C(ServerPlayer player, Collection<ConfigData<?>> entries) {
 		if (FrozenNetworking.isLocalPlayer(player)) return;
 
 		for (ConfigData<?> entry : entries) {
-			sendS2C(player, entry.entries().values());
+			sendEntryS2C(player, entry.entries().values());
 		}
 	}
 
-	public static void sendS2C(ServerPlayer player, Iterable<ConfigEntry<?>> entries) {
+	public static void sendEntryS2C(ServerPlayer player, Iterable<ConfigEntry<?>> entries) {
 		if (FrozenNetworking.isLocalPlayer(player)) return;
 
 		for (ConfigEntry<?> entry : entries) {
 			if (!entry.isSyncable()) continue;
-			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry.getId(), entry.entryClass().getName(), entry.get());
+			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry, entry.get());
 			ServerPlayNetworking.send(player, packet);
 		}
 	}
 
 	public static void sendS2C(ServerPlayer player) {
-		sendS2C(player, ConfigV2Registry.CONFIG_ENTRY.values());
+		sendEntryS2C(player, ConfigV2Registry.CONFIG_ENTRY.values());
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -128,7 +130,7 @@ public record ConfigEntrySyncPacket<T>(ID entryId, String className, T entryData
 
 		for (ConfigEntry<?> entry : entries) {
 			if (!entry.isSyncable()) continue;
-			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry.getId(), entry.entryClass().getName(), entry.getActual());
+			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry, entry.getActual());
 			ClientPlayNetworking.send(packet);
 		}
 	}
@@ -140,8 +142,7 @@ public record ConfigEntrySyncPacket<T>(ID entryId, String className, T entryData
 
 	@Environment(EnvType.CLIENT)
 	public static <T> void trySendC2S(ConfigEntry<T> config) {
-		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false))
-			sendC2S(List.of(config));
+		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false)) sendC2S(List.of(config));
 	}
 
 	@Override
