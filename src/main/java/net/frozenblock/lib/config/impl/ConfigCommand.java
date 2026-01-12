@@ -19,13 +19,9 @@ package net.frozenblock.lib.config.impl;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import java.util.Collection;
 import java.util.Map;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.frozenblock.lib.config.api.instance.Config;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.newconfig.config.ConfigData;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.frozenblock.lib.config.newconfig.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.newconfig.registry.ID;
@@ -51,7 +47,7 @@ public final class ConfigCommand {
 	private static int reloadConfigs(CommandSourceStack source, String modId) {
 		final Map<ID, ConfigData<?>> configs = ConfigV2Registry.CONFIG_DATA;
 		for (ConfigData<?> config : configs.values()) config.load(false);
-		for (ServerPlayer player : PlayerLookup.all(source.getServer())) ConfigEntrySyncPacket.sendS2C(player, configs.values());
+		for (ServerPlayer player : PlayerLookup.all(source.getServer())) ConfigEntrySyncPacket.sendDataS2C(player, configs.values());
 
 		if (configs.size() == 1) {
 			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.single", modId), true);

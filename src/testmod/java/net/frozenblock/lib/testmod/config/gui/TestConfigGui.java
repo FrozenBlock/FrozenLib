@@ -26,7 +26,6 @@ import net.frozenblock.lib.config.api.client.gui.EntryBuilder;
 import net.frozenblock.lib.config.api.client.gui.Slider;
 import net.frozenblock.lib.config.api.client.gui.SliderType;
 import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
-import net.frozenblock.lib.config.newconfig.ConfigSerializer;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.frozenblock.lib.testmod.config.TestConfig;
 import net.minecraft.client.gui.screens.Screen;
@@ -42,14 +41,14 @@ public class TestConfigGui {
 		category.setBackground(Identifier.withDefaultNamespace("textures/block/packed_mud.png"));
 
 		var test = category.addEntry(entryBuilder.startBooleanToggle(text("test_toggle"), TestConfig.testToggle.getActual())
-				.setDefaultValue(TestConfig.testToggle.getDefaultValue())
+				.setDefaultValue(TestConfig.testToggle.defaultValue())
 				.setSaveConsumer(TestConfig.testToggle::setValue)
 				.setTooltip(tooltip("test_toggle"))
 				.build()
 		);
 
 		var sliderTest = new EntryBuilder<>(Component.literal("This is wild"), new Slider<>(TestConfig.testInt.getActual(), 0, 100, SliderType.INT.INSTANCE),
-			new Slider<>(TestConfig.testInt.getDefaultValue(), 0, 100, SliderType.INT.INSTANCE),
+			new Slider<>(TestConfig.testInt.defaultValue(), 0, 100, SliderType.INT.INSTANCE),
 			newValue -> TestConfig.testInt.setValue(newValue.getValue().intValue()),
 			null,
 			false,
@@ -57,7 +56,7 @@ public class TestConfigGui {
 		).build(entryBuilder);
 
 		var testSubMenuBoolean = entryBuilder.startBooleanToggle(text("sub_option"), subMenu.subOption)
-				.setDefaultValue(TestConfig.subMenu.getDefaultValue().subOption)
+				.setDefaultValue(TestConfig.subMenu.defaultValue().subOption)
 				.setSaveConsumer(newValue -> subMenu.subOption = newValue)
 				.setTooltip(tooltip("sub_option"))
 				.build();
