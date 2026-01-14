@@ -32,7 +32,7 @@ public record WindSyncPacket(long windTime, long seed, boolean override, Vec3 co
 			buf.readLong(),
 			buf.readLong(),
 			buf.readBoolean(),
-			buf.readVec3()
+			Vec3.STREAM_CODEC.decode(buf)
 		);
 	}
 
@@ -40,7 +40,7 @@ public record WindSyncPacket(long windTime, long seed, boolean override, Vec3 co
 		buf.writeLong(this.windTime());
 		buf.writeLong(this.seed());
 		buf.writeBoolean(this.override());
-		buf.writeVec3(this.commandWind());
+		Vec3.STREAM_CODEC.encode(buf, this.commandWind());
 	}
 
 	@Override

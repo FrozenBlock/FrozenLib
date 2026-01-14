@@ -43,7 +43,7 @@ public record FadingDistanceSwitchingSoundPacket(
 
 	public FadingDistanceSwitchingSoundPacket(RegistryFriendlyByteBuf buf) {
 		this(
-			buf.readVec3(),
+			Vec3.STREAM_CODEC.decode(buf),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
 			buf.readEnum(SoundSource.class),
@@ -55,7 +55,7 @@ public record FadingDistanceSwitchingSoundPacket(
 	}
 
 	public void write(RegistryFriendlyByteBuf buf) {
-		buf.writeVec3(this.pos());
+		Vec3.STREAM_CODEC.encode(buf, this.pos());
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.closeSound());
 		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.farSound());
 		buf.writeEnum(this.source());

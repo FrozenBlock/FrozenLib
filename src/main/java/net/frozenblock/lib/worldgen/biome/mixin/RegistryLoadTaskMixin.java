@@ -26,12 +26,12 @@ import net.frozenblock.lib.worldgen.biome.impl.FrozenGrassColorModifier;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.WritableRegistry;
-import net.minecraft.resources.RegistryDataLoader;
+import net.minecraft.resources.RegistryLoadTask;
 import net.minecraft.resources.ResourceKey;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(value = RegistryDataLoader.RegistryLoadTask.class, priority = 50)
+@Mixin(value = RegistryLoadTask.class, priority = 50)
 public class RegistryLoadTaskMixin {
 
 	@WrapOperation(
@@ -45,8 +45,8 @@ public class RegistryLoadTaskMixin {
 		WritableRegistry instance, ResourceKey key, Object object, RegistrationInfo registrationInfo, Operation<Holder.Reference> original
 	) {
 		if (object instanceof BiomeInterface biomeInterface) {
-			Optional<FrozenGrassColorModifier> optionalFrozenGrassColorModifier = FrozenGrassColorModifiers.getGrassColorModifier(key.identifier());
-			optionalFrozenGrassColorModifier.ifPresent(biomeInterface::frozenLib$setFrozenGrassColorModifier);
+			final Optional<FrozenGrassColorModifier> grassColorModifier = FrozenGrassColorModifiers.getGrassColorModifier(key.identifier());
+			grassColorModifier.ifPresent(biomeInterface::frozenLib$setFrozenGrassColorModifier);
 		}
 		return original.call(instance, key, object, registrationInfo);
 	}

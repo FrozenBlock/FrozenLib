@@ -32,7 +32,7 @@ public record ScreenShakePacket(float intensity, int duration, int falloffStart,
 			buf.readFloat(),
 			buf.readInt(),
 			buf.readInt(),
-			buf.readVec3(),
+			Vec3.STREAM_CODEC.decode(buf),
 			buf.readFloat(),
 			buf.readInt()
 		);
@@ -42,7 +42,7 @@ public record ScreenShakePacket(float intensity, int duration, int falloffStart,
 		buf.writeFloat(this.intensity());
 		buf.writeInt(this.duration());
 		buf.writeInt(this.falloffStart());
-		buf.writeVec3(this.pos());
+		Vec3.STREAM_CODEC.encode(buf, this.pos());
 		buf.writeFloat(this.maxDistance());
 		buf.writeInt(this.ticks());
 	}

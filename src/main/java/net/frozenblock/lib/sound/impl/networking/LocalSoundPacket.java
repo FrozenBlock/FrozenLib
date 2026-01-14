@@ -34,7 +34,7 @@ public record LocalSoundPacket(Vec3 pos, Holder<SoundEvent> sound, SoundSource s
 
 	public LocalSoundPacket(RegistryFriendlyByteBuf buf) {
 		this(
-			buf.readVec3(),
+			Vec3.STREAM_CODEC.decode(buf),
 			ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).decode(buf),
 			buf.readEnum(SoundSource.class),
 			buf.readFloat(),
@@ -44,12 +44,12 @@ public record LocalSoundPacket(Vec3 pos, Holder<SoundEvent> sound, SoundSource s
 	}
 
 	public void write(RegistryFriendlyByteBuf buf) {
-		buf.writeVec3(this.pos);
-		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound);
-		buf.writeEnum(this.source);
-		buf.writeFloat(this.volume);
-		buf.writeFloat(this.pitch);
-		buf.writeBoolean(this.distanceDelay);
+		Vec3.STREAM_CODEC.encode(buf, this.pos());
+		ByteBufCodecs.holderRegistry(Registries.SOUND_EVENT).encode(buf, this.sound());
+		buf.writeEnum(this.source());
+		buf.writeFloat(this.volume());
+		buf.writeFloat(this.pitch());
+		buf.writeBoolean(this.distanceDelay());
 	}
 
 	@Override

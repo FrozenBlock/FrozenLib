@@ -32,8 +32,8 @@ public record WindDisturbancePacket(AABB affectedArea, Vec3 origin, WindDisturba
 
 	public WindDisturbancePacket(RegistryFriendlyByteBuf buf) {
 		this(
-			new AABB(buf.readVec3(), buf.readVec3()),
-			buf.readVec3(),
+			new AABB(Vec3.STREAM_CODEC.decode(buf), Vec3.STREAM_CODEC.decode(buf)),
+			Vec3.STREAM_CODEC.decode(buf),
 			buf.readEnum(WindDisturbanceLogic.SourceType.class),
 			buf.readIdentifier(),
 			buf.readLong()
@@ -42,9 +42,9 @@ public record WindDisturbancePacket(AABB affectedArea, Vec3 origin, WindDisturba
 
 	public void write(RegistryFriendlyByteBuf buf) {
 		AABB affectedArea = this.affectedArea();
-		buf.writeVec3(new Vec3(affectedArea.minX, affectedArea.minY, affectedArea.minZ));
-		buf.writeVec3(new Vec3(affectedArea.maxX, affectedArea.maxY, affectedArea.maxZ));
-		buf.writeVec3(this.origin());
+		Vec3.STREAM_CODEC.encode(buf, new Vec3(affectedArea.minX, affectedArea.minY, affectedArea.minZ));
+		Vec3.STREAM_CODEC.encode(buf, new Vec3(affectedArea.maxX, affectedArea.maxY, affectedArea.maxZ));
+		Vec3.STREAM_CODEC.encode(buf, this.origin);
 		buf.writeEnum(this.sourceType());
 		buf.writeIdentifier(this.id());
 		buf.writeLong(this.posOrID());

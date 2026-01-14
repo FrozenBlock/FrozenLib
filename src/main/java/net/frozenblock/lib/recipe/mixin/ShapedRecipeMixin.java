@@ -20,7 +20,7 @@ package net.frozenblock.lib.recipe.mixin;
 import net.frozenblock.lib.recipe.api.ShapedRecipeBuilderExtension;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -32,11 +32,11 @@ public class ShapedRecipeMixin implements ShapedRecipeBuilderExtension {
 
 	@Shadow
 	@Final
-	ItemStack result;
+	private ItemStackTemplate result;
 
 	@Override
 	public ShapedRecipeBuilder frozenLib$patch(@Nullable DataComponentPatch patch) {
-		if (patch != null) this.result.applyComponents(patch);
+		if (patch != null) this.result.apply(patch);
 		return null;
 	}
 }

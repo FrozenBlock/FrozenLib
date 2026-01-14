@@ -21,7 +21,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
-import net.frozenblock.lib.networking.FrozenByteBufCodecs;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
@@ -42,7 +41,7 @@ public record WindParticleOptions(int lifespan, Vec3 velocity, ParticleLength le
 	);
 	public static final StreamCodec<RegistryFriendlyByteBuf, WindParticleOptions> STREAM_CODEC = StreamCodec.composite(
 		ByteBufCodecs.VAR_INT, WindParticleOptions::lifespan,
-		FrozenByteBufCodecs.VEC3, WindParticleOptions::velocity,
+		Vec3.STREAM_CODEC, WindParticleOptions::velocity,
 		ParticleLength.STREAM_CODEC, WindParticleOptions::length,
 		WindParticleOptions::new
 	);

@@ -26,6 +26,7 @@ import java.util.concurrent.Executor;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.RegistryDataLoader;
+import net.minecraft.resources.RegistryLoadTask;
 import net.minecraft.resources.ResourceKey;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.DynamicRegistryManagerSetupContextImpl;
@@ -55,7 +56,7 @@ public class RegistryDataLoaderMixin {
 		List<HolderLookup.RegistryLookup<?>> contextRegistries,
 		Executor executor,
 		CallbackInfoReturnable<CompletableFuture<?>> cir,
-		@Local(ordinal = 2) List<RegistryDataLoader.RegistryLoadTask<?>> loadTasks
+		@Local(name = "loadTasks") List<RegistryLoadTask<?>> loadTasks
 	) {
 		RegistryEvents.DYNAMIC_REGISTRY_SETUP.invoker().onDynamicRegistrySetup(
 			new DynamicRegistryManagerSetupContextImpl(loadTasks.stream().map(task -> task.registry))
@@ -66,12 +67,12 @@ public class RegistryDataLoaderMixin {
 		method = "lambda$load$2",
 		at = @At(
 			value = "INVOKE",
-			target = "Ljava/util/List;forEach(Ljava/util/function/Consumer;)V",
+			target = "Ljava/util/List;stream()Ljava/util/stream/Stream;",
 			ordinal = 0
 		)
 	)
 	private static void onDynamicLoaded(
-		List<RegistryDataLoader.RegistryLoadTask<?>> loadTasks,
+		List<RegistryLoadTask<?>> loadTasks,
 		Map<ResourceKey<?>, Exception> loadingErrors,
 		Void ignored,
 		CallbackInfoReturnable<RegistryAccess.Frozen> cir

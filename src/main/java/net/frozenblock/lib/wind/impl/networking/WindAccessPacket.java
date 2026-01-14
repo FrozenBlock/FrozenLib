@@ -30,11 +30,11 @@ public record WindAccessPacket(Vec3 accessPos) implements CustomPacketPayload {
 
 	@Contract("_ -> new")
 	public static WindAccessPacket create(FriendlyByteBuf buf) {
-        return new WindAccessPacket(buf.readVec3());
+        return new WindAccessPacket(Vec3.STREAM_CODEC.decode(buf));
 	}
 
 	public void write(FriendlyByteBuf buf) {
-		buf.writeVec3(this.accessPos());
+		Vec3.STREAM_CODEC.encode(buf, this.accessPos());
 	}
 
 	@Override

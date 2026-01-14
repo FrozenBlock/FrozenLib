@@ -34,6 +34,7 @@ import net.minecraft.core.HolderSet.Named;
 import net.minecraft.core.RegistrationInfo;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
+import net.minecraft.core.component.DataComponentLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -181,6 +182,11 @@ public final class DelayedRegistry<T> implements WritableRegistry<T> {
 	@Override
 	public PendingTags<T> prepareTagReload(TagLoader.LoadResult<T> loadResult) {
 		return this.wrapped.prepareTagReload(loadResult);
+	}
+
+	@Override
+	public DataComponentLookup<T> componentLookup() {
+		return this.wrapped.componentLookup();
 	}
 
 	@Override
