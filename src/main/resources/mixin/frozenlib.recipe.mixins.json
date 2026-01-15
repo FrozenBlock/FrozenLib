@@ -7,10 +7,6 @@
     "defaultRequire": 1
   },
   "mixins": [
-    "RecipeBuilderMixin",
-    "ShapedRecipeBuilderMixin",
-    "ShapedRecipeMixin",
-    "ShapelessRecipeBuilderMixin",
-    "ShapelessRecipeMixin"
+    "RecipeBuilderMixin"
   ]
 }

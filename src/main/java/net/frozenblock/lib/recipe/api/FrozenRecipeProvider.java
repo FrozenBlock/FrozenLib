@@ -29,74 +29,74 @@ import org.jetbrains.annotations.Nullable;
 
 public final class FrozenRecipeProvider {
 
-	public static void woodenButton(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike button, ItemLike material) {
-		recipeProvider.buttonBuilder(button, Ingredient.of(material))
-			.unlockedBy("has_planks", recipeProvider.has(material))
-			.group("wooden_button").save(recipeOutput);
+	public static void woodenButton(RecipeProvider provider, RecipeOutput output, ItemLike button, ItemLike material) {
+		provider.buttonBuilder(button, Ingredient.of(material))
+			.unlockedBy("has_planks", provider.has(material))
+			.group("wooden_button").save(output);
 	}
 
-	public static void woodenDoor(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike door, ItemLike material) {
-		recipeProvider.doorBuilder(door, Ingredient.of(material))
-			.unlockedBy("has_planks", recipeProvider.has(material))
-			.group("wooden_door").save(recipeOutput);
+	public static void woodenDoor(RecipeProvider provider, RecipeOutput output, ItemLike door, ItemLike material) {
+		provider.doorBuilder(door, Ingredient.of(material))
+			.unlockedBy("has_planks", provider.has(material))
+			.group("wooden_door").save(output);
 	}
 
-	public static void woodenFence(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike fence, ItemLike material) {
-		recipeProvider.fenceBuilder(fence, Ingredient.of(material))
-			.unlockedBy("has_planks", recipeProvider.has(material))
-			.group("wooden_fence").save(recipeOutput);
+	public static void woodenFence(RecipeProvider provider, RecipeOutput output, ItemLike fence, ItemLike material) {
+		provider.fenceBuilder(fence, Ingredient.of(material))
+			.unlockedBy("has_planks", provider.has(material))
+			.group("wooden_fence").save(output);
 	}
 
-	public static void woodenFenceGate(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike fenceGate, ItemLike material) {
-		recipeProvider.fenceGateBuilder(fenceGate, Ingredient.of(material))
-			.unlockedBy("has_planks", recipeProvider.has(material))
-			.group("wooden_fence_gate").save(recipeOutput);
+	public static void woodenFenceGate(RecipeProvider provider, RecipeOutput output, ItemLike fenceGate, ItemLike material) {
+		provider.fenceGateBuilder(fenceGate, Ingredient.of(material))
+			.unlockedBy("has_planks", provider.has(material))
+			.group("wooden_fence_gate").save(output);
 	}
 
-	public static void woodenPressurePlace(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike pressurePlate, ItemLike material) {
-		recipeProvider.pressurePlateBuilder(RecipeCategory.REDSTONE, pressurePlate, Ingredient.of(material))
-			.unlockedBy("has_planks", recipeProvider.has(material))
-			.group("wooden_pressure_plate").save(recipeOutput);
+	public static void woodenPressurePlace(RecipeProvider provider, RecipeOutput output, ItemLike pressurePlate, ItemLike material) {
+		provider.pressurePlateBuilder(RecipeCategory.REDSTONE, pressurePlate, Ingredient.of(material))
+			.unlockedBy("has_planks", provider.has(material))
+			.group("wooden_pressure_plate").save(output);
 	}
 
-	public static void woodenSlab(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike slab, ItemLike material) {
-		recipeProvider.slabBuilder(RecipeCategory.BUILDING_BLOCKS, slab, Ingredient.of(material))
-			.unlockedBy("has_planks", recipeProvider.has(material))
-			.group("wooden_slab").save(recipeOutput);
+	public static void woodenSlab(RecipeProvider provider, RecipeOutput output, ItemLike slab, ItemLike material) {
+		provider.slabBuilder(RecipeCategory.BUILDING_BLOCKS, slab, Ingredient.of(material))
+			.unlockedBy("has_planks", provider.has(material))
+			.group("wooden_slab").save(output);
 	}
 
-	public static void woodenStairs(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike stairs, ItemLike material) {
-		recipeProvider.stairBuilder(stairs, Ingredient.of(material))
-			.unlockedBy("has_planks", recipeProvider.has(material))
-			.group("wooden_stairs").save(recipeOutput);
+	public static void woodenStairs(RecipeProvider provider, RecipeOutput output, ItemLike stairs, ItemLike material) {
+		provider.stairBuilder(stairs, Ingredient.of(material))
+			.unlockedBy("has_planks", provider.has(material))
+			.group("wooden_stairs").save(output);
 	}
 
-	public static void woodenTrapdoor(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike trapdoor, ItemLike material) {
-		recipeProvider.trapdoorBuilder(trapdoor, Ingredient.of(material))
-			.unlockedBy("has_planks", recipeProvider.has(material))
-			.group("wooden_trapdoor").save(recipeOutput);
+	public static void woodenTrapdoor(RecipeProvider provider, RecipeOutput output, ItemLike trapdoor, ItemLike material) {
+		provider.trapdoorBuilder(trapdoor, Ingredient.of(material))
+			.unlockedBy("has_planks", provider.has(material))
+			.group("wooden_trapdoor").save(output);
 	}
 
-	public static void woodenSign(RecipeProvider recipeProvider, RecipeOutput recipeOutput, ItemLike sign, ItemLike material) {
-		recipeProvider.signBuilder(sign, Ingredient.of(material))
-			.unlockedBy("has_planks", recipeProvider.has(material))
-			.group("wooden_sign").save(recipeOutput);
+	public static void woodenSign(RecipeProvider provider, RecipeOutput output, ItemLike sign, ItemLike material) {
+		provider.signBuilder(sign, Ingredient.of(material))
+			.unlockedBy("has_planks", provider.has(material))
+			.group("wooden_sign").save(output);
 	}
 
-	public static void colorWithDyes(RecipeProvider recipeProvider, RecipeOutput recipeOutput, List<Item> list, List<Item> list2, @Nullable Item item, String group, RecipeCategory recipeCategory) {
+	public static void colorWithDyes(RecipeProvider provider, RecipeOutput output, List<Item> list, List<Item> list2, @Nullable Item item, String group, RecipeCategory recipeCategory) {
 		for (int i = 0; i < list.size(); ++i) {
 			final Item item2 = list.get(i);
 			final Item item3 = list2.get(i);
 			Stream<Item> stream = list2.stream().filter((item2x) -> !item2x.equals(item3));
 			if (item != null) stream = Stream.concat(stream, Stream.of(item));
 
-			recipeProvider.shapeless(recipeCategory, item3)
+			provider.shapeless(recipeCategory, item3)
 				.requires(item2)
 				.requires(Ingredient.of(stream))
 				.group(group).unlockedBy(
 					"has_needed_dye",
-					recipeProvider.has(item2))
-				.save(recipeOutput, "dye_" + RecipeProvider.getItemName(item3));
+					provider.has(item2))
+				.save(output, "dye_" + RecipeProvider.getItemName(item3));
 		}
 	}
 
