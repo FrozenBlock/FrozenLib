@@ -26,22 +26,16 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvider;
 import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider;
-import net.frozenblock.lib.recipe.api.ShapedRecipeUtil;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.frozenblock.lib.testmod.FrozenTestMain;
-import net.minecraft.advancements.criterion.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BiomeTags;
-import net.minecraft.world.item.Instruments;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.InstrumentComponent;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.LootPool;
@@ -75,17 +69,6 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 					this.shapeless(RecipeCategory.MISC, Items.DIAMOND_BLOCK)
 						.requires(Items.IRON_INGOT, 2)
 						.save(recipeOutput);
-					ShapedRecipeUtil.withResultPatch(
-						this.shaped(RecipeCategory.TOOLS, Items.GOAT_HORN)
-							.define('E', Items.DRAGON_EGG)
-							.pattern("EEE")
-							.pattern("EEE")
-							.pattern("EEE")
-							.unlockedBy("has_dragon_egg", InventoryChangeTrigger.TriggerInstance.hasItems(Items.DRAGON_EGG)),
-						DataComponentPatch.builder()
-							.set(DataComponents.INSTRUMENT, new InstrumentComponent(this.registries.lookupOrThrow(Registries.INSTRUMENT).getOrThrow(Instruments.DREAM_GOAT_HORN)))
-							.build()
-					).save(recipeOutput, FrozenTestMain.id("dream_goat_horn").toString());
 				}
 			};
 		}
