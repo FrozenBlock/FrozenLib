@@ -19,16 +19,16 @@ package net.frozenblock.lib.block.client.api;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.rendering.v1.ColorProviderRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
 import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.Block;
 
 @Environment(EnvType.CLIENT)
-public class TintRegistryHelper {
+public class BlockColorHelper {
 
-	public static void registerAverageFoliageColorForBlock(Block block) {
-		ColorProviderRegistry.BLOCK.register(
+	public static void registerAverageFoliageColor(Block block) {
+		BlockColorRegistry.register(
 			(state, level, pos, tintIndex) -> {
 				if (level == null || pos == null) return FoliageColor.FOLIAGE_DEFAULT;
 				return BiomeColors.getAverageFoliageColor(level, pos);
@@ -37,29 +37,29 @@ public class TintRegistryHelper {
 		);
 	}
 
-	public static void registerBirchFoliageColorForBlock(Block block) {
-		ColorProviderRegistry.BLOCK.register(
+	public static void registerBirchFoliageColor(Block block) {
+		BlockColorRegistry.register(
 			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_BIRCH,
 			block
 		);
 	}
 
-	public static void registerEvergreenFoliageColorForBlock(Block block) {
-		ColorProviderRegistry.BLOCK.register(
+	public static void registerEvergreenFoliageColor(Block block) {
+		BlockColorRegistry.register(
 			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_EVERGREEN,
 			block
 		);
 	}
 
-	public static void registerMangroveFoliageColorForBlock(Block block) {
-		ColorProviderRegistry.BLOCK.register(
+	public static void registerMangroveFoliageColor(Block block) {
+		BlockColorRegistry.register(
 			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_MANGROVE,
 			block
 		);
 	}
 
-	public static void registerColorForBlock(Block block, int color) {
-		ColorProviderRegistry.BLOCK.register(
+	public static void registerColor(Block block, int color) {
+		BlockColorRegistry.register(
 			(state, level, pos, tintIndex) -> color,
 			block
 		);

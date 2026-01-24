@@ -26,14 +26,14 @@ import net.minecraft.core.RegistrySetBuilder;
 public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 
 	@Override
-	public void onInitializeDataGenerator(FabricDataGenerator dataGenerator) {
-		final FabricDataGenerator.Pack pack = dataGenerator.createPack();
+	public void onInitializeDataGenerator(FabricDataGenerator generator) {
+		final FabricDataGenerator.Pack pack = generator.createPack();
 
 		pack.addProvider(FrozenLibBlockTagProvider::new);
 	}
 
 	@Override
-	public void buildRegistry(RegistrySetBuilder registryBuilder) {
+	public void buildRegistry(RegistrySetBuilder builder) {
 	}
 
 	@Override
