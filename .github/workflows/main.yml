@@ -30,10 +30,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Checkout cloth-config
+      - name: Checkout Cloth Config
         uses: actions/checkout@v4
         with:
+          fetch-depth: 0
           repository: EthanRStokes/cloth-config
+          ref: v26.1
+          submodules: recursive
           path: cloth-config
       - name: Setup JDK ${{ matrix.java }}
         uses: actions/setup-java@v4
