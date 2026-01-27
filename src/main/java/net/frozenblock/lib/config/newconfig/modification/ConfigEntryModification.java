@@ -17,10 +17,9 @@
 
 package net.frozenblock.lib.config.newconfig.modification;
 
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.config.api.instance.util.DeepCopyUtils;
-
 import java.util.function.Consumer;
+import net.frozenblock.lib.config.api.instance.util.DeepCopyUtils;
+import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 
 public record ConfigEntryModification<T>(Consumer<EntryValueHolder<T>> modifier) {
 

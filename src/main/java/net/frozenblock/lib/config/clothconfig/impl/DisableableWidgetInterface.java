@@ -19,7 +19,6 @@ package net.frozenblock.lib.config.clothconfig.impl;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 
