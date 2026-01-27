@@ -24,8 +24,6 @@ import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.advancement.api.AdvancementAPI;
 import net.frozenblock.lib.advancement.api.AdvancementEvents;
 import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
-import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.api.GravityBelt;

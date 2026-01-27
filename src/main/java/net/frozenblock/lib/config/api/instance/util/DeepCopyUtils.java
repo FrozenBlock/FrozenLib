@@ -17,9 +17,6 @@
 
 package net.frozenblock.lib.config.api.instance.util;
 
-import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
-import net.frozenblock.lib.config.api.instance.xjs.UnsafeUtils;
-
 import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -36,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
+import net.frozenblock.lib.config.api.instance.xjs.UnsafeUtils;
 
 public final class DeepCopyUtils {
 

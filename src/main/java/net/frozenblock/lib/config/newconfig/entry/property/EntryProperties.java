@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.config.newconfig.entry.property;
 
-import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
+import org.jetbrains.annotations.Nullable;
 
 public class EntryProperties {
 	private static final EntryProperties DEFAULT = new EntryProperties(true, true, null, null);

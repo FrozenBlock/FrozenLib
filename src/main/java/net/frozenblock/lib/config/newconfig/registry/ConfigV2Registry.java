@@ -18,11 +18,11 @@
 package net.frozenblock.lib.config.newconfig.registry;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import java.util.Collection;
+import java.util.Map;
 import net.frozenblock.lib.config.newconfig.config.ConfigData;
 import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
 import net.minecraft.resources.Identifier;
-import java.util.Collection;
-import java.util.Map;
 
 public class ConfigV2Registry {
 	public static final Map<ID, ConfigData<?>> CONFIG_DATA = new Object2ObjectOpenHashMap<>();

@@ -144,7 +144,7 @@ public class DeepCopyUtilsTest {
         SimplePojo original = new SimplePojo(10, "orig", nested);
         SimplePojo dest = new SimplePojo();
 
-        DeepCopyUtils.deepCopyInto(original, dest, false);
+        DeepCopyUtils.deepCopyInto(original, dest);
         assertEquals(10, dest.a);
         assertEquals("orig", dest.b);
         assertNotNull(dest.nested);
