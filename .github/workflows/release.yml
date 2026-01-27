@@ -30,7 +30,7 @@ jobs:
           repository: EthanRStokes/cloth-config
           path: cloth-config
       - name: Validating the Gradle Wrapper
-        uses: gradle/wrapper-validation-action@v1
+        uses: gradle/actions/wrapper-validation@v5
       - name: Setting up Java ${{ matrix.java }}
         uses: actions/setup-java@v4
         with:
