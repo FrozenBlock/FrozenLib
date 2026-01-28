@@ -28,8 +28,8 @@ interface ConfigEntry<T> {
     fun <A, B : AbstractConfigListEntry<A>, C : AbstractFieldBuilder<A, B, C>> makeEntry(
         entryBuilder: ConfigEntryBuilder,
         title: Component,
-        defaultValue: A,
-        saveConsumer: Any,
+        defaultValue: A?,
+        saveConsumer: Any?,
         tooltip: Component?,
         requiresRestart: Boolean?,
         requirement: Requirement?

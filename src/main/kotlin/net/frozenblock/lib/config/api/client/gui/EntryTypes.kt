@@ -22,7 +22,6 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
 import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder
-import net.frozenblock.lib.config.api.client.gui.EntryBuilder.Companion.consumerError
 import net.frozenblock.lib.config.api.client.gui.EntryBuilder.Companion.defaultValueError
 import net.minecraft.network.chat.Component
 import java.util.function.Consumer
@@ -78,18 +77,18 @@ data class EnumEntry<T : Enum<T>>(
     override fun <A, B : AbstractConfigListEntry<A>, C : AbstractFieldBuilder<A, B, C>> makeEntry(
         entryBuilder: ConfigEntryBuilder,
         title: Component,
-        defaultValue: A,
-        saveConsumer: Any,
+        defaultValue: A?,
+        saveConsumer: Any?,
         tooltip: Component?,
         requiresRestart: Boolean?,
         requirement: Requirement?
     ): C {
-        val consumer: Consumer<EnumEntry<T>> = saveConsumer as? Consumer<EnumEntry<T>> ?: consumerError()
-        val default: EnumEntry<T> = defaultValue as? EnumEntry<T> ?: defaultValueError()
+        val consumer: Consumer<EnumEntry<T>>? = saveConsumer as? Consumer<EnumEntry<T>>
+        val default: EnumEntry<T> = defaultValue as? EnumEntry<T>? ?: defaultValueError()
 
         return entryBuilder.startEnumSelector(title, default.`class`.java, value)
             .setDefaultValue(default.value)
-            .setSaveConsumer { newValue -> consumer.accept(EnumEntry(default.`class`, newValue)) }
+            .setSaveConsumer { newValue -> consumer?.accept(EnumEntry(default.`class`, newValue)) }
             .apply {
                 tooltip?.let { this.setTooltip(it) }
                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
@@ -108,18 +107,18 @@ data class SelectorEntry<T>(
     override fun <A, B : AbstractConfigListEntry<A>, C : AbstractFieldBuilder<A, B, C>> makeEntry(
         entryBuilder: ConfigEntryBuilder,
         title: Component,
-        defaultValue: A,
-        saveConsumer: Any,
+        defaultValue: A?,
+        saveConsumer: Any?,
         tooltip: Component?,
         requiresRestart: Boolean?,
         requirement: Requirement?
     ): C {
-        val consumer: Consumer<SelectorEntry<T>> = saveConsumer as? Consumer<SelectorEntry<T>> ?: consumerError()
-        val default: SelectorEntry<T> = defaultValue as? SelectorEntry<T> ?: defaultValueError()
+        val consumer: Consumer<SelectorEntry<T>>? = saveConsumer as? Consumer<SelectorEntry<T>>
+        val default: SelectorEntry<T>? = defaultValue as? SelectorEntry<T>
 
         return entryBuilder.startSelector(title, valuesArray, value)
-            .setDefaultValue(default.value)
-            .setSaveConsumer { newValue -> consumer.accept(SelectorEntry(default.valuesArray, newValue)) }
+            .setDefaultValue(default?.value)
+            .setSaveConsumer { newValue -> consumer?.accept(SelectorEntry(valuesArray, newValue)) }
             .apply {
                 tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
