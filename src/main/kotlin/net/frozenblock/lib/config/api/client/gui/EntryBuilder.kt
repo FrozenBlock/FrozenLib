@@ -37,9 +37,9 @@ data class EntryBuilder<T>(
 
     @JvmField val value: T?,
 
-    @JvmField val defaultValue: T & Any , // not nullable
+    @JvmField val defaultValue: T? = null,
 
-    @JvmField val saveConsumer: Consumer<T>,
+    @JvmField val saveConsumer: Consumer<T>? = null,
 
     @JvmField val tooltip: Component? = null,
 
@@ -51,10 +51,7 @@ data class EntryBuilder<T>(
     @JvmField val requirement: Requirement? = null
 ) {
     companion object {
-        private const val CONSUMER_ERROR = "Invalid consumer"
         private const val DEFAULT_VALUE_ERROR = "Invalid default value"
-
-        internal fun consumerError(): Nothing = throw IllegalArgumentException(CONSUMER_ERROR)
 
         internal fun defaultValueError(): Nothing = throw IllegalArgumentException(DEFAULT_VALUE_ERROR)
     }
@@ -64,12 +61,12 @@ data class EntryBuilder<T>(
      */
     @Suppress("UNCHECKED_CAST")
     fun builder(entryBuilder: ConfigEntryBuilder): AbstractFieldBuilder<*, *, *> {
-        val usedValue: T = value ?: defaultValue
+        val usedValue: T? = value ?: defaultValue
         when (usedValue) {
             is Boolean -> {
-                val consumer = saveConsumer as? Consumer<Boolean> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<Boolean>
                 return entryBuilder.startBooleanToggle(title, usedValue)
-                    .setDefaultValue(defaultValue as Boolean)
+                    .setDefaultValue(defaultValue as? Boolean)
                     .setSaveConsumer(consumer)
                     .setYesNoTextSupplier { bool: Boolean -> text(bool.toString()) }
                     .apply {
@@ -80,9 +77,9 @@ data class EntryBuilder<T>(
             }
 
             is Int -> {
-                val consumer = saveConsumer as? Consumer<Int> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<Int>
                 return entryBuilder.startIntField(title, usedValue)
-                    .setDefaultValue(defaultValue as Int)
+                    .setDefaultValue(defaultValue as? Int)
                     .setSaveConsumer(consumer)
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
@@ -92,9 +89,9 @@ data class EntryBuilder<T>(
             }
 
             is Long -> {
-                val consumer = saveConsumer as? Consumer<Long> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<Long>
                 return entryBuilder.startLongField(title, usedValue)
-                    .setDefaultValue(defaultValue as Long)
+                    .setDefaultValue(defaultValue as? Long)
                     .setSaveConsumer(consumer)
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
@@ -104,9 +101,9 @@ data class EntryBuilder<T>(
             }
 
             is Float -> {
-                val consumer = saveConsumer as? Consumer<Float> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<Float>
                 return entryBuilder.startFloatField(title, usedValue)
-                    .setDefaultValue(defaultValue as Float)
+                    .setDefaultValue(defaultValue as? Float)
                     .setSaveConsumer(consumer)
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
@@ -116,9 +113,9 @@ data class EntryBuilder<T>(
             }
 
             is Double -> {
-                val consumer = saveConsumer as? Consumer<Double> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<Double>
                 return entryBuilder.startDoubleField(title, usedValue)
-                    .setDefaultValue(defaultValue as Double)
+                    .setDefaultValue(defaultValue as? Double)
                     .setSaveConsumer(consumer)
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
@@ -128,9 +125,9 @@ data class EntryBuilder<T>(
             }
 
             is String -> {
-                val consumer = saveConsumer as? Consumer<String> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<String>
                 return entryBuilder.startStrField(title, usedValue)
-                    .setDefaultValue(defaultValue as String)
+                    .setDefaultValue(defaultValue as? String)
                     .setSaveConsumer(consumer)
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
@@ -140,10 +137,10 @@ data class EntryBuilder<T>(
             }
 
             is Color -> {
-                val consumer = saveConsumer as? Consumer<Color> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<Color>
                 return entryBuilder.startColorField(title, usedValue.color)
-                    .setDefaultValue((defaultValue as Color).color)
-                    .setSaveConsumer { color -> consumer.accept(Color(color))}
+                    .setDefaultValue((defaultValue as? Color)?.color)
+                    .setSaveConsumer { color -> consumer?.accept(Color(color))}
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
@@ -154,10 +151,10 @@ data class EntryBuilder<T>(
             is Slider<*> -> {
                 when (usedValue.type) {
                     SliderType.INT -> {
-                        val consumer = saveConsumer as? Consumer<Slider<Int>> ?: consumerError()
+                        val consumer = saveConsumer as? Consumer<Slider<Int>>
                         return entryBuilder.startIntSlider(title, usedValue.value.toInt(), usedValue.min.toInt(), usedValue.max.toInt())
-                            .setDefaultValue((defaultValue as Slider<Int>).value.toInt())
-                            .setSaveConsumer { newValue -> consumer.accept(Slider(newValue, usedValue.min.toInt(), usedValue.max.toInt(), SliderType.INT))}
+                            .setDefaultValue((defaultValue as? Slider<Int>)?.value?.toInt())
+                            .setSaveConsumer { newValue -> consumer?.accept(Slider(newValue, usedValue.min.toInt(), usedValue.max.toInt(), SliderType.INT))}
                             .apply {
                                 tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
@@ -166,10 +163,10 @@ data class EntryBuilder<T>(
                     }
 
                     SliderType.LONG -> {
-                        val consumer = saveConsumer as? Consumer<Slider<Long>> ?: consumerError()
+                        val consumer = saveConsumer as? Consumer<Slider<Long>>
                         return entryBuilder.startLongSlider(title, usedValue.value.toLong(), usedValue.min.toLong(), usedValue.max.toLong())
-                            .setDefaultValue((defaultValue as Slider<Long>).value.toLong())
-                            .setSaveConsumer { newValue -> consumer.accept(Slider(newValue, usedValue.min.toLong(), usedValue.max.toLong(), SliderType.LONG)) }
+                            .setDefaultValue((defaultValue as? Slider<Long>)?.value?.toLong())
+                            .setSaveConsumer { newValue -> consumer?.accept(Slider(newValue, usedValue.min.toLong(), usedValue.max.toLong(), SliderType.LONG)) }
                             .apply {
                                 tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
@@ -182,10 +179,10 @@ data class EntryBuilder<T>(
             }
 
             is StringList -> {
-                val consumer = saveConsumer as? Consumer<StringList> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<StringList>
                 return entryBuilder.startStrList(title, usedValue.list)
-                    .setDefaultValue((defaultValue as StringList).list)
-                    .setSaveConsumer { strList -> consumer.accept(StringList(strList)) }
+                    .setDefaultValue((defaultValue as? StringList)?.list)
+                    .setSaveConsumer { strList -> consumer?.accept(StringList(strList)) }
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
@@ -194,10 +191,10 @@ data class EntryBuilder<T>(
             }
 
             is IntList -> {
-                val consumer = saveConsumer as? Consumer<IntList> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<IntList>
                 return entryBuilder.startIntList(title, usedValue.list)
-                    .setDefaultValue((defaultValue as IntList).list)
-                    .setSaveConsumer { intList -> consumer.accept(IntList(intList)) }
+                    .setDefaultValue((defaultValue as? IntList)?.list)
+                    .setSaveConsumer { intList -> consumer?.accept(IntList(intList)) }
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
@@ -206,10 +203,10 @@ data class EntryBuilder<T>(
             }
 
             is LongList -> {
-                val consumer = saveConsumer as? Consumer<LongList> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<LongList>
                 return entryBuilder.startLongList(title, usedValue.list)
-                    .setDefaultValue((defaultValue as LongList).list)
-                    .setSaveConsumer { longList -> consumer.accept(LongList(longList)) }
+                    .setDefaultValue((defaultValue as? LongList)?.list)
+                    .setSaveConsumer { longList -> consumer?.accept(LongList(longList)) }
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
@@ -218,10 +215,10 @@ data class EntryBuilder<T>(
             }
 
             is FloatList -> {
-                val consumer = saveConsumer as? Consumer<FloatList> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<FloatList>
                 return entryBuilder.startFloatList(title, usedValue.list)
-                    .setDefaultValue((defaultValue as FloatList).list)
-                    .setSaveConsumer { floatList -> consumer.accept(FloatList(floatList)) }
+                    .setDefaultValue((defaultValue as? FloatList)?.list)
+                    .setSaveConsumer { floatList -> consumer?.accept(FloatList(floatList)) }
                     .apply {
                         tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
@@ -230,7 +227,7 @@ data class EntryBuilder<T>(
             }
 
             is ConfigEntry<*> -> {
-                val consumer = saveConsumer as? Consumer<ConfigEntry<*>> ?: consumerError()
+                val consumer = saveConsumer as? Consumer<ConfigEntry<*>>
                 return usedValue.makeEntry(entryBuilder, title, defaultValue, consumer, tooltip, requiresRestart, requirement)
             }
 
