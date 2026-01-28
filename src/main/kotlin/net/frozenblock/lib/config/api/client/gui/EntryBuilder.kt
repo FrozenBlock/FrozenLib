@@ -34,18 +34,18 @@ import net.frozenblock.lib.config.v2.entry.ConfigEntry as V2ConfigEntry
  * @since 1.3.8
  */
 @Environment(EnvType.CLIENT)
-data class EntryBuilder<T, E>(
+data class EntryBuilder(
     @JvmField val title: Component,
 
-    @JvmField val entry: V2ConfigEntry<E>,
+    @JvmField val entry: V2ConfigEntry<*>,
 
     @JvmField val tooltip: Component? = null,
 
-    @JvmField val value: T? = null,
+    @JvmField val value: Any? = null,
 
-    @JvmField val defaultValue: T? = null,
+    @JvmField val defaultValue: Any? = null,
 
-    @JvmField val saveConsumer: Consumer<T>? = null,
+    @JvmField val saveConsumer: Consumer<Any>? = null,
 
     @JvmField val requiresRestart: Boolean? = false,
 
@@ -65,9 +65,9 @@ data class EntryBuilder<T, E>(
      */
     @Suppress("UNCHECKED_CAST")
     fun build(entryBuilder: ConfigEntryBuilder): AbstractConfigListEntry<out Any> {
-        val usedValue: T = (value ?: entry.withSync) as T
-        val defaultValue: T = defaultValue ?: entry.defaultValue() as T
-        val saveConsumer: Consumer<T> = saveConsumer ?: Consumer(entry::setValue) as Consumer<T>
+        val usedValue: Any = (value ?: entry.withSync)
+        val defaultValue: Any = defaultValue ?: entry.defaultValue()
+        val saveConsumer: Consumer<out Any> = saveConsumer ?: Consumer(entry::setValue)
 
         val entry = when (usedValue) {
             is Boolean -> {

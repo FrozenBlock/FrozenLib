@@ -41,7 +41,7 @@ object TestConfigGui {
         category.setBackground(Identifier.withDefaultNamespace("textures/block/packed_mud.png"))
 
         val test = category.addEntry(
-            EntryBuilder<Boolean, Boolean>(
+            EntryBuilder(
                 text("test_toggle"),
                 TestConfig.testToggle,
                 tooltip("test_toggle"),
