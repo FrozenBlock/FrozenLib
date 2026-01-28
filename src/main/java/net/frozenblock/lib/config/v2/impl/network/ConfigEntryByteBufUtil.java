@@ -15,11 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.impl.network;
+package net.frozenblock.lib.config.v2.impl.network;
 
 import net.frozenblock.lib.config.api.instance.xjs.NonSerializableObjectException;
 import net.frozenblock.lib.config.api.instance.xjs.XjsObjectMapper;
-import net.frozenblock.lib.config.newconfig.registry.ID;
+import net.frozenblock.lib.config.v2.registry.ID;
 import net.minecraft.network.FriendlyByteBuf;
 import xjs.data.JsonObject;
 import xjs.data.serialization.JsonContext;

@@ -15,16 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.config;
+package net.frozenblock.lib.config.v2.config;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Map;
-import net.frozenblock.lib.config.newconfig.ConfigSerializer;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.config.newconfig.entry.EntryType;
-import net.frozenblock.lib.config.newconfig.entry.property.EntryProperties;
-import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
-import net.frozenblock.lib.config.newconfig.registry.ID;
+import net.frozenblock.lib.config.v2.ConfigSerializer;
+import net.frozenblock.lib.config.v2.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.entry.EntryType;
+import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
+import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
+import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 
 public class ConfigData<T> {

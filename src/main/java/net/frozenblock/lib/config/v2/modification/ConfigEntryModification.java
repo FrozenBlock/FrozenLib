@@ -15,11 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.modification;
+package net.frozenblock.lib.config.v2.modification;
 
 import java.util.function.Consumer;
 import net.frozenblock.lib.config.api.instance.util.DeepCopyUtils;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 
 public record ConfigEntryModification<T>(Consumer<EntryValueHolder<T>> modifier) {
 

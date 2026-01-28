@@ -19,7 +19,7 @@ package net.frozenblock.lib;
 
 import java.nio.file.Path;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.config.newconfig.registry.ID;
+import net.frozenblock.lib.config.v2.registry.ID;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Contract;

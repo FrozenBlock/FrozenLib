@@ -15,13 +15,13 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.registry;
+package net.frozenblock.lib.config.v2.registry;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Collection;
 import java.util.Map;
-import net.frozenblock.lib.config.newconfig.config.ConfigData;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.config.ConfigData;
+import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.minecraft.resources.Identifier;
 
 public class ConfigV2Registry {

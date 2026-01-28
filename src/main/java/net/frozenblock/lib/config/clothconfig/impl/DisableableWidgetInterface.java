@@ -20,7 +20,7 @@ package net.frozenblock.lib.config.clothconfig.impl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 
 /**
  * Used to integrate config syncing with Cloth Config.

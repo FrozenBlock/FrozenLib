@@ -25,7 +25,7 @@ import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
