@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.impl.network;
+package net.frozenblock.lib.config.v2.impl.network;
 
 import java.util.Collection;
 import java.util.List;
@@ -27,11 +27,11 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.config.newconfig.config.ConfigData;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.config.newconfig.modification.ConfigEntryModification;
-import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
-import net.frozenblock.lib.config.newconfig.registry.ID;
+import net.frozenblock.lib.config.v2.config.ConfigData;
+import net.frozenblock.lib.config.v2.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.modification.ConfigEntryModification;
+import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
+import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.minecraft.client.Minecraft;

@@ -25,7 +25,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
-import net.frozenblock.lib.config.newconfig.modification.ConfigEntryModification;
+import net.frozenblock.lib.config.v2.modification.ConfigEntryModification;
 import net.minecraft.network.chat.Component;
 
 /**

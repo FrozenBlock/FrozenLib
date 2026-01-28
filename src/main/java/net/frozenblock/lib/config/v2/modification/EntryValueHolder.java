@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.modification;
+package net.frozenblock.lib.config.v2.modification;
 
 public class EntryValueHolder<T> {
 	public T value;

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.entry.property;
+package net.frozenblock.lib.config.v2.entry.property;
 
 import java.util.Optional;
 import org.jetbrains.annotations.Nullable;

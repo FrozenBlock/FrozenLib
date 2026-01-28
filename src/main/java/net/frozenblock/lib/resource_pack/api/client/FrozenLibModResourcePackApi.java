@@ -52,7 +52,7 @@ import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.config.newconfig.entry.EntryType;
+import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.resource_pack.impl.client.PackDownloadToast;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;

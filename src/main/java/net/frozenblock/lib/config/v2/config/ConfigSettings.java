@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.config;
+package net.frozenblock.lib.config.v2.config;
 
 import blue.endless.jankson.Jankson;
 import blue.endless.jankson.JsonElement;

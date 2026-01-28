@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig;
+package net.frozenblock.lib.config.v2;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
@@ -34,11 +34,11 @@ import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.config.newconfig.config.ConfigData;
-import net.frozenblock.lib.config.newconfig.config.ConfigSettings;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
-import net.frozenblock.lib.config.newconfig.registry.ID;
+import net.frozenblock.lib.config.v2.config.ConfigData;
+import net.frozenblock.lib.config.v2.config.ConfigSettings;
+import net.frozenblock.lib.config.v2.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
+import net.frozenblock.lib.config.v2.registry.ID;
 
 public class ConfigSerializer {
 	private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir();

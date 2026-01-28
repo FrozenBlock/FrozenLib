@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.newconfig.entry;
+package net.frozenblock.lib.config.v2.entry;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
@@ -23,13 +23,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
-import net.frozenblock.lib.config.newconfig.config.ConfigData;
-import net.frozenblock.lib.config.newconfig.entry.property.EntryProperties;
-import net.frozenblock.lib.config.newconfig.entry.property.VisibilityPredicate;
-import net.frozenblock.lib.config.newconfig.modification.ConfigEntryModification;
-import net.frozenblock.lib.config.newconfig.modification.EntryValueHolder;
-import net.frozenblock.lib.config.newconfig.registry.ConfigV2Registry;
-import net.frozenblock.lib.config.newconfig.registry.ID;
+import net.frozenblock.lib.config.v2.config.ConfigData;
+import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
+import net.frozenblock.lib.config.v2.entry.property.VisibilityPredicate;
+import net.frozenblock.lib.config.v2.modification.ConfigEntryModification;
+import net.frozenblock.lib.config.v2.modification.EntryValueHolder;
+import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
+import net.frozenblock.lib.config.v2.registry.ID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 

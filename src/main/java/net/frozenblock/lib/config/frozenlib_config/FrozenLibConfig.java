@@ -19,10 +19,10 @@ package net.frozenblock.lib.config.frozenlib_config;
 
 import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.config.newconfig.config.ConfigData;
-import net.frozenblock.lib.config.newconfig.config.ConfigSettings;
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry;
-import net.frozenblock.lib.config.newconfig.entry.EntryType;
+import net.frozenblock.lib.config.v2.config.ConfigData;
+import net.frozenblock.lib.config.v2.config.ConfigSettings;
+import net.frozenblock.lib.config.v2.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 
 public class FrozenLibConfig {

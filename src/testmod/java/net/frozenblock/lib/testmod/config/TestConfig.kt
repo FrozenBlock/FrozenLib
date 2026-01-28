@@ -22,11 +22,11 @@ import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
 import io.netty.buffer.ByteBuf
 import net.frozenblock.lib.FrozenLibConstants
-import net.frozenblock.lib.config.newconfig.config.ConfigData
-import net.frozenblock.lib.config.newconfig.config.ConfigSettings
-import net.frozenblock.lib.config.newconfig.entry.ConfigEntry
-import net.frozenblock.lib.config.newconfig.entry.EntryType
-import net.frozenblock.lib.config.newconfig.entry.property.VisibilityPredicate
+import net.frozenblock.lib.config.v2.config.ConfigData
+import net.frozenblock.lib.config.v2.config.ConfigSettings
+import net.frozenblock.lib.config.v2.entry.ConfigEntry
+import net.frozenblock.lib.config.v2.entry.EntryType
+import net.frozenblock.lib.config.v2.entry.property.VisibilityPredicate
 import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
