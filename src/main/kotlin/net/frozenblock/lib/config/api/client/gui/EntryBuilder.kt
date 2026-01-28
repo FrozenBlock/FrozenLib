@@ -35,9 +35,9 @@ import net.frozenblock.lib.config.v2.entry.ConfigEntry as V2ConfigEntry
  */
 @Environment(EnvType.CLIENT)
 data class EntryBuilder(
-    @JvmField val title: Component,
-
     @JvmField val entry: V2ConfigEntry<*>,
+
+    @JvmField val title: Component,
 
     @JvmField val tooltip: Component? = null,
 

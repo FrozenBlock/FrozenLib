@@ -42,15 +42,15 @@ object TestConfigGui {
 
         val test = category.addEntry(
             EntryBuilder(
-                text("test_toggle"),
                 TestConfig.testToggle,
+                text("test_toggle"),
                 tooltip("test_toggle"),
             ).build(entryBuilder)
         )
 
         val sliderTest = EntryBuilder(
-            Component.literal("This is wild"),
             TestConfig.testInt,
+            Component.literal("This is wild"),
             Component.literal("Epic tooltip"),
             Slider(TestConfig.testInt.withSync, 0, 100, SliderType.INT),
             Slider(TestConfig.testInt.defaultValue(), 0, 100, SliderType.INT),
