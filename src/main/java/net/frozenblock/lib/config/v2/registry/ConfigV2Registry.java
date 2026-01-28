@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.config.v2.registry;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.Collection;
 import java.util.Map;
@@ -26,7 +27,7 @@ import net.minecraft.resources.Identifier;
 
 public class ConfigV2Registry {
 	public static final Map<ID, ConfigData<?>> CONFIG_DATA = new Object2ObjectOpenHashMap<>();
-	public static final Map<ID, ConfigEntry<?>> CONFIG_ENTRY = new Object2ObjectOpenHashMap<>();
+	public static final Map<ID, ConfigEntry<?>> CONFIG_ENTRY = new Object2ObjectLinkedOpenHashMap<>();
 
 	public static void register(ConfigData data, ID id) {
 		if (CONFIG_DATA.containsKey(id)) throw new IllegalStateException("A ConfigData with id " + id + " has already been registered!");
