@@ -20,17 +20,18 @@ package net.frozenblock.lib.config.api.client.gui
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
+import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder
 import net.minecraft.network.chat.Component
 
-fun interface ConfigEntry<T> {
+interface ConfigEntry<T> {
 
-    fun makeEntry(
+    fun <A, B : AbstractConfigListEntry<A>, C : AbstractFieldBuilder<A, B, C>> makeEntry(
         entryBuilder: ConfigEntryBuilder,
         title: Component,
-        defaultValue: Any,
+        defaultValue: A,
         saveConsumer: Any,
         tooltip: Component?,
         requiresRestart: Boolean?,
         requirement: Requirement?
-    ): AbstractConfigListEntry<*>
+    ): C
 }

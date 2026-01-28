@@ -17,9 +17,11 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
+import me.shedaniel.clothconfig2.api.AbstractConfigEntry
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
+import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder
 import net.frozenblock.lib.config.api.client.gui.EntryBuilder.Companion.consumerError
 import net.frozenblock.lib.config.api.client.gui.EntryBuilder.Companion.defaultValueError
 import net.minecraft.network.chat.Component
@@ -73,15 +75,15 @@ data class EnumEntry<T : Enum<T>>(
     @JvmField val value: T
 ) : ConfigEntry<EnumEntry<T>> {
 
-    override fun makeEntry(
+    override fun <A, B : AbstractConfigListEntry<A>, C : AbstractFieldBuilder<A, B, C>> makeEntry(
         entryBuilder: ConfigEntryBuilder,
         title: Component,
-        defaultValue: Any,
+        defaultValue: A,
         saveConsumer: Any,
         tooltip: Component?,
         requiresRestart: Boolean?,
         requirement: Requirement?
-    ): AbstractConfigListEntry<*> {
+    ): C {
         val consumer: Consumer<EnumEntry<T>> = saveConsumer as? Consumer<EnumEntry<T>> ?: consumerError()
         val default: EnumEntry<T> = defaultValue as? EnumEntry<T> ?: defaultValueError()
 
@@ -92,8 +94,7 @@ data class EnumEntry<T : Enum<T>>(
                 tooltip?.let { this.setTooltip(it) }
                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                 requirement?.let { requirement -> this.setRequirement(requirement) }
-            }
-            .build()
+            } as C
     }
 
     override fun toString(): String = "EnumEntry[class=$`class`, value=$value]"
@@ -104,15 +105,15 @@ data class SelectorEntry<T>(
     @JvmField val value: T
 ) : ConfigEntry<SelectorEntry<T>> {
 
-    override fun makeEntry(
+    override fun <A, B : AbstractConfigListEntry<A>, C : AbstractFieldBuilder<A, B, C>> makeEntry(
         entryBuilder: ConfigEntryBuilder,
         title: Component,
-        defaultValue: Any,
+        defaultValue: A,
         saveConsumer: Any,
         tooltip: Component?,
         requiresRestart: Boolean?,
         requirement: Requirement?
-    ): AbstractConfigListEntry<*> {
+    ): C {
         val consumer: Consumer<SelectorEntry<T>> = saveConsumer as? Consumer<SelectorEntry<T>> ?: consumerError()
         val default: SelectorEntry<T> = defaultValue as? SelectorEntry<T> ?: defaultValueError()
 
@@ -123,8 +124,7 @@ data class SelectorEntry<T>(
                 tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                 requirement?.let { requirement -> this.setRequirement(requirement) }
-            }
-            .build()
+            } as C
     }
 
     override fun toString(): String = "SelectorEntry[valuesArray=$valuesArray, value=$value]"
