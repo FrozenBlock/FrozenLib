@@ -53,7 +53,7 @@ public class TestConfigGui {
 			null,
 			false,
 			null
-		).build(entryBuilder);
+		).builder(entryBuilder).build();
 
 		var testSubMenuBoolean = entryBuilder.startBooleanToggle(text("sub_option"), subMenu.subOption)
 				.setDefaultValue(TestConfig.subMenu.defaultValue().subOption)
