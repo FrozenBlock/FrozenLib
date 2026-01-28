@@ -20,28 +20,32 @@ package net.frozenblock.lib.config.api.client.gui
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
-import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder
 import net.fabricmc.api.EnvType
 import net.fabricmc.api.Environment
+import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface
 import net.frozenblock.lib.config.frozenlib_config.gui.FrozenLibConfigGui.text
 import net.minecraft.network.chat.Component
 import java.util.function.Consumer
+import net.frozenblock.lib.config.v2.entry.ConfigEntry as V2ConfigEntry
+
 
 /**
  * Should only be used if Fabric Language Kotlin is installed.
  * @since 1.3.8
  */
 @Environment(EnvType.CLIENT)
-data class EntryBuilder<T>(
+data class EntryBuilder<T, E>(
     @JvmField val title: Component,
 
-    @JvmField val value: T?,
+    @JvmField val entry: V2ConfigEntry<E>,
+
+    @JvmField val tooltip: Component? = null,
+
+    @JvmField val value: T? = null,
 
     @JvmField val defaultValue: T? = null,
 
     @JvmField val saveConsumer: Consumer<T>? = null,
-
-    @JvmField val tooltip: Component? = null,
 
     @JvmField val requiresRestart: Boolean? = false,
 
@@ -60,12 +64,15 @@ data class EntryBuilder<T>(
      * @throws IllegalArgumentException if the type of [saveConsumer] is not the same as the type of [value]
      */
     @Suppress("UNCHECKED_CAST")
-    fun builder(entryBuilder: ConfigEntryBuilder): AbstractFieldBuilder<*, *, *> {
-        val usedValue: T? = value ?: defaultValue
-        when (usedValue) {
+    fun build(entryBuilder: ConfigEntryBuilder): AbstractConfigListEntry<out Any> {
+        val usedValue: T = (value ?: entry.withSync) as T
+        val defaultValue: T = defaultValue ?: entry.defaultValue() as T
+        val saveConsumer: Consumer<T> = saveConsumer ?: Consumer(entry::setValue) as Consumer<T>
+
+        val entry = when (usedValue) {
             is Boolean -> {
                 val consumer = saveConsumer as? Consumer<Boolean>
-                return entryBuilder.startBooleanToggle(title, usedValue)
+                entryBuilder.startBooleanToggle(title, usedValue)
                     .setDefaultValue(defaultValue as? Boolean)
                     .setSaveConsumer(consumer)
                     .setYesNoTextSupplier { bool: Boolean -> text(bool.toString()) }
@@ -74,11 +81,12 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is Int -> {
                 val consumer = saveConsumer as? Consumer<Int>
-                return entryBuilder.startIntField(title, usedValue)
+                entryBuilder.startIntField(title, usedValue)
                     .setDefaultValue(defaultValue as? Int)
                     .setSaveConsumer(consumer)
                     .apply {
@@ -86,11 +94,12 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is Long -> {
                 val consumer = saveConsumer as? Consumer<Long>
-                return entryBuilder.startLongField(title, usedValue)
+                entryBuilder.startLongField(title, usedValue)
                     .setDefaultValue(defaultValue as? Long)
                     .setSaveConsumer(consumer)
                     .apply {
@@ -98,11 +107,12 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is Float -> {
                 val consumer = saveConsumer as? Consumer<Float>
-                return entryBuilder.startFloatField(title, usedValue)
+                entryBuilder.startFloatField(title, usedValue)
                     .setDefaultValue(defaultValue as? Float)
                     .setSaveConsumer(consumer)
                     .apply {
@@ -110,11 +120,12 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is Double -> {
                 val consumer = saveConsumer as? Consumer<Double>
-                return entryBuilder.startDoubleField(title, usedValue)
+                entryBuilder.startDoubleField(title, usedValue)
                     .setDefaultValue(defaultValue as? Double)
                     .setSaveConsumer(consumer)
                     .apply {
@@ -122,11 +133,12 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is String -> {
                 val consumer = saveConsumer as? Consumer<String>
-                return entryBuilder.startStrField(title, usedValue)
+                entryBuilder.startStrField(title, usedValue)
                     .setDefaultValue(defaultValue as? String)
                     .setSaveConsumer(consumer)
                     .apply {
@@ -134,11 +146,12 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is Color -> {
                 val consumer = saveConsumer as? Consumer<Color>
-                return entryBuilder.startColorField(title, usedValue.color)
+                entryBuilder.startColorField(title, usedValue.color)
                     .setDefaultValue((defaultValue as? Color)?.color)
                     .setSaveConsumer { color -> consumer?.accept(Color(color))}
                     .apply {
@@ -146,13 +159,14 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is Slider<*> -> {
                 when (usedValue.type) {
                     SliderType.INT -> {
                         val consumer = saveConsumer as? Consumer<Slider<Int>>
-                        return entryBuilder.startIntSlider(title, usedValue.value.toInt(), usedValue.min.toInt(), usedValue.max.toInt())
+                        entryBuilder.startIntSlider(title, usedValue.value.toInt(), usedValue.min.toInt(), usedValue.max.toInt())
                             .setDefaultValue((defaultValue as? Slider<Int>)?.value?.toInt())
                             .setSaveConsumer { newValue -> consumer?.accept(Slider(newValue, usedValue.min.toInt(), usedValue.max.toInt(), SliderType.INT))}
                             .apply {
@@ -160,11 +174,12 @@ data class EntryBuilder<T>(
                                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                                 requirement?.let { requirement -> this.setRequirement(requirement) }
                             }
+                            .build()
                     }
 
                     SliderType.LONG -> {
                         val consumer = saveConsumer as? Consumer<Slider<Long>>
-                        return entryBuilder.startLongSlider(title, usedValue.value.toLong(), usedValue.min.toLong(), usedValue.max.toLong())
+                        entryBuilder.startLongSlider(title, usedValue.value.toLong(), usedValue.min.toLong(), usedValue.max.toLong())
                             .setDefaultValue((defaultValue as? Slider<Long>)?.value?.toLong())
                             .setSaveConsumer { newValue -> consumer?.accept(Slider(newValue, usedValue.min.toLong(), usedValue.max.toLong(), SliderType.LONG)) }
                             .apply {
@@ -172,6 +187,7 @@ data class EntryBuilder<T>(
                                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                                 requirement?.let { requirement -> this.setRequirement(requirement) }
                             }
+                            .build()
                     }
 
                     else -> throw IllegalArgumentException("Unsupported slider type: ${usedValue.type}")
@@ -180,7 +196,7 @@ data class EntryBuilder<T>(
 
             is StringList -> {
                 val consumer = saveConsumer as? Consumer<StringList>
-                return entryBuilder.startStrList(title, usedValue.list)
+                entryBuilder.startStrList(title, usedValue.list)
                     .setDefaultValue((defaultValue as? StringList)?.list)
                     .setSaveConsumer { strList -> consumer?.accept(StringList(strList)) }
                     .apply {
@@ -188,11 +204,12 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is IntList -> {
                 val consumer = saveConsumer as? Consumer<IntList>
-                return entryBuilder.startIntList(title, usedValue.list)
+                entryBuilder.startIntList(title, usedValue.list)
                     .setDefaultValue((defaultValue as? IntList)?.list)
                     .setSaveConsumer { intList -> consumer?.accept(IntList(intList)) }
                     .apply {
@@ -200,11 +217,12 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is LongList -> {
                 val consumer = saveConsumer as? Consumer<LongList>
-                return entryBuilder.startLongList(title, usedValue.list)
+                entryBuilder.startLongList(title, usedValue.list)
                     .setDefaultValue((defaultValue as? LongList)?.list)
                     .setSaveConsumer { longList -> consumer?.accept(LongList(longList)) }
                     .apply {
@@ -212,11 +230,12 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is FloatList -> {
                 val consumer = saveConsumer as? Consumer<FloatList>
-                return entryBuilder.startFloatList(title, usedValue.list)
+                entryBuilder.startFloatList(title, usedValue.list)
                     .setDefaultValue((defaultValue as? FloatList)?.list)
                     .setSaveConsumer { floatList -> consumer?.accept(FloatList(floatList)) }
                     .apply {
@@ -224,14 +243,21 @@ data class EntryBuilder<T>(
                         requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                         requirement?.let { requirement -> this.setRequirement(requirement) }
                     }
+                    .build()
             }
 
             is ConfigEntry<*> -> {
                 val consumer = saveConsumer as? Consumer<ConfigEntry<*>>
-                return usedValue.makeEntry(entryBuilder, title, defaultValue, consumer, tooltip, requiresRestart, requirement)
+                usedValue.makeEntry(entryBuilder, title, defaultValue, consumer, tooltip, requiresRestart, requirement)
             }
 
             else -> throw IllegalArgumentException("Unsupported type: ${usedValue!!::class.java}")
         }
+
+        if (this.entry.isSyncable) {
+            (entry as DisableableWidgetInterface).`frozenLib$addSyncData`(this.entry)
+        }
+
+        return entry
     }
 }

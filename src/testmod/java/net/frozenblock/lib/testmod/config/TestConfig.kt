@@ -99,25 +99,5 @@ object TestConfig {
         .visibilityPredicate(VisibilityPredicate.of { false })
         .build()
 
-    @JvmField
-    @Comment("Sub menu!")
-    var subMenu: ConfigEntry<SubMenu> = CONFIG.entry("subMenu", SubMenu.ENTRY_TYPE, SubMenu())
-
-    data class SubMenu(
-        @JvmField
-        @Comment("Crazy sub option ngl")
-        var subOption: Boolean = true
-    ) {
-        companion object {
-            val CODEC: Codec<SubMenu> = RecordCodecBuilder.create { instance ->
-                instance.group(
-                    Codec.BOOL.fieldOf("subOption").forGetter { it.subOption }
-                ).apply(instance, ::SubMenu)
-            }
-            val STREAM_CODEC: StreamCodec<ByteBuf, SubMenu> = StreamCodec.composite(
-                ByteBufCodecs.BOOL, SubMenu::subOption, ::SubMenu
-            )
-            val ENTRY_TYPE: EntryType<SubMenu> = EntryType.create(CODEC, STREAM_CODEC)
-        }
-    }
+    var subOption: ConfigEntry<Boolean> = CONFIG.entry("subMenu.subOption", EntryType.BOOL, true)
 }

@@ -25,13 +25,13 @@ import net.minecraft.network.chat.Component
 
 interface ConfigEntry<T> {
 
-    fun <A, B : AbstractConfigListEntry<A>, C : AbstractFieldBuilder<A, B, C>> makeEntry(
+    fun makeEntry(
         entryBuilder: ConfigEntryBuilder,
         title: Component,
-        defaultValue: A?,
+        defaultValue: Any?,
         saveConsumer: Any?,
         tooltip: Component?,
         requiresRestart: Boolean?,
         requirement: Requirement?
-    ): C
+    ): AbstractConfigListEntry<*>
 }

@@ -20,6 +20,9 @@ package net.frozenblock.lib;
 import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 
 @Environment(EnvType.SERVER)
@@ -27,6 +30,14 @@ public class FrozenLibServer implements DedicatedServerModInitializer {
 
     @Override
     public void onInitializeServer() {
+		ServerLifecycleEvents.SERVER_STARTED.register((_) -> {
+			try {
+				ConfigSerializer.saveConfigs(true);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		});
+
 		ModIntegrations.initializePreFreeze(); // Mod integrations must run after normal mod initialization
     }
 }

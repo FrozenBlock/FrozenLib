@@ -19,12 +19,14 @@ package net.frozenblock.lib;
 
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
+import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
@@ -45,6 +47,14 @@ public final class FrozenLibClient implements ClientModInitializer {
 
 	@Override
 	public void onInitializeClient() {
+		ClientLifecycleEvents.CLIENT_STARTED.register((_) -> {
+			try {
+				ConfigSerializer.saveConfigs(true);
+			} catch (Exception e) {
+				throw new RuntimeException(e);
+			}
+		});
+
 		FrozenLibClientRegistries.initRegistry();
 		ModIntegrations.initializePreFreeze(); // Mod integrations must run after normal mod initialization
 

@@ -74,15 +74,15 @@ data class EnumEntry<T : Enum<T>>(
     @JvmField val value: T
 ) : ConfigEntry<EnumEntry<T>> {
 
-    override fun <A, B : AbstractConfigListEntry<A>, C : AbstractFieldBuilder<A, B, C>> makeEntry(
+    override fun makeEntry(
         entryBuilder: ConfigEntryBuilder,
         title: Component,
-        defaultValue: A?,
+        defaultValue: Any?,
         saveConsumer: Any?,
         tooltip: Component?,
         requiresRestart: Boolean?,
         requirement: Requirement?
-    ): C {
+    ): AbstractConfigListEntry<*> {
         val consumer: Consumer<EnumEntry<T>>? = saveConsumer as? Consumer<EnumEntry<T>>
         val default: EnumEntry<T> = defaultValue as? EnumEntry<T>? ?: defaultValueError()
 
@@ -93,7 +93,8 @@ data class EnumEntry<T : Enum<T>>(
                 tooltip?.let { this.setTooltip(it) }
                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                 requirement?.let { requirement -> this.setRequirement(requirement) }
-            } as C
+            }
+            .build()
     }
 
     override fun toString(): String = "EnumEntry[class=$`class`, value=$value]"
@@ -104,15 +105,15 @@ data class SelectorEntry<T>(
     @JvmField val value: T
 ) : ConfigEntry<SelectorEntry<T>> {
 
-    override fun <A, B : AbstractConfigListEntry<A>, C : AbstractFieldBuilder<A, B, C>> makeEntry(
+    override fun makeEntry(
         entryBuilder: ConfigEntryBuilder,
         title: Component,
-        defaultValue: A?,
+        defaultValue: Any?,
         saveConsumer: Any?,
         tooltip: Component?,
         requiresRestart: Boolean?,
         requirement: Requirement?
-    ): C {
+    ): AbstractConfigListEntry<*> {
         val consumer: Consumer<SelectorEntry<T>>? = saveConsumer as? Consumer<SelectorEntry<T>>
         val default: SelectorEntry<T>? = defaultValue as? SelectorEntry<T>
 
@@ -123,7 +124,8 @@ data class SelectorEntry<T>(
                 tooltip?.let { tooltip -> this.setTooltip(tooltip) }
                 requiresRestart?.let { requiresRestart -> this.requireRestart(requiresRestart) }
                 requirement?.let { requirement -> this.setRequirement(requirement) }
-            } as C
+            }
+            .build()
     }
 
     override fun toString(): String = "SelectorEntry[valuesArray=$valuesArray, value=$value]"

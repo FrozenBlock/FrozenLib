@@ -83,13 +83,6 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		FrozenLibRegistries.initRegistry();
 
 		TestConfig.init();
-		ClientLifecycleEvents.CLIENT_STARTED.register((_) -> {
-			try {
-				ConfigSerializer.saveConfigs(true);
-			} catch (Exception e) {
-				throw new RuntimeException(e);
-			}
-		});
 
 		// QUILT INIT
 
