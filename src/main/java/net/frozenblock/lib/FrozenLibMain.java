@@ -17,10 +17,9 @@
 
 package net.frozenblock.lib;
 
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
@@ -29,7 +28,6 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.ConfigCommand;
-import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.config.v2.test.TestConfig;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
