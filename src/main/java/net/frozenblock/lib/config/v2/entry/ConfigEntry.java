@@ -210,33 +210,25 @@ public class ConfigEntry<T> {
 		}
 
 		public Builder<T> syncable(boolean syncable) {
-			if (this.properties == null) {
-				this.properties = EntryProperties.builder();
-			}
+			if (this.properties == null) this.properties = EntryProperties.builder();
 			this.properties.syncable(syncable);
 			return this;
 		}
 
 		public Builder<T> modifiable(boolean modifiable) {
-			if (this.properties == null) {
-				this.properties = EntryProperties.builder();
-			}
+			if (this.properties == null) this.properties = EntryProperties.builder();
 			this.properties.modifiable(modifiable);
 			return this;
 		}
 
 		public Builder<T> comment(String comment) {
-			if (this.properties == null) {
-				this.properties = EntryProperties.builder();
-			}
+			if (this.properties == null) this.properties = EntryProperties.builder();
 			this.properties.comment(comment);
 			return this;
 		}
 
 		public Builder<T> visibilityPredicate(VisibilityPredicate predicate) {
-			if (this.properties == null) {
-				this.properties = EntryProperties.builder();
-			}
+			if (this.properties == null) this.properties = EntryProperties.builder();
 			this.properties.visibilityPredicate(predicate);
 			return this;
 		}
