@@ -17,8 +17,9 @@
 
 package net.frozenblock.lib.config.v2.config;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.util.Map;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.entry.EntryType;
@@ -30,9 +31,9 @@ import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 public class ConfigData<T> {
 	private final ID id;
 	private final ConfigSettings<T> settings;
-	private final Map<String, ConfigEntry<?>> entries = new Object2ObjectOpenHashMap<>();
-	private final Map<String, Object> unoptimizedConfigMap = new Object2ObjectOpenHashMap<>();
-	private final Map<ID, Object> optimizedConfigMap = new Object2ObjectOpenHashMap<>();
+	private final Map<String, ConfigEntry<?>> entries = new Object2ObjectLinkedOpenHashMap<>();
+	private final Map<String, T> unoptimizedConfigMap = new Object2ObjectLinkedOpenHashMap<>();
+	private final Map<ID, T> optimizedConfigMap = new Object2ObjectLinkedOpenHashMap<>();
 	public boolean loaded;
 	public boolean optimizedMap;
 
@@ -90,12 +91,19 @@ public class ConfigData<T> {
 		return this.loaded;
 	}
 
-	public void loadEntry(ConfigEntry entry, boolean checkIfCurrentlyLoaded) {
+	public <V> void loadEntry(ConfigEntry<V> entry, boolean checkIfCurrentlyLoaded) {
 		this.load(checkIfCurrentlyLoaded);
-		final Object value = this.optimizedMap
-			? this.optimizedConfigMap.get(entry.id())
-			: ConfigSerializer.getFromUnoptimizedDataMap(this, entry, this.unoptimizedConfigMap);
-		if (value != null) entry.setValue(value);
+
+		if (this.optimizedMap) {
+			final T value = this.optimizedConfigMap.get(entry.id());
+			if (value != null) {
+				entry.setValue((V) value);
+			}
+		} else {
+			ConfigSerializer.getFromUnoptimizedDataMap(this, entry, this.unoptimizedConfigMap)
+				.ifLeft(entry::setValue)
+				.ifRight(error -> FrozenLibLogUtils.logError("Failed to load entry " + entry.id() + ": " + error, FrozenLibLogUtils.UNSTABLE_LOGGING));
+		}
 	}
 
 	public void optimizeConfigMap() {
@@ -109,7 +117,11 @@ public class ConfigData<T> {
 	public void load(boolean checkIfCurrentlyLoaded) {
 		if (checkIfCurrentlyLoaded && this.loaded) return;
 		this.unoptimizedConfigMap.clear();
-		this.unoptimizedConfigMap.putAll(ConfigSerializer.loadConfigAsMap(this.id));
+
+		ConfigSerializer.<T>loadConfigAsMap(this.id)
+			.ifLeft(this.unoptimizedConfigMap::putAll)
+			.ifRight(error -> FrozenLibLogUtils.logError("Failed to load config " + this.id + ": " + error, FrozenLibLogUtils.UNSTABLE_LOGGING));
+
 		this.loaded = true;
 		if (this.optimizedMap) this.optimizeConfigMap();
 	}
