@@ -40,6 +40,32 @@ import java.util.function.BiFunction
 fun <T> configEntryList(
     entryBuilder: ConfigEntryBuilder,
     title: Component,
+    configEntry: ConfigEntry<MutableList<T>>,
+    expandedByDefault: Boolean = false,
+    tooltip: Component,
+    cellCreator: BiFunction<T, NestedListListEntry<T, AbstractConfigListEntry<T>>, AbstractConfigListEntry<T>>,
+    requiresRestart: Boolean = false,
+    requirement: Requirement? = null
+): NestedListListEntry<T, AbstractConfigListEntry<T>>
+    = configEntryList(
+        entryBuilder,
+        title,
+        configEntry as ConfigEntry<List<T>>,
+        expandedByDefault,
+        tooltip,
+        cellCreator,
+        requiresRestart,
+        requirement
+    )
+
+/**
+ * Should only be used if Fabric Language Kotlin is installed.
+ * Creates a nested list entry for a ConfigEntry containing a list.
+ * @since 2.4
+ */
+fun <T> configEntryList(
+    entryBuilder: ConfigEntryBuilder,
+    title: Component,
     configEntry: ConfigEntry<List<T>>,
     expandedByDefault: Boolean = false,
     tooltip: Component,
