@@ -19,7 +19,12 @@ package net.frozenblock.lib.sound.api
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import io.netty.buffer.ByteBuf
+import net.frozenblock.lib.block.sound.api.SoundTypeCodecs
 import net.minecraft.core.Holder
+import net.minecraft.network.RegistryFriendlyByteBuf
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.sounds.Music
 import net.minecraft.sounds.SoundEvent
 import java.util.*
@@ -59,6 +64,15 @@ data class MutableMusic(
                 Codec.BOOL.optionalFieldOf("replace_current_music").forGetter { Optional.ofNullable(it.replaceCurrentMusic) }
             ).apply(instance, ::MutableMusic)
         }
+
+        @JvmField
+        val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, MutableMusic> = StreamCodec.composite(
+            SoundEvent.STREAM_CODEC, MutableMusic::sound,
+            ByteBufCodecs.INT, MutableMusic::minDelay,
+            ByteBufCodecs.INT, MutableMusic::maxDelay,
+            ByteBufCodecs.BOOL, MutableMusic::replaceCurrentMusic,
+            ::MutableMusic
+        )
     }
 }
 
