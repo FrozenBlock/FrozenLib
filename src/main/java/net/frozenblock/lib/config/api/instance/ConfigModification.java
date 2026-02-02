@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.config.api.instance;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -25,7 +27,6 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
-import net.frozenblock.lib.config.v2.modification.ConfigEntryModification;
 import net.minecraft.network.chat.Component;
 
 /**
@@ -39,7 +40,7 @@ public record ConfigModification<T>(Consumer<T> modification) {
         try {
 			// clone
 			final T instance = config.configClass().getConstructor().newInstance();
-			ConfigEntryModification.copyInto(original, instance);
+			copyInto(original, instance);
 
 			// modify
 			final var list = ConfigRegistry.getModificationsForConfig(config)
@@ -61,6 +62,22 @@ public record ConfigModification<T>(Consumer<T> modification) {
 			return original;
 		}
     }
+
+	public static <T> void copyInto(T source, T destination) {
+		Class<?> clazz = source.getClass();
+		while (!clazz.equals(Object.class)) {
+			for (Field field : clazz.getDeclaredFields()) {
+				if (Modifier.isStatic(field.getModifiers())) continue;
+				field.setAccessible(true);
+				try {
+					field.set(destination, field.get(source));
+				} catch (IllegalAccessException e) {
+					FrozenLibLogUtils.logError("Failed to copy field " + field.getName(), true, e);
+				}
+			}
+			clazz = clazz.getSuperclass();
+		}
+	}
 
 	@Environment(EnvType.CLIENT)
 	public enum EntryPermissionType {
