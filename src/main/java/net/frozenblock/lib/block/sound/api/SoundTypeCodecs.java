@@ -21,9 +21,18 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.block.sound.impl.overwrite.HolderSetBlockSoundTypeOverwrite;
+import net.minecraft.core.Holder;
+import net.minecraft.core.IdMap;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.VarInt;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.SoundType;
 
 @UtilityClass
@@ -40,10 +49,57 @@ public class SoundTypeCodecs {
 		).apply(instance, SoundType::new)
 	);
 
+	public static final StreamCodec<RegistryFriendlyByteBuf, SoundEvent> SOUND_EVENT_STREAM_CODEC = holderValue(
+		Registries.SOUND_EVENT,
+		SoundEvent.DIRECT_STREAM_CODEC
+	);
+
+	public static final StreamCodec<RegistryFriendlyByteBuf, SoundType> SOUND_TYPE_STREAM_CODEC = StreamCodec.composite(
+		ByteBufCodecs.FLOAT, SoundType::getVolume,
+		ByteBufCodecs.FLOAT, SoundType::getPitch,
+		SOUND_EVENT_STREAM_CODEC, SoundType::getBreakSound,
+		SOUND_EVENT_STREAM_CODEC, SoundType::getStepSound,
+		SOUND_EVENT_STREAM_CODEC, SoundType::getPlaceSound,
+		SOUND_EVENT_STREAM_CODEC, SoundType::getHitSound,
+		SOUND_EVENT_STREAM_CODEC, SoundType::getFallSound,
+		SoundType::new
+	);
+
 	public static final Codec<HolderSetBlockSoundTypeOverwrite> HOLDER_SET_BLOCK_SOUND_TYPE_OVERWRITE_CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
 			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(HolderSetBlockSoundTypeOverwrite::getValue),
 			SOUND_TYPE.fieldOf("sound_type").forGetter(HolderSetBlockSoundTypeOverwrite::getSoundType)
 		).apply(instance, (tag, soundType) -> new HolderSetBlockSoundTypeOverwrite(tag, soundType, () -> true))
 	);
+
+	static <T> StreamCodec<RegistryFriendlyByteBuf, T> holderValue(
+		final ResourceKey<? extends Registry<T>> registryKey, final StreamCodec<? super RegistryFriendlyByteBuf, T> directCodec
+	) {
+		return new StreamCodec<>() {
+			private static final int DIRECT_HOLDER_ID = 0;
+
+			private IdMap<Holder<T>> getRegistryOrThrow(final RegistryFriendlyByteBuf input) {
+				return input.registryAccess().lookupOrThrow(registryKey).asHolderIdMap();
+			}
+
+			public T decode(final RegistryFriendlyByteBuf input) {
+				int id = VarInt.read(input);
+				return id == DIRECT_HOLDER_ID ? directCodec.decode(input) : this.getRegistryOrThrow(input).byIdOrThrow(id - 1).value();
+			}
+
+			public void encode(final RegistryFriendlyByteBuf output, final T value) {
+				var lookup = output.registryAccess().lookupOrThrow(registryKey);
+				var holder = lookup.wrapAsHolder(value);
+				switch (holder.kind()) {
+					case REFERENCE:
+						int id = this.getRegistryOrThrow(output).getIdOrThrow(holder);
+						VarInt.write(output, id + 1);
+						break;
+					case DIRECT:
+						VarInt.write(output, DIRECT_HOLDER_ID);
+						directCodec.encode(output, holder.value());
+				}
+			}
+		};
+	}
 }
