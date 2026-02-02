@@ -54,6 +54,7 @@ object TestConfigGui {
             Component.literal("Epic tooltip"),
             Slider(TestConfig.testInt.withSync, 0, 100, SliderType.INT),
             Slider(TestConfig.testInt.defaultValue(), 0, 100, SliderType.INT),
+            saveConsumer = { newValue -> TestConfig.testInt.setValue((newValue as Slider<Int>).value as Int)}
         ).build(entryBuilder)
 
         val testSubMenuBoolean = entryBuilder.startBooleanToggle(text("sub_option"), TestConfig.subOption.withSync)

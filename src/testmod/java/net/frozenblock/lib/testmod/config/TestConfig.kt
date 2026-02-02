@@ -99,5 +99,5 @@ object TestConfig {
         .visibilityPredicate(VisibilityPredicate.of { false })
         .build()
 
-    var subOption: ConfigEntry<Boolean> = CONFIG.entry("subMenu.subOption", EntryType.BOOL, true)
+    var subOption: ConfigEntry<Boolean> = CONFIG.entry("subMenu/subOption", EntryType.BOOL, true)
 }
