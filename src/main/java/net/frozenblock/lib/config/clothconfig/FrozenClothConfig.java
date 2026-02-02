@@ -89,4 +89,9 @@ public final class FrozenClothConfig {
 		((DisableableWidgetInterface) entry).frozenLib$addSyncData(configEntry);
 		return entry;
 	}
+
+	public static <T, A extends AbstractConfigListEntry<T>> A syncedEntry(A entry, ConfigEntry<T> configEntry) {
+		((DisableableWidgetInterface) entry).frozenLib$addSyncData(configEntry);
+		return entry;
+	}
 }
