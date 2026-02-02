@@ -75,13 +75,13 @@ data class MutableParameter(
 fun Climate.Parameter.mutable(): MutableParameter = MutableParameter(min, max)
 
 data class MutableParameterPoint(
-    @JvmField var temperature: MutableParameter?,
-    @JvmField var humidity: MutableParameter?,
-    @JvmField var continentalness: MutableParameter?,
-    @JvmField var erosion: MutableParameter?,
-    @JvmField var depth: MutableParameter?,
-    @JvmField var weirdness: MutableParameter?,
-    @JvmField var offset: Long?
+    @JvmField var temperature: MutableParameter,
+    @JvmField var humidity: MutableParameter,
+    @JvmField var continentalness: MutableParameter,
+    @JvmField var erosion: MutableParameter,
+    @JvmField var depth: MutableParameter,
+    @JvmField var weirdness: MutableParameter,
+    @JvmField var offset: Long
 ) {
     companion object {
         @JvmField
@@ -112,13 +112,13 @@ data class MutableParameterPoint(
     }
 
     fun toImmutable(): Climate.ParameterPoint? {
-        val temperature = this.temperature?.toImmutable() ?: return null
-        val humidity = this.humidity?.toImmutable() ?: return null
-        val continentalness = this.continentalness?.toImmutable() ?: return null
-        val erosion = this.erosion?.toImmutable() ?: return null
-        val depth = this.depth?.toImmutable() ?: return null
-        val weirdness = this.weirdness?.toImmutable() ?: return null
-        val offset = this.offset ?: return null
+        val temperature = this.temperature.toImmutable() ?: return null
+        val humidity = this.humidity.toImmutable() ?: return null
+        val continentalness = this.continentalness.toImmutable() ?: return null
+        val erosion = this.erosion.toImmutable() ?: return null
+        val depth = this.depth.toImmutable() ?: return null
+        val weirdness = this.weirdness.toImmutable() ?: return null
+        val offset = this.offset
         return Climate.ParameterPoint(
             temperature,
             humidity,

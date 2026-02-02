@@ -34,34 +34,20 @@ import kotlin.jvm.optionals.getOrNull
  * @since 1.4.4
  */
 data class MutableMusic(
-    @JvmField var sound: Holder<SoundEvent>?,
-    @JvmField var minDelay: Int?,
-    @JvmField var maxDelay: Int?,
-    @JvmField var replaceCurrentMusic: Boolean?
+    @JvmField var sound: Holder<SoundEvent>,
+    @JvmField var minDelay: Int,
+    @JvmField var maxDelay: Int,
+    @JvmField var replaceCurrentMusic: Boolean
 ) {
-    /**
-     * @since 1.6.1
-     */
-    constructor(
-        sound: Optional<Holder<SoundEvent>>,
-        minDelay: Optional<Int>,
-        maxDelay: Optional<Int>,
-        replaceCurrentMusic: Optional<Boolean>
-    ) : this(
-        sound.getOrNull(),
-        minDelay.getOrNull(),
-        maxDelay.getOrNull(),
-        replaceCurrentMusic.getOrNull()
-    )
 
     companion object {
         @JvmField
         val CODEC: Codec<MutableMusic> = RecordCodecBuilder.create { instance ->
             instance.group(
-                SoundEvent.CODEC.optionalFieldOf("sound").forGetter { Optional.ofNullable(it.sound) },
-                Codec.INT.optionalFieldOf("min_delay").forGetter { Optional.ofNullable(it.minDelay) },
-                Codec.INT.optionalFieldOf("max_delay").forGetter { Optional.ofNullable(it.maxDelay) },
-                Codec.BOOL.optionalFieldOf("replace_current_music").forGetter { Optional.ofNullable(it.replaceCurrentMusic) }
+                SoundEvent.CODEC.fieldOf("sound").forGetter(MutableMusic::sound),
+                Codec.INT.fieldOf("min_delay").forGetter(MutableMusic::minDelay),
+                Codec.INT.fieldOf("max_delay").forGetter(MutableMusic::maxDelay),
+                Codec.BOOL.fieldOf("replace_current_music").forGetter(MutableMusic::replaceCurrentMusic)
             ).apply(instance, ::MutableMusic)
         }
 
