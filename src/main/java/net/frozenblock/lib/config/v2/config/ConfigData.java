@@ -63,6 +63,10 @@ public class ConfigData<T> {
 		return (ConfigEntry<B>) this.entries.computeIfAbsent(id, id1 -> new ConfigEntry<>(this, id1, type, defaultValue, false, true));
 	}
 
+	public <B> ConfigEntry<B> entry(String id, ConfigEntry<B> entry) {
+		return (ConfigEntry<B>) this.entries.put(id, entry);
+	}
+
 	public <B> ConfigEntry.Builder<B> entryBuilder(String id, EntryType<B> type, B defaultValue) {
 		return entryBuilder(id, type, defaultValue, true, true);
 	}

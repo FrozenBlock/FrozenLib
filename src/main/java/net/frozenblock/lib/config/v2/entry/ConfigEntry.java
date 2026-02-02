@@ -239,7 +239,9 @@ public class ConfigEntry<T> {
 			if (this.defaultValue == null) throw new IllegalStateException("Entry Default value cannot be null!");
 			if (this.properties == null) throw new IllegalStateException("Entry Properties cannot be null!");
 
-			return new ConfigEntry<>(this.data, this.id, this.type, this.defaultValue, this.properties.build());
+			var entry = new ConfigEntry<>(this.data, this.id, this.type, this.defaultValue, this.properties.build());
+			this.data.entry(this.id, entry);
+			return entry;
 		}
 	}
 }
