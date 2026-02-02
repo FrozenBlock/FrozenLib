@@ -19,6 +19,8 @@ package net.frozenblock.lib.gravity.api;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -46,6 +48,25 @@ public record GravityBelt<T extends GravityFunction>(double minY, double maxY, b
 				gravityFunction.fieldOf("gravityFunction").forGetter(GravityBelt::function)
 			).apply(instance, GravityBelt::new)
 		);
+	}
+
+	public static <T extends SerializableGravityFunction<T>> StreamCodec<ByteBuf, GravityBelt<T>> streamCodec(StreamCodec<ByteBuf, T> gravityFunction) {
+		return new StreamCodec<>() {
+			@Override
+			public GravityBelt<T> decode(ByteBuf input) {
+				double minY = input.readDouble();
+				double maxY = input.readDouble();
+				T function = gravityFunction.decode(input);
+				return new GravityBelt<>(minY, maxY, function);
+			}
+
+			@Override
+			public void encode(ByteBuf output, GravityBelt<T> value) {
+				output.writeDouble(value.minY());
+				output.writeDouble(value.maxY());
+				gravityFunction.encode(output, value.function());
+			}
+		};
 	}
 
 	@Nullable

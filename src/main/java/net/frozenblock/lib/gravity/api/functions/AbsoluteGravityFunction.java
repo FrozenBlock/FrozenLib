@@ -19,8 +19,10 @@ package net.frozenblock.lib.gravity.api.functions;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.frozenblock.lib.gravity.api.SerializableGravityFunction;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -32,6 +34,12 @@ public record AbsoluteGravityFunction(Vec3 gravity) implements SerializableGravi
 		).apply(instance, AbsoluteGravityFunction::new)
 	);
 	public static final Codec<GravityBelt<AbsoluteGravityFunction>> BELT_CODEC = GravityBelt.codec(CODEC);
+
+	public static final StreamCodec<ByteBuf, AbsoluteGravityFunction> STREAM_CODEC = StreamCodec.composite(
+		Vec3.STREAM_CODEC, AbsoluteGravityFunction::gravity,
+		AbsoluteGravityFunction::new
+	);
+	public static final StreamCodec<ByteBuf, GravityBelt<AbsoluteGravityFunction>> BELT_STREAM_CODEC = GravityBelt.streamCodec(STREAM_CODEC);
 
 	@Override
 	public Vec3 get(@Nullable Entity entity, double y, double minY, double maxY) {
