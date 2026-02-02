@@ -20,6 +20,9 @@ package net.frozenblock.lib.worldgen.biome.api
 import com.mojang.serialization.Codec
 import com.mojang.serialization.DataResult
 import com.mojang.serialization.codecs.RecordCodecBuilder
+import io.netty.buffer.ByteBuf
+import net.minecraft.network.codec.ByteBufCodecs
+import net.minecraft.network.codec.StreamCodec
 import net.minecraft.util.ExtraCodecs
 import net.minecraft.world.level.biome.Climate
 
@@ -42,6 +45,28 @@ data class MutableParameter(
             { range -> Climate.unquantizeCoord(range.min ?: 0L) },
             { parameter -> Climate.unquantizeCoord(parameter.max ?: 0L) }
         )
+
+        @JvmField
+        val STREAM_CODEC: StreamCodec<ByteBuf, MutableParameter> = object : StreamCodec<ByteBuf, MutableParameter> {
+            override fun encode(
+                output: ByteBuf,
+                value: MutableParameter
+            ) {
+                val min = Climate.unquantizeCoord(value.min ?: 0L)
+                val max = Climate.unquantizeCoord(value.max ?: 0L)
+
+                output.writeFloat(min)
+                output.writeFloat(max)
+            }
+
+            override fun decode(input: ByteBuf): MutableParameter {
+                val min = input.readFloat()
+                val max = input.readFloat()
+
+                return MutableParameter(Climate.quantizeCoord(min), Climate.quantizeCoord(max))
+            }
+
+        }
     }
 
     fun toImmutable(): Climate.Parameter? = if (min == null || max == null) null else Climate.Parameter(min!!, max!!)
@@ -72,6 +97,18 @@ data class MutableParameterPoint(
                     MutableParameterPoint::offset)
             ).apply(instance, ::MutableParameterPoint)
         }
+
+        @JvmField
+        val STREAM_CODEC: StreamCodec<ByteBuf, MutableParameterPoint> = StreamCodec.composite(
+            MutableParameter.STREAM_CODEC, MutableParameterPoint::temperature,
+            MutableParameter.STREAM_CODEC, MutableParameterPoint::humidity,
+            MutableParameter.STREAM_CODEC, MutableParameterPoint::continentalness,
+            MutableParameter.STREAM_CODEC, MutableParameterPoint::erosion,
+            MutableParameter.STREAM_CODEC, MutableParameterPoint::depth,
+            MutableParameter.STREAM_CODEC, MutableParameterPoint::weirdness,
+            ByteBufCodecs.LONG, MutableParameterPoint::offset,
+            ::MutableParameterPoint
+        )
     }
 
     fun toImmutable(): Climate.ParameterPoint? {
