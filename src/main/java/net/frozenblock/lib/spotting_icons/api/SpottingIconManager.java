@@ -19,6 +19,7 @@ package net.frozenblock.lib.spotting_icons.api;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.util.Optional;
 import net.fabricmc.api.EnvType;
@@ -29,6 +30,8 @@ import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
 import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -129,5 +132,13 @@ public class SpottingIconManager {
 			Codec.FLOAT.fieldOf("endFadeDist").forGetter(SpottingIcon::endFadeDist),
 			Identifier.CODEC.fieldOf("restrictionID").forGetter(SpottingIcon::restrictionID)
 		).apply(instance, SpottingIcon::new));
+
+		public static final StreamCodec<ByteBuf, SpottingIcon> STREAM_CODEC = StreamCodec.composite(
+			Identifier.STREAM_CODEC, SpottingIcon::texture,
+			ByteBufCodecs.FLOAT, SpottingIcon::startFadeDist,
+			ByteBufCodecs.FLOAT, SpottingIcon::endFadeDist,
+			Identifier.STREAM_CODEC, SpottingIcon::restrictionID,
+			SpottingIcon::new
+		);
 	}
 }
