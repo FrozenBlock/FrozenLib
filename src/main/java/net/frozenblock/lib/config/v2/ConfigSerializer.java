@@ -176,8 +176,7 @@ public class ConfigSerializer {
 		Map<String, T> entryMap,
 		SerializationContext<T> context
 	) {
-		final Map<String, T> finalEntryMap = entryMap;
-		final DataResult<V> result = context.encodeOrParse(entry, () -> finalEntryMap.get(pathSegment));
+		final DataResult<V> result = context.encodeOrParse(entry, () -> entryMap.get(pathSegment));
 
 		if (result.isError()) {
 			context.logUnableToUseError(entryId);
@@ -193,7 +192,7 @@ public class ConfigSerializer {
 			return finalResult;
 		}
 
-		finalEntryMap.put(pathSegment, (T) finalResult.get());
+		entryMap.put(pathSegment, (T) finalResult.get());
 
 		if (context.isForSaving() && entry.hasComment() && !context.useCommentWrapper()) {
 			entry.comment().ifPresent(comment -> context.commentMap().put(entryId, comment));
@@ -214,12 +213,16 @@ public class ConfigSerializer {
 		if (existing instanceof Map) {
 			return (Map<String, T>) existing;
 		}
-
 		if (context.isForSaving()) {
 			// Create new nested map for saving
 			final Map<String, T> newMap = new Object2ObjectLinkedOpenHashMap<>();
 			entryMap.put(pathSegment, (T) newMap);
 			return newMap;
+		}
+
+		var mapFunction = context.settings().mapFunction();
+		if (mapFunction != null) {
+			return mapFunction.toMap(existing);
 		}
 
 		// Loading mode - map not found
@@ -281,7 +284,7 @@ public class ConfigSerializer {
 				return Optional.empty();
 			}
 
-			final Map<String, T> configMap = (Map<String, T>) data.settings().load(path);
+			final Map<String, T> configMap = data.settings().load(path);
 			if (configMap.isEmpty()) {
 				throw new IllegalStateException("Loaded config map is empty for " + data.id());
 			}
@@ -394,7 +397,7 @@ public class ConfigSerializer {
 			}
 
 			Files.createDirectories(this.path.getParent());
-			this.settings().save(this.path, (Map<String, Object>) configMapToSave, this.commentMap);
+			this.settings().save(this.path, configMapToSave, this.commentMap);
 		}
 	}
 }

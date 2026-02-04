@@ -31,6 +31,8 @@ import net.frozenblock.lib.config.api.instance.json.JsonType;
 import net.frozenblock.lib.config.api.instance.xjs.XjsFormat;
 import net.frozenblock.lib.config.api.instance.xjs.XjsObjectMapper;
 import net.frozenblock.lib.config.api.instance.xjs.XjsOps;
+import net.frozenblock.lib.config.v2.config.map.XjsMap;
+import org.jetbrains.annotations.Nullable;
 import xjs.data.JsonObject;
 import xjs.data.JsonValue;
 import xjs.data.serialization.JsonContext;
@@ -38,204 +40,120 @@ import xjs.data.serialization.writer.ValueWriter;
 
 public class ConfigSettings<T> {
 	private static final Jankson JANKSON = Jankson.builder().build();
+	public static final LoadFunction<JsonElement> JANKSON_LOAD = path -> {
+		if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+		return new Object2ObjectLinkedOpenHashMap<String, JsonElement>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
+	};
+	public static final LoadFunction<JsonValue> XJS_LOAD = path -> {
+		if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
+		final JsonObject value = (JsonObject) JsonContext.autoParse(path);
+		return new Object2ObjectLinkedOpenHashMap<>(value.toMap(value1 -> value1));
+	};
+	public static final MapFunction<JsonValue> XJS_MAP = element -> {
+		if (element instanceof xjs.data.JsonObject object) {
+			return new XjsMap(object);
+		}
+		return null;
+	};
 
 	public static final ConfigSettings<JsonElement> JSON = new ConfigSettings<>(
 		"json",
 		JanksonOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-				writer.write(JANKSON.toJson(configMap).toJson(JsonType.JSON.getGrammar()));
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			return new Object2ObjectLinkedOpenHashMap<String, Object>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
-		}
+		janksonSave(false, JsonType.JSON),
+		JANKSON_LOAD
 	);
-	public static final ConfigSettings<JsonElement> JSON5 = new ConfigSettings<>(
+	public static final ConfigSettings<JsonElement> JSON5 = new ConfigSettings<JsonElement>(
 		"json5",
 		JanksonOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-				final blue.endless.jankson.JsonObject jsonObject = (blue.endless.jankson.JsonObject) JANKSON.toJson(configMap);
-				// Apply comments if provided
-				if (commentMap != null && !commentMap.isEmpty()) {
-					applyJanksonComments(jsonObject, commentMap, "");
-				}
-				writer.write(jsonObject.toJson(JsonType.JSON5.getGrammar()));
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			return new Object2ObjectLinkedOpenHashMap<String, Object>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
-		}
+		janksonSave(true, JsonType.JSON5),
+		JANKSON_LOAD
 	);
 	public static final ConfigSettings<JsonElement> JSON5_UNQUOTED_KEYS = new ConfigSettings<>(
 		"json5",
 		JanksonOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-				final blue.endless.jankson.JsonObject jsonObject = (blue.endless.jankson.JsonObject) JANKSON.toJson(configMap);
-				// Apply comments if provided
-				if (commentMap != null && !commentMap.isEmpty()) {
-					applyJanksonComments(jsonObject, commentMap, "");
-				}
-				writer.write(jsonObject.toJson(JsonType.JSON5_UNQUOTED_KEYS.getGrammar()));
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			return new Object2ObjectLinkedOpenHashMap<String, Object>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
-		}
+		janksonSave(true, JsonType.JSON5_UNQUOTED_KEYS),
+		JANKSON_LOAD
 	);
 	public static final ConfigSettings<JsonElement> JSON5_UNQUOTED_KEYS_NO_ROOT = new ConfigSettings<>(
 		"json5",
 		JanksonOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
-				final blue.endless.jankson.JsonObject jsonObject = (blue.endless.jankson.JsonObject) JANKSON.toJson(configMap);
-				// Apply comments if provided
-				if (commentMap != null && !commentMap.isEmpty()) {
-					applyJanksonComments(jsonObject, commentMap, "");
-				}
-				writer.write(jsonObject.toJson(JsonType.JSON5_UNQUOTED_KEYS_NO_ROOT.getGrammar()));
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			return new Object2ObjectLinkedOpenHashMap<String, Object>(JANKSON.fromJson(JANKSON.load(path.toFile()), Map.class));
-		}
+		janksonSave(true, JsonType.JSON5_UNQUOTED_KEYS_NO_ROOT),
+		JANKSON_LOAD
 	);
 	public static final ConfigSettings<JsonValue> DJS = new ConfigSettings<>(
 		"djs",
 		XjsOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
-			// Apply comments if provided
-			if (commentMap != null && !commentMap.isEmpty()) {
-				applyXjsComments(value, commentMap, "");
-			}
-			try (ValueWriter writer = XjsFormat.DJS.createWriter(path.toFile())) {
-				writer.write(value);
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
-			return new Object2ObjectLinkedOpenHashMap<>(value.toMap(value1 -> value1));
-		}
+		xjsSave(XjsFormat.DJS),
+		XJS_LOAD,
+		XJS_MAP
 	);
 	public static final ConfigSettings<JsonValue> XJS_JSON = new ConfigSettings<>(
 		"json",
 		XjsOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
-			// Apply comments if provided
-			if (commentMap != null && !commentMap.isEmpty()) {
-				applyXjsComments(value, commentMap, "");
-			}
-			try (ValueWriter writer = XjsFormat.JSON.createWriter(path.toFile())) {
-				writer.write(value);
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
-			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
-		}
+		xjsSave(XjsFormat.JSON),
+		XJS_LOAD,
+		XJS_MAP
 	);
 	public static final ConfigSettings<JsonValue> JSONC = new ConfigSettings<>(
 		"jsonc",
 		XjsOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
-			// Apply comments if provided
-			if (commentMap != null && !commentMap.isEmpty()) {
-				applyXjsComments(value, commentMap, "");
-			}
-			try (ValueWriter writer = XjsFormat.JSONC.createWriter(path.toFile())) {
-				writer.write(value);
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
-			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
-		}
+		xjsSave(XjsFormat.JSONC),
+		XJS_LOAD,
+		XJS_MAP
 	);
 	public static final ConfigSettings<JsonValue> HJSON = new ConfigSettings<>(
 		"hjson",
 		XjsOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
-			// Apply comments if provided
-			if (commentMap != null && !commentMap.isEmpty()) {
-				applyXjsComments(value, commentMap, "");
-			}
-			try (ValueWriter writer = XjsFormat.HJSON.createWriter(path.toFile())) {
-				writer.write(value);
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
-			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
-		}
+		xjsSave(XjsFormat.HJSON),
+		XJS_LOAD,
+		XJS_MAP
 	);
 	public static final ConfigSettings<JsonValue> TXT = new ConfigSettings<>(
 		"txt",
 		XjsOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
-			// Apply comments if provided
-			if (commentMap != null && !commentMap.isEmpty()) {
-				applyXjsComments(value, commentMap, "");
-			}
-			try (ValueWriter writer = XjsFormat.TXT.createWriter(path.toFile())) {
-				writer.write(value);
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
-			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
-		}
+		xjsSave(XjsFormat.TXT),
+		XJS_LOAD,
+		XJS_MAP
 	);
-	public static final ConfigSettings<JsonValue> UBJSON = new ConfigSettings<>(
+	public static final ConfigSettings<JsonValue> UBJSON = new ConfigSettings<JsonValue>(
 		"ubjson",
 		XjsOps.INSTANCE,
-		(path, configMap, commentMap) -> {
-			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
-			// Apply comments if provided
-			if (commentMap != null && !commentMap.isEmpty()) {
-				applyXjsComments(value, commentMap, "");
-			}
-			try (ValueWriter writer = XjsFormat.UBJSON.createWriter(path.toFile())) {
-				writer.write(value);
-			}
-		},
-		(path) -> {
-			if (!Files.exists(path)) return new Object2ObjectLinkedOpenHashMap<>();
-			final JsonObject value = (JsonObject) JsonContext.autoParse(path);
-			return new Object2ObjectLinkedOpenHashMap<>(value.toMap());
-		}
+		xjsSave(XjsFormat.UBJSON),
+		XJS_LOAD,
+		XJS_MAP
 	);
 
 	private final String fileExtension;
 	private final DynamicOps<T> dynamicOps;
-	private final SaveFunction saveFunction;
-	private final LoadFunction loadFunction;
+	private final SaveFunction<T> saveFunction;
+	private final LoadFunction<T> loadFunction;
+	/**
+	 * Only required if the json object itself is not an instance of {@link Map}
+	 */
+	@Nullable
+	private final MapFunction<T> mapFunction;
 
 	public ConfigSettings(
 		String fileExtension,
 		DynamicOps<T> dynamicOps,
-		SaveFunction saveFunction,
-		LoadFunction loadFunction
+		SaveFunction<T> saveFunction,
+		LoadFunction<T> loadFunction,
+		@Nullable MapFunction<T> mapFunction
 	) {
 		this.fileExtension = fileExtension;
 		this.dynamicOps = dynamicOps;
 		this.saveFunction = saveFunction;
 		this.loadFunction = loadFunction;
+		this.mapFunction = mapFunction;
+	}
+
+	public ConfigSettings(
+		String fileExtension,
+		DynamicOps<T> dynamicOps,
+		SaveFunction<T> saveFunction,
+		LoadFunction<T> loadFunction
+	) {
+		this(fileExtension, dynamicOps, saveFunction, loadFunction, null);
 	}
 
 	public String fileExtension() {
@@ -246,26 +164,62 @@ public class ConfigSettings<T> {
 		return this.dynamicOps;
 	}
 
-	public void save(Path path, Map<String, Object> configMap) throws Exception {
+	@Nullable
+	public MapFunction<T> mapFunction() {
+		return this.mapFunction;
+	}
+
+	public void save(Path path, Map<String, T> configMap) throws Exception {
 		this.saveFunction.save(path, configMap, null);
 	}
 
-	public void save(Path path, Map<String, Object> configMap, Map<String, String> commentMap) throws Exception {
+	public void save(Path path, Map<String, T> configMap, Map<String, String> commentMap) throws Exception {
 		this.saveFunction.save(path, configMap, commentMap);
 	}
 
-	public Map<String, Object> load(Path path) throws Exception {
+	public Map<String, T> load(Path path) throws Exception {
 		return this.loadFunction.load(path);
 	}
 
 	@FunctionalInterface
-	public interface SaveFunction {
-		void save(Path path, Map<String, Object> configMap, Map<String, String> commentMap) throws Exception;
+	public interface SaveFunction<T> {
+		void save(Path path, Map<String, T> configMap, Map<String, String> commentMap) throws Exception;
 	}
 
 	@FunctionalInterface
-	public interface LoadFunction {
-		Map<String, Object> load(Path path) throws Exception;
+	public interface LoadFunction<T> {
+		Map<String, T> load(Path path) throws Exception;
+	}
+
+	@FunctionalInterface
+	public interface MapFunction<T> {
+		Map<String, T> toMap(T object);
+	}
+
+	public static SaveFunction<JsonElement> janksonSave(boolean comments, JsonType type) {
+		return (path, configMap, commentMap) -> {
+			try (BufferedWriter writer = Files.newBufferedWriter(path, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING)) {
+				final blue.endless.jankson.JsonObject jsonObject = (blue.endless.jankson.JsonObject) JANKSON.toJson(configMap);
+				// Apply comments if provided
+				if (comments && commentMap != null && !commentMap.isEmpty()) {
+					applyJanksonComments(jsonObject, commentMap, "");
+				}
+				writer.write(jsonObject.toJson(type.getGrammar()));
+			}
+		};
+	}
+
+	public static SaveFunction<JsonValue> xjsSave(XjsFormat format) {
+		return (path, configMap, commentMap) -> {
+			final JsonValue value = XjsObjectMapper.toJsonObject(configMap);
+			// Apply comments if provided
+			if (commentMap != null && !commentMap.isEmpty()) {
+				applyXjsComments(value, commentMap, "");
+			}
+			try (ValueWriter writer = format.createWriter(path.toFile())) {
+				writer.write(value);
+			}
+		};
 	}
 
 	// Helper method to apply comments to Jankson JsonObject
