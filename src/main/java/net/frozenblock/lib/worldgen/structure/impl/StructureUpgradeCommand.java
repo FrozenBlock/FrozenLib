@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Set;
 import net.frozenblock.lib.file.nbt.NbtFileUtils;
 import net.minecraft.commands.CommandSourceStack;
@@ -68,16 +69,10 @@ public class StructureUpgradeCommand {
 
 		foundPieces.forEach((identifier) -> {
 			try {
-				InputStream inputStream = resourceManager.getResourceOrThrow(identifier).open();
-				InputStream inputStream2 = new FastBufferedInputStream(inputStream);
-				CompoundTag compoundTag = NbtIo.readCompressed(inputStream2, NbtAccounter.unlimitedHeap());
-				StructureTemplate structureTemplate = structureTemplateManager.readStructure(compoundTag);
-
-				inputStream2.close();
-				inputStream.close();
+				StructureTemplate structureTemplate = structureTemplateManager.get(identifier).orElseThrow();
 
 				savedTemplates.put(identifier, structureTemplate.save(new CompoundTag()));
-			} catch (IOException e) {
+			} catch (NoSuchElementException e) {
 				throw new RuntimeException(e);
 			}
 		});

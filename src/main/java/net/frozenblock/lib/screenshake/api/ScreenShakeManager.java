@@ -25,11 +25,13 @@ import java.util.List;
 import lombok.Getter;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.ScreenShakeManagerInterface;
 import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.datafix.DataFixTypes;
@@ -42,7 +44,7 @@ import net.minecraft.world.phys.Vec3;
 
 @Getter
 public class ScreenShakeManager extends SavedData {
-	public static final String SCREENSHAKE_MANAGER_FILE_ID = "frozenlib_screen_shakes";
+	public static final Identifier SCREENSHAKE_MANAGER_FILE_ID = FrozenLibConstants.id("screen_shakes");
 	public static final Codec<ScreenShakeManager> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
 			ScreenShake.LIST_CODEC.fieldOf("ScreenShakes").forGetter(screenshakeManager -> screenshakeManager.shakes)

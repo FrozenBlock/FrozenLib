@@ -44,8 +44,8 @@ public abstract class WindManagerExtension extends SavedData {
 		return true;
 	}
 
-	public static String createSaveId(Identifier id) {
-		return WindManager.WIND_FILE_PATH + "_" + id.getNamespace() + "_" + id.getPath();
+	public static Identifier createSaveId(Identifier id) {
+		return Identifier.fromNamespaceAndPath(id.getNamespace(), WindManager.WIND_FILE_PATH + id.getPath());
 	}
 
 	/**

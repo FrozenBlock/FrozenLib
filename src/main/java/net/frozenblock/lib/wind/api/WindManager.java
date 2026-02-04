@@ -37,6 +37,7 @@ import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -46,7 +47,7 @@ import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.level.saveddata.SavedData;
 import net.minecraft.world.level.saveddata.SavedDataType;
-import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.SavedDataStorage;
 import net.minecraft.world.phys.Vec3;
 
 /**
@@ -54,9 +55,10 @@ import net.minecraft.world.phys.Vec3;
  *
  * <p> One instance is created per {@link ServerLevel}.
  */
+// TODO 26.1 transfer old data
 public class WindManager extends SavedData {
-	public static final String WIND_FILE_PATH = "frozenlib_wind_";
-	public static final String WIND_MANAGER_FILE_ID = WIND_FILE_PATH + "main";
+	public static final String WIND_FILE_PATH = "wind_";
+	public static final Identifier WIND_MANAGER_FILE_ID = FrozenLibConstants.id(WIND_FILE_PATH + "main");
 	public static final Codec<WindManager> CODEC = RecordCodecBuilder.create(
 		instance -> instance.group(
 			Codec.LONG.fieldOf("time").forGetter(windManager -> windManager.time),
@@ -156,7 +158,7 @@ public class WindManager extends SavedData {
 		final Map.Entry<SavedDataType<? extends WindManagerExtension>, Integer>[] extensionProviders = EXTENSION_PROVIDERS.entrySet().toArray(new Map.Entry[0]);
 		Arrays.sort(extensionProviders, Map.Entry.comparingByValue());
 
-		final DimensionDataStorage storage = level.getDataStorage();
+		final SavedDataStorage storage = level.getDataStorage();
 		final List<WindManagerExtension> extensions = new ObjectArrayList<>();
 		for (Map.Entry<SavedDataType<? extends WindManagerExtension>, Integer> extensionByPriority : extensionProviders) {
 			SavedDataType<? extends WindManagerExtension> type = extensionByPriority.getKey();

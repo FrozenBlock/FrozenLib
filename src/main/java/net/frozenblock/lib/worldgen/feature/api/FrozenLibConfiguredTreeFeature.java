@@ -111,11 +111,10 @@ public class FrozenLibConfiguredTreeFeature {
 			config.foliageProvider,
 			config.foliagePlacer,
 			config.rootPlacer,
-			config.dirtProvider,
 			config.minimumSize,
 			List.copyOf(decorators),
 			config.ignoreVines,
-			config.forceDirt
+			config.belowTrunkProvider
 		);
 		this.featureWithLitter.makeAndSetHolder(feature, withLitterConfig);
 
