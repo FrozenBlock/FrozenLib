@@ -28,7 +28,6 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(ServerLevel.class)
 public abstract class ServerLevelMixin implements ScreenShakeManagerInterface {
 
-
 	@Shadow
 	public abstract SavedDataStorage getDataStorage();
 
