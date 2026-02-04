@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.v2.test;
+package net.frozenblock.lib.testmod.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -29,7 +29,7 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
-public class TestConfig {
+public class TestConfig2 {
 	public static final ConfigData<?> TEST_CONFIG = ConfigData.createAndRegister(FrozenLibConstants.config("test_config"), ConfigSettings.JSON5);
 
 	public record PoopCrap(int poop, String crap) {

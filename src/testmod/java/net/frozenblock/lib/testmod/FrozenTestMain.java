@@ -29,6 +29,7 @@ import net.frozenblock.lib.gravity.api.GravityAPI;
 import net.frozenblock.lib.gravity.api.GravityBelt;
 import net.frozenblock.lib.gravity.api.functions.AbsoluteGravityFunction;
 import net.frozenblock.lib.testmod.config.TestConfig;
+import net.frozenblock.lib.testmod.config.TestConfig2;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.criterion.LocationPredicate;
@@ -56,6 +57,7 @@ public final class FrozenTestMain implements ModInitializer {
     public void onInitialize() {
 		applyDataFixes(FabricLoader.getInstance().getModContainer(MOD_ID).orElseThrow());
 
+		TestConfig2.init();
 		FrozenLibConfig.SAVE_ITEM_COOLDOWNS.modify(entry -> entry.value = true);
 		FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS.modify(entry -> entry.value = true);
 		FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.modify(entry -> entry.value = true);
