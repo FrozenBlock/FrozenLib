@@ -3,6 +3,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
 ### Added the brand new Config v2!
 The goal of Config v2 is to substantially improve performance, memory usage, and network usage overall, while maintaining FrozenLib's unique config features.
+
 Multiple issues that would result in players being kicked, crashing, or experiencing lag have all been fixed.
 
 ### Config Entries
