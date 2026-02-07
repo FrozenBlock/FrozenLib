@@ -27,6 +27,9 @@ Multiple issues that would result in players being kicked, crashing, or experien
      - Depending on the file type used, this will be saved either as:
        - An array containing the Entry's value and the comment.
        - A comment, not affecting the file's structure.
+   - The `visibilityPredicate` field is optional, and determines whether the entry will be accessible in the config screen (only implemented for Cloth Config).
+   - The `textSupplier` field is optional, and determines what text should be used for the entry's values in the config screen (only implemented for Cloth Config).
+   - The `requireRestart` field is optional, and determines whether the entry will prompt Cloth Config's restart screen.
 
 ### Config Data
  - Config Data provides the base id for all config entries, as well as the file path to save the config file to.

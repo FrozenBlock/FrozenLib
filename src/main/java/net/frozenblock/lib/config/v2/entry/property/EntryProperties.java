@@ -18,31 +18,39 @@
 package net.frozenblock.lib.config.v2.entry.property;
 
 import java.util.Optional;
+import java.util.function.Function;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 public class EntryProperties {
-	private static final EntryProperties DEFAULT = new EntryProperties(true, true, null, null);
-	private static final EntryProperties DEFAULT_UNSYNCABLE = new EntryProperties(false, true, null, null);
-	private static final EntryProperties DEFAULT_UNMODIFIABLE = new EntryProperties(true, false, null, null);
-	private static final EntryProperties DEFAULT_UNSCYNABLE_UNMODIFIABLE = new EntryProperties(false, false, null, null);
+	private static final EntryProperties DEFAULT = new EntryProperties(true, true, null, null, null, false);
+	private static final EntryProperties DEFAULT_UNSYNCABLE = new EntryProperties(false, true, null, null, null, false);
+	private static final EntryProperties DEFAULT_UNMODIFIABLE = new EntryProperties(true, false, null, null, null, false);
+	private static final EntryProperties DEFAULT_UNSCYNABLE_UNMODIFIABLE = new EntryProperties(false, false, null, null, null, false);
 	private final boolean syncable;
 	private final boolean modifiable;
 	@Nullable
 	private final String comment;
 	@Nullable
+	private final Function<Object, Component> textSupplier;
+	@Nullable
 	private final VisibilityPredicate visibilityPredicate;
+	private final boolean requireRestart;
 
-	private final boolean hasComment;
-	private final boolean hasVisibilityPredicate;
-
-	public EntryProperties(boolean syncable, boolean modifiable, @Nullable String comment, @Nullable VisibilityPredicate visibilityPredicate) {
+	public EntryProperties(
+		boolean syncable,
+		boolean modifiable,
+		@Nullable String comment,
+		@Nullable Function<Object, Component> textSupplier,
+		@Nullable VisibilityPredicate visibilityPredicate,
+		boolean requireRestart
+	) {
 		this.syncable = syncable;
 		this.modifiable = modifiable;
 		this.comment = comment;
+		this.textSupplier = textSupplier;
 		this.visibilityPredicate = visibilityPredicate;
-
-		this.hasComment = comment != null;
-		this.hasVisibilityPredicate = visibilityPredicate != null;
+		this.requireRestart = requireRestart;
 	}
 
 	public static EntryProperties of(boolean syncable, boolean modifiable) {
@@ -69,7 +77,7 @@ public class EntryProperties {
 	}
 
 	public boolean hasComment() {
-		return this.hasComment;
+		return this.comment != null;
 	}
 
 	@Nullable
@@ -77,13 +85,30 @@ public class EntryProperties {
 		return Optional.ofNullable(this.comment);
 	}
 
+	public boolean hasTextSupplier() {
+		return this.textSupplier != null;
+	}
+
+	@Nullable
+	public Optional<Function<Object, Component>> getTextSupplier() {
+		return Optional.ofNullable(this.textSupplier);
+	}
+
 	public boolean hasVisibilityPredicate() {
-		return this.hasVisibilityPredicate;
+		return this.visibilityPredicate != null;
+	}
+
+	public VisibilityPredicate visibilityPredicate() {
+		return this.visibilityPredicate;
 	}
 
 	public boolean isVisible() {
-		if (!this.hasVisibilityPredicate) return true;
+		if (!this.hasVisibilityPredicate()) return true;
 		return this.visibilityPredicate.test();
+	}
+
+	public boolean requireRestart() {
+		return this.requireRestart;
 	}
 
 	public static Builder builder() {
@@ -108,7 +133,10 @@ public class EntryProperties {
 		@Nullable
 		private String comment = null;
 		@Nullable
+		private Function<Object, Component> textSupplier = null;
+		@Nullable
 		private VisibilityPredicate visibilityPredicate = null;
+		private boolean requireRestart;
 
 		private Builder() {
 		}
@@ -128,13 +156,23 @@ public class EntryProperties {
 			return this;
 		}
 
+		public Builder textSupplier(@Nullable Function<Object, Component> textSupplier) {
+			this.textSupplier = textSupplier;
+			return this;
+		}
+
 		public Builder visibilityPredicate(@Nullable VisibilityPredicate visibilityPredicate) {
 			this.visibilityPredicate = visibilityPredicate;
 			return this;
 		}
 
+		public Builder requireRestart(boolean requireRestart) {
+			this.requireRestart = requireRestart;
+			return this;
+		}
+
 		public EntryProperties build() {
-			return new EntryProperties(this.syncable, this.modifiable, this.comment, this.visibilityPredicate);
+			return new EntryProperties(this.syncable, this.modifiable, this.comment, this.textSupplier, this.visibilityPredicate, this.requireRestart);
 		}
 	}
 }

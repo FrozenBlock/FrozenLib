@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.frozenblock.lib.config.v2.entry.property.VisibilityPredicate;
@@ -142,16 +143,40 @@ public class ConfigEntry<T> {
 		return (Class<T>) this.defaultValue.getClass();
 	}
 
-	protected Component displayName() {
+	public Component displayName() {
 		return Component.translatable("option." + this.id.namespace() + "." + this.id.path().replace("/", "."));
 	}
 
-	protected Component tooltip() {
+	public Component tooltip() {
 		return Component.translatable("tooltip." + this.id.namespace() + "." + this.id.path().replace("/", "."));
 	}
 
 	public boolean hasComment() {
 		return this.properties.hasComment();
+	}
+
+	public Optional<String> comment() {
+		return this.properties.getComment();
+	}
+
+	public boolean hasTextSupplier() {
+		return this.properties.hasTextSupplier();
+	}
+
+	public Optional<Function<Object, Component>> textSupplier() {
+		return this.properties.getTextSupplier();
+	}
+
+	public boolean hasVisibilityPredicate() {
+		return this.properties.hasVisibilityPredicate();
+	}
+
+	public boolean isVisible() {
+		return this.properties.isVisible();
+	}
+
+	public boolean requireRestart() {
+		return this.properties.requireRestart();
 	}
 
 	public ConfigData<?> configData() {
@@ -164,10 +189,6 @@ public class ConfigEntry<T> {
 
 	public T defaultValue() {
 		return this.defaultValue;
-	}
-
-	public Optional<String> comment() {
-		return this.properties.getComment();
 	}
 
 	public Codec<T> codec() {

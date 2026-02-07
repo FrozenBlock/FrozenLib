@@ -18,14 +18,21 @@
 package net.frozenblock.lib.config.clothconfig;
 
 import java.util.Arrays;
+import java.util.function.Function;
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
+import me.shedaniel.clothconfig2.api.Requirement;
 import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder;
+import me.shedaniel.clothconfig2.impl.builders.AbstractSliderFieldBuilder;
+import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
+import me.shedaniel.clothconfig2.impl.builders.EnumSelectorBuilder;
+import me.shedaniel.clothconfig2.impl.builders.SelectorBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
@@ -45,7 +52,14 @@ public final class FrozenClothConfig {
 	 * @return the newly created subcategory
 	 */
 	@SuppressWarnings("rawtypes")
-	public static ConfigCategory createSubCategory(ConfigEntryBuilder entryBuilder, ConfigCategory parentCategory, Component key, boolean expanded, Component tooltip, AbstractConfigListEntry... entries) {
+	public static ConfigCategory createSubCategory(
+		ConfigEntryBuilder entryBuilder,
+		ConfigCategory parentCategory,
+		Component key,
+		boolean expanded,
+		Component tooltip,
+		AbstractConfigListEntry... entries
+	) {
 		// Create the subcategory
 		final var subCategory = entryBuilder.startSubCategory(key, Arrays.stream(entries).toList());
 
@@ -63,7 +77,10 @@ public final class FrozenClothConfig {
 	}
 
 	/**
-	 * Creates an entry that will interact with config syncing
+	 * Creates an entry from a {@link ConfigEntry}.
+	 *
+	 * <p>
+	 * {@link EntryProperties} will be applied to the new Cloth Config entry.
 	 *
 	 * @param builder The config entry builder to be used
 	 * @param configEntry The FrozenLib {@link ConfigEntry}
@@ -72,26 +89,38 @@ public final class FrozenClothConfig {
 	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A entry(B builder, ConfigEntry<T> configEntry) {
 		builder.setDefaultValue(configEntry.defaultValue());
 		builder.setSaveConsumer(configEntry::setValue);
+		if (configEntry.hasVisibilityPredicate()) builder.setDisplayRequirement(Requirement.isTrue(configEntry::isVisible));
+		if (configEntry.requireRestart()) builder.requireRestart();
+
+		appendTextSupplier: {
+			if (!configEntry.hasTextSupplier()) break appendTextSupplier;
+			final Function textSupplier = configEntry.textSupplier().get();
+			if (builder instanceof AbstractSliderFieldBuilder<?, ?, ?> sliderFieldBuilder) sliderFieldBuilder.setTextGetter(textSupplier);
+			if (builder instanceof BooleanToggleBuilder booleanToggleBuilder) booleanToggleBuilder.setYesNoTextSupplier(textSupplier);
+			if (builder instanceof EnumSelectorBuilder<?> enumSelectorBuilder) enumSelectorBuilder.setEnumNameProvider(textSupplier);
+			if (builder instanceof SelectorBuilder<?> selectorBuilder) selectorBuilder.setNameProvider(textSupplier);
+		}
+
 		return builder.build();
 	}
 
 	/**
-	 * Creates an entry that will interact with config syncing
+	 * Creates an entry from a {@link ConfigEntry} that will interact with config syncing.
+	 *
+	 * <p>
+	 * {@link EntryProperties} will be applied to the new Cloth Config entry.
 	 *
 	 * @param builder The config entry builder to be used
 	 * @param configEntry The FrozenLib {@link ConfigEntry}
 	 * @since 2.4
 	 */
 	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A syncedEntry(B builder, ConfigEntry<T> configEntry) {
-		builder.setDefaultValue(configEntry.defaultValue());
-		builder.setSaveConsumer(configEntry::setValue);
-		final A entry = builder.build();
-		((DisableableWidgetInterface) entry).frozenLib$addSyncData(configEntry);
-		return entry;
+		final var clothEntry = entry(builder, configEntry);
+		return syncedEntry(clothEntry, configEntry);
 	}
 
-	public static <T, A extends AbstractConfigListEntry<T>> A syncedEntry(A entry, ConfigEntry<T> configEntry) {
-		((DisableableWidgetInterface) entry).frozenLib$addSyncData(configEntry);
-		return entry;
+	public static <T, A extends AbstractConfigListEntry<T>> A syncedEntry(A clothEntry, ConfigEntry<T> configEntry) {
+		((DisableableWidgetInterface) clothEntry).frozenLib$addSyncData(configEntry);
+		return clothEntry;
 	}
 }
