@@ -136,7 +136,7 @@ public class EntryProperties {
 		private Function<Object, Component> textSupplier = null;
 		@Nullable
 		private VisibilityPredicate visibilityPredicate = null;
-		private boolean requireRestart;
+		private boolean requireRestart = false;
 
 		private Builder() {
 		}
@@ -166,8 +166,8 @@ public class EntryProperties {
 			return this;
 		}
 
-		public Builder requireRestart(boolean requireRestart) {
-			this.requireRestart = requireRestart;
+		public Builder requireRestart() {
+			this.requireRestart = true;
 			return this;
 		}
 

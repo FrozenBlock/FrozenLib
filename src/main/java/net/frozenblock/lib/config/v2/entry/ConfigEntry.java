@@ -260,9 +260,9 @@ public class ConfigEntry<T> {
 			return this;
 		}
 
-		public Builder<T> requireRestart(boolean requireRestart) {
+		public Builder<T> requireRestart() {
 			if (this.properties == null) this.properties = EntryProperties.builder();
-			this.properties.requireRestart(requireRestart);
+			this.properties.requireRestart();
 			return this;
 		}
 
