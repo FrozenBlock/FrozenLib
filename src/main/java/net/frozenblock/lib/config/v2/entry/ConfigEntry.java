@@ -248,9 +248,21 @@ public class ConfigEntry<T> {
 			return this;
 		}
 
+		public Builder<T> textSupplier(Function<Object, Component> textSupplier) {
+			if (this.properties == null) this.properties = EntryProperties.builder();
+			this.properties.textSupplier(textSupplier);
+			return this;
+		}
+
 		public Builder<T> visibilityPredicate(VisibilityPredicate predicate) {
 			if (this.properties == null) this.properties = EntryProperties.builder();
 			this.properties.visibilityPredicate(predicate);
+			return this;
+		}
+
+		public Builder<T> requireRestart(boolean requireRestart) {
+			if (this.properties == null) this.properties = EntryProperties.builder();
+			this.properties.requireRestart(requireRestart);
 			return this;
 		}
 
