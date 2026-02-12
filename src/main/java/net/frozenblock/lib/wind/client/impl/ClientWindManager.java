@@ -27,7 +27,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.core.client.api.FrustumUtil;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.wind.api.WindDisturbance;
@@ -441,7 +440,6 @@ public final class ClientWindManager {
 			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
 			ACCESSED_POSITIONS.forEach(
 				vec3 -> {
-					if (!FrustumUtil.isVisible(vec3, 0.5D)) return;
 					windNodes.add(createWindNodes(level, vec3, 1.5D, false));
 				}
 			);
@@ -463,8 +461,6 @@ public final class ClientWindManager {
 			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
 			WIND_DISTURBANCES.forEach(
 				windDisturbance -> {
-					if (!FrustumUtil.isVisible(windDisturbance.affectedArea)) return;
-
 					BlockPos.betweenClosed(
 						BlockPos.containing(windDisturbance.affectedArea.getMinPosition()),
 						BlockPos.containing(windDisturbance.affectedArea.getMaxPosition())

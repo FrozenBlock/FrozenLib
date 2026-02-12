@@ -262,9 +262,6 @@ transitive-accessible method net/minecraft/util/datafix/DataFixers createRenamer
 # World Loading
 transitive-accessible field net/minecraft/client/gui/screens/BackupConfirmScreen onProceed Lnet/minecraft/client/gui/screens/BackupConfirmScreen$Listener;
 
-# Rendering
-transitive-accessible field net/minecraft/client/renderer/LevelRenderer capturedFrustum Lnet/minecraft/client/renderer/culling/Frustum;
-
 # Client Level
 transitive-accessible class net/minecraft/client/multiplayer/ClientLevel$EntityCallbacks
 

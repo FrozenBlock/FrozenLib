@@ -50,6 +50,6 @@ public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRe
 			}
 		);
 
-		WindDebugRenderer.emitWindNodesFromList(ClientWindManager.Debug.getDebugDisturbanceNodes());
+		WindDebugRenderer.emitWindNodesFromList(ClientWindManager.Debug.getDebugDisturbanceNodes(), frustum);
 	}
 }
