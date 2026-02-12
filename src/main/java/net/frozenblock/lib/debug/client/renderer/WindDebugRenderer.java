@@ -26,6 +26,7 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.debug.DebugValueAccess;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 @Environment(EnvType.CLIENT)
@@ -41,14 +42,14 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		Frustum frustum,
 		float unknown
 	) {
-		emitWindNodesFromList(ClientWindManager.Debug.getDebugNodes());
+		emitWindNodesFromList(ClientWindManager.Debug.getDebugNodes(), frustum);
 	}
 
-	protected static void emitWindNodesFromList(List<List<Pair<Vec3, Integer>>> windNodes) {
-		windNodes.forEach(WindDebugRenderer::emitWindNodes);
+	protected static void emitWindNodesFromList(List<List<Pair<Vec3, Integer>>> windNodes, Frustum frustum) {
+		windNodes.forEach(node -> emitWindNodes(node, frustum));
 	}
 
-	protected static void emitWindNodes(List<Pair<Vec3, Integer>> windNodes) {
+	protected static void emitWindNodes(List<Pair<Vec3, Integer>> windNodes, Frustum frustum) {
 		final int size = windNodes.size();
 		if (size <= 1) return;
 
@@ -59,8 +60,9 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 
 			final Vec3 startVec = startNode.getFirst();
 			final Vec3 endVec = endNode.getFirst();
-			final int color = startNode.getSecond();
+			if (!frustum.isVisible(new AABB(startVec, endVec))) continue;
 
+			final int color = startNode.getSecond();
 			if (i == finalIndex) {
 				Gizmos.arrow(startVec, endVec, color, 3F);
 			} else {
