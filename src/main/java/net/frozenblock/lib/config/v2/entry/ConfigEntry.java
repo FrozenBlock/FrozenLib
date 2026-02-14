@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Supplier;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.frozenblock.lib.config.v2.entry.property.VisibilityPredicate;
@@ -34,7 +35,7 @@ import net.frozenblock.lib.config.v2.registry.ID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 
-public class ConfigEntry<T> {
+public class ConfigEntry<T> implements Supplier<T> {
 	private final ConfigData<?> configData;
 	private final ID id;
 	private final EntryType<T> type;
@@ -63,6 +64,7 @@ public class ConfigEntry<T> {
 		this(data, id, type, defaultValue, EntryProperties.of(syncable, modifiable));
 	}
 
+	@Override
 	public T get() {
 		return this.syncedValue.orElse(this.modifiedValue.orElseGet(this::getActual));
 	}
