@@ -19,6 +19,10 @@ package net.frozenblock.lib.config.v2.config;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.util.Map;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
@@ -47,6 +51,18 @@ public class ConfigData<T> {
 			if (!allRegistries) return;
 			ConfigV2Registry.allConfigData().forEach(ConfigData::optimizeConfigMap);
 		});
+
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+			ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+				ConfigV2Registry.allConfigData().forEach(ConfigData::save);
+			});
+		}
+
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			ClientLifecycleEvents.CLIENT_STOPPING.register(client -> {
+				ConfigV2Registry.allConfigData().forEach(ConfigData::save);
+			});
+		}
 	}
 
 	public static <T> ConfigData<T> createAndRegister(ID id, ConfigSettings<T> settings) {

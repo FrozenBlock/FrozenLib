@@ -86,14 +86,10 @@ public class ConfigSerializer {
 	public static <T> Either<Map<String, T>, String> loadConfigAsMap(ID configId) {
 		try {
 			final ConfigData<?> data = ConfigV2Registry.getData(configId);
-			if (data == null) {
-				return Either.right("No config data found for " + configId);
-			}
+			if (data == null) return Either.right("No config data found for " + configId);
 
 			final Optional<? extends SerializationContext<?>> optionalContext = SerializationContext.createForLoading(data);
-			if (optionalContext.isEmpty()) {
-				return Either.right("Config file does not exist: " + configId);
-			}
+			if (optionalContext.isEmpty()) return Either.right("Config file does not exist: " + configId);
 
 			final SerializationContext<?> context = optionalContext.get();
 			final Map<String, ?> configMap = context.configMap();
@@ -160,9 +156,7 @@ public class ConfigSerializer {
 			} else {
 				// Intermediate segment - navigate or create nested map
 				entryMap = navigateOrCreateNestedMap(entryId, pathSegment, entryMap, context);
-				if (entryMap == null) {
-					return Optional.empty();
-				}
+				if (entryMap == null) return Optional.empty();
 			}
 		}
 
@@ -177,20 +171,14 @@ public class ConfigSerializer {
 		SerializationContext<T> context
 	) {
 		final DataResult<V> result = context.encodeOrParse(entry, () -> entryMap.get(pathSegment));
-
 		if (result.isError()) {
 			context.logUnableToUseError(entryId);
 			return Optional.empty();
 		}
 
 		final Optional<V> finalResult = result.resultOrPartial();
-		if (finalResult.isEmpty()) {
-			return Optional.empty();
-		}
-
-		if (context.isForLoading()) {
-			return finalResult;
-		}
+		if (finalResult.isEmpty()) return Optional.empty();
+		if (context.isForLoading()) return finalResult;
 
 		entryMap.put(pathSegment, (T) finalResult.get());
 
@@ -209,10 +197,8 @@ public class ConfigSerializer {
 		SerializationContext<T> context
 	) {
 		final T existing = entryMap.get(pathSegment);
+		if (existing instanceof Map) return (Map<String, T>) existing;
 
-		if (existing instanceof Map) {
-			return (Map<String, T>) existing;
-		}
 		if (context.isForSaving()) {
 			// Create new nested map for saving
 			final Map<String, T> newMap = new Object2ObjectLinkedOpenHashMap<>();
@@ -220,10 +206,8 @@ public class ConfigSerializer {
 			return newMap;
 		}
 
-		var mapFunction = context.settings().mapFunction();
-		if (mapFunction != null) {
-			return mapFunction.toMap(existing);
-		}
+		final var mapFunction = context.settings().mapFunction();
+		if (mapFunction != null) return mapFunction.toMap(existing);
 
 		// Loading mode - map not found
 		FrozenLibLogUtils.logError("Could not find entry " + entryId, FrozenLibLogUtils.UNSTABLE_LOGGING);
@@ -235,9 +219,7 @@ public class ConfigSerializer {
 		ConfigV2Registry.allConfigEntries().forEach(entry -> {
 			if (entry.isSaved()) return;
 			final ID configId = entry.configData().id();
-			if (!unsavedConfigIds.contains(configId)) {
-				unsavedConfigIds.add(configId);
-			}
+			if (!unsavedConfigIds.contains(configId)) unsavedConfigIds.add(configId);
 		});
 
 		final Map<ID, List<ConfigEntry<?>>> configsAndEntries = collectConfigs();
@@ -264,9 +246,7 @@ public class ConfigSerializer {
 	) {
 		public static <T> SerializationContext<T> createForSaving(ID configId, List<ConfigEntry<?>> entries) {
 			final ConfigData<T> data = (ConfigData<T>) ConfigV2Registry.getData(configId);
-			if (data == null) {
-				throw new IllegalStateException("No config data found for " + configId);
-			}
+			if (data == null) throw new IllegalStateException("No config data found for " + configId);
 
 			final Path path = CONFIG_PATH.resolve(configId.toString().replace(':', '/') + "." + data.settings().fileExtension());
 			final Map<String, T> emptyMap = new Object2ObjectLinkedOpenHashMap<>();
@@ -274,20 +254,15 @@ public class ConfigSerializer {
 			final SerializationContext<T> saveContext = new SerializationContext<>(data, true, path, emptyMap, commentMap);
 
 			final Map<String, T> configMap = buildConfigMapForSaving(configId, entries, saveContext);
-
 			return new SerializationContext<>(data, true, path, configMap, commentMap);
 		}
 
 		public static <T> Optional<SerializationContext<T>> createForLoading(ConfigData<T> data) throws Exception {
 			final Path path = CONFIG_PATH.resolve(data.id().toString().replace(':', '/') + "." + data.settings().fileExtension());
-			if (!Files.exists(path)) {
-				return Optional.empty();
-			}
+			if (!Files.exists(path)) return Optional.empty();
 
 			final Map<String, T> configMap = data.settings().load(path);
-			if (configMap.isEmpty()) {
-				throw new IllegalStateException("Loaded config map is empty for " + data.id());
-			}
+			if (configMap.isEmpty()) throw new IllegalStateException("Loaded config map is empty for " + data.id());
 
 			final SerializationContext<T> loadContext = new SerializationContext<>(
 				data,
@@ -345,14 +320,10 @@ public class ConfigSerializer {
 			if (this.isForSaving()) {
 				// Encode the value
 				final DataResult<T> encodedResult = (DataResult<T>) codec.encodeStart(JavaOps.INSTANCE, entry.getActual());
-				if (encodedResult.isError()) {
-					return (DataResult<V>) encodedResult;
-				}
+				if (encodedResult.isError()) return (DataResult<V>) encodedResult;
 
 				final Optional<T> encodedValue = encodedResult.resultOrPartial();
-				if (encodedValue.isEmpty()) {
-					return (DataResult<V>) encodedResult;
-				}
+				if (encodedValue.isEmpty()) return (DataResult<V>) encodedResult;
 
 				// Handle comments for plain JSON files using wrapper
 				if (entry.hasComment() && this.useCommentWrapper()) {
@@ -368,33 +339,25 @@ public class ConfigSerializer {
 
 			final DynamicOps<T> dynamicOps = this.settings().dynamicOps();
 			final T input = parseInput.get();
-			DataResult<V> result = codec.parse(dynamicOps, input);
+			final DataResult<V> result = codec.parse(dynamicOps, input);
 
-			if (!result.isError() || !(input instanceof Map<?, ?> map)) {
-				return result;
-			}
+			if (!result.isError() || !(input instanceof Map<?, ?> map)) return result;
 
 			// Try unwrapping comment wrapper
 			final Object value = map.get("value");
 			if (value != null) {
 				final DataResult<V> valueWithCommentResult = codec.parse(dynamicOps, (T) value);
-				if (!valueWithCommentResult.isError()) {
-					return valueWithCommentResult;
-				}
+				if (!valueWithCommentResult.isError()) return valueWithCommentResult;
 			}
 
 			return result;
 		}
 
 		public void saveConfig() throws Exception {
-			if (this.isForLoading()) {
-				throw new IllegalStateException("Cannot save config from loading context!");
-			}
+			if (this.isForLoading()) throw new IllegalStateException("Cannot save config from loading context!");
 
 			final Map<String, T> configMapToSave = this.configMap();
-			if (configMapToSave == null || configMapToSave.isEmpty()) {
-				return;
-			}
+			if (configMapToSave == null || configMapToSave.isEmpty()) return;
 
 			Files.createDirectories(this.path.getParent());
 			this.settings().save(this.path, configMapToSave, this.commentMap);
