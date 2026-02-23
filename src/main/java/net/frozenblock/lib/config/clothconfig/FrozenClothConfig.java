@@ -87,8 +87,12 @@ public final class FrozenClothConfig {
 	 * @since 2.4
 	 */
 	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A entry(B builder, ConfigEntry<T> configEntry) {
-		builder.setDefaultValue(configEntry.defaultValue());
-		builder.setSaveConsumer(configEntry::setValue);
+		if (builder.getDefaultValue() == null) {
+			builder.setDefaultValue(configEntry.defaultValue());
+		}
+		if (builder.getSaveConsumer() == null) {
+			builder.setSaveConsumer(configEntry::setValue);
+		}
 		if (configEntry.hasVisibilityPredicate()) builder.setDisplayRequirement(Requirement.isTrue(configEntry::isVisible));
 		if (configEntry.requireRestart()) builder.requireRestart();
 
