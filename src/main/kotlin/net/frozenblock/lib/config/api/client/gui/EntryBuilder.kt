@@ -60,6 +60,15 @@ data class EntryBuilder(
         internal fun defaultValueError(): Nothing = throw IllegalArgumentException(DEFAULT_VALUE_ERROR)
     }
 
+    constructor(
+        entry: V2ConfigEntry<*>,
+        value: Any? = null,
+        defaultValue: Any? = null,
+        saveConsumer: Consumer<Any>? = null,
+        requiresRestart: Boolean? = false,
+        requirement: Requirement? = null
+    ) : this(entry, entry.displayName(), entry.tooltip(), value, defaultValue, saveConsumer, requiresRestart, requirement)
+
     /**
      * @throws IllegalArgumentException if the type of [saveConsumer] is not the same as the type of [value]
      */
