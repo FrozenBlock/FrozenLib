@@ -45,9 +45,7 @@ public final class ConfigCommand {
 
 	private static int reloadConfigs(CommandSourceStack source, String modId) {
 		final Collection<ConfigData<?>> configs = ConfigV2Registry.allConfigData().stream().filter(data -> data.id().namespace().equals(modId)).toList();
-		for (ConfigData<?> config : configs) {
-			config.reload();
-		}
+		for (ConfigData<?> config : configs) config.reload();
 		for (ServerPlayer player : PlayerLookup.all(source.getServer())) ConfigEntrySyncPacket.sendDataS2C(player, configs);
 
 		if (configs.size() == 1) {

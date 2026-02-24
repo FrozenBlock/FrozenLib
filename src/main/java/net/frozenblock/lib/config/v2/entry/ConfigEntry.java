@@ -103,7 +103,6 @@ public class ConfigEntry<T> implements Supplier<T> {
 		boolean same = this.value.equals(value);
 		this.value = value;
 		if (markDirty) this.markDirty();
-
 		if (!same) this.trySendSync();
 	}
 
