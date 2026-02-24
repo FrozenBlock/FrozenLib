@@ -149,4 +149,12 @@ public class ConfigData<T> {
 	public void save() {
 		ConfigSerializer.saveConfig(this);
 	}
+
+	public void reload() {
+		this.load(false);
+
+		for (ConfigEntry<?> entry : this.entries.values()) {
+			this.loadEntry(entry, true);
+		}
+	}
 }

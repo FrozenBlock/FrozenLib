@@ -29,7 +29,6 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
-import net.frozenblock.lib.config.v2.modification.ConfigEntryModification;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
@@ -90,9 +89,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		final ConfigEntry entry = packet.entry();
 		if (server != null) {
 			// C2S logic
-
-			// TODO: explain to LunadeMusic what this line does lol
-			ConfigEntryModification.copyInto(packet.value(), entry.getActual());
+			entry.setValue(packet.value());
 			if (!FrozenNetworking.connectedToIntegratedServer()) entry.configData().save();
 			for (ServerPlayer player : PlayerLookup.all(server)) sendEntryS2C(player, List.of(entry));
 		} else {
@@ -143,6 +140,11 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 	@Environment(EnvType.CLIENT)
 	public static <T> void trySendC2S(ConfigEntry<T> config) {
 		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false)) sendC2S(List.of(config));
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static void trySendC2S(Iterable<ConfigEntry<?>> entries) {
+		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false)) sendC2S(entries);
 	}
 
 	@Override

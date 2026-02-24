@@ -28,7 +28,7 @@ import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 public class FrozenLibConfig {
 	public static final ConfigData<?> CONFIG = ConfigData.createAndRegister(FrozenLibConstants.config("main"), ConfigSettings.JSON5_UNQUOTED_KEYS);
 
-	public static final ConfigEntry<Boolean> USE_WIND_ON_NON_FROZEN_SERVERS = CONFIG.entry("useWindOnNonFrozenServers", EntryType.BOOL, true);
+	public static final ConfigEntry<Boolean> USE_WIND_ON_NON_FROZEN_SERVERS = CONFIG.unsyncableEntry("useWindOnNonFrozenServers", EntryType.BOOL, true);
 	public static final ConfigEntry<Boolean> SAVE_ITEM_COOLDOWNS = CONFIG.entry("saveItemCooldowns", EntryType.BOOL, false);
 	public static final ConfigEntry<Boolean> REMOVE_EXPERIMENTAL_WARNING = CONFIG.entry("removeExperimentalWarning", EntryType.BOOL, false);
 	public static final ConfigEntry<Boolean> WARDEN_SPAWN_TRACKER_COMMAND = CONFIG.entry("wardenSpawnTrackerCommand", EntryType.BOOL, false);

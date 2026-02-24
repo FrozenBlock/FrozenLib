@@ -31,11 +31,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.Supplier;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.config.ConfigSettings;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
+import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import org.jetbrains.annotations.Nullable;
@@ -56,6 +58,11 @@ public class ConfigSerializer {
 			context.saveConfig();
 		} catch (Exception e) {
 			FrozenLibLogUtils.logError("Error saving config " + configId, e);
+		}
+
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			List<ConfigEntry<?>> syncEntries = entries.stream().filter(ConfigEntry::isSyncable).toList();
+			ConfigEntrySyncPacket.trySendC2S(syncEntries);
 		}
 	}
 
