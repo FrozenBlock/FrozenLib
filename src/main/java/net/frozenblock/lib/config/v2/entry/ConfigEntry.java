@@ -111,6 +111,7 @@ public class ConfigEntry<T> implements Supplier<T> {
 					ConfigEntrySyncPacket.sendEntryS2C(player, List.of(this));
 				}
 			} else {
+				//noinspection ConstantValue
 				if (Minecraft.getInstance() != null) {
 					ConfigEntrySyncPacket.trySendC2S(this);
 				}
