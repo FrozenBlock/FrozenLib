@@ -59,11 +59,6 @@ public class ConfigSerializer {
 		} catch (Exception e) {
 			FrozenLibLogUtils.logError("Error saving config " + configId, e);
 		}
-
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
-			List<ConfigEntry<?>> syncEntries = entries.stream().filter(ConfigEntry::isSyncable).toList();
-			ConfigEntrySyncPacket.trySendC2S(syncEntries);
-		}
 	}
 
 	public static void saveConfigs(boolean collectAll) {

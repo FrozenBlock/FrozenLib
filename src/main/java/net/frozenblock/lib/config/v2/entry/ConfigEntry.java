@@ -25,15 +25,21 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.frozenblock.lib.config.v2.entry.property.VisibilityPredicate;
+import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.config.v2.modification.ConfigEntryModification;
 import net.frozenblock.lib.config.v2.modification.EntryValueHolder;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 
 public class ConfigEntry<T> implements Supplier<T> {
 	private final ConfigData<?> configData;
@@ -93,8 +99,20 @@ public class ConfigEntry<T> implements Supplier<T> {
 
 	public void setValue(T value, boolean markDirty) {
 		this.ensureIsLoaded();
+		boolean same = this.value == value;
 		this.value = value;
 		if (markDirty) this.markDirty();
+
+		if (!same) {
+			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+				MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
+				for (ServerPlayer player : PlayerLookup.all(server)) {
+					ConfigEntrySyncPacket.sendEntryS2C(player, List.of(this));
+				}
+			} else {
+				ConfigEntrySyncPacket.trySendC2S(this);
+			}
+		}
 	}
 
 	public void ensureIsLoaded() {

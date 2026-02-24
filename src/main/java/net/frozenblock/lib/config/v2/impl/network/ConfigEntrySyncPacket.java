@@ -91,7 +91,6 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 			// C2S logic
 			entry.setValue(packet.value());
 			if (!FrozenNetworking.connectedToIntegratedServer()) entry.configData().save();
-			for (ServerPlayer player : PlayerLookup.all(server)) sendEntryS2C(player, List.of(entry));
 		} else {
 			// S2C logic
 			entry.setSyncedValue(packet.value());
