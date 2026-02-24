@@ -104,18 +104,18 @@ public class ConfigEntry<T> implements Supplier<T> {
 		this.value = value;
 		if (markDirty) this.markDirty();
 
-		if (!same) {
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
-				MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
-				for (ServerPlayer player : PlayerLookup.all(server)) {
-					ConfigEntrySyncPacket.sendEntryS2C(player, List.of(this));
-				}
-			} else {
-				//noinspection ConstantValue
-				if (Minecraft.getInstance() != null) {
-					ConfigEntrySyncPacket.trySendC2S(this);
-				}
+		if (!same) this.trySendSync();
+	}
+
+	public void trySendSync() {
+		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
+			final MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
+			for (ServerPlayer player : PlayerLookup.all(server)) {
+				ConfigEntrySyncPacket.sendEntryS2C(player, List.of(this));
 			}
+		} else {
+			//noinspection ConstantValue
+			if (Minecraft.getInstance() != null) ConfigEntrySyncPacket.trySendC2S(this);
 		}
 	}
 
