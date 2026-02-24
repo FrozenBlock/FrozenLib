@@ -118,6 +118,7 @@ public class ConfigData<T> {
 			final T value = this.optimizedConfigMap.get(entry.id());
 			if (value != null) {
 				entry.setValue((V) value);
+				this.optimizedConfigMap.remove(entry.id());
 			}
 		} else {
 			ConfigSerializer.getFromUnoptimizedDataMap(this, entry, this.unoptimizedConfigMap)
