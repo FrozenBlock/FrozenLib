@@ -18,12 +18,15 @@
 package net.frozenblock.lib.render;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
+import com.mojang.blaze3d.pipeline.ColorTargetState;
+import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
-import com.mojang.blaze3d.platform.DepthTestFunction;
+import com.mojang.blaze3d.platform.CompareOp;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.client.renderer.RenderPipelines;
+import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderPipelines {
@@ -43,9 +46,9 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("EMISSIVE")
 			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
-			.withBlend(BlendFunction.TRANSLUCENT)
+			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
 			.withCull(false)
-			.withDepthWrite(true)
+			.withDepthStencilState(DepthStencilState.DEFAULT)
 			.build()
 	);
 
@@ -56,9 +59,9 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("EMISSIVE")
 			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
-			.withBlend(BlendFunction.TRANSLUCENT)
+			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
 			.withCull(true)
-			.withDepthWrite(false)
+			.withDepthStencilState(Optional.empty())
 			.build()
 	);
 
@@ -69,9 +72,9 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("EMISSIVE")
 			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
-			.withBlend(BlendFunction.TRANSLUCENT)
+			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
 			.withCull(true)
-			.withDepthWrite(true)
+			.withDepthStencilState(DepthStencilState.DEFAULT)
 			.build()
 	);
 
@@ -82,10 +85,9 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("EMISSIVE")
 			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
-			.withBlend(BlendFunction.TRANSLUCENT)
-			.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+			.withDepthStencilState(Optional.empty())
 			.withCull(false)
-			.withDepthWrite(false)
 			.build()
 	);
 
@@ -96,10 +98,9 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("EMISSIVE")
 			.withShaderDefine("PER_FACE_LIGHTING")
 			.withSampler("Sampler1")
-			.withBlend(BlendFunction.TRANSLUCENT)
-			.withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+			.withDepthStencilState(Optional.empty())
 			.withCull(true)
-			.withDepthWrite(false)
 			.build()
 	);
 
@@ -110,9 +111,9 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("EMISSIVE")
 			.withShaderDefine("NO_CARDINAL_LIGHTING")
 			.withSampler("Sampler1")
-			.withBlend(BlendFunction.TRANSLUCENT)
+			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
 			.withCull(true)
-			.withDepthWrite(false)
+			.withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
 			.build()
 	);
 

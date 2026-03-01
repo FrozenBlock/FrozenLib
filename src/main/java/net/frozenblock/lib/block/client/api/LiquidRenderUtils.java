@@ -20,12 +20,18 @@ package net.frozenblock.lib.block.client.api;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.renderer.BiomeColors;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.block.BlockAndTintGetter;
+import net.minecraft.client.renderer.block.LiquidBlockRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.tags.FluidTags;
+import net.minecraft.util.ARGB;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
@@ -75,10 +81,9 @@ public class LiquidRenderUtils {
 
 		if (!(renderUp || renderDown || renderEast || renderWest || renderNorth || renderSouth)) return;
 
-		float downShade = level.getShade(Direction.DOWN, true);
-		float upShade = level.getShade(Direction.UP, true);
-		float northShade = level.getShade(Direction.NORTH, true);
-		float westShade = level.getShade(Direction.WEST, true);
+		boolean isLava = fluidState.is(FluidTags.LAVA);
+		int color = isLava ? -1 : BiomeColors.getAverageWaterColor(level, pos);
+		CardinalLighting cardinalLighting = level.cardinalLighting();
 
 		float southWestHeight;
 		float southEastHeight;
@@ -118,34 +123,37 @@ public class LiquidRenderUtils {
 			southEastHeight -= 0.001F;
 			northEastHeight -= 0.001F;
 
-			final int color = getLightCoords(level, pos);
-			vertex(vertexConsumer, renderX + 0F, renderY + northWestHeight, renderZ + 0F, upShade, upShade, upShade, u0, v0, color);
-			vertex(vertexConsumer, renderX + 0F, renderY + southWestHeight, renderZ + 1F, upShade, upShade, upShade, u0, v1, color);
-			vertex(vertexConsumer, renderX + 1F, renderY + southEastHeight, renderZ + 1F, upShade, upShade, upShade, u1, v1, color);
-			vertex(vertexConsumer, renderX + 1F, renderY + northEastHeight, renderZ + 0F, upShade, upShade, upShade, u1, v0, color);
+			final int topLightCoords = getLightCoords(level, pos);
+			int upColor = ARGB.scaleRGB(color, cardinalLighting.up());
+			vertex(vertexConsumer, renderX + 0F, renderY + northWestHeight, renderZ + 0F, upColor, upColor, upColor, u0, v0, topLightCoords);
+			vertex(vertexConsumer, renderX + 0F, renderY + southWestHeight, renderZ + 1F, upColor, upColor, upColor, u0, v1, topLightCoords);
+			vertex(vertexConsumer, renderX + 1F, renderY + southEastHeight, renderZ + 1F, upColor, upColor, upColor, u1, v1, topLightCoords);
+			vertex(vertexConsumer, renderX + 1F, renderY + northEastHeight, renderZ + 0F, upColor, upColor, upColor, u1, v0, topLightCoords);
 			if (fluidState.shouldRenderBackwardUpFace(level, pos.above()) || !state.equals(downState)) {
-				vertex(vertexConsumer, renderX + 0F, renderY + northWestHeight, renderZ + 0F, upShade, upShade, upShade, u0, v0, color);
-				vertex(vertexConsumer, renderX + 1F, renderY + northEastHeight, renderZ + 0F, upShade, upShade, upShade, u1, v0, color);
-				vertex(vertexConsumer, renderX + 1F, renderY + southEastHeight, renderZ + 1F, upShade, upShade, upShade, u1, v1, color);
-				vertex(vertexConsumer, renderX + 0F, renderY + southWestHeight, renderZ + 1F, upShade, upShade, upShade, u0, v1, color);
+				vertex(vertexConsumer, renderX + 0F, renderY + northWestHeight, renderZ + 0F, upColor, upColor, upColor, u0, v0, topLightCoords);
+				vertex(vertexConsumer, renderX + 1F, renderY + northEastHeight, renderZ + 0F, upColor, upColor, upColor, u1, v0, topLightCoords);
+				vertex(vertexConsumer, renderX + 1F, renderY + southEastHeight, renderZ + 1F, upColor, upColor, upColor, u1, v1, topLightCoords);
+				vertex(vertexConsumer, renderX + 0F, renderY + southWestHeight, renderZ + 1F, upColor, upColor, upColor, u0, v1, topLightCoords);
 			}
 		}
 
 		if (renderDown) {
-			final int belowColor = getLightCoords(level, pos.below());
-			vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ + 1F, downShade, downShade, downShade, u0, v1, belowColor);
-			vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u0, v0, belowColor);
-			vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u1, v0, belowColor);
-			vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ + 1F, downShade, downShade, downShade, u1, v1, belowColor);
+			// TODO 26.1 check if belowLightCoords should be used
+			int belowLightCoords = getLightCoords(level, pos.below());
+			int belowColor = ARGB.scaleRGB(color, cardinalLighting.down());
+			vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ + 1F, belowColor, belowColor, belowColor, u0, v1, belowColor);
+			vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ, belowColor, belowColor, belowColor, u0, v0, belowColor);
+			vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ, belowColor, belowColor, belowColor, u1, v0, belowColor);
+			vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ + 1F, belowColor, belowColor, belowColor, u1, v1, belowColor);
 			if (downState.getBlock() != state.getBlock() && !downState.canOcclude()) {
-				vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ + 1F, downShade, downShade, downShade, u0, v1, belowColor);
-				vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ + 1F, downShade, downShade, downShade, u0, v0, belowColor);
-				vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u1, v0, belowColor);
-				vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ, downShade, downShade, downShade, u1, v1, belowColor);
+				vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ + 1F, belowColor, belowColor, belowColor, u0, v1, belowColor);
+				vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ + 1F, belowColor, belowColor, belowColor, u0, v0, belowColor);
+				vertex(vertexConsumer, renderX + 1F, renderY + renderYOffset, renderZ, belowColor, belowColor, belowColor, u1, v0, belowColor);
+				vertex(vertexConsumer, renderX, renderY + renderYOffset, renderZ, belowColor, belowColor, belowColor, u1, v1, belowColor);
 			}
 		}
 
-		final int color = getLightCoords(level, pos);
+		final int sideLightCoords = getLightCoords(level, pos);
 		for (Direction direction : Direction.Plane.HORIZONTAL) {
 			float firstY;
 			float secondY;
@@ -190,15 +198,16 @@ public class LiquidRenderUtils {
 			}) || isFaceOccludedByNeighbor(level, pos, direction, Math.max(firstY, secondY), level.getBlockState(pos.relative(direction)), level.getBlockState(pos.relative(direction))))
 				continue;
 
-			final float sideShade = upShade * (direction.getAxis() == Direction.Axis.Z ? northShade : westShade);
-			vertex(vertexConsumer, firstX, renderY + firstY, firstZ, sideShade, sideShade, sideShade, u0, v0, color);
-			vertex(vertexConsumer, secondX, renderY + secondY, lastZ, sideShade, sideShade, sideShade, u1, v0, color);
-			vertex(vertexConsumer, secondX, renderY + renderYOffset, lastZ, sideShade, sideShade, sideShade, u1, v1, color);
-			vertex(vertexConsumer, firstX, renderY + renderYOffset, firstZ, sideShade, sideShade, sideShade, u0, v1, color);
-			vertex(vertexConsumer, firstX, renderY + renderYOffset, firstZ, sideShade, sideShade, sideShade, u0, v1, color);
-			vertex(vertexConsumer, secondX, renderY + renderYOffset, lastZ, sideShade, sideShade, sideShade, u1, v1, color);
-			vertex(vertexConsumer, secondX, renderY + secondY, lastZ, sideShade, sideShade, sideShade, u1, v0, color);
-			vertex(vertexConsumer, firstX, renderY + firstY, firstZ, sideShade, sideShade, sideShade, u0, v0, color);
+			// TODO 26.1 check
+			final float shadeSide = cardinalLighting.up() * (direction.getAxis() == Direction.Axis.Z ? cardinalLighting.north() : cardinalLighting.west());
+			vertex(vertexConsumer, firstX, renderY + firstY, firstZ, shadeSide, shadeSide, shadeSide, u0, v0, sideLightCoords);
+			vertex(vertexConsumer, secondX, renderY + secondY, lastZ, shadeSide, shadeSide, shadeSide, u1, v0, sideLightCoords);
+			vertex(vertexConsumer, secondX, renderY + renderYOffset, lastZ, shadeSide, shadeSide, shadeSide, u1, v1, sideLightCoords);
+			vertex(vertexConsumer, firstX, renderY + renderYOffset, firstZ, shadeSide, shadeSide, shadeSide, u0, v1, sideLightCoords);
+			vertex(vertexConsumer, firstX, renderY + renderYOffset, firstZ, shadeSide, shadeSide, shadeSide, u0, v1, sideLightCoords);
+			vertex(vertexConsumer, secondX, renderY + renderYOffset, lastZ, shadeSide, shadeSide, shadeSide, u1, v1, sideLightCoords);
+			vertex(vertexConsumer, secondX, renderY + secondY, lastZ, shadeSide, shadeSide, shadeSide, u1, v0, sideLightCoords);
+			vertex(vertexConsumer, firstX, renderY + firstY, firstZ, shadeSide, shadeSide, shadeSide, u0, v0, sideLightCoords);
 		}
 	}
 
@@ -248,14 +257,11 @@ public class LiquidRenderUtils {
 		consumer.addVertex(x, y, z).setColor(red, green, blue, 1F).setUv(u, v).setLight(packedLight).setNormal(0F, 1F, 0F);
 	}
 
-	public static int getLightCoords(BlockAndTintGetter level, BlockPos pos) {
-		final int color = LevelRenderer.getLightCoords(level, pos);
-		final int aboveColor = LevelRenderer.getLightCoords(level, pos.above());
-		final int k = color & 0xFF;
-		final int l = aboveColor & 0xFF;
-		final int m = color >> 16 & 0xFF;
-		final int n = aboveColor >> 16 & 0xFF;
-		return (Math.max(k, l)) | (Math.max(m, n)) << 16;
+	/**
+	 * Static version of getLightCoords in {@link LiquidBlockRenderer}
+	 */
+	public static int getLightCoords(final BlockAndTintGetter level, final BlockPos pos) {
+		return LightCoordsUtil.max(LevelRenderer.getLightCoords(level, pos), LevelRenderer.getLightCoords(level, pos.above()));
 	}
 
 	private static boolean isNeighborSameFluidAndBlock(FluidState firstState, FluidState secondState, BlockState firstBlock, BlockState secondBlock) {
