@@ -34,18 +34,18 @@ import org.jetbrains.annotations.Nullable;
 public class PushableBlockEntityUtil {
 
 	public static boolean saveBlockEntity(Level level, BlockEntity blockEntity, BlockEntity pistonEntity) {
-		if (!(pistonEntity instanceof PistonMovingBlockEntityInterface pistonInterface)) return false;
+		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return false;
 
 		final CompoundTag blockEntityTag = blockEntity.saveWithFullMetadata(level.registryAccess());
-		pistonInterface.frozenLib$setPushedBlockEntityTag(blockEntityTag);
+		pistonMovingBlock.frozenLib$setPushedBlockEntityTag(blockEntityTag);
 		return true;
 	}
 
 	public static boolean saveTag(@Nullable CompoundTag tag, BlockEntity pistonEntity) {
 		if (tag == null) return true;
-		if (!(pistonEntity instanceof PistonMovingBlockEntityInterface pistonInterface)) return false;
+		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return false;
 
-		pistonInterface.frozenLib$setPushedBlockEntityTag(tag);
+		pistonMovingBlock.frozenLib$setPushedBlockEntityTag(tag);
 		return true;
 	}
 
@@ -56,9 +56,9 @@ public class PushableBlockEntityUtil {
 		BlockState state,
 		PistonMovingBlockEntity pistonEntity
 	) {
-		if (!state.hasBlockEntity() || !(pistonEntity instanceof PistonMovingBlockEntityInterface pistonInterface)) return setBlock;
+		if (!state.hasBlockEntity() || !(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return setBlock;
 
-		final CompoundTag blockEntityTag = pistonInterface.frozenLib$getPushedBlockEntityTag();
+		final CompoundTag blockEntityTag = pistonMovingBlock.frozenLib$getPushedBlockEntityTag();
 		if (blockEntityTag == null) return setBlock;
 
 		final BlockEntity blockEntity = BlockEntity.loadStatic(pos, state, blockEntityTag, level.registryAccess());
@@ -68,8 +68,8 @@ public class PushableBlockEntityUtil {
 	}
 
 	public static BlockEntity getFakeBlockEntity(BlockEntity pistonEntity) {
-		if (!(pistonEntity instanceof PistonMovingBlockEntityInterface pistonInterface)) return null;
-		return pistonInterface.frozenLib$getPushedFakeBlockEntity();
+		if (!(pistonEntity instanceof PistonMovingBlockEntity pistonMovingBlock)) return null;
+		return pistonMovingBlock.frozenLib$getPushedFakeBlockEntity();
 	}
 
 	public static boolean canChestsStick(BlockState state1, BlockState state2, Direction direction) {

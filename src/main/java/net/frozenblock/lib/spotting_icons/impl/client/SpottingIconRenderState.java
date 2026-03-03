@@ -21,7 +21,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.render.FrozenLibRenderTypes;
+import net.frozenblock.lib.renderer.FrozenLibRenderTypes;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
 import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -44,7 +44,7 @@ public final class SpottingIconRenderState {
 	public void extract(Entity entity, EntityRenderDispatcher entityRenderDispatcher, float partialTick) {
 		if (entityRenderDispatcher == null || entityRenderDispatcher.camera == null || entity == null) return;
 
-		final SpottingIconManager iconManager = ((EntitySpottingIconInterface) entity).getSpottingIconManager();
+		final SpottingIconManager iconManager = ((EntitySpottingIconInterface) entity).frozenLib$getSpottingIconManager();
 		final SpottingIconManager.SpottingIcon icon = iconManager.icon;
 		if (icon == null) return;
 

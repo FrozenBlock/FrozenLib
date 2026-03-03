@@ -82,10 +82,8 @@ public class MusicManagerMixin {
 		}
 
 		this.frozenLib$currentPitch = Mth.clamp(this.frozenLib$currentPitch, 0F, 5F);
-		if (this.frozenLib$currentPitch > 1.0E-4F) {
-			if (this.minecraft.getSoundManager().soundEngine instanceof SoundEngineInterface soundEngineInterface) {
-				soundEngineInterface.frozenLib$setPitch(this.currentMusic, this.frozenLib$currentPitch);
-			}
-		}
+		if (this.frozenLib$currentPitch <= 1.0E-4F) return;
+
+		this.minecraft.getSoundManager().soundEngine.frozenLib$setPitch(this.currentMusic, this.frozenLib$currentPitch);
 	}
 }

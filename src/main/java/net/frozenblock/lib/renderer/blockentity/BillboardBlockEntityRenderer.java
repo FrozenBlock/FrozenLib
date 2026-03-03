@@ -15,27 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.client.entity;
+package net.frozenblock.lib.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.ModelPart;
-import net.minecraft.client.model.geom.PartPose;
-import net.minecraft.client.model.geom.builders.CubeListBuilder;
-import net.minecraft.client.model.geom.builders.LayerDefinition;
-import net.minecraft.client.model.geom.builders.MeshDefinition;
-import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider.Context;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.renderer.texture.TextureAtlas;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -45,22 +46,8 @@ import org.joml.Vector3f;
 @Environment(EnvType.CLIENT)
 public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S extends BlockEntityRenderState> implements BlockEntityRenderer<T, S> {
 	private static final Vector3f Y_AXIS_NEGATIVE = new Vector3f(0F, -1F, 0F);
-	private final ModelPart base;
 
 	public BillboardBlockEntityRenderer(Context context) {
-		final ModelPart root = this.getRoot(context);
-		this.base = root.getChild("base");
-	}
-
-	public static LayerDefinition getTexturedModelData() {
-		final MeshDefinition modelData = new MeshDefinition();
-		final PartDefinition root = modelData.getRoot();
-		root.addOrReplaceChild("base", CubeListBuilder.create()
-				.texOffs(0, 0)
-				.addBox(-8F, -16F, 0F, 16F, 16F, 0.0F),
-			PartPose.offsetAndRotation(0F, 0F, 0F, Mth.PI, 0F, 0F)
-		);
-		return LayerDefinition.create(modelData, 16, 16);
 	}
 
 	@Override
@@ -76,7 +63,7 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 		collector.submitModelPart(
 			this.base,
 			poseStack,
-			RenderTypes.entityCutout(this.getTexture(renderState)),
+			RenderTypes.entityCutout(this.getSprite(renderState)),
 			renderState.lightCoords,
 			OverlayTexture.NO_OVERLAY,
 			null,
@@ -86,7 +73,59 @@ public abstract class BillboardBlockEntityRenderer<T extends BlockEntity, S exte
 		poseStack.popPose();
 	}
 
-	public abstract Identifier getTexture(S renderState);
+	//CREDIT TO magistermaks ON GITHUB!!
+	protected void render(
+		PoseStack.Pose pose,
+		VertexConsumer vertexConsumer,
+		TextureAtlasSprite sprite,
+		int lightCoords,
+		int overlayCoords,
+		int tint
+	) {
+		final Matrix4f matrix = pose.pose();
+		final float u0 = sprite.getU0();
+		final float u1 = sprite.getU1();
+		final float v0 = sprite.getV0();
+		final float v1 = sprite.getV1();
 
-	public abstract ModelPart getRoot(Context context);
+		final Vector3f transformedNormal = pose.transformNormal(0F, 1F, 0F, new Vector3f());
+		final float normalX = transformedNormal.x;
+		final float normalY = transformedNormal.y;
+		final float normalZ = transformedNormal.z;
+
+		vertexConsumer
+			.addVertex(matrix, -0.5F, -0.5F, 0F)
+			.setColor(tint)
+			.setUv(u0, v1)
+			.setOverlay(overlayCoords)
+			.setLight(lightCoords)
+			.setNormal(normalX, normalY, normalZ);
+		vertexConsumer
+			.addVertex(matrix, 0.5F, -0.5F, 0F)
+			.setColor(tint)
+			.setUv(u1, v1)
+			.setOverlay(overlayCoords)
+			.setLight(lightCoords)
+			.setNormal(normalX, normalY, normalZ);
+		vertexConsumer
+			.addVertex(matrix, 0.5F, 0.5F, 0F)
+			.setColor(tint)
+			.setUv(u1, v0)
+			.setOverlay(overlayCoords)
+			.setLight(lightCoords)
+			.setNormal(normalX, normalY, normalZ);
+		vertexConsumer
+			.addVertex(matrix, -0.5F, 0.5F, 0F)
+			.setColor(tint)
+			.setUv(u0, v0)
+			.setOverlay(overlayCoords)
+			.setLight(lightCoords)
+			.setNormal(normalX, normalY, normalZ);
+	}
+
+	protected static TextureAtlasSprite getSprite(Identifier texture) {
+		return Minecraft.getInstance().getAtlasManager().getAtlasOrThrow(AtlasIds.BLOCKS).getSprite(texture);
+	}
+
+	public abstract TextureAtlas getSprite(S renderState);
 }

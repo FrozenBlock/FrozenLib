@@ -18,7 +18,6 @@
     "tick.BlockStateBaseMixin"
   ],
   "client": [
-    "client.entity.SpecialModelRenderersMixin",
     "client.piston.MovingBlockRenderStateMixin",
     "client.piston.PistonHeadRendererMixin",
     "tick.client.ClientLevelMixin"

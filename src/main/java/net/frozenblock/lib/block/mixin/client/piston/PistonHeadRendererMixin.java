@@ -21,7 +21,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.block.client.impl.state.MovingBlockRenderStateImpl;
+import net.frozenblock.lib.block.client.impl.state.MovingBlockRenderStateInterface;
 import net.frozenblock.lib.block.impl.PushableBlockEntityUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -31,7 +31,7 @@ import net.minecraft.client.renderer.blockentity.PistonHeadRenderer;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.client.renderer.blockentity.state.PistonHeadRenderState;
 import net.minecraft.client.renderer.feature.ModelFeatureRenderer;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.phys.Vec3;
@@ -57,22 +57,20 @@ public class PistonHeadRendererMixin {
 		MovingBlockRenderState original,
 		PistonMovingBlockEntity movingBlock, PistonHeadRenderState renderState, float partialTick, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
 	) {
-		if (!(original instanceof MovingBlockRenderStateImpl movingRenderStateImpl)) return original;
-
 		try {
 			final BlockEntity fakeBlockEntity = PushableBlockEntityUtil.getFakeBlockEntity(movingBlock);
 			if (fakeBlockEntity == null) return original;
 
 			final BlockEntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
 			final BlockEntityRenderState fakeRenderState = renderDispatcher.tryExtractRenderState(fakeBlockEntity, partialTick, crumblingOverlay);
-			movingRenderStateImpl.frozenLib$setBlockEntityRenderState(fakeRenderState);
+			original.frozenLib$setBlockEntityRenderState(fakeRenderState);
 		} catch (Throwable ignored) {}
 
 		return original;
 	}
 
 	@Inject(
-		method = "submit(Lnet/minecraft/client/renderer/blockentity/state/PistonHeadRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+		method = "submit(Lnet/minecraft/client/renderer/blockentity/state/PistonHeadRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
 		at = @At(
 			value = "INVOKE",
 			target = "Lnet/minecraft/client/renderer/SubmitNodeCollector;submitMovingBlock(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/block/MovingBlockRenderState;)V",
@@ -82,9 +80,7 @@ public class PistonHeadRendererMixin {
 	public void frozenLib$SubmitMovingBlockEntity(
 		PistonHeadRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState, CallbackInfo info
 	) {
-		if (!(renderState.block instanceof MovingBlockRenderStateImpl movingRenderStateImpl)) return;
-
-		final BlockEntityRenderState fakeRenderState = movingRenderStateImpl.frozenLib$getBlockEntityRenderState();
+		final BlockEntityRenderState fakeRenderState = renderState.block.frozenLib$getBlockEntityRenderState();
 		if (fakeRenderState == null) return;
 
 		try {

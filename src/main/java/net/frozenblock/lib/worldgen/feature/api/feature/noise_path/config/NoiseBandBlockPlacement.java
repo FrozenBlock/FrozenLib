@@ -83,7 +83,7 @@ public class NoiseBandBlockPlacement {
 		if (!this.replacementPredicate.test(level, pos)) return false;
 		if (!this.searchingPredicate.test(level, pos)) return false;
 
-		final BlockState state = this .blockStateProvider.getState(random, pos);
+		final BlockState state = this.blockStateProvider.getState(level, random, pos);
 		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
 		if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
 		return true;

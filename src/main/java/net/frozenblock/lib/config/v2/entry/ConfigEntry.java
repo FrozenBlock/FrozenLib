@@ -109,10 +109,9 @@ public class ConfigEntry<T> implements Supplier<T> {
 	public void trySendSync() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
 			final MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
-			if (server != null) {
-				for (ServerPlayer player : PlayerLookup.all(server)) {
-					ConfigEntrySyncPacket.sendEntryS2C(player, List.of(this));
-				}
+			if (server == null) return;
+			for (ServerPlayer player : PlayerLookup.all(server)) {
+				ConfigEntrySyncPacket.sendEntryS2C(player, List.of(this));
 			}
 		} else {
 			//noinspection ConstantValue

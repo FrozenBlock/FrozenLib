@@ -333,7 +333,7 @@ public final class FrozenClientNetworking {
 			final Identifier predicate = packet.restrictionID();
 			final ClientLevel level = ctx.client().level;
 			final  Entity entity = level.getEntity(id);
-            if (entity instanceof EntitySpottingIconInterface livingEntity) livingEntity.getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
+            if (entity instanceof EntitySpottingIconInterface livingEntity) livingEntity.frozenLib$getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
 		});
 	}
 
@@ -343,7 +343,7 @@ public final class FrozenClientNetworking {
 			final int id = packet.entityId();
 			final ClientLevel level = ctx.client().level;
 			final Entity entity = level.getEntity(id);
-            if (entity instanceof EntitySpottingIconInterface livingEntity) livingEntity.getSpottingIconManager().icon = null;
+            if (entity instanceof EntitySpottingIconInterface livingEntity) livingEntity.frozenLib$getSpottingIconManager().icon = null;
 		});
 	}
 

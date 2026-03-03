@@ -20,7 +20,6 @@ package net.frozenblock.lib.entity.mixin;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.entity.impl.EntityStepOnBlockInterface;
 import net.frozenblock.lib.entity.impl.StartTrackingEntityInterface;
-import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -45,8 +44,8 @@ public abstract class EntityMixin implements StartTrackingEntityInterface, Entit
 		final Entity entity = Entity.class.cast(this);
 		entity.frozenLib$getSoundManager().syncWithPlayer(serverPlayer);
 		entity.frozenLib$getFadingSoundManager().syncWithPlayer(serverPlayer);
-		entity.getSpottingIconManager().sendIconPacket(serverPlayer);
-		((EntityScreenShakeInterface)entity).frozenLib$getScreenShakeManager().syncWithPlayer(serverPlayer);
+		entity.frozenLib$getSpottingIconManager().sendIconPacket(serverPlayer);
+		entity.frozenLib$getScreenShakeManager().syncWithPlayer(serverPlayer);
 	}
 
 	@Inject(
@@ -59,13 +58,14 @@ public abstract class EntityMixin implements StartTrackingEntityInterface, Entit
 	)
 	public void frozenLib$runSteppedOn(
 		CallbackInfo info,
-		@Local BlockPos pos, @Local BlockState state
+		@Local(name = "effectPos") BlockPos pos,
+		@Local(name = "effectState") BlockState state
 	) {
 		this.frozenLib$onSteppedOnBlock(this.level(), pos, state);
 	}
 
 	@Unique
 	@Override
-	public void frozenLib$onSteppedOnBlock(Level level, BlockPos pos, BlockState state) {
+	public void frozenLib$onSteppedOnBlock(Level level, BlockPos effectPos, BlockState effectState) {
 	}
 }

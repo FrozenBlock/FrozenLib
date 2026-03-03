@@ -34,6 +34,6 @@ public class PlayerMixin {
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initWithIcon(Level level, GameProfile gameProfile, CallbackInfo ci) {
 		Player player = Player.class.cast(this);
-		((EntitySpottingIconInterface) player).getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/player.png"), 0, 1, FrozenLibConstants.id("default"));
+		((EntitySpottingIconInterface) player).frozenLib$getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/player.png"), 0, 1, FrozenLibConstants.id("default"));
 	}
 }

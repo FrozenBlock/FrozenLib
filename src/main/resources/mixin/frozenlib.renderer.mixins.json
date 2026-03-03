@@ -1,12 +1,14 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib.render.mixin",
+  "package": "net.frozenblock.lib.renderer.mixin",
   "compatibilityLevel": "JAVA_21",
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
+    "camera.CameraMixin",
+    "camera.CameraRenderStateMixin",
     "invert.ModelPartCubeMixin",
     "invert.ModelPartMixin",
     "invert.PartDefinitionMixin",

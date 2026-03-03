@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.render;
+package net.frozenblock.lib.renderer;
 
 import java.util.function.BiFunction;
 import java.util.function.Function;
@@ -24,6 +24,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
 
@@ -38,6 +39,29 @@ public final class FrozenLibRenderTypes {
 			.setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
 			.createRenderSetup();
 		return RenderType.create(FrozenLibConstants.safeString("entity_cutout_no_lightmap"), renderSetup);
+	});
+
+	public static final Function<Identifier, RenderType> ENTITY_CUTOUT_NO_SHADING_CULL = Util.memoize(identifier -> {
+		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_CUTOUT_NO_SHADING_CULL)
+			.withTexture("Sampler0", identifier)
+			.useLightmap()
+			.useOverlay()
+			.affectsCrumbling()
+			.setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("entity_cutout_no_lightmap_cull"), renderSetup);
+	});
+
+	public static final Function<Identifier, RenderType> ENTITY_TRANSLUCENT_NO_SHADING_CULL = Util.memoize(identifier -> {
+		final RenderSetup renderSetup = RenderSetup.builder(FrozenLibRenderPipelines.ENTITY_TRANSLUCENT_NO_SHADING_CULL)
+			.withTexture("Sampler0", identifier)
+			.useLightmap()
+			.useOverlay()
+			.affectsCrumbling()
+			.sortOnUpload()
+			.setOutline(RenderSetup.OutlineProperty.AFFECTS_OUTLINE)
+			.createRenderSetup();
+		return RenderType.create(FrozenLibConstants.safeString("entity_translucent_no_lightmap_cull"), renderSetup);
 	});
 
 	public static final BiFunction<Identifier, Boolean, RenderType> ENTITY_TRANSLUCENT_EMISSIVE_FIXED = Util.memoize((identifier, affectsOutline) -> {
@@ -105,8 +129,19 @@ public final class FrozenLibRenderTypes {
 		return RenderType.create(FrozenLibConstants.safeString("apparition_outer"), renderSetup);
 	});
 
+	public static final RenderType NO_SHADING_CUTOUT_BLOCK_SHEET = ENTITY_CUTOUT_NO_SHADING_CULL.apply(TextureAtlas.LOCATION_BLOCKS);
+	public static final RenderType NO_SHADING_TRANSLUCENT_BLOCK_SHEET = ENTITY_TRANSLUCENT_NO_SHADING_CULL.apply(TextureAtlas.LOCATION_BLOCKS);
+
 	public static RenderType entityCutoutNoShading(Identifier identifier) {
 		return ENTITY_CUTOUT_NO_SHADING.apply(identifier);
+	}
+
+	public static RenderType entityCutoutNoShadingCull(Identifier identifier) {
+		return ENTITY_CUTOUT_NO_SHADING_CULL.apply(identifier);
+	}
+
+	public static RenderType entityTranslucentNoShadingCull(Identifier identifier) {
+		return ENTITY_TRANSLUCENT_NO_SHADING_CULL.apply(identifier);
 	}
 
     public static RenderType entityTranslucentEmissiveFixed(Identifier identifier) {

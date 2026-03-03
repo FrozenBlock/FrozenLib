@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.render;
+package net.frozenblock.lib.renderer;
 
 import com.mojang.blaze3d.pipeline.BlendFunction;
 import com.mojang.blaze3d.pipeline.ColorTargetState;
@@ -36,6 +36,27 @@ public final class FrozenLibRenderPipelines {
 			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
 			.withShaderDefine("NO_CARDINAL_LIGHTING")
 			.withSampler("Sampler1")
+			.build()
+	);
+
+	public static final RenderPipeline ENTITY_CUTOUT_NO_SHADING_CULL = RenderPipelines.register(
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+			.withLocation(FrozenLibConstants.id("pipeline/entity_cutout_no_shading_cull"))
+			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
+			.withShaderDefine("NO_CARDINAL_LIGHTING")
+			.withSampler("Sampler1")
+			.withCull(true)
+			.build()
+	);
+
+	public static final RenderPipeline ENTITY_TRANSLUCENT_NO_SHADING_CULL = RenderPipelines.register(
+		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
+			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_no_shading_cull"))
+			.withShaderDefine("ALPHA_CUTOUT", 0.1F)
+			.withShaderDefine("NO_CARDINAL_LIGHTING")
+			.withSampler("Sampler1")
+			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
+			.withCull(true)
 			.build()
 	);
 

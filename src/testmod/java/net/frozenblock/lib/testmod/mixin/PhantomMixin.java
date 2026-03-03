@@ -34,6 +34,6 @@ public class PhantomMixin {
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initWithIcon(EntityType<? extends Phantom> entityType, Level level, CallbackInfo ci) {
 		Phantom phantom = Phantom.class.cast(this);
-		((EntitySpottingIconInterface) phantom).getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/phantom.png"), 16, 20, FrozenLibConstants.id("default"));
+		((EntitySpottingIconInterface) phantom).frozenLib$getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/phantom.png"), 16, 20, FrozenLibConstants.id("default"));
 	}
 }

@@ -25,7 +25,7 @@ import net.frozenblock.lib.spotting_icons.impl.client.SpottingIconRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
-import net.minecraft.client.renderer.state.CameraRenderState;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -45,7 +45,7 @@ public class EntityRenderDispatcherMixin {
 	)
 	public <S extends EntityRenderState> void frozenLib$submitSpottingIcon(
 		S renderState,
-		CameraRenderState cameraState,
+		CameraRenderState camera,
 		double x,
 		double y,
 		double z,
@@ -56,7 +56,7 @@ public class EntityRenderDispatcherMixin {
 		if (!(renderState instanceof EntityRenderStateWithIcon stateWithIcon)) return;
 		final SpottingIconRenderState iconRenderState = stateWithIcon.frozenLib$getIconRenderState();
 		if (iconRenderState == null) return;
-		iconRenderState.submit(poseStack, renderState, cameraState.orientation, collector);
+		iconRenderState.submit(poseStack, renderState, camera.orientation, collector);
 	}
 
 }

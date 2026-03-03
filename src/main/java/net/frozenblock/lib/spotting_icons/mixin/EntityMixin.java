@@ -74,7 +74,7 @@ public class EntityMixin implements EntitySpottingIconInterface {
 
 	@Unique
 	@Override
-	public SpottingIconManager getSpottingIconManager() {
+	public SpottingIconManager frozenLib$getSpottingIconManager() {
 		return this.frozenLib$SpottingIconManager;
 	}
 

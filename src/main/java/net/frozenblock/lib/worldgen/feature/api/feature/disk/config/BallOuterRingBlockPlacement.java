@@ -99,7 +99,7 @@ public class BallOuterRingBlockPlacement {
 		if (!this.replacementPredicate.test(level, pos)) return false;
 		if (!this.searchingPredicate.test(level, pos)) return false;
 
-		final BlockState state = this .stateProvider.getState(random, pos);
+		final BlockState state = this .stateProvider.getState(level, random, pos);
 		level.setBlock(pos, state, Block.UPDATE_CLIENTS);
 		if (this.scheduleTickOnPlacement) level.scheduleTick(pos, state.getBlock(), 1);
 		return true;

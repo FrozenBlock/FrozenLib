@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2026 FrozenBlock
+ * Copyright (C) 2024-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,30 +15,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.mixin.client.piston;
+package net.frozenblock.lib.renderer.mixin.camera;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.block.client.impl.state.MovingBlockRenderStateInterface;
-import net.minecraft.client.renderer.block.MovingBlockRenderState;
-import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.frozenblock.lib.renderer.impl.CameraRenderStateInterface;
+import net.minecraft.client.renderer.state.level.CameraRenderState;
+import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Environment(EnvType.CLIENT)
-@Mixin(MovingBlockRenderState.class)
-public class MovingBlockRenderStateMixin implements MovingBlockRenderStateInterface {
+@Mixin(CameraRenderState.class)
+public class CameraRenderStateMixin implements CameraRenderStateInterface {
 
 	@Unique
-	private BlockEntityRenderState frozenLib$blockEntityRenderState = null;
+	private Quaternionf frozenLib$horizontalOrientation = new Quaternionf();
 
+	@Unique
 	@Override
-	public void frozenLib$setBlockEntityRenderState(BlockEntityRenderState renderState) {
-		this.frozenLib$blockEntityRenderState = renderState;
+	public void frozenLib$setHorizontalOrientation(Quaternionf orientation) {
+		this.frozenLib$horizontalOrientation = orientation;
 	}
 
+	@Unique
 	@Override
-	public BlockEntityRenderState frozenLib$getBlockEntityRenderState() {
-		return this.frozenLib$blockEntityRenderState;
+	public Quaternionf frozenLib$horizontalOrientation() {
+		return this.frozenLib$horizontalOrientation;
 	}
 }

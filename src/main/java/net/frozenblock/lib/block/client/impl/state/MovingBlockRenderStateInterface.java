@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.client.impl.state;
 
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 
-public interface MovingBlockRenderStateImpl {
+public interface MovingBlockRenderStateInterface {
 	void frozenLib$setBlockEntityRenderState(BlockEntityRenderState renderState);
 	BlockEntityRenderState frozenLib$getBlockEntityRenderState();
 }

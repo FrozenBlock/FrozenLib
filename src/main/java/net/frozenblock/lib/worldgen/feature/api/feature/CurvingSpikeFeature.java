@@ -124,7 +124,7 @@ public class CurvingSpikeFeature extends Feature<CurvingSpikeConfig> {
 
 				final BlockPos placementPos = BlockPos.containing(offsetPos);
 				if (!replaceable.test(level, placementPos)) continue;
-				level.setBlock(placementPos, stateProvider.getState(random, placementPos), Block.UPDATE_CLIENTS);
+				level.setBlock(placementPos, stateProvider.getState(level, random, placementPos), Block.UPDATE_CLIENTS);
 			}
 		}
 	}

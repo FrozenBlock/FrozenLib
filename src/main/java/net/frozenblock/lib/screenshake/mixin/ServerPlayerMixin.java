@@ -60,8 +60,9 @@ public class ServerPlayerMixin {
 	public void frozenLib$syncScreenShakes(CallbackInfo info) {
 		if (this.frozenLib$hasSyncedScreenShakes || this.connection == null || !this.connection.isAcceptingMessages() || this.isChangingDimension) return;
 
-		final EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
-		entityScreenShakeManager.syncWithPlayer(ServerPlayer.class.cast(this));
+		final ServerPlayer player = ServerPlayer.class.cast(this);
+		final EntityScreenShakeManager entityScreenShakeManager = player.frozenLib$getScreenShakeManager();
+		entityScreenShakeManager.syncWithPlayer(player);
 		this.frozenLib$hasSyncedScreenShakes = true;
 	}
 
@@ -75,7 +76,7 @@ public class ServerPlayerMixin {
 		final ServerPlayer player = ServerPlayer.class.cast(this);
 		try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
 			final TagValueOutput output = TagValueOutput.createWithContext(scopedCollector, player.registryAccess());
-			final EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
+			final EntityScreenShakeManager entityScreenShakeManager = player.frozenLib$getScreenShakeManager();
 			entityScreenShakeManager.save(output);
 			tempTag = output.buildResult();
 		} catch (Exception e) {
@@ -94,8 +95,8 @@ public class ServerPlayerMixin {
 
 		final ServerPlayer player = ServerPlayer.class.cast(this);
 		try (ProblemReporter.ScopedCollector scopedCollector = new ProblemReporter.ScopedCollector(player.problemPath(), LOGGER)) {
-			ValueInput input = TagValueInput.create(scopedCollector, player.registryAccess(), this.frozenLib$savedScreenShakesTag);
-			EntityScreenShakeManager entityScreenShakeManager = ((EntityScreenShakeInterface) ServerPlayer.class.cast(this)).frozenLib$getScreenShakeManager();
+			final ValueInput input = TagValueInput.create(scopedCollector, player.registryAccess(), this.frozenLib$savedScreenShakesTag);
+			final EntityScreenShakeManager entityScreenShakeManager = player.frozenLib$getScreenShakeManager();
 			entityScreenShakeManager.load(input);
 			this.frozenLib$hasSyncedScreenShakes = false;
 		}

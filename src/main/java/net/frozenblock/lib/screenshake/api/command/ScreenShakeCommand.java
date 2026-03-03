@@ -28,6 +28,7 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
+import net.frozenblock.lib.screenshake.impl.EntityScreenShakeManager;
 import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
 import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
@@ -151,11 +152,11 @@ public class ScreenShakeCommand {
 		int entityAmount = 0;
 		List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
-			if (!(entity instanceof EntityScreenShakeInterface screenShakeInterface)) continue;
-			if (screenShakeInterface.frozenLib$getScreenShakeManager().getShakes().isEmpty()) continue;
+			final EntityScreenShakeManager screenShakeManager = entity.frozenLib$getScreenShakeManager();
+			if (screenShakeManager.getShakes().isEmpty()) continue;
 
 			affectedEntities.add(entity);
-			screenShakeInterface.frozenLib$getScreenShakeManager().getShakes().clear();
+			screenShakeManager.getShakes().clear();
 
 			final CustomPacketPayload packet = new RemoveEntityScreenShakePacket(entity.getId());
 			for (ServerPlayer serverPlayer : PlayerLookup.tracking(entity)) ServerPlayNetworking.send(serverPlayer, packet);

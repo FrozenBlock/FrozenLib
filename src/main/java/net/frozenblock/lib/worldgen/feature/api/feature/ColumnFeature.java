@@ -53,7 +53,7 @@ public class ColumnFeature extends Feature<ColumnFeatureConfig> {
 		for (int step = 0; step < length; step++) {
 			if (replaceable.test(level, mutable)) {
 				generated = true;
-				level.setBlock(mutable, blockStateProvider.getState(random, mutable), Block.UPDATE_ALL);
+				level.setBlock(mutable, blockStateProvider.getState(level, random, mutable), Block.UPDATE_ALL);
 			} else if (stopWhenEncounteringUnreplaceableBlock) {
 				return generated;
 			}

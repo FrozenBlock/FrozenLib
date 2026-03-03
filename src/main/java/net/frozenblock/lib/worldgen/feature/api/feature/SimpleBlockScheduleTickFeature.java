@@ -38,7 +38,7 @@ public class SimpleBlockScheduleTickFeature extends Feature<SimpleBlockConfigura
 		final SimpleBlockConfiguration config = featurePlaceContext.config();
 		final WorldGenLevel level = featurePlaceContext.level();
 		final BlockPos pos = featurePlaceContext.origin();
-		final BlockState state = config.toPlace().getState(featurePlaceContext.random(), pos);
+		final BlockState state = config.toPlace().getState(level, featurePlaceContext.random(), pos);
 
 		if (!state.canSurvive(level, pos)) return false;
 

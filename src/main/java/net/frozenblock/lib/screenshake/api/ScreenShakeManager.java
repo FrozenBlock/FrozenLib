@@ -134,7 +134,7 @@ public class ScreenShakeManager extends SavedData {
 
 		final EntityScreenShakePacket packet = new EntityScreenShakePacket(entity.getId(), intensity, duration, falloffStart, maxDistance, ticks);
 		for (ServerPlayer player : PlayerLookup.level(serverLevel)) ServerPlayNetworking.send(player, packet);
-		((EntityScreenShakeInterface) entity).frozenLib$addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
+		entity.frozenLib$addScreenShake(intensity, duration, falloffStart, maxDistance, ticks);
 	}
 
 	public static void sendEntityScreenShakeTo(ServerPlayer player, Entity entity, float intensity, int duration, int falloffStart, float maxDistance, int ticks) {

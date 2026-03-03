@@ -36,11 +36,11 @@ public class AbstractContainerMenuMixin {
 		)
 	)
 	private boolean frozenLib$fixIsSameItemSameComponents(ItemStack stackA, ItemStack stackB, Operation<Boolean> original) {
-		ItemStackExtension.class.cast(stackA).frozenLib$setCanRemoveTags(true);
-		ItemStackExtension.class.cast(stackB).frozenLib$setCanRemoveTags(true);
+		stackA.frozenLib$setCanRemoveTags(true);
+		stackB.frozenLib$setCanRemoveTags(true);
 		final boolean retValue = original.call(stackA, stackB);
-		ItemStackExtension.class.cast(stackA).frozenLib$setCanRemoveTags(false);
-		ItemStackExtension.class.cast(stackB).frozenLib$setCanRemoveTags(false);
+		stackA.frozenLib$setCanRemoveTags(false);
+		stackB.frozenLib$setCanRemoveTags(false);
 		return retValue;
 	}
 
@@ -52,11 +52,11 @@ public class AbstractContainerMenuMixin {
 		)
 	)
 	private boolean frozenLib$fixMoveItemStackTo(ItemStack stackA, ItemStack stackB, Operation<Boolean> original) {
-		ItemStackExtension.class.cast(stackA).frozenLib$setCanRemoveTags(true);
-		ItemStackExtension.class.cast(stackB).frozenLib$setCanRemoveTags(true);
+		stackA.frozenLib$setCanRemoveTags(true);
+		stackB.frozenLib$setCanRemoveTags(true);
 		final boolean retValue = original.call(stackA, stackB);
-		ItemStackExtension.class.cast(stackA).frozenLib$setCanRemoveTags(false);
-		ItemStackExtension.class.cast(stackB).frozenLib$setCanRemoveTags(false);
+		stackA.frozenLib$setCanRemoveTags(false);
+		stackB.frozenLib$setCanRemoveTags(false);
 		return retValue;
 	}
 }

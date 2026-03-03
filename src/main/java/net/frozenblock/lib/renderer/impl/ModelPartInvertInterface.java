@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.impl.client.rendering;
+package net.frozenblock.lib.renderer.impl;
 
 public interface ModelPartInvertInterface {
 	void frozenLib$setInverted();

@@ -15,12 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icons.impl;
+package net.frozenblock.lib.renderer.impl;
 
-import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
+import org.joml.Quaternionf;
 
-public interface EntitySpottingIconInterface {
-	default SpottingIconManager frozenLib$getSpottingIconManager() {
-		throw new UnsupportedOperationException("IMPLEMENT ME");
-	}
+public interface CameraRenderStateInterface {
+	void frozenLib$setHorizontalOrientation(Quaternionf orientation);
+	Quaternionf frozenLib$horizontalOrientation();
 }

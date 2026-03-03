@@ -53,7 +53,7 @@ public class MinecraftMixin {
 	)
 	public Object frozenLib$selectMusic(
 		Object original,
-		@Local BackgroundMusic backgroundMusic
+		@Local(name = "backgroundMusic") BackgroundMusic backgroundMusic
 	) {
 		if (!(original instanceof Music music)) return original;
 
