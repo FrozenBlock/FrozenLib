@@ -20,6 +20,11 @@ package net.frozenblock.lib.renderer.impl;
 import org.joml.Quaternionf;
 
 public interface CameraRenderStateInterface {
-	void frozenLib$setHorizontalOrientation(Quaternionf orientation);
-	Quaternionf frozenLib$horizontalOrientation();
+	default void frozenLib$setHorizontalOrientation(Quaternionf orientation) {
+		throw new AssertionError();
+	}
+
+	default Quaternionf frozenLib$horizontalOrientation() {
+		throw new AssertionError();
+	}
 }

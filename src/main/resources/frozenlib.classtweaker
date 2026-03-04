@@ -104,7 +104,8 @@ transitive-accessible method net/minecraft/world/entity/EntityType chestBoatFact
 transitive-accessible method net/minecraft/world/entity/projectile/arrow/AbstractArrow isInGround ()Z
 transitive-accessible field net/minecraft/world/entity/LivingEntity dead Z
 
-transitive-inject-interface  net/minecraft/world/entity/Entity net/frozenblock/lib/screenshake/impl/EntityScreenShakeInterface
+transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/screenshake/impl/EntityScreenShakeInterface
+transitive-inject-interface net/minecraft/client/renderer/entity/state/EntityRenderState net/frozenblock/lib/spotting_icons/impl/client/EntityRenderStateWithIcon
 
 # Entity Models
 transitive-extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
@@ -151,6 +152,7 @@ transitive-accessible method net/minecraft/world/level/block/state/BlockBehaviou
 transitive-accessible class net/minecraft/world/level/block/state/BlockBehaviour$BlockStateBase$Cache
 transitive-accessible method net/minecraft/world/level/block/state/BlockBehaviour getSoundType (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/level/block/SoundType;
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour UPDATE_SHAPE_ORDER [Lnet/minecraft/core/Direction;
+transitive-accessible field net/minecraft/client/color/block/BlockColors BLANK_LAYER Lnet/minecraft/client/color/block/BlockTintSource;
 
 # Block Entities
 transitive-accessible method net/minecraft/world/level/block/entity/BlockEntityType <init> (Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/Set;)V
@@ -162,8 +164,8 @@ transitive-mutable field net/minecraft/world/level/block/entity/BeaconBlockEntit
 transitive-accessible field net/minecraft/world/level/block/entity/DecoratedPotPatterns ITEM_TO_POT_TEXTURE Ljava/util/Map;
 transitive-mutable field net/minecraft/world/level/block/entity/DecoratedPotPatterns ITEM_TO_POT_TEXTURE Ljava/util/Map;
 
-transitive-inject-interface  net/minecraft/world/level/block/piston/PistonMovingBlockEntity net/frozenblock/lib/block/impl/PistonMovingBlockEntityInterface
-transitive-inject-interface  net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/block/client/impl/state/MovingBlockRenderStateInterface
+transitive-inject-interface net/minecraft/world/level/block/piston/PistonMovingBlockEntity net/frozenblock/lib/block/impl/PistonMovingBlockEntityInterface
+transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/block/client/impl/state/MovingBlockRenderStateInterface
 
 # Render Types
 accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
@@ -181,10 +183,10 @@ transitive-accessible method net/minecraft/data/worldgen/NoiseData register (Lne
 # Surface Rules
 transitive-accessible method net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource <init> (Ljava/util/List;)V
 transitive-accessible method net/minecraft/world/level/levelgen/SurfaceRules isBiome (Ljava/util/List;)Lnet/minecraft/world/level/levelgen/SurfaceRules$BiomeConditionSource;
-transitive-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Condition
-transitive-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$Context
-transitive-accessible field  net/minecraft/world/level/levelgen/SurfaceRules$Context biome Ljava/util/function/Supplier;
-transitive-accessible class  net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
+transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$Condition
+transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$Context
+transitive-accessible field net/minecraft/world/level/levelgen/SurfaceRules$Context biome Ljava/util/function/Supplier;
+transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
 
 # Placement Modifiers
 transitive-accessible field net/minecraft/world/level/levelgen/placement/PlacementContext level Lnet/minecraft/world/level/WorldGenLevel;

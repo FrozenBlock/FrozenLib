@@ -39,7 +39,7 @@ public class EntityRenderDispatcherMixin {
 		method = "submit",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/CameraRenderState;)V",
+			target = "Lnet/minecraft/client/renderer/entity/EntityRenderer;submit(Lnet/minecraft/client/renderer/entity/state/EntityRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
 			shift = At.Shift.AFTER
 		)
 	)
@@ -53,8 +53,7 @@ public class EntityRenderDispatcherMixin {
 		SubmitNodeCollector collector,
 		CallbackInfo info
 	) {
-		if (!(renderState instanceof EntityRenderStateWithIcon stateWithIcon)) return;
-		final SpottingIconRenderState iconRenderState = stateWithIcon.frozenLib$getIconRenderState();
+		final SpottingIconRenderState iconRenderState = renderState.frozenLib$getIconRenderState();
 		if (iconRenderState == null) return;
 		iconRenderState.submit(poseStack, renderState, camera.orientation, collector);
 	}

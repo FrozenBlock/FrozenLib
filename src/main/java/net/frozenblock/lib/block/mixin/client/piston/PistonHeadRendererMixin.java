@@ -21,7 +21,6 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.block.client.impl.state.MovingBlockRenderStateInterface;
 import net.frozenblock.lib.block.impl.PushableBlockEntityUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.SubmitNodeCollector;
@@ -55,14 +54,14 @@ public class PistonHeadRendererMixin {
 	)
 	public MovingBlockRenderState frozenLib$extractMovingBlockEntity(
 		MovingBlockRenderState original,
-		PistonMovingBlockEntity movingBlock, PistonHeadRenderState renderState, float partialTick, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+		PistonMovingBlockEntity movingBlock, PistonHeadRenderState renderState, float partialTicks, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
 	) {
 		try {
 			final BlockEntity fakeBlockEntity = PushableBlockEntityUtil.getFakeBlockEntity(movingBlock);
 			if (fakeBlockEntity == null) return original;
 
 			final BlockEntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
-			final BlockEntityRenderState fakeRenderState = renderDispatcher.tryExtractRenderState(fakeBlockEntity, partialTick, crumblingOverlay);
+			final BlockEntityRenderState fakeRenderState = renderDispatcher.tryExtractRenderState(fakeBlockEntity, partialTicks, crumblingOverlay);
 			original.frozenLib$setBlockEntityRenderState(fakeRenderState);
 		} catch (Throwable ignored) {}
 

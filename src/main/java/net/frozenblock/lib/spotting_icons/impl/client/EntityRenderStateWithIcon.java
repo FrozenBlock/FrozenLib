@@ -22,5 +22,7 @@ import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public interface EntityRenderStateWithIcon {
-    SpottingIconRenderState frozenLib$getIconRenderState();
+    default SpottingIconRenderState frozenLib$getIconRenderState() {
+		throw new AssertionError();
+	}
 }

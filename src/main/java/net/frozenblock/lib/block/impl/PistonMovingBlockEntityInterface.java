@@ -21,7 +21,15 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public interface PistonMovingBlockEntityInterface {
-	void frozenLib$setPushedBlockEntityTag(CompoundTag tag);
-	CompoundTag frozenLib$getPushedBlockEntityTag();
-	BlockEntity frozenLib$getPushedFakeBlockEntity();
+	default void frozenLib$setPushedBlockEntityTag(CompoundTag tag) {
+		throw new AssertionError();
+	}
+
+	default CompoundTag frozenLib$getPushedBlockEntityTag() {
+		throw new AssertionError();
+	}
+
+	default BlockEntity frozenLib$getPushedFakeBlockEntity() {
+		throw new AssertionError();
+	}
 }

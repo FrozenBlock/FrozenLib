@@ -17,51 +17,39 @@
 
 package net.frozenblock.lib.block.client.api;
 
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.BlockColorRegistry;
-import net.minecraft.client.renderer.BiomeColors;
+import net.minecraft.client.color.block.BlockTintSource;
+import net.minecraft.client.color.block.BlockTintSources;
 import net.minecraft.world.level.FoliageColor;
 import net.minecraft.world.level.block.Block;
 
 @Environment(EnvType.CLIENT)
 public class BlockColorHelper {
 
-	public static void registerAverageFoliageColor(Block block) {
-		BlockColorRegistry.register(
-			(state, level, pos, tintIndex) -> {
-				if (level == null || pos == null) return FoliageColor.FOLIAGE_DEFAULT;
-				return BiomeColors.getAverageFoliageColor(level, pos);
-			},
-			block
-		);
+	public static void registerAverageFoliageTint(Block... blocks) {
+		BlockColorRegistry.register(List.of(BlockTintSources.foliage()), blocks);
 	}
 
-	public static void registerBirchFoliageColor(Block block) {
-		BlockColorRegistry.register(
-			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_BIRCH,
-			block
-		);
+	public static void registerBirchFoliageTint(Block... blocks) {
+		BlockColorRegistry.register(List.of(BlockTintSources.constant(FoliageColor.FOLIAGE_BIRCH)), blocks);
 	}
 
-	public static void registerEvergreenFoliageColor(Block block) {
-		BlockColorRegistry.register(
-			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_EVERGREEN,
-			block
-		);
+	public static void registerEvergreenFoliageTint(Block... blocks) {
+		BlockColorRegistry.register(List.of(BlockTintSources.constant(FoliageColor.FOLIAGE_EVERGREEN)), blocks);
 	}
 
-	public static void registerMangroveFoliageColor(Block block) {
-		BlockColorRegistry.register(
-			(state, level, pos, tintIndex) -> FoliageColor.FOLIAGE_MANGROVE,
-			block
-		);
+	public static void registerMangroveFoliageTint(Block... blocks) {
+		BlockColorRegistry.register(List.of(BlockTintSources.constant(FoliageColor.FOLIAGE_MANGROVE)), blocks);
 	}
 
-	public static void registerColor(Block block, int color) {
-		BlockColorRegistry.register(
-			(state, level, pos, tintIndex) -> color,
-			block
-		);
+	public static void registerTint(int tint, Block... blocks) {
+		BlockColorRegistry.register(List.of(BlockTintSources.constant(tint)), blocks);
+	}
+
+	public static void registerTint(BlockTintSource tintSource, Block... blocks) {
+		BlockColorRegistry.register(List.of(tintSource), blocks);
 	}
 }

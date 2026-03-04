@@ -18,6 +18,11 @@
 package net.frozenblock.lib.item.impl;
 
 public interface ItemStackExtension {
-	boolean frozenLib$canRemoveTags();
-	void frozenLib$setCanRemoveTags(boolean canRemoveTags);
+	default boolean frozenLib$canRemoveTags() {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$setCanRemoveTags(boolean canRemoveTags) {
+		throw new AssertionError();
+	}
 }
