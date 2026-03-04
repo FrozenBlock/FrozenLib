@@ -22,11 +22,11 @@ import com.mojang.blaze3d.pipeline.ColorTargetState;
 import com.mojang.blaze3d.pipeline.DepthStencilState;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.platform.CompareOp;
+import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.client.renderer.RenderPipelines;
-import java.util.Optional;
 
 @Environment(EnvType.CLIENT)
 public final class FrozenLibRenderPipelines {

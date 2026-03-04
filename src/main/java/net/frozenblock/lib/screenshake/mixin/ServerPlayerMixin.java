@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.screenshake.mixin;
 
-import net.frozenblock.lib.screenshake.impl.EntityScreenShakeInterface;
 import net.frozenblock.lib.screenshake.impl.EntityScreenShakeManager;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;

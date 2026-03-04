@@ -20,7 +20,6 @@ package net.frozenblock.lib.spotting_icons.mixin.client;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.spotting_icons.impl.client.EntityRenderStateWithIcon;
 import net.frozenblock.lib.spotting_icons.impl.client.SpottingIconRenderState;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
