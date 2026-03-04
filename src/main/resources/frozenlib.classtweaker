@@ -294,6 +294,9 @@ transitive-accessible class net/minecraft/client/data/models/BlockModelGenerator
 transitive-accessible field net/minecraft/client/particle/Particle x D
 transitive-accessible field net/minecraft/client/particle/Particle y D
 transitive-accessible field net/minecraft/client/particle/Particle z D
+transitive-accessible field net/minecraft/client/particle/Particle xd D
+transitive-accessible field net/minecraft/client/particle/Particle yd D
+transitive-accessible field net/minecraft/client/particle/Particle zd D
 transitive-accessible field net/minecraft/client/particle/Particle gravity F
 transitive-accessible field net/minecraft/client/particle/Particle friction F
 transitive-accessible field net/minecraft/client/particle/Particle stoppedByCollision Z
