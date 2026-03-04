@@ -279,6 +279,10 @@ transitive-accessible field net/minecraft/client/data/models/BlockModelGenerator
 transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_2_SEGMENT_CONDITION Ljava/util/function/Function;
 transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_3_SEGMENT_CONDITION Ljava/util/function/Function;
 transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators FLOWER_BED_MODEL_4_SEGMENT_CONDITION Ljava/util/function/Function;
+transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators LEAF_LITTER_MODEL_1_SEGMENT_CONDITION Ljava/util/function/Function;
+transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators LEAF_LITTER_MODEL_2_SEGMENT_CONDITION Ljava/util/function/Function;
+transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators LEAF_LITTER_MODEL_3_SEGMENT_CONDITION Ljava/util/function/Function;
+transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators LEAF_LITTER_MODEL_4_SEGMENT_CONDITION Ljava/util/function/Function;
 transitive-accessible method net/minecraft/data/loot/EntityLootSubProvider shouldSmeltLoot ()Lnet/minecraft/world/level/storage/loot/predicates/AnyOfCondition$Builder;
 transitive-accessible field net/minecraft/data/loot/BlockLootSubProvider NORMAL_LEAVES_STICK_CHANCES [F
 transitive-accessible field net/minecraft/client/data/models/BlockModelGenerators itemModelOutput Lnet/minecraft/client/data/models/ItemModelOutput;
