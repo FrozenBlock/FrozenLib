@@ -154,6 +154,14 @@ transitive-accessible method net/minecraft/world/level/block/state/BlockBehaviou
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour UPDATE_SHAPE_ORDER [Lnet/minecraft/core/Direction;
 transitive-accessible field net/minecraft/client/color/block/BlockColors BLANK_LAYER Lnet/minecraft/client/color/block/BlockTintSource;
 
+# Liquid Rendering
+transitive-accessible field net/minecraft/client/renderer/block/LiquidBlockRenderer MAX_FLUID_HEIGHT F
+transitive-accessible method net/minecraft/client/renderer/block/LiquidBlockRenderer calculateAverageHeight (Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/world/level/material/Fluid;FFFLnet/minecraft/core/BlockPos;)F
+transitive-accessible method net/minecraft/client/renderer/block/LiquidBlockRenderer getLightCoords (Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/core/BlockPos;)I
+transitive-accessible method net/minecraft/client/renderer/block/LiquidBlockRenderer getHeight (Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/BlockPos;)F
+transitive-accessible method net/minecraft/client/renderer/block/LiquidBlockRenderer getHeight (Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)F
+transitive-accessible method net/minecraft/client/renderer/block/LiquidBlockRenderer vertex (Lcom/mojang/blaze3d/vertex/VertexConsumer;FFFIFFI)V
+
 # Block Entities
 transitive-accessible method net/minecraft/world/level/block/entity/BlockEntityType <init> (Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/Set;)V
 transitive-accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier
