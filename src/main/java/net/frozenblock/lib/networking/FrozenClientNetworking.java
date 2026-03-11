@@ -410,12 +410,16 @@ public final class FrozenClientNetworking {
 				final File localFile = requestedPath.resolve(ServerTextureDownloader.LOCAL_TEXTURE_SOURCE).resolve(fileName).toFile();
 
 				final File sendingFile = file.exists() ? file : localFile;
-				try {
-					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, sendingFile)) {
-						ClientPlayNetworking.send(fileTransferPacket);
+				if (FrozenNetworking.connectedToIntegratedServer()) {
+					ServerTextureDownloader.registerTextureByPacketIfFound(packet);
+				} else {
+					try {
+						for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, sendingFile)) {
+							ClientPlayNetworking.send(fileTransferPacket);
+						}
+					} catch (IOException ignored) {
+						FrozenLibConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
 					}
-				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
 				}
 			} else {
 				final String destPath = packet.transferPath();
@@ -425,10 +429,7 @@ public final class FrozenClientNetworking {
 				try {
 					final Path path = ctx.client().gameDirectory.toPath().resolve(destPath).resolve(fileName);
 					if (FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), true)) {
-						final Identifier identifier = ServerTextureDownloader.WAITING_TEXTURES.get(
-							ServerTextureDownloader.makePathFromRootAndDest(packet.transferPath(), packet.fileName())
-						);
-						if (identifier != null) ServerTextureDownloader.downloadAndRegisterServerTexture(identifier, packet.transferPath(), packet.fileName());
+						ServerTextureDownloader.registerTextureByPacketIfFound(packet);
 					}
 				} catch (IOException ignored) {
 					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);

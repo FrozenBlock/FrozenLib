@@ -74,6 +74,13 @@ public class ServerTextureDownloader {
 		).thenCompose(image -> registerTimedTextureInManager(texture, image, destPath, fileName));
 	}
 
+	public static void registerTextureByPacketIfFound(FileTransferPacket packet) {
+		final Identifier identifier = ServerTextureDownloader.WAITING_TEXTURES.get(
+			ServerTextureDownloader.makePathFromRootAndDest(packet.transferPath(), packet.fileName())
+		);
+		if (identifier != null) ServerTextureDownloader.downloadAndRegisterServerTexture(identifier, packet.transferPath(), packet.fileName());
+	}
+
 	@Nullable
 	public static NativeImage downloadServerTexture(@Nullable Identifier texture, String destPath, String fileName) throws IOException {
 		final Path path = Minecraft.getInstance().gameDirectory.toPath().resolve(destPath);
