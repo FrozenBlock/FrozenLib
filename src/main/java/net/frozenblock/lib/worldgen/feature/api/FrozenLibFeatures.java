@@ -27,7 +27,6 @@ import net.frozenblock.lib.worldgen.feature.api.feature.ColumnWithDiskFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.ComboFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.CurvingSpikeFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.LargeSpireFeature;
-import net.frozenblock.lib.worldgen.feature.api.feature.SimpleBlockScheduleTickFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.UnderwaterVegetationPatchFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.UnderwaterVegetationPatchWithEdgeDecorationFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.VegetationPatchWithEdgeDecorationFeature;
@@ -42,12 +41,10 @@ import net.frozenblock.lib.worldgen.feature.api.feature.noise_path.NoisePathFeat
 import net.frozenblock.lib.worldgen.feature.api.feature.noise_path.config.NoisePathFeatureConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.levelgen.feature.configurations.SimpleBlockConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 
 public class FrozenLibFeatures {
 	public static final ComboFeature COMBO_FEATURE = new ComboFeature(ComboFeatureConfig.CODEC);
-	public static final SimpleBlockScheduleTickFeature SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE = new SimpleBlockScheduleTickFeature(SimpleBlockConfiguration.CODEC);
 	public static final NoisePathFeature NOISE_PATH_FEATURE = new NoisePathFeature(NoisePathFeatureConfig.CODEC);
 	public static final BallFeature BALL_FEATURE = new BallFeature(BallFeatureConfig.CODEC);
 	public static final ColumnFeature COLUMN_FEATURE = new ColumnFeature(ColumnFeatureConfig.CODEC);
@@ -63,7 +60,6 @@ public class FrozenLibFeatures {
 
 	public static void init() {
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("combo"), COMBO_FEATURE);
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("simple_block_schedule_tick"), SIMPLE_BLOCK_SCHEDULE_TICK_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path"), NOISE_PATH_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("ball"), BALL_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column"), COLUMN_FEATURE);
