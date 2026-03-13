@@ -108,8 +108,8 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 		if (range.height() < 4) return false;
 
 		final int radiusByHeight = (int) ((float) range.height() * config.maxColumnRadiusToCaveHeightRatio());
-		final int clampedRadius = Mth.clamp(radiusByHeight, config.columnRadius().getMinValue(), config.columnRadius().getMaxValue());
-		final int radius = Mth.randomBetweenInclusive(random, config.columnRadius().getMinValue(), clampedRadius);
+		final int clampedRadius = Mth.clamp(radiusByHeight, config.columnRadius().minInclusive(), config.columnRadius().maxInclusive());
+		final int radius = Mth.randomBetweenInclusive(random, config.columnRadius().minInclusive(), clampedRadius);
 
 		final LargeSpire ceilingSpire = make(pos.atY(range.ceiling() - 1), false, random, radius, config.stalactiteBluntness(), config.heightScale());
 		final LargeSpire floorSpire = make(pos.atY(range.floor() + 1), true, random, radius, config.stalagmiteBluntness(), config.heightScale());

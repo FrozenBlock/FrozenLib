@@ -20,9 +20,8 @@ package net.frozenblock.lib.block.client.api;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
-import net.minecraft.client.renderer.block.LiquidBlockRenderer;
+import net.minecraft.client.renderer.block.FluidRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -48,6 +47,7 @@ public class LiquidRenderUtils {
 	 * @param sprite The texture to render.
 	 */
 	public static void tesselateWithSingleTexture(
+		FluidRenderer fluidRenderer,
 		BlockAndTintGetter level,
 		BlockPos pos,
 		VertexConsumer vertexConsumer,
@@ -55,8 +55,6 @@ public class LiquidRenderUtils {
 		FluidState fluidState,
 		TextureAtlasSprite sprite
 	) {
-		final LiquidBlockRenderer liquidBlockRenderer = Minecraft.getInstance().getBlockRenderer().getLiquidRenderer();
-
 		final BlockState downState = level.getBlockState(pos.relative(Direction.DOWN));
 		final FluidState downFluidState = downState.getFluidState();
 		final BlockState upState = level.getBlockState(pos.relative(Direction.UP));
@@ -71,7 +69,7 @@ public class LiquidRenderUtils {
 		final FluidState eastFluidState = eastState.getFluidState();
 
 		final boolean renderUp = !isNeighborSameFluidAndBlock(fluidState, upFluidState, state, upState);
-		final boolean renderDown = shouldRenderFace(fluidState, state, Direction.DOWN, downFluidState, downState) && !isFaceOccludedByNeighbor(Direction.DOWN, LiquidBlockRenderer.MAX_FLUID_HEIGHT, downState, state);
+		final boolean renderDown = shouldRenderFace(fluidState, state, Direction.DOWN, downFluidState, downState) && !isFaceOccludedByNeighbor(Direction.DOWN, FluidRenderer.MAX_FLUID_HEIGHT, downState, state);
 		final boolean renderNorth = shouldRenderFace(fluidState, state, Direction.NORTH, northFluidState, northState);
 		final boolean renderSouth = shouldRenderFace(fluidState, state, Direction.SOUTH, southFluidState, southState);
 		final boolean renderEast = shouldRenderFace(fluidState, state, Direction.EAST, eastFluidState, eastState);
@@ -87,21 +85,21 @@ public class LiquidRenderUtils {
 		float northWestHeight;
 		float northEastHeight;
 		final Fluid fluid = fluidState.getType();
-		final float fluidHeight = liquidBlockRenderer.getHeight(level, fluid, pos, state, fluidState);
+		final float fluidHeight = fluidRenderer.getHeight(level, fluid, pos, state, fluidState);
 		if (fluidHeight >= 1F) {
 			northEastHeight = 1F;
 			northWestHeight = 1F;
 			southEastHeight = 1F;
 			southWestHeight = 1F;
 		} else {
-			final float northHeight = liquidBlockRenderer.getHeight(level, fluid, pos.north(), northState, northFluidState);
-			final float southHeight = liquidBlockRenderer.getHeight(level, fluid, pos.south(), southState, southFluidState);
-			final float eastHeight = liquidBlockRenderer.getHeight(level, fluid, pos.east(), eastState, eastFluidState);
-			final float westHeight = liquidBlockRenderer.getHeight(level, fluid, pos.west(), westState, westFluidState);
-			northEastHeight = liquidBlockRenderer.calculateAverageHeight(level, fluid, fluidHeight, northHeight, eastHeight, pos.relative(Direction.NORTH).relative(Direction.EAST));
-			northWestHeight = liquidBlockRenderer.calculateAverageHeight(level, fluid, fluidHeight, northHeight, westHeight, pos.relative(Direction.NORTH).relative(Direction.WEST));
-			southEastHeight = liquidBlockRenderer.calculateAverageHeight(level, fluid, fluidHeight, southHeight, eastHeight, pos.relative(Direction.SOUTH).relative(Direction.EAST));
-			southWestHeight = liquidBlockRenderer.calculateAverageHeight(level, fluid, fluidHeight, southHeight, westHeight, pos.relative(Direction.SOUTH).relative(Direction.WEST));
+			final float northHeight = fluidRenderer.getHeight(level, fluid, pos.north(), northState, northFluidState);
+			final float southHeight = fluidRenderer.getHeight(level, fluid, pos.south(), southState, southFluidState);
+			final float eastHeight = fluidRenderer.getHeight(level, fluid, pos.east(), eastState, eastFluidState);
+			final float westHeight = fluidRenderer.getHeight(level, fluid, pos.west(), westState, westFluidState);
+			northEastHeight = fluidRenderer.calculateAverageHeight(level, fluid, fluidHeight, northHeight, eastHeight, pos.relative(Direction.NORTH).relative(Direction.EAST));
+			northWestHeight = fluidRenderer.calculateAverageHeight(level, fluid, fluidHeight, northHeight, westHeight, pos.relative(Direction.NORTH).relative(Direction.WEST));
+			southEastHeight = fluidRenderer.calculateAverageHeight(level, fluid, fluidHeight, southHeight, eastHeight, pos.relative(Direction.SOUTH).relative(Direction.EAST));
+			southWestHeight = fluidRenderer.calculateAverageHeight(level, fluid, fluidHeight, southHeight, westHeight, pos.relative(Direction.SOUTH).relative(Direction.WEST));
 		}
 
 		final float x = pos.getX() & 15;
@@ -120,36 +118,36 @@ public class LiquidRenderUtils {
 			southEastHeight -= 0.001F;
 			northEastHeight -= 0.001F;
 
-			final int topLightCoords = liquidBlockRenderer.getLightCoords(level, pos);
+			final int topLightCoords = fluidRenderer.getLightCoords(level, pos);
 			int upColor = ARGB.scaleRGB(color, cardinalLighting.up());
-			liquidBlockRenderer.vertex(vertexConsumer, x + 0F, y + northWestHeight, z + 0F, upColor, u0, v0, topLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, x + 0F, y + southWestHeight, z + 1F, upColor, u0, v1, topLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, x + 1F, y + southEastHeight, z + 1F, upColor, u1, v1, topLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, x + 1F, y + northEastHeight, z + 0F, upColor, u1, v0, topLightCoords);
+			fluidRenderer.vertex(vertexConsumer, x + 0F, y + northWestHeight, z + 0F, upColor, u0, v0, topLightCoords);
+			fluidRenderer.vertex(vertexConsumer, x + 0F, y + southWestHeight, z + 1F, upColor, u0, v1, topLightCoords);
+			fluidRenderer.vertex(vertexConsumer, x + 1F, y + southEastHeight, z + 1F, upColor, u1, v1, topLightCoords);
+			fluidRenderer.vertex(vertexConsumer, x + 1F, y + northEastHeight, z + 0F, upColor, u1, v0, topLightCoords);
 			if (fluidState.shouldRenderBackwardUpFace(level, pos.above()) || !state.equals(downState)) {
-				liquidBlockRenderer.vertex(vertexConsumer, x + 0F, y + northWestHeight, z + 0F, upColor, u0, v0, topLightCoords);
-				liquidBlockRenderer.vertex(vertexConsumer, x + 1F, y + northEastHeight, z + 0F, upColor, u1, v0, topLightCoords);
-				liquidBlockRenderer.vertex(vertexConsumer, x + 1F, y + southEastHeight, z + 1F, upColor, u1, v1, topLightCoords);
-				liquidBlockRenderer.vertex(vertexConsumer, x + 0F, y + southWestHeight, z + 1F, upColor, u0, v1, topLightCoords);
+				fluidRenderer.vertex(vertexConsumer, x + 0F, y + northWestHeight, z + 0F, upColor, u0, v0, topLightCoords);
+				fluidRenderer.vertex(vertexConsumer, x + 1F, y + northEastHeight, z + 0F, upColor, u1, v0, topLightCoords);
+				fluidRenderer.vertex(vertexConsumer, x + 1F, y + southEastHeight, z + 1F, upColor, u1, v1, topLightCoords);
+				fluidRenderer.vertex(vertexConsumer, x + 0F, y + southWestHeight, z + 1F, upColor, u0, v1, topLightCoords);
 			}
 		}
 
 		if (renderDown) {
-			int belowLightCoords = liquidBlockRenderer.getLightCoords(level, pos.below());
+			int belowLightCoords = fluidRenderer.getLightCoords(level, pos.below());
 			int belowColor = ARGB.scaleRGB(color, cardinalLighting.down());
-			liquidBlockRenderer.vertex(vertexConsumer, x, y + bottomOffs, z + 1F, belowColor, u0, v1, belowLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, x, y + bottomOffs, z, belowColor, u0, v0, belowLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, x + 1F, y + bottomOffs, z, belowColor, u1, v0, belowLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, x + 1F, y + bottomOffs, z + 1F, belowColor, u1, v1, belowLightCoords);
+			fluidRenderer.vertex(vertexConsumer, x, y + bottomOffs, z + 1F, belowColor, u0, v1, belowLightCoords);
+			fluidRenderer.vertex(vertexConsumer, x, y + bottomOffs, z, belowColor, u0, v0, belowLightCoords);
+			fluidRenderer.vertex(vertexConsumer, x + 1F, y + bottomOffs, z, belowColor, u1, v0, belowLightCoords);
+			fluidRenderer.vertex(vertexConsumer, x + 1F, y + bottomOffs, z + 1F, belowColor, u1, v1, belowLightCoords);
 			if (downState.getBlock() != state.getBlock() && !downState.canOcclude()) {
-				liquidBlockRenderer.vertex(vertexConsumer, x, y + bottomOffs, z + 1F, belowColor, u0, v1, belowLightCoords);
-				liquidBlockRenderer.vertex(vertexConsumer, x + 1F, y + bottomOffs, z + 1F, belowColor, u0, v0, belowLightCoords);
-				liquidBlockRenderer.vertex(vertexConsumer, x + 1F, y + bottomOffs, z, belowColor, u1, v0, belowLightCoords);
-				liquidBlockRenderer.vertex(vertexConsumer, x, y + bottomOffs, z, belowColor, u1, v1, belowLightCoords);
+				fluidRenderer.vertex(vertexConsumer, x, y + bottomOffs, z + 1F, belowColor, u0, v1, belowLightCoords);
+				fluidRenderer.vertex(vertexConsumer, x + 1F, y + bottomOffs, z + 1F, belowColor, u0, v0, belowLightCoords);
+				fluidRenderer.vertex(vertexConsumer, x + 1F, y + bottomOffs, z, belowColor, u1, v0, belowLightCoords);
+				fluidRenderer.vertex(vertexConsumer, x, y + bottomOffs, z, belowColor, u1, v1, belowLightCoords);
 			}
 		}
 
-		final int sideLightCoords = liquidBlockRenderer.getLightCoords(level, pos);
+		final int sideLightCoords = fluidRenderer.getLightCoords(level, pos);
 		for (Direction faceDir : Direction.Plane.HORIZONTAL) {
 			float firstY;
 			float secondY;
@@ -197,14 +195,14 @@ public class LiquidRenderUtils {
 			// TODO 26.1 check
 			final float shadeSide = faceDir.getAxis() == Direction.Axis.Z ? cardinalLighting.north() : cardinalLighting.west();
 			final int faceColor = ARGB.scaleRGB(color, cardinalLighting.up() * shadeSide);
-			liquidBlockRenderer.vertex(vertexConsumer, firstX, y + firstY, firstZ, faceColor, u0, v0, sideLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, secondX, y + secondY, lastZ, faceColor, u1, v0, sideLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, secondX, y + bottomOffs, lastZ, faceColor, u1, v1, sideLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, firstX, y + bottomOffs, firstZ, faceColor, u0, v1, sideLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, firstX, y + bottomOffs, firstZ, faceColor, u0, v1, sideLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, secondX, y + bottomOffs, lastZ, faceColor, u1, v1, sideLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, secondX, y + secondY, lastZ, faceColor, u1, v0, sideLightCoords);
-			liquidBlockRenderer.vertex(vertexConsumer, firstX, y + firstY, firstZ, faceColor, u0, v0, sideLightCoords);
+			fluidRenderer.vertex(vertexConsumer, firstX, y + firstY, firstZ, faceColor, u0, v0, sideLightCoords);
+			fluidRenderer.vertex(vertexConsumer, secondX, y + secondY, lastZ, faceColor, u1, v0, sideLightCoords);
+			fluidRenderer.vertex(vertexConsumer, secondX, y + bottomOffs, lastZ, faceColor, u1, v1, sideLightCoords);
+			fluidRenderer.vertex(vertexConsumer, firstX, y + bottomOffs, firstZ, faceColor, u0, v1, sideLightCoords);
+			fluidRenderer.vertex(vertexConsumer, firstX, y + bottomOffs, firstZ, faceColor, u0, v1, sideLightCoords);
+			fluidRenderer.vertex(vertexConsumer, secondX, y + bottomOffs, lastZ, faceColor, u1, v1, sideLightCoords);
+			fluidRenderer.vertex(vertexConsumer, secondX, y + secondY, lastZ, faceColor, u1, v0, sideLightCoords);
+			fluidRenderer.vertex(vertexConsumer, firstX, y + firstY, firstZ, faceColor, u0, v0, sideLightCoords);
 		}
 	}
 

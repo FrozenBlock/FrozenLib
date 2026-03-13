@@ -21,6 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
@@ -28,6 +29,6 @@ public record BallFeatureConfig(BallBlockPlacement ballBlockPlacement, Optional<
 	public static final Codec<BallFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		BallBlockPlacement.CODEC.fieldOf("block_placement").forGetter(config -> config.ballBlockPlacement),
 		Heightmap.Types.CODEC.lenientOptionalFieldOf("heightmap").forGetter(config -> config.heightmapType),
-		IntProvider.codec(1, 16).fieldOf("placement_radius").forGetter(config -> config.placementRadius)
+		IntProviders.codec(1, 16).fieldOf("placement_radius").forGetter(config -> config.placementRadius)
 	).apply(instance, BallFeatureConfig::new));
 }

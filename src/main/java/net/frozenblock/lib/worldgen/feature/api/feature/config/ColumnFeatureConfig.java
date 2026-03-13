@@ -21,6 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Direction;
 import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
@@ -36,7 +37,7 @@ public record ColumnFeatureConfig(
 		instance.group(
 			BlockStateProvider.CODEC.fieldOf("block_state_provider").forGetter(config -> config.stateProvider),
 			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replaceable),
-			IntProvider.NON_NEGATIVE_CODEC.fieldOf("length").forGetter((config) -> config.length),
+			IntProviders.NON_NEGATIVE_CODEC.fieldOf("length").forGetter((config) -> config.length),
 			Direction.CODEC.fieldOf("direction").forGetter(config -> config.direction),
 			Codec.BOOL.lenientOptionalFieldOf("stop_when_encountering_unreplaceable_block", false).forGetter(config -> config.stopWhenEncounteringUnreplaceableBlock)
 		).apply(instance, ColumnFeatureConfig::new)

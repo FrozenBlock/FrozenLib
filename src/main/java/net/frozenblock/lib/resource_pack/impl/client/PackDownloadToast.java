@@ -29,7 +29,7 @@ import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.toasts.Toast;
 import net.minecraft.client.gui.components.toasts.ToastManager;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -117,30 +117,30 @@ public class PackDownloadToast implements Toast {
 	}
 
 	@Override
-	public void update(ToastManager toastManager, long time) {
-		if ((time % 100) == 0) this.updateTextAndWidth();
+	public void update(ToastManager manager, long fullyVisibleForMs) {
+		if ((fullyVisibleForMs % 100) == 0) this.updateTextAndWidth();
 
 		if (this.changed) {
-			this.lastChanged = time;
+			this.lastChanged = fullyVisibleForMs;
 			this.changed = false;
 		}
 
-		final double displayTime = this.id.displayTime * toastManager.getNotificationDisplayTimeMultiplier();
-		final long timeSinceLastChanged = time - this.lastChanged;
+		final double displayTime = this.id.displayTime * manager.getNotificationDisplayTimeMultiplier();
+		final long timeSinceLastChanged = fullyVisibleForMs - this.lastChanged;
 		this.wantedVisibility = !this.forceHide && timeSinceLastChanged < displayTime ? Toast.Visibility.SHOW : Toast.Visibility.HIDE;
 	}
 
 	@Override
-	public void render(GuiGraphics guiGraphics, Font font, long l) {
-		guiGraphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
+	public void extractRenderState(GuiGraphicsExtractor graphics, Font font, long fullyVisibleForMs) {
+		graphics.blitSprite(RenderPipelines.GUI_TEXTURED, BACKGROUND_SPRITE, 0, 0, this.width(), this.height());
 		if (this.messageLines.isEmpty()) {
-			guiGraphics.drawString(font, this.title, 15, 12, -256, false);
+			graphics.text(font, this.title, 15, 12, -256, false);
 			return;
 		}
 
-		guiGraphics.drawString(font, this.title, 15, 7, -256, false);
+		graphics.text(font, this.title, 15, 7, -256, false);
 		for (int i = 0; i < this.messageLines.size(); ++i) {
-			guiGraphics.drawString(font, this.messageLines.get(i), 18, 18 + i * LINE_SPACING, -1, false);
+			graphics.text(font, this.messageLines.get(i), 18, 18 + i * LINE_SPACING, -1, false);
 		}
 	}
 

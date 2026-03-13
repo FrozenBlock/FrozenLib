@@ -20,7 +20,9 @@ package net.frozenblock.lib.worldgen.feature.api.feature.config;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.util.valueproviders.FloatProviders;
 import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
@@ -31,10 +33,10 @@ public record CurvingSpikeConfig(
 	public static final Codec<CurvingSpikeConfig> CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
 			BlockStateProvider.CODEC.fieldOf("state").forGetter(CurvingSpikeConfig::stateProvider),
-			IntProvider.codec(1, 12).fieldOf("x_width").forGetter(CurvingSpikeConfig::xWidth),
-			IntProvider.codec(1, 12).fieldOf("z_width").forGetter(CurvingSpikeConfig::zWidth),
-			IntProvider.codec(1, 32).fieldOf("height").forGetter(CurvingSpikeConfig::height),
-			FloatProvider.codec(-4F, 4F).fieldOf("curve_distance").forGetter(CurvingSpikeConfig::curveDistance),
+			IntProviders.codec(1, 12).fieldOf("x_width").forGetter(CurvingSpikeConfig::xWidth),
+			IntProviders.codec(1, 12).fieldOf("z_width").forGetter(CurvingSpikeConfig::zWidth),
+			IntProviders.codec(1, 32).fieldOf("height").forGetter(CurvingSpikeConfig::height),
+			FloatProviders.codec(-4F, 4F).fieldOf("curve_distance").forGetter(CurvingSpikeConfig::curveDistance),
 			BlockPredicate.CODEC.fieldOf("replaceable").forGetter(CurvingSpikeConfig::replaceable)
 		).apply(instance, CurvingSpikeConfig::new)
 	);
