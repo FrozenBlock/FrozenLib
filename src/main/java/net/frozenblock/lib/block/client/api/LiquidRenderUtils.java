@@ -21,8 +21,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.block.BlockAndTintGetter;
-import net.minecraft.client.renderer.block.FluidModel;
 import net.minecraft.client.renderer.block.FluidRenderer;
+import net.minecraft.client.renderer.chunk.ChunkSectionLayer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,14 +47,15 @@ public class LiquidRenderUtils {
 	 * @param fluidState The {@link FluidState} to render as.
 	 * @param sprite The texture to render.
 	 */
-	public static void tesselateWithSingleTexture(
+	public static void tessellateWithSingleSprite(
 		FluidRenderer renderer,
 		BlockAndTintGetter level,
 		BlockPos pos,
+		TextureAtlasSprite sprite,
+		ChunkSectionLayer layer,
 		FluidRenderer.Output output,
 		BlockState state,
-		FluidState fluidState,
-		TextureAtlasSprite sprite
+		FluidState fluidState
 	) {
 		final BlockState downState = level.getBlockState(pos.relative(Direction.DOWN));
 		final FluidState downFluidState = downState.getFluidState();
@@ -78,8 +79,7 @@ public class LiquidRenderUtils {
 
 		if (!(renderUp || renderDown || renderEast || renderWest || renderNorth || renderSouth)) return;
 
-		final FluidModel model = renderer.fluidModels.get(fluidState);
-		final VertexConsumer builder = output.getBuilder(model.layer());
+		final VertexConsumer builder = output.getBuilder(layer);
 		int color = ARGB.white(1F);
 		CardinalLighting cardinalLighting = level.cardinalLighting();
 

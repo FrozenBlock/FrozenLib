@@ -161,6 +161,8 @@ transitive-accessible method net/minecraft/client/renderer/block/FluidRenderer g
 transitive-accessible method net/minecraft/client/renderer/block/FluidRenderer getHeight (Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/BlockPos;)F
 transitive-accessible method net/minecraft/client/renderer/block/FluidRenderer getHeight (Lnet/minecraft/client/renderer/block/BlockAndTintGetter;Lnet/minecraft/world/level/material/Fluid;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/material/FluidState;)F
 transitive-accessible method net/minecraft/client/renderer/block/FluidRenderer vertex (Lcom/mojang/blaze3d/vertex/VertexConsumer;FFFIFFI)V
+transitive-accessible field net/minecraft/client/renderer/block/FluidStateModelSet WATER_MODEL Lnet/minecraft/client/renderer/block/FluidModel$Unbaked;
+transitive-accessible field net/minecraft/client/renderer/block/FluidStateModelSet LAVA_MODEL Lnet/minecraft/client/renderer/block/FluidModel$Unbaked;
 
 # Block Entities
 transitive-accessible method net/minecraft/world/level/block/entity/BlockEntityType <init> (Lnet/minecraft/world/level/block/entity/BlockEntityType$BlockEntitySupplier;Ljava/util/Set;)V
