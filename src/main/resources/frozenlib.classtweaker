@@ -153,6 +153,8 @@ transitive-accessible class net/minecraft/world/level/block/state/BlockBehaviour
 transitive-accessible method net/minecraft/world/level/block/state/BlockBehaviour getSoundType (Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/world/level/block/SoundType;
 transitive-accessible field net/minecraft/world/level/block/state/BlockBehaviour UPDATE_SHAPE_ORDER [Lnet/minecraft/core/Direction;
 transitive-accessible field net/minecraft/client/color/block/BlockColors BLANK_LAYER Lnet/minecraft/client/color/block/BlockTintSource;
+transitive-accessible method net/minecraft/world/level/block/Blocks postProcessSelf (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
+transitive-accessible method net/minecraft/world/level/block/Blocks postProcessAbove (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/core/BlockPos;
 
 # Liquid Rendering
 transitive-accessible field net/minecraft/client/renderer/block/FluidRenderer MAX_FLUID_HEIGHT F
