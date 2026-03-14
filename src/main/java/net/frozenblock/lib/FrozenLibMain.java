@@ -35,6 +35,7 @@ import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
+import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -93,6 +94,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		WindDisturbanceLogic.init();
+		FrozenLibDataComponents.init();
 		FrozenLibParticleTypes.init();
 		FrozenLibFeatures.init();
 		FrozenLibBlockPredicateTypes.init();
