@@ -26,7 +26,7 @@ import org.apache.commons.io.FilenameUtils;
 import org.jetbrains.annotations.Nullable;
 
 public class FileTransferFilter {
-	private static final List<String> WHITELISTED_FILE_EXTENSIONS = ImmutableList.of("png", "json");
+	private static final List<String> WHITELISTED_FILE_EXTENSIONS = ImmutableList.of("png", "jpeg", "mcphoto", "json");
 	private static final List<String> WHITELISTED_SERVER_DESTINATIONS = new ArrayList<>();
 	private static final List<String> WHITELISTED_CLIENT_DESTINATIONS = new ArrayList<>();
 	private static final List<String> WHITELISTED_SERVER_REQUEST_PATHS = new ArrayList<>();
@@ -40,10 +40,18 @@ public class FileTransferFilter {
 		return isAcceptable;
 	}
 
-	public static boolean isRequestAcceptable(String requestPath, String fileName, @Nullable ServerPlayer player) {
+	public static boolean isRequestAcceptable(String requestPath, List<String> fileExtensions, @Nullable ServerPlayer player) {
 		final boolean isServer = player != null;
-		final boolean isAcceptable = WHITELISTED_FILE_EXTENSIONS.contains(FilenameUtils.getExtension(fileName)) && isRequestPathAcceptable(requestPath, !isServer);
 
+		boolean passedWhitelist = true;
+		for (String fileExtension : fileExtensions) {
+			if (!WHITELISTED_FILE_EXTENSIONS.contains(fileExtension)) {
+				passedWhitelist = false;
+				break;
+			}
+		}
+
+		final boolean isAcceptable = passedWhitelist && isRequestPathAcceptable(requestPath, !isServer);
 		if (!isAcceptable && isServer) player.connection.disconnect(Component.translatable("frozenlib.file_transfer.unsupported_file_request"));
 		return isAcceptable;
 	}

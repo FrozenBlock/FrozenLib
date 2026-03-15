@@ -20,6 +20,7 @@ package net.frozenblock.lib.networking;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import net.fabricmc.api.EnvType;
@@ -403,24 +404,34 @@ public final class FrozenClientNetworking {
 			if (packet.request()) {
 				final String requestPath = packet.transferPath();
 				final String fileName = packet.fileName();
-				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, null)) return;
+				final List<String> fileExtensions = packet.fileExtensions();
+				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileExtensions, null)) return;
 
 				final Path requestedPath = ctx.client().gameDirectory.toPath().resolve(requestPath);
-				final File file = requestedPath.resolve(fileName).toFile();
-				final File localFile = requestedPath.resolve(ServerTextureDownloader.LOCAL_TEXTURE_SOURCE).resolve(fileName).toFile();
+				for (String fileExtension : fileExtensions) {
+					final String fixedExtension = fileExtension.startsWith(".") ? fileExtension.substring(1) : fileExtension;
+					final String fileNameWithExtension = fileName + "." + fixedExtension;
+					final File file = requestedPath.resolve(fileNameWithExtension).toFile();
+					final File localFile = requestedPath.resolve(FileTransferPacket.LOCAL_SOURCE).resolve(fileNameWithExtension).toFile();
 
-				final File sendingFile = file.exists() ? file : localFile;
-				if (FrozenNetworking.connectedToIntegratedServer()) {
-					ServerTextureDownloader.registerTextureByPacketIfFound(packet);
-				} else {
-					try {
-						for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, sendingFile)) {
-							ClientPlayNetworking.send(fileTransferPacket);
+					final File sendingFile = file.exists() ? file : localFile.exists() ? localFile : null;
+					if (sendingFile == null) continue;
+
+					if (FrozenNetworking.connectedToIntegratedServer()) {
+						ServerTextureDownloader.registerTextureByPacketIfFound(packet.transferPath(), packet.fileName());
+						return;
+					} else {
+						try {
+							for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, sendingFile)) {
+								ClientPlayNetworking.send(fileTransferPacket);
+							}
+							return;
+						} catch (IOException ignored) {
 						}
-					} catch (IOException ignored) {
-						FrozenLibConstants.LOGGER.error("Unable to create and send transfer packet for file {}!", packet.fileName());
 					}
 				}
+
+				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packet for file {}!", packet.fileName());
 			} else {
 				final String destPath = packet.transferPath();
 				final String fileName = packet.fileName();
@@ -429,7 +440,8 @@ public final class FrozenClientNetworking {
 				try {
 					final Path path = ctx.client().gameDirectory.toPath().resolve(destPath).resolve(fileName);
 					if (FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), true)) {
-						ServerTextureDownloader.registerTextureByPacketIfFound(packet);
+						System.out.println(packet.fileName());
+						ServerTextureDownloader.registerTextureByPacketIfFound(packet.transferPath(), packet.fileName());
 					}
 				} catch (IOException ignored) {
 					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);

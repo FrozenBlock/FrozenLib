@@ -20,6 +20,7 @@ package net.frozenblock.lib.networking;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.UUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
@@ -142,20 +143,30 @@ public final class FrozenNetworking {
 			if (packet.request()) {
 				final String requestPath = packet.transferPath();
 				final String fileName = packet.fileName();
-				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileName, ctx.player())) return;
+				final List<String> fileExtensions = packet.fileExtensions();
+				if (!FileTransferFilter.isRequestAcceptable(requestPath, fileExtensions, ctx.player())) return;
 
-				final File file = ctx.server().getServerDirectory().resolve(requestPath).resolve(fileName).toFile();
-				try {
-					for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
-						ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
+				final Path requestedPath = ctx.server().getServerDirectory().resolve(requestPath);
+				for (String fileExtension : fileExtensions) {
+					final String fixedExtension = fileExtension.startsWith(".") ? fileExtension.substring(1) : fileExtension;
+					final String fileNameWithExtension = fileName + "." + fixedExtension;
+					final File file = requestedPath.resolve(fileNameWithExtension).toFile();
+					if (!file.exists()) continue;
+
+					try {
+						for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
+							ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
+						}
+						return;
+					} catch (IOException ignored) {
 					}
-				} catch (IOException ignored) {
-					FrozenLibConstants.LOGGER.error("Unable to create and send transfer packets for file {} on server!", fileName);
 				}
+
+				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packets for file {} on server!", fileName);
 			} else {
 				if (!FrozenLibConfig.FILE_TRANSFER_SERVER.get()) return;
 
-				final String destPath = packet.transferPath().replace("/.local", "");
+				final String destPath = packet.transferPath().replace("/" + FileTransferPacket.LOCAL_SOURCE, "");
 				final String fileName = packet.fileName();
 				if (!FileTransferFilter.isTransferAcceptable(destPath, fileName, ctx.player())) return;
 

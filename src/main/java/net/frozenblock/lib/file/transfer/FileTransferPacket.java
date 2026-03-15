@@ -33,6 +33,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
@@ -46,12 +47,14 @@ import org.jetbrains.annotations.Unmodifiable;
  * Used to both request and transfer files between both the client and server.
  *
  * @param transferPath The directory containing the wanted file.
- * @param fileName The name of the wanted file, including the file extension.
+ * @param fileName The name of the wanted file, including the file extension if transferring, excluding the file extension if requesting.
+ * @param fileExtensions The names of the wanted file's possible extensions.
  * @param request Whether this is for a file request or not. If true, will cause a second transfer packet to be sent back in response with the file if possible.
  * @param snippet The raw data being transferred over the packet, as well as its index (used when split into multiple packets.) Will be ignored if this is a request.
  * @param totalPacketCount The total amount of packets to be sent for the file transfer. Will be ignored if this is a request.
  */
-public record FileTransferPacket(String transferPath, String fileName, boolean request, FileTransferSnippet snippet, int totalPacketCount) implements CustomPacketPayload {
+public record FileTransferPacket(String transferPath, String fileName, List<String> fileExtensions, boolean request, FileTransferSnippet snippet, int totalPacketCount) implements CustomPacketPayload {
+	public static final String LOCAL_SOURCE = ".local";
 	@ApiStatus.Internal
 	public static final Type<FileTransferPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("file_transfer"));
 	@ApiStatus.Internal
@@ -60,7 +63,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 
 	@ApiStatus.Internal
 	public static FileTransferPacket create(FriendlyByteBuf buf) {
-		return new FileTransferPacket(buf.readUtf(), buf.readUtf(), buf.readBoolean(), FileTransferSnippet.read(buf), buf.readVarInt());
+		return new FileTransferPacket(buf.readUtf(), buf.readUtf(), buf.readList(ByteBufCodecs.STRING_UTF8), buf.readBoolean(), FileTransferSnippet.read(buf), buf.readVarInt());
 	}
 
 	/**
@@ -82,6 +85,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 				new FileTransferPacket(
 					destPath,
 					file.getName(),
+					List.of(),
 					false,
 					snippet,
 					totalPacketCount
@@ -95,12 +99,13 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	/**
 	 * Create a file request packet.
 	 *
-	 * @param requestPath The path inside Minecraft's directory the requested file should be located.
-	 * @param fileName    The requested file's name, including the file extension.
+	 * @param requestPath    The path inside Minecraft's directory the requested file should be located.
+	 * @param fileName       The requested file's name, excluding the file extension.
+	 * @param fileExtensions The names of the wanted file's possible extensions.
 	 * @return The new file request packet.
 	 */
-	public static FileTransferPacket createRequest(String requestPath, String fileName) {
-		return new FileTransferPacket(requestPath, fileName, true, FileTransferSnippet.EMPTY, 0);
+	public static FileTransferPacket createRequest(String requestPath, String fileName, List<String> fileExtensions) {
+		return new FileTransferPacket(requestPath, fileName, fileExtensions, true, FileTransferSnippet.EMPTY, 0);
 	}
 
 	@ApiStatus.Internal
@@ -135,6 +140,7 @@ public record FileTransferPacket(String transferPath, String fileName, boolean r
 	private void write(FriendlyByteBuf buf) {
 		buf.writeUtf(this.transferPath);
 		buf.writeUtf(this.fileName);
+		ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list()).encode(buf, this.fileExtensions);
 		buf.writeBoolean(this.request);
 		this.snippet.write(buf);
 		buf.writeVarInt(this.totalPacketCount);
