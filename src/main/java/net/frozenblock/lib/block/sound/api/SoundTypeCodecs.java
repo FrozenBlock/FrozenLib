@@ -48,12 +48,10 @@ public class SoundTypeCodecs {
 			BuiltInRegistries.SOUND_EVENT.byNameCodec().fieldOf("fall_sound").forGetter(SoundType::getFallSound)
 		).apply(instance, SoundType::new)
 	);
-
 	public static final StreamCodec<RegistryFriendlyByteBuf, SoundEvent> SOUND_EVENT_STREAM_CODEC = holderValue(
 		Registries.SOUND_EVENT,
 		SoundEvent.DIRECT_STREAM_CODEC
 	);
-
 	public static final StreamCodec<RegistryFriendlyByteBuf, SoundType> SOUND_TYPE_STREAM_CODEC = StreamCodec.composite(
 		ByteBufCodecs.FLOAT, SoundType::getVolume,
 		ByteBufCodecs.FLOAT, SoundType::getPitch,
@@ -64,7 +62,6 @@ public class SoundTypeCodecs {
 		SOUND_EVENT_STREAM_CODEC, SoundType::getFallSound,
 		SoundType::new
 	);
-
 	public static final Codec<HolderSetBlockSoundTypeOverwrite> HOLDER_SET_BLOCK_SOUND_TYPE_OVERWRITE_CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
 			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(HolderSetBlockSoundTypeOverwrite::getValue),
@@ -82,11 +79,13 @@ public class SoundTypeCodecs {
 				return input.registryAccess().lookupOrThrow(registryKey).asHolderIdMap();
 			}
 
+			@Override
 			public T decode(final RegistryFriendlyByteBuf input) {
 				int id = VarInt.read(input);
 				return id == DIRECT_HOLDER_ID ? directCodec.decode(input) : this.getRegistryOrThrow(input).byIdOrThrow(id - 1).value();
 			}
 
+			@Override
 			public void encode(final RegistryFriendlyByteBuf output, final T value) {
 				var lookup = output.registryAccess().lookupOrThrow(registryKey);
 				var holder = lookup.wrapAsHolder(value);

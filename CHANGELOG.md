@@ -14,3 +14,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `.png`, `.jpeg`, `.mcphoto`, `.json`.
 - Fixed a bug that could occur when running a dedicated server from the same directory a client is running from, which is connected to the dedicated server.
   - `ServerTexture`s would continuously request their texture file while the server would continuously send it, resulting in the file being constantly rewritten and never read as a texture.
+- Added `BuiltInBlockModelRegistry`, helping modders register their own built-in Block models.

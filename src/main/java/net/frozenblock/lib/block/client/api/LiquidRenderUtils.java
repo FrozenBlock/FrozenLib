@@ -27,6 +27,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.CardinalLighting;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
@@ -55,7 +56,9 @@ public class LiquidRenderUtils {
 		ChunkSectionLayer layer,
 		FluidRenderer.Output output,
 		BlockState state,
-		FluidState fluidState
+		FluidState fluidState,
+		boolean emissive,
+		boolean useCardinalLighting
 	) {
 		final BlockState downState = level.getBlockState(pos.relative(Direction.DOWN));
 		final FluidState downFluidState = downState.getFluidState();
@@ -121,8 +124,8 @@ public class LiquidRenderUtils {
 			southEastHeight -= 0.001F;
 			northEastHeight -= 0.001F;
 
-			final int topLightCoords = renderer.getLightCoords(level, pos);
-			int upColor = ARGB.scaleRGB(color, cardinalLighting.up());
+			final int topLightCoords = emissive ? LightCoordsUtil.FULL_BRIGHT : renderer.getLightCoords(level, pos);
+			int upColor = useCardinalLighting ? ARGB.scaleRGB(color, cardinalLighting.up()) : color;
 			renderer.vertex(builder, x + 0F, y + northWestHeight, z + 0F, upColor, u0, v0, topLightCoords);
 			renderer.vertex(builder, x + 0F, y + southWestHeight, z + 1F, upColor, u0, v1, topLightCoords);
 			renderer.vertex(builder, x + 1F, y + southEastHeight, z + 1F, upColor, u1, v1, topLightCoords);
@@ -136,8 +139,8 @@ public class LiquidRenderUtils {
 		}
 
 		if (renderDown) {
-			int belowLightCoords = renderer.getLightCoords(level, pos.below());
-			int belowColor = ARGB.scaleRGB(color, cardinalLighting.down());
+			int belowLightCoords = emissive ? LightCoordsUtil.FULL_BRIGHT : renderer.getLightCoords(level, pos.below());
+			int belowColor = useCardinalLighting ? ARGB.scaleRGB(color, cardinalLighting.down()) : color;
 			renderer.vertex(builder, x, y + bottomOffs, z + 1F, belowColor, u0, v1, belowLightCoords);
 			renderer.vertex(builder, x, y + bottomOffs, z, belowColor, u0, v0, belowLightCoords);
 			renderer.vertex(builder, x + 1F, y + bottomOffs, z, belowColor, u1, v0, belowLightCoords);
@@ -150,7 +153,7 @@ public class LiquidRenderUtils {
 			}
 		}
 
-		final int sideLightCoords = renderer.getLightCoords(level, pos);
+		final int sideLightCoords = emissive ? LightCoordsUtil.FULL_BRIGHT : renderer.getLightCoords(level, pos);
 		for (Direction faceDir : Direction.Plane.HORIZONTAL) {
 			float firstY;
 			float secondY;
@@ -195,9 +198,8 @@ public class LiquidRenderUtils {
 			}) || isFaceOccludedByNeighbor(faceDir, Math.max(firstY, secondY), level.getBlockState(pos.relative(faceDir)), level.getBlockState(pos.relative(faceDir))))
 				continue;
 
-			// TODO 26.1 check
 			final float shadeSide = faceDir.getAxis() == Direction.Axis.Z ? cardinalLighting.north() : cardinalLighting.west();
-			final int faceColor = ARGB.scaleRGB(color, cardinalLighting.up() * shadeSide);
+			final int faceColor = useCardinalLighting ? ARGB.scaleRGB(color, cardinalLighting.up() * shadeSide) : color;
 			renderer.vertex(builder, firstX, y + firstY, firstZ, faceColor, u0, v0, sideLightCoords);
 			renderer.vertex(builder, secondX, y + secondY, lastZ, faceColor, u1, v0, sideLightCoords);
 			renderer.vertex(builder, secondX, y + bottomOffs, lastZ, faceColor, u1, v1, sideLightCoords);

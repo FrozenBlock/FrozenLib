@@ -111,8 +111,8 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		);
 	}
 
-	public void addBuiltInOverwrite(Identifier identifier, SoundType soundType, BooleanSupplier condition) {
-		final Optional<Block> optionalBlock = BuiltInRegistries.BLOCK.getOptional(identifier);
+	public void addBuiltInOverwrite(Identifier id, SoundType soundType, BooleanSupplier condition) {
+		final Optional<Block> optionalBlock = BuiltInRegistries.BLOCK.getOptional(id);
 		optionalBlock.ifPresent(block -> this.builtInOverwrites.add(
 			new HolderSetBlockSoundTypeOverwrite(
 				HolderSet.direct(block.builtInRegistryHolder()),
@@ -173,12 +173,12 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 			for (Map.Entry<Identifier, Resource> entry : entrySet) this.addOverwrite(entry.getKey(), entry.getValue());
 		}
 
-		private void addOverwrite(Identifier location, Resource resource) {
+		private void addOverwrite(Identifier id, Resource resource) {
 			BufferedReader reader;
 			try {
 				reader = resource.openAsReader();
 			} catch (IOException e) {
-				LOGGER.error("Unable to open BufferedReader for file: `{}`", location);
+				LOGGER.error("Unable to open BufferedReader for file: `{}`", id);
 				return;
 			}
 
@@ -186,7 +186,7 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 			final DataResult<? extends Pair<? extends AbstractBlockSoundTypeOverwrite<?>, JsonElement>> dataResult
 				= SoundTypeCodecs.HOLDER_SET_BLOCK_SOUND_TYPE_OVERWRITE_CODEC.decode(JsonOps.INSTANCE, json);
 
-			dataResult.resultOrPartial((string) -> LOGGER.error("Failed to parse sound override for file: '{}'", location))
+			dataResult.resultOrPartial((string) -> LOGGER.error("Failed to parse sound override for file: '{}'", id))
 				.ifPresent(overwrite -> parsedOverwrites.add(overwrite.getFirst()));
 		}
 
