@@ -31,7 +31,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.3.0")
+    kotlin("jvm") version("2.3.10")
     checkstyle
 }
 
