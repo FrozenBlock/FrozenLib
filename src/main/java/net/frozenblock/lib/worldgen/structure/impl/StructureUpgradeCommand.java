@@ -32,7 +32,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import net.minecraft.SharedConstants;
 
@@ -64,9 +63,8 @@ public class StructureUpgradeCommand {
 
 		foundPieces.forEach((identifier) -> {
 			try {
-				StructureTemplate structureTemplate = structureTemplateManager.get(identifier).orElseThrow();
-
-				savedTemplates.put(identifier, structureTemplate.save(new CompoundTag()));
+				final Identifier cleanedId = identifier.withPath(path -> path.replaceFirst("structure/", "").replace(".nbt", ""));
+				structureTemplateManager.get(cleanedId).ifPresent(structureTemplate -> savedTemplates.put(cleanedId, structureTemplate.save(new CompoundTag())));
 			} catch (NoSuchElementException e) {
 				throw new RuntimeException(e);
 			}
