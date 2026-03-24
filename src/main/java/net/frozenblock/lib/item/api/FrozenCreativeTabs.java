@@ -74,10 +74,12 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			final ItemStack stack = new ItemStack(item);
-			stack.setCount(1);
-			final List<ItemStack> list = List.of(stack);
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> entries.insertBefore(comparedItem, list, tabVisibility));
+			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
+				final ItemStack stack = new ItemStack(item);
+				stack.setCount(1);
+				final List<ItemStack> list = List.of(stack);
+				entries.insertBefore(comparedItem, list, tabVisibility);
+			});
 		}
 	}
 
@@ -94,10 +96,10 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || item == null ) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			final ItemStack stack = new ItemStack(item);
-			stack.setCount(1);
-			final List<ItemStack> list = List.of(stack);
 			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
+				final ItemStack stack = new ItemStack(item);
+				stack.setCount(1);
+				final List<ItemStack> list = List.of(stack);
 				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.insertBefore(comparedItem, list, tabVisibility);
 			});
@@ -128,10 +130,12 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			final ItemStack stack = new ItemStack(item);
-			stack.setCount(1);
-			final List<ItemStack> list = List.of(stack);
-			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> entries.insertAfter(comparedItem, list, tabVisibility));
+			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
+				final ItemStack stack = new ItemStack(item);
+				stack.setCount(1);
+				final List<ItemStack> list = List.of(stack);
+				entries.insertAfter(comparedItem, list, tabVisibility);
+			});
 		}
 	}
 
@@ -148,10 +152,10 @@ public class FrozenCreativeTabs {
 	) {
 		if (comparedItem == null || item == null) return;
 		for (ResourceKey<CreativeModeTab> tab : tabs) {
-			final ItemStack stack = new ItemStack(item);
-			stack.setCount(1);
-			final List<ItemStack> list = List.of(stack);
 			CreativeModeTabEvents.modifyOutputEvent(tab).register(entries -> {
+				final ItemStack stack = new ItemStack(item);
+				stack.setCount(1);
+				final List<ItemStack> list = List.of(stack);
 				FrozenLibLogUtils.logError("EMPTY ITEM IN CREATIVE INVENTORY: " + path, stack.isEmpty(), null);
 				entries.insertAfter(comparedItem, list, tabVisibility);
 			});
