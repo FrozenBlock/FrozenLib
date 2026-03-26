@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.modmenu.mixin.client;
 
-// TODO re-enable when modmenu is unobfuscated
-/*import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.terraformersmc.modmenu.gui.widget.ModListWidget;
@@ -49,10 +48,9 @@ public class ModListWidgetMixin {
 	)
 	private boolean frozenLib$showFrozenLibIfPlayerHasCapes(
 		Set instance, Object object, Operation<Boolean> original,
-		@Local(ordinal = 1) String modId
+		@Local(name = "modId") String modId
 	) {
 		if (FrozenBools.HAS_CLOTH_CONFIG && modId.equals(FrozenLibConstants.MOD_ID) && ClientCapeUtil.hasUsableCapes(true)) return false;
 		return original.call(instance, object);
 	}
 }
-*/
