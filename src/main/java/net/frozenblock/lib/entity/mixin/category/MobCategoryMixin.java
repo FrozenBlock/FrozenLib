@@ -39,7 +39,16 @@ public class MobCategoryMixin {
 
 	@SuppressWarnings("InvokerTarget")
 	@Invoker("<init>")
-	private static MobCategory newType(String internalName, int internalId, String name, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
+	private static MobCategory newType(
+		String internalName,
+		int internalId,
+		String name,
+		String debugAbbreviation,
+		int max,
+		boolean isFriendly,
+		boolean isPersistent,
+		int despawnDistance
+	) {
 		throw new AssertionError("Mixin injection failed - FrozenLib MobCategoryMixin");
 	}
 
@@ -78,14 +87,23 @@ public class MobCategoryMixin {
 			});
 
 		for (FrozenMobCategory category : newCategories) {
-			final var namespace = category.key().getNamespace();
-			final var path = category.key().getPath();
+			final String namespace = category.key().getNamespace();
+			final String path = category.key().getPath();
 			final StringBuilder internalId = new StringBuilder(namespace.toUpperCase());
 			internalId.append(path.toUpperCase());
 			if (internalIds.contains(internalId.toString())) throw new IllegalStateException("Cannot add duplicate MobCategory " + internalId + "!");
 
 			currentOrdinal += 1;
-			final var addedCategory = newType(internalId.toString(), currentOrdinal, namespace + path, category.max(), category.isFriendly(), category.isPersistent(), category.despawnDistance());
+			final MobCategory addedCategory = newType(
+				internalId.toString(),
+				currentOrdinal,
+				namespace + path,
+				category.debugAbbreviation(),
+				category.max(),
+				category.isFriendly(),
+				category.isPersistent(),
+				category.despawnDistance()
+			);
 			categories.add(addedCategory);
 			FrozenMobCategories.addMobCategory(internalId.toString(), addedCategory);
 		}

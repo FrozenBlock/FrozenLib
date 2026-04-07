@@ -35,8 +35,8 @@ import org.jetbrains.annotations.Nullable;
 public final class FrozenSurfaceRules {
 	public static final SurfaceRules.RuleSource AIR = makeStateRule(Blocks.AIR);
 	public static final SurfaceRules.RuleSource BEDROCK = makeStateRule(Blocks.BEDROCK);
-	public static final SurfaceRules.RuleSource WHITE_TERRACOTTA = makeStateRule(Blocks.WHITE_TERRACOTTA);
-	public static final SurfaceRules.RuleSource ORANGE_TERRACOTTA = makeStateRule(Blocks.ORANGE_TERRACOTTA);
+	public static final SurfaceRules.RuleSource WHITE_TERRACOTTA = makeStateRule(Blocks.DYED_TERRACOTTA.white());
+	public static final SurfaceRules.RuleSource ORANGE_TERRACOTTA = makeStateRule(Blocks.DYED_TERRACOTTA.orange());
 	public static final SurfaceRules.RuleSource TERRACOTTA = makeStateRule(Blocks.TERRACOTTA);
 	public static final SurfaceRules.RuleSource RED_SAND = makeStateRule(Blocks.RED_SAND);
 	public static final SurfaceRules.RuleSource RED_SANDSTONE = makeStateRule(Blocks.RED_SANDSTONE);

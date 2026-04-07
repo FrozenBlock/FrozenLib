@@ -48,8 +48,8 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 		final VegetationPatchConfiguration config = context.config();
 		final RandomSource random = context.random();
 		final BlockPos pos = context.origin();
-		final Predicate<BlockState> predicate = (state) -> state.is(config.replaceable);
-		final int radius = config.xzRadius.sample(random) + 1;
+		final Predicate<BlockState> predicate = (state) -> state.is(config.replaceable());
+		final int radius = config.xzRadius().sample(random) + 1;
 		final Set<BlockPos> set = this.placeGroundPatch(level, config, random, pos, predicate, radius, radius);
 
 		this.distributeVegetation(context, level, config, random, set, radius, radius);
@@ -61,7 +61,7 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 	) {
 		final MutableBlockPos airMutable = pos.mutable();
 		final MutableBlockPos groundMutable = airMutable.mutable();
-		final Direction surfaceDirection = config.surface.getDirection();
+		final Direction surfaceDirection = config.surface().getDirection();
 		final Direction oppositeSurfaceDirection = surfaceDirection.getOpposite();
 
 		final Set<BlockPos> set = new HashSet<>();
@@ -73,24 +73,24 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 				boolean onBothEdges = onEdgeX && onEdgeZ;
 				boolean onOneEdge = onAnyEdge && !onBothEdges;
 
-				if (onBothEdges || !(!onOneEdge || config.extraEdgeColumnChance != 0.0F && !(random.nextFloat() > config.extraEdgeColumnChance))) continue;
+				if (onBothEdges || !(!onOneEdge || config.extraEdgeColumnChance() != 0F && !(random.nextFloat() > config.extraEdgeColumnChance()))) continue;
 
 				airMutable.setWithOffset(pos, x, 0, z);
 				if (Math.sqrt(airMutable.distSqr(pos)) > xRadius) continue;
 
-				for (int i = 0; level.isStateAtPosition(airMutable, BlockBehaviour.BlockStateBase::isAir) && i < config.verticalRange; ++i) {
+				for (int i = 0; level.isStateAtPosition(airMutable, BlockBehaviour.BlockStateBase::isAir) && i < config.verticalRange(); ++i) {
 					airMutable.move(surfaceDirection);
 				}
 
-				for (int i = 0; level.isStateAtPosition(airMutable, statex -> !statex.isAir()) && i < config.verticalRange; ++i) {
+				for (int i = 0; level.isStateAtPosition(airMutable, statex -> !statex.isAir()) && i < config.verticalRange(); ++i) {
 					airMutable.move(oppositeSurfaceDirection);
 				}
 
-				groundMutable.setWithOffset(airMutable, config.surface.getDirection());
+				groundMutable.setWithOffset(airMutable, config.surface().getDirection());
 				BlockState state = level.getBlockState(groundMutable);
-				if (!level.isEmptyBlock(airMutable) || !state.isFaceSturdy(level, groundMutable, config.surface.getDirection().getOpposite())) continue;
+				if (!level.isEmptyBlock(airMutable) || !state.isFaceSturdy(level, groundMutable, config.surface().getDirection().getOpposite())) continue;
 
-				final int depth = config.depth.sample(random) + (config.extraBottomBlockChance > 0F && random.nextFloat() < config.extraBottomBlockChance ? 1 : 0);
+				final int depth = config.depth().sample(random) + (config.extraBottomBlockChance() > 0F && random.nextFloat() < config.extraBottomBlockChance() ? 1 : 0);
 				BlockPos groundPos = groundMutable.immutable();
 				final boolean placedGround = this.placeGround(level, config, predicate, random, groundMutable, depth);
 				if (placedGround) set.add(groundPos);

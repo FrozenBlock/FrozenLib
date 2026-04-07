@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Column;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.feature.DripstoneUtils;
+import net.minecraft.world.level.levelgen.feature.SpeleothemUtils;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.phys.Vec3;
@@ -100,7 +100,7 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 			level,
 			pos,
 			config.floorToCeilingSearchRange(),
-			DripstoneUtils::isEmptyOrWaterOrLava,
+			SpeleothemUtils::isEmptyOrWaterOrLava,
 			state -> LargeSpireFeature.isBaseOrLava(config, state)
 		);
 

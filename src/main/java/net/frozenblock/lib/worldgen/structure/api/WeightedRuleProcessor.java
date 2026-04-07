@@ -20,7 +20,6 @@ package net.frozenblock.lib.worldgen.structure.api;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import java.util.List;
-import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -28,12 +27,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
 
-public class WeightedRuleProcessor extends StructureProcessor {
-	public static final MapCodec<WeightedRuleProcessor> CODEC = WeightedProcessorRule.CODEC.listOf()
+public class WeightedRuleProcessor implements StructureProcessor {
+	public static final MapCodec<WeightedRuleProcessor> MAP_CODEC = WeightedProcessorRule.CODEC.listOf()
 		.fieldOf("rules").xmap(WeightedRuleProcessor::new, processor -> processor.rules);
 	private final ImmutableList<WeightedProcessorRule> rules;
 
@@ -67,7 +65,7 @@ public class WeightedRuleProcessor extends StructureProcessor {
 	}
 
 	@Override
-	protected StructureProcessorType<?> getType() {
-		return FrozenStructureProcessorTypes.WEIGHTED_RULE_PROCESSOR;
+	public MapCodec<WeightedRuleProcessor> codec() {
+		return MAP_CODEC;
 	}
 }

@@ -228,10 +228,10 @@ dependencies {
     implementation("net.fabricmc:fabric-language-kotlin:$fabric_kotlin_version")
 
     // Mod Menu
-    implementation("com.terraformersmc:modmenu:${modmenu_version}")
+    compileOnly("com.terraformersmc:modmenu:${modmenu_version}")
 
     // Cloth Config
-    implementation("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
+    compileOnly("me.shedaniel.cloth:cloth-config-fabric:$cloth_config_version") {
         exclude(group = "net.fabricmc.fabric-api")
         exclude(group = "com.terraformersmc")
     }
@@ -259,7 +259,7 @@ tasks {
     processResources {
         val properties = HashMap<String, Any>()
         properties["version"] = project.version
-        properties["minecraft_version"] = "~26.1-"//minecraft_version
+        properties["minecraft_version"] = "~26.2-"//minecraft_version
 
         properties["fabric_loader_version"] = ">=$min_loader_version"
         properties["fabric_api_version"] = ">=$fabric_api_version"

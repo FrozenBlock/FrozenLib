@@ -42,7 +42,7 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 	) {
 		final BlockPos.MutableBlockPos airMutable = blockPos.mutable();
 		final BlockPos.MutableBlockPos groundMutable = airMutable.mutable();
-		final Direction surfaceDirection = config.surface.getDirection();
+		final Direction surfaceDirection = config.surface().getDirection();
 		final Direction oppositeSurfaceDirection = surfaceDirection.getOpposite();
 		final Set<BlockPos> set = new HashSet<>();
 
@@ -54,22 +54,22 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 				boolean onBothEdges = onEdgeX && onEdgeZ;
 				boolean onOneEdge = onAnyEdge && !onBothEdges;
 
-				if (onBothEdges || !(!onOneEdge || config.extraEdgeColumnChance != 0F && !(random.nextFloat() > config.extraEdgeColumnChance))) continue;
+				if (onBothEdges || !(!onOneEdge || config.extraEdgeColumnChance() != 0F && !(random.nextFloat() > config.extraEdgeColumnChance()))) continue;
 
 				airMutable.setWithOffset(blockPos, x, 0, z);
-				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, this::isWaterAt) && verticalSteps < config.verticalRange; verticalSteps++) {
+				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, this::isWaterAt) && verticalSteps < config.verticalRange(); verticalSteps++) {
 					airMutable.move(surfaceDirection);
 				}
 
-				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, state -> !this.isWaterAt(state)) && verticalSteps < config.verticalRange; verticalSteps++) {
+				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, state -> !this.isWaterAt(state)) && verticalSteps < config.verticalRange(); verticalSteps++) {
 					airMutable.move(oppositeSurfaceDirection);
 				}
 
-				groundMutable.setWithOffset(airMutable, config.surface.getDirection());
+				groundMutable.setWithOffset(airMutable, config.surface().getDirection());
 				final BlockState state = level.getBlockState(groundMutable);
-				if (!this.isWaterAt(level.getBlockState(airMutable)) || !state.isFaceSturdy(level, groundMutable, config.surface.getDirection().getOpposite())) continue;
+				if (!this.isWaterAt(level.getBlockState(airMutable)) || !state.isFaceSturdy(level, groundMutable, config.surface().getDirection().getOpposite())) continue;
 
-				final int depth = config.depth.sample(random) + (config.extraBottomBlockChance > 0F && random.nextFloat() < config.extraBottomBlockChance ? 1 : 0);
+				final int depth = config.depth().sample(random) + (config.extraBottomBlockChance() > 0F && random.nextFloat() < config.extraBottomBlockChance() ? 1 : 0);
 				final BlockPos groundPos = groundMutable.immutable();
 				final boolean placedGround = this.placeGround(level, config, replaceable, random, groundMutable, depth);
 				if (placedGround) set.add(groundPos);

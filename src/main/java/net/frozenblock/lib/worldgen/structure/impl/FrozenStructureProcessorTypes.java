@@ -25,26 +25,16 @@ import net.frozenblock.lib.worldgen.structure.api.WeightedRuleProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 
 public class FrozenStructureProcessorTypes {
-	public static final StructureProcessorType<BlockStateRespectingRuleProcessor> BLOCK_STATE_RESPECTING_RULE_PROCESSOR = register(
-		"block_state_respecting_rule",
-		BlockStateRespectingRuleProcessor.CODEC
-	);
-	public static final StructureProcessorType<WeightedRuleProcessor> WEIGHTED_RULE_PROCESSOR = register(
-		"weighted_rule",
-		WeightedRuleProcessor.CODEC
-	);
-	public static final StructureProcessorType<MarkForPostProcessingProcessor> MARK_FOR_POST_PROCESSING = register(
-		"mark_for_post_processing",
-		MarkForPostProcessingProcessor.CODEC
-	);
 
 	public static void init() {
+		register("block_state_respecting_rule", BlockStateRespectingRuleProcessor.MAP_CODEC);
+		register("weighted_rule", WeightedRuleProcessor.MAP_CODEC);
+		register("mark_for_post_processing", MarkForPostProcessingProcessor.MAP_CODEC);
 	}
 
-	private static <P extends StructureProcessor> StructureProcessorType<P> register(String id, MapCodec<P> codec) {
-		return Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, FrozenLibConstants.id(id), () -> codec);
+	private static void register(String id, MapCodec<? extends StructureProcessor> codec) {
+		Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, FrozenLibConstants.id(id), codec);
 	}
 }

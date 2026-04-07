@@ -49,7 +49,7 @@ public class UnderwaterVegetationPatchWithEdgeDecorationFeature extends Underwat
 		final BlockPos.MutableBlockPos airMutable = new BlockPos.MutableBlockPos();
 		final BlockPos.MutableBlockPos groundMutable = new BlockPos.MutableBlockPos();
 		final List<BlockPos> finalDecorationPoses = new ArrayList<>(set);
-		final Direction surfaceDirection = config.surface.getDirection();
+		final Direction surfaceDirection = config.surface().getDirection();
 		final Direction oppositeSurfaceDirection = surfaceDirection.getOpposite();
 
 		for (BlockPos pos : set) {

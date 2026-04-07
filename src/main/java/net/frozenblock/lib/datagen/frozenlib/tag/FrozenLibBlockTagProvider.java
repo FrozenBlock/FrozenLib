@@ -39,14 +39,14 @@ public final class FrozenLibBlockTagProvider extends FabricTagsProvider.BlockTag
 			.addOptionalTag(BlockTags.FENCE_GATES)
 			.addOptionalTag(BlockTags.TRAPDOORS)
 			.addOptionalTag(BlockTags.LEAVES)
-			.add(Blocks.COPPER_GRATE)
-			.add(Blocks.EXPOSED_COPPER_GRATE)
-			.add(Blocks.WEATHERED_COPPER_GRATE)
-			.add(Blocks.OXIDIZED_COPPER_GRATE)
-			.add(Blocks.WAXED_COPPER_GRATE)
-			.add(Blocks.WAXED_EXPOSED_COPPER_GRATE)
-			.add(Blocks.WAXED_WEATHERED_COPPER_GRATE)
-			.add(Blocks.WAXED_OXIDIZED_COPPER_GRATE);
+			.add(Blocks.COPPER_GRATE.unaffected())
+			.add(Blocks.COPPER_GRATE.exposed())
+			.add(Blocks.COPPER_GRATE.weathered())
+			.add(Blocks.COPPER_GRATE.oxidized())
+			.add(Blocks.COPPER_GRATE.waxed())
+			.add(Blocks.COPPER_GRATE.waxedExposed())
+			.add(Blocks.COPPER_GRATE.waxedWeathered())
+			.add(Blocks.COPPER_GRATE.waxedOxidized());
 
 		this.valueLookupBuilder(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH)
 			.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS);

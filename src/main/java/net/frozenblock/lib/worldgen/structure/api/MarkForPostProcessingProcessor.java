@@ -19,7 +19,6 @@ package net.frozenblock.lib.worldgen.structure.api;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.worldgen.structure.impl.FrozenStructureProcessorTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -27,12 +26,11 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 import org.jetbrains.annotations.Nullable;
 
-public class MarkForPostProcessingProcessor extends StructureProcessor {
-	public static final MapCodec<MarkForPostProcessingProcessor> CODEC = RecordCodecBuilder.mapCodec(
+public class MarkForPostProcessingProcessor implements StructureProcessor {
+	public static final MapCodec<MarkForPostProcessingProcessor> MAP_CODEC = RecordCodecBuilder.mapCodec(
 		instance -> instance.group(
 			RuleTest.CODEC.fieldOf("input_predicate").forGetter(ruleProcessor -> ruleProcessor.inputPredicate)
 		)
@@ -61,7 +59,7 @@ public class MarkForPostProcessingProcessor extends StructureProcessor {
 	}
 
 	@Override
-	protected StructureProcessorType<?> getType() {
-		return FrozenStructureProcessorTypes.MARK_FOR_POST_PROCESSING;
+	public MapCodec<MarkForPostProcessingProcessor> codec() {
+		return MAP_CODEC;
 	}
 }

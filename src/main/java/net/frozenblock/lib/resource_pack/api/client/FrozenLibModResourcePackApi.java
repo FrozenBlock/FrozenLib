@@ -447,7 +447,7 @@ public class FrozenLibModResourcePackApi {
 			if (FrozenLibConfig.PACK_DOWNLOADING.get() != PackDownloadSetting.ENABLED) return false;
 
 			final Minecraft minecraft = Minecraft.getInstance();
-			if (minecraft == null || minecraft.getToastManager() == null || minecraft.getResourceManager() == null) {
+			if (minecraft == null || minecraft.gui.toastManager() == null || minecraft.getResourceManager() == null) {
 				if (!QUEUED_TOASTS.contains(this)) QUEUED_TOASTS.add(this);
 				return false;
 			}
@@ -476,7 +476,7 @@ public class FrozenLibModResourcePackApi {
 
 		private static void displayOrUpdateToast(PackDownloadToast.PackDownloadToastId id, PackDownloadInfo downloadInfo) {
 			downloadInfo.setGroupStatus(id);
-			PackDownloadToast.addOrAppendIfNotPresent(Minecraft.getInstance().getToastManager(), id, downloadInfo);
+			PackDownloadToast.addOrAppendIfNotPresent(Minecraft.getInstance().gui.toastManager(), id, downloadInfo);
 		}
 	}
 

@@ -50,7 +50,7 @@ public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFea
 		final BlockPos.MutableBlockPos airMutable = new BlockPos.MutableBlockPos();
 		final BlockPos.MutableBlockPos groundMutable = new BlockPos.MutableBlockPos();
 		final List<BlockPos> finalDecorationPoses = new ArrayList<>(set);
-		final Direction surfaceDirection = config.surface.getDirection();
+		final Direction surfaceDirection = config.surface().getDirection();
 		final Direction oppositeDirection = surfaceDirection.getOpposite();
 
 		for (BlockPos blockPos : set) {
