@@ -1,4 +1,5 @@
 Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-- Restored modmenu-specific features.
+- Added the `itemToPatternMappings` method to `DecoratedPotPatternRegistryEntrypoint`.
+  - Removed `SherdRegistry`.

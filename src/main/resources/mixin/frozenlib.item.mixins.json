@@ -20,6 +20,6 @@
     "shovel.ShovelItemMixin"
   ],
   "client": [
-    "client.LevelRendererMixin"
+    "client.LevelExtractorMixin"
   ]
 }

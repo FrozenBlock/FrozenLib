@@ -24,7 +24,6 @@ import net.frozenblock.lib.worldgen.feature.api.feature.CircularWaterloggedVeget
 import net.frozenblock.lib.worldgen.feature.api.feature.CircularWaterloggedVegetationPatchLessBordersFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.ColumnFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.ColumnWithDiskFeature;
-import net.frozenblock.lib.worldgen.feature.api.feature.ComboFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.CurvingSpikeFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.LargeSpireFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.UnderwaterVegetationPatchFeature;
@@ -32,7 +31,6 @@ import net.frozenblock.lib.worldgen.feature.api.feature.UnderwaterVegetationPatc
 import net.frozenblock.lib.worldgen.feature.api.feature.VegetationPatchWithEdgeDecorationFeature;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.ColumnWithDiskFeatureConfig;
-import net.frozenblock.lib.worldgen.feature.api.feature.config.ComboFeatureConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.CurvingSpikeConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.config.LargeSpireConfig;
 import net.frozenblock.lib.worldgen.feature.api.feature.disk.BallFeature;
@@ -44,7 +42,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
 
 public class FrozenLibFeatures {
-	public static final ComboFeature COMBO_FEATURE = new ComboFeature(ComboFeatureConfig.CODEC);
 	public static final NoisePathFeature NOISE_PATH_FEATURE = new NoisePathFeature(NoisePathFeatureConfig.CODEC);
 	public static final BallFeature BALL_FEATURE = new BallFeature(BallFeatureConfig.CODEC);
 	public static final ColumnFeature COLUMN_FEATURE = new ColumnFeature(ColumnFeatureConfig.CODEC);
@@ -59,7 +56,6 @@ public class FrozenLibFeatures {
 	public static final CurvingSpikeFeature CURVING_SPIKE = new CurvingSpikeFeature(CurvingSpikeConfig.CODEC);
 
 	public static void init() {
-		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("combo"), COMBO_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("noise_path"), NOISE_PATH_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("ball"), BALL_FEATURE);
 		Registry.register(BuiltInRegistries.FEATURE, FrozenLibConstants.id("column"), COLUMN_FEATURE);

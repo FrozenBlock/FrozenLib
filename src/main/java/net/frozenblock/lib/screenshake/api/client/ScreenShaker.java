@@ -69,7 +69,7 @@ public class ScreenShaker {
 		float totalIntensity = 0;
 		int amount = 0;
 
-		final Camera camera = minecraft.gameRenderer.getMainCamera();
+		final Camera camera = minecraft.gameRenderer.mainCamera();
 		for (ClientScreenShake screenShake : SCREEN_SHAKES) {
 			screenShake.tick();
 			final float shakeIntensity = screenShake.getIntensity(camera.position());

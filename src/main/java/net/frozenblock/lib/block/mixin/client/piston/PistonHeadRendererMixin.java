@@ -54,14 +54,14 @@ public class PistonHeadRendererMixin {
 	)
 	public MovingBlockRenderState frozenLib$extractMovingBlockEntity(
 		MovingBlockRenderState original,
-		PistonMovingBlockEntity movingBlock, PistonHeadRenderState renderState, float partialTicks, Vec3 cameraPos, @Nullable ModelFeatureRenderer.CrumblingOverlay crumblingOverlay
+		PistonMovingBlockEntity blockEntity, PistonHeadRenderState state, float partialTicks, Vec3 cameraPosition, @Nullable ModelFeatureRenderer.CrumblingOverlay breakProgress
 	) {
 		try {
-			final BlockEntity fakeBlockEntity = PushableBlockEntityUtil.getFakeBlockEntity(movingBlock);
+			final BlockEntity fakeBlockEntity = PushableBlockEntityUtil.getFakeBlockEntity(blockEntity);
 			if (fakeBlockEntity == null) return original;
 
 			final BlockEntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
-			final BlockEntityRenderState fakeRenderState = renderDispatcher.tryExtractRenderState(fakeBlockEntity, partialTicks, crumblingOverlay);
+			final BlockEntityRenderState fakeRenderState = renderDispatcher.tryExtractRenderState(fakeBlockEntity, partialTicks, breakProgress, false);
 			original.frozenLib$setBlockEntityRenderState(fakeRenderState);
 		} catch (Throwable ignored) {}
 
@@ -77,15 +77,15 @@ public class PistonHeadRendererMixin {
 		)
 	)
 	public void frozenLib$SubmitMovingBlockEntity(
-		PistonHeadRenderState renderState, PoseStack poseStack, SubmitNodeCollector collector, CameraRenderState cameraState, CallbackInfo info
+		PistonHeadRenderState state, PoseStack poseStack, SubmitNodeCollector submitNodeCollector, CameraRenderState camera, CallbackInfo info
 	) {
-		final BlockEntityRenderState fakeRenderState = renderState.block.frozenLib$getBlockEntityRenderState();
+		final BlockEntityRenderState fakeRenderState = state.block.frozenLib$getBlockEntityRenderState();
 		if (fakeRenderState == null) return;
 
 		try {
 			final BlockEntityRenderDispatcher renderDispatcher = Minecraft.getInstance().getBlockEntityRenderDispatcher();
 			poseStack.pushPose();
-			renderDispatcher.submit(fakeRenderState, poseStack, collector, cameraState);
+			renderDispatcher.submit(fakeRenderState, poseStack, submitNodeCollector, camera);
 			poseStack.popPose();
 		} catch (Throwable ignored) {}
 	}

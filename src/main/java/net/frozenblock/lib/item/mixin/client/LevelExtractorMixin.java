@@ -26,7 +26,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.item.api.PlaceInAirBlockItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.extract.LevelExtractor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -34,14 +34,15 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Environment(EnvType.CLIENT)
-@Mixin(LevelRenderer.class)
-public class LevelRendererMixin {
+@Mixin(LevelExtractor.class)
+public class LevelExtractorMixin {
 
 	@Shadow
 	@Final
@@ -59,14 +60,14 @@ public class LevelRendererMixin {
 	)
 	public HitResult.Type frozenLib$useBlockTypeIfPlaceableInAir(
 		HitResult.Type original,
-		@Local BlockHitResult hitResult,
+		@Local(name = "blockHitResult") BlockHitResult blockHitResult,
 		@Share("frozenLib$canPlaceInAir") LocalBooleanRef canPlaceInAir
 	) {
 		canPlaceInAir.set(false);
 		if (this.minecraft.player == null || original != HitResult.Type.MISS) return original;
 
-		final BlockPos pos = hitResult.getBlockPos();
-		if (PlaceInAirBlockItem.checkIfPlayerCanPlaceBlock(this.minecraft.player, this.level, pos)) {
+		final BlockPos pos = blockHitResult.getBlockPos();
+		if (this.level.getWorldBorder().isWithinBounds(pos) && PlaceInAirBlockItem.checkIfPlayerCanPlaceBlock(this.minecraft.player, this.level, pos)) {
 			canPlaceInAir.set(true);
 			return HitResult.Type.BLOCK;
 		}
@@ -92,12 +93,13 @@ public class LevelRendererMixin {
 		method = "extractBlockOutline",
 		at = @At(
 			value = "FIELD",
-			target = "Lnet/minecraft/SharedConstants;DEBUG_SHAPES:Z"
+			target = "Lnet/minecraft/SharedConstants;DEBUG_SHAPES:Z",
+			opcode = Opcodes.GETSTATIC
 		)
 	)
 	private boolean frozenLib$fixAirCrash(
 		boolean original,
-		@Local BlockState state,
+		@Local(name = "state") BlockState state,
 		@Share("frozenLib$canPlaceInAir") LocalBooleanRef canPlaceInAir
 	) {
 		if (state.isAir() && canPlaceInAir.get()) return false;
@@ -113,7 +115,7 @@ public class LevelRendererMixin {
 	)
 	private VoxelShape frozenLib$giveAirFullOutline(
 		VoxelShape original,
-		@Local BlockState state
+		@Local(name = "state") BlockState state
 	) {
 		if (state.isAir()) return Shapes.block();
 		return original;

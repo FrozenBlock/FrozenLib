@@ -20,14 +20,17 @@ package net.frozenblock.lib.item.impl.sherd;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.DecoratedPotPattern;
-import org.jetbrains.annotations.Contract;
+import java.util.function.BiConsumer;
 
 public interface DecoratedPotPatternRegistryEntrypoint {
+
+	void itemToPatternMappings(BiConsumer<ResourceKey<Item>, ResourceKey<DecoratedPotPattern>> itemToPattern);
+
 	void bootstrap(Registry<DecoratedPotPattern> registry);
 
-	@Contract("_, _, _ -> new")
-	static DecoratedPotPattern register(Registry<DecoratedPotPattern> registry, ResourceKey<DecoratedPotPattern> registryKey, Identifier location) {
-		return Registry.register(registry, registryKey, new DecoratedPotPattern(location));
+	static DecoratedPotPattern register(Registry<DecoratedPotPattern> registry, ResourceKey<DecoratedPotPattern> id, Identifier assetId) {
+		return Registry.register(registry, id, new DecoratedPotPattern(assetId));
 	}
 }

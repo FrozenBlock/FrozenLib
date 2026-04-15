@@ -51,7 +51,7 @@ public class MusicManagerMixin {
 
 	@Inject(method = "tick", at = @At("HEAD"))
 	public void frozenLib$tick(CallbackInfo info) {
-		if (this.minecraft.level != null) MusicPitchApi.updateTargetMusicPitch(minecraft.level, this.minecraft.level.getBiome(this.minecraft.gameRenderer.getMainCamera().blockPosition()));
+		if (this.minecraft.level != null) MusicPitchApi.updateTargetMusicPitch(minecraft.level, this.minecraft.level.getBiome(this.minecraft.gameRenderer.mainCamera().blockPosition()));
 		final float targetPitch = MusicPitchApi.getCurrentPitch();
 		if (this.currentMusic != null && this.frozenLib$currentPitch != targetPitch) this.frozenLib$updateTargetPitchAndShift(targetPitch);
 	}

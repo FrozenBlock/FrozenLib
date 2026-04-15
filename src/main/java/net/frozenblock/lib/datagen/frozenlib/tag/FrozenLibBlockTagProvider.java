@@ -23,8 +23,9 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.frozenblock.lib.tag.api.FrozenBlockTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.references.BlockItemIds;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.world.level.block.Blocks;
 
 public final class FrozenLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
 
@@ -34,21 +35,14 @@ public final class FrozenLibBlockTagProvider extends FabricTagsProvider.BlockTag
 
 	@Override
 	protected void addTags(HolderLookup.Provider arg) {
-		this.valueLookupBuilder(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH)
+		this.tag(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH)
 			.addOptionalTag(BlockTags.FENCES)
 			.addOptionalTag(BlockTags.FENCE_GATES)
 			.addOptionalTag(BlockTags.TRAPDOORS)
 			.addOptionalTag(BlockTags.LEAVES)
-			.add(Blocks.COPPER_GRATE.unaffected())
-			.add(Blocks.COPPER_GRATE.exposed())
-			.add(Blocks.COPPER_GRATE.weathered())
-			.add(Blocks.COPPER_GRATE.oxidized())
-			.add(Blocks.COPPER_GRATE.waxed())
-			.add(Blocks.COPPER_GRATE.waxedExposed())
-			.add(Blocks.COPPER_GRATE.waxedWeathered())
-			.add(Blocks.COPPER_GRATE.waxedOxidized());
+			.add(BlockItemIds.COPPER_GRATE.asList().stream().map(id -> id.block()).toList().toArray(new ResourceKey[0]));
 
-		this.valueLookupBuilder(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH)
+		this.tag(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH)
 			.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS);
 	}
 
