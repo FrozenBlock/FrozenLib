@@ -39,12 +39,12 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 		SurfaceRules.ConditionSource purpleNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.30, 0.35);
 		SurfaceRules.ConditionSource waterNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.35, 0.40);
 
-        SurfaceRules.RuleSource greenConcrete = SurfaceRules.state(Blocks.GREEN_CONCRETE.defaultBlockState());
-        SurfaceRules.RuleSource orangeConcrete = SurfaceRules.state(Blocks.ORANGE_CONCRETE.defaultBlockState());
-        SurfaceRules.RuleSource whiteConcrete = SurfaceRules.state(Blocks.WHITE_CONCRETE.defaultBlockState());
-		SurfaceRules.RuleSource redConcrete = SurfaceRules.state(Blocks.RED_CONCRETE.defaultBlockState());
-		SurfaceRules.RuleSource cyanConcrete = SurfaceRules.state(Blocks.CYAN_CONCRETE.defaultBlockState());
-		SurfaceRules.RuleSource purpleConcrete = SurfaceRules.state(Blocks.PURPLE_CONCRETE.defaultBlockState());
+        SurfaceRules.RuleSource greenConcrete = SurfaceRules.state(Blocks.CONCRETE.green().defaultBlockState());
+        SurfaceRules.RuleSource orangeConcrete = SurfaceRules.state(Blocks.CONCRETE.orange().defaultBlockState());
+        SurfaceRules.RuleSource whiteConcrete = SurfaceRules.state(Blocks.CONCRETE.white().defaultBlockState());
+		SurfaceRules.RuleSource redConcrete = SurfaceRules.state(Blocks.CONCRETE.red().defaultBlockState());
+		SurfaceRules.RuleSource cyanConcrete = SurfaceRules.state(Blocks.CONCRETE.cyan().defaultBlockState());
+		SurfaceRules.RuleSource purpleConcrete = SurfaceRules.state(Blocks.CONCRETE.purple().defaultBlockState());
 		SurfaceRules.RuleSource water = SurfaceRules.state(Blocks.WATER.defaultBlockState());
 
         context.add(
