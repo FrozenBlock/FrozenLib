@@ -62,7 +62,6 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
-	// TODO: check if this functions as intended (depth stencil)
 	public static final RenderPipeline ENTITY_TRANSLUCENT_EMISSIVE_FIXED = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_EMISSIVE_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/entity_translucent_emissive_fixed"))
