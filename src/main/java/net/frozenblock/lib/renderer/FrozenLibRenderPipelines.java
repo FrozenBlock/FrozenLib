@@ -126,7 +126,6 @@ public final class FrozenLibRenderPipelines {
 			.build()
 	);
 
-	// TODO: test
 	public static final RenderPipeline APPARITION_OUTER = RenderPipelines.register(
 		RenderPipeline.builder(RenderPipelines.ENTITY_SNIPPET)
 			.withLocation(FrozenLibConstants.id("pipeline/apparition_outer"))
@@ -136,7 +135,7 @@ public final class FrozenLibRenderPipelines {
 			.withBindGroupLayout(BindGroupLayouts.SAMPLER1)
 			.withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
 			.withCull(true)
-			.withDepthStencilState(new DepthStencilState(CompareOp.LESS_THAN_OR_EQUAL, false))
+			.withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))
 			.build()
 	);
 
