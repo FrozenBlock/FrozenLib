@@ -18,7 +18,7 @@
 package net.frozenblock.lib.wind.api;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.LevelReader;
@@ -30,8 +30,8 @@ public class BlowingHelper {
 
 	public static boolean canBlowingPassThrough(LevelReader level, BlockPos pos, BlockState state, Direction direction) {
 		return !(
-			(state.isFaceSturdy(level, pos, direction.getOpposite(), SupportType.CENTER) && !state.is(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH))
-			|| state.is(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH)
+			(state.isFaceSturdy(level, pos, direction.getOpposite(), SupportType.CENTER) && !state.is(FrozenLibBlockTags.BLOWING_CAN_PASS_THROUGH))
+			|| state.is(FrozenLibBlockTags.BLOWING_CANNOT_PASS_THROUGH)
 		);
 	}
 

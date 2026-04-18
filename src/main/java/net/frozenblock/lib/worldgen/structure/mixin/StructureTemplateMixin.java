@@ -21,7 +21,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.frozenblock.lib.worldgen.structure.impl.StructureTemplateInterface;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -73,7 +73,7 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 	)
 	private static boolean frozenLib$scheduleTicksOnBlockPlace(ServerLevelAccessor instance, BlockPos pos, BlockState state, int i, Operation<Boolean> original) {
 		final boolean setBlock = original.call(instance, pos, state, i);
-		if (setBlock && state.is(FrozenBlockTags.STRUCTURE_PLACE_SCHEDULES_TICK)) instance.scheduleTick(pos, state.getBlock(), 1);
+		if (setBlock && state.is(FrozenLibBlockTags.STRUCTURE_PLACE_SCHEDULES_TICK)) instance.scheduleTick(pos, state.getBlock(), 1);
 		return setBlock;
 	}
 }

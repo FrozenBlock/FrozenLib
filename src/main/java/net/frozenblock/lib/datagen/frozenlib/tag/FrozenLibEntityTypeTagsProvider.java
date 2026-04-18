@@ -20,30 +20,30 @@ package net.frozenblock.lib.datagen.frozenlib.tag;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
-import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
-import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenLibEntityTypeTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.references.BlockItemIds;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.EntityTypeIds;
 
-public final class FrozenLibBlockTagProvider extends FabricTagsProvider.BlockTagsProvider {
+public final class FrozenLibEntityTypeTagsProvider extends FabricTagsProvider.EntityTypeTagsProvider {
 
-	public FrozenLibBlockTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+	public FrozenLibEntityTypeTagsProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
 		super(output, registries);
 	}
 
 	@Override
 	protected void addTags(HolderLookup.Provider arg) {
-		this.tag(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH)
-			.addOptionalTag(BlockTags.FENCES)
-			.addOptionalTag(BlockTags.FENCE_GATES)
-			.addOptionalTag(BlockTags.TRAPDOORS)
-			.addOptionalTag(BlockTags.LEAVES)
-			.add(BlockItemIds.COPPER_GRATE.asList().stream().map(id -> id.block()).toList().toArray(new ResourceKey[0]));
+		this.tag(FrozenLibEntityTypeTags.SCARES_PIGLIN)
+			.add(EntityTypeIds.ZOMBIFIED_PIGLIN)
+			.add(EntityTypeIds.ZOGLIN);
 
-		this.tag(FrozenBlockTags.BLOWING_CANNOT_PASS_THROUGH)
-			.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS);
+		this.tag(FrozenLibEntityTypeTags.BLAZES)
+			.add(EntityTypeIds.BLAZE);
+
+		this.tag(FrozenLibEntityTypeTags.HOGLINS)
+			.add(EntityTypeIds.HOGLIN, EntityTypeIds.ZOGLIN);
+
+		this.tag(FrozenLibEntityTypeTags.GHOST_LIKE)
+			.add(EntityTypeIds.VEX);
 	}
 
 }

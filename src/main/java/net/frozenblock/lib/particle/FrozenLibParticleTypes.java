@@ -32,11 +32,15 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
 public class FrozenLibParticleTypes {
-	public static final ParticleType<WindParticleOptions> WIND_SMALL = register(
-		"wind_small", false, particleType -> WindParticleOptions.CODEC, particleType -> WindParticleOptions.STREAM_CODEC
+	public static final ParticleType<WindParticleOptions> WIND_SMALL = register("wind_small",
+		false,
+		particleType -> WindParticleOptions.CODEC,
+		particleType -> WindParticleOptions.STREAM_CODEC
 	);
-	public static final ParticleType<WindParticleOptions> WIND_MEDIUM = register(
-		"wind_medium", false, particleType -> WindParticleOptions.CODEC, particleType -> WindParticleOptions.STREAM_CODEC
+	public static final ParticleType<WindParticleOptions> WIND_MEDIUM = register("wind_medium",
+		false,
+		particleType -> WindParticleOptions.CODEC,
+		particleType -> WindParticleOptions.STREAM_CODEC
 	);
 	public static void init() {}
 
@@ -49,12 +53,12 @@ public class FrozenLibParticleTypes {
 	}
 
 	private static <T extends ParticleOptions> ParticleType<T> register(
-		String string,
+		String name,
 		boolean alwaysShow,
-		Function<ParticleType<T>, MapCodec<T>> function,
-		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> function2
+		Function<ParticleType<T>, MapCodec<T>> codec,
+		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodec
 	) {
-		return register(FrozenLibConstants.id(string), alwaysShow, function, function2);
+		return register(FrozenLibConstants.id(name), alwaysShow, codec, streamCodec);
 	}
 
 	private static <T extends ParticleOptions> ParticleType<T> register(

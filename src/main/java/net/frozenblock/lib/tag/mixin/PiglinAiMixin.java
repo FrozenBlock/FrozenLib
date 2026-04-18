@@ -19,18 +19,17 @@ package net.frozenblock.lib.tag.mixin;
 
 import net.frozenblock.lib.tag.api.FrozenLibEntityTypeTags;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.monster.warden.Warden;
+import net.minecraft.world.entity.monster.piglin.PiglinAi;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(Warden.class)
-public class WardenMixin {
+@Mixin(PiglinAi.class)
+public class PiglinAiMixin {
 
-    @Inject(method = "canTargetEntity", at = @At("HEAD"), cancellable = true)
-    public void frozenLib$ignoreTag(Entity entity, CallbackInfoReturnable<Boolean> info) {
-		if (entity != null && entity.is(FrozenLibEntityTypeTags.WARDEN_CANNOT_TARGET)) info.setReturnValue(false);
-    }
-
+	@Inject(method = "isZombified", at = @At("HEAD"), cancellable = true)
+	private static void frozenLib$scarePiglinsWithTag(Entity entity, CallbackInfoReturnable<Boolean> info) {
+		if (entity.is(FrozenLibEntityTypeTags.SCARES_PIGLIN)) info.setReturnValue(true);
+	}
 }

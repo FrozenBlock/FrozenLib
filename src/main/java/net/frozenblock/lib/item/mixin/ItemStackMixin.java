@@ -26,7 +26,7 @@ import net.frozenblock.lib.item.api.ItemTooltipAdditionAPI;
 import net.frozenblock.lib.item.api.removable.RemovableDataComponents;
 import net.frozenblock.lib.item.api.removable.RemovableItemTags;
 import net.frozenblock.lib.item.impl.ItemStackExtension;
-import net.frozenblock.lib.tag.api.FrozenItemTags;
+import net.frozenblock.lib.tag.api.FrozenLibItemTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.TypedInstance;
 import net.minecraft.core.component.DataComponentType;
@@ -59,7 +59,7 @@ public abstract class ItemStackMixin implements TypedInstance<Item>, ItemStackEx
 		)
 	)
 	private boolean preventStartingGameEvent(boolean original) {
-		return original && !this.is(FrozenItemTags.NO_USE_GAME_EVENTS);
+		return original && !this.is(FrozenLibItemTags.NO_USE_GAME_EVENTS);
 	}
 
 	@Unique

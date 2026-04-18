@@ -28,7 +28,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.block.impl.PushableBlockEntityUtil;
-import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -54,7 +54,7 @@ public class PistonBaseBlockMixin {
 	)
 	private static boolean frozenLib$allowBlockEntityPushing(BlockState state, Operation<Boolean> original) {
 		final boolean hasBlockEntity = original.call(state);
-		if (hasBlockEntity && state.is(FrozenBlockTags.HAS_PUSHABLE_BLOCK_ENTITY)) return false;
+		if (hasBlockEntity && state.is(FrozenLibBlockTags.HAS_PUSHABLE_BLOCK_ENTITY)) return false;
 		return hasBlockEntity;
 	}
 
@@ -196,7 +196,7 @@ public class PistonBaseBlockMixin {
 		// With 82, & 256 returns 0.
 		// Adding 256 makes this not return 0, while keeping all other calls intact.
 		final BlockState movingState = instance.getBlockState(pos);
-		if (movingState.hasBlockEntity() && movingState.is(FrozenBlockTags.HAS_PUSHABLE_BLOCK_ENTITY) && (flags & PistonBaseBlock.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS) == 0) {
+		if (movingState.hasBlockEntity() && movingState.is(FrozenLibBlockTags.HAS_PUSHABLE_BLOCK_ENTITY) && (flags & PistonBaseBlock.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS) == 0) {
 			flags += PistonBaseBlock.UPDATE_SKIP_BLOCK_ENTITY_SIDEEFFECTS;
 		}
 		return original.call(instance, pos, state, flags);

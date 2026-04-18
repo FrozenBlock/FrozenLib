@@ -24,7 +24,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 
 @UtilityClass
-public class FrozenBiomeTags {
+public class FrozenLibBiomeTags {
 	public static final TagKey<Biome> CAN_LIGHTNING_OVERRIDE = of("can_lightning_override");
 	public static final TagKey<Biome> CANNOT_LIGHTNING_OVERRIDE = of("cannot_lightning_override");
 

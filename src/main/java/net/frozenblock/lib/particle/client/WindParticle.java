@@ -23,7 +23,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.particle.api.client.CustomRotationalParticleHelper;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
-import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -164,7 +164,7 @@ public class WindParticle extends SingleQuadParticle {
 			box,
 			false,
 			(pos, shape) -> {
-				if (this.level.getBlockState(pos).is(FrozenBlockTags.BLOWING_CAN_PASS_THROUGH)) return Shapes.empty();
+				if (this.level.getBlockState(pos).is(FrozenLibBlockTags.BLOWING_CAN_PASS_THROUGH)) return Shapes.empty();
 				return shape;
 			}
 		);

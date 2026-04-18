@@ -21,14 +21,17 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 
 @UtilityClass
-public class FrozenItemTags {
-	public static final TagKey<Item> NO_USE_GAME_EVENTS = bind("dont_emit_use_game_events");
-	public static final TagKey<Item> ALWAYS_SAVE_COOLDOWNS = bind("always_save_cooldowns");
+public class FrozenLibBlockTags {
+    public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
+	public static final TagKey<Block> BLOWING_CAN_PASS_THROUGH = bind("blowing_can_pass_through");
+	public static final TagKey<Block> BLOWING_CANNOT_PASS_THROUGH = bind("blowing_cannot_pass_through");
+	public static final TagKey<Block> STRUCTURE_PLACE_SCHEDULES_TICK = bind("structure_place_schedules_tick");
+	public static final TagKey<Block> HAS_PUSHABLE_BLOCK_ENTITY = bind("has_pushable_block_entity");
 
-	private static TagKey<Item> bind(String path) {
-		return TagKey.create(Registries.ITEM, FrozenLibConstants.id(path));
-	}
+    private static TagKey<Block> bind(String path) {
+        return TagKey.create(Registries.BLOCK, FrozenLibConstants.id(path));
+    }
 }

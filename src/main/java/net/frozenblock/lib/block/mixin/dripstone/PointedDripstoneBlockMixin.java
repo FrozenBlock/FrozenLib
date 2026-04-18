@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.mixin.dripstone;
 import com.llamalad7.mixinextras.sugar.Local;
 import java.util.Optional;
 import net.frozenblock.lib.block.api.dripstone.DripstoneDripApi;
-import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.attribute.EnvironmentAttributes;
@@ -87,7 +87,7 @@ public class PointedDripstoneBlockMixin {
 
 	@Inject(method = "lambda$findFillableCauldronBelowStalactiteTip$0", at = @At(value = "HEAD"), cancellable = true)
 	private static void frozenLib$dripOnNewAllowedBlocks(Fluid fluid, BlockState state, CallbackInfoReturnable<Boolean> info) {
-		if (state.is(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON)) info.setReturnValue(true);
+		if (state.is(FrozenLibBlockTags.DRIPSTONE_CAN_DRIP_ON)) info.setReturnValue(true);
 	}
 
 }

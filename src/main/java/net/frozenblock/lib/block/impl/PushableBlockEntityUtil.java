@@ -18,7 +18,7 @@
 package net.frozenblock.lib.block.impl;
 
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
-import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -74,7 +74,7 @@ public class PushableBlockEntityUtil {
 
 	public static boolean canChestsStick(BlockState state1, BlockState state2, Direction direction) {
 		if (!state1.is(ConventionalBlockTags.CHESTS) || !state2.is(ConventionalBlockTags.CHESTS)) return false;
-		if (!state1.is(FrozenBlockTags.HAS_PUSHABLE_BLOCK_ENTITY) || !state2.is(FrozenBlockTags.HAS_PUSHABLE_BLOCK_ENTITY)) return false;
+		if (!state1.is(FrozenLibBlockTags.HAS_PUSHABLE_BLOCK_ENTITY) || !state2.is(FrozenLibBlockTags.HAS_PUSHABLE_BLOCK_ENTITY)) return false;
 
 		final ChestType chest1Type = state1.getValueOrElse(BlockStateProperties.CHEST_TYPE, ChestType.SINGLE);
 		if (chest1Type == ChestType.SINGLE) return false;

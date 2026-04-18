@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.frozenblock.lib.block.impl.PushableBlockEntityUtil;
-import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
@@ -46,7 +46,7 @@ public class DoubleChestStickingMixin {
 		)
 	)
 	private boolean frozenLib$doubleChestSticking(BlockState state, Operation<Boolean> original) {
-		if (state.is(ConventionalBlockTags.CHESTS) && state.is(FrozenBlockTags.HAS_PUSHABLE_BLOCK_ENTITY)) return true;
+		if (state.is(ConventionalBlockTags.CHESTS) && state.is(FrozenLibBlockTags.HAS_PUSHABLE_BLOCK_ENTITY)) return true;
 		return original.call(state);
 	}
 

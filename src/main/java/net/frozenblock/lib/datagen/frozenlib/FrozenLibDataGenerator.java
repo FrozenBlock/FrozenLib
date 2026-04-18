@@ -20,7 +20,7 @@ package net.frozenblock.lib.datagen.frozenlib;
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.datagen.frozenlib.tag.FrozenLibBlockTagProvider;
+import net.frozenblock.lib.datagen.frozenlib.tag.FrozenLibBlockTagsProvider;
 import net.minecraft.core.RegistrySetBuilder;
 
 public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
@@ -29,7 +29,7 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 	public void onInitializeDataGenerator(FabricDataGenerator generator) {
 		final FabricDataGenerator.Pack pack = generator.createPack();
 
-		pack.addProvider(FrozenLibBlockTagProvider::new);
+		pack.addProvider(FrozenLibBlockTagsProvider::new);
 	}
 
 	@Override

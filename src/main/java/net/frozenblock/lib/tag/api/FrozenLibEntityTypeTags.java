@@ -21,17 +21,18 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.EntityType;
 
 @UtilityClass
-public class FrozenBlockTags {
-    public static final TagKey<Block> DRIPSTONE_CAN_DRIP_ON = bind("dripstone_can_drip");
-	public static final TagKey<Block> BLOWING_CAN_PASS_THROUGH = bind("blowing_can_pass_through");
-	public static final TagKey<Block> BLOWING_CANNOT_PASS_THROUGH = bind("blowing_cannot_pass_through");
-	public static final TagKey<Block> STRUCTURE_PLACE_SCHEDULES_TICK = bind("structure_place_schedules_tick");
-	public static final TagKey<Block> HAS_PUSHABLE_BLOCK_ENTITY = bind("has_pushable_block_entity");
+public class FrozenLibEntityTypeTags {
+    public static final TagKey<EntityType<?>> CREEPER_IGNORES = bind("creeper_ignores");
+	public static final TagKey<EntityType<?>> WARDEN_CANNOT_TARGET = bind("warden_cannot_target");
+	public static final TagKey<EntityType<?>> SCARES_PIGLIN = bind("scares_piglin");
+	public static final TagKey<EntityType<?>> BLAZES = bind("blazes");
+	public static final TagKey<EntityType<?>> HOGLINS = bind("hoglins");
+	public static final TagKey<EntityType<?>> GHOST_LIKE = bind("ghost_like");
 
-    private static TagKey<Block> bind(String path) {
-        return TagKey.create(Registries.BLOCK, FrozenLibConstants.id(path));
+    private static TagKey<EntityType<?>> bind(String path) {
+        return TagKey.create(Registries.ENTITY_TYPE, FrozenLibConstants.id(path));
     }
 }

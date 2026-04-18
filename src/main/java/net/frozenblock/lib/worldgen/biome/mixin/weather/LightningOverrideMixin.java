@@ -19,7 +19,7 @@ package net.frozenblock.lib.worldgen.biome.mixin.weather;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.frozenblock.lib.tag.api.FrozenBiomeTags;
+import net.frozenblock.lib.tag.api.FrozenLibBiomeTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
@@ -52,8 +52,8 @@ public final class LightningOverrideMixin {
 
 		final Holder<Biome> biomeHolder = level.getBiome(pos);
 		final Biome biome = biomeHolder.value();
-		return (biome.getPrecipitationAt(pos, levelReader.getSeaLevel()) == Biome.Precipitation.RAIN || biomeHolder.is(FrozenBiomeTags.CAN_LIGHTNING_OVERRIDE))
-			&& !biomeHolder.is(FrozenBiomeTags.CANNOT_LIGHTNING_OVERRIDE);
+		return (biome.getPrecipitationAt(pos, levelReader.getSeaLevel()) == Biome.Precipitation.RAIN || biomeHolder.is(FrozenLibBiomeTags.CAN_LIGHTNING_OVERRIDE))
+			&& !biomeHolder.is(FrozenLibBiomeTags.CANNOT_LIGHTNING_OVERRIDE);
 	}
 
 }

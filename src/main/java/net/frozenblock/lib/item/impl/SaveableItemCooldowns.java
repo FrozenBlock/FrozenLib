@@ -26,7 +26,7 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
-import net.frozenblock.lib.tag.api.FrozenItemTags;
+import net.frozenblock.lib.tag.api.FrozenLibItemTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,7 +42,7 @@ public class SaveableItemCooldowns {
 		final int tickCount = player.getCooldowns().tickCount;
 		player.getCooldowns().cooldowns.forEach((cooldownGroup, cooldownInstance) -> {
 			final Optional<Item> optionalItem = BuiltInRegistries.ITEM.getOptional(cooldownGroup);
-			final boolean alwaysSave = optionalItem.isPresent() && optionalItem.get().builtInRegistryHolder().is(FrozenItemTags.ALWAYS_SAVE_COOLDOWNS);
+			final boolean alwaysSave = optionalItem.isPresent() && optionalItem.get().builtInRegistryHolder().is(FrozenLibItemTags.ALWAYS_SAVE_COOLDOWNS);
 			if (!alwaysSave && !FrozenLibConfig.SAVE_ITEM_COOLDOWNS.get()) return;
 			saveableCooldownInstances.add(SaveableCooldownInstance.makeFromCooldownInstance(cooldownGroup, cooldownInstance, tickCount));
 		});

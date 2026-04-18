@@ -26,7 +26,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvider;
 import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider;
-import net.frozenblock.lib.tag.api.FrozenBlockTags;
+import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -108,7 +108,7 @@ public final class FrozenLibTestDatagen implements DataGeneratorEntrypoint {
 		}
 
 		private void generateUtilityTags() {
-			this.builder(FrozenBlockTags.DRIPSTONE_CAN_DRIP_ON)
+			this.builder(FrozenLibBlockTags.DRIPSTONE_CAN_DRIP_ON)
 					.add(Blocks.DIAMOND_BLOCK.builtInRegistryHolder().key());
 		}
 	}

@@ -21,14 +21,14 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
 
 @UtilityClass
-public class FrozenEntityTags {
-    public static final TagKey<EntityType<?>> CREEPER_IGNORES = bind("creeper_ignores");
-	public static final TagKey<EntityType<?>> WARDEN_CANNOT_TARGET = bind("warden_cannot_target");
+public class FrozenLibItemTags {
+	public static final TagKey<Item> NO_USE_GAME_EVENTS = bind("dont_emit_use_game_events");
+	public static final TagKey<Item> ALWAYS_SAVE_COOLDOWNS = bind("always_save_cooldowns");
 
-    private static TagKey<EntityType<?>> bind(String path) {
-        return TagKey.create(Registries.ENTITY_TYPE, FrozenLibConstants.id(path));
-    }
+	private static TagKey<Item> bind(String path) {
+		return TagKey.create(Registries.ITEM, FrozenLibConstants.id(path));
+	}
 }
