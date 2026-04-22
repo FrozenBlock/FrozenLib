@@ -19,16 +19,18 @@ package net.frozenblock.lib.worldgen.surface.impl;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.worldgen.surface.api.FrozenSurfaceRules;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
 @UtilityClass
 public class SurfaceRuleUtil {
-	public static void injectSurfaceRules(NoiseGeneratorSettings settings, ResourceKey<DimensionType> dimension) {
+	public static void injectSurfaceRules(NoiseGeneratorSettings settings, HolderLookup<Biome> biomes, ResourceKey<DimensionType> dimension) {
 		final NoiseGeneratorInterface noiseGenerator = NoiseGeneratorInterface.class.cast(settings);
-		final SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(dimension);
+		final SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(biomes, dimension);
 		if (newRules != null) noiseGenerator.frozenLib$writeSurfaceRules(newRules);
 	}
 }

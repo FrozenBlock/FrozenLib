@@ -17,16 +17,23 @@
 
 package net.frozenblock.lib.worldgen.surface.mixin;
 
+import java.util.Map;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.frozenblock.lib.worldgen.surface.impl.SurfaceRuleUtil;
+import net.minecraft.core.LayeredRegistryAccess;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.RegistryLayer;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -39,21 +46,25 @@ public abstract class MinecraftServerMixin {
 	@Shadow
 	public abstract RegistryAccess.Frozen registryAccess();
 
-	@Inject(method = "createLevels", at = @At("HEAD"))
+	@Shadow
+	@Final
+	private LayeredRegistryAccess<RegistryLayer> registries;
+
+	@Inject(method = "createLevels", at = @At("TAIL"))
 	private void frozenLib$addSurfaceRules(CallbackInfo info) {
-		final var server = MinecraftServer.class.cast(this);
-		final var registryAccess = server.registryAccess();
-		final var levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
+		final RegistryAccess registryAccess = this.registries.compositeAccess();
+		final Registry<LevelStem> levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
 		OptimizedBiomeTagConditionSource.INSTANCES.clear();
 
-		for (var entry : levelStems.entrySet()) {
-			final LevelStem stem = entry.getValue();
-			final ChunkGenerator chunkGenerator = stem.generator();
+		final Registry<Biome> biomes = registryAccess.lookupOrThrow(Registries.BIOME);
+		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : levelStems.entrySet()) {
+			final LevelStem levelStem = entry.getValue();
+			final ChunkGenerator chunkGenerator = levelStem.generator();
 			if (!(chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator)) continue;
 
 			final var noiseSettings = noiseGenerator.generatorSettings().value();
-			final var dimension = stem.type().unwrapKey().orElseThrow();
-			SurfaceRuleUtil.injectSurfaceRules(noiseSettings, dimension);
+			final var dimension = levelStem.type().unwrapKey().orElseThrow();
+			SurfaceRuleUtil.injectSurfaceRules(noiseSettings, biomes, dimension);
 		}
 
 		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().lookupOrThrow(Registries.BIOME));
