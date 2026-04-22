@@ -149,8 +149,7 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		prepared.getOverwrites().forEach(this::addFinalizedOverwrite);
 		// Load our queued overwrites.
 		this.builtInOverwrites.forEach(this::addFinalizedOverwrite);
-		return CompletableFuture.runAsync(() -> {
-		});
+		return CompletableFuture.runAsync(() -> {});
 	}
 
 	@Override
@@ -168,7 +167,7 @@ public class BlockSoundTypeManager implements SimpleResourceReloadListener<Block
 		}
 
 		private void loadSoundOverwrites() {
-			final Map<Identifier, Resource> resources = manager.listResources(DIRECTORY, id -> id.getPath().endsWith(".json"));
+			final Map<Identifier, Resource> resources = this.manager.listResources(DIRECTORY, id -> id.getPath().endsWith(".json"));
 			final var entrySet = resources.entrySet();
 			for (Map.Entry<Identifier, Resource> entry : entrySet) this.addOverwrite(entry.getKey(), entry.getValue());
 		}

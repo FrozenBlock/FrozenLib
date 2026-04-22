@@ -73,10 +73,6 @@ public final class FrozenSurfaceRules {
 		return new SurfaceRules.SequenceRuleSource(list);
 	}
 
-	public static SurfaceRules.ConditionSource isBiome(List<ResourceKey<Biome>> biomes) {
-		return SurfaceRules.isBiome(biomes);
-	}
-
 	public static SurfaceRules.ConditionSource isBiomeTag(TagKey<Biome> biomeTagKey) {
 		return new BiomeTagConditionSource(biomeTagKey);
 	}

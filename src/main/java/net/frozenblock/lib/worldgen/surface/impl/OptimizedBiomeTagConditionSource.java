@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.worldgen.surface.impl;
 
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,18 +30,14 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.jetbrains.annotations.Nullable;
 
 public final class OptimizedBiomeTagConditionSource implements SurfaceRules.ConditionSource {
-	public static final KeyDispatchDataCodec<OptimizedBiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(
-		RecordCodecBuilder.mapCodec(instance -> instance.group(
-			TagKey.codec(Registries.BIOME).fieldOf("biome_tag").forGetter(OptimizedBiomeTagConditionSource::getBiomeTagKey)
-		).apply(instance, OptimizedBiomeTagConditionSource::new))
-	);
-
+	public static final MapCodec<OptimizedBiomeTagConditionSource> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		TagKey.codec(Registries.BIOME).fieldOf("biome_tag").forGetter(OptimizedBiomeTagConditionSource::getBiomeTagKey)
+	).apply(instance, OptimizedBiomeTagConditionSource::new));
 	public final TagKey<Biome> biomeTagKey;
 	@Nullable
 	public List<ResourceKey<Biome>> biomes;
@@ -77,7 +74,7 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 	}
 
 	@Override
-	public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
+	public MapCodec<? extends SurfaceRules.ConditionSource> codec() {
 		return CODEC;
 	}
 
@@ -89,8 +86,8 @@ public final class OptimizedBiomeTagConditionSource implements SurfaceRules.Cond
 			}
 
 			protected boolean compute() {
-				if (OptimizedBiomeTagConditionSource.this.biomeNameTest != null) return this.context.biome.get().is(OptimizedBiomeTagConditionSource.this.biomeNameTest);
-				return this.context.biome.get().is(OptimizedBiomeTagConditionSource.this.biomeTagKey);
+				if (OptimizedBiomeTagConditionSource.this.biomeNameTest != null) return this.context.getBiome().is(OptimizedBiomeTagConditionSource.this.biomeNameTest);
+				return this.context.getBiome().is(OptimizedBiomeTagConditionSource.this.biomeTagKey);
 			}
 		}
 

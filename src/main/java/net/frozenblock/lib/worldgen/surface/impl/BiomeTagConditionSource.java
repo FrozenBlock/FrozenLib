@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.worldgen.surface.impl;
 
+import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.KeyDispatchDataCodec;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
@@ -28,14 +28,9 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
  * A {@link SurfaceRules.ConditionSource} that uses a tag to control which biomes it generates in.
  */
 public final class BiomeTagConditionSource implements SurfaceRules.ConditionSource {
-	public static final KeyDispatchDataCodec<BiomeTagConditionSource> CODEC = KeyDispatchDataCodec.of(
-		RecordCodecBuilder.mapCodec(instance ->
-			instance.group(
-				TagKey.codec(Registries.BIOME).fieldOf("biome_tag").forGetter(BiomeTagConditionSource::getBiomeTagKey)
-			).apply(instance, BiomeTagConditionSource::new)
-		)
-	);
-
+	public static final MapCodec<BiomeTagConditionSource> CODEC =RecordCodecBuilder.mapCodec(instance -> instance.group(
+		TagKey.codec(Registries.BIOME).fieldOf("biome_tag").forGetter(BiomeTagConditionSource::getBiomeTagKey)
+	).apply(instance, BiomeTagConditionSource::new));
 	private final TagKey<Biome> biomeTagKey;
 
 	public BiomeTagConditionSource(TagKey<Biome> biomeTagKey) {
@@ -43,7 +38,7 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 	}
 
 	@Override
-	public KeyDispatchDataCodec<? extends SurfaceRules.ConditionSource> codec() {
+	public MapCodec<? extends SurfaceRules.ConditionSource> codec() {
 		return CODEC;
 	}
 
@@ -55,7 +50,7 @@ public final class BiomeTagConditionSource implements SurfaceRules.ConditionSour
 			}
 
 			protected boolean compute() {
-				return this.context.biome.get().is(BiomeTagConditionSource.this.biomeTagKey);
+				return this.context.getBiome().is(BiomeTagConditionSource.this.biomeTagKey);
 			}
 		}
 
