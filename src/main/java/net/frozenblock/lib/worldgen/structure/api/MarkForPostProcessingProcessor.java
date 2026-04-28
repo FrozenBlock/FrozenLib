@@ -32,7 +32,7 @@ public record MarkForPostProcessingProcessor(RuleTest inputPredicate) implements
 	public static final MapCodec<MarkForPostProcessingProcessor> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 		RuleTest.CODEC.fieldOf("input_predicate").forGetter(ruleProcessor -> ruleProcessor.inputPredicate)
 	).apply(instance, MarkForPostProcessingProcessor::new));
-	
+
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(
 		LevelReader level,
@@ -44,8 +44,7 @@ public record MarkForPostProcessingProcessor(RuleTest inputPredicate) implements
 	) {
 		final BlockPos currentPos = relativeBlockInfo.pos();
 		final RandomSource random = RandomSource.create(Mth.getSeed(currentPos));
-		if (this.inputPredicate.test(relativeBlockInfo.state(), random))
-			level.getChunk(currentPos).markPosForPostProcessing(currentPos);
+		if (this.inputPredicate.test(relativeBlockInfo.state(), random)) level.getChunk(currentPos).markPosForPostProcessing(currentPos);
 		return relativeBlockInfo;
 	}
 
