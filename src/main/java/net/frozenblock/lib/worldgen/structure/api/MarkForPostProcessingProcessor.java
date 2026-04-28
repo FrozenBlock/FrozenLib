@@ -27,22 +27,12 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import org.jetbrains.annotations.Nullable;
 
-public class MarkForPostProcessingProcessor implements StructureProcessor {
-	public static final MapCodec<MarkForPostProcessingProcessor> MAP_CODEC = RecordCodecBuilder.mapCodec(
-		instance -> instance.group(
-			RuleTest.CODEC.fieldOf("input_predicate").forGetter(ruleProcessor -> ruleProcessor.inputPredicate)
-		)
-		.apply(instance, MarkForPostProcessingProcessor::new)
-	);
-	public final RuleTest inputPredicate;
-
-	public MarkForPostProcessingProcessor(RuleTest inputPredicate) {
-		this.inputPredicate = inputPredicate;
-	}
-
-	@Nullable
+public record MarkForPostProcessingProcessor(RuleTest inputPredicate) implements StructureProcessor {
+	public static final MapCodec<MarkForPostProcessingProcessor> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		RuleTest.CODEC.fieldOf("input_predicate").forGetter(ruleProcessor -> ruleProcessor.inputPredicate)
+	).apply(instance, MarkForPostProcessingProcessor::new));
+	
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(
 		LevelReader level,
@@ -54,7 +44,8 @@ public class MarkForPostProcessingProcessor implements StructureProcessor {
 	) {
 		final BlockPos currentPos = relativeBlockInfo.pos();
 		final RandomSource random = RandomSource.create(Mth.getSeed(currentPos));
-		if (this.inputPredicate.test(relativeBlockInfo.state(), random)) level.getChunk(currentPos).markPosForPostprocessing(currentPos);
+		if (this.inputPredicate.test(relativeBlockInfo.state(), random))
+			level.getChunk(currentPos).markPosForPostProcessing(currentPos);
 		return relativeBlockInfo;
 	}
 

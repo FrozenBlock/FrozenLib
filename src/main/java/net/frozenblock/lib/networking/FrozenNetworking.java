@@ -217,7 +217,7 @@ public final class FrozenNetworking {
 	 */
 	public static boolean isMultiplayer() {
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return true;
-		return !Minecraft.getInstance().isSingleplayer();
+		return !Minecraft.getInstance().hasSingleplayerServer();
 	}
 
 }
