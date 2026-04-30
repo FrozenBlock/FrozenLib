@@ -4,10 +4,10 @@
   "package": "org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
-    "DataFixerUpperMixin",
+    "SimpleRegionStorageMixin",
     "DataFixTypesAccessor",
-    "NbtUtilsMixin",
-    "SimpleRegionStorageMixin"
+    "DataFixTypesMixin",
+    "NbtUtilsMixin"
   ],
   "client": [
   ],

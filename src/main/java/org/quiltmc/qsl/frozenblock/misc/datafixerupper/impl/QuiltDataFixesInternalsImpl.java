@@ -18,7 +18,6 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
-import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
@@ -27,10 +26,13 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
+import org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin.DataFixTypesAccessor;
 
 /**
  * Modified to work on Fabric
@@ -84,43 +86,45 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
         return new Schema(0, this.latestVanillaSchema);
     }
 
-	@Override
-	public <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current) {
+    @Override
+    public Dynamic<Tag> updateWithAllFixers(DataFixTypes dataFixTypes, Dynamic<Tag> current) {
+		final  var tag = (CompoundTag) current.getValue();
+
 		// Minecraft fixer added by FrozenBlock
 		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
 			// Changed to Optional by FrozenBlock
-			final Optional<Integer> modDataVersion = getModMinecraftDataVersion(current, entry.getKey());
+			final Optional<Integer> modDataVersion = getModMinecraftDataVersion(tag, entry.getKey());
 			final DataFixerEntry dataFixerEntry = entry.getValue();
 
 			// Check implemented by FrozenBlock for performance.
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
 			if (modDataVersion.isEmpty()) continue;
 			current = dataFixerEntry.dataFixer().update(
-				type,
+				DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
 				current,
 				modDataVersion.get(),
 				dataFixerEntry.currentVersion()
 			);
 		}
 
-		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
+        for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
 			// Changed to Optional by FrozenBlock
-			final Optional<Integer> modDataVersion = getModDataVersion(current, entry.getKey());
+			final Optional<Integer> modDataVersion = getModDataVersion(tag, entry.getKey());
 			final DataFixerEntry dataFixerEntry = entry.getValue();
 
 			// Check implemented by FrozenBlock for performance.
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
 			if (modDataVersion.isEmpty()) continue;
 			current = dataFixerEntry.dataFixer().update(
-				type,
+				DataFixTypesAccessor.class.cast(dataFixTypes).getType(),
 				current,
 				modDataVersion.get(),
 				dataFixerEntry.currentVersion()
 			);
-		}
+        }
 
-		return current;
-	}
+        return current;
+    }
 
     @Override
     public CompoundTag addModDataVersions(CompoundTag tag) {

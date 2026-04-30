@@ -18,11 +18,12 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
-import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -72,10 +73,10 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
         return this.schema;
     }
 
-	@Override
-	public <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current) {
-		return new Dynamic<>(current.getOps(), current.getValue());
-	}
+    @Override
+    public Dynamic<Tag> updateWithAllFixers(DataFixTypes dataFixTypes, Dynamic<Tag> dynamic) {
+        return new Dynamic<>(dynamic.getOps(), dynamic.getValue().copy());
+    }
 
     @Override
     public CompoundTag addModDataVersions(CompoundTag tag) {

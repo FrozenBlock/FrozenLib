@@ -18,7 +18,6 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl;
 
-import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixUtils;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
@@ -26,6 +25,8 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
 import java.util.Optional;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
@@ -45,17 +46,17 @@ public abstract class QuiltDataFixesInternals {
     public record DataFixerEntry(DataFixer dataFixer, int currentVersion) {}
 
     @Contract(pure = true)
-    @Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
-    public static Optional<Integer> getModDataVersion(Dynamic<?> dynamic, String modId) {
-		final int version = dynamic.get(modId + "_DataVersion").asInt(-1);
-		return version != -1 ? Optional.of(version) : Optional.empty();
+    @Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional by FrozenBlock
+    public static Optional<Integer> getModDataVersion(CompoundTag tag, String modId) {
+		final String key = modId + "_DataVersion";
+        return tag.contains(key) ? tag.getInt(modId + "_DataVersion") : Optional.empty();
     }
 
 	@Contract(pure = true)
-	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
-	public static Optional<Integer> getModMinecraftDataVersion(Dynamic<?> dynamic, String modId) {
-		final int version = dynamic.get(modId + "_DataVersion_Minecraft").asInt(-1);
-		return version != -1 ? Optional.of(version) : Optional.empty();
+	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional by FrozenBlock
+	public static Optional<Integer> getModMinecraftDataVersion(CompoundTag tag, String modId) {
+		final String key = modId + "_DataVersion_Minecraft";
+		return tag.contains(key) ? tag.getInt(modId + "_DataVersion_Minecraft") : Optional.empty();
 	}
 
     private static QuiltDataFixesInternals instance;
@@ -98,7 +99,7 @@ public abstract class QuiltDataFixesInternals {
     @Contract(value = "-> new", pure = true)
     public abstract Schema createBaseSchema();
 
-	public abstract <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current);
+    public abstract Dynamic<Tag> updateWithAllFixers(DataFixTypes dataFixTypes, Dynamic<Tag> dynamic);
 
     public abstract CompoundTag addModDataVersions(CompoundTag tag);
 
