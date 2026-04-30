@@ -179,6 +179,28 @@ public final class SimpleFixes {
 	}
 
 	/**
+	 * Adds a block & item & entity rename fix to the builder, in case a block & item & entity's identifier is changed.
+	 *
+	 * @param builder The builder
+	 * @param name The fix's name
+	 * @param oldId The block & item & entity's old identifier
+	 * @param newId The block & item & entity's new identifier
+	 * @param schema The schema this fixer should be a part of
+	 * @see BlockRenameFix
+	 * @see ItemRenameFix
+	 */
+	public static void addBlockItemEntityRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
+		requireNonNull(name, "Fix name cannot be null");
+		requireNonNull(schema, "Schema cannot be null");
+
+		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
+		final UnaryOperator<String> renamer = DataFixers.createRenamer(Map.of(oldIdStr, newIdStr));
+		builder.addFixer(BlockRenameFix.create(schema, name, renamer));
+		builder.addFixer(ItemRenameFix.create(schema, name, renamer));
+		builder.addFixer(BlockEntityRenameFix.create(schema, name, renamer));
+	}
+
+	/**
 	 * Adds a block entity rename fix to the builder, in case a block entity's identifier is changed.
 	 *
 	 * @param builder The builder
