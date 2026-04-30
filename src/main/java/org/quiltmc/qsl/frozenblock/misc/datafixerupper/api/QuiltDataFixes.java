@@ -23,6 +23,7 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.DataFixerBuilder;
 import com.mojang.datafixers.schemas.Schema;
+import com.mojang.serialization.Dynamic;
 import static java.util.Objects.requireNonNull;
 import java.util.Optional;
 import java.util.concurrent.Executor;
@@ -31,7 +32,6 @@ import java.util.function.BiFunction;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixTypes;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Range;
@@ -210,35 +210,35 @@ public class QuiltDataFixes {
 	}
 
 	/**
-	 * Gets a mod's Minecraft version-specific data version from a {@link CompoundTag}.
+	 * Gets a mod's Minecraft version-specific data version from a {@link Dynamic}.
 	 *
-	 * @param compound The compound
+	 * @param dynamic The dynamic
 	 * @param modId The mod identifier
-	 * @return The mod's data version, or {@code 0} if the compound has no data for that mod
+	 * @return The mod's data version, or {@code 0} if the dynamic has no data for that mod
 	 */
 	@Contract(pure = true)
 	@Range(from = 0, to = Integer.MAX_VALUE)
-	public static int getModDataVersion(CompoundTag compound, String modId) {
-		requireNonNull(compound, "compound cannot be null");
+	public static int getModDataVersion(Dynamic<?> dynamic, String modId) {
+		requireNonNull(dynamic, "dynamic cannot be null");
 		requireNonNull(modId, "modId cannot be null");
 
-		return QuiltDataFixesInternals.getModDataVersion(compound, modId).orElse(0);
+		return QuiltDataFixesInternals.getModDataVersion(dynamic, modId).orElse(0);
 	}
 
     /**
-     * Gets a mod's Minecraft version-specific data version from a {@link CompoundTag}.
+     * Gets a mod's Minecraft version-specific data version from a {@link Dynamic}.
      *
-     * @param compound The compound
+     * @param dynamic The dynamic
      * @param modId The mod identifier
-     * @return The mod's data version, or {@code 0} if the compound has no data for that mod
+     * @return The mod's data version, or {@code 0} if the dynamic has no data for that mod
      */
     @Contract(pure = true)
     @Range(from = 0, to = Integer.MAX_VALUE)
-    public static int getModMinecraftDataVersion(CompoundTag compound, String modId) {
-        requireNonNull(compound, "compound cannot be null");
+    public static int getModMinecraftDataVersion(Dynamic<?> dynamic, String modId) {
+        requireNonNull(dynamic, "tag cannot be null");
         requireNonNull(modId, "modId cannot be null");
 
-        return QuiltDataFixesInternals.getModMinecraftDataVersion(compound, modId).orElse(0);
+        return QuiltDataFixesInternals.getModMinecraftDataVersion(dynamic, modId).orElse(0);
     }
 
     /**
