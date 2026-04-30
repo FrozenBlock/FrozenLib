@@ -83,6 +83,11 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     }
 
 	@Override
+	public Dynamic<?> addModDataVersions(Dynamic<?> dynamic) {
+		return dynamic;
+	}
+
+	@Override
 	public void addModDataVersions(ValueOutput output) {}
 
 	@Override
