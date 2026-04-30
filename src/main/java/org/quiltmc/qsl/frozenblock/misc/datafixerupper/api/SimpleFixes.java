@@ -63,10 +63,7 @@ public final class SimpleFixes {
      * @see BlockRenameFix
      */
     public static void addBlockRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
-        requireNonNull(builder, "DataFixerBuilder cannot be null");
         requireNonNull(name, "Fix name cannot be null");
-        requireNonNull(oldId, "Old identifier cannot be null");
-        requireNonNull(newId, "New identifier cannot be null");
         requireNonNull(schema, "Schema cannot be null");
 
         final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
@@ -84,10 +81,7 @@ public final class SimpleFixes {
 	 * @see BlockRenameFix
 	 */
 	public static void addRandomBlockRenameFix(DataFixerBuilder builder, String name, Identifier oldId, List<Identifier> newIds, Schema schema) {
-		Objects.requireNonNull(builder, "DataFixerBuilder cannot be null");
 		Objects.requireNonNull(name, "Fix name cannot be null");
-		Objects.requireNonNull(oldId, "Old identifier cannot be null");
-		Objects.requireNonNull(newIds, "New identifiers cannot be null");
 		Objects.requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString();
@@ -111,10 +105,7 @@ public final class SimpleFixes {
 	 * @see SimplestEntityRenameFix
 	 */
 	public static void addEntityRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
-		requireNonNull(builder, "DataFixerBuilder cannot be null");
 		requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(oldId, "Old identifier cannot be null");
-		requireNonNull(newId, "New identifier cannot be null");
 		requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
@@ -139,10 +130,7 @@ public final class SimpleFixes {
      * @see ItemRenameFix
      */
     public static void addItemRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
-        requireNonNull(builder, "DataFixerBuilder cannot be null");
         requireNonNull(name, "Fix name cannot be null");
-        requireNonNull(oldId, "Old identifier cannot be null");
-        requireNonNull(newId, "New identifier cannot be null");
         requireNonNull(schema, "Schema cannot be null");
 
         final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
@@ -160,10 +148,7 @@ public final class SimpleFixes {
 	 * @see ItemRenameFix
 	 */
 	public static void addRandomItemRenameFix(DataFixerBuilder builder, String name, Identifier oldId, List<Identifier> newIds, Schema schema) {
-		Objects.requireNonNull(builder, "DataFixerBuilder cannot be null");
 		Objects.requireNonNull(name, "Fix name cannot be null");
-		Objects.requireNonNull(oldId, "Old identifier cannot be null");
-		Objects.requireNonNull(newIds, "New identifiers cannot be null");
 		Objects.requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString();
@@ -188,10 +173,7 @@ public final class SimpleFixes {
 	 * @see ItemRenameFix
 	 */
 	public static void addBlockItemRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
-		requireNonNull(builder, "DataFixerBuilder cannot be null");
 		requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(oldId, "Old identifier cannot be null");
-		requireNonNull(newId, "New identifier cannot be null");
 		requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
@@ -211,10 +193,7 @@ public final class SimpleFixes {
 	 * @see BlockEntityRenameFix
 	 */
 	public static void addBlockEntityRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
-		requireNonNull(builder, "DataFixerBuilder cannot be null");
 		requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(oldId, "Old identifier cannot be null");
-		requireNonNull(newId, "New identifier cannot be null");
 		requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
@@ -234,9 +213,7 @@ public final class SimpleFixes {
      * @see BlockStateRenameFix
      */
     public static void addBlockStateRenameFix(DataFixerBuilder builder, String name, Identifier blockId, String oldState, String defaultValue, String newState, Schema schema) {
-        requireNonNull(builder, "DataFixerBuilder cannot be null");
         requireNonNull(name, "Fix name cannot be null");
-        requireNonNull(blockId, "Block Id cannot be null");
         requireNonNull(oldState, "Old BlockState cannot be null");
         requireNonNull(defaultValue, "Default value cannot be null");
         requireNonNull(newState, "New BlockState cannot be null");
@@ -257,10 +234,7 @@ public final class SimpleFixes {
      * @see NamespacedTypeRenameFix
      */
     public static void addBiomeRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
-        requireNonNull(builder, "DataFixerBuilder cannot be null");
         requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(oldId, "Old identifier cannot be null");
-		requireNonNull(newId, "New identifier cannot be null");
 		requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
@@ -278,10 +252,7 @@ public final class SimpleFixes {
 	 * @see AdvancementsRenameFix
 	 */
 	public static void addAdvancementRenameFix(DataFixerBuilder builder, String name, Identifier oldId, Identifier newId, Schema schema) {
-		requireNonNull(builder, "DataFixerBuilder cannot be null");
 		requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(oldId, "Old identifier cannot be null");
-		requireNonNull(newId, "New identifier cannot be null");
 		requireNonNull(schema, "Schema cannot be null");
 
 		final String oldIdStr = oldId.toString(), newIdStr = newId.toString();
@@ -300,9 +271,7 @@ public final class SimpleFixes {
 	 * @see AdvancementsRenameFix
 	 */
 	public static void addAdvancementCriteriaRenameFix(DataFixerBuilder builder, String name, Identifier advancementId, String oldName, String newName, Schema schema) {
-		requireNonNull(builder, "DataFixerBuilder cannot be null");
 		requireNonNull(name, "Fix name cannot be null");
-		requireNonNull(advancementId, "Advancement identifier cannot be null");
 		requireNonNull(oldName, "Old name cannot be null");
 		requireNonNull(newName, "New name cannot be null");
 		requireNonNull(schema, "Schema cannot be null");
