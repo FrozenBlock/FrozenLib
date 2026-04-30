@@ -102,6 +102,8 @@ public abstract class QuiltDataFixesInternals {
 
     public abstract CompoundTag addModDataVersions(CompoundTag tag);
 
+	public abstract Dynamic<?> addModDataVersions(Dynamic<?> tag);
+
 	public abstract void addModDataVersions(ValueOutput output);
 
     public abstract void freeze();

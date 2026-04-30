@@ -22,7 +22,6 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtUtils;
-import net.minecraft.nbt.Tag;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,12 +38,12 @@ public class NbtUtilsMixin {
 	}
 
 	@ModifyReturnValue(method = "addDataVersion(Lcom/mojang/serialization/Dynamic;I)Lcom/mojang/serialization/Dynamic;", at = @At("RETURN"))
-	private static Dynamic<Tag> addDataVersion(Dynamic<Tag> original) {
-		return new Dynamic<>(original.getOps(), QuiltDataFixesInternals.get().addModDataVersions(original.getValue().asCompound().orElseThrow()));
+	private static Dynamic addDataVersion(Dynamic original) {
+		return QuiltDataFixesInternals.get().addModDataVersions(original);
 	}
 
 	@Inject(method = "addDataVersion(Lnet/minecraft/world/level/storage/ValueOutput;I)V", at = @At("TAIL"))
-	private static void addDataVersion(ValueOutput valueOutput, int vanillaVersion, CallbackInfo ci) {
-		QuiltDataFixesInternals.get().addModDataVersions(valueOutput);
+	private static void addDataVersion(ValueOutput output, int version, CallbackInfo info) {
+		QuiltDataFixesInternals.get().addModDataVersions(output);
 	}
 }
