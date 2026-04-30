@@ -48,10 +48,6 @@ import net.minecraft.util.datafix.schemas.NamespacedSchema;
  */
 public final class SimpleFixes {
 
-    private SimpleFixes() {
-        throw new RuntimeException("SimpleFixes contains only static declarations.");
-    }
-
     /**
      * Adds a block rename fix to the builder, in case a block's identifier is changed.
      *
