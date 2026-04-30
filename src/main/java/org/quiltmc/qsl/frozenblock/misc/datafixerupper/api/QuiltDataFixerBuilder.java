@@ -64,10 +64,10 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
      * @return The newly built data fixer
      */
     @Contract(value = "_, _ -> new")
-    public DataFixer build(Set<DSL.TypeReference> types, Supplier<Executor> executorGetter) {
-		return types.isEmpty() ? this.build().fixer() : Util.make(() -> {
+    public DataFixer build(Set<DSL.TypeReference> typesToOptimize, Supplier<Executor> executorGetter) {
+		return typesToOptimize.isEmpty() ? this.build().fixer() : Util.make(() -> {
 			final var result = this.build();
-			result.optimize(types, executorGetter.get()).join();
+			result.optimize(typesToOptimize, executorGetter.get()).join();
 			return result.fixer();
 		});
     }
