@@ -134,17 +134,6 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     }
 
 	@Override
-	public Dynamic<?> addModDataVersions(Dynamic<?> dynamic) {
-		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
-			dynamic = dynamic.set(entry.getKey() + "_DataVersion", dynamic.createInt(entry.getValue().currentVersion()));
-		}
-		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
-			dynamic = dynamic.set(entry.getKey() + "_DataVersion_Minecraft", dynamic.createInt(entry.getValue().currentVersion()));
-		}
-		return dynamic;
-	}
-
-	@Override
 	public void addModDataVersions(ValueOutput output) {
 		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
 			output.putInt(entry.getKey() + "_DataVersion", entry.getValue().currentVersion());
