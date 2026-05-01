@@ -33,10 +33,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(value = DataFixerUpper.class, priority = 1001)
 public class DataFixerUpperMixin {
 
-	@ModifyReturnValue(
-		method = "update",
-		at = @At("RETURN")
-	)
+	@ModifyReturnValue(method = "update", at = @At("RETURN"))
 	public <T> Dynamic<T> frozenLib$updateWithDataFixers(Dynamic<T> original, DSL.TypeReference type) {
 		if (DataFixerUpper.class.cast(this) != DataFixers.getDataFixer()) return original;
 		return QuiltDataFixesInternals.get().updateWithAllFixers(type, original);
