@@ -23,6 +23,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import com.mojang.serialization.Dynamic;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.chunk.storage.SimpleRegionStorage;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
@@ -34,6 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 @Mixin(SimpleRegionStorage.class)
 public class SimpleRegionStorageMixin {
@@ -63,11 +65,11 @@ public class SimpleRegionStorageMixin {
 		CompoundTag original,
 		@Share("frozenLib$moddedDataVersions") LocalRef<Map<String, Integer>> moddedDataVersionsRef
 	) {
-		final Dynamic<CompoundTag> fixed = QuiltDataFixesInternals.get().updateWithAllFixers(
+		final Dynamic<Tag> fixed = QuiltDataFixesInternals.get().updateWithAllFixers(
 			this.dataFixType.type,
 			new Dynamic<>(NbtOps.INSTANCE, original),
-			moddedDataVersionsRef.get()
+			Optional.ofNullable(moddedDataVersionsRef.get())
 		);
-		return fixed.getValue();
+		return fixed.getValue().asCompound().orElseThrow();
 	}
 }
