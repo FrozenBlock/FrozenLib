@@ -47,7 +47,7 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
     }
 
     /**
-     * {@return Rhe current data version}
+     * {@return The current data version}
      */
     @Range(from = 0, to = Integer.MAX_VALUE)
     public int getDataVersion() {
@@ -66,7 +66,7 @@ public class QuiltDataFixerBuilder extends DataFixerBuilder {
     @Contract(value = "_, _ -> new")
     public DataFixer build(Set<DSL.TypeReference> typesToOptimize, Supplier<Executor> executorGetter) {
 		return typesToOptimize.isEmpty() ? this.build().fixer() : Util.make(() -> {
-			final var result = this.build();
+			final Result result = this.build();
 			result.optimize(typesToOptimize, executorGetter.get()).join();
 			return result.fixer();
 		});

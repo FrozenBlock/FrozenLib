@@ -100,16 +100,16 @@ public class QuiltDataFixes {
      * Builds and registers a new data fixer.
      *
      * @param mod The mod container
-     * @param dataFixerBuilder The data fixer builder
+     * @param builder The data fixer builder
      */
     public static void buildAndRegisterFixer(
 		ModContainer mod,
-		QuiltDataFixerBuilder dataFixerBuilder
+		QuiltDataFixerBuilder builder
 	) {
         requireNonNull(mod, "mod cannot be null");
-        requireNonNull(dataFixerBuilder, "data fixer builder cannot be null");
+        requireNonNull(builder, "data fixer builder cannot be null");
 
-        registerFixer(mod.getMetadata().getId(), dataFixerBuilder.getDataVersion(), buildFixer(dataFixerBuilder));
+        registerFixer(mod.getMetadata().getId(), builder.getDataVersion(), buildFixer(builder));
     }
 
 	/**
@@ -153,32 +153,29 @@ public class QuiltDataFixes {
 	 * Builds and registers a new data fixer for use with Minecraft version-specific datafixing.
 	 *
 	 * @param mod The mod container
-	 * @param dataFixerBuilder The data fixer builder
+	 * @param builder The data fixer builder
 	 */
-	public static void buildAndRegisterMinecraftFixer(
-		ModContainer mod,
-		QuiltDataFixerBuilder dataFixerBuilder
-	) {
+	public static void buildAndRegisterMinecraftFixer(ModContainer mod, QuiltDataFixerBuilder builder) {
 		requireNonNull(mod, "mod cannot be null");
-		requireNonNull(dataFixerBuilder, "data fixer builder cannot be null");
+		requireNonNull(builder, "data fixer builder cannot be null");
 
-		registerMinecraftFixer(mod.getMetadata().getId(), dataFixerBuilder.getDataVersion(), buildFixer(dataFixerBuilder));
+		registerMinecraftFixer(mod.getMetadata().getId(), builder.getDataVersion(), buildFixer(builder));
 	}
 
 	/**
 	 * Builds a new data fixer.
 	 *
-	 * @param dataFixerBuilder The data fixer builder
+	 * @param builder The data fixer builder
 	 * @return The built data fixer.
 	 */
-	public static DataFixer buildFixer(QuiltDataFixerBuilder dataFixerBuilder) {
-		requireNonNull(dataFixerBuilder, "data fixer builder cannot be null");
+	public static DataFixer buildFixer(QuiltDataFixerBuilder builder) {
+		requireNonNull(builder, "data fixer builder cannot be null");
 
 		Supplier<Executor> executor = () -> Executors.newSingleThreadExecutor(
 			new ThreadFactoryBuilder().setNameFormat("FrozenLib Quilt Datafixer Bootstrap").setDaemon(true).setPriority(1).build()
 		);
 
-		return dataFixerBuilder.build(DataFixTypes.TYPES_FOR_LEVEL_LIST, executor);
+		return builder.build(DataFixTypes.TYPES_FOR_LEVEL_LIST, executor);
 	}
 
     /**
