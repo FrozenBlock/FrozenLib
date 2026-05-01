@@ -70,6 +70,6 @@ public class SimpleRegionStorageMixin {
 			new Dynamic<>(NbtOps.INSTANCE, original),
 			Optional.ofNullable(moddedDataVersionsRef.get())
 		);
-		return fixed.getValue().asCompound().orElseThrow();
+		return fixed.getValue().asCompound().orElse(original);
 	}
 }
