@@ -158,12 +158,12 @@ public final class SimpleFixes {
 	}
 
 	/**
-	 * Adds a block & item rename fix to the builder, in case a block & item's identifier is changed.
+	 * Adds a block and item rename fix to the builder, in case a block and item's identifier is changed.
 	 *
 	 * @param builder The builder
 	 * @param name The fix's name
-	 * @param oldId The block & item's old identifier
-	 * @param newId The block & item's new identifier
+	 * @param oldId The block and item's old identifier
+	 * @param newId The block and item's new identifier
 	 * @param schema The schema this fixer should be a part of
 	 * @see BlockRenameFix
 	 * @see ItemRenameFix
@@ -179,12 +179,12 @@ public final class SimpleFixes {
 	}
 
 	/**
-	 * Adds a block & item & entity rename fix to the builder, in case a block & item & entity's identifier is changed.
+	 * Adds a block and item and entity rename fix to the builder, in case a block and item and entity's identifier is changed.
 	 *
 	 * @param builder The builder
 	 * @param name The fix's name
-	 * @param oldId The block & item & entity's old identifier
-	 * @param newId The block & item & entity's new identifier
+	 * @param oldId The block and item and entity's old identifier
+	 * @param newId The block and item and entity's new identifier
 	 * @param schema The schema this fixer should be a part of
 	 * @see BlockRenameFix
 	 * @see ItemRenameFix
