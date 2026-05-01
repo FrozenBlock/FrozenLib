@@ -26,6 +26,7 @@ import net.minecraft.util.datafix.DataFixers;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import java.util.Optional;
 
 /**
  * New mixin by FrozenBlock.
@@ -36,6 +37,6 @@ public class DataFixerUpperMixin {
 	@ModifyReturnValue(method = "update", at = @At("RETURN"))
 	public <T> Dynamic<T> frozenLib$updateWithDataFixers(Dynamic<T> original, DSL.TypeReference type) {
 		if (DataFixerUpper.class.cast(this) != DataFixers.getDataFixer()) return original;
-		return QuiltDataFixesInternals.get().updateWithAllFixers(type, original);
+		return QuiltDataFixesInternals.get().updateWithAllFixers(type, original, Optional.empty());
 	}
 }

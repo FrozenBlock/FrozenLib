@@ -22,6 +22,9 @@ import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.serialization.Dynamic;
+import java.util.Map;
+import java.util.Optional;
+import java.util.function.BiFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
@@ -73,7 +76,10 @@ public final class NoOpQuiltDataFixesInternals extends QuiltDataFixesInternals {
     }
 
 	@Override
-	public <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current) {
+	public void forEachFixer(Dynamic<?> dynamic, BiFunction<String, Integer, Integer> function) {}
+
+	@Override
+	public <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current, Optional<Map<String, Integer>> moddedDataVersions) {
 		return new Dynamic<>(current.getOps(), current.getValue());
 	}
 

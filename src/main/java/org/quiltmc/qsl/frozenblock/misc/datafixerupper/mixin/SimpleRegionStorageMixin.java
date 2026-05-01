@@ -17,23 +17,57 @@
 
 package org.quiltmc.qsl.frozenblock.misc.datafixerupper.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
+import com.mojang.serialization.Dynamic;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.util.datafix.DataFixTypes;
 import net.minecraft.world.level.chunk.storage.SimpleRegionStorage;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import java.util.HashMap;
+import java.util.Map;
 
 @Mixin(SimpleRegionStorage.class)
 public class SimpleRegionStorageMixin {
 
-	@ModifyVariable(
+	@Shadow
+	@Final
+	private DataFixTypes dataFixType;
+
+	@Inject(
 		method = "upgradeChunkTag(Lnet/minecraft/nbt/CompoundTag;ILnet/minecraft/nbt/CompoundTag;I)Lnet/minecraft/nbt/CompoundTag;",
-		at = @At("HEAD"),
-		ordinal = 1,
-		argsOnly = true
+		at = @At("HEAD")
 	)
-	private int bypassCheck(int targetVersion) {
-		if (!QuiltDataFixesInternals.get().isEmpty()) return -1;
-		return targetVersion;
+	public void frozenLib$captureModdedDataVersions(
+		CompoundTag chunkTag, int defaultVersion, CompoundTag dataFixContextTag, int targetVersion, CallbackInfoReturnable<CompoundTag> info,
+		@Share("frozenLib$moddedDataVersions") LocalRef<Map<String, Integer>> moddedDataVersionsRef
+	) {
+		final Map<String, Integer> moddedDataVersions = new HashMap<>();
+		QuiltDataFixesInternals.get().forEachFixer(new Dynamic<>(NbtOps.INSTANCE, chunkTag), moddedDataVersions::put);
+		moddedDataVersionsRef.set(moddedDataVersions);
+	}
+
+	@ModifyReturnValue(
+		method = "upgradeChunkTag(Lnet/minecraft/nbt/CompoundTag;ILnet/minecraft/nbt/CompoundTag;I)Lnet/minecraft/nbt/CompoundTag;",
+		at = @At("RETURN")
+	)
+	public CompoundTag frozenLib$upgradeChunkTagWithModdedDataVersions(
+		CompoundTag original,
+		@Share("frozenLib$moddedDataVersions") LocalRef<Map<String, Integer>> moddedDataVersionsRef
+	) {
+		final Dynamic<CompoundTag> fixed = QuiltDataFixesInternals.get().updateWithAllFixers(
+			this.dataFixType.type,
+			new Dynamic<>(NbtOps.INSTANCE, original),
+			moddedDataVersionsRef.get()
+		);
+		return fixed.getValue();
 	}
 }
