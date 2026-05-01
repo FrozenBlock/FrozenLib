@@ -28,7 +28,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 /**
- * New mixin by FrozenBlock to patch custom DataFixers no longer working.
+ * New mixin by FrozenBlock.
  */
 @Mixin(value = DataFixerUpper.class, priority = 1001)
 public class DataFixerUpperMixin {
