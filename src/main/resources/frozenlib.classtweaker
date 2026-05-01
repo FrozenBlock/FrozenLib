@@ -384,6 +384,8 @@ transitive-mutable field net/minecraft/world/flag/FeatureFlags CODEC Lcom/mojang
 
 # DataFixerUpper
 transitive-accessible method net/minecraft/util/datafix/DataFixers createRenamer (Ljava/util/Map;)Ljava/util/function/UnaryOperator;
+accessible method net/minecraft/util/datafix/DataFixers createRenamer (Ljava/lang/String;Ljava/lang/String;)Ljava/util/function/UnaryOperator;
+accessible field net/minecraft/util/datafix/DataFixTypes type Lcom/mojang/datafixers/DSL$TypeReference;
 
 # World Loading
 transitive-accessible field net/minecraft/client/gui/screens/BackupConfirmScreen onProceed Lnet/minecraft/client/gui/screens/BackupConfirmScreen$Listener;

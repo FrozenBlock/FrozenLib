@@ -26,6 +26,7 @@ import it.unimi.dsi.fastutil.objects.Object2ReferenceOpenHashMap;
 import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.storage.ValueOutput;
 import org.jetbrains.annotations.ApiStatus;
@@ -85,16 +86,47 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
     }
 
 	@Override
-	public <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current) {
+	public void forEachFixer(Dynamic<?> dynamic, BiFunction<String, Integer, Integer> function) {
 		// Minecraft fixer added by FrozenBlock
 		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
 			// Changed to Optional by FrozenBlock
-			final Optional<Integer> modDataVersion = getModMinecraftDataVersion(current, entry.getKey());
-			final DataFixerEntry dataFixerEntry = entry.getValue();
+			final Optional<Integer> modDataVersion = getModMinecraftDataVersion(dynamic, entry.getKey());
 
 			// Check implemented by FrozenBlock for performance.
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
 			if (modDataVersion.isEmpty()) continue;
+
+			function.apply(entry.getKey(), modDataVersion.get());
+		}
+
+		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
+			// Changed to Optional by FrozenBlock
+			final Optional<Integer> modDataVersion = getModDataVersion(dynamic, entry.getKey());
+
+			// Check implemented by FrozenBlock for performance.
+			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
+			if (modDataVersion.isEmpty()) continue;
+
+			function.apply(entry.getKey(), modDataVersion.get());
+		}
+	}
+
+	@Override
+	public <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current, Optional<Map<String, Integer>> moddedDataVersions) {
+		final boolean hasExistingDataVersions = !moddedDataVersions.isEmpty();
+
+		// Minecraft fixer added by FrozenBlock
+		for (Map.Entry<String, DataFixerEntry> entry : this.modMinecraftDataFixers.entrySet()) {
+			// Changed to Optional by FrozenBlock
+			final Optional<Integer> modDataVersion = hasExistingDataVersions
+				? Optional.ofNullable(moddedDataVersions.get().get(entry.getKey()))
+				: getModMinecraftDataVersion(current, entry.getKey());
+
+			// Check implemented by FrozenBlock for performance.
+			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
+			if (modDataVersion.isEmpty()) continue;
+
+			final DataFixerEntry dataFixerEntry = entry.getValue();
 			current = dataFixerEntry.dataFixer().update(
 				type,
 				current,
@@ -105,12 +137,15 @@ public final class QuiltDataFixesInternalsImpl extends QuiltDataFixesInternals {
 
 		for (Map.Entry<String, DataFixerEntry> entry : this.modDataFixers.entrySet()) {
 			// Changed to Optional by FrozenBlock
-			final Optional<Integer> modDataVersion = getModDataVersion(current, entry.getKey());
-			final DataFixerEntry dataFixerEntry = entry.getValue();
+			final Optional<Integer> modDataVersion = hasExistingDataVersions
+				? Optional.ofNullable(moddedDataVersions.get().get(entry.getKey()))
+				: getModMinecraftDataVersion(current, entry.getKey());
 
 			// Check implemented by FrozenBlock for performance.
 			// We recommend you register a DataFixer even if you don't need to fix anything currently to have a 100% success.
 			if (modDataVersion.isEmpty()) continue;
+
+			final DataFixerEntry dataFixerEntry = entry.getValue();
 			current = dataFixerEntry.dataFixer().update(
 				type,
 				current,

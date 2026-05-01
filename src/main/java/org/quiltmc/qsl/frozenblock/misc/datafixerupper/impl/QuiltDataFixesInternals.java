@@ -24,7 +24,9 @@ import com.mojang.datafixers.DataFixer;
 import com.mojang.datafixers.schemas.Schema;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Dynamic;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.BiFunction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.datafix.DataFixers;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -44,18 +46,26 @@ public abstract class QuiltDataFixesInternals {
 
     public record DataFixerEntry(DataFixer dataFixer, int currentVersion) {}
 
-    @Contract(pure = true)
     @Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
     public static Optional<Integer> getModDataVersion(Dynamic<?> dynamic, String modId) {
 		final int version = dynamic.get(modId + "_DataVersion").asInt(-1);
 		return version != -1 ? Optional.of(version) : Optional.empty();
     }
 
-	@Contract(pure = true)
+	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
+	public static Optional<Integer> getModDataVersion(CompoundTag tag, String modId) {
+		return tag.getInt(modId + "_DataVersion");
+	}
+
 	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
 	public static Optional<Integer> getModMinecraftDataVersion(Dynamic<?> dynamic, String modId) {
 		final int version = dynamic.get(modId + "_DataVersion_Minecraft").asInt(-1);
 		return version != -1 ? Optional.of(version) : Optional.empty();
+	}
+
+	@Range(from = 0, to = Integer.MAX_VALUE) // Changed to Optional & Dynamic by FrozenBlock
+	public static Optional<Integer> getModMinecraftDataVersion(CompoundTag tag, String modId) {
+		return tag.getInt(modId + "_DataVersion_Minecraft");
 	}
 
     private static QuiltDataFixesInternals instance;
@@ -73,7 +83,7 @@ public abstract class QuiltDataFixesInternals {
 
 		if (latestVanillaSchema == null) {
 			LOGGER.warn("[Quilt DFU API] Failed to initialize! Either someone stopped DFU from initializing,");
-			LOGGER.warn("[Quilt DFU API]  or this Minecraft build is hosed.");
+			LOGGER.warn("[Quilt DFU API] or this Minecraft build is hosed.");
 			LOGGER.warn("[Quilt DFU API] Using no-op implementation.");
 			instance = new NoOpQuiltDataFixesInternals();
 		} else {
@@ -98,7 +108,9 @@ public abstract class QuiltDataFixesInternals {
     @Contract(value = "-> new", pure = true)
     public abstract Schema createBaseSchema();
 
-	public abstract <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current);
+	public abstract void forEachFixer(Dynamic<?> dynamic, BiFunction<String, Integer, Integer> function);
+
+	public abstract <T> Dynamic<T> updateWithAllFixers(DSL.TypeReference type, Dynamic<T> current, Optional<Map<String, Integer>> moddedDataVersions);
 
     public abstract CompoundTag addModDataVersions(CompoundTag tag);
 
