@@ -42,6 +42,7 @@ public class FrozenLibParticleTypes {
 		particleType -> WindParticleOptions.CODEC,
 		particleType -> WindParticleOptions.STREAM_CODEC
 	);
+
 	public static void init() {}
 
 	private static SimpleParticleType register(String name, boolean alwaysShow) {
@@ -62,20 +63,20 @@ public class FrozenLibParticleTypes {
 	}
 
 	private static <T extends ParticleOptions> ParticleType<T> register(
-		Identifier identifier,
+		Identifier id,
 		boolean alwaysShow,
-		Function<ParticleType<T>, MapCodec<T>> function,
-		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> function2
+		Function<ParticleType<T>, MapCodec<T>> codec,
+		Function<ParticleType<T>, StreamCodec<? super RegistryFriendlyByteBuf, T>> streamCodec
 	) {
-		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, identifier, new ParticleType<T>(alwaysShow) {
+		return Registry.register(BuiltInRegistries.PARTICLE_TYPE, id, new ParticleType<T>(alwaysShow) {
 			@Override
 			public MapCodec<T> codec() {
-				return function.apply(this);
+				return codec.apply(this);
 			}
 
 			@Override
 			public StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
-				return function2.apply(this);
+				return streamCodec.apply(this);
 			}
 		});
 	}

@@ -26,15 +26,11 @@ import net.minecraft.core.MappedRegistry;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibClientRegistries {
-
 	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder
 		.create(
 			EntityTextureOverride.class,
 			FrozenLibConstants.id("entity_texture_override")
 		).buildAndRegister();
 
-	public static void initRegistry() {
-		// NO-OP
-		// This is just to make sure the registry is initialized.
-	}
+	public static void init() {}
 }

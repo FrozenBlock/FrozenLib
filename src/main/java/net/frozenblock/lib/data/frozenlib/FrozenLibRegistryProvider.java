@@ -15,18 +15,32 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.datagen.api;
+package net.frozenblock.lib.data.frozenlib;
 
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
-import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.level.biome.Biome;
 
-public abstract class FrozenBiomeTagProvider extends FabricTagsProvider<Biome> {
+final class FrozenLibRegistryProvider extends FabricDynamicRegistryProvider {
 
-	public FrozenBiomeTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
-		super(output, Registries.BIOME, registriesFuture);
+	FrozenLibRegistryProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
+		super(output, registriesFuture);
+	}
+
+	@Override
+	protected void configure(HolderLookup.Provider registries, Entries entries) {
+		entries.addAll(asLookup(entries.getLookup(FrozenLibRegistries.FIRE_TYPE)));
+	}
+
+	public static <T> HolderLookup.RegistryLookup<T> asLookup(HolderGetter<T> getter) {
+		return (HolderLookup.RegistryLookup<T>) getter;
+	}
+
+	@Override
+	public String getName() {
+		return "FrozenLib Dynamic Registries";
 	}
 }

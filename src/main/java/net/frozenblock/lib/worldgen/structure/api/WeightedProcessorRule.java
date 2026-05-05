@@ -22,6 +22,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.random.WeightedList;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.PosAlwaysTrueTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.PosRuleTest;
@@ -41,21 +42,23 @@ public class WeightedProcessorRule {
 	private final PosRuleTest posPredicate;
 	private final WeightedList<BlockState> outputStates;
 
-	public WeightedProcessorRule(RuleTest inputPredicate, RuleTest locationPredicate, WeightedList<BlockState> states) {
-		this(inputPredicate, locationPredicate, PosAlwaysTrueTest.INSTANCE, states);
+	public WeightedProcessorRule(RuleTest inputPredicate, RuleTest locPredicate, WeightedList<BlockState> states) {
+		this(inputPredicate, locPredicate, PosAlwaysTrueTest.INSTANCE, states);
 	}
 
 	public WeightedProcessorRule(
-		RuleTest inputPredicate, RuleTest locationPredicate, PosRuleTest positionPredicate, WeightedList<BlockState> states
+		RuleTest inputPredicate, RuleTest locPredicate, PosRuleTest posPredicate, WeightedList<BlockState> states
 	) {
 		this.inputPredicate = inputPredicate;
-		this.locPredicate = locationPredicate;
-		this.posPredicate = positionPredicate;
+		this.locPredicate = locPredicate;
+		this.posPredicate = posPredicate;
 		this.outputStates = states;
 	}
 
-	public boolean test(BlockState input, BlockState location, BlockPos localPos, BlockPos absolutePos, BlockPos pivot, RandomSource random) {
-		return this.inputPredicate.test(input, random) && this.locPredicate.test(location, random) && this.posPredicate.test(localPos, absolutePos, pivot, random);
+	public boolean test(LevelReader level, BlockState inputState, BlockPos inTemplatePos, BlockPos worldPos, BlockPos reference, RandomSource random) {
+		return this.inputPredicate.test(inputState, random)
+			&& this.locPredicate.testAgainstWorldState(level, worldPos, random)
+			&& this.posPredicate.test(inTemplatePos, worldPos, reference, random);
 	}
 
 	public BlockState getOutputState(RandomSource random) {

@@ -32,13 +32,11 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Contract;
 
 public record WindParticleOptions(int lifespan, Vec3 velocity, ParticleLength length) implements ParticleOptions {
-	public static final MapCodec<WindParticleOptions> CODEC = RecordCodecBuilder.mapCodec(instance ->
-		instance.group(
-			Codec.INT.fieldOf("lifespan").forGetter(WindParticleOptions::lifespan),
-			Vec3.CODEC.fieldOf("velocity").forGetter(WindParticleOptions::velocity),
-			ParticleLength.CODEC.fieldOf("length").forGetter(WindParticleOptions::length)
-		).apply(instance, WindParticleOptions::new)
-	);
+	public static final MapCodec<WindParticleOptions> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		Codec.INT.fieldOf("lifespan").forGetter(WindParticleOptions::lifespan),
+		Vec3.CODEC.fieldOf("velocity").forGetter(WindParticleOptions::velocity),
+		ParticleLength.CODEC.fieldOf("length").forGetter(WindParticleOptions::length)
+	).apply(instance, WindParticleOptions::new));
 	public static final StreamCodec<RegistryFriendlyByteBuf, WindParticleOptions> STREAM_CODEC = StreamCodec.composite(
 		ByteBufCodecs.VAR_INT, WindParticleOptions::lifespan,
 		Vec3.STREAM_CODEC, WindParticleOptions::velocity,

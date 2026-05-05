@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2026 FrozenBlock
+ * Copyright (C) 2024-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,18 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.client.impl.state;
+package net.frozenblock.lib.data.api;
 
-import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import java.util.concurrent.CompletableFuture;
+import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.biome.Biome;
 
-public interface MovingBlockRenderStateInterface {
-	default void frozenLib$setBlockEntityRenderState(BlockEntityRenderState renderState) {
-		throw new AssertionError();
-	}
+public abstract class FrozenBiomeTagProvider extends FabricTagsProvider<Biome> {
 
-	default BlockEntityRenderState frozenLib$getBlockEntityRenderState() {
-		throw new AssertionError();
+	public FrozenBiomeTagProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		super(output, Registries.BIOME, registries);
 	}
 }

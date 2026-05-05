@@ -23,6 +23,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,26 +51,28 @@ public class BlockStateRespectingProcessorRule {
 	private final Block outputBlock;
 	private final RuleBlockEntityModifier blockEntityModifier;
 
-	public BlockStateRespectingProcessorRule(RuleTest inputPredicate, RuleTest locationPredicate, Block outputBlock) {
-		this(inputPredicate, locationPredicate, PosAlwaysTrueTest.INSTANCE, outputBlock);
+	public BlockStateRespectingProcessorRule(RuleTest inputPredicate, RuleTest locPredicate, Block outputBlock) {
+		this(inputPredicate, locPredicate, PosAlwaysTrueTest.INSTANCE, outputBlock);
 	}
 
-	public BlockStateRespectingProcessorRule(RuleTest inputPredicate, RuleTest locationPredicate, PosRuleTest positionPredicate, Block outputBlock) {
-		this(inputPredicate, locationPredicate, positionPredicate, outputBlock, DEFAULT_BLOCK_ENTITY_MODIFIER);
+	public BlockStateRespectingProcessorRule(RuleTest inputPredicate, RuleTest locPredicate, PosRuleTest posPredicate, Block outputBlock) {
+		this(inputPredicate, locPredicate, posPredicate, outputBlock, DEFAULT_BLOCK_ENTITY_MODIFIER);
 	}
 
 	public BlockStateRespectingProcessorRule(
-		RuleTest inputPredicate, RuleTest locationPredicate, PosRuleTest positionPredicate, Block outputBlock, RuleBlockEntityModifier ruleBlockEntityModifier
+		RuleTest inputPredicate, RuleTest locPredicate, PosRuleTest posPredicate, Block outputBlock, RuleBlockEntityModifier ruleBlockEntityModifier
 	) {
 		this.inputPredicate = inputPredicate;
-		this.locPredicate = locationPredicate;
-		this.posPredicate = positionPredicate;
+		this.locPredicate = locPredicate;
+		this.posPredicate = posPredicate;
 		this.outputBlock = outputBlock;
 		this.blockEntityModifier = ruleBlockEntityModifier;
 	}
 
-	public boolean test(BlockState input, BlockState location, BlockPos localPos, BlockPos absolutePos, BlockPos pivot, RandomSource random) {
-		return this.inputPredicate.test(input, random) && this.locPredicate.test(location, random) && this.posPredicate.test(localPos, absolutePos, pivot, random);
+	public boolean test(LevelReader level, BlockState inputState, BlockPos inTemplatePos, BlockPos worldPos, BlockPos reference, RandomSource random) {
+		return this.inputPredicate.test(inputState, random)
+			&& this.locPredicate.testAgainstWorldState(level, worldPos, random)
+			&& this.posPredicate.test(inTemplatePos, worldPos, reference, random);
 	}
 
 	public BlockState getOutputState(BlockState inputState) {
@@ -78,7 +81,7 @@ public class BlockStateRespectingProcessorRule {
 	}
 
 	@Nullable
-	public CompoundTag getOutputTag(RandomSource random, @Nullable CompoundTag nbt) {
-		return this.blockEntityModifier.apply(random, nbt);
+	public CompoundTag getOutputTag(RandomSource random, @Nullable CompoundTag existingTag) {
+		return this.blockEntityModifier.apply(random, existingTag);
 	}
 }

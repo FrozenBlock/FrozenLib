@@ -1,0 +1,9 @@
+{
+  "blocks": "#frozenlib:soul_fire_blocks",
+  "damage": 2.0,
+  "replaceable": true,
+  "spreads_from_ignite_enchantments": true,
+  "spreads_from_zombie": true,
+  "texture_0": "minecraft:soul_fire_0",
+  "texture_1": "minecraft:soul_fire_1"
+}

@@ -78,7 +78,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
-		FrozenLibRegistries.initRegistry();
+		FrozenLibRegistries.init();
 
 		// QUILT INIT
 

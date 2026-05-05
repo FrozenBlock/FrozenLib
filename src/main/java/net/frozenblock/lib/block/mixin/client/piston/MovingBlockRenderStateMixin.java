@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.mixin.client.piston;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.block.client.impl.state.MovingBlockRenderStateInterface;
+import net.frozenblock.lib.block.client.impl.piston.state.MovingBlockRenderStateInterface;
 import net.minecraft.client.renderer.block.MovingBlockRenderState;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import org.spongepowered.asm.mixin.Mixin;

@@ -70,7 +70,7 @@ public class PlaceInAirBlockItem extends BlockItem {
 			if (!level.isInWorldBounds(pos) || !level.getWorldBorder().isWithinBounds(pos) || !level.getBlockState(pos).canBeReplaced()) break place;
 
 			final Direction reflectedFacingDirection = Direction.getApproximateNearest(lookAngle);
-			final BlockPlaceContext context = new BlockPlaceContext(player, hand, stack, new BlockHitResult(pos.getCenter(), reflectedFacingDirection, pos, false));
+			final BlockPlaceContext context = new BlockPlaceContext(player, hand, stack, new BlockHitResult(Vec3.atCenterOf(pos), reflectedFacingDirection, pos, false));
 			final InteractionResult result = this.useOn(context);
 			if (result.consumesAction()) return InteractionResult.SUCCESS;
 		}

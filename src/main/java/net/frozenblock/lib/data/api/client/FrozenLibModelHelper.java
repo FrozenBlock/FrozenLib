@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.datagen.api.client;
+package net.frozenblock.lib.data.api.client;
 
 import com.google.common.collect.ImmutableMap;
 import java.util.Map;

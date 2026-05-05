@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.datagen.api;
+package net.frozenblock.lib.data.api;
 
 import java.util.List;
 import net.minecraft.advancements.predicates.DataComponentMatchers;

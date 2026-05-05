@@ -1,11 +1,15 @@
 Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-- Added the `itemToPatternMappings` method to `DecoratedPotPatternRegistryEntrypoint`.
-  - Removed `SherdRegistry`.
-- Added the `frozenlib:scares_piglin` Entity Type tag.
-- Added the `frozenlib:blazes` Entity Type tag.
-- Added the `frozenlib:hoglins` Entity Type tag.
-- Added the `frozenlib:ghost_like` Entity Type tag.
-- Fixed a critical issue that prevented DataFixing from working as intended.
-- Cleaned up the implementation of multiple DataFixer helpers.
+- Added Fire Types.
+  - Fire Types control the amount of damage an entity will take and the textures to use while on fire.
+  - A data-driven registry is used to create Fire Types:
+    - `blocks`: An ID, a list of IDs, or a tag of Blocks that correspond to the Fire Type. (e.g., Fire and Campfire)
+    - `damage`: The amount of damage the Fire Type will inflict.
+    - `spreads_from_zombie`: Whether the Fire Type can be spread from Zombie attacks.
+    - `spreads_from_ignite_enchantments`: Whether the Fire Type can be spread from Enchantments that ignite entities.
+    - `replaceable`: Whether this Fire Type can be overriden by another upon contact.
+    - `texture_0`: The first Fire overlay texture.
+    - `texture_1`: The second Fire overlay texture, also used in first-person view.
+- Added the `frozenlib:default_fire_blocks` Block Tag, containing the Fire and Campfire blocks by default.
+- Added the `frozenlib:soul_fire_blocks` Block Tag, which is empty by default.

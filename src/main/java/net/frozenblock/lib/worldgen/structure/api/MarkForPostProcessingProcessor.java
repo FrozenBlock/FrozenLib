@@ -36,16 +36,16 @@ public record MarkForPostProcessingProcessor(RuleTest inputPredicate) implements
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(
 		LevelReader level,
-		BlockPos offset,
-		BlockPos pos,
-		StructureTemplate.StructureBlockInfo blockInfo,
-		StructureTemplate.StructureBlockInfo relativeBlockInfo,
+		BlockPos targetPosition,
+		BlockPos referencePos,
+		BlockPos templateRelativePos,
+		StructureTemplate.StructureBlockInfo processedBlockInfo,
 		StructurePlaceSettings settings
 	) {
-		final BlockPos currentPos = relativeBlockInfo.pos();
+		final BlockPos currentPos = processedBlockInfo.pos();
 		final RandomSource random = RandomSource.create(Mth.getSeed(currentPos));
-		if (this.inputPredicate.test(relativeBlockInfo.state(), random)) level.getChunk(currentPos).markPosForPostProcessing(currentPos);
-		return relativeBlockInfo;
+		if (this.inputPredicate.test(processedBlockInfo.state(), random)) level.getChunk(currentPos).markPosForPostProcessing(currentPos);
+		return processedBlockInfo;
 	}
 
 	@Override

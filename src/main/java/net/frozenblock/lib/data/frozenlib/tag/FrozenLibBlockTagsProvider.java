@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.datagen.frozenlib.tag;
+package net.frozenblock.lib.data.frozenlib.tag;
 
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.references.BlockIds;
 import net.minecraft.references.BlockItemIds;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
@@ -44,6 +45,12 @@ public final class FrozenLibBlockTagsProvider extends FabricTagsProvider.BlockTa
 
 		this.tag(FrozenLibBlockTags.BLOWING_CANNOT_PASS_THROUGH)
 			.addOptionalTag(ConventionalBlockTags.GLASS_BLOCKS);
+
+		this.tag(FrozenLibBlockTags.DEFAULT_FIRE_BLOCKS)
+			.add(BlockIds.FIRE)
+			.add(BlockItemIds.CAMPFIRE.block());
+
+		this.tag(FrozenLibBlockTags.SOUL_FIRE_BLOCKS);
 	}
 
 }

@@ -9,6 +9,16 @@
   "mixins": [
     "beacon.BeaconBlockEntityMixin",
     "dripstone.PointedDripstoneBlockMixin",
+    "fire.AbstractArrowMixin",
+    "fire.BaseFireBlockMixin",
+    "fire.CampfireBlockMixin",
+    "fire.ConversionTypeMixin",
+    "fire.EntityMixin",
+    "fire.IgniteMixin",
+    "fire.LivingEntityMixin",
+    "fire.SmallFireballMixin",
+    "fire.WitherSkeletonMixin",
+    "fire.ZombieMixin",
     "friction.LivingEntityMixin",
     "piston.PistonBaseBlockMixin",
     "piston.PistonMovingBlockEntityMixin",
@@ -18,6 +28,9 @@
     "tick.BlockStateBaseMixin"
   ],
   "client": [
+    "client.fire.EntityRendererMixin",
+    "client.fire.FlameFeatureRendererMixin",
+    "client.fire.ScreenEffectRendererMixin",
     "client.piston.MovingBlockRenderStateMixin",
     "client.piston.PistonHeadRendererMixin",
     "tick.client.ClientLevelMixin"

@@ -27,7 +27,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
 import java.util.Optional;
-import net.frozenblock.lib.block.impl.PushableBlockEntityUtil;
+import net.frozenblock.lib.block.impl.piston.PushableBlockEntityUtil;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

@@ -25,7 +25,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
 import net.fabricmc.fabric.api.datagen.v1.provider.SimpleFabricLootTableSubProvider;
-import net.frozenblock.lib.datagen.api.FrozenBiomeTagProvider;
+import net.frozenblock.lib.data.api.FrozenBiomeTagProvider;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.core.HolderLookup;

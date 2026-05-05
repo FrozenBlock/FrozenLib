@@ -24,7 +24,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -43,25 +42,21 @@ public class WeightedRuleProcessor implements StructureProcessor {
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(
 		LevelReader level,
-		BlockPos pos,
-		BlockPos pivot,
-		StructureTemplate.StructureBlockInfo localBlockInfo,
-		StructureTemplate.StructureBlockInfo absoluteBlockInfo,
-		StructurePlaceSettings placementData
+		BlockPos targetPosition,
+		BlockPos referencePos,
+		BlockPos templateRelativePos,
+		StructureTemplate.StructureBlockInfo processedBlockInfo,
+		StructurePlaceSettings settings
 	) {
-		final BlockPos posInfo = absoluteBlockInfo.pos();
-		final RandomSource source = RandomSource.create(Mth.getSeed(posInfo));
-		final BlockState state = level.getBlockState(posInfo);
-		final BlockState inputState = absoluteBlockInfo.state();
+		final RandomSource random = RandomSource.create(Mth.getSeed(processedBlockInfo.pos()));
 
-		for (WeightedProcessorRule processorRule : this.rules) {
-			if (!processorRule.test(inputState, state, localBlockInfo.pos(), absoluteBlockInfo.pos(), pivot, source)) continue;
-			return new StructureTemplate.StructureBlockInfo(
-				absoluteBlockInfo.pos(), processorRule.getOutputState(source), absoluteBlockInfo.nbt()
-			);
+		for (WeightedProcessorRule rule : this.rules) {
+			if (rule.test(level, processedBlockInfo.state(), templateRelativePos, processedBlockInfo.pos(), referencePos, random)) {
+				return new StructureTemplate.StructureBlockInfo(processedBlockInfo.pos(), rule.getOutputState(random), processedBlockInfo.nbt());
+			}
 		}
 
-		return absoluteBlockInfo;
+		return processedBlockInfo;
 	}
 
 	@Override

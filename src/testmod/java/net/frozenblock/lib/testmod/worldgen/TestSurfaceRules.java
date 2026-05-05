@@ -33,13 +33,13 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 	SurfaceRuleEvents.GenericSurfaceRuleCallback {
     @Override
     public void addOverworldSurfaceRules(HolderLookup<Biome> biomes, List<SurfaceRules.RuleSource> context) {
-        SurfaceRules.ConditionSource greenNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.05, 0.1);
-        SurfaceRules.ConditionSource orangeNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.1, 0.15);
-        SurfaceRules.ConditionSource whiteNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.15, 0.20);
-        SurfaceRules.ConditionSource redNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.20, 0.25);
-        SurfaceRules.ConditionSource cyanNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.25, 0.30);
-		SurfaceRules.ConditionSource purpleNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.30, 0.35);
-		SurfaceRules.ConditionSource waterNoise = SurfaceRules.noiseCondition(Noises.CALCITE, 0.35, 0.40);
+        SurfaceRules.ConditionSource greenNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.05, 0.1);
+        SurfaceRules.ConditionSource orangeNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.1, 0.15);
+        SurfaceRules.ConditionSource whiteNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.15, 0.20);
+        SurfaceRules.ConditionSource redNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.20, 0.25);
+        SurfaceRules.ConditionSource cyanNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.25, 0.30);
+		SurfaceRules.ConditionSource purpleNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.30, 0.35);
+		SurfaceRules.ConditionSource waterNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.35, 0.40);
 
         SurfaceRules.RuleSource greenConcrete = SurfaceRules.state(Blocks.CONCRETE.green().defaultBlockState());
         SurfaceRules.RuleSource orangeConcrete = SurfaceRules.state(Blocks.CONCRETE.orange().defaultBlockState());
