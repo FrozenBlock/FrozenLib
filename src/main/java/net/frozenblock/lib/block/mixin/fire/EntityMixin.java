@@ -21,19 +21,22 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.Optional;
 import net.frozenblock.lib.block.api.fire.FireEvents;
-import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public class EntityMixin {
+public abstract class EntityMixin {
+
+	@Shadow
+	protected abstract boolean getSharedFlag(int flag);
 
 	@Inject(
 		method = "lavaIgnite",
@@ -81,11 +84,6 @@ public class EntityMixin {
 	public void frozenLib$setSharedFlagOnFire(Entity instance, int flag, boolean value, Operation<Void> original) {
 		if (!instance.level().isClientSide() && !value) instance.removeAttached(FireData.ATTACHMENT);
 		original.call(instance, flag, value);
-		if (value) {
-			FireEvents.ON_ENTITY_FIRE_START.invoker().onEntityFireStart(instance, FireTypes.getFromEntityOrDefault(instance));
-		} else {
-			FireEvents.ON_ENTITY_FIRE_END.invoker().onEntityFireEnd(instance);
-		}
 	}
 
 	@Inject(method = "clearFire", at = @At("HEAD"))

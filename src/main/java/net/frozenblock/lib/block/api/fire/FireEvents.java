@@ -70,32 +70,12 @@ public class FireEvents {
 	);
 
 	/**
-	 * The event that is triggered after an {@link Entity} is first caught on fire.
-	 */
-	public static final Event<EntityFireStart> ON_ENTITY_FIRE_START = FrozenEvents.createEnvironmentEvent(
-		EntityFireStart.class,
-		(callbacks) -> (entity, fireType) -> {
-			for (var callback : callbacks) callback.onEntityFireStart(entity, fireType);
-		}
-	);
-
-	/**
 	 * The event that is triggered when an {@link Entity} is burnt from fire lingering on them.
 	 */
 	public static final Event<EntityBurnTick> ON_ENTITY_BURN_TICK = FrozenEvents.createEnvironmentEvent(
 		EntityBurnTick.class,
 		(callbacks) -> (entity, fireType) -> {
 			for (var callback : callbacks) callback.onEntityBurnTick(entity, fireType);
-		}
-	);
-
-	/**
-	 * The event that is triggered after an {@link Entity} is first no longer on fire.
-	 */
-	public static final Event<EntityFireEnd> ON_ENTITY_FIRE_END = FrozenEvents.createEnvironmentEvent(
-		EntityFireEnd.class,
-		(callbacks) -> (entity) -> {
-			for (var callback : callbacks) callback.onEntityFireEnd(entity);
 		}
 	);
 
@@ -142,19 +122,6 @@ public class FireEvents {
 	}
 
 	/**
-	 * A functional interface representing an entity caught on fire event.
-	 */
-	@FunctionalInterface
-	public interface EntityFireStart extends CommonEventEntrypoint {
-		/**
-		 * Runs when an {@link Entity} is first caught on fire.
-		 * @param entity the {@link Entity} on fire
-		 * @param fireType the {@link FireType}
-		 */
-		void onEntityFireStart(Entity entity, Holder<FireType> fireType);
-	}
-
-	/**
 	 * A functional interface representing an entity burn tick event.
 	 */
 	@FunctionalInterface
@@ -165,18 +132,6 @@ public class FireEvents {
 		 * @param fireType the {@link FireType}
 		 */
 		void onEntityBurnTick(Entity entity, Holder<FireType> fireType);
-	}
-
-	/**
-	 * A functional interface representing an entity fire end event.
-	 */
-	@FunctionalInterface
-	public interface EntityFireEnd extends CommonEventEntrypoint {
-		/**
-		 * Runs when an {@link Entity} is first no longer on fire.
-		 * @param entity the {@link Entity}
-		 */
-		void onEntityFireEnd(Entity entity);
 	}
 
 	/**
