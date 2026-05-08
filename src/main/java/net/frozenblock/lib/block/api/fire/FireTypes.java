@@ -19,6 +19,7 @@ package net.frozenblock.lib.block.api.fire;
 
 import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
@@ -31,7 +32,9 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
+import org.jetbrains.annotations.Nullable;
 
 public class FireTypes {
 	public static final ResourceKey<FireType> FIRE = createKey(FrozenLibConstants.id("fire"));
@@ -42,12 +45,28 @@ public class FireTypes {
 		return registryAccess.lookupOrThrow(FrozenLibRegistries.FIRE_TYPE).getOrThrow(id);
 	}
 
-	public static Optional<Holder<FireType>> getTypeForBlock(RegistryAccess registryAccess, Block block) {
+	public static Optional<ResourceKey<FireType>> getTypeForBlock(RegistryAccess registryAccess, Block block) {
 		final Registry<FireType> registry = registryAccess.lookupOrThrow(FrozenLibRegistries.FIRE_TYPE);
 		for (FireType type : registry) {
-			if (type.blocks().contains(block.builtInRegistryHolder())) return Optional.of(registry.wrapAsHolder(type));
+			if (type.blocks().contains(block.builtInRegistryHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
 		}
 		return Optional.empty();
+	}
+
+	public static Optional<ResourceKey<FireType>> getTypeFromEntity(Entity entity) {
+		final FireData fireData = entity.getAttached(FireData.ATTACHMENT);
+		if (fireData != null) return fireData.type().unwrapKey();
+		return Optional.empty();
+	}
+
+	public static Holder<FireType> getFromEntityOrDefault(Entity entity) {
+		return getFromDataOrDefault(entity.registryAccess(), entity.getAttached(FireData.ATTACHMENT));
+	}
+
+	public static Holder<FireType> getFromDataOrDefault(RegistryAccess registryAccess, @Nullable FireData data) {
+		return data == null
+			? registryAccess.lookupOrThrow(FrozenLibRegistries.FIRE_TYPE).getOrThrow(DEFAULT)
+			: data.type();
 	}
 
 	public static ResourceKey<FireType> createKey(Identifier id) {

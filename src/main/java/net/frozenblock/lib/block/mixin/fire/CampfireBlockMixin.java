@@ -18,11 +18,11 @@
 package net.frozenblock.lib.block.mixin.fire;
 
 import java.util.Optional;
-import net.frozenblock.lib.block.api.fire.FireTypes;
+import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.InsideBlockEffectApplier;
 import net.minecraft.world.level.Level;
@@ -44,9 +44,12 @@ public class CampfireBlockMixin {
 		)
 	)
 	public void frozenLib$setFireType(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise, CallbackInfo info) {
-		final Optional<Holder<FireType>> fireType = FireTypes.getTypeForBlock(entity.registryAccess(), state.getBlock());
-		if (fireType.isEmpty()) return;
-
-		FireData.trySet(entity, fireType.get());
+		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(
+			entity,
+			Optional.of(CampfireBlock.class.cast(this)),
+			Optional.empty(),
+			Optional.empty()
+		);
+		FireData.trySet(entity, fireType);
 	}
 }

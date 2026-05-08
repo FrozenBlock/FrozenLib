@@ -207,6 +207,9 @@ repositories {
     maven("https://maven.frozenblock.net/release") {
         name = "FrozenBlock"
     }
+    maven("https://maven.lunade.net/release") {
+        name = "FrozenBlock - Lunade Fallback"
+    }
 
     flatDir {
         dirs("libs")

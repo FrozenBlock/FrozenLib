@@ -17,10 +17,13 @@
 
 package net.frozenblock.lib.block.mixin.fire;
 
+import java.util.Optional;
+import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.block.impl.fire.FireType;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.item.enchantment.effects.Ignite;
 import net.minecraft.world.phys.Vec3;
@@ -40,12 +43,16 @@ public class IgniteMixin {
 		)
 	)
 	public void frozenLib$setFireType(ServerLevel serverLevel, int enchantmentLevel, EnchantedItemInUse item, Entity entity, Vec3 position, CallbackInfo info) {
-		final LivingEntity owner = item.owner();
-		if (owner == null) return;
+		boolean includeOwner = false;
+		final FireData fireData = item.owner() != null ? item.owner().getAttached(FireData.ATTACHMENT) : null;
+		if (fireData != null && fireData.type().value().spreadsFromIgniteEnchantments()) includeOwner = true;
 
-		final FireData fireData = owner.getAttached(FireData.ATTACHMENT);
-		if (fireData == null || !fireData.type().value().spreadsFromIgniteEnchantments()) return;
-
-		FireData.trySet(entity, fireData.type());
+		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(
+			entity,
+			Optional.empty(),
+			Optional.ofNullable(includeOwner ? item.owner() : null),
+			Optional.of(item.itemStack())
+		);
+		FireData.trySet(entity, fireType);
 	}
 }

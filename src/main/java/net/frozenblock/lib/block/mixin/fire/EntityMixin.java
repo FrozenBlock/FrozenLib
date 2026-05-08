@@ -19,8 +19,14 @@ package net.frozenblock.lib.block.mixin.fire;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import java.util.Optional;
+import net.frozenblock.lib.block.api.fire.FireEvents;
+import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.block.impl.fire.FireType;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.block.Blocks;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,8 +44,13 @@ public class EntityMixin {
 	)
 	public void frozenLib$lavaIgnite(CallbackInfo info) {
 		final Entity entity = Entity.class.cast(this);
-		if (FireData.hasPermanentFireData(entity)) return;
-		entity.removeAttached(FireData.ATTACHMENT);
+		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(
+			entity,
+			Optional.of(Blocks.LAVA),
+			Optional.empty(),
+			Optional.empty()
+		);
+		FireData.trySet(entity, fireType);
 	}
 
 	@Inject(
@@ -51,8 +62,13 @@ public class EntityMixin {
 	)
 	public void frozenLib$thunderHit(CallbackInfo info) {
 		final Entity entity = Entity.class.cast(this);
-		if (FireData.hasPermanentFireData(entity)) return;
-		entity.removeAttached(FireData.ATTACHMENT);
+		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(
+			entity,
+			Optional.empty(),
+			Optional.empty(),
+			Optional.empty()
+		);
+		FireData.trySet(entity, fireType);
 	}
 
 	@WrapOperation(
@@ -63,14 +79,19 @@ public class EntityMixin {
 		)
 	)
 	public void frozenLib$setSharedFlagOnFire(Entity instance, int flag, boolean value, Operation<Void> original) {
-		if (!instance.level().isClientSide() && !value && !FireData.hasPermanentFireData(instance)) instance.removeAttached(FireData.ATTACHMENT);
+		if (!instance.level().isClientSide() && !value) instance.removeAttached(FireData.ATTACHMENT);
 		original.call(instance, flag, value);
+		if (value) {
+			FireEvents.ON_ENTITY_FIRE_START.invoker().onEntityFireStart(instance, FireTypes.getFromEntityOrDefault(instance));
+		} else {
+			FireEvents.ON_ENTITY_FIRE_END.invoker().onEntityFireEnd(instance);
+		}
 	}
 
 	@Inject(method = "clearFire", at = @At("HEAD"))
 	public void frozenLib$clearFire(CallbackInfo info) {
 		final Entity entity = Entity.class.cast(this);
-		if (entity.level().isClientSide() || FireData.hasPermanentFireData(entity)) return;
+		if (entity.level().isClientSide()) return;
 		entity.removeAttached(FireData.ATTACHMENT);
 	}
 

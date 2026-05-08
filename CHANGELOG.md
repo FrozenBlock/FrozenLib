@@ -13,3 +13,19 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `texture_1`: The second Fire overlay texture, also used in first-person view.
 - Added the `frozenlib:default_fire_blocks` Block Tag, containing the Fire and Campfire blocks by default.
 - Added the `frozenlib:soul_fire_blocks` Block Tag, which is empty by default.
+- Removed the `permanent` field from `FireData`.
+- Added the `FireEvents` class, containing the following Events:
+  - `SELECT_FIRE_TYPE`
+    - Is triggered when an Entity is catching on fire and the FireType is being selected.
+    - Is used to modify the FireType to be set.
+  - `AFTER_FIRE_TYPE_SET`
+    - Is triggered after the FireType is set on an Entity.
+  - `ON_ENTITY_FIRE_START`
+    - Is triggered after an Entity catches on fire.
+  - `ON_ENTITY_BURN_TICK`
+    - Is triggered each time an Entity is burnt from a fire lingering on them.
+  - `ON_ENTITY_FIRE_END`
+    - Is triggered after an Entity is no longer on fire.
+  - `SELECT_FIRE_BLOCK_STATE`
+    - Is triggered when a Fire block is selecting which BlockState to place as.
+    - Is used to modify the BlockState to be set.

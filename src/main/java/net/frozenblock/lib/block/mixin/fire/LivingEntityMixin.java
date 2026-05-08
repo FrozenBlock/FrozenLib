@@ -19,6 +19,8 @@ package net.frozenblock.lib.block.mixin.fire;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.ref.LocalFloatRef;
+import net.frozenblock.lib.block.api.fire.FireEvents;
+import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
@@ -33,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class LivingEntityMixin {
 
 	@Inject(method = "hurtServer", at = @At("HEAD"))
-	public void frozenLib$modifyFireDamage(
+	public void frozenLib$modifyFireDamageAndTriggerEvent(
 		ServerLevel level, DamageSource source, float damage, CallbackInfoReturnable<Boolean> info,
 		@Local(argsOnly = true) LocalFloatRef damageRef
 	) {
@@ -44,5 +46,6 @@ public class LivingEntityMixin {
 			? fireData.type().value().damage()
 			: damage;
 		damageRef.set(newDamage);
+		FireEvents.ON_ENTITY_BURN_TICK.invoker().onEntityBurnTick(LivingEntity.class.cast(this), FireTypes.getFromDataOrDefault(level.registryAccess(), fireData));
 	}
 }
