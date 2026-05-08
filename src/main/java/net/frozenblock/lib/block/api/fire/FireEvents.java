@@ -102,7 +102,7 @@ public class FireEvents {
 	/**
 	 * The event that is triggered when {@link BaseFireBlock#getState(BlockGetter, BlockPos)} is called.
 	 * <p>
-	 * This event is used to alter the {@link BlockState} that gets placed (i.e., Soul & Copper Fire.)
+	 * This event is used to alter the {@link BlockState} that gets placed (i.e., Soul and Copper Fire.)
 	 */
 	public static final Event<SelectFireBlockState> SELECT_FIRE_BLOCK_STATE = FrozenEvents.createEnvironmentEvent(
 		SelectFireBlockState.class,

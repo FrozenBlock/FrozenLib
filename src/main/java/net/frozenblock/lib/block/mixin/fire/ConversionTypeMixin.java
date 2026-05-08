@@ -33,6 +33,6 @@ public class ConversionTypeMixin {
 	private static void frozenLib$setFireTypeOnConversion(Mob from, Mob to, ConversionParams params, CallbackInfo info) {
 		final FireData fireData = from.getAttached(FireData.ATTACHMENT);
 		if (fireData == null) return;
-		to.setAttached(FireData.ATTACHMENT, new FireData(fireData.type(), fireData.permanent()));
+		to.setAttached(FireData.ATTACHMENT, new FireData(fireData.type()));
 	}
 }

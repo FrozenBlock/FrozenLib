@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.item.mixin.sherd;
 
+import java.util.function.BiConsumer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.item.impl.sherd.DecoratedPotPatternRegistryEntrypoint;
 import net.minecraft.core.Registry;
@@ -29,7 +30,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import java.util.function.BiConsumer;
 
 @Mixin(DecoratedPotPatterns.class)
 public class DecoratedPotPatternsMixin {

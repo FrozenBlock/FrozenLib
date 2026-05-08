@@ -27,14 +27,13 @@ import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 
 public record FireData(Holder<FireType> type) {
 	public static final Codec<FireData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		FireType.CODEC.fieldOf("fire_type").forGetter(FireData::type),
+		FireType.CODEC.fieldOf("fire_type").forGetter(FireData::type)
 	).apply(instance, FireData::new));
 	public static final StreamCodec<RegistryFriendlyByteBuf, FireData> STREAM_CODEC = StreamCodec.composite(
 		FireType.STREAM_CODEC, FireData::type,

@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.block.mixin.fire;
 
-import java.util.Optional;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import java.util.Optional;
 import net.frozenblock.lib.block.api.fire.FireEvents;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;

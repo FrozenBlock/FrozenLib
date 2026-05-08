@@ -17,12 +17,12 @@
 
 package net.frozenblock.lib.item.impl.sherd;
 
+import java.util.function.BiConsumer;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.entity.DecoratedPotPattern;
-import java.util.function.BiConsumer;
 
 public interface DecoratedPotPatternRegistryEntrypoint {
 
