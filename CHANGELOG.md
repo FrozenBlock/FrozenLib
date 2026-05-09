@@ -13,8 +13,15 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `SELECT_FIRE_BLOCK_STATE`
     - Is triggered when a Fire block is selecting which BlockState to place as.
     - Is used to modify the BlockState to be set.
-- Added Clip Groups!
+- Added Clip Groups.
   - Clip Groups define a list of blocks that crosshair clipping can pass through, while inside one of their blocks.
     - For example, while inside Wilder Wild's Mesoglea, Mesoglea blocks are no longer selected and you can attack entities and place/break blocks as normal.
   - Added the `frozenlib:clip_group` dynamic registry.
     - Each Clip Group simply contains a block's ID, a list of block IDs, or a Block Tag.
+- Added the `WaterLikeBlock` interface.
+  - Is used to create blocks that have water-like properties, such as Wilder Wild's Mesoglea.
+  - Can optionally support Bubble Columns.
+  - Provides different particles and a fog color to use in place of Water's.
+  - Added the `frozenlib:water_like_type` dynamic registry.
+    - Provides a block's ID, a list of block IDs, or a Block Tag that list the blocks within a specific Water-Like Type.
+    - Provies swimming, splashing, enter, exit, and ambient loop sounds to use for the Water-Like Type.

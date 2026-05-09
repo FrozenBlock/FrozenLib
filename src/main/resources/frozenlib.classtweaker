@@ -117,6 +117,8 @@ transitive-accessible method net/minecraft/world/entity/EntityTypes chestRaftFac
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/screenshake/impl/EntityScreenShakeInterface
 transitive-inject-interface net/minecraft/client/renderer/entity/state/EntityRenderState net/frozenblock/lib/spotting_icons/impl/client/EntityRenderStateWithIcon
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/block/impl/clipgroup/ClipGroupInterface
+transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/block/impl/waterlike/InWaterLikeInterface
+transitive-inject-interface net/minecraft/world/entity/player/Player net/frozenblock/lib/block/impl/waterlike/PlayerInWaterLikeInterface
 
 # Entity Models
 transitive-extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
@@ -173,6 +175,7 @@ transitive-accessible method net/minecraft/world/level/block/Blocks wallVariant 
 transitive-accessible method net/minecraft/world/level/block/Blocks register (Lnet/minecraft/references/BlockItemId;Ljava/util/function/Function;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;
 transitive-accessible method net/minecraft/world/level/block/Blocks register (Lnet/minecraft/references/BlockItemId;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;
 transitive-accessible field net/minecraft/world/level/ClipContext collisionContext Lnet/minecraft/world/phys/shapes/CollisionContext;
+transitive-accessible field net/minecraft/world/level/block/BubbleColumnBlock CHECK_PERIOD I
 
 # Built-In Block Models
 transitive-accessible method net/minecraft/client/renderer/block/BuiltInBlockModels createAir (Lnet/minecraft/client/renderer/block/BuiltInBlockModels$Builder;Lnet/minecraft/world/level/block/Block;)V

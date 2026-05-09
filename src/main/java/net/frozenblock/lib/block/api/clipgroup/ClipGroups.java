@@ -32,7 +32,7 @@ public final class ClipGroups {
 	public static List<ClipGroup> getAll(RegistryAccess registryAccess) {
 		return registryAccess.lookupOrThrow(FrozenLibRegistries.CLIP_GROUP).stream().toList();
 	}
-	
+
 	public static ResourceKey<ClipGroup> createKey(Identifier id) {
 		return ResourceKey.create(FrozenLibRegistries.CLIP_GROUP, id);
 	}
