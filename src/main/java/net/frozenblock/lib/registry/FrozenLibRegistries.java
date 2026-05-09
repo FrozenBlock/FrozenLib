@@ -23,6 +23,7 @@ import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.block.impl.clipgroup.ClipGroup;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.integration.api.ModIntegration;
@@ -76,9 +77,11 @@ public class FrozenLibRegistries {
 
 	// DYNAMIC REGISTRIES
 	public static final ResourceKey<Registry<FireType>> FIRE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("fire_type"));
+	public static final ResourceKey<Registry<ClipGroup>> CLIP_GROUP = ResourceKey.createRegistryKey(FrozenLibConstants.id("clip_group"));
 
     public static void init() {
 		DynamicRegistries.registerSynced(FIRE_TYPE, FireType.DIRECT_CODEC);
+		DynamicRegistries.registerSynced(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
 		FireData.init();
     }
 

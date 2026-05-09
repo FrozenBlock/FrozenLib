@@ -33,7 +33,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public class FireEvents {
+public final class FireEvents {
 	/**
 	 * The event that is triggered when an {@link Entity} is catching on fire and the {@link FireType} is being selected.
 	 */

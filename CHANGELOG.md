@@ -1,18 +1,6 @@
 Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
-- Added Fire Types.
-  - Fire Types control the amount of damage an entity will take and the textures to use while on fire.
-  - A data-driven registry is used to create Fire Types:
-    - `blocks`: An ID, a list of IDs, or a tag of Blocks that correspond to the Fire Type. (e.g., Fire and Campfire)
-    - `damage`: The amount of damage the Fire Type will inflict.
-    - `spreads_from_zombie`: Whether the Fire Type can be spread from Zombie attacks.
-    - `spreads_from_ignite_enchantments`: Whether the Fire Type can be spread from Enchantments that ignite entities.
-    - `replaceable`: Whether this Fire Type can be overriden by another upon contact.
-    - `texture_0`: The first Fire overlay texture.
-    - `texture_1`: The second Fire overlay texture, also used in first-person view.
-- Added the `frozenlib:default_fire_blocks` Block Tag, containing the Fire and Campfire blocks by default.
-- Added the `frozenlib:soul_fire_blocks` Block Tag, which is empty by default.
 - Removed the `permanent` field from `FireData`.
 - Added the `FireEvents` class, containing the following Events:
   - `SELECT_FIRE_TYPE`
@@ -25,3 +13,8 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `SELECT_FIRE_BLOCK_STATE`
     - Is triggered when a Fire block is selecting which BlockState to place as.
     - Is used to modify the BlockState to be set.
+- Added Clip Groups!
+  - Clip Groups define a list of blocks that crosshair clipping can pass through, while inside one of their blocks.
+    - For example, while inside Wilder Wild's Mesoglea, Mesoglea blocks are no longer selected and you can attack entities and place/break blocks as normal.
+  - Added the `frozenlib:clip_group` dynamic registry.
+    - Each Clip Group simply contains a block's ID, a list of block IDs, or a Block Tag.

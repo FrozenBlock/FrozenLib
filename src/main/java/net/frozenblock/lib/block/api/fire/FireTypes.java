@@ -36,7 +36,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
-public class FireTypes {
+public final class FireTypes {
 	public static final ResourceKey<FireType> FIRE = createKey(FrozenLibConstants.id("fire"));
 	public static final ResourceKey<FireType> SOUL_FIRE = createKey(FrozenLibConstants.id("soul_fire"));
 	public static final ResourceKey<FireType> DEFAULT = FIRE;

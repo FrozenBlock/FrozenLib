@@ -103,6 +103,9 @@
         "library",
         "frozenblock"
       ]
+    },
+    "lithium:options": {
+      "mixin.world.raycast": false
     }
   }
 }

@@ -8,6 +8,8 @@
   },
   "mixins": [
     "beacon.BeaconBlockEntityMixin",
+    "clipgroup.BlockGetterMixin",
+    "clipgroup.EntityMixin",
     "dripstone.PointedDripstoneBlockMixin",
     "fire.AbstractArrowMixin",
     "fire.BaseFireBlockMixin",
