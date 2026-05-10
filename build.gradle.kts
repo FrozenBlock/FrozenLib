@@ -204,12 +204,14 @@ repositories {
     maven("https://maven.quiltmc.org/repository/release") {
         name = "Quilt"
     }
-    //maven("https://maven.frozenblock.net/release") {
-    //    name = "FrozenBlock"
-    //}
+    maven("https://maven.frozenblock.net/release") {
+        name = "FrozenBlock"
+    }
+    /*
     maven("https://maven.lunade.net/release") {
         name = "FrozenBlock - Lunade Fallback"
     }
+    */
 
     flatDir {
         dirs("libs")
