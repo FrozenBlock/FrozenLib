@@ -51,7 +51,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.LevelEvent;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.material.FluidState;
@@ -138,8 +137,8 @@ public interface WaterLikeBlock {
 	static boolean canOccupyAsBubbleColumn(BlockState occupyState) {
 		if (!supportsBubbleColumns(occupyState)) return false;
 		final FluidState occupyFluid = occupyState.getFluidState();
-		return occupyFluid.is(FluidTags.BUBBLE_COLUMN_CAN_OCCUPY)
-			&& occupyState.getBlock() instanceof LiquidBlock
+		return supportsBubbleColumns(occupyState)
+			&& occupyFluid.is(FluidTags.BUBBLE_COLUMN_CAN_OCCUPY)
 			&& occupyFluid.isSource()
 			&& occupyFluid.getAmount() >= FluidState.AMOUNT_FULL;
 	}
