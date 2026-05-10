@@ -144,7 +144,6 @@ public interface WaterLikeBlock {
 			&& occupyFluid.getAmount() >= FluidState.AMOUNT_FULL;
 	}
 
-	// TODO: mixin Entity.sendBubbleColumnParticles
 	default void tryEntityInsideAsBubbleColumn(BlockState state, Level level, BlockPos pos, Entity entity, InsideBlockEffectApplier effectApplier, boolean isPrecise) {
 		if (!isPrecise || !this.supportsBubbleColumns()) return;
 
@@ -198,7 +197,7 @@ public interface WaterLikeBlock {
 
 	boolean canWithinEntityTypesExitFromTop(BlockState state);
 
-	default VoxelShape getCollisionShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+	default VoxelShape getCollisionShapeForWaterLike(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
 		VoxelShape shape = Shapes.empty();
 		if (!(context instanceof EntityCollisionContext entityCollisionContext)) return shape;
 		if (entityCollisionContext.getEntity() == null) return shape;
@@ -208,9 +207,9 @@ public interface WaterLikeBlock {
 		if (entity == null || typesThatStayWithin.isEmpty() || !entity.is(typesThatStayWithin.get()) || entity.isPassenger() || entity.isDescending()) return shape;
 		if (entity instanceof Mob mob && mob.isLeashed()) return shape;
 
-		if ((entity.isInWater() || (entity.getInBlockState().is(this.myWaterLikeType(entity.registryAccess()).blocks()))) && this.canWithinEntityTypesExitFromTop(state)) {
+		if ((entity.isInWater() || (entity.getInBlockState().is(this.myWaterLikeType(entity.registryAccess()).blocks())))) {
 			for (Direction direction : Direction.values()) {
-				if (direction == Direction.UP || level.getFluidState(pos.relative(direction)).is(FluidTags.WATER)) continue;
+				if ((direction == Direction.UP && this.canWithinEntityTypesExitFromTop(state)) || level.getFluidState(pos.relative(direction)).is(FluidTags.WATER)) continue;
 				shape = Shapes.or(shape, FrozenShapes.makePlaneFromDirection(direction, ENTITY_WITHIN_COLLISION_FROM_SIDE));
 			}
 		}
@@ -218,11 +217,7 @@ public interface WaterLikeBlock {
 		return shape;
 	}
 
-	default VoxelShape getBlockSupportShape(BlockState state, BlockGetter level, BlockPos pos) {
-		return Shapes.block();
-	}
-
-	default BlockState tryGetStateForPlacementAsBubbleColumn(BlockPlaceContext context, BlockState defaultBlockState) {
+	default BlockState getPlacementStateForWaterLike(BlockPlaceContext context, BlockState defaultBlockState) {
 		final BlockState replacingState = context.getLevel().getBlockState(context.getClickedPos());
 		return defaultBlockState.trySetValue(
 			BUBBLE_COLUMN_DIRECTION,
@@ -232,7 +227,7 @@ public interface WaterLikeBlock {
 			);
 	}
 
-	default void tryUpdateShape(
+	default void onUpdateShapeForWaterLike(
 		Block block,
 		BlockState state,
 		LevelReader level,
@@ -255,16 +250,24 @@ public interface WaterLikeBlock {
 		}
 	}
 
-	default void neighborChanged(Block block, BlockState state, Level level, BlockPos pos, Block neighborBlock, @Nullable Orientation orientation, boolean movedByPiston) {
+	default void neighborChangedForWaterLike(
+		Block block,
+		BlockState state,
+		Level level,
+		BlockPos pos,
+		Block neighborBlock,
+		@Nullable Orientation orientation,
+		boolean movedByPiston
+	) {
 		if (this.supportsBubbleColumns()) level.scheduleTick(pos, block, BubbleColumnBlock.CHECK_PERIOD);
 	}
 
-	default void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+	default void tickForWaterLike(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
 		if (!this.supportsBubbleColumns()) return;
 		updateAsBubbleColumn(level, pos, state, level.getBlockState(pos.below()));
 	}
 
-	default void tryAnimateTickAsBubbleColumn(BlockState state, Level level, BlockPos pos, RandomSource random) {
+	default void animateTickForWaterLike(BlockState state, Level level, BlockPos pos, RandomSource random) {
 		final Optional<Direction> optionalDragDirection = getDirectionAsBubbleColumn(state);
 		if (optionalDragDirection.isEmpty()) return;
 
@@ -321,7 +324,7 @@ public interface WaterLikeBlock {
 		}
 	}
 
-	default FluidState getFluidState(BlockState state) {
+	default FluidState getFluidStateForWaterLike() {
 		return Fluids.WATER.getSource(false);
 	}
 }

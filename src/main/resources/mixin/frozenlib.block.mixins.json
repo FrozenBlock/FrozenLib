@@ -38,7 +38,8 @@
     "waterlike.LevelMixin",
     "waterlike.LivingEntityMixin",
     "waterlike.MonsterMixin",
-    "waterlike.PlayerMixin"
+    "waterlike.PlayerMixin",
+    "waterlike.ServerPlayerGameModeMixin"
   ],
   "client": [
     "client.fire.EntityRendererMixin",
@@ -48,6 +49,7 @@
     "client.piston.PistonHeadRendererMixin",
     "client.waterlike.ClientLevelMixin",
     "client.waterlike.EntityRendererMixin",
+    "client.waterlike.MultiPlayerGameModeMixin",
     "client.waterlike.SuspendedParticleUnderwaterProviderMixin",
     "client.waterlike.fog.CameraMixin",
     "client.waterlike.fog.WaterFogEnvironmentMixin",
