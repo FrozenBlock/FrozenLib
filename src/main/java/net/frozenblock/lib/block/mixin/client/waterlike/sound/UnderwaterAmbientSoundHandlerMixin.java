@@ -44,7 +44,7 @@ public class UnderwaterAmbientSoundHandlerMixin {
 		)
 	)
 	public boolean frozenLib$stopAdditionsIfInWaterLike(boolean original) {
-		if (WaterLikeTypes.getRandomPlayerInside(this.player).isPresent()) return false;
+		if (WaterLikeTypes.getPlayerRandomInside(this.player).isPresent()) return false;
 		return original;
 	}
 

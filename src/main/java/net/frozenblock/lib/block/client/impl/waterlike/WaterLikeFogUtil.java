@@ -72,11 +72,11 @@ public final class WaterLikeFogUtil {
 		WaterLikeFogUtil.fogType = fogType;
 
 		if (level.getBlockState(pos).getBlock() instanceof WaterLikeBlock waterLikeBlock) {
-			final Vector3f waterLikeFogColor = ARGB.vector3fFromRGB24(waterLikeBlock.waterFogColor().rgba());
+			final Vector3f waterLikeColor = ARGB.vector3fFromRGB24(waterLikeBlock.waterLikeColor().rgba());
 			if (fogColor.equals(EMPTY_VEC)) {
-				prevFogColor = fogColor = waterLikeFogColor;
+				prevFogColor = fogColor = waterLikeColor;
 			} else {
-				fogColor = fogColor.add(waterLikeFogColor.sub(fogColor).mul(0.05F));
+				fogColor = fogColor.add(waterLikeColor.sub(fogColor).mul(0.05F));
 			}
 
 			if (newlyInWaterOverride || (WaterLikeFogUtil.fogType == FogType.WATER && prevFogType != FogType.WATER)) {

@@ -19,6 +19,9 @@ package net.frozenblock.lib.block.mixin.waterlike;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import it.unimi.dsi.fastutil.objects.Reference2BooleanArrayMap;
 import java.util.Map;
 import java.util.Optional;
@@ -26,11 +29,14 @@ import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeTypes;
 import net.frozenblock.lib.block.impl.waterlike.InWaterLikeInterface;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import org.objectweb.asm.Opcodes;
@@ -152,6 +158,40 @@ public abstract class EntityMixin implements InWaterLikeInterface {
 
 		this.frozenLib$replacementBubbleParticle = waterLike.bubbleParticle();
 		this.frozenLib$replacementSplashParticle = waterLike.splashParticle();
+	}
+
+	@WrapOperation(
+		method = "sendBubbleColumnParticles",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I",
+			ordinal = 0
+		)
+	)
+	private static int frozenLib$replaceBubbleColumnSplashParticles(
+		ServerLevel instance, ParticleOptions particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed, Operation<Integer> original,
+		@Local(argsOnly = true) Level level, @Local(argsOnly = true) BlockPos pos,
+		@Share("frozenLib$block") LocalRef<Block> block
+	) {
+		block.set(level.getBlockState(pos).getBlock());
+		if (block.get() instanceof WaterLikeBlock waterLikeBlock) particle = waterLikeBlock.splashParticle();
+		return original.call(instance, particle, x, y, z, count, xDist, yDist, zDist, speed);
+	}
+
+	@WrapOperation(
+		method = "sendBubbleColumnParticles",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I",
+			ordinal = 1
+		)
+	)
+	private static int frozenLib$replaceBubbleColumnBubbleParticles(
+		ServerLevel instance, ParticleOptions particle, double x, double y, double z, int count, double xDist, double yDist, double zDist, double speed, Operation<Integer> original,
+		@Share("frozenLib$block") LocalRef<Block> block
+	) {
+		if (block.get() instanceof WaterLikeBlock waterLikeBlock) particle = waterLikeBlock.bubbleParticle();
+		return original.call(instance, particle, x, y, z, count, xDist, yDist, zDist, speed);
 	}
 
 	@WrapOperation(

@@ -21,9 +21,12 @@ import java.util.Optional;
 import net.frozenblock.lib.block.api.shape.FrozenShapes;
 import net.frozenblock.lib.block.impl.waterlike.BubbleColumnDirection;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -65,9 +68,13 @@ public interface WaterLikeBlock {
 	float ENTITY_WITHIN_COLLISION_FROM_SIDE = 0.25F;
 	int AMBIENT_WHIRLPOOL_SOUND_CHANCE = 200;
 
-	WaterLikeType myWaterLikeType();
+	ResourceKey<WaterLikeType> myWaterLikeType();
 
-	ColorRGBA waterFogColor();
+	default WaterLikeType myWaterLikeType(RegistryAccess registryAccess) {
+		return registryAccess.lookupOrThrow(FrozenLibRegistries.WATER_LIKE_TYPE).getOrThrow(this.myWaterLikeType()).value();
+	}
+
+	ColorRGBA waterLikeColor();
 
 	float waterFogDistance();
 

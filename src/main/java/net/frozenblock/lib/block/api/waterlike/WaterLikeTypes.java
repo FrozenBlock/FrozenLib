@@ -47,12 +47,12 @@ public final class WaterLikeTypes {
 		return Util.getRandomSafe(getAllInside(entity), entity.getRandom());
 	}
 
-	public static List<WaterLikeType> getAllPlayerInside(Player player) {
+	public static List<WaterLikeType> getPlayerAllInside(Player player) {
 		return getAll(player.registryAccess()).stream().filter(player::frozenLib$wasPlayerInWaterLike).toList();
 	}
 
-	public static Optional<WaterLikeType> getRandomPlayerInside(Player player) {
-		return Util.getRandomSafe(getAllPlayerInside(player), player.getRandom());
+	public static Optional<WaterLikeType> getPlayerRandomInside(Player player) {
+		return Util.getRandomSafe(getPlayerAllInside(player), player.getRandom());
 	}
 
 	public static List<WaterLikeType> getAllTouching(Entity entity) {

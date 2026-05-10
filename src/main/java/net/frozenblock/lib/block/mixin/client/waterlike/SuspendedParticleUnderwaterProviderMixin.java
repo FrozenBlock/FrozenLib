@@ -48,10 +48,10 @@ public class SuspendedParticleUnderwaterProviderMixin {
 	) {
 		final BlockState state = level.getBlockState(BlockPos.containing(x, y, z));
 		if (state.getBlock() instanceof WaterLikeBlock waterLikeBlock) {
-			final int mesogleaColor = waterLikeBlock.waterFogColor().rgba();
-			r = ARGB.red(mesogleaColor) / 255F;
-			g = ARGB.green(mesogleaColor) / 255F;
-			b  = ARGB.blue(mesogleaColor) / 255F;
+			final int waterLikeColor = waterLikeBlock.waterLikeColor().rgba();
+			r = ARGB.red(waterLikeColor) / 255F;
+			g = ARGB.green(waterLikeColor) / 255F;
+			b  = ARGB.blue(waterLikeColor) / 255F;
 		}
 
 		original.call(instance, r, g, b);
