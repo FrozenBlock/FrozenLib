@@ -178,18 +178,22 @@ public interface WaterLikeBlock {
 
 	Optional<SoundEvent> evaporateSound();
 
-	default void tryEvaporateOnPlace(BlockState state, Level level, BlockPos pos, BlockState replacingState, boolean movedByPiston) {
-		if (!this.canEvaporateOnPlace() || !level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos)) return;
-		level.destroyBlock(pos, false);
-		level.levelEvent(LevelEvent.PARTICLES_WATER_EVAPORATING, pos, 0);
-		level.playSound(
-			null,
-			pos,
-			this.evaporateSound().orElse(SoundEvents.FIRE_EXTINGUISH),
-			SoundSource.BLOCKS,
-			1F,
-			(1F + level.getRandom().nextFloat() * 0.2F) * 0.7F
-		);
+	default void onPlaceForWaterLike(Block block, BlockState state, Level level, BlockPos pos, BlockState replacingState, boolean movedByPiston) {
+		if (this.canEvaporateOnPlace() && level.environmentAttributes().getValue(EnvironmentAttributes.WATER_EVAPORATES, pos)) {
+			level.destroyBlock(pos, false);
+			level.levelEvent(LevelEvent.PARTICLES_WATER_EVAPORATING, pos, 0);
+			level.playSound(
+				null,
+				pos,
+				this.evaporateSound().orElse(SoundEvents.FIRE_EXTINGUISH),
+				SoundSource.BLOCKS,
+				1F,
+				(1F + level.getRandom().nextFloat() * 0.2F) * 0.7F
+			);
+			return;
+		}
+
+		if (canOccupyAsBubbleColumn(state) && canBubbleColumnSurvive(level, pos)) level.scheduleTick(pos, block, BubbleColumnBlock.CHECK_PERIOD);
 	}
 
 	Optional<TagKey<EntityType<?>>> entityTypesThatStayWithinMe(BlockState state);
