@@ -27,7 +27,7 @@ public interface ClipGroupInterface {
 	default boolean frozenLib$wasClipInGroup(ClipGroup group) {
 		throw new AssertionError();
 	}
-	
+
 	default boolean frozenLib$wasClipInGroup(BlockState state) {
 		throw new AssertionError();
 	}
