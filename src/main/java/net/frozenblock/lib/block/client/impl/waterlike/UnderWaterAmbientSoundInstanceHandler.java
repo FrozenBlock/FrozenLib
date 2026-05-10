@@ -46,12 +46,15 @@ public final class UnderWaterAmbientSoundInstanceHandler {
 
 	public static SoundEngine.PlayResult tryPlaySoundForType(WaterLikeType type, LocalPlayer player, SoundManager soundManager) {
 		if (isPlayingSoundForType(type)) return SoundEngine.PlayResult.NOT_STARTED;
-		return soundManager.play(new WaterLikeAmbientSoundInstance(type, player));
+		final AbstractTickableSoundInstance sound = new WaterLikeAmbientSoundInstance(type, player);
+		WATER_LIKE_TYPE_SOUNDS.put(type, sound);
+		return soundManager.play(sound);
 	}
 
-	public static SoundEngine.PlayResult tryPlayVanillaSound(SoundInstance soundInstance, SoundManager soundManager) {
+	public static SoundEngine.PlayResult tryPlayVanillaSound(SoundInstance sound, SoundManager soundManager) {
 		if (isPlayingVanillaSound()) return SoundEngine.PlayResult.NOT_STARTED;
-		return soundManager.play(soundInstance);
+		if (sound instanceof AbstractTickableSoundInstance tickable) VANILLA_SOUNDS.add(tickable);
+		return soundManager.play(sound);
 	}
 
 	public static boolean isPlayingSoundForType(WaterLikeType type) {

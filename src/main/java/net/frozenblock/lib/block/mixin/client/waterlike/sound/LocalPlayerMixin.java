@@ -85,7 +85,7 @@ public class LocalPlayerMixin {
 			opcode = Opcodes.GETSTATIC
 		)
 	)
-	public SoundEvent frozenLib$replaceWaterEnterSoundWithWaterLIke(
+	public SoundEvent frozenLib$replaceWaterEnterSoundWithWaterLike(
 		SoundEvent original,
 		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<Map<WaterLikeType, Boolean>> isPlayerInWaterLikeStatuses
 	) {

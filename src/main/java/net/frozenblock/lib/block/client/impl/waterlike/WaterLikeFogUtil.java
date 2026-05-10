@@ -84,7 +84,7 @@ public final class WaterLikeFogUtil {
 				prevFogDistance = fogDistance = waterLikeBlock.waterFogDistance();
 			} else {
 				fogStrength += (1F - fogStrength) * 0.05F;
-				fogDistance += (waterLikeBlock.waterFogDistance() - fogStrength) * 0.05F;
+				fogDistance += (waterLikeBlock.waterFogDistance() - fogDistance) * 0.05F;
 			}
 		} else {
 			fogStrength += (0F - fogStrength) * 0.05F;
