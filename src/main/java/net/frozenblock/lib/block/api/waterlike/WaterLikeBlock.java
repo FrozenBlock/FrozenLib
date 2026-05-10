@@ -208,7 +208,7 @@ public interface WaterLikeBlock {
 		if (entity == null || typesThatStayWithin.isEmpty() || !entity.is(typesThatStayWithin.get()) || entity.isPassenger() || entity.isDescending()) return shape;
 		if (entity instanceof Mob mob && mob.isLeashed()) return shape;
 
-		if ((entity.isInWater() || (entity.getInBlockState().is(this.myWaterLikeType().blocks()))) && this.canWithinEntityTypesExitFromTop(state)) {
+		if ((entity.isInWater() || (entity.getInBlockState().is(this.myWaterLikeType(entity.registryAccess()).blocks()))) && this.canWithinEntityTypesExitFromTop(state)) {
 			for (Direction direction : Direction.values()) {
 				if (direction == Direction.UP || level.getFluidState(pos.relative(direction)).is(FluidTags.WATER)) continue;
 				shape = Shapes.or(shape, FrozenShapes.makePlaneFromDirection(direction, ENTITY_WITHIN_COLLISION_FROM_SIDE));
