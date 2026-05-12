@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.block.mixin.waterlike;
 
-import it.unimi.dsi.fastutil.objects.Reference2BooleanArrayMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeTypes;
 import net.frozenblock.lib.block.impl.waterlike.PlayerInWaterLikeInterface;
@@ -35,30 +35,30 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class PlayerMixin implements PlayerInWaterLikeInterface {
 
 	@Unique
-	private final Map<WaterLikeType, Boolean> frozenLib$playerInsideWaterLikeStatuses = new Reference2BooleanArrayMap<>();
+	private final List<WaterLikeType> frozenLib$playerWaterLikesInside = new ArrayList<>();
 
 	@Inject(method = "updateIsUnderwater", at = @At(value = "HEAD"))
 	public void frozenLib$updateIsInWaterLike(CallbackInfoReturnable<Boolean> info) {
-		this.frozenLib$playerInsideWaterLikeStatuses.clear();
-		this.frozenLib$playerInsideWaterLikeStatuses.putAll(Player.class.cast(this).frozenLib$inWaterLikeStatuses());
+		this.frozenLib$playerWaterLikesInside.clear();
+		this.frozenLib$playerWaterLikesInside.addAll(Player.class.cast(this).frozenLib$waterLikesInside());
 	}
 
 	@Unique
 	@Override
-	public void frozenLib$setPlayerInWaterLike(WaterLikeType type, boolean inside) {
-		this.frozenLib$playerInsideWaterLikeStatuses.put(type, inside);
+	public void frozenLib$addPlayerInWaterLike(WaterLikeType type) {
+		this.frozenLib$playerWaterLikesInside.add(type);
 	}
 
 	@Unique
 	@Override
 	public boolean frozenLib$wasPlayerInWaterLike(WaterLikeType type) {
-		return this.frozenLib$playerInsideWaterLikeStatuses.getOrDefault(type, false);
+		return this.frozenLib$playerWaterLikesInside.contains(type);
 	}
 
 	@Unique
 	@Override
-	public Map<WaterLikeType, Boolean> frozenLib$playerInWaterLikeStatuses() {
-		return this.frozenLib$playerInsideWaterLikeStatuses;
+	public List<WaterLikeType> frozenLib$playerWaterLikesInside() {
+		return this.frozenLib$playerWaterLikesInside;
 	}
 
 	@Inject(method = "getSwimSound", at = @At("HEAD"), cancellable = true)

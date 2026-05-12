@@ -49,8 +49,10 @@ public interface BlockGetterMixin {
 
 		final Entity entity = entityCollisionContext.getEntity();
 		final BlockState eyeState = this.getBlockState(BlockPos.containing(entity.getEyePosition()));
+
+		entity.frozenLib$resetClipGroups();
 		for (ClipGroup group : ClipGroups.getAll(entity.registryAccess())) {
-			entity.frozenLib$setClipInGroup(group, eyeState != null && group.contains(eyeState));
+			if (eyeState != null && group.contains(eyeState)) entity.frozenLib$addClipInGroup(group);
 		}
 	}
 

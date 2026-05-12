@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.block.impl.waterlike;
 
-import java.util.Map;
+import java.util.List;
 
 public interface PlayerInWaterLikeInterface {
-	default void frozenLib$setPlayerInWaterLike(WaterLikeType type, boolean inside) {
+	default void frozenLib$addPlayerInWaterLike(WaterLikeType type) {
 		throw new AssertionError();
 	}
 
@@ -28,7 +28,7 @@ public interface PlayerInWaterLikeInterface {
 		throw new AssertionError();
 	}
 
-	default Map<WaterLikeType, Boolean> frozenLib$playerInWaterLikeStatuses() {
+	default List<WaterLikeType> frozenLib$playerWaterLikesInside() {
 		throw new AssertionError();
 	}
 }

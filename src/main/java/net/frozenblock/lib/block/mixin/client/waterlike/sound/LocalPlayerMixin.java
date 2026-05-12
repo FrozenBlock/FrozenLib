@@ -24,7 +24,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
-import java.util.Map;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.client.impl.waterlike.UnderWaterAmbientSoundInstanceHandler;
@@ -56,9 +55,9 @@ public class LocalPlayerMixin {
 	@Inject(method = "updateIsUnderwater", at = @At("HEAD"))
 	public void frozenLib$setupWasInWaterLike(
 		CallbackInfoReturnable<Boolean> info,
-		@Share("frozenLib$wasPlayerInWaterLikeStatuses") LocalRef<Map<WaterLikeType, Boolean>> wasPlayerInWaterLikeStatuses
+		@Share("frozenLib$wasPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> wasPlayerInWaterLikeStatuses
 	) {
-		wasPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerInWaterLikeStatuses());
+		wasPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerWaterLikesInside());
 		UnderWaterAmbientSoundInstanceHandler.tick();
 	}
 
@@ -72,9 +71,9 @@ public class LocalPlayerMixin {
 	)
 	public void frozenLib$setupIsInWaterLike(
 		CallbackInfoReturnable<Boolean> info,
-		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<Map<WaterLikeType, Boolean>> isPlayerInWaterLikeStatuses
+		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> isPlayerInWaterLikeStatuses
 	) {
-		isPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerInWaterLikeStatuses());
+		isPlayerInWaterLikeStatuses.set(LocalPlayer.class.cast(this).frozenLib$playerWaterLikesInside());
 	}
 
 	@ModifyExpressionValue(
@@ -87,13 +86,10 @@ public class LocalPlayerMixin {
 	)
 	public SoundEvent frozenLib$replaceWaterEnterSoundWithWaterLike(
 		SoundEvent original,
-		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<Map<WaterLikeType, Boolean>> isPlayerInWaterLikeStatuses
+		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> isPlayerInWaterLikeStatuses
 	) {
 		if (isPlayerInWaterLikeStatuses != null && !isPlayerInWaterLikeStatuses.get().isEmpty()) {
-			final List<WaterLikeType> validTypes = isPlayerInWaterLikeStatuses.get().entrySet().stream()
-				.filter(entry -> entry.getValue() == true)
-				.map(Map.Entry::getKey)
-				.toList();
+			final List<WaterLikeType> validTypes = isPlayerInWaterLikeStatuses.get();
 			if (validTypes != null) return Util.getRandom(validTypes, LocalPlayer.class.cast(this).getRandom()).enterSound().value();
 		}
 		return original;
@@ -108,13 +104,10 @@ public class LocalPlayerMixin {
 	)
 	public SoundEngine.PlayResult frozenLib$replaceLoopSoundWithWaterLike(
 		SoundManager instance, SoundInstance sound, Operation<SoundEngine.PlayResult> original,
-		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<Map<WaterLikeType, Boolean>> isPlayerInWaterLikeStatuses
+		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> isPlayerInWaterLikeStatuses
 	) {
 		if (isPlayerInWaterLikeStatuses != null && !isPlayerInWaterLikeStatuses.get().isEmpty()) {
-			final List<WaterLikeType> validTypes = isPlayerInWaterLikeStatuses.get().entrySet().stream()
-				.filter(entry -> entry.getValue() == true)
-				.map(Map.Entry::getKey)
-				.toList();
+			final List<WaterLikeType> validTypes = isPlayerInWaterLikeStatuses.get();
 			if (!validTypes.isEmpty()) {
 				final WaterLikeType type = Util.getRandom(validTypes, LocalPlayer.class.cast(this).getRandom());
 				return UnderWaterAmbientSoundInstanceHandler.tryPlaySoundForType(type, LocalPlayer.class.cast(this), instance);
@@ -128,16 +121,13 @@ public class LocalPlayerMixin {
 	public void frozenLib$tryPlayAllUnderWaterLoopSounds(
 		CallbackInfoReturnable<Boolean> info,
 		@Local(name = "newIsUnderwater") boolean newIsUnderwater,
-		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<Map<WaterLikeType, Boolean>> isPlayerInWaterLikeStatuses
+		@Share("frozenLib$isPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> isPlayerInWaterLikeStatuses
 	) {
 		if (!newIsUnderwater) return;
 
 		boolean hasAnyWaterLikeTypes = false;
 		if (isPlayerInWaterLikeStatuses != null && !isPlayerInWaterLikeStatuses.get().isEmpty()) {
-			final List<WaterLikeType> validTypes = isPlayerInWaterLikeStatuses.get().entrySet().stream()
-				.filter(entry -> entry.getValue() == true)
-				.map(Map.Entry::getKey)
-				.toList();
+			final List<WaterLikeType> validTypes = isPlayerInWaterLikeStatuses.get();
 			for (WaterLikeType type : validTypes) {
 				hasAnyWaterLikeTypes = true;
 				UnderWaterAmbientSoundInstanceHandler.tryPlaySoundForType(type, LocalPlayer.class.cast(this), this.minecraft.getSoundManager());
@@ -162,13 +152,10 @@ public class LocalPlayerMixin {
 	)
 	public SoundEvent frozenLib$replaceWaterExitSoundWithWaterLike(
 		SoundEvent original,
-		@Share("frozenLib$wasPlayerInWaterLikeStatuses") LocalRef<Map<WaterLikeType, Boolean>> wasPlayerInWaterLikeStatuses
+		@Share("frozenLib$wasPlayerInWaterLikeStatuses") LocalRef<List<WaterLikeType>> wasPlayerInWaterLikeStatuses
 	) {
 		if (wasPlayerInWaterLikeStatuses != null && !wasPlayerInWaterLikeStatuses.get().isEmpty()) {
-			final List<WaterLikeType> validTypes = wasPlayerInWaterLikeStatuses.get().entrySet().stream()
-				.filter(entry -> entry.getValue() == true)
-				.map(Map.Entry::getKey)
-				.toList();
+			final List<WaterLikeType> validTypes = wasPlayerInWaterLikeStatuses.get();
 			if (validTypes != null) return Util.getRandom(validTypes, LocalPlayer.class.cast(this).getRandom()).exitSound().value();
 		}
 		return original;

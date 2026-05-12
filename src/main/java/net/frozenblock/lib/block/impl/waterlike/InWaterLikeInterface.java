@@ -17,12 +17,12 @@
 
 package net.frozenblock.lib.block.impl.waterlike;
 
+import java.util.List;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
 import org.jetbrains.annotations.Nullable;
-import java.util.Map;
 
 public interface InWaterLikeInterface {
-	default void frozenLib$setInWaterLike(WaterLikeType type, boolean inside) {
+	default void frozenLib$addInWaterLike(WaterLikeType type) {
 		throw new AssertionError();
 	}
 
@@ -34,11 +34,11 @@ public interface InWaterLikeInterface {
 		throw new AssertionError();
 	}
 
-	default Map<WaterLikeType, Boolean> frozenLib$inWaterLikeStatuses() {
+	default List<WaterLikeType> frozenLib$waterLikesInside() {
 		throw new AssertionError();
 	}
 
-	default void frozenLib$setTouchingWaterLike(WaterLikeType type, boolean touching) {
+	default void frozenLib$addTouchingWaterLike(WaterLikeType type) {
 		throw new AssertionError();
 	}
 
@@ -50,7 +50,7 @@ public interface InWaterLikeInterface {
 		throw new AssertionError();
 	}
 
-	default Map<WaterLikeType, Boolean> frozenLib$touchingWaterLikeStatuses() {
+	default List<WaterLikeType> frozenLib$touchingWaterLikeStatuses() {
 		throw new AssertionError();
 	}
 

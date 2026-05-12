@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.block.mixin.clipgroup;
 
-import it.unimi.dsi.fastutil.objects.Reference2BooleanArrayMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.block.impl.clipgroup.ClipGroup;
 import net.frozenblock.lib.block.impl.clipgroup.ClipGroupInterface;
 import net.minecraft.world.entity.Entity;
@@ -30,23 +30,30 @@ import org.spongepowered.asm.mixin.Unique;
 public class EntityMixin implements ClipGroupInterface {
 
 	@Unique
-	private final Map<ClipGroup, Boolean> frozenLib$clipGroupStatuses = new Reference2BooleanArrayMap<>();
+	private final List<ClipGroup> frozenLib$clipGroupStatuses = new ArrayList<>();
 
+	@Unique
 	@Override
-	public void frozenLib$setClipInGroup(ClipGroup group, boolean inside) {
-		this.frozenLib$clipGroupStatuses.put(group, inside);
+	public void frozenLib$addClipInGroup(ClipGroup group) {
+		this.frozenLib$clipGroupStatuses.add(group);
 	}
 
+	@Unique
+	@Override
+	public void frozenLib$resetClipGroups() {
+		this.frozenLib$clipGroupStatuses.clear();
+	}
+
+	@Unique
 	@Override
 	public boolean frozenLib$wasClipInGroup(ClipGroup group) {
-		return this.frozenLib$clipGroupStatuses.getOrDefault(group, false);
+		return this.frozenLib$clipGroupStatuses.contains(group);
 	}
 
+	@Unique
 	@Override
 	public boolean frozenLib$wasClipInGroup(BlockState state) {
-		return this.frozenLib$clipGroupStatuses.entrySet()
-			.stream()
-			.filter(entry -> entry.getKey().contains(state))
-			.anyMatch(entry -> entry.getValue() == true);
+		return this.frozenLib$clipGroupStatuses.stream()
+			.anyMatch(group -> group.contains(state));
 	}
 }

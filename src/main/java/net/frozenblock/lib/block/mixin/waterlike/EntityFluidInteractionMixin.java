@@ -49,6 +49,7 @@ public class EntityFluidInteractionMixin {
 		closestPosDistanceRef.set(Double.MAX_VALUE);
 		entity.frozenLib$setWaterReplacementParticlesFromBlock(null);
 		entity.frozenLib$clearInWaterLikes();
+		entity.frozenLib$clearTouchingWaterLikes();
 	}
 
 	@WrapOperation(
@@ -83,7 +84,7 @@ public class EntityFluidInteractionMixin {
 	) {
 		if (!(blockStateRef.get().getBlock() instanceof WaterLikeBlock waterLikeBlock)) return original;
 
-		entity.frozenLib$setTouchingWaterLike(waterLikeBlock.myWaterLikeType(entity.registryAccess()), true);
+		entity.frozenLib$addTouchingWaterLike(waterLikeBlock.myWaterLikeType(entity.registryAccess()));
 		final double distance = entity.distanceToSqr(Vec3.atCenterOf(mutablePos));
 		if (distance >= closestPosDistanceRef.get()) return original;
 
@@ -106,7 +107,7 @@ public class EntityFluidInteractionMixin {
 		@Share("frozenLib$blockState") LocalRef<BlockState> blockStateRef
 	) {
 		if (blockStateRef.get().getBlock() instanceof WaterLikeBlock waterLikeBlock) {
-			entity.frozenLib$setInWaterLike(waterLikeBlock.myWaterLikeType(entity.registryAccess()), true);
+			entity.frozenLib$addInWaterLike(waterLikeBlock.myWaterLikeType(entity.registryAccess()));
 		}
 	}
 }

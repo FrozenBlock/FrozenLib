@@ -22,8 +22,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import it.unimi.dsi.fastutil.objects.Reference2BooleanArrayMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeTypes;
@@ -65,9 +65,9 @@ public abstract class EntityMixin implements InWaterLikeInterface {
 	@Unique
 	private ParticleOptions frozenLib$replacementSplashParticle;
 	@Unique
-	private final Map<WaterLikeType, Boolean> frozenLib$insideWaterLikeStatuses = new Reference2BooleanArrayMap<>();
+	private final List<WaterLikeType> frozenLib$waterLikesInside = new ArrayList<>();
 	@Unique
-	private final Map<WaterLikeType, Boolean> frozenLib$touchingWaterLikeStatuses = new Reference2BooleanArrayMap<>();
+	private final List<WaterLikeType> frozenLib$waterLikesTouching = new ArrayList<>();
 
 	@WrapOperation(
 		method = "getBlockSpeedFactor",
@@ -90,26 +90,26 @@ public abstract class EntityMixin implements InWaterLikeInterface {
 
 	@Unique
 	@Override
-	public void frozenLib$setInWaterLike(WaterLikeType type, boolean inside) {
-		this.frozenLib$insideWaterLikeStatuses.put(type, inside);
+	public void frozenLib$addInWaterLike(WaterLikeType type) {
+		this.frozenLib$waterLikesInside.add(type);
 	}
 
 	@Unique
 	@Override
 	public void frozenLib$clearInWaterLikes() {
-		this.frozenLib$insideWaterLikeStatuses.clear();
+		this.frozenLib$waterLikesInside.clear();
 	}
 
 	@Unique
 	@Override
 	public boolean frozenLib$wasInWaterLike(WaterLikeType type) {
-		return this.frozenLib$insideWaterLikeStatuses.getOrDefault(type, false);
+		return this.frozenLib$waterLikesInside.contains(type);
 	}
 
 	@Unique
 	@Override
-	public Map<WaterLikeType, Boolean> frozenLib$inWaterLikeStatuses() {
-		return this.frozenLib$insideWaterLikeStatuses;
+	public List<WaterLikeType> frozenLib$waterLikesInside() {
+		return this.frozenLib$waterLikesInside;
 	}
 
 	@Inject(method = "updateFluidInteraction", at = @At("TAIL"))
@@ -119,26 +119,26 @@ public abstract class EntityMixin implements InWaterLikeInterface {
 
 	@Unique
 	@Override
-	public void frozenLib$setTouchingWaterLike(WaterLikeType type, boolean touching) {
-		this.frozenLib$touchingWaterLikeStatuses.put(type, touching);
+	public void frozenLib$addTouchingWaterLike(WaterLikeType type) {
+		this.frozenLib$waterLikesTouching.add(type);
 	}
 
 	@Unique
 	@Override
 	public void frozenLib$clearTouchingWaterLikes() {
-		this.frozenLib$touchingWaterLikeStatuses.clear();
+		this.frozenLib$waterLikesTouching.clear();
 	}
 
 	@Unique
 	@Override
 	public boolean frozenLib$wasTouchingWaterLike(WaterLikeType type) {
-		return this.frozenLib$touchingWaterLikeStatuses.getOrDefault(type, false);
+		return this.frozenLib$waterLikesTouching.contains(type);
 	}
 
 	@Unique
 	@Override
-	public Map<WaterLikeType, Boolean> frozenLib$touchingWaterLikeStatuses() {
-		return this.frozenLib$touchingWaterLikeStatuses;
+	public List<WaterLikeType> frozenLib$touchingWaterLikeStatuses() {
+		return this.frozenLib$waterLikesTouching;
 	}
 
 	@Unique

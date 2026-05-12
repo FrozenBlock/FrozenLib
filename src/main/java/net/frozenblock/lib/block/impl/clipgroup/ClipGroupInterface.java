@@ -20,7 +20,11 @@ package net.frozenblock.lib.block.impl.clipgroup;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface ClipGroupInterface {
-	default void frozenLib$setClipInGroup(ClipGroup group, boolean inside) {
+	default void frozenLib$addClipInGroup(ClipGroup group) {
+		throw new AssertionError();
+	}
+
+	default void frozenLib$resetClipGroups() {
 		throw new AssertionError();
 	}
 
