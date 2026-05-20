@@ -18,8 +18,8 @@
 package net.frozenblock.lib.testmod.worldgen;
 
 import java.util.List;
-import net.frozenblock.lib.worldgen.surface.api.FrozenDimensionBoundRuleSource;
-import net.frozenblock.lib.worldgen.surface.api.SurfaceRuleEvents;
+import net.frozenblock.lib.levelgen.surface.api.FrozenDimensionBoundRuleSource;
+import net.frozenblock.lib.levelgen.surface.api.SurfaceRuleEvents;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.biome.Biome;

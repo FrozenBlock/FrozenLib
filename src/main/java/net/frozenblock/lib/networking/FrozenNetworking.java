@@ -59,7 +59,7 @@ import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
-import net.frozenblock.lib.worldgen.structure.impl.status.networking.PlayerStructureStatusPacket;
+import net.frozenblock.lib.levelgen.structure.impl.status.networking.PlayerStructureStatusPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.RegistryFriendlyByteBuf;

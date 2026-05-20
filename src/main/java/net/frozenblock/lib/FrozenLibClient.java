@@ -37,7 +37,7 @@ import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
-import net.frozenblock.lib.worldgen.structure.api.status.client.ClientStructureStatuses;
+import net.frozenblock.lib.levelgen.structure.api.status.client.ClientStructureStatuses;
 import net.minecraft.client.Minecraft;
 import net.minecraft.server.packs.PackType;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;

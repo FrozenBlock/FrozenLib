@@ -21,7 +21,7 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.worldgen.surface.impl.OptimizedBiomeTagConditionSource;
+import net.frozenblock.lib.levelgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;

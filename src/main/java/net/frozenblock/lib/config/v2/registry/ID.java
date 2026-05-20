@@ -78,12 +78,12 @@ public record ID(String namespace, String path) {
 	public boolean equals(Object o) {
 		if (this == o) return true;
 		if (o == null || getClass() != o.getClass()) return false;
-		ID id = (ID) o;
-		return namespace.equals(id.namespace) && path.equals(id.path);
+		final ID id = (ID) o;
+		return this.namespace.equals(id.namespace) && this.path.equals(id.path);
 	}
 
 	@Override
 	public String toString() {
-		return namespace + ':' + path;
+		return this.namespace + ':' + this.path;
 	}
 }

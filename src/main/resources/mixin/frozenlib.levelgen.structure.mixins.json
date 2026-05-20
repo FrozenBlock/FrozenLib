@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.levelgen.structure.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "ChunkGeneratorStructureStateMixin",
+    "ListPoolElementMixin",
+    "PoolElementStructurePieceMixin",
+    "RandomPoolAliasMixin",
+    "SinglePoolElementMixin",
+    "StructureMixin",
+    "StructurePlacementMixin",
+    "StructureSetMixin",
+    "StructureStartMixin",
+    "StructureTemplateMixin",
+    "StructureTemplatePoolMixin",
+    "TemplateStructurePieceMixin",
+    "status.ServerPlayerMixin"
+  ]
+}

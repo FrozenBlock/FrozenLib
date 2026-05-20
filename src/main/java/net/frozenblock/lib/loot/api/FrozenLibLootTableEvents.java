@@ -22,6 +22,7 @@ import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.LootTable;
 
 /**
  * A class containing events related to loot tables.
@@ -44,7 +45,7 @@ public class FrozenLibLootTableEvents {
 	public interface ItemGeneratedInContainer extends CommonEventEntrypoint {
 		/**
 		 * Triggers the event when an item is generated in a {@link Container}.
-		 * @param container The {@link Container} the {@link net.minecraft.world.level.storage.loot.LootTable} is placing an item into.
+		 * @param container The {@link Container} the {@link LootTable} is placing an item into.
 		 * @param stack The {@link ItemStack} being placed into the {@link Container}.
 		 */
 		void onItemGeneratedInContainer(Container container, ItemStack stack);

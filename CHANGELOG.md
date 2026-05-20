@@ -25,3 +25,15 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Added the `frozenlib:water_like_type` dynamic registry.
     - Provides a block's ID, a list of block IDs, or a Block Tag that list the blocks within a specific Water-Like Type.
     - Provies swimming, splashing, enter, exit, and ambient loop sounds to use for the Water-Like Type.
+- Added the `ConfigEntryPredicate`!
+  - A serializable predicate that compares a given value with a `ConfigEntry`'s value.
+  - Contains four fields:
+    - `entry`: The target `ConfigEntry`'s `ID`.
+    - `operator`: The `Operator` to compare the target `ConfigEntry`'s value with.
+    - `target`: The value the target `ConfigEntry`'s value is being compared with.
+- Added the `ConfigEntryBlockPredicate`.
+  - A wrapper of `ConfigEntryPredicate` in `BlockPredicate` form.
+- Added the `ConfigEntryCondition`.
+  - A wrapper of `ConfigEntryPredicate` in `LootItemCondition` form.
+- Refactored the `worldgen` package to `levelgen`.
+- Refactored the `worldgen.block_predicate` package to `levelgen.blockpredicates.`

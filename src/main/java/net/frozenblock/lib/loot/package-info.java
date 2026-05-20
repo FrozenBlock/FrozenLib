@@ -18,7 +18,7 @@
 /**
  * <h2>Loot Table API</h2>
  * <p>
- * This API is work-in-progress, please refrain from using it in public builds.
+ * This API is work-in-progress, please refrain from using it in public builds. (Unless it works!)
  * Thank you!
  */
 

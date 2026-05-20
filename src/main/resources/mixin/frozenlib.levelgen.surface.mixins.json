@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.levelgen.surface.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "plugin": "net.frozenblock.lib.levelgen.surface.mixin.SurfaceRulePlugin",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "MinecraftServerMixin",
+    "NoiseGeneratorSettingsMixin"
+  ]
+}
