@@ -86,6 +86,6 @@ public class SurfaceRuleEvents {
 	}
 
 	public interface GenericSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addGenericSurfaceRules(HolderLookup<Biome> biomes, List<FrozenDimensionBoundRuleSource> context);
+		void addGenericSurfaceRules(HolderLookup<Biome> biomes, List<DimensionBoundRuleSource> context);
 	}
 }

@@ -25,20 +25,18 @@ import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.dimension.LevelStem;
-import org.jetbrains.annotations.Contract;
 
 /**
  * Provides several biome selectors with additional functionality.
  *
  * <p>Based on {@link BiomeSelectors}
  */
-public final class FrozenBiomeSelectors {
+public final class FrozenLibBiomeSelectors {
 
 	/**
 	 * Returns a biome selector that will match all biomes that would normally spawn in the Overworld,
 	 * assuming Vanilla's default biome source is used.
 	 */
-	@Contract(pure = true)
 	public static Predicate<BiomeSelectionContext> foundInOverworld() {
 		return context -> context.hasTag(BiomeTags.IS_OVERWORLD) || context.canGenerateIn(LevelStem.OVERWORLD);
 	}
@@ -49,7 +47,6 @@ public final class FrozenBiomeSelectors {
 	 *
 	 * <p>This selector will also match modded biomes that have been added to the nether using {@link NetherBiomes}.
 	 */
-	@Contract(pure = true)
 	public static Predicate<BiomeSelectionContext> foundInTheNether() {
 		return context -> context.hasTag(BiomeTags.IS_NETHER) || context.canGenerateIn(LevelStem.NETHER);
 	}
@@ -58,7 +55,6 @@ public final class FrozenBiomeSelectors {
 	 * Returns a biome selector that will match all biomes that would normally spawn in the End,
 	 * assuming Vanilla's default End biome source is used.
 	 */
-	@Contract(pure = true)
 	public static Predicate<BiomeSelectionContext> foundInTheEnd() {
 		return context -> context.hasTag(BiomeTags.IS_END) || context.canGenerateIn(LevelStem.END);
 	}
@@ -67,7 +63,6 @@ public final class FrozenBiomeSelectors {
 	 * Returns a biome selector that will match all biomes that would normally spawn in the Overworld,
 	 * assuming Vanilla's default biome source is used, except for biomes in the specified tag.
 	 */
-	@Contract(pure = true)
 	public static Predicate<BiomeSelectionContext> foundInOverworldExcept(TagKey<Biome> except) {
 		return context -> (context.hasTag(BiomeTags.IS_OVERWORLD) || context.canGenerateIn(LevelStem.OVERWORLD)) && !context.hasTag(except);
 	}
@@ -78,7 +73,6 @@ public final class FrozenBiomeSelectors {
 	 *
 	 * <p>This selector will also match modded biomes that have been added to the nether using {@link NetherBiomes}.
 	 */
-	@Contract(pure = true)
 	public static Predicate<BiomeSelectionContext> foundInTheNetherExcept(TagKey<Biome> except) {
 		return context -> (context.hasTag(BiomeTags.IS_NETHER) || context.canGenerateIn(LevelStem.NETHER)) && !context.hasTag(except);
 	}
@@ -87,7 +81,6 @@ public final class FrozenBiomeSelectors {
 	 * Returns a biome selector that will match all biomes that would normally spawn in the End,
 	 * assuming Vanilla's default End biome source is used, except for biomes in the specified tag.
 	 */
-	@Contract(pure = true)
 	public static Predicate<BiomeSelectionContext> foundInTheEndExcept(TagKey<Biome> except) {
 		return context -> (context.hasTag(BiomeTags.IS_END) || context.canGenerateIn(LevelStem.END)) && !context.hasTag(except);
 	}

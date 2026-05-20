@@ -37,3 +37,12 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - A wrapper of `ConfigEntryPredicate` in `LootItemCondition` form.
 - Refactored the `worldgen` package to `levelgen`.
 - Refactored the `worldgen.block_predicate` package to `levelgen.blockpredicates.`
+- Renamed `FrozenBiome` to `FrozenLibBiome`.
+- Renamed `NetherFrozenBiome` to `FrozenLibNetherBiome`.
+- Renamed `FrozenBiomeSelectors` to `FrozenLibBiomeSelectors`.
+- Renamed `FrozenBiomeParameters` to `FrozenLibBiomeParameters`.
+- Renamed `FrozenBiomeSourceAccess` to `FrozenLibBiomeSourceAccess`.
+- Renamed `FrozenGrassColorModifiers` to `FrozenLibGrassColorModifiers`.
+- Renamed `FrozenOverworldBiomes` to `FrozenLibOverworldBiomes`.
+- Renamed `FrozenSurfaceRules` to `FrozenLibSurfaceRules`.
+- Renamed `FrozenDimensionBoundRuleSource` to `DimensionBoundRuleSource`.

@@ -17,13 +17,13 @@
 
 package net.frozenblock.lib.levelgen.biome.mixin;
 
-import net.frozenblock.lib.levelgen.biome.api.FrozenBiomeSourceAccess;
+import net.frozenblock.lib.levelgen.biome.api.FrozenLibBiomeSourceAccess;
 import net.minecraft.world.level.biome.MultiNoiseBiomeSource;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(MultiNoiseBiomeSource.class)
-public class MultiNoiseBiomeSourceMixin implements FrozenBiomeSourceAccess {
+public class MultiNoiseLibBiomeSourceMixin implements FrozenLibBiomeSourceAccess {
 
 	@Unique
 	private boolean frozenLib$modifyBiomeEntries = true;

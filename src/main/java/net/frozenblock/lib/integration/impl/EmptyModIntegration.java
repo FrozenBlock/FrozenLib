@@ -30,7 +30,5 @@ public class EmptyModIntegration extends ModIntegration {
 	}
 
 	@Override
-	public void init() {
-
-	}
+	public void init() {}
 }

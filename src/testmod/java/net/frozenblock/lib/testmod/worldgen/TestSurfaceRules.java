@@ -18,7 +18,7 @@
 package net.frozenblock.lib.testmod.worldgen;
 
 import java.util.List;
-import net.frozenblock.lib.levelgen.surface.api.FrozenDimensionBoundRuleSource;
+import net.frozenblock.lib.levelgen.surface.api.DimensionBoundRuleSource;
 import net.frozenblock.lib.levelgen.surface.api.SurfaceRuleEvents;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.Identifier;
@@ -83,8 +83,8 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
     }
 
     @Override
-    public void addGenericSurfaceRules(HolderLookup<Biome> biomes, List<FrozenDimensionBoundRuleSource> context) {
-		context.add(new FrozenDimensionBoundRuleSource(
+    public void addGenericSurfaceRules(HolderLookup<Biome> biomes, List<DimensionBoundRuleSource> context) {
+		context.add(new DimensionBoundRuleSource(
 			Identifier.withDefaultNamespace("overworld"),
 			SurfaceRules.sequence(
 				SurfaceRules.ifTrue(
@@ -93,7 +93,7 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 				)
 			)
 		));
-		context.add(new FrozenDimensionBoundRuleSource(
+		context.add(new DimensionBoundRuleSource(
 			Identifier.withDefaultNamespace("the_nether"),
 			SurfaceRules.sequence(
 				SurfaceRules.ifTrue(

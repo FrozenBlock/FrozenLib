@@ -25,7 +25,7 @@ import net.frozenblock.lib.levelgen.biome.impl.FrozenGrassColorModifier;
 import net.minecraft.resources.Identifier;
 
 @UtilityClass
-public class FrozenGrassColorModifiers {
+public class FrozenLibGrassColorModifiers {
 	private static final Map<Identifier, FrozenGrassColorModifier> NEW_GRASS_COLOR_MODIFIERS = new LinkedHashMap<>();
 
 	public static void addGrassColorModifier(Identifier biome, FrozenGrassColorModifier grassColorModifier) {

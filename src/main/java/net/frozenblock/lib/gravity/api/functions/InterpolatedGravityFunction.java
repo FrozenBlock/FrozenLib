@@ -24,19 +24,15 @@ import net.frozenblock.lib.gravity.api.SerializableGravityFunction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 public record InterpolatedGravityFunction(Vec3 bottomGravity, Vec3 topGravity) implements SerializableGravityFunction<InterpolatedGravityFunction> {
-	public static final Codec<InterpolatedGravityFunction> CODEC = RecordCodecBuilder.create(instance ->
-		instance.group(
-			Vec3.CODEC.fieldOf("bottom_gravity").forGetter(InterpolatedGravityFunction::bottomGravity),
-			Vec3.CODEC.fieldOf("top_gravity").forGetter(InterpolatedGravityFunction::topGravity)
-		).apply(instance, InterpolatedGravityFunction::new)
-	);
+	public static final Codec<InterpolatedGravityFunction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		Vec3.CODEC.fieldOf("bottom_gravity").forGetter(InterpolatedGravityFunction::bottomGravity),
+		Vec3.CODEC.fieldOf("top_gravity").forGetter(InterpolatedGravityFunction::topGravity)
+	).apply(instance, InterpolatedGravityFunction::new));
 	public static final Codec<GravityBelt<InterpolatedGravityFunction>> BELT_CODEC = GravityBelt.codec(CODEC);
 
-	@Contract("_, _, _, _ -> new")
 	@Override
 	public Vec3 get(@Nullable Entity entity, double y, double minY, double maxY) {
 		final double normalizedY = (y - minY) / (maxY - minY);

@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.biome.mixin;
 
 import com.mojang.datafixers.util.Pair;
 import java.util.function.Consumer;
-import net.frozenblock.lib.levelgen.biome.api.FrozenBiome;
+import net.frozenblock.lib.levelgen.biome.api.FrozenLibBiome;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
@@ -41,8 +41,8 @@ public class OverworldBiomeBuilderMixin {
 		)
 	)
 	public void frozenLib$injectFrozenBiomesToOverworld(Consumer<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> consumer, CallbackInfo info) {
-		for (FrozenBiome frozenBiome : FrozenBiome.getFrozenBiomes()) {
-			if (frozenBiome.isEnabled()) frozenBiome.injectToOverworld(consumer);
+		for (FrozenLibBiome frozenLibBiome : FrozenLibBiome.getFrozenBiomes()) {
+			if (frozenLibBiome.isEnabled()) frozenLibBiome.injectToOverworld(consumer);
 		}
 	}
 }

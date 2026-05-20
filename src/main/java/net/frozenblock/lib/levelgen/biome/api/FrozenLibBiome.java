@@ -34,13 +34,13 @@ import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.MobSpawnSettings;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class FrozenBiome {
-	private static final List<FrozenBiome> BIOMES = new ArrayList<>();
+public abstract class FrozenLibBiome {
+	private static final List<FrozenLibBiome> BIOMES = new ArrayList<>();
 	private final ResourceKey<Biome> key = ResourceKey.create(Registries.BIOME, Identifier.fromNamespaceAndPath(this.modID(), this.biomeID()));
 
 	private boolean enabled = true;
 
-	protected FrozenBiome() {
+	protected FrozenLibBiome() {
 		BIOMES.add(this);
 	}
 
@@ -233,7 +233,7 @@ public abstract class FrozenBiome {
 	/**
 	 * @return the list of all FrozenBiomes.
 	 */
-	public static ImmutableList<FrozenBiome> getFrozenBiomes() {
+	public static ImmutableList<FrozenLibBiome> getFrozenBiomes() {
 		return ImmutableList.copyOf(BIOMES);
 	}
 

@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.levelgen.biome.api;
 
-public interface FrozenBiomeSourceAccess {
+public interface FrozenLibBiomeSourceAccess {
 
 	default boolean frozenLib$shouldModifyBiomeEntries() {
 		throw new UnsupportedOperationException("IMPLEMENT ME");

@@ -31,7 +31,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Climate;
 import net.minecraft.world.level.biome.OverworldBiomeBuilder;
-import org.jetbrains.annotations.Contract;
 
 @UtilityClass
 public class OverworldBiomeBuilderParameters {
@@ -67,7 +66,6 @@ public class OverworldBiomeBuilderParameters {
 		return parameters;
 	}
 
-	@Contract(pure = true)
 	public static List<Climate.ParameterPoint> points(BiomeParameters parameters) {
 		return parameters.points;
 	}
@@ -82,8 +80,12 @@ public class OverworldBiomeBuilderParameters {
 
 	private static void addBiomes(Consumer<Pair<Identifier, Climate.ParameterPoint>> key) {
 		final ImmutableList.Builder<Pair<Climate.ParameterPoint, ResourceKey<Biome>>> builder = new ImmutableList.Builder<>();
-		new OverworldBiomeBuilder().addBiomes(parameterPointResourceKeyPair -> builder.add(parameterPointResourceKeyPair));
-		builder.build().forEach(parameterPointResourceKeyPair -> key.accept(new Pair<>(parameterPointResourceKeyPair.getSecond().identifier(), parameterPointResourceKeyPair.getFirst())));
+		new OverworldBiomeBuilder().addBiomes(builder::add);
+		builder.build().forEach(
+			parameterPointResourceKeyPair -> key.accept(
+				new Pair<>(parameterPointResourceKeyPair.getSecond().identifier(), parameterPointResourceKeyPair.getFirst())
+			)
+		);
 	}
 
 	private static final List<Climate.ParameterPoint> OFF_COAST_POINTS = new ArrayList<>();
@@ -92,5 +94,4 @@ public class OverworldBiomeBuilderParameters {
 		runBiomes();
 		return OFF_COAST_POINTS;
 	}
-
 }

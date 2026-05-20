@@ -20,7 +20,7 @@ package net.frozenblock.lib.levelgen.biome.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.Optional;
-import net.frozenblock.lib.levelgen.biome.api.FrozenGrassColorModifiers;
+import net.frozenblock.lib.levelgen.biome.api.FrozenLibGrassColorModifiers;
 import net.frozenblock.lib.levelgen.biome.impl.BiomeInterface;
 import net.frozenblock.lib.levelgen.biome.impl.FrozenGrassColorModifier;
 import net.minecraft.core.Holder;
@@ -45,7 +45,7 @@ public class RegistryLoadTaskMixin {
 		WritableRegistry instance, ResourceKey key, Object object, RegistrationInfo registrationInfo, Operation<Holder.Reference> original
 	) {
 		if (object instanceof BiomeInterface biomeInterface) {
-			final Optional<FrozenGrassColorModifier> grassColorModifier = FrozenGrassColorModifiers.getGrassColorModifier(key.identifier());
+			final Optional<FrozenGrassColorModifier> grassColorModifier = FrozenLibGrassColorModifiers.getGrassColorModifier(key.identifier());
 			grassColorModifier.ifPresent(biomeInterface::frozenLib$setFrozenGrassColorModifier);
 		}
 		return original.call(instance, key, object, registrationInfo);

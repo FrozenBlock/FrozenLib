@@ -82,9 +82,9 @@ public abstract class ModIntegration {
 
     public <T> TagKey<T> getTag(Registry<T> registry, Identifier key) {
         return registry.getTags().map(HolderSet.Named::key)
-                .filter(tag -> tag.location().equals(key))
-                .findAny()
-                .orElse(TagKey.create(registry.key(), key));
+			.filter(tag -> tag.location().equals(key))
+			.findAny()
+			.orElse(TagKey.create(registry.key(), key));
     }
 
     @SuppressWarnings("unchecked")

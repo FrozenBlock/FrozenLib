@@ -26,11 +26,9 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
  * Holds both a {@link Identifier} and {@link SurfaceRules.RuleSource}.
  * The Identifier denotes the dimension to be modified, and the RuleSource are the rules to be applied to it.
  */
-public record FrozenDimensionBoundRuleSource(Identifier dimension, SurfaceRules.RuleSource ruleSource) {
-	public static final Codec<FrozenDimensionBoundRuleSource> CODEC = RecordCodecBuilder.create(instance ->
-		instance.group(
-			Identifier.CODEC.fieldOf("dimension").forGetter(FrozenDimensionBoundRuleSource::dimension),
-			SurfaceRules.RuleSource.CODEC.fieldOf("rule_source").forGetter(FrozenDimensionBoundRuleSource::ruleSource)
-		).apply(instance, FrozenDimensionBoundRuleSource::new)
-	);
+public record DimensionBoundRuleSource(Identifier dimension, SurfaceRules.RuleSource ruleSource) {
+	public static final Codec<DimensionBoundRuleSource> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		Identifier.CODEC.fieldOf("dimension").forGetter(DimensionBoundRuleSource::dimension),
+		SurfaceRules.RuleSource.CODEC.fieldOf("rule_source").forGetter(DimensionBoundRuleSource::ruleSource)
+	).apply(instance, DimensionBoundRuleSource::new));
 }

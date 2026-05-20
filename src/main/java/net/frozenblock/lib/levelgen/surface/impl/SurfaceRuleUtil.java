@@ -18,7 +18,7 @@
 package net.frozenblock.lib.levelgen.surface.impl;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.levelgen.surface.api.FrozenSurfaceRules;
+import net.frozenblock.lib.levelgen.surface.api.FrozenLibSurfaceRules;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 public class SurfaceRuleUtil {
 	public static void injectSurfaceRules(NoiseGeneratorSettings settings, HolderLookup<Biome> biomes, ResourceKey<DimensionType> dimension) {
 		final NoiseGeneratorInterface noiseGenerator = NoiseGeneratorInterface.class.cast(settings);
-		final SurfaceRules.RuleSource newRules = FrozenSurfaceRules.getSurfaceRules(biomes, dimension);
+		final SurfaceRules.RuleSource newRules = FrozenLibSurfaceRules.getSurfaceRules(biomes, dimension);
 		if (newRules != null) noiseGenerator.frozenLib$writeSurfaceRules(newRules);
 	}
 }

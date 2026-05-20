@@ -33,7 +33,7 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import org.jetbrains.annotations.Nullable;
 
-public final class FrozenSurfaceRules {
+public final class FrozenLibSurfaceRules {
 	public static final SurfaceRules.RuleSource AIR = makeStateRule(Blocks.AIR);
 	public static final SurfaceRules.RuleSource BEDROCK = makeStateRule(Blocks.BEDROCK);
 	public static final SurfaceRules.RuleSource WHITE_TERRACOTTA = makeStateRule(Blocks.DYED_TERRACOTTA.white());
@@ -166,13 +166,13 @@ public final class FrozenSurfaceRules {
 	@Nullable
 	public static SurfaceRules.RuleSource getGenericSurfaceRules(HolderLookup<Biome> biomes, ResourceKey<DimensionType> dimension) {
 		SurfaceRules.RuleSource newSource = null;
-		final ArrayList<FrozenDimensionBoundRuleSource> sourceHolders = new ArrayList<>();
+		final ArrayList<DimensionBoundRuleSource> sourceHolders = new ArrayList<>();
 
 		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(biomes, sourceHolders);
 		final List<SurfaceRules.RuleSource> sourceHoldersForDimension = sourceHolders
 			.stream()
 			.filter(dimRuleSource -> dimRuleSource.dimension().equals(dimension.identifier()))
-			.map(FrozenDimensionBoundRuleSource::ruleSource)
+			.map(DimensionBoundRuleSource::ruleSource)
 			.toList();
 
 		if (!sourceHoldersForDimension.isEmpty()) newSource = sequence(sourceHoldersForDimension);

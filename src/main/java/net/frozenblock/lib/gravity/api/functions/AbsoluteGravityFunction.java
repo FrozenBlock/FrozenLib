@@ -28,13 +28,10 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public record AbsoluteGravityFunction(Vec3 gravity) implements SerializableGravityFunction<AbsoluteGravityFunction> {
-	public static final Codec<AbsoluteGravityFunction> CODEC = RecordCodecBuilder.create(instance ->
-		instance.group(
-			Vec3.CODEC.fieldOf("gravity").forGetter(AbsoluteGravityFunction::gravity)
-		).apply(instance, AbsoluteGravityFunction::new)
-	);
+	public static final Codec<AbsoluteGravityFunction> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		Vec3.CODEC.fieldOf("gravity").forGetter(AbsoluteGravityFunction::gravity)
+	).apply(instance, AbsoluteGravityFunction::new));
 	public static final Codec<GravityBelt<AbsoluteGravityFunction>> BELT_CODEC = GravityBelt.codec(CODEC);
-
 	public static final StreamCodec<ByteBuf, AbsoluteGravityFunction> STREAM_CODEC = StreamCodec.composite(
 		Vec3.STREAM_CODEC, AbsoluteGravityFunction::gravity,
 		AbsoluteGravityFunction::new

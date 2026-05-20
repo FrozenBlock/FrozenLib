@@ -8,7 +8,7 @@
   },
   "mixins": [
     "BiomeMixin",
-    "MultiNoiseBiomeSourceMixin",
+    "MultiNoiseLibBiomeSourceMixin",
     "OverworldBiomeBuilderMixin",
     "OverworldBiomePresetMixin",
     "RegistryLoadTaskMixin",

@@ -244,7 +244,7 @@ transitive-accessible method net/minecraft/client/renderer/RenderPipelines regis
 transitive-accessible method net/minecraft/data/worldgen/biome/OverworldBiomes calculateSkyColor (F)I
 transitive-accessible method net/minecraft/world/level/biome/OverworldBiomeBuilder addBiomes (Ljava/util/function/Consumer;)V
 
-transitive-inject-interface net/minecraft/world/level/biome/MultiNoiseBiomeSource net/frozenblock/lib/worldgen/biome/api/FrozenBiomeSourceAccess
+transitive-inject-interface net/minecraft/world/level/biome/MultiNoiseBiomeSource net/frozenblock/lib/levelgen/biome/api/FrozenLibBiomeSourceAccess
 
 # Noise
 transitive-accessible method net/minecraft/data/worldgen/NoiseData register (Lnet/minecraft/data/worldgen/BootstrapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V

@@ -25,7 +25,7 @@ import net.minecraft.world.level.biome.Climate;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class NetherFrozenBiome extends FrozenBiome {
+public abstract class FrozenLibNetherBiome extends FrozenLibBiome {
 
 	@Override
 	public final float temperature() {

@@ -24,7 +24,7 @@ import net.minecraft.world.level.biome.Climate;
 import org.jetbrains.annotations.Contract;
 
 @UtilityClass
-public class FrozenBiomeParameters {
+public class FrozenLibBiomeParameters {
 
 	public static void addWeirdness(BiomeRunnable runnable, List<Climate.Parameter> weirdnesses) {
 		for (Climate.Parameter weirdness : weirdnesses) runnable.run(weirdness);

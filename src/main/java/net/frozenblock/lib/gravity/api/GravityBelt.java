@@ -41,22 +41,20 @@ public record GravityBelt<T extends GravityFunction>(double minY, double maxY, b
 	}
 
 	public static <T extends SerializableGravityFunction<T>> Codec<GravityBelt<T>> codec(Codec<T> gravityFunction) {
-		return RecordCodecBuilder.create(instance ->
-			instance.group(
-				Codec.DOUBLE.fieldOf("minY").forGetter(GravityBelt::minY),
-				Codec.DOUBLE.fieldOf("maxY").forGetter(GravityBelt::maxY),
-				gravityFunction.fieldOf("gravityFunction").forGetter(GravityBelt::function)
-			).apply(instance, GravityBelt::new)
-		);
+		return RecordCodecBuilder.create(instance -> instance.group(
+			Codec.DOUBLE.fieldOf("minY").forGetter(GravityBelt::minY),
+			Codec.DOUBLE.fieldOf("maxY").forGetter(GravityBelt::maxY),
+			gravityFunction.fieldOf("gravityFunction").forGetter(GravityBelt::function)
+		).apply(instance, GravityBelt::new));
 	}
 
 	public static <T extends SerializableGravityFunction<T>> StreamCodec<ByteBuf, GravityBelt<T>> streamCodec(StreamCodec<ByteBuf, T> gravityFunction) {
 		return new StreamCodec<>() {
 			@Override
 			public GravityBelt<T> decode(ByteBuf input) {
-				double minY = input.readDouble();
-				double maxY = input.readDouble();
-				T function = gravityFunction.decode(input);
+				final double minY = input.readDouble();
+				final double maxY = input.readDouble();
+				final T function = gravityFunction.decode(input);
 				return new GravityBelt<>(minY, maxY, function);
 			}
 

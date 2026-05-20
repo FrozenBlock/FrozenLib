@@ -70,7 +70,7 @@ public class ModIntegrations {
 	 * Runs prior to registries freezing in order to allow for the registering of things.
 	 */
 	public static void initializePreFreeze() {
-		for (var integration : FrozenLibRegistries.MOD_INTEGRATION) {
+		for (ModIntegrationSupplier<?> integration : FrozenLibRegistries.MOD_INTEGRATION) {
 			integration.getIntegration().initPreFreeze();
 			if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) continue;
 			integration.getIntegration().clientInitPreFreeze();
@@ -81,7 +81,7 @@ public class ModIntegrations {
      * Initialize all mod integrations.
      */
     public static void initialize() {
-        for (var integration : FrozenLibRegistries.MOD_INTEGRATION) {
+        for (ModIntegrationSupplier<?> integration : FrozenLibRegistries.MOD_INTEGRATION) {
             integration.getIntegration().init();
 			if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) continue;
 			integration.getIntegration().clientInit();

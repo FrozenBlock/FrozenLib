@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.biome.api;
 
 import java.util.List;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.levelgen.biome.api.parameters.FrozenBiomeParameters;
+import net.frozenblock.lib.levelgen.biome.api.parameters.FrozenLibBiomeParameters;
 import net.frozenblock.lib.levelgen.biome.impl.OverworldBiomeData;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.biome.Biome;
@@ -29,7 +29,7 @@ import net.minecraft.world.level.biome.Climate;
  * API that exposes the internals of Minecraft's overworld biome code.
  */
 @UtilityClass
-public class FrozenOverworldBiomes {
+public class FrozenLibOverworldBiomes {
 
 	/**
 	 * Adds a biome to the Overworld generator.
@@ -133,7 +133,7 @@ public class FrozenOverworldBiomes {
 		float offset,
 		List<Climate.Parameter> weirdnesses
 	) {
-		FrozenBiomeParameters.addWeirdness(weirdness -> OverworldBiomeData.addOverworldBiome(
+		FrozenLibBiomeParameters.addWeirdness(weirdness -> OverworldBiomeData.addOverworldBiome(
 			biome,
 			Climate.parameters(
 				temperature,
