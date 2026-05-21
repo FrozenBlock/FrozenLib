@@ -25,25 +25,23 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record ColumnWithDiskFeatureConfig(
-	BlockState state,
+public record ColumnWithDiskFeatureConfiguration(
+	BlockStateProvider state,
 	IntProvider radius,
 	IntProvider height,
 	float surroundingPillarChance,
 	HolderSet<Block> replaceableBlocks,
-	HolderSet<Block> diskBlocks
+	BlockStateProvider diskState
 ) implements FeatureConfiguration {
-	public static final Codec<ColumnWithDiskFeatureConfig> CODEC = RecordCodecBuilder.create((instance) ->
-		instance.group(
-			BlockState.CODEC.fieldOf("state").forGetter(config -> config.state),
-			IntProviders.NON_NEGATIVE_CODEC.fieldOf("radius").forGetter(config -> config.radius),
-			IntProviders.NON_NEGATIVE_CODEC.fieldOf("height").forGetter(config -> config.height),
-			Codec.FLOAT.fieldOf("surrounding_pillar_chance").forGetter(config -> config.surroundingPillarChance),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter(config -> config.replaceableBlocks),
-			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("disk_blocks").forGetter(config -> config.diskBlocks)
-		).apply(instance, ColumnWithDiskFeatureConfig::new)
-	);
+	public static final Codec<ColumnWithDiskFeatureConfiguration> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+		BlockStateProvider.CODEC.fieldOf("block_state").forGetter(config -> config.state),
+		IntProviders.NON_NEGATIVE_CODEC.fieldOf("radius").forGetter(config -> config.radius),
+		IntProviders.NON_NEGATIVE_CODEC.fieldOf("height").forGetter(config -> config.height),
+		Codec.FLOAT.fieldOf("surrounding_pillar_chance").forGetter(config -> config.surroundingPillarChance),
+		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter(config -> config.replaceableBlocks),
+		BlockStateProvider.CODEC.fieldOf("disk_block_state").forGetter(config -> config.diskState)
+	).apply(instance, ColumnWithDiskFeatureConfiguration::new));
 }

@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.feature.api.feature.disk;
 
 import com.mojang.serialization.Codec;
 import net.frozenblock.lib.levelgen.feature.api.feature.disk.config.BallBlockPlacement;
-import net.frozenblock.lib.levelgen.feature.api.feature.disk.config.BallFeatureConfig;
+import net.frozenblock.lib.levelgen.feature.api.feature.disk.config.BallFeatureConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -27,15 +27,15 @@ import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
-public class BallFeature extends Feature<BallFeatureConfig> {
+public class BallFeature extends Feature<BallFeatureConfiguration> {
 
-	public BallFeature(Codec<BallFeatureConfig> codec) {
+	public BallFeature(Codec<BallFeatureConfiguration> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<BallFeatureConfig> context) {
-		final BallFeatureConfig config = context.config();
+	public boolean place(FeaturePlaceContext<BallFeatureConfiguration> context) {
+		final BallFeatureConfiguration config = context.config();
 		final BlockPos pos = context.origin();
 		final WorldGenLevel level = context.level();
 		final RandomSource random = level.getRandom();

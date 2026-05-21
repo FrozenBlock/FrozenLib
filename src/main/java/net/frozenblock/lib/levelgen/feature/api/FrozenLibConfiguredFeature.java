@@ -22,12 +22,16 @@ import java.util.List;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import org.jetbrains.annotations.Nullable;
 
 public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration> {
@@ -59,6 +63,14 @@ public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration> {
 
 	public ConfiguredFeature<?, ?> getConfiguredFeature(LevelReader level) {
 		return getHolder(level).value();
+	}
+
+	public WeightedPlacedFeature asWeightedPlacedFeature(float weight, PlacementModifier... placementModifiers) {
+		return new WeightedPlacedFeature(this.asInlinePlaced(placementModifiers), weight);
+	}
+
+	public Holder<PlacedFeature> asInlinePlaced(PlacementModifier... placementModifiers) {
+		return PlacementUtils.inlinePlaced(this.getHolder(), placementModifiers);
 	}
 
 	@SuppressWarnings("unchecked")

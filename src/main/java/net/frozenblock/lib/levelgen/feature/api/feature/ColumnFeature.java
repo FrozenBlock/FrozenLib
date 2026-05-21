@@ -18,7 +18,7 @@
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.levelgen.feature.api.feature.config.ColumnFeatureConfig;
+import net.frozenblock.lib.levelgen.feature.api.feature.config.ColumnFeatureConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
@@ -29,24 +29,24 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class ColumnFeature extends Feature<ColumnFeatureConfig> {
+public class ColumnFeature extends Feature<ColumnFeatureConfiguration> {
 
-	public ColumnFeature(Codec<ColumnFeatureConfig> codec) {
+	public ColumnFeature(Codec<ColumnFeatureConfiguration> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<ColumnFeatureConfig> context) {
+	public boolean place(FeaturePlaceContext<ColumnFeatureConfiguration> context) {
 		final BlockPos blockPos = context.origin();
 		final WorldGenLevel level = context.level();
 		final RandomSource random = level.getRandom();
-		final ColumnFeatureConfig config = context.config();
+		final ColumnFeatureConfiguration config = context.config();
 
 		final int length = config.length().sample(random);
 		final BlockPredicate replaceable = config.replaceable();
-		final BlockStateProvider blockStateProvider = config.stateProvider();
+		final BlockStateProvider blockStateProvider = config.state();
 		final Direction direction = config.direction();
-		final boolean stopWhenEncounteringUnreplaceableBlock = config.stopWhenEncounteringUnreplaceableBlock();
+		final boolean stopWhenEncounteringUnreplaceableBlock = config.stopAtUnreplaceableBlock();
 
 		boolean generated = false;
 		final BlockPos.MutableBlockPos mutable = blockPos.mutable();

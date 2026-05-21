@@ -18,11 +18,9 @@
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
-import java.util.Optional;
-import net.frozenblock.lib.levelgen.feature.api.feature.config.ColumnWithDiskFeatureConfig;
+import net.frozenblock.lib.levelgen.feature.api.feature.config.ColumnWithDiskFeatureConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.UniformInt;
@@ -33,18 +31,18 @@ import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
-public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> {
+public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfiguration> {
 
-	public ColumnWithDiskFeature(Codec<ColumnWithDiskFeatureConfig> codec) {
+	public ColumnWithDiskFeature(Codec<ColumnWithDiskFeatureConfiguration> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<ColumnWithDiskFeatureConfig> context) {
-		final ColumnWithDiskFeatureConfig config = context.config();
-		final BlockPos pos = context.origin();
+	public boolean place(FeaturePlaceContext<ColumnWithDiskFeatureConfiguration> context) {
+		final ColumnWithDiskFeatureConfiguration config = context.config();
+		final BlockPos origin = context.origin();
 		final WorldGenLevel level = context.level();
-		final BlockPos surfacePos = pos.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, pos.getX(), pos.getZ()) - 1);
+		final BlockPos surfacePos = origin.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, origin.getX(), origin.getZ()) - 1);
 		final RandomSource random = level.getRandom();
 		final int radius = config.radius().sample(random);
 
@@ -52,13 +50,12 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 
 		// DISK
 		placeDisk: {
-			final Optional<Holder<Block>> diskOptional = config.diskBlocks().getRandomElement(random);
-			if (diskOptional.isEmpty()) break placeDisk;
+			final BlockState diskState = config.diskState().getOptionalState(level, random, origin);
+			if (diskState == null) break placeDisk;
 
 			final HolderSet<Block> replaceableBlocks = config.replaceableBlocks();
 
 			final BlockPos.MutableBlockPos mutable = surfacePos.mutable();
-			final BlockState diskState = diskOptional.get().value().defaultBlockState();
 			final int originX = surfacePos.getX();
 			final int originZ = surfacePos.getZ();
 			for (int x = originX - radius; x <= originX + radius; x++) {
@@ -82,18 +79,18 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfig> 
 
 		// COLUMN
 		placeColumn: {
-			final BlockState columnState = config.state();
-			final BlockPos.MutableBlockPos mutable = pos.mutable();
-			final int pillarHeight = config.height().sample(random);
+			final BlockState columnState = config.state().getState(level, random, origin);
+			final BlockPos.MutableBlockPos mutable = origin.mutable();
+			final int columnHeight = config.height().sample(random);
 
-			generated = placeAtPos(level, pos, mutable, columnState, pillarHeight) || generated;
+			generated = placeAtPos(level, origin, mutable, columnState, columnHeight) || generated;
 
-			final int maxSurroundingPillarHeight = pillarHeight - 1;
+			final int maxSurroundingPillarHeight = columnHeight - 1;
 			if (maxSurroundingPillarHeight <= 0) break placeColumn;
 
 			for (Direction direction : Direction.Plane.HORIZONTAL) {
 				if (random.nextFloat() >= config.surroundingPillarChance()) continue;
-				generated = placeAtPos(level, pos.relative(direction), mutable, columnState, UniformInt.of(1, maxSurroundingPillarHeight).sample(random)) || generated;
+				generated = placeAtPos(level, origin.relative(direction), mutable, columnState, UniformInt.of(1, maxSurroundingPillarHeight).sample(random)) || generated;
 			}
 		}
 		return generated;

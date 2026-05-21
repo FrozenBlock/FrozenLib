@@ -23,7 +23,7 @@ import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoiseBandBlockPlacement;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoiseBandPlacement;
-import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoisePathFeatureConfig;
+import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoisePathFeatureConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -32,15 +32,15 @@ import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
-public class NoisePathFeature extends Feature<NoisePathFeatureConfig> {
+public class NoisePathFeature extends Feature<NoisePathFeatureConfiguration> {
 
-	public NoisePathFeature(Codec<NoisePathFeatureConfig> codec) {
+	public NoisePathFeature(Codec<NoisePathFeatureConfiguration> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<NoisePathFeatureConfig> context) {
-		final NoisePathFeatureConfig config = context.config();
+	public boolean place(FeaturePlaceContext<NoisePathFeatureConfiguration> context) {
+		final NoisePathFeatureConfiguration config = context.config();
 		final BlockPos pos = context.origin();
 		final WorldGenLevel level = context.level();
 		final RandomSource random = level.getRandom();

@@ -25,10 +25,10 @@ import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 
-public record BallFeatureConfig(BallBlockPlacement ballBlockPlacement, Optional<Heightmap.Types> heightmapType, IntProvider placementRadius) implements FeatureConfiguration {
-	public static final Codec<BallFeatureConfig> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+public record BallFeatureConfiguration(BallBlockPlacement ballBlockPlacement, Optional<Heightmap.Types> heightmapType, IntProvider placementRadius) implements FeatureConfiguration {
+	public static final Codec<BallFeatureConfiguration> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
 		BallBlockPlacement.CODEC.fieldOf("block_placement").forGetter(config -> config.ballBlockPlacement),
 		Heightmap.Types.CODEC.lenientOptionalFieldOf("heightmap").forGetter(config -> config.heightmapType),
 		IntProviders.codec(1, 16).fieldOf("placement_radius").forGetter(config -> config.placementRadius)
-	).apply(instance, BallFeatureConfig::new));
+	).apply(instance, BallFeatureConfiguration::new));
 }

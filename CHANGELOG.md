@@ -33,16 +33,12 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `target`: The value the target `ConfigEntry`'s value is being compared with.
 - Added the `ConfigEntryBlockPredicate`.
   - A wrapper of `ConfigEntryPredicate` in `BlockPredicate` form.
+  - Use the `asBlockPredicate` method in `ConfigEntryPredicate`. Failing to do so will cause unnecessary memory usage.
 - Added the `ConfigEntryCondition`.
   - A wrapper of `ConfigEntryPredicate` in `LootItemCondition` form.
+  - Use the `asLootCondition` method in `ConfigEntryPredicate`. Failing to do so will cause unnecessary memory usage.
 - Refactored the `worldgen` package to `levelgen`.
 - Refactored the `worldgen.block_predicate` package to `levelgen.blockpredicates.`
-- Renamed `FrozenBiome` to `FrozenLibBiome`.
-- Renamed `NetherFrozenBiome` to `FrozenLibNetherBiome`.
-- Renamed `FrozenBiomeSelectors` to `FrozenLibBiomeSelectors`.
-- Renamed `FrozenBiomeParameters` to `FrozenLibBiomeParameters`.
-- Renamed `FrozenBiomeSourceAccess` to `FrozenLibBiomeSourceAccess`.
-- Renamed `FrozenGrassColorModifiers` to `FrozenLibGrassColorModifiers`.
-- Renamed `FrozenOverworldBiomes` to `FrozenLibOverworldBiomes`.
-- Renamed `FrozenSurfaceRules` to `FrozenLibSurfaceRules`.
-- Renamed `FrozenDimensionBoundRuleSource` to `DimensionBoundRuleSource`.
+- Renamed multiple worldgen-related classes to be more consistent with Vanilla.
+- `ColumnWithDiskFeatureConfiguration` now uses two `BlockStateProvider`s instead of a `BlockState` and Block Tag.
+- Renamed the `block_state_provider` field to `block_state` and the `stop_when_encountering_unreplaceable_block` field to `stop_at_unreplaceable_block` in `ColumnFeatureConfiguration`.

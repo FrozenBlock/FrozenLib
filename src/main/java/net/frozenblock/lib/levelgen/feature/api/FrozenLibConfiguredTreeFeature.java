@@ -29,11 +29,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeafLitterBlock;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.levelgen.feature.treedecorators.PlaceOnGroundDecorator;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
-import org.jetbrains.annotations.Contract;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
+import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
 public class FrozenLibConfiguredTreeFeature {
 	private final FrozenLibConfiguredFeature<TreeConfiguration> feature;
@@ -54,7 +56,6 @@ public class FrozenLibConfiguredTreeFeature {
 		this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock, triesB, radiusB, heightB, 4));
 	}
 
-	@Contract("_, _, _, _, _ -> new")
 	private static PlaceOnGroundDecorator makeLeafLitterDecorator(Block leafLitterBlock, int tries, int radius, int height, int maxSegments) {
 		return new PlaceOnGroundDecorator(
 			tries,
@@ -84,8 +85,24 @@ public class FrozenLibConfiguredTreeFeature {
 		return this.feature.getHolder();
 	}
 
+	public WeightedPlacedFeature asWeightedPlacedFeature(float weight, PlacementModifier... placementModifiers) {
+		return this.feature.asWeightedPlacedFeature(weight, placementModifiers);
+	}
+
+	public WeightedPlacedFeature litterAsWeightedPlacedFeature(float weight, PlacementModifier... placementModifiers) {
+		return this.featureWithLitter.asWeightedPlacedFeature(weight, placementModifiers);
+	}
+
 	public Holder<ConfiguredFeature<?, ?>> getLitterVariantHolder() {
 		return this.featureWithLitter.getHolder();
+	}
+
+	public Holder<PlacedFeature> asInlinePlaced(PlacementModifier... placementModifiers) {
+		return this.feature.asInlinePlaced(placementModifiers);
+	}
+
+	public Holder<PlacedFeature> litterAsInlinePlaced(PlacementModifier... placementModifiers) {
+		return this.featureWithLitter.asInlinePlaced(placementModifiers);
 	}
 
 	public ConfiguredFeature<?, ?> getConfiguredFeature(LevelReader level) {

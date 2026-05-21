@@ -26,20 +26,18 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record ColumnFeatureConfig(
-	BlockStateProvider stateProvider,
+public record ColumnFeatureConfiguration(
+	BlockStateProvider state,
 	BlockPredicate replaceable,
 	IntProvider length,
 	Direction direction,
-	boolean stopWhenEncounteringUnreplaceableBlock
+	boolean stopAtUnreplaceableBlock
 ) implements FeatureConfiguration {
-	public static final Codec<ColumnFeatureConfig> CODEC = RecordCodecBuilder.create(instance ->
-		instance.group(
-			BlockStateProvider.CODEC.fieldOf("block_state_provider").forGetter(config -> config.stateProvider),
-			BlockPredicate.CODEC.fieldOf("replacement_block_predicate").forGetter(config -> config.replaceable),
-			IntProviders.NON_NEGATIVE_CODEC.fieldOf("length").forGetter((config) -> config.length),
-			Direction.CODEC.fieldOf("direction").forGetter(config -> config.direction),
-			Codec.BOOL.lenientOptionalFieldOf("stop_when_encountering_unreplaceable_block", false).forGetter(config -> config.stopWhenEncounteringUnreplaceableBlock)
-		).apply(instance, ColumnFeatureConfig::new)
-	);
+	public static final Codec<ColumnFeatureConfiguration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		BlockStateProvider.CODEC.fieldOf("block_state").forGetter(config -> config.state),
+		BlockPredicate.CODEC.fieldOf("replaceable").forGetter(config -> config.replaceable),
+		IntProviders.NON_NEGATIVE_CODEC.fieldOf("length").forGetter(config -> config.length),
+		Direction.CODEC.fieldOf("direction").forGetter(config -> config.direction),
+		Codec.BOOL.lenientOptionalFieldOf("stop_at_unreplaceable_block", false).forGetter(config -> config.stopAtUnreplaceableBlock)
+	).apply(instance, ColumnFeatureConfiguration::new));
 }

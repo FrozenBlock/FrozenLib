@@ -26,6 +26,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
@@ -57,6 +58,10 @@ public class FrozenLibPlacedFeature {
 
 	public Holder<PlacedFeature> getHolder() {
 		return FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT.lookup(Registries.PLACED_FEATURE).getOrThrow(this.getKey());
+	}
+
+	public WeightedPlacedFeature asWeightedPlacedFeature(float weight) {
+		return new WeightedPlacedFeature(this.getHolder(), weight);
 	}
 
 	@SuppressWarnings({"unchecked", "rawtypes"})

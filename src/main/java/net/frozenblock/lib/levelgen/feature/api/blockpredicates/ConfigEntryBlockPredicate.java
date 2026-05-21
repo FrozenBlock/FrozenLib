@@ -19,43 +19,23 @@ package net.frozenblock.lib.levelgen.feature.api.blockpredicates;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
-import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
+import org.jetbrains.annotations.ApiStatus;
 
 public class ConfigEntryBlockPredicate implements BlockPredicate {
 	public static final MapCodec<ConfigEntryBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
 		ConfigEntryPredicate.CODEC.fieldOf("config_entry_predicate").forGetter(config -> config.configEntryPredicate)
-	).apply(instance, ConfigEntryBlockPredicate::new));
+	).apply(instance, ConfigEntryPredicate::asBlockPredicate));
 	private final ConfigEntryPredicate<?> configEntryPredicate;
 
+	@ApiStatus.Internal
 	public ConfigEntryBlockPredicate(ConfigEntryPredicate<?> configEntryPredicate) {
 		this.configEntryPredicate = configEntryPredicate;
-	}
-
-	public static <T> ConfigEntryBlockPredicate of(ID entryId, ConfigEntryPredicate.Operator operator, T target) {
-		return new ConfigEntryBlockPredicate(new ConfigEntryPredicate<>(entryId, operator, target));
-	}
-
-	public static <T> ConfigEntryBlockPredicate equalTo(ConfigEntry<T> entry, T target) {
-		return of(entry.id(), ConfigEntryPredicate.Operator.EQUAL_TO, target);
-	}
-
-	public static <T> ConfigEntryBlockPredicate notEqualTo(ConfigEntry<T> entry, T target) {
-		return of(entry.id(), ConfigEntryPredicate.Operator.NOT_EQUAL_TO, target);
-	}
-
-	public static <T> ConfigEntryBlockPredicate greaterThan(ConfigEntry<T> entry, T target) {
-		return of(entry.id(), ConfigEntryPredicate.Operator.GREATER_THAN, target);
-	}
-
-	public static <T> ConfigEntryBlockPredicate lessThan(ConfigEntry<T> entry, T target) {
-		return of(entry.id(), ConfigEntryPredicate.Operator.LESS_THAN, target);
 	}
 
 	@Override
