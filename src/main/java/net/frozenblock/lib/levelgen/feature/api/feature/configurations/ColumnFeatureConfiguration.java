@@ -15,33 +15,29 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.feature.api.feature.config;
+package net.frozenblock.lib.levelgen.feature.api.feature.configurations;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
-import net.minecraft.core.registries.Registries;
+import net.minecraft.core.Direction;
 import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.util.valueproviders.IntProviders;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record ColumnWithDiskFeatureConfiguration(
+public record ColumnFeatureConfiguration(
 	BlockStateProvider state,
-	IntProvider radius,
-	IntProvider height,
-	float surroundingPillarChance,
-	HolderSet<Block> replaceableBlocks,
-	BlockStateProvider diskState
+	BlockPredicate replaceable,
+	IntProvider length,
+	Direction direction,
+	boolean stopAtUnreplaceableBlock
 ) implements FeatureConfiguration {
-	public static final Codec<ColumnWithDiskFeatureConfiguration> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
+	public static final Codec<ColumnFeatureConfiguration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		BlockStateProvider.CODEC.fieldOf("block_state").forGetter(config -> config.state),
-		IntProviders.NON_NEGATIVE_CODEC.fieldOf("radius").forGetter(config -> config.radius),
-		IntProviders.NON_NEGATIVE_CODEC.fieldOf("height").forGetter(config -> config.height),
-		Codec.FLOAT.fieldOf("surrounding_pillar_chance").forGetter(config -> config.surroundingPillarChance),
-		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter(config -> config.replaceableBlocks),
-		BlockStateProvider.CODEC.fieldOf("disk_block_state").forGetter(config -> config.diskState)
-	).apply(instance, ColumnWithDiskFeatureConfiguration::new));
+		BlockPredicate.CODEC.fieldOf("replaceable").forGetter(config -> config.replaceable),
+		IntProviders.NON_NEGATIVE_CODEC.fieldOf("length").forGetter(config -> config.length),
+		Direction.CODEC.fieldOf("direction").forGetter(config -> config.direction),
+		Codec.BOOL.lenientOptionalFieldOf("stop_at_unreplaceable_block", false).forGetter(config -> config.stopAtUnreplaceableBlock)
+	).apply(instance, ColumnFeatureConfiguration::new));
 }

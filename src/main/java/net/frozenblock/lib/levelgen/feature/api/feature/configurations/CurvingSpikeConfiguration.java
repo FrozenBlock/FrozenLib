@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.feature.api.feature.config;
+package net.frozenblock.lib.levelgen.feature.api.feature.configurations;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -27,17 +27,17 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record CurvingSpikeConfig(
+public record CurvingSpikeConfiguration(
 	BlockStateProvider stateProvider, IntProvider xWidth, IntProvider zWidth, IntProvider height, FloatProvider curveDistance, BlockPredicate replaceable
 ) implements FeatureConfiguration {
-	public static final Codec<CurvingSpikeConfig> CODEC = RecordCodecBuilder.create(instance ->
+	public static final Codec<CurvingSpikeConfiguration> CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
-			BlockStateProvider.CODEC.fieldOf("state").forGetter(CurvingSpikeConfig::stateProvider),
-			IntProviders.codec(1, 12).fieldOf("x_width").forGetter(CurvingSpikeConfig::xWidth),
-			IntProviders.codec(1, 12).fieldOf("z_width").forGetter(CurvingSpikeConfig::zWidth),
-			IntProviders.codec(1, 32).fieldOf("height").forGetter(CurvingSpikeConfig::height),
-			FloatProviders.codec(-4F, 4F).fieldOf("curve_distance").forGetter(CurvingSpikeConfig::curveDistance),
-			BlockPredicate.CODEC.fieldOf("replaceable").forGetter(CurvingSpikeConfig::replaceable)
-		).apply(instance, CurvingSpikeConfig::new)
+			BlockStateProvider.CODEC.fieldOf("state").forGetter(CurvingSpikeConfiguration::stateProvider),
+			IntProviders.codec(1, 12).fieldOf("x_width").forGetter(CurvingSpikeConfiguration::xWidth),
+			IntProviders.codec(1, 12).fieldOf("z_width").forGetter(CurvingSpikeConfiguration::zWidth),
+			IntProviders.codec(1, 32).fieldOf("height").forGetter(CurvingSpikeConfiguration::height),
+			FloatProviders.codec(-4F, 4F).fieldOf("curve_distance").forGetter(CurvingSpikeConfiguration::curveDistance),
+			BlockPredicate.CODEC.fieldOf("replaceable").forGetter(CurvingSpikeConfiguration::replaceable)
+		).apply(instance, CurvingSpikeConfiguration::new)
 	);
 }

@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
 import java.util.Optional;
-import net.frozenblock.lib.levelgen.feature.api.feature.config.LargeSpireConfig;
+import net.frozenblock.lib.levelgen.feature.api.feature.configurations.LargeSpireConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
@@ -39,9 +39,9 @@ import net.minecraft.world.level.levelgen.feature.SpeleothemUtils;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class LargeSpireFeature extends Feature<LargeSpireConfig> {
+public class LargeSpireFeature extends Feature<LargeSpireConfiguration> {
 
-	public LargeSpireFeature(Codec<LargeSpireConfig> codec) {
+	public LargeSpireFeature(Codec<LargeSpireConfiguration> codec) {
 		super(codec);
 	}
 
@@ -88,10 +88,10 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<LargeSpireConfig> context) {
+	public boolean place(FeaturePlaceContext<LargeSpireConfiguration> context) {
 		final WorldGenLevel level = context.level();
 		final BlockPos pos = context.origin();
-		final LargeSpireConfig config = context.config();
+		final LargeSpireConfiguration config = context.config();
 		final RandomSource random = context.random();
 
 		if (!LargeSpireFeature.isEmptyOrWaterOrLava(level, pos)) return false;
@@ -124,11 +124,11 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 		return true;
 	}
 
-	public static boolean isBaseOrLava(LargeSpireConfig config, BlockState state) {
+	public static boolean isBaseOrLava(LargeSpireConfiguration config, BlockState state) {
 		return isBase(config, state) || state.is(Blocks.LAVA);
 	}
 
-	public static boolean isBase(LargeSpireConfig config, BlockState state) {
+	public static boolean isBase(LargeSpireConfiguration config, BlockState state) {
 		return state.is(config.baseBlocks()) || state.is(config.replaceable());
 	}
 
@@ -174,7 +174,7 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 			return (int) LargeSpireFeature.getHeight(radius, this.radius, this.scale, this.bluntness);
 		}
 
-		void placeBlocks(WorldGenLevel level, RandomSource random, WindOffsetter windOffsetter, LargeSpireConfig config) {
+		void placeBlocks(WorldGenLevel level, RandomSource random, WindOffsetter windOffsetter, LargeSpireConfiguration config) {
 			for (int x = -this.radius; x <= this.radius; ++x) {
 				for (int z = -this.radius; z <= this.radius; ++z) {
 					final float distance = Mth.sqrt((float) (x * x + z * z));
@@ -204,7 +204,7 @@ public class LargeSpireFeature extends Feature<LargeSpireConfig> {
 			}
 		}
 
-		boolean isSuitableForWind(LargeSpireConfig config) {
+		boolean isSuitableForWind(LargeSpireConfiguration config) {
 			return this.radius >= config.minRadiusForWind() && this.bluntness >= (double) config.minBluntnessForWind();
 		}
 	}

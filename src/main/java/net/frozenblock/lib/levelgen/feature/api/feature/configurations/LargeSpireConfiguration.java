@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.feature.api.feature.config;
+package net.frozenblock.lib.levelgen.feature.api.feature.configurations;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -30,7 +30,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public record LargeSpireConfig(
+public record LargeSpireConfiguration(
 	int floorToCeilingSearchRange,
 	IntProvider columnRadius,
 	BlockStateProvider pathBlock,
@@ -44,7 +44,7 @@ public record LargeSpireConfig(
 	HolderSet<Block> baseBlocks,
 	HolderSet<Block> replaceable
 ) implements FeatureConfiguration {
-	public static final Codec<LargeSpireConfig> CODEC = RecordCodecBuilder.create(instance ->
+	public static final Codec<LargeSpireConfiguration> CODEC = RecordCodecBuilder.create(instance ->
 		instance.group(
 			Codec.intRange(1, 512).fieldOf("floor_to_ceiling_search_range").orElse(30).forGetter(config -> config.floorToCeilingSearchRange),
 			IntProviders.codec(1, 60).fieldOf("column_radius").forGetter(config -> config.columnRadius),
@@ -58,7 +58,7 @@ public record LargeSpireConfig(
 			Codec.floatRange(0F, 5F).fieldOf("min_bluntness_for_wind").forGetter(config -> config.minBluntnessForWind),
 			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("base_blocks").forGetter(config -> config.baseBlocks),
 			RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter(config -> config.replaceable)
-		).apply(instance, LargeSpireConfig::new)
+		).apply(instance, LargeSpireConfiguration::new)
 	);
 
 }

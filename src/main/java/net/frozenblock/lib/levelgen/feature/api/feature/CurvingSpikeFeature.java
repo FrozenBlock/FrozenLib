@@ -18,7 +18,7 @@
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.levelgen.feature.api.feature.config.CurvingSpikeConfig;
+import net.frozenblock.lib.levelgen.feature.api.feature.configurations.CurvingSpikeConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
@@ -29,19 +29,19 @@ import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.phys.Vec3;
 
-public class CurvingSpikeFeature extends Feature<CurvingSpikeConfig> {
+public class CurvingSpikeFeature extends Feature<CurvingSpikeConfiguration> {
 	private static final int BELOW_HEIGHT = -4;
 
-	public CurvingSpikeFeature(Codec<CurvingSpikeConfig> codec) {
+	public CurvingSpikeFeature(Codec<CurvingSpikeConfiguration> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<CurvingSpikeConfig> context) {
+	public boolean place(FeaturePlaceContext<CurvingSpikeConfiguration> context) {
 		final WorldGenLevel level = context.level();
 		final BlockPos pos = context.origin();
 		final RandomSource random = context.random();
-		final CurvingSpikeConfig config = context.config();
+		final CurvingSpikeConfiguration config = context.config();
 
 		final int height = config.height().sample(random);
 		final double curveDistance = config.curveDistance().sample(random);
