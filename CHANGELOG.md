@@ -40,8 +40,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `ConfigEntryCondition`.
   - A wrapper of `ConfigEntryPredicate` in `LootItemCondition` form.
   - Use the `asLootCondition` method in `ConfigEntryPredicate`. Failing to do so will cause unnecessary memory usage.
-- Refactored the `worldgen` package to `levelgen`.
-- Refactored the `worldgen.block_predicate` package to `levelgen.blockpredicates.`
-- Renamed multiple worldgen-related classes to be more consistent with Vanilla.
+- Refactored and renamed many worldgen-related classes to be more consistent with Vanilla.
 - `ColumnWithDiskFeatureConfiguration` now uses two `BlockStateProvider`s instead of a `BlockState` and Block Tag.
 - Renamed the `block_state_provider` field to `block_state` and the `stop_when_encountering_unreplaceable_block` field to `stop_at_unreplaceable_block` in `ColumnFeatureConfiguration`.

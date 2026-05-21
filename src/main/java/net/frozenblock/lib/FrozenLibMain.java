@@ -36,6 +36,7 @@ import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
+import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.loot.impl.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
@@ -98,7 +99,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		FrozenLibParticleTypes.init();
 		FrozenLibFeatures.init();
 		FrozenLibBlockPredicateTypes.init();
-		FrozenLibBlockPredicateTypes.FrozenLibPlacementModifiers.init();
+		FrozenLibPlacementModifiers.init();
 		FrozenLibLootConditionTypes.init();;
 		DataPackReloadMarker.init();
 		StructureGenerationConditionApi.init();

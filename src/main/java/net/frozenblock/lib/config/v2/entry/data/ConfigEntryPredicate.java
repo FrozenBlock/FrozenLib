@@ -50,7 +50,7 @@ public class ConfigEntryPredicate<T> {
 	private final Operator operator;
 	private final T target;
 	private ConfigEntryBlockPredicate blockPredicate;
-	private ConfigEntryPlacementFilter placementFilter;
+	private ConfigEntryPlacementFilter<T> placementFilter;
 	private ConfigEntryCondition lootCondition;
 
 	/**
