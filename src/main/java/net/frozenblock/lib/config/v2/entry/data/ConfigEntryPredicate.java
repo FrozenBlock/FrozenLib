@@ -23,7 +23,6 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiFunction;
-import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
@@ -65,9 +64,6 @@ public class ConfigEntryPredicate<T> {
 		if (operator.requiresComparable() && !(target instanceof Comparable<?>)) {
 			throw new IllegalStateException("Config entry predicate for entry " + id + " is using operator " + operator.getSerializedName() + "without a comparable value!");
 		}
-
-		FrozenLibLogUtils.log("NEW PREDICATE FOR " + id, FrozenLibLogUtils.UNSTABLE_LOGGING);
-		FrozenLibLogUtils.log("TOTAL PREDICATES: " + VALUES.size(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 	}
 
 	public static ConfigEntryPredicate<?> create(ID id, Operator operator, Object target) {
