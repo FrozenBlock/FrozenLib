@@ -2,6 +2,8 @@ Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
 - Removed the `permanent` field from `FireData`.
+- `FireType` now contains an additional optional field, `config_entry_predicate`.
+  - This will be discussed later in the changelog, but will prevent the `FireType` from being used if predicate returns false.
 - Added the `FireEvents` class, containing the following Events:
   - `SELECT_FIRE_TYPE`
     - Is triggered when an Entity is catching on fire and the FireType is being selected.
@@ -31,21 +33,14 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `entry`: The target `ConfigEntry`'s `ID`.
     - `operator`: The `Operator` to compare the target `ConfigEntry`'s value with.
     - `target`: The value the target `ConfigEntry`'s value is being compared with.
-- Added the `ConfigEntryBlockPredicate`.
-  - A wrapper of `ConfigEntryPredicate` in `BlockPredicate` form.
-  - Use the `asBlockPredicate` method in `ConfigEntryPredicate`. Failing to do so will cause unnecessary memory usage.
-- Added the `ConfigEntryPlacementFilter`.
-  - A wrapper of `ConfigEntryPredicate` in `PlacementFilter` form.
-  - Use the `asPlacementFilter` method in `ConfigEntryPredicate`. Failing to do so will cause unnecessary memory usage.
-- Added the `ConfigEntryCondition`.
-  - A wrapper of `ConfigEntryPredicate` in `LootItemCondition` form.
-  - Use the `asLootCondition` method in `ConfigEntryPredicate`. Failing to do so will cause unnecessary memory usage.
-- Added the `ConfigEntrySelector` Configured Feature.
-  - Is configured with `ConfigEntrySelectorFeatureConfiguration` with the following fields:
-    - `config_entry_predicate`: The `ConfigEntryPredicate` to use.
-    - `feature_if_true`: The `PlacedFeature` to be placed if `config_entry_predicate` is true.
-    - `feature_if_false`: The `PlacedFeature` to be placed if `config_entry_predicate` is false.
+  - Can be used as a `BlockPredicate` via the `asBlockPredicate` method.
+  - Can be used as a `PlacementFilter` via the `asPlacementFilter` method.
+  - Can be used as a `LootItemCondition` via the `asLootCondition` method.
+- Added the `ConfigEntrySelector` Configured Feature, configured with `ConfigEntrySelectorFeatureConfiguration`:
+  - `config_entry_predicate`: The `ConfigEntryPredicate` to use.
+  - `feature_if_true`: The `PlacedFeature` to be placed if `config_entry_predicate` returns true.
+  - `feature_if_false`: The `PlacedFeature` to be placed if `config_entry_predicate` returns false.
 - Refactored and renamed many worldgen-related classes to be more consistent with Vanilla.
 - `ColumnWithDiskFeatureConfiguration` now uses two `BlockStateProvider`s instead of a `BlockState` and Block Tag.
 - Renamed the `block_state_provider` field to `block_state` and the `stop_when_encountering_unreplaceable_block` field to `stop_at_unreplaceable_block` in `ColumnFeatureConfiguration`.
-- Removed `FrozenLibGrassColorModifiers`, as this functionality is redundant thanks to Enum extensions in Fabric Loader 0.19+.
+- Removed `FrozenLibGrassColorModifiers`, as this functionality is redundant thanks to Enum Extensions in Fabric Loader 0.19+.

@@ -49,7 +49,8 @@ public record FireData(Holder<FireType> type) {
 
 	public static void init() {}
 
-	public static boolean canFireDataBeReplaced(Entity entity) {
+	public static boolean canFireDataBeReplaced(Entity entity, Holder<FireType> newType) {
+		if (!newType.value().isEnabled()) return false;
 		final FireData fireData = entity.getAttached(ATTACHMENT);
 		return fireData == null || fireData.type().value().replaceable();
 	}
@@ -59,7 +60,7 @@ public record FireData(Holder<FireType> type) {
 	}
 
 	public static void trySet(Entity entity, Holder<FireType> type) {
-		if (entity == null || !canFireDataBeReplaced(entity)) return;
+		if (entity == null || !canFireDataBeReplaced(entity, type)) return;
 
 		entity.setAttached(ATTACHMENT, new FireData(type));
 		FireEvents.AFTER_FIRE_TYPE_SET.invoker().onEntityFireTypeSet(entity, type);
