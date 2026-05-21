@@ -48,3 +48,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Refactored and renamed many worldgen-related classes to be more consistent with Vanilla.
 - `ColumnWithDiskFeatureConfiguration` now uses two `BlockStateProvider`s instead of a `BlockState` and Block Tag.
 - Renamed the `block_state_provider` field to `block_state` and the `stop_when_encountering_unreplaceable_block` field to `stop_at_unreplaceable_block` in `ColumnFeatureConfiguration`.
+- Removed `FrozenLibGrassColorModifiers`, as this functionality is redundant thanks to Enum extensions in Fabric Loader 0.19+.
