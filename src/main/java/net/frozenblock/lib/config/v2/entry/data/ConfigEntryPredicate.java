@@ -27,8 +27,10 @@ import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigEntryBlockPredicate;
+import net.frozenblock.lib.levelgen.placement.api.ConfigEntryPlacementFilter;
 import net.frozenblock.lib.loot.api.predicates.ConfigEntryCondition;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.levelgen.placement.BlockPredicateFilter;
 
 /**
  * A serializable predicate that compares a value with a {@link ConfigEntry}'s value.
@@ -48,6 +50,7 @@ public class ConfigEntryPredicate<T> {
 	private final Operator operator;
 	private final T target;
 	private ConfigEntryBlockPredicate blockPredicate;
+	private ConfigEntryPlacementFilter placementFilter;
 	private ConfigEntryCondition lootCondition;
 
 	/**
@@ -92,6 +95,15 @@ public class ConfigEntryPredicate<T> {
 	public ConfigEntryBlockPredicate asBlockPredicate() {
 		if (this.blockPredicate == null) this.blockPredicate = new ConfigEntryBlockPredicate(this);
 		return this.blockPredicate;
+	}
+
+	public BlockPredicateFilter asBlockPredicateFilter() {
+		return BlockPredicateFilter.forPredicate(this.blockPredicate);
+	}
+
+	public ConfigEntryPlacementFilter<T> asPlacementFilter() {
+		if (this.placementFilter == null) this.placementFilter = new ConfigEntryPlacementFilter<>(this);
+		return this.placementFilter;
 	}
 
 	public ConfigEntryCondition asLootCondition() {

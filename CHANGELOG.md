@@ -34,6 +34,9 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `ConfigEntryBlockPredicate`.
   - A wrapper of `ConfigEntryPredicate` in `BlockPredicate` form.
   - Use the `asBlockPredicate` method in `ConfigEntryPredicate`. Failing to do so will cause unnecessary memory usage.
+- Added the `ConfigEntryPlacementFilter`.
+  - A wrapper of `ConfigEntryPredicate` in `PlacementFilter` form.
+  - Use the `asPlacementFilter` method in `ConfigEntryPredicate`. Failing to do so will cause unnecessary memory usage.
 - Added the `ConfigEntryCondition`.
   - A wrapper of `ConfigEntryPredicate` in `LootItemCondition` form.
   - Use the `asLootCondition` method in `ConfigEntryPredicate`. Failing to do so will cause unnecessary memory usage.

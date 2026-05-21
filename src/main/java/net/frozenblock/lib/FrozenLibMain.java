@@ -51,7 +51,6 @@ import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.api.command.WindCommand;
 import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatures;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
-import net.frozenblock.lib.levelgen.feature.api.placementmodifier.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.levelgen.structure.api.StructureGenerationConditionApi;
 import net.frozenblock.lib.levelgen.structure.api.StructurePlacementExclusionApi;
 import net.frozenblock.lib.levelgen.structure.api.TemplatePoolApi;
@@ -99,7 +98,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		FrozenLibParticleTypes.init();
 		FrozenLibFeatures.init();
 		FrozenLibBlockPredicateTypes.init();
-		FrozenLibPlacementModifiers.init();
+		FrozenLibBlockPredicateTypes.FrozenLibPlacementModifiers.init();
 		FrozenLibLootConditionTypes.init();;
 		DataPackReloadMarker.init();
 		StructureGenerationConditionApi.init();

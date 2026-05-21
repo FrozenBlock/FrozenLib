@@ -15,17 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.feature.api.placementmodifier;
+package net.frozenblock.lib.levelgen.placement.impl;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.levelgen.placement.api.ConfigEntryPlacementFilter;
+import net.frozenblock.lib.levelgen.placement.api.NoisePlacementFilter;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 public class FrozenLibPlacementModifiers {
-	public static final PlacementModifierType<LowerHeightmapPlacement> ACCURATE_HEIGHTMAP = register("improved_heightmap", LowerHeightmapPlacement.CODEC);
+	public static final PlacementModifierType<ConfigEntryPlacementFilter<?>> CONFIG_ENTRY = register("config_entry", ConfigEntryPlacementFilter.CODEC);
 	public static final PlacementModifierType<NoisePlacementFilter> NOISE_FILTER = register("noise_filter", NoisePlacementFilter.CODEC);
 
 	public static void init() {}
