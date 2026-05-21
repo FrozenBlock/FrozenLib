@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.block.api.sound;
 
-import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -43,8 +42,8 @@ public class SoundTypeOverrides {
 			.map(SoundTypeOverride::getSoundType);
 	}
 
-	public static ResourceKey<FireType> createKey(Identifier id) {
-		return ResourceKey.create(FrozenLibRegistries.FIRE_TYPE, id);
+	public static ResourceKey<SoundTypeOverride> createKey(Identifier id) {
+		return ResourceKey.create(FrozenLibRegistries.SOUND_TYPE_OVERRIDE, id);
 	}
 
 	public static void register(
