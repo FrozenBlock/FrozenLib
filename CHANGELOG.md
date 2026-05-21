@@ -33,6 +33,9 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `entry`: The target `ConfigEntry`'s `ID`.
     - `operator`: The `Operator` to compare the target `ConfigEntry`'s value with.
     - `target`: The value the target `ConfigEntry`'s value is being compared with.
+    - `with`: An optional field, providing an `InlinedOperator` and another `ConfigEntryPredicate` to compare the first result against.
+      - `operator` The `InlinedOperator` to compare the original result against.
+      - `config_entry_predicate`: The `ConfigEntryPredicate` being compared.
   - Can be used as a `BlockPredicate` via the `asBlockPredicate` method.
   - Can be used as a `PlacementFilter` via the `asPlacementFilter` method.
   - Can be used as a `LootItemCondition` via the `asLootCondition` method.
@@ -44,3 +47,17 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - `ColumnWithDiskFeatureConfiguration` now uses two `BlockStateProvider`s instead of a `BlockState` and Block Tag.
 - Renamed the `block_state_provider` field to `block_state` and the `stop_when_encountering_unreplaceable_block` field to `stop_at_unreplaceable_block` in `ColumnFeatureConfiguration`.
 - Removed `FrozenLibGrassColorModifiers`, as this functionality is redundant thanks to Enum Extensions in Fabric Loader 0.19+.
+- Block Sound Type Overwrites have been removed, and replaced with a newer version that utilizes Dynamic Registries.
+  - We understand this may upset some players, but the Resource Pack functionality would cause sound type desyncs between the server and client.
+  - The new system will allow players to accomplish the same results, but via Data Pack!
+- Added the `SoundTypeOverride`, containing the following fields:
+  - `blocks`: A block's ID, a list of block IDs, or a Block Tag that the `sound_type` applies to.
+  - `sound_type`: The `SoundType` to be used.
+    - `volume`: The volume to use.
+    - `pitch`: The pitch to use.
+    - `break_sound`: The break sound to use.
+    - `step_sound`: The step sound to use.
+    - `place_sound`: The place sound to use.
+    - `hit_sound`: The hit sound to use.
+    - `fall_sound`: The fall sound to use. Notice a pattern?
+  - `config_entry_predicate`: An optional field, supplying a `ConfigEntryPredicate` that determines whether the override can be used.

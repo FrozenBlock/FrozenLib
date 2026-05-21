@@ -21,6 +21,7 @@ import com.google.common.collect.MapMaker;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentMap;
 import java.util.function.BiFunction;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
@@ -42,13 +43,15 @@ public class ConfigEntryPredicate<T> {
 		id -> RecordCodecBuilder.mapCodec(instance -> instance.group(
 			instance.point(id),
 			Operator.CODEC.fieldOf("operator").forGetter(predicate -> predicate.operator),
-			((Codec<Object>) ConfigV2Registry.getEntry(id).codec()).fieldOf("target").forGetter(predicate -> predicate.target)
+			((Codec<Object>) ConfigV2Registry.getEntry(id).codec()).fieldOf("target").forGetter(predicate -> predicate.target),
+			Inlined.CODEC.optionalFieldOf("with").forGetter(predicate -> predicate.with)
 		).apply(instance, ConfigEntryPredicate::create))
 	);
 	private final ID id;
 	private final ConfigEntry<T> entry;
 	private final Operator operator;
 	private final T target;
+	private final Optional<Inlined> with;
 	private ConfigEntryBlockPredicate blockPredicate;
 	private ConfigEntryPlacementFilter<T> placementFilter;
 	private ConfigEntryCondition lootCondition;
@@ -58,11 +61,12 @@ public class ConfigEntryPredicate<T> {
 	 * @param operator The {@link Operator} used to compare the target {@link ConfigEntry}'s value with.
 	 * @param target The value the target {@link ConfigEntry}'s value is being compared with.
 	 */
-	private ConfigEntryPredicate(ID id, Operator operator, T target) {
+	private ConfigEntryPredicate(ID id, Operator operator, T target, Optional<Inlined> with) {
 		this.id = id;
 		this.entry = (ConfigEntry<T>) ConfigV2Registry.getEntry(id);
 		this.operator = operator;
 		this.target = target;
+		this.with = with;
 
 		if (operator.requiresComparable() && !(target instanceof Comparable<?>)) {
 			throw new IllegalStateException("Config entry predicate for entry " + id + " is using operator " + operator.getSerializedName() + "without a comparable value!");
@@ -71,8 +75,15 @@ public class ConfigEntryPredicate<T> {
 
 	public static ConfigEntryPredicate<?> create(ID id, Operator operator, Object target) {
 		return VALUES.computeIfAbsent(
-			new InternKey(id, operator, target),
-			key -> new ConfigEntryPredicate<>(key.id, key.operator, key.target)
+			new InternKey(id, operator, target, Optional.empty()),
+			key -> new ConfigEntryPredicate<>(key.id, key.operator, key.target, key.with)
+		);
+	}
+
+	public static ConfigEntryPredicate<?> create(ID id, Operator operator, Object target, Optional<Inlined> with) {
+		return VALUES.computeIfAbsent(
+			new InternKey(id, operator, target, with),
+			key -> new ConfigEntryPredicate<>(key.id, key.operator, key.target, key.with)
 		);
 	}
 
@@ -90,6 +101,22 @@ public class ConfigEntryPredicate<T> {
 
 	public static <T> ConfigEntryPredicate<T> lessThan(ConfigEntry<T> entry, T target) {
 		return (ConfigEntryPredicate<T>) create(entry.id(), Operator.LESS_THAN, target);
+	}
+
+	public ConfigEntryPredicate<?> equalTo(ConfigEntryPredicate<?> configEntryPredicate) {
+		return create(this.id, this.operator, this.target, Optional.of(new Inlined(Inlined.InlinedOperator.EQUAL_TO, configEntryPredicate)));
+	}
+
+	public ConfigEntryPredicate<?> notEqualTo(ConfigEntryPredicate<?> configEntryPredicate) {
+		return create(this.id, this.operator, this.target, Optional.of(new Inlined(Inlined.InlinedOperator.NOT_EQUAL_TO, configEntryPredicate)));
+	}
+
+	public ConfigEntryPredicate<?> and(ConfigEntryPredicate<?> configEntryPredicate) {
+		return create(this.id, this.operator, this.target, Optional.of(new Inlined(Inlined.InlinedOperator.AND, configEntryPredicate)));
+	}
+
+	public ConfigEntryPredicate<?> or(ConfigEntryPredicate<?> configEntryPredicate) {
+		return create(this.id, this.operator, this.target, Optional.of(new Inlined(Inlined.InlinedOperator.OR, configEntryPredicate)));
 	}
 
 	public ConfigEntryBlockPredicate asBlockPredicate() {
@@ -113,6 +140,37 @@ public class ConfigEntryPredicate<T> {
 
 	public boolean evaluate() {
 		return this.operator.apply(this.target, this.entry.get());
+	}
+
+	public record Inlined(InlinedOperator operator, ConfigEntryPredicate<?> configEntryPredicate) {
+		public static final Codec<Inlined> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			InlinedOperator.CODEC.fieldOf("operator").forGetter(inlined -> inlined.operator),
+			ConfigEntryPredicate.CODEC.fieldOf("config_entry_predicate").forGetter(inlined -> inlined.configEntryPredicate)
+		).apply(instance, Inlined::new));
+
+		public enum InlinedOperator implements StringRepresentable {
+			EQUAL_TO("equal_to", (a, b) -> a == b),
+			NOT_EQUAL_TO("not_equal_to", (a, b) -> a != b),
+			AND("and", (a, b) -> a && b),
+			OR("or", (a, b) -> a || b);
+			public static final Codec<InlinedOperator> CODEC = StringRepresentable.fromEnum(InlinedOperator::values);
+			private final String name;
+			private final BiFunction<Boolean, Boolean, Boolean> operation;
+
+			InlinedOperator(String name, BiFunction<Boolean, Boolean, Boolean> operation) {
+				this.name = name;
+				this.operation = operation;
+			}
+
+			public boolean apply(Boolean value, Boolean other) {
+				return this.operation.apply(value, other);
+			}
+
+			@Override
+			public String getSerializedName() {
+				return this.name;
+			}
+		}
 	}
 
 	public enum Operator implements StringRepresentable {
@@ -145,5 +203,5 @@ public class ConfigEntryPredicate<T> {
 		}
 	}
 
-	private record InternKey(ID id, Operator operator, Object target) {}
+	private record InternKey(ID id, Operator operator, Object target, Optional<Inlined> with) {}
 }

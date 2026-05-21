@@ -23,13 +23,12 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
+import net.frozenblock.lib.levelgen.structure.api.status.client.ClientStructureStatuses;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
@@ -37,9 +36,7 @@ import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
-import net.frozenblock.lib.levelgen.structure.api.status.client.ClientStructureStatuses;
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.packs.PackType;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
@@ -74,9 +71,6 @@ public final class FrozenLibClient implements ClientModInitializer {
 		});
 
 		FrozenLibModResourcePackApi.init();
-
-		final var resourceLoader = ResourceManagerHelper.get(PackType.CLIENT_RESOURCES);
-		resourceLoader.registerReloadListener(BlockSoundTypeManager.INSTANCE);
 
 		FrozenClientEntrypoint.EVENT.invoker().init(); // also includes dev init
 	}

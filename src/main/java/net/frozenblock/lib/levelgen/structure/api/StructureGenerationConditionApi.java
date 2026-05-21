@@ -25,7 +25,6 @@ import java.util.Map;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.levelgen.structure.impl.StructureSetAndPlacementInterface;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
@@ -35,7 +34,7 @@ public class StructureGenerationConditionApi {
 	private static final Map<Identifier, List<Supplier<Boolean>>> STRUCTURE_SET_TO_SUPPLIER_MAP = new Object2ObjectOpenHashMap<>();
 
 	public static void init() {
-		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register((RegistryAccess registryAccess) -> {
+		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register(registryAccess -> {
 			registryAccess.lookup(Registries.STRUCTURE_SET).ifPresent(structureSetRegistry -> {
 				structureSetRegistry.entrySet().forEach(structureSetEntry -> {
 					if (!((Object) (structureSetEntry.getValue()) instanceof StructureSetAndPlacementInterface setAndPlacementInterface)) return;

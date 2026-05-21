@@ -19,16 +19,12 @@ package net.frozenblock.lib.sound.api
 
 import com.mojang.serialization.Codec
 import com.mojang.serialization.codecs.RecordCodecBuilder
-import io.netty.buffer.ByteBuf
-import net.frozenblock.lib.block.sound.api.SoundTypeCodecs
 import net.minecraft.core.Holder
 import net.minecraft.network.RegistryFriendlyByteBuf
 import net.minecraft.network.codec.ByteBufCodecs
 import net.minecraft.network.codec.StreamCodec
 import net.minecraft.sounds.Music
 import net.minecraft.sounds.SoundEvent
-import java.util.*
-import kotlin.jvm.optionals.getOrNull
 
 /**
  * @since 1.4.4
