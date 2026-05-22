@@ -115,6 +115,5 @@ public abstract class ModIntegration {
     public abstract void init();
 
 	@Environment(EnvType.CLIENT)
-	public void clientInit() {
-	}
+	public void clientInit() {}
 }

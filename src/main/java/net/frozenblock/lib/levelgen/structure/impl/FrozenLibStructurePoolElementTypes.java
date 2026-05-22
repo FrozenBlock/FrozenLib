@@ -26,7 +26,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 
-public final class FrozenStructurePoolElementTypes {
+public final class FrozenLibStructurePoolElementTypes {
 	public static final StructurePoolElementType<DataMarkerProcessableLegacySinglePoolElement> DATA_MARKER_PROCESSABLE_LEGACY_SINGLE = register(
 		"data_marker_processable_legacy_single_pool_element",
 		DataMarkerProcessableLegacySinglePoolElement.CODEC

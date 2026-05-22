@@ -49,13 +49,10 @@ public class WeightedRuleProcessor implements StructureProcessor {
 		StructurePlaceSettings settings
 	) {
 		final RandomSource random = RandomSource.create(Mth.getSeed(processedBlockInfo.pos()));
-
 		for (WeightedProcessorRule rule : this.rules) {
-			if (rule.test(level, processedBlockInfo.state(), templateRelativePos, processedBlockInfo.pos(), referencePos, random)) {
-				return new StructureTemplate.StructureBlockInfo(processedBlockInfo.pos(), rule.getOutputState(random), processedBlockInfo.nbt());
-			}
+			if (!rule.test(level, processedBlockInfo.state(), templateRelativePos, processedBlockInfo.pos(), referencePos, random)) continue;
+			return new StructureTemplate.StructureBlockInfo(processedBlockInfo.pos(), rule.getOutputState(random), processedBlockInfo.nbt());
 		}
-
 		return processedBlockInfo;
 	}
 

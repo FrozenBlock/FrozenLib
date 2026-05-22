@@ -26,10 +26,9 @@ import org.apache.commons.lang3.math.Fraction;
 
 public final class BundleWeightOverride {
 	public static final Codec<BundleWeightOverride> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Codec.INT.fieldOf("numerator").forGetter(component -> component.numerator),
-			Codec.INT.fieldOf("denominator").forGetter(BundleWeightOverride::denominator)
-		).apply(instance, BundleWeightOverride::new)
-	);
+		Codec.INT.fieldOf("numerator").forGetter(component -> component.numerator),
+		Codec.INT.fieldOf("denominator").forGetter(BundleWeightOverride::denominator)
+	).apply(instance, BundleWeightOverride::new));
 	public static final StreamCodec<ByteBuf, BundleWeightOverride> STREAM_CODEC = StreamCodec.composite(
 		ByteBufCodecs.VAR_INT, BundleWeightOverride::numerator,
 		ByteBufCodecs.VAR_INT, BundleWeightOverride::denominator,

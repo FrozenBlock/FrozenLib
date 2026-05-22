@@ -27,7 +27,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Contract;
 
 public class RemovableDataComponents {
 	private static final LinkedHashMap<Holder<DataComponentType<?>>, RemovableDataComponent> REMOVABLE_DATA_COMPONENTS = new LinkedHashMap<>();
@@ -61,7 +60,6 @@ public class RemovableDataComponents {
 		return true;
 	}
 
-	@Contract(pure = true)
 	public static Set<Holder<DataComponentType<?>>> keys() {
 		return REMOVABLE_DATA_COMPONENTS.keySet();
 	}

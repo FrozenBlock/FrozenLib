@@ -41,5 +41,4 @@ public class StructureProcessorApi {
 		final List<StructureProcessor> locationToProcessors = STRUCTURE_TO_PROCESSORS.getOrDefault(structureId, EMPTY);
 		return new ArrayList<>(locationToProcessors);
 	}
-
 }

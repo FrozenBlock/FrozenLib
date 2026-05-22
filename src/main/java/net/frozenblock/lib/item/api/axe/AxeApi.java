@@ -83,5 +83,4 @@ public class AxeApi {
 		 */
 		void onSuccess(Level level, BlockPos pos, Direction direction, BlockState state, BlockState oldState);
 	}
-
 }

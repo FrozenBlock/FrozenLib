@@ -21,7 +21,7 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenStructurePoolElementTypes;
+import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
@@ -66,7 +66,7 @@ public class DataMarkerProcessableSinglePoolElement extends SinglePoolElement {
 
 	@Override
 	public StructurePoolElementType<?> getType() {
-		return FrozenStructurePoolElementTypes.DATA_MARKER_PROCESSABLE_SINGLE;
+		return FrozenLibStructurePoolElementTypes.DATA_MARKER_PROCESSABLE_SINGLE;
 	}
 
 	@Override

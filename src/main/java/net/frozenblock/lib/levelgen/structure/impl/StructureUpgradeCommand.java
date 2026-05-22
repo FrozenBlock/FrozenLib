@@ -38,13 +38,28 @@ import net.minecraft.SharedConstants;
 public class StructureUpgradeCommand {
 
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal("structure_upgrade")
-			.then(Commands.argument("namespace", StringArgumentType.string())
-				.executes(context -> upgradeAndExportPieces(context.getSource(), StringArgumentType.getString(context, "namespace"), false))
-				.then(Commands.argument("log", BoolArgumentType.bool())
-					.executes(context -> upgradeAndExportPieces(context.getSource(), StringArgumentType.getString(context, "namespace"), BoolArgumentType.getBool(context, "log")))
+		dispatcher.register(
+			Commands.literal("structure_upgrade")
+				.then(
+					Commands.argument("namespace", StringArgumentType.string())
+						.executes(
+							context -> upgradeAndExportPieces(
+								context.getSource(),
+								StringArgumentType.getString(context, "namespace"),
+								false
+							)
+						)
+						.then(
+							Commands.argument("log", BoolArgumentType.bool())
+								.executes(
+									context -> upgradeAndExportPieces(
+										context.getSource(),
+										StringArgumentType.getString(context, "namespace"),
+										BoolArgumentType.getBool(context, "log")
+									)
+								)
+						)
 				)
-			)
 		);
 	}
 

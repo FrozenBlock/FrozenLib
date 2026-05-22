@@ -30,7 +30,8 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 public class BlockStateRespectingRuleProcessor implements StructureProcessor {
 	public static final MapCodec<BlockStateRespectingRuleProcessor> MAP_CODEC = BlockStateRespectingProcessorRule.CODEC.listOf()
-		.fieldOf("rules").xmap(BlockStateRespectingRuleProcessor::new, processor -> processor.rules);
+		.fieldOf("rules")
+		.xmap(BlockStateRespectingRuleProcessor::new, processor -> processor.rules);
 	private final ImmutableList<BlockStateRespectingProcessorRule> rules;
 
 	public BlockStateRespectingRuleProcessor(List<? extends BlockStateRespectingProcessorRule> rules) {
@@ -47,15 +48,12 @@ public class BlockStateRespectingRuleProcessor implements StructureProcessor {
 		StructurePlaceSettings settings
 	) {
 		final RandomSource random = RandomSource.create(Mth.getSeed(processedBlockInfo.pos()));
-
 		for (BlockStateRespectingProcessorRule rule : this.rules) {
-			if (rule.test(level, processedBlockInfo.state(), templateRelativePos, processedBlockInfo.pos(), referencePos, random)) {
-				return new StructureTemplate.StructureBlockInfo(
-					processedBlockInfo.pos(), rule.getOutputState(processedBlockInfo.state()), rule.getOutputTag(random, processedBlockInfo.nbt())
-				);
-			}
+			if (!rule.test(level, processedBlockInfo.state(), templateRelativePos, processedBlockInfo.pos(), referencePos, random)) continue;
+			return new StructureTemplate.StructureBlockInfo(
+				processedBlockInfo.pos(), rule.getOutputState(processedBlockInfo.state()), rule.getOutputTag(random, processedBlockInfo.nbt())
+			);
 		}
-
 		return processedBlockInfo;
 	}
 

@@ -89,5 +89,4 @@ public class TemplatePoolApi {
 	public interface AddAdditionalTemplatePools extends CommonEventEntrypoint {
 		void addAdditionalTemplatePools(HolderLookup.RegistryLookup<StructureProcessorList> registry, TemplatePoolAdditionHolder context);
 	}
-
 }

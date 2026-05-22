@@ -41,5 +41,4 @@ public class ItemBlockStateTagUtils {
 		final BlockItemStateProperties stateProperties = stack.getOrDefault(DataComponents.BLOCK_STATE, BlockItemStateProperties.EMPTY);
 		stack.set(DataComponents.BLOCK_STATE, stateProperties.with(property, value));
 	}
-
 }

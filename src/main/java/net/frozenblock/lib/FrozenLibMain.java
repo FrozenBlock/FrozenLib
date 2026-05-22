@@ -40,9 +40,9 @@ import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.levelgen.structure.api.StructureGenerationConditionApi;
 import net.frozenblock.lib.levelgen.structure.api.StructurePlacementExclusionApi;
 import net.frozenblock.lib.levelgen.structure.api.TemplatePoolApi;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenRuleBlockEntityModifiers;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenStructurePoolElementTypes;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenStructureProcessorTypes;
+import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModifiers;
+import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
+import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.StructureUpgradeCommand;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.BiomeTagConditionSource;
@@ -86,9 +86,9 @@ public final class FrozenLibMain extends FrozenModInitializer {
 
 		// CONTINUE FROZENLIB INIT
 
-		FrozenRuleBlockEntityModifiers.init();
-		FrozenStructureProcessorTypes.init();
-		FrozenStructurePoolElementTypes.init();
+		FrozenLibRuleBlockEntityModifiers.init();
+		FrozenLibStructureProcessorTypes.init();
+		FrozenLibStructurePoolElementTypes.init();
 		SoundPredicate.init();
 		SpottingIconPredicate.init();
 		WindDisturbanceLogic.init();

@@ -26,7 +26,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
-public class FrozenStructureProcessorTypes {
+public class FrozenLibStructureProcessorTypes {
 
 	public static void init() {
 		register("block_state_respecting_rule", BlockStateRespectingRuleProcessor.MAP_CODEC);

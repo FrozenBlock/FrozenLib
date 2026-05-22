@@ -39,5 +39,4 @@ public class RandomPoolAliasApi {
 	public static List<Pair<Identifier, Integer>> getAdditionalTargets(Identifier alias) {
 		return ALIAS_TO_TARGETS.getOrDefault(alias, ImmutableList.of());
 	}
-
 }

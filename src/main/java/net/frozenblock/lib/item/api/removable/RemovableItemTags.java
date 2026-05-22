@@ -24,7 +24,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Contract;
 
 /**
  * Targets {@link DataComponents#CUSTOM_DATA }
@@ -54,7 +53,6 @@ public class RemovableItemTags {
 		return true;
 	}
 
-	@Contract(pure = true)
 	public static Set<String> keys() {
 		return REMOVABLE_ITEM_TAGS.keySet();
 	}
