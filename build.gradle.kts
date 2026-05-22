@@ -21,7 +21,7 @@ buildscript {
 }
 
 plugins {
-	id("net.fabricmc.fabric-loom") version("1.15-SNAPSHOT")
+	id("net.fabricmc.fabric-loom") version("1.16-SNAPSHOT")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
 	id("com.modrinth.minotaur") version("+")
@@ -31,7 +31,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.3.10")
+    kotlin("jvm") version("2.3.21")
     checkstyle
 }
 
