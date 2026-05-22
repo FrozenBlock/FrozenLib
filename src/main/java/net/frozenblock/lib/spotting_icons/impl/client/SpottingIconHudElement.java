@@ -51,7 +51,7 @@ public final class SpottingIconHudElement implements HudElement {
 			if (icon == null || !iconManager.clientHasIconResource) continue;
 
 			Vec3 eyePos = entity.getEyePosition(partialTick);
-			double dist = Math.sqrt(minecraft.gameRenderer.getMainCamera().position().distanceToSqr(eyePos));
+			double dist = Math.sqrt(minecraft.gameRenderer.mainCamera().position().distanceToSqr(eyePos));
 			if (dist <= icon.startFadeDist()) continue;
 
 			float endDist = icon.endFadeDist() - icon.startFadeDist();

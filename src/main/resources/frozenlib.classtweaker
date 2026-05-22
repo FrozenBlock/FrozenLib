@@ -115,7 +115,6 @@ transitive-accessible method net/minecraft/world/entity/EntityTypes raftFactory 
 transitive-accessible method net/minecraft/world/entity/EntityTypes chestRaftFactory (Ljava/util/function/Supplier;)Lnet/minecraft/world/entity/EntityType$EntityFactory;
 
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/screenshake/impl/EntityScreenShakeInterface
-transitive-inject-interface net/minecraft/client/renderer/entity/state/EntityRenderState net/frozenblock/lib/spotting_icons/impl/client/EntityRenderStateWithIcon
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/block/impl/clipgroup/ClipGroupInterface
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/block/impl/waterlike/InWaterLikeInterface
 transitive-inject-interface net/minecraft/world/entity/player/Player net/frozenblock/lib/block/impl/waterlike/PlayerInWaterLikeInterface
