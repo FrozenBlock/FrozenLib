@@ -21,15 +21,16 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.util.ARGB;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
@@ -44,6 +45,15 @@ public final class SpottingIconHudElement implements HudElement {
 		if (minecraft.level == null) return;
 
 		float partialTick = deltaTracker.getGameTimeDeltaPartialTick(true);
+		var camera = minecraft.gameRenderer.mainCamera();
+		Vec3 cameraPos = camera.position();
+		float cameraYaw = camera.yRot() * Mth.DEG_TO_RAD;
+		float cameraPitch = camera.xRot() * Mth.DEG_TO_RAD;
+		Vec3 cameraForward = new Vec3(
+			-Mth.sin(cameraYaw) * Mth.cos(cameraPitch),
+			-Mth.sin(cameraPitch),
+			Mth.cos(cameraYaw) * Mth.cos(cameraPitch)
+		);
 
 		for (Entity entity : minecraft.level.entitiesForRendering()) {
 			SpottingIconManager iconManager = entity.frozenLib$getSpottingIconManager();
@@ -51,13 +61,15 @@ public final class SpottingIconHudElement implements HudElement {
 			if (icon == null || !iconManager.clientHasIconResource) continue;
 
 			Vec3 eyePos = entity.getEyePosition(partialTick);
-			double dist = Math.sqrt(minecraft.gameRenderer.mainCamera().position().distanceToSqr(eyePos));
+			double dist = Math.sqrt(cameraPos.distanceToSqr(eyePos));
 			if (dist <= icon.startFadeDist()) continue;
 
 			float endDist = icon.endFadeDist() - icon.startFadeDist();
 			int alpha = (int) (Math.min(1F, (float) (dist - icon.startFadeDist()) / endDist) * 255F);
 
 			Vec3 iconWorldPos = new Vec3(eyePos.x, eyePos.y + entity.getBbHeight() + 1F - entity.getEyeHeight(), eyePos.z);
+			// check if in front of camera
+			if (iconWorldPos.subtract(cameraPos).dot(cameraForward) <= 0D) continue;
 			Vec3 project = minecraft.gameRenderer.projectPointToScreen(iconWorldPos);
 
 			if (project.z > 1.0 || project.x < -1.0 || project.x > 1.0 || project.y < -1.0 || project.y > 1.0) continue;
