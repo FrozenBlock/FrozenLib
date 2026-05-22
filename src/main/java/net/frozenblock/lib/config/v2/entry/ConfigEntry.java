@@ -100,10 +100,9 @@ public class ConfigEntry<T> implements Supplier<T> {
 
 	public void setValue(T value, boolean markDirty) {
 		this.ensureIsLoaded();
-		boolean same = this.value.equals(value);
 		this.value = value;
 		if (markDirty) this.markDirty();
-		if (!same) this.trySendSync();
+		this.trySendSync();
 	}
 
 	public void trySendSync() {

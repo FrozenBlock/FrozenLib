@@ -99,10 +99,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 	public static void sendDataS2C(ServerPlayer player, Collection<ConfigData<?>> entries) {
 		if (FrozenNetworking.isLocalPlayer(player)) return;
-
-		for (ConfigData<?> entry : entries) {
-			sendEntryS2C(player, entry.entries().values());
-		}
+		for (ConfigData<?> entry : entries) sendEntryS2C(player, entry.entries().values());
 	}
 
 	public static void sendEntryS2C(ServerPlayer player, Iterable<ConfigEntry<?>> entries) {
@@ -137,12 +134,15 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 	@Environment(EnvType.CLIENT)
 	public static <T> void trySendC2S(ConfigEntry<T> config) {
-		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false)) sendC2S(List.of(config));
+		trySendC2S(List.of(config));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public static void trySendC2S(Iterable<ConfigEntry<?>> entries) {
-		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false)) sendC2S(entries);
+		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false)) {
+			sendC2S(entries);
+			FrozenLibLogUtils.logError("FAILED TO SEND SYNC LMFAO");
+		}
 	}
 
 	@Override

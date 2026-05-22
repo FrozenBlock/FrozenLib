@@ -15,25 +15,27 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.config.impl;
+package net.frozenblock.lib.config.impl.client;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
-import java.util.Collection;
-import net.frozenblock.lib.config.v2.config.ConfigData;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
+import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 
-public final class ConfigCommand {
+@Environment(EnvType.CLIENT)
+public final class ClientConfigCommand {
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
 		dispatcher.register(
-			Commands.literal("frozenlib_config")
-				.then(Commands.literal("reload")
-					.then(Commands.argument("modId", StringArgumentType.string())
+			ClientCommands.literal("frozenlib_config_client")
+				.then(ClientCommands.literal("reload")
+					.then(ClientCommands.argument("modId", StringArgumentType.string())
 						.suggests((context, builder) ->
 								SharedSuggestionProvider.suggest(
 									ConfigV2Registry.allConfigData().stream()
@@ -43,26 +45,17 @@ public final class ConfigCommand {
 								)
 						)
 						.executes(context -> reloadConfigs(context.getSource(), StringArgumentType.getString(context, "modId")))
-						.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+					)
 				)
-			)
 		);
 	}
 
-	public static int reloadConfigsAndCount(String modId) {
-		final Collection<ConfigData<?>> configs = ConfigV2Registry.allConfigData().stream()
-			.filter(data -> data.id().namespace().equals(modId))
-			.toList();
-		for (ConfigData<?> config : configs) config.reload();
-		return configs.size();
-	}
-
-	private static int reloadConfigs(CommandSourceStack source, String modId) {
-		final int configCount = reloadConfigsAndCount(modId);
+	private static int reloadConfigs(FabricClientCommandSource source, String modId) {
+		final int configCount = ConfigCommand.reloadConfigsAndCount(modId);
 		if (configCount == 1) {
-			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.single", modId), true);
+			source.sendFeedback(Component.translatable("commands.frozenlib_config.reload.single", modId));
 		} else {
-			source.sendSuccess(() -> Component.translatable("commands.frozenlib_config.reload.multiple", configCount, modId), true);
+			source.sendFeedback(Component.translatable("commands.frozenlib_config.reload.multiple", configCount, modId));
 		}
 		return configCount;
 	}

@@ -61,3 +61,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `hit_sound`: The hit sound to use.
     - `fall_sound`: The fall sound to use. Notice a pattern?
   - `config_entry_predicate`: An optional field, supplying a `ConfigEntryPredicate` that determines whether the override can be used.
+- The `frozenlib_config reload` Command now provides completion suggestions.
+- Added the `frozenlib_config_client` Command, allowing clients to use config commands locally without affecting the server.

@@ -24,6 +24,7 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
+import net.frozenblock.lib.config.impl.client.ClientConfigCommand;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
@@ -68,6 +69,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
 			PanoramaCommand.register(dispatcher);
+			ClientConfigCommand.register(dispatcher);
 		});
 
 		FrozenLibModResourcePackApi.init();
