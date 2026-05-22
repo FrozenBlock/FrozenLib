@@ -9,9 +9,5 @@
   "mixins": [
     "EntityMixin"
   ],
-  "client": [
-    "client.EntityRenderDispatcherMixin",
-    "client.EntityRendererMixin",
-    "client.EntityRenderStateInterface"
-  ]
+  "client": []
 }

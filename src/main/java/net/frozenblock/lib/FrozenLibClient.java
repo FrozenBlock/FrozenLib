@@ -23,6 +23,8 @@ import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.frozenblock.lib.block.sound.impl.BlockSoundTypeManager;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
@@ -36,6 +38,7 @@ import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
+import net.frozenblock.lib.spotting_icons.impl.client.SpottingIconHudElement;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.worldgen.structure.api.status.client.ClientStructureStatuses;
 import net.minecraft.client.Minecraft;
@@ -72,6 +75,12 @@ public final class FrozenLibClient implements ClientModInitializer {
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
 			PanoramaCommand.register(dispatcher);
 		});
+
+		HudElementRegistry.attachElementAfter(
+			VanillaHudElements.MISC_OVERLAYS,
+			FrozenLibConstants.id("spotting_icons"),
+			new SpottingIconHudElement()
+		);
 
 		FrozenLibModResourcePackApi.init();
 
