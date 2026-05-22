@@ -83,8 +83,7 @@ public class NoisePlacementFilter extends PlacementFilter {
 		final ImprovedNoise sampler = this.noiseType.createNoise(level.getSeed());
 		final double sample = EasyNoiseSampler.sample(sampler, pos, this.noiseScale, this.scaleY, this.useY);
 
-		boolean isInside = false;
-		if (sample > this.minThreshold && sample < this.maxThreshold) isInside = true;
+		boolean isInside = sample > this.minThreshold && sample < this.maxThreshold;
 		if (this.fadeDistance > 0) {
 			if (sample > this.minFadeThreshold && sample < this.minThreshold) {
 				isInside = random.nextDouble() > Math.abs((this.minThreshold - sample) / this.fadeDistance);
