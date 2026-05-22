@@ -27,10 +27,10 @@ import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.v2.entry.ConfigEntry
 
 fun <T, A : AbstractConfigListEntry<T>, B : AbstractFieldBuilder<T, A, B>> B.entry(entry: ConfigEntry<T>): A
-    = FrozenClothConfig.entry(this, entry)
+    = FrozenLibClothConfigGuiHelper.entry(this, entry)
 
 fun <T, A : AbstractConfigListEntry<T>, B : AbstractFieldBuilder<T, A, B>> B.synced(entry: ConfigEntry<T>): A
-    = FrozenClothConfig.syncedEntry(this, entry)
+    = FrozenLibClothConfigGuiHelper.syncedEntry(this, entry)
 
 fun <T, A : AbstractConfigListEntry<T>> A.synced(entry: ConfigEntry<T>): A
-    = FrozenClothConfig.syncedEntry(this, entry)
+    = FrozenLibClothConfigGuiHelper.syncedEntry(this, entry)

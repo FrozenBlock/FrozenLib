@@ -63,3 +63,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `config_entry_predicate`: An optional field, supplying a `ConfigEntryPredicate` that determines whether the override can be used.
 - The `frozenlib_config reload` Command now provides completion suggestions.
 - Added the `frozenlib_config_client` Command, allowing clients to use config commands locally without affecting the server.
+- Renamed `FrozenClothConfig` to `FrozenLibClothConfigGuiHelper`.
+- Added multiple new helper methods to `FrozenLibClothConfigGuiHelper`.

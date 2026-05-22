@@ -29,7 +29,7 @@ import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
-import net.frozenblock.lib.config.clothconfig.FrozenClothConfig;
+import net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.client.Minecraft;
@@ -43,7 +43,7 @@ public final class FrozenLibConfigGui {
 
 	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
 		var useWindOnNonFrozenServers = category.addEntry(
-			FrozenClothConfig.syncedEntry(
+			FrozenLibClothConfigGuiHelper.syncedEntry(
 				entryBuilder.startBooleanToggle(text("use_wind_on_non_frozenlib_servers"), FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS.getWithSync())
 					.setTooltip(tooltip("use_wind_on_non_frozenlib_servers")),
 					FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS
@@ -51,7 +51,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var saveItemCooldowns = category.addEntry(
-			FrozenClothConfig.syncedEntry(
+			FrozenLibClothConfigGuiHelper.syncedEntry(
 				entryBuilder.startBooleanToggle(text("save_item_cooldowns"), FrozenLibConfig.SAVE_ITEM_COOLDOWNS.getWithSync())
 					.setTooltip(tooltip("save_item_cooldowns")),
 					FrozenLibConfig.SAVE_ITEM_COOLDOWNS
@@ -59,7 +59,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var removeExperimentalWarning = category.addEntry(
-			FrozenClothConfig.syncedEntry(
+			FrozenLibClothConfigGuiHelper.syncedEntry(
 				entryBuilder.startBooleanToggle(text("remove_experimental_warning"), FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.getWithSync())
 					.setTooltip(tooltip("remove_experimental_warning")),
 					FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING
@@ -67,7 +67,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var wardenSpawnTrackerCommand = category.addEntry(
-			FrozenClothConfig.syncedEntry(
+			FrozenLibClothConfigGuiHelper.syncedEntry(
 				entryBuilder.startBooleanToggle(text("warden_spawn_tracker_command"), FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.getWithSync())
 					.setTooltip(tooltip("warden_spawn_tracker_command")),
 					FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND
@@ -75,7 +75,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var fileTransferServer = category.addEntry(
-			FrozenClothConfig.syncedEntry(
+			FrozenLibClothConfigGuiHelper.syncedEntry(
 				entryBuilder.startBooleanToggle(text("file_transfer_server"), FrozenLibConfig.FILE_TRANSFER_SERVER.get())
 					.setTooltip(tooltip("file_transfer_server")),
 				FrozenLibConfig.FILE_TRANSFER_SERVER
@@ -83,7 +83,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var fileTransferClient = category.addEntry(
-			FrozenClothConfig.syncedEntry(
+			FrozenLibClothConfigGuiHelper.syncedEntry(
 				entryBuilder.startBooleanToggle(text("file_transfer_client"), FrozenLibConfig.FILE_TRANSFER_CLIENT.get())
 					.setTooltip(tooltip("file_transfer_client")),
 				FrozenLibConfig.FILE_TRANSFER_CLIENT
@@ -91,7 +91,7 @@ public final class FrozenLibConfigGui {
 		);
 
 		var packDownloading = category.addEntry(
-			FrozenClothConfig.syncedEntry(
+			FrozenLibClothConfigGuiHelper.syncedEntry(
 				entryBuilder.startEnumSelector(text("pack_downloading"), FrozenLibModResourcePackApi.PackDownloadSetting.class, FrozenLibConfig.PACK_DOWNLOADING.get())
 					.setEnumNameProvider(downloadSetting -> enumNameProvider(downloadSetting.toString()))
 					.setTooltip(tooltip("pack_downloading")),
@@ -99,14 +99,14 @@ public final class FrozenLibConfigGui {
 			)
 		);
 
-		var disabledDataFixTypes = FrozenClothConfig.syncedEntry(
+		var disabledDataFixTypes = FrozenLibClothConfigGuiHelper.syncedEntry(
 			entryBuilder.startStrList(text("disabled_datafix_types"), FrozenLibConfig.DISABLED_DATA_FIX_TYPES.get())
 				.setTooltip(tooltip("disabled_datafix_types"))
 				.requireRestart(),
 			FrozenLibConfig.DISABLED_DATA_FIX_TYPES
 		);
 
-		var datafixerCategory = FrozenClothConfig.createSubCategory(entryBuilder, category, text("datafixer"),
+		var datafixerCategory = FrozenLibClothConfigGuiHelper.createSubCategory(entryBuilder, category, text("datafixer"),
 			false,
 			tooltip("datafixer"),
 			disabledDataFixTypes

@@ -25,14 +25,13 @@ import net.fabricmc.api.Environment
 import net.frozenblock.lib.config.api.client.gui.EntryBuilder
 import net.frozenblock.lib.config.api.client.gui.Slider
 import net.frozenblock.lib.config.api.client.gui.SliderType
-import net.frozenblock.lib.config.clothconfig.FrozenClothConfig
+import net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper
 import net.frozenblock.lib.config.clothconfig.synced
 import net.frozenblock.lib.testmod.FrozenTestMain
 import net.frozenblock.lib.testmod.config.TestConfig
 import net.minecraft.client.gui.screens.Screen
 import net.minecraft.network.chat.Component
 import net.minecraft.resources.Identifier
-import java.util.function.Consumer
 
 @Environment(EnvType.CLIENT)
 object TestConfigGui {
@@ -61,7 +60,7 @@ object TestConfigGui {
             .setTooltip(tooltip("sub_option"))
             .synced(TestConfig.subOption)
 
-        val testSubMenuCategory = FrozenClothConfig.createSubCategory(
+        val testSubMenuCategory = FrozenLibClothConfigGuiHelper.createSubCategory(
             entryBuilder, category, text("test_subcategory"),
             false,
             tooltip("test_subcategory"),

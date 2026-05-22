@@ -23,6 +23,8 @@ import me.shedaniel.clothconfig2.api.AbstractConfigListEntry;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
 import me.shedaniel.clothconfig2.api.Requirement;
+import me.shedaniel.clothconfig2.gui.entries.BooleanListEntry;
+import me.shedaniel.clothconfig2.gui.entries.IntegerSliderEntry;
 import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.AbstractSliderFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
@@ -36,9 +38,7 @@ import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.minecraft.network.chat.Component;
 
 @Environment(EnvType.CLIENT)
-public final class FrozenClothConfig {
-
-	private FrozenClothConfig() {}
+public final class FrozenLibClothConfigGuiHelper {
 
 	/**
 	 * Creates a subcategory in the parent config source with the specified key and adds entries to it.
@@ -73,6 +73,40 @@ public final class FrozenClothConfig {
 			.setExpanded(expanded)
 			.setTooltip(tooltip)
 			.build()
+		);
+	}
+
+	public static IntegerSliderEntry zeroToFiveHundredEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry) {
+		return intSliderEntry(builder, key, configEntry, 0, 500);
+	}
+
+	public static IntegerSliderEntry oneToFiveHundredEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry) {
+		return intSliderEntry(builder, key, configEntry, 1, 500);
+	}
+
+	public static IntegerSliderEntry zeroToOneThousandEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry) {
+		return intSliderEntry(builder, key, configEntry, 0, 1000);
+	}
+
+	public static IntegerSliderEntry oneToOneThousandEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry) {
+		return intSliderEntry(builder, key, configEntry, 1, 1000);
+	}
+
+	public static IntegerSliderEntry intSliderEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry, int min, int max) {
+		return syncedEntry(
+			builder.startIntSlider(text(key, configEntry), configEntry.get(), min, max).setTooltip(tooltip(key, configEntry)),
+			configEntry
+		);
+	}
+
+	public static BooleanListEntry booleanEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Boolean> configEntry) {
+		return booleanEntry(builder, text(key, configEntry), configEntry, tooltip(key, configEntry));
+	}
+
+	public static BooleanListEntry booleanEntry(ConfigEntryBuilder builder, Component name, ConfigEntry<Boolean> configEntry, Component... tooltip) {
+		return syncedEntry(
+			builder.startBooleanToggle(name, configEntry.get()).setTooltip(tooltip),
+			configEntry
 		);
 	}
 
@@ -122,5 +156,19 @@ public final class FrozenClothConfig {
 	public static <T, A extends AbstractConfigListEntry<T>> A syncedEntry(A clothEntry, ConfigEntry<T> configEntry) {
 		((DisableableWidgetInterface) clothEntry).frozenLib$addSyncData(configEntry);
 		return clothEntry;
+	}
+
+	/**
+	 * @return A text component for use in a Config GUI
+	 */
+	public static Component text(String key, ConfigEntry<?> configEntry, final Object... args) {
+		return Component.translatable("option." + configEntry.id().namespace() + "." + key, args);
+	}
+
+	/**
+	 * @return A tooltip component for use in a Config GUI
+	 */
+	public static Component tooltip(String key, ConfigEntry<?> configEntry, final Object... args) {
+		return Component.translatable("tooltip." + configEntry.id().namespace() + "." + key, args);
 	}
 }
