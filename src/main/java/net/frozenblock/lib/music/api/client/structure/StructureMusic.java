@@ -44,7 +44,7 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 @Environment(EnvType.CLIENT)
 public record StructureMusic(HolderSet<Structure> structures, BackgroundMusic backgroundMusic, boolean mustBeInsidePiece, Optional<ConfigEntryPredicate<?>> configEntryPredicate) {
 	public static final Codec<StructureMusic> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.homogeneousList(Registries.STRUCTURE).fieldOf("structures").forGetter(StructureMusic::structures),
+		RegistryCodecs.homogeneousList(Registries.STRUCTURE, true).fieldOf("structures").forGetter(StructureMusic::structures),
 		BackgroundMusic.CODEC.fieldOf("background_music").forGetter(StructureMusic::backgroundMusic),
 		Codec.BOOL.optionalFieldOf("must_be_inside_piece", false).forGetter(StructureMusic::mustBeInsidePiece),
 		ConfigEntryPredicate.CODEC.optionalFieldOf("config_entry_predicate").forGetter(StructureMusic::configEntryPredicate)
