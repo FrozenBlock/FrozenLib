@@ -42,6 +42,29 @@ public final class FrozenLibClothConfigGuiHelper {
 
 	/**
 	 * Creates a subcategory in the parent config source with the specified key and adds entries to it.
+	 * <p>
+	 * See {@link FrozenLibClothConfigGuiHelper#createSubCategory}.
+	 *
+	 * @param entryBuilder the ConfigEntryBuilder instance
+	 * @param parentCategory the parent config source
+	 * @param key the key for the subcategory
+	 * @param tooltip the tooltip for the subcategory
+	 * @param entries the entries to be added to the subcategory
+	 * @return the newly created subcategory
+	 */
+	@SuppressWarnings("rawtypes")
+	public static ConfigCategory createSubCategory(
+		ConfigEntryBuilder entryBuilder,
+		ConfigCategory parentCategory,
+		Component key,
+		Component tooltip,
+		AbstractConfigListEntry... entries
+	) {
+		return createSubCategory(entryBuilder, parentCategory, key, false, tooltip, entries);
+	}
+
+	/**
+	 * Creates a subcategory in the parent config source with the specified key and adds entries to it.
 	 *
 	 * @param entryBuilder the ConfigEntryBuilder instance
 	 * @param parentCategory the parent config source
@@ -76,36 +99,95 @@ public final class FrozenLibClothConfigGuiHelper {
 		);
 	}
 
-	public static IntegerSliderEntry zeroToFiveHundredEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry) {
-		return intSliderEntry(builder, key, configEntry, 0, 500);
+	/**
+	 * Creates an int slider entry ranging from 0 to 500.
+	 *
+	 * @param entryBuilder the ConfigEntryBuilder instance
+	 * @param key the key to use for the entry's text and tooltip
+	 * @param configEntry the {@link ConfigEntry}
+	 * @return the newly created int slider entry
+	 */
+	public static IntegerSliderEntry zeroToFiveHundredEntry(ConfigEntryBuilder entryBuilder, String key, ConfigEntry<Integer> configEntry) {
+		return intSliderEntry(entryBuilder, key, configEntry, 0, 500);
 	}
 
-	public static IntegerSliderEntry oneToFiveHundredEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry) {
-		return intSliderEntry(builder, key, configEntry, 1, 500);
+	/**
+	 * Creates an int slider entry ranging from 2 to 500.
+	 *
+	 * @param entryBuilder the ConfigEntryBuilder instance
+	 * @param key the key to use for the entry's text and tooltip
+	 * @param configEntry the {@link ConfigEntry}
+	 * @return the newly created int slider entry
+	 */
+	public static IntegerSliderEntry oneToFiveHundredEntry(ConfigEntryBuilder entryBuilder, String key, ConfigEntry<Integer> configEntry) {
+		return intSliderEntry(entryBuilder, key, configEntry, 1, 500);
 	}
 
-	public static IntegerSliderEntry zeroToOneThousandEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry) {
-		return intSliderEntry(builder, key, configEntry, 0, 1000);
+	/**
+	 * Creates an int slider entry ranging from 0 to 1000.
+	 *
+	 * @param entryBuilder the ConfigEntryBuilder instance
+	 * @param key the key to use for the entry's text and tooltip
+	 * @param configEntry the {@link ConfigEntry}
+	 * @return the newly created int slider entry
+	 */
+	public static IntegerSliderEntry zeroToOneThousandEntry(ConfigEntryBuilder entryBuilder, String key, ConfigEntry<Integer> configEntry) {
+		return intSliderEntry(entryBuilder, key, configEntry, 0, 1000);
 	}
 
-	public static IntegerSliderEntry oneToOneThousandEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry) {
-		return intSliderEntry(builder, key, configEntry, 1, 1000);
+	/**
+	 * Creates an int slider entry ranging from 1 to 1000.
+	 *
+	 * @param entryBuilder the ConfigEntryBuilder instance
+	 * @param key the key to use for the entry's text and tooltip
+	 * @param configEntry the {@link ConfigEntry}
+	 * @return the newly created int slider entry
+	 */
+	public static IntegerSliderEntry oneToOneThousandEntry(ConfigEntryBuilder entryBuilder, String key, ConfigEntry<Integer> configEntry) {
+		return intSliderEntry(entryBuilder, key, configEntry, 1, 1000);
 	}
 
-	public static IntegerSliderEntry intSliderEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Integer> configEntry, int min, int max) {
+	/**
+	 * Creates an int slider entry.
+	 *
+	 * @param entryBuilder the ConfigEntryBuilder instance
+	 * @param key the key to use for the entry's text and tooltip
+	 * @param configEntry the {@link ConfigEntry}
+	 * @param min the minimum allowed value
+	 * @param max the maximum allowed value
+	 * @return the newly created int slider entry
+	 */
+	public static IntegerSliderEntry intSliderEntry(ConfigEntryBuilder entryBuilder, String key, ConfigEntry<Integer> configEntry, int min, int max) {
 		return syncedEntry(
-			builder.startIntSlider(text(key, configEntry), configEntry.get(), min, max).setTooltip(tooltip(key, configEntry)),
+			entryBuilder.startIntSlider(text(key, configEntry), configEntry.get(), min, max).setTooltip(tooltip(key, configEntry)),
 			configEntry
 		);
 	}
 
-	public static BooleanListEntry booleanEntry(ConfigEntryBuilder builder, String key, ConfigEntry<Boolean> configEntry) {
-		return booleanEntry(builder, text(key, configEntry), configEntry, tooltip(key, configEntry));
+	/**
+	 * Creates a boolean entry.
+	 *
+	 * @param entryBuilder the ConfigEntryBuilder instance
+	 * @param key the key to use for the entry's text and tooltip
+	 * @param configEntry the {@link ConfigEntry}
+	 * @return the newly created int slider entry
+	 */
+	public static BooleanListEntry booleanEntry(ConfigEntryBuilder entryBuilder, String key, ConfigEntry<Boolean> configEntry) {
+		return booleanEntry(entryBuilder, text(key, configEntry), configEntry, tooltip(key, configEntry));
 	}
 
-	public static BooleanListEntry booleanEntry(ConfigEntryBuilder builder, Component name, ConfigEntry<Boolean> configEntry, Component... tooltip) {
+	/**
+	 * Creates a boolean entry.
+	 *
+	 * @param entryBuilder the ConfigEntryBuilder instance
+	 * @param name the entry's name
+	 * @param configEntry the {@link ConfigEntry}
+	 * @param tooltip tooltip, or array of tooltips for the entry
+	 * @return the newly created int slider entry
+	 */
+	public static BooleanListEntry booleanEntry(ConfigEntryBuilder entryBuilder, Component name, ConfigEntry<Boolean> configEntry, Component... tooltip) {
 		return syncedEntry(
-			builder.startBooleanToggle(name, configEntry.get()).setTooltip(tooltip),
+			entryBuilder.startBooleanToggle(name, configEntry.get()).setTooltip(tooltip),
 			configEntry
 		);
 	}
@@ -120,22 +202,22 @@ public final class FrozenLibClothConfigGuiHelper {
 	 * @param configEntry The FrozenLib {@link ConfigEntry}
 	 * @since 2.4
 	 */
-	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A entry(B builder, ConfigEntry<T> configEntry) {
-		if (builder.getDefaultValue() == null) builder.setDefaultValue(configEntry.defaultValue());
-		if (builder.getSaveConsumer() == null) builder.setSaveConsumer(configEntry::setValue);
-		if (configEntry.hasVisibilityPredicate()) builder.setDisplayRequirement(Requirement.isTrue(configEntry::isVisible));
-		if (configEntry.requireRestart()) builder.requireRestart();
+	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A entry(B entryBuilder, ConfigEntry<T> configEntry) {
+		if (entryBuilder.getDefaultValue() == null) entryBuilder.setDefaultValue(configEntry.defaultValue());
+		if (entryBuilder.getSaveConsumer() == null) entryBuilder.setSaveConsumer(configEntry::setValue);
+		if (configEntry.hasVisibilityPredicate()) entryBuilder.setDisplayRequirement(Requirement.isTrue(configEntry::isVisible));
+		if (configEntry.requireRestart()) entryBuilder.requireRestart();
 
 		appendTextSupplier: {
 			if (!configEntry.hasTextSupplier()) break appendTextSupplier;
 			final Function textSupplier = configEntry.textSupplier().get();
-			if (builder instanceof AbstractSliderFieldBuilder<?, ?, ?> sliderFieldBuilder) sliderFieldBuilder.setTextGetter(textSupplier);
-			if (builder instanceof BooleanToggleBuilder booleanToggleBuilder) booleanToggleBuilder.setYesNoTextSupplier(textSupplier);
-			if (builder instanceof EnumSelectorBuilder<?> enumSelectorBuilder) enumSelectorBuilder.setEnumNameProvider(textSupplier);
-			if (builder instanceof SelectorBuilder<?> selectorBuilder) selectorBuilder.setNameProvider(textSupplier);
+			if (entryBuilder instanceof AbstractSliderFieldBuilder<?, ?, ?> sliderFieldBuilder) sliderFieldBuilder.setTextGetter(textSupplier);
+			if (entryBuilder instanceof BooleanToggleBuilder booleanToggleBuilder) booleanToggleBuilder.setYesNoTextSupplier(textSupplier);
+			if (entryBuilder instanceof EnumSelectorBuilder<?> enumSelectorBuilder) enumSelectorBuilder.setEnumNameProvider(textSupplier);
+			if (entryBuilder instanceof SelectorBuilder<?> selectorBuilder) selectorBuilder.setNameProvider(textSupplier);
 		}
 
-		return builder.build();
+		return entryBuilder.build();
 	}
 
 	/**
@@ -148,8 +230,8 @@ public final class FrozenLibClothConfigGuiHelper {
 	 * @param configEntry The FrozenLib {@link ConfigEntry}
 	 * @since 2.4
 	 */
-	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A syncedEntry(B builder, ConfigEntry<T> configEntry) {
-		final var clothEntry = entry(builder, configEntry);
+	public static <T, A extends AbstractConfigListEntry<T>, B extends AbstractFieldBuilder<T, A, B>> A syncedEntry(B entryBuilder, ConfigEntry<T> configEntry) {
+		final var clothEntry = entry(entryBuilder, configEntry);
 		return syncedEntry(clothEntry, configEntry);
 	}
 
