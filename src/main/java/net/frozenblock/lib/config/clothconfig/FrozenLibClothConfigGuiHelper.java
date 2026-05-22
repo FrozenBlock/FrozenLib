@@ -198,7 +198,7 @@ public final class FrozenLibClothConfigGuiHelper {
 	 * <p>
 	 * {@link EntryProperties} will be applied to the new Cloth Config entry.
 	 *
-	 * @param builder The config entry builder to be used
+	 * @param entryBuilder The config entry builder to be used
 	 * @param configEntry The FrozenLib {@link ConfigEntry}
 	 * @since 2.4
 	 */
@@ -226,7 +226,7 @@ public final class FrozenLibClothConfigGuiHelper {
 	 * <p>
 	 * {@link EntryProperties} will be applied to the new Cloth Config entry.
 	 *
-	 * @param builder The config entry builder to be used
+	 * @param entryBuilder The config entry builder to be used
 	 * @param configEntry The FrozenLib {@link ConfigEntry}
 	 * @since 2.4
 	 */
