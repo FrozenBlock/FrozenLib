@@ -17,13 +17,13 @@
 
 package net.frozenblock.lib.levelgen.structure.impl.status;
 
+import com.google.common.collect.ImmutableList;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.levelgen.structure.impl.StructureStartInterface;
-import net.frozenblock.lib.levelgen.structure.impl.status.networking.PlayerStructureStatusPacket;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,16 +36,14 @@ import org.jetbrains.annotations.ApiStatus;
 public class StructureStatusUpdater {
 
 	public static void updatePlayerStructureStatusesForLevel(ServerLevel level) {
-		StructureManager structureManager = level.structureManager();
+		final StructureManager structureManager = level.structureManager();
 		level.players().forEach(player -> updatePlayerStructureStatus(structureManager, player));
 	}
 
 	private static void updatePlayerStructureStatus(StructureManager structureManager, ServerPlayer player) {
-		if (!(player instanceof PlayerStructureStatusInterface structureStatusInterface)) return;
-
 		final BlockPos pos = player.blockPosition();
-		final List<PlayerStructureStatus> newStructureStatuses = new ArrayList<>();
-		final List<PlayerStructureStatus> currentStructureStatuses = structureStatusInterface.frozenLib$getStructureStatuses();
+		final List<StructureStatus> newStructureStatuses = new ArrayList<>();
+		final List<StructureStatus> currentStructureStatuses = player.getAttachedOrElse(StructureStatus.ATTACHMENT_TYPE, ImmutableList.of());
 
 		for (Structure structure : structureManager.getAllStructuresAt(pos).keySet()) {
 			final StructureStart structureStart = structureManager.getStructureAt(pos, structure);
@@ -57,24 +55,17 @@ public class StructureStatusUpdater {
 			if (structureLocation != null) {
 				boolean insidePiece = structureManager.structureHasPieceAt(pos, structureStart);
 				boolean addNewStructureStatus = true;
-				for (PlayerStructureStatus existingStatus : newStructureStatuses) {
-					if (!existingStatus.getStructure().equals(structureLocation)) continue;
-					addNewStructureStatus = false;
-					if (!existingStatus.isInsidePiece() && insidePiece) existingStatus.setInsidePiece(true);
+				for (StructureStatus existingStatus : newStructureStatuses) {
+					if (!existingStatus.structure().is(structureLocation)) continue;
+					addNewStructureStatus = existingStatus.insidePiece() != insidePiece;
 				}
-				if (addNewStructureStatus) newStructureStatuses.add(new PlayerStructureStatus(structureLocation, insidePiece));
+				if (addNewStructureStatus) newStructureStatuses.add(new StructureStatus(Holder.direct(structure), insidePiece));
 			} else if (FrozenLibConstants.UNSTABLE_LOGGING) {
 				throw new AssertionError("Structure piece doesn't contain an id!");
 			}
 		}
 
-		if (!newStructureStatuses.equals(currentStructureStatuses)) {
-			structureStatusInterface.frozenLib$setStructureStatuses(newStructureStatuses);
-			sendStructureStatusPacket(player, newStructureStatuses);
-		}
-	}
-
-	private static void sendStructureStatusPacket(ServerPlayer player, List<PlayerStructureStatus> statuses) {
-		player.connection.send(new ClientboundCustomPayloadPacket(new PlayerStructureStatusPacket(statuses)));
+		if (newStructureStatuses.equals(currentStructureStatuses)) return;
+		player.setAttached(StructureStatus.ATTACHMENT_TYPE, newStructureStatuses);
 	}
 }

@@ -26,7 +26,7 @@ import net.minecraft.resources.Identifier;
 /**
  * @param type The in-game id type to check, in {@link MusicPitchDetectionType} form.
  * @param id The {@link Identifier} of the in-game id that triggers the pitch change.
- * @param pitchFunction The target pitch to play music at. This is passed as a {@link Function} with a {@link Long} as the parameter, allowing pitch to continuously shift.
+ * @param pitchFunction The target pitch to play backgroundMusic at. This is passed as a {@link Function} with a {@link Long} as the parameter, allowing pitch to continuously shift.
  */
 @Environment(EnvType.CLIENT)
 public record MusicPitchInfo(MusicPitchDetectionType type, Identifier id, Function<Long, Float> pitchFunction) {

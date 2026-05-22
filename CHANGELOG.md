@@ -15,7 +15,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `SELECT_FIRE_BLOCK_STATE`
     - Is triggered when a Fire block is selecting which BlockState to place as.
     - Is used to modify the BlockState to be set.
-- Added Clip Groups.
+- Added `ClipGroup`s.
   - Clip Groups define a list of blocks that crosshair clipping can pass through, while inside one of their blocks.
     - For example, while inside Wilder Wild's Mesoglea, Mesoglea blocks are no longer selected and you can attack entities and place/break blocks as normal.
   - Added the `frozenlib:clip_group` dynamic registry.
@@ -61,7 +61,19 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `hit_sound`: The hit sound to use.
     - `fall_sound`: The fall sound to use. Notice a pattern?
   - `config_entry_predicate`: An optional field, supplying a `ConfigEntryPredicate` that determines whether the override can be used.
-- The `frozenlib_config reload` Command now provides completion suggestions.
+- Added the `frozenlib_sound_type_override` Dynamic Registry.
+- The `frozenlib_config reload` Command now provides completion suggestions and requires Game Master permissions to use.
 - Added the `frozenlib_config_client` Command, allowing clients to use config commands locally without affecting the server.
 - Renamed `FrozenClothConfig` to `FrozenLibClothConfigGuiHelper`.
 - Added multiple new helper methods to `FrozenLibClothConfigGuiHelper`.
+- Renamed `PlayerStructureStatus` to `StructureStatus`.
+- Revamped the way `StructureStatus`es are handled and sent to the client.
+  - These now rely on Fabric's `Attachment` system, ultimately leading to the removal of custom networking & mixins related to syncing them.
+  - A `Holder` for the `Structure` is now used instead of an `Identifier`.
+- Revamped Structure-based Music.
+  - `StructureMusic` is now serializable and its contents have changed, containing the following fields:
+    - `structures`: A structure's ID, a list of structure IDs, or a Structure Tag that `music` will play within.
+    - `background_music`: The `BackgroundMusic` to play.
+    - `must_be_inside_piece`: Whether the Player must be located inside a `StructurePiece` for `music` to play.
+    - `config_entry_predicate`: An optional field, supplying a `ConfigEntryPredicate` that determines whether the music can be played.
+  - Added the `frozenlib:structure_music` Dynamic Registry.

@@ -31,7 +31,6 @@ import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
-import net.frozenblock.lib.levelgen.structure.api.status.client.ClientStructureStatuses;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
@@ -103,7 +102,5 @@ public final class FrozenLibClient implements ClientModInitializer {
 	private static void clearClientListHolders() {
 		ScreenShaker.clear();
 		ClientWindManager.reset();
-		ClientStructureStatuses.clearStructureStatuses();
 	}
-
 }

@@ -51,7 +51,7 @@ public record FireType(
 		Codec.BOOL.fieldOf("replaceable").forGetter(FireType::replaceable),
 		Identifier.CODEC.optionalFieldOf("texture_0").forGetter(FireType::texture0),
 		Identifier.CODEC.optionalFieldOf("texture_1").forGetter(FireType::texture1),
-		ConfigEntryPredicate.CODEC.codec().optionalFieldOf("config_entry_predicate").forGetter(FireType::enabled)
+		ConfigEntryPredicate.CODEC.optionalFieldOf("config_entry_predicate").forGetter(FireType::enabled)
 	).apply(instance, FireType::new));
 	public static final Codec<Holder<FireType>> CODEC = RegistryFixedCodec.create(FrozenLibRegistries.FIRE_TYPE);
 	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<FireType>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibRegistries.FIRE_TYPE);

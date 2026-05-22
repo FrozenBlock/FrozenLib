@@ -76,8 +76,6 @@ import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
-import net.frozenblock.lib.levelgen.structure.api.status.client.ClientStructureStatuses;
-import net.frozenblock.lib.levelgen.structure.impl.status.networking.PlayerStructureStatusPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -116,7 +114,6 @@ public final class FrozenClientNetworking {
 		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		receiveWindDisturbancePacket();
-		receiveStructureStatusPacket();
 		receiveFileTransferPacket();
 		receiveCapePacket();
 		receiveCapeRepoPacket();
@@ -387,13 +384,6 @@ public final class FrozenClientNetworking {
 					disturbanceLogic.get()
 				)
 			);
-		});
-	}
-
-	@ApiStatus.Internal
-	private static void receiveStructureStatusPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(PlayerStructureStatusPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientStructureStatuses.setStructureStatuses(packet.statuses());
 		});
 	}
 

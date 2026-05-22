@@ -33,7 +33,7 @@ public class SoundTypeOverride {
 	public static final Codec<SoundTypeOverride> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(override -> override.blocks),
 		SoundTypeCodecs.SOUND_TYPE.fieldOf("sound_type").forGetter(override -> override.soundType),
-		ConfigEntryPredicate.CODEC.codec().optionalFieldOf("config_entry_predicate").forGetter(override -> override.configEntryPredicate)
+		ConfigEntryPredicate.CODEC.optionalFieldOf("config_entry_predicate").forGetter(override -> override.configEntryPredicate)
 	).apply(instance, SoundTypeOverride::new));
 	private final HolderSet<Block> blocks;
 	private final SoundType soundType;

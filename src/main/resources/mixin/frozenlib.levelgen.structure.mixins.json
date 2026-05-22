@@ -18,7 +18,6 @@
     "StructureStartMixin",
     "StructureTemplateMixin",
     "StructureTemplatePoolMixin",
-    "TemplateStructurePieceMixin",
-    "status.ServerPlayerMixin"
+    "TemplateStructurePieceMixin"
   ]
 }

@@ -38,7 +38,7 @@ import net.minecraft.world.level.levelgen.placement.BlockPredicateFilter;
  */
 public class ConfigEntryPredicate<T> {
 	private static final ConcurrentMap<InternKey, ConfigEntryPredicate<?>> VALUES = new MapMaker().weakValues().makeMap();
-	public static final MapCodec<ConfigEntryPredicate<?>> CODEC = ID.CODEC.fieldOf("entry").dispatchMap(
+	public static final MapCodec<ConfigEntryPredicate<?>> MAP_CODEC = ID.CODEC.fieldOf("entry").dispatchMap(
 		configEntryPredicate -> configEntryPredicate.id,
 		id -> RecordCodecBuilder.mapCodec(instance -> instance.group(
 			instance.point(id),
@@ -47,6 +47,7 @@ public class ConfigEntryPredicate<T> {
 			Inlined.CODEC.optionalFieldOf("with").forGetter(predicate -> predicate.with)
 		).apply(instance, ConfigEntryPredicate::create))
 	);
+	public static final Codec<ConfigEntryPredicate<?>> CODEC = MAP_CODEC.codec();
 	private final ID id;
 	private final ConfigEntry<T> entry;
 	private final Operator operator;

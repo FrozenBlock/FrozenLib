@@ -31,6 +31,7 @@ import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
+import net.frozenblock.lib.music.api.client.structure.StructureMusic;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spotting_icons.api.SpottingIconPredicate;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
@@ -80,6 +81,7 @@ public class FrozenLibRegistries {
 
 	// DYNAMIC REGISTRIES
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));
+	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
 	public static final ResourceKey<Registry<FireType>> FIRE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("fire_type"));
 	public static final ResourceKey<Registry<ClipGroup>> CLIP_GROUP = ResourceKey.createRegistryKey(FrozenLibConstants.id("clip_group"));
 	public static final ResourceKey<Registry<WaterLikeType>> WATER_LIKE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("water_like_type"));
@@ -87,6 +89,7 @@ public class FrozenLibRegistries {
     public static void init() {
 		DynamicRegistries.registerSynced(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
 		SoundTypeOverrides.init();
+		DynamicRegistries.registerSynced(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
 		DynamicRegistries.registerSynced(FIRE_TYPE, FireType.DIRECT_CODEC);
 		DynamicRegistries.registerSynced(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
 		DynamicRegistries.registerSynced(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);

@@ -24,15 +24,17 @@ import java.util.function.Function;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.music.impl.client.MusicPitchDetectionType;
-import net.frozenblock.lib.levelgen.structure.api.status.client.ClientStructureStatuses;
-import net.frozenblock.lib.levelgen.structure.impl.status.PlayerStructureStatus;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.Nullable;
 
 @UtilityClass
 @Environment(EnvType.CLIENT)
@@ -89,24 +91,23 @@ public class MusicPitchApi {
 	}
 
 	@ApiStatus.Internal
-	public static void updateTargetMusicPitch(Level level, Holder<Biome> biome) {
+	public static void updateTargetMusicPitch(@Nullable Player player, Level level, Holder<Biome> biome) {
 		final long gameTime = level.getGameTime();
 
 		final List<Float> pitches = new ArrayList<>();
 		int pitchContributors = 0;
 
-		final Optional<PlayerStructureStatus> optionalStructureStatus = ClientStructureStatuses.getProminentStructureStatus();
-
+		final Optional<StructureStatus> optionalStructureStatus = StructureStatus.getProminentStructureStatus(player);
 		for (MusicPitchInfo info : MUSIC_PITCH_INFO_LIST) {
 			final MusicPitchDetectionType type = info.type();
 
 			if (type.isForStructure()) {
 				if (optionalStructureStatus.isEmpty()) continue;
-				final PlayerStructureStatus structureStatus = optionalStructureStatus.get();
-				final Identifier structureLocation = structureStatus.getStructure();
-				boolean isInsidePiece = structureStatus.isInsidePiece();
+				final StructureStatus structureStatus = optionalStructureStatus.get();
+				final Holder<Structure> structureHolder = structureStatus.structure();
+				boolean insidePiece = structureStatus.insidePiece();
 
-				if (type.isForStructureAndMatchesInside(isInsidePiece) && info.id().equals(structureLocation)) {
+				if (type.isForStructureAndMatchesInside(insidePiece) && structureHolder.is(info.id())) {
 					pitches.add(info.pitchFunction().apply(gameTime));
 					pitchContributors += 1;
 				}
