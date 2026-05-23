@@ -54,11 +54,9 @@ public final class SpottingIconPredicate<T extends Entity> {
     public interface IconPredicate<T extends Entity> {
         boolean test(T entity);
 
-		default void onAdded(T entity) {
-		}
+		default void onAdded(T entity) {}
 
-		default void onRemoved(T entity) {
-		}
+		default void onRemoved(T entity) {}
     }
 
 	@Contract(pure = true)

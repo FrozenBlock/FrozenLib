@@ -132,7 +132,6 @@ public class SpottingIconManager {
 			Codec.FLOAT.fieldOf("endFadeDist").forGetter(SpottingIcon::endFadeDist),
 			Identifier.CODEC.fieldOf("restrictionID").forGetter(SpottingIcon::restrictionID)
 		).apply(instance, SpottingIcon::new));
-
 		public static final StreamCodec<ByteBuf, SpottingIcon> STREAM_CODEC = StreamCodec.composite(
 			Identifier.STREAM_CODEC, SpottingIcon::texture,
 			ByteBufCodecs.FLOAT, SpottingIcon::startFadeDist,
