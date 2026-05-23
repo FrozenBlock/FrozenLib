@@ -107,7 +107,7 @@ public class ConfigEntryPredicate<T> {
 	/**
 	 * @param entry The target {@link ConfigEntry}.
 	 * @param target The value the target {@link ConfigEntry}'s value is being compared with.
-	 * @return A {@link ConfigEntryPredicate} that returns true if the entry and target values are equal.
+	 * @return A {@link ConfigEntryPredicate} that returns {@code true} if the entry and target values are equal.
 	 */
 	public static <T> ConfigEntryPredicate<T> equalTo(ConfigEntry<T> entry, T target) {
 		return (ConfigEntryPredicate<T>) create(entry.id(), Operator.EQUAL_TO, target);
@@ -116,7 +116,7 @@ public class ConfigEntryPredicate<T> {
 	/**
 	 * @param entry The target {@link ConfigEntry}.
 	 * @param target The value the target {@link ConfigEntry}'s value is being compared with.
-	 * @return A {@link ConfigEntryPredicate} that returns true if the entry and target values are not equal.
+	 * @return A {@link ConfigEntryPredicate} that returns {@code true} if the entry and target values are not equal.
 	 */
 	public static <T> ConfigEntryPredicate<T> notEqualTo(ConfigEntry<T> entry, T target) {
 		return (ConfigEntryPredicate<T>) create(entry.id(), Operator.NOT_EQUAL_TO, target);
@@ -125,7 +125,7 @@ public class ConfigEntryPredicate<T> {
 	/**
 	 * @param entry The target {@link ConfigEntry}.
 	 * @param target The value the target {@link ConfigEntry}'s value is being compared with.
-	 * @return A {@link ConfigEntryPredicate} that returns true if the entry value is greater than the target value.
+	 * @return A {@link ConfigEntryPredicate} that returns {@code true} if the entry value is greater than the target value.
 	 */
 	public static <T> ConfigEntryPredicate<T> greaterThan(ConfigEntry<T> entry, T target) {
 		return (ConfigEntryPredicate<T>) create(entry.id(), Operator.GREATER_THAN, target);
@@ -134,7 +134,7 @@ public class ConfigEntryPredicate<T> {
 	/**
 	 * @param entry The target {@link ConfigEntry}.
 	 * @param target The value the target {@link ConfigEntry}'s value is being compared with.
-	 * @return A {@link ConfigEntryPredicate} that returns true if the entry value is less than the target value.
+	 * @return A {@link ConfigEntryPredicate} that returns {@code true} if the entry value is less than the target value.
 	 */
 	public static <T> ConfigEntryPredicate<T> lessThan(ConfigEntry<T> entry, T target) {
 		return (ConfigEntryPredicate<T>) create(entry.id(), Operator.LESS_THAN, target);
@@ -142,7 +142,7 @@ public class ConfigEntryPredicate<T> {
 
 	/**
 	 * @param configEntryPredicate Another {@link ConfigEntryPredicate} to be evaluated.
-	 * @return A {@link ConfigEntryPredicate} that returns true if both predicates return the same value.
+	 * @return A {@link ConfigEntryPredicate} that returns {@code true} if both predicates return the same value.
 	 */
 	public ConfigEntryPredicate<?> equalTo(ConfigEntryPredicate<?> configEntryPredicate) {
 		return create(this.id, this.operator, this.target, Optional.of(new Inlined(Inlined.InlinedOperator.EQUAL_TO, configEntryPredicate)));
@@ -150,7 +150,7 @@ public class ConfigEntryPredicate<T> {
 
 	/**
 	 * @param configEntryPredicate Another {@link ConfigEntryPredicate} to be evaluated.
-	 * @return A {@link ConfigEntryPredicate} that returns true if both predicates return different values.
+	 * @return A {@link ConfigEntryPredicate} that returns {@code true} if both predicates return different values.
 	 */
 	public ConfigEntryPredicate<?> notEqualTo(ConfigEntryPredicate<?> configEntryPredicate) {
 		return create(this.id, this.operator, this.target, Optional.of(new Inlined(Inlined.InlinedOperator.NOT_EQUAL_TO, configEntryPredicate)));
@@ -158,7 +158,7 @@ public class ConfigEntryPredicate<T> {
 
 	/**
 	 * @param configEntryPredicate Another {@link ConfigEntryPredicate} to be evaluated.
-	 * @return A {@link ConfigEntryPredicate} that returns true if both predicates return {@code true}.
+	 * @return A {@link ConfigEntryPredicate} that returns {@code true} if both predicates return {@code true}.
 	 */
 	public ConfigEntryPredicate<?> and(ConfigEntryPredicate<?> configEntryPredicate) {
 		return create(this.id, this.operator, this.target, Optional.of(new Inlined(Inlined.InlinedOperator.AND, configEntryPredicate)));
@@ -166,7 +166,7 @@ public class ConfigEntryPredicate<T> {
 
 	/**
 	 * @param configEntryPredicate Another {@link ConfigEntryPredicate} to be evaluated.
-	 * @return A {@link ConfigEntryPredicate} that returns true if either predicate returns {@code true}.
+	 * @return A {@link ConfigEntryPredicate} that returns {@code true} if either predicate returns {@code true}.
 	 */
 	public ConfigEntryPredicate<?> or(ConfigEntryPredicate<?> configEntryPredicate) {
 		return create(this.id, this.operator, this.target, Optional.of(new Inlined(Inlined.InlinedOperator.OR, configEntryPredicate)));
