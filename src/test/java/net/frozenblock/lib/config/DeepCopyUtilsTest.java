@@ -17,17 +17,13 @@
 
 package net.frozenblock.lib.config;
 
-import net.frozenblock.lib.config.api.instance.util.DeepCopyUtils;
-import org.junit.jupiter.api.Test;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNotSame;
-import static org.junit.jupiter.api.Assertions.assertSame;
+import net.frozenblock.lib.config.api.instance.util.DeepCopyUtils;
+import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 public class DeepCopyUtilsTest {
 

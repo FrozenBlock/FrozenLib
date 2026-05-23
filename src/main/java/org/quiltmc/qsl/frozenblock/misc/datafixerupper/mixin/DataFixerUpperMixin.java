@@ -22,11 +22,11 @@ import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.datafixers.DSL;
 import com.mojang.datafixers.DataFixerUpper;
 import com.mojang.serialization.Dynamic;
+import java.util.Optional;
 import net.minecraft.util.datafix.DataFixers;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.QuiltDataFixesInternals;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import java.util.Optional;
 
 /**
  * New mixin by FrozenBlock.

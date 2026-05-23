@@ -19,7 +19,6 @@
 
 package net.frozenblock.lib.config.api.instance.json
 
-import com.mojang.datafixers.DataFixer
 import net.frozenblock.lib.config.api.instance.Config
 import java.nio.file.Path
 import net.frozenblock.lib.config.api.instance.json.JsonConfig as RealJsonConfig

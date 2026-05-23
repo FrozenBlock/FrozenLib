@@ -17,11 +17,9 @@
 
 package net.frozenblock.lib.config.api.client.gui
 
-import me.shedaniel.clothconfig2.api.AbstractConfigEntry
 import me.shedaniel.clothconfig2.api.AbstractConfigListEntry
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder
 import me.shedaniel.clothconfig2.api.Requirement
-import me.shedaniel.clothconfig2.impl.builders.AbstractFieldBuilder
 import net.frozenblock.lib.config.api.client.gui.EntryBuilder.Companion.defaultValueError
 import net.minecraft.network.chat.Component
 import java.util.function.Consumer

@@ -19,6 +19,7 @@ package net.frozenblock.lib.block.mixin.waterlike;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import java.util.Optional;
 import net.frozenblock.lib.block.api.waterlike.WaterLikeBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -30,7 +31,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import java.util.Optional;
 
 @Mixin(BubbleColumnBlock.class)
 public class BubbleColumnBlockMixin {

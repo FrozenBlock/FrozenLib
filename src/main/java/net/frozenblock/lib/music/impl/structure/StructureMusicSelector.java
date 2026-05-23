@@ -43,7 +43,7 @@ public class StructureMusicSelector {
 
 		return registryAccess.lookupOrThrow(FrozenLibRegistries.STRUCTURE_MUSIC).stream()
 			.filter(structureMusic -> insidePiece || !structureMusic.mustBeInsidePiece())
-			.filter(structureMusic -> structureMusic.structures().stream().anyMatch(holder -> holder.is(structureId)))
+			.filter(structureMusic -> structureMusic.structures().stream().anyMatch(id -> id.equals(structureId)))
 			.findFirst()
 			.map(StructureMusic::backgroundMusic);
 	}
