@@ -72,8 +72,10 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Added a debug text entry option to display current statuses.
 - Revamped Structure-based Music.
   - `StructureMusic` is now serializable and its contents have changed, containing the following fields:
-    - `structures`: A structure's ID, a list of structure IDs, or a Structure Tag that `music` will play within.
+    - `structures`: A structure's ID or a list of structure IDs that `music` will play within.
     - `background_music`: The `BackgroundMusic` to play.
     - `must_be_inside_piece`: Whether the Player must be located inside a `StructurePiece` for `music` to play.
     - `config_entry_predicate`: An optional field, supplying a `ConfigEntryPredicate` that determines whether the music can be played.
   - Added the `frozenlib:structure_music` Dynamic Registry.
+- Refactored the `spotting_icons` package to `spottingicon`.
+- Spotting Icons have been completely revamped, now rendering as part of the game's HUD.

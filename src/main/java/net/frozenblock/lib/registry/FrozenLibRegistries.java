@@ -31,7 +31,7 @@ import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
-import net.frozenblock.lib.music.api.client.structure.StructureMusic;
+import net.frozenblock.lib.music.api.structure.StructureMusic;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spottingicon.api.SpottingIconPredicate;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;

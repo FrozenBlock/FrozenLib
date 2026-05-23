@@ -15,36 +15,31 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.music.api.client.structure;
+package net.frozenblock.lib.music.api.structure;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.List;
 import java.util.Optional;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryCodecs;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.attribute.BackgroundMusic;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 
 /**
+ * @param structures The {@link Identifier}s of the relevant {@link Structure}s for the music to play it.
  * @param backgroundMusic The {@link BackgroundMusic} to play while in a {@link Structure}.
  * @param mustBeInsidePiece Whether this can play only while the {@link Player} is directly inside a {@link StructurePiece}.
  * @param configEntryPredicate The {@link ConfigEntryPredicate} to test. This instance will be ignored if it returns false.
  */
-@Environment(EnvType.CLIENT)
-public record StructureMusic(HolderSet<Structure> structures, BackgroundMusic backgroundMusic, boolean mustBeInsidePiece, Optional<ConfigEntryPredicate<?>> configEntryPredicate) {
+public record StructureMusic(List<Identifier> structures, BackgroundMusic backgroundMusic, boolean mustBeInsidePiece, Optional<ConfigEntryPredicate<?>> configEntryPredicate) {
 	public static final Codec<StructureMusic> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		RegistryCodecs.homogeneousList(Registries.STRUCTURE, true).fieldOf("structures").forGetter(StructureMusic::structures),
+		Identifier.CODEC.listOf().fieldOf("structures").forGetter(StructureMusic::structures),
 		BackgroundMusic.CODEC.fieldOf("background_music").forGetter(StructureMusic::backgroundMusic),
 		Codec.BOOL.optionalFieldOf("must_be_inside_piece", false).forGetter(StructureMusic::mustBeInsidePiece),
 		ConfigEntryPredicate.CODEC.optionalFieldOf("config_entry_predicate").forGetter(StructureMusic::configEntryPredicate)
@@ -57,16 +52,16 @@ public record StructureMusic(HolderSet<Structure> structures, BackgroundMusic ba
 	public static void register(
 		BootstrapContext<StructureMusic> context,
 		ResourceKey<StructureMusic> name,
-		TagKey<Structure> tagKey,
+		Identifier structure,
 		BackgroundMusic backgroundMusic
 	) {
-		register(context, name, context.lookup(Registries.STRUCTURE).getOrThrow(tagKey), backgroundMusic, false);
+		register(context, name, structure, backgroundMusic, false);
 	}
 
 	public static void register(
 		BootstrapContext<StructureMusic> context,
 		ResourceKey<StructureMusic> name,
-		HolderSet<Structure> structures,
+		List<Identifier> structures,
 		BackgroundMusic backgroundMusic
 	) {
 		register(context, name, structures, backgroundMusic, false);
@@ -75,17 +70,17 @@ public record StructureMusic(HolderSet<Structure> structures, BackgroundMusic ba
 	public static void register(
 		BootstrapContext<StructureMusic> context,
 		ResourceKey<StructureMusic> name,
-		TagKey<Structure> tagKey,
+		Identifier structure,
 		BackgroundMusic backgroundMusic,
 		boolean mustBeInsidePiece
 	) {
-		register(context, name, context.lookup(Registries.STRUCTURE).getOrThrow(tagKey), backgroundMusic, mustBeInsidePiece, Optional.empty());
+		register(context, name, List.of(structure), backgroundMusic, mustBeInsidePiece, Optional.empty());
 	}
 
 	public static void register(
 		BootstrapContext<StructureMusic> context,
 		ResourceKey<StructureMusic> name,
-		HolderSet<Structure> structures,
+		List<Identifier> structures,
 		BackgroundMusic backgroundMusic,
 		boolean mustBeInsidePiece
 	) {
@@ -95,18 +90,18 @@ public record StructureMusic(HolderSet<Structure> structures, BackgroundMusic ba
 	public static void register(
 		BootstrapContext<StructureMusic> context,
 		ResourceKey<StructureMusic> name,
-		TagKey<Structure> tagKey,
+		Identifier structure,
 		BackgroundMusic backgroundMusic,
 		boolean mustBeInsidePiece,
 		ConfigEntryPredicate<?> configEntryPredicate
 	) {
-		register(context, name, context.lookup(Registries.STRUCTURE).getOrThrow(tagKey), backgroundMusic, mustBeInsidePiece, Optional.of(configEntryPredicate));
+		register(context, name, List.of(structure), backgroundMusic, mustBeInsidePiece, Optional.of(configEntryPredicate));
 	}
 
 	public static void register(
 		BootstrapContext<StructureMusic> context,
 		ResourceKey<StructureMusic> name,
-		HolderSet<Structure> structures,
+		List<Identifier> structures,
 		BackgroundMusic backgroundMusic,
 		boolean mustBeInsidePiece,
 		ConfigEntryPredicate<?> configEntryPredicate
@@ -117,7 +112,7 @@ public record StructureMusic(HolderSet<Structure> structures, BackgroundMusic ba
 	public static void register(
 		BootstrapContext<StructureMusic> context,
 		ResourceKey<StructureMusic> name,
-		HolderSet<Structure> structures,
+		List<Identifier> structures,
 		BackgroundMusic backgroundMusic,
 		boolean mustBeInsidePiece,
 		Optional<ConfigEntryPredicate<?>> configEntryPredicate
