@@ -57,6 +57,6 @@ public record FireType(
 	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<FireType>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibRegistries.FIRE_TYPE);
 
 	public boolean isEnabled() {
-		return this.enabled.map(ConfigEntryPredicate::evaluate).orElse(true);
+		return this.enabled.map(ConfigEntryPredicate::test).orElse(true);
 	}
 }

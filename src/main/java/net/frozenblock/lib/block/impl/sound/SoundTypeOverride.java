@@ -50,6 +50,6 @@ public class SoundTypeOverride {
 	}
 
 	public boolean matches(BlockState state) {
-		return this.configEntryPredicate.map(ConfigEntryPredicate::evaluate).orElse(true) && state.is(this.blocks);
+		return this.configEntryPredicate.map(ConfigEntryPredicate::test).orElse(true) && state.is(this.blocks);
 	}
 }

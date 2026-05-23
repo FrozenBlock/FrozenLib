@@ -45,7 +45,7 @@ public class ConfigEntryBlockPredicate implements BlockPredicate {
 
 	@Override
 	public boolean test(WorldGenLevel level, BlockPos pos) {
-		return this.configEntryPredicate.evaluate();
+		return this.configEntryPredicate.test();
 	}
 
 }

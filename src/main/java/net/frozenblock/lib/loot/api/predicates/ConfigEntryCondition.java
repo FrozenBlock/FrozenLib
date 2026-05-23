@@ -42,6 +42,6 @@ public class ConfigEntryCondition implements LootItemCondition {
 
 	@Override
 	public boolean test(LootContext lootContext) {
-		return this.configEntryPredicate.evaluate();
+		return this.configEntryPredicate.test();
 	}
 }

@@ -39,7 +39,7 @@ public class ConfigEntryPlacementFilter<T> extends PlacementFilter {
 
 	@Override
 	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
-		return this.configEntryPredicate.evaluate();
+		return this.configEntryPredicate.test();
 	}
 
 	@Override

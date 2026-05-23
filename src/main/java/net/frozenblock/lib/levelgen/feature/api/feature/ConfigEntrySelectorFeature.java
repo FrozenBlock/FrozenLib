@@ -33,7 +33,7 @@ public class ConfigEntrySelectorFeature extends Feature<ConfigEntrySelectorFeatu
 	public boolean place(FeaturePlaceContext<ConfigEntrySelectorFeatureConfiguration> context) {
 		final WorldGenLevel level = context.level();
 		final ConfigEntrySelectorFeatureConfiguration config = context.config();
-		return (config.configEntryPredicate().evaluate() ? config.featureIfTrue() : config.featureIfFalse())
+		return (config.configEntryPredicate().test() ? config.featureIfTrue() : config.featureIfFalse())
 			.value()
 			.place(level, context.chunkGenerator(), level.getRandom(), context.origin());
 	}
