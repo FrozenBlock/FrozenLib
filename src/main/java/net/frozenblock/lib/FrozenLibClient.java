@@ -29,6 +29,7 @@ import net.frozenblock.lib.cape.client.impl.ClientCapeData;
 import net.frozenblock.lib.config.impl.client.ClientConfigCommand;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
+import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
@@ -81,6 +82,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 		);
 
 		FrozenLibModResourcePackApi.init();
+		FrozenLibDebugScreenEntries.init();
 
 		FrozenClientEntrypoint.EVENT.invoker().init(); // also includes dev init
 	}

@@ -22,11 +22,10 @@ import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.music.api.client.structure.StructureMusic;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.attribute.BackgroundMusic;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,12 +38,12 @@ public class StructureMusicSelector {
 		if (optionalStructureStatus.isEmpty()) return Optional.empty();
 
 		final StructureStatus structureStatus = optionalStructureStatus.get();
-		final Holder<Structure> structure = structureStatus.structure();
+		final Identifier structureId = structureStatus.structure();
 		final boolean insidePiece = structureStatus.insidePiece();
 
 		return registryAccess.lookupOrThrow(FrozenLibRegistries.STRUCTURE_MUSIC).stream()
 			.filter(structureMusic -> insidePiece || !structureMusic.mustBeInsidePiece())
-			.filter(structureMusic -> structureMusic.structures().contains(structure))
+			.filter(structureMusic -> structureMusic.structures().stream().anyMatch(holder -> holder.is(structureId)))
 			.findFirst()
 			.map(StructureMusic::backgroundMusic);
 	}

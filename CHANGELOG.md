@@ -69,7 +69,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Renamed `PlayerStructureStatus` to `StructureStatus`.
 - Revamped the way `StructureStatus`es are handled and sent to the client.
   - These now rely on Fabric's `Attachment` system, ultimately leading to the removal of custom networking & mixins related to syncing them.
-  - A `Holder` for the `Structure` is now used instead of an `Identifier`.
+  - Added a debug text entry option to display current statuses.
 - Revamped Structure-based Music.
   - `StructureMusic` is now serializable and its contents have changed, containing the following fields:
     - `structures`: A structure's ID, a list of structure IDs, or a Structure Tag that `music` will play within.

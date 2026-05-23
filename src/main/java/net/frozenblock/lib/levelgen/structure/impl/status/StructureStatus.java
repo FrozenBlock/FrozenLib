@@ -17,40 +17,40 @@
 
 package net.frozenblock.lib.levelgen.structure.impl.status;
 
+import com.google.common.collect.ImmutableList;
 import java.util.List;
 import java.util.Optional;
-import com.google.common.collect.ImmutableList;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.levelgen.structure.Structure;
 
-public record StructureStatus(Holder<Structure> structure, boolean insidePiece) {
-	public static final StreamCodec<RegistryFriendlyByteBuf, StructureStatus> STREAM_CODEC = StreamCodec.composite(
-		ByteBufCodecs.holderRegistry(Registries.STRUCTURE), StructureStatus::structure,
+public record StructureStatus(Identifier structure, boolean insidePiece) {
+	public static final StreamCodec<FriendlyByteBuf, StructureStatus> STREAM_CODEC = StreamCodec.composite(
+		Identifier.STREAM_CODEC, StructureStatus::structure,
 		ByteBufCodecs.BOOL, StructureStatus::insidePiece,
 		StructureStatus::new
 	);
-	public static final StreamCodec<RegistryFriendlyByteBuf, List<StructureStatus>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
+	public static final StreamCodec<FriendlyByteBuf, List<StructureStatus>> STREAM_CODEC_LIST = STREAM_CODEC.apply(ByteBufCodecs.list());
 	public static final AttachmentType<List<StructureStatus>> ATTACHMENT_TYPE = AttachmentRegistry.create(
 		FrozenLibConstants.id("structure_statuses"),
-		builder -> builder.syncWith(LIST_STREAM_CODEC, AttachmentSyncPredicate.targetOnly())
+		builder -> builder.syncWith(STREAM_CODEC_LIST, AttachmentSyncPredicate.targetOnly())
 	);
+
+	public static void init() {}
 
 	public static Optional<StructureStatus> getProminentStructureStatus(Player player) {
 		if (player == null) return Optional.empty();
-		final List<StructureStatus> structureStatuses = player.getAttachedOrElse(StructureStatus.ATTACHMENT_TYPE, ImmutableList.of());
-		return Optional.ofNullable(structureStatuses.stream()
+		final List<StructureStatus> statuses = player.getAttachedOrElse(ATTACHMENT_TYPE, ImmutableList.of());
+		return Optional.ofNullable(statuses.stream()
 			.filter(StructureStatus::insidePiece)
 			.findFirst()
-			.orElseGet(() -> structureStatuses.stream().findFirst().orElse(null))
+			.orElseGet(() -> statuses.stream().findFirst().orElse(null))
 		);
 	}
 }

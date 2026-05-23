@@ -44,6 +44,7 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModif
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.StructureUpgradeCommand;
+import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.BiomeTagConditionSource;
 import net.frozenblock.lib.levelgen.surface.impl.OptimizedBiomeTagConditionSource;
@@ -79,13 +80,11 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		FrozenLibRegistries.init();
 
 		// QUILT INIT
-
 		ServerFreezer.onInitialize();
 		ModProtocol.loadVersions();
 		ServerRegistrySync.registerHandlers();
 
 		// CONTINUE FROZENLIB INIT
-
 		FrozenLibRuleBlockEntityModifiers.init();
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibStructurePoolElementTypes.init();
@@ -136,6 +135,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			ScreenShakeManager.getOrCreateScreenShakeManager(serverLevel).tick(serverLevel);
 			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
 		});
+		StructureStatus.init();
 
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);

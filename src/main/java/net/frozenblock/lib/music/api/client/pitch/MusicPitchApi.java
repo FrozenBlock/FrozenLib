@@ -32,7 +32,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.structure.Structure;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
@@ -104,10 +103,10 @@ public class MusicPitchApi {
 			if (type.isForStructure()) {
 				if (optionalStructureStatus.isEmpty()) continue;
 				final StructureStatus structureStatus = optionalStructureStatus.get();
-				final Holder<Structure> structureHolder = structureStatus.structure();
+				final Identifier structureId = structureStatus.structure();
 				boolean insidePiece = structureStatus.insidePiece();
 
-				if (type.isForStructureAndMatchesInside(insidePiece) && structureHolder.is(info.id())) {
+				if (type.isForStructureAndMatchesInside(insidePiece) && structureId.equals(info.id())) {
 					pitches.add(info.pitchFunction().apply(gameTime));
 					pitchContributors += 1;
 				}
