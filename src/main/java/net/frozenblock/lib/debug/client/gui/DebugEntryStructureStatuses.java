@@ -47,7 +47,7 @@ public class DebugEntryStructureStatuses implements DebugScreenEntry {
 		if (entity == null) return;
 
 		entity.getAttachedOrElse(StructureStatus.ATTACHMENT_TYPE, ImmutableList.of()).forEach(structureStatus -> {
-			displayer.addToGroup(GROUP, "Structure: " + structureStatus.structure() + " Inside Piece: " + structureStatus.insidePiece());
+			displayer.addToGroup(GROUP, "Structure: " + structureStatus.structure() + ", Inside Piece: " + structureStatus.insidePiece());
 		});
 	}
 }
