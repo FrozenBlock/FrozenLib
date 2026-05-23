@@ -17,6 +17,8 @@
 
 package net.frozenblock.lib.block.api.sound;
 
+import java.util.ArrayList;
+import java.util.Optional;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -29,8 +31,6 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.RegistryEvents;
-import java.util.ArrayList;
-import java.util.Optional;
 
 public class SoundTypeOverrides {
 	private static final ArrayList<SoundTypeOverride> SOUND_TYPE_OVERRIDES = new ArrayList<>();

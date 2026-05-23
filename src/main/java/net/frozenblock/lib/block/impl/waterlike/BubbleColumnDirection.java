@@ -17,11 +17,11 @@
 
 package net.frozenblock.lib.block.impl.waterlike;
 
+import java.util.Optional;
 import net.minecraft.core.Direction;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.BubbleColumnBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import java.util.Optional;
 
 public enum BubbleColumnDirection implements StringRepresentable {
 	NONE("none", Optional.empty()),

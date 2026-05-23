@@ -19,11 +19,11 @@ package net.frozenblock.lib.levelgen.feature.api.feature.noise_path;
 
 import com.mojang.serialization.Codec;
 import java.util.List;
-import net.frozenblock.lib.math.api.AdvancedMath;
-import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoiseBandBlockPlacement;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoiseBandPlacement;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoisePathFeatureConfiguration;
+import net.frozenblock.lib.math.api.AdvancedMath;
+import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;

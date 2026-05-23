@@ -64,7 +64,7 @@
     "mixin/frozenlib.resource_pack.mixins.json",
     "mixin/frozenlib.screenshake.mixins.json",
     "mixin/frozenlib.sound.mixins.json",
-    "mixin/frozenlib.spotting_icons.mixins.json",
+    "mixin/frozenlib.spottingicon.mixins.json",
     "mixin/frozenlib.tag.mixins.json",
     "mixin/frozenlib.texture.mixins.json",
     "mixin/frozenlib.wind.mixins.json",

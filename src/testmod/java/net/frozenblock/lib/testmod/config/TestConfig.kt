@@ -18,9 +18,6 @@
 package net.frozenblock.lib.testmod.config
 
 import blue.endless.jankson.Comment
-import com.mojang.serialization.Codec
-import com.mojang.serialization.codecs.RecordCodecBuilder
-import io.netty.buffer.ByteBuf
 import net.frozenblock.lib.FrozenLibConstants
 import net.frozenblock.lib.config.v2.config.ConfigData
 import net.frozenblock.lib.config.v2.config.ConfigSettings
@@ -31,7 +28,6 @@ import net.minecraft.core.Holder
 import net.minecraft.core.registries.BuiltInRegistries
 import net.minecraft.core.registries.Registries
 import net.minecraft.network.codec.ByteBufCodecs
-import net.minecraft.network.codec.StreamCodec
 import net.minecraft.sounds.SoundEvent
 import net.minecraft.sounds.SoundEvents
 import net.minecraft.world.phys.Vec3

@@ -1,14 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib.tag.mixin",
+  "package": "net.frozenblock.lib.spottingicon.mixin",
   "compatibilityLevel": "JAVA_25",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "CreeperMixin",
-    "PiglinAiMixin",
-    "WardenMixin"
-  ]
+    "EntityMixin"
+  ],
+  "client": []
 }
