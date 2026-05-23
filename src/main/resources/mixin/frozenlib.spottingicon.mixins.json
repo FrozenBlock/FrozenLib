@@ -1,13 +1,13 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib.spotting_icons.mixin",
+  "package": "net.frozenblock.lib.spottingicon.mixin",
   "compatibilityLevel": "JAVA_21",
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "net.frozenblock.lib.spottingicon.mixin.EntityMixin"
+    "EntityMixin"
   ],
   "client": []
 }
