@@ -30,8 +30,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AbstractFish.class)
 public abstract class AbstractFishMixin extends WaterAnimal {
 
-	private AbstractFishMixin(EntityType<? extends WaterAnimal> entityType, Level level) {
-		super(entityType, level);
+	private AbstractFishMixin(EntityType<? extends WaterAnimal> type, Level level) {
+		super(type, level);
 	}
 
 	@Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
