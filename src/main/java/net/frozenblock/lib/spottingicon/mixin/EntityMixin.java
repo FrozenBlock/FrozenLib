@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icons.mixin;
+package net.frozenblock.lib.spottingicon.mixin;
 
-import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spottingicon.api.SpottingIconManager;
+import net.frozenblock.lib.spottingicon.impl.EntitySpottingIconInterface;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;

@@ -19,7 +19,7 @@ package net.frozenblock.lib.testmod.mixin;
 
 import com.mojang.authlib.GameProfile;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spottingicon.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;

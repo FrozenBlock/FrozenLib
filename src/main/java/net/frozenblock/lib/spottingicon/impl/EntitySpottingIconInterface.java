@@ -15,9 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icons.impl;
+package net.frozenblock.lib.spottingicon.impl;
 
-import net.frozenblock.lib.spotting_icons.api.SpottingIconManager;
+import net.frozenblock.lib.spottingicon.api.SpottingIconManager;
 
 public interface EntitySpottingIconInterface {
 	default SpottingIconManager frozenLib$getSpottingIconManager() {

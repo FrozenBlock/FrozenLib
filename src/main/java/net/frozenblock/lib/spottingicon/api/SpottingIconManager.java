@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.spotting_icons.api;
+package net.frozenblock.lib.spottingicon.api;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -26,8 +26,8 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
-import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
+import net.frozenblock.lib.spottingicon.impl.SpottingIconPacket;
+import net.frozenblock.lib.spottingicon.impl.SpottingIconRemovePacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;

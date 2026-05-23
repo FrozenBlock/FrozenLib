@@ -53,8 +53,8 @@ import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRe
 import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
-import net.frozenblock.lib.spotting_icons.impl.SpottingIconPacket;
-import net.frozenblock.lib.spotting_icons.impl.SpottingIconRemovePacket;
+import net.frozenblock.lib.spottingicon.impl.SpottingIconPacket;
+import net.frozenblock.lib.spottingicon.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;

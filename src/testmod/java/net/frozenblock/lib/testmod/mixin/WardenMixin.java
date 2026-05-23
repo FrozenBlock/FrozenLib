@@ -19,7 +19,7 @@ package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
-import net.frozenblock.lib.spotting_icons.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spottingicon.impl.EntitySpottingIconInterface;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;

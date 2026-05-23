@@ -38,7 +38,7 @@ import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
-import net.frozenblock.lib.spotting_icons.impl.client.SpottingIconHudElement;
+import net.frozenblock.lib.spottingicon.impl.client.SpottingIconHudElement;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.minecraft.client.Minecraft;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
