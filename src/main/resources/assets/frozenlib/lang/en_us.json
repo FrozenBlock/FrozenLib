@@ -81,8 +81,15 @@
   "commands.scale.entity.success": "Scaled %s entity to size %s.",
   "commands.scale.entity.failure": "Entity scaling failed.",
 
-  "commands.frozenlib_config.reload.single": "Reloaded 1 config from %s.",
-  "commands.frozenlib_config.reload.multiple": "Reloaded %s configs from %s.",
+  "commands.frozenlib.config.reload.single": "Reloaded 1 config from %s.",
+  "commands.frozenlib.config.reload.multiple": "Reloaded %s configs from %s.",
+
+  "commands.frozenlib.spotting.add.success": "Added spotting icon to %s entity.",
+  "commands.frozenlib.spotting.add.success.multiple": "Added spotting icon to %s entities.",
+  "commands.frozenlib.spotting.add.failure": "No entities were given a spotting icon.",
+  "commands.frozenlib.spotting.remove.success": "Removed spotting icon from %s entity.",
+  "commands.frozenlib.spotting.remove.success.multiple": "Removed spotting icon from %s entities.",
+  "commands.frozenlib.spotting.remove.failure": "No entities had a spotting icon to remove.",
 
   "commands.frozenlib.taglist.footer": "Listed %s tags in %s.",
   "commands.frozenlib.taglist.tag.invalid": "Invalid tag: %s",

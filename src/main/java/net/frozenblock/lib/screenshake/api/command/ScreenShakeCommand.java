@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.screenshake.api.command;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.FloatArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
@@ -43,7 +42,7 @@ import net.minecraft.world.phys.Vec3;
 
 public class ScreenShakeCommand {
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
 		final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("screenshake")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
 
@@ -65,7 +64,7 @@ public class ScreenShakeCommand {
 			.then(Commands.literal("from").then(Commands.argument("entities", EntityArgument.entities()).executes(context -> removeShakesFrom(context.getSource(), EntityArgument.getEntities(context, "entity")))))
 		);
 
-		dispatcher.register(builder);
+		return builder;
 	}
 
 	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance) {

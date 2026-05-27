@@ -25,9 +25,8 @@ import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.config.impl.ConfigCommand;
+import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
-import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
@@ -43,7 +42,6 @@ import net.frozenblock.lib.levelgen.structure.api.TemplatePoolApi;
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModifiers;
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
-import net.frozenblock.lib.levelgen.structure.impl.StructureUpgradeCommand;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.BiomeTagConditionSource;
@@ -53,14 +51,11 @@ import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
-import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.spottingicon.api.SpottingIconPredicate;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
-import net.frozenblock.lib.tag.api.TagListCommand;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.api.WindManager;
-import net.frozenblock.lib.wind.api.command.WindCommand;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -117,12 +112,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		);
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-			WindCommand.register(dispatcher);
-			ScreenShakeCommand.register(dispatcher);
-			ConfigCommand.register(dispatcher);
-			TagListCommand.register(dispatcher);
-			ScaleEntityCommand.register(dispatcher);
-			StructureUpgradeCommand.register(dispatcher);
+			FrozenLibCommand.register(dispatcher);
 		});
 
 		ServerLevelEvents.UNLOAD.register((server, serverLevel) -> {

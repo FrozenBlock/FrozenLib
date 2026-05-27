@@ -17,11 +17,11 @@
 
 package net.frozenblock.lib.entity.api.command;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
@@ -35,15 +35,14 @@ import org.jetbrains.annotations.ApiStatus;
 @ApiStatus.Internal
 public class ScaleEntityCommand {
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal("scale")
+	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
+		return Commands.literal("scale")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 			.then(Commands.argument("targets", EntityArgument.entities())
 				.then(Commands.argument("scale", DoubleArgumentType.doubleArg())
 					.executes(context -> scale(context.getSource(), EntityArgument.getEntities(context, "targets"), DoubleArgumentType.getDouble(context, "scale")))
 				)
-			)
-		);
+			);
 	}
 
 	private static int scale(CommandSourceStack source, Collection<? extends Entity> entities, double scale) {

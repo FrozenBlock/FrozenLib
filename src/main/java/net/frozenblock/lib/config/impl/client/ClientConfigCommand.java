@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.config.impl.client;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.command.v2.ClientCommands;
@@ -31,23 +31,19 @@ import net.minecraft.network.chat.Component;
 @Environment(EnvType.CLIENT)
 public final class ClientConfigCommand {
 
-	public static void register(CommandDispatcher<FabricClientCommandSource> dispatcher) {
-		dispatcher.register(
-			ClientCommands.literal("frozenlib_config_client")
-				.then(ClientCommands.literal("reload")
-					.then(ClientCommands.argument("modId", StringArgumentType.string())
-						.suggests((context, builder) ->
-								SharedSuggestionProvider.suggest(
-									ConfigV2Registry.allConfigData().stream()
-										.map(configData -> configData.id().namespace())
-										.toList(),
-									builder
-								)
-						)
-						.executes(context -> reloadConfigs(context.getSource(), StringArgumentType.getString(context, "modId")))
+	public static LiteralArgumentBuilder<FabricClientCommandSource> buildSubCommand() {
+		return ClientCommands.literal("config")
+			.then(ClientCommands.literal("reload")
+				.then(ClientCommands.argument("modId", StringArgumentType.string()).suggests((context, builder) ->
+					SharedSuggestionProvider.suggest(
+						ConfigV2Registry.allConfigData().stream()
+							.map(configData -> configData.id().namespace())
+							.toList(),
+						builder
 					)
+				).executes(context -> reloadConfigs(context.getSource(), StringArgumentType.getString(context, "modId")))
 				)
-		);
+			);
 	}
 
 	private static int reloadConfigs(FabricClientCommandSource source, String modId) {

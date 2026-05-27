@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.levelgen.structure.impl;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import java.nio.file.Path;
 import java.util.Map;
@@ -37,30 +37,28 @@ import net.minecraft.SharedConstants;
 
 public class StructureUpgradeCommand {
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(
-			Commands.literal("structure_upgrade")
-				.then(
-					Commands.argument("namespace", StringArgumentType.string())
-						.executes(
-							context -> upgradeAndExportPieces(
-								context.getSource(),
-								StringArgumentType.getString(context, "namespace"),
-								false
-							)
+	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
+		return Commands.literal("structure_upgrade")
+			.then(
+				Commands.argument("namespace", StringArgumentType.string())
+					.executes(
+						context -> upgradeAndExportPieces(
+							context.getSource(),
+							StringArgumentType.getString(context, "namespace"),
+							false
 						)
-						.then(
-							Commands.argument("log", BoolArgumentType.bool())
-								.executes(
-									context -> upgradeAndExportPieces(
-										context.getSource(),
-										StringArgumentType.getString(context, "namespace"),
-										BoolArgumentType.getBool(context, "log")
-									)
+					)
+					.then(
+						Commands.argument("log", BoolArgumentType.bool())
+							.executes(
+								context -> upgradeAndExportPieces(
+									context.getSource(),
+									StringArgumentType.getString(context, "namespace"),
+									BoolArgumentType.getBool(context, "log")
 								)
-						)
-				)
-		);
+							)
+					)
+			);
 	}
 
 	private static int upgradeAndExportPieces(CommandSourceStack source, String namespace, boolean log) {

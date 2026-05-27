@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.tag.api;
 
-import com.mojang.brigadier.CommandDispatcher;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
 import net.minecraft.commands.CommandSourceStack;
@@ -35,8 +35,8 @@ public class TagListCommand {
 		type -> Component.translatable("commands.frozenlib.taglist.tag.invalid", type)
 	);
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal("taglist")
+	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
+		return Commands.literal("taglist")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 			.then(
 				Commands.literal("biome")
@@ -128,8 +128,7 @@ public class TagListCommand {
 								)
 							)
 					)
-			)
-		);
+			);
 	}
 
 	private static <T> int list(CommandSourceStack source, ResourceKey<Registry<T>> registryKey, TagKeyArgument.Result<T> tag) throws CommandSyntaxException {

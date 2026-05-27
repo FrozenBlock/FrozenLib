@@ -112,16 +112,16 @@ public class SpottingIconManager {
 	public void load(ValueInput input) {
 		this.ticksToCheck = input.getIntOr("frozenlib_spotting_icon_predicate_cooldown", 0);
 		this.icon = null;
-		final Optional<SpottingIcon> icon = input.read("frozenlib_spotting_icons", SpottingIcon.CODEC);
+		final Optional<SpottingIcon> icon = input.read("frozenlib_spotting_icon", SpottingIcon.CODEC);
 		icon.ifPresent(spottingIcon -> this.icon = spottingIcon);
 	}
 
 	public void save(ValueOutput output) {
 		output.putInt("frozenlib_spotting_icon_predicate_cooldown", this.ticksToCheck);
 		if (this.icon != null) {
-			output.store("frozenlib_spotting_icons", SpottingIcon.CODEC, this.icon);
+			output.store("frozenlib_spotting_icon", SpottingIcon.CODEC, this.icon);
 		} else {
-			output.discard("frozenlib_spotting_icons");
+			output.discard("frozenlib_spotting_icon");
 		}
 	}
 

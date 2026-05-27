@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.wind.api.command;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -29,8 +29,8 @@ import net.minecraft.world.phys.Vec3;
 
 public class WindCommand {
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(Commands.literal("wind")
+	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
+		return Commands.literal("wind")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 			.then(
 				Commands.literal("override")
@@ -69,8 +69,7 @@ public class WindCommand {
 					.then(
 						Commands.literal("pos").executes(context -> displayWindValue(context.getSource(), true))
 					)
-			)
-		);
+			);
 	}
 
 	private static int toggleWindOverride(CommandSourceStack source, boolean bl) {

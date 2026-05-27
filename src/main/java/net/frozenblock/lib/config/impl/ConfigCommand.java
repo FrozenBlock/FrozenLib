@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.config.impl;
 
-import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import java.util.Collection;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.minecraft.commands.CommandSourceStack;
@@ -29,12 +29,11 @@ import net.minecraft.network.chat.Component;
 
 public final class ConfigCommand {
 
-	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-		dispatcher.register(
-			Commands.literal("frozenlib_config")
-				.then(Commands.literal("reload")
-					.then(Commands.argument("modId", StringArgumentType.string())
-						.suggests((context, builder) ->
+	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
+		return Commands.literal("config")
+			.then(Commands.literal("reload")
+				.then(Commands.argument("modId", StringArgumentType.string())
+					.suggests((context, builder) ->
 								SharedSuggestionProvider.suggest(
 									ConfigV2Registry.allConfigData().stream()
 										.map(configData -> configData.id().namespace())
@@ -45,8 +44,7 @@ public final class ConfigCommand {
 						.executes(context -> reloadConfigs(context.getSource(), StringArgumentType.getString(context, "modId")))
 						.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
 				)
-			)
-		);
+			);
 	}
 
 	public static int reloadConfigsAndCount(String modId) {
