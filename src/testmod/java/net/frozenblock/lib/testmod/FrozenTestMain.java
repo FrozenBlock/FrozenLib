@@ -73,7 +73,7 @@ public final class FrozenTestMain implements ModInitializer {
 
 		GravityAPI.MODIFICATIONS.register((ctx) -> {
 			if (ctx.y < 300 && ctx.entity instanceof Player) {
-				ctx.gravity = new Vec3(0.05, 0.8, 0.05);
+				ctx.gravity = new Vec3(0, 0.8, 0);
 			}
 		});
 
