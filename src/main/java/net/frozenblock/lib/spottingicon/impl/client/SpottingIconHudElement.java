@@ -35,6 +35,7 @@ import org.joml.Vector3fc;
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 public final class SpottingIconHudElement implements HudElement {
+	private static final float Y_OFFSET = 0.5F;
 	private static final int ICON_SIZE = 16;
 	private static final int ICON_HALF = ICON_SIZE / 2;
 
@@ -61,7 +62,7 @@ public final class SpottingIconHudElement implements HudElement {
 			final float endDist = icon.endFadeDist() - icon.startFadeDist();
 			final int alpha = (int) (Math.min(1F, (float) (dist - icon.startFadeDist()) / endDist) * 255F);
 
-			final Vec3 iconWorldPos = new Vec3(eyePos.x, eyePos.y + entity.getBbHeight() + 1F - entity.getEyeHeight(), eyePos.z);
+			final Vec3 iconWorldPos = new Vec3(eyePos.x, eyePos.y + entity.getBbHeight() + Y_OFFSET - entity.getEyeHeight(), eyePos.z);
 			// check if in front of camera
 			if (iconWorldPos.subtract(cameraPos).dot(cameraForward) <= 0D) continue;
 			final Vec3 project = minecraft.gameRenderer.projectPointToScreen(iconWorldPos);
