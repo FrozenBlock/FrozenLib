@@ -68,18 +68,21 @@ public final class SpottingIconHudElement implements HudElement {
 
 			if (project.z > 1D || project.x < -1D || project.x > 1D || project.y < -1D || project.y > 1D) continue;
 
-			final int screenX = (int) ((project.x + 1D) / 2D * graphics.guiWidth());
-			final int screenY = (int) ((1D - project.y) / 2D * graphics.guiHeight());
+			final float screenX = (float) ((project.x + 1D) / 2D * graphics.guiWidth());
+			final float screenY = (float) ((1D - project.y) / 2D * graphics.guiHeight());
+			graphics.pose().pushMatrix();
+			graphics.pose().translate(screenX - ICON_HALF, screenY - ICON_HALF);
 			graphics.blit(
 				RenderPipelines.GUI_TEXTURED,
 				icon.texture(),
-				screenX - ICON_HALF,
-				screenY - ICON_HALF,
+				0,
+				0,
 				0F, 0F,
 				ICON_SIZE, ICON_SIZE,
 				ICON_SIZE, ICON_SIZE,
 				ARGB.color(alpha, 255, 255, 255)
 			);
+			graphics.pose().popMatrix();
 		}
 	}
 }
