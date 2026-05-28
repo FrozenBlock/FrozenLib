@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.feature.impl.blockpredicates;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigEntryBlockPredicate;
+import net.frozenblock.lib.levelgen.feature.api.blockpredicates.ConfigBlockPredicate;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.SearchInAreaBlockPredicate;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.SearchInDirectionBlockPredicate;
 import net.frozenblock.lib.levelgen.feature.api.blockpredicates.TouchingBlockPredicate;
@@ -32,7 +32,7 @@ public class FrozenLibBlockPredicateTypes {
 	public static final BlockPredicateType<SearchInDirectionBlockPredicate> SEARCH_IN_DIRECTION = register("search_in_direction", SearchInDirectionBlockPredicate.CODEC);
 	public static final BlockPredicateType<SearchInAreaBlockPredicate> SEARCH_IN_AREA = register("search_in_area", SearchInAreaBlockPredicate.CODEC);
 	public static final BlockPredicateType<TouchingBlockPredicate> TOUCHING = register("touching", TouchingBlockPredicate.CODEC);
-	public static final BlockPredicateType<ConfigEntryBlockPredicate> CONFIG_ENTRY = register("config_entry", ConfigEntryBlockPredicate.CODEC);
+	public static final BlockPredicateType<ConfigBlockPredicate> CONFIG_PREDICATE = register("config_predicate", ConfigBlockPredicate.CODEC);
 
 	public static void init() {}
 

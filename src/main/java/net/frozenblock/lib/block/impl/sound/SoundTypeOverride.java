@@ -21,7 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import net.frozenblock.lib.block.api.sound.SoundTypeCodecs;
-import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.Registries;
@@ -33,16 +33,16 @@ public class SoundTypeOverride {
 	public static final Codec<SoundTypeOverride> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(override -> override.blocks),
 		SoundTypeCodecs.SOUND_TYPE.fieldOf("sound_type").forGetter(override -> override.soundType),
-		ConfigEntryPredicate.CODEC.optionalFieldOf("config_entry_predicate").forGetter(override -> override.configEntryPredicate)
+		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(override -> override.configPredicate)
 	).apply(instance, SoundTypeOverride::new));
 	private final HolderSet<Block> blocks;
 	private final SoundType soundType;
-	private final Optional<ConfigEntryPredicate<?>> configEntryPredicate;
+	private final Optional<ConfigPredicate> configPredicate;
 
-	public SoundTypeOverride(HolderSet<Block> blocks, SoundType soundType, Optional<ConfigEntryPredicate<?>> configEntryPredicate) {
+	public SoundTypeOverride(HolderSet<Block> blocks, SoundType soundType, Optional<ConfigPredicate> configPredicate) {
 		this.blocks = blocks;
 		this.soundType = soundType;
-		this.configEntryPredicate = configEntryPredicate;
+		this.configPredicate = configPredicate;
 	}
 
 	public SoundType getSoundType() {
@@ -50,6 +50,6 @@ public class SoundTypeOverride {
 	}
 
 	public boolean matches(BlockState state) {
-		return this.configEntryPredicate.map(ConfigEntryPredicate::test).orElse(true) && state.is(this.blocks);
+		return this.configPredicate.map(ConfigPredicate::test).orElse(true) && state.is(this.blocks);
 	}
 }

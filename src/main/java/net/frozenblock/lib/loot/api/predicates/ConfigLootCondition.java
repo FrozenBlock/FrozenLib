@@ -19,20 +19,20 @@ package net.frozenblock.lib.loot.api.predicates;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import org.jetbrains.annotations.ApiStatus;
 
-public class ConfigEntryCondition implements LootItemCondition {
-	public static final MapCodec<ConfigEntryCondition> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigEntryPredicate.CODEC.fieldOf("config_entry_predicate").forGetter(config -> config.configEntryPredicate)
-	).apply(instance, ConfigEntryPredicate::asLootCondition));
-	private final ConfigEntryPredicate<?> configEntryPredicate;
+public class ConfigLootCondition implements LootItemCondition {
+	public static final MapCodec<ConfigLootCondition> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
+	).apply(instance, ConfigLootCondition::new));
+	private final ConfigPredicate configPredicate;
 
 	@ApiStatus.Internal
-	public ConfigEntryCondition(ConfigEntryPredicate<?> configEntryPredicate) {
-		this.configEntryPredicate = configEntryPredicate;
+	public ConfigLootCondition(ConfigPredicate configPredicate) {
+		this.configPredicate = configPredicate;
 	}
 
 	@Override
@@ -42,6 +42,6 @@ public class ConfigEntryCondition implements LootItemCondition {
 
 	@Override
 	public boolean test(LootContext lootContext) {
-		return this.configEntryPredicate.test();
+		return this.configPredicate.test();
 	}
 }

@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.api.sound;
 import java.util.ArrayList;
 import java.util.Optional;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
-import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.HolderSet;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -60,9 +60,9 @@ public class SoundTypeOverrides {
 		ResourceKey<SoundTypeOverride> name,
 		HolderSet<Block> blocks,
 		SoundType soundType,
-		ConfigEntryPredicate<?> configEntryPredicate
+		ConfigPredicate configPredicate
 	) {
-		register(context, name, blocks, soundType, Optional.of(configEntryPredicate));
+		register(context, name, blocks, soundType, Optional.of(configPredicate));
 	}
 
 	public static void register(
@@ -70,9 +70,9 @@ public class SoundTypeOverrides {
 		ResourceKey<SoundTypeOverride> name,
 		HolderSet<Block> blocks,
 		SoundType soundType,
-		Optional<ConfigEntryPredicate<?>> configEntryPredicate
+		Optional<ConfigPredicate> configPredicate
 	) {
-		context.register(name, new SoundTypeOverride(blocks, soundType, configEntryPredicate));
+		context.register(name, new SoundTypeOverride(blocks, soundType, configPredicate));
 	}
 
 	@ApiStatus.Internal

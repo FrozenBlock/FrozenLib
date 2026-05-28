@@ -18,22 +18,22 @@
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.levelgen.feature.api.feature.configurations.ConfigEntrySelectorFeatureConfiguration;
+import net.frozenblock.lib.levelgen.feature.api.feature.configurations.ConfigSelectorFeatureConfiguration;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
-public class ConfigEntrySelectorFeature extends Feature<ConfigEntrySelectorFeatureConfiguration> {
+public class ConfigSelectorFeature extends Feature<ConfigSelectorFeatureConfiguration> {
 
-	public ConfigEntrySelectorFeature(Codec<ConfigEntrySelectorFeatureConfiguration> codec) {
+	public ConfigSelectorFeature(Codec<ConfigSelectorFeatureConfiguration> codec) {
 		super(codec);
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<ConfigEntrySelectorFeatureConfiguration> context) {
+	public boolean place(FeaturePlaceContext<ConfigSelectorFeatureConfiguration> context) {
 		final WorldGenLevel level = context.level();
-		final ConfigEntrySelectorFeatureConfiguration config = context.config();
-		return (config.configEntryPredicate().test() ? config.featureIfTrue() : config.featureIfFalse())
+		final ConfigSelectorFeatureConfiguration config = context.config();
+		return (config.configPredicate().test() ? config.featureIfTrue() : config.featureIfFalse())
 			.value()
 			.place(level, context.chunkGenerator(), level.getRandom(), context.origin());
 	}

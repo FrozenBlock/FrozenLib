@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.placement.impl;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.levelgen.placement.api.ConfigEntryPlacementFilter;
+import net.frozenblock.lib.levelgen.placement.api.ConfigPlacementFilter;
 import net.frozenblock.lib.levelgen.placement.api.NoisePlacementFilter;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
 public class FrozenLibPlacementModifiers {
-	public static final PlacementModifierType<ConfigEntryPlacementFilter<?>> CONFIG_ENTRY = register("config_entry", ConfigEntryPlacementFilter.CODEC);
+	public static final PlacementModifierType<ConfigPlacementFilter<?>> CONFIG_PREDICATE = register("config_predicate", ConfigPlacementFilter.CODEC);
 	public static final PlacementModifierType<NoisePlacementFilter> NOISE_FILTER = register("noise_filter", NoisePlacementFilter.CODEC);
 
 	public static void init() {}

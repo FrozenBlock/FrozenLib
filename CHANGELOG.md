@@ -2,12 +2,12 @@ Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
 - Removed the `permanent` field from `FireData`.
-- `FireType` now contains an additional optional field, `config_entry_predicate`.
-  - This will be discussed later in the changelog, but will prevent the `FireType` from being used if predicate returns false.
+- `FireType` now contains an additional optional field, `config_predicate`.
+  - This will be discussed later in the changelog, but will prevent the `FireType` from being used if the predicate returns false.
 - Added the `FireEvents` class, containing the following Events:
   - `SELECT_FIRE_TYPE`
-    - Is triggered when an Entity is catching on fire and the FireType is being selected.
-    - Is used to modify the FireType to be set.
+   - Is triggered when an Entity is catching on fire and the FireType is being selected.
+   - Is used to modify the FireType to be set.
   - `AFTER_FIRE_TYPE_SET`
     - Is triggered after the FireType is set on an Entity.
   - `ON_ENTITY_BURN_TICK`
@@ -27,22 +27,32 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Added the `frozenlib:water_like_type` dynamic registry.
     - Provides a block's ID, a list of block IDs, or a Block Tag that list the blocks within a specific Water-Like Type.
     - Provies swimming, splashing, enter, exit, and ambient loop sounds to use for the Water-Like Type.
-- Added the `ConfigEntryPredicate`!
-  - A serializable predicate that compares a given value with a `ConfigEntry`'s value.
-  - Contains four fields:
-    - `entry`: The target `ConfigEntry`'s `ID`.
-    - `operator`: The `Operator` to compare the target `ConfigEntry`'s value with.
-    - `target`: The value the target `ConfigEntry`'s value is being compared with.
-    - `with`: An optional field, providing an `InlinedOperator` and another `ConfigEntryPredicate` to compare the first result against.
-      - `operator` The `InlinedOperator` to compare the original result against.
-      - `config_entry_predicate`: The `ConfigEntryPredicate` being compared.
+- Added `ConfigPredicate`s!
+  - Provides a way to utilize config from a data-driven context.
+  - These are modeled after Mojang's `BlockPredicate`s, aiming to be easy to utilize in Data Packs.
+  - Multiple predicate types are available, including:
+    - `any_of`: Returns `true` if any of the contained `ConfigPredicates` returned `true`.
+    - `all_of`: Returns `true` if all the contained `ConfigPredicates` returned `true`.
+    - `all_match`: Returns `true` if all the contained `ConfigPredicates` returned the same value.
+    - `not`: Returns `true` if the contained `ConfigPredicate` returns `false`.
+    - `exists`: Returns `true` if the a `ConfigEntry` with the provided `ID` exists.
+    - `true`: Always returns `true`.
+    - The primary five predicate types are as follows:
+      - `equal_to`: Returns `true` if the `ConfigEntry`'s value matches the `target` value.
+      - `greater_than`: Returns `true` if the `ConfigEntry`'s value is greater than the `target` value.
+      - `greater_than_or_equal_to`: Returns `true` if the `ConfigEntry`'s value is greater than or equal to the `target` value.
+      - `less_than`: Returns `true` if the `ConfigEntry`'s value is less than the `target` value.
+      - `less_than_or_equal_to`: Returns `true` if the `ConfigEntry`'s value is less than or equal to the `target` value.
+      - These all share the same two fields:
+        - `entry`: The target `ConfigEntry`'s `ID`.
+        - `target`: The value the target `ConfigEntry`'s value is being compared with.
   - Can be used as a `BlockPredicate` via the `asBlockPredicate` method.
   - Can be used as a `PlacementFilter` via the `asPlacementFilter` method.
   - Can be used as a `LootItemCondition` via the `asLootCondition` method.
-- Added the `ConfigEntrySelector` Configured Feature, configured with `ConfigEntrySelectorFeatureConfiguration`:
-  - `config_entry_predicate`: The `ConfigEntryPredicate` to use.
-  - `feature_if_true`: The `PlacedFeature` to be placed if `config_entry_predicate` returns true.
-  - `feature_if_false`: The `PlacedFeature` to be placed if `config_entry_predicate` returns false.
+- Added the `ConfigSelector` Configured Feature, configured with `ConfigSelectorFeatureConfiguration`:
+  - `config_predicate`: The `ConfigPredicate` to use.
+  - `feature_if_true`: The `PlacedFeature` to be placed if `config_predicate` returns true.
+  - `feature_if_false`: The `PlacedFeature` to be placed if `config_predicate` returns false.
 - Refactored and renamed many worldgen-related classes to be more consistent with Vanilla.
 - `ColumnWithDiskFeatureConfiguration` now uses two `BlockStateProvider`s instead of a `BlockState` and Block Tag.
 - Renamed the `block_state_provider` field to `block_state` and the `stop_when_encountering_unreplaceable_block` field to `stop_at_unreplaceable_block` in `ColumnFeatureConfiguration`.
@@ -60,7 +70,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `place_sound`: The place sound to use.
     - `hit_sound`: The hit sound to use.
     - `fall_sound`: The fall sound to use. Notice a pattern?
-  - `config_entry_predicate`: An optional field, supplying a `ConfigEntryPredicate` that determines whether the override can be used.
+  - `config_predicate`: An optional field, supplying a `ConfigPredicate` that determines whether the override can be used.
 - Added the `frozenlib_sound_type_override` Dynamic Registry.
 - The `frozenlib_config reload` Command now provides completion suggestions and requires Game Master permissions to use.
 - Added the `frozenlib_config_client` Command, allowing clients to use config commands locally without affecting the server.
@@ -75,7 +85,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `structures`: A structure's ID or a list of structure IDs that `music` will play within.
     - `background_music`: The `BackgroundMusic` to play.
     - `must_be_inside_piece`: Whether the Player must be located inside a `StructurePiece` for `music` to play.
-    - `config_entry_predicate`: An optional field, supplying a `ConfigEntryPredicate` that determines whether the music can be played.
+    - `config_predicate`: An optional field, supplying a `ConfigPredicate` that determines whether the music can be played.
   - Added the `frozenlib:structure_music` Dynamic Registry.
 - Refactored the `spotting_icons` package to `spottingicon`.
 - Spotting Icons have been completely revamped, now rendering as part of the game's HUD.

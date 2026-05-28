@@ -21,7 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
 import java.util.Optional;
-import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
@@ -35,14 +35,14 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
  * @param structures The {@link Identifier}s of the relevant {@link Structure}s for the music to play it.
  * @param backgroundMusic The {@link BackgroundMusic} to play while in a {@link Structure}.
  * @param mustBeInsidePiece Whether this can play only while the {@link Player} is directly inside a {@link StructurePiece}.
- * @param configEntryPredicate The {@link ConfigEntryPredicate} to test. This instance will be ignored if it returns false.
+ * @param configPredicate The {@link ConfigPredicate} to test. This instance will be ignored if it returns false.
  */
-public record StructureMusic(List<Identifier> structures, BackgroundMusic backgroundMusic, boolean mustBeInsidePiece, Optional<ConfigEntryPredicate<?>> configEntryPredicate) {
+public record StructureMusic(List<Identifier> structures, BackgroundMusic backgroundMusic, boolean mustBeInsidePiece, Optional<ConfigPredicate> configPredicate) {
 	public static final Codec<StructureMusic> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		Identifier.CODEC.listOf().fieldOf("structures").forGetter(StructureMusic::structures),
 		BackgroundMusic.CODEC.fieldOf("background_music").forGetter(StructureMusic::backgroundMusic),
 		Codec.BOOL.optionalFieldOf("must_be_inside_piece", false).forGetter(StructureMusic::mustBeInsidePiece),
-		ConfigEntryPredicate.CODEC.optionalFieldOf("config_entry_predicate").forGetter(StructureMusic::configEntryPredicate)
+		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(StructureMusic::configPredicate)
 	).apply(instance, StructureMusic::new));
 
 	public static ResourceKey<StructureMusic> createKey(Identifier id) {
@@ -93,9 +93,9 @@ public record StructureMusic(List<Identifier> structures, BackgroundMusic backgr
 		Identifier structure,
 		BackgroundMusic backgroundMusic,
 		boolean mustBeInsidePiece,
-		ConfigEntryPredicate<?> configEntryPredicate
+		ConfigPredicate configPredicate
 	) {
-		register(context, name, List.of(structure), backgroundMusic, mustBeInsidePiece, Optional.of(configEntryPredicate));
+		register(context, name, List.of(structure), backgroundMusic, mustBeInsidePiece, Optional.of(configPredicate));
 	}
 
 	public static void register(
@@ -104,9 +104,9 @@ public record StructureMusic(List<Identifier> structures, BackgroundMusic backgr
 		List<Identifier> structures,
 		BackgroundMusic backgroundMusic,
 		boolean mustBeInsidePiece,
-		ConfigEntryPredicate<?> configEntryPredicate
+		ConfigPredicate configPredicate
 	) {
-		register(context, name, structures, backgroundMusic, mustBeInsidePiece, Optional.of(configEntryPredicate));
+		register(context, name, structures, backgroundMusic, mustBeInsidePiece, Optional.of(configPredicate));
 	}
 
 	public static void register(
@@ -115,8 +115,8 @@ public record StructureMusic(List<Identifier> structures, BackgroundMusic backgr
 		List<Identifier> structures,
 		BackgroundMusic backgroundMusic,
 		boolean mustBeInsidePiece,
-		Optional<ConfigEntryPredicate<?>> configEntryPredicate
+		Optional<ConfigPredicate> configPredicate
 	) {
-		context.register(name, new StructureMusic(structures, backgroundMusic, mustBeInsidePiece, configEntryPredicate));
+		context.register(name, new StructureMusic(structures, backgroundMusic, mustBeInsidePiece, configPredicate));
 	}
 }

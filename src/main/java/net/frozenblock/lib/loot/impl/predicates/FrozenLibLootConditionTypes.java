@@ -19,7 +19,7 @@ package net.frozenblock.lib.loot.impl.predicates;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.loot.api.predicates.ConfigEntryCondition;
+import net.frozenblock.lib.loot.api.predicates.ConfigLootCondition;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
@@ -27,7 +27,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 public class FrozenLibLootConditionTypes {
 
 	public static void init() {
-		register("config_entry", ConfigEntryCondition.MAP_CODEC);
+		register("config_predicate", ConfigLootCondition.MAP_CODEC);
 	}
 
 	private static <P extends LootItemCondition> void register(String name, MapCodec<P> mapCodec) {

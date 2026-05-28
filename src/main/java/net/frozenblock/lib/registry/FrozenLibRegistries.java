@@ -29,6 +29,7 @@ import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
@@ -78,6 +79,9 @@ public class FrozenLibRegistries {
 	public static final MappedRegistry<WindDisturbanceLogic<?>> WIND_DISTURBANCE_LOGIC_UNSYNCED = createSimple(WIND_DISTURBANCE_LOGIC_UNSYNCED_REGISTRY, Lifecycle.stable(), null,
 		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new WindDisturbanceLogic(WindDisturbanceLogic.defaultPredicate()))
 	);
+
+	public static final ResourceKey<Registry<ConfigPredicateType<?>>> CONFIG_PREDICATE_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_type"));
+	public static final MappedRegistry<ConfigPredicateType<?>> CONFIG_PREDICATE_TYPE = createSimple(CONFIG_PREDICATE_TYPE_REGISTRY, Lifecycle.stable());
 
 	// DYNAMIC REGISTRIES
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));

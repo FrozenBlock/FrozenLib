@@ -19,19 +19,19 @@ package net.frozenblock.lib.levelgen.feature.api.feature.configurations;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
-public record ConfigEntrySelectorFeatureConfiguration(
-	ConfigEntryPredicate<?> configEntryPredicate,
+public record ConfigSelectorFeatureConfiguration(
+	ConfigPredicate configPredicate,
 	Holder<PlacedFeature> featureIfTrue,
 	Holder<PlacedFeature> featureIfFalse
 ) implements FeatureConfiguration {
-	public static final Codec<ConfigEntrySelectorFeatureConfiguration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		ConfigEntryPredicate.CODEC.fieldOf("config_entry_predicate").forGetter(config -> config.configEntryPredicate),
+	public static final Codec<ConfigSelectorFeatureConfiguration> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate),
 		PlacedFeature.CODEC.fieldOf("feature_if_true").forGetter(config -> config.featureIfTrue),
 		PlacedFeature.CODEC.fieldOf("feature_if_false").forGetter(config -> config.featureIfFalse)
-	).apply(instance, ConfigEntrySelectorFeatureConfiguration::new));
+	).apply(instance, ConfigSelectorFeatureConfiguration::new));
 }

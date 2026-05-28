@@ -26,6 +26,7 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.command.FrozenLibCommand;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
@@ -89,6 +90,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		FrozenLibDataComponents.init();
 		FrozenLibParticleTypes.init();
 		FrozenLibFeatures.init();
+		ConfigPredicateType.init();
 		FrozenLibBlockPredicateTypes.init();
 		FrozenLibPlacementModifiers.init();
 		FrozenLibLootConditionTypes.init();;

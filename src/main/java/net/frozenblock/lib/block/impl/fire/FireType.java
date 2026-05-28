@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.impl.fire;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
-import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -41,7 +41,7 @@ public record FireType(
 	boolean replaceable,
 	Optional<Identifier> texture0,
 	Optional<Identifier> texture1,
-	Optional<ConfigEntryPredicate<?>> enabled
+	Optional<ConfigPredicate> enabled
 ) {
 	public static final Codec<FireType> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(FireType::blocks),
@@ -51,12 +51,12 @@ public record FireType(
 		Codec.BOOL.fieldOf("replaceable").forGetter(FireType::replaceable),
 		Identifier.CODEC.optionalFieldOf("texture_0").forGetter(FireType::texture0),
 		Identifier.CODEC.optionalFieldOf("texture_1").forGetter(FireType::texture1),
-		ConfigEntryPredicate.CODEC.optionalFieldOf("config_entry_predicate").forGetter(FireType::enabled)
+		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(FireType::enabled)
 	).apply(instance, FireType::new));
 	public static final Codec<Holder<FireType>> CODEC = RegistryFixedCodec.create(FrozenLibRegistries.FIRE_TYPE);
 	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<FireType>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibRegistries.FIRE_TYPE);
 
 	public boolean isEnabled() {
-		return this.enabled.map(ConfigEntryPredicate::test).orElse(true);
+		return this.enabled.map(ConfigPredicate::test).orElse(true);
 	}
 }

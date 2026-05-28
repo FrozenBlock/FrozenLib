@@ -21,7 +21,7 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.Holder;
@@ -150,7 +150,7 @@ public final class FireTypes {
 		boolean replaceable,
 		Optional<Identifier> texture0,
 		Optional<Identifier> texture1,
-		ConfigEntryPredicate<?> enabled
+		ConfigPredicate enabled
 	) {
 		context.register(name, new FireType(blocks, damage, spreadsFromZombie, spreadsFromIgniteEnchantments, replaceable, texture0, texture1, Optional.of(enabled)));
 	}

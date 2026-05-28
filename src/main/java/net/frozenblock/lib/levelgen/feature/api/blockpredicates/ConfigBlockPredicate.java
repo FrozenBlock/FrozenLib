@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.feature.api.blockpredicates;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.WorldGenLevel;
@@ -27,25 +27,25 @@ import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicateType;
 import org.jetbrains.annotations.ApiStatus;
 
-public class ConfigEntryBlockPredicate implements BlockPredicate {
-	public static final MapCodec<ConfigEntryBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigEntryPredicate.CODEC.fieldOf("config_entry_predicate").forGetter(config -> config.configEntryPredicate)
-	).apply(instance, ConfigEntryPredicate::asBlockPredicate));
-	private final ConfigEntryPredicate<?> configEntryPredicate;
+public class ConfigBlockPredicate implements BlockPredicate {
+	public static final MapCodec<ConfigBlockPredicate> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
+	).apply(instance, ConfigBlockPredicate::new));
+	private final ConfigPredicate configPredicate;
 
 	@ApiStatus.Internal
-	public ConfigEntryBlockPredicate(ConfigEntryPredicate<?> configEntryPredicate) {
-		this.configEntryPredicate = configEntryPredicate;
+	public ConfigBlockPredicate(ConfigPredicate configPredicate) {
+		this.configPredicate = configPredicate;
 	}
 
 	@Override
 	public BlockPredicateType<?> type() {
-		return FrozenLibBlockPredicateTypes.CONFIG_ENTRY;
+		return FrozenLibBlockPredicateTypes.CONFIG_PREDICATE;
 	}
 
 	@Override
 	public boolean test(WorldGenLevel level, BlockPos pos) {
-		return this.configEntryPredicate.test();
+		return this.configPredicate.test();
 	}
 
 }

@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.placement.api;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.config.v2.entry.data.ConfigEntryPredicate;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -27,23 +27,23 @@ import net.minecraft.world.level.levelgen.placement.PlacementContext;
 import net.minecraft.world.level.levelgen.placement.PlacementFilter;
 import net.minecraft.world.level.levelgen.placement.PlacementModifierType;
 
-public class ConfigEntryPlacementFilter<T> extends PlacementFilter {
-	public static final MapCodec<ConfigEntryPlacementFilter<?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		ConfigEntryPredicate.CODEC.fieldOf("config_entry_predicate").forGetter(config -> config.configEntryPredicate)
-	).apply(instance, ConfigEntryPredicate::asPlacementFilter));
-	private final ConfigEntryPredicate<T> configEntryPredicate;
+public class ConfigPlacementFilter<T> extends PlacementFilter {
+	public static final MapCodec<ConfigPlacementFilter<?>> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(config -> config.configPredicate)
+	).apply(instance, ConfigPlacementFilter::new));
+	private final ConfigPredicate configPredicate;
 
-	public ConfigEntryPlacementFilter(ConfigEntryPredicate<T> configEntryPredicate) {
-		this.configEntryPredicate = configEntryPredicate;
+	public ConfigPlacementFilter(ConfigPredicate configPredicate) {
+		this.configPredicate = configPredicate;
 	}
 
 	@Override
 	protected boolean shouldPlace(PlacementContext context, RandomSource random, BlockPos pos) {
-		return this.configEntryPredicate.test();
+		return this.configPredicate.test();
 	}
 
 	@Override
 	public PlacementModifierType<?> type() {
-		return FrozenLibPlacementModifiers.CONFIG_ENTRY;
+		return FrozenLibPlacementModifiers.CONFIG_PREDICATE;
 	}
 }
