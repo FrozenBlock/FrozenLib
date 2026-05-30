@@ -52,7 +52,10 @@ public final class FireEvents {
 				if (entityBasedType.isPresent()) type = entityBasedType.get();
 			}
 
-			for (var callback : callbacks) type = callback.selectFireType(entity, sourceBlock, sourceEntity, sourceItem);
+			for (var callback : callbacks) {
+				final ResourceKey<FireType> eventType = callback.selectFireType(entity, sourceBlock, sourceEntity, sourceItem);
+				if (eventType != null) type = eventType;
+			}
 			return type;
 		}
 	);
@@ -105,6 +108,7 @@ public final class FireEvents {
 		 * @param sourceEntity the source {@link Entity} of the fire, if available
 		 * @param sourceItem the source {@link ItemStack} of the fire, if available
 		 */
+		@Nullable
 		ResourceKey<FireType> selectFireType(Entity entity, Optional<Block> sourceBlock, Optional<Entity> sourceEntity, Optional<ItemStack> sourceItem);
 	}
 
