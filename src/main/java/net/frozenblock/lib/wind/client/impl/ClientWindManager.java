@@ -147,7 +147,7 @@ public final class ClientWindManager {
 	}
 
 	/**
-	 * @return whether wind is currently enabled.
+	 * @return whether wind is currently enabledWhen.
 	 */
 	public static boolean shouldUseWind() {
 		return hasInitialized || FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS.get();

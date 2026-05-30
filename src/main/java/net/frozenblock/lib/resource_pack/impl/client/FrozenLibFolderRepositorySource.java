@@ -30,7 +30,7 @@ import net.minecraft.world.level.validation.DirectoryValidator;
  * <p>
  * Resource packs loaded from this repository will have a translatable name of frozenlib.resourcepack.[pack name without ".zip" extension].
  * <p>
- * Resource packs loaded from this repository will be marked as built-in and will always be enabled, with no way to disable them.
+ * Resource packs loaded from this repository will be marked as built-in and will always be enabledWhen, with no way to disable them.
  */
 @Environment(EnvType.CLIENT)
 public class FrozenLibFolderRepositorySource extends FolderRepositorySource {

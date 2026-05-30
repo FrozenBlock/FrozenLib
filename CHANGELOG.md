@@ -2,6 +2,26 @@ Please clear changelog after each release.
 Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 -----------------
 - Removed the `permanent` field from `FireData`.
+- Revamped `FireType`s to be much more flexible. Their new data structure and functionality is as follows:
+  - `source_settings`:
+    - `fire_source_blocks`: A block's ID, a list of block IDs, or a Block Tag defining which blocks use this Fire Type. (i.e, Fire & Campfires.)
+    - `supporting_blocks`: A block's ID, a list of block IDs, or a Block Tag defining which blocks will cause an entity's Fire Type to change upon stepping on them.
+  - `damage_settings`:
+    - `damage`: The amount of damage to inflict while burning.
+    - `vulnerable_damage` The amount of damage to inflict while an entity who is vulnerable to this Fire Type is burning.
+    - `vulnerable_entity_types`: An entity type ID, a list of entity type IDs, or an Entity Type Tag defining which entity types are vulnerable to this Fire Type.
+    - `damage_immune_entity_types`: An entity type ID, a list of entity type IDs, or an Entity Type Tag defining which entity types are immune to damage from this Fire Type.
+  - `spread_settings`:
+    - `spreads_from_zombie_attack`: Whether this Fire Type can be spread to the victim of a burning Zombie's attack.
+    - `spreads_from_ignite_enchantments`: Whether this Fire Type can be spread to the victim of an attack of a burning entity using an enchantment that ignites entities.
+    - `replaceable_by_other_fire_types`: Whether this Fire Type can be replaced by another Fire Type while burning.
+    - `always_apply_to_entity_types`: An entity type ID, a list of entity type IDs, or an Entity Type Tag defining which entity types will always use this Fire Type while burning.
+    - `cannot_apply_to_entity_types`: An entity type ID, a list of entity type IDs, or an Entity Type Tag defining which entity types cannot use this Fire Type.
+  - `textures`:
+    - `texture_0`: The first texture to use for this Fire Type.
+    - `texture_1`: The second texture to use for this Fire Type, also used for the first-person burning overlay.
+  - `config_predicate`: A `ConfigPredicate`, optionally used to dictate whether this Fire Type can be used.
+- Added a builder for Fire Types to make their creation much simpler.
 - `FireType` now contains an additional optional field, `config_predicate`.
   - This will be discussed later in the changelog, but will prevent the `FireType` from being used if the predicate returns false.
 - Added the `FireEvents` class, containing the following Events:

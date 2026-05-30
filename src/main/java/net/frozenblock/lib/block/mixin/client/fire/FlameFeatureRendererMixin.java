@@ -52,8 +52,9 @@ public class FlameFeatureRendererMixin {
 		final FireType fireType = entityRenderState.getData(FrozenLibRenderStateDataKeys.FIRE_TYPE);
 		if (fireType != null) {
 			final AtlasManager atlasManager = context.atlasManager();
-			if (fireType.texture0().isPresent()) fire1 = atlasManager.get(Sheets.BLOCKS_MAPPER.apply(fireType.texture0().get()));
-			if (fireType.texture1().isPresent()) fire2 = atlasManager.get(Sheets.BLOCKS_MAPPER.apply(fireType.texture1().get()));
+			final FireType.TextureSettings textures = fireType.textures();
+			if (textures.texture0().isPresent()) fire1 = atlasManager.get(Sheets.BLOCKS_MAPPER.apply(textures.texture0().get()));
+			if (textures.texture1().isPresent()) fire2 = atlasManager.get(Sheets.BLOCKS_MAPPER.apply(textures.texture1().get()));
 		}
 
 		original.call(instance, submit, buffer, fire1, fire2);

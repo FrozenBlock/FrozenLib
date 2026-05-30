@@ -48,14 +48,18 @@ public final class FireEvents {
 			}
 
 			if (sourceEntity.isPresent()) {
-				final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeFromEntity(sourceEntity.get());
-				if (entityBasedType.isPresent()) type = entityBasedType.get();
+				final Optional<ResourceKey<FireType>> sourceEntityBasedType = FireTypes.getTypeFromEntity(sourceEntity.get());
+				if (sourceEntityBasedType.isPresent()) type = sourceEntityBasedType.get();
 			}
+
+			final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeForEntity(entity);
+			if (entityBasedType.isPresent()) type = entityBasedType.get();
 
 			for (var callback : callbacks) {
 				final ResourceKey<FireType> eventType = callback.selectFireType(entity, sourceBlock, sourceEntity, sourceItem);
 				if (eventType != null) type = eventType;
 			}
+
 			return type;
 		}
 	);

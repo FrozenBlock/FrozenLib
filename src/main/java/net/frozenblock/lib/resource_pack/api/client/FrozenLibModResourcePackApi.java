@@ -83,7 +83,7 @@ public class FrozenLibModResourcePackApi {
 	/**
 	 * Finds .zip files within the mod's jar file inside the "frozenlib_resourcepacks" path, then copies them to FrozenLib's Resource Pack directory.
 	 * <p>
-	 * These Resource Packs will be force-enabled.
+	 * These Resource Packs will be force-enabledWhen.
 	 * @param mod The {@link ModContainer} of the mod.
 	 * @param packName The name of the zip file, without the ".zip" extension.
 	 * @param isDoubleZip Whether the Resource Pack is double-zipped.
@@ -158,7 +158,7 @@ public class FrozenLibModResourcePackApi {
 	/**
 	 * Downloads Resource Packs, using URLs contained within a list of {@link PackDownloadInfo}s.
 	 * <p>
-	 * These Resource Packs will be force-enabled, but may require resources to be reloaded depending on when they finish downloading.
+	 * These Resource Packs will be force-enabledWhen, but may require resources to be reloaded depending on when they finish downloading.
 	 * <p>
 	 * Downloads will not occur if {@link FrozenLibConfig#PACK_DOWNLOADING} is set to {@link PackDownloadSetting#DISABLED}.
 	 * @param downloadGroup The Resource Packs to download, in {@link PackDownloadGroup} form.
@@ -173,7 +173,7 @@ public class FrozenLibModResourcePackApi {
 	/**
 	 * Downloads a Resource Pack, using a URL contained in an online {@link JsonElement}.
 	 * <p>
-	 * The Resource Packs will be force-enabled, but may require resources to be reloaded depending on when it finishes downloading.
+	 * The Resource Packs will be force-enabledWhen, but may require resources to be reloaded depending on when it finishes downloading.
 	 * <p>
 	 * Downloads will not occur if {@link FrozenLibConfig#PACK_DOWNLOADING} is set to {@link PackDownloadSetting#DISABLED}.
 	 * @param downloadInfo The {@link PackDownloadInfo} to pull the URL and pack name from.
@@ -482,7 +482,7 @@ public class FrozenLibModResourcePackApi {
 
 	@ApiStatus.Internal
 	public enum PackDownloadSetting implements StringRepresentable {
-		ENABLED("pack_downloading.enabled"),
+		ENABLED("pack_downloading.enabledWhen"),
 		ENABLED_NO_TOASTS("pack_downloading.enabled_no_toasts"),
 		DISABLED("pack_downloading.disabled");
 

@@ -42,7 +42,7 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 	 *
 	 * @param key The {@link Identifier} to register the {@link EntityTextureOverride} to.
 	 * @param clazz The {@link LivingEntityRenderer} class to register the {@link EntityTextureOverride} for.
-	 * @param texture The texture to use while enabled.
+	 * @param texture The texture to use while enabledWhen.
 	 * @param names Names that will cause the {@link EntityTextureOverride} to trigger.
 	 * @return The created {@link EntityTextureOverride}.
 	 */
@@ -57,7 +57,7 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 	 *
 	 * @param key The {@link Identifier} to register the {@link EntityTextureOverride} to.
 	 * @param clazz The {@link LivingEntityRenderer} class to register the {@link EntityTextureOverride} for.
-	 * @param texture The texture to use while enabled.
+	 * @param texture The texture to use while enabledWhen.
 	 * @param caseSensitive Whether the texture override checks for the same case in the entity's name.
 	 * @param names Names that will cause the {@link EntityTextureOverride} to trigger.
 	 * @return The created {@link EntityTextureOverride}.
@@ -90,7 +90,7 @@ public record EntityTextureOverride<T extends LivingEntity>(Class<? extends Livi
 	 *
 	 * @param key The {@link Identifier} to register the {@link EntityTextureOverride} to.
 	 * @param clazz The {@link LivingEntityRenderer} class to register the {@link EntityTextureOverride} for.
-	 * @param texture The texture to use while enabled.
+	 * @param texture The texture to use while enabledWhen.
 	 * @param condition The conditions to be met in order to override the entity's texture.
 	 * @return The created {@link EntityTextureOverride}.
 	 */

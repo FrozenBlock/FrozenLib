@@ -1,9 +1,14 @@
 {
-  "blocks": "#frozenlib:soul_fire_blocks",
-  "damage": 2.0,
-  "replaceable": true,
-  "spreads_from_ignite_enchantments": true,
-  "spreads_from_zombie": true,
-  "texture_0": "minecraft:soul_fire_0",
-  "texture_1": "minecraft:soul_fire_1"
+  "damage_settings": {
+    "damage": 2.0
+  },
+  "source_settings": {
+    "fire_source_blocks": "#frozenlib:soul_fire_blocks",
+    "supporting_blocks": "#minecraft:soul_fire_base_blocks"
+  },
+  "spread_settings": {},
+  "textures": {
+    "texture_0": "minecraft:soul_fire_0",
+    "texture_1": "minecraft:soul_fire_1"
+  }
 }

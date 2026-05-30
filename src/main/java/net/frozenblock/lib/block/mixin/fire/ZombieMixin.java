@@ -42,7 +42,7 @@ public class ZombieMixin {
 	)
 	public void frozenLib$setFireType(ServerLevel level, Entity target, CallbackInfoReturnable<Boolean> info) {
 		final FireData fireData = Zombie.class.cast(this).getAttached(FireData.ATTACHMENT);
-		if (fireData == null || !fireData.type().value().spreadsFromZombie()) return;
+		if (fireData == null || !fireData.type().value().spreadSettings().spreadsFromZombieAttack()) return;
 
 		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(
 			target,

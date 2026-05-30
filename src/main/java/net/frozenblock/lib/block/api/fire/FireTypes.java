@@ -21,18 +21,17 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
@@ -49,7 +48,15 @@ public final class FireTypes {
 	public static Optional<ResourceKey<FireType>> getTypeForBlock(RegistryAccess registryAccess, Block block) {
 		final Registry<FireType> registry = registryAccess.lookupOrThrow(FrozenLibRegistries.FIRE_TYPE);
 		for (FireType type : registry) {
-			if (type.blocks().contains(block.builtInRegistryHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
+			if (type.sourceSettings().fireSourceBlocks().contains(block.builtInRegistryHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
+		}
+		return Optional.empty();
+	}
+
+	public static Optional<ResourceKey<FireType>> getTypeForEntity(Entity entity) {
+		final Registry<FireType> registry = entity.registryAccess().lookupOrThrow(FrozenLibRegistries.FIRE_TYPE);
+		for (FireType type : registry) {
+			if (type.spreadSettings().alwaysApplyToEntityTypes().contains(entity.typeHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
 		}
 		return Optional.empty();
 	}
@@ -77,88 +84,35 @@ public final class FireTypes {
 	public static void register(
 		BootstrapContext<FireType> context,
 		ResourceKey<FireType> name,
-		HolderSet<Block> blocks
+		FireType.Builder builder
 	) {
-		register(context, name, blocks, 1F, true, true, true, Optional.empty(), Optional.empty());
+		register(context, name, builder.build());
 	}
 
 	public static void register(
 		BootstrapContext<FireType> context,
 		ResourceKey<FireType> name,
-		HolderSet<Block> blocks,
-		float damage
+		FireType fireType
 	) {
-		register(context, name, blocks, damage, true, true, true, Optional.empty(), Optional.empty());
-	}
-
-	public static void register(
-		BootstrapContext<FireType> context,
-		ResourceKey<FireType> name,
-		HolderSet<Block> blocks,
-		float damage,
-		Identifier texture0,
-		Identifier texture1
-	) {
-		register(context, name, blocks, damage, true, true, true, texture0, texture1);
-	}
-
-	public static void register(
-		BootstrapContext<FireType> context,
-		ResourceKey<FireType> name,
-		HolderSet<Block> blocks,
-		Identifier texture0,
-		Identifier texture1
-	) {
-		register(context, name, blocks, 1F, true, true, true, texture0, texture1);
-	}
-
-	public static void register(
-		BootstrapContext<FireType> context,
-		ResourceKey<FireType> name,
-		HolderSet<Block> blocks,
-		float damage,
-		boolean spreadsFromZombie,
-		boolean spreadsFromIgniteEnchantments,
-		boolean replaceable,
-		Identifier texture0,
-		Identifier texture1
-	) {
-		register(context, name, blocks, damage, spreadsFromZombie, spreadsFromIgniteEnchantments, replaceable, Optional.of(texture0), Optional.of(texture1));
-	}
-
-	public static void register(
-		BootstrapContext<FireType> context,
-		ResourceKey<FireType> name,
-		HolderSet<Block> blocks,
-		float damage,
-		boolean spreadsFromZombie,
-		boolean spreadsFromIgniteEnchantments,
-		boolean replaceable,
-		Optional<Identifier> texture0,
-		Optional<Identifier> texture1
-	) {
-		context.register(name, new FireType(blocks, damage, spreadsFromZombie, spreadsFromIgniteEnchantments, replaceable, texture0, texture1, Optional.empty()));
-	}
-
-	public static void register(
-		BootstrapContext<FireType> context,
-		ResourceKey<FireType> name,
-		HolderSet<Block> blocks,
-		float damage,
-		boolean spreadsFromZombie,
-		boolean spreadsFromIgniteEnchantments,
-		boolean replaceable,
-		Optional<Identifier> texture0,
-		Optional<Identifier> texture1,
-		ConfigPredicate enabled
-	) {
-		context.register(name, new FireType(blocks, damage, spreadsFromZombie, spreadsFromIgniteEnchantments, replaceable, texture0, texture1, Optional.of(enabled)));
+		context.register(name, fireType);
 	}
 
 	public static void bootstrap(BootstrapContext<FireType> context) {
 		final HolderGetter<Block> blocks = context.lookup(Registries.BLOCK);
-
-		register(context, FIRE, blocks.getOrThrow(FrozenLibBlockTags.DEFAULT_FIRE_BLOCKS));
-		register(context, SOUL_FIRE, blocks.getOrThrow(FrozenLibBlockTags.SOUL_FIRE_BLOCKS), 2F, Identifier.withDefaultNamespace("soul_fire_0"), Identifier.withDefaultNamespace("soul_fire_1"));
+		register(
+			context,
+			FIRE,
+			FireType.builder()
+				.fireSourceBlocks(blocks.getOrThrow(FrozenLibBlockTags.DEFAULT_FIRE_BLOCKS))
+		);
+		register(
+			context,
+			SOUL_FIRE,
+			FireType.builder()
+				.fireSourceBlocks(blocks.getOrThrow(FrozenLibBlockTags.SOUL_FIRE_BLOCKS))
+				.supportingBlocks(blocks.getOrThrow(BlockTags.SOUL_FIRE_BASE_BLOCKS))
+				.damage(2F)
+				.textures(Identifier.withDefaultNamespace("soul_fire_0"), Identifier.withDefaultNamespace("soul_fire_1"))
+		);
 	}
 }

@@ -1,7 +1,8 @@
 {
-  "blocks": "#frozenlib:default_fire_blocks",
-  "damage": 1.0,
-  "replaceable": true,
-  "spreads_from_ignite_enchantments": true,
-  "spreads_from_zombie": true
+  "damage_settings": {},
+  "source_settings": {
+    "fire_source_blocks": "#frozenlib:default_fire_blocks"
+  },
+  "spread_settings": {},
+  "textures": {}
 }

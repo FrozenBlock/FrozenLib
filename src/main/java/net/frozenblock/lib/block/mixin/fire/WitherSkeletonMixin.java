@@ -46,7 +46,7 @@ public class WitherSkeletonMixin {
 		@Local(name = "arrow") AbstractArrow arrow
 	) {
 		final FireData fireData = WitherSkeleton.class.cast(this).getAttached(FireData.ATTACHMENT);
-		if (fireData == null || !fireData.type().value().spreadsFromIgniteEnchantments()) return;
+		if (fireData == null || !fireData.type().value().spreadSettings().spreadsFromIgniteEnchantments()) return;
 
 		final ResourceKey<FireType> fireType = FireEvents.SELECT_FIRE_TYPE.invoker().selectFireType(
 			arrow,

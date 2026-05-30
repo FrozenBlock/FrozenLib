@@ -41,7 +41,7 @@ public enum SyncBehavior {
 
 	/**
 	 * The config entry will be locked whilst connected to the server or LAN world, but will respect the client's value as it will not sync.
-	 * Anyone will be able to leave, change the value, then rejoin and have their own option enabled.
+	 * Anyone will be able to leave, change the value, then rejoin and have their own option enabledWhen.
 	 * This is recommended to be used for client-only options that may cause bugs or other issues if changed during gameplay.
 	 * Keep in mind that operators/hosts will be able to modify this entry at any time for themselves.
 	 */

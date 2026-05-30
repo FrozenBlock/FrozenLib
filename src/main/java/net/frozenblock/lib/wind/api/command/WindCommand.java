@@ -52,11 +52,11 @@ public class WindCommand {
 							)
 					)
 					.then(
-						Commands.argument("enabled", BoolArgumentType.bool())
+						Commands.argument("enabledWhen", BoolArgumentType.bool())
 							.executes(
 								context -> toggleWindOverride(
 									context.getSource(),
-									BoolArgumentType.getBool(context, "enabled")
+									BoolArgumentType.getBool(context, "enabledWhen")
 								)
 							)
 					)
@@ -76,7 +76,7 @@ public class WindCommand {
 		final ServerLevel level = source.getLevel();
 		final WindManager windManager = WindManager.getOrCreateWindManager(level);
 		if (windManager.overrideWind == bl) {
-			source.sendSuccess(() -> Component.translatable("commands.wind.toggle.failure", bl ? "enabled" : "disabled"), true);
+			source.sendSuccess(() -> Component.translatable("commands.wind.toggle.failure", bl ? "enabledWhen" : "disabled"), true);
 			return 0;
 		}
 
