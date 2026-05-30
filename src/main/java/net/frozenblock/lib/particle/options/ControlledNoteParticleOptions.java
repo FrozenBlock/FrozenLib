@@ -38,6 +38,6 @@ public record ControlledNoteParticleOptions(int note) implements ParticleOptions
 
 	@Override
 	public ParticleType<?> getType() {
-		return FrozenLibParticleTypes.WIND_SMALL;
+		return FrozenLibParticleTypes.CONTROLLED_NOTE;
 	}
 }
