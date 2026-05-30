@@ -22,8 +22,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `texture_1`: The second texture to use for this Fire Type, also used for the first-person burning overlay.
   - `config_predicate`: A `ConfigPredicate`, optionally used to dictate whether this Fire Type can be used.
 - Added a builder for Fire Types to make their creation much simpler.
-- `FireType` now contains an additional optional field, `config_predicate`.
-  - This will be discussed later in the changelog, but will prevent the `FireType` from being used if the predicate returns false.
 - Added the `FireEvents` class, containing the following Events:
   - `SELECT_FIRE_TYPE`
    - Is triggered when an Entity is catching on fire and the FireType is being selected.
