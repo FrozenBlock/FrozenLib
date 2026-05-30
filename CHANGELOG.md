@@ -107,3 +107,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Added the `frozenlib:structure_music` Dynamic Registry.
 - Refactored the `spotting_icons` package to `spottingicon`.
 - Spotting Icons have been completely revamped, now rendering as part of the game's HUD.
+- Added the `frozenlib:controlled_note` Particle Type, which takes an Integer as a parameter to use for the particle's color.

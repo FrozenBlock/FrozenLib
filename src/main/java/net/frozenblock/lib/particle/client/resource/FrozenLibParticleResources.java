@@ -22,14 +22,15 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.particle.client.WindParticle;
+import net.frozenblock.lib.particle.client.provider.FrozenLibParticleProviders;
 
 @Environment(EnvType.CLIENT)
 public class FrozenLibParticleResources {
 
 	public static void init() {
 		final ParticleProviderRegistry particleRegistry = ParticleProviderRegistry.getInstance();
-
-		particleRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Factory::new);
-		particleRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Factory::new);
+		particleRegistry.register(FrozenLibParticleTypes.CONTROLLED_NOTE, FrozenLibParticleProviders.NoteProvider::new);
+		particleRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Provider::new);
+		particleRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Provider::new);
 	}
 }

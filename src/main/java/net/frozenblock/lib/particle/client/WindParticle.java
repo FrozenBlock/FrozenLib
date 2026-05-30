@@ -205,13 +205,13 @@ public class WindParticle extends SingleQuadParticle {
 		return Layer.TRANSLUCENT;
 	}
 
-	public record Factory(SpriteSet spriteSet) implements ParticleProvider<WindParticleOptions> {
+	public record Provider(SpriteSet spriteSet) implements ParticleProvider<WindParticleOptions> {
 		@Override
 		public Particle createParticle(
 			WindParticleOptions options,
 			ClientLevel level,
 			double x, double y, double z,
-			double xSpeed, double ySpeed, double zSpeed,
+			double xAux, double yAux, double zAux,
 			RandomSource random
 		) {
 			final Vec3 velocity = options.velocity();

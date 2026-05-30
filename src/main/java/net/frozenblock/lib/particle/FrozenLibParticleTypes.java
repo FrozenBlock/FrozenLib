@@ -21,6 +21,7 @@ import com.mojang.serialization.MapCodec;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.minecraft.core.Registry;
 import net.minecraft.core.particles.ParticleOptions;
@@ -32,6 +33,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
 public class FrozenLibParticleTypes {
+	public static final ParticleType<ControlledNoteParticleOptions> CONTROLLED_NOTE = register("controlled_note",
+		false,
+		particleType -> ControlledNoteParticleOptions.CODEC,
+		particleType -> ControlledNoteParticleOptions.STREAM_CODEC
+	);
 	public static final ParticleType<WindParticleOptions> WIND_SMALL = register("wind_small",
 		false,
 		particleType -> WindParticleOptions.CODEC,
