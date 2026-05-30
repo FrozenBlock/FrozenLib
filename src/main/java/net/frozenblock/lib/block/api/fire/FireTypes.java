@@ -48,7 +48,7 @@ public final class FireTypes {
 	public static Optional<ResourceKey<FireType>> getTypeForBlock(RegistryAccess registryAccess, Block block) {
 		final Registry<FireType> registry = registryAccess.lookupOrThrow(FrozenLibRegistries.FIRE_TYPE);
 		for (FireType type : registry) {
-			if (type.sourceSettings().fireSourceBlocks().contains(block.builtInRegistryHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
+			if (type.isEnabled() && type.sourceSettings().fireSourceBlocks().contains(block.builtInRegistryHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
 		}
 		return Optional.empty();
 	}
@@ -56,7 +56,7 @@ public final class FireTypes {
 	public static Optional<ResourceKey<FireType>> getTypeForEntity(Entity entity) {
 		final Registry<FireType> registry = entity.registryAccess().lookupOrThrow(FrozenLibRegistries.FIRE_TYPE);
 		for (FireType type : registry) {
-			if (type.spreadSettings().alwaysApplyToEntityTypes().contains(entity.typeHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
+			if (type.isEnabled() && type.spreadSettings().alwaysApplyToEntityTypes().contains(entity.typeHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
 		}
 		return Optional.empty();
 	}
