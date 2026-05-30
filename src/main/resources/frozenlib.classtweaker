@@ -373,7 +373,7 @@ transitive-accessible method net/minecraft/client/particle/NoteParticle <init> (
 transitive-accessible method net/minecraft/client/Minecraft isMultiplayerServer ()Z
 
 # Splashes
-accessible method net/minecraft/client/resources/SplashManager literalSplash (Ljava/lang/String;)Lnet/minecraft/network/chat/Component;
+transitive-accessible method net/minecraft/client/resources/SplashManager literalSplash (Ljava/lang/String;)Lnet/minecraft/network/chat/Component;
 
 # Textures
 transitive-accessible field net/minecraft/client/resources/SkinManager skinTextureDownloader Lnet/minecraft/client/renderer/texture/SkinTextureDownloader;
@@ -384,8 +384,8 @@ transitive-mutable field net/minecraft/world/flag/FeatureFlags CODEC Lcom/mojang
 
 # DataFixerUpper
 transitive-accessible method net/minecraft/util/datafix/DataFixers createRenamer (Ljava/util/Map;)Ljava/util/function/UnaryOperator;
-accessible method net/minecraft/util/datafix/DataFixers createRenamer (Ljava/lang/String;Ljava/lang/String;)Ljava/util/function/UnaryOperator;
-accessible field net/minecraft/util/datafix/DataFixTypes type Lcom/mojang/datafixers/DSL$TypeReference;
+transitive-accessible method net/minecraft/util/datafix/DataFixers createRenamer (Ljava/lang/String;Ljava/lang/String;)Ljava/util/function/UnaryOperator;
+transitive-accessible field net/minecraft/util/datafix/DataFixTypes type Lcom/mojang/datafixers/DSL$TypeReference;
 
 # World Loading
 transitive-accessible field net/minecraft/client/gui/screens/BackupConfirmScreen onProceed Lnet/minecraft/client/gui/screens/BackupConfirmScreen$Listener;
