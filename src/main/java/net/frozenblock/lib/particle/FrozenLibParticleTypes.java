@@ -21,6 +21,7 @@ import com.mojang.serialization.MapCodec;
 import java.util.function.Function;
 import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.particle.options.ColoredSmokeParticleOptions;
 import net.frozenblock.lib.particle.options.ControlledNoteParticleOptions;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.minecraft.core.Registry;
@@ -37,6 +38,26 @@ public class FrozenLibParticleTypes {
 		false,
 		particleType -> ControlledNoteParticleOptions.CODEC,
 		particleType -> ControlledNoteParticleOptions.STREAM_CODEC
+	);
+	public static final ParticleType<ColoredSmokeParticleOptions> SMOKE_COLORED = register("smoke_colored",
+		false,
+		particleType -> ColoredSmokeParticleOptions.CODEC,
+		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+	);
+	public static final ParticleType<ColoredSmokeParticleOptions> LARGE_SMOKE_COLORED = register("large_smoke_colored",
+		false,
+		particleType -> ColoredSmokeParticleOptions.CODEC,
+		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+	);
+	public static final ParticleType<ColoredSmokeParticleOptions> CAMPFIRE_COSY_SMOKE_COLORED = register("campfire_cosy_smoke_colored",
+		false,
+		particleType -> ColoredSmokeParticleOptions.CODEC,
+		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
+	);
+	public static final ParticleType<ColoredSmokeParticleOptions> CAMPFIRE_SIGNAL_SMOKE_COLORED = register("campfire_signal_smoke_colored",
+		false,
+		particleType -> ColoredSmokeParticleOptions.CODEC,
+		particleType -> ColoredSmokeParticleOptions.STREAM_CODEC
 	);
 	public static final ParticleType<WindParticleOptions> WIND_SMALL = register("wind_small",
 		false,

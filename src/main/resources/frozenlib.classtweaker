@@ -368,6 +368,9 @@ transitive-accessible field net/minecraft/client/particle/Particle gravity F
 transitive-accessible field net/minecraft/client/particle/Particle friction F
 transitive-accessible field net/minecraft/client/particle/Particle stoppedByCollision Z
 transitive-accessible method net/minecraft/client/particle/NoteParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDDLnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V
+transitive-accessible method net/minecraft/client/particle/CampfireSmokeParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDDDDZLnet/minecraft/client/renderer/texture/TextureAtlasSprite;)V
+
+transitive-inject-interface net/minecraft/client/particle/LavaParticle net/frozenblock/lib/block/client/impl/fire/LavaParticleFireTypeInterface
 
 # Minecraft Instance
 transitive-accessible method net/minecraft/client/Minecraft isMultiplayerServer ()Z

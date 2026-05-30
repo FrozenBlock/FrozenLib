@@ -2,6 +2,7 @@
   "damage_settings": {
     "damage": 2.0
   },
+  "particle_settings": {},
   "source_settings": {
     "fire_source_blocks": "#frozenlib:soul_fire_blocks",
     "supporting_blocks": "#minecraft:soul_fire_base_blocks"

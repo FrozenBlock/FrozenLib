@@ -43,7 +43,7 @@ public final class FireEvents {
 			ResourceKey<FireType> type = FireTypes.DEFAULT;
 
 			if (sourceBlock.isPresent()) {
-				final Optional<ResourceKey<FireType>> blockBasedType = FireTypes.getTypeForBlock(entity.registryAccess(), sourceBlock.get());
+				final Optional<ResourceKey<FireType>> blockBasedType = FireTypes.getTypeKeyForBlock(entity.registryAccess(), sourceBlock.get(), false);
 				if (blockBasedType.isPresent()) type = blockBasedType.get();
 			}
 
@@ -52,7 +52,7 @@ public final class FireEvents {
 				if (sourceEntityBasedType.isPresent()) type = sourceEntityBasedType.get();
 			}
 
-			final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeForEntity(entity);
+			final Optional<ResourceKey<FireType>> entityBasedType = FireTypes.getTypeKeyForEntity(entity);
 			if (entityBasedType.isPresent()) type = entityBasedType.get();
 
 			for (var callback : callbacks) {

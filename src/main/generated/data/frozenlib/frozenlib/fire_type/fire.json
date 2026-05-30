@@ -1,5 +1,6 @@
 {
   "damage_settings": {},
+  "particle_settings": {},
   "source_settings": {
     "fire_source_blocks": "#frozenlib:default_fire_blocks"
   },

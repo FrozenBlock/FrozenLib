@@ -25,6 +25,8 @@ import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -39,6 +41,7 @@ public record FireType(
 	DamageSettings damageSettings,
 	SpreadSettings spreadSettings,
 	TextureSettings textures,
+	ParticleSettings particleSettings,
 	Optional<ConfigPredicate> enabledWhen
 ) {
 	public static final Codec<FireType> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -46,6 +49,7 @@ public record FireType(
 		DamageSettings.CODEC.fieldOf("damage_settings").forGetter(FireType::damageSettings),
 		SpreadSettings.CODEC.fieldOf("spread_settings").forGetter(FireType::spreadSettings),
 		TextureSettings.CODEC.fieldOf("textures").forGetter(FireType::textures),
+		ParticleSettings.CODEC.fieldOf("particle_settings").forGetter(FireType::particleSettings),
 		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(FireType::enabledWhen)
 	).apply(instance, FireType::new));
 	public static final Codec<Holder<FireType>> CODEC = RegistryFixedCodec.create(FrozenLibRegistries.FIRE_TYPE);
@@ -109,6 +113,65 @@ public record FireType(
 		).apply(instance, TextureSettings::new));
 	}
 
+	public record ParticleSettings(
+		Optional<ParticleOptions> smokeParticle,
+		Optional<ParticleOptions> largeSmokeParticle,
+		Optional<ConfigPredicate> smokeEnabledWhen,
+		Optional<ParticleOptions> campfireCosySmokeParticle,
+		Optional<ParticleOptions> campfireSignalSmokeParticle,
+		Optional<ConfigPredicate> campfireSmokeEnabledWhen,
+		Optional<ParticleOptions> lavaParticle,
+		Optional<ConfigPredicate> lavaEnabledWhen
+	) {
+		public static final Codec<ParticleSettings> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			ParticleTypes.CODEC.optionalFieldOf("smoke_particle").forGetter(ParticleSettings::smokeParticle),
+			ParticleTypes.CODEC.optionalFieldOf("large_smoke_particle").forGetter(ParticleSettings::largeSmokeParticle),
+			ConfigPredicate.CODEC.optionalFieldOf("smoke_config_predicate").forGetter(ParticleSettings::smokeEnabledWhen),
+			ParticleTypes.CODEC.optionalFieldOf("campfire_cosy_smoke_particle").forGetter(ParticleSettings::campfireCosySmokeParticle),
+			ParticleTypes.CODEC.optionalFieldOf("campfire_signal_smoke_particle").forGetter(ParticleSettings::campfireSignalSmokeParticle),
+			ConfigPredicate.CODEC.optionalFieldOf("campfire_smoke_config_predicate").forGetter(ParticleSettings::campfireSmokeEnabledWhen),
+			ParticleTypes.CODEC.optionalFieldOf("lava_particle").forGetter(ParticleSettings::lavaParticle),
+			ConfigPredicate.CODEC.optionalFieldOf("lava_config_predicate").forGetter(ParticleSettings::lavaEnabledWhen)
+		).apply(instance, ParticleSettings::new));
+
+		public boolean smokeEnabled() {
+			return this.smokeEnabledWhen.map(ConfigPredicate::test).orElse(true);
+		}
+
+		public ParticleOptions getSmokeParticle(ParticleOptions original) {
+			if (this.smokeParticle.isEmpty()) return original;
+			return this.smokeEnabled() ? this.smokeParticle.get() : original;
+		}
+
+		public ParticleOptions getLargeSmokeParticle(ParticleOptions original) {
+			if (this.largeSmokeParticle.isEmpty()) return original;
+			return this.smokeEnabled() ? this.largeSmokeParticle.get() : original;
+		}
+
+		public boolean campfireSmokeEnabled() {
+			return this.campfireSmokeEnabledWhen.map(ConfigPredicate::test).orElse(true);
+		}
+
+		public ParticleOptions getCampfireCosySmokeParticle(ParticleOptions original) {
+			if (this.campfireCosySmokeParticle.isEmpty()) return original;
+			return this.campfireSmokeEnabled() ? this.campfireCosySmokeParticle.get() : original;
+		}
+
+		public ParticleOptions getCampfireSignalSmokeParticle(ParticleOptions original) {
+			if (this.campfireSignalSmokeParticle.isEmpty()) return original;
+			return this.campfireSmokeEnabled() ? this.campfireSignalSmokeParticle.get() : original;
+		}
+
+		public boolean lavaEnabled() {
+			return this.lavaEnabledWhen.map(ConfigPredicate::test).orElse(true);
+		}
+
+		public ParticleOptions getLavaParticle(ParticleOptions original) {
+			if (this.lavaParticle.isEmpty()) return original;
+			return this.lavaEnabled() ? this.lavaParticle.get() : original;
+		}
+	}
+
 	public static class Builder {
 		// SOURCE SETTINGS
 		private HolderSet<Block> fireSourceBlocks = HolderSet.empty();
@@ -127,6 +190,15 @@ public record FireType(
 		// TEXTURES
 		private Identifier texture0 = null;
 		private Identifier texture1 = null;
+		// PARTICLE SETTINGS
+		ParticleOptions smokeParticle = null;
+		ParticleOptions largeSmokeParticle = null;
+		ConfigPredicate smokeEnabledWhen = null;
+		ParticleOptions campfireCosySmokeParticle = null;
+		ParticleOptions campfireSignalSmokeParticle = null;
+		ConfigPredicate campfireSmokeEnabledWhen = null;
+		ParticleOptions lavaParticle = null;
+		ConfigPredicate lavaEnabledWhen = null;
 		// ENABLED
 		private ConfigPredicate enabledWhen = null;
 
@@ -189,6 +261,41 @@ public record FireType(
 			return this;
 		}
 
+		public Builder smokeParticles(ParticleOptions smokeParticle, ParticleOptions largeSmokeParticle) {
+			this.smokeParticle = smokeParticle;
+			this.largeSmokeParticle = largeSmokeParticle;
+			return this;
+		}
+
+		public Builder smokeParticles(ParticleOptions smokeParticle, ParticleOptions largeSmokeParticle, ConfigPredicate smokeEnabledWhen) {
+			this.smokeParticles(smokeParticle, largeSmokeParticle);
+			this.smokeEnabledWhen = smokeEnabledWhen;
+			return this;
+		}
+
+		public Builder campfireSmokeParticles(ParticleOptions campfireCosySmokeParticle, ParticleOptions campfireSignalSmokeParticle) {
+			this.campfireCosySmokeParticle = campfireCosySmokeParticle;
+			this.campfireSignalSmokeParticle = campfireSignalSmokeParticle;
+			return this;
+		}
+
+		public Builder campfireSmokeParticles(ParticleOptions campfireCosySmokeParticle, ParticleOptions campfireSignalSmokeParticle, ConfigPredicate campfireSmokeEnabledWhen) {
+			this.campfireSmokeParticles(campfireCosySmokeParticle, campfireSignalSmokeParticle);
+			this.campfireSmokeEnabledWhen = campfireSmokeEnabledWhen;
+			return this;
+		}
+
+		public Builder lavaParticle(ParticleOptions lavaParticle) {
+			this.lavaParticle = lavaParticle;
+			return this;
+		}
+
+		public Builder lavaParticle(ParticleOptions lavaParticle, ConfigPredicate lavaEnabledWhen) {
+			this.lavaParticle(lavaParticle);
+			this.lavaEnabledWhen = lavaEnabledWhen;
+			return this;
+		}
+
 		public Builder enabledWhen(ConfigPredicate enabledWhen) {
 			this.enabledWhen = enabledWhen;
 			return this;
@@ -216,6 +323,16 @@ public record FireType(
 				new TextureSettings(
 					Optional.ofNullable(this.texture0),
 					Optional.ofNullable(this.texture1)
+				),
+				new ParticleSettings(
+					Optional.ofNullable(this.smokeParticle),
+					Optional.ofNullable(this.largeSmokeParticle),
+					Optional.ofNullable(this.smokeEnabledWhen),
+					Optional.ofNullable(this.campfireCosySmokeParticle),
+					Optional.ofNullable(this.campfireSignalSmokeParticle),
+					Optional.ofNullable(this.campfireSmokeEnabledWhen),
+					Optional.ofNullable(this.lavaParticle),
+					Optional.ofNullable(this.lavaEnabledWhen)
 				),
 				Optional.ofNullable(this.enabledWhen)
 			);

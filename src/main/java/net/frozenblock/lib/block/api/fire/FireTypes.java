@@ -45,20 +45,28 @@ public final class FireTypes {
 		return registryAccess.lookupOrThrow(FrozenLibRegistries.FIRE_TYPE).getOrThrow(id);
 	}
 
-	public static Optional<ResourceKey<FireType>> getTypeForBlock(RegistryAccess registryAccess, Block block) {
+	public static Optional<Holder<FireType>> getTypeHolderForBlock(RegistryAccess registryAccess, Block block, boolean ignoreEnabled) {
 		final Registry<FireType> registry = registryAccess.lookupOrThrow(FrozenLibRegistries.FIRE_TYPE);
 		for (FireType type : registry) {
-			if (type.isEnabled() && type.sourceSettings().fireSourceBlocks().contains(block.builtInRegistryHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
+			if ((ignoreEnabled || type.isEnabled()) && type.sourceSettings().fireSourceBlocks().contains(block.builtInRegistryHolder())) return Optional.of(registry.wrapAsHolder(type));
 		}
 		return Optional.empty();
 	}
 
-	public static Optional<ResourceKey<FireType>> getTypeForEntity(Entity entity) {
+	public static Optional<ResourceKey<FireType>> getTypeKeyForBlock(RegistryAccess registryAccess, Block block, boolean ignoreEnabled) {
+		return getTypeHolderForBlock(registryAccess, block, ignoreEnabled).flatMap(Holder::unwrapKey);
+	}
+
+	public static Optional<Holder<FireType>> getTypeHolderForEntity(Entity entity) {
 		final Registry<FireType> registry = entity.registryAccess().lookupOrThrow(FrozenLibRegistries.FIRE_TYPE);
 		for (FireType type : registry) {
-			if (type.isEnabled() && type.spreadSettings().alwaysApplyToEntityTypes().contains(entity.typeHolder())) return Optional.of(registry.wrapAsHolder(type).unwrapKey().orElseThrow());
+			if (type.isEnabled() && type.spreadSettings().alwaysApplyToEntityTypes().contains(entity.typeHolder())) return Optional.of(registry.wrapAsHolder(type));
 		}
 		return Optional.empty();
+	}
+
+	public static Optional<ResourceKey<FireType>> getTypeKeyForEntity(Entity entity) {
+		return getTypeHolderForEntity(entity).flatMap(Holder::unwrapKey);
 	}
 
 	public static Optional<ResourceKey<FireType>> getTypeFromEntity(Entity entity) {

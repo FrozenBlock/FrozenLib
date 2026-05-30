@@ -20,6 +20,9 @@ package net.frozenblock.lib.particle.client.resource;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleProviderRegistry;
+import net.frozenblock.lib.particle.ColoredCampfireSmokeParticle;
+import net.frozenblock.lib.particle.ColoredLargeSmokeParticle;
+import net.frozenblock.lib.particle.ColoredSmokeParticle;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.particle.client.WindParticle;
 import net.frozenblock.lib.particle.client.provider.FrozenLibParticleProviders;
@@ -30,6 +33,10 @@ public class FrozenLibParticleResources {
 	public static void init() {
 		final ParticleProviderRegistry particleRegistry = ParticleProviderRegistry.getInstance();
 		particleRegistry.register(FrozenLibParticleTypes.CONTROLLED_NOTE, FrozenLibParticleProviders.NoteProvider::new);
+		particleRegistry.register(FrozenLibParticleTypes.SMOKE_COLORED, ColoredSmokeParticle.Provider::new);
+		particleRegistry.register(FrozenLibParticleTypes.LARGE_SMOKE_COLORED, ColoredLargeSmokeParticle.Provider::new);
+		particleRegistry.register(FrozenLibParticleTypes.CAMPFIRE_COSY_SMOKE_COLORED, ColoredCampfireSmokeParticle.CosyProvider::new);
+		particleRegistry.register(FrozenLibParticleTypes.CAMPFIRE_SIGNAL_SMOKE_COLORED, ColoredCampfireSmokeParticle.SignalProvider::new);
 		particleRegistry.register(FrozenLibParticleTypes.WIND_SMALL, WindParticle.Provider::new);
 		particleRegistry.register(FrozenLibParticleTypes.WIND_MEDIUM, WindParticle.Provider::new);
 	}

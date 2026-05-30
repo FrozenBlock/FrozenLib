@@ -48,7 +48,9 @@ public final class FrozenLibBlockTagsProvider extends FabricTagsProvider.BlockTa
 
 		this.tag(FrozenLibBlockTags.DEFAULT_FIRE_BLOCKS)
 			.add(BlockIds.FIRE)
-			.add(BlockItemIds.CAMPFIRE.block());
+			.add(BlockItemIds.CAMPFIRE.block())
+			.add(BlockItemIds.TORCH.block())
+			.add(BlockIds.WALL_TORCH);
 
 		this.tag(FrozenLibBlockTags.SOUL_FIRE_BLOCKS);
 	}

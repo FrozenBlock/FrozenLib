@@ -4,7 +4,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Removed the `permanent` field from `FireData`.
 - Revamped `FireType`s to be much more flexible. Their new data structure and functionality is as follows:
   - `source_settings`:
-    - `fire_source_blocks`: A block's ID, a list of block IDs, or a Block Tag defining which blocks use this Fire Type. (i.e, Fire & Campfires.)
+    - `fire_source_blocks`: A block's ID, a list of block IDs, or a Block Tag defining which blocks use this Fire Type. (i.e, Fire, Campfire, Torch.)
     - `supporting_blocks`: A block's ID, a list of block IDs, or a Block Tag defining which blocks will cause an entity's Fire Type to change upon stepping on them.
   - `damage_settings`:
     - `damage`: The amount of damage to inflict while burning.
@@ -20,6 +20,15 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `textures`:
     - `texture_0`: The first texture to use for this Fire Type.
     - `texture_1`: The second texture to use for this Fire Type, also used for the first-person burning overlay.
+  - `particle_settings`:
+    - `smoke_particle`: The `ParticleOptions` to use for this Fire Type's smoke.
+    - `large_smoke_particle`: The `ParticleOptions` to use for this Fire Type's large smoke.
+    - `smoke_config_predicate`: A `ConfigPredicate`, optionally used to dictate whether `smoke_particle` and `large_smoke_particle` can be used.
+    - `campfire_cosy_smoke_particle`: The `ParticleOptions` to use for this Fire Type's campfire cosy smoke.
+    - `campfire_signal_smoke_particle`: The `ParticleOptions` to use for this Fire Type's campfire signal smoke.
+    - `campfire_smoke_config_predicate`: A `ConfigPredicate`, optionally used to dictate whether `campfire_cosy_smoke_particle` and `campfire_signal_smoke_particle` can be used.
+    - `lava_particle`: The `ParticleOptions` to use for this Fire Type's lava particle (Used for campfires.)
+    - `lava_config_predicate`: A `ConfigPredicate`, optionally used to dictate whether `lava_config_predicate` can be used.
   - `config_predicate`: A `ConfigPredicate`, optionally used to dictate whether this Fire Type can be used.
 - Added a builder for Fire Types to make their creation much simpler.
 - Added the `FireEvents` class, containing the following Events:
@@ -108,3 +117,5 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Refactored the `spotting_icons` package to `spottingicon`.
 - Spotting Icons have been completely revamped, now rendering as part of the game's HUD.
 - Added the `frozenlib:controlled_note` Particle Type, which takes an Integer as a parameter to use for the particle's color.
+- Added colored variants of Smoke and Campfire Smoke Particles, using `ColoredSmokeParticleOptions`.
+  - These particles will start off with a tint, and fade back into their Vanilla coloration.
