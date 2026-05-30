@@ -35,7 +35,7 @@ public class LavaParticleMixin implements LavaParticleFireTypeInterface {
 	)
 	public void frozenLib$useSmokeForFireType(ClientLevel instance, ParticleOptions particle, double x, double y, double z, double xd, double yd, double zd, Operation<Void> original) {
 		particle = this.frozenLib$fireType != null
-			? this.frozenLib$fireType.particleSettings().getLavaParticle(particle)
+			? this.frozenLib$fireType.particleSettings().getSmokeParticle(particle)
 			: particle;
 		original.call(instance, particle, x, y, z, xd, yd, zd);
 	}
