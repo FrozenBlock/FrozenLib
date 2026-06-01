@@ -121,3 +121,12 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added colored variants of Smoke and Campfire Smoke Particles, using `ColoredSmokeParticleOptions`.
   - These particles will start off with a tint, and fade back into their Vanilla coloration.
 - Removed the `frozenlib:biome_tag_condition_source` and `frozenlib:optimized_biome_tag_condition_source` Surface Rule `ConditionSource`s, as they are redundant.
+- Added `SulfurCubeUtilAndEvents`, containing the following events:
+  - `ON_INTERACT`
+  - `ON_ARCHETYPE_DATA_REMOVE`
+  - `ON_ARCHETYPE_APPLY`
+  - `ON_POWER_CHANGED`
+  - `ON_PUSH_SOUND_PLAYED`
+  - `ON_PUSH`
+  - `ON_HIT`
+  - `ON_SQUISH`

@@ -13,7 +13,9 @@
     "VariantUtilsMixin",
     "behavior.BehaviorMixin",
     "category.MobCategoryMixin",
-    "command.WardenSpawnTrackerCommandMixin"
+    "command.WardenSpawnTrackerCommandMixin",
+    "cubemob.sulfurcube.AbstractCubeMobMixin",
+    "cubemob.sulfurcube.SulfurCubeMixin"
   ],
   "client": [
     "client.rendering.LivingEntityRendererMixin"
