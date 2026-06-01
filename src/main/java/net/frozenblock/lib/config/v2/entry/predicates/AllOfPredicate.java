@@ -39,6 +39,4 @@ public class AllOfPredicate extends CombiningPredicate {
 	public ConfigPredicateType<?> type() {
 		return ConfigPredicateType.ALL_OF;
 	}
-
-
 }

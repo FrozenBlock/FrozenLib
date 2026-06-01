@@ -39,6 +39,4 @@ public class AnyOfPredicate extends CombiningPredicate {
 	public ConfigPredicateType<?> type() {
 		return ConfigPredicateType.ANY_OF;
 	}
-
-
 }

@@ -42,6 +42,4 @@ public class AllMatchPredicate extends CombiningPredicate {
 	public ConfigPredicateType<?> type() {
 		return ConfigPredicateType.ALL_MATCH;
 	}
-
-
 }

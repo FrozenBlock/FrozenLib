@@ -104,15 +104,15 @@ public class FrozenLibRegistries {
 		return VanillaRegistries.createLookup();
 	}
 
-	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle) {
+	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle) {
 		return createSimple(key, lifecycle, null);
 	}
 
-	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute) {
+	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute) {
 		return createSimple(key, lifecycle, attribute, null);
 	}
 
-	private static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute, BuiltInRegistries.RegistryBootstrap<T> bootstrap) {
+	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, RegistryAttribute attribute, BuiltInRegistries.RegistryBootstrap<T> bootstrap) {
 		final var registry = new MappedRegistry<>(key, lifecycle, false);
 
 		final var fabricRegistryBuilder = FabricRegistryBuilder.from(registry);
