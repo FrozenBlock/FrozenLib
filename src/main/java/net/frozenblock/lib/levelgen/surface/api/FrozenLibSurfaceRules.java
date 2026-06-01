@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -73,6 +74,10 @@ public final class FrozenLibSurfaceRules {
 
 	public static SurfaceRules.RuleSource makeStateRule(Block block) {
 		return SurfaceRules.state(block.defaultBlockState());
+	}
+
+	public static SurfaceRules.ConditionSource isBiomeTag(HolderLookup<Biome> biomes, TagKey<Biome> tagKey) {
+		return new SurfaceRules.BiomeConditionSource(biomes.getOrThrow(tagKey));
 	}
 
 	@Nullable
