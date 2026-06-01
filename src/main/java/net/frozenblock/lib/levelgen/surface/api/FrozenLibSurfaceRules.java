@@ -19,11 +19,8 @@ package net.frozenblock.lib.levelgen.surface.api;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.levelgen.surface.impl.BiomeTagConditionSource;
-import net.frozenblock.lib.levelgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -72,14 +69,6 @@ public final class FrozenLibSurfaceRules {
 
 	public static SurfaceRules.SequenceRuleSource sequence(List<SurfaceRules.RuleSource> list) {
 		return new SurfaceRules.SequenceRuleSource(list);
-	}
-
-	public static SurfaceRules.ConditionSource isBiomeTag(TagKey<Biome> biomeTagKey) {
-		return new BiomeTagConditionSource(biomeTagKey);
-	}
-
-	public static SurfaceRules.ConditionSource isBiomeTagOptimized(TagKey<Biome> biomeTagKey) {
-		return new OptimizedBiomeTagConditionSource(biomeTagKey);
 	}
 
 	public static SurfaceRules.RuleSource makeStateRule(Block block) {

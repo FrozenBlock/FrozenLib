@@ -18,9 +18,6 @@
 package net.frozenblock.lib.levelgen.surface.mixin;
 
 import java.util.Map;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.FrozenLibLogUtils;
-import net.frozenblock.lib.levelgen.surface.impl.OptimizedBiomeTagConditionSource;
 import net.frozenblock.lib.levelgen.surface.impl.SurfaceRuleUtil;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.Registry;
@@ -54,7 +51,6 @@ public abstract class MinecraftServerMixin {
 	private void frozenLib$addSurfaceRules(CallbackInfo info) {
 		final RegistryAccess registryAccess = this.registries.compositeAccess();
 		final Registry<LevelStem> levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
-		OptimizedBiomeTagConditionSource.INSTANCES.clear();
 
 		final Registry<Biome> biomes = registryAccess.lookupOrThrow(Registries.BIOME);
 		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : levelStems.entrySet()) {
@@ -66,9 +62,6 @@ public abstract class MinecraftServerMixin {
 			final var dimension = levelStem.type().unwrapKey().orElseThrow();
 			SurfaceRuleUtil.injectSurfaceRules(noiseSettings, biomes, dimension);
 		}
-
-		OptimizedBiomeTagConditionSource.optimizeAll(this.registryAccess().lookupOrThrow(Registries.BIOME));
-		FrozenLibLogUtils.log("Optimized tag source count: " + OptimizedBiomeTagConditionSource.INSTANCES.size(), FrozenLibConstants.UNSTABLE_LOGGING);
 	}
 
 }

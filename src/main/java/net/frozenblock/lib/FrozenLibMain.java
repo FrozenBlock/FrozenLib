@@ -22,12 +22,11 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.cape.impl.ServerCapeData;
+import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
-import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
-import net.frozenblock.lib.core.impl.DataPackReloadMarker;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
@@ -45,8 +44,7 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElement
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
-import net.frozenblock.lib.levelgen.surface.impl.BiomeTagConditionSource;
-import net.frozenblock.lib.levelgen.surface.impl.OptimizedBiomeTagConditionSource;
+import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
 import net.frozenblock.lib.loot.impl.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
@@ -93,14 +91,12 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		ConfigPredicateType.init();
 		FrozenLibBlockPredicateTypes.init();
 		FrozenLibPlacementModifiers.init();
-		FrozenLibLootConditionTypes.init();;
-		DataPackReloadMarker.init();
+		FrozenLibLootConditionTypes.init();
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();
 
-		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("biome_tag_condition_source"), BiomeTagConditionSource.CODEC);
-		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("optimized_biome_tag_condition_source"), OptimizedBiomeTagConditionSource.CODEC);
+		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
 
 		ServerCapeData.init();
 

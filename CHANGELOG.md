@@ -76,6 +76,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Can be used as a `BlockPredicate` via the `asBlockPredicate` method.
   - Can be used as a `PlacementFilter` via the `asPlacementFilter` method.
   - Can be used as a `LootItemCondition` via the `asLootCondition` method.
+  - Can be used as a `ConditionSource` via the `asConditionSource` method.
 - Added the `ConfigSelector` Configured Feature, configured with `ConfigSelectorFeatureConfiguration`:
   - `config_predicate`: The `ConfigPredicate` to use.
   - `feature_if_true`: The `PlacedFeature` to be placed if `config_predicate` returns true.
@@ -119,3 +120,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Added the `frozenlib:controlled_note` Particle Type, which takes an Integer as a parameter to use for the particle's color.
 - Added colored variants of Smoke and Campfire Smoke Particles, using `ColoredSmokeParticleOptions`.
   - These particles will start off with a tint, and fade back into their Vanilla coloration.
+- Removed the `frozenlib:biome_tag_condition_source` and `frozenlib:optimized_biome_tag_condition_source` Surface Rule `ConditionSource`s, as they are redundant.
