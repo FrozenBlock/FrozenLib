@@ -30,6 +30,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `lava_particle`: The `ParticleOptions` to use for this Fire Type's lava particle (Used for campfires.)
     - `lava_config_predicate`: A `ConfigPredicate`, optionally used to dictate whether `lava_config_predicate` can be used.
   - `config_predicate`: A `ConfigPredicate`, optionally used to dictate whether this Fire Type can be used.
+- Removed the built-in `frozenlib:soul_fire` `FireType`.
 - Added a builder for Fire Types to make their creation much simpler.
 - Added the `FireEvents` class, containing the following Events:
   - `SELECT_FIRE_TYPE`

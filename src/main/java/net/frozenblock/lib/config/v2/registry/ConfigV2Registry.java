@@ -24,6 +24,7 @@ import java.util.Map;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.Nullable;
 
 public class ConfigV2Registry {
 	public static final Map<ID, ConfigData<?>> CONFIG_DATA = new Object2ObjectOpenHashMap<>();
@@ -41,14 +42,17 @@ public class ConfigV2Registry {
 		CONFIG_ENTRY.put(id, entry);
 	}
 
+	@Nullable
 	public static ConfigData<?> getData(ID id) {
 		return CONFIG_DATA.get(id);
 	}
 
+	@Nullable
 	public static ConfigData<?> getData(Identifier id) {
 		return CONFIG_DATA.get(ID.of(id));
 	}
 
+	@Nullable
 	public static ConfigData<?> getData(String namespace, String path) {
 		return CONFIG_DATA.get(ID.of(namespace, path));
 	}
@@ -57,14 +61,17 @@ public class ConfigV2Registry {
 		return CONFIG_DATA.values();
 	}
 
+	@Nullable
 	public static ConfigEntry<?> getEntry(ID id) {
 		return CONFIG_ENTRY.get(id);
 	}
 
+	@Nullable
 	public static ConfigEntry<?> getEntry(Identifier id) {
 		return CONFIG_ENTRY.get(ID.of(id));
 	}
 
+	@Nullable
 	public static ConfigEntry<?> getEntry(String namespace, String path) {
 		return CONFIG_ENTRY.get(ID.of(namespace, path));
 	}

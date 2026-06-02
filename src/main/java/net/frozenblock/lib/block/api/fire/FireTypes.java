@@ -31,14 +31,12 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 public final class FireTypes {
 	public static final ResourceKey<FireType> FIRE = createKey(FrozenLibConstants.id("fire"));
-	public static final ResourceKey<FireType> SOUL_FIRE = createKey(FrozenLibConstants.id("soul_fire"));
 	public static final ResourceKey<FireType> DEFAULT = FIRE;
 
 	public static Holder<FireType> get(RegistryAccess registryAccess, ResourceKey<FireType> id) {
@@ -113,6 +111,8 @@ public final class FireTypes {
 			FireType.builder()
 				.fireSourceBlocks(blocks.getOrThrow(FrozenLibBlockTags.DEFAULT_FIRE_BLOCKS))
 		);
+
+		/*
 		register(
 			context,
 			SOUL_FIRE,
@@ -121,6 +121,19 @@ public final class FireTypes {
 				.supportingBlocks(blocks.getOrThrow(BlockTags.SOUL_FIRE_BASE_BLOCKS))
 				.damage(2F)
 				.textures(Identifier.withDefaultNamespace("soul_fire_0"), Identifier.withDefaultNamespace("soul_fire_1"))
+				.enabledWhen(noNNOrFireTypeConfigEnabled)
+				.smokeParticles(
+					ColoredSmokeParticleOptions.smoke(0F, 0.1F, 0.1F),
+					ColoredSmokeParticleOptions.largeSmoke(0F, 0.1F, 0.1F),
+					noNNOrNNParticleConfigEnabled
+				)
+				.campfireSmokeParticles(
+					ColoredSmokeParticleOptions.campfireCosy(-0.3F, 0F, 0F),
+					ColoredSmokeParticleOptions.campfireSignal(-0.3F, 0F, 0F),
+					noNNOrNNParticleConfigEnabled
+				)
+				.lavaParticle(FrozenLibParticleTypes.SOUL_LAVA, noNNOrNNParticleConfigEnabled)
 		);
+		 */
 	}
 }
