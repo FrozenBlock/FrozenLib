@@ -133,6 +133,7 @@ transitive-accessible method net/minecraft/world/entity/animal/Animal isBrightEn
 
 # Mobs
 transitive-accessible method net/minecraft/world/effect/MobEffect <init> (Lnet/minecraft/world/effect/MobEffectCategory;I)V
+transitive-accessible method net/minecraft/world/effect/MobEffect <init> (Lnet/minecraft/world/effect/MobEffectCategory;ILnet/minecraft/core/particles/ParticleOptions;)V
 transitive-accessible field net/minecraft/world/entity/Mob goalSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 transitive-accessible field net/minecraft/world/entity/Mob targetSelector Lnet/minecraft/world/entity/ai/goal/GoalSelector;
 transitive-accessible method net/minecraft/world/entity/monster/warden/Warden isDiggingOrEmerging ()Z
