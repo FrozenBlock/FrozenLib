@@ -79,7 +79,7 @@ public abstract class EntityMixin implements StartTrackingEntityInterface, Entit
 		)
 	)
 	private boolean frozenLib$useBlockLikeMovementEmission(boolean original) {
-		if (Entity.class.cast(this) instanceof AbstractBlockLikeMob blockLike) return original || !blockLike.canDoStepEffects();
+		if (Entity.class.cast(this) instanceof AbstractBlockLikeMob blockLike && blockLike.useRotationBasedStep()) return original || !(blockLike.canDoStepEffects());
 		return original;
 	}
 }

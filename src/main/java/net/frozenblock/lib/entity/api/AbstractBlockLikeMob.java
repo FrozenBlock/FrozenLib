@@ -223,10 +223,11 @@ public abstract class AbstractBlockLikeMob extends Mob {
 		applyMovementRotation(this.rollDeltaX * partialTicks, this.rollDeltaZ * partialTicks, dest);
 	}
 
-	protected abstract double blockGridSnapIntensity();
+	public abstract double blockGridSnapIntensity();
 
 	@Override
 	protected float nextStep() {
+		if (!this.useRotationBasedStep()) return super.nextStep();
 		this.setCanDoStepEffects(false);
 		return 0F;
 	}
@@ -238,6 +239,8 @@ public abstract class AbstractBlockLikeMob extends Mob {
 	public void setCanDoStepEffects(boolean canDoStepEffects) {
 		this.canDoStepEffects = canDoStepEffects;
 	}
+
+	public abstract boolean useRotationBasedStep();
 
 	public void spawnBreakParticles(int particleCount) {
 		if (!(this.level() instanceof ServerLevel level)) return;
