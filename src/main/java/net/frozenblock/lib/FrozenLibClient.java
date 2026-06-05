@@ -27,7 +27,6 @@ import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElementRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.VanillaHudElements;
 import net.frozenblock.lib.cape.client.impl.ClientCapeData;
 import net.frozenblock.lib.command.client.FrozenLibClientCommand;
-import net.frozenblock.lib.config.impl.client.ClientConfigCommand;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
 import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
@@ -36,6 +35,7 @@ import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
+import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
@@ -70,6 +70,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 
 		ClientCapeData.init();
 		FrozenLibParticleResources.init();
+		FrozenLibModelLayers.init();
 
 		ClientCommandRegistrationCallback.EVENT.register((dispatcher, buildContext) -> {
 			PanoramaCommand.register(dispatcher);

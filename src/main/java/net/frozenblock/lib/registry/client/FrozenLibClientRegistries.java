@@ -21,7 +21,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.entity.api.rendering.EntityTextureOverride;
+import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
 import net.minecraft.core.MappedRegistry;
 
 @Environment(EnvType.CLIENT)

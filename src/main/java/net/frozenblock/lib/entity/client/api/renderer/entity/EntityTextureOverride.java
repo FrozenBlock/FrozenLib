@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entity.api.rendering;
+package net.frozenblock.lib.entity.client.api.renderer.entity;
 
 import java.util.Arrays;
 import java.util.concurrent.atomic.AtomicBoolean;

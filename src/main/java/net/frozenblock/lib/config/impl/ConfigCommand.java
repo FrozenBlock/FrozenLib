@@ -18,8 +18,8 @@
 package net.frozenblock.lib.config.impl;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
-import java.util.Collection;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import java.util.Collection;
 import net.frozenblock.lib.config.v2.config.ConfigData;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.minecraft.commands.CommandSourceStack;

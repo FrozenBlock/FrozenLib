@@ -17,7 +17,9 @@
 
 package net.frozenblock.lib.entity.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
+import net.frozenblock.lib.entity.api.AbstractBlockLikeMob;
 import net.frozenblock.lib.entity.impl.EntityStepOnBlockInterface;
 import net.frozenblock.lib.entity.impl.StartTrackingEntityInterface;
 import net.minecraft.core.BlockPos;
@@ -58,14 +60,26 @@ public abstract class EntityMixin implements StartTrackingEntityInterface, Entit
 	)
 	public void frozenLib$runSteppedOn(
 		CallbackInfo info,
-		@Local(name = "effectPos") BlockPos pos,
-		@Local(name = "effectState") BlockState state
+		@Local(name = "effectPos") BlockPos effectPos,
+		@Local(name = "effectState") BlockState effectState
 	) {
-		this.frozenLib$onSteppedOnBlock(this.level(), pos, state);
+		this.frozenLib$onSteppedOnBlock(this.level(), effectPos, effectState);
 	}
 
 	@Unique
 	@Override
-	public void frozenLib$onSteppedOnBlock(Level level, BlockPos effectPos, BlockState effectState) {
+	public void frozenLib$onSteppedOnBlock(Level level, BlockPos effectPos, BlockState effectState) {}
+
+	@ModifyExpressionValue(
+		method = "applyMovementEmissionAndPlaySound",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/level/block/state/BlockState;isAir()Z",
+			ordinal = 0
+		)
+	)
+	private boolean frozenLib$useBlockLikeMovementEmission(boolean original) {
+		if (Entity.class.cast(this) instanceof AbstractBlockLikeMob blockLike) return original || !blockLike.canDoStepEffects();
+		return original;
 	}
 }

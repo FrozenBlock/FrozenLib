@@ -131,3 +131,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `ON_PUSH`
   - `ON_HIT`
   - `ON_SQUISH`
+- Added the `AbstractBlockLikeMob`, used to create Mobs that render like Blocks and rotate as they move.
+  - Based upon 26w14a's implementation.
+  - Renders using the model of the provided `BlockState` it is given.
+- Added the `NoOpModel`, in cases a `LivingEntityRenderer` is required but no `Model` is wanted.

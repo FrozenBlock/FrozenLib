@@ -22,14 +22,17 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Quaternionf;
+import org.joml.Quaternionfc;
+import org.joml.Vector3f;
+import org.joml.Vector3fc;
 
 @UtilityClass
 public class AdvancedMath {
 
-	@Contract(" -> new")
 	public static RandomSource random() {
 		return RandomSource.create();
 	}
@@ -185,7 +188,6 @@ public class AdvancedMath {
 		return new Vec3(x, original.y, z);
 	}
 
-	@Contract(pure = true)
 	public static double getAngleFromOriginXZ(Vec3 pos) { // https://stackoverflow.com/questions/35271222/getting-the-angle-from-a-direction-vector
 		final double angleRad = Math.atan2(pos.x, pos.z);
 		final double degrees = angleRad * Mth.RAD_TO_DEG;
@@ -195,5 +197,48 @@ public class AdvancedMath {
 	public static double getAngleBetweenXZ(Vec3 posA, Vec3 posB) {
 		final double angle = Math.atan2(posA.x - posB.x, posA.z - posB.z);
 		return (360D + (angle * Mth.RAD_TO_DEG)) % 360D;
+	}
+
+	/**
+	 * From 26w14a
+	 */
+	public static Quaternionf snapToNearestRightAngle(Quaternionfc rotation) {
+		final Vector3f localForward = Direction.NORTH.step().rotate(rotation);
+		final Vector3f localUp = Direction.UP.step().rotate(rotation);
+		return new Quaternionf()
+			.lookAlong(
+				getNearest(localForward, Direction.NORTH).getUnitVec3f(),
+				getNearest(localUp, Direction.UP).getUnitVec3f()
+			)
+			.conjugate();
+	}
+
+	/**
+	 * from 26w14a
+	 */
+	public static Direction getNearest(Vector3fc vec, @Nullable Direction orElse) {
+		return getNearest(vec.x(), vec.y(), vec.z(), orElse);
+	}
+
+	/**
+	 * from 26w14a
+	 */
+	@Nullable
+	public static Direction getNearest(float x, float y, float z, @Nullable Direction orElse) {
+		final float absX = Math.abs(x);
+		final float absY = Math.abs(y);
+		final float absZ = Math.abs(z);
+		if (absX > absZ && absX > absY) return x < 0F ? Direction.WEST : Direction.EAST;
+		if (absZ > absX && absZ > absY) return z < 0F ? Direction.NORTH : Direction.SOUTH;
+		if (absY > absX && absY > absZ) return y < 0F ? Direction.DOWN : Direction.UP;
+		return orElse;
+	}
+
+	/**
+	 * from 26w14a
+	 */
+	public static double edge(AABB aabb, Direction face) {
+		final Direction.Axis axis = face.getAxis();
+		return face.getAxisDirection() == Direction.AxisDirection.POSITIVE ? aabb.max(axis) : aabb.min(axis);
 	}
 }

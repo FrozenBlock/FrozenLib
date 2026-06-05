@@ -21,7 +21,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.entity.api.rendering.EntityTextureOverride;
+import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.EntityRenderer;
