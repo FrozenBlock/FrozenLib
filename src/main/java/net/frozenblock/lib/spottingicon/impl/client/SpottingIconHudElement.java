@@ -27,6 +27,7 @@ import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.ARGB;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
@@ -39,6 +40,7 @@ public final class SpottingIconHudElement implements HudElement {
 	private static final float Y_OFFSET = 0.5F;
 	private static final int ICON_SIZE = 16;
 	private static final int ICON_HALF = ICON_SIZE / 2;
+	private static final int ICON_SPACING = ICON_HALF / 4;
 
 	@Override
 	public void extractRenderState(GuiGraphicsExtractor graphics, DeltaTracker deltaTracker) {
@@ -55,10 +57,14 @@ public final class SpottingIconHudElement implements HudElement {
 			final SpottingIcons icons = entity.getAttachedOrElse(SpottingIcons.ATTACHMENT, SpottingIcons.EMPTY);
 			if (icons.isEmpty()) continue;
 
+			final BlockPos blockPos = entity.blockPosition();
+			if (!(minecraft.level.isOutsideBuildHeight(blockPos.getY()) || minecraft.levelRenderer.isSectionCompiledAndVisible(blockPos))) continue;
+
 			final Vec3 entityEyePosition = entity.getEyePosition(partialTicks);
 			final double distance = Math.sqrt(cameraPos.distanceToSqr(entityEyePosition));
 
 			float startPos = 0F;
+			float lastScale = 0F;
 
 			for (SpottingIcon icon : icons) {
 				final float transparency = icon.attributes().calculateTransparency(distance);
@@ -76,12 +82,15 @@ public final class SpottingIconHudElement implements HudElement {
 
 				final float screenX = (float) ((project.x + 1D) / 2D * graphics.guiWidth());
 				final float screenY = (float) ((1D - project.y) / 2D * graphics.guiHeight());
-				final float iconScale = ICON_SIZE * scale;
+				final float scaleDifference = scale - lastScale;
+				startPos += scaleDifference * (ICON_HALF);
+				startPos += ICON_SPACING;
 
 				graphics.pose().pushMatrix();
-				graphics.pose().translate(screenX - ICON_HALF, (screenY - ICON_HALF) + startPos);
+				graphics.pose().translate(screenX, screenY - startPos);
 				graphics.pose().pushMatrix();
-				graphics.pose().scale(iconScale);
+				graphics.pose().scale(scale);
+				graphics.pose().translate(-ICON_HALF, -ICON_HALF);
 				graphics.blit(
 					RenderPipelines.GUI_TEXTURED,
 					icon.texture(),
@@ -94,9 +103,9 @@ public final class SpottingIconHudElement implements HudElement {
 				);
 				graphics.pose().popMatrix();
 				graphics.pose().popMatrix();
-
-				// TODO: test stacked icons
-				startPos += scale;
+				
+				startPos += (scale * ICON_SIZE);
+				lastScale = scale;
 			}
 		}
 	}

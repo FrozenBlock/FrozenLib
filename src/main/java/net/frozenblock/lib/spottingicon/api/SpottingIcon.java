@@ -78,8 +78,8 @@ public record SpottingIcon(Identifier texture, Attributes attributes) {
 			Fade.LIST_CODEC.fieldOf("faders").forGetter(Attributes::faders)
 		).apply(instance, Attributes::new));
 		public static final StreamCodec<ByteBuf, Attributes> STREAM_CODEC = StreamCodec.composite(
-			Fade.LIST_STREAM_CODEC, Attributes::faders,
 			Fade.LIST_STREAM_CODEC, Attributes::scalers,
+			Fade.LIST_STREAM_CODEC, Attributes::faders,
 			Attributes::new
 		);
 
