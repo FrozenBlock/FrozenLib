@@ -330,7 +330,6 @@ accessible field net/minecraft/client/resources/sounds/AbstractSoundInstance pit
 
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/sound/impl/EntityLoopingSoundInterface
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/sound/impl/EntityLoopingFadingDistanceSoundInterface
-transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/spottingicon/impl/EntitySpottingIconInterface
 
 # Camera
 transitive-accessible method net/minecraft/client/Camera setRotation (FF)V

@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.spottingicon.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spottingicon.api.SpottingIcon;
+import net.frozenblock.lib.spottingicon.api.SpottingIcons;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Creeper;
@@ -31,10 +31,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Creeper.class)
 public class CreeperMixin {
 
-	@Inject(method = "<init>", at = @At(value = "TAIL"))
-	public void initWithIcon(EntityType<? extends Creeper> entityType, Level level, CallbackInfo info) {
-		Creeper creeper = Creeper.class.cast(this);
-		((EntitySpottingIconInterface) creeper).frozenLib$getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/creeper.png"), 16, 20, FrozenLibConstants.id("default"));
+	@Inject(method = "<init>", at = @At("TAIL"))
+	private void initWithIcon(EntityType<? extends Creeper> type, Level level, CallbackInfo info) {
+		SpottingIcons.addIcon(
+			Creeper.class.cast(this),
+			SpottingIcon.builder()
+				.texture(FrozenTestMain.id("textures/spotting_icons/creeper.png"))
+				.addFader(16F, 20F, 0F, 1F)
+				.build()
+		);
 	}
-
 }

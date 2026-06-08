@@ -116,8 +116,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `must_be_inside_piece`: Whether the Player must be located inside a `StructurePiece` for `music` to play.
     - `config_predicate`: An optional field, supplying a `ConfigPredicate` that determines whether the music can be played.
   - Added the `frozenlib:structure_music` Dynamic Registry.
-- Refactored the `spotting_icons` package to `spottingicon`.
-- Spotting Icons have been completely revamped, now rendering as part of the game's HUD.
 - Added the `frozenlib:controlled_note` Particle Type, which takes an Integer as a parameter to use for the particle's color.
 - Added colored variants of Smoke and Campfire Smoke Particles, using `ColoredSmokeParticleOptions`.
   - These particles will start off with a tint, and fade back into their Vanilla coloration.
@@ -135,3 +133,14 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Based upon 26w14a's implementation.
   - Renders using the model of the provided `BlockState` it is given.
 - Added the `NoOpModel`, in cases a `LivingEntityRenderer` is required but no `Model` is wanted.
+- Revamped Spotting Icons.
+  - Refactored the `spotting_icons` package to `spottingicon`.
+  - Spotting Icons now render as part of the game's HUD.
+  - Removed the `frozenlib:spotting_icon_predicate` Registry.
+  - Removed `SpottingIconPredicate`s.
+  - Spotting Icons now use Fabric's Data Attachment system, using the `SpottingIcons` class.
+    - This class contains methods to add, remove, and check a predicate against its Spotting Icons.
+  - An Entity can now have multiple Spotting Icons at once.
+  - Spotting Icons a much more flexible fading system.
+    - A custom start and end value can now be defined.
+    - Fades can be used for both the Icon's scale and transparency.

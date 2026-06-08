@@ -34,7 +34,6 @@ import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.frozenblock.lib.spottingicon.api.SpottingIconPredicate;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.MappedRegistry;
@@ -63,11 +62,6 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<SoundPredicate<?>>> SOUND_PREDICATE_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_predicate_unsynced"));
 	public static final MappedRegistry<SoundPredicate<?>> SOUND_PREDICATE_UNSYNCED = createSimple(SOUND_PREDICATE_UNSYNCED_REGISTRY, Lifecycle.stable(), null,
 		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new SoundPredicate<>(() -> entity -> false))
-	);
-
-	public static final ResourceKey<Registry<SpottingIconPredicate<?>>> SPOTTING_ICON_PREDICATE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("spotting_icon_predicate"));
-	public static final MappedRegistry<SpottingIconPredicate<?>> SPOTTING_ICON_PREDICATE = createSimple(SPOTTING_ICON_PREDICATE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
-		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new SpottingIconPredicate<>(entity -> false))
 	);
 
 	public static final ResourceKey<Registry<WindDisturbanceLogic<?>>> WIND_DISTURBANCE_LOGIC_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("wind_disturbance_logic"));

@@ -53,8 +53,6 @@ import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRe
 import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
-import net.frozenblock.lib.spottingicon.impl.SpottingIconPacket;
-import net.frozenblock.lib.spottingicon.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
@@ -118,8 +116,6 @@ public final class FrozenNetworking {
 		registry.register(EntityScreenShakePacket.PACKET_TYPE, EntityScreenShakePacket.CODEC);
 		registry.register(RemoveScreenShakePacket.PACKET_TYPE, RemoveScreenShakePacket.CODEC);
 		registry.register(RemoveEntityScreenShakePacket.PACKET_TYPE, RemoveEntityScreenShakePacket.CODEC);
-		registry.register(SpottingIconPacket.PACKET_TYPE, SpottingIconPacket.CODEC);
-		registry.register(SpottingIconRemovePacket.PACKET_TYPE, SpottingIconRemovePacket.CODEC);
 		registry.register(WindSyncPacket.PACKET_TYPE, WindSyncPacket.CODEC);
 		registry.register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
 

@@ -22,7 +22,6 @@ import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.levelgen.structure.impl.StructureUpgradeCommand;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
-import net.frozenblock.lib.spottingicon.impl.SpottingIconCommand;
 import net.frozenblock.lib.tag.api.TagListCommand;
 import net.frozenblock.lib.wind.api.command.WindCommand;
 import net.minecraft.commands.CommandSourceStack;
@@ -38,7 +37,8 @@ public final class FrozenLibCommand {
 			.then(ConfigCommand.buildSubCommand())
 			.then(ScaleEntityCommand.buildSubCommand())
 			.then(ScreenShakeCommand.buildSubCommand())
-			.then(SpottingIconCommand.buildSubcommand())
+			// TODO: New icon command
+			//.then(SpottingIconCommand.buildSubcommand())
 			.then(StructureUpgradeCommand.buildSubCommand())
 			.then(TagListCommand.buildSubCommand())
 			.then(WindCommand.buildSubCommand())

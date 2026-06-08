@@ -17,9 +17,9 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
-import net.frozenblock.lib.spottingicon.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spottingicon.api.SpottingIcon;
+import net.frozenblock.lib.spottingicon.api.SpottingIcons;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -41,13 +41,24 @@ public abstract class WardenMixin extends Monster {
 	}
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void initWithIcon(EntityType<? extends Warden> entityType, Level level, CallbackInfo ci) {
-		Warden warden = Warden.class.cast(this);
-		((EntitySpottingIconInterface) warden).frozenLib$getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/warden.png"), 8, 12, FrozenLibConstants.id("default"));
+	private void initWithIcon(EntityType<? extends Warden> type, Level level, CallbackInfo info) {
+		SpottingIcons.addIcon(
+			Warden.class.cast(this),
+			SpottingIcon.builder()
+				.texture(FrozenTestMain.id("textures/spotting_icons/warden.png"))
+				.addFader(8F, 12F, 0F, 1F)
+				.build()
+		);
 	}
 
-	@Inject(method = "doHurtTarget", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
-	private void startShaking(ServerLevel level, Entity target, CallbackInfoReturnable<Boolean> cir) {
+	@Inject(
+		method = "doHurtTarget",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"
+		)
+	)
+	private void startShaking(ServerLevel level, Entity target, CallbackInfoReturnable<Boolean> info) {
 		ScreenShakeManager.addScreenShake(level, 0.6F, 8, this.getX(), this.getY(), this.getZ(), 15);
 	}
 }

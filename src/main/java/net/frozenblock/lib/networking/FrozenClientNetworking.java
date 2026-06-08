@@ -66,9 +66,6 @@ import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRe
 import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
-import net.frozenblock.lib.spottingicon.impl.EntitySpottingIconInterface;
-import net.frozenblock.lib.spottingicon.impl.SpottingIconPacket;
-import net.frozenblock.lib.spottingicon.impl.SpottingIconRemovePacket;
 import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
 import net.frozenblock.lib.wind.api.WindDisturbance;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
@@ -110,8 +107,6 @@ public final class FrozenClientNetworking {
 		receiveScreenShakeFromEntityPacket();
 		receiveRemoveScreenShakePacket();
 		receiveRemoveScreenShakeFromEntityPacket();
-		receiveIconPacket();
-		receiveIconRemovePacket();
 		receiveWindSyncPacket();
 		receiveWindDisturbancePacket();
 		receiveFileTransferPacket();
@@ -318,30 +313,6 @@ public final class FrozenClientNetworking {
 			final ClientLevel level = ctx.client().level;
 			final Entity entity = level.getEntity(id);
             if (entity != null) ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
-		});
-	}
-
-	@ApiStatus.Internal
-	private static void receiveIconPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(SpottingIconPacket.PACKET_TYPE, (packet, ctx) -> {
-			final int id = packet.entityId();
-			final Identifier texture = packet.texture();
-			final float startFade = packet.startFade();
-			final float endFade = packet.endFade();
-			final Identifier predicate = packet.restrictionID();
-			final ClientLevel level = ctx.client().level;
-			final  Entity entity = level.getEntity(id);
-            if (entity instanceof EntitySpottingIconInterface livingEntity) livingEntity.frozenLib$getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
-		});
-	}
-
-	@ApiStatus.Internal
-	private static void receiveIconRemovePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(SpottingIconRemovePacket.PACKET_TYPE, (packet, ctx) -> {
-			final int id = packet.entityId();
-			final ClientLevel level = ctx.client().level;
-			final Entity entity = level.getEntity(id);
-            if (entity instanceof EntitySpottingIconInterface livingEntity) livingEntity.frozenLib$getSpottingIconManager().icon = null;
 		});
 	}
 

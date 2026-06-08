@@ -20,7 +20,8 @@ package net.frozenblock.lib.spottingicon.impl.client;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
-import net.frozenblock.lib.spottingicon.api.SpottingIconManager;
+import net.frozenblock.lib.spottingicon.api.SpottingIcon;
+import net.frozenblock.lib.spottingicon.api.SpottingIcons;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -51,39 +52,52 @@ public final class SpottingIconHudElement implements HudElement {
 		final Vec3 cameraForward = new Vec3(forwardAs3fc.x(), forwardAs3fc.y(), forwardAs3fc.z());
 
 		for (Entity entity : minecraft.level.entitiesForRendering()) {
-			final SpottingIconManager iconManager = entity.frozenLib$getSpottingIconManager();
-			final SpottingIconManager.SpottingIcon icon = iconManager.icon;
-			if (icon == null) continue;
+			final SpottingIcons icons = entity.getAttachedOrElse(SpottingIcons.ATTACHMENT, SpottingIcons.EMPTY);
+			if (icons.isEmpty()) continue;
 
-			final Vec3 eyePos = entity.getEyePosition(partialTicks);
-			final double dist = Math.sqrt(cameraPos.distanceToSqr(eyePos));
-			if (dist <= icon.startFadeDist()) continue;
+			final Vec3 entityEyePosition = entity.getEyePosition(partialTicks);
+			final double distance = Math.sqrt(cameraPos.distanceToSqr(entityEyePosition));
 
-			final float endDist = icon.endFadeDist() - icon.startFadeDist();
-			final int alpha = (int) (Math.min(1F, (float) (dist - icon.startFadeDist()) / endDist) * 255F);
+			float startPos = 0F;
 
-			final Vec3 iconWorldPos = new Vec3(eyePos.x, eyePos.y + entity.getBbHeight() + Y_OFFSET - entity.getEyeHeight(), eyePos.z);
-			// check if in front of camera
-			if (iconWorldPos.subtract(cameraPos).dot(cameraForward) <= 0D) continue;
-			final Vec3 project = minecraft.gameRenderer.projectPointToScreen(iconWorldPos);
+			for (SpottingIcon icon : icons) {
+				final float transparency = icon.attributes().calculateTransparency(distance);
+				if (transparency <= 0F) continue;
 
-			if (project.z > 1D || project.x < -1D || project.x > 1D || project.y < -1D || project.y > 1D) continue;
+				final float scale = icon.attributes().calculateScale(distance);
+				if (scale <= 0F) continue;
 
-			final float screenX = (float) ((project.x + 1D) / 2D * graphics.guiWidth());
-			final float screenY = (float) ((1D - project.y) / 2D * graphics.guiHeight());
-			graphics.pose().pushMatrix();
-			graphics.pose().translate(screenX - ICON_HALF, screenY - ICON_HALF);
-			graphics.blit(
-				RenderPipelines.GUI_TEXTURED,
-				icon.texture(),
-				0,
-				0,
-				0F, 0F,
-				ICON_SIZE, ICON_SIZE,
-				ICON_SIZE, ICON_SIZE,
-				ARGB.color(alpha, 255, 255, 255)
-			);
-			graphics.pose().popMatrix();
+				final Vec3 iconWorldPos = new Vec3(entityEyePosition.x, entityEyePosition.y + entity.getBbHeight() + Y_OFFSET - entity.getEyeHeight(), entityEyePosition.z);
+				// Check if icon is in front of camera
+				if (iconWorldPos.subtract(cameraPos).dot(cameraForward) <= 0D) continue;
+
+				final Vec3 project = minecraft.gameRenderer.projectPointToScreen(iconWorldPos);
+				if (project.z > 1D || project.x < -1D || project.x > 1D || project.y < -1D || project.y > 1D) continue;
+
+				final float screenX = (float) ((project.x + 1D) / 2D * graphics.guiWidth());
+				final float screenY = (float) ((1D - project.y) / 2D * graphics.guiHeight());
+				final float iconScale = ICON_SIZE * scale;
+
+				graphics.pose().pushMatrix();
+				graphics.pose().translate(screenX - ICON_HALF, (screenY - ICON_HALF) + startPos);
+				graphics.pose().pushMatrix();
+				graphics.pose().scale(iconScale);
+				graphics.blit(
+					RenderPipelines.GUI_TEXTURED,
+					icon.texture(),
+					0,
+					0,
+					0F, 0F,
+					ICON_SIZE, ICON_SIZE,
+					ICON_SIZE, ICON_SIZE,
+					ARGB.colorFromFloat(transparency, 1F, 1F, 1F)
+				);
+				graphics.pose().popMatrix();
+				graphics.pose().popMatrix();
+
+				// TODO: test stacked icons
+				startPos += scale;
+			}
 		}
 	}
 }

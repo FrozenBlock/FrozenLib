@@ -18,8 +18,8 @@
 package net.frozenblock.lib.testmod.mixin;
 
 import com.mojang.authlib.GameProfile;
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.spottingicon.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spottingicon.api.SpottingIcon;
+import net.frozenblock.lib.spottingicon.api.SpottingIcons;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -32,8 +32,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerMixin {
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void initWithIcon(Level level, GameProfile gameProfile, CallbackInfo ci) {
-		Player player = Player.class.cast(this);
-		((EntitySpottingIconInterface) player).frozenLib$getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/player.png"), 0, 1, FrozenLibConstants.id("default"));
+	private void initWithIcon(Level level, GameProfile gameProfile, CallbackInfo info) {
+		SpottingIcons.addIcon(
+			Player.class.cast(this),
+			SpottingIcon.builder()
+				.texture(FrozenTestMain.id("textures/spotting_icons/player.png"))
+				.addFader(0F, 1F, 0F, 1F)
+				.build()
+		);
 	}
 }

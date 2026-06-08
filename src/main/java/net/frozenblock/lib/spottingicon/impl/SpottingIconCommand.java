@@ -17,25 +17,13 @@
 
 package net.frozenblock.lib.spottingicon.impl;
 
-import com.mojang.brigadier.arguments.FloatArgumentType;
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import java.util.Collection;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.frozenblock.lib.spottingicon.api.SpottingIconManager;
-import net.frozenblock.lib.spottingicon.api.SpottingIconPredicate;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.EntityArgument;
-import net.minecraft.commands.arguments.IdentifierArgument;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.Identifier;
-import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public final class SpottingIconCommand {
+	// TODO: new icon command
 
+	/*
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubcommand() {
 		return Commands.literal("spotting")
 			.then(Commands.literal("add")
@@ -47,7 +35,6 @@ public final class SpottingIconCommand {
 							IdentifierArgument.getId(ctx, "texture"),
 							16F,
 							20F,
-							SpottingIconPredicate.DEFAULT_ID
 						))
 						.then(Commands.argument("startFade", FloatArgumentType.floatArg())
 							.then(Commands.argument("endFade", FloatArgumentType.floatArg())
@@ -57,7 +44,6 @@ public final class SpottingIconCommand {
 									IdentifierArgument.getId(ctx, "texture"),
 									FloatArgumentType.getFloat(ctx, "startFade"),
 									FloatArgumentType.getFloat(ctx, "endFade"),
-									SpottingIconPredicate.DEFAULT_ID
 								))
 								.then(Commands.argument("predicate", IdentifierArgument.id())
 									.suggests((ctx, builder) ->
@@ -142,4 +128,5 @@ public final class SpottingIconCommand {
 		}
 		return count;
 	}
+	*/
 }

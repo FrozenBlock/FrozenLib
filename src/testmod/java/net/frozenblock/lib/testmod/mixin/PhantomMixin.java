@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.spottingicon.impl.EntitySpottingIconInterface;
+import net.frozenblock.lib.spottingicon.api.SpottingIcon;
+import net.frozenblock.lib.spottingicon.api.SpottingIcons;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Phantom;
@@ -32,8 +32,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PhantomMixin {
 
 	@Inject(method = "<init>", at = @At("TAIL"))
-	private void initWithIcon(EntityType<? extends Phantom> entityType, Level level, CallbackInfo ci) {
-		Phantom phantom = Phantom.class.cast(this);
-		((EntitySpottingIconInterface) phantom).frozenLib$getSpottingIconManager().setIcon(FrozenTestMain.id("textures/spotting_icons/phantom.png"), 16, 20, FrozenLibConstants.id("default"));
+	private void initWithIcon(EntityType<? extends Phantom> type, Level level, CallbackInfo info) {
+		SpottingIcons.addIcon(
+			Phantom.class.cast(this),
+			SpottingIcon.builder()
+				.texture(FrozenTestMain.id("textures/spotting_icons/phantom.png"))
+				.addFader(16F, 20F, 0F, 1F)
+				.build()
+		);
 	}
 }
