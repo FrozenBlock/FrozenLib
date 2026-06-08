@@ -22,13 +22,10 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
 import java.util.Optional;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.spottingicon.impl.SpottingIconPacket;
 import net.frozenblock.lib.spottingicon.impl.SpottingIconRemovePacket;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -60,7 +57,6 @@ public class SpottingIconManager {
 		this.ticksToCheck = 20;
 		if (this.icon == null) return;
 
-		if (this.entity.level().isClientSide()) this.clientHasIconResource = hasTexture(this.icon.texture());
 		if (!SpottingIconPredicate.getPredicate(this.icon.restrictionID).test(this.entity)) this.removeIcon();
 	}
 
@@ -69,8 +65,6 @@ public class SpottingIconManager {
 		if (!this.entity.level().isClientSide()) {
 			final CustomPacketPayload packet = new SpottingIconPacket(this.entity.getId(), texture, startFade, endFade, restrictionID);
 			for (ServerPlayer player : PlayerLookup.tracking(this.entity)) ServerPlayNetworking.send(player, packet);
-		} else {
-			this.clientHasIconResource = hasTexture(this.icon.texture());
 		}
 		SpottingIconPredicate.getPredicate(this.icon.restrictionID).onAdded(this.entity);
 	}
@@ -102,11 +96,6 @@ public class SpottingIconManager {
 				this.icon.restrictionID()
 			)
 		);
-	}
-
-	@Environment(EnvType.CLIENT)
-	private static boolean hasTexture(Identifier texture) {
-		return Minecraft.getInstance().getResourceManager().getResource(texture).isPresent();
 	}
 
 	public void load(ValueInput input) {

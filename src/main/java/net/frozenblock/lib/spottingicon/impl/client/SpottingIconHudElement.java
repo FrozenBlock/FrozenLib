@@ -53,7 +53,7 @@ public final class SpottingIconHudElement implements HudElement {
 		for (Entity entity : minecraft.level.entitiesForRendering()) {
 			final SpottingIconManager iconManager = entity.frozenLib$getSpottingIconManager();
 			final SpottingIconManager.SpottingIcon icon = iconManager.icon;
-			if (icon == null || !iconManager.clientHasIconResource) continue;
+			if (icon == null) continue;
 
 			final Vec3 eyePos = entity.getEyePosition(partialTicks);
 			final double dist = Math.sqrt(cameraPos.distanceToSqr(eyePos));
