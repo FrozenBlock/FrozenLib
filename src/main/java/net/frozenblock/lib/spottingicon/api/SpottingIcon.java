@@ -56,13 +56,23 @@ public record SpottingIcon(Identifier texture, Attributes attributes) {
 			return this;
 		}
 
-		public Builder addScaler(float startDistance, float endDistance, float startValue, float endValue) {
+		public Builder scaler(float startDistance, float endDistance, float startValue, float endValue) {
 			this.scalers.add(new Fade(startDistance, endDistance, startValue, endValue));
 			return this;
 		}
 
-		public Builder addFader(float startDistance, float endDistance, float startValue, float endValue) {
+		public Builder scale(float value) {
+			this.scalers.add(new Fade(0F, 0F, value, value));
+			return this;
+		}
+
+		public Builder fader(float startDistance, float endDistance, float startValue, float endValue) {
 			this.faders.add(new Fade(startDistance, endDistance, startValue, endValue));
+			return this;
+		}
+
+		public Builder transparency(float value) {
+			this.faders.add(new Fade(0F, 0F, value, value));
 			return this;
 		}
 

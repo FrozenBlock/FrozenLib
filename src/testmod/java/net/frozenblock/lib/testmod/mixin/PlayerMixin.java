@@ -37,7 +37,7 @@ public class PlayerMixin {
 			Player.class.cast(this),
 			SpottingIcon.builder()
 				.texture(FrozenTestMain.id("textures/spotting_icons/player.png"))
-				.addFader(0F, 1F, 0F, 1F)
+				.fader(0F, 1F, 0F, 1F)
 				.build()
 		);
 	}

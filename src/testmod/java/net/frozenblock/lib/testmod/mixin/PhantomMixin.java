@@ -37,7 +37,7 @@ public class PhantomMixin {
 			Phantom.class.cast(this),
 			SpottingIcon.builder()
 				.texture(FrozenTestMain.id("textures/spotting_icons/phantom.png"))
-				.addFader(16F, 20F, 0F, 1F)
+				.fader(16F, 20F, 0F, 1F)
 				.build()
 		);
 	}

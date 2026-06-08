@@ -46,7 +46,7 @@ public abstract class WardenMixin extends Monster {
 			Warden.class.cast(this),
 			SpottingIcon.builder()
 				.texture(FrozenTestMain.id("textures/spotting_icons/warden.png"))
-				.addFader(8F, 12F, 0F, 1F)
+				.fader(8F, 12F, 0F, 1F)
 				.build()
 		);
 	}

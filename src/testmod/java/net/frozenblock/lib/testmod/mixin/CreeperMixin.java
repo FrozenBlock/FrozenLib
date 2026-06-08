@@ -37,7 +37,7 @@ public class CreeperMixin {
 			Creeper.class.cast(this),
 			SpottingIcon.builder()
 				.texture(FrozenTestMain.id("textures/spotting_icons/creeper.png"))
-				.addFader(16F, 20F, 0F, 1F)
+				.fader(16F, 20F, 0F, 1F)
 				.build()
 		);
 	}

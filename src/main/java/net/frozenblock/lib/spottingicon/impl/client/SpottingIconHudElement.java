@@ -37,7 +37,7 @@ import org.joml.Vector3fc;
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
 public final class SpottingIconHudElement implements HudElement {
-	private static final float Y_OFFSET = 0.5F;
+	private static final float Y_OFFSET = 0.25F;
 	private static final int ICON_SIZE = 16;
 	private static final int ICON_HALF = ICON_SIZE / 2;
 	private static final int ICON_SPACING = ICON_HALF / 4;
@@ -60,8 +60,8 @@ public final class SpottingIconHudElement implements HudElement {
 			final BlockPos blockPos = entity.blockPosition();
 			if (!(minecraft.level.isOutsideBuildHeight(blockPos.getY()) || minecraft.levelRenderer.isSectionCompiledAndVisible(blockPos))) continue;
 
-			final Vec3 entityEyePosition = entity.getEyePosition(partialTicks);
-			final double distance = Math.sqrt(cameraPos.distanceToSqr(entityEyePosition));
+			final Vec3 entityTopPosition = entity.getPosition(partialTicks).add(0D, entity.getBbHeight(), 0D);
+			final double distance = Math.sqrt(cameraPos.distanceToSqr(entityTopPosition));
 
 			float startPos = 0F;
 			float lastScale = 0F;
@@ -73,7 +73,7 @@ public final class SpottingIconHudElement implements HudElement {
 				final float scale = icon.attributes().calculateScale(distance);
 				if (scale <= 0F) continue;
 
-				final Vec3 iconWorldPos = new Vec3(entityEyePosition.x, entityEyePosition.y + entity.getBbHeight() + Y_OFFSET - entity.getEyeHeight(), entityEyePosition.z);
+				final Vec3 iconWorldPos = new Vec3(entityTopPosition.x, entityTopPosition.y + Y_OFFSET, entityTopPosition.z);
 				// Check if icon is in front of camera
 				if (iconWorldPos.subtract(cameraPos).dot(cameraForward) <= 0D) continue;
 
@@ -103,7 +103,7 @@ public final class SpottingIconHudElement implements HudElement {
 				);
 				graphics.pose().popMatrix();
 				graphics.pose().popMatrix();
-				
+
 				startPos += (scale * ICON_SIZE);
 				lastScale = scale;
 			}
