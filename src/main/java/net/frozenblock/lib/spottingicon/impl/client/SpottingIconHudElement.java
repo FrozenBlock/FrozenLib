@@ -94,8 +94,7 @@ public final class SpottingIconHudElement implements HudElement {
 				graphics.blit(
 					RenderPipelines.GUI_TEXTURED,
 					icon.texture(),
-					0,
-					0,
+					0, 0,
 					0F, 0F,
 					ICON_SIZE, ICON_SIZE,
 					ICON_SIZE, ICON_SIZE,
