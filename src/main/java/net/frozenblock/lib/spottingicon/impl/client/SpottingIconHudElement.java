@@ -33,6 +33,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3fc;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)
@@ -53,7 +56,10 @@ public final class SpottingIconHudElement implements HudElement {
 		final Vector3fc forwardAs3fc = camera.forwardVector();
 		final Vec3 cameraForward = new Vec3(forwardAs3fc.x(), forwardAs3fc.y(), forwardAs3fc.z());
 
-		for (Entity entity : minecraft.level.entitiesForRendering()) {
+		final List<Entity> entities = new ArrayList<>();
+		minecraft.level.entitiesForRendering().forEach(entities::add);
+		entities.sort(Comparator.comparingDouble(e -> -e.position().distanceTo(cameraPos)));
+		for (Entity entity : entities) {
 			final SpottingIcons icons = entity.getAttachedOrElse(SpottingIcons.ATTACHMENT, SpottingIcons.EMPTY);
 			if (icons.isEmpty()) continue;
 
