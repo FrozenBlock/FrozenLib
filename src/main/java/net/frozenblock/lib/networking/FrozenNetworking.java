@@ -152,8 +152,7 @@ public final class FrozenNetworking {
 							ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
 						}
 						return;
-					} catch (IOException ignored) {
-					}
+					} catch (IOException ignored) {}
 				}
 
 				FrozenLibConstants.LOGGER.debug("Unable to create and send transfer packets for file {} on server!", fileName);

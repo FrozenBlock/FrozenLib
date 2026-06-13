@@ -387,8 +387,7 @@ public final class FrozenClientNetworking {
 								ClientPlayNetworking.send(fileTransferPacket);
 							}
 							return;
-						} catch (IOException ignored) {
-						}
+						} catch (IOException ignored) {}
 					}
 				}
 

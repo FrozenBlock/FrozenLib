@@ -39,7 +39,6 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import org.apache.commons.lang3.ArrayUtils;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -171,12 +170,10 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	public record FileTransferSnippet(byte[] bytes, int index) {
 		public static final FileTransferSnippet EMPTY = new FileTransferSnippet(new byte[0], 0);
 
-		@Contract("_ -> new")
 		public static FileTransferSnippet read(FriendlyByteBuf byteBuf) {
 			return new FileTransferSnippet(byteBuf.readByteArray(), byteBuf.readVarInt());
 		}
 
-		@Contract("_ -> param1")
 		public ByteBuf write(FriendlyByteBuf byteBuf) {
 			byteBuf.writeByteArray(this.bytes);
 			byteBuf.writeVarInt(this.index);
