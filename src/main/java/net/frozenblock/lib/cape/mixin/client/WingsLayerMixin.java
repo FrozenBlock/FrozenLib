@@ -20,11 +20,12 @@ package net.frozenblock.lib.cape.mixin.client;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.cape.client.impl.AvatarCapeInterface;
+import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.minecraft.client.renderer.entity.layers.WingsLayer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.core.ClientAsset;
 import net.minecraft.resources.Identifier;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -38,16 +39,18 @@ public class WingsLayerMixin {
 		method = "getPlayerElytraTexture",
 		at = @At(
 			value = "FIELD",
-			target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;skin:Lnet/minecraft/world/entity/player/PlayerSkin;"
+			target = "Lnet/minecraft/client/renderer/entity/state/AvatarRenderState;skin:Lnet/minecraft/world/entity/player/PlayerSkin;",
+			opcode = Opcodes.GETFIELD
 		),
 		cancellable = true
 	)
 	private static void frozenLib$useFrozenLibCapeAsElytra(
 		CallbackInfoReturnable<Identifier> info,
-		@Local(ordinal = 0) AvatarRenderState renderState
+		@Local(name = "playerState") AvatarRenderState playerState
 	) {
-		if (!(renderState instanceof AvatarCapeInterface capeInterface) || !renderState.showCape) return;
-		final ClientAsset.Texture capeAsset = capeInterface.frozenLib$getCape();
-		if (capeAsset != null) info.setReturnValue(capeAsset.texturePath());
+		if (!playerState.showCape) return;
+
+		final ClientAsset.Texture newCapeAsset = playerState.getData(ClientCapeUtil.CAPE_TEXTURE_DATA_KEY);
+		if (newCapeAsset != null) info.setReturnValue(newCapeAsset.texturePath());
 	}
 }

@@ -17,6 +17,9 @@
 
 package net.frozenblock.lib.spottingicon.impl.client;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.rendering.v1.hud.HudElement;
@@ -33,9 +36,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
 import org.joml.Vector3fc;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
 
 @ApiStatus.Internal
 @Environment(EnvType.CLIENT)

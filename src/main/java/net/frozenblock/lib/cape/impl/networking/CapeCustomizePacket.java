@@ -17,8 +17,7 @@
 
 package net.frozenblock.lib.cape.impl.networking;
 
-import java.util.UUID;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import java.util.Optional;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
@@ -27,81 +26,40 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
-import net.minecraft.server.MinecraftServer;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.server.level.ServerPlayer;
 
-public final class CapeCustomizePacket implements CustomPacketPayload {
-	private static final Identifier DUMMY = FrozenLibConstants.id("dummy");
-	public static final Type<CapeCustomizePacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("cape_packet"));
+public record CapeCustomizePacket(Optional<Cape> cape) implements CustomPacketPayload {
+	public static final Type<CapeCustomizePacket> TYPE = new Type<>(FrozenLibConstants.id("customize_cape"));
 	public static final StreamCodec<FriendlyByteBuf, CapeCustomizePacket> CODEC = StreamCodec.ofMember(CapeCustomizePacket::write, CapeCustomizePacket::new);
 
-	private final UUID playerUUID;
-	private final boolean enabled;
-	private Identifier capeId = null;
-
-	private CapeCustomizePacket(UUID uuid, boolean enabled) {
-		this.playerUUID = uuid;
-		this.enabled = enabled;
-	}
-
-	private CapeCustomizePacket(UUID uuid, boolean enabled, Identifier capeId) {
-		this(uuid, enabled);
-		this.capeId = capeId;
-	}
-
 	public CapeCustomizePacket(FriendlyByteBuf buf) {
-		this(buf.readUUID(), buf.readBoolean());
-		if (this.enabled) this.capeId = buf.readIdentifier();
+		this(Cape.NETWORK_CODEC.decode(buf));
 	}
 
 	public void write(FriendlyByteBuf buf) {
-		buf.writeUUID(this.playerUUID);
-		buf.writeBoolean(this.enabled);
-		if (this.enabled) buf.writeIdentifier(this.capeId);
+		Cape.NETWORK_CODEC.encode(buf, this.cape);
 	}
 
-	public static CapeCustomizePacket createDisablePacket(UUID uuid) {
-		return new CapeCustomizePacket(uuid, false);
+	public static CapeCustomizePacket createDisable() {
+		return new CapeCustomizePacket(Optional.empty());
 	}
 
-	public static CapeCustomizePacket createPacket(UUID uuid, @Nullable Identifier capeId) {
-		return new CapeCustomizePacket(uuid, !shouldDisable(CapeUtil.getCape(capeId).orElse(null)), capeId);
-	}
-
-	@Contract("_, _ -> new")
-	public static CapeCustomizePacket createPacket(UUID uuid, Cape cape) {
-		return new CapeCustomizePacket(uuid, !shouldDisable(cape), cape.id());
-	}
-
-	public static void sendCapeToAll(MinecraftServer server, UUID uuid, @Nullable Identifier capeId) {
-		final CapeCustomizePacket capePacket = CapeCustomizePacket.createPacket(uuid, capeId);
-		PlayerLookup.all(server).forEach(player -> ServerPlayNetworking.send(player, capePacket));
-	}
-
-	public static boolean shouldDisable(Cape cape) {
-		return cape == null || shouldDisable(cape.id()) || cape.texture() == null;
-	}
-
-	public static boolean shouldDisable(Identifier capeId) {
-		return capeId == null || capeId.equals(DUMMY);
-	}
-
-	public UUID getPlayerUUID() {
-		return this.playerUUID;
-	}
-
-	public boolean isEnabled() {
-		return this.enabled;
-	}
-
-	@Nullable
-	public Identifier getCapeId() {
-		return this.capeId;
+	public static CapeCustomizePacket create(Identifier capeID) {
+		return new CapeCustomizePacket(CapeUtil.getCape(capeID).filter(cape -> !cape.dummy()));
 	}
 
 	@Override
 	public Type<?> type() {
-		return PACKET_TYPE;
+		return TYPE;
+	}
+
+	public static void handle(CapeCustomizePacket packet, ServerPlayNetworking.Context context) {
+		final ServerPlayer player = context.player();
+		if (player == null) return;
+		final boolean empty = packet.cape().isEmpty() || packet.cape.get().dummy() || !CapeUtil.canPlayerUserCape(player.getUUID(), packet.cape().get());
+		player.setAttached(
+			Cape.ATTACHMENT_TYPE,
+			empty ? Optional.empty() : packet.cape()
+		);
 	}
 }

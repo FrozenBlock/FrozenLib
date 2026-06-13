@@ -21,7 +21,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.ModContainer;
-import net.frozenblock.lib.cape.impl.ServerCapeData;
+import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.command.FrozenLibCommand;
 import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
@@ -29,7 +29,6 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
-import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
@@ -98,7 +97,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
 
-		ServerCapeData.init();
+		CapeUtil.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
 
@@ -123,12 +122,8 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			ScreenShakeManager.getOrCreateScreenShakeManager(serverLevel).tick(serverLevel);
 			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
 		});
-		StructureStatus.init();
 
-		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
-			WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
-			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
-		}));
+		StructureStatus.init();
 
 		if (FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.get()) {
 			CommandRegistrationCallback.EVENT.register(
@@ -145,5 +140,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			if (!allRegistries) return;
 			for (Config<?> config : ConfigRegistry.getAllConfigs()) config.save();
 		});
+
+		FrozenLibConfig.CONFIG.load(true);
 	}
 }

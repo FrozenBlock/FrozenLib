@@ -145,3 +145,6 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - A custom start and end value can now be defined.
     - Fades can be used for both the Icon's scale and transparency.
 - Migrated server texture packets to use Fabric's packet splitter.
+- Revamped FrozenLib's Custom Cape implementation
+  - Migrated to Fabric's Data Attachments system and Render State Data Keys.
+  - Fixed a bug that caused a Player's Custom Cape to not sync to clients when joining a server.

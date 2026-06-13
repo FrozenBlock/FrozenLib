@@ -23,15 +23,12 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
-import net.frozenblock.lib.cape.client.impl.ClientCapeData;
-import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.impl.network.ConfigSyncModification;
@@ -111,7 +108,6 @@ public final class FrozenClientNetworking {
 		receiveWindSyncPacket();
 		receiveWindDisturbancePacket();
 		receiveFileTransferPacket();
-		receiveCapePacket();
 		receiveCapeRepoPacket();
 		ClientPlayNetworking.registerGlobalReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, ctx) ->
 			ConfigEntrySyncPacket.receive(packet, null)
@@ -404,17 +400,6 @@ public final class FrozenClientNetworking {
 				} catch (IOException ignored) {
 					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
 				}
-			}
-		});
-	}
-
-	private static void receiveCapePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE, (packet, ctx) -> {
-			final UUID uuid = packet.getPlayerUUID();
-			if (packet.isEnabled()) {
-				ClientCapeData.setCapeForUUID(uuid, packet.getCapeId());
-			} else {
-				ClientCapeData.removeCapeForUUID(uuid);
 			}
 		});
 	}

@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.UUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -30,7 +29,6 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
-import net.frozenblock.lib.cape.impl.ServerCapeData;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
@@ -63,7 +61,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -79,12 +76,11 @@ public final class FrozenNetworking {
 		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
 			final WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
 			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
-			ServerCapeData.sendAllCapesToPlayer(player);
 		}));
 
 		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {
 			ConfigEntrySyncPacket.sendS2C(player);
-			ServerCapeData.sendCapeReposToPlayer(player);
+			CapeUtil.sendCapeReposToPlayer(player);
 		});
 
 		ResourceLoaderEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, error) -> {
@@ -121,15 +117,9 @@ public final class FrozenNetworking {
 		registry.register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
 
 		// CAPE
-		registry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
+		c2sRegistry.register(CapeCustomizePacket.TYPE, CapeCustomizePacket.CODEC);
+		ServerPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.TYPE, CapeCustomizePacket::handle);
 		registry.register(LoadCapeRepoPacket.PACKET_TYPE, LoadCapeRepoPacket.STREAM_CODEC);
-		c2sRegistry.register(CapeCustomizePacket.PACKET_TYPE, CapeCustomizePacket.CODEC);
-		ServerPlayNetworking.registerGlobalReceiver(CapeCustomizePacket.PACKET_TYPE, (packet, ctx) -> {
-			final UUID uuid = ctx.player().getUUID();
-			final Identifier capeId = packet.getCapeId();
-			if (capeId != null && !CapeUtil.canPlayerUserCape(uuid, capeId)) return;
-			CapeCustomizePacket.sendCapeToAll(ctx.server(), uuid, capeId);
-		});
 
 		// FILE TRANSFER
 		registry.registerLarge(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);

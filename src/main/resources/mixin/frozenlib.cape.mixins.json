@@ -7,9 +7,7 @@
     "defaultRequire": 1
   },
   "client": [
-    "client.AbstractClientPlayerMixin",
     "client.AvatarRendererMixin",
-    "client.AvatarRenderStateMixin",
     "client.CapeLayerMixin",
     "client.WingsLayerMixin"
   ]

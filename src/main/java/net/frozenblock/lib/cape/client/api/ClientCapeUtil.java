@@ -22,18 +22,26 @@ import com.google.gson.JsonIOException;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
+import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
+import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -42,19 +50,22 @@ public class ClientCapeUtil {
 	@ApiStatus.Internal
 	public static final Path CAPE_CACHE_PATH = FrozenLibConstants.FROZENLIB_GAME_DIRECTORY.resolve("cape_cache");
 	@ApiStatus.Internal
+	public static final RenderStateDataKey<Cape.CapeTexture> CAPE_TEXTURE_DATA_KEY = RenderStateDataKey.create();
+	@ApiStatus.Internal
 	private static final List<Identifier> REGISTERED_CAPE_LISTENERS = new ArrayList<>();
 	@ApiStatus.Internal
 	private static final List<Cape> USABLE_CAPES = new ArrayList<>();
 
+	public static void init() {
+		ClientPlayConnectionEvents.JOIN.register((listener, sender, minecraft) -> {
+			ClientPlayNetworking.send(CapeCustomizePacket.create(Identifier.parse(FrozenLibConfig.CAPE.get())));
+		});
+	}
+
 	public static void registerCapeTextureFromURL(Identifier capeID, Identifier texture, String textureURL) throws JsonIOException {
 		if (REGISTERED_CAPE_LISTENERS.contains(capeID)) return;
 
-		ResourceManagerHelper.get(PackType.CLIENT_RESOURCES).registerReloadListener(new SimpleSynchronousResourceReloadListener() {
-			@Override
-			public Identifier getFabricId() {
-				return capeID;
-			}
-
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(capeID, new ResourceManagerReloadListener() {
 			@Override
 			public void onResourceManagerReload(ResourceManager resourceManager) {
 				Minecraft.getInstance().getSkinManager().skinTextureDownloader.downloadAndRegisterSkin(
@@ -74,7 +85,17 @@ public class ClientCapeUtil {
 		USABLE_CAPES.addAll(CapeUtil.getUsableCapes(playerUUID));
 	}
 
-	public static @Unmodifiable List<Cape> getUsableCapes(boolean refresh) {
+	public static void extractCapeToRenderState(Entity entity, EntityRenderState state) {
+		final Optional<Optional<Cape>> capeAttachment = Optional.ofNullable(entity.getAttached(Cape.ATTACHMENT_TYPE));
+		if (capeAttachment.isEmpty() || capeAttachment.get().isEmpty() || capeAttachment.get().get().dummy()) {
+			state.setData(CAPE_TEXTURE_DATA_KEY, null);
+		} else {
+			state.setData(CAPE_TEXTURE_DATA_KEY, capeAttachment.get().get().texture());
+		}
+	}
+
+	@Unmodifiable
+	public static List<Cape> getUsableCapes(boolean refresh) {
 		if (refresh) refreshUsableCapes();
 		return ImmutableList.copyOf(USABLE_CAPES);
 	}

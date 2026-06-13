@@ -19,11 +19,8 @@ package net.frozenblock.lib.cape.mixin.client;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.cape.client.impl.AvatarCapeInterface;
+import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.minecraft.client.entity.ClientAvatarEntity;
-import net.minecraft.client.model.player.PlayerModel;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.player.AvatarRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
 import net.minecraft.world.entity.Avatar;
@@ -34,16 +31,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Environment(EnvType.CLIENT)
 @Mixin(AvatarRenderer.class)
-public abstract class AvatarRendererMixin<AvatarlikeEntity extends Avatar & ClientAvatarEntity> extends LivingEntityRenderer<AvatarlikeEntity, AvatarRenderState, PlayerModel> {
-
-	public AvatarRendererMixin(EntityRendererProvider.Context context, PlayerModel entityModel, float f) {
-		super(context, entityModel, f);
-	}
+public class AvatarRendererMixin<AvatarlikeEntity extends Avatar & ClientAvatarEntity> {
 
 	@Inject(method = "extractCapeState", at = @At("TAIL"))
-	private void frozenLib$extractCapeState(AvatarlikeEntity entity, AvatarRenderState renderState, float f, CallbackInfo info) {
-		if (!(renderState instanceof AvatarCapeInterface stateInterface)) return;
-		if (!(entity instanceof AvatarCapeInterface entityInterface)) return;
-		stateInterface.frozenLib$setCape(entityInterface.frozenLib$getCape());
+	private void frozenLib$extractCapeState(AvatarlikeEntity entity, AvatarRenderState state, float partialTicks, CallbackInfo info) {
+		ClientCapeUtil.extractCapeToRenderState(entity, state);
 	}
 }
