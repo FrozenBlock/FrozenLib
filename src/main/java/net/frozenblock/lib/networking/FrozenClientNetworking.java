@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.networking;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -39,7 +40,6 @@ import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
-import net.frozenblock.lib.file.transfer.FileTransferRebuilder;
 import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
@@ -86,6 +86,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemCooldowns;
 import net.minecraft.world.phys.Vec3;
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.ApiStatus;
 
 @Environment(EnvType.CLIENT)
@@ -383,9 +384,7 @@ public final class FrozenClientNetworking {
 						return;
 					} else {
 						try {
-							for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, sendingFile)) {
-								ClientPlayNetworking.send(fileTransferPacket);
-							}
+							ClientPlayNetworking.send(FileTransferPacket.create(requestPath, sendingFile));
 							return;
 						} catch (IOException ignored) {}
 					}
@@ -399,10 +398,9 @@ public final class FrozenClientNetworking {
 
 				try {
 					final Path path = ctx.client().gameDirectory.toPath().resolve(destPath).resolve(fileName);
-					if (FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), true)) {
-						System.out.println(packet.fileName());
-						ServerTextureDownloader.registerTextureByPacketIfFound(packet.transferPath(), packet.fileName());
-					}
+					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.data()), path.toFile());
+					FrozenLibConstants.LOGGER.debug("Saved transferred file {} on client!", fileName);
+					ServerTextureDownloader.registerTextureByPacketIfFound(packet.transferPath(), packet.fileName());
 				} catch (IOException ignored) {
 					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on client!", fileName);
 				}

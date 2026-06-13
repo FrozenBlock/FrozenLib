@@ -144,3 +144,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Spotting Icons a much more flexible fading system.
     - A custom start and end value can now be defined.
     - Fades can be used for both the Icon's scale and transparency.
+- Migrated server texture packets to use Fabric's packet splitter.

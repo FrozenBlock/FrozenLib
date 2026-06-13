@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.networking;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
@@ -37,7 +38,6 @@ import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
 import net.frozenblock.lib.event.api.PlayerJoinEvents;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
 import net.frozenblock.lib.file.transfer.FileTransferPacket;
-import net.frozenblock.lib.file.transfer.FileTransferRebuilder;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
@@ -67,6 +67,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.apache.commons.io.FileUtils;
 import org.quiltmc.qsl.frozenblock.resource.loader.api.ResourceLoaderEvents;
 
 public final class FrozenNetworking {
@@ -131,8 +132,8 @@ public final class FrozenNetworking {
 		});
 
 		// FILE TRANSFER
-		registry.register(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC);
-		c2sRegistry.register(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC);
+		registry.registerLarge(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
+		c2sRegistry.registerLarge(FileTransferPacket.PACKET_TYPE, FileTransferPacket.STREAM_CODEC, FileTransferPacket.MAX_SIZE_PER_TRANSFER);
 		ServerPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
 			if (packet.request()) {
 				final String requestPath = packet.transferPath();
@@ -148,9 +149,7 @@ public final class FrozenNetworking {
 					if (!file.exists()) continue;
 
 					try {
-						for (FileTransferPacket fileTransferPacket : FileTransferPacket.create(requestPath, file)) {
-							ServerPlayNetworking.send(ctx.player(), fileTransferPacket);
-						}
+						ServerPlayNetworking.send(ctx.player(), FileTransferPacket.create(requestPath, file));
 						return;
 					} catch (IOException ignored) {}
 				}
@@ -165,7 +164,8 @@ public final class FrozenNetworking {
 
 				try {
 					final Path path = ctx.server().getServerDirectory().resolve(destPath).resolve(packet.fileName());
-					FileTransferRebuilder.onReceiveFileTransferPacket(path, packet.snippet(), packet.totalPacketCount(), false);
+					FileUtils.copyInputStreamToFile(new ByteArrayInputStream(packet.data()), path.toFile());
+					FrozenLibConstants.LOGGER.debug("Saved transferred file {} on server!", fileName);
 				} catch (IOException ignored) {
 					FrozenLibConstants.LOGGER.error("Unable to save transferred file {} on server!", packet.fileName());
 				}
