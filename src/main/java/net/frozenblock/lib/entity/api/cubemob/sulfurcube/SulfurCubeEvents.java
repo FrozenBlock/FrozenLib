@@ -116,8 +116,8 @@ public final class SulfurCubeEvents {
 	 */
 	public static final Event<Hit> ON_HIT = FrozenEvents.createEnvironmentEvent(
 		Hit.class,
-		(callbacks) -> (sulfurCube, pushVelocity, source, damage) -> {
-			for (var callback : callbacks) callback.onHit(sulfurCube, pushVelocity, source, damage);
+		(callbacks) -> (sulfurCube, pushVelocity, source, damage, comesFromEffect) -> {
+			for (var callback : callbacks) callback.onHit(sulfurCube, pushVelocity, source, damage, comesFromEffect);
 		}
 	);
 
@@ -224,8 +224,9 @@ public final class SulfurCubeEvents {
 		 * @param hitVelocity the velocity of the hit in {@link Vec3} form
 		 * @param source the {@link DamageSource} of the damage
 		 * @param damage the amount of damage
+		 * @param comesFromEffect whether the knockback was caused by something other than a direct hit (such as knockback enchantments and spears)
 		 */
-		void onHit(SulfurCube sulfurCube, Vec3 hitVelocity, DamageSource source, float damage);
+		void onHit(SulfurCube sulfurCube, Vec3 hitVelocity, DamageSource source, float damage, boolean comesFromEffect);
 	}
 
 	/**

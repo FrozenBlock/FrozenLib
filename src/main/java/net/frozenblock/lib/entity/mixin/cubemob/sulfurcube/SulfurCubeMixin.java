@@ -128,7 +128,8 @@ public class SulfurCubeMixin {
 			SulfurCube.class.cast(this),
 			new Vec3(horizontalKnockback.x(), verticalPower, horizontalKnockback.z()),
 			source,
-			damage
+			damage,
+			comesFromEffect
 		);
 	}
 
