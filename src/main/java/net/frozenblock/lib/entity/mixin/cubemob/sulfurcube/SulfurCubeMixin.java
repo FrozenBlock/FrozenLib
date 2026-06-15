@@ -120,7 +120,7 @@ public class SulfurCubeMixin {
 		)
 	)
 	private void frozenLib$onHit(
-		double power, double xd, double zd, DamageSource source, float damage, CallbackInfo info,
+		double power, double xd, double zd, DamageSource source, float damage, boolean comesFromEffect, CallbackInfo info,
 		@Local(name = "verticalPower") float verticalPower,
 		@Local(name = "horizontalKnockback") Vec3 horizontalKnockback
 	) {

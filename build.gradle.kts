@@ -10,7 +10,7 @@ import java.nio.file.Files
 import java.util.*
 
 plugins {
-	id("net.fabricmc.fabric-loom") version("1.16-SNAPSHOT")
+	id("net.fabricmc.fabric-loom") version("1.17-SNAPSHOT")
 	id("org.ajoberstar.grgit") version("+")
 	id("org.quiltmc.gradle.licenser") version("+")
     id("me.modmuss50.mod-publish-plugin") version("+")
@@ -20,7 +20,7 @@ plugins {
     idea
     `java-library`
     java
-    kotlin("jvm") version("2.3.21")
+    kotlin("jvm") version("2.4.0")
     checkstyle
 }
 
