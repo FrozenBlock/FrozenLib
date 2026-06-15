@@ -39,10 +39,6 @@ import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
-import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
-import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
-import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
-import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.sound.impl.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.FlyBySoundPacket;
 import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
@@ -109,10 +105,6 @@ public final class FrozenNetworking {
 		registry.register(CooldownChangePacket.PACKET_TYPE, CooldownChangePacket.CODEC);
 		registry.register(ForcedCooldownPacket.PACKET_TYPE, ForcedCooldownPacket.CODEC);
 		registry.register(CooldownTickCountPacket.PACKET_TYPE, CooldownTickCountPacket.CODEC);
-		registry.register(ScreenShakePacket.PACKET_TYPE, ScreenShakePacket.CODEC);
-		registry.register(EntityScreenShakePacket.PACKET_TYPE, EntityScreenShakePacket.CODEC);
-		registry.register(RemoveScreenShakePacket.PACKET_TYPE, RemoveScreenShakePacket.CODEC);
-		registry.register(RemoveEntityScreenShakePacket.PACKET_TYPE, RemoveEntityScreenShakePacket.CODEC);
 		registry.register(WindSyncPacket.PACKET_TYPE, WindSyncPacket.CODEC);
 		registry.register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
 

@@ -50,8 +50,8 @@ data class MutableMusic(
         @JvmField
         val STREAM_CODEC: StreamCodec<RegistryFriendlyByteBuf, MutableMusic> = StreamCodec.composite(
             SoundEvent.STREAM_CODEC, MutableMusic::sound,
-            ByteBufCodecs.INT, MutableMusic::minDelay,
-            ByteBufCodecs.INT, MutableMusic::maxDelay,
+            ByteBufCodecs.VAR_INT, MutableMusic::minDelay,
+            ByteBufCodecs.VAR_INT, MutableMusic::maxDelay,
             ByteBufCodecs.BOOL, MutableMusic::replaceCurrentMusic,
             ::MutableMusic
         )

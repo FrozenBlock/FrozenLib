@@ -36,12 +36,11 @@ public class GameRendererMixin {
 			target = "()Lcom/mojang/blaze3d/vertex/PoseStack;"
 		)
 	)
-	public PoseStack frozenLib$shakeLevel(
-		PoseStack poseStack, DeltaTracker tracker,
-		@Local(ordinal = 0) float deltaTime
+	public PoseStack frozenLib$applyScreenShakes(
+		PoseStack poseStack, DeltaTracker deltaTracker,
+		@Local(name = "worldPartialTicks") float worldPartialTicks
 	) {
-		ScreenShaker.shake(poseStack, deltaTime);
+		ScreenShaker.shake(poseStack, worldPartialTicks);
 		return poseStack;
 	}
-
 }

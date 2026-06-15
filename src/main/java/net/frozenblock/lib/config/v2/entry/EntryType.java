@@ -31,10 +31,10 @@ import net.minecraft.world.phys.Vec3;
 
 public abstract class EntryType<T> {
 	public static final EntryType<Boolean> BOOL = create(Codec.BOOL, ByteBufCodecs.BOOL);
-	public static final EntryType<Integer> INT = create(Codec.INT, ByteBufCodecs.INT);
+	public static final EntryType<Integer> INT = create(Codec.INT, ByteBufCodecs.VAR_INT);
 	public static final EntryType<Double> DOUBLE = create(Codec.DOUBLE, ByteBufCodecs.DOUBLE);
 	public static final EntryType<Float> FLOAT = create(Codec.FLOAT, ByteBufCodecs.FLOAT);
-	public static final EntryType<Long> LONG = create(Codec.LONG, ByteBufCodecs.LONG);
+	public static final EntryType<Long> LONG = create(Codec.LONG, ByteBufCodecs.VAR_LONG);
 	public static final EntryType<String> STRING = create(Codec.STRING, ByteBufCodecs.STRING_UTF8);
 	public static final EntryType<Identifier> IDENTIFIER = EntryType.create(Identifier.CODEC, Identifier.STREAM_CODEC);
 	public static final EntryType<BlockPos> BLOCKPOS = EntryType.create(BlockPos.CODEC, BlockPos.STREAM_CODEC);

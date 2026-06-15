@@ -34,7 +34,7 @@ import net.minecraft.world.entity.Entity;
 public record SpottingIcons(List<SpottingIcon> icons) implements Iterable<SpottingIcon> {
 	public static final SpottingIcons EMPTY = new SpottingIcons(List.of());
 	public static final Codec<SpottingIcons> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		SpottingIcon.LIST_CODEC.fieldOf("icons").forGetter(SpottingIcons::icons)
+		SpottingIcon.LIST_CODEC.fieldOf("screenShakes").forGetter(SpottingIcons::icons)
 	).apply(instance, SpottingIcons::new));
 	public static final StreamCodec<ByteBuf, SpottingIcons> STREAM_CODEC = StreamCodec.composite(
 		SpottingIcon.LIST_STREAM_CODEC, SpottingIcons::icons,
@@ -81,11 +81,11 @@ public record SpottingIcons(List<SpottingIcon> icons) implements Iterable<Spotti
 		return target.getAttachedOrElse(ATTACHMENT, EMPTY).noneMatch(predicate);
 	}
 
-	public static boolean hasIcons(Entity target) {
+	public static boolean has(Entity target) {
 		return !target.getAttachedOrElse(ATTACHMENT, EMPTY).isEmpty();
 	}
 
-	public static SpottingIcons getIcons(Entity target) {
+	public static SpottingIcons get(Entity target) {
 		return target.getAttachedOrElse(ATTACHMENT, EMPTY);
 	}
 

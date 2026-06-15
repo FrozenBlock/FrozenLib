@@ -41,11 +41,6 @@ import net.frozenblock.lib.item.impl.CooldownInterface;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
-import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
-import net.frozenblock.lib.screenshake.impl.network.EntityScreenShakePacket;
-import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
-import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
-import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.client.api.sounds.RelativeMovingSoundInstance;
 import net.frozenblock.lib.sound.client.api.sounds.RestrictedMovingSound;
@@ -101,10 +96,6 @@ public final class FrozenClientNetworking {
 		receiveCooldownChangePacket();
 		receiveForcedCooldownPacket();
 		receiveCooldownTickCountPacket();
-		receiveScreenShakePacket();
-		receiveScreenShakeFromEntityPacket();
-		receiveRemoveScreenShakePacket();
-		receiveRemoveScreenShakeFromEntityPacket();
 		receiveWindSyncPacket();
 		receiveWindDisturbancePacket();
 		receiveFileTransferPacket();
@@ -266,54 +257,6 @@ public final class FrozenClientNetworking {
 	}
 
 	@ApiStatus.Internal
-	private static void receiveScreenShakePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(ScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
-			final float intensity = packet.intensity();
-			final int duration = packet.duration();
-			final int fallOffStart = packet.falloffStart();
-			final Vec3 pos = packet.pos();
-			final float maxDistance = packet.maxDistance();
-			final int ticks = packet.ticks();
-			final ClientLevel level = ctx.client().level;
-            ScreenShaker.addShake(level, intensity, duration, fallOffStart, pos, maxDistance, ticks);
-        });
-	}
-
-	@ApiStatus.Internal
-	private static void receiveScreenShakeFromEntityPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(EntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
-			final int id = packet.entityId();
-			final float intensity = packet.intensity();
-			final int duration = packet.duration();
-			final int fallOffStart = packet.falloffStart();
-			final float maxDistance = packet.maxDistance();
-			final int ticks = packet.ticks();
-			final ClientLevel level = ctx.client().level;
-			final Entity entity = level.getEntity(id);
-            if (entity != null) ScreenShaker.addShake(entity, intensity, duration, fallOffStart, maxDistance, ticks);
-		});
-	}
-
-	@ApiStatus.Internal
-	private static void receiveRemoveScreenShakePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(RemoveScreenShakePacket.PACKET_TYPE, (packet, ctx) ->
-			ScreenShaker.SCREEN_SHAKES.removeIf(
-				clientScreenShake -> !(clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake)
-			)
-		);
-	}
-
-	@ApiStatus.Internal
-	private static void receiveRemoveScreenShakeFromEntityPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(RemoveEntityScreenShakePacket.PACKET_TYPE, (packet, ctx) -> {
-			final int id = packet.entityId();
-			final ClientLevel level = ctx.client().level;
-			final Entity entity = level.getEntity(id);
-            if (entity != null) ScreenShaker.SCREEN_SHAKES.removeIf(clientScreenShake -> clientScreenShake instanceof ScreenShaker.ClientEntityScreenShake entityScreenShake && entityScreenShake.getEntity() == entity);
-		});
-	}
-
-	@ApiStatus.Internal
 	private static void receiveWindSyncPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(WindSyncPacket.PACKET_TYPE, (packet, ctx) -> {
 			ClientWindManager.time = packet.windTime();
@@ -433,5 +376,4 @@ public final class FrozenClientNetworking {
 		if (serverData == null) return false;
 		return serverData.isLan();
 	}
-
 }

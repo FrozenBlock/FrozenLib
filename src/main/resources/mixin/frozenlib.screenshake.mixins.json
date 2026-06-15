@@ -7,9 +7,7 @@
 	"defaultRequire": 1
   },
   "mixins": [
-    "EntityMixin",
-    "ServerLevelMixin",
-    "ServerPlayerMixin"
+    "EntityMixin"
   ],
   "client": [
     "client.GameRendererMixin"

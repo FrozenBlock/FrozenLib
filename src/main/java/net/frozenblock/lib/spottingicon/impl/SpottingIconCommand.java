@@ -110,7 +110,7 @@ public final class SpottingIconCommand {
 								Collection<? extends Entity> entities = EntityArgument.getEntities(ctx, "targets");
 								return SharedSuggestionProvider.suggestResource(
 									entities.stream()
-										.flatMap(e -> SpottingIcons.getIcons(e).icons().stream())
+										.flatMap(e -> SpottingIcons.get(e).icons().stream())
 										.map(icon -> fromTextureIdentifier(icon.texture()))
 										.distinct()
 										.toList(),
@@ -164,7 +164,7 @@ public final class SpottingIconCommand {
 	private static int removeAllIcons(CommandSourceStack source, Collection<? extends Entity> entities) {
 		int count = 0;
 		for (Entity entity : entities) {
-			if (SpottingIcons.hasIcons(entity)) {
+			if (SpottingIcons.has(entity)) {
 				SpottingIcons.removeIconIf(entity, icon -> true);
 				count++;
 			}
