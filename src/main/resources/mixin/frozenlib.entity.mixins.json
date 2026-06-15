@@ -9,7 +9,6 @@
   "mixins": [
     "AbstractFishMixin",
     "EntityMixin",
-    "ServerEntityMixin",
     "VariantUtilsMixin",
     "behavior.BehaviorMixin",
     "category.MobCategoryMixin",

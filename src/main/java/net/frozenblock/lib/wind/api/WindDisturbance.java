@@ -110,6 +110,5 @@ public class WindDisturbance<T> {
 		return 0L;
 	}
 
-	public record DisturbanceResult(double strength, double weight, Vec3 wind) {
-	}
+	public record DisturbanceResult(double strength, double weight, Vec3 wind) {}
 }

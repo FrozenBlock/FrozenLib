@@ -59,19 +59,17 @@ import net.minecraft.world.phys.Vec3;
 public class WindManager extends SavedData {
 	public static final String WIND_FILE_PATH = "wind_";
 	public static final Identifier WIND_MANAGER_FILE_ID = FrozenLibConstants.id(WIND_FILE_PATH + "main");
-	public static final Codec<WindManager> CODEC = RecordCodecBuilder.create(
-		instance -> instance.group(
-			Codec.LONG.fieldOf("time").forGetter(windManager -> windManager.time),
-			Codec.BOOL.fieldOf("overrideWind").forGetter(windManager -> windManager.overrideWind),
-			Vec3.CODEC.fieldOf("commandWind").forGetter(windManager -> windManager.commandWind),
-			Codec.DOUBLE.fieldOf("windX").forGetter(windManager -> windManager.windX),
-			Codec.DOUBLE.fieldOf("windY").forGetter(windManager -> windManager.windY),
-			Codec.DOUBLE.fieldOf("windZ").forGetter(windManager -> windManager.windZ),
-			Codec.DOUBLE.fieldOf("laggedWindX").forGetter(windManager -> windManager.laggedWindX),
-			Codec.DOUBLE.fieldOf("laggedWindY").forGetter(windManager -> windManager.laggedWindY),
-			Codec.DOUBLE.fieldOf("laggedWindZ").forGetter(windManager -> windManager.laggedWindZ)
-		).apply(instance, WindManager::createFromCodec)
-	);
+	public static final Codec<WindManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		Codec.LONG.fieldOf("time").forGetter(windManager -> windManager.time),
+		Codec.BOOL.fieldOf("overrideWind").forGetter(windManager -> windManager.overrideWind),
+		Vec3.CODEC.fieldOf("commandWind").forGetter(windManager -> windManager.commandWind),
+		Codec.DOUBLE.fieldOf("windX").forGetter(windManager -> windManager.windX),
+		Codec.DOUBLE.fieldOf("windY").forGetter(windManager -> windManager.windY),
+		Codec.DOUBLE.fieldOf("windZ").forGetter(windManager -> windManager.windZ),
+		Codec.DOUBLE.fieldOf("laggedWindX").forGetter(windManager -> windManager.laggedWindX),
+		Codec.DOUBLE.fieldOf("laggedWindY").forGetter(windManager -> windManager.laggedWindY),
+		Codec.DOUBLE.fieldOf("laggedWindZ").forGetter(windManager -> windManager.laggedWindZ)
+	).apply(instance, WindManager::createFromCodec));
 	public static final SavedDataType<WindManager> TYPE = new SavedDataType<>(WIND_MANAGER_FILE_ID, WindManager::new, CODEC, DataFixTypes.SAVED_DATA_RANDOM_SEQUENCES);
 
 	private static final long MIN_TIME_VALUE = Long.MIN_VALUE + 1;
@@ -96,8 +94,7 @@ public class WindManager extends SavedData {
 
 	public ImprovedNoise noise = EasyNoiseSampler.createXoroNoise(this.seed);
 
-	public WindManager() {
-	}
+	public WindManager() {}
 
 	public static WindManager createFromCodec(
 		long time,

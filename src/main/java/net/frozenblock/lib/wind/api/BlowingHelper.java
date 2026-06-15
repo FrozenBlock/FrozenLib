@@ -34,5 +34,4 @@ public class BlowingHelper {
 			|| state.is(FrozenLibBlockTags.BLOWING_CANNOT_PASS_THROUGH)
 		);
 	}
-
 }

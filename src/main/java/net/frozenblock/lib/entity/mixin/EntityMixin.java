@@ -21,10 +21,7 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.frozenblock.lib.entity.api.AbstractBlockLikeMob;
 import net.frozenblock.lib.entity.impl.EntityStepOnBlockInterface;
-import net.frozenblock.lib.entity.impl.StartTrackingEntityInterface;
-import net.frozenblock.lib.sound.impl.MovingSoundManager;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -36,17 +33,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements StartTrackingEntityInterface, EntityStepOnBlockInterface {
+public abstract class EntityMixin implements EntityStepOnBlockInterface {
 
 	@Shadow
 	public abstract Level level();
-
-	@Unique
-	@Override
-	public void frozenLib$playerStartsTracking(ServerPlayer serverPlayer) {
-		final Entity entity = Entity.class.cast(this);
-		MovingSoundManager.syncWithPlayer(entity, serverPlayer);
-	}
 
 	@Inject(
 		method = "applyEffectsFromBlocks(Ljava/util/List;)V",

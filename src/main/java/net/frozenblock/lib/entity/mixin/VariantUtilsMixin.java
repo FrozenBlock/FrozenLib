@@ -44,12 +44,12 @@ public class VariantUtilsMixin {
 		),
 		cancellable = true
 	)
-	private static <T extends PriorityProvider<SpawnContext, ?>> void frozenLib$checkForNewBiomes(
-		SpawnContext spawnContext, ResourceKey<Registry<T>> resourceKey, CallbackInfoReturnable<Optional<Holder.Reference<T>>> info
+	private static <T extends PriorityProvider<SpawnContext, ?>> void frozenLib$selectWolfVariantToSpawn(
+		SpawnContext context, ResourceKey<Registry<T>> variantRegistry, CallbackInfoReturnable<Optional<Holder.Reference<T>>> info
 	) {
-		if (!resourceKey.equals(Registries.WOLF_VARIANT)) return;
-		final Registry<WolfVariant> registry = spawnContext.level().registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
-		final Optional<ResourceKey<Biome>> optionalBiome = spawnContext.biome().unwrapKey();
+		if (!variantRegistry.equals(Registries.WOLF_VARIANT)) return;
+		final Registry<WolfVariant> registry = context.level().registryAccess().lookupOrThrow(Registries.WOLF_VARIANT);
+		final Optional<ResourceKey<Biome>> optionalBiome = context.biome().unwrapKey();
 		if (optionalBiome.isEmpty()) return;
 
 		final ResourceKey<Biome> biomeKey = optionalBiome.get();
