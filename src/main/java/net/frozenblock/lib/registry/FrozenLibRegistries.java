@@ -33,6 +33,7 @@ import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
+import net.frozenblock.lib.sound.api.type.MovingSoundType;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.minecraft.core.HolderLookup;
@@ -76,6 +77,9 @@ public class FrozenLibRegistries {
 
 	public static final ResourceKey<Registry<ConfigPredicateType<?>>> CONFIG_PREDICATE_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_type"));
 	public static final MappedRegistry<ConfigPredicateType<?>> CONFIG_PREDICATE_TYPE = createSimple(CONFIG_PREDICATE_TYPE_REGISTRY, Lifecycle.stable());
+
+	public static final ResourceKey<Registry<MovingSoundType<?>>> MOVING_SOUND_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("moving_sound_type"));
+	public static final MappedRegistry<MovingSoundType<?>> MOVING_SOUND_TYPE = createSimple(MOVING_SOUND_TYPE_REGISTRY, Lifecycle.stable());
 
 	// DYNAMIC REGISTRIES
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));

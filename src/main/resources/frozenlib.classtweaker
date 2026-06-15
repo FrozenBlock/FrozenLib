@@ -328,9 +328,6 @@ transitive-mutable field net/minecraft/client/resources/sounds/AbstractSoundInst
 transitive-extendable method net/minecraft/client/resources/sounds/AbstractTickableSoundInstance stop ()V
 accessible field net/minecraft/client/resources/sounds/AbstractSoundInstance pitch F
 
-transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/sound/impl/EntityLoopingSoundInterface
-transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/sound/impl/EntityLoopingFadingDistanceSoundInterface
-
 # Camera
 transitive-accessible method net/minecraft/client/Camera setRotation (FF)V
 transitive-accessible field net/minecraft/client/Camera xRot F

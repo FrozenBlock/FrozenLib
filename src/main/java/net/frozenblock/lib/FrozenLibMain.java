@@ -50,6 +50,7 @@ import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
+import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
 import net.frozenblock.lib.spottingicon.api.SpottingIcons;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
@@ -82,6 +83,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibStructurePoolElementTypes.init();
 		SoundPredicate.init();
+		MovingSoundTypes.init();
 		SpottingIcons.init();
 		WindDisturbanceLogic.init();
 		FrozenLibDataComponents.init();

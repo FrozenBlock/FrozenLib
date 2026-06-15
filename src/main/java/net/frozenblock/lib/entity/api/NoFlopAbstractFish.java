@@ -25,7 +25,7 @@ import net.minecraft.world.level.Level;
 /**
  * This is the same as {@link AbstractFish} but the entity will not flop while on land.
  */
-public abstract class NoFlopAbstractFish extends net.minecraft.world.entity.animal.fish.AbstractFish {
+public abstract class NoFlopAbstractFish extends AbstractFish {
 
 	public NoFlopAbstractFish(EntityType<? extends NoFlopAbstractFish> entityType, Level level) {
 		super(entityType, level);

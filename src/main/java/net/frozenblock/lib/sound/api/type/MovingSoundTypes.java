@@ -15,29 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.impl;
+package net.frozenblock.lib.sound.api.type;
 
-import net.frozenblock.lib.sound.api.MovingLoopingSoundEntityManager;
-import net.minecraft.resources.Identifier;
-import net.minecraft.sounds.SoundSource;
-import org.jetbrains.annotations.ApiStatus;
+import net.frozenblock.lib.FrozenLibConstants;
 
-@ApiStatus.Internal
-public interface EntityLoopingSoundInterface {
+public final class MovingSoundTypes {
 
-    default MovingLoopingSoundEntityManager frozenLib$getSoundManager() {
-		throw new UnsupportedOperationException("IMPLEMENT ME");
+	public static final MovingLoopingSoundType LOOPING =
+		new MovingLoopingSoundType(FrozenLibConstants.id("looping"));
+
+	public static final FadingDistanceLoopingMovingSoundType LOOPING_FADING_DISTANCE =
+		new FadingDistanceLoopingMovingSoundType(FrozenLibConstants.id("looping_fading_distance"));
+
+	public static void init() {
+		MovingSoundType.register(FrozenLibConstants.id("looping"), LOOPING);
+		MovingSoundType.register(FrozenLibConstants.id("looping_fading_distance"), LOOPING_FADING_DISTANCE);
 	}
 
-    default void frozenLib$addSound(
-		Identifier soundID,
-		SoundSource source,
-		float volume,
-		float pitch,
-		Identifier restrictionId,
-		boolean stopOnDeath
-	) {
-		throw new UnsupportedOperationException("IMPLEMENT ME");
-	}
-
+	private MovingSoundTypes() {}
 }

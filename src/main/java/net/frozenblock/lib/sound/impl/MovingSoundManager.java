@@ -15,22 +15,26 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.sound.mixin;
+package net.frozenblock.lib.sound.impl;
 
-import net.frozenblock.lib.sound.impl.MovingSoundManager;
+import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.sound.api.type.MovingSoundType;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Entity.class)
-public abstract class EntityMixin {
+@UtilityClass
+public final class MovingSoundManager {
 
-	@Inject(method = "tick", at = @At("TAIL"))
-	private void frozenLib$tickMovingSounds(CallbackInfo info) {
-		final Entity entity = Entity.class.cast(this);
-		if (entity.level().isClientSide()) return;
-		MovingSoundManager.tick(entity);
+	public static void tick(Entity entity) {
+		for (MovingSoundType<?> type : FrozenLibRegistries.MOVING_SOUND_TYPE) {
+			type.tickSounds(entity);
+		}
+	}
+
+	public static void syncWithPlayer(Entity entity, ServerPlayer player) {
+		for (MovingSoundType<?> type : FrozenLibRegistries.MOVING_SOUND_TYPE) {
+			type.syncSounds(entity, player);
+		}
 	}
 }

@@ -20,6 +20,9 @@ package net.frozenblock.lib.sound.impl.networking;
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.sound.api.type.FadingDistanceLoopingMovingSoundType;
+import net.frozenblock.lib.sound.api.type.MovingLoopingSoundType;
+import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
@@ -179,7 +182,6 @@ public class FrozenLibSoundPackets {
 					true
 				)
 			);
-			entity.frozenLib$addSound(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath);
 		}
 
 		if (entity instanceof ServerPlayer player) {
@@ -197,6 +199,11 @@ public class FrozenLibSoundPackets {
 				)
 			);
 		}
+
+		MovingSoundTypes.LOOPING.addSound(
+			entity,
+			new MovingLoopingSoundType.SoundLoopData(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath)
+		);
     }
 
     public static void createAndSendMovingRestrictionLoopingSound(
@@ -277,16 +284,19 @@ public class FrozenLibSoundPackets {
 			);
 		}
 
-		entity.frozenLib$addFadingDistanceSound(
-			sound.unwrapKey().orElseThrow().identifier(),
-			sound2.unwrapKey().orElseThrow().identifier(),
-			category,
-			volume,
-			pitch,
-			predicate,
-			stopOnDeath,
-			fadeDist,
-			maxDist
+		MovingSoundTypes.LOOPING_FADING_DISTANCE.addSound(
+			entity,
+			new FadingDistanceLoopingMovingSoundType.FadingDistanceSoundLoopData(
+				sound.unwrapKey().orElseThrow().identifier(),
+				sound2.unwrapKey().orElseThrow().identifier(),
+				category,
+				volume,
+				pitch,
+				fadeDist,
+				maxDist,
+				predicate,
+				stopOnDeath
+			)
 		);
     }
 
@@ -426,7 +436,10 @@ public class FrozenLibSoundPackets {
 			);
 		}
 
-		entity.frozenLib$addSound(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath);
+		MovingSoundTypes.LOOPING.addSound(
+			entity,
+			new MovingLoopingSoundType.SoundLoopData(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath)
+		);
     }
 
     public static void createAndSendStartingMovingRestrictionLoopingSound(
