@@ -17,49 +17,81 @@
 
 package net.frozenblock.lib.spottingicon.impl;
 
+import com.mojang.brigadier.arguments.FloatArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import net.frozenblock.lib.spottingicon.api.SpottingIcon;
+import net.frozenblock.lib.spottingicon.api.SpottingIcons;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.arguments.EntityArgument;
+import net.minecraft.commands.arguments.IdentifierArgument;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
+import java.util.Collection;
 
 @ApiStatus.Internal
 public final class SpottingIconCommand {
-	// TODO: new icon command
 
-	/*
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubcommand() {
 		return Commands.literal("spotting")
 			.then(Commands.literal("add")
 				.then(Commands.argument("targets", EntityArgument.entities())
 					.then(Commands.argument("texture", IdentifierArgument.id())
-						.executes(ctx -> addIcon(
+						.executes(ctx -> addIconToEntities(
 							ctx.getSource(),
 							EntityArgument.getEntities(ctx, "targets"),
-							IdentifierArgument.getId(ctx, "texture"),
-							16F,
-							20F,
+							SpottingIcon.builder()
+								.texture(toTextureIdentifier(IdentifierArgument.getId(ctx, "texture")))
+								.build()
 						))
-						.then(Commands.argument("startFade", FloatArgumentType.floatArg())
-							.then(Commands.argument("endFade", FloatArgumentType.floatArg())
-								.executes(ctx -> addIcon(
-									ctx.getSource(),
-									EntityArgument.getEntities(ctx, "targets"),
-									IdentifierArgument.getId(ctx, "texture"),
-									FloatArgumentType.getFloat(ctx, "startFade"),
-									FloatArgumentType.getFloat(ctx, "endFade"),
-								))
-								.then(Commands.argument("predicate", IdentifierArgument.id())
-									.suggests((ctx, builder) ->
-										SharedSuggestionProvider.suggestResource(
-											FrozenLibRegistries.SPOTTING_ICON_PREDICATE.keySet(),
-											builder
+						.then(Commands.argument("faderStartDist", FloatArgumentType.floatArg())
+							.then(Commands.argument("faderEndDist", FloatArgumentType.floatArg())
+								.then(Commands.argument("faderStartVal", FloatArgumentType.floatArg(0F, 1F))
+									.then(Commands.argument("faderEndVal", FloatArgumentType.floatArg(0F, 1F))
+										.executes(ctx -> addIconToEntities(
+											ctx.getSource(),
+											EntityArgument.getEntities(ctx, "targets"),
+											SpottingIcon.builder()
+												.texture(toTextureIdentifier(IdentifierArgument.getId(ctx, "texture")))
+												.fader(
+													FloatArgumentType.getFloat(ctx, "faderStartDist"),
+													FloatArgumentType.getFloat(ctx, "faderEndDist"),
+													FloatArgumentType.getFloat(ctx, "faderStartVal"),
+													FloatArgumentType.getFloat(ctx, "faderEndVal")
+												)
+												.build()
+										))
+										.then(Commands.argument("scalerStartDist", FloatArgumentType.floatArg())
+											.then(Commands.argument("scalerEndDist", FloatArgumentType.floatArg())
+												.then(Commands.argument("scalerStartVal", FloatArgumentType.floatArg())
+													.then(Commands.argument("scalerEndVal", FloatArgumentType.floatArg())
+														.executes(ctx -> addIconToEntities(
+															ctx.getSource(),
+															EntityArgument.getEntities(ctx, "targets"),
+															SpottingIcon.builder()
+																.texture(toTextureIdentifier(IdentifierArgument.getId(ctx, "texture")))
+																.fader(
+																	FloatArgumentType.getFloat(ctx, "faderStartDist"),
+																	FloatArgumentType.getFloat(ctx, "faderEndDist"),
+																	FloatArgumentType.getFloat(ctx, "faderStartVal"),
+																	FloatArgumentType.getFloat(ctx, "faderEndVal")
+																)
+																.scaler(
+																	FloatArgumentType.getFloat(ctx, "scalerStartDist"),
+																	FloatArgumentType.getFloat(ctx, "scalerEndDist"),
+																	FloatArgumentType.getFloat(ctx, "scalerStartVal"),
+																	FloatArgumentType.getFloat(ctx, "scalerEndVal")
+																)
+																.build()
+														))
+													)
+												)
+											)
 										)
 									)
-									.executes(ctx -> addIcon(
-										ctx.getSource(),
-										EntityArgument.getEntities(ctx, "targets"),
-										IdentifierArgument.getId(ctx, "texture"),
-										FloatArgumentType.getFloat(ctx, "startFade"),
-										FloatArgumentType.getFloat(ctx, "endFade"),
-										IdentifierArgument.getId(ctx, "predicate")
-									))
 								)
 							)
 						)
@@ -68,10 +100,32 @@ public final class SpottingIconCommand {
 			)
 			.then(Commands.literal("remove")
 				.then(Commands.argument("targets", EntityArgument.entities())
-					.executes(ctx -> removeIcon(
+					.executes(ctx -> removeAllIcons(
 						ctx.getSource(),
 						EntityArgument.getEntities(ctx, "targets")
 					))
+					.then(Commands.argument("texture", IdentifierArgument.id())
+						.suggests((ctx, builder) -> {
+							try {
+								Collection<? extends Entity> entities = EntityArgument.getEntities(ctx, "targets");
+								return SharedSuggestionProvider.suggestResource(
+									entities.stream()
+										.flatMap(e -> SpottingIcons.getIcons(e).icons().stream())
+										.map(icon -> fromTextureIdentifier(icon.texture()))
+										.distinct()
+										.toList(),
+									builder
+								);
+							} catch (Exception ignored) {
+								return builder.buildFuture();
+							}
+						})
+						.executes(ctx -> removeIcon(
+							ctx.getSource(),
+							EntityArgument.getEntities(ctx, "targets"),
+							IdentifierArgument.getId(ctx, "texture")
+						))
+					)
 				)
 			);
 	}
@@ -80,18 +134,18 @@ public final class SpottingIconCommand {
 		return Identifier.fromNamespaceAndPath(arg.getNamespace(), "textures/spotting_icons/" + arg.getPath() + ".png");
 	}
 
-	private static int addIcon(
-		CommandSourceStack source,
-		Collection<? extends Entity> entities,
-		Identifier textureArg,
-		float startFade,
-		float endFade,
-		Identifier predicate
-	) {
-		final Identifier texture = toTextureIdentifier(textureArg);
+	private static Identifier fromTextureIdentifier(Identifier fullPath) {
+		String path = fullPath.getPath();
+		if (path.startsWith("textures/spotting_icons/") && path.endsWith(".png")) {
+			path = path.substring("textures/spotting_icons/".length(), path.length() - ".png".length());
+		}
+		return Identifier.fromNamespaceAndPath(fullPath.getNamespace(), path);
+	}
+
+	private static int addIconToEntities(CommandSourceStack source, Collection<? extends Entity> entities, SpottingIcon icon) {
 		int count = 0;
 		for (Entity entity : entities) {
-			((EntitySpottingIconInterface) entity).frozenLib$getSpottingIconManager().setIcon(texture, startFade, endFade, predicate);
+			SpottingIcons.addIcon(entity, icon);
 			count++;
 		}
 		if (count == 0) {
@@ -107,12 +161,11 @@ public final class SpottingIconCommand {
 		return count;
 	}
 
-	private static int removeIcon(CommandSourceStack source, Collection<? extends Entity> entities) {
+	private static int removeAllIcons(CommandSourceStack source, Collection<? extends Entity> entities) {
 		int count = 0;
 		for (Entity entity : entities) {
-			final SpottingIconManager manager = ((EntitySpottingIconInterface) entity).frozenLib$getSpottingIconManager();
-			if (manager.icon != null) {
-				manager.removeIcon();
+			if (SpottingIcons.hasIcons(entity)) {
+				SpottingIcons.removeIconIf(entity, icon -> true);
 				count++;
 			}
 		}
@@ -128,5 +181,26 @@ public final class SpottingIconCommand {
 		}
 		return count;
 	}
-	*/
+
+	private static int removeIcon(CommandSourceStack source, Collection<? extends Entity> entities, Identifier textureArg) {
+		final Identifier texture = toTextureIdentifier(textureArg);
+		int count = 0;
+		for (Entity entity : entities) {
+			if (SpottingIcons.anyIconsMatch(entity, icon -> icon.texture().equals(texture))) {
+				SpottingIcons.removeIconIf(entity, icon -> icon.texture().equals(texture));
+				count++;
+			}
+		}
+		if (count == 0) {
+			source.sendFailure(Component.translatable("commands.frozenlib.spotting.remove.failure"));
+			return 0;
+		}
+		final int finalCount = count;
+		if (count == 1) {
+			source.sendSuccess(() -> Component.translatable("commands.frozenlib.spotting.remove.success", finalCount), true);
+		} else {
+			source.sendSuccess(() -> Component.translatable("commands.frozenlib.spotting.remove.success.multiple", finalCount), true);
+		}
+		return count;
+	}
 }
