@@ -61,7 +61,6 @@ public final class FrozenTestMain implements ModInitializer {
 		FrozenLibConfig.SAVE_ITEM_COOLDOWNS.modify(entry -> entry.value = true);
 		FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS.modify(entry -> entry.value = true);
 		FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING.modify(entry -> entry.value = true);
-		FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.modify(entry -> entry.value = true);
 
         LOGGER.info("The test toggle value is {}", TestConfig.testToggle.get());
         LOGGER.info("The test vec3 value is {}", TestConfig.typedVecList.get());

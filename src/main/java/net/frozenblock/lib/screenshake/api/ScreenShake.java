@@ -32,14 +32,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public record ScreenShake(float intensity, Optional<Vec3> position, float minDistance, float maxDistance, long startTime, int duration, int falloffStartDuration) {
+	public static final float DEFAULT_INTENSITY = 1F;
+	public static final float DEFAULT_MIN_DISTANCE = 0F;
+	public static final float DEFAULT_MAX_DISTANCE = 8F;
+	public static final int DEFAULT_DURATION = 10;
+	public static final int DEFAULT_FALLOFF_START_DURATION = 1;
 	public static final Codec<ScreenShake> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("intensity", 1F).forGetter(ScreenShake::intensity),
+		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("intensity", DEFAULT_INTENSITY).forGetter(ScreenShake::intensity),
 		Vec3.CODEC.optionalFieldOf("position").forGetter(ScreenShake::position),
-		ExtraCodecs.NON_NEGATIVE_FLOAT.optionalFieldOf("min_distance", 0F).forGetter(ScreenShake::minDistance),
-		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("max_distance", 8F).forGetter(ScreenShake::maxDistance),
+		ExtraCodecs.NON_NEGATIVE_FLOAT.optionalFieldOf("min_distance", DEFAULT_MIN_DISTANCE).forGetter(ScreenShake::minDistance),
+		ExtraCodecs.POSITIVE_FLOAT.optionalFieldOf("max_distance", DEFAULT_MAX_DISTANCE).forGetter(ScreenShake::maxDistance),
 		Codec.LONG.fieldOf("start_time").forGetter(ScreenShake::startTime),
-		ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", 20).forGetter(ScreenShake::duration),
-		ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("falloffStartDuration", 5).forGetter(ScreenShake::falloffStartDuration)
+		ExtraCodecs.POSITIVE_INT.optionalFieldOf("duration", DEFAULT_DURATION).forGetter(ScreenShake::duration),
+		ExtraCodecs.NON_NEGATIVE_INT.optionalFieldOf("falloff_start_duration", DEFAULT_FALLOFF_START_DURATION).forGetter(ScreenShake::falloffStartDuration)
 	).apply(instance, ScreenShake::new));
 	public static final StreamCodec<ByteBuf, ScreenShake> STREAM_CODEC = StreamCodec.composite(
 		ByteBufCodecs.FLOAT, ScreenShake::intensity,
@@ -56,6 +61,10 @@ public record ScreenShake(float intensity, Optional<Vec3> position, float minDis
 
 	public static Builder builder(Level level, Optional<Vec3> position) {
 		return new Builder(level.getGameTime(), position);
+	}
+
+	public static Builder builder(Level level, Vec3 position) {
+		return new Builder(level.getGameTime(), Optional.of(position));
 	}
 
 	public static Builder builder(Level level) {
@@ -107,11 +116,11 @@ public record ScreenShake(float intensity, Optional<Vec3> position, float minDis
 	public static class Builder {
 		private final long startTime;
 		private final Optional<Vec3> position;
-		private float intensity = 1F;
-		private float minDistance = 0F;
-		private float maxDistance = 8F;
-		private int duration = 20;
-		private int falloffStartDuration = 5;
+		private float intensity = DEFAULT_INTENSITY;
+		private float minDistance = DEFAULT_MIN_DISTANCE;
+		private float maxDistance = DEFAULT_MAX_DISTANCE;
+		private int duration = DEFAULT_DURATION;
+		private int falloffStartDuration = DEFAULT_FALLOFF_START_DURATION;
 
 		private Builder(long startTime, Optional<Vec3> position) {
 			this.startTime = startTime;
@@ -125,6 +134,16 @@ public record ScreenShake(float intensity, Optional<Vec3> position, float minDis
 
 		public Builder range(float minDistance, float maxDistance) {
 			this.minDistance = minDistance;
+			this.maxDistance = maxDistance;
+			return this;
+		}
+
+		public Builder minDistance(float minDistance) {
+			this.minDistance = minDistance;
+			return this;
+		}
+
+		public Builder maxDistance(float maxDistance) {
 			this.maxDistance = maxDistance;
 			return this;
 		}

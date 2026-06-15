@@ -6,9 +6,7 @@
   "injectors": {
 	"defaultRequire": 1
   },
-  "mixins": [
-    "EntityMixin"
-  ],
+  "mixins": [],
   "client": [
     "client.GameRendererMixin"
   ]

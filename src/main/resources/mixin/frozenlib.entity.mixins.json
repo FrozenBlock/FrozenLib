@@ -13,7 +13,6 @@
     "VariantUtilsMixin",
     "behavior.BehaviorMixin",
     "category.MobCategoryMixin",
-    "command.WardenSpawnTrackerCommandMixin",
     "cubemob.sulfurcube.AbstractCubeMobMixin",
     "cubemob.sulfurcube.SulfurCubeMixin"
   ],

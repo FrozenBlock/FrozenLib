@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
+import net.frozenblock.lib.screenshake.api.ScreenShake;
+import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.behavior.warden.Roar;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -36,8 +37,15 @@ public class RoarMixin {
 	@Final
 	private static int TICKS_BEFORE_PLAYING_ROAR_SOUND;
 
-	@Inject(method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/monster/warden/Warden;J)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", shift = At.Shift.AFTER))
-	private void startShaking(ServerLevel serverLevel, Warden warden, long l, CallbackInfo ci) {
-		ScreenShakeManager.addEntityScreenShake(warden, 0.3F, WardenAi.ROAR_DURATION - TICKS_BEFORE_PLAYING_ROAR_SOUND, 19);
+	@Inject(
+		method = "tick(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/monster/warden/Warden;J)V",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/monster/warden/Warden;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V",
+			shift = At.Shift.AFTER
+		)
+	)
+	private void startShaking(ServerLevel level, Warden body, long timestamp, CallbackInfo info) {
+		ScreenShakes.addScreenShake(body, ScreenShake.builder(body).intensity(0.3F).duration(WardenAi.ROAR_DURATION - TICKS_BEFORE_PLAYING_ROAR_SOUND).maxDistance(19F).build());
 	}
 }

@@ -30,6 +30,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.level.Level;
 
 public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<ScreenShake> {
 	public static final ScreenShakes EMPTY = new ScreenShakes(List.of());
@@ -48,6 +49,18 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 		}
 	);
 
+	public static void tick(Level level, AttachmentTarget target) {
+		final ScreenShakes screenShakes = target.getAttached(ATTACHMENT);
+		if (screenShakes == null) return;
+		if (screenShakes.isEmpty()) {
+			target.removeAttached(ATTACHMENT);
+			return;
+		}
+
+		final long gameTime = level.getGameTime();
+		target.setAttached(ATTACHMENT, screenShakes.removeIf(screenShake -> screenShake.expired(gameTime)));
+	}
+
 	public static void init() {}
 
 	public static void setScreenShakes(AttachmentTarget target, ScreenShake... screenShakes) {
@@ -61,6 +74,10 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 			return;
 		}
 		target.setAttached(ATTACHMENT, screenShakes.add(screenShake));
+	}
+
+	public static void remove(AttachmentTarget target) {
+		target.removeAttached(ATTACHMENT);
 	}
 
 	public static void removeScreenShakeIf(AttachmentTarget target, Predicate<ScreenShake> removeIf) {

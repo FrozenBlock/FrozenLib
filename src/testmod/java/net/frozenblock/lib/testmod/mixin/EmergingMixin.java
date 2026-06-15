@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
+import net.frozenblock.lib.screenshake.api.ScreenShake;
+import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.ai.behavior.warden.Emerging;
 import net.minecraft.world.entity.monster.warden.Warden;
@@ -31,7 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class EmergingMixin<E extends Warden> {
 
 	@Inject(method = "start(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/monster/warden/Warden;J)V", at = @At("TAIL"))
-	private void startShaking(ServerLevel serverLevel, E warden, long l, CallbackInfo ci) {
-		ScreenShakeManager.addScreenShake(serverLevel, 0.25F, WardenAi.EMERGE_DURATION - 30, warden.getX(), warden.getY(), warden.getZ(), 20);
+	private void startShaking(ServerLevel level, E body, long timestamp, CallbackInfo info) {
+		ScreenShakes.addScreenShake(body, ScreenShake.builder(body).intensity(0.25F).duration(WardenAi.EMERGE_DURATION - 30).maxDistance(20F).build());
 	}
 }

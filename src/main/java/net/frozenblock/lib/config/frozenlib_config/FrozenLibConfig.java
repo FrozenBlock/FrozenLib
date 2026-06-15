@@ -31,7 +31,6 @@ public class FrozenLibConfig {
 	public static final ConfigEntry<Boolean> USE_WIND_ON_NON_FROZEN_SERVERS = CONFIG.unsyncableEntry("useWindOnNonFrozenServers", EntryType.BOOL, true);
 	public static final ConfigEntry<Boolean> SAVE_ITEM_COOLDOWNS = CONFIG.entry("saveItemCooldowns", EntryType.BOOL, false);
 	public static final ConfigEntry<Boolean> REMOVE_EXPERIMENTAL_WARNING = CONFIG.entry("removeExperimentalWarning", EntryType.BOOL, false);
-	public static final ConfigEntry<Boolean> WARDEN_SPAWN_TRACKER_COMMAND = CONFIG.entry("wardenSpawnTrackerCommand", EntryType.BOOL, false);
 	public static final ConfigEntry<Boolean> FILE_TRANSFER_SERVER = CONFIG.entry("fileTransferServer", EntryType.BOOL, true);
 	public static final ConfigEntry<Boolean> FILE_TRANSFER_CLIENT = CONFIG.unsyncableEntry("fileTransferClient", EntryType.BOOL, true);
 	public static final ConfigEntry<FrozenLibModResourcePackApi.PackDownloadSetting> PACK_DOWNLOADING = CONFIG.entry(

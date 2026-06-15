@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
+import net.frozenblock.lib.screenshake.api.ScreenShake;
+import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.spottingicon.api.SpottingIcon;
 import net.frozenblock.lib.spottingicon.api.SpottingIcons;
 import net.frozenblock.lib.testmod.FrozenTestMain;
@@ -59,6 +60,6 @@ public abstract class WardenMixin extends Monster {
 		)
 	)
 	private void startShaking(ServerLevel level, Entity target, CallbackInfoReturnable<Boolean> info) {
-		ScreenShakeManager.addScreenShake(level, 0.6F, 8, this.getX(), this.getY(), this.getZ(), 15);
+		ScreenShakes.addScreenShake(this, ScreenShake.builder(this).intensity(0.6F).duration(8).maxDistance(15F).build());
 	}
 }

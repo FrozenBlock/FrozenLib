@@ -37,7 +37,7 @@ import net.frozenblock.lib.particle.client.resource.FrozenLibParticleResources;
 import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
-import net.frozenblock.lib.screenshake.api.client.ScreenShaker;
+import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.spottingicon.impl.client.SpottingIconHudElement;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
@@ -94,17 +94,17 @@ public final class FrozenLibClient implements ClientModInitializer {
 			level -> {
 				final Minecraft minecraft = Minecraft.getInstance();
 				ClientWindManager.tick(level);
-				ScreenShaker.tick(minecraft, level);
+				ClientScreenShaker.tick(minecraft, level);
 				FlyBySoundHub.tick(minecraft, minecraft.getCameraEntity(), true);
 			}
 		);
 		ClientTickEvents.START_CLIENT_TICK.register(client -> ClientWindManager.clearAndSwitchWindDisturbances());
-		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clearClientListHolders());
-		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((minecraft, clientLevel) -> clearClientListHolders());
+		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clearStaticClientData());
+		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((minecraft, clientLevel) -> clearStaticClientData());
 	}
 
-	private static void clearClientListHolders() {
-		ScreenShaker.clear();
+	private static void clearStaticClientData() {
+		ClientScreenShaker.reset();
 		ClientWindManager.reset();
 	}
 }

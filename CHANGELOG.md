@@ -145,6 +145,13 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - A custom start and end value can now be defined.
     - Fades can be used for both the Icon's scale and transparency.
 - Migrated server texture packets to use Fabric's packet splitter.
-- Revamped FrozenLib's Custom Cape implementation
+- Revamped FrozenLib Cape implementation.
   - Migrated to Fabric's Data Attachments system and Render State Data Keys.
-  - Fixed a bug that caused a Player's Custom Cape to not sync to clients when joining a server.
+  - Fixed a bug that caused a Player's FrozenLib Cape to not sync to clients when joining a server.
+- Revamped Screen Shake implementation.
+  - Migrated to Fabric's Data Attachments system and Fabric's Level Tick Event instead of using separate mixins.
+  - Screen Shakes can now have a "minimum distance", which will override the calculated distance to the Screen Shake if it is lower than this.
+  - Added a `Builder` for Screen Shakes.
+  - Screen Shakes no longer have separate implementation for Levels and Entities, now being universal and easy to use for both.
+  - Updated the `frozenlib screenshake` command and its feedback.
+- Removed the Warden Spawn Tracker config option, as the command can now be enabled in Vanilla via launch arguments.

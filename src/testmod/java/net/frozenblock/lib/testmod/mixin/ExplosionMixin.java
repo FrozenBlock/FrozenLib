@@ -17,7 +17,8 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
+import net.frozenblock.lib.screenshake.api.ScreenShake;
+import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ServerExplosion;
@@ -41,18 +42,18 @@ public class ExplosionMixin {
 	@Shadow
 	@Final
 	private float radius;
-
 	@Shadow
 	@Final
 	private Vec3 center;
 
 	@Inject(method = "explode", at = @At(value = "TAIL"))
-	public void finalizeExplosion(CallbackInfoReturnable<Integer> cir) {
-		double x = this.center.x;
-		double y = this.center.y;
-		double z = this.center.z;
-
-		ScreenShakeManager.addScreenShake(this.level, (float) ((0.5F + (blockInteraction != Explosion.BlockInteraction.KEEP ? 0.2F : 0) + radius * 0.1) / 5F), (int) ((radius * 5) + 3), 1, x, y, z, radius * 2);
+	public void finalizeExplosion(CallbackInfoReturnable<Integer> info) {
+		ScreenShakes.addScreenShake(
+			this.level,
+			ScreenShake.builder(this.level, this.center)
+				.intensity((float) ((0.5F + (blockInteraction != Explosion.BlockInteraction.KEEP ? 0.2F : 0) + radius * 0.1) / 5F))
+				.duration((int) ((radius * 5) + 3))
+				.maxDistance(this.radius * 2).build()
+		);
 	}
-
 }

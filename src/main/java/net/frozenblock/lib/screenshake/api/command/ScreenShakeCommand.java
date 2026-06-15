@@ -23,21 +23,15 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
-import net.frozenblock.lib.screenshake.impl.EntityScreenShakeManager;
-import net.frozenblock.lib.screenshake.impl.network.RemoveEntityScreenShakePacket;
-import net.frozenblock.lib.screenshake.impl.network.RemoveScreenShakePacket;
-import net.frozenblock.lib.screenshake.impl.network.ScreenShakePacket;
+import net.frozenblock.lib.screenshake.api.ScreenShake;
+import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.arguments.EntityArgument;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class ScreenShakeCommand {
@@ -46,30 +40,37 @@ public class ScreenShakeCommand {
 		final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("screenshake")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
 
-		builder.then(Commands.argument("pos", Vec3Argument.vec3()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "pos"), 1F, 10, 5, 16F))
-			.then(Commands.argument("intensity", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "pos"), FloatArgumentType.getFloat(context, "intensity"), 10, 5, 16F))
-				.then(Commands.argument("duration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "pos"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), 5, 16F))
-					.then(Commands.argument("durationFalloffStart", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "pos"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "durationFalloffStart"), 16F))
-						.then(Commands.argument("maxDistance", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "pos"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "durationFalloffStart"), FloatArgumentType.getFloat(context, "maxDistance")))
-							.then(Commands.argument("players", EntityArgument.players()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "pos"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "durationFalloffStart"), FloatArgumentType.getFloat(context, "maxDistance"), EntityArgument.getPlayers(context, "players")))))))));
+		builder.then(Commands.argument("position", Vec3Argument.vec3()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), ScreenShake.DEFAULT_INTENSITY, ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
+			.then(Commands.argument("intensity", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgumentType.getFloat(context, "intensity"), ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
+				.then(Commands.argument("duration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), 5, ScreenShake.DEFAULT_MAX_DISTANCE))
+					.then(Commands.argument("falloffStartDuration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "falloffStartDuration"), ScreenShake.DEFAULT_MAX_DISTANCE))
+						.then(Commands.argument("maxDistance", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), Vec3Argument.getVec3(context, "position"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "falloffStartDuration"), FloatArgumentType.getFloat(context, "maxDistance"))))))));
 
-		builder.then(Commands.argument("entity", EntityArgument.entities()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "entity"), 1F, 10, 5, 16F))
-			.then(Commands.argument("intensity", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "entity"), FloatArgumentType.getFloat(context, "intensity"), 10, 5, 16F))
-				.then(Commands.argument("duration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "entity"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), 5, 16F))
-					.then(Commands.argument("durationFalloffStart", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "entity"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "durationFalloffStart"), 16F))
-						.then(Commands.argument("maxDistance", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "entity"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "durationFalloffStart"), FloatArgumentType.getFloat(context, "maxDistance"))))))));
+		builder.then(Commands.argument("targets", EntityArgument.entities()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), ScreenShake.DEFAULT_INTENSITY, ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
+			.then(Commands.argument("intensity", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgumentType.getFloat(context, "intensity"), ScreenShake.DEFAULT_DURATION, ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
+				.then(Commands.argument("duration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), ScreenShake.DEFAULT_FALLOFF_START_DURATION, ScreenShake.DEFAULT_MAX_DISTANCE))
+					.then(Commands.argument("falloffStartDuration", IntegerArgumentType.integer()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "falloffStartDuration"), ScreenShake.DEFAULT_MAX_DISTANCE))
+						.then(Commands.argument("maxDistance", FloatArgumentType.floatArg()).executes(context -> shake(context.getSource(), EntityArgument.getEntities(context, "targets"), FloatArgumentType.getFloat(context, "intensity"), IntegerArgumentType.getInteger(context, "duration"), IntegerArgumentType.getInteger(context, "falloffStartDuration"), FloatArgumentType.getFloat(context, "maxDistance"))))))));
 
 		builder.then(Commands.literal("remove")
-			.then(Commands.literal("for").then(Commands.argument("players", EntityArgument.players()).executes(context -> removeShakesFor(context.getSource(), EntityArgument.getPlayers(context, "players")))))
-			.then(Commands.literal("from").then(Commands.argument("entities", EntityArgument.entities()).executes(context -> removeShakesFrom(context.getSource(), EntityArgument.getEntities(context, "entity")))))
+			.then(Commands.literal("world").executes(context -> removeLevelScreenShakes(context.getSource())))
+			.then(Commands.argument("targets", EntityArgument.entities()).executes(context -> removeEntityScreenShakes(context.getSource(), EntityArgument.getEntities(context, "targets"))))
 		);
 
 		return builder;
 	}
 
-	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance) {
+	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int falloffStartDuration, float maxDistance) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
-		ScreenShakeManager.addScreenShake(source.getLevel(), intensity, duration, durationFalloffStart, vec3.x(), vec3.y(), vec3.z(), maxDistance);
+		ScreenShakes.addScreenShake(
+			source.getLevel(),
+			ScreenShake.builder(source.getLevel(), vec3)
+				.intensity(intensity)
+				.duration(duration)
+				.falloffStartDuration(falloffStartDuration)
+				.maxDistance(maxDistance)
+				.build()
+		);
 		final Vec3 finalVec = vec3;
 		source.sendSuccess(() -> Component.translatable(
 				"commands.screenshake.success",
@@ -78,7 +79,7 @@ public class ScreenShakeCommand {
 				finalVec.z(),
 				intensity,
 				duration,
-				durationFalloffStart,
+				falloffStartDuration,
 				maxDistance
 			),
 			true
@@ -86,95 +87,78 @@ public class ScreenShakeCommand {
 		return 1;
 	}
 
-	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int durationFalloffStart, float maxDistance, Collection<? extends ServerPlayer> entities) {
-		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
-		final ScreenShakePacket packet = new ScreenShakePacket(intensity, duration, durationFalloffStart, vec3, maxDistance, 0);
-		for (ServerPlayer serverPlayer : entities) ServerPlayNetworking.send(serverPlayer, packet);
+	private static int shake(CommandSourceStack source, Collection<? extends Entity> entities, float intensity, int duration, int falloffStartDuration, float maxDistance) {
+		for (Entity entity : entities) {
+			ScreenShakes.addScreenShake(
+				entity,
+				ScreenShake.builder(entity)
+					.intensity(intensity)
+					.duration(duration)
+					.falloffStartDuration(falloffStartDuration)
+					.maxDistance(maxDistance)
+					.build()
+			);
+		}
 
-		final int playerCount = entities.size();
-		final boolean onePlayer = entities.size() == 1;
-		final Vec3 finalVec = vec3;
-		source.sendSuccess(() ->
-				Component.translatable(
-					onePlayer ? "commands.screenshake.player.success" : "commands.screenshake.player.success.multiple",
-					onePlayer ? entities.stream().toList().getFirst() : playerCount,
-					finalVec.x(),
-					finalVec.y(),
-					finalVec.z(),
-					intensity,
-					duration,
-					durationFalloffStart,
-					maxDistance
-				),
-			true
-		);
-		return 1;
-	}
-
-	private static int shake(CommandSourceStack source, Collection<? extends Entity> entities, float intensity, int duration, int durationFalloffStart, float maxDistance) {
-		for (Entity entity : entities) ScreenShakeManager.addEntityScreenShake(entity, intensity, duration, durationFalloffStart, maxDistance);
 		final int entityCount = entities.size();
 		final boolean oneEntity = entities.size() == 1;
-
 		source.sendSuccess(() ->
 				Component.translatable(
 					oneEntity ? "commands.screenshake.entity.success" : "commands.screenshake.entity.success.multiple",
-					entityCount,
+					oneEntity ? entities.stream().findFirst().get().getDisplayName() : entityCount,
 					intensity,
 					duration,
-					durationFalloffStart,
+					falloffStartDuration,
 					maxDistance
 				),
 			true
 		);
-		return 1;
+		return entityCount;
 	}
 
-	private static int removeShakesFor(CommandSourceStack source, Collection<? extends ServerPlayer> entities) {
-		final CustomPacketPayload packet = new RemoveScreenShakePacket();
-		for (ServerPlayer serverPlayer : entities) ServerPlayNetworking.send(serverPlayer, packet);
+	private static int removeLevelScreenShakes(CommandSourceStack source) {
+		final Level level = source.getLevel();
+		final ScreenShakes screenShakes = ScreenShakes.get(level);
+		if (screenShakes.isEmpty()) {
+			source.sendFailure(Component.translatable("commands.screenshake.remove.level.fail"));
+			return 0;
+		}
 
-		final int playerCount = entities.size();
-		final boolean onePlayer = entities.size() == 1;
+		ScreenShakes.remove(level);
+
+		final int screenShakeCount = screenShakes.screenShakes().size();
+		final boolean oneScreenShake = screenShakeCount == 1;
 		source.sendSuccess(() ->
 				Component.translatable(
-					onePlayer ? "commands.screenshake.remove.player.success" : "commands.screenshake.remove.player.success.multiple",
-					onePlayer ? entities.stream().toList().getFirst() : playerCount
+					oneScreenShake ? "commands.screenshake.remove.level.success" : "commands.screenshake.remove.level.success.multiple",
+					oneScreenShake ? "" : screenShakeCount
 				),
 			true
 		);
-		return 1;
+		return screenShakeCount;
 	}
 
-	private static int removeShakesFrom(CommandSourceStack source, Collection<? extends Entity> entities) {
-		int entityAmount = 0;
-		List<Entity> affectedEntities = new ArrayList<>();
+	private static int removeEntityScreenShakes(CommandSourceStack source, Collection<? extends Entity> entities) {
+		final List<Entity> affectedEntities = new ArrayList<>();
 		for (Entity entity : entities) {
-			final EntityScreenShakeManager screenShakeManager = entity.frozenLib$getScreenShakeManager();
-			if (screenShakeManager.getShakes().isEmpty()) continue;
+			final ScreenShakes screenShakes = ScreenShakes.get(entity);
+			if (screenShakes.isEmpty()) continue;
 
 			affectedEntities.add(entity);
-			screenShakeManager.getShakes().clear();
-
-			final CustomPacketPayload packet = new RemoveEntityScreenShakePacket(entity.getId());
-			for (ServerPlayer serverPlayer : PlayerLookup.tracking(entity)) ServerPlayNetworking.send(serverPlayer, packet);
-			if (entity instanceof ServerPlayer serverPlayer) ServerPlayNetworking.send(serverPlayer, packet);
-
-			entityAmount += 1;
+			ScreenShakes.remove(entity);
 		}
 
-		int entityCount = affectedEntities.size();
-		boolean oneEntity = entityCount == 1;
-
-		if (entityAmount > 0) {
+		final int entityCount = affectedEntities.size();
+		final boolean oneEntity = entityCount == 1;
+		if (entityCount > 0) {
 			source.sendSuccess(() ->
 				Component.translatable(
 					oneEntity ? "commands.screenshake.remove.entity.success" : "commands.screenshake.remove.entity.success.multiple",
-					entityCount
+					oneEntity ? entities.stream().findFirst().get().getDisplayName() : entityCount
 				),
 				true
 			);
-			return 1;
+			return entityCount;
 		}
 		source.sendFailure(Component.translatable("commands.screenshake.remove.entity.failure"));
 		return 0;

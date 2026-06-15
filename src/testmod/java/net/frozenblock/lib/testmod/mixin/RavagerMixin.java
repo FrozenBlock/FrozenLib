@@ -17,25 +17,25 @@
 
 package net.frozenblock.lib.testmod.mixin;
 
-import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
-import net.minecraft.world.entity.EntityType;
+import net.frozenblock.lib.screenshake.api.ScreenShake;
+import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.minecraft.world.entity.monster.Ravager;
-import net.minecraft.world.entity.raid.Raider;
-import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Ravager.class)
-public abstract class RavagerMixin extends Raider {
+public class RavagerMixin {
 
-	private RavagerMixin(EntityType<? extends Raider> entityType, Level level) {
-		super(entityType, level);
-	}
-
-	@Inject(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/monster/Ravager;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"))
-	private void startShaking(CallbackInfo ci) {
-		ScreenShakeManager.addEntityScreenShake(Ravager.class.cast(this), 0.5F, 17, 23);
+	@Inject(
+		method = "aiStep",
+		at = @At(
+			value = "INVOKE",
+			target = "Lnet/minecraft/world/entity/monster/Ravager;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V"
+		)
+	)
+	private void startShaking(CallbackInfo info) {
+		ScreenShakes.addScreenShake(Ravager.class.cast(this), ScreenShake.builder(Ravager.class.cast(this)).intensity(0.5F).duration(17).maxDistance(23F).build());
 	}
 }

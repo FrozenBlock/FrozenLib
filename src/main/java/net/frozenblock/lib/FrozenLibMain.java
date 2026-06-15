@@ -48,7 +48,7 @@ import net.frozenblock.lib.loot.impl.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.frozenblock.lib.screenshake.api.ScreenShakeManager;
+import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
 import net.frozenblock.lib.spottingicon.api.SpottingIcons;
@@ -58,7 +58,7 @@ import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.server.commands.WardenSpawnTrackerCommand;
+import net.minecraft.world.entity.Entity;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
@@ -99,7 +99,9 @@ public final class FrozenLibMain extends FrozenModInitializer {
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
 
+		StructureStatus.init();
 		CapeUtil.init();
+		ScreenShakes.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
 
@@ -121,17 +123,14 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		ServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
 			WindManager.getOrCreateWindManager(serverLevel).clearAndSwitchWindDisturbances();
 			WindManager.getOrCreateWindManager(serverLevel).tick(serverLevel);
-			ScreenShakeManager.getOrCreateScreenShakeManager(serverLevel).tick(serverLevel);
 			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
+			ScreenShakes.tick(serverLevel, serverLevel);
+			for (Entity entity : serverLevel.getAllEntities()) {
+				if (entity.isRemoved()) continue;
+				ScreenShakes.tick(serverLevel, entity);
+			}
 		});
 
-		StructureStatus.init();
-
-		if (FrozenLibConfig.WARDEN_SPAWN_TRACKER_COMMAND.get()) {
-			CommandRegistrationCallback.EVENT.register(
-				((dispatcher, registryAccess, environment) -> WardenSpawnTrackerCommand.register(dispatcher))
-			);
-		}
 		FrozenNetworking.registerNetworking();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
