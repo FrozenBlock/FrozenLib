@@ -23,7 +23,6 @@ import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 public final class SoundPredicate<T extends Entity> {
@@ -56,15 +55,13 @@ public final class SoundPredicate<T extends Entity> {
 			if (predicate != null) return predicate.predicateSupplier.get();
 		}
 
-		FrozenLibConstants.LOGGER.error("Unable to find sound predicate {}! Using default sound predicate instead!", id);
+		FrozenLibConstants.LOGGER.error("Unable to find sound predicate {}! Using default instead.", id);
         return defaultPredicate();
     }
 
-	@Contract(pure = true)
 	public static <T extends Entity> LoopPredicate<T> defaultPredicate() {
 		return entity -> !entity.isSilent();
 	}
-	@Contract(pure = true)
 	public static <T extends Entity> LoopPredicate<T> notSilentAndAlive() {
 		return entity -> !entity.isSilent();
 	}
@@ -83,10 +80,8 @@ public final class SoundPredicate<T extends Entity> {
 			return null;
 		}
 
-		default void onStart(@Nullable T entity) {
-		}
+		default void onStart(@Nullable T entity) {}
 
-		default void onStop(@Nullable T entity) {
-		}
+		default void onStop(@Nullable T entity) {}
     }
 }
