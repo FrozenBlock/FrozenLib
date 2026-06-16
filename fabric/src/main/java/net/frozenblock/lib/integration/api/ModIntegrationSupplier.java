@@ -19,8 +19,8 @@ package net.frozenblock.lib.integration.api;
 
 import java.util.Optional;
 import java.util.function.Supplier;
-import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.integration.impl.EmptyModIntegration;
+import net.frozenblock.lib.platform.FrozenEarlyPlatformUtils;
 
 public class ModIntegrationSupplier<T extends ModIntegration> {
 	protected final String modID;
@@ -30,14 +30,14 @@ public class ModIntegrationSupplier<T extends ModIntegration> {
 
 	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, String modID) {
 		this.modID = modID;
-		this.isModLoaded = FabricLoader.getInstance().isModLoaded(this.modID);
+		this.isModLoaded = FrozenEarlyPlatformUtils.LOADER.isModLoaded(this.modID);
 		this.optionalIntegration = this.modLoaded() ? Optional.of(modIntegrationSupplier.get()) : Optional.empty();
 		this.unloadedModIntegration = (T) new EmptyModIntegration(modID);
 	}
 
 	public ModIntegrationSupplier(Supplier<T> modIntegrationSupplier, Supplier<T> unloadedModIntegrationSupplier, String modID) {
 		this.modID = modID;
-		this.isModLoaded = FabricLoader.getInstance().isModLoaded(this.modID);
+		this.isModLoaded = FrozenEarlyPlatformUtils.LOADER.isModLoaded(this.modID);
 		this.optionalIntegration = this.modLoaded() ? Optional.of(modIntegrationSupplier.get()) : Optional.empty();
 		this.unloadedModIntegration = unloadedModIntegrationSupplier.get();
 	}
