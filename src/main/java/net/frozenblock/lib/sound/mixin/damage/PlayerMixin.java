@@ -35,5 +35,4 @@ public abstract class PlayerMixin {
 		if (PlayerDamageTypeSounds.containsSource(type)) return PlayerDamageTypeSounds.getDamageSound(type);
 		return original;
 	}
-
 }

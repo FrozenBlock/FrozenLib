@@ -48,5 +48,4 @@ public interface WindDisturbingEntity {
 	 * @return whether this entity will sync its wind disturbance to the client via packets, or will create the disturbance separately on the server and client.
 	 */
 	boolean frozenLib$useSyncPacket();
-
 }

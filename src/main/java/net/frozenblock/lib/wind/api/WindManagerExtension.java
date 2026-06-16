@@ -19,15 +19,13 @@ package net.frozenblock.lib.wind.api;
 
 import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.saveddata.SavedData;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * Used to add custom logic to the {@link WindManager}.
  */
-public abstract class WindManagerExtension extends SavedData {
+public abstract class WindManagerExtension {
 	@Nullable
 	private WindManager windManager;
 
@@ -35,17 +33,9 @@ public abstract class WindManagerExtension extends SavedData {
 		this.windManager = windManager;
 	}
 
-	public @Nullable WindManager getWindManager() {
+	@Nullable
+	public WindManager getWindManager() {
 		return this.windManager;
-	}
-
-	@Override
-	public boolean isDirty() {
-		return true;
-	}
-
-	public static Identifier createSaveId(Identifier id) {
-		return Identifier.fromNamespaceAndPath(id.getNamespace(), WindManager.WIND_FILE_PATH + id.getPath());
 	}
 
 	/**

@@ -40,7 +40,7 @@ public record SpottingIcons(List<SpottingIcon> icons) implements Iterable<Spotti
 		SpottingIcon.LIST_STREAM_CODEC, SpottingIcons::icons,
 		SpottingIcons::new
 	);
-	public static final AttachmentType<SpottingIcons> ATTACHMENT = AttachmentRegistry.create(
+	public static final AttachmentType<SpottingIcons> ATTACHMENT_TYPE = AttachmentRegistry.create(
 		FrozenLibConstants.id("spotting_icons"),
 		builder -> {
 			builder.persistent(CODEC);
@@ -51,42 +51,42 @@ public record SpottingIcons(List<SpottingIcon> icons) implements Iterable<Spotti
 	public static void init() {}
 
 	public static void setIcons(Entity target, SpottingIcon... icons) {
-		target.setAttached(ATTACHMENT, new SpottingIcons(List.of(icons)));
+		target.setAttached(ATTACHMENT_TYPE, new SpottingIcons(List.of(icons)));
 	}
 
 	public static void addIcon(Entity target, SpottingIcon icon) {
-		final SpottingIcons icons = target.getAttachedOrElse(ATTACHMENT, EMPTY);
+		final SpottingIcons icons = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
 		if (icons.isEmpty()) {
 			setIcons(target, icon);
 			return;
 		}
-		target.setAttached(ATTACHMENT, icons.add(icon));
+		target.setAttached(ATTACHMENT_TYPE, icons.add(icon));
 	}
 
 	public static void removeIconIf(Entity target, Predicate<SpottingIcon> removeIf) {
-		final SpottingIcons icons = target.getAttachedOrElse(ATTACHMENT, EMPTY);
+		final SpottingIcons icons = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
 		if (icons.isEmpty()) return;
-		target.setAttached(ATTACHMENT, icons.removeIf(removeIf));
+		target.setAttached(ATTACHMENT_TYPE, icons.removeIf(removeIf));
 	}
 
 	public static boolean anyIconsMatch(Entity target, Predicate<SpottingIcon> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT, EMPTY).anyMatch(predicate);
+		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).anyMatch(predicate);
 	}
 
 	public static boolean allIconsMatch(Entity target, Predicate<SpottingIcon> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT, EMPTY).allMatch(predicate);
+		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).allMatch(predicate);
 	}
 
 	public static boolean noIconsMatch(Entity target, Predicate<SpottingIcon> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT, EMPTY).noneMatch(predicate);
+		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).noneMatch(predicate);
 	}
 
 	public static boolean has(Entity target) {
-		return !target.getAttachedOrElse(ATTACHMENT, EMPTY).isEmpty();
+		return !target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).isEmpty();
 	}
 
 	public static SpottingIcons get(Entity target) {
-		return target.getAttachedOrElse(ATTACHMENT, EMPTY);
+		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
 	}
 
 	public SpottingIcons add(SpottingIcon icon) {

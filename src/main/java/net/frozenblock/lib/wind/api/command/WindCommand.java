@@ -19,6 +19,7 @@ package net.frozenblock.lib.wind.api.command;
 
 import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
+import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import net.frozenblock.lib.wind.api.WindManager;
 import net.minecraft.commands.CommandSourceStack;
@@ -30,46 +31,33 @@ import net.minecraft.world.phys.Vec3;
 public class WindCommand {
 
 	public static LiteralArgumentBuilder<CommandSourceStack> buildSubCommand() {
-		return Commands.literal("wind")
-			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
-			.then(
-				Commands.literal("override")
-					.then(
-						Commands.argument("x", DoubleArgumentType.doubleArg())
-							.then(
-								Commands.argument("y", DoubleArgumentType.doubleArg())
-									.then(
-										Commands.argument("z", DoubleArgumentType.doubleArg())
-											.executes(
-												context -> setAndEnableWindOverride(
-												context.getSource(),
-												DoubleArgumentType.getDouble(context, "x"),
-												DoubleArgumentType.getDouble(context, "y"),
-												DoubleArgumentType.getDouble(context, "z")
-												)
-											)
-									)
-							)
+		final LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("wind")
+			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS));
+
+		final ArgumentBuilder<CommandSourceStack, ?> overrideBuilder = Commands.literal("override");
+		overrideBuilder
+			.then(Commands.argument("x", DoubleArgumentType.doubleArg())
+				.then(Commands.argument("y", DoubleArgumentType.doubleArg())
+					.then(Commands.argument("z", DoubleArgumentType.doubleArg())
+						.executes(context -> setAndEnableWindOverride(
+							context.getSource(),
+							DoubleArgumentType.getDouble(context, "x"),
+							DoubleArgumentType.getDouble(context, "y"),
+							DoubleArgumentType.getDouble(context, "z")
+						))
 					)
-					.then(
-						Commands.argument("enabled", BoolArgumentType.bool())
-							.executes(
-								context -> toggleWindOverride(
-									context.getSource(),
-									BoolArgumentType.getBool(context, "enabled")
-								)
-							)
-					)
+				)
 			)
-			.then(
-				Commands.literal("display")
-					.then(
-						Commands.literal("global").executes(context -> displayWindValue(context.getSource(), false))
-					)
-					.then(
-						Commands.literal("pos").executes(context -> displayWindValue(context.getSource(), true))
-					)
+			.then(Commands.argument("enabled", BoolArgumentType.bool())
+				.executes(context -> toggleWindOverride(context.getSource(), BoolArgumentType.getBool(context, "enabled")))
 			);
+
+		final ArgumentBuilder<CommandSourceStack, ?> displayBuilder = Commands.literal("display");
+		displayBuilder
+			.then(Commands.literal("global").executes(context -> displayWindValue(context.getSource(), false)))
+			.then(Commands.literal("pos").executes(context -> displayWindValue(context.getSource(), true)));
+
+		return builder.then(overrideBuilder).then(displayBuilder);
 	}
 
 	private static int toggleWindOverride(CommandSourceStack source, boolean bl) {
@@ -104,8 +92,7 @@ public class WindCommand {
 		final WindManager windManager = WindManager.getOrCreateWindManager(level);
 		if (!atPos) {
 			source.sendSuccess(
-				() -> Component.translatable(
-					"commands.wind.display.global.success", windManager.windX, windManager.windY, windManager.windZ),
+				() -> Component.translatable("commands.wind.display.global.success", windManager.windX, windManager.windY, windManager.windZ),
 				true
 			);
 		} else {

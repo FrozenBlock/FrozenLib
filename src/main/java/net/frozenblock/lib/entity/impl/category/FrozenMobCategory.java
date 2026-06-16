@@ -19,5 +19,4 @@ package net.frozenblock.lib.entity.impl.category;
 
 import net.minecraft.resources.Identifier;
 
-public record FrozenMobCategory(Identifier key, String debugAbbreviation, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) {
-}
+public record FrozenMobCategory(Identifier key, String debugAbbreviation, int max, boolean isFriendly, boolean isPersistent, int despawnDistance) { }

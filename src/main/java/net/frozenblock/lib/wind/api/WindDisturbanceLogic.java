@@ -53,7 +53,7 @@ public final class WindDisturbanceLogic<T> {
 
 	@FunctionalInterface
 	public interface DisturbanceLogic<T> {
-		WindDisturbance.DisturbanceResult calculateDisturbanceResult(Optional<T> source, Level level, Vec3 windOrigin, AABB affectedArea, Vec3 windTarget);
+
 	}
 
 	public static Optional<WindDisturbanceLogic> getWindDisturbanceLogic(Identifier id) {
@@ -61,9 +61,6 @@ public final class WindDisturbanceLogic<T> {
 
 		if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.containsKey(id)) {
 			WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC.getValue(id);
-			if (disturbanceLogic != null) return Optional.of(disturbanceLogic);
-		} else if (FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.containsKey(id)) {
-			WindDisturbanceLogic<?> disturbanceLogic = FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED.getValue(id);
 			if (disturbanceLogic != null) return Optional.of(disturbanceLogic);
 		}
 
@@ -86,10 +83,6 @@ public final class WindDisturbanceLogic<T> {
 		Registry.register(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC, id, new WindDisturbanceLogic<>(predicate));
 	}
 
-	public static <T> void registerUnsynced(Identifier id, DisturbanceLogic<T> predicate) {
-		Registry.register(FrozenLibRegistries.WIND_DISTURBANCE_LOGIC_UNSYNCED, id, new WindDisturbanceLogic<>(predicate));
-	}
-
     public enum SourceType {
 		ENTITY,
 		BLOCK_ENTITY,
@@ -97,36 +90,9 @@ public final class WindDisturbanceLogic<T> {
 		NONE
 	}
 
-	private static final double WIND_RANGE_BREEZE = 6D;
+
 	private static final double WIND_RANGE_WIND_CHARGE = 5D;
 
-	@Contract(pure = true)
-	private static DisturbanceLogic<Breeze> breeze() {
-		return (source, level, windOrigin, affectedArea, windTarget) -> {
-			if (source.isEmpty()) return null;
-
-			final double distance = windOrigin.distanceTo(windTarget);
-			if (distance > WIND_RANGE_BREEZE) return null;
-
-			final Vec3 breezeLookVec = source.get().getForward();
-			final Vec3 differenceInPoses = windOrigin.subtract(windTarget);
-			final double scaledDistance = (WIND_RANGE_BREEZE - distance) / WIND_RANGE_BREEZE;
-			final double strengthFromDistance = Mth.clamp((WIND_RANGE_BREEZE - distance) / (WIND_RANGE_BREEZE * 0.75D), 0D, 1D);
-			final double angleBetween = AdvancedMath.getAngleBetweenXZ(breezeLookVec, differenceInPoses);
-
-			double x = Math.cos((angleBetween * Math.PI) / 180D);
-			double z = -Math.sin((angleBetween * Math.PI) / 180D);
-			x = -Mth.lerp(scaledDistance, (x - (differenceInPoses.x * 0.45D)) * 0.5D, x);
-			z = -Mth.lerp(scaledDistance, (z - (differenceInPoses.z * 0.45D)) * 0.5D, z);
-
-			final Vec3 windVec = new Vec3(x, strengthFromDistance, z).scale(1D);
-			return new WindDisturbance.DisturbanceResult(
-				strengthFromDistance,
-				WIND_RANGE_BREEZE - distance,
-				windVec
-			);
-		};
-	}
 
 	@Contract(pure = true)
 	private static DisturbanceLogic<AbstractWindCharge> windCharge() {

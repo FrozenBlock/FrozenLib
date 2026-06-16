@@ -126,5 +126,4 @@ public abstract class EntityMixin implements WindDisturbingEntity, WindDisturbin
 	public Level level() {
 		throw new AssertionError("Mixin injection failed - FrozenLib EntityMixin.");
 	}
-
 }

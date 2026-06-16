@@ -60,7 +60,7 @@ public final class SpottingIconHudElement implements HudElement {
 		minecraft.level.entitiesForRendering().forEach(entities::add);
 		entities.sort(Comparator.comparingDouble(e -> -e.position().distanceTo(cameraPos)));
 		for (Entity entity : entities) {
-			final SpottingIcons icons = entity.getAttachedOrElse(SpottingIcons.ATTACHMENT, SpottingIcons.EMPTY);
+			final SpottingIcons icons = entity.getAttachedOrElse(SpottingIcons.ATTACHMENT_TYPE, SpottingIcons.EMPTY);
 			if (icons.isEmpty()) continue;
 
 			final BlockPos blockPos = entity.blockPosition();

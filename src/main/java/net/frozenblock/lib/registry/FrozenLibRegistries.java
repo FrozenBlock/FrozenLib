@@ -33,9 +33,10 @@ import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
-import net.frozenblock.lib.sound.api.type.MovingSoundType;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
-import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
+import net.frozenblock.lib.sound.api.type.MovingSoundType;
+import net.frozenblock.lib.wind.v2.disturbance.WindDisturbanceType;
+import net.frozenblock.lib.wind.v2.extension.WindManagerExtensionType;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
@@ -65,15 +66,11 @@ public class FrozenLibRegistries {
 		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new SoundPredicate<>(() -> entity -> false))
 	);
 
-	public static final ResourceKey<Registry<WindDisturbanceLogic<?>>> WIND_DISTURBANCE_LOGIC_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("wind_disturbance_logic"));
-	public static final MappedRegistry<WindDisturbanceLogic<?>> WIND_DISTURBANCE_LOGIC = createSimple(WIND_DISTURBANCE_LOGIC_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED,
-		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new WindDisturbanceLogic(WindDisturbanceLogic.defaultPredicate()))
-	);
+	public static final ResourceKey<Registry<WindManagerExtensionType<?>>> WIND_MANAGER_EXTENSION_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("wind_manager_extension_type"));
+	public static final MappedRegistry<WindManagerExtensionType<?>> WIND_MANAGER_EXTENSION_TYPE = createSimple(WIND_MANAGER_EXTENSION_TYPE_REGISTRY, Lifecycle.stable());
 
-	public static final ResourceKey<Registry<WindDisturbanceLogic<?>>> WIND_DISTURBANCE_LOGIC_UNSYNCED_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("wind_disturbance_logic_unsynced"));
-	public static final MappedRegistry<WindDisturbanceLogic<?>> WIND_DISTURBANCE_LOGIC_UNSYNCED = createSimple(WIND_DISTURBANCE_LOGIC_UNSYNCED_REGISTRY, Lifecycle.stable(), null,
-		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new WindDisturbanceLogic(WindDisturbanceLogic.defaultPredicate()))
-	);
+	public static final ResourceKey<Registry<WindDisturbanceType<?>>> WIND_DISTURBANCE_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("wind_disturbance_type"));
+	public static final MappedRegistry<WindDisturbanceType<?>> WIND_DISTURBANCE_TYPE = createSimple(WIND_DISTURBANCE_TYPE_REGISTRY, Lifecycle.stable(), RegistryAttribute.SYNCED);
 
 	public static final ResourceKey<Registry<ConfigPredicateType<?>>> CONFIG_PREDICATE_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_type"));
 	public static final MappedRegistry<ConfigPredicateType<?>> CONFIG_PREDICATE_TYPE = createSimple(CONFIG_PREDICATE_TYPE_REGISTRY, Lifecycle.stable());

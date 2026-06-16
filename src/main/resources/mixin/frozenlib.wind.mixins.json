@@ -9,8 +9,7 @@
   "mixins": [
     "AbstractWindChargeMixin",
     "BreezeMixin",
-    "EntityMixin",
-    "ServerLevelMixin"
+    "EntityMixin"
   ],
   "client": [
     "client.EntityMixin"
