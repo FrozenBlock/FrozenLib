@@ -1,6 +1,7 @@
 plugins {
     id("multiloader-common")
     id("net.neoforged.moddev")
+    kotlin("jvm")
 }
 
 val neo_form_version: String by project

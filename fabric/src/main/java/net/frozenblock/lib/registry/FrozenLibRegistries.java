@@ -33,6 +33,7 @@ import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
+import net.frozenblock.lib.sound.api.type.MovingSoundType;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;

@@ -85,9 +85,11 @@ loom {
         }
 
         named("client") {
+            name("Fabric Client")
             ideConfigGenerated(true)
         }
         named("server") {
+            name("Fabric Server")
             ideConfigGenerated(true)
         }
     }

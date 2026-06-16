@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.music.api.client.pitch;
+package net.frozenblock.lib.sound.api.client.pitch;
 
 import java.util.ArrayList;
 import java.util.List;
