@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.advancement.impl.AdvancementInterface;
+import net.frozenblock.lib.advancement.impl.AdvancementRequirementsInterface;
+import net.frozenblock.lib.advancement.impl.AdvancementRewardsInterface;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
@@ -40,7 +43,8 @@ public final class AdvancementAPI {
 	 * Use only when needed, as this will increase memory usage
 	 */
 	public static void setupRewards(Advancement advancement) {
-		if (advancement.rewards == AdvancementRewards.EMPTY) advancement.rewards = new AdvancementRewards(0, List.of(), List.of(), Optional.empty());
+		var inter = AdvancementInterface.class.cast(advancement);
+		if (inter.frozenLib$getRewards() == AdvancementRewards.EMPTY) inter.frozenLib$setRewards(new AdvancementRewards(0, List.of(), List.of(), Optional.empty()));
 	}
 
 	/**
@@ -49,33 +53,38 @@ public final class AdvancementAPI {
 	 * Use only when needed, as this will increase memory usage
 	 */
 	public static void setupRequirements(Advancement advancement) {
-		if (advancement.requirements == AdvancementRequirements.EMPTY) advancement.requirements = new AdvancementRequirements(List.of());
+		var inter = AdvancementInterface.class.cast(advancement);
+		if (inter.frozenLib$getRequirements() == AdvancementRequirements.EMPTY) inter.frozenLib$setRequirements(new AdvancementRequirements(List.of()));
 	}
 
 	public static void setupCriteria(Advancement advancement) {
-		if (!(advancement.criteria instanceof HashMap<String, Criterion<?>>)) advancement.criteria = new HashMap<>(advancement.criteria);
+		var inter = AdvancementInterface.class.cast(advancement);
+		if (!(inter.frozenLib$getCriteria() instanceof HashMap<String, Criterion<?>>)) inter.frozenLib$setCriteria(new HashMap<>(inter.frozenLib$getCriteria()));
 	}
 
 	public static void addCriteria(Advancement advancement, String key, Criterion<?> criterion) {
 		if (criterion == null) return;
 		setupCriteria(advancement);
-		advancement.criteria().putIfAbsent(key, criterion);
+		AdvancementInterface.class.cast(advancement).frozenLib$getCriteria().putIfAbsent(key, criterion);
 	}
 
 	public static void addRequirementsAsNewList(Advancement advancement, AdvancementRequirements requirements) {
 		if (requirements == null || requirements.isEmpty()) return;
 		setupRequirements(advancement);
 
-		final List<List<String>> requirementsList = new ArrayList<>(advancement.requirements().requirements);
-		requirementsList.addAll(requirements.requirements);
-		advancement.requirements().requirements = Collections.unmodifiableList(requirementsList);
+		final AdvancementRequirementsInterface addedRequirements = AdvancementRequirementsInterface.class.cast(requirements);
+		final AdvancementInterface inter = AdvancementInterface.class.cast(advancement);
+		final List<List<String>> requirementsList = new ArrayList<>(inter.frozenLib$getRequirementsInterface().frozenLib$getRequirements());
+		requirementsList.addAll(addedRequirements.frozenLib$getRequirements());
+		inter.frozenLib$getRequirementsInterface().frozenLib$setRequirements(Collections.unmodifiableList(requirementsList));
 	}
 
 	public static void addRequirementsToList(Advancement advancement, List<String> newRequirements) {
 		if (newRequirements == null || newRequirements.isEmpty()) return;
 		setupRequirements(advancement);
 
-		final List<List<String>> requirementsList = new ArrayList<>(advancement.requirements().requirements);
+		final AdvancementInterface inter = AdvancementInterface.class.cast(advancement);
+		final List<List<String>> requirementsList = new ArrayList<>(inter.frozenLib$getRequirementsInterface().frozenLib$getRequirements());
 		if (requirementsList.isEmpty()) {
 			requirementsList.add(newRequirements);
 		} else {
@@ -85,26 +94,26 @@ public final class AdvancementAPI {
 			requirementsList.add(Collections.unmodifiableList(finalList));
 			requirementsList.remove(existingList);
 		}
-		advancement.requirements().requirements = Collections.unmodifiableList(requirementsList);
+		inter.frozenLib$getRequirementsInterface().frozenLib$setRequirements(Collections.unmodifiableList(requirementsList));
 	}
 
 	public static void addLootTables(Advancement advancement, List<ResourceKey<LootTable>> newLootTables) {
 		if (newLootTables.isEmpty()) return;
 		setupRewards(advancement);
 
-		final AdvancementRewards rewards = advancement.rewards();
-		final List<ResourceKey<LootTable>> finalLootTables = new ArrayList<>(rewards.loot);
+		final AdvancementRewardsInterface rewards = AdvancementRewardsInterface.class.cast(AdvancementInterface.class.cast(advancement).frozenLib$getRewards());
+		final List<ResourceKey<LootTable>> finalLootTables = new ArrayList<>(rewards.frozenLib$getLoot());
 		finalLootTables.addAll(newLootTables);
-		rewards.loot = Collections.unmodifiableList(finalLootTables);
+		rewards.frozenLib$setLoot(Collections.unmodifiableList(finalLootTables));
 	}
 
 	public static void addRecipes(Advancement advancement, List<ResourceKey<Recipe<?>>> newRecipes) {
 		if (newRecipes.isEmpty()) return;
 		setupRewards(advancement);
 
-		final AdvancementRewards rewards = advancement.rewards();
-		final List<ResourceKey<Recipe<?>>> finalRecipes = new ArrayList<>(rewards.recipes);
+		final AdvancementRewardsInterface rewards = AdvancementRewardsInterface.class.cast(AdvancementInterface.class.cast(advancement).frozenLib$getRewards());
+		final List<ResourceKey<Recipe<?>>> finalRecipes = new ArrayList<>(rewards.frozenLib$getRecipes());
 		finalRecipes.addAll(newRecipes);
-		rewards.recipes = Collections.unmodifiableList(finalRecipes);
+		rewards.frozenLib$setRecipes(Collections.unmodifiableList(finalRecipes));
 	}
 }

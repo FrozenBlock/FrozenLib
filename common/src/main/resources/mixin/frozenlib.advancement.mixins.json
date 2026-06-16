@@ -7,6 +7,9 @@
     "defaultRequire": 1
   },
   "mixins": [
+    "AdvancementMixin",
+    "AdvancementRequirementsMixin",
+    "AdvancementRewardsMixin",
     "ServerAdvancementManagerMixin"
   ]
 }
