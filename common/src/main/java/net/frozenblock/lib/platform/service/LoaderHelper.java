@@ -27,6 +27,8 @@ public interface LoaderHelper {
 
 	Path getGameDir();
 
+	Path getConfigDir();
+
 	boolean isModLoaded(String modId);
 
 	boolean isFabric();
@@ -42,4 +44,8 @@ public interface LoaderHelper {
 	boolean isServer();
 
 	Env getEnv();
+
+	Object getGameObject();
+
+	String[] getLaunchArgs();
 }

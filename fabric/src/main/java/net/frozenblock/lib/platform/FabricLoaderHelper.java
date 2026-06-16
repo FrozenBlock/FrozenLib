@@ -37,6 +37,11 @@ public class FabricLoaderHelper implements LoaderHelper {
 	}
 
 	@Override
+	public Path getConfigDir() {
+		return FabricLoader.getInstance().getConfigDir();
+	}
+
+	@Override
 	public boolean isModLoaded(String modId) {
 		return FabricLoader.getInstance().isModLoaded(modId);
 	}
@@ -77,5 +82,15 @@ public class FabricLoaderHelper implements LoaderHelper {
 			case CLIENT -> Env.CLIENT;
 			case SERVER -> Env.SERVER;
 		};
+	}
+
+	@Override
+	public Object getGameObject() {
+		return FabricLoader.getInstance().getGameInstance();
+	}
+
+	@Override
+	public String[] getLaunchArgs() {
+		return FabricLoader.getInstance().getLaunchArguments(true);
 	}
 }

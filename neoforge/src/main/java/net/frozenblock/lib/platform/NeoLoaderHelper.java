@@ -19,8 +19,11 @@ package net.frozenblock.lib.platform;
 
 import net.frozenblock.lib.platform.api.Env;
 import net.frozenblock.lib.platform.service.LoaderHelper;
+import net.minecraft.client.Minecraft;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
+import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -34,6 +37,11 @@ public class NeoLoaderHelper implements LoaderHelper {
 	@Override
 	public Path getGameDir() {
 		return FMLLoader.getCurrent().getGameDir();
+	}
+
+	@Override
+	public Path getConfigDir() {
+		return FMLPaths.CONFIGDIR.get();
 	}
 
 	@Override
@@ -77,5 +85,15 @@ public class NeoLoaderHelper implements LoaderHelper {
 			case CLIENT -> Env.CLIENT;
 			case DEDICATED_SERVER -> Env.SERVER;
 		};
+	}
+
+	@Override
+	public Object getGameObject() {
+		return isClient() ? Minecraft.getInstance() : ServerLifecycleHooks.getCurrentServer();
+	}
+
+	@Override
+	public String[] getLaunchArgs() {
+		return FMLLoader.getCurrent().getProgramArgs().getArguments();
 	}
 }

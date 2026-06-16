@@ -48,10 +48,6 @@ if (!neoforgeSnapshotMaven.isNullOrBlank()) {
     }
 }
 
-repositories {
-    maven("https://maven.shedaniel.me/")
-}
-
 neoForge {
     version = neoforge_version
     val at = rootProject.file("common/src/main/resources/META-INF/accesstransformer.cfg")

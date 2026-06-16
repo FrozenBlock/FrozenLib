@@ -5,8 +5,16 @@ plugins {
     kotlin("jvm")
 }
 
+val asm_version: String by project
 val neo_form_version: String by project
 val neoforgeSnapshotMaven = findProperty("neoforge_snapshot_maven") as String?
+
+val cloth_config_version: String by project
+
+val jankson_version: String by project
+val xjs_data_version: String by project
+val xjs_compat_version: String by project
+val fresult_version: String by project
 
 if (!neoforgeSnapshotMaven.isNullOrBlank()) {
     repositories {
@@ -40,9 +48,22 @@ tasks {
 }
 
 dependencies {
+    compileOnly("org.ow2.asm:asm:${asm_version}")
+    compileOnly("org.ow2.asm:asm-tree:${asm_version}")
+    compileOnly("org.ow2.asm:asm-commons:${asm_version}")
+    compileOnly("org.ow2.asm:asm-util:${asm_version}")
+
     compileOnly("org.spongepowered:mixin:0.8.5")
     compileOnly("io.github.llamalad7:mixinextras-common:0.5.3")
     annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.3")
+
+    compileOnly("me.shedaniel.cloth:cloth-config:$cloth_config_version")
+
+    compileOnly("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
+
+    compileOnly("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
+    compileOnly("org.exjson:xjs-compat:$xjs_compat_version")
+    compileOnly("com.personthecat:fresult:$fresult_version")
 
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 }

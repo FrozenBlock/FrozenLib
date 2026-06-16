@@ -170,7 +170,6 @@ repositories {
             includeGroup("com.terraformersmc")
         }
     }
-    maven("https://maven.shedaniel.me/")
     maven("https://maven.minecraftforge.net")
     maven("https://maven.parchmentmc.org")
     flatDir {

@@ -29,6 +29,7 @@ repositories {
     maven("https://maven.quiltmc.org/repository/release") {
         name = "Quilt"
     }
+    maven("https://maven.shedaniel.me/")
     exclusiveContent {
         forRepository {
             maven {

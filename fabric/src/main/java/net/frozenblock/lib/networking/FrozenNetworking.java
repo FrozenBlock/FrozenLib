@@ -22,11 +22,9 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
@@ -39,6 +37,7 @@ import net.frozenblock.lib.file.transfer.FileTransferPacket;
 import net.frozenblock.lib.item.impl.network.CooldownChangePacket;
 import net.frozenblock.lib.item.impl.network.CooldownTickCountPacket;
 import net.frozenblock.lib.item.impl.network.ForcedCooldownPacket;
+import net.frozenblock.lib.platform.FrozenEarlyPlatformUtils;
 import net.frozenblock.lib.sound.impl.networking.FadingDistanceSwitchingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.FlyBySoundPacket;
 import net.frozenblock.lib.sound.impl.networking.LocalPlayerSoundPacket;
@@ -153,12 +152,12 @@ public final class FrozenNetworking {
 	}
 
 	public static boolean isLocalPlayer(Player player) {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return false;
+		if (FrozenEarlyPlatformUtils.LOADER.isServer()) return false;
 		return Minecraft.getInstance().isLocalPlayer(player.getGameProfile().id());
 	}
 
 	public static boolean connectedToIntegratedServer() {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return false;
+		if (FrozenEarlyPlatformUtils.LOADER.isServer()) return false;
 		final Minecraft minecraft = Minecraft.getInstance();
 		return minecraft.hasSingleplayerServer();
 	}
@@ -167,7 +166,7 @@ public final class FrozenNetworking {
 	 * @return if the client is connected to any server
 	 */
 	public static boolean connectedToServer() {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return false;
+		if (FrozenEarlyPlatformUtils.LOADER.isServer()) return false;
 
 		final Minecraft minecraft = Minecraft.getInstance();
 		final ClientPacketListener listener = minecraft.getConnection();
@@ -180,7 +179,7 @@ public final class FrozenNetworking {
 	 * @return if the current server is multiplayer (LAN/dedicated) or not (singleplayer)
 	 */
 	public static boolean isMultiplayer() {
-		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) return true;
+		if (FrozenEarlyPlatformUtils.LOADER.isServer()) return true;
 		return !Minecraft.getInstance().hasSingleplayerServer();
 	}
 
