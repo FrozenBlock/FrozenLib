@@ -30,6 +30,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.FrozenDataAttachmentType;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -43,24 +44,20 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 		ScreenShake.LIST_STREAM_CODEC, ScreenShakes::screenShakes,
 		ScreenShakes::new
 	);
-	public static final AttachmentType<ScreenShakes> ATTACHMENT_TYPE = AttachmentRegistry.create(
-		FrozenLibConstants.id("screen_shakes"),
-		builder -> {
-			builder.persistent(CODEC);
-			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all());
-		}
-	);
+	public static final FrozenDataAttachmentType<ScreenShakes> ATTACHMENT = FrozenDataAttachmentType.<ScreenShakes>builder(
+		FrozenLibConstants.id("screen_shakes")
+	).persistent(CODEC).sync(STREAM_CODEC).build();
 
-	public static void tick(Level level, AttachmentTarget target) {
-		final ScreenShakes screenShakes = target.getAttached(ATTACHMENT_TYPE);
+	public static void tick(Level level, Object target) {
+		final ScreenShakes screenShakes = ATTACHMENT.get(target);
 		if (screenShakes == null) return;
 		if (screenShakes.isEmpty()) {
-			target.removeAttached(ATTACHMENT_TYPE);
+			ATTACHMENT.remove(target);
 			return;
 		}
 
 		final long gameTime = level.getGameTime();
-		target.setAttached(ATTACHMENT_TYPE, screenShakes.removeIf(screenShake -> screenShake.expired(gameTime)));
+		ATTACHMENT.set(target, screenShakes.removeIf(screenShake -> screenShake.expired(gameTime)));
 		if (!has(target)) removeAttachment(target);
 	}
 
@@ -74,47 +71,47 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 		});
 	}
 
-	public static void set(AttachmentTarget target, ScreenShake... screenShakes) {
-		target.setAttached(ATTACHMENT_TYPE, new ScreenShakes(List.of(screenShakes)));
+	public static void setScreenShakes(Object target, ScreenShake... screenShakes) {
+		ATTACHMENT.set(target, new ScreenShakes(List.of(screenShakes)));
 	}
 
-	public static void add(AttachmentTarget target, ScreenShake screenShake) {
-		final ScreenShakes screenShakes = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+	public static void addScreenShake(Object target, ScreenShake screenShake) {
+		final ScreenShakes screenShakes = ATTACHMENT.getOrDefault(target, EMPTY);
 		if (screenShakes.isEmpty()) {
 			set(target, screenShake);
 			return;
 		}
-		target.setAttached(ATTACHMENT_TYPE, screenShakes.add(screenShake));
+		ATTACHMENT.set(target, screenShakes.add(screenShake));
 	}
 
-	public static void removeAttachment(AttachmentTarget target) {
-		target.removeAttached(ATTACHMENT_TYPE);
+	public static void removeAttachment(Object target) {
+		ATTACHMENT.remove(target);
 	}
 
-	public static void removeIf(AttachmentTarget target, Predicate<ScreenShake> removeIf) {
-		final ScreenShakes screenShakes = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+	public static void removeIf(Object target, Predicate<ScreenShake> removeIf) {
+		final ScreenShakes screenShakes = ATTACHMENT.getOrDefault(target, EMPTY);
 		if (screenShakes.isEmpty()) return;
-		target.setAttached(ATTACHMENT_TYPE, screenShakes.removeIf(removeIf));
+		ATTACHMENT.set(target, screenShakes.removeIf(removeIf));
 	}
 
-	public static boolean anyMatch(AttachmentTarget target, Predicate<ScreenShake> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).anyMatch(predicate);
+	public static boolean anyMatch(Object target, Predicate<ScreenShake> predicate) {
+		return ATTACHMENT.getOrDefault(target, EMPTY).anyMatch(predicate);
 	}
 
-	public static boolean allMatch(AttachmentTarget target, Predicate<ScreenShake> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).allMatch(predicate);
+	public static boolean allMatch(Object target, Predicate<ScreenShake> predicate) {
+		return ATTACHMENT.getOrDefault(target, EMPTY).allMatch(predicate);
 	}
 
-	public static boolean noneMatch(AttachmentTarget target, Predicate<ScreenShake> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).noneMatch(predicate);
+	public static boolean noneMatch(Object target, Predicate<ScreenShake> predicate) {
+		return ATTACHMENT.getOrDefault(target, EMPTY).noneMatch(predicate);
 	}
 
-	public static boolean has(AttachmentTarget target) {
-		return !target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).isEmpty();
+	public static boolean has(Object target) {
+		return !ATTACHMENT.getOrDefault(target, EMPTY).isEmpty();
 	}
 
-	public static ScreenShakes get(AttachmentTarget target) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+	public static ScreenShakes get(Object target) {
+		return ATTACHMENT.getOrDefault(target, EMPTY);
 	}
 
 	public ScreenShakes add(ScreenShake screenShake) {

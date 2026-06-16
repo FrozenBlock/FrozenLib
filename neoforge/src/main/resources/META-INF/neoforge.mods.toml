@@ -3,6 +3,9 @@ loaderVersion="[4,)"
 license="GPL-3.0"
 issueTrackerURL="https://github.com/FrozenBlock/FrozenLib/issues"
 
+[[mixins]]
+    config="mixin/frozenlib.screenshake.mixins.json"
+
 [[mods]]
     modId="frozenlib"
     version="${mod_version}"

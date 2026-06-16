@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 FrozenBlock
+ * Copyright (C) 2024-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,16 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.command;
 
-import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.platform.service.DataAttachmentHelper;
-import net.frozenblock.lib.platform.service.RegistryHelper;
-import static net.frozenblock.lib.platform.PlatformUtil.load;
+import com.mojang.brigadier.CommandDispatcher;
+import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import org.jetbrains.annotations.ApiStatus;
 
-@UtilityClass
-public class FrozenInitPlatformUtils {
+@ApiStatus.Internal
+public final class NeoFrozenLibCommand {
 
-	public static final RegistryHelper REGISTRY = load(RegistryHelper.class);
-	public static final DataAttachmentHelper DATA_ATTACHMENT = load(DataAttachmentHelper.class);
+	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
+		dispatcher.register(Commands.literal("frozenlib")
+			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+			.then(ScreenShakeCommand.buildSubCommand())
+		);
+	}
 }
+

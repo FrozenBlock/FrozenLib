@@ -15,16 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.service;
 
-import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.platform.service.DataAttachmentHelper;
-import net.frozenblock.lib.platform.service.RegistryHelper;
-import static net.frozenblock.lib.platform.PlatformUtil.load;
+import net.frozenblock.lib.platform.api.FrozenDataAttachmentType;
 
-@UtilityClass
-public class FrozenInitPlatformUtils {
-
-	public static final RegistryHelper REGISTRY = load(RegistryHelper.class);
-	public static final DataAttachmentHelper DATA_ATTACHMENT = load(DataAttachmentHelper.class);
+public interface DataAttachmentHelper {
+	<T> FrozenDataAttachmentType<T> create(FrozenDataAttachmentType.Builder<T> builder);
 }
