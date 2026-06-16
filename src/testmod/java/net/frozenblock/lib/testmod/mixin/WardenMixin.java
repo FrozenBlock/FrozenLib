@@ -19,8 +19,8 @@ package net.frozenblock.lib.testmod.mixin;
 
 import net.frozenblock.lib.screenshake.api.ScreenShake;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
-import net.frozenblock.lib.spottingicon.api.SpottingIcon;
-import net.frozenblock.lib.spottingicon.api.SpottingIcons;
+import net.frozenblock.lib.entity.api.spottingicon.SpottingIcon;
+import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -43,7 +43,7 @@ public abstract class WardenMixin extends Monster {
 
 	@Inject(method = "<init>", at = @At("TAIL"))
 	private void initWithIcon(EntityType<? extends Warden> type, Level level, CallbackInfo info) {
-		SpottingIcons.addIcon(
+		SpottingIcons.add(
 			Warden.class.cast(this),
 			SpottingIcon.builder()
 				.texture(FrozenTestMain.id("textures/spotting_icons/warden.png"))
@@ -60,6 +60,6 @@ public abstract class WardenMixin extends Monster {
 		)
 	)
 	private void startShaking(ServerLevel level, Entity target, CallbackInfoReturnable<Boolean> info) {
-		ScreenShakes.addScreenShake(this, ScreenShake.builder(this).intensity(0.6F).duration(8).maxDistance(15F).build());
+		ScreenShakes.add(this, ScreenShake.builder(this).intensity(0.6F).duration(8).maxDistance(15F).build());
 	}
 }

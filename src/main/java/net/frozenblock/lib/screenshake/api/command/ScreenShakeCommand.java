@@ -62,7 +62,7 @@ public class ScreenShakeCommand {
 
 	private static int shake(CommandSourceStack source, Vec3 vec3, float intensity, int duration, int falloffStartDuration, float maxDistance) {
 		vec3 = new Vec3(Math.round(vec3.x()), Math.round(vec3.y()), Math.round(vec3.z()));
-		ScreenShakes.addScreenShake(
+		ScreenShakes.add(
 			source.getLevel(),
 			ScreenShake.builder(source.getLevel(), vec3)
 				.intensity(intensity)
@@ -89,7 +89,7 @@ public class ScreenShakeCommand {
 
 	private static int shake(CommandSourceStack source, Collection<? extends Entity> entities, float intensity, int duration, int falloffStartDuration, float maxDistance) {
 		for (Entity entity : entities) {
-			ScreenShakes.addScreenShake(
+			ScreenShakes.add(
 				entity,
 				ScreenShake.builder(entity)
 					.intensity(intensity)
@@ -124,7 +124,7 @@ public class ScreenShakeCommand {
 			return 0;
 		}
 
-		ScreenShakes.remove(level);
+		ScreenShakes.removeAttachment(level);
 
 		final int screenShakeCount = screenShakes.screenShakes().size();
 		final boolean oneScreenShake = screenShakeCount == 1;
@@ -145,7 +145,7 @@ public class ScreenShakeCommand {
 			if (screenShakes.isEmpty()) continue;
 
 			affectedEntities.add(entity);
-			ScreenShakes.remove(entity);
+			ScreenShakes.removeAttachment(entity);
 		}
 
 		final int entityCount = affectedEntities.size();

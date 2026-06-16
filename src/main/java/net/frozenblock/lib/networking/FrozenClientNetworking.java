@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Optional;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
@@ -59,12 +58,8 @@ import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
-import net.frozenblock.lib.wind.api.WindDisturbance;
-import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
 import net.frozenblock.lib.wind.client.impl.ClientWindManager;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
-import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
-import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -72,7 +67,6 @@ import net.minecraft.client.multiplayer.ServerData;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.EntityBoundSoundInstance;
 import net.minecraft.client.sounds.SoundManager;
-import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
@@ -96,8 +90,6 @@ public final class FrozenClientNetworking {
 		receiveCooldownChangePacket();
 		receiveForcedCooldownPacket();
 		receiveCooldownTickCountPacket();
-		receiveWindSyncPacket();
-		receiveWindDisturbancePacket();
 		receiveFileTransferPacket();
 		receiveCapeRepoPacket();
 		ClientPlayNetworking.registerGlobalReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, ctx) ->
@@ -256,48 +248,6 @@ public final class FrozenClientNetworking {
 		});
 	}
 
-	@ApiStatus.Internal
-	private static void receiveWindSyncPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(WindSyncPacket.PACKET_TYPE, (packet, ctx) -> {
-			ClientWindManager.time = packet.windTime();
-			ClientWindManager.setSeed(packet.seed());
-			ClientWindManager.overrideWind = packet.override();
-			ClientWindManager.commandWind = packet.commandWind();
-			ClientWindManager.hasInitialized = true;
-		});
-	}
-
-	@ApiStatus.Internal
-	private static void receiveWindDisturbancePacket() {
-		ClientPlayNetworking.registerGlobalReceiver(WindDisturbancePacket.PACKET_TYPE, (packet, ctx) -> {
-			final ClientLevel level = ctx.client().level;
-			if (level == null) return;
-
-			final long posOrID = packet.posOrID();
-			final Optional<WindDisturbanceLogic> disturbanceLogic = WindDisturbanceLogic.getWindDisturbanceLogic(packet.id());
-			if (disturbanceLogic.isEmpty()) return;
-
-			final WindDisturbanceLogic.SourceType sourceType = packet.sourceType();
-			Optional source = Optional.empty();
-			if (sourceType == WindDisturbanceLogic.SourceType.ENTITY) {
-				source = Optional.ofNullable(level.getEntity((int) posOrID));
-			} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK_ENTITY) {
-				source = Optional.ofNullable(level.getBlockEntity(BlockPos.of(posOrID)));
-			} else if (sourceType == WindDisturbanceLogic.SourceType.BLOCK) {
-				source = Optional.of(level.getBlockState(BlockPos.of(posOrID)).getBlock());
-			}
-
-			ClientWindManager.addWindDisturbance(
-				new WindDisturbance(
-					source,
-					packet.origin(),
-					packet.affectedArea(),
-					disturbanceLogic.get()
-				)
-			);
-		});
-	}
-
 	private static void receiveFileTransferPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(FileTransferPacket.PACKET_TYPE, (packet, ctx) -> {
 			if (!FrozenLibConfig.FILE_TRANSFER_CLIENT.get()) return;
@@ -355,7 +305,7 @@ public final class FrozenClientNetworking {
 
 	// DEBUG
 	private static void receiveWindDebugPacket() {
-		ClientPlayNetworking.registerGlobalReceiver(WindAccessPacket.PACKET_TYPE, (packet, ctx) -> {
+		ClientPlayNetworking.registerGlobalReceiver(WindAccessPacket.TYPE, (packet, ctx) -> {
 			if (!FrozenLibConstants.DEBUG_WIND) return;
 			ClientWindManager.Debug.addAccessedPosition(packet.accessPos());
 		});

@@ -18,7 +18,6 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLevelEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.loader.api.ModContainer;
@@ -45,7 +44,7 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTy
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
-import net.frozenblock.lib.loot.impl.predicates.FrozenLibLootConditionTypes;
+import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -53,15 +52,14 @@ import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
 import net.frozenblock.lib.sound.impl.MovingSoundManager;
-import net.frozenblock.lib.spottingicon.api.SpottingIcons;
+import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
-import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
-import net.frozenblock.lib.wind.v2.WindManager;
-import net.frozenblock.lib.wind.v2.extension.WindManagerExtensionType;
+import net.frozenblock.lib.wind.WindManager;
+import net.frozenblock.lib.wind.disturbance.WindDisturbances;
+import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.entity.Entity;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
@@ -88,12 +86,13 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		SoundPredicate.init();
 		MovingSoundTypes.init();
 		SpottingIcons.init();
-		WindDisturbanceLogic.init();
 		FrozenLibDataComponents.init();
 		FrozenLibParticleTypes.init();
 		FrozenLibFeatures.init();
 		ConfigPredicateType.init();
+		WindManager.init();
 		WindManagerExtensionType.init();
+		WindDisturbances.init();
 		FrozenLibBlockPredicateTypes.init();
 		FrozenLibPlacementModifiers.init();
 		FrozenLibLootConditionTypes.init();
@@ -120,19 +119,9 @@ public final class FrozenLibMain extends FrozenModInitializer {
 			FrozenLibCommand.register(dispatcher);
 		});
 
-		ServerLevelEvents.UNLOAD.register((server, serverLevel) -> {
-			WindManager.getOrCreateWindManager(serverLevel).clearAllWindDisturbances();
-		});
-
 		ServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
-			WindManager.getOrCreateWindManager(serverLevel).clearAndSwitchWindDisturbances();
-			WindManager.getOrCreateWindManager(serverLevel).tick(serverLevel);
+			WindManager.getOrCreate(serverLevel).tick(serverLevel);
 			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
-			ScreenShakes.tick(serverLevel, serverLevel);
-			for (Entity entity : serverLevel.getAllEntities()) {
-				if (entity.isRemoved()) continue;
-				ScreenShakes.tick(serverLevel, entity);
-			}
 		});
 
 		EntityTrackingEvents.START_TRACKING.register((entity, player) -> {

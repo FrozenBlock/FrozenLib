@@ -1,0 +1,191 @@
+/*
+ * Copyright (C) 2026 FrozenBlock
+ *
+ * This program is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+package net.frozenblock.lib.wind.disturbance;
+
+import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.frozenblock.lib.FrozenLibConstants;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.breeze.Breeze;
+import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge;
+import net.minecraft.world.level.Level;
+
+public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implements Iterable<WindDisturbance<?>> {
+	public static final WindDisturbances EMPTY = new WindDisturbances(List.of());
+	public static final Codec<WindDisturbances> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+		WindDisturbance.LIST_CODEC.fieldOf("wind_disturbances").forGetter(WindDisturbances::windDisturbances)
+	).apply(instance, WindDisturbances::new));
+	public static final StreamCodec<RegistryFriendlyByteBuf, WindDisturbances> STREAM_CODEC = StreamCodec.composite(
+		WindDisturbance.LIST_STREAM_CODEC, WindDisturbances::windDisturbances,
+		WindDisturbances::new
+	);
+	public static final AttachmentType<WindDisturbances> ATTACHMENT_TYPE = AttachmentRegistry.create(
+		FrozenLibConstants.id("wind_disturbances"),
+		builder -> {
+			builder.persistent(CODEC);
+			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all());
+		}
+	);
+	private static final List<Pair<?, WindDisturbances>> WIND_DISTURBANCES = new ArrayList<>();
+
+	public static void tick(Level level, AttachmentTarget target) {
+		final WindDisturbances windDisturbances = target.getAttached(ATTACHMENT_TYPE);
+		if (windDisturbances == null) return;
+		if (windDisturbances.isEmpty()) {
+			removeAttachment(target);
+			return;
+		}
+
+		target.setAttached(ATTACHMENT_TYPE, windDisturbances.removeIf(windDisturbance -> ((WindDisturbance) windDisturbance).expired(target, level)));
+		if (!has(target)) removeAttachment(target);
+	}
+
+	public static void init() {
+		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> {
+
+		})
+
+		ServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
+			tick(serverLevel, serverLevel);
+			for (Entity entity : serverLevel.getAllEntities()) {
+				if (entity.isRemoved()) continue;
+				tick(serverLevel, entity);
+			}
+			for (Entity entity : serverLevel.tickBlockEntities();) {
+				if (entity.isRemoved()) continue;
+				tick(serverLevel, entity);
+			}
+		});
+
+		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
+			addIf(entity, isOfClassAndDoesntHaveDisturbance(Breeze.class, WindDisturbanceType.BREEZE), () -> BreezeWindDisturbance.INSTANCE);
+			addIf(entity, isOfClassAndDoesntHaveDisturbance(AbstractWindCharge.class, WindDisturbanceType.WIND_CHARGE), () -> WindChargeWindDisturbance.INSTANCE);
+		});
+	}
+
+	@Environment(EnvType.CLIENT)
+	public static void initClient() {
+
+	}
+
+	public static void set(AttachmentTarget target, WindDisturbance<?>... windDisturbances) {
+		target.setAttached(ATTACHMENT_TYPE, new WindDisturbances(List.of(windDisturbances)));
+	}
+
+	public static void add(AttachmentTarget target, WindDisturbance<?> windDisturbance) {
+		final WindDisturbances windDisturbances = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+		if (windDisturbances.isEmpty()) {
+			set(target, windDisturbance);
+			return;
+		}
+		target.setAttached(ATTACHMENT_TYPE, windDisturbances.add(windDisturbance));
+	}
+
+	public static void addIf(AttachmentTarget target, Predicate<AttachmentTarget> predicate, Supplier<WindDisturbance<?>> windDisturbance) {
+		if (!predicate.test(target)) return;
+		add(target, windDisturbance.get());
+	}
+
+	public static void removeAttachment(AttachmentTarget target) {
+		target.removeAttached(ATTACHMENT_TYPE);
+	}
+
+	public static void removeIf(AttachmentTarget target, Predicate<WindDisturbance<?>> removeIf) {
+		final WindDisturbances windDisturbances = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+		if (windDisturbances.isEmpty()) return;
+		target.setAttached(ATTACHMENT_TYPE, windDisturbances.removeIf(removeIf));
+	}
+
+	public static Predicate<AttachmentTarget> isOfClassAndDoesntHaveDisturbance(Class<?> clazz, WindDisturbanceType<?> type) {
+		return target -> target.getClass().isAssignableFrom(clazz) && noneMatch(target, type(type));
+	}
+
+	public static boolean anyMatch(AttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
+		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).anyMatch(predicate);
+	}
+
+	public static boolean allMatch(AttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
+		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).allMatch(predicate);
+	}
+
+	public static boolean noneMatch(AttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
+		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).noneMatch(predicate);
+	}
+
+	public static Predicate<WindDisturbance<?>> type(WindDisturbanceType<?> type) {
+		return windDisturbance -> windDisturbance.type().equals(type);
+	}
+
+	public static boolean has(AttachmentTarget target) {
+		return !target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).isEmpty();
+	}
+
+	public static WindDisturbances get(AttachmentTarget target) {
+		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+	}
+
+	public WindDisturbances add(WindDisturbance<?> windDisturbance) {
+		final List<WindDisturbance<?>> newWindDisturbances = new ArrayList<>(this.windDisturbances);
+		newWindDisturbances.add(windDisturbance);
+		return new WindDisturbances(newWindDisturbances);
+	}
+
+	public WindDisturbances removeIf(Predicate<WindDisturbance<?>> removeIf) {
+		final List<WindDisturbance<?>> newIcons = new ArrayList<>(this.windDisturbances);
+		newIcons.removeIf(removeIf);
+		return new WindDisturbances(newIcons);
+	}
+
+	public boolean anyMatch(Predicate<WindDisturbance<?>> predicate) {
+		return this.windDisturbances.stream().anyMatch(predicate);
+	}
+
+	public boolean allMatch(Predicate<WindDisturbance<?>> predicate) {
+		return this.windDisturbances.stream().allMatch(predicate);
+	}
+
+	public boolean noneMatch(Predicate<WindDisturbance<?>> predicate) {
+		return this.windDisturbances.stream().noneMatch(predicate);
+	}
+
+	public boolean isEmpty() {
+		return this.windDisturbances.isEmpty();
+	}
+
+	@Override
+	public Iterator<WindDisturbance<?>> iterator() {
+		return this.windDisturbances().iterator();
+	}
+}

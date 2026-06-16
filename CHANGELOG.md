@@ -134,7 +134,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Renders using the model of the provided `BlockState` it is given.
 - Added the `NoOpModel`, in cases a `LivingEntityRenderer` is required but no `Model` is wanted.
 - Revamped Spotting Icons.
-  - Refactored the `spotting_icons` package to `spottingicon`.
+  - Refactored all classes into the `entity` package.
   - Spotting Icons now render as part of the game's HUD.
   - Removed the `frozenlib:spotting_icon_predicate` Registry.
   - Removed `SpottingIconPredicate`s.
@@ -146,12 +146,20 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - Fades can be used for both the Icon's scale and transparency.
 - Migrated server texture packets to use Fabric's packet splitter.
 - Revamped FrozenLib Cape implementation.
-  - Migrated to Fabric's Data Attachments system and Render State Data Keys.
+  - Migrated to Fabric's Data Attachment system and Render State Data Keys.
   - Fixed a bug that caused a Player's FrozenLib Cape to not sync to clients when joining a server.
 - Revamped Screen Shake implementation.
-  - Migrated to Fabric's Data Attachments system and Fabric's Level Tick Event instead of using separate mixins.
+  - Migrated to Fabric's Data Attachment system and Fabric's Level Tick Event instead of using separate mixins.
   - Screen Shakes can now have a "minimum distance", which will override the calculated distance to the Screen Shake if it is lower than this.
   - Added a `Builder` for Screen Shakes.
   - Screen Shakes no longer have separate implementation for Levels and Entities, now being universal and easy to use for both.
   - Updated the `frozenlib screenshake` command and its feedback.
+- Revamped Wind implementation.
+  - Migrated to Fabric's Data Attachment system.
+  - `ClientWindManager` has been removed and `WindManager` is now used on both the server and client.
+  - Removed the ability and config option to use Wind on the client without a server that has Wind.
+  - `WindManagerExtension`s now use a registry instead of a list.
+  - `WindDisturbance`s have been completely revamped, allowing for the creation of custom `WindDisturbanceTypes` for more dynamic usage.
 - Removed the Warden Spawn Tracker config option, as the command can now be enabled in Vanilla via launch arguments.
+- Refactored the `loot` package into the `item` package.
+- Refactored the `recipe` package into the `item` package.

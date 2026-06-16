@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.testmod.registry;
 
-import net.frozenblock.lib.loot.api.LootTableModificationApi;
-import net.frozenblock.lib.loot.impl.MutableLootTable;
+import net.frozenblock.lib.item.api.loot.LootTableModificationApi;
+import net.frozenblock.lib.item.impl.loot.MutableLootTable;
 import net.frozenblock.lib.testmod.FrozenTestMain;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.storage.loot.BuiltInLootTables;

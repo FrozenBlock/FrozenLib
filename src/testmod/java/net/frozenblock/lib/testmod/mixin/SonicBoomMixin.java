@@ -41,6 +41,6 @@ public class SonicBoomMixin {
 		require = 1
 	)
 	private static void startShaking(Warden body, ServerLevel level, LivingEntity target, CallbackInfo info) {
-		ScreenShakes.addScreenShake(body, ScreenShake.builder(body).intensity(0.5F).duration(25).maxDistance(18).build());
+		ScreenShakes.add(body, ScreenShake.builder(body).intensity(0.5F).duration(25).maxDistance(18).build());
 	}
 }

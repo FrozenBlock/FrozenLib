@@ -28,8 +28,10 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 
 public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<ScreenShake> {
@@ -59,42 +61,51 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 
 		final long gameTime = level.getGameTime();
 		target.setAttached(ATTACHMENT_TYPE, screenShakes.removeIf(screenShake -> screenShake.expired(gameTime)));
+		if (!has(target)) removeAttachment(target);
 	}
 
-	public static void init() {}
+	public static void init() {
+		ServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
+			tick(serverLevel, serverLevel);
+			for (Entity entity : serverLevel.getAllEntities()) {
+				if (entity.isRemoved()) continue;
+				tick(serverLevel, entity);
+			}
+		});
+	}
 
-	public static void setScreenShakes(AttachmentTarget target, ScreenShake... screenShakes) {
+	public static void set(AttachmentTarget target, ScreenShake... screenShakes) {
 		target.setAttached(ATTACHMENT_TYPE, new ScreenShakes(List.of(screenShakes)));
 	}
 
-	public static void addScreenShake(AttachmentTarget target, ScreenShake screenShake) {
+	public static void add(AttachmentTarget target, ScreenShake screenShake) {
 		final ScreenShakes screenShakes = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
 		if (screenShakes.isEmpty()) {
-			setScreenShakes(target, screenShake);
+			set(target, screenShake);
 			return;
 		}
 		target.setAttached(ATTACHMENT_TYPE, screenShakes.add(screenShake));
 	}
 
-	public static void remove(AttachmentTarget target) {
+	public static void removeAttachment(AttachmentTarget target) {
 		target.removeAttached(ATTACHMENT_TYPE);
 	}
 
-	public static void removeScreenShakeIf(AttachmentTarget target, Predicate<ScreenShake> removeIf) {
+	public static void removeIf(AttachmentTarget target, Predicate<ScreenShake> removeIf) {
 		final ScreenShakes screenShakes = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
 		if (screenShakes.isEmpty()) return;
 		target.setAttached(ATTACHMENT_TYPE, screenShakes.removeIf(removeIf));
 	}
 
-	public static boolean anyScreenShakesMatch(AttachmentTarget target, Predicate<ScreenShake> predicate) {
+	public static boolean anyMatch(AttachmentTarget target, Predicate<ScreenShake> predicate) {
 		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).anyMatch(predicate);
 	}
 
-	public static boolean allScreenShakesMatch(AttachmentTarget target, Predicate<ScreenShake> predicate) {
+	public static boolean allMatch(AttachmentTarget target, Predicate<ScreenShake> predicate) {
 		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).allMatch(predicate);
 	}
 
-	public static boolean noScreenShakesMatch(AttachmentTarget target, Predicate<ScreenShake> predicate) {
+	public static boolean noneMatch(AttachmentTarget target, Predicate<ScreenShake> predicate) {
 		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).noneMatch(predicate);
 	}
 
@@ -107,13 +118,13 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 	}
 
 	public ScreenShakes add(ScreenShake screenShake) {
-		List<ScreenShake> newIcons = new ArrayList<>(this.screenShakes);
+		final List<ScreenShake> newIcons = new ArrayList<>(this.screenShakes);
 		newIcons.add(screenShake);
 		return new ScreenShakes(newIcons);
 	}
 
 	public ScreenShakes removeIf(Predicate<ScreenShake> removeIf) {
-		List<ScreenShake> newIcons = new ArrayList<>(this.screenShakes);
+		final List<ScreenShake> newIcons = new ArrayList<>(this.screenShakes);
 		newIcons.removeIf(removeIf);
 		return new ScreenShakes(newIcons);
 	}

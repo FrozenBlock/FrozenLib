@@ -36,6 +36,6 @@ public class RavagerMixin {
 		)
 	)
 	private void startShaking(CallbackInfo info) {
-		ScreenShakes.addScreenShake(Ravager.class.cast(this), ScreenShake.builder(Ravager.class.cast(this)).intensity(0.5F).duration(17).maxDistance(23F).build());
+		ScreenShakes.add(Ravager.class.cast(this), ScreenShake.builder(Ravager.class.cast(this)).intensity(0.5F).duration(17).maxDistance(23F).build());
 	}
 }

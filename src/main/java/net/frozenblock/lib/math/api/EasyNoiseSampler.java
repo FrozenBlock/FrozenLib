@@ -28,7 +28,6 @@ import net.minecraft.world.level.levelgen.ThreadSafeLegacyRandomSource;
 import net.minecraft.world.level.levelgen.XoroshiroRandomSource;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Contract;
 
 /**
  * Adds easy-to-use noise sampling and random number generators
@@ -36,22 +35,18 @@ import org.jetbrains.annotations.Contract;
 @UtilityClass
 public class EasyNoiseSampler {
 
-	@Contract("_ -> new")
 	public static ImprovedNoise createCheckedNoise(long seed) {
 		return new ImprovedNoise(new LegacyRandomSource(seed));
 	}
 
-	@Contract("_ -> new")
 	public static ImprovedNoise createLegacyThreadSafeNoise(long seed) {
 		return new ImprovedNoise(new ThreadSafeLegacyRandomSource(seed));
 	}
 
-	@Contract("_ -> new")
 	public static ImprovedNoise createLocalNoise(long seed) {
 		return new ImprovedNoise(new SingleThreadedRandomSource(seed));
 	}
 
-	@Contract("_ -> new")
 	public static ImprovedNoise createXoroNoise(long seed) {
 		return new ImprovedNoise(new XoroshiroRandomSource(seed));
 	}

@@ -48,7 +48,7 @@ public class ExplosionMixin {
 
 	@Inject(method = "explode", at = @At(value = "TAIL"))
 	public void finalizeExplosion(CallbackInfoReturnable<Integer> info) {
-		ScreenShakes.addScreenShake(
+		ScreenShakes.add(
 			this.level,
 			ScreenShake.builder(this.level, this.center)
 				.intensity((float) ((0.5F + (blockInteraction != Explosion.BlockInteraction.KEEP ? 0.2F : 0) + radius * 0.1) / 5F))

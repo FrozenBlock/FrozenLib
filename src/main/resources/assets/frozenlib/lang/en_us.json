@@ -25,11 +25,6 @@
   "option.frozenlib.disabled_datafix_types": "Disabled DataFix Types",
   "tooltip.frozenlib.disabled_datafix_types": "A list of DataFix types that are excluded from running through\nthe modified DataFixerUpper API by The Quilt Project\n\nWorldgen settings are disabled by default to\nprevent a compatibility issue with Lithium + BCLib\n\nThe vanilla DataFix types are...\n'level', 'player', 'chunk', 'hotbar', 'options', 'structure', 'stats',\n'saved_data', 'advancements', 'poi_chunk', 'entity_chunk',\nand 'world_gen_settings'",
 
-  "option.frozenlib.use_wind_on_non_frozenlib_servers": "Wind On Non-FrozenLib Servers",
-  "option.frozenlib.use_wind_on_non_frozenlib_servers.false": "§cOFF",
-  "option.frozenlib.use_wind_on_non_frozenlib_servers.true": "§aON",
-  "tooltip.frozenlib.use_wind_on_non_frozenlib_servers": "When disabled, the client won't use wind on servers that\ndon't have FrozenLib installed.\nWhen enabled, the client will generate a random seed to use\nfor wind on servers that don't have FrozenLib installed.",
-
   "option.frozenlib.save_item_cooldowns": "Save Item Cooldowns",
   "option.frozenlib.save_item_cooldowns.false": "§cOFF",
   "option.frozenlib.save_item_cooldowns.true": "§aON",
@@ -59,9 +54,9 @@
 
   "commands.wind.display.global.success": "The global wind is currently: %.6f, %.6f, %.6f.",
   "commands.wind.display.pos.success": "The wind at %.6f, %.6f, %.6f currently: %.6f, %.6f, %.6f.",
-  "commands.wind.success": "Set wind to %.6f, %.6f, %.6f.",
-  "commands.wind.toggle.success": "%s wind override.",
-  "commands.wind.toggle.failure": "Wind override is already %s.",
+  "commands.wind.override.success": "Set wind override to %.6f, %.6f, %.6f.",
+  "commands.wind.override.disable.failure": "No wind override is present!",
+  "commands.wind.override.disable.success": "Disabled wind override.",
 
   "commands.screenshake.success": "Created screen shake at %s, %s, %s, with intensity %s, duration %s, falloff start time %s, and distance %s.",
   "commands.screenshake.remove.level.success.multiple": "Removed %s screen shakes from world .",

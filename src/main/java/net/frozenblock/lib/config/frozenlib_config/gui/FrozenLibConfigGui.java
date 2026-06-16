@@ -41,7 +41,6 @@ import net.minecraft.resources.Identifier;
 public final class FrozenLibConfigGui {
 
 	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
-		category.addEntry(booleanEntry(entryBuilder, "use_wind_on_non_frozenlib_servers", FrozenLibConfig.USE_WIND_ON_NON_FROZEN_SERVERS));
 		category.addEntry(booleanEntry(entryBuilder, "save_item_cooldowns", FrozenLibConfig.SAVE_ITEM_COOLDOWNS));
 		category.addEntry(booleanEntry(entryBuilder, "remove_experimental_warning", FrozenLibConfig.REMOVE_EXPERIMENTAL_WARNING));
 		category.addEntry(booleanEntry(entryBuilder, "file_transfer_server", FrozenLibConfig.FILE_TRANSFER_SERVER));

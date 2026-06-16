@@ -47,10 +47,7 @@ import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRe
 import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
-import net.frozenblock.lib.wind.v2.WindManager;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
-import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
-import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -68,11 +65,6 @@ public final class FrozenNetworking {
 	public static void registerNetworking() {
 		final PayloadTypeRegistry<RegistryFriendlyByteBuf> registry = PayloadTypeRegistry.clientboundPlay();
 		final PayloadTypeRegistry<RegistryFriendlyByteBuf> c2sRegistry = PayloadTypeRegistry.serverboundPlay();
-
-		PlayerJoinEvents.ON_PLAYER_ADDED_TO_LEVEL.register(((server, serverLevel, player) -> {
-			final WindManager windManager = WindManager.getOrCreateWindManager(serverLevel);
-			windManager.sendSyncToPlayer(windManager.createSyncPacket(), player);
-		}));
 
 		PlayerJoinEvents.ON_JOIN_SERVER.register((server, player) -> {
 			ConfigEntrySyncPacket.sendS2C(player);
@@ -105,8 +97,6 @@ public final class FrozenNetworking {
 		registry.register(CooldownChangePacket.PACKET_TYPE, CooldownChangePacket.CODEC);
 		registry.register(ForcedCooldownPacket.PACKET_TYPE, ForcedCooldownPacket.CODEC);
 		registry.register(CooldownTickCountPacket.PACKET_TYPE, CooldownTickCountPacket.CODEC);
-		registry.register(WindSyncPacket.PACKET_TYPE, WindSyncPacket.CODEC);
-		registry.register(WindDisturbancePacket.PACKET_TYPE, WindDisturbancePacket.CODEC);
 
 		// CAPE
 		c2sRegistry.register(CapeCustomizePacket.TYPE, CapeCustomizePacket.CODEC);
@@ -155,7 +145,7 @@ public final class FrozenNetworking {
 		});
 
 		// DEBUG
-		registry.register(WindAccessPacket.PACKET_TYPE, WindAccessPacket.STREAM_CODEC);
+		registry.register(WindAccessPacket.TYPE, WindAccessPacket.STREAM_CODEC);
 	}
 
 	public static void sendPacketToAllPlayers(ServerLevel level, CustomPacketPayload payload) {

@@ -46,6 +46,6 @@ public class RoarMixin {
 		)
 	)
 	private void startShaking(ServerLevel level, Warden body, long timestamp, CallbackInfo info) {
-		ScreenShakes.addScreenShake(body, ScreenShake.builder(body).intensity(0.3F).duration(WardenAi.ROAR_DURATION - TICKS_BEFORE_PLAYING_ROAR_SOUND).maxDistance(19F).build());
+		ScreenShakes.add(body, ScreenShake.builder(body).intensity(0.3F).duration(WardenAi.ROAR_DURATION - TICKS_BEFORE_PLAYING_ROAR_SOUND).maxDistance(19F).build());
 	}
 }
