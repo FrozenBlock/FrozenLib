@@ -24,7 +24,9 @@ import net.frozenblock.lib.entrypoint.api.ServerEventEntrypoint;
 import org.jetbrains.annotations.ApiStatus;
 
 /**
- * Enum class representing the different environments for events to take place on
+ * Enum class representing the different environments for events to take place on.
+ * <p>
+ * Used by the Fabric {@code EventHelper} implementation to auto-discover entrypoint listeners.
  */
 @ApiStatus.Internal
 public enum EventType {

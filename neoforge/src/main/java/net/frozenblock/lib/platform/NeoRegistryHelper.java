@@ -20,7 +20,6 @@ package net.frozenblock.lib.platform;
 import net.frozenblock.lib.platform.api.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.service.RegistryHelper;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 
 public class NeoRegistryHelper implements RegistryHelper {

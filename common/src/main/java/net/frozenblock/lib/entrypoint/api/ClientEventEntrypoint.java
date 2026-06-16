@@ -18,9 +18,9 @@
 package net.frozenblock.lib.entrypoint.api;
 
 /**
- * A common event callback that can be used as an entrypoint.
+ * A client-sided event callback that can be used as an entrypoint.
  * <p>
- * Defined with the {@code frozenlib:events} key in {@code fabric.mod.json}.
+ * On Fabric, defined with the {@code frozenlib:client_events} key in {@code fabric.mod.json}.
  */
-public interface CommonEventEntrypoint {
+public interface ClientEventEntrypoint {
 }

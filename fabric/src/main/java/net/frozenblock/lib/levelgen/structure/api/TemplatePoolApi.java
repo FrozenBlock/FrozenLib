@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.event.api.FrozenEvent;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.frozenblock.lib.levelgen.structure.impl.StructureTemplatePoolInterface;
@@ -42,7 +42,7 @@ public class TemplatePoolApi {
 	/**
 	 * An event used to add new {@link StructurePoolElement}s to {@link StructureTemplatePool}s.
 	 */
-	public static final Event<AddAdditionalTemplatePools> ADD_ADDITIONAL_TEMPLATE_POOLS = FrozenEvents.createEnvironmentEvent(AddAdditionalTemplatePools.class,
+	public static final FrozenEvent<AddAdditionalTemplatePools> ADD_ADDITIONAL_TEMPLATE_POOLS = FrozenEvents.createEnvironmentEvent(AddAdditionalTemplatePools.class,
 		callbacks -> (registry, context) -> {
 			for (var callback : callbacks) callback.addAdditionalTemplatePools(registry, context);
 	});

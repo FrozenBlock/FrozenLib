@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025-2026 FrozenBlock
+ * Copyright (C) 2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,22 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.block.api.friction;
+package net.frozenblock.lib.platform;
 
+import java.util.function.Function;
 import net.frozenblock.lib.event.api.FrozenEvent;
-import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
-import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.platform.service.EventHelper;
 
-public class BlockFrictionAPI {
+public class NeoEventHelper implements EventHelper {
 
-	public static final FrozenEvent<FrictionModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(
-		FrictionModification.class,
-		callbacks -> context -> {
-			for (FrictionModification modification : callbacks) modification.modifyFriction(context);
-		});
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> FrozenEvent<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
+		return new NeoFrozenEvent<>((Class<T>) type, invokerFactory);
+	}
 
-	@FunctionalInterface
-	public interface FrictionModification extends CommonEventEntrypoint {
-		void modifyFriction(FrictionContext context);
+	@Override
+	public <T> FrozenEvent<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
+		return new NeoFrozenEvent<>(type, invokerFactory);
 	}
 }

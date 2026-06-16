@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2026 FrozenBlock
+ * Copyright (C) 2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,23 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entrypoint.api;
+package net.frozenblock.lib.event.api;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.event.api.FrozenEvent;
-import net.frozenblock.lib.event.api.FrozenEvents;
+/**
+ * A cross-platform event, analogous to Fabric's {@code Event<T>}.
+ *
+ * <p>On Fabric this is backed directly by Fabric's array-backed event system.
+ * On NeoForge this is backed by a real {@code IEventBus} dispatch.
+ *
+ * @param <T> the listener callback type
+ */
+public interface FrozenEvent<T> {
 
-@FunctionalInterface
-public interface FrozenMainEntrypoint {
-	FrozenEvent<FrozenMainEntrypoint> EVENT = FrozenEvents.createEnvironmentEvent(FrozenMainEntrypoint.class, callbacks -> () -> {
-		for (var callback : callbacks) {
-			callback.init();
-			if (FabricLoader.getInstance().isDevelopmentEnvironment()) callback.initDevOnly();
-		}
-	});
+	void register(T listener);
 
-	void init();
-
-	default void initDevOnly() {}
-
+	T invoker();
 }

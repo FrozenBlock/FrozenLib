@@ -21,7 +21,7 @@ package org.quiltmc.qsl.frozenblock.core.registry.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.serialization.Lifecycle;
-import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.event.api.FrozenEvent;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.MappedRegistry;
@@ -48,7 +48,7 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 	private MutableRegistryEntryContextImpl<V> frozenLib_quilt$entryContext;
 
 	@Unique
-	private Event<RegistryEvents.EntryAdded<V>> frozenLib_quilt$entryAddedEvent;
+	private FrozenEvent<RegistryEvents.EntryAdded<V>> frozenLib_quilt$entryAddedEvent;
 
 	// HACK TODO for some reason initializing this like normal doesnt work. i dont care to figure out why - glitch
 	@Inject(method = "<init>(Lnet/minecraft/resources/ResourceKey;Lcom/mojang/serialization/Lifecycle;Z)V", at = @At("TAIL"))
@@ -89,7 +89,7 @@ public abstract class MappedRegistryMixin<V> implements Registry<V>, RegistryEve
 	}
 
 	@Override
-	public Event<RegistryEvents.EntryAdded<V>> frozenLib_quilt$getEntryAddedEvent() {
+	public FrozenEvent<RegistryEvents.EntryAdded<V>> frozenLib_quilt$getEntryAddedEvent() {
 		return this.frozenLib_quilt$entryAddedEvent;
 	}
 }

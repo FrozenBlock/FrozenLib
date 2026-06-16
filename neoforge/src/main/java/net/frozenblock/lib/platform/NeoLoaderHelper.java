@@ -20,7 +20,9 @@ package net.frozenblock.lib.platform;
 import net.frozenblock.lib.platform.service.LoaderHelper;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
+import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
 public class NeoLoaderHelper implements LoaderHelper {
 	@Override
@@ -36,5 +38,25 @@ public class NeoLoaderHelper implements LoaderHelper {
 	@Override
 	public boolean isModLoaded(String modId) {
 		return ModList.get().isLoaded(modId);
+	}
+
+	@Override
+	public boolean isFabric() {
+		return false;
+	}
+
+	@Override
+	public boolean isNeoForge() {
+		return true;
+	}
+
+	@Override
+	public @Nullable <T> T ifFabric(Supplier<T> supplier) {
+		return null;
+	}
+
+	@Override
+	public @Nullable <T> T ifNeoForge(Supplier<T> supplier) {
+		return supplier.get();
 	}
 }

@@ -17,21 +17,10 @@
 
 package net.frozenblock.lib.entrypoint.api;
 
-import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.event.api.FrozenEvent;
-import net.frozenblock.lib.event.api.FrozenEvents;
-
-@FunctionalInterface
-public interface FrozenMainEntrypoint {
-	FrozenEvent<FrozenMainEntrypoint> EVENT = FrozenEvents.createEnvironmentEvent(FrozenMainEntrypoint.class, callbacks -> () -> {
-		for (var callback : callbacks) {
-			callback.init();
-			if (FabricLoader.getInstance().isDevelopmentEnvironment()) callback.initDevOnly();
-		}
-	});
-
-	void init();
-
-	default void initDevOnly() {}
-
+/**
+ * A common event callback that can be used as an entrypoint.
+ * <p>
+ * On Fabric, defined with the {@code frozenlib:events} key in {@code fabric.mod.json}.
+ */
+public interface CommonEventEntrypoint {
 }

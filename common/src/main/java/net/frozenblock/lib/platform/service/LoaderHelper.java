@@ -17,7 +17,9 @@
 
 package net.frozenblock.lib.platform.service;
 
+import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
 public interface LoaderHelper {
 	boolean isDevelopmentEnvironment();
@@ -25,4 +27,12 @@ public interface LoaderHelper {
 	Path getGameDir();
 
 	boolean isModLoaded(String modId);
+
+	boolean isFabric();
+
+	boolean isNeoForge();
+
+	<T> @Nullable T ifFabric(Supplier<T> supplier);
+
+	<T> @Nullable T ifNeoForge(Supplier<T> supplier);
 }

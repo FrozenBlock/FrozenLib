@@ -18,7 +18,7 @@
 
 package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
-import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.event.api.FrozenEvent;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import org.jetbrains.annotations.ApiStatus;
@@ -36,5 +36,5 @@ public interface RegistryEventStorage<V> {
 	/**
 	 * {@return The entry added event}
 	 */
-	Event<RegistryEvents.EntryAdded<V>> frozenLib_quilt$getEntryAddedEvent();
+	FrozenEvent<RegistryEvents.EntryAdded<V>> frozenLib_quilt$getEntryAddedEvent();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024-2026 FrozenBlock
+ * Copyright (C) 2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -15,12 +15,14 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.entrypoint.api;
+package net.frozenblock.lib.platform.service;
 
-/**
- * A dedicated-server-sided event callback that can be used as an entrypoint.
- * <p>
- * Defined with the {@code frozenlib:server_events} key in {@code fabric.mod.json}.
- */
-public interface ServerEventEntrypoint {
+import java.util.function.Function;
+import net.frozenblock.lib.event.api.FrozenEvent;
+
+public interface EventHelper {
+
+	<T> FrozenEvent<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory);
+
+	<T> FrozenEvent<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory);
 }

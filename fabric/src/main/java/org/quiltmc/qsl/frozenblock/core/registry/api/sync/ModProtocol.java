@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.event.api.FrozenEvent;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.CustomValue;
@@ -34,7 +34,7 @@ import net.frozenblock.lib.event.api.FrozenEvents;
 import org.slf4j.Logger;
 
 public class ModProtocol {
-	public static final Event<LoadModProtocol> LOAD_MOD_PROTOCOL = FrozenEvents.createEnvironmentEvent(LoadModProtocol.class, callbacks -> () -> {
+	public static final FrozenEvent<LoadModProtocol> LOAD_MOD_PROTOCOL = FrozenEvents.createEnvironmentEvent(LoadModProtocol.class, callbacks -> () -> {
 		for (var callback : callbacks) callback.load();
 	});
 	public static final List<ModProtocolDef> REQUIRED = new ArrayList<>();

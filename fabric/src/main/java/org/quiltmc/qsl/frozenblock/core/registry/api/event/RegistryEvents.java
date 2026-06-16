@@ -19,7 +19,7 @@
 package org.quiltmc.qsl.frozenblock.core.registry.api.event;
 
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.event.api.FrozenEvent;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.core.MappedRegistry;
@@ -51,7 +51,7 @@ public class RegistryEvents {
 	 * the combined registry manager, and each layer holds different registries.
 	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 	 */
-	public static final Event<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = FrozenEvents.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
+	public static final FrozenEvent<DynamicRegistrySetupCallback> DYNAMIC_REGISTRY_SETUP = FrozenEvents.createEnvironmentEvent(DynamicRegistrySetupCallback.class,
 		callbacks -> context -> {
 			for (var callback : callbacks) callback.onDynamicRegistrySetup(context);
 		}
@@ -67,7 +67,7 @@ public class RegistryEvents {
 	 * the combined registry manager, and each layer holds different registries.
 	 * Use {@link RegistryAccess#lookup(ResourceKey)} to prevent crashes.
 	 */
-	public static final Event<DynamicRegistryLoadedCallback> DYNAMIC_REGISTRY_LOADED = FrozenEvents.createEnvironmentEvent(DynamicRegistryLoadedCallback.class,
+	public static final FrozenEvent<DynamicRegistryLoadedCallback> DYNAMIC_REGISTRY_LOADED = FrozenEvents.createEnvironmentEvent(DynamicRegistryLoadedCallback.class,
 		callbacks -> registryManager -> {
 			for (var callback : callbacks) callback.onDynamicRegistryLoaded(registryManager);
 		}
@@ -83,7 +83,7 @@ public class RegistryEvents {
 	 * @return The entry added event for the specified registry, which can have callbacks registered to it
 	 * @throws ClassCastException If the registry is not a {@link MappedRegistry}
 	 */
-	public static <V> Event<EntryAdded<V>> getEntryAddEvent(Registry<V> registry) {
+	public static <V> FrozenEvent<EntryAdded<V>> getEntryAddEvent(Registry<V> registry) {
 		return RegistryEventStorage.as((MappedRegistry<V>) registry).frozenLib_quilt$getEntryAddedEvent();
 	}
 

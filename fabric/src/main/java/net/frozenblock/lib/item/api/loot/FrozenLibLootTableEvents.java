@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.item.api.loot;
 
-import net.fabricmc.fabric.api.event.Event;
+import net.frozenblock.lib.event.api.FrozenEvent;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.world.Container;
@@ -32,7 +32,7 @@ public class FrozenLibLootTableEvents {
 	/**
 	 * The event that is triggered when an item is generated in a {@link net.minecraft.world.Container}.
 	 */
-	public static final Event<ItemGeneratedInContainer> ON_ITEM_GENERATED_IN_CONTAINER = FrozenEvents.createEnvironmentEvent(
+	public static final FrozenEvent<ItemGeneratedInContainer> ON_ITEM_GENERATED_IN_CONTAINER = FrozenEvents.createEnvironmentEvent(
 		ItemGeneratedInContainer.class,
 		callbacks -> (server, player) -> {
 			for (var callback : callbacks) callback.onItemGeneratedInContainer(server, player);

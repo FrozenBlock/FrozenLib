@@ -19,7 +19,9 @@ package net.frozenblock.lib.platform;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.platform.service.LoaderHelper;
+import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
+import java.util.function.Supplier;
 
 public class FabricLoaderHelper implements LoaderHelper {
 	@Override
@@ -35,5 +37,25 @@ public class FabricLoaderHelper implements LoaderHelper {
 	@Override
 	public boolean isModLoaded(String modId) {
 		return FabricLoader.getInstance().isModLoaded(modId);
+	}
+
+	@Override
+	public boolean isFabric() {
+		return true;
+	}
+
+	@Override
+	public boolean isNeoForge() {
+		return false;
+	}
+
+	@Override
+	public @Nullable <T> T ifFabric(Supplier<T> supplier) {
+		return supplier.get();
+	}
+
+	@Override
+	public @Nullable <T> T ifNeoForge(Supplier<T> supplier) {
+		return null;
 	}
 }
