@@ -38,6 +38,7 @@ base {
     archivesName.set("$archives_base_name-neoforge")
 }
 
+version = getModVersion()
 group = maven_group
 
 if (!neoforgeSnapshotMaven.isNullOrBlank()) {
@@ -127,7 +128,24 @@ dependencies {
     }
 }
 
+fun getModVersion(): String {
+    var version = "$mod_version-mc$minecraft_version"
+
+    return version
+}
+
 tasks {
+    processResources {
+        val properties = HashMap<String, Any>()
+        properties["mod_version"] = getModVersion()
+
+        properties.forEach { (a, b) -> inputs.property(a, b) }
+
+        filesMatching("META-INF/neoforge.mods.toml") {
+            expand(properties)
+        }
+    }
+
     shadowJar {
         configurations = listOf(relocImplementation, relocApi)
         enableAutoRelocation = true
@@ -170,3 +188,4 @@ java {
     sourceCompatibility = JavaVersion.VERSION_25
     targetCompatibility = JavaVersion.VERSION_25
 }
+

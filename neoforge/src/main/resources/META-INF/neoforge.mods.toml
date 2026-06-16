@@ -1,15 +1,20 @@
 modLoader="javafml"
 loaderVersion="[4,)"
 license="GPL-3.0"
+issueTrackerURL="https://github.com/FrozenBlock/FrozenLib/issues"
 
 [[mods]]
     modId="frozenlib"
-    version="${file.jarVersion}"
+    version="${mod_version}"
     displayName="FrozenLib"
+    displayURL="https://www.modrinth.com/mod/FrozenLib"
+    logoFile="assets/frozenlib/icon.png"
+    authors="Ethan Stokes, Luna"
     description='''
 A library that contains many tools for modders.
 Includes advanced math operations, noise sampling, advanced sounds, entity texture overrides,
 structure pool element replacements, item cooldown changes, datafixers, syncable configs, and much more!
+Provides a NeoForge implementation of QuiltMC's DataFixerUpper API.
     '''
 
 [[ dependencies.frozenlib ]]

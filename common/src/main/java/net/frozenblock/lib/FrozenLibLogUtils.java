@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib;
 
-import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.platform.FrozenEarlyPlatformUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
@@ -31,7 +31,7 @@ public final class FrozenLibLogUtils {
 	 * <p>
 	 * It's smart to use this for at least registries.
 	 */
-	public static boolean UNSTABLE_LOGGING = FabricLoader.getInstance().isDevelopmentEnvironment();
+	public static boolean UNSTABLE_LOGGING = FrozenEarlyPlatformUtils.LOADER.isDevelopmentEnvironment();
 
 	public static void log(Object string, boolean should) {
 		if (should) FrozenLibConstants.LOGGER.info(string.toString());
@@ -63,5 +63,21 @@ public final class FrozenLibLogUtils {
 
 	public static void logError(Object string) {
 		logError(string, true, null);
+	}
+
+	public static void logDebug(Object string, boolean should, @Nullable Throwable throwable) {
+		if (should) FrozenLibConstants.LOGGER.debug(string.toString());
+	}
+
+	public static void logDebug(Object string, boolean should) {
+		logDebug(string, should, null);
+	}
+
+	public static void logDebug(Object string, @Nullable Throwable throwable) {
+		logDebug(string, true, throwable);
+	}
+
+	public static void logDebug(Object string) {
+		logDebug(string, true, null);
 	}
 }

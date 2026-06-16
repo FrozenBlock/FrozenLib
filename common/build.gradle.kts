@@ -24,6 +24,8 @@ dependencies {
     compileOnly("org.spongepowered:mixin:0.8.5")
     compileOnly("io.github.llamalad7:mixinextras-common:0.5.3")
     annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.3")
+
+    compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 }
 
 sourceSets {

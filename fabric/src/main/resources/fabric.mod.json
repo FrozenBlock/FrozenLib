@@ -8,7 +8,7 @@
   "name": "FrozenLib",
   "description": "A library that contains many tools for modders.\nIncludes advanced math operations, noise sampling, advanced sounds, entity texture overrides, structure pool element replacements, item cooldown changes, datafixers, syncable configs, and much more!\nProvides a Fabric implementation of QuiltMC's DataFixerUpper API.",
   "authors": [
-    "Treetrain1",
+    "Ethan Stokes",
     "Luna"
   ],
   "contributors": [
