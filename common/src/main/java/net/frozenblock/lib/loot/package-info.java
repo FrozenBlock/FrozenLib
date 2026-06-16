@@ -15,22 +15,20 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.wind.disturbance;
 
-import java.util.function.Function;
-import net.frozenblock.lib.event.api.FrozenEvent;
-import net.frozenblock.lib.platform.service.EventHelper;
+import net.minecraft.world.phys.Vec3;
 
-public class NeoEventHelper implements EventHelper {
+public sealed interface WindDisturbanceResult {
+	Pass PASS = new Pass();
 
-	@Override
-	@SuppressWarnings("unchecked")
-	public <T> FrozenEvent<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
-		return new NeoFrozenEvent<>((Class<T>) type, invokerFactory);
+	public static Success success(double strength, double weight, Vec3 vector) {
+		return new Success(strength, weight, vector);
 	}
 
-	@Override
-	public <T> FrozenEvent<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
-		return new NeoFrozenEvent<>(type, invokerFactory);
+	public static record Success(double strength, double weight, Vec3 vector) implements WindDisturbanceResult {}
+
+	public static record Pass() implements WindDisturbanceResult {
+		public Pass() {}
 	}
 }

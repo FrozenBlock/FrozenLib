@@ -15,31 +15,17 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.registry;
 
 import net.frozenblock.lib.platform.api.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.api.FrozenHolder;
+import net.frozenblock.lib.platform.service.RegistryHelper;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
-import net.neoforged.fml.ModLoadingContext;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import java.util.function.Supplier;
 
-public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
-
-	private final DeferredRegister<T> inner;
-
-	public NeoFrozenDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		this.inner = DeferredRegister.create(registryKey, namespace);
-	}
+public class NeoRegistryHelper implements RegistryHelper {
 
 	@Override
-	public <I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier) {
-		return new NeoFrozenHolder<>(this.inner.register(name, supplier));
-	}
-
-	@Override
-	public void register() {
-		this.inner.register(ModLoadingContext.get().getActiveContainer().getEventBus());
+	public <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
+		return new NeoFrozenDeferredRegister<>(registryKey, namespace);
 	}
 }

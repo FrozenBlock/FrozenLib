@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.loot.mixin.neoforge",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "LootTableAccessor",
+    "LootTableBuilderAccessor",
+    "LootTableMixin",
+    "ReloadableServerRegistriesMixin"
+  ]
+}

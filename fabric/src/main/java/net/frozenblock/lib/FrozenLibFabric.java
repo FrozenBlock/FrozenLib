@@ -29,7 +29,8 @@ import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
-import net.frozenblock.lib.event.api.RegistryFreezeEvents;
+import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
+import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
@@ -45,6 +46,7 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTy
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
+import net.frozenblock.lib.event.impl.FabricLootTableEventBridge;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -63,15 +65,17 @@ import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 
-public final class FrozenLibMain extends FrozenModInitializer {
+public final class FrozenLibFabric extends FrozenModInitializer {
 
-	public FrozenLibMain() {
+	public FrozenLibFabric() {
 		super(FrozenLibConstants.MOD_ID);
 	}
 
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
+		FrozenLibMain.init();
 		FrozenLibRegistries.init();
+		FabricEventBridge.initModStage();
 
 		// QUILT INIT
 		ServerFreezer.onInitialize();

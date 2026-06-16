@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.event;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.Method;
@@ -23,14 +23,13 @@ import java.lang.reflect.Proxy;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import net.frozenblock.lib.event.api.FrozenEvent;
-import net.neoforged.bus.api.Event;
+import net.frozenblock.lib.event.api.Event;
 import net.neoforged.fml.event.IModBusEvent;
 
 /**
- * A {@link FrozenEvent} backed by a real NeoForge {@code IEventBus} dispatch.
+ * A {@link Event} backed by a real NeoForge {@code IEventBus} dispatch.
  *
- * <p>NeoForge's {@code IEventBus} dispatches by concrete {@link Event} subclass, while
+ * <p>NeoForge's {@code IEventBus} dispatches by concrete {@link net.neoforged.bus.api.Event} subclass, while
  * FrozenLib's listener-callback-interface model (mirroring Fabric's {@code Event<T>}) is
  * generic over an arbitrary functional interface {@code T}. To bridge the two without
  * forcing every FrozenLib event listener interface to extend NeoForge's {@code Event},
@@ -40,18 +39,18 @@ import net.neoforged.fml.event.IModBusEvent;
  *
  * @param <T> the listener callback type
  */
-public class NeoFrozenEvent<T> implements FrozenEvent<T> {
+public class NeoEvent<T> implements Event<T> {
 
 	private final Class<T> listenerType;
 	private final Function<T[], T> invokerFactory;
 	private final List<T> listeners = new ArrayList<>();
 	private volatile T cachedInvoker;
 
-	public NeoFrozenEvent(Class<T> listenerType, Function<T[], T> invokerFactory) {
+	public NeoEvent(Class<T> listenerType, Function<T[], T> invokerFactory) {
 		this.listenerType = listenerType;
 		this.invokerFactory = invokerFactory;
 
-		NeoFrozenEventBus.get().addListener(BridgeEvent.class, event -> {
+		FrozenLibEventBus.get().addListener(BridgeEvent.class, event -> {
 			if (event.source != this) return;
 			this.dispatch(event);
 		});
@@ -60,6 +59,23 @@ public class NeoFrozenEvent<T> implements FrozenEvent<T> {
 	@Override
 	public synchronized void register(T listener) {
 		this.listeners.add(listener);
+		this.cachedInvoker = null;
+	}
+
+	@Override
+	public synchronized void unregister(T listener) {
+		this.listeners.remove(listener);
+		this.cachedInvoker = null;
+	}
+
+	@Override
+	public synchronized boolean isRegistered(T listener) {
+		return this.listeners.contains(listener);
+	}
+
+	@Override
+	public synchronized void clearCallbacks() {
+		this.listeners.clear();
 		this.cachedInvoker = null;
 	}
 
@@ -85,7 +101,7 @@ public class NeoFrozenEvent<T> implements FrozenEvent<T> {
 			new Class<?>[]{this.listenerType},
 			(ignoredProxy, method, args) -> {
 				BridgeEvent event = new BridgeEvent(this, method, args);
-				NeoFrozenEventBus.get().post(event);
+				FrozenLibEventBus.get().post(event);
 				return event.result;
 			}
 		);
@@ -106,13 +122,13 @@ public class NeoFrozenEvent<T> implements FrozenEvent<T> {
 	}
 
 	/** Internal bridge event posted on FrozenLib's mod event bus to drive real IEventBus traversal. */
-	private static final class BridgeEvent extends Event implements IModBusEvent {
-		private final NeoFrozenEvent<?> source;
+	private static final class BridgeEvent extends net.neoforged.bus.api.Event implements IModBusEvent {
+		private final NeoEvent<?> source;
 		private final Method invokedMethod;
 		private final Object[] invokedArgs;
 		private Object result;
 
-		private BridgeEvent(NeoFrozenEvent<?> source, Method invokedMethod, Object[] invokedArgs) {
+		private BridgeEvent(NeoEvent<?> source, Method invokedMethod, Object[] invokedArgs) {
 			this.source = source;
 			this.invokedMethod = invokedMethod;
 			this.invokedArgs = invokedArgs;

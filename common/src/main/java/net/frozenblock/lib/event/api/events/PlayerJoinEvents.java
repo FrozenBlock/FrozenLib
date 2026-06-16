@@ -15,9 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.api;
+package net.frozenblock.lib.event.api.events;
 
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
+import net.frozenblock.lib.event.api.Event;
+import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -29,14 +31,14 @@ public class PlayerJoinEvents {
 	/**
 	 * The event that is triggered when a player joins the server.
 	 */
-	public static final FrozenEvent<PlayerJoin> ON_JOIN_SERVER = FrozenEvents.createEnvironmentEvent(PlayerJoin.class, (callbacks) -> (server, player) -> {
+	public static final Event<PlayerJoin> ON_JOIN_SERVER = FrozenEvents.createEnvironmentEvent(PlayerJoin.class, (callbacks) -> (server, player) -> {
 		for (var callback : callbacks) callback.onPlayerJoin(server, player);
 	});
 
 	/**
 	 * The event that is triggered when a player joins a world.
 	 */
-	public static final FrozenEvent<PlayerAddedToLevel> ON_PLAYER_ADDED_TO_LEVEL = FrozenEvents.createEnvironmentEvent(PlayerAddedToLevel.class, (callbacks) -> (server, level, player) -> {
+	public static final Event<PlayerAddedToLevel> ON_PLAYER_ADDED_TO_LEVEL = FrozenEvents.createEnvironmentEvent(PlayerAddedToLevel.class, (callbacks) -> (server, level, player) -> {
 		for (var callback : callbacks) callback.onPlayerAddedToLevel(server, level, player);
 	});
 

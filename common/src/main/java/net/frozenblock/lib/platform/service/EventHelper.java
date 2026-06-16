@@ -18,11 +18,11 @@
 package net.frozenblock.lib.platform.service;
 
 import java.util.function.Function;
-import net.frozenblock.lib.event.api.FrozenEvent;
+import net.frozenblock.lib.event.api.Event;
 
 public interface EventHelper {
 
-	<T> FrozenEvent<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory);
+	<T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory);
 
-	<T> FrozenEvent<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory);
+	<T> Event<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory);
 }

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.data;
 
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.FrozenDataAttachmentType;

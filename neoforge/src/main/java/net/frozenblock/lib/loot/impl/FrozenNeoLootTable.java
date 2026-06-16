@@ -15,17 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.loot.impl;
 
-import net.frozenblock.lib.platform.api.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.service.RegistryHelper;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.core.Holder;
+import net.minecraft.world.level.storage.loot.LootTable;
 
-public class NeoRegistryHelper implements RegistryHelper {
-
-	@Override
-	public <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		return new NeoFrozenDeferredRegister<>(registryKey, namespace);
-	}
+/**
+ * Lets a {@link LootTable} remember its own registry {@link Holder}, populated once the loot table registry
+ * has finished loading. Used to resolve the {@code holder} parameter for
+ * {@link net.frozenblock.lib.loot.api.FrozenLibLootTableEvents.ModifyDrops}.
+ */
+public interface FrozenNeoLootTable {
+	void frozenLib$setHolder(Holder<LootTable> holder);
 }

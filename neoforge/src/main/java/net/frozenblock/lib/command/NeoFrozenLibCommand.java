@@ -18,6 +18,7 @@
 package net.frozenblock.lib.command;
 
 import com.mojang.brigadier.CommandDispatcher;
+import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -29,6 +30,7 @@ public final class NeoFrozenLibCommand {
 	public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
 		dispatcher.register(Commands.literal("frozenlib")
 			.requires(Commands.hasPermission(Commands.LEVEL_GAMEMASTERS))
+			.then(ScaleEntityCommand.buildSubCommand())
 			.then(ScreenShakeCommand.buildSubCommand())
 		);
 	}

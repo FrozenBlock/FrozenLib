@@ -30,7 +30,7 @@ import net.frozenblock.lib.config.v2.entry.EntryType;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
 import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.config.v2.registry.ID;
-import net.frozenblock.lib.event.api.RegistryFreezeEvents;
+import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
 
 public class ConfigData<T> {
 	private final ID id;

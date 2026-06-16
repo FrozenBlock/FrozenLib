@@ -15,19 +15,22 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.event.api;
+package net.frozenblock.lib.platform.event;
 
-/**
- * A cross-platform event, analogous to Fabric's {@code Event<T>}.
- *
- * <p>On Fabric this is backed directly by Fabric's array-backed event system.
- * On NeoForge this is backed by a real {@code IEventBus} dispatch.
- *
- * @param <T> the listener callback type
- */
-public interface FrozenEvent<T> {
+import java.util.function.Function;
+import net.frozenblock.lib.event.api.Event;
+import net.frozenblock.lib.platform.service.EventHelper;
 
-	void register(T listener);
+public class NeoEventHelper implements EventHelper {
 
-	T invoker();
+	@Override
+	@SuppressWarnings("unchecked")
+	public <T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
+		return new NeoEvent<>((Class<T>) type, invokerFactory);
+	}
+
+	@Override
+	public <T> Event<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
+		return new NeoEvent<>(type, invokerFactory);
+	}
 }

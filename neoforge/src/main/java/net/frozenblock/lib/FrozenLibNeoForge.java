@@ -18,7 +18,8 @@
 package net.frozenblock.lib;
 
 import net.frozenblock.lib.command.NeoFrozenLibCommand;
-import net.frozenblock.lib.platform.NeoDataAttachmentHelper;
+import net.frozenblock.lib.event.impl.NeoEventBridge;
+import net.frozenblock.lib.platform.data.NeoDataAttachmentHelper;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.minecraft.client.Minecraft;
@@ -39,7 +40,9 @@ import net.minecraft.server.level.ServerLevel;
 public final class FrozenLibNeoForge {
 
 	public FrozenLibNeoForge(IEventBus modBus) {
+		FrozenLibMain.init();
 		NeoDataAttachmentHelper.register(modBus);
+		NeoEventBridge.initModStage(modBus);
 
 		ScreenShakes.init();
 

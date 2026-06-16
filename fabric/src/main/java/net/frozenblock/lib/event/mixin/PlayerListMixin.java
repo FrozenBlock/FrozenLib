@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.event.mixin;
 
-import net.frozenblock.lib.event.api.PlayerJoinEvents;
+import net.frozenblock.lib.event.api.events.PlayerJoinEvents;
 import net.minecraft.network.Connection;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;

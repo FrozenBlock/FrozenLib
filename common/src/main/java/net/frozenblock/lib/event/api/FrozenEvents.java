@@ -27,9 +27,9 @@ public class FrozenEvents {
 	 *
 	 * @param type The type of event to be created
 	 * @param invokerFactory The function to create the invoker for the event
-	 * @return A new FrozenEvent of the specified type
+	 * @return A new Event of the specified type
 	 */
-	public static <T> FrozenEvent<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
+	public static <T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
 		return FrozenInitPlatformUtils.EVENT.createEnvironmentEvent(type, invokerFactory);
 	}
 
@@ -39,9 +39,9 @@ public class FrozenEvents {
 	 * @param type The type of event to be created
 	 * @param emptyInvoker An empty invoker for the event
 	 * @param invokerFactory The function to create the invoker for the event
-	 * @return A new FrozenEvent of the specified type
+	 * @return A new Event of the specified type
 	 */
-	public static <T> FrozenEvent<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
+	public static <T> Event<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
 		return FrozenInitPlatformUtils.EVENT.createEnvironmentEvent(type, emptyInvoker, invokerFactory);
 	}
 }

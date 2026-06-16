@@ -18,12 +18,12 @@
 package net.frozenblock.lib.entrypoint.api;
 
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.event.api.FrozenEvent;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 
 @FunctionalInterface
 public interface FrozenClientEntrypoint extends ClientEventEntrypoint {
-	FrozenEvent<FrozenClientEntrypoint> EVENT = FrozenEvents.createEnvironmentEvent(FrozenClientEntrypoint.class, callbacks -> () -> {
+	Event<FrozenClientEntrypoint> EVENT = FrozenEvents.createEnvironmentEvent(FrozenClientEntrypoint.class, callbacks -> () -> {
 		for (var callback : callbacks) {
 			callback.init();
 			if (FabricLoader.getInstance().isDevelopmentEnvironment()) callback.initDevOnly();

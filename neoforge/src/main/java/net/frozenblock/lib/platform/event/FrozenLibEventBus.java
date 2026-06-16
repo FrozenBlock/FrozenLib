@@ -15,27 +15,16 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.event;
 
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModList;
 
-/**
- * Lazily resolves FrozenLib's own mod event bus.
- *
- * <p>Custom FrozenLib events are created from static initializers, which can run at
- * arbitrary classloading time — not necessarily while FrozenLib's own mod constructor is
- * on the stack. {@code ModLoadingContext.get().getActiveContainer()} is only valid during
- * a mod's own construction, so it cannot be used here. Mod discovery (and thus FrozenLib's
- * {@code ModContainer}) is available well before any mod's classes that would touch a
- * FrozenLib event are loaded, so resolving the container by id via {@link ModList} is safe.
- */
-final class NeoFrozenEventBus {
+@UtilityClass
+public class FrozenLibEventBus {
 	private static IEventBus bus;
-
-	private NeoFrozenEventBus() {
-	}
 
 	static synchronized IEventBus get() {
 		if (bus == null) {

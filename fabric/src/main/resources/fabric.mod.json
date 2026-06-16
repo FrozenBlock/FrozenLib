@@ -27,7 +27,7 @@
   "environment": "*",
   "entrypoints": {
 	  "main": [
-      "net.frozenblock.lib.FrozenLibMain"
+      "net.frozenblock.lib.FrozenLibFabric"
 	  ],
 	  "client": [
       "net.frozenblock.lib.FrozenLibClient"

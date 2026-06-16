@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
-import net.frozenblock.lib.event.api.FrozenEvent;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.api.FrozenEvents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -32,7 +32,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 public final class GravityAPI {
     public static final Vec3 DEFAULT_GRAVITY = new Vec3(0D, 1D, 0D);
-    public static final FrozenEvent<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(
+    public static final Event<GravityModification> MODIFICATIONS = FrozenEvents.createEnvironmentEvent(
 		GravityModification.class, callbacks -> context -> {
 			for (GravityModification callback : callbacks) callback.modifyGravity(context);
 		});

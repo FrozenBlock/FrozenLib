@@ -18,7 +18,7 @@
 package net.frozenblock.lib.block.api.fire;
 
 import java.util.Optional;
-import net.frozenblock.lib.event.api.FrozenEvent;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
@@ -37,7 +37,7 @@ public final class FireEvents {
 	/**
 	 * The event that is triggered when an {@link Entity} is catching on fire and the {@link FireType} is being selected.
 	 */
-	public static final FrozenEvent<SelectFireType> SELECT_FIRE_TYPE = FrozenEvents.createEnvironmentEvent(
+	public static final Event<SelectFireType> SELECT_FIRE_TYPE = FrozenEvents.createEnvironmentEvent(
 		SelectFireType.class,
 		(callbacks) -> (entity, sourceBlock, sourceEntity, sourceItem) -> {
 			ResourceKey<FireType> type = FireTypes.DEFAULT;
@@ -69,7 +69,7 @@ public final class FireEvents {
 	 * <p>
 	 * Runs after {@link FireEvents#SELECT_FIRE_TYPE}.
 	 */
-	public static final FrozenEvent<EntityFireTypeSet> AFTER_FIRE_TYPE_SET = FrozenEvents.createEnvironmentEvent(
+	public static final Event<EntityFireTypeSet> AFTER_FIRE_TYPE_SET = FrozenEvents.createEnvironmentEvent(
 		EntityFireTypeSet.class,
 		(callbacks) -> (entity, fireType) -> {
 			for (var callback : callbacks) callback.onEntityFireTypeSet(entity, fireType);
@@ -79,7 +79,7 @@ public final class FireEvents {
 	/**
 	 * The event that is triggered when an {@link Entity} is burnt from fire lingering on them.
 	 */
-	public static final FrozenEvent<EntityBurnTick> ON_ENTITY_BURN_TICK = FrozenEvents.createEnvironmentEvent(
+	public static final Event<EntityBurnTick> ON_ENTITY_BURN_TICK = FrozenEvents.createEnvironmentEvent(
 		EntityBurnTick.class,
 		(callbacks) -> (entity, fireType) -> {
 			for (var callback : callbacks) callback.onEntityBurnTick(entity, fireType);
@@ -91,7 +91,7 @@ public final class FireEvents {
 	 * <p>
 	 * This event is used to alter the {@link BlockState} that gets placed (i.e., Soul and Copper Fire.)
 	 */
-	public static final FrozenEvent<SelectFireBlockState> SELECT_FIRE_BLOCK_STATE = FrozenEvents.createEnvironmentEvent(
+	public static final Event<SelectFireBlockState> SELECT_FIRE_BLOCK_STATE = FrozenEvents.createEnvironmentEvent(
 		SelectFireBlockState.class,
 		(callbacks) -> (level, belowPos, belowState) -> {
 			BlockState newState = null;

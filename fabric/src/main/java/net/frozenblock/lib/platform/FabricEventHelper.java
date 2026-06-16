@@ -20,49 +20,30 @@ package net.frozenblock.lib.platform;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
-import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.event.api.FrozenEvent;
+import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.event.impl.EventType;
 import net.frozenblock.lib.platform.service.EventHelper;
 
 public class FabricEventHelper implements EventHelper {
-	private final List<Event<?>> registeredEvents = new ArrayList<>();
 
 	@Override
-	public <T> FrozenEvent<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
-		final Event<T> event = EventFactory.createArrayBacked(type, invokerFactory);
+	public <T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
+		final FabricEvent<T> event = new FabricEvent<>(type, null, invokerFactory);
 		this.autoRegister(event, type);
-		return wrap(event);
+		return event;
 	}
 
 	@Override
-	public <T> FrozenEvent<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
-		final Event<T> event = EventFactory.createArrayBacked(type, emptyInvoker, invokerFactory);
+	public <T> Event<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
+		final FabricEvent<T> event = new FabricEvent<>(type, emptyInvoker, invokerFactory);
 		this.autoRegister(event, type);
-		return wrap(event);
-	}
-
-	private static <T> FrozenEvent<T> wrap(Event<T> event) {
-		return new FrozenEvent<>() {
-			@Override
-			public void register(T listener) {
-				event.register(listener);
-			}
-
-			@Override
-			public T invoker() {
-				return event.invoker();
-			}
-		};
+		return event;
 	}
 
 	@SuppressWarnings("unchecked")
 	private <T> void autoRegister(Event<T> event, Class<? super T> type) {
-		if (this.registeredEvents.contains(event)) return;
-		this.registeredEvents.add(event);
-
 		for (var eventType : EventType.VALUES) {
 			if (!eventType.listener().isAssignableFrom(type)) continue;
 			final List<?> entrypoints = FabricLoader.getInstance().getEntrypoints(eventType.entrypoint(), eventType.listener());
@@ -72,6 +53,70 @@ public class FabricEventHelper implements EventHelper {
 				event.register((T) entrypoint);
 			}
 			break;
+		}
+	}
+
+	/**
+	 * An {@link Event} backed by a real Fabric {@code Event<T>}.
+	 *
+	 * <p>Fabric's array-backed {@code Event<T>} has no listener removal API, so this keeps its own
+	 * listener list as the source of truth and rebuilds the underlying Fabric event from scratch
+	 * whenever a listener is removed or all listeners are cleared.
+	 */
+	private static final class FabricEvent<T> implements Event<T> {
+		private final Class<? super T> type;
+		private final T emptyInvoker;
+		private final Function<T[], T> invokerFactory;
+		private final List<T> listeners = new ArrayList<>();
+		private volatile net.fabricmc.fabric.api.event.Event<T> delegate;
+
+		@SuppressWarnings("unchecked")
+		private FabricEvent(Class<? super T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
+			this.type = type;
+			this.emptyInvoker = emptyInvoker;
+			this.invokerFactory = invokerFactory;
+			this.delegate = emptyInvoker != null
+				? EventFactory.createArrayBacked((Class<T>) type, emptyInvoker, invokerFactory)
+				: EventFactory.createArrayBacked(type, invokerFactory);
+		}
+
+		@Override
+		public synchronized void register(T listener) {
+			this.listeners.add(listener);
+			this.delegate.register(listener);
+		}
+
+		@Override
+		public synchronized void unregister(T listener) {
+			this.listeners.remove(listener);
+			this.rebuild();
+		}
+
+		@Override
+		public synchronized boolean isRegistered(T listener) {
+			return this.listeners.contains(listener);
+		}
+
+		@Override
+		public synchronized void clearCallbacks() {
+			this.listeners.clear();
+			this.rebuild();
+		}
+
+		@SuppressWarnings("unchecked")
+		private void rebuild() {
+			final net.fabricmc.fabric.api.event.Event<T> rebuilt = this.emptyInvoker != null
+				? EventFactory.createArrayBacked((Class<T>) this.type, this.emptyInvoker, this.invokerFactory)
+				: EventFactory.createArrayBacked(this.type, this.invokerFactory);
+			for (T listener : this.listeners) {
+				rebuilt.register(listener);
+			}
+			this.delegate = rebuilt;
+		}
+
+		@Override
+		public T invoker() {
+			return this.delegate.invoker();
 		}
 	}
 }
