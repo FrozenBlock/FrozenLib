@@ -73,13 +73,13 @@ loom {
     runs {
         register("testmodClient") {
             client()
-            ideConfigGenerated(project.rootProject == project)
+            ideConfigGenerated(project.rootProject == project.parent)
             name("Testmod Client")
             source(testmod.get())
         }
         register("testmodServer") {
             server()
-            ideConfigGenerated(project.rootProject == project)
+            ideConfigGenerated(project.rootProject == project.parent)
             name("Testmod Server")
             source(testmod.get())
         }
