@@ -37,32 +37,32 @@ public interface WindDisturbance<T extends AttachmentTarget> {
 	Codec<List<WindDisturbance<?>>> LIST_CODEC = CODEC.listOf();
 	StreamCodec<RegistryFriendlyByteBuf, List<WindDisturbance<?>>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());
 
-	public default double scale(T source, Level level, Vec3 target) {
+	default double scale(T source, Level level, Vec3 target) {
 		return 1D;
 	}
 
-	public Vec3 origin(T source, Level level);
+	Vec3 origin(T source, Level level);
 
-	public AABB area(T source, Level level, Vec3 origin, Vec3 target, double scale);
+	AABB area(T source, Level level, Vec3 origin, Vec3 target, double scale);
 
-	public default AABB area(T source, Level level, Vec3 target) {
+	default AABB area(T source, Level level, Vec3 target) {
 		return this.area(source, level, this.origin(source, level), target, this.scale(source, level, target));
 	}
 
-	public WindDisturbanceResult get(T source, Level level, Vec3 origin, AABB area, Vec3 target, double scale);
+	WindDisturbanceResult get(T source, Level level, Vec3 origin, AABB area, Vec3 target, double scale);
 
-	public default WindDisturbanceResult get(T source, Level level, Vec3 target) {
+	default WindDisturbanceResult get(T source, Level level, Vec3 target) {
 		final double scale = this.scale(source, level, target);
 		final Vec3 origin = this.origin(source, level);
 		final AABB area = this.area(source, level, origin, target, scale);
 		return get(source, level, origin, area, target, scale);
 	}
 
-	public boolean expired(T source, Level level);
+	boolean expired(T source, Level level);
 
 	WindDisturbanceType<?> type();
 
-	public record Tracked<T extends AttachmentTarget>(WindDisturbance<T> windDisturbance, T source) {
+	record Tracked<T extends AttachmentTarget>(WindDisturbance<T> windDisturbance, T source) {
 		public boolean isSourceValid(Level level) {
 			if (this.source == null) return false;
 			if (this.source instanceof Entity entity) return !entity.isRemoved() && level == entity.level();

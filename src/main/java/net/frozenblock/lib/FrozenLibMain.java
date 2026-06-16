@@ -20,7 +20,6 @@ package net.frozenblock.lib;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.command.FrozenLibCommand;
@@ -58,7 +57,6 @@ import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
-import net.frozenblock.lib.wind.impl.networking.WindDisturbanceSyncPacket;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;
@@ -130,9 +128,6 @@ public final class FrozenLibMain extends FrozenModInitializer {
 
 		EntityTrackingEvents.START_TRACKING.register((entity, player) -> {
 			MovingSoundManager.syncWithPlayer(entity, player);
-			for (var disturbance : WindDisturbances.get(entity)) {
-				ServerPlayNetworking.send(player, new WindDisturbanceSyncPacket(entity.getId(), disturbance, true));
-			}
 		});
 
 		FrozenNetworking.registerNetworking();

@@ -48,7 +48,6 @@ import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
-import net.frozenblock.lib.wind.impl.networking.WindDisturbanceSyncPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -144,9 +143,6 @@ public final class FrozenNetworking {
 				}
 			}
 		});
-
-		// WIND DISTURBANCE SYNC
-		registry.register(WindDisturbanceSyncPacket.TYPE, WindDisturbanceSyncPacket.STREAM_CODEC);
 
 		// DEBUG
 		registry.register(WindAccessPacket.TYPE, WindAccessPacket.STREAM_CODEC);
