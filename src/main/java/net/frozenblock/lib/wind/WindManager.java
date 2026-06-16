@@ -83,7 +83,8 @@ public class WindManager {
 		ByteBufCodecs.DOUBLE, windManager -> windManager.laggedWindY,
 		ByteBufCodecs.DOUBLE, windManager -> windManager.laggedWindZ,
 		WindManagerExtension.LIST_STREAM_CODEC, windManager -> windManager.extensions,
-		WindManager::createFromCodec
+		ByteBufCodecs.optional(ByteBufCodecs.LONG), windManager -> windManager.seed,
+		WindManager::createFromStreamCodec
 	);
 	public static final AttachmentType<WindManager> ATTACHMENT_TYPE = AttachmentRegistry.create(
 		FrozenLibConstants.id("wind"),
@@ -106,18 +107,15 @@ public class WindManager {
 	public double laggedWindY;
 	public double laggedWindZ;
 	private Optional<Long> seed = Optional.empty();
-	private boolean initialized;
 	public ImprovedNoise noise;
 
 	private WindManager() {
 		this.level = null;
-		this.initialized = true;
 	}
 
 	private WindManager(ServerLevel level) {
 		this.level = level;
 		this.seed = Optional.of(RandomSource.create(level.getSeed()).nextLong());
-		this.initialized = true;
 	}
 
 	private WindManager(Level level) {
@@ -128,7 +126,6 @@ public class WindManager {
 		this.level = level;
 		if (level instanceof ServerLevel serverLevel && (this.seed.isEmpty() || this.noise == null)) {
 			this.seed = Optional.of(RandomSource.create(serverLevel.getSeed()).nextLong());
-			this.initialized = true;
 			this.trySync(serverLevel);
 		}
 	}
@@ -161,12 +158,8 @@ public class WindManager {
 
 	private static WindManager createFromCodec(
 		Optional<Vec3> windOverride,
-		double windX,
-		double windY,
-		double windZ,
-		double laggedWindX,
-		double laggedWindY,
-		double laggedWindZ,
+		double windX, double windY, double windZ,
+		double laggedWindX, double laggedWindY, double laggedWindZ,
 		List<WindManagerExtension> extensions
 	) {
 		final WindManager windManager = new WindManager();
@@ -178,6 +171,18 @@ public class WindManager {
 		windManager.laggedWindY = laggedWindY;
 		windManager.laggedWindZ = laggedWindZ;
 		windManager.extensions.addAll(extensions);
+		return windManager;
+	}
+
+	private static WindManager createFromStreamCodec(
+		Optional<Vec3> windOverride,
+		double windX, double windY, double windZ,
+		double laggedWindX, double laggedWindY, double laggedWindZ,
+		List<WindManagerExtension> extensions,
+		Optional<Long> seed
+	) {
+		final WindManager windManager = createFromCodec(windOverride, windX, windY, windZ, laggedWindX, laggedWindY, laggedWindZ, extensions);
+		windManager.seed = seed;
 		return windManager;
 	}
 
@@ -198,7 +203,7 @@ public class WindManager {
 	}
 
 	public boolean usable() {
-		return this.initialized;
+		return this.seed.isPresent();
 	}
 
 	/**
