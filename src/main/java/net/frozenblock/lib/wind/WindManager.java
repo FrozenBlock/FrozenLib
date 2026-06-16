@@ -39,11 +39,12 @@ import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
-import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceResult;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.extension.WindManagerExtension;
+import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
+import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -198,6 +199,25 @@ public class WindManager {
 
 	public boolean usable() {
 		return this.initialized;
+	}
+
+	/**
+	 * Returns the {@link WindManagerExtension} of the given {@link WindManagerExtensionType}, if available.
+	 * @param type The {@link WindManagerExtensionType} to get.
+	 * @return the extension of the given type, if available.
+	 */
+	public <T extends WindManagerExtension> Optional<T> getExtension(WindManagerExtensionType<T> type) {
+		return (Optional<T>) this.extensions.stream().filter(extension -> extension.type() == type).findFirst();
+	}
+
+	/**
+	 * Returns the {@link WindManagerExtension} of the given {@link WindManagerExtensionType} used for a given {@link Level}, if available.
+	 * @param level The {@link Level} to obtain the {@link WindManagerExtension} for.
+	 * @param type The {@link WindManagerExtensionType} to get.
+	 * @return the extension of the given type, if available.
+	 */
+	public static <T extends WindManagerExtension> Optional<T> getExtension(Level level, WindManagerExtensionType<T> type) {
+		return WindManager.getOrCreate(level).getExtension(type);
 	}
 
 	/**
