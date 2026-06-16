@@ -42,6 +42,8 @@ runserver/
 /src/main/generated/.cache
 /src/testmod/generated/.cache
 /config/
+/fabric/run
+/neoforge/runs
 
 # github actions
 
