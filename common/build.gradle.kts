@@ -1,6 +1,7 @@
 plugins {
     id("multiloader-common")
     id("net.neoforged.moddev")
+    id("org.quiltmc.gradle.licenser")
     kotlin("jvm")
 }
 
@@ -18,6 +19,23 @@ neoForge {
     val at = file("src/main/resources/META-INF/accesstransformer.cfg")
     if (at.exists()) {
         accessTransformers.from(at.absolutePath)
+    }
+}
+
+val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
+val licenseChecks: Boolean = githubActions
+
+val applyLicenses: Task by tasks
+
+tasks {
+    license {
+        if (licenseChecks) {
+            rule(rootProject.file("codeformat/QUILT_MODIFIED_HEADER"))
+            rule(rootProject.file("codeformat/HEADER"))
+
+            include("**//*.java")
+            include("**//*.kt")
+        }
     }
 }
 

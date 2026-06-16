@@ -18,20 +18,28 @@
 package net.frozenblock.lib.platform;
 
 import net.frozenblock.lib.platform.api.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.service.RegistryHelper;
+import net.frozenblock.lib.platform.api.FrozenHolder;
 import net.minecraft.core.Registry;
-import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.neoforged.fml.ModLoadingContext;
+import net.neoforged.neoforge.registries.DeferredRegister;
+import java.util.function.Supplier;
 
-public class FabricRegistryHelper implements RegistryHelper {
+public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 
-	@Override
-	public <T> T register(Registry<T> registry, Identifier id, T value) {
-		return Registry.register(registry, id, value);
+	private final DeferredRegister<T> inner;
+
+	public NeoFrozenDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
+		this.inner = DeferredRegister.create(registryKey, namespace);
 	}
 
 	@Override
-	public <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		return new FabricFrozenDeferredRegister<>(registryKey, namespace);
+	public <I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier) {
+		return new NeoFrozenHolder<>(this.inner.register(name, supplier));
+	}
+
+	@Override
+	public void register() {
+		this.inner.register(ModLoadingContext.get().getActiveContainer().getEventBus());
 	}
 }

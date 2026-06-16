@@ -17,21 +17,42 @@
 
 package net.frozenblock.lib.platform;
 
-import net.frozenblock.lib.platform.api.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.service.RegistryHelper;
-import net.minecraft.core.Registry;
+import net.frozenblock.lib.platform.api.FrozenHolder;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.neoforged.neoforge.registries.DeferredHolder;
 
-public class FabricRegistryHelper implements RegistryHelper {
+public class NeoFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
 
-	@Override
-	public <T> T register(Registry<T> registry, Identifier id, T value) {
-		return Registry.register(registry, id, value);
+	private final DeferredHolder<R, T> delegate;
+
+	public NeoFrozenHolder(DeferredHolder<R, T> delegate) {
+		this.delegate = delegate;
 	}
 
 	@Override
-	public <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		return new FabricFrozenDeferredRegister<>(registryKey, namespace);
+	public T get() {
+		return this.delegate.get();
+	}
+
+	@Override
+	public ResourceKey<R> getKey() {
+		return this.delegate.getKey();
+	}
+
+	@Override
+	public Identifier getId() {
+		return this.delegate.getId();
+	}
+
+	@Override
+	public boolean isBound() {
+		return this.delegate.isBound();
+	}
+
+	@Override
+	public Holder<R> asHolder() {
+		return this.delegate;
 	}
 }

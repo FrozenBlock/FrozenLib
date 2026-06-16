@@ -15,23 +15,30 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform;
+package net.frozenblock.lib.platform.api;
 
-import net.frozenblock.lib.platform.api.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.service.RegistryHelper;
-import net.minecraft.core.Registry;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import java.util.function.Supplier;
 
-public class FabricRegistryHelper implements RegistryHelper {
+/**
+ * A cross-platform lazy holder for a registered object.
+ * Safe to store as a static field before {@link FrozenDeferredRegister#register()} is called.
+ *
+ * @param <R> the registry object type
+ * @param <T> the concrete subtype, extends R
+ */
+public interface FrozenHolder<R, T extends R> extends Supplier<T> {
 
 	@Override
-	public <T> T register(Registry<T> registry, Identifier id, T value) {
-		return Registry.register(registry, id, value);
-	}
+	T get();
 
-	@Override
-	public <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		return new FabricFrozenDeferredRegister<>(registryKey, namespace);
-	}
+	ResourceKey<R> getKey();
+
+	Identifier getId();
+
+	boolean isBound();
+
+	Holder<R> asHolder();
 }

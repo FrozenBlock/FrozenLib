@@ -5,6 +5,7 @@ plugins {
     id("multiloader-loader")
     id("net.neoforged.moddev")
     id("com.gradleup.shadow")
+    id("org.quiltmc.gradle.licenser")
     kotlin("jvm")
     checkstyle
 }
@@ -75,6 +76,23 @@ neoForge {
     mods {
         create(mod_id) {
             sourceSet(sourceSets.main.get())
+        }
+    }
+}
+
+val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
+val licenseChecks: Boolean = githubActions
+
+val applyLicenses: Task by tasks
+
+tasks {
+    license {
+        if (licenseChecks) {
+            rule(rootProject.file("codeformat/QUILT_MODIFIED_HEADER"))
+            rule(rootProject.file("codeformat/HEADER"))
+
+            include("**//*.java")
+            include("**//*.kt")
         }
     }
 }
