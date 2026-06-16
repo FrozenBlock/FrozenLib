@@ -317,8 +317,8 @@ public class WindManager {
 			extension.tick(this, level);
 		}
 
-		// Sync with clients every 20 ticks
-		if (time % 20 == 0) this.trySync(level);
+		// Sync with clients every 40 ticks
+		if (time % 40 == 0) this.trySync(level);
 	}
 
 	/**
