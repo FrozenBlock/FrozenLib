@@ -289,14 +289,6 @@ public class WindManager {
 	public void tick(Level level) {
 		if (!level.tickRateManager().runsNormally()) return;
 
-		if (!(level instanceof ServerLevel)) {
-			for (WindManagerExtension extension : this.extensions) {
-				extension.baseTick(level);
-				extension.tick(level);
-			}
-			return;
-		}
-
 		if (this.seed.isEmpty()) return;
 		if (this.noise == null) this.noise = EasyNoiseSampler.createXoroNoise(this.seed.get());
 
@@ -321,8 +313,8 @@ public class WindManager {
 
 		// Tick extensions
 		for (WindManagerExtension extension : this.extensions) {
-			extension.baseTick(level);
-			extension.tick(level);
+			extension.baseTick(this, level);
+			extension.tick(this, level);
 		}
 
 		// Sync with clients every 20 ticks

@@ -20,6 +20,7 @@ package net.frozenblock.lib.wind.extension;
 import com.mojang.serialization.Codec;
 import java.util.List;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.wind.WindManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -37,12 +38,12 @@ public interface WindManagerExtension {
 	/**
 	 * Runs after the baseTick method.
 	 */
-	void tick(Level level);
+	void tick(WindManager windManager, Level level);
 
 	/**
 	 * Runs before the regular tick method.
 	 */
-	void baseTick(Level level);
+	void baseTick(WindManager windManager, Level level);
 
 	/**
 	 * Used to reset defined values in the rare case of an overflow.
