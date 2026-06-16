@@ -8,8 +8,6 @@
   },
   "mixins": [
     "CreeperMixin",
-    "DragonRespawnAnimationMixin$PreparingPillarsMixin",
-    "DragonRespawnAnimationMixin$SpawningDragonMixin",
     "EmergingMixin",
     "PhantomMixin",
     "PlayerMixin",
