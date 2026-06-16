@@ -59,7 +59,9 @@ import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
+import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
+import net.frozenblock.lib.wind.impl.networking.WindDisturbanceSyncPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -98,6 +100,8 @@ public final class FrozenClientNetworking {
 		ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
 			for (ConfigEntry<?> config : ConfigV2Registry.allConfigEntries()) ConfigSyncModification.clearSyncData(config);
 		}));
+
+		receiveWindDisturbanceSyncPacket();
 
 		// DEBUG
 		receiveWindDebugPacket();
@@ -300,6 +304,20 @@ public final class FrozenClientNetworking {
 	private static void receiveCapeRepoPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(LoadCapeRepoPacket.PACKET_TYPE, (packet, ctx) -> {
 			CapeUtil.registerCapesFromURL(packet.capeRepo());
+		});
+	}
+
+	private static void receiveWindDisturbanceSyncPacket() {
+		ClientPlayNetworking.registerGlobalReceiver(WindDisturbanceSyncPacket.TYPE, (packet, ctx) -> {
+			final var level = ctx.client().level;
+			if (level == null) return;
+			final var entity = level.getEntity(packet.entityId());
+			if (entity == null) return;
+			if (packet.add()) {
+				WindDisturbances.add(entity, packet.disturbance());
+			} else {
+				WindDisturbances.removeIf(entity, d -> d.equals(packet.disturbance()));
+			}
 		});
 	}
 

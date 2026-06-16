@@ -27,7 +27,6 @@ import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
@@ -36,8 +35,11 @@ import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.wind.WindManager;
+import net.frozenblock.lib.wind.impl.networking.WindDisturbanceSyncPacket;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge;
 
@@ -52,10 +54,7 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 	);
 	public static final AttachmentType<WindDisturbances> ATTACHMENT_TYPE = AttachmentRegistry.create(
 		FrozenLibConstants.id("wind_disturbances"),
-		builder -> {
-			builder.persistent(CODEC);
-			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all());
-		}
+		builder -> builder.persistent(CODEC)
 	);
 	public static void init() {
 		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
@@ -80,7 +79,18 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 	}
 
 	public static void set(AttachmentTarget target, WindDisturbance<?>... windDisturbances) {
+		final WindDisturbances old = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+		if (target instanceof Entity entity && entity.level() instanceof ServerLevel serverLevel) {
+			for (WindDisturbance<?> oldDisturbance : old) {
+				WindDisturbanceSyncPacket.sendToTracking(serverLevel, entity, oldDisturbance, false);
+			}
+		}
 		target.setAttached(ATTACHMENT_TYPE, new WindDisturbances(List.of(windDisturbances)));
+		if (target instanceof Entity entity && entity.level() instanceof ServerLevel serverLevel) {
+			for (WindDisturbance<?> disturbance : windDisturbances) {
+				WindDisturbanceSyncPacket.sendToTracking(serverLevel, entity, disturbance, true);
+			}
+		}
 	}
 
 	public static void add(AttachmentTarget target, WindDisturbance<?> windDisturbance) {
@@ -90,6 +100,9 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 			return;
 		}
 		target.setAttached(ATTACHMENT_TYPE, windDisturbances.add(windDisturbance));
+		if (target instanceof Entity entity && entity.level() instanceof ServerLevel serverLevel) {
+			WindDisturbanceSyncPacket.sendToTracking(serverLevel, entity, windDisturbance, true);
+		}
 	}
 
 	public static void addIf(AttachmentTarget target, Predicate<AttachmentTarget> predicate, Supplier<WindDisturbance<?>> windDisturbance) {
@@ -98,13 +111,25 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 	}
 
 	public static void removeAttachment(AttachmentTarget target) {
+		final WindDisturbances old = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
 		target.removeAttached(ATTACHMENT_TYPE);
+		if (target instanceof Entity entity && entity.level() instanceof ServerLevel serverLevel) {
+			for (WindDisturbance<?> disturbance : old) {
+				WindDisturbanceSyncPacket.sendToTracking(serverLevel, entity, disturbance, false);
+			}
+		}
 	}
 
 	public static void removeIf(AttachmentTarget target, Predicate<WindDisturbance<?>> removeIf) {
 		final WindDisturbances windDisturbances = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
 		if (windDisturbances.isEmpty()) return;
+		final List<WindDisturbance<?>> removed = windDisturbances.windDisturbances().stream().filter(removeIf).toList();
 		target.setAttached(ATTACHMENT_TYPE, windDisturbances.removeIf(removeIf));
+		if (target instanceof Entity entity && entity.level() instanceof ServerLevel serverLevel) {
+			for (WindDisturbance<?> disturbance : removed) {
+				WindDisturbanceSyncPacket.sendToTracking(serverLevel, entity, disturbance, false);
+			}
+		}
 	}
 
 	public static Predicate<AttachmentTarget> isOfClassAndDoesntHaveDisturbance(Class<?> clazz, WindDisturbanceType<?> type) {
