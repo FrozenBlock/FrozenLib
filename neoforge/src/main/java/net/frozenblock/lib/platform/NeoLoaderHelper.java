@@ -18,6 +18,7 @@
 package net.frozenblock.lib.platform;
 
 import net.frozenblock.lib.platform.service.LoaderHelper;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
 import java.nio.file.Path;
 
@@ -30,5 +31,10 @@ public class NeoLoaderHelper implements LoaderHelper {
 	@Override
 	public Path getGameDir() {
 		return FMLLoader.getCurrent().getGameDir();
+	}
+
+	@Override
+	public boolean isModLoaded(String modId) {
+		return ModList.get().isLoaded(modId);
 	}
 }

@@ -21,5 +21,8 @@ import java.nio.file.Path;
 
 public interface LoaderHelper {
 	boolean isDevelopmentEnvironment();
+
 	Path getGameDir();
+
+	boolean isModLoaded(String modId);
 }
