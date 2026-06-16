@@ -18,7 +18,7 @@
 package net.frozenblock.lib.platform.data;
 
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.api.FrozenDataAttachmentType;
+import net.frozenblock.lib.platform.api.data.FrozenDataAttachmentType;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

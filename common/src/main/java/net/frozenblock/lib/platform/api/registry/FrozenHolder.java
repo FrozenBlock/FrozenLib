@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform.api;
+package net.frozenblock.lib.platform.api.registry;
 
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;

@@ -30,7 +30,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.api.FrozenDataAttachmentType;
+import net.frozenblock.lib.platform.api.data.FrozenDataAttachmentType;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;

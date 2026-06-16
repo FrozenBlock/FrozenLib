@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.platform.service;
 
+import net.frozenblock.lib.platform.api.Env;
 import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -35,4 +36,10 @@ public interface LoaderHelper {
 	<T> @Nullable T ifFabric(Supplier<T> supplier);
 
 	<T> @Nullable T ifNeoForge(Supplier<T> supplier);
+
+	boolean isClient();
+
+	boolean isServer();
+
+	Env getEnv();
 }

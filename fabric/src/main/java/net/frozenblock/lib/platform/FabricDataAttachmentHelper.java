@@ -21,7 +21,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.frozenblock.lib.platform.api.FrozenDataAttachmentType;
+import net.frozenblock.lib.platform.api.data.FrozenDataAttachmentType;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 
 public class FabricDataAttachmentHelper implements DataAttachmentHelper {

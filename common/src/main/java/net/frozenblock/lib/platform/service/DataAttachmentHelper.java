@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.platform.service;
 
-import net.frozenblock.lib.platform.api.FrozenDataAttachmentType;
+import net.frozenblock.lib.platform.api.data.FrozenDataAttachmentType;
 
 public interface DataAttachmentHelper {
 	<T> FrozenDataAttachmentType<T> create(FrozenDataAttachmentType.Builder<T> builder);

@@ -17,7 +17,9 @@
 
 package net.frozenblock.lib.platform;
 
+import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.frozenblock.lib.platform.api.Env;
 import net.frozenblock.lib.platform.service.LoaderHelper;
 import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
@@ -57,5 +59,23 @@ public class FabricLoaderHelper implements LoaderHelper {
 	@Override
 	public @Nullable <T> T ifNeoForge(Supplier<T> supplier) {
 		return null;
+	}
+
+	@Override
+	public boolean isClient() {
+		return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+	}
+
+	@Override
+	public boolean isServer() {
+		return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
+	}
+
+	@Override
+	public Env getEnv() {
+		return switch (FabricLoader.getInstance().getEnvironmentType()) {
+			case CLIENT -> Env.CLIENT;
+			case SERVER -> Env.SERVER;
+		};
 	}
 }

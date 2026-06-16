@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform.api;
+package net.frozenblock.lib.platform.api.registry;
 
 import net.frozenblock.lib.platform.FrozenInitPlatformUtils;
 import net.minecraft.core.Registry;

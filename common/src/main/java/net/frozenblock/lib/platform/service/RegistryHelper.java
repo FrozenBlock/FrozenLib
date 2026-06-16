@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.platform.service;
 
-import net.frozenblock.lib.platform.api.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 

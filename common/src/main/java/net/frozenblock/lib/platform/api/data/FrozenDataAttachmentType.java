@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.platform.api;
+package net.frozenblock.lib.platform.api.data;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;

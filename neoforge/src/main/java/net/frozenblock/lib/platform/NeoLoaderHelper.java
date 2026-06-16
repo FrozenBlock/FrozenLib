@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.platform;
 
+import net.frozenblock.lib.platform.api.Env;
 import net.frozenblock.lib.platform.service.LoaderHelper;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLLoader;
@@ -58,5 +59,23 @@ public class NeoLoaderHelper implements LoaderHelper {
 	@Override
 	public @Nullable <T> T ifNeoForge(Supplier<T> supplier) {
 		return supplier.get();
+	}
+
+	@Override
+	public boolean isClient() {
+		return FMLLoader.getCurrent().getDist().isClient();
+	}
+
+	@Override
+	public boolean isServer() {
+		return FMLLoader.getCurrent().getDist().isDedicatedServer();
+	}
+
+	@Override
+	public Env getEnv() {
+		return switch (FMLLoader.getCurrent().getDist()) {
+			case CLIENT -> Env.CLIENT;
+			case DEDICATED_SERVER -> Env.SERVER;
+		};
 	}
 }

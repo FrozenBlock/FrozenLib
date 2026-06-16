@@ -17,8 +17,8 @@
 
 package net.frozenblock.lib.platform.registry;
 
-import net.frozenblock.lib.platform.api.FrozenDeferredRegister;
-import net.frozenblock.lib.platform.api.FrozenHolder;
+import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.fml.ModLoadingContext;
