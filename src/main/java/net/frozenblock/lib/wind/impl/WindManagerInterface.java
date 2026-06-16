@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.wind.impl;
 
-import net.frozenblock.lib.wind.api.WindManager;
+import net.frozenblock.lib.wind.v2.WindManager;
 
 public interface WindManagerInterface {
 	WindManager frozenLib$getOrCreateWindManager();

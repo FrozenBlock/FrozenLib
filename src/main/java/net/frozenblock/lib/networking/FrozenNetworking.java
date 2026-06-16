@@ -47,7 +47,7 @@ import net.frozenblock.lib.sound.impl.networking.MovingFadingDistanceSwitchingRe
 import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
-import net.frozenblock.lib.wind.api.WindManager;
+import net.frozenblock.lib.wind.v2.WindManager;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.frozenblock.lib.wind.impl.networking.WindDisturbancePacket;
 import net.frozenblock.lib.wind.impl.networking.WindSyncPacket;

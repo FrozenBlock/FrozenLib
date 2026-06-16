@@ -56,7 +56,7 @@ import net.frozenblock.lib.sound.impl.MovingSoundManager;
 import net.frozenblock.lib.spottingicon.api.SpottingIcons;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.wind.api.WindDisturbanceLogic;
-import net.frozenblock.lib.wind.api.WindManager;
+import net.frozenblock.lib.wind.v2.WindManager;
 import net.frozenblock.lib.wind.v2.extension.WindManagerExtensionType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;

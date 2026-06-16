@@ -21,7 +21,8 @@ import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.DoubleArgumentType;
 import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import net.frozenblock.lib.wind.api.WindManager;
+import java.util.Optional;
+import net.frozenblock.lib.wind.v2.WindManager;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
@@ -81,7 +82,7 @@ public class WindCommand {
 		windManager.windX = x;
 		windManager.windY = y;
 		windManager.windZ = z;
-		windManager.commandWind = new Vec3(windManager.windX, windManager.windY, windManager.windZ);
+		windManager.windOverride = Optional.of(new Vec3(x, y, z));
 		windManager.sendSync(level);
 		source.sendSuccess(() -> Component.translatable("commands.wind.success", x, y, z), true);
 		return 1;
