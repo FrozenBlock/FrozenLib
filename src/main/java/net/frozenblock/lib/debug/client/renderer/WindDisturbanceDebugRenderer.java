@@ -19,7 +19,8 @@ package net.frozenblock.lib.debug.client.renderer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.wind.client.impl.ClientWindManager;
+import net.frozenblock.lib.wind.client.ClientWindUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.gizmos.GizmoStyle;
@@ -43,13 +44,15 @@ public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRe
 		Frustum frustum,
 		float unknown
 	) {
-		ClientWindManager.Debug.getWindDisturbances().forEach(
-			windDisturbance -> {
-				Gizmos.cuboid(windDisturbance.affectedArea, WIND_DISTURBANCE_AREA_STYLE);
-				Gizmos.cuboid(AABB.ofSize(windDisturbance.origin, 0.2D, 0.2D, 0.2D), WIND_DISTURBANCE_CORE_STYLE);
+		final var level = Minecraft.getInstance().level;
+		ClientWindUtil.Debug.getWindDisturbances().forEach(
+			tracked -> {
+				if (level == null) return;
+				Gizmos.cuboid(tracked.area(level), WIND_DISTURBANCE_AREA_STYLE);
+				Gizmos.cuboid(AABB.ofSize(tracked.origin(level), 0.2D, 0.2D, 0.2D), WIND_DISTURBANCE_CORE_STYLE);
 			}
 		);
 
-		WindDebugRenderer.emitWindNodesFromList(ClientWindManager.Debug.getDebugDisturbanceNodes(), frustum);
+		WindDebugRenderer.emitWindNodesFromList(ClientWindUtil.Debug.getDebugDisturbanceNodes(), frustum);
 	}
 }

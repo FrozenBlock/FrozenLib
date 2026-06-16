@@ -24,7 +24,7 @@ import net.fabricmc.api.Environment;
 import net.frozenblock.lib.particle.api.client.CustomRotationalParticleHelper;
 import net.frozenblock.lib.particle.options.WindParticleOptions;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
-import net.frozenblock.lib.wind.client.impl.ClientWindManager;
+import net.frozenblock.lib.wind.WindManager;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
@@ -86,7 +86,7 @@ public class WindParticle extends SingleQuadParticle {
 			final double horizontalScale = 0.007D;
 			final double verticalScale = 0.0015D * 0.695;
 			final Vec3 pos = new Vec3(this.x, this.y, this.z);
-			final Vec3 wind = ClientWindManager.getWindMovement(this.level, pos, this.windMovementScale, 7D, 5D);
+			final Vec3 wind = WindManager.getOrCreate(this.level).getWindMovement(pos, this.windMovementScale, 7D, 5D);
 			this.xd += wind.x() * horizontalScale;
 			this.yd += wind.y() * verticalScale;
 			this.zd += wind.z() * horizontalScale;

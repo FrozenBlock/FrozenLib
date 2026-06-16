@@ -21,7 +21,7 @@ import com.mojang.datafixers.util.Pair;
 import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.wind.client.impl.ClientWindManager;
+import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
 import net.minecraft.gizmos.Gizmos;
@@ -42,7 +42,7 @@ public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 		Frustum frustum,
 		float unknown
 	) {
-		emitWindNodesFromList(ClientWindManager.Debug.getDebugNodes(), frustum);
+		emitWindNodesFromList(ClientWindUtil.Debug.getDebugNodes(), frustum);
 	}
 
 	protected static void emitWindNodesFromList(List<List<Pair<Vec3, Integer>>> windNodes, Frustum frustum) {

@@ -40,7 +40,9 @@ import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
-import net.frozenblock.lib.wind.client.impl.ClientWindManager;
+import net.frozenblock.lib.wind.WindManager;
+import net.frozenblock.lib.wind.client.ClientWindUtil;
+import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.minecraft.client.Minecraft;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
@@ -85,6 +87,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 
 		FrozenLibModResourcePackApi.init();
 		FrozenLibDebugScreenEntries.init();
+		WindDisturbances.initClient();
 
 		FrozenClientEntrypoint.EVENT.invoker().init(); // also includes dev init
 	}
@@ -93,18 +96,17 @@ public final class FrozenLibClient implements ClientModInitializer {
 		ClientTickEvents.START_LEVEL_TICK.register(
 			level -> {
 				final Minecraft minecraft = Minecraft.getInstance();
-				ClientWindManager.tick(level);
+				WindManager.getOrCreate(level).tick(level);
+				ClientWindUtil.Debug.tick(level);
 				ClientScreenShaker.tick(minecraft, level);
 				FlyBySoundHub.tick(minecraft, minecraft.getCameraEntity(), true);
 			}
 		);
-		ClientTickEvents.START_CLIENT_TICK.register(client -> ClientWindManager.clearAndSwitchWindDisturbances());
 		ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> clearStaticClientData());
 		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((minecraft, clientLevel) -> clearStaticClientData());
 	}
 
 	private static void clearStaticClientData() {
 		ClientScreenShaker.reset();
-		ClientWindManager.reset();
 	}
 }

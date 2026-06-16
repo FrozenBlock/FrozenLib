@@ -55,6 +55,7 @@ import net.frozenblock.lib.sound.impl.MovingSoundManager;
 import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.wind.WindManager;
+import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -93,6 +94,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		WindManager.init();
 		WindManagerExtensionType.init();
 		WindDisturbances.init();
+		WindDisturbanceType.init();
 		FrozenLibBlockPredicateTypes.init();
 		FrozenLibPlacementModifiers.init();
 		FrozenLibLootConditionTypes.init();

@@ -26,6 +26,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
@@ -63,10 +64,26 @@ public interface WindDisturbance<T extends AttachmentTarget> {
 
 	public record Tracked<T extends AttachmentTarget>(WindDisturbance<T> windDisturbance, T source) {
 		public boolean isSourceValid(Level level) {
-			source.
 			if (this.source == null) return false;
-			if (this.source instanceof Entity entity && (entity.isRemoved() || level != entity.level())) return false;
-			if (this.source instanceof Chunk)
+			if (this.source instanceof Entity entity) return !entity.isRemoved() && level == entity.level();
+			if (this.source instanceof BlockEntity blockEntity) return !blockEntity.isRemoved() && blockEntity.getLevel() == level;
+			return true;
+		}
+
+		public boolean isExpired(Level level) {
+			return !isSourceValid(level) || this.windDisturbance.expired(this.source, level);
+		}
+
+		public WindDisturbanceResult get(Level level, Vec3 target) {
+			return this.windDisturbance.get(this.source, level, target);
+		}
+
+		public Vec3 origin(Level level) {
+			return this.windDisturbance.origin(this.source, level);
+		}
+
+		public AABB area(Level level) {
+			return this.windDisturbance.area(this.source, level, this.origin(level));
 		}
 	}
 }

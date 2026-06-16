@@ -58,7 +58,7 @@ import net.frozenblock.lib.sound.impl.networking.MovingRestrictionSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.RelativeMovingSoundPacket;
 import net.frozenblock.lib.sound.impl.networking.StartingMovingRestrictionSoundLoopPacket;
 import net.frozenblock.lib.texture.client.api.ServerTextureDownloader;
-import net.frozenblock.lib.wind.client.impl.ClientWindManager;
+import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.impl.networking.WindAccessPacket;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -307,7 +307,7 @@ public final class FrozenClientNetworking {
 	private static void receiveWindDebugPacket() {
 		ClientPlayNetworking.registerGlobalReceiver(WindAccessPacket.TYPE, (packet, ctx) -> {
 			if (!FrozenLibConstants.DEBUG_WIND) return;
-			ClientWindManager.Debug.addAccessedPosition(packet.accessPos());
+			ClientWindUtil.Debug.addAccessedPosition(packet.accessPos());
 		});
 	}
 

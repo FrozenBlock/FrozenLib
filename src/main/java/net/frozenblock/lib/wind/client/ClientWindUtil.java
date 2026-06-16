@@ -22,6 +22,7 @@ import com.mojang.datafixers.util.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -43,7 +44,7 @@ public class ClientWindUtil {
 	@VisibleForDebug
 	public static class Debug {
 		private static final List<Vec3> ACCESSED_POSITIONS = new ArrayList<>();
-		private static final List<WindDisturbance<?>> WIND_DISTURBANCES = new ArrayList<>();
+		private static final List<WindDisturbance.Tracked<?>> WIND_DISTURBANCES = new ArrayList<>();
 		private static final List<List<Pair<Vec3, Integer>>> DEBUG_NODES = new ArrayList<>();
 		private static final List<List<Pair<Vec3, Integer>>> DEBUG_DISTURBANCE_NODES = new ArrayList<>();
 
@@ -54,7 +55,7 @@ public class ClientWindUtil {
 
 			if (FrozenLibConstants.DEBUG_WIND) DEBUG_NODES.addAll(createWindNodes(level));
 			if (FrozenLibConstants.DEBUG_WIND_DISTURBANCES) {
-				WIND_DISTURBANCES.addAll(getWindDisturbances());
+				WIND_DISTURBANCES.addAll(WindManager.getOrCreate(level).getTrackedDisturbances());
 				DEBUG_DISTURBANCE_NODES.addAll(createWindDisturbanceNodes(level));
 			}
 
@@ -91,7 +92,7 @@ public class ClientWindUtil {
 		}
 
 		@VisibleForDebug
-		public static @Unmodifiable List<WindDisturbance<?>> getWindDisturbances() {
+		public static @Unmodifiable List<WindDisturbance.Tracked<?>> getWindDisturbances() {
 			return ImmutableList.copyOf(WIND_DISTURBANCES);
 		}
 
@@ -103,10 +104,11 @@ public class ClientWindUtil {
 		private static List<List<Pair<Vec3, Integer>>> createWindDisturbanceNodes(ClientLevel level) {
 			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
 			WIND_DISTURBANCES.forEach(
-				windDisturbance -> {
+				tracked -> {
+					final var area = tracked.area(level);
 					BlockPos.betweenClosed(
-						BlockPos.containing(windDisturbance.affectedArea.getMinPosition()),
-						BlockPos.containing(windDisturbance.affectedArea.getMaxPosition())
+						BlockPos.containing(area.getMinPosition()),
+						BlockPos.containing(area.getMaxPosition())
 					).forEach(
 						blockPos -> {
 							final Vec3 blockPosCenter = Vec3.atCenterOf(blockPos);
@@ -120,9 +122,10 @@ public class ClientWindUtil {
 
 		private static List<Pair<Vec3, Integer>> createWindNodes(Level level, Vec3 origin, double stretch, boolean disturbanceOnly) {
 			final List<Pair<Vec3, Integer>> windNodes = new ArrayList<>();
+			final WindManager windManager = WindManager.getOrCreate(level);
 			Vec3 wind = disturbanceOnly ?
-				ClientWindManager.getRawDisturbanceMovement(level, origin)
-				: ClientWindManager.getWindMovement(level, origin);
+				windManager.getRawDisturbanceMovement(origin)
+				: windManager.getWindMovement(origin);
 
 			final double windLength = wind.length();
 			if (windLength == 0D) return windNodes;
@@ -147,8 +150,8 @@ public class ClientWindUtil {
 				);
 				lineStart = lineEnd;
 				wind = disturbanceOnly ?
-					ClientWindManager.getRawDisturbanceMovement(level, lineStart)
-					: ClientWindManager.getWindMovement(level, lineStart);
+					windManager.getRawDisturbanceMovement(lineStart)
+					: windManager.getWindMovement(lineStart);
 			}
 
 			return windNodes;

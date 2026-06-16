@@ -17,7 +17,6 @@
 
 package net.frozenblock.lib.wind.disturbance;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
@@ -31,16 +30,16 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.wind.WindManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.monster.breeze.Breeze;
 import net.minecraft.world.entity.projectile.hurtingprojectile.windcharge.AbstractWindCharge;
-import net.minecraft.world.level.Level;
 
 public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implements Iterable<WindDisturbance<?>> {
 	public static final WindDisturbances EMPTY = new WindDisturbances(List.of());
@@ -58,46 +57,26 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all());
 		}
 	);
-	private static final List<Pair<?, WindDisturbances>> WIND_DISTURBANCES = new ArrayList<>();
-
-	public static void tick(Level level, AttachmentTarget target) {
-		final WindDisturbances windDisturbances = target.getAttached(ATTACHMENT_TYPE);
-		if (windDisturbances == null) return;
-		if (windDisturbances.isEmpty()) {
-			removeAttachment(target);
-			return;
-		}
-
-		target.setAttached(ATTACHMENT_TYPE, windDisturbances.removeIf(windDisturbance -> ((WindDisturbance) windDisturbance).expired(target, level)));
-		if (!has(target)) removeAttachment(target);
-	}
-
 	public static void init() {
-		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> {
-
-		})
-
-		ServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
-			tick(serverLevel, serverLevel);
-			for (Entity entity : serverLevel.getAllEntities()) {
-				if (entity.isRemoved()) continue;
-				tick(serverLevel, entity);
-			}
-			for (Entity entity : serverLevel.tickBlockEntities();) {
-				if (entity.isRemoved()) continue;
-				tick(serverLevel, entity);
-			}
-		});
-
 		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
-			addIf(entity, isOfClassAndDoesntHaveDisturbance(Breeze.class, WindDisturbanceType.BREEZE), () -> BreezeWindDisturbance.INSTANCE);
-			addIf(entity, isOfClassAndDoesntHaveDisturbance(AbstractWindCharge.class, WindDisturbanceType.WIND_CHARGE), () -> WindChargeWindDisturbance.INSTANCE);
+			final WindManager windManager = WindManager.getOrCreate(level);
+			windManager.reindexExisting(entity);
+			windManager.addIfMissing(entity, isOfClassAndDoesntHaveDisturbance(Breeze.class, WindDisturbanceType.BREEZE), BreezeWindDisturbance.INSTANCE);
+			windManager.addIfMissing(entity, isOfClassAndDoesntHaveDisturbance(AbstractWindCharge.class, WindDisturbanceType.WIND_CHARGE), WindChargeWindDisturbance.INSTANCE);
 		});
+		ServerEntityEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrack(entity));
+
+		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).reindexExisting(blockEntity));
+		ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrack(blockEntity));
 	}
 
 	@Environment(EnvType.CLIENT)
 	public static void initClient() {
+		ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).reindexExisting(entity));
+		ClientEntityEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrack(entity));
 
+		ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).reindexExisting(blockEntity));
+		ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrack(blockEntity));
 	}
 
 	public static void set(AttachmentTarget target, WindDisturbance<?>... windDisturbances) {
