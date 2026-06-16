@@ -324,8 +324,8 @@ tasks {
     withType(KotlinCompile::class) {
         compilerOptions {
             jvmTarget = JvmTarget.JVM_25
-            apiVersion = KotlinVersion.KOTLIN_2_1
-            languageVersion = KotlinVersion.KOTLIN_2_1
+            //apiVersion = KotlinVersion.KOTLIN_2_1
+            //languageVersion = KotlinVersion.KOTLIN_2_1
         }
     }
 
