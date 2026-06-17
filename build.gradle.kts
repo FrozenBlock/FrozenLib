@@ -519,19 +519,6 @@ fun getBranch(): String {
     return branch.substring(branch.lastIndexOf("/") + 1)
 }
 
-tasks.publishCurseforge {
-    dependsOn(jar)
-    dependsOn(tasks.shadowJar)
-}
-tasks.publishModrinth {
-    dependsOn(jar)
-    dependsOn(tasks.shadowJar)
-}
-tasks.publishGithub {
-    dependsOn(jar)
-    dependsOn(tasks.shadowJar)
-}
-
 publishMods {
     version.set(modrinth_version)
     file.set(tasks.shadowJar.get().archiveFile)
@@ -566,6 +553,19 @@ publishMods {
         commitish.set(getBranch())
         additionalFiles.from(sourcesJar.archiveFile.get().asFile, javadocJar.archiveFile.get().asFile)
     }
+}
+
+tasks.named("publishCurseforge") {
+    dependsOn(tasks.jar)
+    dependsOn(tasks.shadowJar)
+}
+tasks.named("publishModrinth") {
+    dependsOn(tasks.jar)
+    dependsOn(tasks.shadowJar)
+}
+tasks.named("publishGithub") {
+    dependsOn(tasks.jar)
+    dependsOn(tasks.shadowJar)
 }
 
 val publishMod by tasks.register("publishMod") {
