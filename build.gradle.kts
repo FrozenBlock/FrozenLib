@@ -521,7 +521,7 @@ fun getBranch(): String {
 
 publishMods {
     version.set(modrinth_version)
-    file.set(jar.archiveFile)
+    file.set(tasks.shadowJar.get().archiveFile)
     changelog.set(changelog_text)
     type.set(STABLE)
     modLoaders.add("fabric")
@@ -556,6 +556,7 @@ publishMods {
 }
 
 val publishMod by tasks.register("publishMod") {
+    dependsOn(tasks.shadowJar)
     dependsOn(tasks.publish)
     dependsOn(tasks.publishMods)
 }
