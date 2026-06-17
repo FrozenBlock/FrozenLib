@@ -66,6 +66,7 @@ import org.jetbrains.annotations.Nullable;
  * <p> One instance is created per {@link Level}.
  */
 public class WindManager {
+	private static final WindManager INSTANCE = new WindManager();
 	public static final Codec<WindManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		Vec3.CODEC.optionalFieldOf("wind_override").forGetter(windManager -> windManager.windOverride),
 		Codec.DOUBLE.fieldOf("x").forGetter(windManager -> windManager.windX),
@@ -86,7 +87,7 @@ public class WindManager {
 		ByteBufCodecs.DOUBLE, windManager -> windManager.laggedWindZ,
 		WindManagerExtension.LIST_STREAM_CODEC, windManager -> windManager.extensions,
 		ByteBufCodecs.optional(ByteBufCodecs.LONG), windManager -> windManager.seed,
-		WindManager::createFromStreamCodec
+		WindManager::applyFromStreamCodec
 	);
 	public static final AttachmentType<WindManager> ATTACHMENT_TYPE = AttachmentRegistry.create(
 		FrozenLibConstants.id("wind"),
@@ -144,7 +145,7 @@ public class WindManager {
 		if (windManager == null) {
 			windManager = level instanceof ServerLevel serverLevel
 				? new WindManager(serverLevel)
-				: new WindManager(level);
+				: INSTANCE;
 			level.setAttached(ATTACHMENT_TYPE, windManager);
 		} else {
 			windManager.setLevel(level);
@@ -183,6 +184,26 @@ public class WindManager {
 		final WindManager windManager = createFromCodec(windOverride, windX, windY, windZ, laggedWindX, laggedWindY, laggedWindZ, extensions);
 		windManager.seed = seed;
 		return windManager;
+	}
+
+	@ApiStatus.Internal
+	private static WindManager applyFromStreamCodec(
+		Optional<Vec3> windOverride,
+		double windX, double windY, double windZ,
+		double laggedWindX, double laggedWindY, double laggedWindZ,
+		List<WindManagerExtension> extensions,
+		Optional<Long> seed
+	) {
+		INSTANCE.windOverride = windOverride;
+		INSTANCE.windX = windX;
+		INSTANCE.windY = windY;
+		INSTANCE.windZ = windZ;
+		INSTANCE.laggedWindX = laggedWindX;
+		INSTANCE.laggedWindY = laggedWindY;
+		INSTANCE.laggedWindZ = laggedWindZ;
+		INSTANCE.extensions.addAll(extensions);
+		INSTANCE.seed = seed;
+		return INSTANCE;
 	}
 
 	@ApiStatus.Internal
