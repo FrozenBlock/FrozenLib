@@ -159,7 +159,13 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - `ClientWindManager` has been removed and `WindManager` is now used on both the server and client.
   - Removed the ability and config option to use Wind on the client without a server that has Wind.
   - `WindManagerExtension`s now use a registry instead of a list.
-  - `WindDisturbance`s have been completely revamped, allowing for the creation of custom `WindDisturbanceTypes` for more dynamic usage.
+  - `WindDisturbance`s have been completely revamped, using Fabric's Data Attachment system and allowing for the creation of custom `WindDisturbanceTypes` for more dynamic usage.
+- Revamped Moving Sound Manager implementation.
+  - Migrated to Fabric's Data Attachment system.
+  - `MovingSoundType`s can now be registered to FrozenLib's new `frozenlib:moving_sound_type` Registry.
+  - Each `MovingSoundType` handles the ticking (and optionally removal) of each sound per-entity, similar to the original sound managers.
+  - Thanks to these changes, multiple mixins and duplicate implementations have been removed.
+- Added the `frozenlib:moving_sound_manager` Dynamic Registry.
 - Removed the Warden Spawn Tracker config option, as the command can now be enabled in Vanilla via launch arguments.
 - Refactored the `loot` package into the `item` package.
 - Refactored the `recipe` package into the `item` package.

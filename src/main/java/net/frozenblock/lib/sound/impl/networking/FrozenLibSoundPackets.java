@@ -202,7 +202,7 @@ public class FrozenLibSoundPackets {
 
 		MovingSoundTypes.LOOPING.addSound(
 			entity,
-			new MovingLoopingSoundType.SoundLoopData(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath)
+			new MovingLoopingSoundType.Data(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath)
 		);
     }
 
@@ -286,7 +286,7 @@ public class FrozenLibSoundPackets {
 
 		MovingSoundTypes.LOOPING_FADING_DISTANCE.addSound(
 			entity,
-			new FadingDistanceLoopingMovingSoundType.FadingDistanceSoundLoopData(
+			new FadingDistanceLoopingMovingSoundType.Data(
 				sound.unwrapKey().orElseThrow().identifier(),
 				sound2.unwrapKey().orElseThrow().identifier(),
 				category,
@@ -438,7 +438,7 @@ public class FrozenLibSoundPackets {
 
 		MovingSoundTypes.LOOPING.addSound(
 			entity,
-			new MovingLoopingSoundType.SoundLoopData(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath)
+			new MovingLoopingSoundType.Data(sound.unwrapKey().orElseThrow().identifier(), category, volume, pitch, predicate, stopOnDeath)
 		);
     }
 

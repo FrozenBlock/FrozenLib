@@ -31,26 +31,26 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
-public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<FadingDistanceLoopingMovingSoundType.FadingDistanceSoundLoopData> {
+public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<FadingDistanceLoopingMovingSoundType.Data> {
 
 	public FadingDistanceLoopingMovingSoundType(Identifier attachmentId) {
-		super(attachmentId, FadingDistanceSoundLoopData.CODEC);
+		super(attachmentId, Data.CODEC);
 	}
 
 	@Override
-	protected void onAdd(Entity entity, FadingDistanceSoundLoopData data) {
+	protected void onAdd(Entity entity, Data data) {
 		SoundPredicate.getPredicate(data.restrictionID()).onStart(entity);
 	}
 
 	@Override
-	protected List<FadingDistanceSoundLoopData> tick(Entity entity, List<FadingDistanceSoundLoopData> sounds) {
-		List<FadingDistanceSoundLoopData> result = new ArrayList<>(sounds);
-		Iterator<FadingDistanceSoundLoopData> it = result.iterator();
-		while (it.hasNext()) {
-			FadingDistanceSoundLoopData data = it.next();
-			SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(data.restrictionID());
+	protected List<Data> tick(Entity entity, List<Data> sounds) {
+		final List<Data> result = new ArrayList<>(sounds);
+		final Iterator<Data> iterator = result.iterator();
+		while (iterator.hasNext()) {
+			final Data data = iterator.next();
+			final SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(data.restrictionID());
 			if (!predicate.test(entity)) {
-				it.remove();
+				iterator.remove();
 				predicate.onStop(entity);
 			}
 		}
@@ -58,8 +58,8 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 	}
 
 	@Override
-	protected void syncWithPlayer(Entity entity, ServerPlayer player, List<FadingDistanceSoundLoopData> sounds) {
-		for (FadingDistanceSoundLoopData data : sounds) {
+	protected void syncWithPlayer(Entity entity, ServerPlayer player, List<Data> sounds) {
+		for (Data data : sounds) {
 			FrozenLibSoundPackets.createAndSendMovingRestrictionLoopingFadingDistanceSound(
 				player,
 				entity,
@@ -76,7 +76,7 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 		}
 	}
 
-	public record FadingDistanceSoundLoopData(
+	public record Data(
 		Identifier closeSound,
 		Identifier farSound,
 		String category,
@@ -87,19 +87,19 @@ public class FadingDistanceLoopingMovingSoundType extends MovingSoundType<Fading
 		Identifier restrictionID,
 		boolean stopOnDeath
 	) {
-		public static final Codec<FadingDistanceSoundLoopData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Identifier.CODEC.fieldOf("closeSound").forGetter(FadingDistanceSoundLoopData::closeSound),
-			Identifier.CODEC.fieldOf("farSound").forGetter(FadingDistanceSoundLoopData::farSound),
-			Codec.STRING.fieldOf("categoryOrdinal").forGetter(FadingDistanceSoundLoopData::category),
-			Codec.FLOAT.fieldOf("volume").forGetter(FadingDistanceSoundLoopData::volume),
-			Codec.FLOAT.fieldOf("pitch").forGetter(FadingDistanceSoundLoopData::pitch),
-			Codec.FLOAT.fieldOf("fadeDist").forGetter(FadingDistanceSoundLoopData::fadeDist),
-			Codec.FLOAT.fieldOf("maxDist").forGetter(FadingDistanceSoundLoopData::maxDist),
-			Identifier.CODEC.fieldOf("restrictionID").forGetter(FadingDistanceSoundLoopData::restrictionID),
-			Codec.BOOL.fieldOf("stopOnDeath").forGetter(FadingDistanceSoundLoopData::stopOnDeath)
-		).apply(instance, FadingDistanceSoundLoopData::new));
+		public static final Codec<Data> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Identifier.CODEC.fieldOf("closeSound").forGetter(Data::closeSound),
+			Identifier.CODEC.fieldOf("farSound").forGetter(Data::farSound),
+			Codec.STRING.fieldOf("categoryOrdinal").forGetter(Data::category),
+			Codec.FLOAT.fieldOf("volume").forGetter(Data::volume),
+			Codec.FLOAT.fieldOf("pitch").forGetter(Data::pitch),
+			Codec.FLOAT.fieldOf("fadeDist").forGetter(Data::fadeDist),
+			Codec.FLOAT.fieldOf("maxDist").forGetter(Data::maxDist),
+			Identifier.CODEC.fieldOf("restrictionID").forGetter(Data::restrictionID),
+			Codec.BOOL.fieldOf("stopOnDeath").forGetter(Data::stopOnDeath)
+		).apply(instance, Data::new));
 
-		public FadingDistanceSoundLoopData(
+		public Data(
 			Identifier closeSound,
 			Identifier farSound,
 			SoundSource category,

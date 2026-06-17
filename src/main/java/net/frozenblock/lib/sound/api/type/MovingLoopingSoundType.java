@@ -31,26 +31,26 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 
-public class MovingLoopingSoundType extends MovingSoundType<MovingLoopingSoundType.SoundLoopData> {
+public class MovingLoopingSoundType extends MovingSoundType<MovingLoopingSoundType.Data> {
 
 	public MovingLoopingSoundType(Identifier attachmentId) {
-		super(attachmentId, SoundLoopData.CODEC);
+		super(attachmentId, Data.CODEC);
 	}
 
 	@Override
-	protected void onAdd(Entity entity, SoundLoopData data) {
+	protected void onAdd(Entity entity, Data data) {
 		SoundPredicate.getPredicate(data.restrictionID()).onStart(entity);
 	}
 
 	@Override
-	protected List<SoundLoopData> tick(Entity entity, List<SoundLoopData> sounds) {
-		List<SoundLoopData> result = new ArrayList<>(sounds);
-		Iterator<SoundLoopData> it = result.iterator();
-		while (it.hasNext()) {
-			SoundLoopData data = it.next();
-			SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(data.restrictionID());
+	protected List<Data> tick(Entity entity, List<Data> sounds) {
+		final List<Data> result = new ArrayList<>(sounds);
+		final Iterator<Data> iterator = result.iterator();
+		while (iterator.hasNext()) {
+			final Data data = iterator.next();
+			final SoundPredicate.LoopPredicate<Entity> predicate = SoundPredicate.getPredicate(data.restrictionID());
 			if (!predicate.test(entity)) {
-				it.remove();
+				iterator.remove();
 				predicate.onStop(entity);
 			}
 		}
@@ -58,8 +58,8 @@ public class MovingLoopingSoundType extends MovingSoundType<MovingLoopingSoundTy
 	}
 
 	@Override
-	protected void syncWithPlayer(Entity entity, ServerPlayer player, List<SoundLoopData> sounds) {
-		for (SoundLoopData data : sounds) {
+	protected void syncWithPlayer(Entity entity, ServerPlayer player, List<Data> sounds) {
+		for (Data data : sounds) {
 			FrozenLibSoundPackets.createAndSendMovingRestrictionLoopingSound(
 				player,
 				entity,
@@ -73,7 +73,7 @@ public class MovingLoopingSoundType extends MovingSoundType<MovingLoopingSoundTy
 		}
 	}
 
-	public record SoundLoopData(
+	public record Data(
 		Identifier sound,
 		String category,
 		float volume,
@@ -81,16 +81,16 @@ public class MovingLoopingSoundType extends MovingSoundType<MovingLoopingSoundTy
 		Identifier restrictionID,
 		boolean stopOnDeath
 	) {
-		public static final Codec<SoundLoopData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-			Identifier.CODEC.fieldOf("sound").forGetter(SoundLoopData::sound),
-			Codec.STRING.fieldOf("categoryOrdinal").forGetter(SoundLoopData::category),
-			Codec.FLOAT.fieldOf("volume").forGetter(SoundLoopData::volume),
-			Codec.FLOAT.fieldOf("pitch").forGetter(SoundLoopData::pitch),
-			Identifier.CODEC.fieldOf("restrictionID").forGetter(SoundLoopData::restrictionID),
-			Codec.BOOL.fieldOf("stopOnDeath").forGetter(SoundLoopData::stopOnDeath)
-		).apply(instance, SoundLoopData::new));
+		public static final Codec<Data> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+			Identifier.CODEC.fieldOf("sound").forGetter(Data::sound),
+			Codec.STRING.fieldOf("categoryOrdinal").forGetter(Data::category),
+			Codec.FLOAT.fieldOf("volume").forGetter(Data::volume),
+			Codec.FLOAT.fieldOf("pitch").forGetter(Data::pitch),
+			Identifier.CODEC.fieldOf("restrictionID").forGetter(Data::restrictionID),
+			Codec.BOOL.fieldOf("stopOnDeath").forGetter(Data::stopOnDeath)
+		).apply(instance, Data::new));
 
-		public SoundLoopData(Identifier sound, SoundSource category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath) {
+		public Data(Identifier sound, SoundSource category, float volume, float pitch, Identifier restrictionID, boolean stopOnDeath) {
 			this(sound, category.toString(), volume, pitch, restrictionID, stopOnDeath);
 		}
 	}
