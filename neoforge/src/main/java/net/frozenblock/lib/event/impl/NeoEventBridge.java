@@ -18,13 +18,42 @@
 package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
+import net.frozenblock.lib.event.api.events.LifecycleEvents;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.server.ServerStartedEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStoppedEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
 @UtilityClass
 public final class NeoEventBridge {
 
 	public static void initModStage(IEventBus modBus) {
+		NeoForge.EVENT_BUS.register(NeoEventBridge.class);
 		NeoLootTableEventBridge.init();
 		NeoServerTickEventBridge.init();
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void event(ServerStartingEvent event) {
+		LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(event.getServer());
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void event(ServerStartedEvent event) {
+		LifecycleEvents.SERVER_STARTED.invoker().onServerStarted(event.getServer());
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void event(ServerStoppingEvent event) {
+		LifecycleEvents.SERVER_STOPPING.invoker().onServerStopping(event.getServer());
+	}
+
+	@SubscribeEvent(priority = EventPriority.HIGH)
+	public static void event(ServerStoppedEvent event) {
+		LifecycleEvents.SERVER_STOPPED.invoker().onServerStopped(event.getServer());
 	}
 }

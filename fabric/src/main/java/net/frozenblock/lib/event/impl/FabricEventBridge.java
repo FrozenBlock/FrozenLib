@@ -18,11 +18,18 @@
 package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.frozenblock.lib.event.api.events.LifecycleEvents;
 
 @UtilityClass
 public final class FabricEventBridge {
 	public static void initModStage() {
 		FabricLootTableEventBridge.init();
 		FabricServerTickEventsBridge.init();
+
+		ServerLifecycleEvents.SERVER_STARTING.register(instance -> LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(instance));
+		ServerLifecycleEvents.SERVER_STARTED.register(instance -> LifecycleEvents.SERVER_STARTED.invoker().onServerStarted(instance));
+		ServerLifecycleEvents.SERVER_STOPPING.register(instance -> LifecycleEvents.SERVER_STOPPING.invoker().onServerStopping(instance));
+		ServerLifecycleEvents.SERVER_STOPPED.register(instance -> LifecycleEvents.SERVER_STOPPED.invoker().onServerStopped(instance));
 	}
 }

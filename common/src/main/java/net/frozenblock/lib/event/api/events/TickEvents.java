@@ -24,7 +24,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 
 @UtilityClass
-public class FrozenLibServerTickEvents {
+public class TickEvents {
 	/**
 	 * Called at the start of the server tick.
 	 *

@@ -25,7 +25,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.event.api.events.FrozenLibServerTickEvents;
+import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.platform.api.data.FrozenDataAttachmentType;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
@@ -58,7 +58,7 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 	}
 
 	public static void init() {
-		FrozenLibServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
+		TickEvents.START_LEVEL_TICK.register(serverLevel -> {
 			tick(serverLevel, serverLevel);
 			for (Entity entity : serverLevel.getAllEntities()) {
 				if (entity.isRemoved()) continue;
