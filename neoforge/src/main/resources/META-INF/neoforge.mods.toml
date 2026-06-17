@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="GPL-3.0"
+
+[[mods]]
+    modId="frozenlib"
+    version="${file.jarVersion}"
+    displayName="FrozenLib"
+    description='''
+A library that contains many tools for modders.
+Includes advanced math operations, noise sampling, advanced sounds, entity texture overrides,
+structure pool element replacements, item cooldown changes, datafixers, syncable configs, and much more!
+    '''
+
+[[ dependencies.frozenlib ]]
+    modId="neoforge"
+    type="required"
+    versionRange="[~26.2-,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[ dependencies.frozenlib ]]
+    modId="minecraft"
+    type="required"
+    versionRange="[~26.2-,)"
+    ordering="NONE"
+    side="BOTH"

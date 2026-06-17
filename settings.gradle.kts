@@ -6,6 +6,9 @@ pluginManagement {
         maven("https://maven.fabricmc.net") {
             name = "Fabric"
         }
+        maven("https://maven.neoforged.net/releases") {
+            name = "NeoForged"
+        }
         maven("https://jitpack.io") {
             name = "Jitpack"
         }
@@ -14,7 +17,24 @@ pluginManagement {
     }
 }
 
+val neoforgeSnapshotMaven = settings.providers.gradleProperty("neoforge_snapshot_maven").orNull
+if (!neoforgeSnapshotMaven.isNullOrBlank()) {
+    pluginManagement {
+        repositories {
+            maven(neoforgeSnapshotMaven) { name = "NeoForge Snapshots" }
+        }
+    }
+}
+
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version "1.0.0"
+}
+
 rootProject.name = "FrozenLib"
+
+include("common")
+include("fabric")
+include("neoforge")
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", kotlin = false, enabled = false)
 
