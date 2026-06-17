@@ -29,7 +29,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 
 public abstract class MovingSoundType<D> {
-
 	private final AttachmentType<List<D>> attachmentType;
 
 	protected MovingSoundType(Identifier attachmentId, Codec<D> dataCodec) {
@@ -44,8 +43,8 @@ public abstract class MovingSoundType<D> {
 	}
 
 	public void addSound(Entity entity, D data) {
-		List<D> current = entity.getAttached(this.attachmentType);
-		List<D> next = current == null ? new ArrayList<>() : new ArrayList<>(current);
+		final List<D> current = entity.getAttached(this.attachmentType);
+		final List<D> next = current == null ? new ArrayList<>() : new ArrayList<>(current);
 		next.add(data);
 		entity.setAttached(this.attachmentType, next);
 		this.onAdd(entity, data);
@@ -58,13 +57,13 @@ public abstract class MovingSoundType<D> {
 	protected abstract void syncWithPlayer(Entity entity, ServerPlayer player, List<D> sounds);
 
 	public final void tickSounds(Entity entity) {
-		List<D> sounds = entity.getAttached(this.attachmentType);
+		final List<D> sounds = entity.getAttached(this.attachmentType);
 		if (sounds == null || sounds.isEmpty()) return;
 		entity.setAttached(this.attachmentType, this.tick(entity, sounds));
 	}
 
 	public final void syncSounds(Entity entity, ServerPlayer player) {
-		List<D> sounds = entity.getAttached(this.attachmentType);
+		final List<D> sounds = entity.getAttached(this.attachmentType);
 		if (sounds == null || sounds.isEmpty()) return;
 		this.syncWithPlayer(entity, player, sounds);
 	}

@@ -17,20 +17,18 @@
 
 package net.frozenblock.lib.sound.api.type;
 
+import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.sound.impl.MovingSoundManager;
 
 public final class MovingSoundTypes {
-
-	public static final MovingLoopingSoundType LOOPING =
-		new MovingLoopingSoundType(FrozenLibConstants.id("looping"));
-
-	public static final FadingDistanceLoopingMovingSoundType LOOPING_FADING_DISTANCE =
-		new FadingDistanceLoopingMovingSoundType(FrozenLibConstants.id("looping_fading_distance"));
+	public static final MovingLoopingSoundType LOOPING = new MovingLoopingSoundType(FrozenLibConstants.id("looping"));
+	public static final FadingDistanceLoopingMovingSoundType LOOPING_FADING_DISTANCE = new FadingDistanceLoopingMovingSoundType(FrozenLibConstants.id("looping_fading_distance"));
 
 	public static void init() {
+		EntityTrackingEvents.START_TRACKING.register(MovingSoundManager::syncWithPlayer);
+
 		MovingSoundType.register(FrozenLibConstants.id("looping"), LOOPING);
 		MovingSoundType.register(FrozenLibConstants.id("looping_fading_distance"), LOOPING_FADING_DISTANCE);
 	}
-
-	private MovingSoundTypes() {}
 }

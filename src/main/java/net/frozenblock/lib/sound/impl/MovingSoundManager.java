@@ -27,14 +27,10 @@ import net.minecraft.world.entity.Entity;
 public final class MovingSoundManager {
 
 	public static void tick(Entity entity) {
-		for (MovingSoundType<?> type : FrozenLibRegistries.MOVING_SOUND_TYPE) {
-			type.tickSounds(entity);
-		}
+		for (MovingSoundType<?> type : FrozenLibRegistries.MOVING_SOUND_TYPE) type.tickSounds(entity);
 	}
 
 	public static void syncWithPlayer(Entity entity, ServerPlayer player) {
-		for (MovingSoundType<?> type : FrozenLibRegistries.MOVING_SOUND_TYPE) {
-			type.syncSounds(entity, player);
-		}
+		for (MovingSoundType<?> type : FrozenLibRegistries.MOVING_SOUND_TYPE) type.syncSounds(entity, player);
 	}
 }

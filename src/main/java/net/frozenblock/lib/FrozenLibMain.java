@@ -19,7 +19,6 @@ package net.frozenblock.lib;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
-import net.fabricmc.fabric.api.networking.v1.EntityTrackingEvents;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.command.FrozenLibCommand;
@@ -27,11 +26,13 @@ import net.frozenblock.lib.config.api.instance.Config;
 import net.frozenblock.lib.config.api.registry.ConfigRegistry;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
+import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
+import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatures;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
@@ -44,15 +45,12 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTy
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
-import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
-import net.frozenblock.lib.sound.impl.MovingSoundManager;
-import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
@@ -124,10 +122,6 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		ServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
 			WindManager.getOrCreate(serverLevel).tick(serverLevel);
 			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
-		});
-
-		EntityTrackingEvents.START_TRACKING.register((entity, player) -> {
-			MovingSoundManager.syncWithPlayer(entity, player);
 		});
 
 		FrozenNetworking.registerNetworking();
