@@ -20,7 +20,7 @@ package net.frozenblock.lib.music.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.frozenblock.lib.sound.api.client.pitch.MusicPitchApi;
+import net.frozenblock.lib.music.api.client.pitch.MusicPitchApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;

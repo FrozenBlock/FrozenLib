@@ -16,6 +16,9 @@ config="mixin/frozenlib.item.mixins.json"
 config="mixin/frozenlib.loot.neoforge.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.levelgen.surface.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.networking.mixins.json"
 
 [[mixins]]
