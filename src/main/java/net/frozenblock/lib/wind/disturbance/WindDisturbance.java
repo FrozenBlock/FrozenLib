@@ -20,6 +20,7 @@ package net.frozenblock.lib.wind.disturbance;
 import com.mojang.serialization.Codec;
 import java.util.List;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
+import net.frozenblock.lib.FrozenLibLogUtils;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -59,8 +60,13 @@ public interface WindDisturbance<T extends AttachmentTarget> {
 
 	boolean expired(T source, Level level);
 
-	default boolean expiredGeneric(Object source, Level level) {
-		return this.expired((T) source, level);
+	default boolean invalidOrExpired(Object source, Level level) {
+		try {
+			return this.expired((T) source, level);
+		} catch (Exception e) {
+			FrozenLibLogUtils.logError("WindDisturbance invalid", e);
+			return true;
+		}
 	}
 
 	WindDisturbanceType<?> type();

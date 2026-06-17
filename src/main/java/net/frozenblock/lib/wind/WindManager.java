@@ -306,7 +306,7 @@ public class WindManager {
 	public void tick(Level level) {
 		this.disturbanceHolders.removeIf(target -> {
 			if (target == null) return true;
-			WindDisturbances.removeIf(level, target, disturbance -> disturbance.expiredGeneric(target, level));
+			WindDisturbances.removeIf(level, target, disturbance -> disturbance.invalidOrExpired(target, level));
 			return !WindDisturbances.has(target);
 		});
 		if (!level.tickRateManager().runsNormally()) return;
