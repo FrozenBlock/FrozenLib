@@ -66,7 +66,8 @@ import org.jetbrains.annotations.Nullable;
  * <p> One instance is created per {@link Level}.
  */
 public class WindManager {
-	private static final WindManager INSTANCE = new WindManager();
+	@ApiStatus.Internal
+	public static final WindManager INSTANCE = new WindManager();
 	public static final Codec<WindManager> CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		Vec3.CODEC.optionalFieldOf("wind_override").forGetter(windManager -> windManager.windOverride),
 		Codec.DOUBLE.fieldOf("x").forGetter(windManager -> windManager.windX),
@@ -170,19 +171,6 @@ public class WindManager {
 		windManager.laggedWindY = laggedWindY;
 		windManager.laggedWindZ = laggedWindZ;
 		windManager.extensions.addAll(extensions);
-		return windManager;
-	}
-
-	@ApiStatus.Internal
-	private static WindManager createFromStreamCodec(
-		Optional<Vec3> windOverride,
-		double windX, double windY, double windZ,
-		double laggedWindX, double laggedWindY, double laggedWindZ,
-		List<WindManagerExtension> extensions,
-		Optional<Long> seed
-	) {
-		final WindManager windManager = createFromCodec(windOverride, windX, windY, windZ, laggedWindX, laggedWindY, laggedWindZ, extensions);
-		windManager.seed = seed;
 		return windManager;
 	}
 
@@ -293,6 +281,26 @@ public class WindManager {
 		} else {
 			untrackDisturbanceHolder(target);
 		}
+	}
+
+	/**
+	 * Resets all values to their default state.
+	 * <p>
+	 * Should only be used for {@link WindManager#INSTANCE} upon exiting a {@link Level}.
+	 */
+	public void reset() {
+		this.level = null;
+		this.extensions.clear();
+		this.disturbanceHolders.clear();
+		this.windOverride = Optional.empty();
+		this.windX = 0D;
+		this.windY = 0D;
+		this.windZ = 0D;
+		this.laggedWindX = 0D;
+		this.laggedWindY = 0D;
+		this.laggedWindZ = 0D;
+		this.seed = Optional.empty();
+		this.noise = null;
 	}
 
 	public void tick(Level level) {

@@ -25,7 +25,9 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientBlockEntityEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientChunkEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientEntityEvents;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLevelEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
@@ -46,6 +48,10 @@ public class ClientWindUtil {
 	@ApiStatus.Internal
 	public static void init() {
 		ClientTickEvents.START_LEVEL_TICK.register(Debug::tick);
+
+		ClientLevelEvents.AFTER_CLIENT_LEVEL_CHANGE.register((minecraft, level) -> WindManager.INSTANCE.reset());
+
+		ClientPlayConnectionEvents.DISCONNECT.register((minecraft, level) -> WindManager.INSTANCE.reset());
 
 		ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity));
 		ClientEntityEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
