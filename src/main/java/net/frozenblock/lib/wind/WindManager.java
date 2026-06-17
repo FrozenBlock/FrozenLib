@@ -361,7 +361,7 @@ public class WindManager {
 	 * @param predicate Whether the disturbance should be added.
 	 * @param windDisturbance The {@link WindDisturbance} to add if the predicate passes.
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
+	@SuppressWarnings({"rawtypes"})
 	public void addIfMissing(AttachmentTarget source, Predicate<AttachmentTarget> predicate, WindDisturbance windDisturbance) {
 		if (!predicate.test(source)) return;
 		this.attachDisturbance(source, windDisturbance);
