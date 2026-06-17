@@ -519,6 +519,19 @@ fun getBranch(): String {
     return branch.substring(branch.lastIndexOf("/") + 1)
 }
 
+tasks.publishCurseforge {
+    dependsOn(jar)
+    dependsOn(tasks.shadowJar)
+}
+tasks.publishModrinth {
+    dependsOn(jar)
+    dependsOn(tasks.shadowJar)
+}
+tasks.publishGithub {
+    dependsOn(jar)
+    dependsOn(tasks.shadowJar)
+}
+
 publishMods {
     version.set(modrinth_version)
     file.set(tasks.shadowJar.get().archiveFile)
