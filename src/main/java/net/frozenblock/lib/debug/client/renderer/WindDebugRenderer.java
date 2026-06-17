@@ -32,8 +32,7 @@ import net.minecraft.world.phys.Vec3;
 @Environment(EnvType.CLIENT)
 public class WindDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 
-	public WindDebugRenderer() {
-	}
+	public WindDebugRenderer() {}
 
 	@Override
 	public void emitGizmos(

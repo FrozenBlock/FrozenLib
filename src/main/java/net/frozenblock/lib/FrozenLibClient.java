@@ -30,6 +30,7 @@ import net.frozenblock.lib.command.client.FrozenLibClientCommand;
 import net.frozenblock.lib.config.v2.ConfigSerializer;
 import net.frozenblock.lib.core.client.api.PanoramaCommand;
 import net.frozenblock.lib.debug.client.gui.FrozenLibDebugScreenEntries;
+import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
 import net.frozenblock.lib.entrypoint.api.FrozenClientEntrypoint;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.networking.FrozenClientNetworking;
@@ -39,10 +40,8 @@ import net.frozenblock.lib.renderer.model.FrozenLibModelLayers;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
-import net.frozenblock.lib.entity.client.impl.spottingicon.SpottingIconHudElement;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
-import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.minecraft.client.Minecraft;
 import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
 import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
@@ -87,7 +86,7 @@ public final class FrozenLibClient implements ClientModInitializer {
 
 		FrozenLibModResourcePackApi.init();
 		FrozenLibDebugScreenEntries.init();
-		WindDisturbances.initClient();
+		ClientWindUtil.init();
 
 		FrozenClientEntrypoint.EVENT.invoker().init(); // also includes dev init
 	}
@@ -97,7 +96,6 @@ public final class FrozenLibClient implements ClientModInitializer {
 			level -> {
 				final Minecraft minecraft = Minecraft.getInstance();
 				WindManager.getOrCreate(level).tick(level);
-				ClientWindUtil.Debug.tick(level);
 				ClientScreenShaker.tick(minecraft, level);
 				FlyBySoundHub.tick(minecraft, minecraft.getCameraEntity(), true);
 			}

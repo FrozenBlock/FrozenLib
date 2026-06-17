@@ -19,7 +19,9 @@ package net.frozenblock.lib.debug.client.renderer;
 
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
+import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.debug.DebugRenderer;
@@ -27,15 +29,16 @@ import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.ARGB;
 import net.minecraft.util.debug.DebugValueAccess;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 @Environment(EnvType.CLIENT)
 public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRenderer {
 	private static final GizmoStyle WIND_DISTURBANCE_AREA_STYLE = GizmoStyle.stroke(ARGB.colorFromFloat(0.5F, 1F, 0.5F, 0.35F));
 	private static final GizmoStyle WIND_DISTURBANCE_CORE_STYLE = GizmoStyle.stroke(ARGB.colorFromFloat(1F, 1F, 1F, 1F));
 
-	public WindDisturbanceDebugRenderer() {
-	}
+	public WindDisturbanceDebugRenderer() {}
 
 	@Override
 	public void emitGizmos(
@@ -44,12 +47,16 @@ public class WindDisturbanceDebugRenderer implements DebugRenderer.SimpleDebugRe
 		Frustum frustum,
 		float unknown
 	) {
-		final var level = Minecraft.getInstance().level;
+		final Level level = Minecraft.getInstance().level;
+		if (level == null) return;
 		ClientWindUtil.Debug.getWindDisturbances().forEach(
 			tracked -> {
-				if (level == null) return;
-				Gizmos.cuboid(tracked.area(level), WIND_DISTURBANCE_AREA_STYLE);
-				Gizmos.cuboid(AABB.ofSize(tracked.origin(level), 0.2D, 0.2D, 0.2D), WIND_DISTURBANCE_CORE_STYLE);
+				final AttachmentTarget target = tracked.getFirst();
+				for (WindDisturbance disturbance : tracked.getSecond()) {
+					final Vec3 origin = disturbance.origin(target, level);
+					Gizmos.cuboid(disturbance.area(target, level, origin), WIND_DISTURBANCE_AREA_STYLE);
+					Gizmos.cuboid(AABB.ofSize(origin, 0.2D, 0.2D, 0.2D), WIND_DISTURBANCE_CORE_STYLE);
+				}
 			}
 		);
 

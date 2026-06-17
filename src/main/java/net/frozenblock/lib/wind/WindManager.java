@@ -21,12 +21,10 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
+import net.fabricmc.api.EnvType;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
@@ -35,10 +33,12 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentChange;
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentSync;
 import net.fabricmc.fabric.impl.attachment.sync.AttachmentTargetInfo;
+import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceResult;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
@@ -60,6 +60,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -100,9 +101,8 @@ public class WindManager {
 
 	private Level level;
 	public final List<WindManagerExtension> extensions = new ArrayList<>();
-	private final List<Tracked> trackedDisturbances = new ArrayList<>();
+	private final List<AttachmentTargetInfo<?>> trackedDisturbanceTargets = new ArrayList<>();
 	private boolean loadedExtensions;
-	private boolean indexedLevel;
 	public Optional<Vec3> windOverride = Optional.empty();
 	public double windX;
 	public double windY;
@@ -153,13 +153,10 @@ public class WindManager {
 			windManager.setLevel(level);
 		}
 		windManager.tryCreateAndSortExtensions(level);
-		if (!windManager.indexedLevel) {
-			windManager.indexedLevel = true;
-			windManager.reindexExisting(level);
-		}
 		return windManager;
 	}
 
+	@ApiStatus.Internal
 	private static WindManager createFromCodec(
 		Optional<Vec3> windOverride,
 		double windX, double windY, double windZ,
@@ -178,6 +175,7 @@ public class WindManager {
 		return windManager;
 	}
 
+	@ApiStatus.Internal
 	private static WindManager createFromStreamCodec(
 		Optional<Vec3> windOverride,
 		double windX, double windY, double windZ,
@@ -190,7 +188,8 @@ public class WindManager {
 		return windManager;
 	}
 
-	public void tryCreateAndSortExtensions(Level level) {
+	@ApiStatus.Internal
+	private void tryCreateAndSortExtensions(Level level) {
 		if (this.loadedExtensions) return;
 
 		final List<WindManagerExtension> extensions = new ArrayList<>(this.extensions);
@@ -206,6 +205,9 @@ public class WindManager {
 		this.loadedExtensions = true;
 	}
 
+	/**
+	 * @return if this has a seed present. If empty, this is expected to be on a client connected to a server without FrozenLib.
+	 */
 	public boolean usable() {
 		return this.seed.isPresent();
 	}
@@ -229,172 +231,88 @@ public class WindManager {
 		return WindManager.getOrCreate(level).getExtension(type);
 	}
 
-	/**
-	 * A tracked wind disturbance entry, keyed by an {@link AttachmentTargetInfo}
-	 * so the disturbance can be looked up on both server and client via the attachment sync system.
-	 *
-	 * @param targetInfo Info describing the entity, block entity, chunk, or level the disturbance is attached to.
-	 * @param disturbance The disturbance instance.
-	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public record Tracked(AttachmentTargetInfo<?> targetInfo, WindDisturbance<?> disturbance) {
-		public boolean isTargetValid(Level level) {
-			if (this.targetInfo == null) return false;
-			final AttachmentTarget target = this.targetInfo.getTarget(level);
-			return switch (target) {
-				case null -> false;
-				case Entity entity -> !entity.isRemoved() && entity.level() == level;
-				case BlockEntity blockEntity -> !blockEntity.isRemoved() && blockEntity.getLevel() == level;
-				case ChunkAccess chunkAccess -> true;
-				default -> true;
-			};
-		}
-
-		public boolean isExpired(Level level) {
-			final AttachmentTarget target = this.targetInfo.getTarget(level);
-			if (target == null) return true;
-			if (!isTargetValid(level)) return true;
-			return ((WindDisturbance) this.disturbance).expired(target, level);
-		}
-
-		public WindDisturbanceResult get(Level level, Vec3 target) {
-			final AttachmentTarget source = this.targetInfo.getTarget(level);
-			return ((WindDisturbance) this.disturbance).get(source, level, target);
-		}
-	}
-
 	@Nullable
 	private static AttachmentTargetInfo<?> toTargetInfo(AttachmentTarget target) {
-		if (target instanceof Entity entity) {
-			return new AttachmentTargetInfo.EntityTarget(entity.getId());
-		} else if (target instanceof BlockEntity blockEntity) {
-			return new AttachmentTargetInfo.BlockEntityTarget(blockEntity.getBlockPos());
-		} else if (target instanceof ChunkAccess chunk) {
-			return new AttachmentTargetInfo.ChunkTarget(chunk.getPos());
-		} else if (target instanceof Level) {
-			return AttachmentTargetInfo.LevelTarget.INSTANCE;
-		}
+		if (target instanceof Entity entity) return new AttachmentTargetInfo.EntityTarget(entity.getId());
+		if (target instanceof BlockEntity blockEntity) return new AttachmentTargetInfo.BlockEntityTarget(blockEntity.getBlockPos());
+		if (target instanceof ChunkAccess chunk) return new AttachmentTargetInfo.ChunkTarget(chunk.getPos());
+		if (target instanceof Level) return AttachmentTargetInfo.LevelTarget.INSTANCE;
 		return null;
 	}
 
 	/**
-	 * @return an unmodifiable view of this manager's live, incrementally-maintained tracked disturbance index,
-	 * converted to the external {@link WindDisturbance.Tracked} type.
+	 * @return the currently tracked {@link WindDisturbances}, pair with their respective sources in {@link AttachmentTarget} sources.
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public List<WindDisturbance.Tracked<?>> getTrackedDisturbances() {
-		if (this.trackedDisturbances.isEmpty()) return List.of();
-		final List<WindDisturbance.Tracked<?>> result = new ArrayList<>();
-		for (Tracked tracked : this.trackedDisturbances) {
-			final AttachmentTarget source = tracked.targetInfo().getTarget(this.level);
-			if (source == null) continue;
-			result.add(new WindDisturbance.Tracked(tracked.disturbance(), source));
-		}
-		return Collections.unmodifiableList(result);
+	public List<Pair<AttachmentTarget, WindDisturbances>> getWindDisturbances() {
+		return this.trackedDisturbanceTargets.stream()
+			.map(targetInfo -> WindDisturbances.getAsPair(this.level, targetInfo))
+			.filter(Optional::isPresent)
+			.map(Optional::get)
+			.toList();
 	}
 
 	/**
-	 * Attaches a {@link WindDisturbance} to the given target and adds it to the tracked disturbance index.
+	 * Tracks an {@link AttachmentTargetInfo}.
 	 * <p>
-	 * The disturbance is persisted and synced to clients automatically via the target's attachment
-	 * (see {@link WindDisturbances#ATTACHMENT_TYPE}) — no manual packet send is needed.
+	 * This is used to track {@link WindDisturbances}. {@link AttachmentTargetInfo}s with null targets or no {@link WindDisturbances} present will be untracked.
 	 *
-	 * @param target        The {@link AttachmentTarget} the disturbance is attached to.
-	 * @param disturbance The {@link WindDisturbance} to add.
+	 * @param targetInfo The {@link AttachmentTargetInfo} to be tracked.
 	 */
-	@SuppressWarnings({"unchecked", "rawtypes"})
-	public void attachDisturbance(AttachmentTarget target, WindDisturbance<?> disturbance) {
-		final AttachmentTargetInfo<?> info = toTargetInfo(target);
-		if (info == null) return;
-		WindDisturbances.add(target, disturbance);
-		this.trackedDisturbances.add(new Tracked(info, disturbance));
+	public void trackDisturbanceTargetInfo(AttachmentTargetInfo<?> targetInfo) {
+		if (this.trackedDisturbanceTargets.contains(targetInfo)) return;
+		this.trackedDisturbanceTargets.add(targetInfo);
 	}
 
 	/**
-	 * Attaches a {@link WindDisturbance} to the given {@link AttachmentTargetInfo}
-	 * and adds it to the tracked disturbance index without modifying the persistent attachment.
+	 * Tracks an {@link AttachmentTarget}.
 	 * <p>
-	 * This is called by the client-side attachment sync mixin when incoming sync data is applied.
+	 * This is used to track {@link WindDisturbances}. Null {@link AttachmentTarget}s or {@link AttachmentTarget}s with no {@link WindDisturbances} present will be untracked.
 	 *
-	 * @param targetInfo  The {@link AttachmentTargetInfo} describing the target.
-	 * @param disturbance The {@link WindDisturbance} to add.
+	 * @param target The {@link AttachmentTarget} to be tracked.
 	 */
-	public void attachDisturbance(AttachmentTargetInfo<?> targetInfo, WindDisturbance<?> disturbance) {
-		this.trackedDisturbances.add(new Tracked(targetInfo, disturbance));
+	public void trackDisturbanceTarget(AttachmentTarget target) {
+		trackDisturbanceTargetInfo(toTargetInfo(target));
 	}
 
 	/**
-	 * Removes all tracked entries for the given {@link AttachmentTargetInfo} and replaces them with the disturbances
-	 * from the given {@link WindDisturbances} list.
-	 * <p>
-	 * Used by the client-side attachment sync mixin when an attachment change is decoded and applied.
+	 * Tracks or untracks a {@link AttachmentTarget} depending on whether it is present and has {@link WindDisturbances}.
 	 *
-	 * @param targetInfo   The info describing the target whose tracked entries should be replaced.
-	 * @param disturbances The new disturbances, or {@code null} if the attachment was removed entirely.
+	 * @param target The {@link AttachmentTarget} to be tracked or untracked.
 	 */
-	public void replaceForAttachmentSync(AttachmentTargetInfo<?> targetInfo, WindDisturbances disturbances) {
-		this.trackedDisturbances.removeIf(t -> t.targetInfo().equals(targetInfo));
-		if (disturbances == null) {
-			for (WindDisturbance<?> disturbance : disturbances) {
-				this.trackedDisturbances.add(new Tracked(targetInfo, disturbance));
-			}
+	public void trackOrUntrackDisturbanceTarget(@Nullable AttachmentTarget target) {
+		if (target == null) return;
+		if (WindDisturbances.has(target)) {
+			trackDisturbanceTarget(target);
+		} else {
+			untrackDisturbanceTarget(target);
 		}
 	}
 
 	/**
-	 * Adds a {@link WindDisturbance} to the world, attached to the given source.
+	 * Untracks an {@link AttachmentTargetInfo}.
 	 *
-	 * @deprecated Use {@link #attachDisturbance(AttachmentTarget, WindDisturbance)} instead.
+	 * @param targetInfo The {@link AttachmentTargetInfo} to be untracked.
 	 */
-	@Deprecated
-	public <T extends AttachmentTarget> void addWindDisturbance(T source, WindDisturbance<T> windDisturbance) {
-		this.attachDisturbance(source, windDisturbance);
+	public void untrackDisturbanceTargetInfo(AttachmentTargetInfo<?> targetInfo) {
+		this.trackedDisturbanceTargets.remove(targetInfo);
 	}
 
 	/**
-	 * Adds a {@link WindDisturbance} to the given source if it doesn't already have one matching the predicate.
+	 * Untracks an {@link AttachmentTarget}.
 	 *
-	 * <p> The disturbance's source type isn't statically tied to the caller's {@link AttachmentTarget} type here —
-	 * the predicate is responsible for ensuring the source is actually compatible (e.g. {@code isOfClassAndDoesntHaveDisturbance}).
-	 *
-	 * @param source The {@link AttachmentTarget} to test and potentially attach the disturbance to.
-	 * @param predicate Whether the disturbance should be added.
-	 * @param windDisturbance The {@link WindDisturbance} to add if the predicate passes.
+	 * @param target The {@link AttachmentTarget} to be untracked.
 	 */
-	@SuppressWarnings({"rawtypes"})
-	public void addIfMissing(AttachmentTarget source, Predicate<AttachmentTarget> predicate, WindDisturbance windDisturbance) {
-		if (!predicate.test(source)) return;
-		this.attachDisturbance(source, windDisturbance);
-	}
-
-	/**
-	 * Re-indexes any {@link WindDisturbance}s already persisted on the given source (e.g. loaded from save)
-	 * into this manager's live tracked list. Called once per load event — never iterates all entities/block entities.
-	 *
-	 * @param source The {@link AttachmentTarget} that just loaded.
-	 */
-	public void reindexExisting(AttachmentTarget source) {
-		final AttachmentTargetInfo<?> info = toTargetInfo(source);
-		if (info == null) return;
-		for (WindDisturbance<?> windDisturbance : WindDisturbances.get(source)) {
-			this.trackedDisturbances.add(new Tracked(info, windDisturbance));
-		}
-	}
-
-	/**
-	 * Removes all tracked {@link WindDisturbance}s whose source is the given target from this manager's live index.
-	 *
-	 * <p> The persisted attachment data itself is left untouched — it lives on the source and disappears with it.
-	 *
-	 * @param source The {@link AttachmentTarget} that unloaded.
-	 */
-	public void untrack(AttachmentTarget source) {
-		final AttachmentTargetInfo<?> info = toTargetInfo(source);
-		if (info == null) return;
-		this.trackedDisturbances.removeIf(tracked -> tracked.targetInfo().equals(info));
+	public void untrackDisturbanceTarget(AttachmentTarget target) {
+		untrackDisturbanceTargetInfo(toTargetInfo(target));
 	}
 
 	public void tick(Level level) {
+		this.trackedDisturbanceTargets.removeIf(targetInfo -> {
+			final AttachmentTarget target = targetInfo.getTarget(level);
+			if (target == null) return true;
+			WindDisturbances.removeIf(level, target, disturbance -> disturbance.expiredGeneric(target, level));
+			return !WindDisturbances.has(target);
+		});
 		if (!level.tickRateManager().runsNormally()) return;
 
 		if (this.seed.isEmpty()) return;
@@ -565,6 +483,8 @@ public class WindManager {
 
 		if (FrozenLibConstants.DEBUG_WIND && this.level instanceof ServerLevel serverLevel) {
 			FrozenNetworking.sendPacketToAllPlayers(serverLevel, new WindAccessPacket(target));
+		} else if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) {
+			ClientWindUtil.Debug.addAccessedPosition(target);
 		}
 
 		return new Vec3(
@@ -584,7 +504,7 @@ public class WindManager {
 	}
 
 	/**
-	 * Calculates the strength and movement of the current {@link Tracked} entries at a given position.
+	 * Calculates the strength and movement of the current {@link WindDisturbances} entries at a given position.
 	 * <p>
 	 * Expired or invalidated entries are pruned from the list (and their persisted attachment) as they're encountered,
 	 * instead of being swept in a separate per-tick pass.
@@ -595,25 +515,18 @@ public class WindManager {
 	private Pair<Double, Vec3> calculateWindDisturbance(Vec3 target) {
 		final ArrayList<WindDisturbanceResult.Success> successes = new ArrayList<>();
 		double maxStrength = 0D;
-		final Iterator<Tracked> iterator = this.trackedDisturbances.iterator();
-		while (iterator.hasNext()) {
-			final Tracked tracked = iterator.next();
-			if (tracked.isExpired(this.level)) {
-				iterator.remove();
-				final AttachmentTarget source = tracked.targetInfo().getTarget(this.level);
-				if (source != null) {
-					WindDisturbances.removeIf(source, disturbance -> disturbance == tracked.disturbance());
-				}
-				continue;
+		for (Pair<AttachmentTarget, WindDisturbances> tracked : this.getWindDisturbances()) {
+			final AttachmentTarget source = tracked.getFirst();
+			for (WindDisturbance disturbance : tracked.getSecond()) {
+				if (disturbance.expired(source, this.level)) continue;
+
+				final WindDisturbanceResult result = disturbance.get(source, this.level, target);
+				if (!(result instanceof WindDisturbanceResult.Success success)) continue;
+				if (success.strength() <= 0D || success.weight() <= 0D) continue;
+
+				maxStrength = Math.max(maxStrength, success.strength());
+				successes.add(success);
 			}
-
-			final WindDisturbanceResult result = tracked.get(this.level, target);
-			if (!(result instanceof WindDisturbanceResult.Success success)) continue;
-
-			if (success.strength() <= 0D || success.weight() <= 0D) continue;
-
-			maxStrength = Math.max(maxStrength, success.strength());
-			successes.add(success);
 		}
 
 		double finalX = 0D;
@@ -641,7 +554,7 @@ public class WindManager {
 	}
 
 	/**
-	 * Returns only the wind disturbance contribution at a given position, ignoring the base wind — used for debug rendering.
+	 * Returns the wind disturbance contribution at a given position, ignoring the base wind.
 	 *
 	 * @param target The {@link Vec3} to check.
 	 * @return the movement contributed by {@link WindDisturbance}s at the given position.
@@ -650,5 +563,4 @@ public class WindManager {
 		if (!this.usable()) return Vec3.ZERO;
 		return this.calculateWindDisturbance(target).getSecond();
 	}
-
 }
