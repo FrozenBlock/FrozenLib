@@ -94,7 +94,7 @@ public class WindManager {
 		FrozenLibConstants.id("wind"),
 		builder -> {
 			builder.persistent(CODEC);
-			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.targetOnly());
+			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all());
 		}
 	);
 
