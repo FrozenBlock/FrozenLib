@@ -5,7 +5,7 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
 - Revamped `FireType`s to be much more flexible. Their new data structure and functionality is as follows:
   - `source_settings`:
     - `fire_source_blocks`: A block's ID, a list of block IDs, or a Block Tag defining which blocks use this Fire Type. (i.e, Fire, Campfire, Torch.)
-    - `supporting_blocks`: A block's ID, a list of block IDs, or a Block Tag defining which blocks will cause an entity's Fire Type to change upon stepping on them.
+    - `supporting_blocks`: A block's ID, a list of block IDs, or a Block Tag defining which blocks support this Fire Type on top of them.
   - `damage_settings`:
     - `damage`: The amount of damage to inflict while burning.
     - `vulnerable_damage` The amount of damage to inflict while an entity who is vulnerable to this Fire Type is burning.
