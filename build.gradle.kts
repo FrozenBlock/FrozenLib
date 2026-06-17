@@ -567,6 +567,8 @@ tasks.named("publishModrinth") {
 }
 tasks.named("publishGithub") {
     dependsOn(tasks.jar)
+    dependsOn(sourcesJar)
+    dependsOn(javadocJar)
     dependsOn(tasks.shadowJar)
 }
 
