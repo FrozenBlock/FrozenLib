@@ -40,6 +40,6 @@ public class AttachmentChangeMixin {
 		if (attachmentChange.type() != WindDisturbances.ATTACHMENT_TYPE) return;
 
 		final WindManager windManager = WindManager.getOrCreate(level);
-		windManager.trackDisturbanceTargetInfo(attachmentChange.targetInfo());
+		windManager.trackDisturbanceHolder(attachmentChange.targetInfo().getTarget(level));
 	}
 }

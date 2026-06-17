@@ -53,11 +53,8 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.ApiStatus;
@@ -101,7 +98,7 @@ public class WindManager {
 
 	private Level level;
 	public final List<WindManagerExtension> extensions = new ArrayList<>();
-	private final List<AttachmentTargetInfo<?>> trackedDisturbanceTargets = new ArrayList<>();
+	private final List<AttachmentTarget> disturbanceHolders = new ArrayList<>();
 	private boolean loadedExtensions;
 	public Optional<Vec3> windOverride = Optional.empty();
 	public double windX;
@@ -231,70 +228,27 @@ public class WindManager {
 		return WindManager.getOrCreate(level).getExtension(type);
 	}
 
-	@Nullable
-	private static AttachmentTargetInfo<?> toTargetInfo(AttachmentTarget target) {
-		if (target instanceof Entity entity) return new AttachmentTargetInfo.EntityTarget(entity.getId());
-		if (target instanceof BlockEntity blockEntity) return new AttachmentTargetInfo.BlockEntityTarget(blockEntity.getBlockPos());
-		if (target instanceof ChunkAccess chunk) return new AttachmentTargetInfo.ChunkTarget(chunk.getPos());
-		if (target instanceof Level) return AttachmentTargetInfo.LevelTarget.INSTANCE;
-		return null;
-	}
-
 	/**
-	 * @return the currently tracked {@link WindDisturbances}, pair with their respective sources in {@link AttachmentTarget} sources.
+	 * @return the currently tracked {@link WindDisturbances}, paired with their respective sources in {@link AttachmentTarget} sources.
 	 */
 	public List<Pair<AttachmentTarget, WindDisturbances>> getWindDisturbances() {
-		return this.trackedDisturbanceTargets.stream()
-			.map(targetInfo -> WindDisturbances.getAsPair(this.level, targetInfo))
+		return this.disturbanceHolders.stream()
+			.map(target -> WindDisturbances.getAsPair(target))
 			.filter(Optional::isPresent)
 			.map(Optional::get)
 			.toList();
 	}
 
 	/**
-	 * Tracks an {@link AttachmentTargetInfo}.
-	 * <p>
-	 * This is used to track {@link WindDisturbances}. {@link AttachmentTargetInfo}s with null targets or no {@link WindDisturbances} present will be untracked.
-	 *
-	 * @param targetInfo The {@link AttachmentTargetInfo} to be tracked.
-	 */
-	public void trackDisturbanceTargetInfo(AttachmentTargetInfo<?> targetInfo) {
-		if (this.trackedDisturbanceTargets.contains(targetInfo)) return;
-		this.trackedDisturbanceTargets.add(targetInfo);
-	}
-
-	/**
 	 * Tracks an {@link AttachmentTarget}.
 	 * <p>
-	 * This is used to track {@link WindDisturbances}. Null {@link AttachmentTarget}s or {@link AttachmentTarget}s with no {@link WindDisturbances} present will be untracked.
+	 * This is used to track {@link WindDisturbances}.
 	 *
 	 * @param target The {@link AttachmentTarget} to be tracked.
 	 */
-	public void trackDisturbanceTarget(AttachmentTarget target) {
-		trackDisturbanceTargetInfo(toTargetInfo(target));
-	}
-
-	/**
-	 * Tracks or untracks a {@link AttachmentTarget} depending on whether it is present and has {@link WindDisturbances}.
-	 *
-	 * @param target The {@link AttachmentTarget} to be tracked or untracked.
-	 */
-	public void trackOrUntrackDisturbanceTarget(@Nullable AttachmentTarget target) {
-		if (target == null) return;
-		if (WindDisturbances.has(target)) {
-			trackDisturbanceTarget(target);
-		} else {
-			untrackDisturbanceTarget(target);
-		}
-	}
-
-	/**
-	 * Untracks an {@link AttachmentTargetInfo}.
-	 *
-	 * @param targetInfo The {@link AttachmentTargetInfo} to be untracked.
-	 */
-	public void untrackDisturbanceTargetInfo(AttachmentTargetInfo<?> targetInfo) {
-		this.trackedDisturbanceTargets.remove(targetInfo);
+	public void trackDisturbanceHolder(@Nullable AttachmentTarget target) {
+		if (target == null || this.disturbanceHolders.contains(target)) return;
+		this.disturbanceHolders.add(target);
 	}
 
 	/**
@@ -302,13 +256,26 @@ public class WindManager {
 	 *
 	 * @param target The {@link AttachmentTarget} to be untracked.
 	 */
-	public void untrackDisturbanceTarget(AttachmentTarget target) {
-		untrackDisturbanceTargetInfo(toTargetInfo(target));
+	public void untrackDisturbanceHolder(AttachmentTarget target) {
+		this.disturbanceHolders.remove(target);
+	}
+
+	/**
+	 * Tracks or untracks a {@link AttachmentTarget} depending on whether it is present and has {@link WindDisturbances}.
+	 *
+	 * @param target The {@link AttachmentTarget} to be tracked or untracked.
+	 */
+	public void trackOrUntrackDisturbanceHolder(@Nullable AttachmentTarget target) {
+		if (target == null) return;
+		if (WindDisturbances.has(target)) {
+			trackDisturbanceHolder(target);
+		} else {
+			untrackDisturbanceHolder(target);
+		}
 	}
 
 	public void tick(Level level) {
-		this.trackedDisturbanceTargets.removeIf(targetInfo -> {
-			final AttachmentTarget target = targetInfo.getTarget(level);
+		this.disturbanceHolders.removeIf(target -> {
 			if (target == null) return true;
 			WindDisturbances.removeIf(level, target, disturbance -> disturbance.expiredGeneric(target, level));
 			return !WindDisturbances.has(target);

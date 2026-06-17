@@ -47,14 +47,14 @@ public class ClientWindUtil {
 	public static void init() {
 		ClientTickEvents.START_LEVEL_TICK.register(Debug::tick);
 
-		ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceTarget(entity));
-		ClientEntityEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceTarget(entity));
+		ClientEntityEvents.ENTITY_LOAD.register((entity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity));
+		ClientEntityEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
 
-		ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceTarget(blockEntity));
-		ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceTarget(blockEntity));
+		ClientBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(blockEntity));
+		ClientBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(blockEntity));
 
-		ClientChunkEvents.CHUNK_LOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).trackOrUntrackDisturbanceTarget(chunk));
-		ClientChunkEvents.CHUNK_UNLOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).untrackDisturbanceTarget(chunk));
+		ClientChunkEvents.CHUNK_LOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).trackOrUntrackDisturbanceHolder(chunk));
+		ClientChunkEvents.CHUNK_UNLOAD.register((clientLevel, chunk) -> WindManager.getOrCreate(clientLevel).untrackDisturbanceHolder(chunk));
 	}
 
 	@VisibleForDebug

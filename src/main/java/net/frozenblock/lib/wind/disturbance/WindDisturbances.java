@@ -33,7 +33,6 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerBlockEntityEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerEntityEvents;
-import net.fabricmc.fabric.impl.attachment.sync.AttachmentTargetInfo;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.wind.WindManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -58,24 +57,25 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 			builder.syncWith(STREAM_CODEC, AttachmentSyncPredicate.all());
 		}
 	);
+
 	public static void init() {
 		ServerEntityEvents.ENTITY_LOAD.register((entity, level) -> {
-			WindManager.getOrCreate(level).trackOrUntrackDisturbanceTarget(entity);
+			WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(entity);
 			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(Breeze.class, WindDisturbanceType.BREEZE), () -> BreezeWindDisturbance.INSTANCE);
 			addIf(level, entity, isOfClassAndDoesntHaveDisturbance(AbstractWindCharge.class, WindDisturbanceType.WIND_CHARGE), () -> WindChargeWindDisturbance.INSTANCE);
 		});
-		ServerEntityEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceTarget(entity));
+		ServerEntityEvents.ENTITY_UNLOAD.register((entity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(entity));
 
-		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceTarget(blockEntity));
-		ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceTarget(blockEntity));
+		ServerBlockEntityEvents.BLOCK_ENTITY_LOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).trackOrUntrackDisturbanceHolder(blockEntity));
+		ServerBlockEntityEvents.BLOCK_ENTITY_UNLOAD.register((blockEntity, level) -> WindManager.getOrCreate(level).untrackDisturbanceHolder(blockEntity));
 
-		ServerChunkEvents.CHUNK_LOAD.register((serverLevel, chunk, generated) -> WindManager.getOrCreate(serverLevel).trackOrUntrackDisturbanceTarget(chunk));
-		ServerChunkEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> WindManager.getOrCreate(serverLevel).untrackDisturbanceTarget(chunk));
+		ServerChunkEvents.CHUNK_LOAD.register((serverLevel, chunk, generated) -> WindManager.getOrCreate(serverLevel).trackOrUntrackDisturbanceHolder(chunk));
+		ServerChunkEvents.CHUNK_UNLOAD.register((serverLevel, chunk) -> WindManager.getOrCreate(serverLevel).untrackDisturbanceHolder(chunk));
 	}
 
 	public static void set(Level level, AttachmentTarget target, WindDisturbances windDisturbances) {
 		target.setAttached(ATTACHMENT_TYPE, windDisturbances);
-		WindManager.getOrCreate(level).trackDisturbanceTarget(target);
+		WindManager.getOrCreate(level).trackDisturbanceHolder(target);
 	}
 
 	public static void set(Level level, AttachmentTarget target, List<WindDisturbance<?>> windDisturbances) {
@@ -102,11 +102,11 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 
 	public static void removeAttachment(Level level, AttachmentTarget target) {
 		target.removeAttached(ATTACHMENT_TYPE);
-		WindManager.getOrCreate(level).untrackDisturbanceTarget(target);
+		WindManager.getOrCreate(level).untrackDisturbanceHolder(target);
 	}
 
 	public static void removeIf(Level level, AttachmentTarget target, Predicate<WindDisturbance<?>> removeIf) {
-		final WindDisturbances windDisturbances = target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
+		final WindDisturbances windDisturbances = get(target);
 		if (windDisturbances.isEmpty()) return;
 		set(level, target, windDisturbances.removeIf(removeIf));
 	}
@@ -116,15 +116,15 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 	}
 
 	public static boolean anyMatch(AttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).anyMatch(predicate);
+		return get(target).anyMatch(predicate);
 	}
 
 	public static boolean allMatch(AttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).allMatch(predicate);
+		return  get(target).allMatch(predicate);
 	}
 
 	public static boolean noneMatch(AttachmentTarget target, Predicate<WindDisturbance<?>> predicate) {
-		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).noneMatch(predicate);
+		return  get(target).noneMatch(predicate);
 	}
 
 	public static Predicate<WindDisturbance<?>> type(WindDisturbanceType<?> type) {
@@ -132,37 +132,31 @@ public record WindDisturbances(List<WindDisturbance<?>> windDisturbances) implem
 	}
 
 	public static boolean has(AttachmentTarget target) {
-		return !target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY).isEmpty();
+		return ! get(target).isEmpty();
 	}
 
 	public static WindDisturbances get(AttachmentTarget target) {
 		return target.getAttachedOrElse(ATTACHMENT_TYPE, EMPTY);
 	}
 
-	public static WindDisturbances get(Level level, AttachmentTargetInfo<?> targetInfo) {
-		final AttachmentTarget target = targetInfo.getTarget(level);
-		if (target == null) return EMPTY;
-		return get(target);
-	}
-
-	public static Optional<Pair<AttachmentTarget, WindDisturbances>> getAsPair(Level level, AttachmentTargetInfo<?> targetInfo) {
-		final WindDisturbances disturbances = get(level, targetInfo);
+	public static Optional<Pair<AttachmentTarget, WindDisturbances>> getAsPair(AttachmentTarget target) {
+		final WindDisturbances disturbances = get(target);
 		return disturbances.isEmpty()
 			? Optional.empty()
-			: Optional.of(Pair.of(targetInfo.getTarget(level), disturbances));
+			: Optional.of(Pair.of(target, disturbances));
 	}
 
 
 	public WindDisturbances add(WindDisturbance<?> windDisturbance) {
-		final List<WindDisturbance<?>> newWindDisturbances = new ArrayList<>(this.windDisturbances);
-		newWindDisturbances.add(windDisturbance);
-		return new WindDisturbances(newWindDisturbances);
+		final List<WindDisturbance<?>> newDisturbances = new ArrayList<>(this.windDisturbances);
+		newDisturbances.add(windDisturbance);
+		return new WindDisturbances(newDisturbances);
 	}
 
 	public WindDisturbances removeIf(Predicate<WindDisturbance<?>> removeIf) {
-		final List<WindDisturbance<?>> newIcons = new ArrayList<>(this.windDisturbances);
-		newIcons.removeIf(removeIf);
-		return new WindDisturbances(newIcons);
+		final List<WindDisturbance<?>> newDisturbances = new ArrayList<>(this.windDisturbances);
+		newDisturbances.removeIf(removeIf);
+		return new WindDisturbances(newDisturbances);
 	}
 
 	public boolean anyMatch(Predicate<WindDisturbance<?>> predicate) {
