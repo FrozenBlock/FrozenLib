@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.loot.api;
+package net.frozenblock.lib.item.api.loot;
 
 import java.util.List;
 import net.frozenblock.lib.event.api.Event;

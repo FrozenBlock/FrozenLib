@@ -18,7 +18,7 @@
 package net.frozenblock.lib.event.impl;
 
 import net.fabricmc.fabric.api.loot.v3.LootTableEvents;
-import net.frozenblock.lib.loot.api.FrozenLibLootTableEvents;
+import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
 
 /**
  * Redirects Fabric's {@link LootTableEvents} into {@link FrozenLibLootTableEvents}'s cross-platform events.

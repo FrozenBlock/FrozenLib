@@ -10,7 +10,7 @@ config="mixin/frozenlib.advancement.mixins.json"
 config="mixin/frozenlib.gravity.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.loot.mixins.json"
+config="mixin/frozenlib.item.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.loot.neoforge.mixins.json"

@@ -16,7 +16,6 @@
     "axe.AxeItemMixin",
     "bonemeal.BoneMealItemMixin",
     "bundle.BundleContentsMixin",
-    "loot.LootTableMixin",
     "recipe.RecipeBuilderMixin",
     "sherd.DecoratedPotPatternsMixin",
     "shovel.ShovelItemMixin"

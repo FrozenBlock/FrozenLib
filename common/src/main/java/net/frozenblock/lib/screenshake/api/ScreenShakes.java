@@ -24,12 +24,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.function.Predicate;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.event.api.events.FrozenLibServerTickEvents;
 import net.frozenblock.lib.platform.api.data.FrozenDataAttachmentType;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
@@ -62,7 +58,7 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 	}
 
 	public static void init() {
-		ServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
+		FrozenLibServerTickEvents.START_LEVEL_TICK.register(serverLevel -> {
 			tick(serverLevel, serverLevel);
 			for (Entity entity : serverLevel.getAllEntities()) {
 				if (entity.isRemoved()) continue;
@@ -71,11 +67,11 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 		});
 	}
 
-	public static void setScreenShakes(Object target, ScreenShake... screenShakes) {
+	public static void set(Object target, ScreenShake... screenShakes) {
 		ATTACHMENT.set(target, new ScreenShakes(List.of(screenShakes)));
 	}
 
-	public static void addScreenShake(Object target, ScreenShake screenShake) {
+	public static void add(Object target, ScreenShake screenShake) {
 		final ScreenShakes screenShakes = ATTACHMENT.getOrDefault(target, EMPTY);
 		if (screenShakes.isEmpty()) {
 			set(target, screenShake);

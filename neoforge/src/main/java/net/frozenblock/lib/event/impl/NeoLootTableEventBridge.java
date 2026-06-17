@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.event.impl;
 
-import net.frozenblock.lib.loot.api.FrozenLibLootTableEvents;
+import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
 import net.frozenblock.lib.loot.mixin.neoforge.LootTableAccessor;
 import net.frozenblock.lib.loot.mixin.neoforge.LootTableBuilderAccessor;
 import net.minecraft.core.HolderLookup;

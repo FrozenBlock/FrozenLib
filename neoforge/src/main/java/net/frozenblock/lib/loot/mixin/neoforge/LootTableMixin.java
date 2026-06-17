@@ -29,7 +29,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootTable;
-import net.frozenblock.lib.loot.api.FrozenLibLootTableEvents;
+import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
 import net.frozenblock.lib.loot.impl.FrozenNeoLootTable;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;

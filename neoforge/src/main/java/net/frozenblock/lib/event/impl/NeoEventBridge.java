@@ -25,5 +25,6 @@ public final class NeoEventBridge {
 
 	public static void initModStage(IEventBus modBus) {
 		NeoLootTableEventBridge.init();
+		NeoServerTickEventBridge.init();
 	}
 }

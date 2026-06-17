@@ -18,7 +18,7 @@
 package net.frozenblock.lib.loot.mixin.neoforge;
 
 import com.google.gson.JsonElement;
-import net.frozenblock.lib.loot.api.FrozenLibLootTableEvents;
+import net.frozenblock.lib.item.api.loot.FrozenLibLootTableEvents;
 import net.frozenblock.lib.loot.impl.FrozenNeoLootTable;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
