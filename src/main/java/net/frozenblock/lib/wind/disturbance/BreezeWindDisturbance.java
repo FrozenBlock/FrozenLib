@@ -28,7 +28,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
 public class BreezeWindDisturbance extends EntityWindDisturbance<Breeze> {
-	public static BreezeWindDisturbance INSTANCE = new BreezeWindDisturbance();
+	public static final BreezeWindDisturbance INSTANCE = new BreezeWindDisturbance();
 	public static final MapCodec<BreezeWindDisturbance> CODEC = MapCodec.unit(() -> INSTANCE);
 	public static final StreamCodec<RegistryFriendlyByteBuf, BreezeWindDisturbance> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 	private static final double AREA_WIDTH = 12D;
