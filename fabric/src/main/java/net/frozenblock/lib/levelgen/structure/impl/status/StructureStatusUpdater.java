@@ -19,7 +19,7 @@ package net.frozenblock.lib.levelgen.structure.impl.status;
 
 import java.util.ArrayList;
 import java.util.List;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.frozenblock.lib.networking.PlayerLookup;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.Registries;

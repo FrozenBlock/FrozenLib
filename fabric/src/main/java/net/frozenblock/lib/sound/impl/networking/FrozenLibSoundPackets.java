@@ -18,7 +18,7 @@
 package net.frozenblock.lib.sound.impl.networking;
 
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.frozenblock.lib.networking.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.sound.api.type.FadingDistanceLoopingMovingSoundType;
 import net.frozenblock.lib.sound.api.type.MovingLoopingSoundType;
