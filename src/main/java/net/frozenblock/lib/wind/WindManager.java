@@ -141,11 +141,11 @@ public class WindManager {
 	 * @return the {@link WindManager} used for the given {@link Level}.
 	 */
 	public static WindManager getOrCreate(Level level) {
-		WindManager windManager = level.getAttached(ATTACHMENT_TYPE);
+		WindManager windManager = level instanceof ServerLevel
+			? level.getAttached(ATTACHMENT_TYPE)
+			: INSTANCE;
 		if (windManager == null) {
-			windManager = level instanceof ServerLevel serverLevel
-				? new WindManager(serverLevel)
-				: INSTANCE;
+			windManager = new WindManager((ServerLevel) level);
 			level.setAttached(ATTACHMENT_TYPE, windManager);
 		} else {
 			windManager.setLevel(level);
