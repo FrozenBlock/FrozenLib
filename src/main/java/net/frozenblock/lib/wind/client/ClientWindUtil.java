@@ -98,7 +98,7 @@ public class ClientWindUtil {
 
 		private static List<List<Pair<Vec3, Integer>>> createWindNodes(ClientLevel level) {
 			final List<List<Pair<Vec3, Integer>>> windNodes = new ArrayList<>();
-			ACCESSED_POSITIONS.forEach(vec3 -> windNodes.add(createWindNodes(level, vec3, 1.5D, false)));
+			ImmutableList.copyOf(ACCESSED_POSITIONS).forEach(vec3 -> windNodes.add(createWindNodes(level, vec3, 1.5D, false)));
 			return windNodes;
 		}
 
