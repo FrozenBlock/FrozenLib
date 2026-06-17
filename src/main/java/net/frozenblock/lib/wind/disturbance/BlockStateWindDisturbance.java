@@ -23,7 +23,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.phys.Vec3;
 
-public abstract class BlockStateWindDisturbance<T extends ChunkAccess> implements WindDisturbance<T> {
+public abstract class BlockStateWindDisturbance implements WindDisturbance<ChunkAccess> {
 	private final BlockState blockState;
 	private final BlockPos position;
 
@@ -32,17 +32,17 @@ public abstract class BlockStateWindDisturbance<T extends ChunkAccess> implement
 		this.position = position;
 	}
 
-	public BlockState getBlockStateAtOrigin(T source) {
+	public BlockState getBlockStateAtOrigin(ChunkAccess source) {
 		return source.getBlockState(this.position);
 	}
 
 	@Override
-	public Vec3 origin(T source, Level level) {
+	public Vec3 origin(ChunkAccess source, Level level) {
 		return Vec3.atCenterOf(this.position);
 	}
 
 	@Override
-	public boolean expired(T source, Level level) {
+	public boolean expired(ChunkAccess source, Level level) {
 		return !this.getBlockStateAtOrigin(source).equals(this.blockState);
 	}
 }
