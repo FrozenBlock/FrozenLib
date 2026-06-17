@@ -533,6 +533,8 @@ publishMods {
         projectSlug.set("frozenlib")
         accessToken.set(providers.environmentVariable("CURSEFORGE_TOKEN"))
         minecraftVersions.add(minecraft_version)
+        client = true
+        server = true
         requires("fabric-api")
         optional("modmenu")
         optional("cloth-config")
