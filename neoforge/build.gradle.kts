@@ -134,7 +134,7 @@ dependencies {
     compileOnly("org.projectlombok:lombok:1.18.42")?.let { annotationProcessor(it) }
 
     // Kotlin for NeoForge
-    implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinforforge_version")
+    //implementation("thedarkcolour:kotlinforforge-neoforge:$kotlinforforge_version")
 
     // Cloth Config (NeoForge edition)
     compileOnly("me.shedaniel.cloth:cloth-config-neoforge:$cloth_config_version") {
