@@ -29,11 +29,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(AttachmentChange.class)
 public class AttachmentChangeMixin {
 
+	/**
+	 * @reason Is called to set the attachment on the client when it is synced. We are using this to add {@link WindDisturbances} to the client's {@link WindManager}.
+	 */
 	@Inject(method = "tryApply", at = @At("TAIL"))
-	private void frozenLib$onAttachmentApplied(Level level, CallbackInfo ci) {
-		AttachmentChange self = (AttachmentChange) (Object) this;
-		if (self.type() != WindDisturbances.ATTACHMENT_TYPE) return;
-		WindManager windManager = WindManager.getOrCreate(level);
-		windManager.replaceForAttachmentSync(self.targetInfo(), (WindDisturbances) self.value());
+	private void frozenLib$onAttachmentApplied(Level level, CallbackInfo info) {
+		if (level.isClientSide()) return;
+
+		AttachmentChange attachmentChange = AttachmentChange.class.cast(this);
+		if (attachmentChange.type() != WindDisturbances.ATTACHMENT_TYPE) return;
+
+		final WindManager windManager = WindManager.getOrCreate(level);
+		windManager.replaceForAttachmentSync(attachmentChange.targetInfo(), (WindDisturbances) attachmentChange.value());
 	}
 }
