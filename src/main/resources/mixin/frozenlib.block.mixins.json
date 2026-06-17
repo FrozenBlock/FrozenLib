@@ -8,10 +8,6 @@
   },
   "mixins": [
     "beacon.BeaconBlockEntityMixin",
-    "client.fire.BaseFireBlockMixin",
-    "client.fire.CampfireBlockMixin",
-    "client.fire.TorchBlockMixin",
-    "client.fire.WallTorchBlockMixin",
     "clipgroup.BlockGetterMixin",
     "clipgroup.EntityMixin",
     "dripstone.PointedDripstoneBlockMixin",
@@ -46,11 +42,15 @@
     "waterlike.ServerPlayerGameModeMixin"
   ],
   "client": [
+    "client.fire.BaseFireBlockMixin",
+    "client.fire.CampfireBlockMixin",
     "client.fire.EntityRendererMixin",
     "client.fire.FlameFeatureRendererMixin",
     "client.fire.LavaParticleMixin",
     "client.fire.LavaParticleProviderMixin",
     "client.fire.ScreenEffectRendererMixin",
+    "client.fire.TorchBlockMixin",
+    "client.fire.WallTorchBlockMixin",
     "client.piston.MovingBlockRenderStateMixin",
     "client.piston.PistonHeadRendererMixin",
     "client.waterlike.ClientLevelMixin",

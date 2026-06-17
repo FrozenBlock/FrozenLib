@@ -17,15 +17,30 @@
 
 package net.frozenblock.lib.wind.disturbance;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.VarInt;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.phys.Vec3;
 
 public abstract class BlockStateWindDisturbance implements WindDisturbance<ChunkAccess> {
-	private final BlockState blockState;
-	private final BlockPos position;
+	protected static final StreamCodec<ByteBuf, BlockState> BLOCK_STATE_CODEC = new StreamCodec<>() {
+		@Override
+		public void encode(ByteBuf output, BlockState value) {
+			VarInt.write(output, Block.getId(value));
+		}
+
+		@Override
+		public BlockState decode(ByteBuf input) {
+			return Block.stateById(VarInt.read(input));
+		}
+	};
+	public final BlockState blockState;
+	public final BlockPos position;
 
 	protected BlockStateWindDisturbance(BlockState blockState, BlockPos position) {
 		this.blockState = blockState;
