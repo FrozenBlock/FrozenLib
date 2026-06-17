@@ -34,7 +34,7 @@ public class AttachmentChangeMixin {
 	 */
 	@Inject(method = "tryApply", at = @At("TAIL"))
 	private void frozenLib$onAttachmentApplied(Level level, CallbackInfo info) {
-		if (level.isClientSide()) return;
+		if (!level.isClientSide()) return;
 
 		AttachmentChange attachmentChange = AttachmentChange.class.cast(this);
 		if (attachmentChange.type() != WindDisturbances.ATTACHMENT_TYPE) return;
