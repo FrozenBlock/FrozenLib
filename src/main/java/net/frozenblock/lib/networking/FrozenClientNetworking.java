@@ -93,7 +93,7 @@ public final class FrozenClientNetworking {
 		receiveFileTransferPacket();
 		receiveCapeRepoPacket();
 		ClientPlayNetworking.registerGlobalReceiver(ConfigEntrySyncPacket.PACKET_TYPE, (packet, ctx) ->
-			ConfigEntrySyncPacket.receive(packet, null)
+			ConfigEntrySyncPacket.receive(packet, null, null)
 		);
 		ClientPlayConnectionEvents.DISCONNECT.register(((handler, client) -> {
 			for (ConfigEntry<?> config : ConfigV2Registry.allConfigEntries()) ConfigSyncModification.clearSyncData(config);

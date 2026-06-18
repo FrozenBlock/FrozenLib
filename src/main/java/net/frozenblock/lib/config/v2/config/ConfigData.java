@@ -117,12 +117,12 @@ public class ConfigData<T> {
 		if (this.optimizedMap) {
 			final T value = this.optimizedConfigMap.get(entry.id());
 			if (value != null) {
-				entry.setValue((V) value);
+				entry.setValueForLoad((V) value);
 				this.optimizedConfigMap.remove(entry.id());
 			}
 		} else {
 			ConfigSerializer.getFromUnoptimizedDataMap(this, entry, this.unoptimizedConfigMap)
-				.ifLeft(entry::setValue)
+				.ifLeft(entry::setValueForLoad)
 				.ifRight(error -> FrozenLibLogUtils.logError("Failed to load entry " + entry.id() + ": " + error, FrozenLibLogUtils.UNSTABLE_LOGGING));
 		}
 	}

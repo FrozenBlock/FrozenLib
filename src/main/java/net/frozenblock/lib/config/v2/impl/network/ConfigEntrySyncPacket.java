@@ -22,6 +22,7 @@ import java.util.List;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
@@ -82,16 +83,29 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 		this.entry.streamCodec().encode(buf, this.entry.getActual());
 	}
 
-	public static void receive(ConfigEntrySyncPacket packet, @Nullable MinecraftServer server) {
+	public static void receive(ConfigEntrySyncPacket packet, @Nullable ServerPlayer sender, @Nullable MinecraftServer server) {
 		if (packet == DUMMY_PACKET) return;
+		if ((sender == null) == (server != null)) {
+			FrozenLibLogUtils.logError("Config sync received with invalid sender!", FrozenLibLogUtils.UNSTABLE_LOGGING);
+			return;
+		}
 
 		final ConfigEntry entry = packet.entry();
-		if (server != null) {
+		if (sender != null) {
 			// C2S logic
-			entry.setValue(packet.value());
+			FrozenLibLogUtils.log("ENTRY SYNC RECEIVED ON SERVER: " + entry.id(), FrozenLibLogUtils.UNSTABLE_LOGGING);
+			if (FrozenNetworking.isLocalPlayer(sender)) {
+				for (ServerPlayer player : PlayerLookup.all(server)) {
+					ConfigEntrySyncPacket.sendEntryS2C(player, List.of(entry));
+				}
+			} else {
+				entry.setValue(packet.value());
+			}
+
 			if (!FrozenNetworking.connectedToIntegratedServer()) entry.configData().save();
 		} else {
 			// S2C logic
+			FrozenLibLogUtils.log("ENTRY SYNC RECEIVED ON CLIENT: " + entry.id(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 			entry.setSyncedValue(packet.value());
 		}
 		//entry.onSync(packet.value());
@@ -110,6 +124,18 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry, entry.get());
 			ServerPlayNetworking.send(player, packet);
 		}
+
+		if (!FrozenLibLogUtils.UNSTABLE_LOGGING) return;
+
+		boolean hadEntryBefore = false;
+		final StringBuilder builder = new StringBuilder("ENTRY SYNC SENT FROM SERVER:");
+		for (ConfigEntry<?> entry : entries) {
+			if (!entry.isSyncable()) continue;
+			builder.append(hadEntryBefore ? ", " : " ").append(entry.id());
+			hadEntryBefore = true;
+		}
+
+		FrozenLibLogUtils.log(builder.toString(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 	}
 
 	public static void sendS2C(ServerPlayer player) {
@@ -125,6 +151,18 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 			final ConfigEntrySyncPacket<?> packet = new ConfigEntrySyncPacket<>(entry, entry.getActual());
 			ClientPlayNetworking.send(packet);
 		}
+
+		if (!FrozenLibLogUtils.UNSTABLE_LOGGING) return;
+
+		boolean hadEntryBefore = false;
+		final StringBuilder builder = new StringBuilder("ENTRY SYNC SENT ON CLIENT ENV:");
+		for (ConfigEntry<?> entry : entries) {
+			if (!entry.isSyncable()) continue;
+			builder.append(hadEntryBefore ? ", " : " ").append(entry.id());
+			hadEntryBefore = true;
+		}
+
+		FrozenLibLogUtils.log(builder.toString(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 	}
 
 	@Environment(EnvType.CLIENT)
@@ -139,10 +177,8 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 
 	@Environment(EnvType.CLIENT)
 	public static void trySendC2S(Iterable<ConfigEntry<?>> entries) {
-		if (hasPermissionsToSendSync(Minecraft.getInstance().player, false)) {
-			sendC2S(entries);
-			FrozenLibLogUtils.logError("FAILED TO SEND SYNC LMFAO");
-		}
+		if (!hasPermissionsToSendSync(Minecraft.getInstance().player, false)) return;
+		sendC2S(entries);
 	}
 
 	@Override

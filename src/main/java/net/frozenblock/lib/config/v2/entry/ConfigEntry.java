@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.config.v2.config.ConfigData;
@@ -82,8 +83,7 @@ public class ConfigEntry<T> implements Supplier<T> {
 	}
 
 	public T getWithSync() {
-		this.ensureIsLoaded();
-		return this.syncedValue.orElse(this.value);
+		return this.syncedValue.orElseGet(this::getActual);
 	}
 
 	public boolean isSyncable() {
@@ -102,10 +102,18 @@ public class ConfigEntry<T> implements Supplier<T> {
 		this.ensureIsLoaded();
 		this.value = value;
 		if (markDirty) this.markDirty();
-		this.trySendSync();
+		this.trySendSync(value);
 	}
 
-	public void trySendSync() {
+	public void setValueForLoad(T value) {
+		this.value = value;
+		this.markDirty();
+	}
+
+	public void trySendSync(T value) {
+		if (!this.isSyncable()) return;
+		if (this.syncedValue.isPresent() && this.syncedValue.get() == value) return;
+
 		if (FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER) {
 			final MinecraftServer server = (MinecraftServer) FabricLoader.getInstance().getGameInstance();
 			if (server == null) return;
@@ -116,6 +124,11 @@ public class ConfigEntry<T> implements Supplier<T> {
 			//noinspection ConstantValue
 			if (Minecraft.getInstance() != null) ConfigEntrySyncPacket.trySendC2S(this);
 		}
+	}
+
+	@Environment(EnvType.CLIENT)
+	private void trySendSyncOnClient() {
+		final Minecraft minecraft = Minecraft.getInstance();
 	}
 
 	public void ensureIsLoaded() {
