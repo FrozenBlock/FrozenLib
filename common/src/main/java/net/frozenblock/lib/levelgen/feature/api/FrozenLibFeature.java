@@ -33,12 +33,11 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import org.jetbrains.annotations.Nullable;
 
-public class FrozenLibFeature<F extends Feature> {
-
+public class FrozenLibFeature {
 	/**
 	 * Can be used for setting all bootstrap contexts on 1.19.3+.
 	 */
-	public static final List<FrozenLibFeature<?>> FEATURES = new ArrayList<>();
+	public static final List<FrozenLibFeature> FEATURES = new ArrayList<>();
 
 	private final ResourceKey<Feature> key;
 
@@ -73,7 +72,7 @@ public class FrozenLibFeature<F extends Feature> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public FrozenLibFeature<F> makeAndSetHolder(F feature) {
+	public FrozenLibFeature makeAndSetHolder(Feature feature) {
 		FrozenLibLogUtils.log("Registering configured feature: " + this.getKey().identifier(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 
 		assert FrozenLibFeatureUtil.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().identifier();
