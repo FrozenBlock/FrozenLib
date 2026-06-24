@@ -17,25 +17,37 @@
 
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
-import com.mojang.serialization.Codec;
-import net.frozenblock.lib.levelgen.feature.api.feature.configurations.ConfigSelectorFeatureConfiguration;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
-public class ConfigSelectorFeature extends Feature<ConfigSelectorFeatureConfiguration> {
+public record ConfigSelectorFeature(
+	ConfigPredicate configPredicate,
+	Holder<PlacedFeature> featureIfTrue,
+	Holder<PlacedFeature> featureIfFalse
+) implements Feature {
+	public static final MapCodec<ConfigSelectorFeature> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		ConfigPredicate.CODEC.fieldOf("config_predicate").forGetter(ConfigSelectorFeature::configPredicate),
+		PlacedFeature.CODEC.fieldOf("feature_if_true").forGetter(ConfigSelectorFeature::featureIfTrue),
+		PlacedFeature.CODEC.fieldOf("feature_if_false").forGetter(ConfigSelectorFeature::featureIfFalse)
+	).apply(instance, ConfigSelectorFeature::new));
 
-	public ConfigSelectorFeature(Codec<ConfigSelectorFeatureConfiguration> codec) {
-		super(codec);
+	@Override
+	public MapCodec<? extends Feature> codec() {
+		return CODEC;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<ConfigSelectorFeatureConfiguration> context) {
-		final WorldGenLevel level = context.level();
-		final ConfigSelectorFeatureConfiguration config = context.config();
-		return (config.configPredicate().test() ? config.featureIfTrue() : config.featureIfFalse())
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
+		return (this.configPredicate.test() ? this.featureIfTrue : this.featureIfFalse)
 			.value()
-			.place(level, context.chunkGenerator(), level.getRandom(), context.origin());
+			.place(level, chunkGenerator, random, origin);
 	}
-
 }

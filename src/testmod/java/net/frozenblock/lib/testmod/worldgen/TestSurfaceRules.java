@@ -20,9 +20,10 @@ package net.frozenblock.lib.testmod.worldgen;
 import java.util.List;
 import net.frozenblock.lib.levelgen.surface.api.DimensionBoundRuleSource;
 import net.frozenblock.lib.levelgen.surface.api.SurfaceRuleEvents;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.material.VanillaMaterialConditions;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.Biomes;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Noises;
@@ -32,7 +33,7 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 	SurfaceRuleEvents.NetherSurfaceRuleCallback, SurfaceRuleEvents.EndSurfaceRuleCallback,
 	SurfaceRuleEvents.GenericSurfaceRuleCallback {
     @Override
-    public void addOverworldSurfaceRules(HolderLookup<Biome> biomes, List<SurfaceRules.RuleSource> context) {
+    public void addOverworldSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context) {
         SurfaceRules.ConditionSource greenNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.05, 0.1);
         SurfaceRules.ConditionSource orangeNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.1, 0.15);
         SurfaceRules.ConditionSource whiteNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.15, 0.20);
@@ -53,7 +54,7 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 			SurfaceRules.ifTrue(
 				SurfaceRules.abovePreliminarySurface(),
 				SurfaceRules.ifTrue(
-					SurfaceRules.ON_FLOOR,
+					SurfaceRules.getCondition(registryAccess.lookupOrThrow(Registries.MATERIAL_CONDITION), VanillaMaterialConditions.ON_FLOOR),
 					SurfaceRules.sequence(
 						SurfaceRules.ifTrue(greenNoise, greenConcrete),
 						SurfaceRules.ifTrue(orangeNoise, orangeConcrete),
@@ -69,26 +70,26 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
     }
 
     @Override
-    public void addNetherSurfaceRules(HolderLookup<Biome> biomes, List<SurfaceRules.RuleSource> context) {
+    public void addNetherSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context) {
 		context.add(
 			SurfaceRules.state(Blocks.SPONGE.defaultBlockState())
 		);
     }
 
     @Override
-    public void addEndSurfaceRules(HolderLookup<Biome> biomes, List<SurfaceRules.RuleSource> context) {
+    public void addEndSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context) {
 		context.add(
 			SurfaceRules.state(Blocks.BIRCH_LOG.defaultBlockState())
 		);
     }
 
     @Override
-    public void addGenericSurfaceRules(HolderLookup<Biome> biomes, List<DimensionBoundRuleSource> context) {
+    public void addGenericSurfaceRules(RegistryAccess registryAccess, List<DimensionBoundRuleSource> context) {
 		context.add(new DimensionBoundRuleSource(
 			Identifier.withDefaultNamespace("overworld"),
 			SurfaceRules.sequence(
 				SurfaceRules.ifTrue(
-					SurfaceRules.isBiome(biomes, Biomes.BIRCH_FOREST),
+					SurfaceRules.isBiome(registryAccess.lookupOrThrow(Registries.BIOME), Biomes.BIRCH_FOREST),
 					SurfaceRules.state(Blocks.HAY_BLOCK.defaultBlockState())
 				)
 			)
@@ -97,7 +98,7 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
 			Identifier.withDefaultNamespace("the_nether"),
 			SurfaceRules.sequence(
 				SurfaceRules.ifTrue(
-					SurfaceRules.isBiome(biomes, Biomes.WARPED_FOREST),
+					SurfaceRules.isBiome(registryAccess.lookupOrThrow(Registries.BIOME), Biomes.WARPED_FOREST),
 					SurfaceRules.state(Blocks.COARSE_DIRT.defaultBlockState())
 				)
 			)

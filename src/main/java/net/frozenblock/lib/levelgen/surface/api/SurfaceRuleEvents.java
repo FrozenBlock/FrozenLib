@@ -21,8 +21,7 @@ import java.util.List;
 import net.fabricmc.fabric.api.event.Event;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.world.level.biome.Biome;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
 /**
@@ -37,55 +36,55 @@ public class SurfaceRuleEvents {
 	/**
 	 * Lets you modify the Surface Rules of Overworld-based world presets.
 	 */
-	public static final Event<OverworldSurfaceRuleCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleCallback.class,callbacks -> (biomes, context) -> {
-		for (var callback : callbacks) callback.addOverworldSurfaceRules(biomes, context);
+	public static final Event<OverworldSurfaceRuleCallback> MODIFY_OVERWORLD = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleCallback.class,callbacks -> (registryAccess, context) -> {
+		for (var callback : callbacks) callback.addOverworldSurfaceRules(registryAccess, context);
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of Overworld-based world presets without checking the preliminary surface.
 	 */
-	public static final Event<OverworldSurfaceRuleNoPrelimSurfaceCallback> MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleNoPrelimSurfaceCallback.class, callbacks -> (biomes, context) -> {
-		for (var callback : callbacks) callback.addOverworldNoPrelimSurfaceRules(biomes, context);
+	public static final Event<OverworldSurfaceRuleNoPrelimSurfaceCallback> MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE = FrozenEvents.createEnvironmentEvent(OverworldSurfaceRuleNoPrelimSurfaceCallback.class, callbacks -> (registryAccess, context) -> {
+		for (var callback : callbacks) callback.addOverworldNoPrelimSurfaceRules(registryAccess, context);
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of Nether-based world presets.
 	 */
-	public static final Event<NetherSurfaceRuleCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
-		for (var callback : callbacks) callback.addNetherSurfaceRules(biomes, context);
+	public static final Event<NetherSurfaceRuleCallback> MODIFY_NETHER = FrozenEvents.createEnvironmentEvent(NetherSurfaceRuleCallback.class, callbacks -> (registryAccess, context) -> {
+		for (var callback : callbacks) callback.addNetherSurfaceRules(registryAccess, context);
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of End-based world presets.
 	 */
-	public static final Event<EndSurfaceRuleCallback> MODIFY_END = FrozenEvents.createEnvironmentEvent(EndSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
-		for (var callback : callbacks) callback.addEndSurfaceRules(biomes, context);
+	public static final Event<EndSurfaceRuleCallback> MODIFY_END = FrozenEvents.createEnvironmentEvent(EndSurfaceRuleCallback.class, callbacks -> (registryAccess, context) -> {
+		for (var callback : callbacks) callback.addEndSurfaceRules(registryAccess, context);
 	});
 
 	/**
 	 * Lets you modify the Surface Rules of custom world presets.
 	 */
-	public static final Event<GenericSurfaceRuleCallback> MODIFY_GENERIC = FrozenEvents.createEnvironmentEvent(GenericSurfaceRuleCallback.class, callbacks -> (biomes, context) -> {
-		for (var callback : callbacks) callback.addGenericSurfaceRules(biomes, context);
+	public static final Event<GenericSurfaceRuleCallback> MODIFY_GENERIC = FrozenEvents.createEnvironmentEvent(GenericSurfaceRuleCallback.class, callbacks -> (registryAccess, context) -> {
+		for (var callback : callbacks) callback.addGenericSurfaceRules(registryAccess, context);
 	});
 
 	public interface OverworldSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addOverworldSurfaceRules(HolderLookup<Biome> biomes, List<SurfaceRules.RuleSource> context);
+		void addOverworldSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context);
 	}
 
 	public interface OverworldSurfaceRuleNoPrelimSurfaceCallback extends CommonEventEntrypoint {
-		void addOverworldNoPrelimSurfaceRules(HolderLookup<Biome> biomes, List<SurfaceRules.RuleSource> context);
+		void addOverworldNoPrelimSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context);
 	}
 
 	public interface NetherSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addNetherSurfaceRules(HolderLookup<Biome> biomes, List<SurfaceRules.RuleSource> context);
+		void addNetherSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context);
 	}
 
 	public interface EndSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addEndSurfaceRules(HolderLookup<Biome> biomes, List<SurfaceRules.RuleSource> context);
+		void addEndSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context);
 	}
 
 	public interface GenericSurfaceRuleCallback extends CommonEventEntrypoint {
-		void addGenericSurfaceRules(HolderLookup<Biome> biomes, List<DimensionBoundRuleSource> context);
+		void addGenericSurfaceRules(RegistryAccess registryAccess, List<DimensionBoundRuleSource> context);
 	}
 }

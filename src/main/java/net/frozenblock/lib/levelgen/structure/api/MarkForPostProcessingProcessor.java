@@ -30,7 +30,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemp
 
 public record MarkForPostProcessingProcessor(RuleTest inputPredicate) implements StructureProcessor {
 	public static final MapCodec<MarkForPostProcessingProcessor> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		RuleTest.CODEC.fieldOf("input_predicate").forGetter(ruleProcessor -> ruleProcessor.inputPredicate)
+		RuleTest.CODEC.fieldOf("input_predicate").forGetter(MarkForPostProcessingProcessor::inputPredicate)
 	).apply(instance, MarkForPostProcessingProcessor::new));
 
 	@Override
@@ -44,7 +44,7 @@ public record MarkForPostProcessingProcessor(RuleTest inputPredicate) implements
 	) {
 		final BlockPos currentPos = processedBlockInfo.pos();
 		final RandomSource random = RandomSource.create(Mth.getSeed(currentPos));
-		if (this.inputPredicate.test(processedBlockInfo.state(), random)) level.getChunk(currentPos).markPosForPostProcessing(currentPos);
+		if (this.inputPredicate.test(processedBlockInfo.state(), currentPos, random)) level.getChunk(currentPos).markPosForPostProcessing(currentPos);
 		return processedBlockInfo;
 	}
 

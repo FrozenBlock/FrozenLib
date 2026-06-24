@@ -17,17 +17,26 @@
 
 package net.frozenblock.lib.levelgen.feature.api;
 
+import java.util.Set;
 import lombok.experimental.UtilityClass;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
+import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
+import net.minecraft.world.level.levelgen.feature.Feature;
+import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
 @UtilityClass
-public class FrozenLibFeatureUtils {
+public class FrozenLibFeatureUtil {
 	public static BootstrapContext<Object> BOOTSTRAP_CONTEXT = null;
 
 	public static boolean isBlockExposed(WorldGenLevel level, BlockPos pos) {
@@ -67,5 +76,39 @@ public class FrozenLibFeatureUtils {
 		);
 		for (BlockPos currentPos : poses) if (predicate.test(level, currentPos)) return true;
 		return false;
+	}
+
+	public static ResourceKey<Feature> createKey(String namespace, String path) {
+		return ResourceKey.create(Registries.FEATURE, Identifier.fromNamespaceAndPath(namespace, path));
+	}
+
+	public static <F extends Feature> Holder.Reference<F> register(
+		DynamicRegistryManagerSetupContext context,
+		DynamicRegistryManagerSetupContext.RegistryMap registries,
+		String namespace,
+		String id,
+		F feature
+	) {
+		Registry.register(registries.get(Registries.FEATURE), Identifier.fromNamespaceAndPath(namespace, id), feature);
+		return (Holder.Reference<F>) getExact(registries, feature);
+	}
+
+	public static void register(BootstrapContext<Feature> context, ResourceKey<Feature> key, Feature feature) {
+		register(context, key, feature);
+	}
+
+	public static Holder<Feature> register(DynamicRegistryManagerSetupContext entries, ResourceKey<Feature> key, Feature feature) {
+		final DynamicRegistryManagerSetupContext.RegistryMap registries = entries.getRegistries(Set.of(Registries.FEATURE));
+		final Feature value = registries.register(Registries.FEATURE, key.identifier(), feature);
+		return Holder.direct(value);
+	}
+
+	public static Holder.Reference<Feature> getExact(DynamicRegistryManagerSetupContext.RegistryMap registries, Feature feature) {
+		final Registry<Feature> configuredRegistry = registries.get(Registries.FEATURE);
+		return configuredRegistry.getOrThrow(configuredRegistry.getResourceKey(feature).orElseThrow());
+	}
+
+	public static Holder<Feature> getHolder(ResourceKey<Feature> resourceKey) {
+		return VanillaRegistries.createLookup().lookupOrThrow(Registries.FEATURE).getOrThrow(resourceKey);
 	}
 }

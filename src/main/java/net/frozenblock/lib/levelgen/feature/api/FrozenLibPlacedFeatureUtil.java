@@ -26,13 +26,13 @@ import net.minecraft.data.registries.VanillaRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import org.quiltmc.qsl.frozenblock.core.registry.api.event.DynamicRegistryManagerSetupContext;
 
 @UtilityClass
-public class FrozenLibPlacementUtils {
+public class FrozenLibPlacedFeatureUtil {
 
 	public static ResourceKey<PlacedFeature> createKey(String namespace, String path) {
 		return ResourceKey.create(Registries.PLACED_FEATURE, Identifier.fromNamespaceAndPath(namespace, path));
@@ -41,37 +41,37 @@ public class FrozenLibPlacementUtils {
 	public static Holder<PlacedFeature> register(
 		BootstrapContext<PlacedFeature> entries,
 		ResourceKey<PlacedFeature> registryKey,
-		Holder<ConfiguredFeature<?, ?>> holder,
+		Holder<Feature> feature,
 		List<PlacementModifier> list
 	) {
-		return entries.register(registryKey, new PlacedFeature(holder, List.copyOf(list)));
+		return entries.register(registryKey, new PlacedFeature(feature, List.copyOf(list)));
 	}
 
 	public static Holder<PlacedFeature> register(
 		BootstrapContext<PlacedFeature> entries,
 		ResourceKey<PlacedFeature> registryKey,
-		Holder<ConfiguredFeature<?, ?>> holder,
+		Holder<Feature> feature,
 		PlacementModifier... placementModifiers
 	) {
-		return register(entries, registryKey, holder, List.of(placementModifiers));
+		return register(entries, registryKey, feature, List.of(placementModifiers));
 	}
 
 	public static Holder<PlacedFeature> register(
 		DynamicRegistryManagerSetupContext entries,
 		ResourceKey<PlacedFeature> registryKey,
-		ResourceKey<ConfiguredFeature<?, ?>> configuredKey,
+		ResourceKey<Feature> configuredKey,
 		List<PlacementModifier> list
 	) {
-		final var registry = entries.getRegistries(Set.of(Registries.CONFIGURED_FEATURE, Registries.PLACED_FEATURE));
-		final var configured = entries.registryManager().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(configuredKey);
-		final var value = registry.register(Registries.PLACED_FEATURE, registryKey.identifier(), new PlacedFeature(configured, List.copyOf(list)));
-		return Holder.direct(value);
+		final DynamicRegistryManagerSetupContext.RegistryMap registry = entries.getRegistries(Set.of(Registries.FEATURE, Registries.PLACED_FEATURE));
+		final Holder<Feature> feature = entries.registryManager().lookupOrThrow(Registries.FEATURE).getOrThrow(configuredKey);
+		final PlacedFeature placed = registry.register(Registries.PLACED_FEATURE, registryKey.identifier(), new PlacedFeature(feature, List.copyOf(list)));
+		return Holder.direct(placed);
 	}
 
 	public static Holder<PlacedFeature> register(
 		DynamicRegistryManagerSetupContext entries,
 		ResourceKey<PlacedFeature> registryKey,
-		ResourceKey<ConfiguredFeature<?, ?>> resourceKey,
+		ResourceKey<Feature> resourceKey,
 		PlacementModifier... placementModifiers
 	) {
 		return register(entries, registryKey, resourceKey, List.of(placementModifiers));

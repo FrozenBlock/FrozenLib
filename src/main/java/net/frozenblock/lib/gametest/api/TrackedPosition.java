@@ -122,7 +122,7 @@ public record TrackedPosition<T>(PositionType type, T pos, T opposite) {
 		} else if (relative instanceof BlockPos blockPos) {
 			helper.assertBlockPresent(block, blockPos);
 		} else if (relative instanceof Vec3i vec3i) {
-			helper.assertBlockPresent(block, new BlockPos(vec3i));
+			helper.assertBlockPresent(block, new BlockPos(vec3i.getX(), vec3i.getY(), vec3i.getZ()));
 		} else if (relative instanceof Vector3ic vec3i) {
 			helper.assertBlockPresent(block, new BlockPos(vec3i.x(), vec3i.y(), vec3i.z()));
 		} else if (relative instanceof Vector3fc vec3f) {

@@ -18,48 +18,54 @@
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.levelgen.feature.api.feature.configurations.ColumnFeatureConfiguration;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class ColumnFeature extends Feature<ColumnFeatureConfiguration> {
+public record ColumnFeature(
+	BlockStateProvider state,
+	BlockPredicate replaceable,
+	IntProvider length,
+	Direction direction,
+	boolean stopAtUnreplaceableBlock
+) implements Feature {
+	public static final MapCodec<ColumnFeature> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		BlockStateProvider.CODEC.fieldOf("block_state").forGetter(ColumnFeature::state),
+		BlockPredicate.CODEC.fieldOf("replaceable").forGetter(ColumnFeature::replaceable),
+		IntProviders.NON_NEGATIVE_CODEC.fieldOf("length").forGetter(ColumnFeature::length),
+		Direction.CODEC.fieldOf("direction").forGetter(ColumnFeature::direction),
+		Codec.BOOL.lenientOptionalFieldOf("stop_at_unreplaceable_block", false).forGetter(ColumnFeature::stopAtUnreplaceableBlock)
+	).apply(instance, ColumnFeature::new));
 
-	public ColumnFeature(Codec<ColumnFeatureConfiguration> codec) {
-		super(codec);
+	@Override
+	public MapCodec<? extends Feature> codec() {
+		return CODEC;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<ColumnFeatureConfiguration> context) {
-		final BlockPos blockPos = context.origin();
-		final WorldGenLevel level = context.level();
-		final RandomSource random = level.getRandom();
-		final ColumnFeatureConfiguration config = context.config();
-
-		final int length = config.length().sample(random);
-		final BlockPredicate replaceable = config.replaceable();
-		final BlockStateProvider blockStateProvider = config.state();
-		final Direction direction = config.direction();
-		final boolean stopWhenEncounteringUnreplaceableBlock = config.stopAtUnreplaceableBlock();
-
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
+		final int length = this.length.sample(random);
 		boolean generated = false;
-		final BlockPos.MutableBlockPos mutable = blockPos.mutable();
+		final BlockPos.MutableBlockPos mutable = origin.mutable();
 		for (int step = 0; step < length; step++) {
-			if (replaceable.test(level, mutable)) {
+			if (this.replaceable.test(level, mutable)) {
 				generated = true;
-				level.setBlock(mutable, blockStateProvider.getState(level, random, mutable), Block.UPDATE_ALL);
-			} else if (stopWhenEncounteringUnreplaceableBlock) {
+				level.setBlock(mutable, this.state.getState(level, random, mutable), Block.UPDATE_ALL);
+			} else if (this.stopAtUnreplaceableBlock) {
 				return generated;
 			}
-			mutable.move(direction);
+			mutable.move(this.direction);
 		}
 		return generated;
 	}
-
 }

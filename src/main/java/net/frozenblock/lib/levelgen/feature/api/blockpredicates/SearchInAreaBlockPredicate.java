@@ -20,7 +20,7 @@ package net.frozenblock.lib.levelgen.feature.api.blockpredicates;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureUtils;
+import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureUtil;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.WorldGenLevel;
@@ -76,6 +76,6 @@ public class SearchInAreaBlockPredicate implements BlockPredicate {
 
 	@Override
 	public boolean test(WorldGenLevel level, BlockPos pos) {
-		return FrozenLibFeatureUtils.matchesConditionNearby(level, pos, this.searchArea, this.blockPredicate);
+		return FrozenLibFeatureUtil.matchesConditionNearby(level, pos, this.searchArea, this.blockPredicate);
 	}
 }

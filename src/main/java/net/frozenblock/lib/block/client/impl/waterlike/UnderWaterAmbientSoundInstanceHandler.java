@@ -26,34 +26,38 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.client.resources.sounds.UnderLiquidAmbientSoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.client.sounds.SoundManager;
 
 @Environment(EnvType.CLIENT)
 public final class UnderWaterAmbientSoundInstanceHandler {
-	private static final Map<WaterLikeType, AbstractTickableSoundInstance> WATER_LIKE_TYPE_SOUNDS = new Reference2ObjectArrayMap<>();
-	private static final List<AbstractTickableSoundInstance> VANILLA_SOUNDS = new ArrayList<>();
+	private static final Map<WaterLikeType, UnderLiquidAmbientSoundInstance> WATER_LIKE_TYPE_SOUNDS = new Reference2ObjectArrayMap<>();
+	private static final List<UnderLiquidAmbientSoundInstance> VANILLA_SOUNDS = new ArrayList<>();
 
 	public static void tick() {
 		WATER_LIKE_TYPE_SOUNDS.values().removeIf(Objects::isNull);
-		WATER_LIKE_TYPE_SOUNDS.values().removeIf(AbstractTickableSoundInstance::isStopped);
+		WATER_LIKE_TYPE_SOUNDS.values().removeIf(UnderLiquidAmbientSoundInstance::isStopped);
 
 		VANILLA_SOUNDS.removeIf(Objects::isNull);
-		VANILLA_SOUNDS.removeIf(AbstractTickableSoundInstance::isStopped);
+		VANILLA_SOUNDS.removeIf(UnderLiquidAmbientSoundInstance::isStopped);
 	}
 
 	public static SoundEngine.PlayResult tryPlaySoundForType(WaterLikeType type, LocalPlayer player, SoundManager soundManager) {
 		if (isPlayingSoundForType(type)) return SoundEngine.PlayResult.NOT_STARTED;
-		final AbstractTickableSoundInstance sound = new WaterLikeAmbientSoundInstance(type, player);
-		WATER_LIKE_TYPE_SOUNDS.put(type, sound);
-		return soundManager.play(sound);
+		final UnderLiquidAmbientSoundInstance waterLikeAmbientSound = new UnderLiquidAmbientSoundInstance(
+			type.ambientSound().value(),
+			player,
+			localPlayer -> localPlayer.isUnderWater() && localPlayer.frozenLib$wasPlayerInWaterLike(type)
+		);
+		WATER_LIKE_TYPE_SOUNDS.put(type, waterLikeAmbientSound);
+		return soundManager.play(waterLikeAmbientSound);
 	}
 
 	public static SoundEngine.PlayResult tryPlayVanillaSound(SoundInstance sound, SoundManager soundManager) {
 		if (isPlayingVanillaSound()) return SoundEngine.PlayResult.NOT_STARTED;
-		if (sound instanceof AbstractTickableSoundInstance tickable) VANILLA_SOUNDS.add(tickable);
+		if (sound instanceof UnderLiquidAmbientSoundInstance tickable) VANILLA_SOUNDS.add(tickable);
 		return soundManager.play(sound);
 	}
 

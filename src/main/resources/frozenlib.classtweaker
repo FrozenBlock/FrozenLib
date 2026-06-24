@@ -50,7 +50,6 @@ transitive-accessible method net/minecraft/world/level/levelgen/feature/treedeco
 transitive-accessible method net/minecraft/world/level/levelgen/feature/trunkplacers/TrunkPlacerType <init> (Lcom/mojang/serialization/MapCodec;)V
 transitive-accessible method net/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacerType <init> (Lcom/mojang/serialization/MapCodec;)V
 transitive-accessible method net/minecraft/data/worldgen/placement/VegetationPlacements treePlacementBase (Lnet/minecraft/world/level/levelgen/placement/PlacementModifier;)Lcom/google/common/collect/ImmutableList$Builder;
-transitive-accessible method net/minecraft/world/level/levelgen/feature/configurations/TreeConfiguration <init> (Lnet/minecraft/world/level/levelgen/feature/stateproviders/BlockStateProvider;Lnet/minecraft/world/level/levelgen/feature/trunkplacers/TrunkPlacer;Lnet/minecraft/world/level/levelgen/feature/stateproviders/BlockStateProvider;Lnet/minecraft/world/level/levelgen/feature/foliageplacers/FoliagePlacer;Ljava/util/Optional;Lnet/minecraft/world/level/levelgen/feature/featuresize/FeatureSize;Ljava/util/List;ZLnet/minecraft/world/level/levelgen/feature/stateproviders/BlockStateProvider;)V
 transitive-accessible method net/minecraft/data/worldgen/features/VegetationFeatures segmentedBlockPatchBuilder (Lnet/minecraft/world/level/block/Block;IILnet/minecraft/world/level/block/state/properties/IntegerProperty;Lnet/minecraft/world/level/block/state/properties/EnumProperty;)Lnet/minecraft/util/random/WeightedList$Builder;
 transitive-accessible field net/minecraft/data/worldgen/placement/VegetationPlacements TREE_THRESHOLD Lnet/minecraft/world/level/levelgen/placement/PlacementModifier;
 
@@ -237,7 +236,7 @@ transitive-inject-interface net/minecraft/world/level/block/piston/PistonMovingB
 transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/block/client/impl/piston/state/MovingBlockRenderStateInterface
 
 # Render Types
-accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
+transitive-accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
 transitive-accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
 
 # Biomes
@@ -264,6 +263,10 @@ transitive-accessible field net/minecraft/world/level/levelgen/placement/Placeme
 transitive-accessible method net/minecraft/world/level/levelgen/feature/MultifaceGrowthFeature isAirOrWater (Lnet/minecraft/world/level/block/state/BlockState;)Z
 transitive-accessible field net/minecraft/world/level/block/MultifaceSpreader$DefaultSpreaderConfig block Lnet/minecraft/world/level/block/MultifaceBlock;
 transitive-accessible method net/minecraft/world/level/levelgen/feature/stateproviders/SimpleStateProvider <init> (Lnet/minecraft/world/level/block/state/BlockState;)V
+transitive-accessible method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature distributeVegetation (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Ljava/util/Set;)V
+transitive-extendable method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature distributeVegetation (Lnet/minecraft/world/level/WorldGenLevel;Lnet/minecraft/world/level/chunk/ChunkGenerator;Lnet/minecraft/util/RandomSource;Ljava/util/Set;)V
+transitive-accessible method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature placeGround (Lnet/minecraft/world/level/WorldGenLevel;Ljava/util/function/Predicate;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos$MutableBlockPos;I)Z
+transitive-extendable method net/minecraft/world/level/levelgen/feature/VegetationPatchFeature placeGround (Lnet/minecraft/world/level/WorldGenLevel;Ljava/util/function/Predicate;Lnet/minecraft/util/RandomSource;Lnet/minecraft/core/BlockPos$MutableBlockPos;I)Z
 
 # Loot Table
 transitive-accessible field net/minecraft/world/level/storage/loot/LootTable pools Ljava/util/List;
@@ -325,7 +328,7 @@ transitive-accessible field net/minecraft/client/sounds/SoundEngine instanceToCh
 transitive-accessible field net/minecraft/client/sounds/SoundEngine channelAccess Lnet/minecraft/client/sounds/ChannelAccess;
 transitive-mutable field net/minecraft/client/resources/sounds/AbstractSoundInstance identifier Lnet/minecraft/resources/Identifier;
 transitive-extendable method net/minecraft/client/resources/sounds/AbstractTickableSoundInstance stop ()V
-accessible field net/minecraft/client/resources/sounds/AbstractSoundInstance pitch F
+transitive-accessible field net/minecraft/client/resources/sounds/AbstractSoundInstance pitch F
 
 # Camera
 transitive-accessible method net/minecraft/client/Camera setRotation (FF)V

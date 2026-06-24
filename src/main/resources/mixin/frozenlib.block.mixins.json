@@ -62,7 +62,6 @@
     "client.waterlike.sound.BubbleColumnAmbientSoundHandlerMixin",
     "client.waterlike.sound.LocalPlayerMixin",
     "client.waterlike.sound.UnderwaterAmbientSoundHandlerMixin",
-    "client.waterlike.sound.UnderwaterAmbientSoundInstanceMixin",
     "tick.client.ClientLevelMixin"
   ]
 }

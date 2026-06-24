@@ -27,29 +27,28 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LeafLitterBlock;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.TreeFeature;
 import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.TreeConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.WeightedStateProvider;
 import net.minecraft.world.level.levelgen.feature.treedecorators.PlaceOnGroundDecorator;
 import net.minecraft.world.level.levelgen.feature.treedecorators.TreeDecorator;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
-public class FrozenLibConfiguredTreeFeature {
-	private final FrozenLibConfiguredFeature<TreeConfiguration> feature;
-	private final FrozenLibConfiguredFeature<TreeConfiguration> featureWithLitter;
+public class FrozenLibTreeFeature {
+	private final FrozenLibFeature<TreeFeature> feature;
+	private final FrozenLibFeature<TreeFeature> featureWithLitter;
 	private final List<TreeDecorator> litterDecorators;
 
-	public FrozenLibConfiguredTreeFeature(
+	public FrozenLibTreeFeature(
 		Identifier key,
 		Block leafLitterBlock,
 		int triesA, int radiusA, int heightA,
 		int triesB, int radiusB, int heightB
 	) {
-		this.feature = new FrozenLibConfiguredFeature<>(key);
-		this.featureWithLitter = new FrozenLibConfiguredFeature<>(key.withSuffix("_leaf_litter"));
+		this.feature = new FrozenLibFeature<>(key);
+		this.featureWithLitter = new FrozenLibFeature<>(key.withSuffix("_leaf_litter"));
 		this.litterDecorators = FrozenBools.IS_DATAGEN ? new ArrayList<>() : null;
 		if (this.litterDecorators == null) return;
 		this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock, triesA, radiusA, heightA, 3));
@@ -73,15 +72,15 @@ public class FrozenLibConfiguredTreeFeature {
 		);
 	}
 
-	public ResourceKey<ConfiguredFeature<?, ?>> getKey() {
+	public ResourceKey<Feature> getKey() {
 		return this.feature.getKey();
 	}
 
-	public ResourceKey<ConfiguredFeature<?, ?>> getLitterVariantKey() {
+	public ResourceKey<Feature> getLitterVariantKey() {
 		return this.featureWithLitter.getKey();
 	}
 
-	public Holder<ConfiguredFeature<?, ?>> getHolder() {
+	public Holder<Feature> getHolder() {
 		return this.feature.getHolder();
 	}
 
@@ -93,7 +92,7 @@ public class FrozenLibConfiguredTreeFeature {
 		return this.featureWithLitter.asWeightedPlacedFeature(weight, placementModifiers);
 	}
 
-	public Holder<ConfiguredFeature<?, ?>> getLitterVariantHolder() {
+	public Holder<Feature> getLitterVariantHolder() {
 		return this.featureWithLitter.getHolder();
 	}
 
@@ -105,35 +104,35 @@ public class FrozenLibConfiguredTreeFeature {
 		return this.featureWithLitter.asInlinePlaced(placementModifiers);
 	}
 
-	public ConfiguredFeature<?, ?> getConfiguredFeature(LevelReader level) {
-		return this.feature.getConfiguredFeature(level);
+	public Feature getFeature(LevelReader level) {
+		return this.feature.getFeature(level);
 	}
 
-	public ConfiguredFeature<?, ?> getLitterVariantConfiguredFeature(LevelReader level) {
-		return this.featureWithLitter.getConfiguredFeature(level);
+	public Feature getLitterVariantFeature(LevelReader level) {
+		return this.featureWithLitter.getFeature(level);
 	}
 
 	public FrozenLibPlacedTreeFeature toPlacedFeature() {
 		return new FrozenLibPlacedTreeFeature(this);
 	}
 
-	public <F extends Feature<TreeConfiguration>> FrozenLibConfiguredTreeFeature makeAndSetHolders(F feature, TreeConfiguration config) {
-		this.feature.makeAndSetHolder(feature, config);
+	public <F extends TreeFeature> FrozenLibTreeFeature makeAndSetHolders(F feature) {
+		this.feature.makeAndSetHolder(feature);
 
-		final List<TreeDecorator> decorators = new ArrayList<>(config.decorators);
+		final List<TreeDecorator> decorators = new ArrayList<>(feature.decorators());
 		decorators.addAll(this.litterDecorators);
-		TreeConfiguration withLitterConfig = new TreeConfiguration(
-			config.trunkProvider,
-			config.trunkPlacer,
-			config.foliageProvider,
-			config.foliagePlacer,
-			config.rootPlacer,
-			config.minimumSize,
+		final TreeFeature featureWithLitter = new TreeFeature(
+			feature.trunkProvider(),
+			feature.trunkPlacer(),
+			feature.foliageProvider(),
+			feature.foliagePlacer(),
+			feature.rootPlacer(),
+			feature.minimumSize(),
 			List.copyOf(decorators),
-			config.ignoreVines,
-			config.belowTrunkProvider
+			feature.ignoreVines(),
+			feature.belowTrunkProvider()
 		);
-		this.featureWithLitter.makeAndSetHolder(feature, withLitterConfig);
+		this.featureWithLitter.makeAndSetHolder(featureWithLitter);
 
 		return this;
 	}

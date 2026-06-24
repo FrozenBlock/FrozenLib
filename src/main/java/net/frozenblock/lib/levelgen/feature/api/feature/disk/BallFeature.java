@@ -17,54 +17,60 @@
 
 package net.frozenblock.lib.levelgen.feature.api.feature.disk;
 
-import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.Optional;
 import net.frozenblock.lib.levelgen.feature.api.feature.disk.config.BallBlockPlacement;
-import net.frozenblock.lib.levelgen.feature.api.feature.disk.config.BallFeatureConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 
-public class BallFeature extends Feature<BallFeatureConfiguration> {
+public record BallFeature(
+	BallBlockPlacement ballBlockPlacement,
+	Optional<Heightmap.Types> heightmapType,
+	IntProvider placementRadius
+) implements Feature {
+	public static final MapCodec<BallFeature> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		BallBlockPlacement.CODEC.fieldOf("block_placement").forGetter(BallFeature::ballBlockPlacement),
+		Heightmap.Types.CODEC.lenientOptionalFieldOf("heightmap").forGetter(BallFeature::heightmapType),
+		IntProviders.codec(1, 16).fieldOf("placement_radius").forGetter(BallFeature::placementRadius)
+	).apply(instance, BallFeature::new));
 
-	public BallFeature(Codec<BallFeatureConfiguration> codec) {
-		super(codec);
+	@Override
+	public MapCodec<? extends Feature> codec() {
+		return CODEC;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<BallFeatureConfiguration> context) {
-		final BallFeatureConfiguration config = context.config();
-		final BlockPos pos = context.origin();
-		final WorldGenLevel level = context.level();
-		final RandomSource random = level.getRandom();
-
-		final int radius = config.placementRadius().sample(random);
-		final BallBlockPlacement blockPlacement = config.ballBlockPlacement();
-		final Heightmap.Types heightmapType = config.heightmapType().orElse(null);
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
+		final int radius = this.placementRadius().sample(random);
+		final Heightmap.Types heightmapType = this.heightmapType.orElse(null);
 		final boolean missingHeightmap = heightmapType == null;
 
-		final BlockPos.MutableBlockPos mutable = pos.mutable();
-		final int startX = pos.getX();
-		final int startY = pos.getY();
-		final int startZ = pos.getZ();
+		final BlockPos.MutableBlockPos mutable = origin.mutable();
+		final int startX = origin.getX();
+		final int startY = origin.getY();
+		final int startZ = origin.getZ();
 
 		boolean generated = false;
 		for (int x = startX - radius; x <= startX + radius; x++) {
 			for (int z = startZ - radius; z <= startZ + radius; z++) {
 				if (!missingHeightmap) {
 					mutable.set(x, level.getHeight(heightmapType, x, z) - 1, z);
-					generated = blockPlacement.generate(level, pos, mutable, true, radius, random) || generated;
+					generated = this.ballBlockPlacement.generate(level, origin, mutable, true, radius, random) || generated;
 				} else {
 					for (int y = startY - radius; y <= startY + radius; y++) {
 						mutable.set(x, y, z);
-						generated = blockPlacement.generate(level, pos, mutable, false, radius, random) || generated;
+						generated = this.ballBlockPlacement.generate(level, origin, mutable, false, radius, random) || generated;
 					}
 				}
 			}
 		}
 		return generated;
 	}
-
 }

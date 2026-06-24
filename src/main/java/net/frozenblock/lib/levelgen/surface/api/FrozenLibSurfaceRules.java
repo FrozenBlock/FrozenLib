@@ -20,6 +20,8 @@ package net.frozenblock.lib.levelgen.surface.api;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -80,34 +82,38 @@ public final class FrozenLibSurfaceRules {
 		return new SurfaceRules.BiomeConditionSource(biomes.getOrThrow(tagKey));
 	}
 
+	public static SurfaceRules.ConditionSource isBiomeTag(RegistryAccess registryAccess, TagKey<Biome> tagKey) {
+		return isBiomeTag(registryAccess.lookupOrThrow(Registries.BIOME), tagKey);
+	}
+
 	@Nullable
-	public static SurfaceRules.RuleSource getSurfaceRules(HolderLookup<Biome> biomes, ResourceKey<DimensionType> dimension) {
+	public static SurfaceRules.RuleSource getSurfaceRules(RegistryAccess registryAccess, ResourceKey<DimensionType> dimension) {
 		if (dimension == null) return null;
 
 		final var location = dimension.identifier();
 		SurfaceRules.RuleSource returnValue = null;
 
 		if (location.equals(BuiltinDimensionTypes.OVERWORLD.identifier()) || location.equals(BuiltinDimensionTypes.OVERWORLD_CAVES.identifier())) {
-			returnValue = getOverworldSurfaceRules(biomes);
+			returnValue = getOverworldSurfaceRules(registryAccess);
 		} else if (location.equals(BuiltinDimensionTypes.NETHER.identifier())) {
-			returnValue = getNetherSurfaceRules(biomes);
+			returnValue = getNetherSurfaceRules(registryAccess);
 		} else if (location.equals(BuiltinDimensionTypes.END.identifier())) {
-			returnValue = getEndSurfaceRules(biomes);
+			returnValue = getEndSurfaceRules(registryAccess);
 		}
 
 		// Get generic dimension surface rules
-		final SurfaceRules.RuleSource generic = getGenericSurfaceRules(biomes, dimension);
+		final SurfaceRules.RuleSource generic = getGenericSurfaceRules(registryAccess, dimension);
 		if (generic != null) returnValue = returnValue == null ? generic : SurfaceRules.sequence(returnValue, generic);
 
 		return returnValue;
 	}
 
 	@Nullable
-	public static SurfaceRules.RuleSource getOverworldSurfaceRules(HolderLookup<Biome> biomes) {
+	public static SurfaceRules.RuleSource getOverworldSurfaceRules(RegistryAccess registryAccess) {
 		SurfaceRules.RuleSource newRule = null;
 
 		final ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
-		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldSurfaceRules(biomes, sourceHolders);
+		SurfaceRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldSurfaceRules(registryAccess, sourceHolders);
 
 		if (!sourceHolders.isEmpty()) {
 			SurfaceRules.RuleSource newSource = sequence(sourceHolders);
@@ -117,7 +123,7 @@ public final class FrozenLibSurfaceRules {
 
 		// NO PRELIMINARY SURFACE
 		final ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
-		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimSurfaceRules(biomes, noPrelimSourceHolders);
+		SurfaceRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimSurfaceRules(registryAccess, noPrelimSourceHolders);
 
 		if (!noPrelimSourceHolders.isEmpty()) {
 			final SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
@@ -128,11 +134,11 @@ public final class FrozenLibSurfaceRules {
 	}
 
 	@Nullable
-	public static SurfaceRules.RuleSource getNetherSurfaceRules(HolderLookup<Biome> biomes) {
+	public static SurfaceRules.RuleSource getNetherSurfaceRules(RegistryAccess registryAccess) {
 		SurfaceRules.RuleSource newSource = null;
 
 		final ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
-		SurfaceRuleEvents.MODIFY_NETHER.invoker().addNetherSurfaceRules(biomes, sourceHolders);
+		SurfaceRuleEvents.MODIFY_NETHER.invoker().addNetherSurfaceRules(registryAccess, sourceHolders);
 
 		if (!sourceHolders.isEmpty()) {
 			newSource = SurfaceRules.sequence(
@@ -146,11 +152,11 @@ public final class FrozenLibSurfaceRules {
 	}
 
 	@Nullable
-	public static SurfaceRules.RuleSource getEndSurfaceRules(HolderLookup<Biome> biomes) {
+	public static SurfaceRules.RuleSource getEndSurfaceRules(RegistryAccess registryAccess) {
 		SurfaceRules.RuleSource newSource = null;
 
 		final ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
-		SurfaceRuleEvents.MODIFY_END.invoker().addEndSurfaceRules(biomes, sourceHolders);
+		SurfaceRuleEvents.MODIFY_END.invoker().addEndSurfaceRules(registryAccess, sourceHolders);
 
 		if (!sourceHolders.isEmpty()) newSource = sequence(sourceHolders);
 
@@ -158,11 +164,11 @@ public final class FrozenLibSurfaceRules {
 	}
 
 	@Nullable
-	public static SurfaceRules.RuleSource getGenericSurfaceRules(HolderLookup<Biome> biomes, ResourceKey<DimensionType> dimension) {
+	public static SurfaceRules.RuleSource getGenericSurfaceRules(RegistryAccess registryAccess, ResourceKey<DimensionType> dimension) {
 		SurfaceRules.RuleSource newSource = null;
 		final ArrayList<DimensionBoundRuleSource> sourceHolders = new ArrayList<>();
 
-		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(biomes, sourceHolders);
+		SurfaceRuleEvents.MODIFY_GENERIC.invoker().addGenericSurfaceRules(registryAccess, sourceHolders);
 		final List<SurfaceRules.RuleSource> sourceHoldersForDimension = sourceHolders
 			.stream()
 			.filter(dimRuleSource -> dimRuleSource.dimension().equals(dimension.identifier()))

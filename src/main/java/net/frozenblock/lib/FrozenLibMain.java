@@ -33,7 +33,7 @@ import net.frozenblock.lib.event.api.RegistryFreezeEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
-import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatures;
+import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.levelgen.structure.api.StructureGenerationConditionApi;
@@ -87,7 +87,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		SpottingIcons.init();
 		FrozenLibDataComponents.init();
 		FrozenLibParticleTypes.init();
-		FrozenLibFeatures.init();
+		FrozenLibFeatureTypes.init();
 		ConfigPredicateType.init();
 		WindManager.init();
 		WindManagerExtensionType.init();
@@ -100,7 +100,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();
 
-		Registry.register(BuiltInRegistries.MATERIAL_CONDITION, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
+		Registry.register(BuiltInRegistries.MATERIAL_CONDITION_TYPE, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
 
 		StructureStatus.init();
 		CapeUtil.init();

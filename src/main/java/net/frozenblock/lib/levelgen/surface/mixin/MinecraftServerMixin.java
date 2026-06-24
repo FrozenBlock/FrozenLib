@@ -26,7 +26,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.RegistryLayer;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
@@ -52,7 +51,6 @@ public abstract class MinecraftServerMixin {
 		final RegistryAccess registryAccess = this.registries.compositeAccess();
 		final Registry<LevelStem> levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
 
-		final Registry<Biome> biomes = registryAccess.lookupOrThrow(Registries.BIOME);
 		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : levelStems.entrySet()) {
 			final LevelStem levelStem = entry.getValue();
 			final ChunkGenerator chunkGenerator = levelStem.generator();
@@ -60,7 +58,7 @@ public abstract class MinecraftServerMixin {
 
 			final var noiseSettings = noiseGenerator.generatorSettings().value();
 			final var dimension = levelStem.type().unwrapKey().orElseThrow();
-			SurfaceRuleUtil.injectSurfaceRules(noiseSettings, biomes, dimension);
+			SurfaceRuleUtil.injectSurfaceRules(noiseSettings, registryAccess, dimension);
 		}
 	}
 

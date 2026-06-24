@@ -19,27 +19,27 @@ package net.frozenblock.lib.levelgen.feature.api;
 
 import java.util.List;
 import net.minecraft.core.Holder;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
 public class FrozenLibPlacedTreeFeature {
-	private final FrozenLibConfiguredTreeFeature treeFeature;
+	private final FrozenLibTreeFeature treeFeature;
 	private final FrozenLibPlacedFeature placedFeature;
 	private final FrozenLibPlacedFeature placedFeatureWithLitter;
 
-	public FrozenLibPlacedTreeFeature(FrozenLibConfiguredTreeFeature treeFeature) {
+	public FrozenLibPlacedTreeFeature(FrozenLibTreeFeature treeFeature) {
 		this.treeFeature = treeFeature;
 		this.placedFeature = new FrozenLibPlacedFeature(this.treeFeature.getKey().identifier().withSuffix("_checked"));
 		this.placedFeatureWithLitter = new FrozenLibPlacedFeature(this.treeFeature.getLitterVariantKey().identifier().withSuffix("_checked"));
 	}
 
-	public Holder<ConfiguredFeature<?, ?>> getConfiguredHolder() {
+	public Holder<Feature> getConfiguredHolder() {
 		return this.placedFeature.getConfiguredHolder();
 	}
 
-	public Holder<ConfiguredFeature<?, ?>> getLitterVariantConfiguredHolder() {
+	public Holder<Feature> getLitterVariantConfiguredHolder() {
 		return this.placedFeatureWithLitter.getConfiguredHolder();
 	}
 

@@ -18,31 +18,67 @@
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
-import net.frozenblock.lib.levelgen.feature.api.feature.configurations.LargeSpireConfiguration;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.util.valueproviders.FloatProviders;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Column;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.SpeleothemUtils;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
-public class LargeSpireFeature extends Feature<LargeSpireConfiguration> {
+public record LargeSpireFeature(
+	int floorToCeilingSearchRange,
+	IntProvider columnRadius,
+	BlockStateProvider pathBlock,
+	FloatProvider heightScale,
+	float maxColumnRadiusToCaveHeightRatio,
+	FloatProvider stalactiteBluntness,
+	FloatProvider stalagmiteBluntness,
+	FloatProvider windSpeed,
+	int minRadiusForWind,
+	float minBluntnessForWind,
+	HolderSet<Block> baseBlocks,
+	HolderSet<Block> replaceable
+) implements Feature {
+	public static final MapCodec<LargeSpireFeature> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		Codec.intRange(1, 512).fieldOf("floor_to_ceiling_search_range").orElse(30).forGetter(LargeSpireFeature::floorToCeilingSearchRange),
+		IntProviders.codec(1, 60).fieldOf("column_radius").forGetter(LargeSpireFeature::columnRadius),
+		BlockStateProvider.CODEC.fieldOf("block").forGetter(LargeSpireFeature::pathBlock),
+		FloatProviders.codec(0F, 20F).fieldOf("height_scale").forGetter(LargeSpireFeature::heightScale),
+		Codec.floatRange(0.1F, 1F).fieldOf("max_column_radius_to_cave_height_ratio").forGetter(LargeSpireFeature::maxColumnRadiusToCaveHeightRatio),
+		FloatProviders.codec(0.1F, 10F).fieldOf("stalactite_bluntness").forGetter(LargeSpireFeature::stalactiteBluntness),
+		FloatProviders.codec(0.1F, 10F).fieldOf("stalagmite_bluntness").forGetter(LargeSpireFeature::stalagmiteBluntness),
+		FloatProviders.codec(0F, 2F).fieldOf("wind_speed").forGetter(LargeSpireFeature::windSpeed),
+		Codec.intRange(0, 100).fieldOf("min_radius_for_wind").forGetter(LargeSpireFeature::minRadiusForWind),
+		Codec.floatRange(0F, 5F).fieldOf("min_bluntness_for_wind").forGetter(LargeSpireFeature::minBluntnessForWind),
+		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("base_blocks").forGetter(LargeSpireFeature::baseBlocks),
+		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable").forGetter(LargeSpireFeature::replaceable)
+	).apply(instance, LargeSpireFeature::new));
 
-	public LargeSpireFeature(Codec<LargeSpireConfiguration> codec) {
-		super(codec);
+	@Override
+	public MapCodec<? extends Feature> codec() {
+		return CODEC;
 	}
 
 	private static LargeSpireFeature.LargeSpire make(
@@ -88,48 +124,43 @@ public class LargeSpireFeature extends Feature<LargeSpireConfiguration> {
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<LargeSpireConfiguration> context) {
-		final WorldGenLevel level = context.level();
-		final BlockPos pos = context.origin();
-		final LargeSpireConfiguration config = context.config();
-		final RandomSource random = context.random();
-
-		if (!LargeSpireFeature.isEmptyOrWaterOrLava(level, pos)) return false;
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
+		if (!LargeSpireFeature.isEmptyOrWaterOrLava(level, origin)) return false;
 
 		final Optional<Column> optionalColumn = Column.scan(
 			level,
-			pos,
-			config.floorToCeilingSearchRange(),
+			origin,
+			this.floorToCeilingSearchRange,
 			SpeleothemUtils::isEmptyOrWaterOrLava,
-			state -> LargeSpireFeature.isBaseOrLava(config, state)
+			state -> LargeSpireFeature.isBaseOrLava(this, state)
 		);
 
 		if (optionalColumn.isEmpty() || !(optionalColumn.get() instanceof Column.Range range)) return false;
 		if (range.height() < 4) return false;
 
-		final int radiusByHeight = (int) ((float) range.height() * config.maxColumnRadiusToCaveHeightRatio());
-		final int clampedRadius = Mth.clamp(radiusByHeight, config.columnRadius().minInclusive(), config.columnRadius().maxInclusive());
-		final int radius = Mth.randomBetweenInclusive(random, config.columnRadius().minInclusive(), clampedRadius);
+		final int radiusByHeight = (int) ((float) range.height() * this.maxColumnRadiusToCaveHeightRatio);
+		final int clampedRadius = Mth.clamp(radiusByHeight, this.columnRadius.minInclusive(), this.columnRadius.maxInclusive());
+		final int radius = Mth.randomBetweenInclusive(random, this.columnRadius.minInclusive(), clampedRadius);
 
-		final LargeSpire ceilingSpire = make(pos.atY(range.ceiling() - 1), false, random, radius, config.stalactiteBluntness(), config.heightScale());
-		final LargeSpire floorSpire = make(pos.atY(range.floor() + 1), true, random, radius, config.stalagmiteBluntness(), config.heightScale());
+		final LargeSpire ceilingSpire = make(origin.atY(range.ceiling() - 1), false, random, radius, this.stalactiteBluntness, this.heightScale);
+		final LargeSpire floorSpire = make(origin.atY(range.floor() + 1), true, random, radius, this.stalagmiteBluntness, this.heightScale);
 
-		final WindOffsetter windOffsetter = ceilingSpire.isSuitableForWind(config) && floorSpire.isSuitableForWind(config)
-			? new WindOffsetter(pos.getY(), random, config.windSpeed())
+			final WindOffsetter windOffsetter = ceilingSpire.isSuitableForWind(this) && floorSpire.isSuitableForWind(this)
+			? new WindOffsetter(origin.getY(), random, this.windSpeed)
 			: WindOffsetter.noWind();
 
-		if (ceilingSpire.moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(level, windOffsetter)) ceilingSpire.placeBlocks(level, random, windOffsetter, config);
-		if (floorSpire.moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(level, windOffsetter)) floorSpire.placeBlocks(level, random, windOffsetter, config);
+		if (ceilingSpire.moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(level, windOffsetter)) ceilingSpire.placeBlocks(level, random, windOffsetter, this);
+		if (floorSpire.moveBackUntilBaseIsInsideStoneAndShrinkRadiusIfNecessary(level, windOffsetter)) floorSpire.placeBlocks(level, random, windOffsetter, this);
 
 		return true;
 	}
 
-	public static boolean isBaseOrLava(LargeSpireConfiguration config, BlockState state) {
-		return isBase(config, state) || state.is(Blocks.LAVA);
+	public static boolean isBaseOrLava(LargeSpireFeature feature, BlockState state) {
+		return isBase(feature, state) || state.is(Blocks.LAVA);
 	}
 
-	public static boolean isBase(LargeSpireConfiguration config, BlockState state) {
-		return state.is(config.baseBlocks()) || state.is(config.replaceable());
+	public static boolean isBase(LargeSpireFeature feature, BlockState state) {
+		return state.is(feature.baseBlocks()) || state.is(feature.replaceable());
 	}
 
 	static final class LargeSpire {
@@ -174,7 +205,7 @@ public class LargeSpireFeature extends Feature<LargeSpireConfiguration> {
 			return (int) LargeSpireFeature.getHeight(radius, this.radius, this.scale, this.bluntness);
 		}
 
-		void placeBlocks(WorldGenLevel level, RandomSource random, WindOffsetter windOffsetter, LargeSpireConfiguration config) {
+		void placeBlocks(WorldGenLevel level, RandomSource random, WindOffsetter windOffsetter, LargeSpireFeature feature) {
 			for (int x = -this.radius; x <= this.radius; ++x) {
 				for (int z = -this.radius; z <= this.radius; ++z) {
 					final float distance = Mth.sqrt((float) (x * x + z * z));
@@ -193,7 +224,7 @@ public class LargeSpireFeature extends Feature<LargeSpireConfiguration> {
 						final BlockPos pos = windOffsetter.offset(mutable);
 						if (isEmptyOrWaterOrLava(level, pos)) {
 							bl = true;
-							level.setBlock(pos, config.pathBlock().getState(level, random, mutable), Block.UPDATE_ALL);
+							level.setBlock(pos, feature.pathBlock().getState(level, random, mutable), Block.UPDATE_ALL);
 						} else if (bl && level.getBlockState(pos).is(BlockTags.BASE_STONE_NETHER)) {
 							break;
 						}
@@ -204,8 +235,8 @@ public class LargeSpireFeature extends Feature<LargeSpireConfiguration> {
 			}
 		}
 
-		boolean isSuitableForWind(LargeSpireConfiguration config) {
-			return this.radius >= config.minRadiusForWind() && this.bluntness >= (double) config.minBluntnessForWind();
+		boolean isSuitableForWind(LargeSpireFeature feature) {
+			return this.radius >= feature.minRadiusForWind() && this.bluntness >= (double) feature.minBluntnessForWind();
 		}
 	}
 

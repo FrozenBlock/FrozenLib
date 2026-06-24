@@ -21,59 +21,56 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModifiers;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Util;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.item.ItemStackTemplate;
 import net.minecraft.world.level.block.entity.PotDecorations;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
 import org.jetbrains.annotations.Nullable;
 
-public record AppendSherds(List<Item> sherds, float chancePerSlot, boolean defaultToBrick) implements RuleBlockEntityModifier {
+public record AppendSherds(List<ItemStackTemplate> sherds, float chancePerSlot) implements RuleBlockEntityModifier {
 	public static final MapCodec<AppendSherds> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		BuiltInRegistries.ITEM.byNameCodec().listOf().fieldOf("sherds").forGetter(modifier -> modifier.sherds),
-		Codec.FLOAT.fieldOf("chance_per_slot").orElse(0.75F).forGetter(modifier -> modifier.chancePerSlot),
-		Codec.BOOL.fieldOf("default_to_brick").orElse(true).forGetter(modifier -> modifier.defaultToBrick)
+		ItemStackTemplate.CODEC.listOf().fieldOf("sherds").forGetter(modifier -> modifier.sherds),
+		Codec.FLOAT.fieldOf("chance_per_slot").orElse(0.75F).forGetter(modifier -> modifier.chancePerSlot)
 	).apply(instance, AppendSherds::new));
 
-	public AppendSherds(float chancePerSlot, boolean defaultToBrick, Item... sherd) {
-		this(List.of(sherd), chancePerSlot, defaultToBrick);
+	public AppendSherds(float chancePerSlot, ItemStackTemplate... sherd) {
+		this(List.of(sherd), chancePerSlot);
 	}
 
-	public AppendSherds(List<Item> sherds, float chancePerSlot, boolean defaultToBrick) {
+	public AppendSherds(List<ItemStackTemplate> sherds, float chancePerSlot) {
 		this.sherds = sherds;
 		this.chancePerSlot = chancePerSlot;
-		this.defaultToBrick = defaultToBrick;
 		if (this.sherds.isEmpty()) throw new IllegalArgumentException("AppendSherds requires at least one sherd!");
 	}
 
 	@Override
 	public CompoundTag apply(RandomSource random, @Nullable CompoundTag existingTag) {
+		final Function<Optional<ItemStackTemplate>, Optional<ItemStackTemplate>> sherdSelector = original -> {
+			return random.nextFloat() <= this.chancePerSlot
+				? Optional.of(this.getRandomSherd(random))
+				: original;
+		};
+
 		final CompoundTag compoundTag = existingTag == null ? new CompoundTag() : existingTag.copy();
-		final Item[] chosenSherds = new Item[4];
-		final List<Item> orderedDecorations = compoundTag.read("sherds", PotDecorations.CODEC).orElse(PotDecorations.EMPTY).ordered();
-		for (int i = 0; i < chosenSherds.length; i++) {
-			if (random.nextFloat() <= this.chancePerSlot) {
-				chosenSherds[i] = this.getRandomSherd(random);
-			} else {
-				chosenSherds[i] = this.defaultToBrick ? Items.BRICK : orderedDecorations.get(i);
-			}
-		}
-		final PotDecorations processedDecorations = new PotDecorations(
-			chosenSherds[0],
-			chosenSherds[1],
-			chosenSherds[2],
-			chosenSherds[3]
+		final PotDecorations initialPotDecorations = compoundTag.read("sherds", PotDecorations.CODEC).orElse(PotDecorations.EMPTY);
+		final PotDecorations potDecorations = new PotDecorations(
+			sherdSelector.apply(initialPotDecorations.back()),
+			sherdSelector.apply(initialPotDecorations.left()),
+			sherdSelector.apply(initialPotDecorations.right()),
+			sherdSelector.apply(initialPotDecorations.front())
 		);
-		compoundTag.store("sherds", PotDecorations.CODEC, processedDecorations);
+
+		compoundTag.store("sherds", PotDecorations.CODEC, potDecorations);
 		return compoundTag;
 	}
 
-	public Item getRandomSherd(RandomSource random) {
+	public ItemStackTemplate getRandomSherd(RandomSource random) {
 		return Util.getRandom(this.sherds, random);
 	}
 

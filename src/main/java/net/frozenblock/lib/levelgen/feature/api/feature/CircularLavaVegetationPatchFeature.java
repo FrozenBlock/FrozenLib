@@ -17,51 +17,64 @@
 
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
-import com.mojang.serialization.Codec;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.function.Predicate;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.BlockPos.MutableBlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.placement.CaveSurface;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
+	public static final MapCodec<CircularLavaVegetationPatchFeature> CODEC = makeCodec(CircularLavaVegetationPatchFeature::new);
 
-	public CircularLavaVegetationPatchFeature(Codec<VegetationPatchConfiguration> codec) {
-		super(codec);
+	public CircularLavaVegetationPatchFeature(
+		HolderSet<Block> replaceable,
+		BlockStateProvider groundState,
+		Holder<PlacedFeature> vegetationFeature,
+		CaveSurface surface,
+		IntProvider depth,
+		float extraBottomBlockChance,
+		int verticalRange,
+		float vegetationChance,
+		IntProvider xzRadius,
+		float extraEdgeColumnChance
+	) {
+		super(replaceable, groundState, vegetationFeature, surface, depth, extraBottomBlockChance, verticalRange, vegetationChance, xzRadius, extraEdgeColumnChance);
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<VegetationPatchConfiguration> context) {
-		final WorldGenLevel level = context.level();
-		final VegetationPatchConfiguration config = context.config();
-		final RandomSource random = context.random();
-		final BlockPos pos = context.origin();
-		final Predicate<BlockState> predicate = (state) -> state.is(config.replaceable());
-		final int radius = config.xzRadius().sample(random) + 1;
-		final Set<BlockPos> set = this.placeGroundPatch(level, config, random, pos, predicate, radius, radius);
-
-		this.distributeVegetation(context, level, config, random, set, radius, radius);
-		return !set.isEmpty();
+	public MapCodec<? extends VegetationPatchFeature> codec() {
+		return CODEC;
 	}
 
-	public Set<BlockPos> placeCircularGroundPatch(
-		WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos pos, Predicate<BlockState> predicate, int xRadius, int zRadius
-	) {
-		final MutableBlockPos airMutable = pos.mutable();
+	@Override
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
+		final int radius = this.xzRadius.sample(random) + 1;
+		final Set<BlockPos> surface = this.placeGroundPatch(level, random, origin, state -> state.is(this.replaceable), radius, radius);
+		this.distributeVegetation(level, chunkGenerator, random, surface);
+		return !surface.isEmpty();
+	}
+
+	public Set<BlockPos> placeCircularGroundPatch(WorldGenLevel level, RandomSource random, BlockPos origin, Predicate<BlockState> replaceable, int xRadius, int zRadius) {
+		final MutableBlockPos airMutable = origin.mutable();
 		final MutableBlockPos groundMutable = airMutable.mutable();
-		final Direction surfaceDirection = config.surface().getDirection();
+		final Direction surfaceDirection = this.surface.getDirection();
 		final Direction oppositeSurfaceDirection = surfaceDirection.getOpposite();
 
 		final Set<BlockPos> set = new HashSet<>();
@@ -73,26 +86,26 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 				boolean onBothEdges = onEdgeX && onEdgeZ;
 				boolean onOneEdge = onAnyEdge && !onBothEdges;
 
-				if (onBothEdges || !(!onOneEdge || config.extraEdgeColumnChance() != 0F && !(random.nextFloat() > config.extraEdgeColumnChance()))) continue;
+				if (onBothEdges || !(!onOneEdge || this.extraEdgeColumnChance != 0F && !(random.nextFloat() > this.extraEdgeColumnChance))) continue;
 
-				airMutable.setWithOffset(pos, x, 0, z);
-				if (Math.sqrt(airMutable.distSqr(pos)) > xRadius) continue;
+				airMutable.setWithOffset(origin, x, 0, z);
+				if (Math.sqrt(airMutable.distSqr(origin)) > xRadius) continue;
 
-				for (int i = 0; level.isStateAtPosition(airMutable, BlockBehaviour.BlockStateBase::isAir) && i < config.verticalRange(); ++i) {
+				for (int i = 0; level.isStateAtPosition(airMutable, BlockBehaviour.BlockStateBase::isAir) && i < this.verticalRange; ++i) {
 					airMutable.move(surfaceDirection);
 				}
 
-				for (int i = 0; level.isStateAtPosition(airMutable, statex -> !statex.isAir()) && i < config.verticalRange(); ++i) {
+				for (int i = 0; level.isStateAtPosition(airMutable, statex -> !statex.isAir()) && i < this.verticalRange; ++i) {
 					airMutable.move(oppositeSurfaceDirection);
 				}
 
-				groundMutable.setWithOffset(airMutable, config.surface().getDirection());
+				groundMutable.setWithOffset(airMutable, this.surface.getDirection());
 				BlockState state = level.getBlockState(groundMutable);
-				if (!level.isEmptyBlock(airMutable) || !state.isFaceSturdy(level, groundMutable, config.surface().getDirection().getOpposite())) continue;
+				if (!level.isEmptyBlock(airMutable) || !state.isFaceSturdy(level, groundMutable, this.surface.getDirection().getOpposite())) continue;
 
-				final int depth = config.depth().sample(random) + (config.extraBottomBlockChance() > 0F && random.nextFloat() < config.extraBottomBlockChance() ? 1 : 0);
+				final int depth = this.depth.sample(random) + (this.extraBottomBlockChance > 0F && random.nextFloat() < this.extraBottomBlockChance ? 1 : 0);
 				BlockPos groundPos = groundMutable.immutable();
-				final boolean placedGround = this.placeGround(level, config, predicate, random, groundMutable, depth);
+				final boolean placedGround = this.placeGround(level, replaceable, random, groundMutable, depth);
 				if (placedGround) set.add(groundPos);
 			}
 		}
@@ -101,26 +114,18 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 	}
 
 	@Override
-	protected Set<BlockPos> placeGroundPatch(
-		WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos pos, Predicate<BlockState> predicate, int xRadius, int zRadius
-	) {
-		final Set<BlockPos> set = this.placeCircularGroundPatch(level, config, random, pos, predicate, xRadius, zRadius);
-		final Set<BlockPos> set2 = new HashSet<>();
+	protected Set<BlockPos> placeGroundPatch(WorldGenLevel level, RandomSource random, BlockPos origin, Predicate<BlockState> replaceable, int xRadius, int zRadius) {
+		final Set<BlockPos> surface = this.placeCircularGroundPatch(level, random, origin, replaceable, xRadius, zRadius);
+		final Set<BlockPos> surroundedSurface = new HashSet<>();
 		final MutableBlockPos mutable = new MutableBlockPos();
 
-		Iterator<BlockPos> poses = set.iterator();
-		while (poses.hasNext()) {
-			BlockPos nextPos = poses.next();
-			if (!isExposed(level, nextPos, mutable)) set2.add(nextPos);
+		for (BlockPos nextPos : surface) {
+			if (!isExposed(level, nextPos, mutable)) surroundedSurface.add(nextPos);
 		}
 
-		poses = set2.iterator();
-		while (poses.hasNext()) {
-			BlockPos nextPos = poses.next();
-			level.setBlock(nextPos, Blocks.LAVA.defaultBlockState(), Block.UPDATE_CLIENTS);
-		}
+		for (BlockPos nextPos : surroundedSurface) level.setBlock(nextPos, Blocks.LAVA.defaultBlockState(), Block.UPDATE_CLIENTS);
 
-		return set2;
+		return surroundedSurface;
 	}
 
 	private static boolean isExposed(WorldGenLevel level, BlockPos pos, MutableBlockPos mutable) {
@@ -137,7 +142,7 @@ public class CircularLavaVegetationPatchFeature extends VegetationPatchFeature {
 	}
 
 	@Override
-	protected boolean placeVegetation(WorldGenLevel level, VegetationPatchConfiguration config, ChunkGenerator chunkGenerator, RandomSource random, BlockPos pos) {
-		return super.placeVegetation(level, config, chunkGenerator, random, pos.below());
+	protected boolean placeVegetation(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos vegetationPos) {
+		return super.placeVegetation(level, chunkGenerator, random, vegetationPos.below());
 	}
 }
