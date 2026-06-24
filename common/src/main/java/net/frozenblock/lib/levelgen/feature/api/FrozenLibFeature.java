@@ -27,42 +27,40 @@ import net.minecraft.data.worldgen.placement.PlacementUtils;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.WeightedPlacedFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 import org.jetbrains.annotations.Nullable;
 
-public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration> {
+public class FrozenLibFeature<F extends Feature> {
 
 	/**
 	 * Can be used for setting all bootstrap contexts on 1.19.3+.
 	 */
-	public static final List<FrozenLibConfiguredFeature<?>> FEATURES = new ArrayList<>();
+	public static final List<FrozenLibFeature<?>> FEATURES = new ArrayList<>();
 
-	private final ResourceKey<ConfiguredFeature<?, ?>> key;
+	private final ResourceKey<Feature> key;
 
-	public FrozenLibConfiguredFeature(Identifier key) {
-		this.key = ResourceKey.create(Registries.CONFIGURED_FEATURE, key);
+	public FrozenLibFeature(Identifier key) {
+		this.key = ResourceKey.create(Registries.FEATURE, key);
 		FEATURES.add(this);
 	}
 
-	public ResourceKey<ConfiguredFeature<?, ?>> getKey() {
+	public ResourceKey<Feature> getKey() {
 		return this.key;
 	}
 
-	public Holder<ConfiguredFeature<?, ?>> getHolder(@Nullable LevelReader level) {
-		if (level == null) return FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT.lookup(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
-		return level.registryAccess().lookupOrThrow(Registries.CONFIGURED_FEATURE).getOrThrow(this.getKey());
+	public Holder<Feature> getHolder(@Nullable LevelReader level) {
+		if (level == null) return FrozenLibFeatureUtil.BOOTSTRAP_CONTEXT.lookup(Registries.FEATURE).getOrThrow(this.getKey());
+		return level.registryAccess().lookupOrThrow(Registries.FEATURE).getOrThrow(this.getKey());
 	}
 
-	public Holder<ConfiguredFeature<?, ?>> getHolder() {
+	public Holder<Feature> getHolder() {
 		return getHolder(null);
 	}
 
-	public ConfiguredFeature<?, ?> getConfiguredFeature(LevelReader level) {
+	public Feature getFeature(LevelReader level) {
 		return getHolder(level).value();
 	}
 
@@ -75,15 +73,14 @@ public class FrozenLibConfiguredFeature<FC extends FeatureConfiguration> {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <F extends Feature<FC>> FrozenLibConfiguredFeature<FC> makeAndSetHolder(F feature, FC config) {
+	public FrozenLibFeature<F> makeAndSetHolder(F feature) {
 		FrozenLibLogUtils.log("Registering configured feature: " + this.getKey().identifier(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 
-		assert FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().identifier();
+		assert FrozenLibFeatureUtil.BOOTSTRAP_CONTEXT != null : "Bootstrap context is null while registering " + this.getKey().identifier();
 
 		assert feature != null : "Feature is null whilst registering " + this.getKey().identifier();
-		assert config != null : "Feature configuration is null whilst registering " + this.getKey().identifier();
 
-		FrozenLibFeatureUtils.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), new ConfiguredFeature<>(feature, config));
+		FrozenLibFeatureUtil.BOOTSTRAP_CONTEXT.register((ResourceKey) this.getKey(), feature);
 		return this;
 	}
 

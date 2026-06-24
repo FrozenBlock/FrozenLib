@@ -18,42 +18,58 @@
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
 import com.mojang.serialization.Codec;
-import net.frozenblock.lib.levelgen.feature.api.feature.configurations.ColumnWithDiskFeatureConfiguration;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryCodecs;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap.Types;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfiguration> {
+public record ColumnWithDiskFeature(
+	BlockStateProvider state,
+	IntProvider radius,
+	IntProvider height,
+	float surroundingPillarChance,
+	HolderSet<Block> replaceableBlocks,
+	BlockStateProvider diskState
+) implements Feature {
+	public static final MapCodec<ColumnWithDiskFeature> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		BlockStateProvider.CODEC.fieldOf("block_state").forGetter(ColumnWithDiskFeature::state),
+		IntProviders.NON_NEGATIVE_CODEC.fieldOf("radius").forGetter(ColumnWithDiskFeature::radius),
+		IntProviders.NON_NEGATIVE_CODEC.fieldOf("height").forGetter(ColumnWithDiskFeature::height),
+		Codec.FLOAT.fieldOf("surrounding_pillar_chance").forGetter(ColumnWithDiskFeature::surroundingPillarChance),
+		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("replaceable_blocks").forGetter(ColumnWithDiskFeature::replaceableBlocks),
+		BlockStateProvider.CODEC.fieldOf("disk_block_state").forGetter(ColumnWithDiskFeature::diskState)
+	).apply(instance, ColumnWithDiskFeature::new));
 
-	public ColumnWithDiskFeature(Codec<ColumnWithDiskFeatureConfiguration> codec) {
-		super(codec);
+	@Override
+	public MapCodec<? extends Feature> codec() {
+		return CODEC;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<ColumnWithDiskFeatureConfiguration> context) {
-		final ColumnWithDiskFeatureConfiguration config = context.config();
-		final BlockPos origin = context.origin();
-		final WorldGenLevel level = context.level();
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
 		final BlockPos surfacePos = origin.atY(level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, origin.getX(), origin.getZ()) - 1);
-		final RandomSource random = level.getRandom();
-		final int radius = config.radius().sample(random);
+		final int radius = this.radius.sample(random);
 
 		boolean generated = false;
 
 		// DISK
 		placeDisk: {
-			final BlockState diskState = config.diskState().getOptionalState(level, random, origin);
+			final BlockState diskState = this.diskState.getOptionalState(level, random, origin);
 			if (diskState == null) break placeDisk;
-
-			final HolderSet<Block> replaceableBlocks = config.replaceableBlocks();
 
 			final BlockPos.MutableBlockPos mutable = surfacePos.mutable();
 			final int originX = surfacePos.getX();
@@ -65,7 +81,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfigur
 
 					mutable.set(x, level.getHeight(Types.MOTION_BLOCKING_NO_LEAVES, x, z) - 1, z);
 					final boolean fade = !mutable.closerThan(surfacePos, radius * 0.8D);
-					if (!level.getBlockState(mutable).is(replaceableBlocks)) continue;
+					if (!level.getBlockState(mutable).is(this.replaceableBlocks)) continue;
 
 					generated = true;
 					if (fade) {
@@ -79,9 +95,9 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfigur
 
 		// COLUMN
 		placeColumn: {
-			final BlockState columnState = config.state().getState(level, random, origin);
+			final BlockState columnState = this.state.getState(level, random, origin);
 			final BlockPos.MutableBlockPos mutable = origin.mutable();
-			final int columnHeight = config.height().sample(random);
+			final int columnHeight = this.height.sample(random);
 
 			generated = placeAtPos(level, origin, mutable, columnState, columnHeight) || generated;
 
@@ -89,7 +105,7 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfigur
 			if (maxSurroundingPillarHeight <= 0) break placeColumn;
 
 			for (Direction direction : Direction.Plane.HORIZONTAL) {
-				if (random.nextFloat() >= config.surroundingPillarChance()) continue;
+				if (random.nextFloat() >= this.surroundingPillarChance) continue;
 				generated = placeAtPos(level, origin.relative(direction), mutable, columnState, UniformInt.of(1, maxSurroundingPillarHeight).sample(random)) || generated;
 			}
 		}
@@ -110,11 +126,11 @@ public class ColumnWithDiskFeature extends Feature<ColumnWithDiskFeatureConfigur
 		for (int i = 0; i < height; i++) {
 			final BlockState state = level.getBlockState(mutable.move(Direction.UP));
 			if (!state.canBeReplaced()) continue;
-				level.setBlock(mutable, columnState, Block.UPDATE_CLIENTS);
-				generated = true;
+
+			level.setBlock(mutable, columnState, Block.UPDATE_CLIENTS);
+			generated = true;
 		}
 
 		return generated;
 	}
-
 }

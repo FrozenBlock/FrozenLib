@@ -30,15 +30,15 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.chunk.ChunkGeneratorStructureState;
 import net.minecraft.world.level.levelgen.structure.StructureSet;
-import net.minecraft.world.level.levelgen.structure.placement.StructurePlacement;
+import net.minecraft.world.level.levelgen.structure.placement.AbstractSpreadingStructurePlacement;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(StructurePlacement.class)
-public class StructurePlacementMixin implements StructureSetAndPlacementInterface {
+@Mixin(AbstractSpreadingStructurePlacement.class)
+public class AbstractSpreadingStructurePlacementMixin implements StructureSetAndPlacementInterface {
 
 	@Unique
 	private final List<Supplier<Boolean>> frozenLib$generationConditions = new ArrayList<>();
@@ -71,7 +71,7 @@ public class StructurePlacementMixin implements StructureSetAndPlacementInterfac
 	}
 
 	@Inject(method = "isStructureChunk", at = @At("HEAD"), cancellable = true)
-	public void frozenLib$checkPlacementConditions(ChunkGeneratorStructureState chunkGeneratorStructureState, int i, int j, CallbackInfoReturnable<Boolean> info) {
+	public void frozenLib$checkPlacementConditions(ChunkGeneratorStructureState state, int sourceX, int sourceZ, CallbackInfoReturnable<Boolean> info) {
 		if (this.frozenLib$generationConditions.isEmpty()) return;
 
 		for (Supplier<Boolean> generationCondition : this.frozenLib$generationConditions) {
@@ -81,18 +81,15 @@ public class StructurePlacementMixin implements StructureSetAndPlacementInterfac
 		}
 	}
 
-	@ModifyReturnValue(
-		method = "applyInteractionsWithOtherStructures",
-		at = @At(value = "RETURN")
-	)
+	@ModifyReturnValue(method = "applyInteractionsWithOtherStructures", at = @At("RETURN"))
 	public boolean frozenLib$isPlacementForbidden(
 		boolean original,
-		ChunkGeneratorStructureState chunkGeneratorStructureState, int i, int j
+		ChunkGeneratorStructureState state, int sourceX, int sourceZ
 	) {
 		if (!original || this.frozenLib$addedExclusions.isEmpty()) return original;
 
 		for (Pair<Holder<StructureSet>, Integer> pair : this.frozenLib$addedExclusions) {
-			if (chunkGeneratorStructureState.hasStructureChunkInRange(pair.getFirst(), i, j, pair.getSecond())) return false;
+			if (state.hasStructureChunkInRange(pair.getFirst(), sourceX, sourceZ, pair.getSecond())) return false;
 		}
 
 		return original;

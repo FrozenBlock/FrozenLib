@@ -31,7 +31,7 @@ import net.frozenblock.lib.block.impl.waterlike.PlayerInWaterLikeInterface;impor
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.client.resources.sounds.UnderwaterAmbientSoundInstances;
+import net.minecraft.client.resources.sounds.UnderLiquidAmbientSoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.sounds.SoundEvent;
@@ -134,9 +134,10 @@ public class LocalPlayerMixin {
 			}
 		}
 
-		if (!hasAnyWaterLikeTypes)  {
+		if (!hasAnyWaterLikeTypes) {
 			UnderWaterAmbientSoundInstanceHandler.tryPlayVanillaSound(
-				new UnderwaterAmbientSoundInstances.UnderwaterAmbientSoundInstance(LocalPlayer.class.cast(this)),
+				// TODO: see if we can just wrapOperation the underwater condition and invalidate if inside types with custom ambience
+				UnderLiquidAmbientSoundInstance.underwater(LocalPlayer.class.cast(this)),
 				this.minecraft.getSoundManager()
 			);
 		}

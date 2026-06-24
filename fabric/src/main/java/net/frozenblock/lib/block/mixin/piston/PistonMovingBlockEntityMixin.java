@@ -85,12 +85,12 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 		method = "finalTick",
 		at = @At(
 			value = "INVOKE",
-			target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z"
+			target = "Lnet/minecraft/world/level/Level;setBlockAndUpdate(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;)Z"
 		)
 	)
-	public boolean frozenLib$setBlockFinalTick(Level level, BlockPos pos, BlockState state, int flags, Operation<Boolean> original) {
-		final boolean setBlock = original.call(level, pos, state, flags);
-		return PushableBlockEntityUtil.setBlockAndEntity(setBlock, level, pos, state, PistonMovingBlockEntity.class.cast(this));
+	public boolean frozenLib$setBlockFinalTick(Level instance, BlockPos pos, BlockState state, Operation<Boolean> original) {
+		final boolean setBlock = original.call(instance, pos, state);
+		return PushableBlockEntityUtil.setBlockAndEntity(setBlock, instance, pos, state, PistonMovingBlockEntity.class.cast(this));
 	}
 
 	@WrapOperation(
@@ -102,10 +102,10 @@ public class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInte
 	)
 	private static boolean frozenLib$setBlockTick(
 		Level level, BlockPos pos, BlockState state, int flags, Operation<Boolean> original,
-		@Local(argsOnly = true) PistonMovingBlockEntity pistonEntity
+		@Local(argsOnly = true) PistonMovingBlockEntity entity
 	) {
 		final boolean setBlock = original.call(level, pos, state, flags);
-		return PushableBlockEntityUtil.setBlockAndEntity(setBlock, level, pos, state, pistonEntity);
+		return PushableBlockEntityUtil.setBlockAndEntity(setBlock, level, pos, state, entity);
 	}
 
 	@Inject(method = "loadAdditional", at = @At("TAIL"))

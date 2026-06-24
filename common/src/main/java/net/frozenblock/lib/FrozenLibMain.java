@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2026 FrozenBlock
+ * Copyright (C) 2024-2026 FrozenBlock
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -25,10 +25,11 @@ import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.entity.api.cubemob.sulfurcube.SulfurCubeEvents;import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
+import net.frozenblock.lib.event.api.events.TickEvents;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
-import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatures;
+import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.levelgen.structure.api.StructureGenerationConditionApi;
@@ -38,6 +39,7 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModif
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
+import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
@@ -69,34 +71,18 @@ public final class FrozenLibMain {
 	}
 
 	public static void init() {
-		var argTypes = FrozenDeferredRegister.create(
-			Registries.COMMAND_ARGUMENT_TYPE,
-			FrozenLibConstants.MOD_ID
-		);
-
-		argTypes.register(
-			"tag_key",
-			() -> new TagKeyArgument.Info<>(),
-			info -> ArgumentTypeInfos.BY_CLASS.put(
-				ArgumentTypeInfos.fixClassType(TagKeyArgument.class),
-				info
-			)
-		);
-
-		argTypes.register();
-
-		CapeUtil.init();
-		SpottingIcons.init();
-		SulfurCubeEvents.init();
-		StructureStatus.init();
 		SoundPredicate.init();
 		MovingSoundTypes.init();
 		FrozenLibParticleTypes.init();
 		FrozenLibRuleBlockEntityModifiers.init();
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibStructurePoolElementTypes.init();
+		SoundPredicate.init();
+		MovingSoundTypes.init();
+		SpottingIcons.init();
 		FrozenLibDataComponents.init();
-		FrozenLibFeatures.init();
+		FrozenLibParticleTypes.init();
+		FrozenLibFeatureTypes.init();
 		ConfigPredicateType.init();
 		WindManager.init();
 		WindManagerExtensionType.init();
@@ -116,7 +102,31 @@ public final class FrozenLibMain {
 		matCon.register("config_predicate", () -> ConfigConditionSource.CODEC);
 		matCon.register();
 
+		var argTypes = FrozenDeferredRegister.create(
+			Registries.COMMAND_ARGUMENT_TYPE,
+			FrozenLibConstants.MOD_ID
+		);
+
+		argTypes.register(
+			"tag_key",
+			() -> new TagKeyArgument.Info<>(),
+			info -> ArgumentTypeInfos.BY_CLASS.put(
+				ArgumentTypeInfos.fixClassType(TagKeyArgument.class),
+				info
+			)
+		);
+
+		argTypes.register();
+
+		StructureStatus.init();
+		CapeUtil.init();
 		ScreenShakes.init();
+		SulfurCubeEvents.init();
+
+		TickEvents.START_LEVEL_TICK.register(serverLevel -> {
+			WindManager.getOrCreate(serverLevel).tick(serverLevel);
+			StructureStatusUpdater.updatePlayerStructureStatusesForLevel(serverLevel);
+		});
 
 		FrozenNetworking.registerNetworking();
 

@@ -69,7 +69,7 @@ public class BlockStateRespectingProcessorRule {
 	}
 
 	public boolean test(LevelReader level, BlockState inputState, BlockPos inTemplatePos, BlockPos worldPos, BlockPos reference, RandomSource random) {
-		return this.inputPredicate.test(inputState, random)
+		return this.inputPredicate.test(inputState, worldPos, random)
 			&& this.locPredicate.testAgainstWorldState(level, worldPos, random)
 			&& this.posPredicate.test(inTemplatePos, worldPos, reference, random);
 	}

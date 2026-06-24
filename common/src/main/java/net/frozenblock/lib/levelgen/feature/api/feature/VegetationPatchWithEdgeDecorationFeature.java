@@ -17,59 +17,74 @@
 
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
-import com.mojang.serialization.Codec;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.placement.CaveSurface;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class VegetationPatchWithEdgeDecorationFeature extends VegetationPatchFeature {
+	public static final MapCodec<VegetationPatchWithEdgeDecorationFeature> CODEC = makeCodec(VegetationPatchWithEdgeDecorationFeature::new);
 
-	public VegetationPatchWithEdgeDecorationFeature(Codec<VegetationPatchConfiguration> codec) {
-		super(codec);
+	public VegetationPatchWithEdgeDecorationFeature(
+		HolderSet<Block> replaceable,
+		BlockStateProvider groundState,
+		Holder<PlacedFeature> vegetationFeature,
+		CaveSurface surface,
+		IntProvider depth,
+		float extraBottomBlockChance,
+		int verticalRange,
+		float vegetationChance,
+		IntProvider xzRadius,
+		float extraEdgeColumnChance
+	) {
+		super(replaceable, groundState, vegetationFeature, surface, depth, extraBottomBlockChance, verticalRange, vegetationChance, xzRadius, extraEdgeColumnChance);
 	}
 
 	@Override
-	protected void distributeVegetation(
-		FeaturePlaceContext<VegetationPatchConfiguration> context,
-		WorldGenLevel level,
-		VegetationPatchConfiguration config,
-		RandomSource random,
-		Set<BlockPos> set,
-		int xRadius,
-		int zRadius
-	) {
+	public MapCodec<? extends VegetationPatchFeature> codec() {
+		return CODEC;
+	}
+
+	@Override
+	public void distributeVegetation(WorldGenLevel level, ChunkGenerator generator, RandomSource random, Set<BlockPos> surface) {
 		final BlockPos.MutableBlockPos airMutable = new BlockPos.MutableBlockPos();
 		final BlockPos.MutableBlockPos groundMutable = new BlockPos.MutableBlockPos();
-		final List<BlockPos> finalDecorationPoses = new ArrayList<>(set);
-		final Direction surfaceDirection = config.surface().getDirection();
-		final Direction oppositeDirection = surfaceDirection.getOpposite();
+		final List<BlockPos> finalDecorationPositions = new ArrayList<>(surface);
+		final Direction inwards = this.surface.getDirection();
+		final Direction outwards = inwards.getOpposite();
 
-		for (BlockPos blockPos : set) {
-			airMutable.setWithOffset(blockPos, oppositeDirection);
+		for (BlockPos blockPos : surface) {
+			airMutable.setWithOffset(blockPos, outwards);
 			for (Direction direction : Direction.Plane.HORIZONTAL) {
 				airMutable.move(direction);
-				groundMutable.setWithOffset(airMutable, surfaceDirection);
+				groundMutable.setWithOffset(airMutable, inwards);
 				final BlockPos groundPos = groundMutable.immutable();
 
-				if (!finalDecorationPoses.contains(groundPos)) {
+				if (!finalDecorationPositions.contains(groundPos)) {
 					final BlockState groundState = level.getBlockState(groundPos);
-					if (level.isEmptyBlock(airMutable) && groundState.isFaceSturdy(level, groundMutable, oppositeDirection)) finalDecorationPoses.add(groundPos);
+					if (level.isEmptyBlock(airMutable) && groundState.isFaceSturdy(level, groundMutable, outwards)) finalDecorationPositions.add(groundPos);
 				}
 
 				airMutable.move(direction.getOpposite());
 			}
 		}
 
-		set = new HashSet<>(finalDecorationPoses);
-		super.distributeVegetation(context, level, config, random, set, xRadius, zRadius);
+		surface = new HashSet<>(finalDecorationPositions);
+		super.distributeVegetation(level, generator, random, surface);
 	}
 }

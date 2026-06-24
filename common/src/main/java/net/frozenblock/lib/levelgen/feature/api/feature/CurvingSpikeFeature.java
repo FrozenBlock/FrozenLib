@@ -17,49 +17,62 @@
 
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
-import com.mojang.serialization.Codec;
-import net.frozenblock.lib.levelgen.feature.api.feature.configurations.CurvingSpikeConfiguration;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.FloatProvider;
+import net.minecraft.util.valueproviders.FloatProviders;
+import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.util.valueproviders.IntProviders;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.blockpredicates.BlockPredicate;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import net.minecraft.world.phys.Vec3;
 
-public class CurvingSpikeFeature extends Feature<CurvingSpikeConfiguration> {
+public record CurvingSpikeFeature(
+	BlockStateProvider stateProvider,
+	IntProvider xWidth,
+	IntProvider zWidth,
+	IntProvider height,
+	FloatProvider curveDistance,
+	BlockPredicate replaceable
+) implements Feature {
 	private static final int BELOW_HEIGHT = -4;
+	public static final MapCodec<CurvingSpikeFeature> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		BlockStateProvider.CODEC.fieldOf("state").forGetter(CurvingSpikeFeature::stateProvider),
+		IntProviders.codec(1, 12).fieldOf("x_width").forGetter(CurvingSpikeFeature::xWidth),
+		IntProviders.codec(1, 12).fieldOf("z_width").forGetter(CurvingSpikeFeature::zWidth),
+		IntProviders.codec(1, 32).fieldOf("height").forGetter(CurvingSpikeFeature::height),
+		FloatProviders.codec(-4F, 4F).fieldOf("curve_distance").forGetter(CurvingSpikeFeature::curveDistance),
+		BlockPredicate.CODEC.fieldOf("replaceable").forGetter(CurvingSpikeFeature::replaceable)
+	).apply(instance, CurvingSpikeFeature::new));
 
-	public CurvingSpikeFeature(Codec<CurvingSpikeConfiguration> codec) {
-		super(codec);
+	@Override
+	public MapCodec<? extends Feature> codec() {
+		return CODEC;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<CurvingSpikeConfiguration> context) {
-		final WorldGenLevel level = context.level();
-		final BlockPos pos = context.origin();
-		final RandomSource random = context.random();
-		final CurvingSpikeConfiguration config = context.config();
-
-		final int height = config.height().sample(random);
-		final double curveDistance = config.curveDistance().sample(random);
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
+		final int height = this.height.sample(random);
+		final double curveDistance = this.curveDistance.sample(random);
 		final double curveFactorX = random.nextGaussian();
-		final int xWidth = config.xWidth().sample(random);
+		final int xWidth = this.xWidth.sample(random);
 		final double curveFactorZ = random.nextGaussian();
-		final int zWidth = config.zWidth().sample(random);
-		final BlockStateProvider stateProvider = config.stateProvider();
-		final BlockPredicate replaceable = config.replaceable();
+		final int zWidth = this.zWidth.sample(random);
 
 		final BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
 		for (int i = 0; i < height; i++) {
-			mutable.setWithOffset(pos, 0, i, 0);
+			mutable.setWithOffset(origin, 0, i, 0);
 			placeInSquare(
 				level,
 				mutable,
-				stateProvider,
-				replaceable,
+				this.stateProvider,
+				this.replaceable,
 				(double) i / height,
 				curveDistance,
 				curveFactorX,
@@ -71,12 +84,12 @@ public class CurvingSpikeFeature extends Feature<CurvingSpikeConfiguration> {
 		}
 
 		for (int i = BELOW_HEIGHT; i < 0; i++) {
-			mutable.setWithOffset(pos, 0, i, 0);
+			mutable.setWithOffset(origin, 0, i, 0);
 			placeInSquare(
 				level,
 				mutable,
-				stateProvider,
-				replaceable,
+				this.stateProvider,
+				this.replaceable,
 				(double) i / BELOW_HEIGHT,
 				curveDistance,
 				curveFactorX,

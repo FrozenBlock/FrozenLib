@@ -18,56 +18,57 @@
 package net.frozenblock.lib.levelgen.feature.api.feature.noise_path;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoiseBandBlockPlacement;
 import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoiseBandPlacement;
-import net.frozenblock.lib.levelgen.feature.api.feature.noise_path.config.NoisePathFeatureConfiguration;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.feature.Feature;
-import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.synth.ImprovedNoise;
 
-public class NoisePathFeature extends Feature<NoisePathFeatureConfiguration> {
+public record NoisePathFeature(
+	NoiseBandPlacement noiseBandPlacement,
+	int placementRadius
+) implements Feature {
+	public static final MapCodec<NoisePathFeature> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		NoiseBandPlacement.CODEC.fieldOf("noise_band_placement").forGetter(NoisePathFeature::noiseBandPlacement),
+		Codec.intRange(1, 16).fieldOf("placement_radius").orElse(10).forGetter(NoisePathFeature::placementRadius)
+	).apply(instance, NoisePathFeature::new));
 
-	public NoisePathFeature(Codec<NoisePathFeatureConfiguration> codec) {
-		super(codec);
+	@Override
+	public MapCodec<? extends Feature> codec() {
+		return CODEC;
 	}
 
 	@Override
-	public boolean place(FeaturePlaceContext<NoisePathFeatureConfiguration> context) {
-		final NoisePathFeatureConfiguration config = context.config();
-		final BlockPos pos = context.origin();
-		final WorldGenLevel level = context.level();
-		final RandomSource random = level.getRandom();
+	public boolean place(WorldGenLevel level, ChunkGenerator chunkGenerator, RandomSource random, BlockPos origin) {
+		final ImprovedNoise sampler = this.noiseBandPlacement.noiseType().createNoise(level.getSeed());
+		final double noiseScale = this.noiseBandPlacement.noiseScale();
+		final boolean calculateNoiseWithY = this.noiseBandPlacement.calculateNoiseWithY();
+		final boolean scaleYNoise = this.noiseBandPlacement.scaleYNoise();
 
-		final int radius = config.placementRadius();
-		final NoiseBandPlacement noiseBandPlacement = config.noiseBandPlacement();
-
-		final ImprovedNoise sampler = noiseBandPlacement.noiseType().createNoise(level.getSeed());
-		final double noiseScale = noiseBandPlacement.noiseScale();
-		final boolean calculateNoiseWithY = noiseBandPlacement.calculateNoiseWithY();
-		final boolean scaleYNoise = noiseBandPlacement.scaleYNoise();
-
-		final List<NoiseBandBlockPlacement> blockPlacements = noiseBandPlacement.blockPlacements();
-		final Heightmap.Types heightmapType = noiseBandPlacement.heightmapType().orElse(null);
+		final List<NoiseBandBlockPlacement> blockPlacements = this.noiseBandPlacement.blockPlacements();
+		final Heightmap.Types heightmapType = this.noiseBandPlacement.heightmapType().orElse(null);
 		final boolean missingHeightmap = heightmapType == null;
 
-		final BlockPos.MutableBlockPos mutable = pos.mutable();
-		final int startX = pos.getX();
-		final int startY = pos.getY();
-		final int startZ = pos.getZ();
+		final BlockPos.MutableBlockPos mutable = origin.mutable();
+		final int startX = origin.getX();
+		final int startY = origin.getY();
+		final int startZ = origin.getZ();
 
 		boolean generated = false;
-		for (int x = startX - radius; x <= startX + radius; x++) {
-			for (int z = startZ - radius; z <= startZ + radius; z++) {
+		for (int x = startX - this.placementRadius; x <= startX + this.placementRadius; x++) {
+			for (int z = startZ - this.placementRadius; z <= startZ + this.placementRadius; z++) {
 				if (!missingHeightmap) {
 					mutable.set(x, level.getHeight(heightmapType, x, z) - 1, z);
-					if (AdvancedMath.distanceBetween(pos, mutable, false) < radius) {
+					if (AdvancedMath.distanceBetween(origin, mutable, false) < this.placementRadius) {
 						generated = this.attemptPlaceForAllBlockPlacements(
 							level,
 							mutable,
@@ -80,9 +81,9 @@ public class NoisePathFeature extends Feature<NoisePathFeatureConfiguration> {
 						) || generated;
 					}
 				} else {
-					for (int y = startY - radius; y <= startY + radius; y++) {
+					for (int y = startY - this.placementRadius; y <= startY + this.placementRadius; y++) {
 						mutable.set(x, y, z);
-						if (AdvancedMath.distanceBetween(pos, mutable, true) < radius) {
+						if (AdvancedMath.distanceBetween(origin, mutable, true) < this.placementRadius) {
 							generated = this.attemptPlaceForAllBlockPlacements(
 								level,
 								mutable,

@@ -17,34 +17,55 @@
 
 package net.frozenblock.lib.levelgen.feature.api.feature;
 
-import com.mojang.serialization.Codec;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.valueproviders.IntProvider;
 import net.minecraft.world.level.WorldGenLevel;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.VegetationPatchFeature;
-import net.minecraft.world.level.levelgen.feature.configurations.VegetationPatchConfiguration;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
+import net.minecraft.world.level.levelgen.placement.CaveSurface;
+import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
+	public static final MapCodec<UnderwaterVegetationPatchFeature> CODEC = makeCodec(UnderwaterVegetationPatchFeature::new);
 
-	public UnderwaterVegetationPatchFeature(Codec<VegetationPatchConfiguration> codec) {
-		super(codec);
+	public UnderwaterVegetationPatchFeature(
+		HolderSet<Block> replaceable,
+		BlockStateProvider groundState,
+		Holder<PlacedFeature> vegetationFeature,
+		CaveSurface surface,
+		IntProvider depth,
+		float extraBottomBlockChance,
+		int verticalRange,
+		float vegetationChance,
+		IntProvider xzRadius,
+		float extraEdgeColumnChance
+	) {
+		super(replaceable, groundState, vegetationFeature, surface, depth, extraBottomBlockChance, verticalRange, vegetationChance, xzRadius, extraEdgeColumnChance);
 	}
 
 	@Override
-	public Set<BlockPos> placeGroundPatch(
-		WorldGenLevel level, VegetationPatchConfiguration config, RandomSource random, BlockPos blockPos, Predicate<BlockState> replaceable, int xRadius, int zRadius
-	) {
-		final BlockPos.MutableBlockPos airMutable = blockPos.mutable();
+	public MapCodec<? extends VegetationPatchFeature> codec() {
+		return CODEC;
+	}
+
+	@Override
+	public Set<BlockPos> placeGroundPatch(WorldGenLevel level, RandomSource random, BlockPos origin, Predicate<BlockState> replaceable, int xRadius, int zRadius) {
+		final BlockPos.MutableBlockPos airMutable = origin.mutable();
 		final BlockPos.MutableBlockPos groundMutable = airMutable.mutable();
-		final Direction surfaceDirection = config.surface().getDirection();
-		final Direction oppositeSurfaceDirection = surfaceDirection.getOpposite();
-		final Set<BlockPos> set = new HashSet<>();
+		final Direction inwards = this.surface.getDirection();
+		final Direction outwards = inwards.getOpposite();
+		final Set<BlockPos> surface = new HashSet<>();
 
 		for (int x = -xRadius; x <= xRadius; x++) {
 			boolean onEdgeX = x == -xRadius || x == xRadius;
@@ -54,29 +75,29 @@ public class UnderwaterVegetationPatchFeature extends VegetationPatchFeature {
 				boolean onBothEdges = onEdgeX && onEdgeZ;
 				boolean onOneEdge = onAnyEdge && !onBothEdges;
 
-				if (onBothEdges || !(!onOneEdge || config.extraEdgeColumnChance() != 0F && !(random.nextFloat() > config.extraEdgeColumnChance()))) continue;
+				if (onBothEdges || !(!onOneEdge || this.extraEdgeColumnChance != 0F && !(random.nextFloat() > this.extraEdgeColumnChance))) continue;
 
-				airMutable.setWithOffset(blockPos, x, 0, z);
-				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, this::isWaterAt) && verticalSteps < config.verticalRange(); verticalSteps++) {
-					airMutable.move(surfaceDirection);
+				airMutable.setWithOffset(origin, x, 0, z);
+				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, this::isWaterAt) && verticalSteps < this.verticalRange; verticalSteps++) {
+					airMutable.move(inwards);
 				}
 
-				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, state -> !this.isWaterAt(state)) && verticalSteps < config.verticalRange(); verticalSteps++) {
-					airMutable.move(oppositeSurfaceDirection);
+				for (int verticalSteps = 0; level.isStateAtPosition(airMutable, state -> !this.isWaterAt(state)) && verticalSteps < this.verticalRange; verticalSteps++) {
+					airMutable.move(outwards);
 				}
 
-				groundMutable.setWithOffset(airMutable, config.surface().getDirection());
+				groundMutable.setWithOffset(airMutable, this.surface.getDirection());
 				final BlockState state = level.getBlockState(groundMutable);
-				if (!this.isWaterAt(level.getBlockState(airMutable)) || !state.isFaceSturdy(level, groundMutable, config.surface().getDirection().getOpposite())) continue;
+				if (!this.isWaterAt(level.getBlockState(airMutable)) || !state.isFaceSturdy(level, groundMutable, this.surface.getDirection().getOpposite())) continue;
 
-				final int depth = config.depth().sample(random) + (config.extraBottomBlockChance() > 0F && random.nextFloat() < config.extraBottomBlockChance() ? 1 : 0);
+				final int depth = this.depth.sample(random) + (this.extraBottomBlockChance > 0F && random.nextFloat() < this.extraBottomBlockChance ? 1 : 0);
 				final BlockPos groundPos = groundMutable.immutable();
-				final boolean placedGround = this.placeGround(level, config, replaceable, random, groundMutable, depth);
-				if (placedGround) set.add(groundPos);
+				final boolean groundPlaced = this.placeGround(level, replaceable, random, groundMutable, depth);
+				if (groundPlaced) surface.add(groundPos);
 			}
 		}
 
-		return set;
+		return surface;
 	}
 
 	public boolean isWaterAt(BlockState state) {
