@@ -195,8 +195,7 @@ public class WindManager {
 				.findFirst()
 				.orElse(null);
 
-			if (existingExtension == null || !existingExtension.supportsApplicationFromSync()) {
-				if (existingExtension != null) INSTANCE.extensions.remove(existingExtension);
+			if (existingExtension == null) {
 				INSTANCE.extensions.add(syncedExtension);
 			} else {
 				existingExtension.applyFromSyncedInstance(syncedExtension);
