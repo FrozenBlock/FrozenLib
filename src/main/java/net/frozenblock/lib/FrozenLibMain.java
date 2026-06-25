@@ -44,7 +44,7 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElement
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
-import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
+import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;

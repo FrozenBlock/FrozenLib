@@ -1,9 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.frozenblock.lib.levelgen.surface.mixin",
+  "package": "net.frozenblock.lib.levelgen.material.mixin",
   "compatibilityLevel": "JAVA_25",
-  "plugin": "net.frozenblock.lib.levelgen.surface.mixin.SurfaceRulePlugin",
+  "plugin": "net.frozenblock.lib.levelgen.material.mixin.MaterialRulePlugin",
   "injectors": {
     "defaultRequire": 1
   },

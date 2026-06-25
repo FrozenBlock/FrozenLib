@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.surface.mixin;
+package net.frozenblock.lib.levelgen.material.mixin;
 
 import java.util.Map;
-import net.frozenblock.lib.levelgen.surface.impl.SurfaceRuleUtil;
+import net.frozenblock.lib.levelgen.material.impl.SurfaceRuleUtil;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;

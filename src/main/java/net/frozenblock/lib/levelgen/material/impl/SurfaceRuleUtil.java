@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.surface.impl;
+package net.frozenblock.lib.levelgen.material.impl;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.levelgen.surface.api.FrozenLibSurfaceRules;
+import net.frozenblock.lib.levelgen.material.api.FrozenLibMaterialRules;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.dimension.DimensionType;
@@ -29,7 +29,7 @@ import net.minecraft.world.level.levelgen.SurfaceRules;
 public class SurfaceRuleUtil {
 	public static void injectSurfaceRules(NoiseGeneratorSettings settings, RegistryAccess registryAccess, ResourceKey<DimensionType> dimension) {
 		final NoiseGeneratorInterface noiseGenerator = NoiseGeneratorInterface.class.cast(settings);
-		final SurfaceRules.RuleSource newRules = FrozenLibSurfaceRules.getSurfaceRules(registryAccess, dimension);
+		final SurfaceRules.RuleSource newRules = FrozenLibMaterialRules.getMaterialRules(registryAccess, dimension);
 		if (newRules != null) noiseGenerator.frozenLib$writeSurfaceRules(newRules);
 	}
 }

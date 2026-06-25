@@ -22,6 +22,7 @@ import java.util.List;
 import lombok.Getter;
 import net.frozenblock.lib.FrozenLibLogUtils;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -58,6 +59,10 @@ public class FrozenLibPlacedFeature {
 
 	public Holder<PlacedFeature> getHolder() {
 		return FrozenLibFeatureUtil.BOOTSTRAP_CONTEXT.lookup(Registries.PLACED_FEATURE).getOrThrow(this.getKey());
+	}
+
+	public HolderSet<PlacedFeature> asHolderSet() {
+		return HolderSet.direct(this.getHolder());
 	}
 
 	public WeightedPlacedFeature asWeightedPlacedFeature(float weight) {
