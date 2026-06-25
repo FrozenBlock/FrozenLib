@@ -37,8 +37,8 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import net.minecraft.world.level.levelgen.placement.PlacementModifier;
 
 public class FrozenLibTreeFeature {
-	private final FrozenLibFeature<TreeFeature> feature;
-	private final FrozenLibFeature<TreeFeature> featureWithLitter;
+	private final FrozenLibFeature feature;
+	private final FrozenLibFeature featureWithLitter;
 	private final List<TreeDecorator> litterDecorators;
 
 	public FrozenLibTreeFeature(
@@ -47,8 +47,8 @@ public class FrozenLibTreeFeature {
 		int triesA, int radiusA, int heightA,
 		int triesB, int radiusB, int heightB
 	) {
-		this.feature = new FrozenLibFeature<>(key);
-		this.featureWithLitter = new FrozenLibFeature<>(key.withSuffix("_leaf_litter"));
+		this.feature = new FrozenLibFeature(key);
+		this.featureWithLitter = new FrozenLibFeature(key.withSuffix("_leaf_litter"));
 		this.litterDecorators = FrozenBools.IS_DATAGEN ? new ArrayList<>() : null;
 		if (this.litterDecorators == null) return;
 		this.litterDecorators.add(makeLeafLitterDecorator(leafLitterBlock, triesA, radiusA, heightA, 3));

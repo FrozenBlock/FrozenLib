@@ -18,8 +18,8 @@
 package net.frozenblock.lib.testmod.worldgen;
 
 import java.util.List;
-import net.frozenblock.lib.levelgen.surface.api.DimensionBoundRuleSource;
-import net.frozenblock.lib.levelgen.surface.api.SurfaceRuleEvents;
+import net.frozenblock.lib.levelgen.material.api.DimensionBoundRuleSource;
+import net.frozenblock.lib.levelgen.material.api.MaterialRuleEvents;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.material.VanillaMaterialConditions;
@@ -29,11 +29,11 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.levelgen.Noises;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 
-public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleCallback,
-	SurfaceRuleEvents.NetherSurfaceRuleCallback, SurfaceRuleEvents.EndSurfaceRuleCallback,
-	SurfaceRuleEvents.GenericSurfaceRuleCallback {
+public class TestMaterialRules implements MaterialRuleEvents.OverworldMaterialRuleCallback,
+	MaterialRuleEvents.NetherMaterialRuleCallback, MaterialRuleEvents.EndMaterialRuleCallback,
+	MaterialRuleEvents.GenericMaterialRuleCallback {
     @Override
-    public void addOverworldSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context) {
+    public void addOverworldMaterialRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context) {
         SurfaceRules.ConditionSource greenNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.05, 0.1);
         SurfaceRules.ConditionSource orangeNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.1, 0.15);
         SurfaceRules.ConditionSource whiteNoise = SurfaceRules.noiseCondition3d(Noises.CALCITE, 0.15, 0.20);
@@ -70,21 +70,21 @@ public class TestSurfaceRules implements SurfaceRuleEvents.OverworldSurfaceRuleC
     }
 
     @Override
-    public void addNetherSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context) {
+    public void addNetherMaterialRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context) {
 		context.add(
 			SurfaceRules.state(Blocks.SPONGE.defaultBlockState())
 		);
     }
 
     @Override
-    public void addEndSurfaceRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context) {
+    public void addEndMaterialRules(RegistryAccess registryAccess, List<SurfaceRules.RuleSource> context) {
 		context.add(
 			SurfaceRules.state(Blocks.BIRCH_LOG.defaultBlockState())
 		);
     }
 
     @Override
-    public void addGenericSurfaceRules(RegistryAccess registryAccess, List<DimensionBoundRuleSource> context) {
+    public void addGenericMaterialRules(RegistryAccess registryAccess, List<DimensionBoundRuleSource> context) {
 		context.add(new DimensionBoundRuleSource(
 			Identifier.withDefaultNamespace("overworld"),
 			SurfaceRules.sequence(

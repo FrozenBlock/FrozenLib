@@ -71,8 +71,8 @@
     "mixin/frozenlib.texture.mixins.json",
     "mixin/frozenlib.wind.mixins.json",
     "mixin/frozenlib.levelgen.biome.mixins.json",
+    "mixin/frozenlib.levelgen.material.mixins.json",
     "mixin/frozenlib.levelgen.structure.mixins.json",
-    "mixin/frozenlib.levelgen.surface.mixins.json",
 
     "mixin/frozenlib_quiltmc_datafixerupper.mixins.json",
     "mixin/frozenlib_quiltmc_registry.mixins.json",

@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.surface.mixin.terrablender;
+package net.frozenblock.lib.levelgen.material.mixin.terrablender;
 
 // TODO re-enable when terrablender is unobfuscated
 /*import com.llamalad7.mixinextras.injector.ModifyReturnValue;

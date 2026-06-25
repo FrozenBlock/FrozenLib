@@ -15,10 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.surface.mixin;
+package net.frozenblock.lib.levelgen.material.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import net.frozenblock.lib.levelgen.surface.impl.NoiseGeneratorInterface;
+import net.frozenblock.lib.levelgen.material.impl.NoiseGeneratorInterface;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import net.minecraft.world.level.levelgen.SurfaceRules;
