@@ -56,7 +56,9 @@ public record FireData(Holder<FireType> type) {
 	}
 
 	public static void trySet(Entity entity, ResourceKey<FireType> type) {
-		trySet(entity, entity.registryAccess().lookupOrThrow(FrozenLibRegistries.FIRE_TYPE).getOrThrow(type));
+		entity.registryAccess().lookup(FrozenLibRegistries.FIRE_TYPE)
+			.flatMap(registry -> registry.get(type))
+			.ifPresent(fireType -> trySet(entity, fireType));
 	}
 
 	public static void trySet(Entity entity, Holder<FireType> type) {

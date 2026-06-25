@@ -59,6 +59,8 @@ public class LivingEntityMixin {
 				: damageSettings.damage()
 		);
 
-		FireEvents.ON_ENTITY_BURN_TICK.invoker().onEntityBurnTick(entity, FireTypes.getFromDataOrDefault(level.registryAccess(), fireData));
+		FireTypes.getFromDataOrDefault(level.registryAccess(), fireData).ifPresent(
+			fireTypeHolder -> FireEvents.ON_ENTITY_BURN_TICK.invoker().onEntityBurnTick(entity, fireTypeHolder)
+		);
 	}
 }
