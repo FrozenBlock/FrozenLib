@@ -36,6 +36,20 @@ public interface WindManagerExtension {
 	WindManagerExtensionType<?> type();
 
 	/**
+	 * Used to modify the current client instance, if synced from the server.
+	 */
+	default <T extends WindManagerExtension> void applyFromSyncedInstance(T extension) {}
+
+	/**
+	 * Whether this instance uses {@link #applyFromSyncedInstance(WindManagerExtension)} to modify the current client instance upon syncing.
+	 * <p>
+	 * If false, this instance will be removed and replaced with the new synced instance.
+	 */
+	default boolean supportsApplicationFromSync() {
+		return false;
+	}
+
+	/**
 	 * Runs after the baseTick method.
 	 */
 	void tick(WindManager windManager, Level level);

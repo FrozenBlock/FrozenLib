@@ -189,6 +189,19 @@ public class WindManager {
 		INSTANCE.laggedWindX = laggedWindX;
 		INSTANCE.laggedWindY = laggedWindY;
 		INSTANCE.laggedWindZ = laggedWindZ;
+		for (WindManagerExtension syncedExtension : extensions) {
+			final WindManagerExtension existingExtension = INSTANCE.extensions.stream()
+				.filter(existing -> existing.type() == syncedExtension.type())
+				.findFirst()
+				.orElse(null);
+
+			if (existingExtension == null || !existingExtension.supportsApplicationFromSync()) {
+				if (existingExtension != null) INSTANCE.extensions.remove(existingExtension);
+				INSTANCE.extensions.add(syncedExtension);
+			} else {
+				existingExtension.applyFromSyncedInstance(syncedExtension);
+			}
+		}
 		INSTANCE.extensions.addAll(extensions);
 		INSTANCE.seed = seed;
 		return INSTANCE;
@@ -334,7 +347,7 @@ public class WindManager {
 		this.laggedWindZ = laggedVec.z + (laggedVec.z * thunderLevel);
 
 		// Tick extensions
-		for (WindManagerExtension extension : this.extensions) {
+		for (WindManagerExtension extension : List.copyOf(this.extensions)) {
 			extension.baseTick(this, level);
 			extension.tick(this, level);
 		}
