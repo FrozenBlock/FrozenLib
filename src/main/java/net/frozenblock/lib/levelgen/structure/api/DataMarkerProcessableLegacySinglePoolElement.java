@@ -18,20 +18,11 @@
 package net.frozenblock.lib.levelgen.structure.api;
 
 import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
-import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
-import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
@@ -39,14 +30,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-/**
- * Be sure to mixin into {@link StructurePoolElement#handleDataMarker(LevelAccessor, StructureTemplate.StructureBlockInfo, BlockPos, Rotation, RandomSource, BoundingBox)}!
- */
-public class DataMarkerProcessableLegacySinglePoolElement extends SinglePoolElement {
-	public static final MapCodec<DataMarkerProcessableLegacySinglePoolElement> CODEC = RecordCodecBuilder.mapCodec(
-		instance -> instance.group(templateCodec(), processorsCodec(), projectionCodec(), overrideLiquidSettingsCodec())
-			.apply(instance, DataMarkerProcessableLegacySinglePoolElement::new)
-	);
+public abstract class DataMarkerProcessableLegacySinglePoolElement extends DataMarkerProcessableSinglePoolElement {
 
 	public DataMarkerProcessableLegacySinglePoolElement(
 		Either<Identifier, StructureTemplate> either,
@@ -60,14 +44,8 @@ public class DataMarkerProcessableLegacySinglePoolElement extends SinglePoolElem
 	@Override
 	protected StructurePlaceSettings getSettings(Rotation rotation, BoundingBox boundingBox, LiquidSettings liquidSettings, boolean offset) {
 		StructurePlaceSettings structurePlaceSettings = super.getSettings(rotation, boundingBox, liquidSettings, offset);
-		structurePlaceSettings.popProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
 		structurePlaceSettings.addProcessor(BlockIgnoreProcessor.AIR);
 		return structurePlaceSettings;
-	}
-
-	@Override
-	public StructurePoolElementType<?> getType() {
-		return FrozenLibStructurePoolElementTypes.DATA_MARKER_PROCESSABLE_LEGACY_SINGLE;
 	}
 
 	@Override

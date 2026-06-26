@@ -15,30 +15,24 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.structure.api;
+package net.frozenblock.lib.levelgen.structure.api.processor;
 
-import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
-import java.util.List;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
-import org.jetbrains.annotations.Nullable;
 
-public class WeightedRuleProcessor implements StructureProcessor {
-	public static final MapCodec<WeightedRuleProcessor> MAP_CODEC = WeightedProcessorRule.CODEC.listOf()
-		.fieldOf("rules").xmap(WeightedRuleProcessor::new, processor -> processor.rules);
-	private final ImmutableList<WeightedProcessorRule> rules;
+public record MarkForPostProcessingProcessor(RuleTest inputPredicate) implements StructureProcessor {
+	public static final MapCodec<MarkForPostProcessingProcessor> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+		RuleTest.CODEC.fieldOf("input_predicate").forGetter(MarkForPostProcessingProcessor::inputPredicate)
+	).apply(instance, MarkForPostProcessingProcessor::new));
 
-	public WeightedRuleProcessor(List<? extends WeightedProcessorRule> rules) {
-		this.rules = ImmutableList.copyOf(rules);
-	}
-
-	@Nullable
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(
 		LevelReader level,
@@ -48,16 +42,14 @@ public class WeightedRuleProcessor implements StructureProcessor {
 		StructureTemplate.StructureBlockInfo processedBlockInfo,
 		StructurePlaceSettings settings
 	) {
-		final RandomSource random = RandomSource.create(Mth.getSeed(processedBlockInfo.pos()));
-		for (WeightedProcessorRule rule : this.rules) {
-			if (!rule.test(level, processedBlockInfo.state(), templateRelativePos, processedBlockInfo.pos(), referencePos, random)) continue;
-			return new StructureTemplate.StructureBlockInfo(processedBlockInfo.pos(), rule.getOutputState(random), processedBlockInfo.nbt());
-		}
+		final BlockPos currentPos = processedBlockInfo.pos();
+		final RandomSource random = RandomSource.create(Mth.getSeed(currentPos));
+		if (this.inputPredicate.test(processedBlockInfo.state(), currentPos, random)) level.getChunk(currentPos).markPosForPostProcessing(currentPos);
 		return processedBlockInfo;
 	}
 
 	@Override
-	public MapCodec<WeightedRuleProcessor> codec() {
+	public MapCodec<MarkForPostProcessingProcessor> codec() {
 		return MAP_CODEC;
 	}
 }

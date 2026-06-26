@@ -15,23 +15,28 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.structure.api;
+package net.frozenblock.lib.levelgen.structure.api.processor;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.levelgen.structure.templatesystem.RuleTest;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-public record MarkForPostProcessingProcessor(RuleTest inputPredicate) implements StructureProcessor {
-	public static final MapCodec<MarkForPostProcessingProcessor> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-		RuleTest.CODEC.fieldOf("input_predicate").forGetter(MarkForPostProcessingProcessor::inputPredicate)
-	).apply(instance, MarkForPostProcessingProcessor::new));
+public class BlockStateRespectingRuleProcessor implements StructureProcessor {
+	public static final MapCodec<BlockStateRespectingRuleProcessor> MAP_CODEC = BlockStateRespectingProcessorRule.CODEC.listOf()
+		.fieldOf("rules")
+		.xmap(BlockStateRespectingRuleProcessor::new, processor -> processor.rules);
+	private final ImmutableList<BlockStateRespectingProcessorRule> rules;
+
+	public BlockStateRespectingRuleProcessor(List<? extends BlockStateRespectingProcessorRule> rules) {
+		this.rules = ImmutableList.copyOf(rules);
+	}
 
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(
@@ -42,14 +47,18 @@ public record MarkForPostProcessingProcessor(RuleTest inputPredicate) implements
 		StructureTemplate.StructureBlockInfo processedBlockInfo,
 		StructurePlaceSettings settings
 	) {
-		final BlockPos currentPos = processedBlockInfo.pos();
-		final RandomSource random = RandomSource.create(Mth.getSeed(currentPos));
-		if (this.inputPredicate.test(processedBlockInfo.state(), currentPos, random)) level.getChunk(currentPos).markPosForPostProcessing(currentPos);
+		final RandomSource random = RandomSource.create(Mth.getSeed(processedBlockInfo.pos()));
+		for (BlockStateRespectingProcessorRule rule : this.rules) {
+			if (!rule.test(level, processedBlockInfo.state(), templateRelativePos, processedBlockInfo.pos(), referencePos, random)) continue;
+			return new StructureTemplate.StructureBlockInfo(
+				processedBlockInfo.pos(), rule.getOutputState(processedBlockInfo.state()), rule.getOutputTag(random, processedBlockInfo.nbt())
+			);
+		}
 		return processedBlockInfo;
 	}
 
 	@Override
-	public MapCodec<MarkForPostProcessingProcessor> codec() {
+	public MapCodec<BlockStateRespectingRuleProcessor> codec() {
 		return MAP_CODEC;
 	}
 }

@@ -35,16 +35,16 @@ import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
 import net.frozenblock.lib.item.impl.loot.predicates.FrozenLibLootConditionTypes;
 import net.frozenblock.lib.levelgen.feature.api.FrozenLibFeatureTypes;
 import net.frozenblock.lib.levelgen.feature.impl.blockpredicates.FrozenLibBlockPredicateTypes;
+import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
 import net.frozenblock.lib.levelgen.placement.impl.FrozenLibPlacementModifiers;
 import net.frozenblock.lib.levelgen.structure.api.StructureGenerationConditionApi;
 import net.frozenblock.lib.levelgen.structure.api.StructurePlacementExclusionApi;
+import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
 import net.frozenblock.lib.levelgen.structure.api.TemplatePoolApi;
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModifiers;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
 import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
-import net.frozenblock.lib.levelgen.material.impl.ConfigConditionSource;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
@@ -81,7 +81,6 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		// CONTINUE FROZENLIB INIT
 		FrozenLibRuleBlockEntityModifiers.init();
 		FrozenLibStructureProcessorTypes.init();
-		FrozenLibStructurePoolElementTypes.init();
 		SoundPredicate.init();
 		MovingSoundTypes.init();
 		SpottingIcons.init();
@@ -99,6 +98,7 @@ public final class FrozenLibMain extends FrozenModInitializer {
 		StructureGenerationConditionApi.init();
 		StructurePlacementExclusionApi.init();
 		TemplatePoolApi.init();
+		StructureSetApi.init();
 
 		Registry.register(BuiltInRegistries.MATERIAL_CONDITION_TYPE, FrozenLibConstants.id("config_predicate"), ConfigConditionSource.CODEC);
 

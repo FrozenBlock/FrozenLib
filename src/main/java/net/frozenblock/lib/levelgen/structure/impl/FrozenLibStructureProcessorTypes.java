@@ -19,9 +19,9 @@ package net.frozenblock.lib.levelgen.structure.impl;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.levelgen.structure.api.BlockStateRespectingRuleProcessor;
-import net.frozenblock.lib.levelgen.structure.api.MarkForPostProcessingProcessor;
-import net.frozenblock.lib.levelgen.structure.api.WeightedRuleProcessor;
+import net.frozenblock.lib.levelgen.structure.api.processor.BlockStateRespectingRuleProcessor;
+import net.frozenblock.lib.levelgen.structure.api.processor.MarkForPostProcessingProcessor;
+import net.frozenblock.lib.levelgen.structure.api.processor.WeightedRuleProcessor;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;

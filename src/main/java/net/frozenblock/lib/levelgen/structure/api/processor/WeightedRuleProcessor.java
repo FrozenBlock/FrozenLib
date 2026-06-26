@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.structure.api;
+package net.frozenblock.lib.levelgen.structure.api.processor;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
@@ -27,17 +27,18 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import org.jetbrains.annotations.Nullable;
 
-public class BlockStateRespectingRuleProcessor implements StructureProcessor {
-	public static final MapCodec<BlockStateRespectingRuleProcessor> MAP_CODEC = BlockStateRespectingProcessorRule.CODEC.listOf()
-		.fieldOf("rules")
-		.xmap(BlockStateRespectingRuleProcessor::new, processor -> processor.rules);
-	private final ImmutableList<BlockStateRespectingProcessorRule> rules;
+public class WeightedRuleProcessor implements StructureProcessor {
+	public static final MapCodec<WeightedRuleProcessor> MAP_CODEC = WeightedProcessorRule.CODEC.listOf()
+		.fieldOf("rules").xmap(WeightedRuleProcessor::new, processor -> processor.rules);
+	private final ImmutableList<WeightedProcessorRule> rules;
 
-	public BlockStateRespectingRuleProcessor(List<? extends BlockStateRespectingProcessorRule> rules) {
+	public WeightedRuleProcessor(List<? extends WeightedProcessorRule> rules) {
 		this.rules = ImmutableList.copyOf(rules);
 	}
 
+	@Nullable
 	@Override
 	public StructureTemplate.StructureBlockInfo processBlock(
 		LevelReader level,
@@ -48,17 +49,15 @@ public class BlockStateRespectingRuleProcessor implements StructureProcessor {
 		StructurePlaceSettings settings
 	) {
 		final RandomSource random = RandomSource.create(Mth.getSeed(processedBlockInfo.pos()));
-		for (BlockStateRespectingProcessorRule rule : this.rules) {
+		for (WeightedProcessorRule rule : this.rules) {
 			if (!rule.test(level, processedBlockInfo.state(), templateRelativePos, processedBlockInfo.pos(), referencePos, random)) continue;
-			return new StructureTemplate.StructureBlockInfo(
-				processedBlockInfo.pos(), rule.getOutputState(processedBlockInfo.state()), rule.getOutputTag(random, processedBlockInfo.nbt())
-			);
+			return new StructureTemplate.StructureBlockInfo(processedBlockInfo.pos(), rule.getOutputState(random), processedBlockInfo.nbt());
 		}
 		return processedBlockInfo;
 	}
 
 	@Override
-	public MapCodec<BlockStateRespectingRuleProcessor> codec() {
+	public MapCodec<WeightedRuleProcessor> codec() {
 		return MAP_CODEC;
 	}
 }
