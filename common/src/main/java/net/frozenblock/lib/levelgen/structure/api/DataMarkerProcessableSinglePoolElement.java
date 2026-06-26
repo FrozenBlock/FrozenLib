@@ -18,20 +18,19 @@
 package net.frozenblock.lib.levelgen.structure.api;
 
 import com.mojang.datafixers.util.Either;
+import com.mojang.datafixers.util.Function4;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructurePoolElementTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.StringUtil;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
-import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElementType;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.templatesystem.BlockIgnoreProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
@@ -39,15 +38,7 @@ import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlac
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
 
-/**
- * Be sure to mixin into {@link StructurePoolElement#handleDataMarker(LevelAccessor, StructureTemplate.StructureBlockInfo, BlockPos, Rotation, RandomSource, BoundingBox)}!
- */
-public class DataMarkerProcessableSinglePoolElement extends SinglePoolElement {
-	public static final MapCodec<DataMarkerProcessableSinglePoolElement> CODEC = RecordCodecBuilder.mapCodec(
-		instance -> instance.group(templateCodec(), processorsCodec(), projectionCodec(), overrideLiquidSettingsCodec())
-			.apply(instance, DataMarkerProcessableSinglePoolElement::new)
-	);
-
+public abstract class DataMarkerProcessableSinglePoolElement extends SinglePoolElement {
 	public DataMarkerProcessableSinglePoolElement(
 		Either<Identifier, StructureTemplate> either,
 		Holder<StructureProcessorList> holder,
@@ -57,16 +48,58 @@ public class DataMarkerProcessableSinglePoolElement extends SinglePoolElement {
 		super(either, holder, projection, optional);
 	}
 
+	static <T extends DataMarkerProcessableSinglePoolElement> MapCodec<T> codec(
+		Function4<
+			Either<Identifier, StructureTemplate>,
+			Holder<StructureProcessorList>,
+			StructureTemplatePool.Projection,
+			Optional<LiquidSettings>,
+			T
+		> constructor
+	) {
+		return RecordCodecBuilder.mapCodec(instance -> instance.group(
+			templateCodec(),
+			processorsCodec(),
+			projectionCodec(),
+			overrideLiquidSettingsCodec()
+		).apply(instance, constructor));
+	}
+
+	@Override
+	public final void handleDataMarker(
+		LevelAccessor level,
+		StructureTemplate.StructureBlockInfo dataMarker,
+		BlockPos position,
+		Rotation rotation,
+		RandomSource random,
+		BoundingBox chunkBB
+	) {
+		if (dataMarker == null || dataMarker.nbt() == null) return;
+
+		final BlockPos pos = dataMarker.pos();
+		if (!chunkBB.isInside(pos)) return;
+
+		final String metadata = dataMarker.nbt().getStringOr("metadata", "");
+		if (StringUtil.isNullOrEmpty(metadata)) return;
+
+		this.handleDataMarker(level, dataMarker, metadata, position, rotation, random, chunkBB);
+	}
+
+	public abstract void handleDataMarker(
+		LevelAccessor level,
+		StructureTemplate.StructureBlockInfo dataMarker,
+		String metadata,
+		BlockPos position,
+		Rotation rotation,
+		RandomSource random,
+		BoundingBox chunkBB
+	);
+
 	@Override
 	protected StructurePlaceSettings getSettings(Rotation rotation, BoundingBox boundingBox, LiquidSettings liquidSettings, boolean offset) {
 		StructurePlaceSettings structurePlaceSettings = super.getSettings(rotation, boundingBox, liquidSettings, offset);
 		structurePlaceSettings.popProcessor(BlockIgnoreProcessor.STRUCTURE_BLOCK);
 		return structurePlaceSettings;
-	}
-
-	@Override
-	public StructurePoolElementType<?> getType() {
-		return FrozenLibStructurePoolElementTypes.DATA_MARKER_PROCESSABLE_SINGLE.get();
 	}
 
 	@Override

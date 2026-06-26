@@ -18,11 +18,12 @@
 package net.frozenblock.lib.levelgen.structure.impl;
 
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.levelgen.structure.api.BlockStateRespectingRuleProcessor;
-import net.frozenblock.lib.levelgen.structure.api.MarkForPostProcessingProcessor;
-import net.frozenblock.lib.levelgen.structure.api.WeightedRuleProcessor;
+import net.frozenblock.lib.levelgen.structure.api.processor.BlockStateRespectingRuleProcessor;
+import net.frozenblock.lib.levelgen.structure.api.processor.MarkForPostProcessingProcessor;
+import net.frozenblock.lib.levelgen.structure.api.processor.WeightedRuleProcessor;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
 public class FrozenLibStructureProcessorTypes {
 
