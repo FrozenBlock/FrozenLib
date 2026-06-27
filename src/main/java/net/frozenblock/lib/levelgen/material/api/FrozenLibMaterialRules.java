@@ -18,7 +18,7 @@
 package net.frozenblock.lib.levelgen.material.api;
 
 import java.util.List;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderGetter;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
@@ -72,7 +72,7 @@ public final class FrozenLibMaterialRules {
 		return SurfaceRules.state(block.defaultBlockState());
 	}
 
-	public static SurfaceRules.ConditionSource isBiomeTag(HolderLookup<Biome> biomes, TagKey<Biome> tagKey) {
+	public static SurfaceRules.ConditionSource isBiomeTag(HolderGetter<Biome> biomes, TagKey<Biome> tagKey) {
 		return new SurfaceRules.BiomeConditionSource(biomes.getOrThrow(tagKey));
 	}
 

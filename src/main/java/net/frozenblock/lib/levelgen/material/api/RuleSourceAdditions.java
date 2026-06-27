@@ -47,21 +47,40 @@ public final class RuleSourceAdditions {
 
 	public static void register(
 		BootstrapContext<RuleSourceAddition> context,
-		ResourceKey<RuleSourceAddition> name,
+		ResourceKey<RuleSourceAddition> key,
 		HolderSet<DimensionType> dimensions,
 		SurfaceRules.RuleSource ruleSource
 	) {
-		register(context, name, dimensions, false, ruleSource);
+		register(context, key, dimensions, false, ruleSource);
 	}
 
 	public static void register(
 		BootstrapContext<RuleSourceAddition> context,
-		ResourceKey<RuleSourceAddition> name,
+		Identifier id,
+		HolderSet<DimensionType> dimensions,
+		SurfaceRules.RuleSource ruleSource
+	) {
+		register(context, createKey(id), dimensions, ruleSource);
+	}
+
+	public static void register(
+		BootstrapContext<RuleSourceAddition> context,
+		ResourceKey<RuleSourceAddition> key,
 		HolderSet<DimensionType> dimensions,
 		boolean hasPreliminarySurface,
 		SurfaceRules.RuleSource ruleSource
 	) {
-		context.register(name, new RuleSourceAddition(dimensions, hasPreliminarySurface, ruleSource));
+		context.register(key, new RuleSourceAddition(dimensions, hasPreliminarySurface, ruleSource));
+	}
+
+	public static void register(
+		BootstrapContext<RuleSourceAddition> context,
+		Identifier id,
+		HolderSet<DimensionType> dimensions,
+		boolean hasPreliminarySurface,
+		SurfaceRules.RuleSource ruleSource
+	) {
+		register(context, createKey(id), dimensions, hasPreliminarySurface, ruleSource);
 	}
 
 	@ApiStatus.Internal
