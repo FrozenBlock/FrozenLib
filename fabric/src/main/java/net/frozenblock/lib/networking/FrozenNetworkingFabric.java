@@ -20,6 +20,7 @@ package net.frozenblock.lib.networking;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
+import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
 import net.frozenblock.lib.event.api.events.PlayerJoinEvents;
 import net.frozenblock.lib.file.transfer.FileTransferFilter;
@@ -109,7 +110,7 @@ public final class FrozenNetworkingFabric {
 		// CAPE
 		networking.registerC2SPayloadType(CapeCustomizePacket.TYPE, CapeCustomizePacket.CODEC);
 		networking.registerGlobalServerReceiver(CapeCustomizePacket.TYPE, (packet, server, player) -> CapeCustomizePacket.handle(packet, player));
-		networking.registerS2CPayloadType(net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket.PACKET_TYPE, net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket.STREAM_CODEC);
+		networking.registerS2CPayloadType(LoadCapeRepoPacket.PACKET_TYPE, net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket.STREAM_CODEC);
 
 		// DEBUG
 		networking.registerS2CPayloadType(WindAccessPacket.TYPE, WindAccessPacket.STREAM_CODEC);

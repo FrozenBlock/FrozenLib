@@ -22,6 +22,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.frozenblock.lib.block.api.tick.BlockScheduledTicks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * An API related to Pointed Dripstone dripping.
  * <p>
- * If you are looking to add a custom funciton when a block is dripped ON, it is recommended to use {@link net.frozenblock.lib.block.api.tick.BlockScheduledTicks} and {@link #getDripstoneFluid(ServerLevel, BlockPos)}.
+ * If you are looking to add a custom funciton when a block is dripped ON, it is recommended to use {@link BlockScheduledTicks} and {@link #getDripstoneFluid(ServerLevel, BlockPos)}.
  */
 public class DripstoneDripApi {
 	private static final Map<Block, List<InjectedDrip>> WATER_DRIP_METHODS = new Object2ObjectOpenHashMap<>();

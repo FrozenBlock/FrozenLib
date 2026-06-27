@@ -249,7 +249,7 @@ public class JsonPath implements Iterable<Either<String, Integer>> {
 	}
 
 	public JsonContainer getLastContainer(final JsonObject json) {
-		return net.frozenblock.lib.config.api.instance.xjs.XjsUtils.getLastContainer(json, this);
+		return XjsUtils.getLastContainer(json, this);
 	}
 
 	public Optional<JsonValue> getValue(final JsonObject json) {

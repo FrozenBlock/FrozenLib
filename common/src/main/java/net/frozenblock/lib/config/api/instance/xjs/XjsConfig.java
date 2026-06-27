@@ -28,7 +28,7 @@ import xjs.data.serialization.writer.ValueWriter;
  * @since 1.7
  */
 public class XjsConfig<T> extends Config<T> {
-	private final net.frozenblock.lib.config.api.instance.xjs.XjsFormat format;
+	private final XjsFormat format;
 
 	public XjsConfig(String modId, Class<T> config) {
 		this(modId, config, true);

@@ -92,7 +92,7 @@ public record ConfigEntrySyncPacket<T>(ConfigEntry entry, T value) implements Cu
 			// C2S logic
 			FrozenLibLogUtils.log("ENTRY SYNC RECEIVED ON SERVER: " + entry.id(), FrozenLibLogUtils.UNSTABLE_LOGGING);
 			if (FrozenNetworking.isLocalPlayer(sender)) {
-				for (ServerPlayer player : net.frozenblock.lib.networking.PlayerLookup.all(server)) {
+				for (ServerPlayer player : PlayerLookup.all(server)) {
 					ConfigEntrySyncPacket.sendEntryS2C(player, List.of(entry));
 				}
 			} else {

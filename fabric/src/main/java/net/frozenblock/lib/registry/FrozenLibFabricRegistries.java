@@ -29,6 +29,7 @@ import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.service.RegistryHelper;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
@@ -93,7 +94,7 @@ public class FrozenLibFabricRegistries {
 		return createSimple(key, lifecycle, synced, null);
 	}
 
-	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, boolean synced, net.frozenblock.lib.platform.service.RegistryHelper.RegistryBootstrap<T> bootstrap) {
+	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, boolean synced, RegistryHelper.RegistryBootstrap<T> bootstrap) {
 		return FrozenLibInitPlatformUtils.REGISTRY.createSimpleRegistry(key, lifecycle, synced, bootstrap);
 	}
 }

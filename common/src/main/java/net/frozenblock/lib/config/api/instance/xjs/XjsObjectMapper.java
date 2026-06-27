@@ -46,7 +46,7 @@ import xjs.data.JsonValue;
  */
 public class XjsObjectMapper {
 
-	public static void serializeObject(final Path p, final Object o) throws IOException, net.frozenblock.lib.config.api.instance.xjs.NonSerializableObjectException {
+	public static void serializeObject(final Path p, final Object o) throws IOException, NonSerializableObjectException {
 		XjsUtils.writeJson(toJsonObject(o), p.toFile()).throwIfErr();
 	}
 

@@ -21,6 +21,7 @@ import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.service.RegistryHelper;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
@@ -40,7 +41,7 @@ public class FrozenLibRegistries {
 		return createSimple(key, lifecycle, synced, null);
 	}
 
-	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, boolean synced, net.frozenblock.lib.platform.service.RegistryHelper.RegistryBootstrap<T> bootstrap) {
+	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle, boolean synced, RegistryHelper.RegistryBootstrap<T> bootstrap) {
 		return FrozenLibInitPlatformUtils.REGISTRY.createSimpleRegistry(key, lifecycle, synced, bootstrap);
 	}
 }

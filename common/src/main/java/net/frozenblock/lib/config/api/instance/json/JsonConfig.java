@@ -30,7 +30,7 @@ import net.frozenblock.lib.config.api.instance.ConfigSerialization;
  */
 public class JsonConfig<T> extends Config<T> {
 	private final Jankson jankson;
-	private final net.frozenblock.lib.config.api.instance.json.JsonType type;
+	private final JsonType type;
 
 	public JsonConfig(String modId, Class<T> config) {
 		this(modId, config, true);
