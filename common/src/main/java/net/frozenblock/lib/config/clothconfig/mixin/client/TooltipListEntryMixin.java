@@ -25,7 +25,7 @@ import me.shedaniel.clothconfig2.gui.entries.TooltipListEntry;
 import net.frozenblock.lib.config.api.instance.ConfigModification;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.v2.impl.network.ConfigEntrySyncPacket;
-import net.frozenblock.lib.networking.FrozenClientNetworkingFabric;
+import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
@@ -42,7 +42,7 @@ public class TooltipListEntryMixin {
 		final DisableableWidgetInterface disableableWidgetInterface = (DisableableWidgetInterface) this;
 
 		if (!disableableWidgetInterface.frozenLib$getEntryPermissionType().canModify) {
-			final Optional<Component> optionalComponent = FrozenClientNetworkingFabric.connectedToLan()
+			final Optional<Component> optionalComponent = FrozenClientNetworking.connectedToLan()
 				? disableableWidgetInterface.frozenLib$getEntryPermissionType().lanTooltip
 				: disableableWidgetInterface.frozenLib$getEntryPermissionType().tooltip;
 

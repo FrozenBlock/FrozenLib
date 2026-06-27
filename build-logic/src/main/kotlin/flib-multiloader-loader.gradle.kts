@@ -1,5 +1,5 @@
 plugins {
-    id("multiloader-common")
+    id("flib-multiloader-common")
 }
 
 configurations {

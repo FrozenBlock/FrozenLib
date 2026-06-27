@@ -46,7 +46,8 @@ public class NeoLoaderHelper implements LoaderHelper {
 
 	@Override
 	public boolean isModLoaded(String modId) {
-		return ModList.get().isLoaded(modId);
+		var modList = ModList.get();
+		return modList != null && modList.isLoaded(modId);
 	}
 
 	@Override

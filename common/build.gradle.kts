@@ -1,5 +1,5 @@
 plugins {
-    id("multiloader-common")
+    id("flib-multiloader-common")
     id("net.neoforged.moddev")
     id("org.quiltmc.gradle.licenser")
     kotlin("jvm")
@@ -11,6 +11,7 @@ val neoforgeSnapshotMaven = findProperty("neoforge_snapshot_maven") as String?
 
 val cloth_config_version: String by project
 
+val toml4j_version: String by project
 val jankson_version: String by project
 val xjs_data_version: String by project
 val xjs_compat_version: String by project
@@ -48,16 +49,19 @@ tasks {
 }
 
 dependencies {
-    compileOnly("org.ow2.asm:asm:${asm_version}")
-    compileOnly("org.ow2.asm:asm-tree:${asm_version}")
-    compileOnly("org.ow2.asm:asm-commons:${asm_version}")
-    compileOnly("org.ow2.asm:asm-util:${asm_version}")
+    compileOnlyApi("org.ow2.asm:asm:${asm_version}")
+    compileOnlyApi("org.ow2.asm:asm-tree:${asm_version}")
+    compileOnlyApi("org.ow2.asm:asm-commons:${asm_version}")
+    compileOnlyApi("org.ow2.asm:asm-util:${asm_version}")
 
-    compileOnly("org.spongepowered:mixin:0.8.5")
-    compileOnly("io.github.llamalad7:mixinextras-common:0.5.3")
+    compileOnlyApi("org.spongepowered:mixin:0.8.5")
+    compileOnlyApi("io.github.llamalad7:mixinextras-common:0.5.3")
     annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.3")
 
     compileOnly("me.shedaniel.cloth:cloth-config:$cloth_config_version")
+
+    // Toml
+    api("com.moandjiezana.toml:toml4j:${toml4j_version}")
 
     compileOnly("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
 

@@ -7,6 +7,10 @@ issueTrackerURL="https://github.com/FrozenBlock/FrozenLib/issues"
 config="mixin/frozenlib.advancement.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.clothconfig.mixins.json"
+requiredMods=["cloth-config"]
+
+[[mixins]]
 config="mixin/frozenlib.gravity.mixins.json"
 
 [[mixins]]

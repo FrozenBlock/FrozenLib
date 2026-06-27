@@ -24,6 +24,10 @@ import net.frozenblock.lib.config.v2.registry.ConfigV2Registry;
 import net.frozenblock.lib.event.api.events.ClientConnectionEvents;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.platform.api.ClientOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.client.multiplayer.ServerData;
+import net.minecraft.client.player.LocalPlayer;
 
 @ClientOnly
 public final class FrozenClientNetworking {
@@ -35,5 +39,21 @@ public final class FrozenClientNetworking {
 		ClientConnectionEvents.DISCONNECT.register((handler, client) -> {
 			for (ConfigEntry<?> config : ConfigV2Registry.allConfigEntries()) ConfigSyncModification.clearSyncData(config);
 		});
+	}
+
+	public static boolean notConnected() {
+		final Minecraft minecraft = Minecraft.getInstance();
+		final ClientPacketListener listener = minecraft.getConnection();
+		if (listener == null) return true;
+
+		final LocalPlayer player = Minecraft.getInstance().player;
+		return player == null;
+	}
+
+	public static boolean connectedToLan() {
+		if (notConnected()) return false;
+		final ServerData serverData = Minecraft.getInstance().getCurrentServer();
+		if (serverData == null) return false;
+		return serverData.isLan();
 	}
 }

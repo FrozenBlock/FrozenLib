@@ -299,20 +299,4 @@ public final class FrozenClientNetworkingFabric {
 			ClientWindUtil.Debug.addAccessedPosition(packet.accessPos());
 		});
 	}
-
-	public static boolean notConnected() {
-		final Minecraft minecraft = Minecraft.getInstance();
-		final ClientPacketListener listener = minecraft.getConnection();
-		if (listener == null) return true;
-
-		final LocalPlayer player = Minecraft.getInstance().player;
-		return player == null;
-	}
-
-	public static boolean connectedToLan() {
-		if (notConnected()) return false;
-		final ServerData serverData = Minecraft.getInstance().getCurrentServer();
-		if (serverData == null) return false;
-		return serverData.isLan();
-	}
 }

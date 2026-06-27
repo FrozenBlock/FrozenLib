@@ -2,7 +2,7 @@ import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-    id("multiloader-loader")
+    id("flib-multiloader-loader")
     id("net.neoforged.moddev")
     id("com.gradleup.shadow")
     id("org.quiltmc.gradle.licenser")

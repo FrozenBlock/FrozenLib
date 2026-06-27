@@ -1,7 +1,6 @@
 import groovy.xml.XmlSlurper
 import org.codehaus.groovy.runtime.ResourceGroovyMethods
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
-import org.jetbrains.kotlin.gradle.dsl.KotlinVersion
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.FileInputStream
 import java.io.FileNotFoundException
@@ -10,7 +9,7 @@ import java.nio.file.Files
 import java.util.*
 
 plugins {
-    id("multiloader-loader")
+    id("flib-multiloader-loader")
     id("net.fabricmc.fabric-loom")
     id("org.ajoberstar.grgit")
     id("org.quiltmc.gradle.licenser")

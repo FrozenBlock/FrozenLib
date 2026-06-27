@@ -30,14 +30,13 @@ import me.shedaniel.clothconfig2.impl.builders.AbstractSliderFieldBuilder;
 import me.shedaniel.clothconfig2.impl.builders.BooleanToggleBuilder;
 import me.shedaniel.clothconfig2.impl.builders.EnumSelectorBuilder;
 import me.shedaniel.clothconfig2.impl.builders.SelectorBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.frozenblock.lib.config.clothconfig.impl.DisableableWidgetInterface;
 import net.frozenblock.lib.config.v2.entry.ConfigEntry;
 import net.frozenblock.lib.config.v2.entry.property.EntryProperties;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.network.chat.Component;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenLibClothConfigGuiHelper {
 
 	/**
