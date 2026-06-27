@@ -15,21 +15,21 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.material.impl;
+package net.frozenblock.lib.tag.api;
 
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.levelgen.material.api.FrozenLibMaterialRules;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.resources.ResourceKey;
+import net.frozenblock.lib.FrozenLibConstants;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
-import net.minecraft.world.level.levelgen.SurfaceRules;
 
 @UtilityClass
-public class SurfaceRuleUtil {
-	public static void injectSurfaceRules(NoiseGeneratorSettings settings, RegistryAccess registryAccess, ResourceKey<DimensionType> dimension) {
-		final NoiseGeneratorInterface noiseGenerator = NoiseGeneratorInterface.class.cast(settings);
-		final SurfaceRules.RuleSource newRules = FrozenLibMaterialRules.getMaterialRules(registryAccess, dimension);
-		if (newRules != null) noiseGenerator.frozenLib$writeSurfaceRules(newRules);
+public class FrozenLibDimensionTypeTags {
+	public static final TagKey<DimensionType> OVERWORLD = of("overworld");
+	public static final TagKey<DimensionType> NETHER = of("nether");
+	public static final TagKey<DimensionType> END = of("end");
+
+	private static TagKey<DimensionType> of(String path) {
+		return TagKey.create(Registries.DIMENSION_TYPE, FrozenLibConstants.id(path));
 	}
 }

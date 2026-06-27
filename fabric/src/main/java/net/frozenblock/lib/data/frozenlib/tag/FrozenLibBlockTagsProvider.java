@@ -54,5 +54,4 @@ public final class FrozenLibBlockTagsProvider extends FabricTagsProvider.BlockTa
 
 		this.tag(FrozenLibBlockTags.SOUL_FIRE_BLOCKS);
 	}
-
 }

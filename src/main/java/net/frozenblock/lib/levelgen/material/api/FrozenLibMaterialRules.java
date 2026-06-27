@@ -17,21 +17,15 @@
 
 package net.frozenblock.lib.levelgen.material.api;
 
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.SurfaceRules;
-import net.minecraft.world.level.levelgen.VerticalAnchor;
-import org.jetbrains.annotations.Nullable;
 
 public final class FrozenLibMaterialRules {
 	public static final SurfaceRules.RuleSource AIR = makeStateRule(Blocks.AIR);
@@ -84,99 +78,5 @@ public final class FrozenLibMaterialRules {
 
 	public static SurfaceRules.ConditionSource isBiomeTag(RegistryAccess registryAccess, TagKey<Biome> tagKey) {
 		return isBiomeTag(registryAccess.lookupOrThrow(Registries.BIOME), tagKey);
-	}
-
-	@Nullable
-	public static SurfaceRules.RuleSource getMaterialRules(RegistryAccess registryAccess, ResourceKey<DimensionType> dimension) {
-		if (dimension == null) return null;
-
-		final var location = dimension.identifier();
-		SurfaceRules.RuleSource returnValue = null;
-
-		if (location.equals(BuiltinDimensionTypes.OVERWORLD.identifier()) || location.equals(BuiltinDimensionTypes.OVERWORLD_CAVES.identifier())) {
-			returnValue = getOverworldSurfaceRules(registryAccess);
-		} else if (location.equals(BuiltinDimensionTypes.NETHER.identifier())) {
-			returnValue = getNetherMaterialRules(registryAccess);
-		} else if (location.equals(BuiltinDimensionTypes.END.identifier())) {
-			returnValue = getEndMaterialRules(registryAccess);
-		}
-
-		// Get generic dimension surface rules
-		final SurfaceRules.RuleSource generic = getGenericMaterialRules(registryAccess, dimension);
-		if (generic != null) returnValue = returnValue == null ? generic : SurfaceRules.sequence(returnValue, generic);
-
-		return returnValue;
-	}
-
-	@Nullable
-	public static SurfaceRules.RuleSource getOverworldSurfaceRules(RegistryAccess registryAccess) {
-		SurfaceRules.RuleSource newRule = null;
-
-		final ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
-		MaterialRuleEvents.MODIFY_OVERWORLD.invoker().addOverworldMaterialRules(registryAccess, sourceHolders);
-
-		if (!sourceHolders.isEmpty()) {
-			SurfaceRules.RuleSource newSource = sequence(sourceHolders);
-			newSource = SurfaceRules.ifTrue(SurfaceRules.abovePreliminarySurface(), newSource);
-			newRule = newSource;
-		}
-
-		// NO PRELIMINARY SURFACE
-		final ArrayList<SurfaceRules.RuleSource> noPrelimSourceHolders = new ArrayList<>();
-		MaterialRuleEvents.MODIFY_OVERWORLD_NO_PRELIMINARY_SURFACE.invoker().addOverworldNoPrelimMaterialRules(registryAccess, noPrelimSourceHolders);
-
-		if (!noPrelimSourceHolders.isEmpty()) {
-			final SurfaceRules.RuleSource noPrelimSource = sequence(noPrelimSourceHolders);
-			newRule = newRule == null ? noPrelimSource : SurfaceRules.sequence(noPrelimSource, newRule);
-		}
-
-		return newRule;
-	}
-
-	@Nullable
-	public static SurfaceRules.RuleSource getNetherMaterialRules(RegistryAccess registryAccess) {
-		SurfaceRules.RuleSource newSource = null;
-
-		final ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
-		MaterialRuleEvents.MODIFY_NETHER.invoker().addNetherMaterialRules(registryAccess, sourceHolders);
-
-		if (!sourceHolders.isEmpty()) {
-			newSource = SurfaceRules.sequence(
-				SurfaceRules.ifTrue(SurfaceRules.verticalGradient("frozenlib_bedrock_floor", VerticalAnchor.bottom(), VerticalAnchor.aboveBottom(5)), BEDROCK),
-				SurfaceRules.ifTrue(SurfaceRules.not(SurfaceRules.verticalGradient("frozenlib_bedrock_roof", VerticalAnchor.belowTop(5), VerticalAnchor.top())), BEDROCK),
-				sequence(sourceHolders)
-			);
-		}
-
-		return newSource;
-	}
-
-	@Nullable
-	public static SurfaceRules.RuleSource getEndMaterialRules(RegistryAccess registryAccess) {
-		SurfaceRules.RuleSource newSource = null;
-
-		final ArrayList<SurfaceRules.RuleSource> sourceHolders = new ArrayList<>();
-		MaterialRuleEvents.MODIFY_END.invoker().addEndMaterialRules(registryAccess, sourceHolders);
-
-		if (!sourceHolders.isEmpty()) newSource = sequence(sourceHolders);
-
-		return newSource;
-	}
-
-	@Nullable
-	public static SurfaceRules.RuleSource getGenericMaterialRules(RegistryAccess registryAccess, ResourceKey<DimensionType> dimension) {
-		SurfaceRules.RuleSource newSource = null;
-		final ArrayList<DimensionBoundRuleSource> sourceHolders = new ArrayList<>();
-
-		MaterialRuleEvents.MODIFY_GENERIC.invoker().addGenericMaterialRules(registryAccess, sourceHolders);
-		final List<SurfaceRules.RuleSource> sourceHoldersForDimension = sourceHolders
-			.stream()
-			.filter(dimRuleSource -> dimRuleSource.dimension().equals(dimension.identifier()))
-			.map(DimensionBoundRuleSource::ruleSource)
-			.toList();
-
-		if (!sourceHoldersForDimension.isEmpty()) newSource = sequence(sourceHoldersForDimension);
-
-		return newSource;
 	}
 }

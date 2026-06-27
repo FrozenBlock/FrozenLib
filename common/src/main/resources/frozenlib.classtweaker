@@ -313,13 +313,15 @@ mutable field net/minecraft/world/level/chunk/ChunkGenerator featuresPerStep Lja
 transitive-accessible method net/minecraft/data/worldgen/NoiseData register (Lnet/minecraft/data/worldgen/BootstrapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
 transitive-inject-interface net/minecraft/world/level/levelgen/NoiseGeneratorSettings net/frozenblock/lib/levelgen/surface/impl/NoiseGeneratorInterface
 
-# Surface Rules
+# Material Rules
 transitive-accessible method net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource <init> (Ljava/util/List;)V
 transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$Condition
 transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$Context
 transitive-accessible method net/minecraft/world/level/levelgen/SurfaceRules$Context getBiome ()Lnet/minecraft/core/Holder;
 transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
 transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$BiomeConditionSource
+
+transitive-inject-interface net/minecraft/world/level/levelgen/NoiseGeneratorSettings net/frozenblock/lib/levelgen/material/impl/NoiseGeneratorSettingsInterface
 
 # Placement Modifiers
 transitive-accessible field net/minecraft/world/level/levelgen/placement/PlacementContext level Lnet/minecraft/world/level/WorldGenLevel;

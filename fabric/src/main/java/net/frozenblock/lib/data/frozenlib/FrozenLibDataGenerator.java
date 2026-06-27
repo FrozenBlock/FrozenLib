@@ -22,6 +22,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibBlockTagsProvider;
+import net.frozenblock.lib.data.frozenlib.tag.FrozenLibDimensionTypeTagsProvider;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibEntityTypeTagsProvider;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.RegistrySetBuilder;
@@ -35,6 +36,7 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 		pack.addProvider(FrozenLibRegistryProvider::new);
 		pack.addProvider(FrozenLibBlockTagsProvider::new);
 		pack.addProvider(FrozenLibEntityTypeTagsProvider::new);
+		pack.addProvider(FrozenLibDimensionTypeTagsProvider::new);
 	}
 
 	@Override

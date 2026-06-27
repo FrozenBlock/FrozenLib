@@ -21,9 +21,6 @@
     "fabric-datagen": [
       "net.frozenblock.lib.testmod.datagen.FrozenLibTestDatagen"
     ],
-    "frozenlib:events": [
-      "net.frozenblock.lib.testmod.worldgen.TestMaterialRules"
-    ],
     "modmenu": [
       "net.frozenblock.lib.testmod.config.gui.ModMenuInit"
     ]

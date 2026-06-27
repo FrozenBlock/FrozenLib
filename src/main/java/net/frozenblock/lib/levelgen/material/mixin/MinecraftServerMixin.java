@@ -17,18 +17,19 @@
 
 package net.frozenblock.lib.levelgen.material.mixin;
 
-import java.util.Map;
-import net.frozenblock.lib.levelgen.material.impl.SurfaceRuleUtil;
+import net.frozenblock.lib.levelgen.material.api.RuleSourceAdditions;
+import net.minecraft.core.Holder;
 import net.minecraft.core.LayeredRegistryAccess;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.RegistryLayer;
 import net.minecraft.world.level.chunk.ChunkGenerator;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -47,19 +48,18 @@ public abstract class MinecraftServerMixin {
 	private LayeredRegistryAccess<RegistryLayer> registries;
 
 	@Inject(method = "createLevels", at = @At("TAIL"))
-	private void frozenLib$addSurfaceRules(CallbackInfo info) {
+	private void frozenLib$addRuleSources(CallbackInfo info) {
 		final RegistryAccess registryAccess = this.registries.compositeAccess();
 		final Registry<LevelStem> levelStems = registryAccess.lookupOrThrow(Registries.LEVEL_STEM);
 
-		for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : levelStems.entrySet()) {
-			final LevelStem levelStem = entry.getValue();
+		for (LevelStem levelStem : levelStems) {
 			final ChunkGenerator chunkGenerator = levelStem.generator();
-			if (!(chunkGenerator instanceof NoiseBasedChunkGenerator noiseGenerator)) continue;
+			if (!(chunkGenerator instanceof NoiseBasedChunkGenerator noiseBasedChunkGenerator)) continue;
 
-			final var noiseSettings = noiseGenerator.generatorSettings().value();
-			final var dimension = levelStem.type().unwrapKey().orElseThrow();
-			SurfaceRuleUtil.injectSurfaceRules(noiseSettings, registryAccess, dimension);
+			final NoiseGeneratorSettings noiseGeneratorSettings = noiseBasedChunkGenerator.generatorSettings().value();
+			final Holder<DimensionType> dimension = levelStem.type();
+
+			RuleSourceAdditions.compileAndGet(registryAccess, dimension).ifPresent(noiseGeneratorSettings::frozenLib$setRuleSourceAddition);
 		}
 	}
-
 }

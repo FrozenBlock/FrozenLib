@@ -20,29 +20,28 @@ package net.frozenblock.lib.data.frozenlib.tag;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagsProvider;
-import net.frozenblock.lib.tag.api.FrozenLibEntityTypeTags;
+import net.frozenblock.lib.tag.api.FrozenLibDimensionTypeTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.world.entity.EntityTypeIds;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.level.dimension.BuiltinDimensionTypes;
+import net.minecraft.world.level.dimension.DimensionType;
 
-public final class FrozenLibEntityTypeTagsProvider extends FabricTagsProvider.EntityTypeTagsProvider {
+public final class FrozenLibDimensionTypeTagsProvider extends FabricTagsProvider<DimensionType> {
 
-	public FrozenLibEntityTypeTagsProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
-		super(output, registries);
+	public FrozenLibDimensionTypeTagsProvider(FabricPackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
+		super(output, Registries.DIMENSION_TYPE, registries);
 	}
 
 	@Override
 	protected void addTags(HolderLookup.Provider arg) {
-		this.tag(FrozenLibEntityTypeTags.SCARES_PIGLIN)
-			.add(EntityTypeIds.ZOMBIFIED_PIGLIN)
-			.add(EntityTypeIds.ZOGLIN);
+		this.tag(FrozenLibDimensionTypeTags.OVERWORLD)
+			.add(BuiltinDimensionTypes.OVERWORLD)
+			.add(BuiltinDimensionTypes.OVERWORLD_CAVES);
 
-		this.tag(FrozenLibEntityTypeTags.BLAZES)
-			.add(EntityTypeIds.BLAZE);
+		this.tag(FrozenLibDimensionTypeTags.NETHER)
+			.add(BuiltinDimensionTypes.NETHER);
 
-		this.tag(FrozenLibEntityTypeTags.HOGLINS)
-			.add(EntityTypeIds.HOGLIN, EntityTypeIds.ZOGLIN);
-
-		this.tag(FrozenLibEntityTypeTags.GHOST_LIKE)
-			.add(EntityTypeIds.VEX);
+		this.tag(FrozenLibDimensionTypeTags.END)
+			.add(BuiltinDimensionTypes.END);
 	}
 }
