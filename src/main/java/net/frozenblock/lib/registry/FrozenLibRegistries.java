@@ -32,6 +32,7 @@ import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
+import net.frozenblock.lib.levelgen.material.impl.RuleSourceAddition;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundType;
@@ -84,15 +85,17 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<FireType>> FIRE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("fire_type"));
 	public static final ResourceKey<Registry<ClipGroup>> CLIP_GROUP = ResourceKey.createRegistryKey(FrozenLibConstants.id("clip_group"));
 	public static final ResourceKey<Registry<WaterLikeType>> WATER_LIKE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("water_like_type"));
+	public static final ResourceKey<Registry<RuleSourceAddition>> RULE_SOURCE_ADDITION = ResourceKey.createRegistryKey(FrozenLibConstants.id("rule_source_addition"));
 
     public static void init() {
 		DynamicRegistries.registerSynced(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
 		SoundTypeOverrides.init();
 		DynamicRegistries.registerSynced(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
 		DynamicRegistries.registerSynced(FIRE_TYPE, FireType.DIRECT_CODEC);
+		FireData.init();
 		DynamicRegistries.registerSynced(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
 		DynamicRegistries.registerSynced(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
-		FireData.init();
+		DynamicRegistries.register(RULE_SOURCE_ADDITION, RuleSourceAddition.DIRECT_CODEC);
     }
 
 	public static HolderLookup.Provider vanillaRegistries() {
