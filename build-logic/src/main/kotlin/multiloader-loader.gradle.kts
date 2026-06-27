@@ -12,14 +12,14 @@ configurations {
 }
 
 dependencies {
-    compileOnly(project(":common")) {
+    compileOnly(project(":flib-common")) {
         val loaderAttribute = Attribute.of("io.github.mcgradleconventions.loader", String::class.java)
         attributes {
             attribute(loaderAttribute, "common")
         }
     }
-    add("commonJava", project(mapOf("path" to ":common", "configuration" to "commonJava")))
-    add("commonResources", project(mapOf("path" to ":common", "configuration" to "commonResources")))
+    add("commonJava", project(mapOf("path" to ":flib-common", "configuration" to "commonJava")))
+    add("commonResources", project(mapOf("path" to ":flib-common", "configuration" to "commonResources")))
 }
 
 tasks.named<JavaCompile>("compileJava") {

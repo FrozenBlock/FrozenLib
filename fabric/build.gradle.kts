@@ -365,7 +365,7 @@ publishing {
     //val release = mavenUrl?.contains("release")
     val snapshot = mavenUrl?.contains("snapshot")
 
-    val publishingValid = project.name == "fabric" && !mavenUrl.isNullOrEmpty() && !mavenUsername.isNullOrEmpty() && !mavenPassword.isNullOrEmpty()
+    val publishingValid = project.name == "flib-fabric" && !mavenUrl.isNullOrEmpty() && !mavenUsername.isNullOrEmpty() && !mavenPassword.isNullOrEmpty()
 
     val publishVersion = makeModrinthVersion(mod_version)
     val snapshotPublishVersion = publishVersion + if (snapshot == true) "-SNAPSHOT" else ""

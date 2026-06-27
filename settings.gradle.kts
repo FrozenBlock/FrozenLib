@@ -32,9 +32,16 @@ plugins {
 
 rootProject.name = "FrozenLib"
 
-include("common")
-include("fabric")
-include("neoforge")
+includeBuild("build-logic")
+
+include("flib-common")
+project(":flib-common").projectDir = file("common")
+
+include("flib-fabric")
+project(":flib-fabric").projectDir = file("fabric")
+
+include("flib-neoforge")
+project(":flib-neoforge").projectDir = file("neoforge")
 
 localRepository("cloth-config", "me.shedaniel.cloth:cloth-config-fabric", kotlin = false, enabled = false)
 
