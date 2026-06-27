@@ -30,7 +30,7 @@
       "net.frozenblock.lib.FrozenLibFabric"
 	  ],
 	  "client": [
-      "net.frozenblock.lib.FrozenLibClient"
+        "net.frozenblock.lib.FrozenLibClientFabric"
 	  ],
     "server": [
       "net.frozenblock.lib.FrozenLibServer"

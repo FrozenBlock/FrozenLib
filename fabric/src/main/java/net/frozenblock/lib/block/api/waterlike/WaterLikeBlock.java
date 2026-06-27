@@ -21,7 +21,7 @@ import java.util.Optional;
 import net.frozenblock.lib.block.api.shape.FrozenShapes;
 import net.frozenblock.lib.block.impl.waterlike.BubbleColumnDirection;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.RegistryAccess;
@@ -70,7 +70,7 @@ public interface WaterLikeBlock {
 	ResourceKey<WaterLikeType> myWaterLikeType();
 
 	default WaterLikeType myWaterLikeType(RegistryAccess registryAccess) {
-		return registryAccess.lookupOrThrow(FrozenLibRegistries.WATER_LIKE_TYPE).getOrThrow(this.myWaterLikeType()).value();
+		return registryAccess.lookupOrThrow(FrozenLibFabricRegistries.WATER_LIKE_TYPE).getOrThrow(this.myWaterLikeType()).value();
 	}
 
 	ColorRGBA waterLikeColor();

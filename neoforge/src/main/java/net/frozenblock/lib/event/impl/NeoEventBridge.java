@@ -37,6 +37,10 @@ public final class NeoEventBridge {
 		NeoServerTickEventBridge.init();
 	}
 
+	public static void initClientModStage() {
+		NeoClientLifecycleEventBridge.init();
+	}
+
 	@SubscribeEvent(priority = EventPriority.HIGH)
 	public static void event(ServerStartingEvent event) {
 		LifecycleEvents.SERVER_STARTING.invoker().onServerStarting(event.getServer());

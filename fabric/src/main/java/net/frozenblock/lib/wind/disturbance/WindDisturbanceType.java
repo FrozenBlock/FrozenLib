@@ -19,7 +19,7 @@ package net.frozenblock.lib.wind.disturbance;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -40,7 +40,7 @@ public interface WindDisturbanceType<D extends WindDisturbance<?>> {
 		MapCodec<D> codec,
 		StreamCodec<RegistryFriendlyByteBuf, D> streamCodec
 	) {
-		return Registry.register(FrozenLibRegistries.WIND_DISTURBANCE_TYPE, id, new WindDisturbanceType<>() {
+		return Registry.register(FrozenLibFabricRegistries.WIND_DISTURBANCE_TYPE, id, new WindDisturbanceType<>() {
 			@Override
 			public MapCodec<D> codec() {
 				return codec;

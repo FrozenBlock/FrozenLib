@@ -21,7 +21,7 @@ import java.util.Optional;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
@@ -39,11 +39,11 @@ public final class FireTypes {
 	public static final ResourceKey<FireType> DEFAULT = FIRE;
 
 	public static Optional<? extends Holder<FireType>> get(RegistryAccess registryAccess, ResourceKey<FireType> id) {
-		return registryAccess.lookup(FrozenLibRegistries.FIRE_TYPE).flatMap(registry -> registry.get(id));
+		return registryAccess.lookup(FrozenLibFabricRegistries.FIRE_TYPE).flatMap(registry -> registry.get(id));
 	}
 
 	public static Optional<Holder<FireType>> getTypeHolderForBlock(RegistryAccess registryAccess, Block block, boolean ignoreEnabled) {
-		return registryAccess.lookup(FrozenLibRegistries.FIRE_TYPE)
+		return registryAccess.lookup(FrozenLibFabricRegistries.FIRE_TYPE)
 			.flatMap(registry -> registry.stream()
 				.filter(fireType -> (ignoreEnabled || fireType.isEnabled()) && fireType.sourceSettings().fireSourceBlocks().contains(block.builtInRegistryHolder()))
 				.findFirst()
@@ -56,7 +56,7 @@ public final class FireTypes {
 	}
 
 	public static Optional<Holder<FireType>> getTypeHolderForEntity(Entity entity) {
-		return entity.registryAccess().lookup(FrozenLibRegistries.FIRE_TYPE)
+		return entity.registryAccess().lookup(FrozenLibFabricRegistries.FIRE_TYPE)
 			.flatMap(registry -> registry.stream()
 				.filter(fireType -> fireType.isEnabled() && entity.is(fireType.spreadSettings().alwaysApplyToEntityTypes()))
 				.findFirst()
@@ -80,12 +80,12 @@ public final class FireTypes {
 
 	public static Optional<Holder<FireType>> getFromDataOrDefault(RegistryAccess registryAccess, @Nullable FireData data) {
 		return data == null
-			? registryAccess.lookup(FrozenLibRegistries.FIRE_TYPE).flatMap(registry -> registry.get(DEFAULT))
+			? registryAccess.lookup(FrozenLibFabricRegistries.FIRE_TYPE).flatMap(registry -> registry.get(DEFAULT))
 			: Optional.ofNullable(data.type());
 	}
 
 	public static ResourceKey<FireType> createKey(Identifier id) {
-		return ResourceKey.create(FrozenLibRegistries.FIRE_TYPE, id);
+		return ResourceKey.create(FrozenLibFabricRegistries.FIRE_TYPE, id);
 	}
 
 	public static void register(

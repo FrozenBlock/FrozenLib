@@ -24,7 +24,7 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.block.api.fire.FireEvents;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -56,7 +56,7 @@ public record FireData(Holder<FireType> type) {
 	}
 
 	public static void trySet(Entity entity, ResourceKey<FireType> type) {
-		entity.registryAccess().lookup(FrozenLibRegistries.FIRE_TYPE)
+		entity.registryAccess().lookup(FrozenLibFabricRegistries.FIRE_TYPE)
 			.flatMap(registry -> registry.get(type))
 			.ifPresent(fireType -> trySet(entity, fireType));
 	}

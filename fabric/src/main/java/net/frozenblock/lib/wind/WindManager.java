@@ -37,7 +37,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.math.api.EasyNoiseSampler;
 import net.frozenblock.lib.networking.FrozenNetworking;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.frozenblock.lib.wind.disturbance.WindDisturbance;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceResult;
@@ -212,7 +212,7 @@ public class WindManager {
 		if (this.loadedExtensions) return;
 
 		final List<WindManagerExtension> extensions = new ArrayList<>(this.extensions);
-		level.registryAccess().lookupOrThrow(FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE_REGISTRY).stream()
+		level.registryAccess().lookupOrThrow(FrozenLibFabricRegistries.WIND_MANAGER_EXTENSION_TYPE_REGISTRY).stream()
 			.filter(type -> extensions.stream().noneMatch(extension -> extension.type() == type))
 			.forEach(type -> extensions.add(type.supplier().get()));
 

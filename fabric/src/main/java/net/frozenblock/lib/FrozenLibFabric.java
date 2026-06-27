@@ -30,6 +30,8 @@ import net.frozenblock.lib.entity.api.spottingicon.SpottingIcons;
 import net.frozenblock.lib.entrypoint.api.FrozenMainEntrypoint;
 import net.frozenblock.lib.entrypoint.api.FrozenModInitializer;
 import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
+import net.frozenblock.lib.block.api.sound.SoundTypeOverrides;
+import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.event.impl.FabricEventBridge;
 import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.item.api.component.FrozenLibDataComponents;
@@ -46,10 +48,10 @@ import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTy
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.levelgen.surface.impl.ConfigConditionSource;
-import net.frozenblock.lib.event.impl.FabricLootTableEventBridge;
 import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.networking.FrozenNetworkingFabric;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
@@ -74,7 +76,9 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
 		FrozenLibMain.init();
-		FrozenLibRegistries.init();
+		FrozenLibFabricRegistries.init();
+		SoundTypeOverrides.init();
+		FireData.init();
 		FabricEventBridge.initModStage();
 
 		// QUILT INIT
@@ -129,6 +133,7 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		});
 
 		FrozenNetworking.registerNetworking();
+		FrozenNetworkingFabric.registerNetworking();
 
 		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
 			if (allRegistries) ModIntegrations.initialize();

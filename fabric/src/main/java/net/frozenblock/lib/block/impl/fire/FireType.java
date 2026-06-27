@@ -21,7 +21,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.Optional;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
@@ -52,8 +52,8 @@ public record FireType(
 		ParticleSettings.CODEC.fieldOf("particle_settings").forGetter(FireType::particleSettings),
 		ConfigPredicate.CODEC.optionalFieldOf("config_predicate").forGetter(FireType::enabledWhen)
 	).apply(instance, FireType::new));
-	public static final Codec<Holder<FireType>> CODEC = RegistryFixedCodec.create(FrozenLibRegistries.FIRE_TYPE);
-	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<FireType>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibRegistries.FIRE_TYPE);
+	public static final Codec<Holder<FireType>> CODEC = RegistryFixedCodec.create(FrozenLibFabricRegistries.FIRE_TYPE);
+	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<FireType>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibFabricRegistries.FIRE_TYPE);
 
 	public static Builder builder() {
 		return new Builder();

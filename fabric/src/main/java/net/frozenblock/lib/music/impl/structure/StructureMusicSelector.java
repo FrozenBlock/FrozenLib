@@ -21,7 +21,7 @@ import java.util.Optional;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.attribute.BackgroundMusic;
@@ -41,7 +41,7 @@ public class StructureMusicSelector {
 		final Identifier structureId = structureStatus.structure();
 		final boolean insidePiece = structureStatus.insidePiece();
 
-		return registryAccess.lookupOrThrow(FrozenLibRegistries.STRUCTURE_MUSIC).stream()
+		return registryAccess.lookupOrThrow(FrozenLibFabricRegistries.STRUCTURE_MUSIC).stream()
 			.filter(structureMusic -> insidePiece || !structureMusic.mustBeInsidePiece())
 			.filter(structureMusic -> structureMusic.structures().stream().anyMatch(id -> id.equals(structureId)))
 			.findFirst()

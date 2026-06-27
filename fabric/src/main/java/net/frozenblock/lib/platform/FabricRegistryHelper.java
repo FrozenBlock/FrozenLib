@@ -17,15 +17,47 @@
 
 package net.frozenblock.lib.platform;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.Lifecycle;
+import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.service.RegistryHelper;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.Nullable;
 
 public class FabricRegistryHelper implements RegistryHelper {
 
 	@Override
 	public <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
 		return new FabricFrozenDeferredRegister<>(registryKey, namespace);
+	}
+
+	@Override
+	public <T> MappedRegistry<T> createSimpleRegistry(
+		ResourceKey<? extends Registry<T>> key,
+		Lifecycle lifecycle,
+		boolean synced,
+		@Nullable RegistryBootstrap<T> bootstrap
+	) {
+		final var registry = new MappedRegistry<>(key, lifecycle, false);
+		final var builder = FabricRegistryBuilder.from(registry);
+		if (synced) builder.attribute(RegistryAttribute.SYNCED);
+		final var registered = builder.buildAndRegister();
+		if (bootstrap != null) bootstrap.run(registered);
+		return registered;
+	}
+
+	@Override
+	public <T> void registerDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec) {
+		DynamicRegistries.register(key, directCodec);
+	}
+
+	@Override
+	public <T> void registerSyncedDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec) {
+		DynamicRegistries.registerSynced(key, directCodec);
 	}
 }

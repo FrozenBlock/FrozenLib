@@ -17,20 +17,20 @@
 
 package net.frozenblock.lib.registry.client;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
+import net.frozenblock.lib.platform.api.ClientOnly;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.MappedRegistry;
+import net.minecraft.resources.ResourceKey;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public class FrozenLibClientRegistries {
-	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE = FabricRegistryBuilder
-		.create(
-			EntityTextureOverride.class,
-			FrozenLibConstants.id("entity_texture_override")
-		).buildAndRegister();
+	public static final ResourceKey<net.minecraft.core.Registry<EntityTextureOverride>> ENTITY_TEXTURE_OVERRIDE_REGISTRY =
+		ResourceKey.createRegistryKey(FrozenLibConstants.id("entity_texture_override"));
+	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE =
+		FrozenLibFabricRegistries.createSimple(ENTITY_TEXTURE_OVERRIDE_REGISTRY, Lifecycle.stable());
 
 	public static void init() {}
 }

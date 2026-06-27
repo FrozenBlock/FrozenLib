@@ -71,8 +71,8 @@
   "commands.scale.entity.success": "Scaled %s entity to size %s.",
   "commands.scale.entity.failure": "Entity scaling failed.",
 
-  "commands.frozenlib.config.reload.single": "Reloaded 1 config from %s.",
-  "commands.frozenlib.config.reload.multiple": "Reloaded %s configs from %s.",
+  "commands.frozenlib_config.reload.single": "Reloaded 1 config from %s.",
+  "commands.frozenlib_config.reload.multiple": "Reloaded %s configs from %s.",
 
   "commands.frozenlib.spotting.add.success": "Added spotting icon to %s entity.",
   "commands.frozenlib.spotting.add.success.multiple": "Added spotting icon to %s entities.",

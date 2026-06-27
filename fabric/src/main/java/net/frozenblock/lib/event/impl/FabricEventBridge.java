@@ -32,4 +32,8 @@ public final class FabricEventBridge {
 		ServerLifecycleEvents.SERVER_STOPPING.register(instance -> LifecycleEvents.SERVER_STOPPING.invoker().onServerStopping(instance));
 		ServerLifecycleEvents.SERVER_STOPPED.register(instance -> LifecycleEvents.SERVER_STOPPED.invoker().onServerStopped(instance));
 	}
+
+	public static void initClientModStage() {
+		FabricClientLifecycleEventBridge.init();
+	}
 }

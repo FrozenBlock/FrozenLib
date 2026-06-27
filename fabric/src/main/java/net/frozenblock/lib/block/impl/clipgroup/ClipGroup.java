@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.impl.clipgroup;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
@@ -35,8 +35,8 @@ public record ClipGroup(HolderSet<Block> blocks) {
 	public static final Codec<ClipGroup> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
 		RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(ClipGroup::blocks)
 	).apply(instance, ClipGroup::new));
-	public static final Codec<Holder<ClipGroup>> CODEC = RegistryFixedCodec.create(FrozenLibRegistries.CLIP_GROUP);
-	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<ClipGroup>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibRegistries.CLIP_GROUP);
+	public static final Codec<Holder<ClipGroup>> CODEC = RegistryFixedCodec.create(FrozenLibFabricRegistries.CLIP_GROUP);
+	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<ClipGroup>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibFabricRegistries.CLIP_GROUP);
 
 	public boolean contains(BlockState state) {
 		return state.is(this.blocks);

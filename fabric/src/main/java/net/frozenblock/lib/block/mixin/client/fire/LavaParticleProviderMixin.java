@@ -22,7 +22,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.block.impl.fire.FireType;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.LavaParticle;
 import net.minecraft.client.particle.Particle;
@@ -43,7 +43,7 @@ public class LavaParticleProviderMixin {
 		@Local(argsOnly = true) SimpleParticleType options,
 		@Local(argsOnly = true) ClientLevel level
 	) {
-		for (FireType fireType : level.registryAccess().lookupOrThrow(FrozenLibRegistries.FIRE_TYPE)) {
+		for (FireType fireType : level.registryAccess().lookupOrThrow(FrozenLibFabricRegistries.FIRE_TYPE)) {
 			final FireType.ParticleSettings particleSettings = fireType.particleSettings();
 			if (!particleSettings.lavaEnabled()) continue;
 			if (particleSettings.lavaParticle().isPresent() && particleSettings.lavaParticle().get().equals(options)) {

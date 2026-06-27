@@ -19,7 +19,7 @@ package net.frozenblock.lib.sound.impl.networking;
 
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.networking.PlayerLookup;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.sound.api.type.FadingDistanceLoopingMovingSoundType;
 import net.frozenblock.lib.sound.api.type.MovingLoopingSoundType;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
@@ -62,7 +62,7 @@ public class FrozenLibSoundPackets {
 	) {
 		if (!(level instanceof ServerLevel serverLevel)) return;
 		for (ServerPlayer player : PlayerLookup.tracking(serverLevel, BlockPos.containing(x, y, z))) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new LocalSoundPacket(new Vec3(x, y, z), sound, source, volume, pitch, distanceDelay)
 			);
@@ -79,7 +79,7 @@ public class FrozenLibSoundPackets {
 	) {
 		if (!(level instanceof ServerLevel serverLevel)) return;
 		for (ServerPlayer player : PlayerLookup.tracking(serverLevel, pos)) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new RelativeMovingSoundPacket(pos, sound, source, volume, pitch)
 			);
@@ -97,14 +97,14 @@ public class FrozenLibSoundPackets {
 		if (!(level instanceof ServerLevel)) return;
 
 		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new FlyBySoundPacket(entity.getId(), sound, category, volume, pitch)
 			);
 		}
 
 		if (entity instanceof ServerPlayer player) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new FlyBySoundPacket(entity.getId(), sound, category, volume, pitch)
 			);
@@ -124,7 +124,7 @@ public class FrozenLibSoundPackets {
 		if (!(level instanceof ServerLevel)) return;
 
 		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new MovingRestrictionSoundPacket(
 					entity.getId(),
@@ -140,7 +140,7 @@ public class FrozenLibSoundPackets {
 		}
 
 		if (entity instanceof ServerPlayer player) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new MovingRestrictionSoundPacket(
 					entity.getId(),
@@ -169,7 +169,7 @@ public class FrozenLibSoundPackets {
 		if (!(level instanceof ServerLevel)) return;
 
 		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new MovingRestrictionSoundPacket(
 					entity.getId(),
@@ -185,7 +185,7 @@ public class FrozenLibSoundPackets {
 		}
 
 		if (entity instanceof ServerPlayer player) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new MovingRestrictionSoundPacket(
 					entity.getId(),
@@ -216,7 +216,7 @@ public class FrozenLibSoundPackets {
 		Identifier id,
 		boolean stopOnDeath
 	) {
-		ServerPlayNetworking.send(
+		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 			player,
 			new MovingRestrictionSoundPacket(
 				entity.getId(),
@@ -247,7 +247,7 @@ public class FrozenLibSoundPackets {
 		if (!(level instanceof ServerLevel)) return;
 
 		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new MovingFadingDistanceSwitchingRestrictionSoundPacket(
 					entity.getId(),
@@ -266,7 +266,7 @@ public class FrozenLibSoundPackets {
 		}
 
 		if (entity instanceof ServerPlayer player) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new MovingFadingDistanceSwitchingRestrictionSoundPacket(
 					entity.getId(),
@@ -313,7 +313,7 @@ public class FrozenLibSoundPackets {
 		float fadeDist,
 		float maxDist
 	) {
-		ServerPlayNetworking.send(
+		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 			player,
 			new MovingFadingDistanceSwitchingRestrictionSoundPacket(
 				entity.getId(),
@@ -344,7 +344,7 @@ public class FrozenLibSoundPackets {
 		float fadeDist,
 		float maxDist
 	) {
-		ServerPlayNetworking.send(
+		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 			player,
 			new MovingFadingDistanceSwitchingRestrictionSoundPacket(
 				entity.getId(),
@@ -375,7 +375,7 @@ public class FrozenLibSoundPackets {
 	) {
 		if (!(level instanceof ServerLevel serverLevel)) return;
 		for (ServerPlayer player : PlayerLookup.tracking(serverLevel, BlockPos.containing(pos))) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new FadingDistanceSwitchingSoundPacket(
 					pos,
@@ -405,7 +405,7 @@ public class FrozenLibSoundPackets {
 		if (!(level instanceof ServerLevel)) return;
 
 		for (ServerPlayer player : PlayerLookup.tracking(entity)) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new StartingMovingRestrictionSoundLoopPacket(
 					entity.getId(),
@@ -421,7 +421,7 @@ public class FrozenLibSoundPackets {
 		}
 
 		if (entity instanceof ServerPlayer player) {
-			ServerPlayNetworking.send(
+			FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 				player,
 				new StartingMovingRestrictionSoundLoopPacket(
 					entity.getId(),
@@ -453,7 +453,7 @@ public class FrozenLibSoundPackets {
 		Identifier predicate,
 		boolean stopOnDeath
 	) {
-		ServerPlayNetworking.send(
+		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(
 			player,
 			new StartingMovingRestrictionSoundLoopPacket(
 				entity.getId(),
@@ -469,7 +469,7 @@ public class FrozenLibSoundPackets {
     }
 
 	public static void createAndSendLocalPlayerSound(ServerPlayer player, Holder<SoundEvent> sound, float volume, float pitch) {
-		ServerPlayNetworking.send(player, new LocalPlayerSoundPacket(sound, volume, pitch));
+		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(player, new LocalPlayerSoundPacket(sound, volume, pitch));
 	}
 
 }

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -69,6 +69,6 @@ public abstract class MovingSoundType<D> {
 	}
 
 	public static <D> MovingSoundType<D> register(Identifier id, MovingSoundType<D> type) {
-		return Registry.register(FrozenLibRegistries.MOVING_SOUND_TYPE, id, type);
+		return Registry.register(FrozenLibFabricRegistries.MOVING_SOUND_TYPE, id, type);
 	}
 }

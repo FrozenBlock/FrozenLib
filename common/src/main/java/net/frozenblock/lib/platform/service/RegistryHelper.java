@@ -17,10 +17,30 @@
 
 package net.frozenblock.lib.platform.service;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.Nullable;
 
 public interface RegistryHelper {
 	<T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace);
+
+	<T> MappedRegistry<T> createSimpleRegistry(
+		ResourceKey<? extends Registry<T>> key,
+		Lifecycle lifecycle,
+		boolean synced,
+		@Nullable RegistryBootstrap<T> bootstrap
+	);
+
+	<T> void registerDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec);
+
+	<T> void registerSyncedDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec);
+
+	@FunctionalInterface
+	interface RegistryBootstrap<T> {
+		void run(Registry<T> registry);
+	}
 }

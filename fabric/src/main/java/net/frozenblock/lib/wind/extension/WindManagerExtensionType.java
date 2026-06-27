@@ -20,7 +20,7 @@ package net.frozenblock.lib.wind.extension;
 import com.mojang.serialization.MapCodec;
 import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -45,7 +45,7 @@ public interface WindManagerExtensionType<E extends WindManagerExtension> {
 		MapCodec<E> codec,
 		StreamCodec<RegistryFriendlyByteBuf, E> streamCodec
 	) {
-		return Registry.register(FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE, id, new WindManagerExtensionType<>() {
+		return Registry.register(FrozenLibFabricRegistries.WIND_MANAGER_EXTENSION_TYPE, id, new WindManagerExtensionType<>() {
 			@Override
 			public int priority() {
 				return priority;

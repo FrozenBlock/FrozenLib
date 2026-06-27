@@ -19,7 +19,8 @@ package net.frozenblock.lib.wind.extension;
 
 import com.mojang.serialization.Codec;
 import java.util.List;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.frozenblock.lib.wind.WindManager;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -27,8 +28,8 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 
 public interface WindManagerExtension {
-	Codec<WindManagerExtension> CODEC = FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE.byNameCodec().dispatch(WindManagerExtension::type, WindManagerExtensionType::codec);
-	StreamCodec<RegistryFriendlyByteBuf, WindManagerExtension> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibRegistries.WIND_MANAGER_EXTENSION_TYPE_REGISTRY)
+	Codec<WindManagerExtension> CODEC = FrozenLibFabricRegistries.WIND_MANAGER_EXTENSION_TYPE.byNameCodec().dispatch(WindManagerExtension::type, WindManagerExtensionType::codec);
+	StreamCodec<RegistryFriendlyByteBuf, WindManagerExtension> STREAM_CODEC = ByteBufCodecs.registry(FrozenLibFabricRegistries.WIND_MANAGER_EXTENSION_TYPE_REGISTRY)
 		.dispatch(WindManagerExtension::type, WindManagerExtensionType::streamCodec);
 	Codec<List<WindManagerExtension>> LIST_CODEC = CODEC.listOf();
 	StreamCodec<RegistryFriendlyByteBuf, List<WindManagerExtension>> LIST_STREAM_CODEC = STREAM_CODEC.apply(ByteBufCodecs.list());

@@ -22,10 +22,11 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -49,7 +50,7 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	@ApiStatus.Internal
 	public static final Type<FileTransferPacket> PACKET_TYPE = new Type<>(FrozenLibConstants.id("file_transfer"));
 	@ApiStatus.Internal
-	public static final StreamCodec<FriendlyByteBuf, FileTransferPacket> STREAM_CODEC = StreamCodec.ofMember(FileTransferPacket::write, FileTransferPacket::create);
+	public static final StreamCodec<RegistryFriendlyByteBuf, FileTransferPacket> STREAM_CODEC = StreamCodec.ofMember(FileTransferPacket::write, FileTransferPacket::create);
 	public static final int MAX_SIZE_PER_TRANSFER = 1835008; // 1.75MB
 
 	@ApiStatus.Internal
@@ -108,7 +109,7 @@ public record FileTransferPacket(String transferPath, String fileName, List<Stri
 	 */
 	public static void sendToPlayer(File file, String destPath, ServerPlayer player) throws IOException {
 		if (!FrozenLibConfig.FILE_TRANSFER_SERVER.get()) return;
-		ServerPlayNetworking.send(player, create(destPath, file));
+		FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(player, create(destPath, file));
 	}
 
 	@ApiStatus.Internal

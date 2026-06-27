@@ -18,19 +18,18 @@
 package net.frozenblock.lib.cape.impl.networking;
 
 import java.util.Optional;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.RegistryFriendlyByteBuf;import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
 
 public record CapeCustomizePacket(Optional<Cape> cape) implements CustomPacketPayload {
 	public static final Type<CapeCustomizePacket> TYPE = new Type<>(FrozenLibConstants.id("customize_cape"));
-	public static final StreamCodec<FriendlyByteBuf, CapeCustomizePacket> CODEC = StreamCodec.ofMember(CapeCustomizePacket::write, CapeCustomizePacket::new);
+	public static final StreamCodec<RegistryFriendlyByteBuf, CapeCustomizePacket> CODEC = StreamCodec.ofMember(CapeCustomizePacket::write, CapeCustomizePacket::new);
 
 	public CapeCustomizePacket(FriendlyByteBuf buf) {
 		this(Cape.NETWORK_CODEC.decode(buf));
@@ -53,9 +52,7 @@ public record CapeCustomizePacket(Optional<Cape> cape) implements CustomPacketPa
 		return TYPE;
 	}
 
-	public static void handle(CapeCustomizePacket packet, ServerPlayNetworking.Context context) {
-		final ServerPlayer player = context.player();
-		if (player == null) return;
+	public static void handle(CapeCustomizePacket packet, ServerPlayer player) {
 		final boolean empty = packet.cape().isEmpty() || packet.cape.get().dummy() || !CapeUtil.canPlayerUserCape(player.getUUID(), packet.cape().get());
 		player.setAttached(
 			Cape.ATTACHMENT_TYPE,

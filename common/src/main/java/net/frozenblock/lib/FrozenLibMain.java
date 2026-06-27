@@ -17,8 +17,11 @@
 
 package net.frozenblock.lib;
 
+import net.frozenblock.lib.networking.FrozenNetworking;import net.frozenblock.lib.registry.FrozenLibRegistries;
+
 public final class FrozenLibMain {
 
 	public static void init() {
+		FrozenLibRegistries.init();
 	}
 }

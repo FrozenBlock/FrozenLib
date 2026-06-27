@@ -20,7 +20,7 @@ package net.frozenblock.lib.block.api.waterlike;
 import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryAccess;
@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.Block;
 public final class WaterLikeTypes {
 
 	public static List<WaterLikeType> getAll(RegistryAccess registryAccess) {
-		return registryAccess.lookupOrThrow(FrozenLibRegistries.WATER_LIKE_TYPE).stream().toList();
+		return registryAccess.lookupOrThrow(FrozenLibFabricRegistries.WATER_LIKE_TYPE).stream().toList();
 	}
 
 	public static List<WaterLikeType> getAllInside(Entity entity) {
@@ -72,7 +72,7 @@ public final class WaterLikeTypes {
 	}
 
 	public static ResourceKey<WaterLikeType> createKey(Identifier id) {
-		return ResourceKey.create(FrozenLibRegistries.WATER_LIKE_TYPE, id);
+		return ResourceKey.create(FrozenLibFabricRegistries.WATER_LIKE_TYPE, id);
 	}
 
 	public static void register(

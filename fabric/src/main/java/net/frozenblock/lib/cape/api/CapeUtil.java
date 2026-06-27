@@ -37,13 +37,12 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.loader.api.FabricLoader;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
 import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.LoadCapeRepoPacket;
+import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerPlayer;
@@ -63,7 +62,7 @@ public class CapeUtil {
 
 	@ApiStatus.Internal
 	public static void sendCapeReposToPlayer(ServerPlayer recipient) {
-		CapeUtil.getCapeRepos().forEach(repoURL -> ServerPlayNetworking.send(recipient, new LoadCapeRepoPacket(repoURL)));
+		CapeUtil.getCapeRepos().forEach(repoURL -> FrozenLibInitPlatformUtils.NETWORKING.sendToPlayer(recipient, new LoadCapeRepoPacket(repoURL)));
 	}
 
 	@Unmodifiable
@@ -148,7 +147,7 @@ public class CapeUtil {
 			if (capeLocation == null) return;
 
 			final Identifier capeTextureLocation = CapeUtil.buildCapeTextureLocation(capeLocation);
-			if (FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT) ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
+			if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) ClientCapeUtil.registerCapeTextureFromURL(capeLocation, capeTextureLocation, capeTexture);
 
 			if (!whitelisted) {
 				registerCape(capeLocation, capeName);

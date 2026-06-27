@@ -22,7 +22,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
 import java.util.Optional;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
@@ -46,7 +46,7 @@ public record StructureMusic(List<Identifier> structures, BackgroundMusic backgr
 	).apply(instance, StructureMusic::new));
 
 	public static ResourceKey<StructureMusic> createKey(Identifier id) {
-		return ResourceKey.create(FrozenLibRegistries.STRUCTURE_MUSIC, id);
+		return ResourceKey.create(FrozenLibFabricRegistries.STRUCTURE_MUSIC, id);
 	}
 
 	public static void register(

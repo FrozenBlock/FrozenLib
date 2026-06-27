@@ -17,15 +17,75 @@
 
 package net.frozenblock.lib.platform.registry;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.Lifecycle;
+import java.util.ArrayList;
+import java.util.List;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.service.RegistryHelper;
+import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
+import org.jetbrains.annotations.Nullable;
 
 public class NeoRegistryHelper implements RegistryHelper {
+
+	private static final List<Registry<?>> PENDING_REGISTRIES = new ArrayList<>();
+
+	private record DynamicRegistryEntry<T>(ResourceKey<Registry<T>> key, Codec<T> codec, boolean synced) {}
+	private static final List<DynamicRegistryEntry<?>> PENDING_DYNAMIC_REGISTRIES = new ArrayList<>();
 
 	@Override
 	public <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
 		return new NeoFrozenDeferredRegister<>(registryKey, namespace);
+	}
+
+	@Override
+	public <T> MappedRegistry<T> createSimpleRegistry(
+		ResourceKey<? extends Registry<T>> key,
+		Lifecycle lifecycle,
+		boolean synced,
+		@Nullable RegistryBootstrap<T> bootstrap
+	) {
+		var builder = new RegistryBuilder<>(key).disableRegistrationCheck();
+		if (synced) builder.sync(true);
+		@SuppressWarnings("unchecked")
+		var registry = (MappedRegistry<T>) builder.create();
+		if (bootstrap != null) bootstrap.run(registry);
+		PENDING_REGISTRIES.add(registry);
+		return registry;
+	}
+
+	@Override
+	public <T> void registerDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec) {
+		PENDING_DYNAMIC_REGISTRIES.add(new DynamicRegistryEntry<>(key, directCodec, false));
+	}
+
+	@Override
+	public <T> void registerSyncedDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec) {
+		PENDING_DYNAMIC_REGISTRIES.add(new DynamicRegistryEntry<>(key, directCodec, true));
+	}
+
+	public static void flushRegistries(NewRegistryEvent event) {
+		for (Registry<?> registry : PENDING_REGISTRIES) {
+			event.register(registry);
+		}
+		PENDING_REGISTRIES.clear();
+	}
+
+	@SuppressWarnings("unchecked")
+	public static void flushDynamicRegistries(DataPackRegistryEvent.NewRegistry event) {
+		for (DynamicRegistryEntry<?> entry : PENDING_DYNAMIC_REGISTRIES) {
+			var typedEntry = (DynamicRegistryEntry<Object>) entry;
+			if (typedEntry.synced()) {
+				event.dataPackRegistry(typedEntry.key(), typedEntry.codec(), typedEntry.codec());
+			} else {
+				event.dataPackRegistry(typedEntry.key(), typedEntry.codec());
+			}
+		}
+		PENDING_DYNAMIC_REGISTRIES.clear();
 	}
 }

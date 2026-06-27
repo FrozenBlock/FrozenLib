@@ -19,7 +19,14 @@ package net.frozenblock.lib;
 
 import net.frozenblock.lib.command.NeoFrozenLibCommand;
 import net.frozenblock.lib.event.impl.NeoEventBridge;
+import net.frozenblock.lib.networking.FrozenClientNetworking;
+import net.frozenblock.lib.networking.FrozenNetworking;
+import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.platform.data.NeoDataAttachmentHelper;
+import net.frozenblock.lib.platform.networking.NeoNetworkingHelper;
+import net.frozenblock.lib.platform.registry.NeoRegistryHelper;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.screenshake.api.client.ClientScreenShaker;
 import net.minecraft.client.Minecraft;
@@ -34,12 +41,28 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.registries.DataPackRegistryEvent;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.minecraft.server.level.ServerLevel;
 
 @Mod(FrozenLibConstants.MOD_ID)
 public final class FrozenLibNeoForge {
 
 	public FrozenLibNeoForge(IEventBus modBus) {
+		modBus.addListener(NewRegistryEvent.class, NeoRegistryHelper::flushRegistries);
+		modBus.addListener(DataPackRegistryEvent.NewRegistry.class, event -> {
+			FrozenLibRegistries.init();
+			NeoRegistryHelper.flushDynamicRegistries(event);
+		});
+		modBus.addListener(RegisterPayloadHandlersEvent.class, event -> {
+			FrozenNetworking.registerNetworking();
+			if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) {
+				FrozenClientNetworking.registerClientReceivers();
+			}
+ 			((NeoNetworkingHelper) FrozenLibInitPlatformUtils.NETWORKING).flush(event.registrar("frozenlib"));
+		});
+
 		FrozenLibMain.init();
 		NeoDataAttachmentHelper.register(modBus);
 		NeoEventBridge.initModStage(modBus);
@@ -62,6 +85,8 @@ public final class FrozenLibNeoForge {
 		});
 
 		if (FMLEnvironment.getDist().isClient()) {
+			NeoEventBridge.initClientModStage();
+
 			NeoForge.EVENT_BUS.addListener(ClientTickEvent.Post.class, event -> {
 				Minecraft minecraft = Minecraft.getInstance();
 				ClientLevel level = minecraft.level;

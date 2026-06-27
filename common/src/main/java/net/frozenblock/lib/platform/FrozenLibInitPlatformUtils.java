@@ -20,6 +20,7 @@ package net.frozenblock.lib.platform;
 import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 import net.frozenblock.lib.platform.service.EventHelper;
+import net.frozenblock.lib.platform.service.NetworkingHelper;
 import net.frozenblock.lib.platform.service.RegistryHelper;
 import static net.frozenblock.lib.platform.PlatformUtil.load;
 
@@ -28,4 +29,5 @@ public class FrozenLibInitPlatformUtils {
 	public static final RegistryHelper REGISTRY = load(RegistryHelper.class);
 	public static final DataAttachmentHelper DATA_ATTACHMENT = load(DataAttachmentHelper.class);
 	public static final EventHelper EVENT = load(EventHelper.class);
+	public static final NetworkingHelper NETWORKING = load(NetworkingHelper.class);
 }

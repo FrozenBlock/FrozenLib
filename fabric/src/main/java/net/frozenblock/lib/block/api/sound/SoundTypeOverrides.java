@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 import net.frozenblock.lib.block.impl.sound.SoundTypeOverride;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.HolderSet;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
@@ -43,7 +43,7 @@ public class SoundTypeOverrides {
 	}
 
 	public static ResourceKey<SoundTypeOverride> createKey(Identifier id) {
-		return ResourceKey.create(FrozenLibRegistries.SOUND_TYPE_OVERRIDE, id);
+		return ResourceKey.create(FrozenLibFabricRegistries.SOUND_TYPE_OVERRIDE, id);
 	}
 
 	public static void register(
@@ -78,7 +78,7 @@ public class SoundTypeOverrides {
 	@ApiStatus.Internal
 	public static void init() {
 		RegistryEvents.DYNAMIC_REGISTRY_LOADED.register(registryAccess -> {
-			registryAccess.lookup(FrozenLibRegistries.SOUND_TYPE_OVERRIDE).ifPresent(soundTypeOverrideRegistry -> {
+			registryAccess.lookup(FrozenLibFabricRegistries.SOUND_TYPE_OVERRIDE).ifPresent(soundTypeOverrideRegistry -> {
 				SOUND_TYPE_OVERRIDES.clear();
 				soundTypeOverrideRegistry.forEach(SOUND_TYPE_OVERRIDES::add);
 			});

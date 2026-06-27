@@ -21,9 +21,6 @@ import java.util.List;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
 import me.shedaniel.clothconfig2.api.ConfigEntryBuilder;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
 import net.frozenblock.lib.cape.client.api.ClientCapeUtil;
@@ -31,13 +28,15 @@ import net.frozenblock.lib.cape.impl.Cape;
 import net.frozenblock.lib.cape.impl.networking.CapeCustomizePacket;
 import static net.frozenblock.lib.config.clothconfig.FrozenLibClothConfigGuiHelper.*;
 import net.frozenblock.lib.config.frozenlib_config.FrozenLibConfig;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.platform.api.ClientOnly;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
-@Environment(EnvType.CLIENT)
+@ClientOnly
 public final class FrozenLibConfigGui {
 
 	private static void setupEntries(ConfigCategory category, ConfigEntryBuilder entryBuilder) {
@@ -78,7 +77,8 @@ public final class FrozenLibConfigGui {
 					.setSaveConsumer(newValue -> {
 						final Identifier capeId = Identifier.parse((String) newValue);
 						FrozenLibConfig.CAPE.setValue((String) newValue);
-						if (Minecraft.getInstance().getConnection() != null) ClientPlayNetworking.send(CapeCustomizePacket.create(capeId));
+						if (Minecraft.getInstance().getConnection() != null)
+							FrozenLibInitPlatformUtils.NETWORKING.sendToServer(CapeCustomizePacket.create(capeId));
 					})
 					.setTooltip(tooltip("cape"))
 					.build()

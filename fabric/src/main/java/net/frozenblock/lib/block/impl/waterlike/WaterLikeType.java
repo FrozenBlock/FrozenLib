@@ -19,7 +19,7 @@ package net.frozenblock.lib.block.impl.waterlike;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
@@ -58,8 +58,8 @@ public record WaterLikeType(
 		SoundEvent.CODEC.fieldOf("exit_sound").forGetter(WaterLikeType::exitSound),
 		SoundEvent.CODEC.fieldOf("ambient_sound").forGetter(WaterLikeType::ambientSound)
 	).apply(instance, WaterLikeType::new));
-	public static final Codec<Holder<WaterLikeType>> CODEC = RegistryFixedCodec.create(FrozenLibRegistries.WATER_LIKE_TYPE);
-	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<WaterLikeType>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibRegistries.WATER_LIKE_TYPE);
+	public static final Codec<Holder<WaterLikeType>> CODEC = RegistryFixedCodec.create(FrozenLibFabricRegistries.WATER_LIKE_TYPE);
+	public static final StreamCodec<RegistryFriendlyByteBuf, Holder<WaterLikeType>> STREAM_CODEC = ByteBufCodecs.holderRegistry(FrozenLibFabricRegistries.WATER_LIKE_TYPE);
 
 	public boolean contains(BlockState state) {
 		return state.is(this.blocks);
