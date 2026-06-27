@@ -21,13 +21,13 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
-import net.frozenblock.lib.platform.api.data.FrozenDataAttachmentType;
+import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 
 public class FabricDataAttachmentHelper implements DataAttachmentHelper {
 
 	@Override
-	public <T> FrozenDataAttachmentType<T> create(FrozenDataAttachmentType.Builder<T> builder) {
+	public <T> DataAttachmentType<T> create(DataAttachmentType.Builder<T> builder) {
 		AttachmentType<T> attachmentType = AttachmentRegistry.create(builder.id(), attachmentBuilder -> {
 			if (builder.codec() != null) attachmentBuilder.persistent(builder.codec());
 			if (builder.streamCodec() != null) attachmentBuilder.syncWith(builder.streamCodec(), AttachmentSyncPredicate.all());
@@ -35,7 +35,7 @@ public class FabricDataAttachmentHelper implements DataAttachmentHelper {
 		return new FabricDataAttachmentType<>(attachmentType);
 	}
 
-	private record FabricDataAttachmentType<T>(AttachmentType<T> attachmentType) implements FrozenDataAttachmentType<T> {
+	private record FabricDataAttachmentType<T>(AttachmentType<T> attachmentType) implements DataAttachmentType<T> {
 
 		@Override
 		public T get(Object holder) {

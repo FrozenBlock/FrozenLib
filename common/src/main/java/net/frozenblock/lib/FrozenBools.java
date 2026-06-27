@@ -18,7 +18,7 @@
 package net.frozenblock.lib;
 
 import java.util.Arrays;
-import net.frozenblock.lib.platform.FrozenEarlyPlatformUtils;
+import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
 
 public class FrozenBools {
 	/**
@@ -33,7 +33,7 @@ public class FrozenBools {
 	public static final boolean IS_DATAGEN = isDatagen();
 
 	private static boolean isDatagen() {
-		return Arrays.stream(FrozenEarlyPlatformUtils.LOADER.getLaunchArgs())
+		return Arrays.stream(FrozenLibEarlyPlatformUtils.LOADER.getLaunchArgs())
 			.toList()
 			.stream()
 			.anyMatch(string -> string.contains("datagen"));
@@ -49,6 +49,6 @@ public class FrozenBools {
     public static final boolean HAS_TERRABLENDER = hasMod("terrablender");
 
 	public static boolean hasMod(String mod) {
-		return FrozenEarlyPlatformUtils.LOADER.isModLoaded(mod);
+		return FrozenLibEarlyPlatformUtils.LOADER.isModLoaded(mod);
 	}
 }

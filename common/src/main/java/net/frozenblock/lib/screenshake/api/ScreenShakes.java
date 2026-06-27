@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.event.api.events.TickEvents;
-import net.frozenblock.lib.platform.api.data.FrozenDataAttachmentType;
+import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
@@ -40,7 +40,7 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 		ScreenShake.LIST_STREAM_CODEC, ScreenShakes::screenShakes,
 		ScreenShakes::new
 	);
-	public static final FrozenDataAttachmentType<ScreenShakes> ATTACHMENT = FrozenDataAttachmentType.<ScreenShakes>builder(
+	public static final DataAttachmentType<ScreenShakes> ATTACHMENT = DataAttachmentType.<ScreenShakes>builder(
 		FrozenLibConstants.id("screen_shakes")
 	).persistent(CODEC).sync(STREAM_CODEC).build();
 

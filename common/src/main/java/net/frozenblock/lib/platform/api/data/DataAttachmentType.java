@@ -19,7 +19,7 @@ package net.frozenblock.lib.platform.api.data;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.frozenblock.lib.platform.FrozenInitPlatformUtils;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
  *
  * @param <T> the attached value type
  */
-public interface FrozenDataAttachmentType<T> {
+public interface DataAttachmentType<T> {
 
 	static <T> Builder<T> builder(Identifier id) {
 		return new Builder<>(id);
@@ -88,8 +88,8 @@ public interface FrozenDataAttachmentType<T> {
 			return this.streamCodec;
 		}
 
-		public FrozenDataAttachmentType<T> build() {
-			return FrozenInitPlatformUtils.DATA_ATTACHMENT.create(this);
+		public DataAttachmentType<T> build() {
+			return FrozenLibInitPlatformUtils.DATA_ATTACHMENT.create(this);
 		}
 	}
 }

@@ -18,7 +18,7 @@
 package net.frozenblock.lib.platform.data;
 
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.platform.api.data.FrozenDataAttachmentType;
+import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -30,9 +30,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 public class NeoDataAttachmentHelper implements DataAttachmentHelper {
-
-	private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
-		DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, FrozenLibConstants.MOD_ID);
+	private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, FrozenLibConstants.MOD_ID);
 
 	public static void register(IEventBus modBus) {
 		ATTACHMENT_TYPES.register(modBus);
@@ -40,15 +38,14 @@ public class NeoDataAttachmentHelper implements DataAttachmentHelper {
 
 	@Override
 	@SuppressWarnings("unchecked")
-	public <T> FrozenDataAttachmentType<T> create(FrozenDataAttachmentType.Builder<T> builder) {
+	public <T> DataAttachmentType<T> create(DataAttachmentType.Builder<T> builder) {
 		DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder = ATTACHMENT_TYPES.register(
 			builder.id().getPath(),
 			() -> {
 				AttachmentType.Builder<T> attachmentBuilder = AttachmentType.builder(() -> (T) null);
 				if (builder.codec() != null) attachmentBuilder.serialize(builder.codec().fieldOf("value"));
 				if (builder.streamCodec() != null) {
-					StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec =
-						(StreamCodec<? super RegistryFriendlyByteBuf, T>) (StreamCodec<?, T>) builder.streamCodec();
+					final StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec = builder.streamCodec();
 					attachmentBuilder.sync(streamCodec);
 				}
 				return attachmentBuilder.build();
@@ -57,7 +54,7 @@ public class NeoDataAttachmentHelper implements DataAttachmentHelper {
 		return new NeoDataAttachmentType<>(holder);
 	}
 
-	private record NeoDataAttachmentType<T>(DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder) implements FrozenDataAttachmentType<T> {
+	private record NeoDataAttachmentType<T>(DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder) implements DataAttachmentType<T> {
 
 		@Override
 		public T get(Object holder) {

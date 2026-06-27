@@ -18,7 +18,7 @@
 package net.frozenblock.lib.event.api;
 
 import java.util.function.Function;
-import net.frozenblock.lib.platform.FrozenInitPlatformUtils;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 
 public class FrozenEvents {
 
@@ -30,7 +30,7 @@ public class FrozenEvents {
 	 * @return A new Event of the specified type
 	 */
 	public static <T> Event<T> createEnvironmentEvent(Class<? super T> type, Function<T[], T> invokerFactory) {
-		return FrozenInitPlatformUtils.EVENT.createEnvironmentEvent(type, invokerFactory);
+		return FrozenLibInitPlatformUtils.EVENT.createEnvironmentEvent(type, invokerFactory);
 	}
 
 	/**
@@ -42,6 +42,6 @@ public class FrozenEvents {
 	 * @return A new Event of the specified type
 	 */
 	public static <T> Event<T> createEnvironmentEvent(Class<T> type, T emptyInvoker, Function<T[], T> invokerFactory) {
-		return FrozenInitPlatformUtils.EVENT.createEnvironmentEvent(type, emptyInvoker, invokerFactory);
+		return FrozenLibInitPlatformUtils.EVENT.createEnvironmentEvent(type, emptyInvoker, invokerFactory);
 	}
 }

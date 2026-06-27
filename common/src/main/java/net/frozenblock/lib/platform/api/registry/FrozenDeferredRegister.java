@@ -17,7 +17,7 @@
 
 package net.frozenblock.lib.platform.api.registry;
 
-import net.frozenblock.lib.platform.FrozenInitPlatformUtils;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import java.util.function.Supplier;
@@ -37,7 +37,7 @@ import java.util.function.Supplier;
 public interface FrozenDeferredRegister<T> {
 
 	static <T> FrozenDeferredRegister<T> create(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
-		return FrozenInitPlatformUtils.REGISTRY.createDeferredRegister(registryKey, namespace);
+		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredRegister(registryKey, namespace);
 	}
 
 	static <T> FrozenDeferredRegister<T> create(Registry<T> registry, String namespace) {

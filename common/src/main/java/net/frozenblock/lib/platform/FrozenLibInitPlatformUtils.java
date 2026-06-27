@@ -24,8 +24,7 @@ import net.frozenblock.lib.platform.service.RegistryHelper;
 import static net.frozenblock.lib.platform.PlatformUtil.load;
 
 @UtilityClass
-public class FrozenInitPlatformUtils {
-
+public class FrozenLibInitPlatformUtils {
 	public static final RegistryHelper REGISTRY = load(RegistryHelper.class);
 	public static final DataAttachmentHelper DATA_ATTACHMENT = load(DataAttachmentHelper.class);
 	public static final EventHelper EVENT = load(EventHelper.class);
