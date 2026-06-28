@@ -14,6 +14,9 @@ requiredMods=["cloth-config"]
 config="mixin/frozenlib.entity.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.feature_flag.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.gravity.mixins.json"
 
 [[mixins]]
