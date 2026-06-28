@@ -52,6 +52,18 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 	}
 
 	@Override
+	public <I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier) {
+		return new NeoFrozenHolder<>(this.inner.register(key.identifier().getPath(), supplier));
+	}
+
+	@Override
+	public <I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier, Consumer<I> also) {
+		var holder = new NeoFrozenHolder<>(this.inner.register(key.identifier().getPath(), supplier));
+		consumers.put((FrozenHolder) holder, (Consumer) also);
+		return (FrozenHolder<T, I>) holder;
+	}
+
+	@Override
 	public void register() {
 		var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
 		this.inner.register(bus);

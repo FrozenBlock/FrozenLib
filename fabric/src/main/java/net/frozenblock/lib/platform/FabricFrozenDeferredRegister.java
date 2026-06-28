@@ -49,7 +49,19 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 	@Override
 	public <I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier, Consumer<I> also) {
 		FabricFrozenHolder<T, I> holder = new FabricFrozenHolder<>();
-		this.pending.add(new PendingEntry<>(name, supplier, also, holder));
+		this.pending.add(new PendingEntry<>(Identifier.fromNamespaceAndPath(this.namespace, name), supplier, also, holder));
+		return holder;
+	}
+
+	@Override
+	public <I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier) {
+		return register(key, supplier, null);
+	}
+
+	@Override
+	public <I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier, Consumer<I> also) {
+		FabricFrozenHolder<T, I> holder = new FabricFrozenHolder<>();
+		this.pending.add(new PendingEntry<>(key.identifier(), supplier, also, holder));
 		return holder;
 	}
 
@@ -66,10 +78,9 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 
 	@SuppressWarnings("unchecked")
 	private <I extends T> void registerEntry(Registry<T> registry, PendingEntry<T, I> entry) {
-		Identifier id = Identifier.fromNamespaceAndPath(this.namespace, entry.name());
-		ResourceKey<T> key = ResourceKey.create(this.registryKey, id);
+		ResourceKey<T> key = ResourceKey.create(this.registryKey, entry.id());
 		I value = entry.supplier().get();
-		Registry.register(registry, id, value);
+		Registry.register(registry, entry.id(), value);
 		Holder.Reference<T> ref = registry.getOrThrow(key);
 		entry.holder().bind((Holder.Reference<I>) ref);
 		var also = entry.also();
@@ -78,7 +89,7 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 	}
 
 	private record PendingEntry<T, I extends T>(
-		String name,
+		Identifier id,
 		Supplier<? extends I> supplier,
 		@Nullable Consumer<I> also,
 		FabricFrozenHolder<T, I> holder

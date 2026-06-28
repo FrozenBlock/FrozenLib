@@ -49,5 +49,9 @@ public interface FrozenDeferredRegister<T> {
 
 	<I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier, Consumer<I> also);
 
+	<I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier);
+
+	<I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier, Consumer<I> also);
+
 	void register();
 }
