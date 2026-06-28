@@ -69,7 +69,7 @@ public class FrozenEvents {
 
 		REGISTERED_EVENTS.add(event);
 		// Loop through all event types
-		for (var eventType : EventType.VALUES) {
+		for (EventType eventType : EventType.VALUES) {
 			// Check if the listener type is assignable from the event type
 			if (!eventType.listener().isAssignableFrom(type)) continue;
 			// Get the entrypoints for the specified listener type

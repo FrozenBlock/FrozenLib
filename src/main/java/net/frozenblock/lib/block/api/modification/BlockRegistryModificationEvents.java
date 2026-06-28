@@ -30,7 +30,7 @@ import org.jetbrains.annotations.ApiStatus;
 /**
  * Allows for the modification of Blocks before they are registered.
  * <p>
- * These events should be used sparingly and referenced as early as possible.
+ * These events should be used sparingly and referenced as early as possible via the {@code frozenlib:events} entrypoint.
  */
 @ApiStatus.Experimental
 public class BlockRegistryModificationEvents {
@@ -42,7 +42,10 @@ public class BlockRegistryModificationEvents {
 	 * Custom register methods will be ignored.
 	 */
 	public static final Event<ModifyProperties> MODIFY_PROPERTIES = FrozenEvents.createEnvironmentEvent(ModifyProperties.class, (callbacks) -> (id, properties) -> {
-		for (var callback : callbacks) properties = callback.modifyProperties(id, properties);
+		for (var callback : callbacks) {
+			final BlockBehaviour.Properties eventProperties = callback.modifyProperties(id, properties);
+			if (eventProperties != null) properties = eventProperties;
+		}
 		return properties;
 	});
 
@@ -53,8 +56,11 @@ public class BlockRegistryModificationEvents {
 	 * <p>
 	 * Custom register methods will be ignored.
 	 */
-	public static final Event<ReplaceFactory> REPLACE_FACTORY = FrozenEvents.createEnvironmentEvent(ReplaceFactory.class, (callbacks) -> (id, factory) -> {
-		for (var callback : callbacks) factory = callback.replaceFactory(id, factory);
+	public static final Event<ReplaceFactory> REPLACE_FACTORY = FrozenEvents.createEnvironmentEvent(ReplaceFactory.class, (callbacks) -> (id, properties, factory) -> {
+		for (var callback : callbacks) {
+			final Function<BlockBehaviour.Properties, Block> eventFactory = callback.replaceFactory(id, properties, factory);
+			if (eventFactory != null) factory = eventFactory;
+		}
 		return factory;
 	});
 
@@ -80,9 +86,10 @@ public class BlockRegistryModificationEvents {
 		/**
 		 * Triggers the event when a Block is about to be created, letting its factory be replaced.
 		 * @param id The {@link ResourceKey} of the Block.
+		 * @param properties The {@link BlockBehaviour.Properties} of the Block.
 		 * @param factory The {@link Function} that creates the Block.
 		 * @return the new {@link Function} to use as the {@code factory}.
 		 */
-		Function<BlockBehaviour.Properties, Block> replaceFactory(ResourceKey<Block> id, Function<BlockBehaviour.Properties, Block> factory);
+		Function<BlockBehaviour.Properties, Block> replaceFactory(ResourceKey<Block> id, BlockBehaviour.Properties properties, Function<BlockBehaviour.Properties, Block> factory);
 	}
 }
