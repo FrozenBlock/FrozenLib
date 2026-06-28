@@ -19,6 +19,7 @@ package net.frozenblock.lib.levelgen.material.api;
 
 import java.util.List;
 import java.util.Optional;
+import lombok.experimental.UtilityClass;
 import net.frozenblock.lib.levelgen.material.impl.RuleSourceAddition;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Holder;
@@ -31,6 +32,7 @@ import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.SurfaceRules;
 import org.jetbrains.annotations.ApiStatus;
 
+@UtilityClass
 public final class RuleSourceAdditions {
 
 	public static List<RuleSourceAddition> getAll(RegistryAccess registryAccess) {

@@ -19,20 +19,19 @@ package net.frozenblock.lib.sound.mixin.damage;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import net.frozenblock.lib.sound.api.damage.PlayerDamageTypeSounds;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Player.class)
-public abstract class PlayerMixin {
+public class PlayerMixin {
 
 	@ModifyReturnValue(method = "getHurtSound", at = @At("RETURN"))
 	private SoundEvent frozenLib$playHurtSound(SoundEvent original, DamageSource source) {
-		final DamageType type = source.type();
-		if (PlayerDamageTypeSounds.containsSource(type)) return PlayerDamageTypeSounds.getDamageSound(type);
-		return original;
+		final RegistryAccess registryAccess = Player.class.cast(this).registryAccess();
+		return PlayerDamageTypeSounds.getSoundForTypeOr(registryAccess, source.type(), original);
 	}
 }
