@@ -63,7 +63,7 @@ dependencies {
     // Toml
     api("com.moandjiezana.toml:toml4j:${toml4j_version}")
 
-    compileOnly("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
+    compileOnlyApi("blue.endless:jankson:1.2.3-mod-SNAPSHOT")
 
     compileOnly("org.exjson:xjs-data:0.14-infinity-compat-SNAPSHOT")
     compileOnly("org.exjson:xjs-compat:$xjs_compat_version")

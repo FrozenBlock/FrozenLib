@@ -18,9 +18,17 @@
 package net.frozenblock.lib;
 
 import net.frozenblock.lib.platform.api.ClientOnly;
+import net.frozenblock.lib.registry.client.FrozenLibClientRegistries;
 
 @ClientOnly
 public final class FrozenLibClient {
+
+	public static void preQuiltInit() {
+		FrozenLibClientRegistries.init();
+	}
+
+	public static void quiltInit() {
+	}
 
 	public static void init() {
 	}

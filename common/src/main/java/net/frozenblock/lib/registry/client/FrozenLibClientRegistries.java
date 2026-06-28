@@ -21,7 +21,7 @@ import com.mojang.serialization.Lifecycle;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entity.client.api.renderer.entity.EntityTextureOverride;
 import net.frozenblock.lib.platform.api.ClientOnly;
-import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.resources.ResourceKey;
 
@@ -30,7 +30,7 @@ public class FrozenLibClientRegistries {
 	public static final ResourceKey<net.minecraft.core.Registry<EntityTextureOverride>> ENTITY_TEXTURE_OVERRIDE_REGISTRY =
 		ResourceKey.createRegistryKey(FrozenLibConstants.id("entity_texture_override"));
 	public static final MappedRegistry<EntityTextureOverride> ENTITY_TEXTURE_OVERRIDE =
-		FrozenLibFabricRegistries.createSimple(ENTITY_TEXTURE_OVERRIDE_REGISTRY, Lifecycle.stable());
+		FrozenLibRegistries.createSimple(ENTITY_TEXTURE_OVERRIDE_REGISTRY, Lifecycle.stable());
 
 	public static void init() {}
 }

@@ -62,10 +62,11 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 			}
 		});
 
-		FrozenLibClientRegistries.init();
+		FrozenLibClient.preQuiltInit();
 		ModIntegrations.initializePreFreeze(); // Mod integrations must run after normal mod initialization
 
 		// QUILT INIT
+		FrozenLibClient.quiltInit();
 		ClientFreezer.onInitializeClient();
 		ClientRegistrySync.registerHandlers();
 
