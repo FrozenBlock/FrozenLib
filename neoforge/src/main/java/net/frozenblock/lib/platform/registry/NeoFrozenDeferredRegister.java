@@ -165,34 +165,33 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 		}
 
 		@Override
-		public <B extends Block> FrozenDeferredBlock<B> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties) {
-			var id = Identifier.fromNamespaceAndPath(this.inner.getNamespace(), name);
-			return new FrozenDeferredBlock<>(register(name, () -> func.apply(properties.get().setId(ResourceKey.create(Registries.BLOCK, id)))));
+		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties) {
+			return new FrozenDeferredBlock<>(register(key, () -> func.apply(properties.get().setId(key))));
 		}
 
 		@Override
-		public <B extends Block> FrozenDeferredBlock<B> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> propertiesOp) {
-			return registerBlock(name, func, () -> propertiesOp.apply(BlockBehaviour.Properties.of()));
+		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> propertiesOp) {
+			return registerBlock(key, func, () -> propertiesOp.apply(BlockBehaviour.Properties.of()));
 		}
 
 		@Override
-		public <B extends Block> FrozenDeferredBlock<B> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends B> func) {
-			return registerBlock(name, func, BlockBehaviour.Properties::of);
+		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func) {
+			return registerBlock(key, func, BlockBehaviour.Properties::of);
 		}
 
 		@Override
-		public FrozenDeferredBlock<Block> registerSimpleBlock(String name, Supplier<BlockBehaviour.Properties> properties) {
-			return registerBlock(name, Block::new, properties);
+		public FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, Supplier<BlockBehaviour.Properties> properties) {
+			return registerBlock(key, Block::new, properties);
 		}
 
 		@Override
-		public FrozenDeferredBlock<Block> registerSimpleBlock(String name, UnaryOperator<BlockBehaviour.Properties> propertiesOp) {
-			return registerBlock(name, Block::new, propertiesOp);
+		public FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, UnaryOperator<BlockBehaviour.Properties> propertiesOp) {
+			return registerBlock(key, Block::new, propertiesOp);
 		}
 
 		@Override
-		public FrozenDeferredBlock<Block> registerSimpleBlock(String name) {
-			return registerBlock(name, Block::new);
+		public FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key) {
+			return registerBlock(key, Block::new);
 		}
 	}
 

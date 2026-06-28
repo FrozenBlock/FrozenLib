@@ -117,17 +117,17 @@ public interface FrozenDeferredRegister<T> {
 		@Override
 		<I extends Block> FrozenDeferredBlock<I> register(ResourceKey<Block> key, Function<Identifier, ? extends I> func, Consumer<I> also);
 
-		<B extends Block> FrozenDeferredBlock<B> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties);
+		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties);
 
-		<B extends Block> FrozenDeferredBlock<B> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties);
+		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties);
 
-		<B extends Block> FrozenDeferredBlock<B> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends B> func);
+		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func);
 
-		FrozenDeferredBlock<Block> registerSimpleBlock(String name, Supplier<BlockBehaviour.Properties> properties);
+		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, Supplier<BlockBehaviour.Properties> properties);
 
-		FrozenDeferredBlock<Block> registerSimpleBlock(String name, UnaryOperator<BlockBehaviour.Properties> properties);
+		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, UnaryOperator<BlockBehaviour.Properties> properties);
 
-		FrozenDeferredBlock<Block> registerSimpleBlock(String name);
+		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key);
 	}
 
 	interface Items extends FrozenDeferredRegister<Item> {
