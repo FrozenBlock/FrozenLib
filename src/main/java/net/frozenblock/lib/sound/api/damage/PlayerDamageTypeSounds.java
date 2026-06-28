@@ -17,50 +17,80 @@
 
 package net.frozenblock.lib.sound.api.damage;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-import java.util.Map;
+import java.util.Optional;
 import lombok.experimental.UtilityClass;
-import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicate;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.sound.impl.damage.PlayerDamageTypeSound;
+import net.minecraft.core.Holder;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.Identifier;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.damagesource.DamageType;
+import org.jetbrains.annotations.ApiStatus;
 
 @UtilityClass
-public class PlayerDamageTypeSounds {
-	private static final Map<DamageType, Identifier> DAMAGE_TYPE_RESOURCE_LOCATION_MAP = new Object2ObjectOpenHashMap<>();
-	private static final Map<Identifier, SoundEvent> RESOURCE_LOCATION_SOUND_EVENT_MAP = new Object2ObjectOpenHashMap<>();
-	private static final Identifier DEFAULT_ID = FrozenLibConstants.id("default_damage_source");
+public final class PlayerDamageTypeSounds {
 
-	/**
-	 * Adds a custom sound to be played upon a player getting damaged by a specific {@link DamageType}.
-	 *
-	 * @param type The {@link DamageType} to register the sound for.
-	 * @param sound The {@link SoundEvent} to register.
-	 * @param id The {@link Identifier} to register the sound override under.
-	 */
-	public static void addDamageSound(DamageType type, SoundEvent sound, Identifier id) {
-		DAMAGE_TYPE_RESOURCE_LOCATION_MAP.put(type, id);
-		RESOURCE_LOCATION_SOUND_EVENT_MAP.put(id, sound);
+	@ApiStatus.Internal
+	public static SoundEvent getSoundForTypeOr(RegistryAccess registryAccess, Holder<DamageType> damageType, SoundEvent original) {
+		return registryAccess.lookup(FrozenLibRegistries.PLAYER_DAMAGE_TYPE_SOUND)
+			.map(registry -> registry.stream()
+				.filter(playerDamageTypeSound -> playerDamageTypeSound.enabledAndMatches(damageType))
+				.findFirst()
+				.map(playerDamageTypeSound -> playerDamageTypeSound.sound().value())
+				.orElse(original)
+			).orElse(original);
 	}
 
-	public static SoundEvent getDamageSound(DamageType type) {
-		return DAMAGE_TYPE_RESOURCE_LOCATION_MAP.containsKey(type) ? getDamageSound(DAMAGE_TYPE_RESOURCE_LOCATION_MAP.get(type)) : SoundEvents.PLAYER_HURT;
+	@ApiStatus.Internal
+	public static SoundEvent getSoundForTypeOr(RegistryAccess registryAccess, DamageType damageType, SoundEvent original) {
+		return getSoundForTypeOr(registryAccess, registryAccess.lookupOrThrow(Registries.DAMAGE_TYPE).wrapAsHolder(damageType), original);
 	}
 
-	public static SoundEvent getDamageSound(Identifier id) {
-		return RESOURCE_LOCATION_SOUND_EVENT_MAP.getOrDefault(id, SoundEvents.PLAYER_HURT);
+	public static ResourceKey<PlayerDamageTypeSound> createKey(Identifier id) {
+		return ResourceKey.create(FrozenLibRegistries.PLAYER_DAMAGE_TYPE_SOUND, id);
 	}
 
-	public static Identifier getDamageID(DamageType type) {
-		return DAMAGE_TYPE_RESOURCE_LOCATION_MAP.getOrDefault(type, DEFAULT_ID);
+	public static void register(
+		BootstrapContext<PlayerDamageTypeSound> context,
+		ResourceKey<PlayerDamageTypeSound> key,
+		HolderSet<DamageType> damageTypes,
+		Holder<SoundEvent> soundEvent
+	) {
+		context.register(key, new PlayerDamageTypeSound(damageTypes, soundEvent, Optional.empty()));
 	}
 
-	public static boolean containsSource(DamageType type) {
-		return DAMAGE_TYPE_RESOURCE_LOCATION_MAP.containsKey(type);
+	public static void register(
+		BootstrapContext<PlayerDamageTypeSound> context,
+		Identifier id,
+		HolderSet<DamageType> damageTypes,
+		Holder<SoundEvent> soundEvent
+	) {
+		register(context, createKey(id), damageTypes, soundEvent);
 	}
 
-	public static boolean containsSource(Identifier location) {
-		return RESOURCE_LOCATION_SOUND_EVENT_MAP.containsKey(location);
+	public static void register(
+		BootstrapContext<PlayerDamageTypeSound> context,
+		ResourceKey<PlayerDamageTypeSound> key,
+		HolderSet<DamageType> damageTypes,
+		Holder<SoundEvent> soundEvent,
+		ConfigPredicate enabledWhen
+	) {
+		context.register(key, new PlayerDamageTypeSound(damageTypes, soundEvent, Optional.of(enabledWhen)));
+	}
+
+	public static void register(
+		BootstrapContext<PlayerDamageTypeSound> context,
+		Identifier id,
+		HolderSet<DamageType> damageTypes,
+		Holder<SoundEvent> soundEvent,
+		ConfigPredicate enabledWhen
+	) {
+		register(context, createKey(id), damageTypes, soundEvent, enabledWhen);
 	}
 }

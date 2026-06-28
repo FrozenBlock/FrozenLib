@@ -14,3 +14,9 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
     - `rule_source`: The `RuleSource` to add to `dimensions`.
   - Removed `SurfaceRuleEvents`, `DimensionBoundRuleSource`, and `SurfaceRuleUtil` as they are no longer needed.
 - Added the `#frozenlib:overworld`, `#frozenlib:nether`, and `#frozenlib:end` Dimension Type Tags.
+- Added `PlayerDamageTypeSound`s, used to play a custom sound when a Player is damaged by a specific `DamageType`.
+  - Added the `frozenlib:player_damage_type_sound` Dynamic Registry with the following format:
+    - `damage_types`: A Damage Type's ID, a list of Damage Type IDs, or a Damage Type Tag that `sound_event` will be used for.
+    - `sound_event`: The Sound Event to play when a Player is damaged by `damage_types`.
+    - `config_predicate`: An optional field, used to determine whether this can be used.
+  - Removed the initial implementation, as this new data-driven implementation is far more stable.
