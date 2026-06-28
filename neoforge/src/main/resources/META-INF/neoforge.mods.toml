@@ -11,7 +11,7 @@ config="mixin/frozenlib.block.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.clothconfig.mixins.json"
-requiredMods=["cloth-config"]
+requiredMods=["cloth_config"]
 
 [[mixins]]
 config="mixin/frozenlib.entity.mixins.json"
