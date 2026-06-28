@@ -44,6 +44,6 @@ public final class BlocksMixin {
 		@Local(argsOnly = true) LocalRef<BlockBehaviour.Properties> properties
 	) {
 		properties.set(BlockRegistryModificationEvents.MODIFY_PROPERTIES.invoker().modifyProperties(id, properties.get()));
-		factory.set(BlockRegistryModificationEvents.REPLACE_FACTORY.invoker().replaceFactory(id, factory.get()));
+		factory.set(BlockRegistryModificationEvents.REPLACE_FACTORY.invoker().replaceFactory(id, properties.get(), factory.get()));
 	}
 }
