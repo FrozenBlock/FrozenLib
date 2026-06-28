@@ -209,6 +209,9 @@ transitive-accessible field net/minecraft/world/level/ClipContext collisionConte
 transitive-accessible field net/minecraft/world/level/block/BubbleColumnBlock CHECK_PERIOD I
 transitive-accessible method net/minecraft/world/level/block/StairBlock <init> (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 
+# Block Entities
+transitive-inject-interface net/minecraft/world/level/block/entity/PotentSulfurBlockEntity net/frozenblock/lib/wind/disturbance/geyser/PotentSulfurWindAccess
+
 # Built-In Block Models
 transitive-accessible method net/minecraft/client/renderer/block/BuiltInBlockModels createAir (Lnet/minecraft/client/renderer/block/BuiltInBlockModels$Builder;Lnet/minecraft/world/level/block/Block;)V
 transitive-accessible method net/minecraft/client/renderer/block/BuiltInBlockModels special (Lnet/minecraft/client/renderer/special/SpecialModelRenderer$Unbaked;)Lnet/minecraft/client/renderer/block/model/BlockModel$Unbaked;

@@ -22,3 +22,4 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Removed the initial implementation, as this new data-driven implementation is far more stable.
 - Added `ShearsDispenseItemBehaviorApi`, used to register custom behaviors for Shears being used by a Dispenser.
 - Added the experimental `BlockRegistryModificationEvents` class, used to modify the Properties and Factory used to create Blocks.
+- Moved Wilder Wild's Potent Sulfur Geyser Wind Disturbance into FrozenLib.

@@ -20,6 +20,7 @@ package net.frozenblock.lib.wind.disturbance;
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.wind.disturbance.geyser.GeyserWindDisturbance;
 import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -28,6 +29,7 @@ import net.minecraft.resources.Identifier;
 public interface WindDisturbanceType<D extends WindDisturbance<?>> {
 	WindDisturbanceType<BreezeWindDisturbance> BREEZE = register("breeze", BreezeWindDisturbance.CODEC, BreezeWindDisturbance.STREAM_CODEC);
 	WindDisturbanceType<WindChargeWindDisturbance> WIND_CHARGE = register("wind_charge", WindChargeWindDisturbance.CODEC, WindChargeWindDisturbance.STREAM_CODEC);
+	WindDisturbanceType<GeyserWindDisturbance> GEYSER = register("geyser", GeyserWindDisturbance.CODEC, GeyserWindDisturbance.STREAM_CODEC);
 
 	MapCodec<D> codec();
 
