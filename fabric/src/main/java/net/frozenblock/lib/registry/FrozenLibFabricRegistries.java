@@ -74,16 +74,10 @@ public class FrozenLibFabricRegistries {
 	// DYNAMIC REGISTRIES
 	public static final ResourceKey<Registry<SoundTypeOverride>> SOUND_TYPE_OVERRIDE = ResourceKey.createRegistryKey(FrozenLibConstants.id("sound_type_override"));
 	public static final ResourceKey<Registry<StructureMusic>> STRUCTURE_MUSIC = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_music"));
-	public static final ResourceKey<Registry<FireType>> FIRE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("fire_type"));
-	public static final ResourceKey<Registry<ClipGroup>> CLIP_GROUP = ResourceKey.createRegistryKey(FrozenLibConstants.id("clip_group"));
-	public static final ResourceKey<Registry<WaterLikeType>> WATER_LIKE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("water_like_type"));
 
 	public static void init() {
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
 		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(STRUCTURE_MUSIC, StructureMusic.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(FIRE_TYPE, FireType.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(CLIP_GROUP, ClipGroup.DIRECT_CODEC);
-		FrozenLibInitPlatformUtils.REGISTRY.registerSyncedDynamicRegistry(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
 	}
 
 	public static <T> MappedRegistry<T> createSimple(ResourceKey<? extends Registry<T>> key, Lifecycle lifecycle) {

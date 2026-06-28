@@ -24,6 +24,7 @@ import net.frozenblock.lib.block.api.fire.FireTypes;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibBlockTagsProvider;
 import net.frozenblock.lib.data.frozenlib.tag.FrozenLibEntityTypeTagsProvider;
 import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.RegistrySetBuilder;
 
 public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
@@ -39,7 +40,7 @@ public final class FrozenLibDataGenerator implements DataGeneratorEntrypoint {
 
 	@Override
 	public void buildRegistry(RegistrySetBuilder builder) {
-		builder.add(FrozenLibFabricRegistries.FIRE_TYPE, FireTypes::bootstrap);
+		builder.add(FrozenLibRegistries.FIRE_TYPE, FireTypes::bootstrap);
 	}
 
 	@Override

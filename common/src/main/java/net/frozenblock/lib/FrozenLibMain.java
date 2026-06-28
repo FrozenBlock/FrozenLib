@@ -17,9 +17,8 @@
 
 package net.frozenblock.lib;
 
-import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.block.impl.fire.FireData;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
-import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.registries.Registries;
@@ -27,7 +26,7 @@ import net.minecraft.core.registries.Registries;
 public final class FrozenLibMain {
 
 	public static void preQuiltInit() {
-		FrozenLibRegistries.init();
+		FireData.init();
 	}
 
 	public static void quiltInit() {}

@@ -28,6 +28,7 @@ import net.minecraft.world.level.block.Block;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
+// IN COMMON MIXINS.JSON
 @Mixin(LivingEntity.class)
 public class LivingEntityMixin {
 

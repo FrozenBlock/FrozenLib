@@ -1,0 +1,24 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.frozenblock.lib.block.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "mixins": [
+    "beacon.BeaconBlockEntityMixin",
+    "clipgroup.BlockGetterMixin",
+    "clipgroup.EntityMixin",
+    "dripstone.PointedDripstoneBlockMixin",
+    "piston.PistonBaseBlockMixin",
+    "piston.PistonMovingBlockEntityMixin",
+    "piston.structure_resolver.DoubleChestStickingMixin",
+    "sound.BlockBehaviourMixin",
+    "storage.hopper.HopperBlockEntityMixin"
+  ],
+  "client": [
+    "client.piston.MovingBlockRenderStateMixin",
+    "client.piston.PistonHeadRendererMixin"
+  ]
+}

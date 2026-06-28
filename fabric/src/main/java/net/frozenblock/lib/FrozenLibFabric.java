@@ -52,6 +52,7 @@ import net.frozenblock.lib.networking.FrozenNetworking;
 import net.frozenblock.lib.networking.FrozenNetworkingFabric;
 import net.frozenblock.lib.particle.FrozenLibParticleTypes;
 import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
@@ -74,9 +75,9 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
 		FrozenLibMain.preQuiltInit();
+		FrozenLibRegistries.init();
 		FrozenLibFabricRegistries.init();
 		SoundTypeOverrides.init();
-		FireData.init();
 		FabricEventBridge.initModStage();
 
 		// QUILT INIT

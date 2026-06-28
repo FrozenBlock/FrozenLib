@@ -54,6 +54,10 @@ neoForge {
     if (at.exists()) {
         accessTransformers.from(at.absolutePath)
     }
+    val neoAt = rootProject.file("neoforge/src/main/resources/META-INF/neo/accesstransformer.cfg")
+    if (neoAt.exists()) {
+        accessTransformers.from(neoAt.absolutePath)
+    }
     runs {
         configureEach {
             systemProperty("neoforge.enabledGameTestNamespaces", mod_id)

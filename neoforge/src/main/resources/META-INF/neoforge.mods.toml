@@ -7,6 +7,9 @@ issueTrackerURL="https://github.com/FrozenBlock/FrozenLib/issues"
 config="mixin/frozenlib.advancement.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.block.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.clothconfig.mixins.json"
 requiredMods=["cloth-config"]
 
@@ -30,6 +33,9 @@ config="mixin/frozenlib.loot.neoforge.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.networking.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.renderer.mixins.json"
 
 [[mixins]]
     config="mixin/frozenlib.screenshake.mixins.json"

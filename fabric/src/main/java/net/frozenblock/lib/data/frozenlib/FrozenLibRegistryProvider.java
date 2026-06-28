@@ -20,7 +20,7 @@ package net.frozenblock.lib.data.frozenlib;
 import java.util.concurrent.CompletableFuture;
 import net.fabricmc.fabric.api.datagen.v1.FabricPackOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricDynamicRegistryProvider;
-import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
 
@@ -32,7 +32,7 @@ final class FrozenLibRegistryProvider extends FabricDynamicRegistryProvider {
 
 	@Override
 	protected void configure(HolderLookup.Provider registries, Entries entries) {
-		entries.addAll(asLookup(entries.getLookup(FrozenLibFabricRegistries.FIRE_TYPE)));
+		entries.addAll(asLookup(entries.getLookup(FrozenLibRegistries.FIRE_TYPE)));
 	}
 
 	public static <T> HolderLookup.RegistryLookup<T> asLookup(HolderGetter<T> getter) {
