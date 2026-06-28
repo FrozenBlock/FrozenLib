@@ -23,6 +23,7 @@
     "fire.WitherSkeletonMixin",
     "fire.ZombieMixin",
     "friction.LivingEntityMixin",
+    "modification.BlocksMixin",
     "piston.PistonBaseBlockMixin",
     "piston.PistonMovingBlockEntityMixin",
     "piston.structure_resolver.DoubleChestStickingMixin",
