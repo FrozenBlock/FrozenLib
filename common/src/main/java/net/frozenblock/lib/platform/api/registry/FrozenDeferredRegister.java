@@ -20,6 +20,7 @@ package net.frozenblock.lib.platform.api.registry;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
@@ -45,6 +46,8 @@ public interface FrozenDeferredRegister<T> {
 	}
 
 	<I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier);
+
+	<I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier, Consumer<I> also);
 
 	void register();
 }

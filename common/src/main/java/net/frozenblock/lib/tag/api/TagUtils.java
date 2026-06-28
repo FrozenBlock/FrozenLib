@@ -22,11 +22,9 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.fabric.api.tag.convention.v2.TagUtil;
 import net.frozenblock.lib.math.api.AdvancedMath;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
@@ -86,13 +84,5 @@ public class TagUtils {
 
 		if (!entries.isEmpty()) return entries.get(random.nextInt(entries.size()));
         return null;
-    }
-
-    public static <T> boolean isIn(TagKey<T> tagKey, T entry) {
-        return TagUtil.isIn(tagKey, entry);
-    }
-
-    public static <T> boolean isIn(@Nullable RegistryAccess registryAccess, TagKey<T> tagKey, T entry) {
-        return TagUtil.isIn(registryAccess, tagKey, entry);
     }
 }

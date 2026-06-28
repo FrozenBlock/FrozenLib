@@ -55,12 +55,10 @@ import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
 import net.frozenblock.lib.screenshake.api.ScreenShakes;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundTypes;
-import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.disturbance.WindDisturbanceType;
 import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
-import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
@@ -75,18 +73,20 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
-		FrozenLibMain.init();
+		FrozenLibMain.preQuiltInit();
 		FrozenLibFabricRegistries.init();
 		SoundTypeOverrides.init();
 		FireData.init();
 		FabricEventBridge.initModStage();
 
 		// QUILT INIT
+		FrozenLibMain.quiltInit();
 		ServerFreezer.onInitialize();
 		ModProtocol.loadVersions();
 		ServerRegistrySync.registerHandlers();
 
 		// CONTINUE FROZENLIB INIT
+		FrozenLibMain.init();
 		FrozenLibRuleBlockEntityModifiers.init();
 		FrozenLibStructureProcessorTypes.init();
 		FrozenLibStructurePoolElementTypes.init();
@@ -115,13 +115,6 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		ScreenShakes.init();
 
 		FrozenMainEntrypoint.EVENT.invoker().init(); // includes dev init
-
-		ArgumentTypeInfos.register(
-			BuiltInRegistries.COMMAND_ARGUMENT_TYPE,
-			FrozenLibConstants.string("tag_key"),
-			ArgumentTypeInfos.fixClassType(TagKeyArgument.class),
-			new TagKeyArgument.Info<>()
-		);
 
 		CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
 			FrozenLibCommand.register(dispatcher);

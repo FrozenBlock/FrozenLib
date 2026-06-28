@@ -24,8 +24,10 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
@@ -41,8 +43,13 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 
 	@Override
 	public <I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier) {
+		return register(name, supplier, null);
+	}
+
+	@Override
+	public <I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier, Consumer<I> also) {
 		FabricFrozenHolder<T, I> holder = new FabricFrozenHolder<>();
-		this.pending.add(new PendingEntry<>(name, supplier, holder));
+		this.pending.add(new PendingEntry<>(name, supplier, also, holder));
 		return holder;
 	}
 
@@ -65,11 +72,15 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 		Registry.register(registry, id, value);
 		Holder.Reference<T> ref = registry.getOrThrow(key);
 		entry.holder().bind((Holder.Reference<I>) ref);
+		var also = entry.also();
+		if (also != null)
+			also.accept((I) ref.value());
 	}
 
 	private record PendingEntry<T, I extends T>(
 		String name,
 		Supplier<? extends I> supplier,
+		@Nullable Consumer<I> also,
 		FabricFrozenHolder<T, I> holder
 	) {}
 }

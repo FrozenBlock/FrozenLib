@@ -29,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CreeperMixin {
 
     @Inject(method = "setTarget", at = @At("HEAD"), cancellable = true)
-    public void frozenLib$ignoreTag(LivingEntity entity, CallbackInfo info) {
-		if (entity != null && entity.is(FrozenLibEntityTypeTags.CREEPER_IGNORES)) info.cancel();
+    public void frozenLib$ignoreTag(LivingEntity target, CallbackInfo info) {
+		if (target != null && target.is(FrozenLibEntityTypeTags.CREEPER_IGNORES)) info.cancel();
     }
 
 }

@@ -17,11 +17,36 @@
 
 package net.frozenblock.lib;
 
-import net.frozenblock.lib.networking.FrozenNetworking;import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
+import net.frozenblock.lib.tag.api.TagKeyArgument;
+import net.minecraft.commands.synchronization.ArgumentTypeInfos;
+import net.minecraft.core.registries.Registries;
 
 public final class FrozenLibMain {
 
-	public static void init() {
+	public static void preQuiltInit() {
 		FrozenLibRegistries.init();
+	}
+
+	public static void quiltInit() {}
+
+	public static void init() {
+		var register = FrozenLibInitPlatformUtils.REGISTRY.createDeferredRegister(
+			Registries.COMMAND_ARGUMENT_TYPE,
+			FrozenLibConstants.MOD_ID
+		);
+
+		register.register(
+			"tag_key",
+			() -> new TagKeyArgument.Info<>(),
+			info -> ArgumentTypeInfos.BY_CLASS.put(
+				ArgumentTypeInfos.fixClassType(TagKeyArgument.class),
+				info
+			)
+		);
+
+		register.register();
 	}
 }

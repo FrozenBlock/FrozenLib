@@ -22,13 +22,21 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import java.util.function.Consumer;
 
 public class NeoFrozenHolder<R, T extends R> implements FrozenHolder<R, T> {
 
 	private final DeferredHolder<R, T> delegate;
+	private final Consumer<T> consumer;
 
 	public NeoFrozenHolder(DeferredHolder<R, T> delegate) {
 		this.delegate = delegate;
+		this.consumer = null;
+	}
+
+	public NeoFrozenHolder(DeferredHolder<R, T> delegate, Consumer<T> consumer) {
+		this.delegate = delegate;
+		this.consumer = consumer;
 	}
 
 	@Override

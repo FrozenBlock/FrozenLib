@@ -23,16 +23,19 @@ config="mixin/frozenlib.gravity.mixins.json"
 config="mixin/frozenlib.item.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.loot.neoforge.mixins.json"
+config="mixin/frozenlib.levelgen.surface.mixins.json"
 
 [[mixins]]
-config="mixin/frozenlib.levelgen.surface.mixins.json"
+config="mixin/frozenlib.loot.neoforge.mixins.json"
 
 [[mixins]]
 config="mixin/frozenlib.networking.mixins.json"
 
 [[mixins]]
     config="mixin/frozenlib.screenshake.mixins.json"
+
+[[mixins]]
+config="mixin/frozenlib.tag.mixins.json"
 
 [[mods]]
     modId="frozenlib"

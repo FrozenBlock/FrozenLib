@@ -17,17 +17,23 @@
 
 package net.frozenblock.lib.platform.registry;
 
+import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import net.neoforged.neoforge.registries.RegisterEvent;
+import java.util.Map;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 
 	private final DeferredRegister<T> inner;
+	private final Map<FrozenHolder<Object, Object>, Consumer<Object>> consumers = new Object2ObjectLinkedOpenHashMap<>();
 
 	public NeoFrozenDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
 		this.inner = DeferredRegister.create(registryKey, namespace);
@@ -39,7 +45,26 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 	}
 
 	@Override
+	public <I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier, Consumer<I> also) {
+		var holder = new NeoFrozenHolder<>(this.inner.register(name, supplier));
+		consumers.put((FrozenHolder) holder, (Consumer) also);
+		return (FrozenHolder<T, I>) holder;
+	}
+
+	@Override
 	public void register() {
-		this.inner.register(ModLoadingContext.get().getActiveContainer().getEventBus());
+		var bus = ModLoadingContext.get().getActiveContainer().getEventBus();
+		this.inner.register(bus);
+		bus.addListener(this::runCallbacks);
+	}
+
+	private void runCallbacks(RegisterEvent event) {
+		if (!event.getRegistryKey().equals(this.inner.getRegistryKey())) {
+			return;
+		}
+
+		for (var consumer : consumers.entrySet()) {
+			consumer.getValue().accept(consumer.getKey().get());
+		}
 	}
 }

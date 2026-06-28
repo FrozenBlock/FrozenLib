@@ -63,7 +63,10 @@ public final class FrozenLibNeoForge {
  			((NeoNetworkingHelper) FrozenLibInitPlatformUtils.NETWORKING).flush(event.registrar("frozenlib"));
 		});
 
+		FrozenLibMain.preQuiltInit();
+		FrozenLibMain.quiltInit();
 		FrozenLibMain.init();
+
 		NeoDataAttachmentHelper.register(modBus);
 		NeoEventBridge.initModStage(modBus);
 

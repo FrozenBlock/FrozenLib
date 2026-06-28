@@ -36,6 +36,7 @@ transitive-accessible method net/minecraft/server/network/ServerConfigurationPac
 transitive-accessible field net/minecraft/server/network/ServerConfigurationPacketListenerImpl currentTask Lnet/minecraft/server/network/ConfigurationTask;
 
 # Command
+transitive-accessible field net/minecraft/commands/synchronization/ArgumentTypeInfos BY_CLASS Ljava/util/Map;
 transitive-accessible method net/minecraft/commands/synchronization/ArgumentTypeInfos register (Lnet/minecraft/core/Registry;Ljava/lang/String;Ljava/lang/Class;Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;)Lnet/minecraft/commands/synchronization/ArgumentTypeInfo;
 transitive-accessible method net/minecraft/commands/synchronization/ArgumentTypeInfos fixClassType (Ljava/lang/Class;)Ljava/lang/Class;
 

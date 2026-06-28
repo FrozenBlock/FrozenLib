@@ -21,6 +21,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import net.frozenblock.lib.config.impl.ConfigCommand;
 import net.frozenblock.lib.entity.api.command.ScaleEntityCommand;
 import net.frozenblock.lib.screenshake.api.command.ScreenShakeCommand;
+import net.frozenblock.lib.tag.api.TagListCommand;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.jetbrains.annotations.ApiStatus;
@@ -34,6 +35,7 @@ public final class NeoFrozenLibCommand {
 			.then(ConfigCommand.buildSubCommand())
 			.then(ScaleEntityCommand.buildSubCommand())
 			.then(ScreenShakeCommand.buildSubCommand())
+			.then(TagListCommand.buildSubCommand())
 		);
 	}
 }
