@@ -24,6 +24,7 @@
     "fire.WitherSkeletonMixin",
     "fire.ZombieMixin",
     "friction.LivingEntityMixin",
+    "modification.BlocksMixin",
     "sound.BlockBehaviourMixin",
     "storage.hopper.HopperBlockEntityMixin",
     "tick.BlockStateBaseMixin",
