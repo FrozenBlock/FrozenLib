@@ -11,6 +11,7 @@
     "blockentity.BlockEntityTypeMixin",
     "clipgroup.BlockGetterMixin",
     "clipgroup.EntityMixin",
+    "dispenser.ShearsDispenseItemBehaviorMixin",
     "dripstone.PointedDripstoneBlockMixin",
     "fire.AbstractArrowMixin",
     "fire.BaseFireBlockMixin",
