@@ -8,9 +8,9 @@
   },
   "mixins": [
     "BiomeMixin",
-    "MultiNoiseLibBiomeSourceMixin",
-    "OverworldBiomeBuilderMixin",
-    "OverworldBiomePresetMixin",
+    "BiomeSpecialEffectsMixin",
+    "MinecraftServerMixin",
+    "RegistryAccessImmutableRegistryAccessMixin",
     "weather.LightningOverrideMixin"
   ]
 }

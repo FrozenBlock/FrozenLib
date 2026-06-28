@@ -26,6 +26,9 @@ config="mixin/frozenlib.gravity.mixins.json"
 config="mixin/frozenlib.item.mixins.json"
 
 [[mixins]]
+config="mixin/frozenlib.levelgen.biome.mixins.json"
+
+[[mixins]]
 config="mixin/frozenlib.levelgen.surface.mixins.json"
 
 [[mixins]]

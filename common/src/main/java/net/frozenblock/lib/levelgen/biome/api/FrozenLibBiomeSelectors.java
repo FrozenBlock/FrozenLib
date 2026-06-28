@@ -15,12 +15,9 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.biome.api.modifications;
+package net.frozenblock.lib.levelgen.biome.api;
 
 import java.util.function.Predicate;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectionContext;
-import net.fabricmc.fabric.api.biome.v1.BiomeSelectors;
-import net.fabricmc.fabric.api.biome.v1.NetherBiomes;
 import net.minecraft.tags.BiomeTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.biome.Biome;
@@ -29,7 +26,7 @@ import net.minecraft.world.level.dimension.LevelStem;
 /**
  * Provides several biome selectors with additional functionality.
  *
- * <p>Based on {@link BiomeSelectors}
+ * <p>Based on FabricMC BiomeSelectors
  */
 public final class FrozenLibBiomeSelectors {
 
@@ -45,7 +42,7 @@ public final class FrozenLibBiomeSelectors {
 	 * Returns a biome selector that will match all biomes that would normally spawn in the Nether,
 	 * assuming Vanilla's default multi noise biome source with the nether preset is used.
 	 *
-	 * <p>This selector will also match modded biomes that have been added to the nether using {@link NetherBiomes}.
+	 * <p>This selector will also match modded biomes that have been added to the nether using FabricMC NetherBiomes.
 	 */
 	public static Predicate<BiomeSelectionContext> foundInTheNether() {
 		return context -> context.hasTag(BiomeTags.IS_NETHER) || context.canGenerateIn(LevelStem.NETHER);
@@ -71,7 +68,7 @@ public final class FrozenLibBiomeSelectors {
 	 * Returns a biome selector that will match all biomes that would normally spawn in the Nether,
 	 * assuming Vanilla's default multi noise biome source with the nether preset is used, except for biomes in the specified tag.
 	 *
-	 * <p>This selector will also match modded biomes that have been added to the nether using {@link NetherBiomes}.
+	 * <p>This selector will also match modded biomes that have been added to the nether using FabricMC NetherBiomes.
 	 */
 	public static Predicate<BiomeSelectionContext> foundInTheNetherExcept(TagKey<Biome> except) {
 		return context -> (context.hasTag(BiomeTags.IS_NETHER) || context.canGenerateIn(LevelStem.NETHER)) && !context.hasTag(except);
