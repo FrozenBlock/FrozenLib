@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.networking.FrozenClientNetworking;
 import net.frozenblock.lib.networking.FrozenClientNetworkingFabric;
 import net.frozenblock.lib.resource_pack.api.client.FrozenLibModResourcePackApi;
 import net.minecraft.client.Minecraft;
@@ -184,13 +185,13 @@ public class PackDownloadToast implements Toast {
 	public static class PackDownloadToastId {
 		public static final PackDownloadToastId PACK_DOWNLOAD_SUCCESS = new PackDownloadToastId(
 			"download.success",
-			() -> FrozenClientNetworkingFabric.notConnected()
+			() -> FrozenClientNetworking.notConnected()
 				? Component.translatable("frozenlib.resourcepack.download.open_menu")
 				: Component.translatable("frozenlib.resourcepack.download.press_f3")
 		);
 		public static final PackDownloadToastId PACK_UPDATE_SUCCESS = new PackDownloadToastId(
 			"download.success.update",
-			() -> FrozenClientNetworkingFabric.notConnected()
+			() -> FrozenClientNetworking.notConnected()
 				? Component.translatable("frozenlib.resourcepack.download.open_menu")
 				: Component.translatable("frozenlib.resourcepack.download.press_f3")
 		);
