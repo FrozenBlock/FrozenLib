@@ -25,6 +25,7 @@ import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.service.RegistryHelper;
 import net.minecraft.core.MappedRegistry;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
@@ -41,6 +42,26 @@ public class NeoRegistryHelper implements RegistryHelper {
 	@Override
 	public <T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace) {
 		return new NeoFrozenDeferredRegister<>(registryKey, namespace);
+	}
+
+	@Override
+	public FrozenDeferredRegister.Items createDeferredItemsRegister(String namespace) {
+		return new NeoFrozenDeferredRegister.Items(namespace);
+	}
+
+	@Override
+	public FrozenDeferredRegister.Blocks createDeferredBlocksRegister(String namespace) {
+		return new NeoFrozenDeferredRegister.Blocks(namespace);
+	}
+
+	@Override
+	public FrozenDeferredRegister.DataComponents createDeferredDataComponentsRegister(String namespace) {
+		return new NeoFrozenDeferredRegister.DataComponents(Registries.DATA_COMPONENT_TYPE, namespace);
+	}
+
+	@Override
+	public FrozenDeferredRegister.Entities createDeferredEntitiesRegister(String namespace) {
+		return new NeoFrozenDeferredRegister.Entities(namespace);
 	}
 
 	@Override

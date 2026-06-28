@@ -28,6 +28,14 @@ import org.jetbrains.annotations.Nullable;
 public interface RegistryHelper {
 	<T> FrozenDeferredRegister<T> createDeferredRegister(ResourceKey<? extends Registry<T>> registryKey, String namespace);
 
+	FrozenDeferredRegister.Items createDeferredItemsRegister(String namespace);
+
+	FrozenDeferredRegister.Blocks createDeferredBlocksRegister(String namespace);
+
+	FrozenDeferredRegister.DataComponents createDeferredDataComponentsRegister(String namespace);
+
+	FrozenDeferredRegister.Entities createDeferredEntitiesRegister(String namespace);
+
 	<T> MappedRegistry<T> createSimpleRegistry(
 		ResourceKey<? extends Registry<T>> key,
 		Lifecycle lifecycle,

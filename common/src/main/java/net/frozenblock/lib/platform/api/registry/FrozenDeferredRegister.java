@@ -18,10 +18,22 @@
 package net.frozenblock.lib.platform.api.registry;
 
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 
 /**
  * A cross-platform deferred registry abstraction, analogous to NeoForge's {@code DeferredRegister}.
@@ -45,13 +57,139 @@ public interface FrozenDeferredRegister<T> {
 		return create(registry.key(), namespace);
 	}
 
+	static Items createItems(String namespace) {
+		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredItemsRegister(namespace);
+	}
+
+	static Blocks createBlocks(String namespace) {
+		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredBlocksRegister(namespace);
+	}
+
+	static DataComponents createDataComponents(String namespace) {
+		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredDataComponentsRegister(namespace);
+	}
+
+	static Entities createEntities(String namespace) {
+		return FrozenLibInitPlatformUtils.REGISTRY.createDeferredEntitiesRegister(namespace);
+	}
+
 	<I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier);
 
 	<I extends T> FrozenHolder<T, I> register(String name, Supplier<? extends I> supplier, Consumer<I> also);
+
+	<I extends T> FrozenHolder<T, I> register(String name, Function<Identifier, ? extends I> func);
+
+	<I extends T> FrozenHolder<T, I> register(String name, Function<Identifier, ? extends I> func, Consumer<I> also);
 
 	<I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier);
 
 	<I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Supplier<? extends I> supplier, Consumer<I> also);
 
+	<I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Function<Identifier, ? extends I> func);
+
+	<I extends T> FrozenHolder<T, I> register(ResourceKey<T> key, Function<Identifier, ? extends I> func, Consumer<I> also);
+
 	void register();
+
+	interface Blocks extends FrozenDeferredRegister<Block> {
+
+		@Override
+		<I extends Block> FrozenDeferredBlock<I> register(String name, Supplier<? extends I> supplier);
+
+		@Override
+		<I extends Block> FrozenDeferredBlock<I> register(String name, Supplier<? extends I> supplier, Consumer<I> also);
+
+		@Override
+		<I extends Block> FrozenDeferredBlock<I> register(String name, Function<Identifier, ? extends I> func);
+
+		@Override
+		<I extends Block> FrozenDeferredBlock<I> register(String name, Function<Identifier, ? extends I> func, Consumer<I> also);
+
+		@Override
+		<I extends Block> FrozenDeferredBlock<I> register(ResourceKey<Block> key, Supplier<? extends I> supplier);
+
+		@Override
+		<I extends Block> FrozenDeferredBlock<I> register(ResourceKey<Block> key, Supplier<? extends I> supplier, Consumer<I> also);
+
+		@Override
+		<I extends Block> FrozenDeferredBlock<I> register(ResourceKey<Block> key, Function<Identifier, ? extends I> func);
+
+		@Override
+		<I extends Block> FrozenDeferredBlock<I> register(ResourceKey<Block> key, Function<Identifier, ? extends I> func, Consumer<I> also);
+
+		<B extends Block> FrozenDeferredBlock<B> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties);
+
+		<B extends Block> FrozenDeferredBlock<B> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties);
+
+		<B extends Block> FrozenDeferredBlock<B> registerBlock(String name, Function<BlockBehaviour.Properties, ? extends B> func);
+
+		FrozenDeferredBlock<Block> registerSimpleBlock(String name, Supplier<BlockBehaviour.Properties> properties);
+
+		FrozenDeferredBlock<Block> registerSimpleBlock(String name, UnaryOperator<BlockBehaviour.Properties> properties);
+
+		FrozenDeferredBlock<Block> registerSimpleBlock(String name);
+	}
+
+	interface Items extends FrozenDeferredRegister<Item> {
+
+		@Override
+		<I extends Item> FrozenDeferredItem<I> register(String name, Supplier<? extends I> supplier);
+
+		@Override
+		<I extends Item> FrozenDeferredItem<I> register(String name, Supplier<? extends I> supplier, Consumer<I> also);
+
+		@Override
+		<I extends Item> FrozenDeferredItem<I> register(ResourceKey<Item> key, Supplier<? extends I> supplier);
+
+		@Override
+		<I extends Item> FrozenDeferredItem<I> register(ResourceKey<Item> key, Supplier<? extends I> supplier, Consumer<I> also);
+
+		@Override
+		<I extends Item> FrozenDeferredItem<I> register(String name, Function<Identifier, ? extends I> func);
+
+		@Override
+		<I extends Item> FrozenDeferredItem<I> register(String name, Function<Identifier, ? extends I> func, Consumer<I> also);
+
+		@Override
+		<I extends Item> FrozenDeferredItem<I> register(ResourceKey<Item> key, Function<Identifier, ? extends I> func);
+
+		@Override
+		<I extends Item> FrozenDeferredItem<I> register(ResourceKey<Item> key, Function<Identifier, ? extends I> func, Consumer<I> also);
+
+		<I extends Item> FrozenDeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func, Supplier<Item.Properties> properties);
+
+		<I extends Item> FrozenDeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func, UnaryOperator<Item.Properties> properties);
+
+		<I extends Item> FrozenDeferredItem<I> registerItem(String name, Function<Item.Properties, ? extends I> func);
+
+		FrozenDeferredItem<Item> registerSimpleItem(String name, Supplier<Item.Properties> properties);
+
+		FrozenDeferredItem<Item> registerSimpleItem(String name, UnaryOperator<Item.Properties> properties);
+
+		FrozenDeferredItem<Item> registerSimpleItem(String name);
+
+		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, Supplier<Item.Properties> properties);
+
+		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block, UnaryOperator<Item.Properties> properties);
+
+		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(String name, Supplier<? extends Block> block);
+
+		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block, Supplier<Item.Properties> properties);
+
+		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block, UnaryOperator<Item.Properties> properties);
+
+		FrozenDeferredItem<BlockItem> registerSimpleBlockItem(Holder<Block> block);
+	}
+
+	interface DataComponents extends FrozenDeferredRegister<DataComponentType<?>> {
+
+		<D> FrozenHolder<DataComponentType<?>, DataComponentType<D>> registerComponent(String name, UnaryOperator<DataComponentType.Builder<D>> builder);
+	}
+
+	interface Entities extends FrozenDeferredRegister<EntityType<?>> {
+
+		<E extends Entity> FrozenHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category);
+
+		<E extends Entity> FrozenHolder<EntityType<?>, EntityType<E>> registerEntityType(String name, EntityType.EntityFactory<E> factory, MobCategory category, UnaryOperator<EntityType.Builder<E>> builder);
+	}
 }
