@@ -73,12 +73,14 @@ loom {
         register("testmodClient") {
             client()
             ideConfigGenerated(project.rootProject == project.parent)
+            preferGradleTask = true
             name("Testmod Client")
             source(testmod.get())
         }
         register("testmodServer") {
             server()
             ideConfigGenerated(project.rootProject == project.parent)
+            preferGradleTask = true
             name("Testmod Server")
             source(testmod.get())
         }
@@ -86,10 +88,12 @@ loom {
         named("client") {
             name("Fabric Client")
             ideConfigGenerated(true)
+            preferGradleTask = true
         }
         named("server") {
             name("Fabric Server")
             ideConfigGenerated(true)
+            preferGradleTask = true
         }
     }
 

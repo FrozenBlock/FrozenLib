@@ -129,15 +129,6 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 		FrozenNetworking.registerNetworking();
 		FrozenNetworkingFabric.registerNetworking();
 
-		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
-			if (allRegistries) ModIntegrations.initialize();
-		});
-
-		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {
-			if (!allRegistries) return;
-			for (Config<?> config : ConfigRegistry.getAllConfigs()) config.save();
-		});
-
 		FrozenLibConfig.CONFIG.load(true);
 	}
 }

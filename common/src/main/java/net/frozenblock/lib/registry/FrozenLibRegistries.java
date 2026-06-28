@@ -23,6 +23,8 @@ import net.frozenblock.lib.block.impl.clipgroup.ClipGroup;
 import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.block.impl.waterlike.WaterLikeType;
 import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
+import net.frozenblock.lib.integration.api.ModIntegration;
+import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.platform.service.RegistryHelper;
 import net.minecraft.core.MappedRegistry;
@@ -30,6 +32,15 @@ import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 
 public class FrozenLibRegistries {
+	public static final ResourceKey<Registry<ModIntegrationSupplier<?>>> MOD_INTEGRATION_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("mod_integration"));
+	public static final MappedRegistry<ModIntegrationSupplier<?>> MOD_INTEGRATION = createSimple(MOD_INTEGRATION_REGISTRY, Lifecycle.stable(), false,
+		registry -> Registry.register(registry, FrozenLibConstants.id("dummy"), new ModIntegrationSupplier<>(() -> new ModIntegration("dummy") {
+			@Override
+			public void init() {}
+		},
+			"dummy"
+		))
+	);
 
 	public static final ResourceKey<Registry<ConfigPredicateType<?>>> CONFIG_PREDICATE_TYPE_REGISTRY = ResourceKey.createRegistryKey(FrozenLibConstants.id("config_predicate_type"));
 	public static final MappedRegistry<ConfigPredicateType<?>> CONFIG_PREDICATE_TYPE = createSimple(CONFIG_PREDICATE_TYPE_REGISTRY, Lifecycle.stable());

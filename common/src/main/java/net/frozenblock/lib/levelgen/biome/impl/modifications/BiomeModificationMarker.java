@@ -21,5 +21,5 @@ package net.frozenblock.lib.levelgen.biome.impl.modifications;
  * if it does occur.
  */
 public interface BiomeModificationMarker {
-	void fabric_markModified();
+	void frozenLib$markModified();
 }

@@ -109,7 +109,7 @@ public class BiomeModificationImpl {
 		// this once for a RegistryAccess. Marking the RegistryAccess as modified ensures a crash
 		// if the precondition is violated.
 		BiomeModificationMarker modificationTracker = (BiomeModificationMarker) impl;
-		modificationTracker.fabric_markModified();
+		modificationTracker.frozenLib$markModified();
 
 		Registry<Biome> biomes = impl.lookupOrThrow(Registries.BIOME);
 

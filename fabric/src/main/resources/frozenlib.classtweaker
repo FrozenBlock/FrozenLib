@@ -242,10 +242,29 @@ accessible method net/minecraft/client/renderer/rendertype/RenderType create (Lj
 transitive-accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
 
 # Biomes
+accessible class net/minecraft/world/level/biome/Biome$ClimateSettings
+accessible field net/minecraft/world/level/biome/Biome attributes Lnet/minecraft/world/attribute/EnvironmentAttributeMap;
+mutable field net/minecraft/world/level/biome/Biome attributes Lnet/minecraft/world/attribute/EnvironmentAttributeMap;
+accessible field net/minecraft/world/level/biome/BiomeGenerationSettings features Ljava/util/List;
+mutable field net/minecraft/world/level/biome/BiomeGenerationSettings features Ljava/util/List;
+accessible field net/minecraft/world/level/biome/BiomeGenerationSettings featureSet Ljava/util/function/Supplier;
+mutable field net/minecraft/world/level/biome/BiomeGenerationSettings featureSet Ljava/util/function/Supplier;
+accessible field net/minecraft/world/level/biome/BiomeGenerationSettings boneMealFeatures Ljava/util/function/Supplier;
+mutable field net/minecraft/world/level/biome/BiomeGenerationSettings boneMealFeatures Ljava/util/function/Supplier;
+accessible field net/minecraft/world/level/biome/BiomeGenerationSettings carvers Lnet/minecraft/core/HolderSet;
+mutable field net/minecraft/world/level/biome/BiomeGenerationSettings carvers Lnet/minecraft/core/HolderSet;
+accessible field net/minecraft/world/level/biome/MobSpawnSettings spawners Ljava/util/Map;
+mutable field net/minecraft/world/level/biome/MobSpawnSettings spawners Ljava/util/Map;
+accessible field net/minecraft/world/level/biome/MobSpawnSettings mobSpawnCosts Ljava/util/Map;
+mutable field net/minecraft/world/level/biome/MobSpawnSettings mobSpawnCosts Ljava/util/Map;
+accessible field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
+mutable field net/minecraft/world/level/biome/MobSpawnSettings creatureGenerationProbability F
 transitive-accessible method net/minecraft/data/worldgen/biome/OverworldBiomes calculateSkyColor (F)I
 transitive-accessible method net/minecraft/world/level/biome/OverworldBiomeBuilder addBiomes (Ljava/util/function/Consumer;)V
 
 transitive-inject-interface net/minecraft/world/level/biome/MultiNoiseBiomeSource net/frozenblock/lib/levelgen/biome/api/FrozenLibBiomeSourceAccess
+accessible field net/minecraft/world/level/chunk/ChunkGenerator featuresPerStep Ljava/util/function/Supplier;
+mutable field net/minecraft/world/level/chunk/ChunkGenerator featuresPerStep Ljava/util/function/Supplier;
 
 # Noise
 transitive-accessible method net/minecraft/data/worldgen/NoiseData register (Lnet/minecraft/data/worldgen/BootstrapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
@@ -313,6 +332,7 @@ transitive-accessible method net/minecraft/world/level/levelgen/SurfaceRules$Seq
 transitive-accessible method net/minecraft/data/registries/VanillaRegistries validateThatAllBiomeFeaturesHaveBiomeFilter (Lnet/minecraft/core/HolderLookup$Provider;)V
 transitive-accessible method net/minecraft/data/Main bindRegistries (Ljava/util/function/BiFunction;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/data/DataProvider$Factory;
 transitive-accessible method net/minecraft/core/MappedRegistry getOrCreateHolderOrThrow (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/core/Holder$Reference;
+accessible field net/minecraft/core/MappedRegistry registrationInfos Ljava/util/Map;
 transitive-accessible method net/minecraft/core/registries/BuiltInRegistries freeze ()V
 transitive-accessible method net/minecraft/core/Holder$Reference bindValue (Ljava/lang/Object;)V
 transitive-accessible class net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap

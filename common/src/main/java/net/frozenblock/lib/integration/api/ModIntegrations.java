@@ -20,9 +20,8 @@ package net.frozenblock.lib.integration.api;
 import java.util.List;
 import java.util.function.Supplier;
 import lombok.experimental.UtilityClass;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
-import net.frozenblock.lib.registry.FrozenLibFabricRegistries;
+import net.frozenblock.lib.platform.FrozenLibEarlyPlatformUtils;
+import net.frozenblock.lib.registry.FrozenLibRegistries;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
 
@@ -39,7 +38,7 @@ public class ModIntegrations {
      */
     public static ModIntegrationSupplier<? extends ModIntegration> register(Supplier<? extends ModIntegration> integration, String srcModID, String modID) {
         return Registry.register(
-			FrozenLibFabricRegistries.MOD_INTEGRATION,
+			FrozenLibRegistries.MOD_INTEGRATION,
 			Identifier.fromNamespaceAndPath(srcModID, modID),
 			new ModIntegrationSupplier<>(integration, modID)
 		);
@@ -56,23 +55,23 @@ public class ModIntegrations {
 	 */
 	public static <T extends ModIntegration> ModIntegrationSupplier<T> register(Supplier<T> integration, Supplier<T> unloadedIntegration, String srcModID, String modID) {
 		return Registry.register(
-			FrozenLibFabricRegistries.MOD_INTEGRATION,
+			FrozenLibRegistries.MOD_INTEGRATION,
 			Identifier.fromNamespaceAndPath(srcModID, modID),
 			new ModIntegrationSupplier<>(integration, unloadedIntegration, modID)
 		);
 	}
 
     public static List<ModIntegrationSupplier<?>> getIntegrationSuppliers() {
-        return FrozenLibFabricRegistries.MOD_INTEGRATION.stream().toList();
+        return FrozenLibRegistries.MOD_INTEGRATION.stream().toList();
     }
 
 	/**
 	 * Runs prior to registries freezing in order to allow for the registering of things.
 	 */
 	public static void initializePreFreeze() {
-		for (ModIntegrationSupplier<?> integration : FrozenLibFabricRegistries.MOD_INTEGRATION) {
+		for (ModIntegrationSupplier<?> integration : FrozenLibRegistries.MOD_INTEGRATION) {
 			integration.getIntegration().initPreFreeze();
-			if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) continue;
+			if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) continue;
 			integration.getIntegration().clientInitPreFreeze();
 		}
 	}
@@ -81,9 +80,9 @@ public class ModIntegrations {
      * Initialize all mod integrations.
      */
     public static void initialize() {
-        for (ModIntegrationSupplier<?> integration : FrozenLibFabricRegistries.MOD_INTEGRATION) {
+        for (ModIntegrationSupplier<?> integration : FrozenLibRegistries.MOD_INTEGRATION) {
             integration.getIntegration().init();
-			if (FabricLoader.getInstance().getEnvironmentType() != EnvType.CLIENT) continue;
+			if (FrozenLibEarlyPlatformUtils.LOADER.isServer()) continue;
 			integration.getIntegration().clientInit();
         }
     }

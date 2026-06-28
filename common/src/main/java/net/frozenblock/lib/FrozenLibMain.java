@@ -18,6 +18,10 @@
 package net.frozenblock.lib;
 
 import net.frozenblock.lib.block.impl.fire.FireData;
+import net.frozenblock.lib.config.api.instance.Config;
+import net.frozenblock.lib.config.api.registry.ConfigRegistry;
+import net.frozenblock.lib.event.api.events.RegistryFreezeEvents;
+import net.frozenblock.lib.integration.api.ModIntegrations;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.frozenblock.lib.tag.api.TagKeyArgument;
 import net.minecraft.commands.synchronization.ArgumentTypeInfos;
@@ -47,5 +51,14 @@ public final class FrozenLibMain {
 		);
 
 		register.register();
+
+		RegistryFreezeEvents.START_REGISTRY_FREEZE.register((registry, allRegistries) -> {
+			if (allRegistries) ModIntegrations.initialize();
+		});
+
+		RegistryFreezeEvents.END_REGISTRY_FREEZE.register((registry, allRegistries) -> {
+			if (!allRegistries) return;
+			for (Config<?> config : ConfigRegistry.getAllConfigs()) config.save();
+		});
 	}
 }

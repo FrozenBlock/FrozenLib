@@ -29,14 +29,14 @@ import org.spongepowered.asm.mixin.Unique;
 @Mixin(RegistryAccess.ImmutableRegistryAccess.class)
 public class RegistryAccessImmutableRegistryAccessMixin implements BiomeModificationMarker {
 	@Unique
-	private boolean modified;
+	private boolean frozenLib$modified;
 
 	@Override
-	public void fabric_markModified() {
-		if (modified) {
+	public void frozenLib$markModified() {
+		if (frozenLib$modified) {
 			throw new IllegalStateException("This dynamic registries instance has already been modified");
 		}
 
-		modified = true;
+		frozenLib$modified = true;
 	}
 }
