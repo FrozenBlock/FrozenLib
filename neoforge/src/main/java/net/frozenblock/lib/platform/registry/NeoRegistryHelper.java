@@ -35,7 +35,7 @@ public class NeoRegistryHelper implements RegistryHelper {
 
 	private static final List<Registry<?>> PENDING_REGISTRIES = new ArrayList<>();
 
-	private record DynamicRegistryEntry<T>(ResourceKey<Registry<T>> key, Codec<T> codec, boolean synced) {}
+	private record DynamicRegistryEntry<T>(ResourceKey<Registry<T>> key, Codec<T> codec, @Nullable Codec<T> networkCodec, boolean synced) {}
 	private static final List<DynamicRegistryEntry<?>> PENDING_DYNAMIC_REGISTRIES = new ArrayList<>();
 
 	@Override
@@ -52,7 +52,6 @@ public class NeoRegistryHelper implements RegistryHelper {
 	) {
 		var builder = new RegistryBuilder<>(key).disableRegistrationCheck();
 		if (synced) builder.sync(true);
-		@SuppressWarnings("unchecked")
 		var registry = (MappedRegistry<T>) builder.create();
 		if (bootstrap != null) bootstrap.run(registry);
 		PENDING_REGISTRIES.add(registry);
@@ -61,12 +60,17 @@ public class NeoRegistryHelper implements RegistryHelper {
 
 	@Override
 	public <T> void registerDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec) {
-		PENDING_DYNAMIC_REGISTRIES.add(new DynamicRegistryEntry<>(key, directCodec, false));
+		PENDING_DYNAMIC_REGISTRIES.add(new DynamicRegistryEntry<>(key, directCodec, null, false));
 	}
 
 	@Override
 	public <T> void registerSyncedDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec) {
-		PENDING_DYNAMIC_REGISTRIES.add(new DynamicRegistryEntry<>(key, directCodec, true));
+		registerSyncedDynamicRegistry(key, directCodec, directCodec);
+	}
+
+	@Override
+	public <T> void registerSyncedDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec, Codec<T> networkCodec) {
+		PENDING_DYNAMIC_REGISTRIES.add(new DynamicRegistryEntry<>(key, directCodec, networkCodec, true));
 	}
 
 	public static void flushRegistries(NewRegistryEvent event) {
@@ -81,7 +85,7 @@ public class NeoRegistryHelper implements RegistryHelper {
 		for (DynamicRegistryEntry<?> entry : PENDING_DYNAMIC_REGISTRIES) {
 			var typedEntry = (DynamicRegistryEntry<Object>) entry;
 			if (typedEntry.synced()) {
-				event.dataPackRegistry(typedEntry.key(), typedEntry.codec(), typedEntry.codec());
+				event.dataPackRegistry(typedEntry.key(), typedEntry.codec(), typedEntry.networkCodec());
 			} else {
 				event.dataPackRegistry(typedEntry.key(), typedEntry.codec());
 			}

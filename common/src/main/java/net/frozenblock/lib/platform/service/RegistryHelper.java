@@ -39,6 +39,8 @@ public interface RegistryHelper {
 
 	<T> void registerSyncedDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec);
 
+	<T> void registerSyncedDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec, Codec<T> networkCodec);
+
 	@FunctionalInterface
 	interface RegistryBootstrap<T> {
 		void run(Registry<T> registry);

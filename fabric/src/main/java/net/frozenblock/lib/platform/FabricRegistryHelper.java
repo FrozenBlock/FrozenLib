@@ -60,4 +60,9 @@ public class FabricRegistryHelper implements RegistryHelper {
 	public <T> void registerSyncedDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec) {
 		DynamicRegistries.registerSynced(key, directCodec);
 	}
+
+	@Override
+	public <T> void registerSyncedDynamicRegistry(ResourceKey<Registry<T>> key, Codec<T> directCodec, Codec<T> networkCodec) {
+		DynamicRegistries.registerSynced(key, directCodec, networkCodec);
+	}
 }
