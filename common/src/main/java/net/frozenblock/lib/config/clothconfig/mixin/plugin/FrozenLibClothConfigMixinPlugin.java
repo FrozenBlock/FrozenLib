@@ -40,7 +40,10 @@ public class FrozenLibClothConfigMixinPlugin implements IMixinConfigPlugin {
 
 	@Override
 	public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-		return FrozenLibEarlyPlatformUtils.LOADER.isModLoaded("cloth-config");
+		if (FrozenLibEarlyPlatformUtils.LOADER.isFabric()) {
+			return FrozenLibEarlyPlatformUtils.LOADER.isModLoaded("cloth-config");
+		}
+		return true;
 	}
 
 	@Override
