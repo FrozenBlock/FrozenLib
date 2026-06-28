@@ -44,7 +44,7 @@ public class FabricEventHelper implements EventHelper {
 
 	@SuppressWarnings("unchecked")
 	private <T> void autoRegister(Event<T> event, Class<? super T> type) {
-		for (var eventType : EventType.VALUES) {
+		for (EventType eventType : EventType.VALUES) {
 			if (!eventType.listener().isAssignableFrom(type)) continue;
 			final List<?> entrypoints = FabricLoader.getInstance().getEntrypoints(eventType.entrypoint(), eventType.listener());
 
