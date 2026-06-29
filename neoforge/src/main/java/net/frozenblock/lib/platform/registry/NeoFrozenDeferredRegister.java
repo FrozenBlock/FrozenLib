@@ -170,13 +170,28 @@ public class NeoFrozenDeferredRegister<T> implements FrozenDeferredRegister<T> {
 		}
 
 		@Override
+		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties, Consumer<B> also) {
+			return new FrozenDeferredBlock<>(register(key, () -> func.apply(properties.get().setId(key)), also));
+		}
+
+		@Override
 		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> propertiesOp) {
 			return registerBlock(key, func, () -> propertiesOp.apply(BlockBehaviour.Properties.of()));
 		}
 
 		@Override
+		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties, Consumer<B> also) {
+			return registerBlock(key, func, () -> properties.apply(BlockBehaviour.Properties.of()), also);
+		}
+
+		@Override
 		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func) {
 			return registerBlock(key, func, BlockBehaviour.Properties::of);
+		}
+
+		@Override
+		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Consumer<B> also) {
+			return registerBlock(key, func, BlockBehaviour.Properties::of, also);
 		}
 
 		@Override

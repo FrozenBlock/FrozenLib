@@ -174,7 +174,12 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 
 		@Override
 		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties) {
-			return new FrozenDeferredBlock<>(register(key, () -> func.apply(properties.get())));
+			return new FrozenDeferredBlock<>(register(key, () -> func.apply(properties.get().setId(key))));
+		}
+
+		@Override
+		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties, Consumer<B> also) {
+			return new FrozenDeferredBlock<>(register(key, () -> func.apply(properties.get().setId(key)), also));
 		}
 
 		@Override
@@ -183,8 +188,18 @@ public class FabricFrozenDeferredRegister<T> implements FrozenDeferredRegister<T
 		}
 
 		@Override
+		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties, Consumer<B> also) {
+			return registerBlock(key, func, () -> properties.apply(BlockBehaviour.Properties.of()), also);
+		}
+
+		@Override
 		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func) {
 			return registerBlock(key, func, BlockBehaviour.Properties::of);
+		}
+
+		@Override
+		public <B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Consumer<B> also) {
+			return registerBlock(key, func, BlockBehaviour.Properties::of, also);
 		}
 
 		@Override

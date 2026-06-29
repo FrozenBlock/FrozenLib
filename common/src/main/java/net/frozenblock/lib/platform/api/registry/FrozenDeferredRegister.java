@@ -21,6 +21,7 @@ import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.references.BlockItemId;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -29,6 +30,9 @@ import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SlabBlock;
+import net.minecraft.world.level.block.StairBlock;
+import net.minecraft.world.level.block.WallBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import java.util.function.Consumer;
 import java.util.function.Function;
@@ -119,15 +123,37 @@ public interface FrozenDeferredRegister<T> {
 
 		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties);
 
+		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Supplier<BlockBehaviour.Properties> properties, Consumer<B> also);
+
 		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties);
 
+		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, UnaryOperator<BlockBehaviour.Properties> properties, Consumer<B> also);
+
 		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func);
+
+		<B extends Block> FrozenDeferredBlock<B> registerBlock(ResourceKey<Block> key, Function<BlockBehaviour.Properties, ? extends B> func, Consumer<B> also);
 
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, Supplier<BlockBehaviour.Properties> properties);
 
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key, UnaryOperator<BlockBehaviour.Properties> properties);
 
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key);
+
+		default FrozenDeferredBlock<StairBlock> registerLegacyStair(final BlockItemId id, final Block base) {
+			return registerBlock(id.block(), p -> new StairBlock(base.defaultBlockState(), p), () -> BlockBehaviour.Properties.ofLegacyCopy(base));
+		}
+
+		default FrozenDeferredBlock<StairBlock> registerStair(final BlockItemId id, final Block base) {
+			return registerBlock(id.block(), p -> new StairBlock(base.defaultBlockState(), p), () -> BlockBehaviour.Properties.ofFullCopy(base));
+		}
+
+		default FrozenDeferredBlock<SlabBlock> registerSlab(final BlockItemId id, final Block base) {
+			return registerBlock(id.block(), SlabBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base));
+		}
+
+		default FrozenDeferredBlock<WallBlock> registerWall(final BlockItemId id, final Block base) {
+			return registerBlock(id.block(), WallBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base).forceSolidOn());
+		}
 	}
 
 	interface Items extends FrozenDeferredRegister<Item> {
