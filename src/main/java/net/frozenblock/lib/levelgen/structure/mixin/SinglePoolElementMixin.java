@@ -20,8 +20,7 @@ package net.frozenblock.lib.levelgen.structure.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.levelgen.structure.impl.StructurePoolElementInterface;
-import net.frozenblock.lib.levelgen.structure.impl.StructureTemplateInterface;
+import net.frozenblock.lib.levelgen.structure.impl.processor.ProcessorInjectionInterface;
 import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
@@ -30,7 +29,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(SinglePoolElement.class)
-public class SinglePoolElementMixin implements StructurePoolElementInterface {
+public class SinglePoolElementMixin implements ProcessorInjectionInterface {
 
 	@Unique
 	private final List<StructureProcessor> frozenLib$additionalProcessors = new ArrayList<>();
@@ -48,7 +47,7 @@ public class SinglePoolElementMixin implements StructurePoolElementInterface {
 		)
 	)
 	public StructureTemplate frozenLib$place(StructureTemplate original) {
-		if (original instanceof StructureTemplateInterface structureTemplateInterface) structureTemplateInterface.frozenLib$addProcessors(this.frozenLib$additionalProcessors);
+		if (original instanceof ProcessorInjectionInterface processorInjectionInterface) processorInjectionInterface.frozenLib$addProcessors(this.frozenLib$additionalProcessors);
 		return original;
 	}
 

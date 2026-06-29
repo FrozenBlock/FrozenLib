@@ -41,8 +41,8 @@ import net.frozenblock.lib.levelgen.structure.api.StructureGenerationConditionAp
 import net.frozenblock.lib.levelgen.structure.api.StructurePlacementExclusionApi;
 import net.frozenblock.lib.levelgen.structure.api.StructureSetApi;
 import net.frozenblock.lib.levelgen.structure.api.TemplatePoolApi;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModifiers;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenLibStructureProcessorTypes;
+import net.frozenblock.lib.levelgen.structure.api.processor.FrozenLibRuleBlockEntityModifiers;
+import net.frozenblock.lib.levelgen.structure.impl.processor.FrozenLibStructureProcessorTypes;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatus;
 import net.frozenblock.lib.levelgen.structure.impl.status.StructureStatusUpdater;
 import net.frozenblock.lib.networking.FrozenNetworking;

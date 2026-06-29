@@ -18,7 +18,7 @@
 package net.frozenblock.lib.levelgen.structure.mixin;
 
 import java.util.List;
-import net.frozenblock.lib.levelgen.structure.impl.InitialPieceProcessorInjectionInterface;
+import net.frozenblock.lib.levelgen.structure.impl.processor.ProcessorInjectionInterface;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(TemplateStructurePiece.class)
-public abstract class TemplateStructurePieceMixin implements InitialPieceProcessorInjectionInterface {
+public abstract class TemplateStructurePieceMixin implements ProcessorInjectionInterface {
 
 	@Shadow
 	protected StructurePlaceSettings placeSettings;

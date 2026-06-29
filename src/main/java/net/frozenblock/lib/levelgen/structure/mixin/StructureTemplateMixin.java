@@ -21,7 +21,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import java.util.ArrayList;
 import java.util.List;
-import net.frozenblock.lib.levelgen.structure.impl.StructureTemplateInterface;
+import net.frozenblock.lib.levelgen.structure.impl.processor.ProcessorInjectionInterface;
 import net.frozenblock.lib.tag.api.FrozenLibBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(StructureTemplate.class)
-public class StructureTemplateMixin implements StructureTemplateInterface {
+public class StructureTemplateMixin implements ProcessorInjectionInterface {
 
 	@Unique
 	private final List<StructureProcessor> frozenLib$additionalProcessors = new ArrayList<>();
@@ -51,7 +51,7 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 		)
 	)
 	public synchronized void frozenLib$placeInWorld(
-		ServerLevelAccessor level, BlockPos offset, BlockPos pos, StructurePlaceSettings settings, RandomSource random, int flags,
+		ServerLevelAccessor level, BlockPos position, BlockPos referencePos, StructurePlaceSettings settings, RandomSource random, int updateMode,
 		CallbackInfoReturnable<Boolean> info
 	) {
 		this.frozenLib$additionalProcessors.forEach(settings::addProcessor);
@@ -71,8 +71,8 @@ public class StructureTemplateMixin implements StructureTemplateInterface {
 			ordinal = 1
 		)
 	)
-	private static boolean frozenLib$scheduleTicksOnBlockPlace(ServerLevelAccessor instance, BlockPos pos, BlockState state, int i, Operation<Boolean> original) {
-		final boolean setBlock = original.call(instance, pos, state, i);
+	private static boolean frozenLib$scheduleTicksOnBlockPlace(ServerLevelAccessor instance, BlockPos pos, BlockState state, int updateFlags, Operation<Boolean> original) {
+		final boolean setBlock = original.call(instance, pos, state, updateFlags);
 		if (setBlock && state.is(FrozenLibBlockTags.STRUCTURE_PLACE_SCHEDULES_TICK)) instance.scheduleTick(pos, state.getBlock(), 1);
 		return setBlock;
 	}

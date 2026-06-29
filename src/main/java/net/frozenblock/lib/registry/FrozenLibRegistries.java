@@ -33,6 +33,7 @@ import net.frozenblock.lib.config.v2.entry.predicates.ConfigPredicateType;
 import net.frozenblock.lib.integration.api.ModIntegration;
 import net.frozenblock.lib.integration.api.ModIntegrationSupplier;
 import net.frozenblock.lib.levelgen.material.impl.RuleSourceAddition;
+import net.frozenblock.lib.levelgen.structure.impl.processor.StructureProcessorListAddition;
 import net.frozenblock.lib.music.api.structure.StructureMusic;
 import net.frozenblock.lib.sound.api.predicate.SoundPredicate;
 import net.frozenblock.lib.sound.api.type.MovingSoundType;
@@ -88,6 +89,7 @@ public class FrozenLibRegistries {
 	public static final ResourceKey<Registry<WaterLikeType>> WATER_LIKE_TYPE = ResourceKey.createRegistryKey(FrozenLibConstants.id("water_like_type"));
 	public static final ResourceKey<Registry<RuleSourceAddition>> RULE_SOURCE_ADDITION = ResourceKey.createRegistryKey(FrozenLibConstants.id("rule_source_addition"));
 	public static final ResourceKey<Registry<PlayerDamageTypeSound>> PLAYER_DAMAGE_TYPE_SOUND = ResourceKey.createRegistryKey(FrozenLibConstants.id("player_damage_type_sound"));
+	public static final ResourceKey<Registry<StructureProcessorListAddition>> STRUCTURE_PROCESSOR_LIST_ADDITION = ResourceKey.createRegistryKey(FrozenLibConstants.id("structure_processor_list_addition"));
 
     public static void init() {
 		DynamicRegistries.registerSynced(SOUND_TYPE_OVERRIDE, SoundTypeOverride.DIRECT_CODEC);
@@ -99,6 +101,7 @@ public class FrozenLibRegistries {
 		DynamicRegistries.registerSynced(WATER_LIKE_TYPE, WaterLikeType.DIRECT_CODEC);
 		DynamicRegistries.register(RULE_SOURCE_ADDITION, RuleSourceAddition.DIRECT_CODEC);
 		DynamicRegistries.registerSynced(PLAYER_DAMAGE_TYPE_SOUND, PlayerDamageTypeSound.DIRECT_CODEC);
+		DynamicRegistries.register(STRUCTURE_PROCESSOR_LIST_ADDITION, StructureProcessorListAddition.DIRECT_CODEC);
     }
 
 	public static HolderLookup.Provider vanillaRegistries() {

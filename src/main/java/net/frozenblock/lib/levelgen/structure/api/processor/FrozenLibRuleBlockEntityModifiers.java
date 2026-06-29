@@ -15,11 +15,10 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.structure.impl;
+package net.frozenblock.lib.levelgen.structure.api.processor;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
-import net.frozenblock.lib.levelgen.structure.api.processor.AppendSherds;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
@@ -30,7 +29,7 @@ public class FrozenLibRuleBlockEntityModifiers {
 
 	public static void init() {}
 
-	private static <P extends RuleBlockEntityModifier> RuleBlockEntityModifierType<P> register(String path, MapCodec<P> codec) {
-		return Registry.register(BuiltInRegistries.RULE_BLOCK_ENTITY_MODIFIER, FrozenLibConstants.id(path), () -> codec);
+	private static <P extends RuleBlockEntityModifier> RuleBlockEntityModifierType<P> register(String name, MapCodec<P> codec) {
+		return Registry.register(BuiltInRegistries.RULE_BLOCK_ENTITY_MODIFIER, FrozenLibConstants.id(name), () -> codec);
 	}
 }

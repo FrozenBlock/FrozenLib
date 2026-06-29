@@ -15,7 +15,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.structure.impl;
+package net.frozenblock.lib.levelgen.structure.impl.processor;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
@@ -34,7 +34,7 @@ public class FrozenLibStructureProcessorTypes {
 		register("mark_for_post_processing", MarkForPostProcessingProcessor.MAP_CODEC);
 	}
 
-	private static void register(String id, MapCodec<? extends StructureProcessor> codec) {
-		Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, FrozenLibConstants.id(id), codec);
+	private static void register(String name, MapCodec<? extends StructureProcessor> codec) {
+		Registry.register(BuiltInRegistries.STRUCTURE_PROCESSOR, FrozenLibConstants.id(name), codec);
 	}
 }

@@ -17,68 +17,38 @@
 
 package net.frozenblock.lib.levelgen.structure.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import java.util.List;
-import net.frozenblock.lib.levelgen.structure.api.StructureProcessorApi;
-import net.frozenblock.lib.levelgen.structure.impl.InitialPieceProcessorInjectionInterface;
-import net.frozenblock.lib.levelgen.structure.impl.StructureStartInterface;
+import net.frozenblock.lib.levelgen.structure.api.processor.StructureProcessorListAdditions;
+import net.frozenblock.lib.levelgen.structure.impl.processor.ProcessorInjectionInterface;
 import net.minecraft.core.BlockPos;
-import net.minecraft.resources.Identifier;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessorList;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(StructureStart.class)
-public class StructureStartMixin implements StructureStartInterface {
+public class StructureStartMixin {
 
-	@Unique
-	@Nullable
-	private Identifier frozenLib$id;
-
-	@ModifyExpressionValue(
-		method = "loadStaticStart",
-		at = @At(
-			value = "INVOKE",
-			target = "Lnet/minecraft/resources/Identifier;parse(Ljava/lang/String;)Lnet/minecraft/resources/Identifier;"
-		)
-	)
-	private static Identifier frozenLib$loadStaticStartA(
-		Identifier original,
-		@Share("frozenLib$identifier") LocalRef<Identifier> identifierRef
-	) {
-		identifierRef.set(original);
-		return original;
-	}
-
-	@ModifyExpressionValue(
-		method = "loadStaticStart",
-		at = @At(
-			value = "NEW",
-			target = "(Lnet/minecraft/world/level/levelgen/structure/Structure;Lnet/minecraft/world/level/ChunkPos;ILnet/minecraft/world/level/levelgen/structure/pieces/PiecesContainer;)Lnet/minecraft/world/level/levelgen/structure/StructureStart;"
-		)
-	)
-	private static StructureStart frozenLib$loadStaticStartB(
-		StructureStart structureStart, @Share("frozenLib$identifier") LocalRef<Identifier> identifierRef
-	) {
-		StructureStartInterface.class.cast(structureStart).frozenLib$setId(identifierRef.get());
-		return structureStart;
-	}
+	@Shadow
+	@Final
+	private Structure structure;
 
 	@Inject(
 		method = "placeInChunk",
@@ -88,10 +58,14 @@ public class StructureStartMixin implements StructureStartInterface {
 		)
 	)
 	public void frozenLib$placeInChunkA(
-		WorldGenLevel level, StructureManager structureManager, ChunkGenerator chunkGenerator, RandomSource random, BoundingBox boundingBox, ChunkPos chunkPos, CallbackInfo info,
+		WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator, RandomSource random, BoundingBox chunkBB, ChunkPos chunkPos, CallbackInfo info,
 		@Share("frozenLib$additionalProcessors") LocalRef<List<StructureProcessor>> additionalProcessors
 	) {
-		additionalProcessors.set(StructureProcessorApi.getAdditionalProcessors(this.frozenLib$id));
+		additionalProcessors.set(
+			StructureProcessorListAdditions.getAdditions(level.registryAccess(), this.structure)
+				.map(StructureProcessorList::list)
+				.orElse(List.of())
+		);
 	}
 
 	@WrapOperation(
@@ -113,21 +87,9 @@ public class StructureStartMixin implements StructureStartInterface {
 		Operation<Void> original,
 		@Share("frozenLib$additionalProcessors") LocalRef<List<StructureProcessor>> additionalProcessors
 	) {
-		if (instance instanceof InitialPieceProcessorInjectionInterface initialPieceProcessorInjectionInterface) {
-			initialPieceProcessorInjectionInterface.frozenLib$addProcessors(additionalProcessors.get());
+		if (instance instanceof ProcessorInjectionInterface processorInjectionInterface) {
+			processorInjectionInterface.frozenLib$addProcessors(additionalProcessors.get());
 		}
 		original.call(instance, level, structureManager, chunkGenerator, random, boundingBox, chunkPos, pos);
-	}
-
-	@Unique
-	@Override
-	public synchronized Identifier frozenLib$getId() {
-		return this.frozenLib$id;
-	}
-
-	@Unique
-	@Override
-	public synchronized void frozenLib$setId(Identifier id) {
-		this.frozenLib$id = id;
 	}
 }
