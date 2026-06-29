@@ -45,7 +45,7 @@ public interface FrozenLibRenderState {
 	 * @return the data, or {@code null} if it cannot be found.
 	 */
 	@Nullable
-	default <T> T getData(RenderStateDataKey<T> key) {
+	default <T> T frozenLib$getData(RenderStateDataKey<T> key) {
 		throw new UnsupportedOperationException("Implemented via mixin");
 	}
 
@@ -56,7 +56,7 @@ public interface FrozenLibRenderState {
 	 * @param <T> the type of the data
 	 * @return the data, or the default value if it cannot be found.
 	 */
-	default <T> T getDataOrDefault(RenderStateDataKey<T> key, T defaultValue) {
+	default <T> T frozenLib$getDataOrDefault(RenderStateDataKey<T> key, T defaultValue) {
 		throw new UnsupportedOperationException("Implemented via mixin");
 	}
 
@@ -66,7 +66,7 @@ public interface FrozenLibRenderState {
 	 * @param value the data
 	 * @param <T> the type of the data
 	 */
-	default <T> void setData(RenderStateDataKey<T> key, @Nullable T value) {
+	default <T> void frozenLib$setData(RenderStateDataKey<T> key, @Nullable T value) {
 		throw new UnsupportedOperationException("Implemented via mixin");
 	}
 

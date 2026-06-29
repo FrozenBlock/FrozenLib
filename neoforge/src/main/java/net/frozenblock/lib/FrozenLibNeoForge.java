@@ -41,15 +41,29 @@ import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
+import net.neoforged.neoforge.network.configuration.ICustomConfigurationTask;
+import net.neoforged.neoforge.network.event.RegisterConfigurationTasksEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+import java.util.function.Consumer;
+import net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.network.ConfigurationTask;
+import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 import net.minecraft.server.level.ServerLevel;
+import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
+import org.quiltmc.qsl.frozenblock.core.registry.impl.event.DelayedRegistry;
+import org.quiltmc.qsl.frozenblock.core.registry.impl.event.NeoForgeDelayedRegistry;
 
 @Mod(FrozenLibConstants.MOD_ID)
 public final class FrozenLibNeoForge {
 
 	public FrozenLibNeoForge(IEventBus modBus) {
+		DelayedRegistry.setFactory(NeoForgeDelayedRegistry::new);
+
 		modBus.addListener(NewRegistryEvent.class, NeoRegistryHelper::flushRegistries);
 		modBus.addListener(DataPackRegistryEvent.NewRegistry.class, event -> {
 			FrozenLibRegistries.init();
@@ -60,7 +74,10 @@ public final class FrozenLibNeoForge {
 			if (FrozenLibEarlyPlatformUtils.LOADER.isClient()) {
 				FrozenClientNetworking.registerClientReceivers();
 			}
- 			((NeoNetworkingHelper) FrozenLibInitPlatformUtils.NETWORKING).flush(event.registrar("frozenlib"));
+			NeoNetworkingHelper neoNetworking = (NeoNetworkingHelper) FrozenLibInitPlatformUtils.NETWORKING;
+			PayloadRegistrar registrar = event.registrar("frozenlib");
+			neoNetworking.flush(registrar);
+			neoNetworking.flushConfig(registrar);
 		});
 
 		FrozenLibMain.preQuiltInit();
@@ -69,6 +86,32 @@ public final class FrozenLibNeoForge {
 
 		NeoDataAttachmentHelper.register(modBus);
 		NeoEventBridge.initModStage(modBus);
+
+		modBus.addListener(RegisterConfigurationTasksEvent.class, event -> {
+			var handler = (ServerConfigurationPacketListenerImpl) event.getListener();
+			var server = ServerLifecycleHooks.getCurrentServer();
+			if (server != null) {
+				ConfigurationConnectionEvents.SERVER_CONFIGURE
+					.invoker().onServerConfigure(handler, server, task -> {
+						ICustomConfigurationTask neoTask = task instanceof ICustomConfigurationTask neo ? neo
+							: new ICustomConfigurationTask() {
+								@Override
+								public void run(Consumer<CustomPacketPayload> send) {
+									task.start(pkt -> {
+										if (pkt instanceof ClientboundCustomPayloadPacket cpkt) {
+											send.accept(cpkt.payload());
+										}
+									});
+								}
+								@Override
+								public ConfigurationTask.Type type() {
+									return task.type();
+								}
+							};
+						event.register(neoTask);
+					});
+			}
+		});
 
 		ScreenShakes.init();
 

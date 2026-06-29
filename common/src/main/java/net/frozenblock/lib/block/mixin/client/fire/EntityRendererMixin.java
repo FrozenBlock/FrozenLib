@@ -45,7 +45,7 @@ public class EntityRendererMixin<T extends Entity, S extends EntityRenderState> 
 	) {
 		if (original) {
 			final FireData fireData = FireData.ATTACHMENT.get(entity);
-			if (fireData != null) ((FrozenLibRenderState) state).setData(FrozenLibRenderStateDataKeys.FIRE_TYPE, fireData.type().value());
+			if (fireData != null) ((FrozenLibRenderState) state).frozenLib$setData(FrozenLibRenderStateDataKeys.FIRE_TYPE, fireData.type().value());
 		}
 		return original;
 	}

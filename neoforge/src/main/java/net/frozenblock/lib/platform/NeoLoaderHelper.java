@@ -17,6 +17,7 @@
 
 package net.frozenblock.lib.platform;
 
+import com.google.gson.JsonElement;
 import net.frozenblock.lib.platform.api.Env;
 import net.frozenblock.lib.platform.service.LoaderHelper;
 import net.minecraft.client.Minecraft;
@@ -26,6 +27,9 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jspecify.annotations.Nullable;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class NeoLoaderHelper implements LoaderHelper {
@@ -96,5 +100,31 @@ public class NeoLoaderHelper implements LoaderHelper {
 	@Override
 	public String[] getLaunchArgs() {
 		return FMLLoader.getCurrent().getProgramArgs().getArguments();
+	}
+
+	@Override
+	public List<ModEntry> getAllMods() {
+		ModList modList = ModList.get();
+		if (modList == null) return List.of();
+		List<ModEntry> result = new ArrayList<>();
+		for (var modInfo : modList.getMods()) {
+			result.add(new ModEntry() {
+				@Override
+				public String getId() {
+					return modInfo.getModId();
+				}
+
+				@Override
+				public String getName() {
+					return modInfo.getDisplayName();
+				}
+
+				@Override
+				public Optional<JsonElement> getCustomData(String key) {
+					return Optional.empty();
+				}
+			});
+		}
+		return result;
 	}
 }

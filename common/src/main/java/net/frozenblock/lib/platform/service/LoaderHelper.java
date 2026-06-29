@@ -17,9 +17,12 @@
 
 package net.frozenblock.lib.platform.service;
 
+import com.google.gson.JsonElement;
 import net.frozenblock.lib.platform.api.Env;
 import org.jetbrains.annotations.Nullable;
 import java.nio.file.Path;
+import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public interface LoaderHelper {
@@ -48,4 +51,23 @@ public interface LoaderHelper {
 	Object getGameObject();
 
 	String[] getLaunchArgs();
+
+	/**
+	 * Returns metadata for every loaded mod.
+	 * On Fabric, custom data is read from {@code fabric.mod.json}'s {@code custom} block.
+	 * On NeoForge, custom data is unavailable ({@link ModEntry#getCustomData} returns empty).
+	 */
+	List<ModEntry> getAllMods();
+
+	interface ModEntry {
+		String getId();
+
+		String getName();
+
+		/**
+		 * Returns the custom data value for the given top-level key, if present.
+		 * The value is returned as a {@link JsonElement} regardless of the underlying format.
+		 */
+		Optional<JsonElement> getCustomData(String key);
+	}
 }

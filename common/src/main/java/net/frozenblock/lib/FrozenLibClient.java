@@ -28,6 +28,8 @@ public final class FrozenLibClient {
 	}
 
 	public static void quiltInit() {
+		org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer.onInitializeClient();
+		org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync.registerHandlers();
 	}
 
 	public static void init() {

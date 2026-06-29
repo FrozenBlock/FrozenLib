@@ -48,7 +48,7 @@ public class FlameFeatureRendererMixin {
 		FeatureFrameContext context
 	) {
 		final EntityRenderState entityRenderState = submit.entityRenderState();
-		final FireType fireType = ((FrozenLibRenderState) entityRenderState).getData(FrozenLibRenderStateDataKeys.FIRE_TYPE);
+		final FireType fireType = ((FrozenLibRenderState) entityRenderState).frozenLib$getData(FrozenLibRenderStateDataKeys.FIRE_TYPE);
 		if (fireType != null) {
 			final AtlasManager atlasManager = context.atlasManager();
 			final FireType.TextureSettings textures = fireType.textures();

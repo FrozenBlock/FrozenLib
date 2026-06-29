@@ -17,14 +17,24 @@
 
 package net.frozenblock.lib.platform;
 
+import net.fabricmc.fabric.api.client.networking.v1.ClientConfigurationNetworking;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.FabricServerConfigurationPacketListenerImpl;
+import net.fabricmc.fabric.api.networking.v1.PacketSender;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationNetworking;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.frozenblock.lib.networking.ConfigPacketSender;
 import net.frozenblock.lib.platform.service.NetworkingHelper;
+import net.minecraft.client.Minecraft;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ConfigurationTask;
+import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 
 public class FabricNetworkingHelper implements NetworkingHelper {
 
@@ -90,5 +100,70 @@ public class FabricNetworkingHelper implements NetworkingHelper {
 	@Override
 	public void sendToServer(CustomPacketPayload payload) {
 		ClientPlayNetworking.send(payload);
+	}
+
+	@Override
+	public <P extends CustomPacketPayload> void registerClientboundConfigPayloadType(
+		CustomPacketPayload.Type<P> type,
+		StreamCodec<FriendlyByteBuf, P> codec
+	) {
+		PayloadTypeRegistry.clientboundConfiguration().register(type, codec);
+	}
+
+	@Override
+	public <P extends CustomPacketPayload> void registerServerboundConfigPayloadType(
+		CustomPacketPayload.Type<P> type,
+		StreamCodec<FriendlyByteBuf, P> codec
+	) {
+		PayloadTypeRegistry.serverboundConfiguration().register(type, codec);
+	}
+
+	@Override
+	public <P extends CustomPacketPayload> void registerGlobalServerConfigReceiver(
+		CustomPacketPayload.Type<P> type,
+		ServerConfigPayloadHandler<P> handler
+	) {
+		ServerConfigurationNetworking.registerGlobalReceiver(type, (payload, ctx) ->
+			handler.receive(payload, ctx.packetListener(), wrapFabricSender(ctx.responseSender()))
+		);
+	}
+
+	@Override
+	public <P extends CustomPacketPayload> void registerGlobalClientConfigReceiver(
+		CustomPacketPayload.Type<P> type,
+		ClientConfigPayloadHandler<P> handler
+	) {
+		ClientConfigurationNetworking.registerGlobalReceiver(type, (payload, ctx) ->
+			handler.receive(payload, ctx.client(), wrapFabricSender(ctx.responseSender()))
+		);
+	}
+
+	@Override
+	public boolean canSendConfigPacket(ServerConfigurationPacketListenerImpl handler, CustomPacketPayload.Type<?> type) {
+		return ServerConfigurationNetworking.canSend(handler, type);
+	}
+
+	@Override
+	public ConfigPacketSender getServerConfigSender(ServerConfigurationPacketListenerImpl handler) {
+		return wrapFabricSender(ServerConfigurationNetworking.getSender(handler));
+	}
+
+	@Override
+	public void completeConfigTask(ServerConfigurationPacketListenerImpl handler, ConfigurationTask.Type type) {
+		handler.completeTask(type);
+	}
+
+	private static ConfigPacketSender wrapFabricSender(PacketSender fabricSender) {
+		return new ConfigPacketSender() {
+			@Override
+			public void sendPacket(CustomPacketPayload payload) {
+				fabricSender.sendPacket(payload);
+			}
+
+			@Override
+			public void disconnect(Component reason) {
+				fabricSender.disconnect(reason);
+			}
+		};
 	}
 }

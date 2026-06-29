@@ -46,19 +46,19 @@ public interface RenderStateDataKeyMixin extends FrozenLibRenderState {
 
 	@Unique
 	@Override
-	public default <T> T getData(RenderStateDataKey<T> key) {
+	default <T> T frozenLib$getData(RenderStateDataKey<T> key) {
 		return this.getData(getOrCreateFabricKey(key));
 	}
 
 	@Unique
 	@Override
-	public default <T> T getDataOrDefault(RenderStateDataKey<T> key, T defaultValue) {
+	default <T> T frozenLib$getDataOrDefault(RenderStateDataKey<T> key, T defaultValue) {
 		return this.getDataOrDefault(getOrCreateFabricKey(key), defaultValue);
 	}
 
 	@Unique
 	@Override
-	public default <T> void setData(RenderStateDataKey<T> key, @Nullable T value) {
+	public default <T> void frozenLib$setData(RenderStateDataKey<T> key, @Nullable T value) {
 		this.setData(getOrCreateFabricKey(key), value);
 	}
 
@@ -73,7 +73,7 @@ public interface RenderStateDataKeyMixin extends FrozenLibRenderState {
 		final net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey<T> fabricKey = (net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey<T>) key.getFabricKey();
 		if (fabricKey != null) return fabricKey;
 
-		key.setFabricKey(RenderStateDataKey.create(key.asContextKey().name()));
+		key.setFabricKey(net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey.create(() -> key.asContextKey().name().toString()));
 		return (net.fabricmc.fabric.api.client.rendering.v1.RenderStateDataKey<T>) key.getFabricKey();
 	}
 }

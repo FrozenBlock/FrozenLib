@@ -43,20 +43,20 @@ public abstract class RenderStateDataKeyMixin implements FrozenLibRenderState {
 
 	@Unique
 	@Override
-	public <T> T getData(RenderStateDataKey<T> key) {
+	public <T> T frozenLib$getData(RenderStateDataKey<T> key) {
 		return this.getRenderData(key.asContextKey());
 	}
 
 	@Unique
 	@Override
-	public <T> T getDataOrDefault(RenderStateDataKey<T> key, T defaultValue) {
-		final T value = this.getData(key);
+	public <T> T frozenLib$getDataOrDefault(RenderStateDataKey<T> key, T defaultValue) {
+		final T value = this.frozenLib$getData(key);
 		return value != null ? value : defaultValue;
 	}
 
 	@Unique
 	@Override
-	public <T> void setData(RenderStateDataKey<T> key, @Nullable T value) {
+	public <T> void frozenLib$setData(RenderStateDataKey<T> key, @Nullable T value) {
 		this.setRenderData(key.asContextKey(), value);
 	}
 

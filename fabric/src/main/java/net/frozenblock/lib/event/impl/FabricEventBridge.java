@@ -19,6 +19,9 @@ package net.frozenblock.lib.event.impl;
 
 import lombok.experimental.UtilityClass;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.FabricServerConfigurationPacketListenerImpl;
+import net.fabricmc.fabric.api.networking.v1.ServerConfigurationConnectionEvents;
+import net.frozenblock.lib.event.api.events.ConfigurationConnectionEvents;
 import net.frozenblock.lib.event.api.events.LifecycleEvents;
 
 @UtilityClass
@@ -31,6 +34,13 @@ public final class FabricEventBridge {
 		ServerLifecycleEvents.SERVER_STARTED.register(instance -> LifecycleEvents.SERVER_STARTED.invoker().onServerStarted(instance));
 		ServerLifecycleEvents.SERVER_STOPPING.register(instance -> LifecycleEvents.SERVER_STOPPING.invoker().onServerStopping(instance));
 		ServerLifecycleEvents.SERVER_STOPPED.register(instance -> LifecycleEvents.SERVER_STOPPED.invoker().onServerStopped(instance));
+
+		ServerConfigurationConnectionEvents.CONFIGURE.register((handler, server) ->
+			ConfigurationConnectionEvents.SERVER_CONFIGURE.invoker().onServerConfigure(
+				handler, server,
+				task -> ((FabricServerConfigurationPacketListenerImpl) handler).addTask(task)
+			)
+		);
 	}
 
 	public static void initClientModStage() {

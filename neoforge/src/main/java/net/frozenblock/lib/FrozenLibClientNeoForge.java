@@ -25,6 +25,7 @@ import net.neoforged.fml.common.Mod;
 public final class FrozenLibClientNeoForge {
 
 	public FrozenLibClientNeoForge(IEventBus eventBus) {
+		FrozenLibClient.quiltInit();
 		FrozenLibClient.init();
 	}
 }

@@ -17,14 +17,18 @@
 
 package net.frozenblock.lib.platform.service;
 
+import net.frozenblock.lib.networking.ConfigPacketSender;
 import net.frozenblock.lib.platform.api.ClientOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ConfigurationTask;
+import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 
 public interface NetworkingHelper {
 
@@ -66,6 +70,33 @@ public interface NetworkingHelper {
 	@ClientOnly
 	void sendToServer(CustomPacketPayload payload);
 
+	<P extends CustomPacketPayload> void registerClientboundConfigPayloadType(
+		CustomPacketPayload.Type<P> type,
+		StreamCodec<FriendlyByteBuf, P> codec
+	);
+
+	<P extends CustomPacketPayload> void registerServerboundConfigPayloadType(
+		CustomPacketPayload.Type<P> type,
+		StreamCodec<FriendlyByteBuf, P> codec
+	);
+
+	<P extends CustomPacketPayload> void registerGlobalServerConfigReceiver(
+		CustomPacketPayload.Type<P> type,
+		ServerConfigPayloadHandler<P> handler
+	);
+
+	@ClientOnly
+	<P extends CustomPacketPayload> void registerGlobalClientConfigReceiver(
+		CustomPacketPayload.Type<P> type,
+		ClientConfigPayloadHandler<P> handler
+	);
+
+	boolean canSendConfigPacket(ServerConfigurationPacketListenerImpl handler, CustomPacketPayload.Type<?> type);
+
+	ConfigPacketSender getServerConfigSender(ServerConfigurationPacketListenerImpl handler);
+
+	void completeConfigTask(ServerConfigurationPacketListenerImpl handler, ConfigurationTask.Type type);
+
 	@FunctionalInterface
 	interface ServerPayloadHandler<P extends CustomPacketPayload> {
 		void receive(P payload, MinecraftServer server, ServerPlayer player);
@@ -75,5 +106,16 @@ public interface NetworkingHelper {
 	@FunctionalInterface
 	interface ClientPayloadHandler<P extends CustomPacketPayload> {
 		void receive(P payload, Minecraft minecraft, LocalPlayer player);
+	}
+
+	@FunctionalInterface
+	interface ServerConfigPayloadHandler<P extends CustomPacketPayload> {
+		void receive(P payload, ServerConfigurationPacketListenerImpl listener, ConfigPacketSender sender);
+	}
+
+	@ClientOnly
+	@FunctionalInterface
+	interface ClientConfigPayloadHandler<P extends CustomPacketPayload> {
+		void receive(P payload, Minecraft client, ConfigPacketSender sender);
 	}
 }

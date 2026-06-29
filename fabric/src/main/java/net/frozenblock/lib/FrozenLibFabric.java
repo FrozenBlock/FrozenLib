@@ -18,6 +18,8 @@
 package net.frozenblock.lib;
 
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
+import org.quiltmc.qsl.frozenblock.core.registry.impl.event.DelayedRegistry;
+import org.quiltmc.qsl.frozenblock.core.registry.impl.event.FabricDelayedRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.loader.api.ModContainer;
 import net.frozenblock.lib.cape.api.CapeUtil;
@@ -62,9 +64,6 @@ import net.frozenblock.lib.wind.disturbance.WindDisturbances;
 import net.frozenblock.lib.wind.extension.WindManagerExtensionType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.server.ServerRegistrySync;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.ServerFreezer;
 
 public final class FrozenLibFabric extends FrozenModInitializer {
 
@@ -74,6 +73,7 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 
 	@Override
 	public void onInitialize(String modId, ModContainer container) {
+		DelayedRegistry.setFactory(FabricDelayedRegistry::new);
 		FrozenLibMain.preQuiltInit();
 		FrozenLibRegistries.init();
 		FrozenLibFabricRegistries.init();
@@ -82,9 +82,6 @@ public final class FrozenLibFabric extends FrozenModInitializer {
 
 		// QUILT INIT
 		FrozenLibMain.quiltInit();
-		ServerFreezer.onInitialize();
-		ModProtocol.loadVersions();
-		ServerRegistrySync.registerHandlers();
 
 		// CONTINUE FROZENLIB INIT
 		FrozenLibMain.init();

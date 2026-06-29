@@ -45,8 +45,6 @@ import net.frozenblock.lib.sound.client.impl.FlyBySoundHub;
 import net.frozenblock.lib.wind.WindManager;
 import net.frozenblock.lib.wind.client.ClientWindUtil;
 import net.minecraft.client.Minecraft;
-import org.quiltmc.qsl.frozenblock.core.registry.impl.sync.client.ClientRegistrySync;
-import org.quiltmc.qsl.frozenblock.misc.datafixerupper.impl.client.ClientFreezer;
 
 public final class FrozenLibClientFabric implements ClientModInitializer {
 
@@ -67,8 +65,6 @@ public final class FrozenLibClientFabric implements ClientModInitializer {
 
 		// QUILT INIT
 		FrozenLibClient.quiltInit();
-		ClientFreezer.onInitializeClient();
-		ClientRegistrySync.registerHandlers();
 
 		// CONTINUE FROZENLIB INIT
 		FrozenLibClient.init();

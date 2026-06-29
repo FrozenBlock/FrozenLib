@@ -21,13 +21,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import net.frozenblock.lib.networking.ConfigPacketSender;
 import net.frozenblock.lib.platform.service.NetworkingHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.network.ConfigurationTask;
+import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
+import net.neoforged.neoforge.common.extensions.ICommonPacketListener;
+import net.neoforged.neoforge.common.extensions.IServerConfigurationPacketListenerExtension;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.jetbrains.annotations.Nullable;
@@ -41,10 +48,20 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		int maxSize
 	) {}
 
+	private record ConfigPayloadEntry<P extends CustomPacketPayload>(
+		CustomPacketPayload.Type<P> type,
+		StreamCodec<FriendlyByteBuf, P> codec
+	) {}
+
 	private final List<PayloadEntry<?>> s2cEntries = new ArrayList<>();
 	private final List<PayloadEntry<?>> c2sEntries = new ArrayList<>();
 	private final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> serverHandlers = new HashMap<>();
 	private final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> clientHandlers = new HashMap<>();
+
+	private final List<ConfigPayloadEntry<?>> s2cConfigEntries = new ArrayList<>();
+	private final List<ConfigPayloadEntry<?>> c2sConfigEntries = new ArrayList<>();
+	private final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> serverConfigHandlers = new HashMap<>();
+	private final Map<CustomPacketPayload.Type<?>, IPayloadHandler<?>> clientConfigHandlers = new HashMap<>();
 
 	@Override
 	public <P extends CustomPacketPayload> void registerS2CPayloadType(
@@ -110,6 +127,73 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		Minecraft.getInstance().getConnection().send(payload);
 	}
 
+	@Override
+	public <P extends CustomPacketPayload> void registerClientboundConfigPayloadType(
+		CustomPacketPayload.Type<P> type,
+		StreamCodec<FriendlyByteBuf, P> codec
+	) {
+		s2cConfigEntries.add(new ConfigPayloadEntry<>(type, codec));
+	}
+
+	@Override
+	public <P extends CustomPacketPayload> void registerServerboundConfigPayloadType(
+		CustomPacketPayload.Type<P> type,
+		StreamCodec<FriendlyByteBuf, P> codec
+	) {
+		c2sConfigEntries.add(new ConfigPayloadEntry<>(type, codec));
+	}
+
+	@Override
+	public <P extends CustomPacketPayload> void registerGlobalServerConfigReceiver(
+		CustomPacketPayload.Type<P> type,
+		ServerConfigPayloadHandler<P> handler
+	) {
+		serverConfigHandlers.put(type, (payload, context) -> {
+			ServerConfigurationPacketListenerImpl listener = (ServerConfigurationPacketListenerImpl) context.listener();
+			handler.receive((P) payload, listener, wrapNeoSender(context.listener()));
+		});
+	}
+
+	@Override
+	public <P extends CustomPacketPayload> void registerGlobalClientConfigReceiver(
+		CustomPacketPayload.Type<P> type,
+		ClientConfigPayloadHandler<P> handler
+	) {
+		clientConfigHandlers.put(type, (payload, context) ->
+			handler.receive((P) payload, Minecraft.getInstance(), wrapNeoSender(context.listener()))
+		);
+	}
+
+	@Override
+	public boolean canSendConfigPacket(ServerConfigurationPacketListenerImpl handler, CustomPacketPayload.Type<?> type) {
+		return ((ICommonPacketListener) handler).hasChannel(type);
+	}
+
+	@Override
+	public ConfigPacketSender getServerConfigSender(ServerConfigurationPacketListenerImpl handler) {
+		return wrapNeoSender(handler);
+	}
+
+	@Override
+	public void completeConfigTask(ServerConfigurationPacketListenerImpl handler, ConfigurationTask.Type type) {
+		((IServerConfigurationPacketListenerExtension) handler).finishCurrentTask(type);
+	}
+
+	private static ConfigPacketSender wrapNeoSender(Object listener) {
+		ICommonPacketListener neo = (ICommonPacketListener) listener;
+		return new ConfigPacketSender() {
+			@Override
+			public void sendPacket(CustomPacketPayload payload) {
+				neo.send(payload);
+			}
+
+			@Override
+			public void disconnect(Component reason) {
+				neo.disconnect(reason);
+			}
+		};
+	}
+
 	@SuppressWarnings("unchecked")
 	public void flush(PayloadRegistrar registrar) {
 		for (PayloadEntry<?> s2cEntry : s2cEntries) {
@@ -125,6 +209,46 @@ public class NeoNetworkingHelper implements NetworkingHelper {
 		c2sEntries.clear();
 		serverHandlers.clear();
 		clientHandlers.clear();
+	}
+
+	@SuppressWarnings("unchecked")
+	public void flushConfig(PayloadRegistrar registrar) {
+		for (ConfigPayloadEntry<?> s2cEntry : s2cConfigEntries) {
+			flushS2CConfig(registrar, (ConfigPayloadEntry<CustomPacketPayload>) s2cEntry);
+		}
+		for (ConfigPayloadEntry<?> c2sEntry : c2sConfigEntries) {
+			boolean isAlsoS2C = s2cConfigEntries.stream().anyMatch(e -> e.type().equals(c2sEntry.type()));
+			if (!isAlsoS2C) {
+				flushC2SConfigOnly(registrar, (ConfigPayloadEntry<CustomPacketPayload>) c2sEntry);
+			}
+		}
+		s2cConfigEntries.clear();
+		c2sConfigEntries.clear();
+		serverConfigHandlers.clear();
+		clientConfigHandlers.clear();
+	}
+
+	private <P extends CustomPacketPayload> void flushS2CConfig(PayloadRegistrar registrar, ConfigPayloadEntry<P> entry) {
+		@Nullable IPayloadHandler<P> clientHandler = (IPayloadHandler<P>) clientConfigHandlers.get(entry.type());
+		boolean isAlsoC2S = c2sConfigEntries.stream().anyMatch(e -> e.type().equals(entry.type()));
+
+		if (isAlsoC2S) {
+			@Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) serverConfigHandlers.get(entry.type());
+			registrar.configurationBidirectional(entry.type(), entry.codec(), serverHandler != null ? serverHandler : (p, ctx) -> {}, clientHandler);
+		} else {
+			if (clientHandler != null) {
+				registrar.configurationToClient(entry.type(), entry.codec(), clientHandler);
+			} else {
+				registrar.configurationToClient(entry.type(), entry.codec());
+			}
+		}
+	}
+
+	private <P extends CustomPacketPayload> void flushC2SConfigOnly(PayloadRegistrar registrar, ConfigPayloadEntry<P> entry) {
+		@Nullable IPayloadHandler<P> serverHandler = (IPayloadHandler<P>) serverConfigHandlers.get(entry.type());
+		if (serverHandler != null) {
+			registrar.configurationToServer(entry.type(), entry.codec(), serverHandler);
+		}
 	}
 
 	private <P extends CustomPacketPayload> void flushS2C(PayloadRegistrar registrar, PayloadEntry<P> entry) {
