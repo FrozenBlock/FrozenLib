@@ -139,20 +139,20 @@ public interface FrozenDeferredRegister<T> {
 
 		FrozenDeferredBlock<Block> registerSimpleBlock(ResourceKey<Block> key);
 
-		default FrozenDeferredBlock<StairBlock> registerLegacyStair(final BlockItemId id, final Block base) {
-			return registerBlock(id.block(), p -> new StairBlock(base.defaultBlockState(), p), () -> BlockBehaviour.Properties.ofLegacyCopy(base));
+		default FrozenDeferredBlock<StairBlock> registerLegacyStair(final BlockItemId id, final Supplier<? extends Block> base) {
+			return registerBlock(id.block(), p -> new StairBlock(base.get().defaultBlockState(), p), () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()));
 		}
 
-		default FrozenDeferredBlock<StairBlock> registerStair(final BlockItemId id, final Block base) {
-			return registerBlock(id.block(), p -> new StairBlock(base.defaultBlockState(), p), () -> BlockBehaviour.Properties.ofFullCopy(base));
+		default FrozenDeferredBlock<StairBlock> registerStair(final BlockItemId id, final Supplier<? extends Block> base) {
+			return registerBlock(id.block(), p -> new StairBlock(base.get().defaultBlockState(), p), () -> BlockBehaviour.Properties.ofFullCopy(base.get()));
 		}
 
-		default FrozenDeferredBlock<SlabBlock> registerSlab(final BlockItemId id, final Block base) {
-			return registerBlock(id.block(), SlabBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base));
+		default FrozenDeferredBlock<SlabBlock> registerSlab(final BlockItemId id, final Supplier<? extends Block> base) {
+			return registerBlock(id.block(), SlabBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()));
 		}
 
-		default FrozenDeferredBlock<WallBlock> registerWall(final BlockItemId id, final Block base) {
-			return registerBlock(id.block(), WallBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base).forceSolidOn());
+		default FrozenDeferredBlock<WallBlock> registerWall(final BlockItemId id, final Supplier<? extends Block> base) {
+			return registerBlock(id.block(), WallBlock::new, () -> BlockBehaviour.Properties.ofLegacyCopy(base.get()).forceSolidOn());
 		}
 	}
 
