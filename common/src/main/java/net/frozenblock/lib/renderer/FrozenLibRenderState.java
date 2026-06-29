@@ -73,7 +73,7 @@ public interface FrozenLibRenderState {
 	/**
 	 * Clears all extra render data on the render state.
 	 */
-	default void clearExtraData() {
+	default void frozenLib$clearExtraData() {
 		throw new UnsupportedOperationException("Implemented via mixin");
 	}
 }

@@ -33,27 +33,20 @@ package net.frozenblock.lib.renderer;
  * limitations under the License.
  */
 
-import java.util.function.Supplier;
+import net.minecraft.resources.Identifier;
+import net.minecraft.util.context.ContextKey;
+import org.jetbrains.annotations.ApiStatus;
 
 /**
  * A unique key representing extra data to attach to a render state.
  * @param <T> The type of the render state data.
  */
 public final class RenderStateDataKey<T> {
-	private final Supplier<String> name;
+	private final ContextKey<T> key;
+	private Object fabricKey = null;
 
-	private RenderStateDataKey(Supplier<String> debugName) {
-		this.name = debugName;
-	}
-
-	/**
-	 * Creates a new unique data key.
-	 * @param debugName The name of this data key, shown in error messages.
-	 * @param <T> The type of the render state data.
-	 * @return The newly created data key.
-	 */
-	public static <T> RenderStateDataKey<T> create(Supplier<String> debugName) {
-		return new RenderStateDataKey<>(debugName);
+	private RenderStateDataKey(ContextKey<T> key) {
+		this.key = key;
 	}
 
 	/**
@@ -61,12 +54,29 @@ public final class RenderStateDataKey<T> {
 	 * @param <T> The type of the render state data.
 	 * @return The newly created data key.
 	 */
-	public static <T> RenderStateDataKey<T> create() {
-		return new RenderStateDataKey<>(() -> "unnamed");
+	public static <T> RenderStateDataKey<T> create(Identifier id) {
+		return new RenderStateDataKey<>(new ContextKey<>(id));
+	}
+
+	/**
+	 * @return This as a {@link ContextKey}.
+	 */
+	public ContextKey<T> asContextKey() {
+		return this.key;
+	}
+
+	@ApiStatus.Internal
+	public void setFabricKey(Object key) {
+		this.fabricKey = key;
+	}
+
+	@ApiStatus.Internal
+	public Object getFabricKey() {
+		return this.fabricKey;
 	}
 
 	@Override
 	public String toString() {
-		return "RenderStateDataKey(" + name.get() + ")";
+		return "RenderStateDataKey(" +  this.key.name() + ")";
 	}
 }
