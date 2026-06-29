@@ -1,3 +1,8 @@
 plugins {
-    id("dev.architectury.loom-no-remap") apply(false)
+    id("dev.architectury.loom-no-remap") version("1.17-SNAPSHOT") apply(false)
+    id("org.ajoberstar.grgit") version("+") apply(false)
+    id("org.quiltmc.gradle.licenser") version("+") apply(false)
+    id("me.modmuss50.mod-publish-plugin") version("+") apply(false)
+    id("com.gradleup.shadow") version("+") apply(false)
+    kotlin("jvm") version("2.4.0") apply(false)
 }

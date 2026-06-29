@@ -18,14 +18,6 @@ pluginManagement {
         mavenCentral()
         gradlePluginPortal()
     }
-    plugins {
-        id("dev.architectury.loom-no-remap")    version("1.17-SNAPSHOT")
-        id("org.ajoberstar.grgit")              version("+")
-        id("org.quiltmc.gradle.licenser")       version("+")
-        id("me.modmuss50.mod-publish-plugin")   version("+")
-        id("com.gradleup.shadow")               version("+")
-        kotlin("jvm")                           version("2.4.0")
-    }
 }
 
 val neoforgeSnapshotMaven = settings.providers.gradleProperty("neoforge_snapshot_maven").orNull
