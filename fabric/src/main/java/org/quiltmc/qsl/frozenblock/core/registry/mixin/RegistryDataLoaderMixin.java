@@ -38,8 +38,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 /**
  * Modified to work on Fabric
  */
+@SuppressWarnings("unused")
 @Mixin(RegistryDataLoader.class)
-public class RegistryDataLoaderMixin {
+public class RegistryDataLoaderMixin { // in common mixins.json
 
 	@Inject(
 		method = "lambda$load$0",

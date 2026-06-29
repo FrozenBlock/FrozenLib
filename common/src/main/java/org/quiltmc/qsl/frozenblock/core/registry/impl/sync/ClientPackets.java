@@ -99,7 +99,7 @@ public final class ClientPackets {
 	 * Ends registry sync. No data
 	 */
 	public record End() implements CustomPacketPayload {
-		public static final Type<End> PACKET_TYPE = new Type<>(FrozenLibConstants.id("registry_sync/end"));
+		public static final Type<End> PACKET_TYPE = new Type<>(FrozenLibConstants.id("registry_sync/end_client"));
 		public static final StreamCodec<FriendlyByteBuf, End> CODEC = StreamCodec.ofMember(End::write, End::new);
 
 		public End(FriendlyByteBuf buf) {

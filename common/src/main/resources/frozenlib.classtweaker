@@ -29,6 +29,10 @@ transitive-accessible field net/minecraft/advancements/triggers/EffectsChangedTr
 transitive-accessible field net/minecraft/advancements/predicates/MobEffectsPredicate effectMap Ljava/util/Map;
 transitive-mutable field net/minecraft/advancements/predicates/MobEffectsPredicate effectMap Ljava/util/Map;
 
+transitive-inject-interface net/minecraft/advancements/Advancement net/frozenblock/lib/advancement/impl/AdvancementInterface
+transitive-inject-interface net/minecraft/advancements/AdvancementRequirements net/frozenblock/lib/advancement/impl/AdvancementRequirementsInterface
+transitive-inject-interface net/minecraft/advancements/AdvancementRewards net/frozenblock/lib/advancement/impl/AdvancementRewardsInterface
+
 # Network
 transitive-accessible field net/minecraft/client/multiplayer/ClientCommonPacketListenerImpl connection Lnet/minecraft/network/Connection;
 transitive-accessible field net/minecraft/server/network/ServerCommonPacketListenerImpl connection Lnet/minecraft/network/Connection;
@@ -99,6 +103,16 @@ transitive-accessible method net/minecraft/world/level/levelgen/structure/Struct
 transitive-accessible field net/minecraft/world/level/levelgen/structure/Structure settings Lnet/minecraft/world/level/levelgen/structure/Structure$StructureSettings;
 transitive-accessible class net/minecraft/world/level/levelgen/structure/pools/alias/RandomPoolAlias
 
+transitive-inject-interface net/minecraft/world/level/levelgen/structure/placement/StructurePlacement net/frozenblock/lib/levelgen/structure/impl/StructureSetAndPlacementInterface
+transitive-inject-interface net/minecraft/world/level/levelgen/structure/StructureSet net/frozenblock/lib/levelgen/structure/impl/StructureSetAndPlacementInterface
+transitive-inject-interface net/minecraft/world/level/levelgen/structure/StructureStart net/frozenblock/lib/levelgen/structure/impl/StructureStartInterface
+transitive-inject-interface net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate net/frozenblock/lib/levelgen/structure/impl/StructureTemplateInterface
+transitive-inject-interface net/minecraft/world/level/levelgen/structure/pools/StructureTemplatePool net/frozenblock/lib/levelgen/structure/impl/StructureTemplatePoolInterface
+transitive-inject-interface net/minecraft/world/level/levelgen/structure/pools/ListPoolElement net/frozenblock/lib/levelgen/structure/impl/StructurePoolElementInterface
+transitive-inject-interface net/minecraft/world/level/levelgen/structure/pools/SinglePoolElement net/frozenblock/lib/levelgen/structure/impl/StructurePoolElementInterface
+transitive-inject-interface net/minecraft/world/level/levelgen/structure/PoolElementStructurePiece net/frozenblock/lib/levelgen/structure/impl/InitialPieceProcessorInjectionInterface
+transitive-inject-interface net/minecraft/world/level/levelgen/structure/TemplateStructurePiece net/frozenblock/lib/levelgen/structure/impl/InitialPieceProcessorInjectionInterface
+
 # Entities
 transitive-accessible method net/minecraft/world/entity/Entity updateFluidInteraction ()Z
 transitive-accessible class net/minecraft/world/entity/monster/warden/Warden$VibrationUser
@@ -119,6 +133,12 @@ transitive-accessible method net/minecraft/world/entity/EntityTypes chestRaftFac
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/block/impl/clipgroup/ClipGroupInterface
 transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/block/impl/waterlike/InWaterLikeInterface
 transitive-inject-interface net/minecraft/world/entity/player/Player net/frozenblock/lib/block/impl/waterlike/PlayerInWaterLikeInterface
+
+transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/gravity/impl/EntityGravityInterface
+transitive-inject-interface net/minecraft/world/entity/LivingEntity net/frozenblock/lib/gravity/impl/EntityGravityInterface
+transitive-inject-interface net/minecraft/world/entity/vehicle/boat/AbstractBoat net/frozenblock/lib/gravity/impl/EntityGravityInterface
+transitive-inject-interface net/minecraft/world/entity/projectile/ThrowableProjectile net/frozenblock/lib/gravity/impl/EntityGravityInterface
+transitive-inject-interface net/minecraft/world/entity/Entity net/frozenblock/lib/entity/impl/EntityStepOnBlockInterface
 
 # Entity Models
 transitive-extendable method net/minecraft/client/model/Model renderToBuffer (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V
@@ -177,6 +197,7 @@ transitive-accessible method net/minecraft/world/level/block/Blocks register (Ln
 transitive-accessible method net/minecraft/world/level/block/Blocks register (Lnet/minecraft/references/BlockItemId;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)Lnet/minecraft/world/level/block/Block;
 transitive-accessible field net/minecraft/world/level/ClipContext collisionContext Lnet/minecraft/world/phys/shapes/CollisionContext;
 transitive-accessible field net/minecraft/world/level/block/BubbleColumnBlock CHECK_PERIOD I
+transitive-accessible method net/minecraft/world/level/block/StairBlock <init> (Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockBehaviour$Properties;)V
 
 # Built-In Block Models
 transitive-accessible method net/minecraft/client/renderer/block/BuiltInBlockModels createAir (Lnet/minecraft/client/renderer/block/BuiltInBlockModels$Builder;Lnet/minecraft/world/level/block/Block;)V
@@ -237,6 +258,12 @@ transitive-accessible method net/minecraft/world/level/block/entity/BlockEntityT
 transitive-inject-interface net/minecraft/world/level/block/piston/PistonMovingBlockEntity net/frozenblock/lib/block/impl/piston/PistonMovingBlockEntityInterface
 transitive-inject-interface net/minecraft/client/renderer/block/MovingBlockRenderState net/frozenblock/lib/block/client/impl/piston/state/MovingBlockRenderStateInterface
 
+# Models
+transitive-inject-interface net/minecraft/client/model/geom/ModelPart net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
+transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Cube net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
+transitive-inject-interface net/minecraft/client/model/geom/builders/PartDefinition net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
+transitive-inject-interface net/minecraft/client/model/geom/ModelPart$Polygon net/frozenblock/lib/renderer/impl/ModelPartInvertInterface
+
 # Render Types
 accessible method net/minecraft/client/renderer/rendertype/RenderType create (Ljava/lang/String;Lnet/minecraft/client/renderer/rendertype/RenderSetup;)Lnet/minecraft/client/renderer/rendertype/RenderType;
 transitive-accessible method net/minecraft/client/renderer/RenderPipelines register (Lcom/mojang/blaze3d/pipeline/RenderPipeline;)Lcom/mojang/blaze3d/pipeline/RenderPipeline;
@@ -263,11 +290,15 @@ transitive-accessible method net/minecraft/data/worldgen/biome/OverworldBiomes c
 transitive-accessible method net/minecraft/world/level/biome/OverworldBiomeBuilder addBiomes (Ljava/util/function/Consumer;)V
 
 transitive-inject-interface net/minecraft/world/level/biome/MultiNoiseBiomeSource net/frozenblock/lib/levelgen/biome/api/FrozenLibBiomeSourceAccess
+transitive-inject-interface net/minecraft/world/level/biome/Biome net/frozenblock/lib/levelgen/biome/impl/modifications/BiomeInterface
+transitive-inject-interface net/minecraft/world/level/biome/BiomeSpecialEffects net/frozenblock/lib/levelgen/biome/impl/modifications/BiomeSpecialEffectsInterface
+transitive-inject-interface net/minecraft/core/RegistryAccess$ImmutableRegistryAccess net/frozenblock/lib/levelgen/biome/impl/modifications/BiomeModificationMarker
 accessible field net/minecraft/world/level/chunk/ChunkGenerator featuresPerStep Ljava/util/function/Supplier;
 mutable field net/minecraft/world/level/chunk/ChunkGenerator featuresPerStep Ljava/util/function/Supplier;
 
 # Noise
 transitive-accessible method net/minecraft/data/worldgen/NoiseData register (Lnet/minecraft/data/worldgen/BootstrapContext;Lnet/minecraft/resources/ResourceKey;ID[D)V
+transitive-inject-interface net/minecraft/world/level/levelgen/NoiseGeneratorSettings net/frozenblock/lib/levelgen/surface/impl/NoiseGeneratorInterface
 
 # Surface Rules
 transitive-accessible method net/minecraft/world/level/levelgen/SurfaceRules$SequenceRuleSource <init> (Ljava/util/List;)V
@@ -328,6 +359,11 @@ transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$Surf
 transitive-accessible class net/minecraft/world/level/levelgen/SurfaceRules$SequenceRule
 transitive-accessible method net/minecraft/world/level/levelgen/SurfaceRules$SequenceRule <init> (Ljava/util/List;)V
 
+# QuiltMC Networking
+transitive-inject-interface net/minecraft/network/Connection org/quiltmc/qsl/frozenblock/core/registry/impl/sync/server/ExtendedConnection
+transitive-inject-interface net/minecraft/network/protocol/status/ServerStatus$Version org/quiltmc/qsl/frozenblock/core/registry/impl/sync/mod_protocol/ModProtocolContainer
+transitive-inject-interface net/minecraft/client/multiplayer/ServerData org/quiltmc/qsl/frozenblock/core/registry/impl/sync/mod_protocol/ModProtocolContainer
+
 # Registry
 transitive-accessible method net/minecraft/data/registries/VanillaRegistries validateThatAllBiomeFeaturesHaveBiomeFilter (Lnet/minecraft/core/HolderLookup$Provider;)V
 transitive-accessible method net/minecraft/data/Main bindRegistries (Ljava/util/function/BiFunction;Ljava/util/concurrent/CompletableFuture;)Lnet/minecraft/data/DataProvider$Factory;
@@ -337,6 +373,7 @@ transitive-accessible method net/minecraft/core/registries/BuiltInRegistries fre
 transitive-accessible method net/minecraft/core/Holder$Reference bindValue (Ljava/lang/Object;)V
 transitive-accessible class net/minecraft/core/registries/BuiltInRegistries$RegistryBootstrap
 transitive-accessible method net/minecraft/core/HolderSet$Named <init> (Lnet/minecraft/core/HolderOwner;Lnet/minecraft/tags/TagKey;)V
+transitive-inject-interface net/minecraft/core/MappedRegistry org/quiltmc/qsl/frozenblock/core/registry/api/event/RegistryEventStorage
 
 # Sounds
 transitive-accessible field net/minecraft/client/sounds/SoundManager soundEngine Lnet/minecraft/client/sounds/SoundEngine;
@@ -417,6 +454,9 @@ transitive-accessible class net/minecraft/client/multiplayer/ClientLevel$EntityC
 
 # Sound Engine
 transitive-inject-interface net/minecraft/client/sounds/SoundEngine net/frozenblock/lib/music/impl/client/SoundEngineInterface
+
+# Resource Packs
+transitive-inject-interface net/minecraft/server/packs/repository/PackRepository net/frozenblock/lib/resource_pack/impl/client/PackRepositoryInterface
 
 # Debug
 transitive-accessible method net/minecraft/SharedConstants debugFlag (Ljava/lang/String;)Z

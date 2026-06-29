@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 import net.frozenblock.lib.event.api.Event;
+import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.event.IModBusEvent;
 
 /**
@@ -45,15 +46,22 @@ public class NeoEvent<T> implements Event<T> {
 	private final Function<T[], T> invokerFactory;
 	private final List<T> listeners = new ArrayList<>();
 	private volatile T cachedInvoker;
+	private volatile boolean bridgeRegistered;
 
 	public NeoEvent(Class<T> listenerType, Function<T[], T> invokerFactory) {
 		this.listenerType = listenerType;
 		this.invokerFactory = invokerFactory;
+	}
 
-		FrozenLibEventBus.get().addListener(BridgeEvent.class, event -> {
+	private synchronized void registerBridge() {
+		if (this.bridgeRegistered) return;
+		IEventBus bus = FrozenLibEventBus.get();
+		if (bus == null) return; // still too early — try again on next invocation
+		bus.addListener(BridgeEvent.class, event -> {
 			if (event.source != this) return;
 			this.dispatch(event);
 		});
+		this.bridgeRegistered = true;
 	}
 
 	@Override
@@ -101,7 +109,13 @@ public class NeoEvent<T> implements Event<T> {
 			new Class<?>[]{this.listenerType},
 			(ignoredProxy, method, args) -> {
 				BridgeEvent event = new BridgeEvent(this, method, args);
-				FrozenLibEventBus.get().post(event);
+				IEventBus bus = FrozenLibEventBus.get();
+				if (bus != null) {
+					this.registerBridge();
+					bus.post(event);
+				} else {
+					this.dispatch(event);
+				}
 				return event.result;
 			}
 		);

@@ -10,7 +10,7 @@ import java.util.*
 
 plugins {
     id("flib-multiloader-loader")
-    id("net.fabricmc.fabric-loom")
+    id("dev.architectury.loom-no-remap")
     id("org.ajoberstar.grgit")
     id("org.quiltmc.gradle.licenser")
     id("me.modmuss50.mod-publish-plugin")
@@ -97,7 +97,7 @@ loom {
         }
     }
 
-    accessWidenerPath = file("src/main/resources/frozenlib.classtweaker")
+    accessWidenerPath = rootProject.file("common/src/main/resources/frozenlib.classtweaker")
     interfaceInjection {
         enableDependencyInterfaceInjection = true
     }

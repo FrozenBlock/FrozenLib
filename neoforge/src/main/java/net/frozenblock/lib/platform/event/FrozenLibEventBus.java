@@ -28,7 +28,9 @@ public class FrozenLibEventBus {
 
 	static synchronized IEventBus get() {
 		if (bus == null) {
-			bus = ModList.get().getModContainerById(FrozenLibConstants.MOD_ID)
+			var modList = ModList.get();
+			if (modList == null) return null; // too early — ModList not yet initialized
+			bus = modList.getModContainerById(FrozenLibConstants.MOD_ID)
 				.orElseThrow(() -> new IllegalStateException("FrozenLib mod container not found"))
 				.getEventBus();
 		}

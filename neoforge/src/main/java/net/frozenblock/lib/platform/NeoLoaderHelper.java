@@ -170,7 +170,9 @@ public class NeoLoaderHelper implements LoaderHelper {
 							return List.of(primary);
 						}
 						FileSystem fs = openOrGetFileSystem(primary);
-						return List.copyOf(fs.getRootDirectories());
+						List<Path> roots = new ArrayList<>();
+						fs.getRootDirectories().forEach(roots::add);
+						return List.copyOf(roots);
 					} catch (Exception e) {
 						return List.of();
 					}

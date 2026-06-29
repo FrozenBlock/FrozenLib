@@ -1,13 +1,12 @@
 plugins {
     id("flib-multiloader-common")
-    id("net.neoforged.moddev")
+    id("dev.architectury.loom-no-remap")
     id("org.quiltmc.gradle.licenser")
     kotlin("jvm")
 }
 
+val minecraft_version: String by project
 val asm_version: String by project
-val neo_form_version: String by project
-val neoforgeSnapshotMaven = findProperty("neoforge_snapshot_maven") as String?
 
 val cloth_config_version: String by project
 
@@ -17,24 +16,14 @@ val xjs_data_version: String by project
 val xjs_compat_version: String by project
 val fresult_version: String by project
 
-if (!neoforgeSnapshotMaven.isNullOrBlank()) {
-    repositories {
-        maven(neoforgeSnapshotMaven) { name = "NeoForge Snapshots" }
-    }
-}
-
-neoForge {
-    neoFormVersion = neo_form_version
-    val at = file("src/main/resources/META-INF/accesstransformer.cfg")
-    if (at.exists()) {
-        accessTransformers.from(at.absolutePath)
-    }
-}
-
 val githubActions: Boolean = System.getenv("GITHUB_ACTIONS") == "true"
 val licenseChecks: Boolean = githubActions
 
 val applyLicenses: Task by tasks
+
+loom {
+    accessWidenerPath = file("src/main/resources/frozenlib.classtweaker")
+}
 
 tasks {
     license {
@@ -49,6 +38,8 @@ tasks {
 }
 
 dependencies {
+    minecraft("com.mojang:minecraft:$minecraft_version")
+
     compileOnlyApi("org.ow2.asm:asm:${asm_version}")
     compileOnlyApi("org.ow2.asm:asm-tree:${asm_version}")
     compileOnlyApi("org.ow2.asm:asm-commons:${asm_version}")

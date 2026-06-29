@@ -6,6 +6,9 @@ pluginManagement {
         maven("https://maven.fabricmc.net") {
             name = "Fabric"
         }
+        maven("https://maven.architectury.dev/") {
+            name = "Architectury"
+        }
         maven("https://maven.neoforged.net/releases") {
             name = "NeoForged"
         }
@@ -14,6 +17,14 @@ pluginManagement {
         }
         mavenCentral()
         gradlePluginPortal()
+    }
+    plugins {
+        id("dev.architectury.loom-no-remap")    version("1.17-SNAPSHOT")
+        id("org.ajoberstar.grgit")              version("+")
+        id("org.quiltmc.gradle.licenser")       version("+")
+        id("me.modmuss50.mod-publish-plugin")   version("+")
+        id("com.gradleup.shadow")               version("+")
+        kotlin("jvm")                           version("2.4.0")
     }
 }
 

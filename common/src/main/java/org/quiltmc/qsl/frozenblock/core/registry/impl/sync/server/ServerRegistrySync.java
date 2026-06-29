@@ -29,6 +29,7 @@ import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.Identifier;
+import net.minecraft.server.network.ServerConfigurationPacketListenerImpl;
 import net.minecraft.util.StrictJsonParser;
 import org.jetbrains.annotations.ApiStatus;
 import org.quiltmc.qsl.frozenblock.core.registry.api.sync.ModProtocol;
@@ -77,15 +78,15 @@ public final class ServerRegistrySync {
 		FrozenLibInitPlatformUtils.NETWORKING.registerClientboundConfigPayloadType(ServerPackets.ErrorStyle.PACKET_TYPE, ServerPackets.ErrorStyle.CODEC);
 	}
 
-	public static void handleHandshake(ClientPackets.Handshake handshake, net.minecraft.server.network.ServerConfigurationPacketListenerImpl listener) {
+	public static void handleHandshake(ClientPackets.Handshake handshake, ServerConfigurationPacketListenerImpl listener) {
 		((QuiltSyncTask) ((ServerConfigurationPacketListenerAccessor) listener).frozenLib$getCurrentTask()).handleHandshake(handshake);
 	}
 
-	public static void handleModProtocol(ClientPackets.ModProtocol modProtocol, net.minecraft.server.network.ServerConfigurationPacketListenerImpl listener, ConfigPacketSender sender) {
+	public static void handleModProtocol(ClientPackets.ModProtocol modProtocol, ServerConfigurationPacketListenerImpl listener, ConfigPacketSender sender) {
 		((QuiltSyncTask) ((ServerConfigurationPacketListenerAccessor) listener).frozenLib$getCurrentTask()).handleModProtocol(modProtocol, sender);
 	}
 
-	public static void handleEnd(ClientPackets.End end, net.minecraft.server.network.ServerConfigurationPacketListenerImpl listener) {
+	public static void handleEnd(ClientPackets.End end, ServerConfigurationPacketListenerImpl listener) {
 		((QuiltSyncTask) ((ServerConfigurationPacketListenerAccessor) listener).frozenLib$getCurrentTask()).handleEnd(end);
 	}
 
