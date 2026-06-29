@@ -15,14 +15,19 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.structure.impl;
+package net.frozenblock.lib.levelgen.structure.api.processor;
 
 import com.mojang.serialization.MapCodec;
 import net.frozenblock.lib.FrozenLibConstants;
+<<<<<<<< HEAD:common/src/main/java/net/frozenblock/lib/levelgen/structure/impl/FrozenLibRuleBlockEntityModifiers.java
 import net.frozenblock.lib.levelgen.structure.api.processor.AppendSherds;
 import net.frozenblock.lib.platform.api.registry.FrozenDeferredRegister;
 import net.frozenblock.lib.platform.api.registry.FrozenHolder;
 import net.minecraft.core.registries.Registries;
+========
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
+>>>>>>>> 2cdac879d (make structure processor additions data-driven):common/src/main/java/net/frozenblock/lib/levelgen/structure/api/processor/FrozenLibRuleBlockEntityModifiers.java
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifier;
 import net.minecraft.world.level.levelgen.structure.templatesystem.rule.blockentity.RuleBlockEntityModifierType;
 
@@ -42,9 +47,14 @@ public class FrozenLibRuleBlockEntityModifiers {
 
 	public static void init() {}
 
+<<<<<<<< HEAD:common/src/main/java/net/frozenblock/lib/levelgen/structure/impl/FrozenLibRuleBlockEntityModifiers.java
 	private static <P extends RuleBlockEntityModifier> FrozenHolder<RuleBlockEntityModifierType<?>, RuleBlockEntityModifierType<P>> register(
 		String id, MapCodec<P> codec
 	) {
 		return REGISTER.register(id, () -> () -> codec);
+========
+	private static <P extends RuleBlockEntityModifier> RuleBlockEntityModifierType<P> register(String name, MapCodec<P> codec) {
+		return Registry.register(BuiltInRegistries.RULE_BLOCK_ENTITY_MODIFIER, FrozenLibConstants.id(name), () -> codec);
+>>>>>>>> 2cdac879d (make structure processor additions data-driven):common/src/main/java/net/frozenblock/lib/levelgen/structure/api/processor/FrozenLibRuleBlockEntityModifiers.java
 	}
 }

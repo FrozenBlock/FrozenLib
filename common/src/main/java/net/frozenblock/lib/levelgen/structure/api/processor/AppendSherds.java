@@ -23,7 +23,6 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
-import net.frozenblock.lib.levelgen.structure.impl.FrozenLibRuleBlockEntityModifiers;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Util;

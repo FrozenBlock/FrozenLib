@@ -15,11 +15,11 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package net.frozenblock.lib.levelgen.structure.impl;
+package net.frozenblock.lib.levelgen.structure.impl.processor;
 
-import net.minecraft.resources.Identifier;
+import java.util.List;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
 
-public interface StructureStartInterface {
-	Identifier frozenLib$getId();
-	void frozenLib$setId(Identifier id);
+public interface ProcessorInjectionInterface {
+	void frozenLib$addProcessors(List<StructureProcessor> processors);
 }

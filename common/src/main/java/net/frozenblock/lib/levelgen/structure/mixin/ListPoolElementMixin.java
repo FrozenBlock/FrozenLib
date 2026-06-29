@@ -18,7 +18,7 @@
 package net.frozenblock.lib.levelgen.structure.mixin;
 
 import java.util.List;
-import net.frozenblock.lib.levelgen.structure.impl.StructurePoolElementInterface;
+import net.frozenblock.lib.levelgen.structure.impl.processor.ProcessorInjectionInterface;
 import net.minecraft.world.level.levelgen.structure.pools.ListPoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureProcessor;
@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ListPoolElement.class)
-public class ListPoolElementMixin implements StructurePoolElementInterface {
+public class ListPoolElementMixin implements ProcessorInjectionInterface {
 
 	@Shadow
 	@Final
@@ -36,7 +36,7 @@ public class ListPoolElementMixin implements StructurePoolElementInterface {
 	@Override
 	public synchronized void frozenLib$addProcessors(List<StructureProcessor> processors) {
 		this.elements.forEach(element -> {
-			if (element instanceof StructurePoolElementInterface structurePoolElementInterface) structurePoolElementInterface.frozenLib$addProcessors(processors);
+			if (element instanceof ProcessorInjectionInterface processorInjectionInterface) processorInjectionInterface.frozenLib$addProcessors(processors);
 		});
 	}
 }

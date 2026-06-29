@@ -12,7 +12,6 @@
     "PoolElementStructurePieceMixin",
     "RandomPoolAliasMixin",
     "SinglePoolElementMixin",
-    "StructureMixin",
     "AbstractSpreadingStructurePlacementMixin",
     "StructureSetMixin",
     "StructureStartMixin",

@@ -18,8 +18,13 @@ Put the changelog BELOW the dashes. ANYTHING ABOVE IS IGNORED.
   - Added the `frozenlib:player_damage_type_sound` Dynamic Registry with the following format:
     - `damage_types`: A Damage Type's ID, a list of Damage Type IDs, or a Damage Type Tag that `sound_event` will be used for.
     - `sound_event`: The Sound Event to play when a Player is damaged by `damage_types`.
-    - `config_predicate`: An optional field, used to determine whether this can be used.
+    - `config_predicate`: An optional field, determining whether this can be used.
   - Removed the initial implementation, as this new data-driven implementation is far more stable.
 - Added `ShearsDispenseItemBehaviorApi`, used to register custom behaviors for Shears being used by a Dispenser.
 - Added the experimental `BlockRegistryModificationEvents` class, used to modify the Properties and Factory used to create Blocks.
 - Moved Wilder Wild's Potent Sulfur Geyser Wind Disturbance into FrozenLib.
+- Added `StructureProcessorListAddition`s, replacing `StructureProcessorApi` in a more stable and data-driven manner.
+  - Added the `frozenlib:structure_processor_list_addition` Dynamic Registry with the following format:
+    - `structures`: A Structure's ID, a list of Structure IDs, or a Structure Tag that `processors` will be added to.
+    - `processors`: A list of `StructureProcessor`s to add to `structures`.
+    - `config_predicate`: An optional field, determining whether this can be used.
