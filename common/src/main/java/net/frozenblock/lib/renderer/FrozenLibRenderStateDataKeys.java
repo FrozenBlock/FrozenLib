@@ -17,10 +17,10 @@
 
 package net.frozenblock.lib.renderer;
 
-import net.frozenblock.lib.block.impl.fire.FireType;
+import net.frozenblock.lib.FrozenLibConstants;import net.frozenblock.lib.block.impl.fire.FireType;
 import net.frozenblock.lib.platform.api.ClientOnly;
 
 @ClientOnly
 public class FrozenLibRenderStateDataKeys {
-	public static final RenderStateDataKey<FireType> FIRE_TYPE = RenderStateDataKey.create();
+	public static final RenderStateDataKey<FireType> FIRE_TYPE = RenderStateDataKey.create(FrozenLibConstants.id("fire_type"));
 }

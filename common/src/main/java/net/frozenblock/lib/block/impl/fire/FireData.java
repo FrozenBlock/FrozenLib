@@ -36,12 +36,12 @@ public record FireData(Holder<FireType> type) {
 		FireType.STREAM_CODEC, FireData::type,
 		FireData::new
 	);
-	public static final DataAttachmentType<FireData> ATTACHMENT = DataAttachmentType.builder(
-		FrozenLibConstants.id("fire_data")
-	)
-		.persistent((Codec) CODEC)
-		.sync(STREAM_CODEC)
-		.build();
+	public static final DataAttachmentType<FireData> ATTACHMENT = DataAttachmentType.create(
+		FrozenLibConstants.id("fire_data"),
+		builder -> builder
+			.persistent(CODEC)
+			.syncWith(STREAM_CODEC)
+	);
 
 	public static void init() {}
 

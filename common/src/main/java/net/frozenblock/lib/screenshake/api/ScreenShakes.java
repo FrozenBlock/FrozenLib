@@ -40,9 +40,12 @@ public record ScreenShakes(List<ScreenShake> screenShakes) implements Iterable<S
 		ScreenShake.LIST_STREAM_CODEC, ScreenShakes::screenShakes,
 		ScreenShakes::new
 	);
-	public static final DataAttachmentType<ScreenShakes> ATTACHMENT = DataAttachmentType.<ScreenShakes>builder(
-		FrozenLibConstants.id("screen_shakes")
-	).persistent(CODEC).sync(STREAM_CODEC).build();
+	public static final DataAttachmentType<ScreenShakes> ATTACHMENT = DataAttachmentType.create(
+		FrozenLibConstants.id("screen_shakes"),
+		builder -> builder
+			.persistent(CODEC)
+			.syncWith(STREAM_CODEC)
+	);
 
 	public static void tick(Level level, Object target) {
 		final ScreenShakes screenShakes = ATTACHMENT.get(target);

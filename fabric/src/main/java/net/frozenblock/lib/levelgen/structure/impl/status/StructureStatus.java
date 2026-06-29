@@ -24,6 +24,8 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.data.DataAttachmentSyncPredicate;
+import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -37,16 +39,16 @@ public record StructureStatus(Identifier structure, boolean insidePiece) {
 		StructureStatus::new
 	);
 	public static final StreamCodec<FriendlyByteBuf, List<StructureStatus>> STREAM_CODEC_LIST = STREAM_CODEC.apply(ByteBufCodecs.list());
-	public static final AttachmentType<List<StructureStatus>> ATTACHMENT_TYPE = AttachmentRegistry.create(
+	public static final DataAttachmentType<List<StructureStatus>> ATTACHMENT_TYPE = DataAttachmentType.create(
 		FrozenLibConstants.id("structure_statuses"),
-		builder -> builder.syncWith(STREAM_CODEC_LIST, AttachmentSyncPredicate.targetOnly())
+		builder -> builder.syncWith(STREAM_CODEC_LIST, DataAttachmentSyncPredicate.targetOnly())
 	);
 
 	public static void init() {}
 
 	public static Optional<StructureStatus> getProminentStructureStatus(Player player) {
 		if (player == null) return Optional.empty();
-		final List<StructureStatus> statuses = player.getAttachedOrElse(ATTACHMENT_TYPE, ImmutableList.of());
+		final List<StructureStatus> statuses = ATTACHMENT_TYPE.getAttachedOrGet(player, ImmutableList::of);
 		return Optional.ofNullable(statuses.stream()
 			.filter(StructureStatus::insidePiece)
 			.findFirst()

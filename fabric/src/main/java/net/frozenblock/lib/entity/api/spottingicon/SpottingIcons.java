@@ -28,6 +28,8 @@ import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.frozenblock.lib.FrozenLibConstants;
+import net.frozenblock.lib.platform.api.data.DataAttachmentSyncPredicate;
+import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.Entity;
 

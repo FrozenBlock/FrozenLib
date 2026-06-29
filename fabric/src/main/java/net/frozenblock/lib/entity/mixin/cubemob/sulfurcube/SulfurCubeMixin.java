@@ -74,9 +74,9 @@ public class SulfurCubeMixin {
 		final SulfurCube sulfurCube = SulfurCube.class.cast(this);
 		if (!(sulfurCube.level() instanceof ServerLevel level)) return;
 
-		final boolean wasPowered = sulfurCube.getAttachedOrElse(SulfurCubeEvents.POWERED, false);
+		final boolean wasPowered = SulfurCubeEvents.POWERED.getOrDefault(sulfurCube, false);
 		final boolean isPowered = level.getBestOwnOrNeighbourSignal(BlockPos.containing(sulfurCube.position())) != 0;
-		sulfurCube.setAttached(SulfurCubeEvents.POWERED, isPowered);
+		SulfurCubeEvents.POWERED.set(sulfurCube, isPowered);
 		if (!wasPowered && isPowered) {
 			SulfurCubeEvents.ON_POWER_CHANGED.invoker().onPowerChanged(sulfurCube, true);
 		} else if (wasPowered && !isPowered) {

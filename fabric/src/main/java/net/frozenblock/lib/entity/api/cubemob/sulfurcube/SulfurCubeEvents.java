@@ -27,6 +27,7 @@ import net.frozenblock.lib.event.api.Event;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.entrypoint.api.CommonEventEntrypoint;
 import net.frozenblock.lib.event.api.FrozenEvents;
+import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.minecraft.core.Holder;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jspecify.annotations.Nullable;
 
 public final class SulfurCubeEvents {
-	public static final AttachmentType<Boolean> POWERED = AttachmentRegistry.create(
+	public static final DataAttachmentType<Boolean> POWERED = DataAttachmentType.create(
 		FrozenLibConstants.id("sulfur_cube_powered"),
 		builder -> {
 			builder.initializer(() -> false);

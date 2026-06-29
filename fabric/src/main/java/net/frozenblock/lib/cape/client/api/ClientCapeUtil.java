@@ -39,7 +39,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.ApiStatus;
@@ -65,17 +64,14 @@ public class ClientCapeUtil {
 	public static void registerCapeTextureFromURL(Identifier capeID, Identifier texture, String textureURL) throws JsonIOException {
 		if (REGISTERED_CAPE_LISTENERS.contains(capeID)) return;
 
-		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(capeID, new ResourceManagerReloadListener() {
-			@Override
-			public void onResourceManagerReload(ResourceManager resourceManager) {
-				Minecraft.getInstance().getSkinManager().skinTextureDownloader.downloadAndRegisterSkin(
-					texture,
-					CAPE_CACHE_PATH.resolve(capeID.getNamespace()).resolve(capeID.getPath() + ".png"),
-					textureURL,
-					false
-				);
-			}
-		});
+		ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloadListener(capeID, (ResourceManagerReloadListener) resourceManager ->
+			Minecraft.getInstance().getSkinManager().skinTextureDownloader.downloadAndRegisterSkin(
+				texture,
+				CAPE_CACHE_PATH.resolve(capeID.getNamespace()).resolve(capeID.getPath() + ".png"),
+				textureURL,
+				false
+			)
+		);
 		REGISTERED_CAPE_LISTENERS.add(capeID);
 	}
 
@@ -86,7 +82,7 @@ public class ClientCapeUtil {
 	}
 
 	public static void extractCapeToRenderState(Entity entity, EntityRenderState state) {
-		final Optional<Optional<Cape>> capeAttachment = Optional.ofNullable(entity.getAttached(Cape.ATTACHMENT_TYPE));
+		final Optional<Optional<Cape>> capeAttachment = Optional.ofNullable(Cape.ATTACHMENT_TYPE.get(entity));
 		if (capeAttachment.isEmpty() || capeAttachment.get().isEmpty() || capeAttachment.get().get().dummy()) {
 			state.setData(CAPE_TEXTURE_DATA_KEY, null);
 		} else {

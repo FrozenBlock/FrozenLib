@@ -17,27 +17,26 @@
 
 package net.frozenblock.lib.cape.impl;
 
+import io.netty.buffer.ByteBuf;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentSyncPredicate;
-import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.cape.api.CapeUtil;
+import net.frozenblock.lib.platform.api.data.DataAttachmentSyncPredicate;
+import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.minecraft.core.ClientAsset;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
 
 public record Cape(Identifier id, Component name, CapeTexture texture, Optional<List<UUID>> allowedPlayers) {
-	public static final StreamCodec<FriendlyByteBuf, Optional<Cape>> NETWORK_CODEC = StreamCodec.of(Cape::writeToStream, Cape::createFromStream);
-	public static final AttachmentType<Optional<Cape>> ATTACHMENT_TYPE = AttachmentRegistry.create(
+	public static final StreamCodec<ByteBuf, Optional<Cape>> NETWORK_CODEC = StreamCodec.of(Cape::writeToStream, Cape::createFromStream);
+	public static final DataAttachmentType<Optional<Cape>> ATTACHMENT_TYPE = DataAttachmentType.create(
 		FrozenLibConstants.id("cape"),
 		builder -> {
-			builder.syncWith(NETWORK_CODEC, AttachmentSyncPredicate.all());
+			builder.syncWith(NETWORK_CODEC, DataAttachmentSyncPredicate.all());
 			builder.copyOnDeath();
 		}
 	);
@@ -52,11 +51,11 @@ public record Cape(Identifier id, Component name, CapeTexture texture, Optional<
 		return this.id.getPath().equals("dummy");
 	}
 
-	private static void writeToStream(FriendlyByteBuf output, Optional<Cape> cape) {
+	private static void writeToStream(ByteBuf output, Optional<Cape> cape) {
 		ByteBufCodecs.optional(Identifier.STREAM_CODEC).encode(output, cape.map(Cape::id));
 	}
 
-	public static Optional<Cape> createFromStream(FriendlyByteBuf input) {
+	public static Optional<Cape> createFromStream(ByteBuf input) {
 		return ByteBufCodecs.optional(Identifier.STREAM_CODEC).decode(input).flatMap(CapeUtil::getCape);
 	}
 

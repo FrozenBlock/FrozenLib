@@ -19,10 +19,15 @@ package net.frozenblock.lib.platform.api.data;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
+import java.util.Objects;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+import java.util.function.UnaryOperator;
 import net.frozenblock.lib.platform.FrozenLibInitPlatformUtils;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.Identifier;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.ApiStatus;import org.jetbrains.annotations.Nullable;
 
 /**
  * A cross-platform per-object data attachment, analogous to Fabric's {@code AttachmentType}
@@ -40,9 +45,21 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface DataAttachmentType<T> {
 
+	static <T> DataAttachmentType<T> create(Identifier id, Consumer<Builder<T>> consumer) {
+		Builder<T> builder = new Builder<>(id);
+		consumer.accept(builder);
+		return builder.build();
+	}
+
 	static <T> Builder<T> builder(Identifier id) {
 		return new Builder<>(id);
 	}
+
+	static <T> Builder<T> builder(Identifier id, Supplier<T> initializer) {
+		return new Builder<T>(id).initializer(initializer);
+	}
+
+	Identifier identifier();
 
 	@Nullable
 	T get(Object holder);
@@ -55,10 +72,63 @@ public interface DataAttachmentType<T> {
 
 	boolean has(Object holder);
 
+	@Nullable
+	Supplier<T> initializer();
+
+	boolean isPersistent();
+
+	boolean isSynced();
+
+	boolean copyOnDeath();
+
+	default T getAttachedOrThrow(Object holder) {
+		return Objects.requireNonNull(get(holder), "No value attached for " + identifier());
+	}
+
+	default T getAttachedOrCreate(Object holder) {
+		Supplier<T> init = initializer();
+		if (init == null) throw new IllegalArgumentException("getAttachedOrCreate() without supplier requires an initializer on the attachment type");
+		return getAttachedOrCreate(holder, init);
+	}
+
+	default T getAttachedOrCreate(Object holder, Supplier<T> initializer) {
+		T value = get(holder);
+		if (value != null) return value;
+		T initialized = Objects.requireNonNull(initializer.get(), "initializer result cannot be null");
+		set(holder, initialized);
+		return initialized;
+	}
+
+	default T getAttachedOrSet(Object holder, T defaultValue) {
+		Objects.requireNonNull(defaultValue, "default value cannot be null");
+		T value = get(holder);
+		if (value != null) return value;
+		set(holder, defaultValue);
+		return defaultValue;
+	}
+
+	default T getAttachedOrGet(Object holder, Supplier<T> defaultValue) {
+		Objects.requireNonNull(defaultValue, "default value supplier cannot be null");
+		T value = get(holder);
+		return value != null ? value : defaultValue.get();
+	}
+
+	@Nullable
+	default T modifyAttached(Object holder, UnaryOperator<T> modifier) {
+		T previous = get(holder);
+		set(holder, modifier.apply(previous));
+		return previous;
+	}
+
 	final class Builder<T> {
 		private final Identifier id;
 		private Codec<T> codec;
-		private StreamCodec<? super ByteBuf, T> streamCodec;
+		private StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec;
+		private DataAttachmentSyncPredicate syncPredicate;
+		private Supplier<T> initializer;
+		private boolean copyOnDeath;
+		@Nullable
+		private DataAttachmentType<T> built;
 
 		private Builder(Identifier id) {
 			this.id = id;
@@ -69,8 +139,23 @@ public interface DataAttachmentType<T> {
 			return this;
 		}
 
-		public Builder<T> sync(StreamCodec<? super ByteBuf, T> streamCodec) {
+		public Builder<T> syncWith(StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec) {
+			return syncWith(streamCodec, DataAttachmentSyncPredicate.all());
+		}
+
+		public Builder<T> syncWith(StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec, DataAttachmentSyncPredicate syncPredicate) {
 			this.streamCodec = streamCodec;
+			this.syncPredicate = syncPredicate;
+			return this;
+		}
+
+		public Builder<T> initializer(Supplier<T> initializer) {
+			this.initializer = initializer;
+			return this;
+		}
+
+		public Builder<T> copyOnDeath() {
+			this.copyOnDeath = true;
 			return this;
 		}
 
@@ -84,12 +169,28 @@ public interface DataAttachmentType<T> {
 		}
 
 		@Nullable
-		public StreamCodec<? super ByteBuf, T> streamCodec() {
+		public StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec() {
 			return this.streamCodec;
 		}
 
+		@Nullable
+		public DataAttachmentSyncPredicate syncPredicate() {
+			return this.syncPredicate;
+		}
+
+		@Nullable
+		public Supplier<T> initializer() {
+			return this.initializer;
+		}
+
+		public boolean isCopyOnDeath() {
+			return this.copyOnDeath;
+		}
+
+		@ApiStatus.Internal
 		public DataAttachmentType<T> build() {
-			return FrozenLibInitPlatformUtils.DATA_ATTACHMENT.create(this);
+			if (this.built == null) this.built = FrozenLibInitPlatformUtils.DATA_ATTACHMENT.create(this);
+			return this.built;
 		}
 	}
 }

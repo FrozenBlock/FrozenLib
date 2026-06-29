@@ -54,9 +54,6 @@ public record CapeCustomizePacket(Optional<Cape> cape) implements CustomPacketPa
 
 	public static void handle(CapeCustomizePacket packet, ServerPlayer player) {
 		final boolean empty = packet.cape().isEmpty() || packet.cape.get().dummy() || !CapeUtil.canPlayerUserCape(player.getUUID(), packet.cape().get());
-		player.setAttached(
-			Cape.ATTACHMENT_TYPE,
-			empty ? Optional.empty() : packet.cape()
-		);
+		Cape.ATTACHMENT_TYPE.set(player, empty ? Optional.empty() : packet.cape());
 	}
 }

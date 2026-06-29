@@ -17,17 +17,22 @@
 
 package net.frozenblock.lib.platform.data;
 
+import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import java.util.function.Supplier;
 import net.frozenblock.lib.FrozenLibConstants;
 import net.frozenblock.lib.platform.api.data.DataAttachmentType;
 import net.frozenblock.lib.platform.service.DataAttachmentHelper;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.attachment.IAttachmentHolder;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
+import org.jetbrains.annotations.Nullable;
 
 public class NeoDataAttachmentHelper implements DataAttachmentHelper {
 	private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, FrozenLibConstants.MOD_ID);
@@ -39,25 +44,68 @@ public class NeoDataAttachmentHelper implements DataAttachmentHelper {
 	@Override
 	@SuppressWarnings("unchecked")
 	public <T> DataAttachmentType<T> create(DataAttachmentType.Builder<T> builder) {
+		final Supplier<T> initializer = builder.initializer();
+		final var syncPredicate = builder.syncPredicate();
 		DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder = ATTACHMENT_TYPES.register(
 			builder.id().getPath(),
 			() -> {
-				AttachmentType.Builder<T> attachmentBuilder = AttachmentType.builder(() -> (T) null);
-				if (builder.codec() != null) attachmentBuilder.serialize(builder.codec().fieldOf("value"));
-				if (builder.streamCodec() != null) {
+				Supplier<T> defaultSupplier = initializer != null ? initializer : () -> (T) null;
+				AttachmentType.Builder<T> attachmentBuilder = AttachmentType.builder(defaultSupplier);
+				if (builder.codec() != null) {
+					attachmentBuilder.serialize(builder.codec().fieldOf("value"));
+					if (builder.isCopyOnDeath()) attachmentBuilder.copyOnDeath();
+				}
+				if (builder.streamCodec() != null && syncPredicate != null) {
 					final StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec = builder.streamCodec();
-					attachmentBuilder.sync(streamCodec);
+					attachmentBuilder.sync(syncPredicate::test, streamCodec);
 				}
 				return attachmentBuilder.build();
 			}
 		);
-		return new NeoDataAttachmentType<>(holder);
+		return new NeoDataAttachmentType<>(
+			holder,
+			builder.id(),
+			builder.codec(),
+			builder.streamCodec(),
+			initializer,
+			builder.isCopyOnDeath()
+		);
 	}
 
-	private record NeoDataAttachmentType<T>(DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder) implements DataAttachmentType<T> {
+	private static final class NeoDataAttachmentType<T> implements DataAttachmentType<T> {
+		private final DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder;
+		private final Identifier id;
+		@Nullable
+		private final Codec<T> codec;
+		@Nullable
+		private final StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec;
+		@Nullable
+		private final Supplier<T> initializer;
+		private final boolean copyOnDeath;
+
+		private NeoDataAttachmentType(
+			DeferredHolder<AttachmentType<?>, AttachmentType<T>> holder,
+			Identifier id,
+			@Nullable Codec<T> codec,
+			@Nullable StreamCodec<? super RegistryFriendlyByteBuf, T> streamCodec,
+			@Nullable Supplier<T> initializer,
+			boolean copyOnDeath
+		) {
+			this.holder = holder;
+			this.id = id;
+			this.codec = codec;
+			this.streamCodec = streamCodec;
+			this.initializer = initializer;
+			this.copyOnDeath = copyOnDeath;
+		}
 
 		@Override
-		public T get(Object holder) {
+		public Identifier identifier() {
+			return this.id;
+		}
+
+		@Override
+		public @Nullable T get(Object holder) {
 			return ((IAttachmentHolder) holder).getExistingDataOrNull(this.holder.get());
 		}
 
@@ -79,6 +127,26 @@ public class NeoDataAttachmentHelper implements DataAttachmentHelper {
 		@Override
 		public boolean has(Object holder) {
 			return ((IAttachmentHolder) holder).hasData(this.holder.get());
+		}
+
+		@Override
+		public @Nullable Supplier<T> initializer() {
+			return this.initializer;
+		}
+
+		@Override
+		public boolean isPersistent() {
+			return this.codec != null;
+		}
+
+		@Override
+		public boolean isSynced() {
+			return this.streamCodec != null;
+		}
+
+		@Override
+		public boolean copyOnDeath() {
+			return this.copyOnDeath;
 		}
 	}
 }
